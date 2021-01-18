@@ -19,7 +19,7 @@ Appen krever en del environment variabler og legges til i .env fila i root på p
     COOKIE_KEY2='<any string of length 32>'
     
     SESSION_SECRET='<any string of length 32>'
-    TILBAKE_SCOPE=api://<familie-ba-sak client ID>/.default
+    FAMILIE_TILBAKE_SCOPE=api://<familie-ba-sak client ID>/.default
 
     ENV=local
     APP_VERSION=0.0.1

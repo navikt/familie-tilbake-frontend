@@ -1,12 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { mergeWithCustomize } = require('webpack-merge');
 const common = require('./webpack.common');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
-const config = merge.strategy({
+const config = mergeWithCustomize({
     'entry.familie-tilbake': 'prepend',
     'module.rules': 'append',
 })(common, {
