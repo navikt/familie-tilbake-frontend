@@ -8,6 +8,13 @@ metadata:
 spec:
   image: {{ image }}
   team: teamfamilie
+  azure:
+    application:
+      enabled: true
+      replyURLs:
+        - "https://familie-tilbake-frontend.dev.adeo.no"
+        - "http://localhost:8000"
+      tenant: trygdeetaten.no    # enum of {trygdeetaten.no, nav.no}, defaults to nav.no if omitted
   replicas:
     min: 1
     max: 2
