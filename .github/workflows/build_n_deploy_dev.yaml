@@ -2,6 +2,7 @@ name: Build&deploy to dev
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 env:
@@ -24,6 +25,7 @@ jobs:
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
   deploy:
+    if: github.event.pull_request.draft == false
     name: Deploy to NAIS / GCP
     needs: build
     runs-on: ubuntu-latest
