@@ -32,8 +32,16 @@ spec:
       external: 
         - host: https://familie-tilbake.dev-fss-pub.nais.io
   env:
+    - name: ENV
+      value: preprod
     - name: APP_VERSION
       value: {{ VERSION }}
+    - name: CLIENT_ID
+      value: {{ AZURE_APP_CLIENT_ID }}
+    - name: CLIENT_SECRET
+      value: {{ AZURE_APP_CLIENT_SECRET }}
+  envFrom:
+    - secret: familie-tilbake-frontend
   resources:
     limits:
       cpu: 2000m

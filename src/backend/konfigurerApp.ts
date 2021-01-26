@@ -1,9 +1,5 @@
 import dotenv from 'dotenv';
-if (process.env.NODE_ENV === 'production') {
-    dotenv.config({ path: '/var/run/secrets/nais.io/vault/.env' });
-} else {
-    dotenv.config();
-}
+dotenv.config();
 
 const konfigurerAzure = () => {
     const host = 'barnetrygd';
@@ -17,7 +13,7 @@ const konfigurerAzure = () => {
         case 'e2e':
             process.env.AAD_LOGOUT_REDIRECT_URL = `http://mock-oauth2-server:1111/v2.0/logout?post_logout_redirect_uri=http:\\\\localhost:8000`;
             process.env.AAD_REDIRECT_URL =
-                'http://familie-ba-sak-frontend:8000/auth/openid/callback';
+                'http://familie-tilbake-frontend:8000/auth/openid/callback';
             process.env.AAD_DISCOVERY_URL = `http://mock-oauth2-server:1111/v2.0/.well-known/openid-configuration`;
             process.env.GRAPH_API = 'http://familie-mock-server:1337/graph/me';
             break;
