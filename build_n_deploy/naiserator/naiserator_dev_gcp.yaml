@@ -42,6 +42,7 @@ spec:
       value: test
   envFrom:
     - secret: familie-tilbake-frontend
+    - secret: azuread-familie-tilbake-frontend
   resources:
     limits:
       cpu: 2000m
