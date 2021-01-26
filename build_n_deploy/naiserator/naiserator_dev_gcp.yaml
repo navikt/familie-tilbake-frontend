@@ -30,7 +30,7 @@ spec:
   accessPolicy:
     outbound:
       external: 
-        - host: https://familie-tilbake.dev-fss-pub.nais.io
+        - host: familie-tilbake.dev-fss-pub.nais.io
   env:
     - name: ENV
       value: preprod
