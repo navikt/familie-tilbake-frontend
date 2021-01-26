@@ -37,9 +37,9 @@ spec:
     - name: APP_VERSION
       value: {{ VERSION }}
     - name: CLIENT_ID
-      value: {{ AZURE_APP_CLIENT_ID }}
+      value: test
     - name: CLIENT_SECRET
-      value: {{ AZURE_APP_CLIENT_SECRET }}
+      value: test
   envFrom:
     - secret: familie-tilbake-frontend
   resources:
