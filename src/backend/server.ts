@@ -10,14 +10,14 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import backend, {
     IApp,
-    // ensureAuthenticated,
+    ensureAuthenticated,
     getLogTimestamp,
     info,
     envVar,
 } from '@navikt/familie-backend';
 
 import { sessionConfig } from './config';
-import { doProxy } from './proxy';
+import { attachToken, doProxy } from './proxy';
 import setupRouter from './router';
 
 // eslint-disable-next-line
@@ -25,7 +25,7 @@ const config = require('../../build_n_deploy/webpack/webpack.dev');
 
 const port = 8000;
 
-backend(sessionConfig).then(({ app, router }: IApp) => {
+backend(sessionConfig).then(({ app, azureAuthClient, router }: IApp) => {
     let middleware;
 
     if (process.env.NODE_ENV === 'development') {
@@ -47,15 +47,15 @@ backend(sessionConfig).then(({ app, router }: IApp) => {
 
     app.use(
         '/familie-tilbake/api',
-        // ensureAuthenticated(azureAuthClient, true),
-        // attachToken(azureAuthClient),
+        ensureAuthenticated(azureAuthClient, true),
+        attachToken(azureAuthClient),
         doProxy()
     );
 
     // Sett opp bodyParser og router etter proxy. Spesielt viktig med tanke på større payloads som blir parset av bodyParser
     app.use(bodyParser.json({ limit: '200mb' }));
     app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
-    app.use('/', setupRouter(/*azureAuthClient,*/ router, middleware));
+    app.use('/', setupRouter(azureAuthClient, router, middleware));
 
     app.listen(port, '0.0.0.0', () => {
         info(

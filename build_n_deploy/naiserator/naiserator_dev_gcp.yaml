@@ -26,6 +26,12 @@ spec:
     - https://familie-tilbake-frontend.dev.intern.nav.no
   vault:
     enabled: false
+  azure:
+    application:
+      enabled: true
+      tenant: trygdeetaten.no
+      replyURLs:
+        - "http://familie-tilbake-frontend.dev.intern.nav.no/auth/openid/callback"
   webproxy: true
   accessPolicy:
     outbound:
@@ -36,10 +42,6 @@ spec:
       value: preprod
     - name: APP_VERSION
       value: {{ VERSION }}
-    - name: CLIENT_ID
-      value: test
-    - name: CLIENT_SECRET
-      value: test
   envFrom:
     - secret: familie-tilbake-frontend
     - secret: azuread-familie-tilbake-frontend
