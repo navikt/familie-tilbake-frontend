@@ -1,0 +1,53 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: familie-tilbake-frontend
+  namespace: teamfamilie
+  labels:
+    team: teamfamilie
+spec:
+  image: {{ image }}
+  team: teamfamilie
+  replicas:
+    min: 1
+    max: 2
+    cpuThresholdPercentage: 50
+  port: 8000
+  liveness:
+    path: /isAlive
+    initialDelay: 5
+  readiness:
+    path: /isReady
+    initialDelay: 5
+  prometheus:
+    enabled: true
+    path: /metrics
+  ingresses:
+    - https://familie-tilbake-frontend.dev.intern.nav.no
+  vault:
+    enabled: false
+  azure:
+    application:
+      enabled: true
+      tenant: trygdeetaten.no
+      replyURLs:
+        - "https://familie-tilbake-frontend.dev.intern.nav.no/auth/openid/callback"
+  webproxy: true
+  accessPolicy:
+    outbound:
+      external: 
+        - host: familie-tilbake.dev-fss-pub.nais.io
+  env:
+    - name: ENV
+      value: preprod
+    - name: APP_VERSION
+      value: {{ VERSION }}
+  envFrom:
+    - secret: familie-tilbake-frontend
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 1024Mi
+    requests:
+      memory: 512Mi
+      cpu: 200m

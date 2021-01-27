@@ -20,16 +20,16 @@ const Environment = () => {
         return {
             buildPath: '../../frontend_production',
             namespace: 'preprod',
-            proxyUrl: 'http://familie-tilbake',
-            // redisUrl: 'familie-ba-sak-frontend-redis.default.svc.nais.local',
+            proxyUrl: 'https://familie-tilbake.dev-fss-pub.nais.io',
+            // redisUrl: 'familie-familie-tilbake-frontend-redis.default.svc.nais.local',
         };
     }
 
     return {
         buildPath: '../../frontend_production',
         namespace: 'production',
-        proxyUrl: 'http://familie-tilbake',
-        // redisUrl: 'familie-ba-sak-frontend-redis.default.svc.nais.local',
+        proxyUrl: 'https://familie-tilbake.prod-fss-pub.nais.io',
+        // redisUrl: 'familie-familie-tilbake-frontend-redis.default.svc.nais.local',
     };
 };
 const env = Environment();
