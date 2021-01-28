@@ -21,7 +21,7 @@ const Environment = () => {
             buildPath: '../../frontend_production',
             namespace: 'preprod',
             proxyUrl: 'https://familie-tilbake.dev-fss-pub.nais.io',
-            // redisUrl: 'familie-familie-tilbake-frontend-redis.default.svc.nais.local',
+            redisUrl: process.env.REDIS_HOST,
         };
     }
 
@@ -29,7 +29,7 @@ const Environment = () => {
         buildPath: '../../frontend_production',
         namespace: 'production',
         proxyUrl: 'https://familie-tilbake.prod-fss-pub.nais.io',
-        // redisUrl: 'familie-familie-tilbake-frontend-redis.default.svc.nais.local',
+        redisUrl: process.env.REDIS_HOST,
     };
 };
 const env = Environment();
