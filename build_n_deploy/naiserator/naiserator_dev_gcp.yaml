@@ -35,6 +35,8 @@ spec:
   webproxy: true
   accessPolicy:
     outbound:
+      rules:
+        - application: familie-tilbake-frontend-redis
       external: 
         - host: familie-tilbake.dev-fss-pub.nais.io
   env:
