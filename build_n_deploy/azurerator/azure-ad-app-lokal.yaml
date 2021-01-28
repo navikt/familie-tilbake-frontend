@@ -2,7 +2,7 @@
 apiVersion: nais.io/v1
 kind: AzureAdApplication
 metadata:
-  name: familie-tilbake-frontend
+  name: familie-tilbake-frontend-lokal
   namespace: teamfamilie
   labels:
     team: teamfamilie
