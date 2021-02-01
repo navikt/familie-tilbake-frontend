@@ -22,7 +22,7 @@ const Container: React.FC = () => {
                         <BehandlingProvider>
                             <Switch>
                                 <Route
-                                    path="/fagsak/:fagsakId/behandling/:behandlingId"
+                                    path="/ytelse/:ytelseType/fagsak/:fagsakId/behandling/:behandlingId"
                                     component={BehandlingContainer}
                                 />
                                 <Route exact={true} path="/" component={Dashboard} />
