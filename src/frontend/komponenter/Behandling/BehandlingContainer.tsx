@@ -9,33 +9,22 @@ import Personlinje from '../Fagsak/Personlinje/Personlinje';
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 
 interface IProps {
+    ytelseType: string;
     fagsakId: string;
     behandlingId: string;
 }
 
 const BehandlingContainer: React.FC = () => {
-    const { fagsakId, behandlingId } = useParams<IProps>();
+    const { ytelseType, fagsakId, behandlingId } = useParams<IProps>();
 
-    const { bruker, fagsak, hentFagsak, hentBruker } = useFagsakRessurser();
-    const { åpenBehandling, hentBehandling } = useBehandling();
-
-    React.useEffect(() => {
-        if (fagsakId !== undefined) {
-            hentFagsak(fagsakId);
-        }
-    }, [fagsakId]);
+    const { bruker, fagsak } = useFagsakRessurser();
+    const { åpenBehandling, hentBehandlingContext } = useBehandling();
 
     React.useEffect(() => {
-        if (fagsak !== undefined) {
-            hentBruker(fagsak.fagsakId);
+        if (ytelseType !== undefined && fagsakId !== undefined && behandlingId !== undefined) {
+            hentBehandlingContext(ytelseType, fagsakId, behandlingId);
         }
-    }, [fagsak]);
-
-    React.useEffect(() => {
-        if (fagsak !== undefined && bruker !== undefined) {
-            hentBehandling(fagsak.fagsakId, behandlingId);
-        }
-    }, [fagsak, bruker]);
+    }, [ytelseType, fagsakId, behandlingId]);
 
     return (
         <>
@@ -61,7 +50,7 @@ const BehandlingContainer: React.FC = () => {
                 </>
             ) : (
                 <div>
-                    Skal vise fagsak {fagsakId} og behandling {behandlingId}
+                    Skal vise fagsak {fagsakId} med ytelse {ytelseType} og behandling {behandlingId}
                 </div>
             )}
         </>
