@@ -17,7 +17,7 @@ const config = mergeWithCustomize({
     },
     output: {
         path: path.join(__dirname, '../../frontend_development'),
-        filename: '[name].[hash].js',
+        filename: '[name].[contenthash].js',
         publicPath: '/assets/',
         globalObject: 'this',
     },

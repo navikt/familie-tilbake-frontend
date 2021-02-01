@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TypeScriptTypeChecker = require('fork-ts-checker-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -54,7 +54,7 @@ module.exports = {
     optimization: {
         splitChunks: {
             cacheGroups: {
-                vendor: {
+                defaultVendors: {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
                     chunks: 'all',
@@ -62,6 +62,7 @@ module.exports = {
             },
         },
         runtimeChunk: true,
+        emitOnErrors: false,
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -77,7 +78,6 @@ module.exports = {
                 files: './src/**/*.{ts,tsx,js,jsx}',
             },
         }),
-        new webpack.NoEmitOnErrorsPlugin(),
-        new OptimizeCssAssetsPlugin(),
+        new CssMinimizerPlugin(),
     ],
 };
