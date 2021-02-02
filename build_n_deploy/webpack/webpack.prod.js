@@ -23,8 +23,6 @@ const config = mergeWithCustomize({
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
-        new webpack.optimize.OccurrenceOrderPlugin(false),
-        new webpack.NoEmitOnErrorsPlugin(),
         new MiniCssExtractPlugin({
             filename: 'familie-tilbake-frontend.css',
         }),

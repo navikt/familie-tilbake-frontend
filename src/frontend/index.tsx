@@ -1,11 +1,16 @@
 import * as React from 'react';
 
+import axe from '@axe-core/react';
 import * as ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 
 import App from './komponenter/App';
 
 import './index.less';
+
+if (process.env.NODE_ENV !== 'production') {
+    axe(React, ReactDOM, 1000, {});
+}
 
 const rootElement = document.getElementById('app');
 const renderApp = (Component: React.ComponentType): void => {
@@ -20,3 +25,11 @@ const renderApp = (Component: React.ComponentType): void => {
 };
 
 renderApp(App);
+
+if (module.hot) {
+    module.hot.accept('./komponenter/App', () => {
+        // eslint-disable-next-line
+        const NewApp = require('./komponenter/App').default;
+        renderApp(NewApp);
+    });
+}
