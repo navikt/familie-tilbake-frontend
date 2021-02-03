@@ -46,8 +46,6 @@ spec:
       value: {{ VERSION }}
     - name: REDIS_HOST
       value: familie-tilbake-frontend-redis
-    - name: FAMILIE_TILBAKE_SCOPE
-      value: api://familie-tilbake/.default
   envFrom:
     - secret: familie-tilbake-frontend
     - secret: familie-tilbake-frontend-redis
