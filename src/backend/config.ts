@@ -7,13 +7,13 @@ const Environment = () => {
         return {
             buildPath: '../../frontend_development',
             namespace: 'local',
-            proxyUrl: 'http://localhost:8089',
+            proxyUrl: 'http://localhost:8030',
         };
     } else if (process.env.ENV === 'e2e') {
         return {
             buildPath: '../../frontend_production',
             namespace: 'e2e',
-            proxyUrl: 'http://familie-tilbake:8089',
+            proxyUrl: 'http://familie-tilbake:8030',
             // redisUrl: 'familie-redis',
         };
     } else if (process.env.ENV === 'preprod') {
