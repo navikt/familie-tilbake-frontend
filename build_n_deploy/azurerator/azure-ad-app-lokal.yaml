@@ -7,13 +7,11 @@ metadata:
   labels:
     team: teamfamilie
 spec:
-  preAuthorizedApplications:
-    - application: familie-tilbake
-      cluster: dev-gcp
-      namespace: teamfamilie
   logoutUrl: "https://familie-tilbake-frontend.dev.intern.nav.no"
   tenant: trygdeetaten.no
   replyUrls:
     - url: "http://familie-tilbake-frontend.dev.intern.nav.no/auth/openid/callback"
     - url: "http://localhost:8000/auth/openid/callback"
   secretName: azuread-familie-tilbake-frontend-lokal
+
+# secret kan hentes fra cluster med "kubectl -n teamfamilie get secret azuread-familie-tilbake-frontend-lokal -o json | jq '.data | map_values(@base64d)'"
