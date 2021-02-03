@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import createUseContext from 'constate';
 
-import { ISaksbehandler } from '@navikt/familie-typer';
+import { HttpProvider, useHttp } from '@navikt/familie-http';
+import { ISaksbehandler, Ressurs } from '@navikt/familie-typer';
 
 export interface IModal {
     actions?: JSX.Element[] | JSX.Element;
@@ -12,6 +13,13 @@ export interface IModal {
     onClose?: () => void;
     tittel: string;
     visModal: boolean;
+}
+
+interface IInfo {
+    appImage: string;
+    appName: string;
+    namespace: string;
+    clusterName: string;
 }
 
 interface IProps {
@@ -24,7 +32,7 @@ interface AuthProviderExports {
     innloggetSaksbehandler: ISaksbehandler | undefined;
 }
 
-const [AuthProvider, useApp] = createUseContext(
+const [AuthProvider, useAuth] = createUseContext(
     ({ autentisertSaksbehandler }: IProps): AuthProviderExports => {
         const [autentisert, settAutentisert] = React.useState(true);
         const [innloggetSaksbehandler, settInnloggetSaksbehandler] = React.useState(
@@ -46,9 +54,48 @@ const [AuthProvider, useApp] = createUseContext(
     }
 );
 
+const [AppContentProvider, useApp] = createUseContext(() => {
+    const { autentisert, innloggetSaksbehandler } = useAuth();
+    const { request } = useHttp();
+
+    const hentTilbakeInfo = (): void => {
+        request<void, IInfo>({
+            url: '/familie-tilbake/api/info',
+            method: 'GET',
+        }).then((info: Ressurs<IInfo>) => {
+            if (info.status === 'SUKSESS') {
+                console.log('info response: ', info.data);
+            } else {
+                console.log('error!', info);
+            }
+        });
+    };
+
+    return {
+        autentisert,
+        innloggetSaksbehandler,
+        hentTilbakeInfo,
+    };
+});
+
+const AuthOgHttpProvider: React.FC = ({ children }) => {
+    const { innloggetSaksbehandler, settAutentisert } = useAuth();
+
+    return (
+        <HttpProvider
+            innloggetSaksbehandler={innloggetSaksbehandler}
+            settAutentisert={settAutentisert}
+        >
+            <AppContentProvider>{children}</AppContentProvider>
+        </HttpProvider>
+    );
+};
+
 const AppProvider: React.FC<IProps> = ({ autentisertSaksbehandler, children }) => {
     return (
-        <AuthProvider autentisertSaksbehandler={autentisertSaksbehandler}>{children}</AuthProvider>
+        <AuthProvider autentisertSaksbehandler={autentisertSaksbehandler}>
+            <AuthOgHttpProvider children={children} />
+        </AuthProvider>
     );
 };
 
