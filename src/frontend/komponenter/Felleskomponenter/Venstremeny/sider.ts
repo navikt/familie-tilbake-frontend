@@ -36,6 +36,10 @@ export const sider: Record<SideId, ISide> = {
     },
 };
 
-export const erSidenAktiv = (side: ISide, _behandling: IBehandling): boolean => {
-    return side === sider.FAKTA;
+export const erSidenAktiv = (_side: ISide, _behandling: IBehandling): boolean => {
+    return true;
+};
+
+export const visSide = (_side: ISide, _åpenBehandling: IBehandling) => {
+    return true;
 };

@@ -2,35 +2,46 @@ import * as React from 'react';
 
 import createUseContext from 'constate';
 
-import { kjønnType } from '@navikt/familie-typer';
+import { byggSuksessRessurs, kjønnType, Ressurs } from '@navikt/familie-typer';
 
+import { Ytelsetype } from '../kodeverk/ytelsetype';
 import { IFagsak } from '../typer/fagsak';
-import { IPerson } from '../typer/person';
 
-export const brukerMock = {
+const personIdent = '12345600001';
+const brukerMock = {
     navn: 'Test Testesen',
     kjønn: kjønnType.UKJENT,
+    fødselsdato: '1990-01-01',
     alder: 22,
+    personIdent: personIdent,
 };
 
-const [FagsakProvider, useFagsakRessurser] = createUseContext(() => {
-    const [fagsak, settFagsak] = React.useState<IFagsak>();
-    const [bruker, settBruker] = React.useState<IPerson>();
+const fagsakMock = {
+    søkerFødselsnummer: personIdent,
+    behandlinger: [
+        { id: '2', eksternBrukId: '2' },
+        { id: '3', eksternBrukId: '3' },
+    ],
+};
 
-    const settSak = (fagsak: IFagsak): void => {
-        settFagsak(fagsak);
-    };
+const [FagsakProvider, useFagsak] = createUseContext(() => {
+    const [fagsak, settFagsak] = React.useState<Ressurs<IFagsak>>();
 
-    const settPerson = (person: IPerson): void => {
-        settBruker(person);
+    const hentFagsak = (ytelseType: Ytelsetype, eksternFagsakId: string): void => {
+        settFagsak(
+            byggSuksessRessurs<IFagsak>({
+                ytelseType,
+                eksternFagsakId: eksternFagsakId,
+                ...fagsakMock,
+                bruker: brukerMock,
+            })
+        );
     };
 
     return {
-        bruker,
         fagsak,
-        settSak,
-        settPerson,
+        hentFagsak,
     };
 });
 
-export { FagsakProvider, useFagsakRessurser };
+export { FagsakProvider, useFagsak };

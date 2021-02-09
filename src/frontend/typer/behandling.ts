@@ -54,10 +54,21 @@ export const behandlingsresultater: Record<BehandlingResultat, string> = {
     IKKE_VURDERT: 'Ikke vurdert',
 };
 
+export enum Behandlingstype {
+    TILBAKEKREVING = 'TILBAKEKREVING',
+    REVURDERING_TILBAKEKREVING = 'REVURDERING_TILBAKEKREVING',
+}
+
+export const behandlingstyper: Record<Behandlingstype, string> = {
+    TILBAKEKREVING: 'Tilbakekreving',
+    REVURDERING_TILBAKEKREVING: 'Revurdering tilbakekreving',
+};
+
 export interface IBehandling {
+    id: string;
     aktiv: boolean;
     //    begrunnelse: string;
-    behandlingId: string;
+    eksternBrukId: string;
     //    endretAv: string;
     //    kategori: BehandlingKategori;
     //    opprettetTidspunkt: string;
@@ -69,7 +80,7 @@ export interface IBehandling {
     //    stegTilstand: IRestStegTilstand[];
     //    totrinnskontroll?: ITotrinnskontroll;
     //    opplysningsplikt?: IOpplysningsplikt;
-    //    type: Behandlingstype;
+    type: Behandlingstype;
     //    underkategori: BehandlingUnderkategori;
     //    vedtakForBehandling: IVedtakForBehandling[];
     //    utbetalingsperioder: IUtbetalingsperiode[];

@@ -4,6 +4,9 @@ import { Menyknapp } from 'nav-frontend-ikonknapper';
 import KnappBase from 'nav-frontend-knapper';
 import Popover, { PopoverOrientering } from 'nav-frontend-popover';
 
+import { RessursStatus } from '@navikt/familie-typer';
+
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { IFagsak } from '../../../../typer/fagsak';
 
 interface IProps {
@@ -11,6 +14,7 @@ interface IProps {
 }
 
 const Behandlingsmeny: React.FC<IProps> = () => {
+    const { åpenBehandling } = useBehandling();
     const [anker, settAnker] = React.useState<HTMLElement | undefined>(undefined);
 
     return (
@@ -45,9 +49,19 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                     <li>
                         <KnappBase mini={true}>Opprett revurdering</KnappBase>
                     </li>
-                    <li>
-                        <KnappBase mini={true}>Henlegg behandling</KnappBase>
-                    </li>
+                    {åpenBehandling?.status === RessursStatus.SUKSESS && (
+                        <>
+                            <li>
+                                <KnappBase mini={true}>Henlegg behandling</KnappBase>
+                            </li>
+                            <li>
+                                <KnappBase mini={true}>Opprett/Fjern verge</KnappBase>
+                            </li>
+                            <li>
+                                <KnappBase mini={true}>Bytt behandlingsenhet</KnappBase>
+                            </li>
+                        </>
+                    )}
                 </ul>
             </Popover>
         </>
