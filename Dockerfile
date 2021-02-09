@@ -1,4 +1,4 @@
-FROM navikt/node-express:12.2.0-alpine
+FROM navikt/node-express:12.18-alpine
 RUN apk --no-cache add curl # trengs curl?
 
 ADD ./ /var/server/
