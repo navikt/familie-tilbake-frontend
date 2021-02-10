@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { useHistory, useParams } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -9,6 +10,11 @@ import { useFagsak } from '../../context/FagsakContext';
 import { Ytelsetype } from '../../kodeverk/ytelsetype';
 import BehandlingContainer from './BehandlingContainer';
 import Personlinje from './Personlinje/Personlinje';
+
+const FagsakContainerContent = styled.div`
+    display: flex;
+    height: calc(100vh - 6rem);
+`;
 
 interface IProps {
     ytelseType: Ytelsetype;
@@ -46,7 +52,7 @@ const FagsakContainer: React.FC = () => {
                 <>
                     <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
-                    <div className={'fagsakcontainer__content'}>
+                    <FagsakContainerContent>
                         {åpenBehandling ? (
                             åpenBehandling?.status === RessursStatus.SUKSESS ? (
                                 <BehandlingContainer
@@ -61,7 +67,7 @@ const FagsakContainer: React.FC = () => {
                         ) : (
                             <div>Saksoversikt?</div>
                         )}
-                    </div>
+                    </FagsakContainerContent>
                 </>
             );
         }

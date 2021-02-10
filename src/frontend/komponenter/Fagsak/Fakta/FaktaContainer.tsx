@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+import styled from 'styled-components';
+
+import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
 import { Normaltekst, Undertekst, Undertittel } from 'nav-frontend-typografi';
 
@@ -12,6 +15,47 @@ import { IBehandling } from '../../../typer/behandling';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingFakta';
 import FaktaRevurdering from './FaktaRevurdering';
 import FeilutbetalingPerioder from './periode/FeilutbetalingPerioder';
+
+const StyledFeilutbetalingFakta = styled.div`
+    padding: 10px;
+
+    .smallMarginBottom {
+        margin-bottom: 16px;
+    }
+
+    .typo-undertekst {
+        margin-bottom: 10px;
+    }
+
+    .redText {
+        color: ${navFarger.navRod};
+        font-weight: bold;
+    }
+
+    table {
+        width: 100%;
+
+        td {
+            margin-left: 0px;
+            margin-right: 0px;
+            vertical-align: top;
+            padding: 5px;
+        }
+
+        th {
+            border-bottom: 1px solid black;
+            text-align: left;
+        }
+
+        .beløp {
+            text-align: right;
+        }
+
+        .skjemaelement {
+            margin: 5px;
+        }
+    }
+`;
 
 interface IProps {
     behandling: IBehandling;
@@ -35,7 +79,7 @@ const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
 
     return feilutbetalingFakta ? (
         feilutbetalingFakta.behandlingFakta ? (
-            <div className={'feilutbetaling-fakta'}>
+            <StyledFeilutbetalingFakta>
                 <Row className={'smallMarginBottom'}>
                     <Column xs="12" md="6">
                         <Row className={'smallMarginBottom'}>
@@ -102,7 +146,7 @@ const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
                         />
                     </Column>
                 </Row>
-            </div>
+            </StyledFeilutbetalingFakta>
         ) : null
     ) : null;
 };

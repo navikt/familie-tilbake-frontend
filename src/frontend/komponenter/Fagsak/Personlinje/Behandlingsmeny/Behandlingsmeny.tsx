@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import styled from 'styled-components';
+
 import { Menyknapp } from 'nav-frontend-ikonknapper';
 import KnappBase from 'nav-frontend-knapper';
 import Popover, { PopoverOrientering } from 'nav-frontend-popover';
@@ -8,6 +10,20 @@ import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { IFagsak } from '../../../../typer/fagsak';
+
+const StyledList = styled.ul`
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+
+    .knapp {
+        border: none;
+        margin: 0.1rem 0;
+        width: 100%;
+        display: flex;
+        justify-content: left;
+    }
+`;
 
 interface IProps {
     fagsak: IFagsak;
@@ -40,8 +56,7 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                 tabIndex={-1}
                 utenPil
             >
-                <ul
-                    className="behandlingsmeny__list"
+                <StyledList
                     role="menu"
                     style={{ minWidth: 190 }}
                     aria-labelledby={'behandlingsmeny-arialabel-knapp'}
@@ -62,7 +77,7 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                             </li>
                         </>
                     )}
-                </ul>
+                </StyledList>
             </Popover>
         </>
     );

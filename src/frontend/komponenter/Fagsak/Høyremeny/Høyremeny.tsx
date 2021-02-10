@@ -1,8 +1,17 @@
 import * as React from 'react';
 
+import styled from 'styled-components';
+
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import Behandlingskort from '../Behandlingskort/Behandlingskort';
+
+const StyledContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 25rem;
+    height: calc(100vh - 8rem);
+`;
 
 interface IProps {
     fagsak: IFagsak;
@@ -11,9 +20,9 @@ interface IProps {
 
 const Høyremeny: React.FC<IProps> = ({ fagsak, åpenBehandling }) => {
     return (
-        <div className={'høyremeny'}>
+        <StyledContainer>
             <Behandlingskort fagsak={fagsak} åpenBehandling={åpenBehandling} />
-        </div>
+        </StyledContainer>
     );
 };
 

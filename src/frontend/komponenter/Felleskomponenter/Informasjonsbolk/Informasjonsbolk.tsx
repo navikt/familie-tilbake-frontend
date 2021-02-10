@@ -1,6 +1,14 @@
 import * as React from 'react';
 
+import styled from 'styled-components';
+
 import { Element, Normaltekst } from 'nav-frontend-typografi';
+
+const StyledContainer = styled.div`
+    column-count: 2;
+    max-width: 30rem;
+    padding: 1rem 0;
+`;
 
 export interface IInformasjon {
     label: string;
@@ -14,7 +22,7 @@ interface IProps {
 
 const Informasjonsbolk: React.FC<IProps> = ({ informasjon }) => {
     return (
-        <div className={'informasjonsbolk'}>
+        <StyledContainer>
             {informasjon.map((info: IInformasjon) => {
                 return <Normaltekst key={info.label + info.tekst} children={info.label} />;
             })}
@@ -27,7 +35,7 @@ const Informasjonsbolk: React.FC<IProps> = ({ informasjon }) => {
                     />
                 );
             })}
-        </div>
+        </StyledContainer>
     );
 };
 
