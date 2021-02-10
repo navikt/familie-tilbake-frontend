@@ -1,15 +1,19 @@
 import * as React from 'react';
 
-import classNames from 'classnames';
+import styled from 'styled-components';
+
+const StyledContainer = styled.div`
+    padding: 10px;
+`;
 
 const Dashboard: React.FC = () => (
-    <div className={classNames('dashboard')}>
+    <StyledContainer>
         <h2>NAV Familie - Tilbakekreving</h2>
         <div>
             Velkommen til saksbehandlingsløsningen for tilbakekreving av ytelsene Barnetrygd,
             Konstantstøtte og Støtte til enslig forsørger.
         </div>
-    </div>
+    </StyledContainer>
 );
 
 export default Dashboard;

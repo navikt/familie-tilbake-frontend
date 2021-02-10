@@ -6,8 +6,6 @@ import { AppContainer } from 'react-hot-loader';
 
 import App from './komponenter/App';
 
-import './index.less';
-
 if (process.env.NODE_ENV !== 'production') {
     axe(React, ReactDOM, 1000, {});
 }

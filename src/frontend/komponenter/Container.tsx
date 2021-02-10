@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { BehandlingProvider } from '../context/BehandlingContext';
 import { FagsakProvider } from '../context/FagsakContext';
-import BehandlingContainer from './Behandling/BehandlingContainer';
+import FagsakContainer from './Fagsak/FagsakContainer';
 import Dashboard from './Felleskomponenter/Dashboard';
 import Feilmelding from './Felleskomponenter/Feilmelding';
 import FTHeader from './Felleskomponenter/FTHeader/FTHeader';
@@ -22,8 +22,8 @@ const Container: React.FC = () => {
                         <BehandlingProvider>
                             <Switch>
                                 <Route
-                                    path="/ytelse/:ytelseType/fagsak/:fagsakId/behandling/:behandlingId"
-                                    component={BehandlingContainer}
+                                    path="/ytelse/:ytelseType/fagsak/:fagsakId"
+                                    component={FagsakContainer}
                                 />
                                 <Route exact={true} path="/" component={Dashboard} />
                                 <Route path="/*" component={Feilmelding} />
