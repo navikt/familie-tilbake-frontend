@@ -15,6 +15,7 @@ const StyledList = styled.ul`
     list-style-type: none;
     padding: 0;
     text-align: left;
+    minwidth: 190px;
 
     .knapp {
         border: none;
@@ -56,11 +57,7 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                 tabIndex={-1}
                 utenPil
             >
-                <StyledList
-                    role="menu"
-                    style={{ minWidth: 190 }}
-                    aria-labelledby={'behandlingsmeny-arialabel-knapp'}
-                >
+                <StyledList role="menu" aria-labelledby={'behandlingsmeny-arialabel-knapp'}>
                     <li>
                         <KnappBase mini={true}>Opprett revurdering</KnappBase>
                     </li>
