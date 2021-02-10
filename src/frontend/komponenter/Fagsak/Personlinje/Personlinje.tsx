@@ -11,6 +11,7 @@ import Visittkort from '@navikt/familie-visittkort';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IFagsak } from '../../../typer/fagsak';
 import { IPerson } from '../../../typer/person';
+import { hentAlder } from '../../../utils/dateUtils';
 import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
 
 const PlaceholderDiv = styled.div`
@@ -44,7 +45,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                 navn={bruker.navn}
                 ident={fagsak.søkerFødselsnummer}
                 kjønn={bruker.kjønn}
-                alder={bruker.alder}
+                alder={hentAlder(bruker.fødselsdato)}
             >
                 <PlaceholderDiv />
 

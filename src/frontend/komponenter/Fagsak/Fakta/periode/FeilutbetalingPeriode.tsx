@@ -14,6 +14,7 @@ import {
     hentHendelseUndertyper,
 } from '../../../../kodeverk/feilutbetalingsÅrsak';
 import { IFaktaPeriode } from '../../../../typer/feilutbetalingFakta';
+import { formatterDatostring } from '../../../../utils/dateUtils';
 
 interface IProps {
     periode: IFaktaPeriode;
@@ -44,7 +45,9 @@ const FeilutbetalingPeriode: React.FC<IProps> = ({ periode, hendelseTyper, index
     return (
         <tr>
             <td>
-                <Undertekst>{`${periode.fom} - ${periode.tom}`}</Undertekst>
+                <Undertekst>{`${formatterDatostring(periode.fom)} - ${formatterDatostring(
+                    periode.tom
+                )}`}</Undertekst>
             </td>
             <td>
                 <FamilieSelect

@@ -3,7 +3,6 @@ import { kjønnType } from '@navikt/familie-typer';
 export interface IPerson {
     personIdent: string;
     navn: string;
-    fødselsdato?: string;
+    fødselsdato: string;
     kjønn: kjønnType;
-    alder: number;
 }

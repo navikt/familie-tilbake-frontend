@@ -6,6 +6,7 @@ import { Column, Row } from 'nav-frontend-grid';
 import { Normaltekst, Undertekst, Undertittel } from 'nav-frontend-typografi';
 
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingFakta';
+import { formatterDatostring } from '../../../utils/dateUtils';
 
 interface IProps {
     feilutbetalingFakta: IFeilutbetalingFakta;
@@ -31,7 +32,9 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                 <Column xs="6">
                     <Undertekst>Dato for revurderingsvedtak</Undertekst>
                     <Normaltekst>
-                        {feilutbetalingFakta.behandlingFakta.datoForRevurderingsvedtak}
+                        {formatterDatostring(
+                            feilutbetalingFakta.behandlingFakta.datoForRevurderingsvedtak
+                        )}
                     </Normaltekst>
                 </Column>
             </Row>

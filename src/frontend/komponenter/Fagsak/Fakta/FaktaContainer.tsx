@@ -13,6 +13,7 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { Ytelsetype } from '../../../kodeverk/ytelsetype';
 import { IBehandling } from '../../../typer/behandling';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingFakta';
+import { formatterDatostring } from '../../../utils/dateUtils';
 import FaktaRevurdering from './FaktaRevurdering';
 import FeilutbetalingPerioder from './periode/FeilutbetalingPerioder';
 
@@ -91,7 +92,11 @@ const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
                             <Column xs="12" md="4">
                                 <Undertekst>Periode med feilutbetaling</Undertekst>
                                 <Normaltekst>
-                                    {`${feilutbetalingFakta.behandlingFakta.totalPeriodeFom} - ${feilutbetalingFakta.behandlingFakta.totalPeriodeTom}`}
+                                    {`${formatterDatostring(
+                                        feilutbetalingFakta.behandlingFakta.totalPeriodeFom
+                                    )} - ${formatterDatostring(
+                                        feilutbetalingFakta.behandlingFakta.totalPeriodeTom
+                                    )}`}
                                 </Normaltekst>
                             </Column>
                             <Column xs="12" md="4">

@@ -12,7 +12,6 @@ const brukerMock = {
     navn: 'Test Testesen',
     kjønn: kjønnType.UKJENT,
     fødselsdato: '1990-01-01',
-    alder: 22,
     personIdent: personIdent,
 };
 
