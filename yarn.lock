@@ -557,14 +557,16 @@
     snyk "^1.336.0"
     winston "^3.2.1"
 
-"@navikt/familie-clipboard@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-clipboard/-/familie-clipboard-3.1.2.tgz#8ffc848a004c79efc120edb50e4f847b3efac42c"
-  integrity sha512-rLbC9IaEMbhtFN5XcHvL/mYMm1by67LKgdSDeENkH2YkocTu/EQHY50iFQketzDo2o0pso3PIKrl+y/S/4DLMA==
+"@navikt/familie-clipboard@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-clipboard/-/familie-clipboard-3.1.3.tgz#28f074dd8a724a286bd8d9ac2102d66ca661f9d1"
+  integrity sha512-7wgL8uizpYoN++gRl8uSkZ+h3FRAg2qpvtSAW07nJmGhbC9M+QkBfqilGHBdH9KniIOKf+KTF5g30bFAidsdHQ==
   dependencies:
     "@types/react-tooltip" "^3.11.0"
     framer-motion "^2.9.1"
     nav-frontend-core "^5.0.10"
+    nav-frontend-knapper "^2.0.31"
+    nav-frontend-knapper-style "^1.0.16"
     react-tooltip "^3.11.4"
     styled-components "^5.2.1"
 
@@ -589,14 +591,14 @@
     react-day-picker "^7.4.8"
     react-select "^3.1.1"
 
-"@navikt/familie-header@^2.0.20":
-  version "2.0.21"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-header/-/familie-header-2.0.21.tgz#ca839e44a8b3d60069719c30cf184cdedcb5ec02"
-  integrity sha512-ahhQVcKVRyu6/2oRRNE972ZhfZPHGZGRZyLzMsABL25qpioNYPe/5giiMW37ZsT03qELVnz9Ql6rumyBKnhjtw==
+"@navikt/familie-header@2.0.22":
+  version "2.0.22"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-header/-/familie-header-2.0.22.tgz#83f02156daaab8905969ec6291988e79fd4bb7f3"
+  integrity sha512-oiAriubxxUvbG97KEGjTFA/CzZpWZ38g/kZVWV4L9IWMgRAxoQ1TEksAyCCGEskTUXzwhU0i4wERQl59Z62W1g==
   dependencies:
     "@navikt/boxed-list-with-links" "^1.0.2"
-    "@navikt/familie-ikoner" "^3.1.7"
-    "@navikt/familie-typer" "^3.0.10"
+    "@navikt/familie-ikoner" "^3.1.8"
+    "@navikt/familie-typer" "^3.0.11"
     "@navikt/nap-user-panel" "^1.0.0"
     classnames "^2.2.6"
     lodash.throttle "^4.1.1"
@@ -613,44 +615,55 @@
     nav-frontend-typografi-style "^1.0.18"
     prop-types "^15.7.2"
 
-"@navikt/familie-http@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-http/-/familie-http-1.0.1.tgz#61d78c3006425d782a00c9ad25922dc23a66c469"
-  integrity sha512-Hl4HFjWVgc3vJcFKWBtkiN9hrH/6WmXSDei92jB5c5RxRSK2L73qOIgeoQnl1UvNFYGtIFrDNfDEecUVILky/A==
+"@navikt/familie-http@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-http/-/familie-http-1.0.3.tgz#aeb6acf918c1ad86c351f09ed360211438cbbe06"
+  integrity sha512-yMlgvcVjlluscTn+hZnzTCgc8p+v535JieehywOhQKq0mwRaafjaqUKD/hCrqRQX/37aGPZ9+DqjcY2DUfy8DQ==
   dependencies:
-    "@navikt/familie-typer" "^3.0.10"
+    "@navikt/familie-typer" "^3.0.12"
     "@sentry/core" "^5.27.3"
     constate "^3.1.0"
+    nav-frontend-knapper "^2.0.31"
+    nav-frontend-knapper-style "^1.0.16"
 
-"@navikt/familie-ikoner@^3.1.7":
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-ikoner/-/familie-ikoner-3.1.7.tgz#894432ff11fee3ddcaddcb031938a67b9f551b5b"
-  integrity sha512-A4psvLYg4LasyG4L8rfSySAZjWeG14FOFYOfOX9w3qiRr9vVXJMllyQxHMchO+K0l48xHnpWuvaTvYk1Yzc3bA==
+"@navikt/familie-ikoner@^3.1.8", "@navikt/familie-ikoner@^3.1.9":
+  version "3.1.9"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-ikoner/-/familie-ikoner-3.1.9.tgz#e8074d87648f74b3f20500ed56479b66928dc2b0"
+  integrity sha512-kCuDqGIzuQR8lq0w5Xu+JJxoLxYEd//NFQn/2AYeKbyvKGaJFLmXoHF7Cp8/YQXAcNedPWUP1YzxtxVCH/LLNQ==
   dependencies:
-    "@navikt/familie-typer" "^3.0.10"
+    "@navikt/familie-typer" "^3.0.12"
+    nav-frontend-knapper "^2.0.31"
+    nav-frontend-knapper-style "^1.0.16"
 
-"@navikt/familie-logging@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-logging/-/familie-logging-1.0.2.tgz#383db9ffd2993e9e3a84d404ed51858e052e9bd0"
-  integrity sha512-fW6qXQTke32fzqTWN/OXU3RjCxDzCzzYshNc4Ea4+DR0hdZvGW2IIzBxuKKDAp2G6mF7/rWBDn17VSB2rPeOYA==
+"@navikt/familie-logging@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-logging/-/familie-logging-1.0.3.tgz#f30623acc5300be30bef41630dd75e481f80643f"
+  integrity sha512-iP7XGgfdfeWERJrvY5UC4sVzIzujwbN/UvCEs+bItqT1sp+yTW1uGaoe9rTtEYW/UZf5mk6Dmv33q2sxBW+5FQ==
   dependencies:
+    nav-frontend-knapper "^2.0.31"
+    nav-frontend-knapper-style "^1.0.16"
     winston "^3.2.1"
 
-"@navikt/familie-typer@^3.0.10":
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-typer/-/familie-typer-3.0.10.tgz#b9b1dac25c492850a0a36f33504b37e311dad586"
-  integrity sha512-vtefj8N6PlRO7JcbfmJFWGOU3JFFoxaZ8sf4o7y3h6Oj67CXKItLF8+gyxhfQAag3pyGnMK2KdcVRNOKA0V14w==
-
-"@navikt/familie-visittkort@^2.1.20":
-  version "2.1.20"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-visittkort/-/familie-visittkort-2.1.20.tgz#6186352ed347a831348c6c39c4d0921785dfb753"
-  integrity sha512-vw6KH4aNUaydZaHFwUAOFj1pHMi78mgApWT4on8vyJ9/BmOpsnSqvsTPRFwQg5n3UUCmv5bHvqBaG5AugBMqWg==
+"@navikt/familie-typer@^3.0.11", "@navikt/familie-typer@^3.0.12":
+  version "3.0.12"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-typer/-/familie-typer-3.0.12.tgz#3599a85fc497ef35a449904fe09ff0ab4b157944"
+  integrity sha512-5lLTcgO9Dap0wAcPtp1y4SE41bPTvvC+JtSzmRg953dEsE9N7UQVwp8CYTkYPWGkonVBSSelmYbpJ/qORQBIAw==
   dependencies:
-    "@navikt/familie-clipboard" "^3.1.2"
-    "@navikt/familie-ikoner" "^3.1.7"
-    "@navikt/familie-typer" "^3.0.10"
+    nav-frontend-knapper "^2.0.31"
+    nav-frontend-knapper-style "^1.0.16"
+
+"@navikt/familie-visittkort@^2.1.22":
+  version "2.1.22"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-visittkort/-/familie-visittkort-2.1.22.tgz#283a0387ebaa59d656b8a28ae8276bdfc26d75e8"
+  integrity sha512-j7OYePQBbe1Knv33i9LCQGYMgI4b3z/xsFzzEHY+7aWZAZvLttJm8iHfNuUE1FqFsO97Isw3WmoxbjYZIchwFQ==
+  dependencies:
+    "@navikt/familie-clipboard" "^3.1.3"
+    "@navikt/familie-ikoner" "^3.1.9"
+    "@navikt/familie-typer" "^3.0.12"
     classnames "^2.2.6"
     nav-frontend-core "^5.0.8"
+    nav-frontend-knapper "^2.0.31"
+    nav-frontend-knapper-style "^1.0.16"
     nav-frontend-typografi "^2.0.17"
     nav-frontend-typografi-style "^1.0.18"
     prop-types "^15.7.2"
@@ -1335,10 +1348,10 @@
   dependencies:
     "@types/react" "^16"
 
-"@types/react-modal@^3.10.6":
-  version "3.10.6"
-  resolved "https://registry.yarnpkg.com/@types/react-modal/-/react-modal-3.10.6.tgz#76717220f32bc72769190692147814a540053c7e"
-  integrity sha512-XpshhwVYir1TRZ2HS5EfmNotJjB8UEC2IkT3omNtiQzROOXSzVLz5xsjwEpACP8U+PctkpfZepX+WT5oDf0a9g==
+"@types/react-modal@^3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@types/react-modal/-/react-modal-3.12.0.tgz#91fa86a76fd7fc57e36d2cf9b76efe5735a855a1"
+  integrity sha512-UnHu/YO73NZLwqFpju/c0tqiswR0UHIfeO16rkfLVJUIMfQsl7X0CBm99H5XXgBMe/PgtQ/Rkud72iuRBr1TeA==
   dependencies:
     "@types/react" "*"
 
