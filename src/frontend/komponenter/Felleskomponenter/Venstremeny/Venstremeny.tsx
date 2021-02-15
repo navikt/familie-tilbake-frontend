@@ -64,7 +64,7 @@ const Venstremeny: React.FunctionComponent<IProps> = ({ fagsak }) => {
                 ? Object.entries(sider)
                       .filter(([_, side]) => visSide(side, åpenBehandling.data))
                       .map(([sideId, side], index: number) => {
-                          const tilPath = `/ytelse/${fagsak.ytelseType}/fagsak/${fagsak.eksternFagsakId}/behandling/${åpenBehandling.data.eksternBrukId}/${side.href}`;
+                          const tilPath = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${åpenBehandling.data.eksternBrukId}/${side.href}`;
                           const aktiv = erSidenAktiv(side, åpenBehandling.data);
                           return (
                               <React.Fragment key={sideId}>

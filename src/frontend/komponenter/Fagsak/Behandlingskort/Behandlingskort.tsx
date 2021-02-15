@@ -7,7 +7,7 @@ import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
 import {
     IBehandling,
-    behandlingÅrsak,
+    behandlingårsaker,
     behandlingsstatuser,
     behandlingsresultater,
 } from '../../../typer/behandling';
@@ -43,7 +43,7 @@ const Behandlingskort: React.FC<IProps> = ({ åpenBehandling }) => {
     return (
         <Container>
             <StyledUndertittel>{tittel}</StyledUndertittel>
-            <Normaltekst>{behandlingÅrsak[åpenBehandling.årsak]}</Normaltekst>
+            <Normaltekst>{behandlingårsaker[åpenBehandling.årsak]}</Normaltekst>
             <StyledHr />
             <Informasjonsbolk
                 informasjon={[

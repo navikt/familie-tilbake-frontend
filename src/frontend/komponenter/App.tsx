@@ -5,6 +5,7 @@ import { ISaksbehandler } from '@navikt/familie-typer';
 import { hentInnloggetBruker } from '../api/saksbehandler';
 import { AppProvider } from '../context/AppContext';
 import Container from './Container';
+import ErrorBoundary from './Felleskomponenter/ErrorBoundary/ErrorBoundary';
 
 const App: React.FC = () => {
     const [autentisertSaksbehandler, settAutentisertSaksbehandler] = React.useState<
@@ -18,9 +19,11 @@ const App: React.FC = () => {
     }, []);
 
     return (
-        <AppProvider autentisertSaksbehandler={autentisertSaksbehandler}>
-            <Container />
-        </AppProvider>
+        <ErrorBoundary autentisertSaksbehandler={autentisertSaksbehandler}>
+            <AppProvider autentisertSaksbehandler={autentisertSaksbehandler}>
+                <Container />
+            </AppProvider>
+        </ErrorBoundary>
     );
 };
 

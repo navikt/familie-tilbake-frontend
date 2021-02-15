@@ -1,26 +1,29 @@
-import { HendelseType, HendelseUndertype } from '../kodeverk/feilutbetalingsÅrsak';
+import { HendelseType, HendelseUndertype, Foreldelsevurdering } from '../kodeverk';
 
-export interface IFaktaPeriode {
+type FeilutbetalingPeriode = {
     fom: string;
     tom: string;
     belop: number;
+};
+
+export type FaktaPeriode = {
     feilutbetalingÅrsakDto?: {
         hendelseType: HendelseType;
         hendelseUndertype?: HendelseUndertype;
     };
-}
+} & FeilutbetalingPeriode;
 
 export interface IFeilutbetalingFakta {
     behandlingFakta?: {
-        perioder?: Array<IFaktaPeriode>;
+        perioder?: FaktaPeriode[];
         totalPeriodeFom: string;
         totalPeriodeTom: string;
         aktuellFeilUtbetaltBeløp: number;
         tidligereVarsletBeløp?: number;
-        behandlingÅrsaker?: Array<string>;
+        behandlingårsaker?: string[];
         behandlingsresultat?: {
             resultat: string;
-            konsekvenserForYtelsen: Array<string>;
+            konsekvenserForYtelsen: string[];
         };
         tilbakekrevingValg?: {
             videreBehandling: string;
@@ -28,4 +31,15 @@ export interface IFeilutbetalingFakta {
         datoForRevurderingsvedtak: string;
         begrunnelse?: string;
     };
+}
+
+export type ForeldelsePeriode = {
+    foreldelseVurderingType: Foreldelsevurdering;
+    begrunnelse?: string;
+    foreldelsesfrist?: string;
+    oppdagelsesDato?: string;
+} & FeilutbetalingPeriode;
+
+export interface IFeilutbetalingForeldelse {
+    perioder: ForeldelsePeriode[];
 }

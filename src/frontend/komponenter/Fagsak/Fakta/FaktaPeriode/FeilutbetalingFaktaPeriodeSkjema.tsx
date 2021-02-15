@@ -12,34 +12,40 @@ import {
     hendelseUndertype,
     HendelseUndertype,
     hentHendelseUndertyper,
-} from '../../../../kodeverk/feilutbetalingsÅrsak';
-import { IFaktaPeriode } from '../../../../typer/feilutbetalingFakta';
+} from '../../../../kodeverk';
+import { FaktaPeriode } from '../../../../typer/feilutbetalingtyper';
 import { formatterDatostring } from '../../../../utils/dateUtils';
 
 interface IProps {
-    periode: IFaktaPeriode;
+    periode: FaktaPeriode;
     hendelseTyper: Array<HendelseType> | undefined;
     index: number;
 }
 
-const FeilutbetalingPeriode: React.FC<IProps> = ({ periode, hendelseTyper, index }) => {
+const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({ periode, hendelseTyper, index }) => {
     const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<Array<HendelseUndertype>>();
+    const [valgtÅrsak, settValgtÅrsak] = React.useState<HendelseType>();
+    const [valgtUnderÅrsak, settValgtUnderÅrsak] = React.useState<HendelseUndertype>();
 
     React.useEffect(() => {
         if (periode.feilutbetalingÅrsakDto) {
             settHendelseUnderTyper(
                 hentHendelseUndertyper(periode.feilutbetalingÅrsakDto.hendelseType)
             );
+            settValgtÅrsak(periode.feilutbetalingÅrsakDto.hendelseType);
+            settValgtUnderÅrsak(periode.feilutbetalingÅrsakDto.hendelseUndertype);
         }
-    }, [periode.feilutbetalingÅrsakDto]);
+    }, [periode]);
 
     const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const årsak = HendelseType[e.target.value as keyof typeof HendelseType];
+        settValgtÅrsak(årsak);
         settHendelseUnderTyper(hentHendelseUndertyper(årsak));
     };
 
-    const onChangeUnderÅrsak = (_e: React.ChangeEvent<HTMLSelectElement>) => {
-        // TODO:
+    const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const underÅrsak = HendelseUndertype[e.target.value as keyof typeof HendelseUndertype];
+        settValgtUnderÅrsak(underÅrsak);
     };
 
     return (
@@ -52,12 +58,9 @@ const FeilutbetalingPeriode: React.FC<IProps> = ({ periode, hendelseTyper, index
             <td>
                 <FamilieSelect
                     id={`perioder.${index}.årsak`}
+                    label={'Årsak'}
                     onChange={event => onChangeÅrsak(event)}
-                    value={
-                        periode.feilutbetalingÅrsakDto
-                            ? periode.feilutbetalingÅrsakDto.hendelseType
-                            : '-'
-                    }
+                    value={valgtÅrsak ? valgtÅrsak : '-'}
                 >
                     <option>-</option>
                     {hendelseTyper?.map(type => (
@@ -69,12 +72,9 @@ const FeilutbetalingPeriode: React.FC<IProps> = ({ periode, hendelseTyper, index
                 {hendelseUnderTyper && (
                     <FamilieSelect
                         id={`perioder.${index}.underårsak`}
+                        label={'Underårsak'}
                         onChange={event => onChangeUnderÅrsak(event)}
-                        value={
-                            periode.feilutbetalingÅrsakDto
-                                ? periode.feilutbetalingÅrsakDto.hendelseUndertype
-                                : '-'
-                        }
+                        value={valgtUnderÅrsak ? valgtUnderÅrsak : '-'}
                     >
                         <option>-</option>
                         {hendelseUnderTyper.map(type => (
@@ -92,4 +92,4 @@ const FeilutbetalingPeriode: React.FC<IProps> = ({ periode, hendelseTyper, index
     );
 };
 
-export default FeilutbetalingPeriode;
+export default FeilutbetalingFaktaPeriode;

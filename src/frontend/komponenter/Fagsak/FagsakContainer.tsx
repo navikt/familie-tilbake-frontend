@@ -7,7 +7,7 @@ import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
-import { Ytelsetype } from '../../kodeverk/ytelsetype';
+import { Fagsystem } from '../../kodeverk';
 import BehandlingContainer from './BehandlingContainer';
 import Personlinje from './Personlinje/Personlinje';
 
@@ -17,12 +17,14 @@ const FagsakContainerContent = styled.div`
 `;
 
 interface IProps {
-    ytelseType: Ytelsetype;
+    fagsystem: string;
     fagsakId: string;
 }
 
 const FagsakContainer: React.FC = () => {
-    const { ytelseType, fagsakId } = useParams<IProps>();
+    const { fagsystem: fagsystemParam, fagsakId } = useParams<IProps>();
+    const fagsystem = Fagsystem[fagsystemParam as keyof typeof Fagsystem];
+
     const history = useHistory();
     const behandlingId = history.location.pathname.split('/')[6];
 
@@ -30,10 +32,10 @@ const FagsakContainer: React.FC = () => {
     const { åpenBehandling, hentBehandling } = useBehandling();
 
     React.useEffect(() => {
-        if (ytelseType !== undefined && fagsakId !== undefined) {
-            hentFagsak(ytelseType, fagsakId);
+        if (fagsystem !== undefined && fagsakId !== undefined) {
+            hentFagsak(fagsystem, fagsakId);
         }
-    }, [ytelseType, fagsakId]);
+    }, [fagsystem, fagsakId]);
 
     React.useEffect(() => {
         if (fagsak?.status === RessursStatus.SUKSESS && behandlingId) {
@@ -72,10 +74,13 @@ const FagsakContainer: React.FC = () => {
             );
         }
         default:
-            return (
+            return fagsystem ? (
                 <div>
-                    Skal vise fagsak {fagsakId} med ytelse {ytelseType} og behandling {behandlingId}
+                    Skal vise fagsak {fagsakId} fra fagssystem {fagsystem} og behandling{' '}
+                    {behandlingId}
                 </div>
+            ) : (
+                <div>Ukjent fagssystem: {fagsystemParam}</div>
             );
     }
 };

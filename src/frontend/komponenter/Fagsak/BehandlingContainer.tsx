@@ -9,9 +9,10 @@ import { IBehandling } from '../../typer/behandling';
 import { IFagsak } from '../../typer/fagsak';
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 import FaktaContainer from './Fakta/FaktaContainer';
+import ForeldelseContainer from './Foreldelse/ForeldelseContainer';
 import Høyremeny from './Høyremeny/Høyremeny';
 
-const BEHANDLING_KONTEKST_PATH = '/ytelse/:ytelseType/fagsak/:fagsakId/behandling/:behandlingId';
+const BEHANDLING_KONTEKST_PATH = '/fagsystem/:fagsystem/fagsak/:fagsakId/behandling/:behandlingId';
 
 const StyledVenstremenyContainer = styled.div`
     min-width: 10rem;
@@ -55,9 +56,10 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, åpenBehandling }) => {
                             />
                         )}
                     ></Route>
-                    <Route path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}>
-                        <div>Foreldelse</div>
-                    </Route>
+                    <Route
+                        path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
+                        render={() => <ForeldelseContainer behandling={åpenBehandling} />}
+                    />
                     <Route path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}>
                         <div>Vilkårsvurdering</div>
                     </Route>

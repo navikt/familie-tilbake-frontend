@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import classNames from 'classnames';
-
 import { Column, Row } from 'nav-frontend-grid';
-import { Normaltekst, Undertekst, Undertittel } from 'nav-frontend-typografi';
+import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
-import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingFakta';
+import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring } from '../../../utils/dateUtils';
+import { RadMedMargin } from './FaktaContainer';
 
 interface IProps {
     feilutbetalingFakta: IFeilutbetalingFakta;
@@ -15,32 +14,32 @@ interface IProps {
 const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
     return feilutbetalingFakta?.behandlingFakta ? (
         <>
-            <Row className={classNames('smallMarginBottom')}>
+            <RadMedMargin>
                 <Column xs="12">
                     <Undertittel>Revurdering</Undertittel>
                 </Column>
-            </Row>
-            <Row className={classNames('smallMarginBottom')}>
+            </RadMedMargin>
+            <RadMedMargin>
                 <Column xs="6">
-                    <Undertekst>Årsak(er) til revurdering</Undertekst>
-                    {feilutbetalingFakta.behandlingFakta.behandlingÅrsaker && (
+                    <UndertekstBold>Årsak(er) til revurdering</UndertekstBold>
+                    {feilutbetalingFakta.behandlingFakta.behandlingårsaker && (
                         <Normaltekst>
-                            {feilutbetalingFakta.behandlingFakta.behandlingÅrsaker.join(', ')}
+                            {feilutbetalingFakta.behandlingFakta.behandlingårsaker.join(', ')}
                         </Normaltekst>
                     )}
                 </Column>
                 <Column xs="6">
-                    <Undertekst>Dato for revurderingsvedtak</Undertekst>
+                    <UndertekstBold>Dato for revurderingsvedtak</UndertekstBold>
                     <Normaltekst>
                         {formatterDatostring(
                             feilutbetalingFakta.behandlingFakta.datoForRevurderingsvedtak
                         )}
                     </Normaltekst>
                 </Column>
-            </Row>
-            <Row className={classNames('smallMarginBottom')}>
+            </RadMedMargin>
+            <RadMedMargin>
                 <Column xs="6">
-                    <Undertekst>Resultat</Undertekst>
+                    <UndertekstBold>Resultat</UndertekstBold>
                     {feilutbetalingFakta.behandlingFakta.behandlingsresultat && (
                         <Normaltekst>
                             {feilutbetalingFakta.behandlingFakta.behandlingsresultat.resultat}
@@ -48,7 +47,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                     )}
                 </Column>
                 <Column xs="6">
-                    <Undertekst>Konsekvens</Undertekst>
+                    <UndertekstBold>Konsekvens</UndertekstBold>
                     {feilutbetalingFakta.behandlingFakta.behandlingsresultat && (
                         <Normaltekst>
                             {feilutbetalingFakta.behandlingFakta.behandlingsresultat.konsekvenserForYtelsen?.join(
@@ -57,10 +56,10 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                         </Normaltekst>
                     )}
                 </Column>
-            </Row>
+            </RadMedMargin>
             <Row>
                 <Column xs="6">
-                    <Undertekst>Tilbakekrevingsvalg</Undertekst>
+                    <UndertekstBold>Tilbakekrevingsvalg</UndertekstBold>
                     {feilutbetalingFakta.behandlingFakta.tilbakekrevingValg && (
                         <Normaltekst>
                             {

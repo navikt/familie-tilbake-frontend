@@ -36,7 +36,10 @@ export const sider: Record<SideId, ISide> = {
     },
 };
 
-export const erSidenAktiv = (_side: ISide, _behandling: IBehandling): boolean => {
+export const erSidenAktiv = (side: ISide, behandling: IBehandling): boolean => {
+    if (side === sider.VERGE) {
+        return behandling.harVerge;
+    }
     return true;
 };
 
