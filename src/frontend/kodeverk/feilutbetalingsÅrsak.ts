@@ -37,6 +37,6 @@ const undertyper = {
     KS_ANNET: [HendelseUndertype.ANNET_FRITEKST],
 };
 
-export const hentHendelseUndertyper = (hendelseType: HendelseType): Array<HendelseUndertype> => {
+export const hentHendelseUndertyper = (hendelseType: HendelseType): HendelseUndertype[] => {
     return undertyper[hendelseType];
 };

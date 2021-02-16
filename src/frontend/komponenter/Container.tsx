@@ -13,6 +13,7 @@ import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
 
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
+
     return (
         <Router>
             {autentisert ? (
@@ -22,7 +23,7 @@ const Container: React.FC = () => {
                         <BehandlingProvider>
                             <Switch>
                                 <Route
-                                    path="/ytelse/:ytelseType/fagsak/:fagsakId"
+                                    path="/fagsystem/:fagsystem/fagsak/:fagsakId"
                                     component={FagsakContainer}
                                 />
                                 <Route exact={true} path="/" component={Dashboard} />

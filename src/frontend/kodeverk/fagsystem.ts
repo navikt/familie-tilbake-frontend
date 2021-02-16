@@ -1,5 +1,11 @@
 import { HendelseType } from './feilutbetalingsÅrsak';
 
+export enum Fagsystem {
+    BA = 'BA',
+    EF = 'EF',
+    KS = 'KS',
+}
+
 export enum Ytelsetype {
     BARNETRYGD = 'BARNETRYGD',
     OVERGANGSSTØNAD = 'OVERGANGSSTØNAD',
@@ -24,6 +30,6 @@ const hendelseTyperForYtelse = {
     KONTANTSTØTTE: [HendelseType.KS_MEDLEMSKAP, HendelseType.KS_ANNET],
 };
 
-export const hentHendelseTyper = (ytelse: Ytelsetype): Array<HendelseType> => {
+export const hentHendelseTyper = (ytelse: Ytelsetype): HendelseType[] => {
     return hendelseTyperForYtelse[ytelse];
 };

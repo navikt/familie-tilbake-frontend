@@ -43,7 +43,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
         <StyledContainer>
             <Visittkort
                 navn={bruker.navn}
-                ident={fagsak.søkerFødselsnummer}
+                ident={bruker.personIdent}
                 kjønn={bruker.kjønn}
                 alder={hentAlder(bruker.fødselsdato)}
             >

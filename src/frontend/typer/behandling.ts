@@ -1,4 +1,4 @@
-export enum BehandlingÅrsak {
+export enum Behandlingårsak {
     SØKNAD = 'SØKNAD',
     FØDSELSHENDELSE = 'FØDSELSHENDELSE',
     ÅRLIG_KONTROLL = 'ÅRLIG_KONTROLL',
@@ -9,7 +9,7 @@ export enum BehandlingÅrsak {
     OMREGNING_18ÅR = 'OMREGNING_18ÅR',
 }
 
-export const behandlingÅrsak: Record<BehandlingÅrsak, string> = {
+export const behandlingårsaker: Record<Behandlingårsak, string> = {
     SØKNAD: 'Søknad',
     FØDSELSHENDELSE: 'Fødselshendelse',
     ÅRLIG_KONTROLL: 'Årlig kontroll',
@@ -20,7 +20,7 @@ export const behandlingÅrsak: Record<BehandlingÅrsak, string> = {
     OMREGNING_18ÅR: 'Omregning 18 år',
 };
 
-export enum BehandlingStatus {
+export enum Behandlingstatus {
     OPPRETTET = 'OPPRETTET',
     UTREDES = 'UTREDES',
     FATTER_VEDTAK = 'FATTER_VEDTAK',
@@ -28,7 +28,7 @@ export enum BehandlingStatus {
     AVSLUTTET = 'AVSLUTTET',
 }
 
-export const behandlingsstatuser: Record<BehandlingStatus, string> = {
+export const behandlingsstatuser: Record<Behandlingstatus, string> = {
     OPPRETTET: 'Opprettet',
     UTREDES: 'Utredes',
     FATTER_VEDTAK: 'Fatter vedtak',
@@ -36,7 +36,7 @@ export const behandlingsstatuser: Record<BehandlingStatus, string> = {
     AVSLUTTET: 'Avsluttet',
 };
 
-export enum BehandlingResultat {
+export enum Behandlingresultat {
     INGEN_TILBAKEKREVING = 'INGEN_TILBAKEKREVING',
     DELVIS_TILBAKEKREVING = 'DELVIS_TILBAKEKREVING',
     FULL_TILBAKEKREVING = 'FULL_TILBAKEKREVING',
@@ -45,7 +45,7 @@ export enum BehandlingResultat {
     IKKE_VURDERT = 'IKKE_VURDERT',
 }
 
-export const behandlingsresultater: Record<BehandlingResultat, string> = {
+export const behandlingsresultater: Record<Behandlingresultat, string> = {
     INGEN_TILBAKEKREVING: 'Ingen tilbakekreving',
     DELVIS_TILBAKEKREVING: 'Delvis tilbakekreving',
     FULL_TILBAKEKREVING: 'Fortsatt innvilget',
@@ -74,8 +74,8 @@ export interface IBehandling {
     //    opprettetTidspunkt: string;
     //    personResultater: IRestPersonResultat[];
     //    personer: IGrunnlagPerson[];
-    resultat: BehandlingResultat;
-    status: BehandlingStatus;
+    resultat: Behandlingresultat;
+    status: Behandlingstatus;
     //    steg: BehandlingSteg;
     //    stegTilstand: IRestStegTilstand[];
     //    totrinnskontroll?: ITotrinnskontroll;
@@ -85,6 +85,8 @@ export interface IBehandling {
     //    vedtakForBehandling: IVedtakForBehandling[];
     //    utbetalingsperioder: IUtbetalingsperiode[];
     //    personerMedAndelerTilkjentYtelse: IPersonMedAndelerTilkjentYtelse[];
-    årsak: BehandlingÅrsak;
+    årsak: Behandlingårsak;
     //    skalBehandlesAutomatisk: boolean;
+    harVerge: boolean;
+    kanHenleggeBehandling: boolean;
 }

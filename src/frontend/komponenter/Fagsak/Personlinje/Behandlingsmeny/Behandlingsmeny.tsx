@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import navFarger from 'nav-frontend-core';
 import { Menyknapp } from 'nav-frontend-ikonknapper';
 import KnappBase from 'nav-frontend-knapper';
 import Popover, { PopoverOrientering } from 'nav-frontend-popover';
@@ -15,7 +16,7 @@ const StyledList = styled.ul`
     list-style-type: none;
     padding: 0;
     text-align: left;
-    minwidth: 190px;
+    min-width: 190px;
 
     .knapp {
         border: none;
@@ -23,6 +24,11 @@ const StyledList = styled.ul`
         width: 100%;
         display: flex;
         justify-content: left;
+
+        &--disabled {
+            color: ${navFarger.navLysBla};
+            background-color: ${navFarger.navLysBlaLighten80};
+        }
     }
 `;
 
@@ -64,11 +70,22 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                     {åpenBehandling?.status === RessursStatus.SUKSESS && (
                         <>
                             <li>
-                                <KnappBase mini={true}>Henlegg behandling</KnappBase>
+                                <KnappBase
+                                    mini={true}
+                                    disabled={!åpenBehandling.data.kanHenleggeBehandling}
+                                >
+                                    Henlegg behandling
+                                </KnappBase>
                             </li>
-                            <li>
-                                <KnappBase mini={true}>Opprett/Fjern verge</KnappBase>
-                            </li>
+                            {åpenBehandling.data.harVerge ? (
+                                <li>
+                                    <KnappBase mini={true}>Fjern verge</KnappBase>
+                                </li>
+                            ) : (
+                                <li>
+                                    <KnappBase mini={true}>Opprett verge</KnappBase>
+                                </li>
+                            )}
                             <li>
                                 <KnappBase mini={true}>Bytt behandlingsenhet</KnappBase>
                             </li>

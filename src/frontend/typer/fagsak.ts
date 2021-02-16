@@ -1,16 +1,19 @@
-import { Ytelsetype } from '../kodeverk/ytelsetype';
+import { Fagsystem, Ytelsetype } from '../kodeverk';
+import { Behandlingstatus, Behandlingstype } from './behandling';
 import { IPerson } from './person';
 
 export interface IFagsakBehandling {
     id: string;
     eksternBrukId: string;
+    type: Behandlingstype;
+    status: Behandlingstatus;
 }
 export interface IFagsak {
     eksternFagsakId: string;
     status?: string;
+    fagsystem: Fagsystem;
     ytelseType: Ytelsetype;
-    søkerFødselsnummer: string;
     språkkode?: string;
     bruker: IPerson;
-    behandlinger: Array<IFagsakBehandling>;
+    behandlinger: IFagsakBehandling[];
 }
