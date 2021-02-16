@@ -8,7 +8,7 @@ import { Column, Row } from 'nav-frontend-grid';
 import { Normaltekst } from 'nav-frontend-typografi';
 
 import { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
-import { hentPeriodelengde } from '../../../../utils/dateUtils';
+import { formatterDatostring, hentPeriodelengde } from '../../../../utils/dateUtils';
 
 const StyledContainer = styled.div`
     background-color: ${navFarger.orangeFocusLighten80};
@@ -47,7 +47,11 @@ const PeriodeOppsummering: React.FC<IProps> = ({ periode }) => {
         <StyledContainer>
             <Row>
                 <Column xs="6">
-                    <NormaltekstBold>{`${periode.fom} - ${periode.tom}`}</NormaltekstBold>
+                    <NormaltekstBold>
+                        {`${formatterDatostring(periode.fom)} - ${formatterDatostring(
+                            periode.tom
+                        )}`}
+                    </NormaltekstBold>
                 </Column>
                 <Column xs="6">
                     <Normaltekst>{hentPeriodelengde(periode.fom, periode.tom)}</Normaltekst>

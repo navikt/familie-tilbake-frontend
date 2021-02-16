@@ -9,6 +9,7 @@ import { Column, Row } from 'nav-frontend-grid';
 
 import { Periode, Tidslinje } from '@navikt/helse-frontend-tidslinje';
 
+import { Foreldelsevurdering } from '../../../../kodeverk';
 import { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
 import ForeldelsePeriodeForm from './FeilutbetalingForeldelsePeriodeSkjema';
 
@@ -19,7 +20,28 @@ const Spacer20 = styled.div`
 const TidslinjeContainer = styled.div`
     border: 1px solid ${navFarger.navGra20};
     margin-bottom: 20px;
+
+    button.behandlet {
+        background-color: ${navFarger.navGronnLighten60};
+    }
+
+    button.ubehandlet {
+        background-color: ${navFarger.navLysGra};
+    }
 `;
+
+const finnClassNamePeriode = (periode: ForeldelsePeriode) => {
+    switch (periode.foreldelseVurderingType) {
+        case Foreldelsevurdering.FORELDET:
+        case Foreldelsevurdering.IKKE_FORELDET:
+        case Foreldelsevurdering.TILLEGGSFRIST:
+            return 'behandlet';
+        case Foreldelsevurdering.IKKE_VURDERT:
+        case Foreldelsevurdering.UDEFINERT:
+        default:
+            return 'ubehandlet';
+    }
+};
 
 const genererRader = (perioder: ForeldelsePeriode[]): Periode[][] => {
     return [
@@ -29,6 +51,7 @@ const genererRader = (perioder: ForeldelsePeriode[]): Periode[][] => {
                 fom: new Date(periode.fom),
                 status: 'suksess',
                 id: `index_${index}`,
+                className: finnClassNamePeriode(periode),
             })
         ),
     ];

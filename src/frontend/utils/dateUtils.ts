@@ -1,4 +1,5 @@
-import { parseISO, differenceInCalendarYears, add, differenceInBusinessDays } from 'date-fns';
+import { parseISO, differenceInCalendarYears, add } from 'date-fns';
+import { differenceInMonths } from 'date-fns/esm';
 
 const datoformat = { day: '2-digit', month: '2-digit', year: 'numeric' };
 
@@ -25,35 +26,31 @@ export const finnDatoRelativtTilNå = (config: Duration): string => {
     return formatterDato(aDate);
 };
 
-const formatterPeriodelengde = (weeks?: number, days?: number): string => {
-    if (weeks === undefined && days === undefined) {
-        return 'Antall uker og dager -';
+const formatterPeriodelengde = (years?: number, months?: number): string => {
+    if (years === undefined && months === undefined) {
+        return 'Antall år og måneder -';
     }
 
-    if (days === 0) {
-        return weeks === 1 ? `${weeks} uke` : `${weeks} uker`;
+    if (months === 0) {
+        return `${years} år`;
     }
 
-    if (weeks === 0) {
-        return days === 1 ? `${days} dag` : `${days} dager`;
+    if (years === 0) {
+        return months === 1 ? `${months} måned` : `${months} måneder`;
     }
 
-    if (days === 1) {
-        return weeks === 1 ? `${weeks} uke ${days} dag` : `${weeks} uker ${days} dag`;
+    if (months === 1) {
+        return `${years} år ${months} måned`;
     }
 
-    if (weeks === 1) {
-        return `${weeks} uke ${days} dag`;
-    }
-
-    return `${weeks} uker ${days} dager`;
+    return `${years} år ${months} måneder`;
 };
 
 export const hentPeriodelengde = (fraDatoPeriode: string, tilDatoPeriode: string): string => {
-    const numOfDays = -differenceInBusinessDays(new Date(fraDatoPeriode), new Date(tilDatoPeriode));
+    const numOfMonths = differenceInMonths(new Date(tilDatoPeriode), new Date(fraDatoPeriode)) + 1;
 
-    const weeks = Math.floor(numOfDays / 5);
-    const days = numOfDays % 5;
+    const years = Math.floor(numOfMonths / 12);
+    const months = numOfMonths % 12;
 
-    return formatterPeriodelengde(weeks, days);
+    return formatterPeriodelengde(years, months);
 };
