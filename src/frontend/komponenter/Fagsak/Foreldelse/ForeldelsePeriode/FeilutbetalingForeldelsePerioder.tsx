@@ -22,7 +22,7 @@ const TidslinjeContainer = styled.div`
     margin-bottom: 20px;
 
     button.behandlet {
-        background-color: ${navFarger.navGronnLighten40};
+        background-color: ${navFarger.navGronnLighten60};
     }
 
     button.ubehandlet {
