@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import axe from '@axe-core/react';
 import * as ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
+import { hot } from 'react-hot-loader';
 
 import App from './komponenter/App';
 
@@ -13,21 +13,11 @@ if (process.env.NODE_ENV !== 'production') {
 const rootElement = document.getElementById('app');
 const renderApp = (Component: React.ComponentType): void => {
     ReactDOM.render(
-        <AppContainer>
-            <React.StrictMode>
-                <Component />
-            </React.StrictMode>
-        </AppContainer>,
+        <React.StrictMode>
+            <Component />
+        </React.StrictMode>,
         rootElement
     );
 };
 
-renderApp(App);
-
-if (module.hot) {
-    module.hot.accept('./komponenter/App', () => {
-        // eslint-disable-next-line
-        const NewApp = require('./komponenter/App').default;
-        renderApp(NewApp);
-    });
-}
+renderApp(hot(module)(App));
