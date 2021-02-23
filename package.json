@@ -100,7 +100,7 @@
     "@types/webpack-dev-middleware": "3.7.2",
     "@types/webpack-env": "^1.16.0",
     "@types/webpack-hot-middleware": "^2.25.3",
-    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.1",
     "babel-polyfill": "^6.26.0",
     "compression-webpack-plugin": "^7.1.2",
