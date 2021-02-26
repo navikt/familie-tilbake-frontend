@@ -603,10 +603,10 @@
     react-tooltip "^3.11.4"
     styled-components "^5.2.1"
 
-"@navikt/familie-form-elements@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-form-elements/-/familie-form-elements-2.1.0.tgz#171052d2736104eaeb951829c9aa7619ea88c8b2"
-  integrity sha512-hhS0+ZKe0+SbEnwP4EGU6SzQXsHSISHhOOp8cWzQpZ6ZtlotEY8RxOHZpLVOPUAEZv9fUxIrY93cjJgNEZS7Cg==
+"@navikt/familie-form-elements@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-form-elements/-/familie-form-elements-2.1.2.tgz#a84c27427995209cc4201fa86f63f7de2f0b65d6"
+  integrity sha512-Phf0onaTRRaALdpZ4UtpyUhEj60/Y1uwr6tKe88RRjvScwa7Ja3Jn4abeMhrkZFdv10bo+ytJDI+s/ubSLUDlw==
   dependencies:
     "@navikt/fnrvalidator" "^1.1.2"
     "@types/classnames" "^2.2.10"
@@ -623,6 +623,7 @@
     nav-frontend-typografi "^2.0.21"
     react-day-picker "^7.4.8"
     react-select "^3.1.1"
+    styled-components "^5.2.1"
 
 "@navikt/familie-header@2.0.22":
   version "2.0.22"
@@ -6231,25 +6232,15 @@ nav-frontend-js-utils@^1.0.17:
   dependencies:
     lodash.throttle "^4.1.1"
 
-nav-frontend-knapper-style@^1.0.16:
+nav-frontend-knapper-style@^1.0.16, nav-frontend-knapper-style@^1.0.8:
   version "1.0.16"
   resolved "https://registry.yarnpkg.com/nav-frontend-knapper-style/-/nav-frontend-knapper-style-1.0.16.tgz#648612a3d5c5afdecb9cc0ec81e92c7108b5a620"
   integrity sha512-LRG81mtg/48klu3K7Ow9KMUBT7FbcIR1+7L3DfEHdxt2k4FsvsjdPt48oVIgc2Nm2z4uEco4UkGPjYLv0s66MQ==
 
-nav-frontend-knapper-style@^1.0.8:
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/nav-frontend-knapper-style/-/nav-frontend-knapper-style-1.0.15.tgz#22f3c925be788b8b7900dbeeec63af69fe6b3906"
-  integrity sha512-Grb8lk7Un5FZFalE/Mi8VYmNZjRd7gbd4XtKXBb0O4h7/+oLl92nO4wg64QDGK4G2osIe4fhFEZcm/qmvZMsHw==
-
-nav-frontend-knapper@^2.0.31:
+nav-frontend-knapper@^2.0.31, nav-frontend-knapper@^2.0.4:
   version "2.0.31"
   resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-2.0.31.tgz#2b748e01925b2352a30d24e6e5fdf2bdf4aa6519"
   integrity sha512-6wYv/xHT1LUDepO+Svjl2fVvTLCcrIw2lwysoWnXdMO/ov7ggNn6jaEbbtxhCdl0dGwFCC4ErT059iRjTOdl7w==
-
-nav-frontend-knapper@^2.0.4:
-  version "2.0.30"
-  resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-2.0.30.tgz#2460d18cd626b20bf6d6c6fd7395bb045bc81725"
-  integrity sha512-uTgvMANu5vKEykLx/415ysQmi1b6M/IaTrhAL7vHAhAAmm73VSnaLyrT6/on6Tw1vKlg2G2n3tTKBE7XcAh+eQ==
 
 nav-frontend-lenker-style@^0.2.28:
   version "0.2.42"
@@ -6316,25 +6307,15 @@ nav-frontend-popover@^1.0.2:
   resolved "https://registry.yarnpkg.com/nav-frontend-popover/-/nav-frontend-popover-1.0.2.tgz#5d33f0724de4e260b2979be28492a181e00762f1"
   integrity sha512-SLcJHB9Caoqe6+/cMW43IwpDP1ysZDqTQ6inzEiTZIyABDmTv83YsFvSrCZppFAvdgJAQk/g7OOKjabsnJLDlQ==
 
-nav-frontend-skjema-style@^2.0.32:
+nav-frontend-skjema-style@^2.0.32, nav-frontend-skjema-style@^2.0.9:
   version "2.0.32"
   resolved "https://registry.yarnpkg.com/nav-frontend-skjema-style/-/nav-frontend-skjema-style-2.0.32.tgz#2b2625ec60f3afd6fcffdadb699d7cdb03505ae4"
   integrity sha512-3PUnYYwEZD9jUm41ohlfCFEEsHwqrJimo6OLtuLOO8Z83t3bV9F7Ek7s3XozbkqpF2mBbV+hsTqg8Xh93oF3Gw==
 
-nav-frontend-skjema-style@^2.0.9:
-  version "2.0.30"
-  resolved "https://registry.yarnpkg.com/nav-frontend-skjema-style/-/nav-frontend-skjema-style-2.0.30.tgz#bc1be61255818c7a793c20abf61604ff2cab9e09"
-  integrity sha512-43HH9cV7izOC97/eTOes+eG5xueHDQPj6RvTgZyUg1Kqetu4M54xHOgFfR2JBN+SzvIKdscpBmipZ8Za0D7QuQ==
-
-nav-frontend-skjema@^3.0.52:
+nav-frontend-skjema@^3.0.52, nav-frontend-skjema@^3.0.7:
   version "3.0.52"
   resolved "https://registry.yarnpkg.com/nav-frontend-skjema/-/nav-frontend-skjema-3.0.52.tgz#7a9b0a76cb7141bf6fd0b75e92cf7661524a24af"
   integrity sha512-I6YNDZD0D5WVd6OqjmIaOkMazvUNCiOC7r7+Iz4+F0NNySDuBt988iNz41Q5jqEviOHjl0W8zE7llGsUt2Bpsg==
-
-nav-frontend-skjema@^3.0.7:
-  version "3.0.50"
-  resolved "https://registry.yarnpkg.com/nav-frontend-skjema/-/nav-frontend-skjema-3.0.50.tgz#c8f6ddbcc9bf4cdba9be5ec64a35862d22067371"
-  integrity sha512-ZFg6Rz1j8qHx9qdN70Gz2MtZVb0f7o5N/XsNGQortwBIwcX4dY8OYlEwQh8Pf7Pzs1t+ep24QzZLXcqXcqujpQ==
 
 nav-frontend-typografi-style@^1.0.17, nav-frontend-typografi-style@^1.0.18:
   version "1.0.32"
