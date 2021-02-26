@@ -7,33 +7,37 @@ import { Undertekst } from 'nav-frontend-typografi';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import {
-    hendelseType,
+    hendelsetyper,
     HendelseType,
-    hendelseUndertype,
+    hendelseundertyper,
     HendelseUndertype,
     hentHendelseUndertyper,
 } from '../../../../kodeverk';
 import { FaktaPeriode } from '../../../../typer/feilutbetalingtyper';
-import { formatterDatostring } from '../../../../utils/dateUtils';
+import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 
 interface IProps {
     periode: FaktaPeriode;
     hendelseTyper: Array<HendelseType> | undefined;
     index: number;
+    erLesevisning: boolean;
 }
 
-const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({ periode, hendelseTyper, index }) => {
+const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
+    periode,
+    hendelseTyper,
+    index,
+    erLesevisning,
+}) => {
     const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<Array<HendelseUndertype>>();
     const [valgtÅrsak, settValgtÅrsak] = React.useState<HendelseType>();
     const [valgtUnderÅrsak, settValgtUnderÅrsak] = React.useState<HendelseUndertype>();
 
     React.useEffect(() => {
-        if (periode.feilutbetalingÅrsakDto) {
-            settHendelseUnderTyper(
-                hentHendelseUndertyper(periode.feilutbetalingÅrsakDto.hendelseType)
-            );
-            settValgtÅrsak(periode.feilutbetalingÅrsakDto.hendelseType);
-            settValgtUnderÅrsak(periode.feilutbetalingÅrsakDto.hendelseUndertype);
+        if (periode.hendelsestype) {
+            settHendelseUnderTyper(hentHendelseUndertyper(periode.hendelsestype));
+            settValgtÅrsak(periode.hendelsestype);
+            settValgtUnderÅrsak(periode.hendelsesundertype);
         }
     }, [periode]);
 
@@ -51,8 +55,8 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({ periode, hendelseTyper, 
     return (
         <tr>
             <td>
-                <Undertekst>{`${formatterDatostring(periode.fom)} - ${formatterDatostring(
-                    periode.tom
+                <Undertekst>{`${formatterDatostring(periode.periode.fom)} - ${formatterDatostring(
+                    periode.periode.tom
                 )}`}</Undertekst>
             </td>
             <td>
@@ -61,11 +65,12 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({ periode, hendelseTyper, 
                     label={'Årsak'}
                     onChange={event => onChangeÅrsak(event)}
                     value={valgtÅrsak ? valgtÅrsak : '-'}
+                    erLesevisning={erLesevisning}
                 >
                     <option>-</option>
                     {hendelseTyper?.map(type => (
                         <option key={type} value={type}>
-                            {hendelseType[type]}
+                            {hendelsetyper[type]}
                         </option>
                     ))}
                 </FamilieSelect>
@@ -75,18 +80,19 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({ periode, hendelseTyper, 
                         label={'Underårsak'}
                         onChange={event => onChangeUnderÅrsak(event)}
                         value={valgtUnderÅrsak ? valgtUnderÅrsak : '-'}
+                        erLesevisning={erLesevisning}
                     >
                         <option>-</option>
                         {hendelseUnderTyper.map(type => (
                             <option key={type} value={type}>
-                                {hendelseUndertype[type]}
+                                {hendelseundertyper[type]}
                             </option>
                         ))}
                     </FamilieSelect>
                 )}
             </td>
-            <td className={classNames('beløp', 'redText')}>
-                <Undertekst>{periode.belop}</Undertekst>
+            <td className={classNames('redText')}>
+                <Undertekst>{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</Undertekst>
             </td>
         </tr>
     );

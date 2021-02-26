@@ -11,7 +11,7 @@ import Visittkort from '@navikt/familie-visittkort';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IFagsak } from '../../../typer/fagsak';
 import { IPerson } from '../../../typer/person';
-import { hentAlder } from '../../../utils/dateUtils';
+import { hentAlder } from '../../../utils';
 import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
 
 const PlaceholderDiv = styled.div`

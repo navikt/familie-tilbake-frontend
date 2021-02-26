@@ -2,15 +2,12 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
 import { Radio } from 'nav-frontend-skjema';
 import { Undertittel } from 'nav-frontend-typografi';
 
-import {
-    FamilieDatovelger,
-    FamilieRadioGruppe,
-    FamilieTextarea,
-} from '@navikt/familie-form-elements';
+import { FamilieDatovelger, FamilieRadioGruppe } from '@navikt/familie-form-elements';
 
 import {
     Foreldelsevurdering,
@@ -18,16 +15,14 @@ import {
     foreldelseVurderingTyper,
 } from '../../../../kodeverk';
 import { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
-import { datoformatNorsk } from '../../../../utils/dateUtils';
-import PeriodeOppsummering from './PeriodeOppsummering';
+import { datoformatNorsk } from '../../../../utils';
+import { Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
+import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
 
 const StyledContainer = styled.div`
-    border: 1px solid black;
+    border: 1px solid ${navFarger.navGra60};
     padding: 10px;
-`;
-
-const Spacer20 = styled.div`
-    height: 20px;
 `;
 
 const Spacer8 = styled.div`
@@ -36,9 +31,10 @@ const Spacer8 = styled.div`
 
 interface IProps {
     periode: ForeldelsePeriode;
+    erLesevisning: boolean;
 }
 
-const ForeldelsePeriodeForm: React.FC<IProps> = ({ periode }) => {
+const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ periode, erLesevisning }) => {
     const [
         valgtForeldelsevurdering,
         settValgtForeldelsevurdering,
@@ -71,7 +67,11 @@ const ForeldelsePeriodeForm: React.FC<IProps> = ({ periode }) => {
             <Row>
                 <Column xs="8">
                     <Undertittel>Detaljer for valgt periode</Undertittel>
-                    <PeriodeOppsummering periode={periode} />
+                    <PeriodeOppsummering
+                        fom={periode.periode.fom}
+                        tom={periode.periode.tom}
+                        beløp={periode.feilutbetaltBeløp}
+                    />
                 </Column>
             </Row>
             <Spacer20 />
@@ -79,12 +79,12 @@ const ForeldelsePeriodeForm: React.FC<IProps> = ({ periode }) => {
                 <Column xs="12">
                     <Row>
                         <Column md="8">
-                            <FamilieTextarea
+                            <FamilieTilbakeTextArea
                                 id={'begrunnelse'}
                                 name="begrunnelse"
                                 label={'Vurdering'}
                                 maxLength={1500}
-                                erLesevisning={false}
+                                erLesevisning={erLesevisning}
                                 value={begrunnelse ? begrunnelse : ''}
                                 onChange={event => onChangeBegrunnelse(event)}
                             />
@@ -94,10 +94,10 @@ const ForeldelsePeriodeForm: React.FC<IProps> = ({ periode }) => {
             </Row>
             <Spacer20 />
             <Row>
-                <Column md="5">
+                <Column md="6">
                     <FamilieRadioGruppe
                         id="foreldet"
-                        erLesevisning={false}
+                        erLesevisning={erLesevisning}
                         legend="Vurder om perioden er foreldet"
                         verdi={periode.foreldelseVurderingType}
                     >
@@ -113,12 +113,12 @@ const ForeldelsePeriodeForm: React.FC<IProps> = ({ periode }) => {
                         ))}
                     </FamilieRadioGruppe>
                 </Column>
-                <Column md="3">
+                <Column md="6">
                     {(erForeldet || erMedTilleggsfrist) && (
                         <FamilieDatovelger
                             id="foreldelsesfrist"
                             label={'Foreldelsesfrist'}
-                            erLesesvisning={false}
+                            erLesesvisning={erLesevisning}
                             onChange={(nyDato?: string) => {
                                 settForeldelsesfrist(nyDato ? nyDato : '');
                             }}
@@ -132,7 +132,7 @@ const ForeldelsePeriodeForm: React.FC<IProps> = ({ periode }) => {
                             <FamilieDatovelger
                                 id="oppdagelsesDato"
                                 label={'Dato for når feilutbetaling ble oppdaget'}
-                                erLesesvisning={false}
+                                erLesesvisning={erLesevisning}
                                 onChange={(nyDato?: string) => {
                                     settOppdagelsesDato(nyDato ? nyDato : '');
                                 }}
@@ -150,4 +150,4 @@ const ForeldelsePeriodeForm: React.FC<IProps> = ({ periode }) => {
     );
 };
 
-export default ForeldelsePeriodeForm;
+export default ForeldelsePeriodeSkjema;

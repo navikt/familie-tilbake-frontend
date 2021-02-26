@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import '@navikt/helse-frontend-tidslinje/lib/main.css';
-
 import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
@@ -9,10 +7,11 @@ import { Column, Row } from 'nav-frontend-grid';
 
 import { Periode, Tidslinje } from '@navikt/helse-frontend-tidslinje';
 
-import { Foreldelsevurdering } from '../../../../kodeverk';
-import { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
-import { Spacer20 } from '../../../Felleskomponenter/Flytelementer';
-import ForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
+import { Foreldelsevurdering } from '../../../kodeverk';
+import { VilkårsvurderingPeriode } from '../../../typer/feilutbetalingtyper';
+import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { VilkårsvurderingPeriodeProvider } from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeContext';
+import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 
 const TidslinjeContainer = styled.div`
     border: 1px solid ${navFarger.navGra60};
@@ -27,20 +26,17 @@ const TidslinjeContainer = styled.div`
     }
 `;
 
-const finnClassNamePeriode = (periode: ForeldelsePeriode) => {
-    switch (periode.foreldelseVurderingType) {
-        case Foreldelsevurdering.FORELDET:
-        case Foreldelsevurdering.IKKE_FORELDET:
-        case Foreldelsevurdering.TILLEGGSFRIST:
-            return 'behandlet';
-        case Foreldelsevurdering.IKKE_VURDERT:
-        case Foreldelsevurdering.UDEFINERT:
-        default:
-            return 'ubehandlet';
+const finnClassNamePeriode = (periode: VilkårsvurderingPeriode) => {
+    if (
+        periode.vilkårsresultat ||
+        periode.foreldelse.foreldelseVurderingType === Foreldelsevurdering.FORELDET
+    ) {
+        return 'behandlet';
     }
+    return 'ubehandlet';
 };
 
-const genererRader = (perioder: ForeldelsePeriode[]): Periode[][] => {
+const genererRader = (perioder: VilkårsvurderingPeriode[]): Periode[][] => {
     return [
         perioder.map(
             (periode, index): Periode => ({
@@ -55,25 +51,30 @@ const genererRader = (perioder: ForeldelsePeriode[]): Periode[][] => {
 };
 
 interface IProps {
-    perioder: ForeldelsePeriode[];
+    perioder: VilkårsvurderingPeriode[];
+    erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
 }
 
-const ForeldelsePerioder: React.FC<IProps> = ({ perioder, erLesevisning }) => {
+const VilkårsvurderingPerioder: React.FC<IProps> = ({
+    perioder,
+    erTotalbeløpUnder4Rettsgebyr,
+    erLesevisning,
+}) => {
     const [tidslinjeRader, settTidslinjeRader] = React.useState<Periode[][]>();
-    const [valgtPeriode, settValgtPeriode] = React.useState<ForeldelsePeriode>();
+    const [valgtPeriode, settValgtPeriode] = React.useState<VilkårsvurderingPeriode>();
 
     React.useEffect(() => {
         settTidslinjeRader(genererRader(perioder));
     }, [perioder]);
 
-    const onSelectPeriode = (periode: Periode): void => {
+    const onSelectPeriode = (periode: Periode) => {
         const periodeFom = periode.fom.toISOString().substring(0, 10);
         const periodeTom = periode.tom.toISOString().substring(0, 10);
-        const foreldelsePeriode = perioder.find(
+        const vilkårsvurderingPeriode = perioder.find(
             per => per.periode.fom === periodeFom && per.periode.tom === periodeTom
         );
-        settValgtPeriode(foreldelsePeriode);
+        settValgtPeriode(vilkårsvurderingPeriode);
     };
 
     return perioder && tidslinjeRader ? (
@@ -90,10 +91,12 @@ const ForeldelsePerioder: React.FC<IProps> = ({ perioder, erLesevisning }) => {
                     <Spacer20 />
                     <Row>
                         <Column xs="12">
-                            <ForeldelsePeriodeSkjema
-                                periode={valgtPeriode}
-                                erLesevisning={erLesevisning}
-                            />
+                            <VilkårsvurderingPeriodeProvider periode={valgtPeriode}>
+                                <VilkårsvurderingPeriodeSkjema
+                                    erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
+                                    erLesevisning={erLesevisning}
+                                />
+                            </VilkårsvurderingPeriodeProvider>
                         </Column>
                     </Row>
                 </>
@@ -102,4 +105,4 @@ const ForeldelsePerioder: React.FC<IProps> = ({ perioder, erLesevisning }) => {
     ) : null;
 };
 
-export default ForeldelsePerioder;
+export default VilkårsvurderingPerioder;

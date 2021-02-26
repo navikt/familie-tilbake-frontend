@@ -9,21 +9,26 @@ import FeilutbetalingFaktaPeriode from './FeilutbetalingFaktaPeriodeSkjema';
 const StyledPeriodeTable = styled.table`
     width: 100%;
 
-    td {
-        margin-left: 0px;
-        margin-right: 0px;
-        vertical-align: top;
-        padding: 5px;
-    }
-
     th {
         border-bottom: 1px solid black;
         text-align: left;
-        padding: 5px;
     }
 
-    .beløp {
-        text-align: right;
+    td {
+        vertical-align: top;
+    }
+
+    th,
+    td {
+        padding: 5px;
+
+        :last-child {
+            text-align: right;
+        }
+    }
+
+    tbody tr:last-child td {
+        border-bottom: 1px solid black;
     }
 
     .skjemaelement {
@@ -38,9 +43,10 @@ const StyledPeriodeTable = styled.table`
 interface IProps {
     ytelse: Ytelsetype;
     perioder: Array<FaktaPeriode>;
+    erLesevisning: boolean;
 }
 
-const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder }) => {
+const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLesevisning }) => {
     const [hendelseTyper, settHendelseTyper] = React.useState<Array<HendelseType>>();
 
     React.useEffect(() => {
@@ -53,7 +59,7 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder }) => 
                 <tr>
                     <th>Periode</th>
                     <th>Hendelse</th>
-                    <th className={'beløp'}>Feilutbetalt beløp</th>
+                    <th>Feilutbetalt beløp</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,6 +70,7 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder }) => 
                             periode={periode}
                             key={`formIndex${index + 1}`}
                             index={index}
+                            erLesevisning={erLesevisning}
                         />
                     );
                 })}

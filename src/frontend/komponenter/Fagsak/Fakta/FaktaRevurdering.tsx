@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Column, Row } from 'nav-frontend-grid';
 import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
-import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
-import { formatterDatostring } from '../../../utils/dateUtils';
+import { IFeilutbetalingFakta, tilbakekrevingsvalg } from '../../../typer/feilutbetalingtyper';
+import { formatterDatostring } from '../../../utils';
 import { RadMedMargin } from './FaktaContainer';
 
 interface IProps {
@@ -12,7 +12,7 @@ interface IProps {
 }
 
 const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
-    return feilutbetalingFakta?.behandlingFakta ? (
+    return feilutbetalingFakta ? (
         <>
             <RadMedMargin>
                 <Column xs="12">
@@ -22,37 +22,31 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
             <RadMedMargin>
                 <Column xs="6">
                     <UndertekstBold>Årsak(er) til revurdering</UndertekstBold>
-                    {feilutbetalingFakta.behandlingFakta.behandlingårsaker && (
-                        <Normaltekst>
-                            {feilutbetalingFakta.behandlingFakta.behandlingårsaker.join(', ')}
-                        </Normaltekst>
+                    {feilutbetalingFakta.faktainfo?.revurderingsårsak && (
+                        <Normaltekst>{feilutbetalingFakta.faktainfo.revurderingsårsak}</Normaltekst>
                     )}
                 </Column>
                 <Column xs="6">
                     <UndertekstBold>Dato for revurderingsvedtak</UndertekstBold>
                     <Normaltekst>
-                        {formatterDatostring(
-                            feilutbetalingFakta.behandlingFakta.datoForRevurderingsvedtak
-                        )}
+                        {formatterDatostring(feilutbetalingFakta.revurderingsvedtaksdato)}
                     </Normaltekst>
                 </Column>
             </RadMedMargin>
             <RadMedMargin>
                 <Column xs="6">
                     <UndertekstBold>Resultat</UndertekstBold>
-                    {feilutbetalingFakta.behandlingFakta.behandlingsresultat && (
+                    {feilutbetalingFakta.faktainfo?.revurderingsresultat && (
                         <Normaltekst>
-                            {feilutbetalingFakta.behandlingFakta.behandlingsresultat.resultat}
+                            {feilutbetalingFakta.faktainfo.revurderingsresultat}
                         </Normaltekst>
                     )}
                 </Column>
                 <Column xs="6">
                     <UndertekstBold>Konsekvens</UndertekstBold>
-                    {feilutbetalingFakta.behandlingFakta.behandlingsresultat && (
+                    {feilutbetalingFakta.faktainfo?.konsekvensForYtelser && (
                         <Normaltekst>
-                            {feilutbetalingFakta.behandlingFakta.behandlingsresultat.konsekvenserForYtelsen?.join(
-                                ', '
-                            )}
+                            {feilutbetalingFakta.faktainfo.konsekvensForYtelser?.join(', ')}
                         </Normaltekst>
                     )}
                 </Column>
@@ -60,12 +54,9 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
             <Row>
                 <Column xs="6">
                     <UndertekstBold>Tilbakekrevingsvalg</UndertekstBold>
-                    {feilutbetalingFakta.behandlingFakta.tilbakekrevingValg && (
+                    {feilutbetalingFakta.faktainfo?.tilbakekrevingsvalg && (
                         <Normaltekst>
-                            {
-                                feilutbetalingFakta.behandlingFakta.tilbakekrevingValg
-                                    .videreBehandling
-                            }
+                            {tilbakekrevingsvalg[feilutbetalingFakta.faktainfo.tilbakekrevingsvalg]}
                         </Normaltekst>
                     )}
                 </Column>
