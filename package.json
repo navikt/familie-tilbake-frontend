@@ -94,7 +94,7 @@
   },
   "devDependencies": {
     "@axe-core/react": "^4.1.1",
-    "@babel/core": "^7.12.17",
+    "@babel/core": "^7.13.8",
     "@babel/preset-react": "^7.12.13",
     "@types/webpack": "^4.41.26",
     "@types/webpack-dev-middleware": "3.7.2",
