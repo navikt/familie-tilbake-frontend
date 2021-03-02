@@ -88,7 +88,7 @@
     "react-router-hash-link": "^2.4.0",
     "request": "^2.34",
     "request-promise": "^4.2.6",
-    "snyk": "^1.458.0",
+    "snyk": "^1.464.0",
     "styled-components": "^5.2.1",
     "uuid": "^8.3.0"
   },
