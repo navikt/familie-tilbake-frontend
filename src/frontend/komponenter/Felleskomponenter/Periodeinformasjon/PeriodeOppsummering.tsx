@@ -7,8 +7,8 @@ import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
 import { Normaltekst } from 'nav-frontend-typografi';
 
-import { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
-import { formatterDatostring, hentPeriodelengde } from '../../../../utils/dateUtils';
+import { HendelseType, hendelsetyper } from '../../../kodeverk';
+import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
 
 const StyledContainer = styled.div`
     background-color: ${navFarger.orangeFocusLighten80};
@@ -39,32 +39,36 @@ const NormaltekstBold = styled(Normaltekst)`
 `;
 
 interface IProps {
-    periode: ForeldelsePeriode;
+    fom: string;
+    tom: string;
+    beløp: number;
+    hendelsetype?: HendelseType;
 }
 
-const PeriodeOppsummering: React.FC<IProps> = ({ periode }) => {
+const PeriodeOppsummering: React.FC<IProps> = ({ fom, tom, beløp, hendelsetype }) => {
     return (
         <StyledContainer>
             <Row>
                 <Column xs="6">
                     <NormaltekstBold>
-                        {`${formatterDatostring(periode.fom)} - ${formatterDatostring(
-                            periode.tom
-                        )}`}
+                        {`${formatterDatostring(fom)} - ${formatterDatostring(tom)}`}
                     </NormaltekstBold>
                 </Column>
                 <Column xs="6">
-                    <Normaltekst>{hentPeriodelengde(periode.fom, periode.tom)}</Normaltekst>
+                    <Normaltekst>{hentPeriodelengde(fom, tom)}</Normaltekst>
                 </Column>
             </Row>
             <SumRad>
                 <Column xs="6">
                     <Normaltekst>
                         Feilutbetaling :
-                        <span className={classNames(periode.belop ? 'redNumber' : 'positivNumber')}>
-                            {periode.belop}
+                        <span className={classNames(beløp ? 'redNumber' : 'positivNumber')}>
+                            {formatCurrencyNoKr(beløp)}
                         </span>
                     </Normaltekst>
+                </Column>
+                <Column xs="6">
+                    {hendelsetype && <Normaltekst>{hendelsetyper[hendelsetype]}</Normaltekst>}
                 </Column>
             </SumRad>
         </StyledContainer>

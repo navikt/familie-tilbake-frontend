@@ -10,23 +10,20 @@ import { RessursStatus } from '@navikt/familie-typer';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IBehandling } from '../../../typer/behandling';
 import { IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
-import { finnDatoRelativtTilNå } from '../../../utils/dateUtils';
+import { finnDatoRelativtTilNå } from '../../../utils';
+import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import ForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
 
 export const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });
 };
 
-const StyledContainer = styled.div`
+const StyledForeldelse = styled.div`
     padding: 10px;
 `;
 
 const StyledUndertittel = styled(Undertittel)`
     margin-bottom: 10px;
-`;
-
-const Spacer20 = styled.div`
-    height: 20px;
 `;
 
 interface IProps {
@@ -39,6 +36,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
         settFeilutbetalingForeldelse,
     ] = React.useState<IFeilutbetalingForeldelse>();
     const { hentFeilutbetalingForeldelse } = useBehandling();
+    const erLesevisning = false;
 
     React.useEffect(() => {
         const foreldelse = hentFeilutbetalingForeldelse(behandling.id);
@@ -48,7 +46,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
     }, [behandling]);
 
     return feilutbetalingForeldelse ? (
-        <StyledContainer>
+        <StyledForeldelse>
             <Row>
                 <Column xs="12">
                     <StyledUndertittel>Foreldelse</StyledUndertittel>
@@ -65,10 +63,13 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
             <Spacer20 />
             <Row>
                 <Column xs="12">
-                    <ForeldelsePerioder perioder={feilutbetalingForeldelse.perioder} />
+                    <ForeldelsePerioder
+                        perioder={feilutbetalingForeldelse.perioder}
+                        erLesevisning={erLesevisning}
+                    />
                 </Column>
             </Row>
-        </StyledContainer>
+        </StyledForeldelse>
     ) : null;
 };
 

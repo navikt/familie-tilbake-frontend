@@ -7,7 +7,7 @@ export enum HendelseType {
     KS_ANNET = 'KS_ANNET',
 }
 
-export const hendelseType: Record<HendelseType, string> = {
+export const hendelsetyper: Record<HendelseType, string> = {
     BA_MEDLEMSKAP: 'Medlemskap',
     BA_ANNET: 'Annet',
     EF_MEDLEMSKAP: 'Medlemskap',
@@ -22,7 +22,7 @@ export enum HendelseUndertype {
     ANNET_FRITEKST = 'ANNET_FRITEKST',
 }
 
-export const hendelseUndertype: Record<HendelseUndertype, string> = {
+export const hendelseundertyper: Record<HendelseUndertype, string> = {
     DØDSFALL: 'Dødsfall',
     UTFLYTTING: 'Utflytting',
     ANNET_FRITEKST: 'Annet fritekst',

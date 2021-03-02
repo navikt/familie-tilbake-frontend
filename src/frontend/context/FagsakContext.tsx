@@ -36,6 +36,12 @@ const fagsakMock = {
             type: Behandlingstype.REVURDERING_TILBAKEKREVING,
             status: Behandlingstatus.OPPRETTET,
         },
+        {
+            id: '5',
+            eksternBrukId: '5',
+            type: Behandlingstype.REVURDERING_TILBAKEKREVING,
+            status: Behandlingstatus.OPPRETTET,
+        },
     ],
 };
 
