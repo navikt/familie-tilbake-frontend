@@ -1,7 +1,10 @@
-import { parseISO, differenceInCalendarYears, add } from 'date-fns';
-import { differenceInMonths } from 'date-fns/esm';
+import { parseISO, differenceInCalendarYears, add, differenceInMonths } from 'date-fns';
 
-const datoformat = { day: '2-digit', month: '2-digit', year: 'numeric' };
+const datoformat: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+};
 
 export enum datoformatNorsk {
     DATO = 'ddmmåå',
