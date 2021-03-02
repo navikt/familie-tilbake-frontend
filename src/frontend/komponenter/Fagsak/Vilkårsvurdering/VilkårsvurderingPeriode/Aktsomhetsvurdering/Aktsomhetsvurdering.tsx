@@ -26,7 +26,8 @@ const Aktsomhetsvurdering: React.FC<IProps> = ({ erTotalbeløpUnder4Rettsgebyr, 
         aktsomhetsvurdering,
         oppdaterAktsomhetsvurdering,
     } = useVilkårsvurderingPeriode();
-    const erForstodBurdeForstått = vilkårsresultat === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+    const erForstodBurdeForstått =
+        vilkårsresultat?.vilkårsresultat === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
 
     const onChangeAktsomhet = (type: Aktsomhet) => {
         oppdaterAktsomhetsvurdering({ aktsomhet: type });

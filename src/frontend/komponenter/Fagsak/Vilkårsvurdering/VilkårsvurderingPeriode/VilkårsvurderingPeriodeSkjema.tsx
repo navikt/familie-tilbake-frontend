@@ -38,7 +38,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erLesevisning,
 }) => {
     const {
-        vilkårsvurderingPeriode: periode,
+        vilkårsvurderingPeriode,
         vilkårsresultat,
         oppdaterVilkårsresultat,
         aktsomhetsvurdering,
@@ -63,23 +63,25 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         // TODO
     };
 
-    const erForeldet = periode?.foreldelse.foreldelseVurderingType === Foreldelsevurdering.FORELDET;
+    const erForeldet =
+        vilkårsvurderingPeriode?.foreldelse.foreldelseVurderingType ===
+        Foreldelsevurdering.FORELDET;
 
-    return periode ? (
+    return vilkårsvurderingPeriode ? (
         <StyledContainer>
             <Row>
                 <Column xs="8">
                     <Undertittel>Detaljer for valgt periode</Undertittel>
                     <PeriodeOppsummering
-                        fom={periode.periode.fom}
-                        tom={periode.periode.tom}
-                        beløp={periode.feilutbetaltBeløp}
-                        hendelsetype={periode.hendelseType}
+                        fom={vilkårsvurderingPeriode.periode.fom}
+                        tom={vilkårsvurderingPeriode.periode.tom}
+                        beløp={vilkårsvurderingPeriode.feilutbetaltBeløp}
+                        hendelsetype={vilkårsvurderingPeriode.hendelseType}
                     />
                 </Column>
             </Row>
             <Spacer20 />
-            <TilbakekrevingAktivitetTabell ytelser={periode.ytelser} />
+            <TilbakekrevingAktivitetTabell ytelser={vilkårsvurderingPeriode.ytelser} />
             <Spacer20 />
             {!erLesevisning && !erForeldet && (
                 <>
@@ -110,8 +112,8 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         <UndertekstBold>Varsel</UndertekstBold>
                                         <Spacer8 />
                                         <Normaltekst>
-                                            {periode.foreldelse?.begrunnelse
-                                                ? periode.foreldelse.begrunnelse
+                                            {vilkårsvurderingPeriode.foreldelse?.begrunnelse
+                                                ? vilkårsvurderingPeriode.foreldelse.begrunnelse
                                                 : ''}
                                         </Normaltekst>
                                     </Column>
