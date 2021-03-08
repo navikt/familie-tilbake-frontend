@@ -33,7 +33,7 @@
     "@navikt/familie-header": "2.0.22",
     "@navikt/familie-http": "^1.0.3",
     "@navikt/familie-logging": "^1.0.3",
-    "@navikt/familie-typer": "^3.0.12",
+    "@navikt/familie-typer": "^3.0.13",
     "@navikt/familie-visittkort": "^2.1.22",
     "@navikt/helse-frontend-tidslinje": "^6.1.6",
     "@navikt/nap-user-panel": "^1.1.0",
