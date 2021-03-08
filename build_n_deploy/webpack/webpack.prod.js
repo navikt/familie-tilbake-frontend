@@ -1,31 +1,28 @@
 const path = require('path');
-const webpack = require('webpack');
-const { mergeWithCustomize } = require('webpack-merge');
-const common = require('./webpack.common');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
-const config = mergeWithCustomize({
-    'entry.familie-tilbake': 'prepend',
-    'module.rules': 'append',
-})(common, {
+const baseConfig = require('./webpack.common');
+
+const config = merge.mergeWithRules({
+    module: {
+        rules: {
+            test: 'match',
+            use: 'replace',
+        }
+    }
+})(baseConfig, {
     mode: 'production',
-    entry: {
-        'familie-tilbake': ['babel-polyfill'],
-    },
+    entry: [path.join(process.cwd(), 'src/frontend/index.tsx')],
     output: {
-        path: path.join(__dirname, '../../frontend_production'),
+        path: path.join(process.cwd(), 'frontend_production'),
         filename: '[name].[contenthash].js',
         publicPath: '/assets/',
     },
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('production'),
-        }),
-        new MiniCssExtractPlugin({
-            filename: 'familie-tilbake-frontend.css',
-        }),
         new CompressionPlugin({
             algorithm: 'gzip',
             test: /\.js$|\.css$|\.html$/,
@@ -34,7 +31,26 @@ const config = mergeWithCustomize({
         }),
     ],
     optimization: {
-        minimizer: [new TerserPlugin()],
+        minimize: true,
+        minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
+        runtimeChunk: {
+            name: 'runtime',
+        },
+        splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+                styles: {
+                    name: 'styles',
+                    type: 'css/mini-extract',
+                    chunks: 'all',
+                    enforce: true,
+                },
+            },
+        },
+    },
+    performance: {
+        maxEntrypointSize: 800000,
+        maxAssetSize: 800000,
     },
 });
 

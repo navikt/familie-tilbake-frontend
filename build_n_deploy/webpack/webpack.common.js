@@ -1,83 +1,51 @@
 const path = require('path');
-const webpack = require('webpack');
+
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TypeScriptTypeChecker = require('fork-ts-checker-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
-    entry: {
-        'familie-tilbake': ['./src/frontend/index.tsx'],
-    },
+    entry: ['./src/frontend/index.tsx'],
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.less'],
     },
     module: {
         rules: [
             {
-                test: /\.(ts|tsx)$/,
-                enforce: 'pre',
-                exclude: /node_modules/,
-                use: [
-                    {
-                        options: {
-                            eslintPath: require.resolve('eslint'),
-                        },
-                        loader: require.resolve('eslint-loader'),
-                    },
-                ],
+                test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
+                use: [`file-loader`],
             },
             {
-                test: /\.(js|ts|tsx)$/,
-                loader: 'ts-loader',
+                test: /\.(js|jsx|ts|tsx)$/,
+                loader: 'babel-loader',
                 exclude: /node_modules/,
                 options: {
-                    transpileOnly: true,
+                    presets: ['react-app'],
                 },
             },
             {
                 test: /\.(less|css)$/,
                 use: [
-                    { loader: require.resolve('style-loader') },
+                    { loader: 'style-loader' },
                     {
-                        loader: require.resolve('css-loader'),
+                        loader: 'css-loader',
                         options: {
                             modules: {
                                 compileType: 'icss',
                             },
                         },
                     },
-                    { loader: require.resolve('less-loader') },
+                    { loader: 'less-loader' },
                 ],
             },
         ],
     },
-    optimization: {
-        splitChunks: {
-            cacheGroups: {
-                defaultVendors: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: 'vendors',
-                    chunks: 'all',
-                },
-            },
-        },
-        runtimeChunk: true,
-        emitOnErrors: false,
-    },
+    devtool: 'inline-source-map',
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.join(__dirname, '../../src/frontend/index.html'),
+            template: path.join(process.cwd(), '/src/frontend/index.html'),
             inject: 'body',
             alwaysWriteToDisk: true,
         }),
-        new TypeScriptTypeChecker({
-            typescript: {
-                configFile: path.join(__dirname, '../../src/frontend/tsconfig.json'),
-            },
-            eslint: {
-                files: './src/**/*.{ts,tsx,js,jsx}',
-            },
-        }),
-        new CssMinimizerPlugin(),
+        new CaseSensitivePathsPlugin(),
     ],
 };

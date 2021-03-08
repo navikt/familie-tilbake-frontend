@@ -18,7 +18,7 @@ import {
 import { Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
-import Aktsomhetsvurdering from './Aktsomhetsvurdering/Aktsomhetsvurdering';
+import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import AktsomhetGodTro from './GodTroSkjema';
 import TilbakekrevingAktivitetTabell from './TilbakekrevingAktivitetTabell';
 import { useVilkårsvurderingPeriode } from './VilkårsvurderingPeriodeContext';
@@ -198,7 +198,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     {vilkårsresultat.vilkårsresultat === Vilkårsresultat.GOD_TRO ? (
                                         <AktsomhetGodTro erLesevisning={erLesevisning} />
                                     ) : (
-                                        <Aktsomhetsvurdering
+                                        <AktsomhetsvurderingSkjema
                                             erTotalbeløpUnder4Rettsgebyr={
                                                 erTotalbeløpUnder4Rettsgebyr
                                             }

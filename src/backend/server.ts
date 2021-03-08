@@ -2,7 +2,7 @@ import './konfigurerApp';
 
 import path from 'path';
 
-import bodyParser from 'body-parser';
+import express from 'express';
 import expressStaticGzip from 'express-static-gzip';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
@@ -33,16 +33,14 @@ backend(sessionConfig).then(({ app, azureAuthClient, router }: IApp) => {
         // @ts-ignore
         middleware = webpackDevMiddleware(compiler, {
             publicPath: config.output.publicPath,
+            writeToDisk: true,
         });
 
         app.use(middleware);
         // @ts-ignore
         app.use(webpackHotMiddleware(compiler));
     } else {
-        app.use(
-            '/assets',
-            expressStaticGzip(path.join(__dirname, '../../frontend_production'), {})
-        );
+        app.use('/assets', expressStaticGzip(path.join(process.cwd(), 'frontend_production'), {}));
     }
 
     app.use(
@@ -52,10 +50,10 @@ backend(sessionConfig).then(({ app, azureAuthClient, router }: IApp) => {
         doProxy()
     );
 
-    // Sett opp bodyParser og router etter proxy. Spesielt viktig med tanke på større payloads som blir parset av bodyParser
-    app.use(bodyParser.json({ limit: '200mb' }));
-    app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
-    app.use('/', setupRouter(azureAuthClient, router, middleware));
+    // Sett opp express og router etter proxy. Spesielt viktig med tanke på større payloads
+    app.use(express.json({ limit: '200mb' }));
+    app.use(express.urlencoded({ limit: '200mb', extended: true }));
+    app.use('/', setupRouter(azureAuthClient, router));
 
     app.listen(port, '0.0.0.0', () => {
         info(
