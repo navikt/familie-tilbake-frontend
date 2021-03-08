@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import classNames from 'classnames';
 
-import { Undertekst } from 'nav-frontend-typografi';
+import { Normaltekst } from 'nav-frontend-typografi';
 
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
@@ -55,9 +55,9 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     return (
         <tr>
             <td>
-                <Undertekst>{`${formatterDatostring(periode.periode.fom)} - ${formatterDatostring(
+                <Normaltekst>{`${formatterDatostring(periode.periode.fom)} - ${formatterDatostring(
                     periode.periode.tom
-                )}`}</Undertekst>
+                )}`}</Normaltekst>
             </td>
             <td>
                 <FamilieSelect
@@ -92,7 +92,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                 )}
             </td>
             <td className={classNames('redText')}>
-                <Undertekst>{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</Undertekst>
+                <Normaltekst>{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</Normaltekst>
             </td>
         </tr>
     );

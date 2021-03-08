@@ -9,7 +9,6 @@ import {
     forstodBurdeForståttAktsomheter,
     Vilkårsresultat,
 } from '../../../../../kodeverk';
-import { Aktsomhetsvurdering } from '../../../../../typer/feilutbetalingtyper';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useVilkårsvurderingPeriode } from '../VilkårsvurderingPeriodeContext';
 import GradForsettSkjema from './GradForsettSkjema';
@@ -20,7 +19,10 @@ interface IProps {
     erLesevisning: boolean;
 }
 
-const Aktsomhetsvurdering: React.FC<IProps> = ({ erTotalbeløpUnder4Rettsgebyr, erLesevisning }) => {
+const AktsomhetsvurderingSkjema: React.FC<IProps> = ({
+    erTotalbeløpUnder4Rettsgebyr,
+    erLesevisning,
+}) => {
     const {
         vilkårsresultat,
         aktsomhetsvurdering,
@@ -73,4 +75,4 @@ const Aktsomhetsvurdering: React.FC<IProps> = ({ erTotalbeløpUnder4Rettsgebyr, 
     );
 };
 
-export default Aktsomhetsvurdering;
+export default AktsomhetsvurderingSkjema;

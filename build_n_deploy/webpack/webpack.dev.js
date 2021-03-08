@@ -1,36 +1,39 @@
 const path = require('path');
-const webpack = require('webpack');
-const { mergeWithCustomize } = require('webpack-merge');
-const common = require('./webpack.common');
 
-const config = mergeWithCustomize({
-    'entry.familie-tilbake': 'prepend',
-    'module.rules': 'append',
-})(common, {
+const webpack = require('webpack');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const merge = require('webpack-merge');
+
+const baseConfig = require('./webpack.common');
+
+const config = merge.mergeWithRules({
+    module: {
+        rules: {
+            test: 'match',
+            options: 'replace',
+        },
+    },
+})(baseConfig, {
     mode: 'development',
-    entry: {
-        'familie-tilbake': [
-            'babel-polyfill',
-            'react-hot-loader/patch',
-            'webpack-hot-middleware/client?reload=true',
+    entry: ['webpack-hot-middleware/client'],
+    output: {
+        path: path.join(process.cwd(), 'frontend_development'),
+        publicPath: '/assets/',
+    },
+    plugins: [new ReactRefreshWebpackPlugin(), new webpack.HotModuleReplacementPlugin()],
+    module: {
+        rules: [
+            {
+                test: /\.(jsx|tsx|ts|js)?$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader',
+                options: {
+                    presets: ['react-app'],
+                    plugins: ['react-refresh/babel'],
+                },
+            },
         ],
     },
-    output: {
-        path: path.join(__dirname, '../../frontend_development'),
-        filename: '[name].[contenthash].js',
-        publicPath: '/assets/',
-        globalObject: 'this',
-    },
-    devtool: 'inline-source-map',
-    resolve: {
-        alias: { react: require.resolve('react') },
-    },
-    plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('development'),
-        }),
-        new webpack.HotModuleReplacementPlugin(),
-    ],
 });
 
 module.exports = config;

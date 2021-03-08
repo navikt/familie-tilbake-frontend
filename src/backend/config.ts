@@ -5,20 +5,20 @@ import { appConfig, ISessionKonfigurasjon, IApi } from '@navikt/familie-backend'
 const Environment = () => {
     if (process.env.ENV === 'local') {
         return {
-            buildPath: '../../frontend_development',
+            buildPath: 'frontend_development',
             namespace: 'local',
             proxyUrl: 'http://localhost:8030',
         };
     } else if (process.env.ENV === 'e2e') {
         return {
-            buildPath: '../../frontend_production',
+            buildPath: 'frontend_production',
             namespace: 'e2e',
             proxyUrl: 'http://familie-tilbake:8030',
             // redisUrl: 'familie-redis',
         };
     } else if (process.env.ENV === 'preprod') {
         return {
-            buildPath: '../../frontend_production',
+            buildPath: 'frontend_production',
             namespace: 'preprod',
             proxyUrl: 'https://familie-tilbake.dev-fss-pub.nais.io',
             redisUrl: process.env.REDIS_HOST,
@@ -26,7 +26,7 @@ const Environment = () => {
     }
 
     return {
-        buildPath: '../../frontend_production',
+        buildPath: 'frontend_production',
         namespace: 'production',
         proxyUrl: 'https://familie-tilbake.prod-fss-pub.nais.io',
         redisUrl: process.env.REDIS_HOST,
