@@ -34,7 +34,7 @@
     "@navikt/familie-http": "^1.0.3",
     "@navikt/familie-logging": "^1.0.3",
     "@navikt/familie-typer": "^3.0.12",
-    "@navikt/familie-visittkort": "^2.1.22",
+    "@navikt/familie-visittkort": "^2.1.23",
     "@navikt/helse-frontend-tidslinje": "^6.1.6",
     "@navikt/nap-user-panel": "^1.1.0",
     "@types/classnames": "^2.2.11",
