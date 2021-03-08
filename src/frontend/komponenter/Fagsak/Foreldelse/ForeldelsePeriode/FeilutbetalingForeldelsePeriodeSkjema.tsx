@@ -137,8 +137,8 @@ const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ periode, erLesevisning }) =
                                     settOppdagelsesDato(nyDato ? nyDato : '');
                                 }}
                                 valgtDato={oppdagelsesDato}
-                                dayPickerProps={{
-                                    disabledDays: { after: new Date() },
+                                limitations={{
+                                    maxDate: new Date().toISOString(),
                                 }}
                                 placeholder={datoformatNorsk.DATO}
                             />
