@@ -115,7 +115,7 @@
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-app": "^6.2.2",
     "express-static-gzip": "^2.1.0",
-    "html-webpack-plugin": "^5.3.0",
+    "html-webpack-plugin": "^5.3.1",
     "husky": "^4.3.8",
     "less": "^4.1.1",
     "less-loader": "^8.0.0",
