@@ -71,10 +71,10 @@ export interface IBehandling {
     eksternBrukId: string;
     //    endretAv: string;
     //    kategori: BehandlingKategori;
-    //    opprettetTidspunkt: string;
+    opprettetDato: string;
     //    personResultater: IRestPersonResultat[];
     //    personer: IGrunnlagPerson[];
-    resultat: Behandlingresultat;
+    resultatstype: Behandlingresultat;
     status: Behandlingstatus;
     //    steg: BehandlingSteg;
     //    stegTilstand: IRestStegTilstand[];
@@ -85,7 +85,7 @@ export interface IBehandling {
     //    vedtakForBehandling: IVedtakForBehandling[];
     //    utbetalingsperioder: IUtbetalingsperiode[];
     //    personerMedAndelerTilkjentYtelse: IPersonMedAndelerTilkjentYtelse[];
-    årsak: Behandlingårsak;
+    årsak?: Behandlingårsak;
     //    skalBehandlesAutomatisk: boolean;
     harVerge: boolean;
     kanHenleggeBehandling: boolean;

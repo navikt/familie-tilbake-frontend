@@ -56,16 +56,16 @@ interface IProps {
 }
 
 const Venstremeny: React.FunctionComponent<IProps> = ({ fagsak }) => {
-    const { åpenBehandling } = useBehandling();
+    const { behandling } = useBehandling();
 
     return (
         <StyledNav>
-            {åpenBehandling?.status === RessursStatus.SUKSESS
+            {behandling?.status === RessursStatus.SUKSESS
                 ? Object.entries(sider)
-                      .filter(([_, side]) => visSide(side, åpenBehandling.data))
+                      .filter(([_, side]) => visSide(side, behandling.data))
                       .map(([sideId, side], index: number) => {
-                          const tilPath = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${åpenBehandling.data.eksternBrukId}/${side.href}`;
-                          const aktiv = erSidenAktiv(side, åpenBehandling.data);
+                          const tilPath = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.data.eksternBrukId}/${side.href}`;
+                          const aktiv = erSidenAktiv(side, behandling.data);
                           return (
                               <React.Fragment key={sideId}>
                                   <StyledLink

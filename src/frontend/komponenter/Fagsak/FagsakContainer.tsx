@@ -10,6 +10,7 @@ import { useFagsak } from '../../context/FagsakContext';
 import { Fagsystem } from '../../kodeverk';
 import BehandlingContainer from './BehandlingContainer';
 import Personlinje from './Personlinje/Personlinje';
+import AlertStripe from 'nav-frontend-alertstriper';
 
 const FagsakContainerContent = styled.div`
     display: flex;
@@ -29,7 +30,7 @@ const FagsakContainer: React.FC = () => {
     const behandlingId = history.location.pathname.split('/')[6];
 
     const { fagsak, hentFagsak } = useFagsak();
-    const { åpenBehandling, hentBehandling } = useBehandling();
+    const { behandling, hentBehandling } = useBehandling();
 
     React.useEffect(() => {
         if (fagsystem !== undefined && fagsakId !== undefined) {
@@ -39,49 +40,52 @@ const FagsakContainer: React.FC = () => {
 
     React.useEffect(() => {
         if (fagsak?.status === RessursStatus.SUKSESS && behandlingId) {
-            const fagsakBehandling = fagsak.data.behandlinger.find(
-                behandling => behandling.eksternBrukId === behandlingId
-            );
-            if (fagsakBehandling?.eksternBrukId === behandlingId) {
-                hentBehandling(fagsakBehandling.id);
-            }
+            hentBehandling(fagsak.data, behandlingId);
         }
-    }, [fagsak]);
+    }, [fagsak, behandlingId]);
 
     switch (fagsak?.status) {
         case RessursStatus.SUKSESS: {
-            return (
-                <>
-                    <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
+            switch (behandling?.status) {
+                case RessursStatus.SUKSESS:
+                    return (
+                        <>
+                            <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
-                    <FagsakContainerContent>
-                        {åpenBehandling ? (
-                            åpenBehandling?.status === RessursStatus.SUKSESS ? (
+                            <FagsakContainerContent>
                                 <BehandlingContainer
                                     fagsak={fagsak.data}
-                                    åpenBehandling={åpenBehandling.data}
+                                    behandling={behandling.data}
                                 />
-                            ) : (
-                                <div>Ingen ressurs</div>
-                            )
-                        ) : behandlingId ? (
-                            <div>Ingen ressurs</div>
-                        ) : (
-                            <div>Saksoversikt?</div>
-                        )}
-                    </FagsakContainerContent>
-                </>
-            );
+                            </FagsakContainerContent>
+                        </>
+                    );
+                case RessursStatus.IKKE_TILGANG:
+                    return (
+                        <AlertStripe
+                            children={`Du har ikke tilgang til å se denne behandlingen.`}
+                            type={'advarsel'}
+                        />
+                    );
+                case RessursStatus.FEILET:
+                case RessursStatus.FUNKSJONELL_FEIL:
+                    return <AlertStripe children={behandling.frontendFeilmelding} type={'feil'} />;
+                default:
+                    return <div />;
+            }
         }
-        default:
-            return fagsystem ? (
-                <div>
-                    Skal vise fagsak {fagsakId} fra fagssystem {fagsystem} og behandling{' '}
-                    {behandlingId}
-                </div>
-            ) : (
-                <div>Ukjent fagssystem: {fagsystemParam}</div>
+        case RessursStatus.IKKE_TILGANG:
+            return (
+                <AlertStripe
+                    children={`Du har ikke tilgang til å se denne saken.`}
+                    type={'advarsel'}
+                />
             );
+        case RessursStatus.FEILET:
+        case RessursStatus.FUNKSJONELL_FEIL:
+            return <AlertStripe children={fagsak.frontendFeilmelding} type={'feil'} />;
+        default:
+            return <div />;
     }
 };
 

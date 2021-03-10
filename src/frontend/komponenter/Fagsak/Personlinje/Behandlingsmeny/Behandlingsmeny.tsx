@@ -37,7 +37,7 @@ interface IProps {
 }
 
 const Behandlingsmeny: React.FC<IProps> = () => {
-    const { åpenBehandling } = useBehandling();
+    const { behandling } = useBehandling();
     const [anker, settAnker] = React.useState<HTMLElement | undefined>(undefined);
 
     return (
@@ -67,17 +67,17 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                     <li>
                         <KnappBase mini={true}>Opprett revurdering</KnappBase>
                     </li>
-                    {åpenBehandling?.status === RessursStatus.SUKSESS && (
+                    {behandling?.status === RessursStatus.SUKSESS && (
                         <>
                             <li>
                                 <KnappBase
                                     mini={true}
-                                    disabled={!åpenBehandling.data.kanHenleggeBehandling}
+                                    disabled={!behandling.data.kanHenleggeBehandling}
                                 >
                                     Henlegg behandling
                                 </KnappBase>
                             </li>
-                            {åpenBehandling.data.harVerge ? (
+                            {behandling.data.harVerge ? (
                                 <li>
                                     <KnappBase mini={true}>Fjern verge</KnappBase>
                                 </li>

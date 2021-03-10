@@ -7,16 +7,18 @@ import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
 import {
     IBehandling,
-    behandlingårsaker,
     behandlingsstatuser,
     behandlingsresultater,
+    Behandlingstype,
 } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import Informasjonsbolk from '../../Felleskomponenter/Informasjonsbolk/Informasjonsbolk';
+import { ytelsetype } from '../../../kodeverk';
+import { formatterDatostring } from '../../../utils';
 
 interface IProps {
     fagsak: IFagsak;
-    åpenBehandling: IBehandling;
+    behandling: IBehandling;
 }
 
 const Container = styled.div`
@@ -38,22 +40,33 @@ const StyledHr = styled.hr`
     border-bottom: 1px solid ${navFarger.navLysGra};
 `;
 
-const Behandlingskort: React.FC<IProps> = ({ åpenBehandling }) => {
-    const tittel = 'Tilbakekreving';
+const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
+    const tittel =
+        behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING
+            ? 'Revurdering tilbakekreving'
+            : 'Tilbakekreving';
     return (
         <Container>
             <StyledUndertittel>{tittel}</StyledUndertittel>
-            <Normaltekst>{behandlingårsaker[åpenBehandling.årsak]}</Normaltekst>
+            <Normaltekst>{`Opprettet: ${
+                behandling.opprettetDato ? formatterDatostring(behandling.opprettetDato) : ''
+            }`}</Normaltekst>
             <StyledHr />
             <Informasjonsbolk
                 informasjon={[
                     {
+                        label: 'Ytelse',
+                        tekst: ytelsetype[fagsak.ytelsestype],
+                    },
+                    {
                         label: 'Behandlingsstatus',
-                        tekst: behandlingsstatuser[åpenBehandling.status],
+                        tekst: behandlingsstatuser[behandling.status],
                     },
                     {
                         label: 'Resultat',
-                        tekst: behandlingsresultater[åpenBehandling.resultat],
+                        tekst: behandling.resultatstype
+                            ? behandlingsresultater[behandling.resultatstype]
+                            : '-',
                     },
                 ]}
             />

@@ -1,38 +1,35 @@
 import React from 'react';
 
+import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
-import { byggSuksessRessurs, byggTomRessurs, Ressurs } from '@navikt/familie-typer';
+import { useHttp } from '@navikt/familie-http';
+import {
+    byggFeiletRessurs,
+    byggSuksessRessurs,
+    byggTomRessurs,
+    Ressurs,
+    RessursStatus,
+} from '@navikt/familie-typer';
 
 import {
     Aktsomhet,
+    Fagsystem,
     Foreldelsevurdering,
     HendelseType,
     HendelseUndertype,
     SærligeGrunner,
     Vilkårsresultat,
 } from '../kodeverk/';
-import {
-    Behandlingresultat,
-    Behandlingstatus,
-    Behandlingstype,
-    Behandlingårsak,
-    IBehandling,
-} from '../typer/behandling';
+import { IBehandling } from '../typer/behandling';
+import { IFagsak } from '../typer/fagsak';
 import {
     IFeilutbetalingFakta,
     IFeilutbetalingForeldelse,
     IFeilutbetalingVilkårsvurdering,
     Tilbakekrevingsvalg,
 } from '../typer/feilutbetalingtyper';
-
-const behandlingMock = {
-    aktiv: true,
-    type: Behandlingstype.TILBAKEKREVING,
-    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
-    resultat: Behandlingresultat.IKKE_VURDERT,
-    status: Behandlingstatus.UTREDES,
-};
+import { useFagsak } from './FagsakContext';
 
 const feilUtbetalingFakta = new Map<string, IFeilutbetalingFakta>([
     [
@@ -839,41 +836,73 @@ const feilutbetalingVilkårsvurdering = new Map<string, IFeilutbetalingVilkårsv
 ]);
 
 const [BehandlingProvider, useBehandling] = createUseContext(() => {
-    const [åpenBehandling, settÅpenBehandling] = React.useState<Ressurs<IBehandling>>();
+    const [behandling, settBehandling] = React.useState<Ressurs<IBehandling>>();
+    const { fagsak } = useFagsak();
+    const { request } = useHttp();
 
-    const hentBehandling = (behandlingId: string): void => {
-        settÅpenBehandling(
-            byggSuksessRessurs({
-                id: behandlingId,
-                eksternBrukId: behandlingId,
-                kanHenleggeBehandling: behandlingId === '3',
-                harVerge: behandlingId === '2',
-                ...behandlingMock,
-            })
+    const hentBehandling = (fagsak: IFagsak, behandlingId: string): void => {
+        const fagsakBehandling = fagsak.behandlinger.find(
+            behandling => behandling.eksternBrukId === behandlingId
         );
+        if (fagsakBehandling) {
+            request<void, IBehandling>({
+                method: 'GET',
+                url: `/familie-tilbake/api/behandling/v1/${fagsakBehandling.behandlingId}`,
+            })
+                .then((hentetBehandling: Ressurs<IBehandling>) => {
+                    settBehandling(hentetBehandling);
+                })
+                .catch((_error: AxiosError) => {
+                    settBehandling(byggFeiletRessurs('Ukjent feil ved henting av behandling'));
+                });
+        } else {
+            settBehandling(byggFeiletRessurs('Fann ikke behandling'));
+        }
     };
 
-    const hentFeilutbetalingFakta = (behandlingId: string): Ressurs<IFeilutbetalingFakta> => {
+    const utledBehandlingId = () => {
+        if (
+            behandling?.status === RessursStatus.SUKSESS &&
+            fagsak?.status === RessursStatus.SUKSESS
+        ) {
+            switch (fagsak.data.fagsystem) {
+                case Fagsystem.BA:
+                    return '2';
+                case Fagsystem.EF:
+                    return '3';
+                case Fagsystem.KS:
+                    return '4';
+                default:
+                    return '5';
+            }
+        } else {
+            return '5';
+        }
+    };
+    const hentFeilutbetalingFakta = (_behandlingId: string): Ressurs<IFeilutbetalingFakta> => {
+        const behandlingId = utledBehandlingId();
         const fakta = feilUtbetalingFakta.get(behandlingId);
         return fakta ? byggSuksessRessurs(fakta) : byggTomRessurs();
     };
 
     const hentFeilutbetalingForeldelse = (
-        behandlingId: string
+        _behandlingId: string
     ): Ressurs<IFeilutbetalingForeldelse> => {
+        const behandlingId = utledBehandlingId();
         const foreldelse = feilutbelingForeldelse.get(behandlingId);
         return foreldelse ? byggSuksessRessurs(foreldelse) : byggTomRessurs();
     };
 
     const hentFeilutbetalingVilkårsvurdering = (
-        behandlingId: string
+        _behandlingId: string
     ): Ressurs<IFeilutbetalingVilkårsvurdering> => {
+        const behandlingId = utledBehandlingId();
         const vilkårsvurdering = feilutbetalingVilkårsvurdering.get(behandlingId);
         return vilkårsvurdering ? byggSuksessRessurs(vilkårsvurdering) : byggTomRessurs();
     };
 
     return {
-        åpenBehandling,
+        behandling,
         hentBehandling,
         hentFeilutbetalingFakta,
         hentFeilutbetalingForeldelse,
