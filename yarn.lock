@@ -1381,34 +1381,36 @@
   dependencies:
     "@navikt/nap-bem-utils" "1.0.1"
 
-"@navikt/familie-backend@^5.0.22":
-  version "5.0.22"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-backend/-/familie-backend-5.0.22.tgz#2d43e0b5281de7186444f2eab6cc422c85221a6b"
-  integrity sha512-LnPSgnp+uApUQUaGuAFAU2bwqgZY2/lhF4Ddl09/oEY1dN2ptNI5S0dUGv5C32J3Oj5BUVnmRP20r2Bwy7Xv6A==
+"@navikt/familie-backend@5.0.21":
+  version "5.0.21"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-backend/-/familie-backend-5.0.21.tgz#7fa2414b90b8ab403796d5aae3e036651f7c71ba"
+  integrity sha512-cl+75MkZa7crTeqe6VY6FsDrIpAME/ceCOcXlI4sugJou7HmEsZlVvvgH+vNFaXHybJb7mBBQNSvA4/iqbKmPg==
   dependencies:
-    "@navikt/familie-logging" "^1.0.4"
+    "@navikt/familie-logging" "^1.0.3"
     "@types/cookie-parser" "^1.4.2"
-    "@types/express" "^4.17.11"
-    "@types/express-session" "^1.17.3"
+    "@types/express" "^4.17.9"
+    "@types/express-session" "^1.15.15"
     "@types/morgan" "^1.7.37"
-    "@types/passport" "^1.0.6"
+    "@types/passport" "^1.0.1"
     "@types/redis" "^2.8.14"
-    "@types/request-promise" "^4.1.47"
+    "@types/request-promise" "^4.1.46"
     "@types/tunnel" "^0.0.1"
     axios "^0.21.0"
-    connect-redis "^5.1.0"
+    connect-redis "^5.0.0"
     cookie-parser "^1.4.4"
     express "^4.17.1"
     express-http-proxy "^1.6.0"
     express-session "^1.17.1"
     https-proxy-agent "^5.0.0"
     moment-timezone "^0.5.27"
-    openid-client "^4.4.1"
+    nav-frontend-knapper "^2.0.31"
+    nav-frontend-knapper-style "^1.0.16"
+    openid-client "^4.2.0"
     passport "^0.4.0"
-    prom-client "^13.1.0"
+    prom-client "^12.0.0"
     redis "^3.0.2"
     request-promise "^4.2.5"
-    snyk "^1.473.0"
+    snyk "^1.336.0"
 
 "@navikt/familie-clipboard@^3.1.4":
   version "3.1.4"
@@ -1495,7 +1497,7 @@
     nav-frontend-knapper "^2.0.31"
     nav-frontend-knapper-style "^1.0.16"
 
-"@navikt/familie-logging@^1.0.4":
+"@navikt/familie-logging@^1.0.3", "@navikt/familie-logging@^1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@navikt/familie-logging/-/familie-logging-1.0.4.tgz#3e14ee4123928463159023d2f2cafe1e36cd4e2e"
   integrity sha512-dU/ynwqBUHlo/UE121UuLLXUcwm5OAU8FXXKGtQGZ6tmb8E1UohimfZRZyaK0zV5EPOt3wHBvrQH/C3GSIOYZw==
@@ -2040,14 +2042,14 @@
     "@types/qs" "*"
     "@types/range-parser" "*"
 
-"@types/express-session@^1.17.3":
+"@types/express-session@^1.15.15":
   version "1.17.3"
   resolved "https://registry.yarnpkg.com/@types/express-session/-/express-session-1.17.3.tgz#4a37c5c4428b8f922ac8ac1cb4bd9190a4d2b097"
   integrity sha512-57DnyxiqClXOIjoCgeKCUYfKxBPOlOY/k+l1TPK+7bSwyiPTrS5FIk1Ycql7twk4wO7P5lfOVy6akDGiaMSLfw==
   dependencies:
     "@types/express" "*"
 
-"@types/express@*", "@types/express@^4.17.11", "@types/express@^4.17.8":
+"@types/express@*", "@types/express@^4.17.8", "@types/express@^4.17.9":
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-4.17.11.tgz#debe3caa6f8e5fcda96b47bd54e2f40c4ee59545"
   integrity sha512-no+R6rW60JEc59977wIxreQVsIEOAYwgCqldrA/vkpCnbD7MqTefO97lmoBe4WE0F156bC4uLSP1XHDOySnChg==
@@ -2179,7 +2181,7 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
-"@types/passport@^1.0.6":
+"@types/passport@^1.0.1":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@types/passport/-/passport-1.0.6.tgz#72343e49d65efa98cb328163cff5f127981947d7"
   integrity sha512-9oKfrJXuAxvyxdrtMCxKkHgmd6DMO8NDOLvMJ1LvIWd6/xP+i81PAkpTaEca7VhJX9S009RciwZL/j6dsLsHrA==
@@ -2299,7 +2301,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/request-promise@^4.1.47":
+"@types/request-promise@^4.1.46":
   version "4.1.47"
   resolved "https://registry.yarnpkg.com/@types/request-promise/-/request-promise-4.1.47.tgz#62f58a52476ef6cfe4f38d689cb826959a33a268"
   integrity sha512-eRSZhAS8SMsrWOM8vbhxFGVZhTbWSJvaRKyufJTdIf4gscUouQvOBlfotPSPHbMR3S7kfkyKbhb1SWPmQdy3KQ==
@@ -3609,7 +3611,7 @@ confusing-browser-globals@^1.0.10, confusing-browser-globals@^1.0.9:
   resolved "https://registry.yarnpkg.com/confusing-browser-globals/-/confusing-browser-globals-1.0.10.tgz#30d1e7f3d1b882b25ec4933d1d1adac353d20a59"
   integrity sha512-gNld/3lySHwuhaVluJUKLePYirM3QNCKzVxqAdhJII9/WXKVX5PURzMVJspS1jTslSqjeuG4KMVTSouit5YPHA==
 
-connect-redis@^5.1.0:
+connect-redis@^5.0.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/connect-redis/-/connect-redis-5.1.0.tgz#bcef59e6fa882377a66398f46f674051a96bcc0b"
   integrity sha512-Cosy8gGUdkBPEYG84svgkzIGzspKBb98NUX4Nfc5eTJOF0A++41ZV15rPwWW0n5nU/FusNgNzuMeXhLVEQF80Q==
@@ -7346,10 +7348,10 @@ opencollective-postinstall@^2.0.2:
   resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz#7a0fff978f6dbfa4d006238fbac98ed4198c3259"
   integrity sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
 
-openid-client@^4.4.1:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/openid-client/-/openid-client-4.4.2.tgz#2c464aa4a06430a95a7dbc402f8016ac64b3dcce"
-  integrity sha512-A3003Ucp/4X1kxDWOCABYm14d1f8JBVhc8DJH/3+Rqm8r+QPbIAJ32y1P7aR3bHOuZyrKJ6YiA0DEXKuOQ9cwQ==
+openid-client@^4.2.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/openid-client/-/openid-client-4.5.0.tgz#08a4d250895d47af7157070fe5741f4164711da8"
+  integrity sha512-ofw+DcVOPXekG2l5quc7f2bQYi+Vtpa748PXz/u6LeLetTQlzQ1H1wiGnTMTyA9jA2gZGYTj4HsVd3DeQMdajA==
   dependencies:
     aggregate-error "^3.1.0"
     got "^11.8.0"
@@ -8096,10 +8098,10 @@ progress@^2.0.0, progress@^2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-prom-client@^13.1.0:
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/prom-client/-/prom-client-13.1.0.tgz#1185caffd8691e28d32e373972e662964e3dba45"
-  integrity sha512-jT9VccZCWrJWXdyEtQddCDszYsiuWj5T0ekrPszi/WEegj3IZy6Mm09iOOVM86A4IKMWq8hZkT2dD9MaSe+sng==
+prom-client@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/prom-client/-/prom-client-12.0.0.tgz#9689379b19bd3f6ab88a9866124db9da3d76c6ed"
+  integrity sha512-JbzzHnw0VDwCvoqf8y1WDtq4wSBAbthMB1pcVI/0lzdqHGJI3KBJDXle70XK+c7Iv93Gihqo0a5LlOn+g8+DrQ==
   dependencies:
     tdigest "^0.1.1"
 
@@ -9265,10 +9267,10 @@ snyk-try-require@^2.0.0:
     lodash.clonedeep "^4.3.0"
     lru-cache "^5.1.1"
 
-snyk@^1.473.0:
-  version "1.476.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.476.0.tgz#1b3dc14e43deaf4fa833b3826b92eaf9aaf92edc"
-  integrity sha512-GLOZC1EQ9mcA38WF+6a6z4rZtvHTGUiokXYp66DVf70OoNDPwM00nL3AwWtFc39bLb04TSl8INgL87LIXiYLUg==
+snyk@^1.336.0:
+  version "1.481.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.481.0.tgz#9f9e366814369c06a0884f7bf2f4a557181f74bf"
+  integrity sha512-lYoKrzGws/yVaKLur8srFBhkGI5koX4OSXqEd0JBtHiuMWR1XsHRQXpkO+7U9KkMvbEiuE9rB6u5QmQw316Tdg==
   dependencies:
     "@open-policy-agent/opa-wasm" "^1.2.0"
     "@snyk/cli-interface" "2.11.0"
@@ -9330,6 +9332,7 @@ snyk@^1.473.0:
     snyk-try-require "1.3.1"
     source-map-support "^0.5.11"
     strip-ansi "^5.2.0"
+    tar "^6.1.0"
     tempfile "^2.0.0"
     update-notifier "^4.1.0"
     uuid "^3.3.2"
@@ -9811,7 +9814,7 @@ tar-stream@^2.1.0, tar-stream@^2.1.2:
     inherits "^2.0.3"
     readable-stream "^3.1.1"
 
-tar@^6.0.2:
+tar@^6.0.2, tar@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/tar/-/tar-6.1.0.tgz#d1724e9bcc04b977b18d5c573b333a2207229a83"
   integrity sha512-DUCttfhsnLCjwoDoFcI+B2iJgYa93vBnDUATYEeRx6sntCTdN01VnqsIuTlALXla/LWooNg0yEGeB+Y8WdFxGA==

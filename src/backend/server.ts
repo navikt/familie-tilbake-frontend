@@ -12,6 +12,7 @@ import backend, { IApp, ensureAuthenticated, envVar } from '@navikt/familie-back
 import { logInfo } from '@navikt/familie-logging';
 
 import { sessionConfig } from './config';
+import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy } from './proxy';
 import setupRouter from './router';
 
@@ -20,7 +21,7 @@ const config = require('../../build_n_deploy/webpack/webpack.dev');
 
 const port = 8000;
 
-backend(sessionConfig).then(({ app, azureAuthClient, router }: IApp) => {
+backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }: IApp) => {
     let middleware;
 
     if (process.env.NODE_ENV === 'development') {

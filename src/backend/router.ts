@@ -11,7 +11,7 @@ import {
 } from '@navikt/familie-backend';
 
 import { buildPath } from './config';
-// import { prometheusTellere } from './metrikker';
+import { prometheusTellere } from './metrikker';
 
 export default (authClient: Client, router: Router) => {
     router.get('/version', (_: Request, res: Response) => {
@@ -21,7 +21,7 @@ export default (authClient: Client, router: Router) => {
     });
 
     router.get('/error', (_: Request, res: Response) => {
-        // prometheusTellere.errorRoute.inc();
+        prometheusTellere.errorRoute.inc();
         res.sendFile('error.html', { root: path.join(`assets/`) });
     });
 
@@ -33,7 +33,7 @@ export default (authClient: Client, router: Router) => {
 
     // APP
     router.get('*', ensureAuthenticated(authClient, false), (_: Request, res: Response) => {
-        // prometheusTellere.appLoad.inc();
+        prometheusTellere.appLoad.inc();
 
         res.sendFile('index.html', { root: path.join(process.cwd(), buildPath) });
     });
