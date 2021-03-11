@@ -5,13 +5,13 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 
-import { IBehandling } from '../../typer/behandling';
 import { IFagsak } from '../../typer/fagsak';
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 import FaktaContainer from './Fakta/FaktaContainer';
 import ForeldelseContainer from './Foreldelse/ForeldelseContainer';
 import Høyremeny from './Høyremeny/Høyremeny';
 import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
+import { IBehandling } from '../../typer/behandling';
 
 const BEHANDLING_KONTEKST_PATH = '/fagsystem/:fagsystem/fagsak/:fagsakId/behandling/:behandlingId';
 
@@ -34,14 +34,11 @@ const StyledHøyremenyContainer = styled.div`
 
 interface IProps {
     fagsak: IFagsak;
-    åpenBehandling: IBehandling;
+    behandling: IBehandling;
 }
 
-const BehandlingContainer: React.FC<IProps> = ({ fagsak, åpenBehandling }) => {
-    //const history = useHistory();
-    //const sidevisning = history.location.pathname.split('/')[7];
-
-    return (
+const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
+    return behandling ? (
         <>
             <StyledVenstremenyContainer>
                 <Venstremeny fagsak={fagsak} />
@@ -51,19 +48,16 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, åpenBehandling }) => {
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                         render={() => (
-                            <FaktaContainer
-                                behandling={åpenBehandling}
-                                ytelse={fagsak.ytelseType}
-                            />
+                            <FaktaContainer behandling={behandling} ytelse={fagsak.ytelsestype} />
                         )}
                     ></Route>
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
-                        render={() => <ForeldelseContainer behandling={åpenBehandling} />}
+                        render={() => <ForeldelseContainer behandling={behandling} />}
                     />
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
-                        render={() => <VilkårsvurderingContainer behandling={åpenBehandling} />}
+                        render={() => <VilkårsvurderingContainer behandling={behandling} />}
                     />
                     <Route path={BEHANDLING_KONTEKST_PATH + '/vedtak'}>
                         <div>Vedtak</div>
@@ -74,9 +68,11 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, åpenBehandling }) => {
                 </Switch>
             </StyledMainContainer>
             <StyledHøyremenyContainer>
-                <Høyremeny fagsak={fagsak} åpenBehandling={åpenBehandling} />
+                <Høyremeny fagsak={fagsak} behandling={behandling} />
             </StyledHøyremenyContainer>
         </>
+    ) : (
+        <div />
     );
 };
 

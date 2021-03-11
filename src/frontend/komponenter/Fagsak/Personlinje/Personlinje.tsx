@@ -38,7 +38,7 @@ interface IProps {
 }
 
 const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
-    const { åpenBehandling } = useBehandling();
+    const { behandling } = useBehandling();
     return (
         <StyledContainer>
             <Visittkort
@@ -49,7 +49,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
             >
                 <PlaceholderDiv />
 
-                {åpenBehandling?.status === RessursStatus.SUKSESS && (
+                {behandling?.status === RessursStatus.SUKSESS && (
                     <KnappBase mini={true} type={'flat'}>
                         Gå til revurderingen
                     </KnappBase>

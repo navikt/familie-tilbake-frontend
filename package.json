@@ -16,7 +16,9 @@
     "prepare": "yarn run snyk-protect"
   },
   "husky": {
-    "hooks": {}
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,css}": [
@@ -25,7 +27,7 @@
     ]
   },
   "dependencies": {
-    "@navikt/familie-backend": "^5.0.22",
+    "@navikt/familie-backend": "5.0.21",
     "@navikt/familie-clipboard": "^3.1.4",
     "@navikt/familie-form-elements": "^2.2.1",
     "@navikt/familie-header": "2.0.22",
@@ -37,9 +39,8 @@
     "@navikt/nap-user-panel": "^1.1.0",
     "@types/classnames": "^2.2.11",
     "@types/express": "^4.17.8",
-    "@types/http-proxy-middleware": "^0.19.3",
     "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.1",
+    "@types/react-dom": "^17.0.2",
     "@types/react-modal": "^3.12.0",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-router-hash-link": "^1.2.1",
@@ -72,8 +73,8 @@
     "nav-frontend-paneler-style": "^1.0.2",
     "nav-frontend-popover": "^1.0.3",
     "nav-frontend-popover-style": "^1.0.2",
-    "nav-frontend-skjema": "^3.0.53",
-    "nav-frontend-skjema-style": "^2.0.33",
+    "nav-frontend-skjema": "^3.1.0",
+    "nav-frontend-skjema-style": "^2.1.0",
     "nav-frontend-typografi": "^3.0.4",
     "nav-frontend-typografi-style": "^1.0.35",
     "prop-types": "^15.7.2",
@@ -85,25 +86,25 @@
     "react-router-hash-link": "^2.4.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "snyk": "^1.476.0",
+    "snyk": "^1.483.0",
     "styled-components": "^5.2.1",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
     "@axe-core/react": "^4.1.1",
-    "@babel/core": "^7.13.8",
+    "@babel/core": "^7.13.10",
     "@babel/preset-react": "^7.12.13",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@types/webpack-dev-middleware": "^4.1.0",
     "@types/webpack-env": "^1.16.0",
     "@types/webpack-hot-middleware": "^2.25.3",
-    "@typescript-eslint/eslint-plugin": "^4.16.1",
-    "@typescript-eslint/parser": "^4.16.1",
+    "@typescript-eslint/eslint-plugin": "^4.17.0",
+    "@typescript-eslint/parser": "^4.17.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-react-app": "^10.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "compression-webpack-plugin": "^7.1.2",
-    "css-loader": "^5.1.1",
+    "css-loader": "^5.1.2",
     "css-minimizer-webpack-plugin": "^1.2.0",
     "eslint": "^7.21.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -115,7 +116,7 @@
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-app": "^6.2.2",
     "express-static-gzip": "^2.1.0",
-    "html-webpack-plugin": "^5.3.0",
+    "html-webpack-plugin": "^5.3.1",
     "husky": "^4.3.8",
     "less": "^4.1.1",
     "less-loader": "^8.0.0",

@@ -15,13 +15,13 @@ const StyledContainer = styled.div`
 
 interface IProps {
     fagsak: IFagsak;
-    åpenBehandling: IBehandling;
+    behandling: IBehandling;
 }
 
-const Høyremeny: React.FC<IProps> = ({ fagsak, åpenBehandling }) => {
+const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
     return (
         <StyledContainer>
-            <Behandlingskort fagsak={fagsak} åpenBehandling={åpenBehandling} />
+            <Behandlingskort fagsak={fagsak} behandling={behandling} />
         </StyledContainer>
     );
 };
