@@ -86,7 +86,7 @@
     "react-router-hash-link": "^2.4.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "snyk": "^1.480.0",
+    "snyk": "^1.483.0",
     "styled-components": "^5.2.1",
     "uuid": "^8.3.0"
   },
@@ -104,7 +104,7 @@
     "babel-preset-react-app": "^10.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "compression-webpack-plugin": "^7.1.2",
-    "css-loader": "^5.1.1",
+    "css-loader": "^5.1.2",
     "css-minimizer-webpack-plugin": "^1.2.0",
     "eslint": "^7.21.0",
     "eslint-config-airbnb": "^18.2.1",
