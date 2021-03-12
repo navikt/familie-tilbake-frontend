@@ -22,10 +22,6 @@ const StyledForeldelse = styled.div`
     padding: 10px;
 `;
 
-const StyledUndertittel = styled(Undertittel)`
-    margin-bottom: 10px;
-`;
-
 interface IProps {
     behandling: IBehandling;
 }
@@ -39,7 +35,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
     const erLesevisning = false;
 
     React.useEffect(() => {
-        const foreldelse = hentFeilutbetalingForeldelse(behandling.id);
+        const foreldelse = hentFeilutbetalingForeldelse(behandling.behandlingId);
         if (foreldelse.status === RessursStatus.SUKSESS) {
             settFeilutbetalingForeldelse(foreldelse.data);
         }
@@ -47,19 +43,12 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
 
     return feilutbetalingForeldelse ? (
         <StyledForeldelse>
-            <Row>
-                <Column xs="12">
-                    <StyledUndertittel>Foreldelse</StyledUndertittel>
-                </Column>
-            </Row>
-            <Row>
-                <Column xs="12">
-                    <Normaltekst>
-                        Perioden før {getDate()} kan være foreldet. Del opp perioden ved behov og
-                        fastsett foreldelse
-                    </Normaltekst>
-                </Column>
-            </Row>
+            <Undertittel>Foreldelse</Undertittel>
+            <Spacer20 />
+            <Normaltekst>
+                Perioden før {getDate()} kan være foreldet. Del opp perioden ved behov og fastsett
+                foreldelse
+            </Normaltekst>
             <Spacer20 />
             <Row>
                 <Column xs="12">

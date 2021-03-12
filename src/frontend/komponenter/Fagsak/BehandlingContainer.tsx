@@ -12,6 +12,7 @@ import ForeldelseContainer from './Foreldelse/ForeldelseContainer';
 import Høyremeny from './Høyremeny/Høyremeny';
 import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
 import { IBehandling } from '../../typer/behandling';
+import VedtakContainer from './Vedtak/VedtakContainer';
 
 const BEHANDLING_KONTEKST_PATH = '/fagsystem/:fagsystem/fagsak/:fagsakId/behandling/:behandlingId';
 
@@ -59,9 +60,10 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
                         render={() => <VilkårsvurderingContainer behandling={behandling} />}
                     />
-                    <Route path={BEHANDLING_KONTEKST_PATH + '/vedtak'}>
-                        <div>Vedtak</div>
-                    </Route>
+                    <Route
+                        path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
+                        render={() => <VedtakContainer behandling={behandling} />}
+                    />
                     <Route path={BEHANDLING_KONTEKST_PATH + '/verge'}>
                         <div>Verge</div>
                     </Route>
