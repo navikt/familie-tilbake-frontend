@@ -30,7 +30,7 @@
     "@navikt/familie-backend": "5.0.21",
     "@navikt/familie-clipboard": "^3.1.4",
     "@navikt/familie-form-elements": "^2.2.1",
-    "@navikt/familie-header": "2.0.22",
+    "@navikt/familie-header": "3.0.4",
     "@navikt/familie-http": "^1.0.4",
     "@navikt/familie-logging": "^1.0.4",
     "@navikt/familie-typer": "^3.0.13",
