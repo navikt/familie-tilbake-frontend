@@ -35,7 +35,7 @@ const SumRad = styled(Row)`
 `;
 
 const NormaltekstBold = styled(Normaltekst)`
-    font-weight: bold;
+    font-weight: 600;
 `;
 
 interface IProps {

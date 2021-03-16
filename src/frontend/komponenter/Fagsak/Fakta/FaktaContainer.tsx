@@ -47,7 +47,7 @@ const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
     const erLesevisning = false;
 
     React.useEffect(() => {
-        const fakta = hentFeilutbetalingFakta(behandling.id);
+        const fakta = hentFeilutbetalingFakta(behandling.behandlingId);
         if (fakta.status === RessursStatus.SUKSESS) {
             settFeilutbetalingFakta(fakta.data);
             settBegrunnelse(fakta.data?.begrunnelse);

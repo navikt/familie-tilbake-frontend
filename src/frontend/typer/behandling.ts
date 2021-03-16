@@ -65,7 +65,7 @@ export const behandlingstyper: Record<Behandlingstype, string> = {
 };
 
 export interface IBehandling {
-    id: string;
+    behandlingId: string;
     aktiv: boolean;
     //    begrunnelse: string;
     eksternBrukId: string;
@@ -74,7 +74,7 @@ export interface IBehandling {
     opprettetDato: string;
     //    personResultater: IRestPersonResultat[];
     //    personer: IGrunnlagPerson[];
-    resultatstype: Behandlingresultat;
+    resultatstype?: Behandlingresultat;
     status: Behandlingstatus;
     //    steg: BehandlingSteg;
     //    stegTilstand: IRestStegTilstand[];

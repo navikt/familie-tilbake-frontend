@@ -15,6 +15,7 @@ import {
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
+import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 
 const StyledVilkårsvurdering = styled.div`
     padding: 10px;
@@ -37,7 +38,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
     const erLesevisning = false;
 
     React.useEffect(() => {
-        const vilkårsvurdering = hentFeilutbetalingVilkårsvurdering(behandling.id);
+        const vilkårsvurdering = hentFeilutbetalingVilkårsvurdering(behandling.behandlingId);
         if (vilkårsvurdering.status === RessursStatus.SUKSESS) {
             settFeilutbetalingVilkårsvurdering(vilkårsvurdering.data);
         }
@@ -57,19 +58,12 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
 
     return feilutbetalingVilkårsvurdering ? (
         <StyledVilkårsvurdering>
-            <RadMedMargin>
-                <Column xs="12">
-                    <Undertittel>Tilbakekreving</Undertittel>
-                </Column>
-            </RadMedMargin>
-            <RadMedMargin>
-                <Column xs="12">
-                    <Normaltekst>
-                        Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik
-                        vurdering
-                    </Normaltekst>
-                </Column>
-            </RadMedMargin>
+            <Undertittel>Tilbakekreving</Undertittel>
+            <Spacer20 />
+            <Normaltekst>
+                Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering
+            </Normaltekst>
+            <Spacer20 />
             <RadMedMargin>
                 <Column xs="12">
                     <VilkårsvurderingPerioder

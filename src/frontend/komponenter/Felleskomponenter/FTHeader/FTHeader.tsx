@@ -22,6 +22,7 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
                 enhet: innloggetSaksbehandler?.enhet || 'ukjent enhet',
             }}
             brukerPopoverItems={[{ name: 'Logg ut', href: `${window.origin}/auth/logout` }]}
+            eksterneLenker={[]}
         >
             <div>
                 <NavLink
