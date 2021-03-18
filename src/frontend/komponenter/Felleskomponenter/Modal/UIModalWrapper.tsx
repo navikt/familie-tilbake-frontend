@@ -3,6 +3,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
+import navFarger from 'nav-frontend-core';
 import Modal from 'nav-frontend-modal';
 import { Undertittel } from 'nav-frontend-typografi';
 
@@ -12,7 +13,7 @@ const StyledModal = styled(Modal)`
     .uimodal {
         width: 35rem;
         min-height: 12rem;
-        color: @navMorkGra;
+        color: ${navFarger.navMorkGra};
 
         &__content {
             padding: 0.5rem 1.5rem;

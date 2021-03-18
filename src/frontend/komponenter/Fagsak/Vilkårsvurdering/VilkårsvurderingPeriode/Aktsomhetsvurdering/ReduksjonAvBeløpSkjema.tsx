@@ -12,7 +12,7 @@ import { Aktsomhet } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isNumeric } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
-import { useVilkårsvurderingPeriode } from '../VilkårsvurderingPeriodeContext';
+import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 
 const StyledNormaltekst = styled(Normaltekst)`
     padding-top: 15px;
@@ -39,16 +39,11 @@ export const EGENDEFINERT = 'Egendefinert';
 export const ANDELER = ['30', '50', '70', EGENDEFINERT];
 
 interface IProps {
-    uaktsomhetGrad: Aktsomhet;
     harMerEnnEnAktivitet: boolean;
     erLesevisning: boolean;
 }
 
-const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({
-    uaktsomhetGrad,
-    harMerEnnEnAktivitet,
-    erLesevisning,
-}) => {
+const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ harMerEnnEnAktivitet, erLesevisning }) => {
     const {
         vilkårsvurderingPeriode,
         aktsomhetsvurdering,
@@ -125,6 +120,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({
                         id="harGrunnerTilReduksjon"
                         legend={'Skal særlige grunner gi reduksjon av beløpet?'}
                         erLesevisning={erLesevisning}
+                        verdi={aktsomhetsvurdering?.harGrunnerTilReduksjon ? 'Ja' : 'Nei'}
                     >
                         <Radio
                             name="harGrunnerTilReduksjon"
@@ -143,7 +139,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({
                 </Column>
             </Row>
             {aktsomhetsvurdering?.harGrunnerTilReduksjon === true && (
-                <ArrowBox alignOffset={20}>
+                <ArrowBox alignOffset={erLesevisning ? 5 : 20} marginTop={erLesevisning ? 15 : 0}>
                     <Row>
                         <Column md="6">
                             {!harMerEnnEnAktivitet && !erEgendefinert && (
@@ -211,7 +207,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({
                                 />
                             )}
                         </Column>
-                        {uaktsomhetGrad === Aktsomhet.GROVT_UAKTSOM && (
+                        {aktsomhetsvurdering?.aktsomhet === Aktsomhet.GROVT_UAKTSOM && (
                             <Column md="6">
                                 <UndertekstBold>Skal det tillegges renter?</UndertekstBold>
                                 <StyledNormaltekst>Nei</StyledNormaltekst>
@@ -235,11 +231,12 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({
                                     : '100 %'}
                             </StyledNormaltekst>
                         </Column>
-                        {uaktsomhetGrad === Aktsomhet.GROVT_UAKTSOM && (
+                        {aktsomhetsvurdering?.aktsomhet === Aktsomhet.GROVT_UAKTSOM && (
                             <HorisontalFamilieRadioGruppe
                                 id="skalDetTilleggesRenter"
                                 legend={'Skal det tillegges renter?'}
                                 erLesevisning={erLesevisning}
+                                verdi={aktsomhetsvurdering.ileggRenter ? 'Ja' : 'Nei'}
                             >
                                 <Radio
                                     name="skalDetTilleggesRenter"

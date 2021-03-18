@@ -11,12 +11,14 @@ import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Ytelsetype } from '../../../kodeverk';
-import { IBehandling } from '../../../typer/behandling';
+import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
+import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 
 const StyledFeilutbetalingFakta = styled.div`
     padding: 10px;
@@ -42,11 +44,18 @@ interface IProps {
 
 const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
     const [feilutbetalingFakta, settFeilutbetalingFakta] = React.useState<IFeilutbetalingFakta>();
+    const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
     const [begrunnelse, settBegrunnelse] = React.useState<string>();
-    const { hentFeilutbetalingFakta } = useBehandling();
-    const erLesevisning = false;
+    const {
+        aktivtSteg,
+        behandlingILesemodus,
+        hentFeilutbetalingFakta,
+        erStegBehandlet,
+    } = useBehandling();
+    const erLesevisning = !!behandlingILesemodus;
 
     React.useEffect(() => {
+        settStegErBehandlet(erStegBehandlet(Behandlingssteg.FAKTA));
         const fakta = hentFeilutbetalingFakta(behandling.behandlingId);
         if (fakta.status === RessursStatus.SUKSESS) {
             settFeilutbetalingFakta(fakta.data);
@@ -61,8 +70,19 @@ const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
 
     return feilutbetalingFakta ? (
         <StyledFeilutbetalingFakta>
+            <Undertittel>Fakta om feilutbetaling</Undertittel>
+            <Spacer20 />
+            {aktivtSteg && (
+                <>
+                    <Steginformasjon
+                        behandletSteg={stegErBehandlet}
+                        infotekst={'Kontroller at korrekt hendelse er satt'}
+                    />
+                    <Spacer20 />
+                </>
+            )}
             <RadMedMargin>
-                <Column xs="12" md="6">
+                <Column sm="12" md="6">
                     <RadMedMargin>
                         <Column xs="12">
                             <Undertittel>Feilutbetaling</Undertittel>
@@ -116,12 +136,12 @@ const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
                         </Column>
                     </Row>
                 </Column>
-                <Column xs="12" md="6">
+                <Column sm="12" md="6">
                     <FaktaRevurdering feilutbetalingFakta={feilutbetalingFakta} />
                 </Column>
             </RadMedMargin>
             <Row>
-                <Column md="6">
+                <Column sm="12" md="6">
                     <FamilieTilbakeTextArea
                         name={'begrunnelse'}
                         label={'Forklar årsaken(e) til feilutbetalingen'}
@@ -129,6 +149,7 @@ const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
                         value={begrunnelse ? begrunnelse : ''}
                         onChange={event => onChangeBegrunnelse(event)}
                         maxLength={1500}
+                        className={erLesevisning ? 'lesevisning' : ''}
                     />
                 </Column>
             </Row>

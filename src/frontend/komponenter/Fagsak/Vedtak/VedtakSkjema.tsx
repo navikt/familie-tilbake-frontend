@@ -52,7 +52,7 @@ const VedtakSkjema: React.FC<IProps> = ({ avsnitter, erLesevisning }) => {
                     <React.Fragment key={avsnitt.avsnittstype + avsnitt.fom}>
                         <Ekspanderbartpanel
                             tittel={avsnitt.overskrift ? avsnitt.overskrift : ''}
-                            apen={skalVisesÅpen(avsnitt)}
+                            apen={!erLesevisning && skalVisesÅpen(avsnitt)}
                         >
                             {avsnitt.underavsnittsliste.map(underavsnitt => {
                                 return (

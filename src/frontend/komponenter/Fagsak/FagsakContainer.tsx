@@ -3,6 +3,8 @@ import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
+import AlertStripe from 'nav-frontend-alertstriper';
+
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../context/BehandlingContext';
@@ -10,7 +12,12 @@ import { useFagsak } from '../../context/FagsakContext';
 import { Fagsystem } from '../../kodeverk';
 import BehandlingContainer from './BehandlingContainer';
 import Personlinje from './Personlinje/Personlinje';
-import AlertStripe from 'nav-frontend-alertstriper';
+import {
+    Behandlingsstegstatus,
+    IBehandlingsstegstilstand,
+    venteårsaker,
+} from '../../typer/behandling';
+import PåVentModal from '../Felleskomponenter/Modal/PåVentModal';
 
 const FagsakContainerContent = styled.div`
     display: flex;
@@ -30,7 +37,10 @@ const FagsakContainer: React.FC = () => {
     const behandlingId = history.location.pathname.split('/')[6];
 
     const { fagsak, hentFagsak } = useFagsak();
-    const { behandling, hentBehandling } = useBehandling();
+    const { behandling, hentBehandling, harKravgrunnlag } = useBehandling();
+
+    const [ventegrunn, settVentegrunn] = React.useState<IBehandlingsstegstilstand>();
+    const [visVenteModal, settVisVenteModal] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         if (fagsystem !== undefined && fagsakId !== undefined) {
@@ -40,9 +50,31 @@ const FagsakContainer: React.FC = () => {
 
     React.useEffect(() => {
         if (fagsak?.status === RessursStatus.SUKSESS && behandlingId) {
+            console.log('Skal hente behandling!');
             hentBehandling(fagsak.data, behandlingId);
+            settVisVenteModal(false);
         }
     }, [fagsak, behandlingId]);
+
+    React.useEffect(() => {
+        if (behandling?.status === RessursStatus.SUKSESS) {
+            const venteSteg = behandling.data.behandlingsstegsinfo?.find(
+                stegInfo => stegInfo.behandlingsstegstatus === Behandlingsstegstatus.VENTER
+            );
+            if (venteSteg) {
+                settVentegrunn(venteSteg);
+                settVisVenteModal(true);
+            }
+        }
+    }, [behandling]);
+
+    const lukkVenteModal = () => {
+        settVisVenteModal(false);
+    };
+
+    if (visVenteModal) {
+        return <PåVentModal venteÅrsak={ventegrunn} onClose={lukkVenteModal} />;
+    }
 
     switch (fagsak?.status) {
         case RessursStatus.SUKSESS: {
@@ -52,12 +84,25 @@ const FagsakContainer: React.FC = () => {
                         <>
                             <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
-                            <FagsakContainerContent>
-                                <BehandlingContainer
-                                    fagsak={fagsak.data}
-                                    behandling={behandling.data}
+                            {ventegrunn && (
+                                <AlertStripe
+                                    children={`Behandlingen er satt på vent${
+                                        ventegrunn.venteårsak
+                                            ? `: ${venteårsaker[ventegrunn.venteårsak]}`
+                                            : ''
+                                    }`}
+                                    type={'info'}
                                 />
-                            </FagsakContainerContent>
+                            )}
+
+                            {harKravgrunnlag && (
+                                <FagsakContainerContent>
+                                    <BehandlingContainer
+                                        fagsak={fagsak.data}
+                                        behandling={behandling.data}
+                                    />
+                                </FagsakContainerContent>
+                            )}
                         </>
                     );
                 case RessursStatus.IKKE_TILGANG:

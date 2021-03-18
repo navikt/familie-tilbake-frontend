@@ -89,6 +89,11 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                             <li>
                                 <KnappBase mini={true}>Bytt behandlingsenhet</KnappBase>
                             </li>
+                            {behandling.data.erBehandlingPåVent ? (
+                                <KnappBase mini={true}>Fortsett behandling</KnappBase>
+                            ) : (
+                                <KnappBase mini={true}>Sett behandling på vent</KnappBase>
+                            )}
                         </>
                     )}
                 </StyledList>

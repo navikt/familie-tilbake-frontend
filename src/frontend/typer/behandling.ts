@@ -64,29 +64,77 @@ export const behandlingstyper: Record<Behandlingstype, string> = {
     REVURDERING_TILBAKEKREVING: 'Revurdering tilbakekreving',
 };
 
+export enum Behandlingssteg {
+    VARSEL = 'VARSEL',
+    GRUNNLAG = 'GRUNNLAG',
+    VERGE = 'VERGE',
+    FAKTA = 'FAKTA',
+    FORELDELSE = 'FORELDELSE',
+    VILKÅRSVURDERING = 'VILKÅRSVURDERING',
+    FORESLÅ_VEDTAK = 'FORESLÅ_VEDTAK',
+    FATTE_VEDTAK = 'FATTE_VEDTAK',
+    IVERKSETT_VEDTAK = 'IVERKSETT_VEDTAK',
+    AVSLUTTET = 'AVSLUTTET',
+}
+
+export const SaksbehandlerBehandlingssteg = [
+    Behandlingssteg.VERGE,
+    Behandlingssteg.FAKTA,
+    Behandlingssteg.FORELDELSE,
+    Behandlingssteg.VILKÅRSVURDERING,
+    Behandlingssteg.FORESLÅ_VEDTAK,
+    Behandlingssteg.FATTE_VEDTAK,
+];
+
+export enum Behandlingsstegstatus {
+    STARTET = 'STARTET',
+    VENTER = 'VENTER',
+    KLAR = 'KLAR',
+    UTFØRT = 'UTFØRT',
+    AUTOUTFØRT = 'AUTOUTFØRT',
+    TILBAKEFØRT = 'TILBAKEFØRT',
+    AVBRUTT = 'AVBRUTT',
+}
+
+export enum Venteårsak {
+    VENT_PÅ_BRUKERTILBAKEMELDING = 'VENT_PÅ_BRUKERTILBAKEMELDING',
+    VENT_PÅ_TILBAKEKREVINGSGRUNNLAG = 'VENT_PÅ_TILBAKEKREVINGSGRUNNLAG',
+    AVVENTER_DOKUMENTASJON = 'AVVENTER_DOKUMENTASJON',
+    UTVIDET_TILSVAR_FRIST = 'UTVIDET_TILSVAR_FRIST',
+    ENDRE_TILKJENT_YTELSE = 'ENDRE_TILKJENT_YTELSE',
+    VENT_PÅ_MULIG_MOTREGNING = 'VENT_PÅ_MULIG_MOTREGNING',
+}
+
+export const venteårsaker: Record<Venteårsak, string> = {
+    VENT_PÅ_BRUKERTILBAKEMELDING: 'Venter på tilbakemelding fra bruker',
+    VENT_PÅ_TILBAKEKREVINGSGRUNNLAG: 'Venter på tilbakekrevingsgrunnlag fra økonomi',
+    AVVENTER_DOKUMENTASJON: 'Avventer dokumentasjon',
+    UTVIDET_TILSVAR_FRIST: 'Bruker har fått utvidet tilsvarsfrist',
+    ENDRE_TILKJENT_YTELSE: 'Mulig endring i tilkjent ytelse',
+    VENT_PÅ_MULIG_MOTREGNING: 'Mulig motregning med annen ytelse',
+};
+
+export interface IBehandlingsstegstilstand {
+    behandlingssteg: Behandlingssteg;
+    behandlingsstegstatus: Behandlingsstegstatus;
+    venteårsak?: Venteårsak;
+    tidsfrist?: string;
+}
+
 export interface IBehandling {
     behandlingId: string;
-    aktiv: boolean;
-    //    begrunnelse: string;
     eksternBrukId: string;
     //    endretAv: string;
-    //    kategori: BehandlingKategori;
     opprettetDato: string;
-    //    personResultater: IRestPersonResultat[];
-    //    personer: IGrunnlagPerson[];
     resultatstype?: Behandlingresultat;
     status: Behandlingstatus;
-    //    steg: BehandlingSteg;
-    //    stegTilstand: IRestStegTilstand[];
     //    totrinnskontroll?: ITotrinnskontroll;
-    //    opplysningsplikt?: IOpplysningsplikt;
     type: Behandlingstype;
-    //    underkategori: BehandlingUnderkategori;
     //    vedtakForBehandling: IVedtakForBehandling[];
-    //    utbetalingsperioder: IUtbetalingsperiode[];
-    //    personerMedAndelerTilkjentYtelse: IPersonMedAndelerTilkjentYtelse[];
     årsak?: Behandlingårsak;
     //    skalBehandlesAutomatisk: boolean;
+    erBehandlingPåVent?: boolean;
     harVerge: boolean;
     kanHenleggeBehandling: boolean;
+    behandlingsstegsinfo?: IBehandlingsstegstilstand[];
 }

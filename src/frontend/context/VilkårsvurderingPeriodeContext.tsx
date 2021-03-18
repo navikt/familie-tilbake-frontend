@@ -6,7 +6,7 @@ import {
     Aktsomhetsvurdering,
     VilkårsresultatInfo,
     VilkårsvurderingPeriode,
-} from '../../../../typer/feilutbetalingtyper';
+} from '../typer/feilutbetalingtyper';
 
 interface IContextProps {
     periode: VilkårsvurderingPeriode;

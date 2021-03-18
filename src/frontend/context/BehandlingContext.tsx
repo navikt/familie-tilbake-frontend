@@ -25,7 +25,12 @@ import {
     Vilkårsresultat,
     Vurdering,
 } from '../kodeverk/';
-import { IBehandling } from '../typer/behandling';
+import {
+    Behandlingssteg,
+    Behandlingsstegstatus,
+    IBehandling,
+    IBehandlingsstegstilstand,
+} from '../typer/behandling';
 import { IFagsak } from '../typer/fagsak';
 import {
     IFeilutbetalingFakta,
@@ -1305,8 +1310,15 @@ const vedtaksbrever = new Map<string, IVedtaksbrev>([
     ],
 ]);
 
+const erStegUtført = (status: Behandlingsstegstatus) => {
+    return status === Behandlingsstegstatus.UTFØRT || status === Behandlingsstegstatus.AUTOUTFØRT;
+};
+
 const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [behandling, settBehandling] = React.useState<Ressurs<IBehandling>>();
+    const [aktivtSteg, settAktivtSteg] = React.useState<IBehandlingsstegstilstand>();
+    const [harKravgrunnlag, settHarKravgrunnlag] = React.useState<boolean>();
+    const [behandlingILesemodus, settBehandlingILesemodus] = React.useState<boolean>();
     const { fagsak } = useFagsak();
     const { request } = useHttp();
 
@@ -1321,13 +1333,56 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
             })
                 .then((hentetBehandling: Ressurs<IBehandling>) => {
                     settBehandling(hentetBehandling);
+
+                    if (hentetBehandling.status === RessursStatus.SUKSESS) {
+                        const erILeseModus =
+                            hentetBehandling.data.erBehandlingPåVent ||
+                            hentetBehandling.data.behandlingsstegsinfo?.some(
+                                stegInfo =>
+                                    stegInfo.behandlingssteg === Behandlingssteg.AVSLUTTET ||
+                                    stegInfo.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK ||
+                                    (stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
+                                        stegInfo.behandlingsstegstatus ===
+                                            Behandlingsstegstatus.KLAR)
+                            );
+                        settBehandlingILesemodus(erILeseModus);
+
+                        const harKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo?.some(
+                            stegInfo =>
+                                stegInfo.behandlingssteg === Behandlingssteg.GRUNNLAG &&
+                                erStegUtført(stegInfo.behandlingsstegstatus)
+                        );
+                        settHarKravgrunnlag(
+                            !hentetBehandling.data.behandlingsstegsinfo || harKravgrunnlag
+                        );
+
+                        const aktivtSteg = hentetBehandling.data.behandlingsstegsinfo?.find(
+                            stegInfo =>
+                                stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR ||
+                                stegInfo.behandlingsstegstatus === Behandlingsstegstatus.VENTER
+                        );
+                        if (aktivtSteg) {
+                            settAktivtSteg(aktivtSteg);
+                        }
+                    }
                 })
-                .catch((_error: AxiosError) => {
+                .catch((error: AxiosError) => {
+                    console.log('Error: ', error);
                     settBehandling(byggFeiletRessurs('Ukjent feil ved henting av behandling'));
                 });
         } else {
             settBehandling(byggFeiletRessurs('Fann ikke behandling'));
         }
+    };
+
+    const erStegBehandlet = (steg: Behandlingssteg): boolean => {
+        if (behandling?.status === RessursStatus.SUKSESS) {
+            const behandlingSteg = behandling.data.behandlingsstegsinfo?.find(
+                stegInfo => stegInfo.behandlingssteg === steg
+            );
+            return erStegUtført(behandlingSteg?.behandlingsstegstatus);
+        }
+        return false;
     };
 
     const utledBehandlingId = () => {
@@ -1386,6 +1441,10 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     return {
         behandling,
         hentBehandling,
+        behandlingILesemodus,
+        aktivtSteg,
+        erStegBehandlet,
+        harKravgrunnlag,
         hentFeilutbetalingFakta,
         hentFeilutbetalingForeldelse,
         hentFeilutbetalingVilkårsvurdering,

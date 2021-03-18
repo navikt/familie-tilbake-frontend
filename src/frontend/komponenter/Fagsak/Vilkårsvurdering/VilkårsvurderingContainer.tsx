@@ -3,19 +3,20 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
-import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
+import { Undertittel } from 'nav-frontend-typografi';
 
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
-import { IBehandling } from '../../../typer/behandling';
+import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 const StyledVilkårsvurdering = styled.div`
     padding: 10px;
@@ -34,10 +35,17 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
         feilutbetalingVilkårsvurdering,
         settFeilutbetalingVilkårsvurdering,
     ] = React.useState<IFeilutbetalingVilkårsvurdering>();
-    const { hentFeilutbetalingVilkårsvurdering } = useBehandling();
-    const erLesevisning = false;
+    const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
+    const {
+        aktivtSteg,
+        erStegBehandlet,
+        behandlingILesemodus,
+        hentFeilutbetalingVilkårsvurdering,
+    } = useBehandling();
+    const erLesevisning = !!behandlingILesemodus;
 
     React.useEffect(() => {
+        settStegErBehandlet(erStegBehandlet(Behandlingssteg.VILKÅRSVURDERING));
         const vilkårsvurdering = hentFeilutbetalingVilkårsvurdering(behandling.behandlingId);
         if (vilkårsvurdering.status === RessursStatus.SUKSESS) {
             settFeilutbetalingVilkårsvurdering(vilkårsvurdering.data);
@@ -60,10 +68,15 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
         <StyledVilkårsvurdering>
             <Undertittel>Tilbakekreving</Undertittel>
             <Spacer20 />
-            <Normaltekst>
-                Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering
-            </Normaltekst>
-            <Spacer20 />
+            {aktivtSteg && (
+                <>
+                    <Steginformasjon
+                        behandletSteg={stegErBehandlet}
+                        infotekst={`Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering`}
+                    />
+                    <Spacer20 />
+                </>
+            )}
             <RadMedMargin>
                 <Column xs="12">
                     <VilkårsvurderingPerioder

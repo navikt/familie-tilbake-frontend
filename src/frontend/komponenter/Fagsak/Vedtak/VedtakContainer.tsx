@@ -24,8 +24,8 @@ interface IProps {
 const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
     const [beregningsresultat, settBeregningsresultat] = React.useState<IBeregningsresultat>();
     const [avsnittsliste, settAvsnittliste] = React.useState<VedtaksbrevAvsnitt[]>();
-    const { hentBeregningsresultat, hentVedtaksbrev } = useBehandling();
-    const erLesevisning = false;
+    const { behandlingILesemodus, hentBeregningsresultat, hentVedtaksbrev } = useBehandling();
+    const erLesevisning = !!behandlingILesemodus;
 
     React.useEffect(() => {
         if (behandling) {

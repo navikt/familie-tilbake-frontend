@@ -21,7 +21,7 @@ import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelement
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import AktsomhetGodTro from './GodTroSkjema';
 import TilbakekrevingAktivitetTabell from './TilbakekrevingAktivitetTabell';
-import { useVilkårsvurderingPeriode } from './VilkårsvurderingPeriodeContext';
+import { useVilkårsvurderingPeriode } from '../../../../context/VilkårsvurderingPeriodeContext';
 
 const StyledContainer = styled.div`
     border: 1px solid ${navFarger.navGra60};
@@ -150,6 +150,11 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     id="valgtVilkarResultatType"
                                     erLesevisning={erLesevisning}
                                     legend={'Er vilkårene for tilbakekreving oppfylt?'}
+                                    verdi={
+                                        vilkårsresultat?.vilkårsresultat
+                                            ? vilkårsresultater[vilkårsresultat.vilkårsresultat]
+                                            : ''
+                                    }
                                 >
                                     {vilkårsresultatTyper.map(type => (
                                         <Radio
