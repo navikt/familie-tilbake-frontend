@@ -14,7 +14,6 @@ const ef_behandling_4: IBehandling = {
     eksternBrukId: '3',
     kanHenleggeBehandling: true,
     harVerge: true,
-    aktiv: true,
     type: Behandlingstype.TILBAKEKREVING,
     årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,

@@ -1,9 +1,11 @@
 import { kjønnType } from '@navikt/familie-typer';
 
-import { Fagsystem, Ytelsetype } from '../../frontend/kodeverk';
-import { Behandlingstype, Behandlingstatus } from '../../frontend/typer/behandling';
-import { IFagsak, IFagsakBehandling } from '../../frontend/typer/fagsak';
-import { IPerson } from '../../frontend/typer/person';
+import { Fagsystem, Ytelsetype } from '../../../frontend/kodeverk';
+import { Behandlingstype, Behandlingstatus } from '../../../frontend/typer/behandling';
+import { IFagsak, IFagsakBehandling } from '../../../frontend/typer/fagsak';
+import { IPerson } from '../../../frontend/typer/person';
+
+export * from './BA_behandling_4';
 
 const bruker: IPerson = {
     navn: 'Test Testesen',

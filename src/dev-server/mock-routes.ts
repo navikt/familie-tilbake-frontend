@@ -4,10 +4,24 @@ import { Request, Response, Router } from 'express';
 
 import { byggFeiletRessurs, byggSuksessRessurs, RessursStatus } from '@navikt/familie-typer';
 
-import { fagsak_ba2, ba_behandling_4, ba_feilutbetalingFakta_4 } from './mock';
-import { fagsak_ef2, ef_behandling_4, ef_feilutbetalingFakta_4 } from './mock';
-import { fagsak_ks2 } from './mock/KS_fagsak_2';
-import { ks_behandling_4, ks_feilutbetalingFakta_4 } from './mock/KS_behandling_4';
+import { fagsak_ba2, ba_behandling_4, ba_feilutbetalingFakta_4 } from './mock/ba2/BA_fagsak_2';
+import { fagsak_ef2, ef_behandling_4, ef_feilutbetalingFakta_4 } from './mock/EF_fagsak_2';
+import { fagsak_ks2, ks_behandling_4, ks_feilutbetalingFakta_4 } from './mock/KS_fagsak_2';
+import {
+    fagsak_ba3,
+    ba_behandling_6,
+    ba_behandling_7,
+    ba_behandling_8,
+    ba_feilutbetalingFakta_8,
+    ba_behandling_9,
+    ba_feilutbetalingFakta_9,
+} from './mock/ba3/BA_fagsak_3';
+import {
+    fagsak_ba4,
+    ba_behandling_12,
+    ba_behandling_13,
+    ba_behandling_14,
+} from './mock/ba4/BA_fagsak_4';
 
 export const setupRouter = (router: Router) => {
     router.get('/user/profile', (_: Request, res: Response) => {
@@ -25,6 +39,12 @@ export const setupRouter = (router: Router) => {
         switch (eksternFagsakId) {
             case 'ba2':
                 res.send(byggSuksessRessurs(fagsak_ba2));
+                return;
+            case 'ba3':
+                res.send(byggSuksessRessurs(fagsak_ba3));
+                return;
+            case 'ba4':
+                res.send(byggSuksessRessurs(fagsak_ba4));
                 return;
             case 'ef2':
                 res.send(byggSuksessRessurs(fagsak_ef2));
@@ -59,6 +79,27 @@ export const setupRouter = (router: Router) => {
                 case 'ba4':
                     res.send(byggSuksessRessurs(ba_behandling_4));
                     return;
+                case 'ba6':
+                    res.send(byggSuksessRessurs(ba_behandling_6));
+                    return;
+                case 'ba7':
+                    res.send(byggSuksessRessurs(ba_behandling_7));
+                    return;
+                case 'ba8':
+                    res.send(byggSuksessRessurs(ba_behandling_8));
+                    return;
+                case 'ba9':
+                    res.send(byggSuksessRessurs(ba_behandling_9));
+                    return;
+                case 'ba12':
+                    res.send(byggSuksessRessurs(ba_behandling_12));
+                    return;
+                case 'ba13':
+                    res.send(byggSuksessRessurs(ba_behandling_13));
+                    return;
+                case 'ba14':
+                    res.send(byggSuksessRessurs(ba_behandling_14));
+                    return;
                 case 'ef4':
                     res.send(byggSuksessRessurs(ef_behandling_4));
                     return;
@@ -85,6 +126,12 @@ export const setupRouter = (router: Router) => {
             switch (behandlingId) {
                 case 'ba4':
                     res.send(byggSuksessRessurs(ba_feilutbetalingFakta_4));
+                    return;
+                case 'ba8':
+                    res.send(byggSuksessRessurs(ba_feilutbetalingFakta_8));
+                    return;
+                case 'ba9':
+                    res.send(byggSuksessRessurs(ba_feilutbetalingFakta_9));
                     return;
                 case 'ef4':
                     res.send(byggSuksessRessurs(ef_feilutbetalingFakta_4));

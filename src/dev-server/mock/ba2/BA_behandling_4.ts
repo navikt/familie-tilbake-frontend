@@ -1,21 +1,20 @@
-import { HendelseType, HendelseUndertype } from '../../frontend/kodeverk';
+import { HendelseType, HendelseUndertype } from '../../../frontend/kodeverk';
 import {
     Behandlingstatus,
     Behandlingstype,
     Behandlingårsak,
     IBehandling,
-} from '../../frontend/typer/behandling';
+} from '../../../frontend/typer/behandling';
 import {
     IFeilutbetalingFakta,
     Tilbakekrevingsvalg,
-} from '../../frontend/typer/feilutbetalingtyper';
+} from '../../../frontend/typer/feilutbetalingtyper';
 
 const ba_behandling_4: IBehandling = {
     behandlingId: 'ba4',
     eksternBrukId: '3',
     kanHenleggeBehandling: true,
     harVerge: true,
-    aktiv: true,
     type: Behandlingstype.TILBAKEKREVING,
     årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
