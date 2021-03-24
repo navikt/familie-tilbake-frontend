@@ -14,11 +14,11 @@ import { Ytelsetype } from '../../../kodeverk';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
+import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
+import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
-import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 
 const StyledFeilutbetalingFakta = styled.div`
     padding: 10px;
@@ -46,12 +46,7 @@ const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
     const [feilutbetalingFakta, settFeilutbetalingFakta] = React.useState<IFeilutbetalingFakta>();
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
     const [begrunnelse, settBegrunnelse] = React.useState<string>();
-    const {
-        aktivtSteg,
-        behandlingILesemodus,
-        hentFeilutbetalingFakta,
-        erStegBehandlet,
-    } = useBehandling();
+    const { behandlingILesemodus, hentFeilutbetalingFakta, erStegBehandlet } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
     React.useEffect(() => {
@@ -72,7 +67,7 @@ const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
         <StyledFeilutbetalingFakta>
             <Undertittel>Fakta om feilutbetaling</Undertittel>
             <Spacer20 />
-            {aktivtSteg && (
+            {(!erLesevisning || stegErBehandlet) && (
                 <>
                     <Steginformasjon
                         behandletSteg={stegErBehandlet}

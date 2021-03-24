@@ -105,6 +105,13 @@ export enum Venteårsak {
     VENT_PÅ_MULIG_MOTREGNING = 'VENT_PÅ_MULIG_MOTREGNING',
 }
 
+export const manuelleÅrsaker = [
+    Venteårsak.AVVENTER_DOKUMENTASJON,
+    Venteårsak.UTVIDET_TILSVAR_FRIST,
+    Venteårsak.ENDRE_TILKJENT_YTELSE,
+    Venteårsak.VENT_PÅ_MULIG_MOTREGNING,
+];
+
 export const venteårsaker: Record<Venteårsak, string> = {
     VENT_PÅ_BRUKERTILBAKEMELDING: 'Venter på tilbakemelding fra bruker',
     VENT_PÅ_TILBAKEKREVINGSGRUNNLAG: 'Venter på tilbakekrevingsgrunnlag fra økonomi',
@@ -136,5 +143,5 @@ export interface IBehandling {
     erBehandlingPåVent?: boolean;
     harVerge: boolean;
     kanHenleggeBehandling: boolean;
-    behandlingsstegsinfo?: IBehandlingsstegstilstand[];
+    behandlingsstegsinfo: IBehandlingsstegstilstand[];
 }

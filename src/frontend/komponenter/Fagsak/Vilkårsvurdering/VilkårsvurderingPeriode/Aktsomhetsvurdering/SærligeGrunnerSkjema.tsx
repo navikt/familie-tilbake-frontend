@@ -7,10 +7,10 @@ import { UndertekstBold } from 'nav-frontend-typografi';
 
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
 
+import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 import { Spacer20, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
-import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 
 const StyledFamilieCheckbox = styled(FamilieCheckbox)`

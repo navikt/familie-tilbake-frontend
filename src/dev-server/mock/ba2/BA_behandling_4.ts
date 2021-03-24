@@ -1,5 +1,7 @@
 import { HendelseType, HendelseUndertype } from '../../../frontend/kodeverk';
 import {
+    Behandlingssteg,
+    Behandlingsstegstatus,
     Behandlingstatus,
     Behandlingstype,
     Behandlingårsak,
@@ -15,10 +17,37 @@ const ba_behandling_4: IBehandling = {
     eksternBrukId: '3',
     kanHenleggeBehandling: true,
     harVerge: true,
+    erBehandlingPåVent: false,
     type: Behandlingstype.TILBAKEKREVING,
     årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
+    behandlingsstegsinfo: [
+        {
+            behandlingssteg: Behandlingssteg.VARSEL,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.GRUNNLAG,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FAKTA,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FORELDELSE,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.VILKÅRSVURDERING,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FORESLÅ_VEDTAK,
+            behandlingsstegstatus: Behandlingsstegstatus.KLAR,
+        },
+    ],
 };
 
 const ba_feilutbetalingFakta_4: IFeilutbetalingFakta = {

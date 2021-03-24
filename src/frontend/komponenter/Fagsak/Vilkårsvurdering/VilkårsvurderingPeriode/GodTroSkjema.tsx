@@ -7,10 +7,10 @@ import { Undertekst } from 'nav-frontend-typografi';
 
 import { FamilieInput } from '@navikt/familie-form-elements';
 
+import { useVilkårsvurderingPeriode } from '../../../../context/VilkårsvurderingPeriodeContext';
 import { isNumeric } from '../../../../utils';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';
-import { useVilkårsvurderingPeriode } from '../../../../context/VilkårsvurderingPeriodeContext';
 
 const ArrowBoxContainer = styled.div`
     width: 300px;

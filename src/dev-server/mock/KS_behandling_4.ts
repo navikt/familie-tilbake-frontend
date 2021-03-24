@@ -1,4 +1,6 @@
 import {
+    Behandlingssteg,
+    Behandlingsstegstatus,
     Behandlingstatus,
     Behandlingstype,
     Behandlingårsak,
@@ -13,11 +15,38 @@ const ks_behandling_4: IBehandling = {
     behandlingId: 'ks4',
     eksternBrukId: '3',
     kanHenleggeBehandling: true,
+    erBehandlingPåVent: false,
     harVerge: true,
     type: Behandlingstype.TILBAKEKREVING,
     årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
+    behandlingsstegsinfo: [
+        {
+            behandlingssteg: Behandlingssteg.VARSEL,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.GRUNNLAG,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FAKTA,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FORELDELSE,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.VILKÅRSVURDERING,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FORESLÅ_VEDTAK,
+            behandlingsstegstatus: Behandlingsstegstatus.KLAR,
+        },
+    ],
 };
 
 const ks_feilutbetalingFakta_4: IFeilutbetalingFakta = {

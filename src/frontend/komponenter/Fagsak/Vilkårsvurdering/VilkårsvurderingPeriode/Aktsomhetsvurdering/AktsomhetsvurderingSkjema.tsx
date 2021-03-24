@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Radio } from 'nav-frontend-skjema';
 
+import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 import {
     Aktsomhet,
     aktsomheter,
@@ -10,7 +11,6 @@ import {
     Vilkårsresultat,
 } from '../../../../../kodeverk';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
-import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 import GradForsettSkjema from './GradForsettSkjema';
 import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
 

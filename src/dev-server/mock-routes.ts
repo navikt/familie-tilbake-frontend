@@ -5,8 +5,6 @@ import { Request, Response, Router } from 'express';
 import { byggFeiletRessurs, byggSuksessRessurs, RessursStatus } from '@navikt/familie-typer';
 
 import { fagsak_ba2, ba_behandling_4, ba_feilutbetalingFakta_4 } from './mock/ba2/BA_fagsak_2';
-import { fagsak_ef2, ef_behandling_4, ef_feilutbetalingFakta_4 } from './mock/EF_fagsak_2';
-import { fagsak_ks2, ks_behandling_4, ks_feilutbetalingFakta_4 } from './mock/KS_fagsak_2';
 import {
     fagsak_ba3,
     ba_behandling_6,
@@ -22,6 +20,8 @@ import {
     ba_behandling_13,
     ba_behandling_14,
 } from './mock/ba4/BA_fagsak_4';
+import { fagsak_ef2, ef_behandling_4, ef_feilutbetalingFakta_4 } from './mock/EF_fagsak_2';
+import { fagsak_ks2, ks_behandling_4, ks_feilutbetalingFakta_4 } from './mock/KS_fagsak_2';
 
 export const setupRouter = (router: Router) => {
     router.get('/user/profile', (_: Request, res: Response) => {
@@ -32,6 +32,11 @@ export const setupRouter = (router: Router) => {
             groups: ['9449c153-5a1e-44a7-84c6-7cc7a8867233'],
             email: 'VL',
         });
+    });
+
+    router.put('/familie-tilbake/api/behandling/vent/v1', (req: Request, res: Response) => {
+        console.log('Skal sette behandling på vent: ', req.body);
+        res.send(byggSuksessRessurs('OK'));
     });
 
     router.get('/familie-tilbake/api/fagsak/v1', (req: Request, res: Response) => {

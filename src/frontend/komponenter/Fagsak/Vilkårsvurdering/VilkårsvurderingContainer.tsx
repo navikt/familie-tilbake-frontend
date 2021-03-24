@@ -14,9 +14,9 @@ import {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
-import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 
 const StyledVilkårsvurdering = styled.div`
     padding: 10px;
@@ -37,7 +37,6 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
     ] = React.useState<IFeilutbetalingVilkårsvurdering>();
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
     const {
-        aktivtSteg,
         erStegBehandlet,
         behandlingILesemodus,
         hentFeilutbetalingVilkårsvurdering,
@@ -68,7 +67,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
         <StyledVilkårsvurdering>
             <Undertittel>Tilbakekreving</Undertittel>
             <Spacer20 />
-            {aktivtSteg && (
+            {(!erLesevisning || stegErBehandlet) && (
                 <>
                     <Steginformasjon
                         behandletSteg={stegErBehandlet}

@@ -12,6 +12,7 @@ import {
     IFeilutbetalingFakta,
     Tilbakekrevingsvalg,
 } from '../../../frontend/typer/feilutbetalingtyper';
+import { dayIn21Days } from '../ba3/BA_behandling_venter';
 
 const ba_behandling_13: IBehandling = {
     behandlingId: 'ba13',
@@ -48,6 +49,7 @@ const ba_behandling_13: IBehandling = {
             behandlingssteg: Behandlingssteg.FORESLÅ_VEDTAK,
             behandlingsstegstatus: Behandlingsstegstatus.VENTER,
             venteårsak: Venteårsak.VENT_PÅ_BRUKERTILBAKEMELDING,
+            tidsfrist: dayIn21Days(),
         },
     ],
 };

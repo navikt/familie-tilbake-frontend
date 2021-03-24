@@ -4,10 +4,10 @@ import styled from 'styled-components';
 
 import { Undertekst } from 'nav-frontend-typografi';
 
-import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
-import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
-import { AddCircleIkon } from '../../Felleskomponenter/Ikoner';
 import { VedtaksbrevUnderavsnitt } from '../../../typer/vedtakTyper';
+import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
+import { AddCircleIkon } from '../../Felleskomponenter/Ikoner';
+import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 
 const LeggTilFritekst = styled.div`
     cursor: pointer;

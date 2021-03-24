@@ -1,20 +1,17 @@
 import * as React from 'react';
 
 import classNames from 'classnames';
+import ReactModal from 'react-modal';
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
 import Modal from 'nav-frontend-modal';
 import { Undertittel } from 'nav-frontend-typografi';
 
-import { IModal } from '../../../context/AppContext';
-
 const StyledModal = styled(Modal)`
-    .uimodal {
-        width: 35rem;
-        min-height: 12rem;
-        color: ${navFarger.navMorkGra};
+    width: 30rem;
+    min-height: 12rem;
 
+    .uimodal {
         &__content {
             padding: 0.5rem 1.5rem;
 
@@ -36,11 +33,22 @@ const StyledModal = styled(Modal)`
     }
 `;
 
-interface IProps {
-    modal: IModal;
+export interface IModal {
+    actions?: JSX.Element[] | JSX.Element;
+    className?: string;
+    innhold?: () => React.ReactNode;
+    lukkKnapp: boolean;
+    onClose?: () => void;
+    tittel: string;
+    visModal: boolean;
 }
 
-const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, children }) => {
+interface IProps {
+    modal: IModal;
+    style?: ReactModal.Styles;
+}
+
+const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, style, children }) => {
     const { tittel, visModal, onClose, lukkKnapp, actions, className, innhold } = modal;
 
     return (
@@ -50,6 +58,7 @@ const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, children }) =>
             onRequestClose={(): void => onClose && onClose()}
             contentLabel="ui-modal"
             closeButton={lukkKnapp}
+            style={style}
         >
             <div className="uimodal__content">
                 <Undertittel children={tittel} />

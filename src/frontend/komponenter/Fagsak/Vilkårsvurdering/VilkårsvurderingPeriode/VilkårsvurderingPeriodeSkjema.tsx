@@ -9,6 +9,7 @@ import { Normaltekst, Undertekst, UndertekstBold, Undertittel } from 'nav-fronte
 
 import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
 
+import { useVilkårsvurderingPeriode } from '../../../../context/VilkårsvurderingPeriodeContext';
 import {
     Foreldelsevurdering,
     Vilkårsresultat,
@@ -21,7 +22,6 @@ import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelement
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import AktsomhetGodTro from './GodTroSkjema';
 import TilbakekrevingAktivitetTabell from './TilbakekrevingAktivitetTabell';
-import { useVilkårsvurderingPeriode } from '../../../../context/VilkårsvurderingPeriodeContext';
 
 const StyledContainer = styled.div`
     border: 1px solid ${navFarger.navGra60};

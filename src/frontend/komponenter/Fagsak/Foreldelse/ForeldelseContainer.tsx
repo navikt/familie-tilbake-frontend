@@ -12,8 +12,8 @@ import { Behandlingssteg, Behandlingsstegstatus, IBehandling } from '../../../ty
 import { IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
 import { finnDatoRelativtTilNå } from '../../../utils';
 import { Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
-import ForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import ForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
 
 export const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });
@@ -34,12 +34,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
     ] = React.useState<IFeilutbetalingForeldelse>();
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
     const [erAutoutført, settErAutoutført] = React.useState<boolean>();
-    const {
-        aktivtSteg,
-        erStegBehandlet,
-        behandlingILesemodus,
-        hentFeilutbetalingForeldelse,
-    } = useBehandling();
+    const { erStegBehandlet, behandlingILesemodus, hentFeilutbetalingForeldelse } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
     React.useEffect(() => {
@@ -72,7 +67,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
             )}
             {feilutbetalingForeldelse && (
                 <>
-                    {aktivtSteg && (
+                    {(!erLesevisning || stegErBehandlet) && (
                         <>
                             <Steginformasjon
                                 behandletSteg={stegErBehandlet}

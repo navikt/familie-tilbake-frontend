@@ -10,7 +10,9 @@ import Popover, { PopoverOrientering } from 'nav-frontend-popover';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { Behandlingssteg } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
+import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
 
 const StyledList = styled.ul`
     list-style-type: none;
@@ -36,9 +38,11 @@ interface IProps {
     fagsak: IFagsak;
 }
 
-const Behandlingsmeny: React.FC<IProps> = () => {
-    const { behandling } = useBehandling();
+const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
+    const { behandling, ventegrunn } = useBehandling();
     const [anker, settAnker] = React.useState<HTMLElement | undefined>(undefined);
+
+    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.GRUNNLAG;
 
     return (
         <>
@@ -89,11 +93,16 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                             <li>
                                 <KnappBase mini={true}>Bytt behandlingsenhet</KnappBase>
                             </li>
-                            {behandling.data.erBehandlingPåVent ? (
-                                <KnappBase mini={true}>Fortsett behandling</KnappBase>
-                            ) : (
-                                <KnappBase mini={true}>Sett behandling på vent</KnappBase>
-                            )}
+                            {!venterPåKravgrunnlag ? (
+                                behandling.data.erBehandlingPåVent || ventegrunn ? (
+                                    <KnappBase mini={true}>Fortsett behandling</KnappBase>
+                                ) : (
+                                    <SettBehandlingPåVent
+                                        behandling={behandling.data}
+                                        fagsak={fagsak}
+                                    />
+                                )
+                            ) : null}
                         </>
                     )}
                 </StyledList>

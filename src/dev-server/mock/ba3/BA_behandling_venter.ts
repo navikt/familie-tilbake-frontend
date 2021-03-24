@@ -12,6 +12,12 @@ import {
     Tilbakekrevingsvalg,
 } from '../../../frontend/typer/feilutbetalingtyper';
 
+export const dayIn21Days = () => {
+    const dayIn21Days = new Date();
+    dayIn21Days.setDate(dayIn21Days.getDate() + 21);
+    return dayIn21Days.toISOString().substring(0, 10);
+};
+
 const ba_behandling_6: IBehandling = {
     behandlingId: 'ba6',
     eksternBrukId: '5',
@@ -21,11 +27,13 @@ const ba_behandling_6: IBehandling = {
     årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
+    erBehandlingPåVent: true,
     behandlingsstegsinfo: [
         {
             behandlingssteg: Behandlingssteg.VARSEL,
             behandlingsstegstatus: Behandlingsstegstatus.VENTER,
             venteårsak: Venteårsak.VENT_PÅ_BRUKERTILBAKEMELDING,
+            tidsfrist: dayIn21Days(),
         },
     ],
 };
@@ -49,6 +57,7 @@ const ba_behandling_7: IBehandling = {
             behandlingssteg: Behandlingssteg.GRUNNLAG,
             behandlingsstegstatus: Behandlingsstegstatus.VENTER,
             venteårsak: Venteårsak.VENT_PÅ_TILBAKEKREVINGSGRUNNLAG,
+            tidsfrist: dayIn21Days(),
         },
     ],
 };
@@ -77,6 +86,7 @@ const ba_behandling_8: IBehandling = {
             behandlingssteg: Behandlingssteg.FAKTA,
             behandlingsstegstatus: Behandlingsstegstatus.VENTER,
             venteårsak: Venteårsak.VENT_PÅ_BRUKERTILBAKEMELDING,
+            tidsfrist: dayIn21Days(),
         },
     ],
 };

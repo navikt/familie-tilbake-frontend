@@ -6,6 +6,7 @@ import createUseContext from 'constate';
 import { useHttp } from '@navikt/familie-http';
 import {
     byggFeiletRessurs,
+    byggHenterRessurs,
     byggSuksessRessurs,
     byggTomRessurs,
     Ressurs,
@@ -38,8 +39,8 @@ import {
     IFeilutbetalingVilkårsvurdering,
     Tilbakekrevingsvalg,
 } from '../typer/feilutbetalingtyper';
-import { useFagsak } from './FagsakContext';
 import { IBeregningsresultat, IVedtaksbrev } from '../typer/vedtakTyper';
+import { useFagsak } from './FagsakContext';
 
 const feilUtbetalingFakta = new Map<string, IFeilutbetalingFakta>([
     [
@@ -1243,6 +1244,48 @@ const vedtaksbrever = new Map<string, IVedtaksbrev>([
                     ],
                 },
                 {
+                    avsnittstype: Avsnittstype.PERIODE,
+                    overskrift: 'Avsnitt 2 - per 1',
+                    fom: '2013-01-01',
+                    tom: '2017-04-30',
+                    underavsnittsliste: [
+                        {
+                            underavsnittstype: Underavsnittstype.FAKTA,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            brødtekst: 'Brødtekst fakta per 1',
+                        },
+                        {
+                            underavsnittstype: Underavsnittstype.FORELDELSE,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            overskrift: 'Foreldelse per 1',
+                            brødtekst: 'Brødtekst foreldelse per 1',
+                        },
+                    ],
+                },
+                {
+                    avsnittstype: Avsnittstype.PERIODE,
+                    overskrift: 'Avsnitt 3 - per 2',
+                    fom: '2017-05-01',
+                    tom: '2020-09-01',
+                    underavsnittsliste: [
+                        {
+                            underavsnittstype: Underavsnittstype.FAKTA,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            brødtekst: 'Brødtekst fakta per 2',
+                        },
+                        {
+                            underavsnittstype: Underavsnittstype.SARLIGEGRUNNER_ANNET,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: true,
+                            overskrift: 'Oppsummering per 2',
+                            brødtekst: 'Brødtekst oppsummering per 2',
+                        },
+                    ],
+                },
+                {
                     avsnittstype: Avsnittstype.TILLEGGSINFORMASJON,
                     overskrift: 'Lovhjemler vi bruker?',
                     underavsnittsliste: [
@@ -1270,6 +1313,48 @@ const vedtaksbrever = new Map<string, IVedtaksbrev>([
                             fritekstPåkrevet: true,
                             overskrift: 'Overskrift 1',
                             brødtekst: 'Brødtekst 1',
+                        },
+                    ],
+                },
+                {
+                    avsnittstype: Avsnittstype.PERIODE,
+                    overskrift: 'Avsnitt 2 - per 1',
+                    fom: '2013-01-01',
+                    tom: '2017-04-30',
+                    underavsnittsliste: [
+                        {
+                            underavsnittstype: Underavsnittstype.FAKTA,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            brødtekst: 'Brødtekst fakta per 1',
+                        },
+                        {
+                            underavsnittstype: Underavsnittstype.FORELDELSE,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            overskrift: 'Foreldelse per 1',
+                            brødtekst: 'Brødtekst foreldelse per 1',
+                        },
+                    ],
+                },
+                {
+                    avsnittstype: Avsnittstype.PERIODE,
+                    overskrift: 'Avsnitt 3 - per 2',
+                    fom: '2017-05-01',
+                    tom: '2020-09-01',
+                    underavsnittsliste: [
+                        {
+                            underavsnittstype: Underavsnittstype.FAKTA,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            brødtekst: 'Brødtekst fakta per 2',
+                        },
+                        {
+                            underavsnittstype: Underavsnittstype.SARLIGEGRUNNER_ANNET,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: true,
+                            overskrift: 'Oppsummering per 2',
+                            brødtekst: 'Brødtekst oppsummering per 2',
                         },
                     ],
                 },
@@ -1317,6 +1402,7 @@ const erStegUtført = (status: Behandlingsstegstatus) => {
 const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [behandling, settBehandling] = React.useState<Ressurs<IBehandling>>();
     const [aktivtSteg, settAktivtSteg] = React.useState<IBehandlingsstegstilstand>();
+    const [ventegrunn, settVentegrunn] = React.useState<IBehandlingsstegstilstand>();
     const [harKravgrunnlag, settHarKravgrunnlag] = React.useState<boolean>();
     const [behandlingILesemodus, settBehandlingILesemodus] = React.useState<boolean>();
     const { fagsak } = useFagsak();
@@ -1327,6 +1413,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
             behandling => behandling.eksternBrukId === behandlingId
         );
         if (fagsakBehandling) {
+            settBehandling(byggHenterRessurs());
             request<void, IBehandling>({
                 method: 'GET',
                 url: `/familie-tilbake/api/behandling/v1/${fagsakBehandling.behandlingId}`,
@@ -1337,7 +1424,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                     if (hentetBehandling.status === RessursStatus.SUKSESS) {
                         const erILeseModus =
                             hentetBehandling.data.erBehandlingPåVent ||
-                            hentetBehandling.data.behandlingsstegsinfo?.some(
+                            hentetBehandling.data.behandlingsstegsinfo.some(
                                 stegInfo =>
                                     stegInfo.behandlingssteg === Behandlingssteg.AVSLUTTET ||
                                     stegInfo.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK ||
@@ -1347,22 +1434,26 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                             );
                         settBehandlingILesemodus(erILeseModus);
 
-                        const harKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo?.some(
+                        const harKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo.some(
                             stegInfo =>
                                 stegInfo.behandlingssteg === Behandlingssteg.GRUNNLAG &&
                                 erStegUtført(stegInfo.behandlingsstegstatus)
                         );
-                        settHarKravgrunnlag(
-                            !hentetBehandling.data.behandlingsstegsinfo || harKravgrunnlag
-                        );
+                        settHarKravgrunnlag(harKravgrunnlag);
 
-                        const aktivtSteg = hentetBehandling.data.behandlingsstegsinfo?.find(
+                        const funnetAktivtsteg = hentetBehandling.data.behandlingsstegsinfo.find(
                             stegInfo =>
                                 stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR ||
                                 stegInfo.behandlingsstegstatus === Behandlingsstegstatus.VENTER
                         );
-                        if (aktivtSteg) {
-                            settAktivtSteg(aktivtSteg);
+                        if (funnetAktivtsteg) {
+                            settAktivtSteg(funnetAktivtsteg);
+                            if (
+                                funnetAktivtsteg.behandlingsstegstatus ===
+                                Behandlingsstegstatus.VENTER
+                            ) {
+                                settVentegrunn(funnetAktivtsteg);
+                            }
                         }
                     }
                 })
@@ -1377,10 +1468,11 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
 
     const erStegBehandlet = (steg: Behandlingssteg): boolean => {
         if (behandling?.status === RessursStatus.SUKSESS) {
-            const behandlingSteg = behandling.data.behandlingsstegsinfo?.find(
-                stegInfo => stegInfo.behandlingssteg === steg
+            return behandling.data.behandlingsstegsinfo.some(
+                stegInfo =>
+                    stegInfo.behandlingssteg === steg &&
+                    erStegUtført(stegInfo.behandlingsstegstatus)
             );
-            return erStegUtført(behandlingSteg?.behandlingsstegstatus);
         }
         return false;
     };
@@ -1443,6 +1535,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         hentBehandling,
         behandlingILesemodus,
         aktivtSteg,
+        ventegrunn,
         erStegBehandlet,
         harKravgrunnlag,
         hentFeilutbetalingFakta,

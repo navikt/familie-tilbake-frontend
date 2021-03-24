@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
-import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
+import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
 
 const StyledSkjema = styled.div`

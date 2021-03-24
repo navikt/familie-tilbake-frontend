@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { Radio } from 'nav-frontend-skjema';
 
+import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 import { Aktsomhet } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
-import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 
 interface IProps {
     erValgtResultatTypeForstoBurdeForstaatt: boolean;

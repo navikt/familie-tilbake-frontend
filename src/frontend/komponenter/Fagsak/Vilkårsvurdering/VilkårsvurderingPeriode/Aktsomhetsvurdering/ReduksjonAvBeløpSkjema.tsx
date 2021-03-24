@@ -8,11 +8,11 @@ import { Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 
+import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 import { Aktsomhet } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isNumeric } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
-import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 
 const StyledNormaltekst = styled(Normaltekst)`
     padding-top: 15px;
