@@ -34,10 +34,23 @@ export const setupRouter = (router: Router) => {
         });
     });
 
-    router.put('/familie-tilbake/api/behandling/vent/v1', (req: Request, res: Response) => {
-        console.log('Skal sette behandling på vent: ', req.body);
-        res.send(byggSuksessRessurs('OK'));
-    });
+    router.put(
+        '/familie-tilbake/api/behandling/:behandlingId/vent/v1',
+        (req: Request, res: Response) => {
+            const { behandlingId } = req.params;
+            console.log(`Skal sette behandling ${behandlingId} på vent: `, req.body);
+            res.send(byggSuksessRessurs('OK'));
+        }
+    );
+
+    router.put(
+        '/familie-tilbake/api/behandling/:behandlingId/gjenoppta/v1',
+        (req: Request, res: Response) => {
+            const { behandlingId } = req.params;
+            console.log(`Skal gjennopta behandlingen av ${behandlingId}`);
+            res.send(byggSuksessRessurs('OK'));
+        }
+    );
 
     router.get('/familie-tilbake/api/fagsak/v1', (req: Request, res: Response) => {
         const { fagsystem, fagsak: eksternFagsakId } = req.query;

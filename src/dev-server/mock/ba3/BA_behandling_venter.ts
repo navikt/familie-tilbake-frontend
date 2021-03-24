@@ -18,6 +18,12 @@ export const dayIn21Days = () => {
     return dayIn21Days.toISOString().substring(0, 10);
 };
 
+const yesterday = () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return yesterday.toISOString().substring(0, 10);
+};
+
 const ba_behandling_6: IBehandling = {
     behandlingId: 'ba6',
     eksternBrukId: '5',
@@ -57,7 +63,7 @@ const ba_behandling_7: IBehandling = {
             behandlingssteg: Behandlingssteg.GRUNNLAG,
             behandlingsstegstatus: Behandlingsstegstatus.VENTER,
             venteårsak: Venteårsak.VENT_PÅ_TILBAKEKREVINGSGRUNNLAG,
-            tidsfrist: dayIn21Days(),
+            tidsfrist: yesterday(),
         },
     ],
 };

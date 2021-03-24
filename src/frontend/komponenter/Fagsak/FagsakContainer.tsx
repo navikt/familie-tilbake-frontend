@@ -49,7 +49,12 @@ const FagsakContainer: React.FC = () => {
     const behandlingId = history.location.pathname.split('/')[6];
 
     const { fagsak, hentFagsak } = useFagsak();
-    const { behandling, hentBehandling, harKravgrunnlag, ventegrunn } = useBehandling();
+    const {
+        behandling,
+        hentBehandlingMedEksternBrukId,
+        harKravgrunnlag,
+        ventegrunn,
+    } = useBehandling();
 
     const [visVenteModal, settVisVenteModal] = React.useState<boolean>(false);
 
@@ -61,7 +66,7 @@ const FagsakContainer: React.FC = () => {
 
     React.useEffect(() => {
         if (fagsak?.status === RessursStatus.SUKSESS && behandlingId) {
-            hentBehandling(fagsak.data, behandlingId);
+            hentBehandlingMedEksternBrukId(fagsak.data, behandlingId);
             settVisVenteModal(false);
         }
     }, [fagsak, behandlingId]);

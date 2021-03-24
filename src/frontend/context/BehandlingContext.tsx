@@ -1408,62 +1408,66 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const { fagsak } = useFagsak();
     const { request } = useHttp();
 
-    const hentBehandling = (fagsak: IFagsak, behandlingId: string): void => {
+    const hentBehandlingMedEksternBrukId = (fagsak: IFagsak, behandlingId: string): void => {
         const fagsakBehandling = fagsak.behandlinger.find(
             behandling => behandling.eksternBrukId === behandlingId
         );
         if (fagsakBehandling) {
-            settBehandling(byggHenterRessurs());
-            request<void, IBehandling>({
-                method: 'GET',
-                url: `/familie-tilbake/api/behandling/v1/${fagsakBehandling.behandlingId}`,
-            })
-                .then((hentetBehandling: Ressurs<IBehandling>) => {
-                    settBehandling(hentetBehandling);
-
-                    if (hentetBehandling.status === RessursStatus.SUKSESS) {
-                        const erILeseModus =
-                            hentetBehandling.data.erBehandlingPåVent ||
-                            hentetBehandling.data.behandlingsstegsinfo.some(
-                                stegInfo =>
-                                    stegInfo.behandlingssteg === Behandlingssteg.AVSLUTTET ||
-                                    stegInfo.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK ||
-                                    (stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
-                                        stegInfo.behandlingsstegstatus ===
-                                            Behandlingsstegstatus.KLAR)
-                            );
-                        settBehandlingILesemodus(erILeseModus);
-
-                        const harKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo.some(
-                            stegInfo =>
-                                stegInfo.behandlingssteg === Behandlingssteg.GRUNNLAG &&
-                                erStegUtført(stegInfo.behandlingsstegstatus)
-                        );
-                        settHarKravgrunnlag(harKravgrunnlag);
-
-                        const funnetAktivtsteg = hentetBehandling.data.behandlingsstegsinfo.find(
-                            stegInfo =>
-                                stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR ||
-                                stegInfo.behandlingsstegstatus === Behandlingsstegstatus.VENTER
-                        );
-                        if (funnetAktivtsteg) {
-                            settAktivtSteg(funnetAktivtsteg);
-                            if (
-                                funnetAktivtsteg.behandlingsstegstatus ===
-                                Behandlingsstegstatus.VENTER
-                            ) {
-                                settVentegrunn(funnetAktivtsteg);
-                            }
-                        }
-                    }
-                })
-                .catch((error: AxiosError) => {
-                    console.log('Error: ', error);
-                    settBehandling(byggFeiletRessurs('Ukjent feil ved henting av behandling'));
-                });
+            hentBehandlingMedBehandlingId(fagsakBehandling.behandlingId);
         } else {
             settBehandling(byggFeiletRessurs('Fann ikke behandling'));
         }
+    };
+
+    const hentBehandlingMedBehandlingId = (behandlingId: string) => {
+        settBehandling(byggHenterRessurs());
+        settVentegrunn(null);
+        settAktivtSteg(null);
+        settHarKravgrunnlag(null);
+        settBehandlingILesemodus(null);
+        request<void, IBehandling>({
+            method: 'GET',
+            url: `/familie-tilbake/api/behandling/v1/${behandlingId}`,
+        })
+            .then((hentetBehandling: Ressurs<IBehandling>) => {
+                settBehandling(hentetBehandling);
+
+                if (hentetBehandling.status === RessursStatus.SUKSESS) {
+                    const erILeseModus =
+                        hentetBehandling.data.erBehandlingPåVent ||
+                        hentetBehandling.data.behandlingsstegsinfo.some(
+                            stegInfo =>
+                                stegInfo.behandlingssteg === Behandlingssteg.AVSLUTTET ||
+                                stegInfo.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK ||
+                                (stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
+                                    stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR)
+                        );
+                    settBehandlingILesemodus(erILeseModus);
+
+                    const harFåttKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo.some(
+                        stegInfo => stegInfo.behandlingssteg === Behandlingssteg.FAKTA
+                    );
+                    settHarKravgrunnlag(harFåttKravgrunnlag);
+
+                    const funnetAktivtsteg = hentetBehandling.data.behandlingsstegsinfo.find(
+                        stegInfo =>
+                            stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR ||
+                            stegInfo.behandlingsstegstatus === Behandlingsstegstatus.VENTER
+                    );
+                    if (funnetAktivtsteg) {
+                        settAktivtSteg(funnetAktivtsteg);
+                        if (
+                            funnetAktivtsteg.behandlingsstegstatus === Behandlingsstegstatus.VENTER
+                        ) {
+                            settVentegrunn(funnetAktivtsteg);
+                        }
+                    }
+                }
+            })
+            .catch((error: AxiosError) => {
+                console.log('Error: ', error);
+                settBehandling(byggFeiletRessurs('Ukjent feil ved henting av behandling'));
+            });
     };
 
     const erStegBehandlet = (steg: Behandlingssteg): boolean => {
@@ -1532,7 +1536,8 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
 
     return {
         behandling,
-        hentBehandling,
+        hentBehandlingMedEksternBrukId,
+        hentBehandlingMedBehandlingId,
         behandlingILesemodus,
         aktivtSteg,
         ventegrunn,

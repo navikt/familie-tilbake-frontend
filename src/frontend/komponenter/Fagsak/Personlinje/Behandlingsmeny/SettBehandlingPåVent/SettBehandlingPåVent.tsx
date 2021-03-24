@@ -8,7 +8,6 @@ import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling, manuelleÅrsaker, venteårsaker } from '../../../../../typer/behandling';
-import { IFagsak } from '../../../../../typer/fagsak';
 import { datoformatNorsk } from '../../../../../utils';
 import { Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
@@ -17,19 +16,18 @@ import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { FixedDatovelger } from '../../../../Felleskomponenter/Skjemaelementer/';
 
 interface IProps {
-    fagsak: IFagsak;
     behandling: IBehandling;
 }
 
-const SettBehandlingPåVent: React.FC<IProps> = ({ fagsak, behandling }) => {
+const SettBehandlingPåVent: React.FC<IProps> = ({ behandling }) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
-    const { hentBehandling } = useBehandling();
+    const { hentBehandlingMedBehandlingId } = useBehandling();
 
     const { skjema, onBekreft, nullstillSkjema, feilmelding } = usePåVentBehandling(
         (suksess: boolean) => {
             settVisModal(false);
             if (suksess) {
-                hentBehandling(fagsak, behandling.eksternBrukId);
+                hentBehandlingMedBehandlingId(behandling.behandlingId);
             }
         },
         undefined
@@ -41,12 +39,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ fagsak, behandling }) => {
 
     return (
         <>
-            <KnappBase
-                mini={true}
-                onClick={() => {
-                    settVisModal(true);
-                }}
-            >
+            <KnappBase mini={true} onClick={() => settVisModal(true)}>
                 Sett behandling på vent
             </KnappBase>
 

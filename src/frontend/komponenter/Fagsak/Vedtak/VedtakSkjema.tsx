@@ -7,15 +7,12 @@ import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
+import { NormaltekstBold } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
 
 const StyledSkjema = styled.div`
     width: 90%;
-`;
-
-const NormaltekstBold = styled(Normaltekst)`
-    font-weight: 600;
 `;
 
 interface IProps {

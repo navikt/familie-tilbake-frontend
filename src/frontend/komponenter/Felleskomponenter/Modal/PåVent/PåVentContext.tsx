@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { useHttp } from '@navikt/familie-http';
 import { useSkjema, useFelt, FeltState, feil, ok } from '@navikt/familie-skjema';
 import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 
@@ -10,6 +11,7 @@ export const usePåVentBehandling = (
     ventegrunn?: IBehandlingsstegstilstand | undefined
 ) => {
     const [feilmelding, settFeilmelding] = useState<string>();
+    const { request } = useHttp();
 
     const { onSubmit, skjema, nullstillSkjema } = useSkjema<
         {
@@ -40,30 +42,39 @@ export const usePåVentBehandling = (
                 method: 'PUT',
                 data: {
                     behandlingId: behandlingId,
-                    årsak: skjema.felter.årsak.verdi,
+                    venteårsak: skjema.felter.årsak.verdi,
                     tidsfrist: skjema.felter.tidsfrist.verdi,
                 },
-                url: `/familie-tilbake/api/behandling/vent/v1`,
+                url: `/familie-tilbake/api/behandling/${behandlingId}/vent/v1`,
             },
-            (ressurs: Ressurs<string>) => {
-                if (ressurs.status === RessursStatus.SUKSESS) {
-                    if (ventegrunn) {
-                        ventegrunn.tidsfrist = skjema.felter.tidsfrist.verdi;
-                        // @ts-ignore
-                        ventegrunn.venteårsak = skjema.felter.årsak.verdi;
-                    }
-                    lukkModal(true);
-                } else {
-                    console.log('Sett på vent feilet!');
-                    if (
-                        ressurs.status === RessursStatus.FEILET ||
-                        ressurs.status === RessursStatus.FUNKSJONELL_FEIL
-                    ) {
-                        settFeilmelding(ressurs.frontendFeilmelding);
-                    }
+            (_ressurs: Ressurs<string>) => {
+                if (ventegrunn) {
+                    ventegrunn.tidsfrist = skjema.felter.tidsfrist.verdi;
+                    // @ts-ignore
+                    ventegrunn.venteårsak = skjema.felter.årsak.verdi;
                 }
+                lukkModal(true);
             }
         );
+    };
+
+    const onOkTaAvVent = (behandlingId: string) => {
+        request<void, string>({
+            method: 'PUT',
+            url: `/familie-tilbake/api/behandling/${behandlingId}/gjenoppta/v1`,
+        }).then((response: Ressurs<string>) => {
+            if (response.status === RessursStatus.SUKSESS) {
+                lukkModal(true);
+            } else {
+                console.log('Gjennopta behandling feilet!');
+                if (
+                    response.status === RessursStatus.FEILET ||
+                    response.status === RessursStatus.FUNKSJONELL_FEIL
+                ) {
+                    settFeilmelding(response.frontendFeilmelding);
+                }
+            }
+        });
     };
 
     return {
@@ -71,5 +82,6 @@ export const usePåVentBehandling = (
         feilmelding,
         nullstillSkjema,
         onBekreft,
+        onOkTaAvVent,
     };
 };

@@ -12,6 +12,7 @@ import { RessursStatus } from '@navikt/familie-typer';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { Behandlingssteg } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
+import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
 
 const StyledList = styled.ul`
@@ -38,7 +39,7 @@ interface IProps {
     fagsak: IFagsak;
 }
 
-const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
+const Behandlingsmeny: React.FC<IProps> = () => {
     const { behandling, ventegrunn } = useBehandling();
     const [anker, settAnker] = React.useState<HTMLElement | undefined>(undefined);
 
@@ -95,12 +96,9 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                             </li>
                             {!venterPåKravgrunnlag ? (
                                 behandling.data.erBehandlingPåVent || ventegrunn ? (
-                                    <KnappBase mini={true}>Fortsett behandling</KnappBase>
+                                    <GjennoptaBehandling behandling={behandling.data} />
                                 ) : (
-                                    <SettBehandlingPåVent
-                                        behandling={behandling.data}
-                                        fagsak={fagsak}
-                                    />
+                                    <SettBehandlingPåVent behandling={behandling.data} />
                                 )
                             ) : null}
                         </>

@@ -13,8 +13,8 @@ import {
     manuelleÅrsaker,
     venteårsaker,
 } from '../../../../typer/behandling';
-import { datoformatNorsk } from '../../../../utils';
-import { Spacer20 } from '../../Flytelementer';
+import { dateBeforeToday, datoformatNorsk, NormaltekstBold } from '../../../../utils';
+import { Spacer20, Spacer8 } from '../../Flytelementer';
 import { FixedDatovelger } from '../../Skjemaelementer';
 import UIModalWrapper from '../UIModalWrapper';
 import { usePåVentBehandling } from './PåVentContext';
@@ -46,14 +46,17 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
         }
     }, [ventegrunn]);
 
+    const erVenterPåKravgrunnlag = ventegrunn.behandlingssteg === Behandlingssteg.GRUNNLAG;
     const erAutomatiskVent =
-        ventegrunn.behandlingssteg === Behandlingssteg.VARSEL ||
-        ventegrunn.behandlingssteg === Behandlingssteg.GRUNNLAG;
+        ventegrunn.behandlingssteg === Behandlingssteg.VARSEL || erVenterPåKravgrunnlag;
 
     const muligeÅrsaker =
         ventegrunn.venteårsak && !manuelleÅrsaker.includes(ventegrunn.venteårsak)
             ? manuelleÅrsaker.concat([ventegrunn.venteårsak])
             : manuelleÅrsaker;
+
+    const erFristenUtløpt =
+        erVenterPåKravgrunnlag && ventegrunn.tidsfrist && dateBeforeToday(ventegrunn.tidsfrist);
 
     const ugyldigDatoValgt =
         skjema.visFeilmeldinger &&
@@ -92,13 +95,31 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
             }}
             style={{
                 content: {
-                    width: '25rem',
+                    width: erFristenUtløpt ? '35rem' : '25rem',
                     minHeight: '18rem',
                 },
             }}
         >
             <>
                 {feilmelding && feilmelding !== '' && <Normaltekst>{feilmelding}</Normaltekst>}
+                {erFristenUtløpt && (
+                    <>
+                        <NormaltekstBold>
+                            OBS! Fristen på denne behandlingen er utløpt!
+                        </NormaltekstBold>
+                        <Spacer8 />
+                        <Normaltekst>
+                            Kontroller hvorfor Økonomi ikke har dannet et kravgrunnlag.
+                        </Normaltekst>
+                        <Normaltekst>
+                            Dersom det feilutbetalte beløpet er bortfalt skal saken henlegges.
+                        </Normaltekst>
+                        <Normaltekst>
+                            For mer informasjon, se rutine under tilbakekreving.
+                        </Normaltekst>
+                        <Spacer20 />
+                    </>
+                )}
                 <FixedDatovelger
                     id={'frist'}
                     label={'Frist'}
