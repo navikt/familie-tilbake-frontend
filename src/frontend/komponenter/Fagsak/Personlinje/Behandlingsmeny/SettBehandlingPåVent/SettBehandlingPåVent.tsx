@@ -11,7 +11,7 @@ import { IBehandling, manuelleÅrsaker, venteårsaker } from '../../../../../typ
 import { datoformatNorsk } from '../../../../../utils';
 import { Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
-import { settMinDato } from '../../../../Felleskomponenter/Modal/PåVent/PåVentModal';
+import { maxTidsfrist, minTidsfrist } from '../../../../Felleskomponenter/Modal/PåVent/PåVentModal';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { FixedDatovelger } from '../../../../Felleskomponenter/Skjemaelementer/';
 
@@ -84,7 +84,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling }) => {
                         onChange={(nyVerdi?: string) =>
                             skjema.felter.tidsfrist.onChange(nyVerdi ? nyVerdi : '')
                         }
-                        limitations={{ minDate: settMinDato() }}
+                        limitations={{ minDate: minTidsfrist(), maxDate: maxTidsfrist() }}
                         placeholder={datoformatNorsk.DATO}
                         valgtDato={skjema.felter.tidsfrist.verdi}
                         harFeil={ugyldigDatoValgt}

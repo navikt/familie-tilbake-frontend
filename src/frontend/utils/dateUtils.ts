@@ -23,7 +23,7 @@ export const hentAlder = (fødselsdato: string) => {
     return differenceInCalendarYears(now, dato);
 };
 
-const finnDateRelativtTilNå = (config: Duration): Date => {
+export const finnDateRelativtTilNå = (config: Duration): Date => {
     const now = new Date();
     const aDate = add(now, config);
     return aDate;

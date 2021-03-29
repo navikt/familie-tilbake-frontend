@@ -13,16 +13,26 @@ import {
     manuelleÅrsaker,
     venteårsaker,
 } from '../../../../typer/behandling';
-import { dateBeforeToday, datoformatNorsk, NormaltekstBold } from '../../../../utils';
+import {
+    dateBeforeToday,
+    datoformatNorsk,
+    finnDateRelativtTilNå,
+    NormaltekstBold,
+} from '../../../../utils';
 import { Spacer20, Spacer8 } from '../../Flytelementer';
 import { FixedDatovelger } from '../../Skjemaelementer';
 import UIModalWrapper from '../UIModalWrapper';
 import { usePåVentBehandling } from './PåVentContext';
 
-export const settMinDato = (): string => {
+export const minTidsfrist = (): string => {
     const minDato = new Date();
     minDato.setDate(minDato.getDate() + 1);
     return minDato.toISOString();
+};
+
+export const maxTidsfrist = (): string => {
+    const dato = finnDateRelativtTilNå({ months: 3 });
+    return dato.toISOString();
 };
 
 interface IProps {
@@ -126,7 +136,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     onChange={(nyVerdi?: string) =>
                         skjema.felter.tidsfrist.onChange(nyVerdi ? nyVerdi : '')
                     }
-                    limitations={{ minDate: settMinDato() }}
+                    limitations={{ minDate: minTidsfrist(), maxDate: maxTidsfrist() }}
                     placeholder={datoformatNorsk.DATO}
                     valgtDato={skjema.felter.tidsfrist.verdi}
                     harFeil={ugyldigDatoValgt}

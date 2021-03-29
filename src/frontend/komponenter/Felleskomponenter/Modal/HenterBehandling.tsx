@@ -24,7 +24,7 @@ const HenterBehandling: React.FC = () => {
             <Row>
                 <Column md="10">
                     <Normaltekst>Henting av behandlingen tar litt tid.</Normaltekst>
-                    <Normaltekst>Vennligs vent!</Normaltekst>
+                    <Normaltekst>Vennligst vent!</Normaltekst>
                 </Column>
                 <Column md="2">
                     <NavFrontendSpinner type="L" />
