@@ -7,15 +7,10 @@ import { UndertekstBold } from 'nav-frontend-typografi';
 
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
 
-import {
-    Aktsomhet,
-    SærligeGrunner,
-    særligegrunner,
-    særligeGrunnerTyper,
-} from '../../../../../kodeverk';
+import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
+import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 import { Spacer20, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
-import { useVilkårsvurderingPeriode } from '../VilkårsvurderingPeriodeContext';
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 
 const StyledFamilieCheckbox = styled(FamilieCheckbox)`
@@ -23,11 +18,10 @@ const StyledFamilieCheckbox = styled(FamilieCheckbox)`
 `;
 
 interface IProps {
-    uaktsomhetGrad: Aktsomhet;
     erLesevisning: boolean;
 }
 
-const SærligeGrunnerSkjema: React.FC<IProps> = ({ uaktsomhetGrad, erLesevisning }) => {
+const SærligeGrunnerSkjema: React.FC<IProps> = ({ erLesevisning }) => {
     const {
         vilkårsvurderingPeriode,
         aktsomhetsvurdering,
@@ -49,6 +43,11 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ uaktsomhetGrad, erLesevisning
         }
     };
 
+    const onChangeSærligeGrunnerBegrunnelse = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const nyVerdi = e.target.value;
+        oppdaterAktsomhetsvurdering({ særligGrunnerBegrunnelse: nyVerdi });
+    };
+
     const onChangeAnnetBegrunnelse = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const nyVerdi = e.target.value;
         oppdaterAktsomhetsvurdering({ annetBegrunnelse: nyVerdi });
@@ -56,17 +55,37 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ uaktsomhetGrad, erLesevisning
 
     return (
         <div>
+            <UndertekstBold>Særlige grunner 4. ledd</UndertekstBold>
+            <Spacer8 />
+            <FamilieTilbakeTextArea
+                name="sarligGrunnerBegrunnelse"
+                label={'Vurder særlige grunner du har vektlagt for resultatet'}
+                maxLength={1500}
+                erLesevisning={erLesevisning}
+                value={
+                    aktsomhetsvurdering?.særligGrunnerBegrunnelse
+                        ? aktsomhetsvurdering.særligGrunnerBegrunnelse
+                        : ''
+                }
+                onChange={event => onChangeSærligeGrunnerBegrunnelse(event)}
+                placeholder={
+                    'Begrunn om det foreligger/ ikke foreligger særlige grunner for reduksjon av beløpet som kreves tilbake. Kryss av hvilke særlige grunner som er vektlagt for resultatet'
+                }
+            />
+            <Spacer20 />
             <UndertekstBold>Særlige grunner som er vektlagt (4.ledd)</UndertekstBold>
             <Spacer8 />
-            {særligeGrunnerTyper.map((type: SærligeGrunner) => (
-                <StyledFamilieCheckbox
-                    key={type}
-                    label={særligegrunner[type]}
-                    erLesevisning={erLesevisning}
-                    checked={aktsomhetsvurdering?.særligeGrunner?.includes(type) ? true : false}
-                    onChange={() => onChangeSærligeGrunner(type)}
-                />
-            ))}
+            <div>
+                {særligeGrunnerTyper.map((type: SærligeGrunner) => (
+                    <StyledFamilieCheckbox
+                        key={type}
+                        label={særligegrunner[type]}
+                        erLesevisning={erLesevisning}
+                        checked={aktsomhetsvurdering?.særligeGrunner?.includes(type) ? true : false}
+                        onChange={() => onChangeSærligeGrunner(type)}
+                    />
+                ))}
+            </div>
             {aktsomhetsvurdering?.særligeGrunner?.includes(SærligeGrunner.ANNET) && (
                 <Row>
                     <Column md="1" />
@@ -87,7 +106,6 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ uaktsomhetGrad, erLesevisning
             )}
             <Spacer20 />
             <ReduksjonAvBeløpSkjema
-                uaktsomhetGrad={uaktsomhetGrad}
                 harMerEnnEnAktivitet={
                     vilkårsvurderingPeriode?.ytelser
                         ? vilkårsvurderingPeriode.ytelser.length > 1

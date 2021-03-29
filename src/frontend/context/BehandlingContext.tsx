@@ -6,6 +6,7 @@ import createUseContext from 'constate';
 import { useHttp } from '@navikt/familie-http';
 import {
     byggFeiletRessurs,
+    byggHenterRessurs,
     byggSuksessRessurs,
     byggTomRessurs,
     Ressurs,
@@ -25,7 +26,12 @@ import {
     Vilkårsresultat,
     Vurdering,
 } from '../kodeverk/';
-import { IBehandling } from '../typer/behandling';
+import {
+    Behandlingssteg,
+    Behandlingsstegstatus,
+    IBehandling,
+    IBehandlingsstegstilstand,
+} from '../typer/behandling';
 import { IFagsak } from '../typer/fagsak';
 import {
     IFeilutbetalingFakta,
@@ -33,8 +39,8 @@ import {
     IFeilutbetalingVilkårsvurdering,
     Tilbakekrevingsvalg,
 } from '../typer/feilutbetalingtyper';
-import { useFagsak } from './FagsakContext';
 import { IBeregningsresultat, IVedtaksbrev } from '../typer/vedtakTyper';
+import { useFagsak } from './FagsakContext';
 
 const feilUtbetalingFakta = new Map<string, IFeilutbetalingFakta>([
     [
@@ -1238,6 +1244,48 @@ const vedtaksbrever = new Map<string, IVedtaksbrev>([
                     ],
                 },
                 {
+                    avsnittstype: Avsnittstype.PERIODE,
+                    overskrift: 'Avsnitt 2 - per 1',
+                    fom: '2013-01-01',
+                    tom: '2017-04-30',
+                    underavsnittsliste: [
+                        {
+                            underavsnittstype: Underavsnittstype.FAKTA,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            brødtekst: 'Brødtekst fakta per 1',
+                        },
+                        {
+                            underavsnittstype: Underavsnittstype.FORELDELSE,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            overskrift: 'Foreldelse per 1',
+                            brødtekst: 'Brødtekst foreldelse per 1',
+                        },
+                    ],
+                },
+                {
+                    avsnittstype: Avsnittstype.PERIODE,
+                    overskrift: 'Avsnitt 3 - per 2',
+                    fom: '2017-05-01',
+                    tom: '2020-09-01',
+                    underavsnittsliste: [
+                        {
+                            underavsnittstype: Underavsnittstype.FAKTA,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            brødtekst: 'Brødtekst fakta per 2',
+                        },
+                        {
+                            underavsnittstype: Underavsnittstype.SARLIGEGRUNNER_ANNET,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: true,
+                            overskrift: 'Oppsummering per 2',
+                            brødtekst: 'Brødtekst oppsummering per 2',
+                        },
+                    ],
+                },
+                {
                     avsnittstype: Avsnittstype.TILLEGGSINFORMASJON,
                     overskrift: 'Lovhjemler vi bruker?',
                     underavsnittsliste: [
@@ -1265,6 +1313,48 @@ const vedtaksbrever = new Map<string, IVedtaksbrev>([
                             fritekstPåkrevet: true,
                             overskrift: 'Overskrift 1',
                             brødtekst: 'Brødtekst 1',
+                        },
+                    ],
+                },
+                {
+                    avsnittstype: Avsnittstype.PERIODE,
+                    overskrift: 'Avsnitt 2 - per 1',
+                    fom: '2013-01-01',
+                    tom: '2017-04-30',
+                    underavsnittsliste: [
+                        {
+                            underavsnittstype: Underavsnittstype.FAKTA,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            brødtekst: 'Brødtekst fakta per 1',
+                        },
+                        {
+                            underavsnittstype: Underavsnittstype.FORELDELSE,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            overskrift: 'Foreldelse per 1',
+                            brødtekst: 'Brødtekst foreldelse per 1',
+                        },
+                    ],
+                },
+                {
+                    avsnittstype: Avsnittstype.PERIODE,
+                    overskrift: 'Avsnitt 3 - per 2',
+                    fom: '2017-05-01',
+                    tom: '2020-09-01',
+                    underavsnittsliste: [
+                        {
+                            underavsnittstype: Underavsnittstype.FAKTA,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                            brødtekst: 'Brødtekst fakta per 2',
+                        },
+                        {
+                            underavsnittstype: Underavsnittstype.SARLIGEGRUNNER_ANNET,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: true,
+                            overskrift: 'Oppsummering per 2',
+                            brødtekst: 'Brødtekst oppsummering per 2',
                         },
                     ],
                 },
@@ -1305,29 +1395,90 @@ const vedtaksbrever = new Map<string, IVedtaksbrev>([
     ],
 ]);
 
+const erStegUtført = (status: Behandlingsstegstatus) => {
+    return status === Behandlingsstegstatus.UTFØRT || status === Behandlingsstegstatus.AUTOUTFØRT;
+};
+
 const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [behandling, settBehandling] = React.useState<Ressurs<IBehandling>>();
+    const [aktivtSteg, settAktivtSteg] = React.useState<IBehandlingsstegstilstand>();
+    const [ventegrunn, settVentegrunn] = React.useState<IBehandlingsstegstilstand>();
+    const [harKravgrunnlag, settHarKravgrunnlag] = React.useState<boolean>();
+    const [behandlingILesemodus, settBehandlingILesemodus] = React.useState<boolean>();
     const { fagsak } = useFagsak();
     const { request } = useHttp();
 
-    const hentBehandling = (fagsak: IFagsak, behandlingId: string): void => {
+    const hentBehandlingMedEksternBrukId = (fagsak: IFagsak, behandlingId: string): void => {
         const fagsakBehandling = fagsak.behandlinger.find(
             behandling => behandling.eksternBrukId === behandlingId
         );
         if (fagsakBehandling) {
-            request<void, IBehandling>({
-                method: 'GET',
-                url: `/familie-tilbake/api/behandling/v1/${fagsakBehandling.behandlingId}`,
-            })
-                .then((hentetBehandling: Ressurs<IBehandling>) => {
-                    settBehandling(hentetBehandling);
-                })
-                .catch((_error: AxiosError) => {
-                    settBehandling(byggFeiletRessurs('Ukjent feil ved henting av behandling'));
-                });
+            hentBehandlingMedBehandlingId(fagsakBehandling.behandlingId);
         } else {
             settBehandling(byggFeiletRessurs('Fann ikke behandling'));
         }
+    };
+
+    const hentBehandlingMedBehandlingId = (behandlingId: string) => {
+        settBehandling(byggHenterRessurs());
+        settVentegrunn(null);
+        settAktivtSteg(null);
+        settHarKravgrunnlag(null);
+        settBehandlingILesemodus(null);
+        request<void, IBehandling>({
+            method: 'GET',
+            url: `/familie-tilbake/api/behandling/v1/${behandlingId}`,
+        })
+            .then((hentetBehandling: Ressurs<IBehandling>) => {
+                settBehandling(hentetBehandling);
+
+                if (hentetBehandling.status === RessursStatus.SUKSESS) {
+                    const erILeseModus =
+                        hentetBehandling.data.erBehandlingPåVent ||
+                        hentetBehandling.data.behandlingsstegsinfo.some(
+                            stegInfo =>
+                                stegInfo.behandlingssteg === Behandlingssteg.AVSLUTTET ||
+                                stegInfo.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK ||
+                                (stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
+                                    stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR)
+                        );
+                    settBehandlingILesemodus(erILeseModus);
+
+                    const harFåttKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo.some(
+                        stegInfo => stegInfo.behandlingssteg === Behandlingssteg.FAKTA
+                    );
+                    settHarKravgrunnlag(harFåttKravgrunnlag);
+
+                    const funnetAktivtsteg = hentetBehandling.data.behandlingsstegsinfo.find(
+                        stegInfo =>
+                            stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR ||
+                            stegInfo.behandlingsstegstatus === Behandlingsstegstatus.VENTER
+                    );
+                    if (funnetAktivtsteg) {
+                        settAktivtSteg(funnetAktivtsteg);
+                        if (
+                            funnetAktivtsteg.behandlingsstegstatus === Behandlingsstegstatus.VENTER
+                        ) {
+                            settVentegrunn(funnetAktivtsteg);
+                        }
+                    }
+                }
+            })
+            .catch((error: AxiosError) => {
+                console.log('Error: ', error);
+                settBehandling(byggFeiletRessurs('Ukjent feil ved henting av behandling'));
+            });
+    };
+
+    const erStegBehandlet = (steg: Behandlingssteg): boolean => {
+        if (behandling?.status === RessursStatus.SUKSESS) {
+            return behandling.data.behandlingsstegsinfo.some(
+                stegInfo =>
+                    stegInfo.behandlingssteg === steg &&
+                    erStegUtført(stegInfo.behandlingsstegstatus)
+            );
+        }
+        return false;
     };
 
     const utledBehandlingId = () => {
@@ -1385,7 +1536,13 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
 
     return {
         behandling,
-        hentBehandling,
+        hentBehandlingMedEksternBrukId,
+        hentBehandlingMedBehandlingId,
+        behandlingILesemodus,
+        aktivtSteg,
+        ventegrunn,
+        erStegBehandlet,
+        harKravgrunnlag,
         hentFeilutbetalingFakta,
         hentFeilutbetalingForeldelse,
         hentFeilutbetalingVilkårsvurdering,

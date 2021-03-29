@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import navFarger from 'nav-frontend-core';
 import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
+import { ytelsetype } from '../../../kodeverk';
 import {
     IBehandling,
     behandlingsstatuser,
@@ -12,9 +13,8 @@ import {
     Behandlingstype,
 } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import Informasjonsbolk from '../../Felleskomponenter/Informasjonsbolk/Informasjonsbolk';
-import { ytelsetype } from '../../../kodeverk';
 import { formatterDatostring } from '../../../utils';
+import Informasjonsbolk from '../../Felleskomponenter/Informasjonsbolk/Informasjonsbolk';
 
 interface IProps {
     fagsak: IFagsak;

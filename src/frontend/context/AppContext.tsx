@@ -5,16 +5,6 @@ import createUseContext from 'constate';
 import { HttpProvider, useHttp } from '@navikt/familie-http';
 import { ISaksbehandler, Ressurs } from '@navikt/familie-typer';
 
-export interface IModal {
-    actions?: JSX.Element[] | JSX.Element;
-    className?: string;
-    innhold?: () => React.ReactNode;
-    lukkKnapp: boolean;
-    onClose?: () => void;
-    tittel: string;
-    visModal: boolean;
-}
-
 interface IInfo {
     appImage: string;
     appName: string;

@@ -7,10 +7,10 @@ import { Undertekst } from 'nav-frontend-typografi';
 
 import { FamilieInput } from '@navikt/familie-form-elements';
 
+import { useVilkårsvurderingPeriode } from '../../../../context/VilkårsvurderingPeriodeContext';
 import { isNumeric } from '../../../../utils';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';
-import { useVilkårsvurderingPeriode } from './VilkårsvurderingPeriodeContext';
 
 const ArrowBoxContainer = styled.div`
     width: 300px;
@@ -50,6 +50,7 @@ const AktsomhetGodTro: React.FC<IProps> = ({ erLesevisning }) => {
                 id="erBelopetIBehold"
                 erLesevisning={erLesevisning}
                 legend={'Er beløpet i behold?'}
+                verdi={vilkårsresultat?.erBeløpetIBehold ? 'Ja' : 'Nei'}
             >
                 <Radio
                     name="erBelopetIBehold"

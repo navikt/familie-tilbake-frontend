@@ -5,17 +5,14 @@ import styled from 'styled-components';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
-import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
+import { NormaltekstBold } from '../../../utils';
+import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
 
 const StyledSkjema = styled.div`
     width: 90%;
-`;
-
-const NormaltekstBold = styled(Normaltekst)`
-    font-weight: 600;
 `;
 
 interface IProps {
@@ -52,7 +49,7 @@ const VedtakSkjema: React.FC<IProps> = ({ avsnitter, erLesevisning }) => {
                     <React.Fragment key={avsnitt.avsnittstype + avsnitt.fom}>
                         <Ekspanderbartpanel
                             tittel={avsnitt.overskrift ? avsnitt.overskrift : ''}
-                            apen={skalVisesÅpen(avsnitt)}
+                            apen={!erLesevisning && skalVisesÅpen(avsnitt)}
                         >
                             {avsnitt.underavsnittsliste.map(underavsnitt => {
                                 return (

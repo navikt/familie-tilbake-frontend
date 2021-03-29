@@ -99,7 +99,11 @@ const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ periode, erLesevisning }) =
                         id="foreldet"
                         erLesevisning={erLesevisning}
                         legend="Vurder om perioden er foreldet"
-                        verdi={periode.foreldelseVurderingType}
+                        verdi={
+                            periode.foreldelseVurderingType
+                                ? foreldelsevurderinger[periode.foreldelseVurderingType]
+                                : ''
+                        }
                     >
                         {foreldelseVurderingTyper.map(type => (
                             <Radio

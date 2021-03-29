@@ -6,10 +6,10 @@ import { Column, Row } from 'nav-frontend-grid';
 import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 
+import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
-import { useVilkårsvurderingPeriode } from '../VilkårsvurderingPeriodeContext';
 
 const StyledNormaltekst = styled(Normaltekst)`
     padding-top: 15px;
@@ -44,6 +44,7 @@ const GradForsettSkjema: React.FC<IProps> = ({
                                 id="skalDetTilleggesRenter"
                                 erLesevisning={erLesevisning}
                                 legend={'Skal det tillegges renter?'}
+                                verdi={aktsomhetsvurdering?.ileggRenter ? 'Ja' : 'Nei'}
                             >
                                 <Radio
                                     name="skalDetTilleggesRenter"

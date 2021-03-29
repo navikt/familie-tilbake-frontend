@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Radio } from 'nav-frontend-skjema';
 
+import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 import {
     Aktsomhet,
     aktsomheter,
@@ -10,7 +11,6 @@ import {
     Vilkårsresultat,
 } from '../../../../../kodeverk';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
-import { useVilkårsvurderingPeriode } from '../VilkårsvurderingPeriodeContext';
 import GradForsettSkjema from './GradForsettSkjema';
 import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
 
@@ -41,6 +41,13 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({
                 id="handletUaktsomhetGrad"
                 erLesevisning={erLesevisning}
                 legend={'I hvilken grad har mottaker handlet uaktsomt?'}
+                verdi={
+                    aktsomhetsvurdering?.aktsomhet
+                        ? erForstodBurdeForstått
+                            ? forstodBurdeForståttAktsomheter[aktsomhetsvurdering.aktsomhet]
+                            : aktsomheter[aktsomhetsvurdering.aktsomhet]
+                        : ''
+                }
             >
                 {aktsomhetTyper.map(type => (
                     <Radio
@@ -65,7 +72,6 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({
                     />
                 ) : (
                     <GradUaktsomhetSkjema
-                        uaktsomhetGrad={aktsomhetsvurdering.aktsomhet}
                         erValgtResultatTypeForstoBurdeForstaatt={erForstodBurdeForstått}
                         erLesevisning={erLesevisning}
                         erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}

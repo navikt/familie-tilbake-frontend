@@ -4,12 +4,13 @@ import styled from 'styled-components';
 
 import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
-import { IBehandling } from '../../../typer/behandling';
-import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
 import { RessursStatus } from '@navikt/familie-typer';
+
+import { useBehandling } from '../../../context/BehandlingContext';
 import { vedtaksresultater } from '../../../kodeverk';
+import { IBehandling } from '../../../typer/behandling';
+import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
+import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import VedtakPerioder from './VedtakPerioder';
 import VedtakSkjema from './VedtakSkjema';
 
@@ -24,8 +25,8 @@ interface IProps {
 const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
     const [beregningsresultat, settBeregningsresultat] = React.useState<IBeregningsresultat>();
     const [avsnittsliste, settAvsnittliste] = React.useState<VedtaksbrevAvsnitt[]>();
-    const { hentBeregningsresultat, hentVedtaksbrev } = useBehandling();
-    const erLesevisning = false;
+    const { behandlingILesemodus, hentBeregningsresultat, hentVedtaksbrev } = useBehandling();
+    const erLesevisning = !!behandlingILesemodus;
 
     React.useEffect(() => {
         if (behandling) {

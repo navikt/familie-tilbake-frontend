@@ -8,7 +8,12 @@ import { Column, Row } from 'nav-frontend-grid';
 import { Normaltekst } from 'nav-frontend-typografi';
 
 import { HendelseType, hendelsetyper } from '../../../kodeverk';
-import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
+import {
+    formatterDatostring,
+    hentPeriodelengde,
+    formatCurrencyNoKr,
+    NormaltekstBold,
+} from '../../../utils';
 
 const StyledContainer = styled.div`
     background-color: ${navFarger.orangeFocusLighten80};
@@ -32,10 +37,6 @@ const SumRad = styled(Row)`
         font-weight: bold;
         margin-left: 8px;
     }
-`;
-
-const NormaltekstBold = styled(Normaltekst)`
-    font-weight: 600;
 `;
 
 interface IProps {

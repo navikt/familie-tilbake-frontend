@@ -3,19 +3,38 @@ import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
+import AlertStripe from 'nav-frontend-alertstriper';
+
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { Fagsystem } from '../../kodeverk';
+import { IBehandlingsstegstilstand, venteårsaker } from '../../typer/behandling';
+import { formatterDatostring } from '../../utils';
+import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
+import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 import BehandlingContainer from './BehandlingContainer';
 import Personlinje from './Personlinje/Personlinje';
-import AlertStripe from 'nav-frontend-alertstriper';
 
 const FagsakContainerContent = styled.div`
     display: flex;
     height: calc(100vh - 6rem);
 `;
+
+const StyledAlertStripe = styled(AlertStripe)`
+    .alertstripe__tekst {
+        max-width: fit-content;
+    }
+`;
+
+const venteBeskjed = (ventegrunn: IBehandlingsstegstilstand) => {
+    return `Behandlingen er satt på vent: ${
+        // @ts-ignore
+        venteårsaker[ventegrunn.venteårsak]
+        // @ts-ignore
+    }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist)}`;
+};
 
 interface IProps {
     fagsystem: string;
@@ -30,7 +49,14 @@ const FagsakContainer: React.FC = () => {
     const behandlingId = history.location.pathname.split('/')[6];
 
     const { fagsak, hentFagsak } = useFagsak();
-    const { behandling, hentBehandling } = useBehandling();
+    const {
+        behandling,
+        hentBehandlingMedEksternBrukId,
+        harKravgrunnlag,
+        ventegrunn,
+    } = useBehandling();
+
+    const [visVenteModal, settVisVenteModal] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         if (fagsystem !== undefined && fagsakId !== undefined) {
@@ -40,9 +66,34 @@ const FagsakContainer: React.FC = () => {
 
     React.useEffect(() => {
         if (fagsak?.status === RessursStatus.SUKSESS && behandlingId) {
-            hentBehandling(fagsak.data, behandlingId);
+            hentBehandlingMedEksternBrukId(fagsak.data, behandlingId);
+            settVisVenteModal(false);
         }
     }, [fagsak, behandlingId]);
+
+    React.useEffect(() => {
+        if (ventegrunn) {
+            settVisVenteModal(true);
+        }
+    }, [ventegrunn]);
+
+    const lukkVenteModal = () => {
+        settVisVenteModal(false);
+    };
+
+    if (fagsak?.status === RessursStatus.HENTER || behandling?.status === RessursStatus.HENTER) {
+        return <HenterBehandling />;
+    }
+
+    if (visVenteModal && ventegrunn && behandling?.status === RessursStatus.SUKSESS) {
+        return (
+            <PåVentModal
+                behandling={behandling.data}
+                ventegrunn={ventegrunn}
+                onClose={lukkVenteModal}
+            />
+        );
+    }
 
     switch (fagsak?.status) {
         case RessursStatus.SUKSESS: {
@@ -52,12 +103,21 @@ const FagsakContainer: React.FC = () => {
                         <>
                             <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
-                            <FagsakContainerContent>
-                                <BehandlingContainer
-                                    fagsak={fagsak.data}
-                                    behandling={behandling.data}
+                            {ventegrunn && (
+                                <StyledAlertStripe
+                                    children={venteBeskjed(ventegrunn)}
+                                    type={'info'}
                                 />
-                            </FagsakContainerContent>
+                            )}
+
+                            {harKravgrunnlag && (
+                                <FagsakContainerContent>
+                                    <BehandlingContainer
+                                        fagsak={fagsak.data}
+                                        behandling={behandling.data}
+                                    />
+                                </FagsakContainerContent>
+                            )}
                         </>
                     );
                 case RessursStatus.IKKE_TILGANG:

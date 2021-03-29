@@ -1,4 +1,4 @@
-import { parseISO, differenceInCalendarYears, add, differenceInMonths } from 'date-fns';
+import { parseISO, differenceInCalendarYears, add, differenceInMonths, isBefore } from 'date-fns';
 
 const datoformat: Intl.DateTimeFormatOptions = {
     day: '2-digit',
@@ -23,9 +23,14 @@ export const hentAlder = (fødselsdato: string) => {
     return differenceInCalendarYears(now, dato);
 };
 
-export const finnDatoRelativtTilNå = (config: Duration): string => {
+export const finnDateRelativtTilNå = (config: Duration): Date => {
     const now = new Date();
     const aDate = add(now, config);
+    return aDate;
+};
+
+export const finnDatoRelativtTilNå = (config: Duration): string => {
+    const aDate = finnDateRelativtTilNå(config);
     return formatterDato(aDate);
 };
 
@@ -57,3 +62,17 @@ export const hentPeriodelengde = (fraDatoPeriode: string, tilDatoPeriode: string
 
     return formatterPeriodelengde(years, months);
 };
+
+const isEmpty = (text?: string | number | boolean | Date | null) =>
+    text === null || text === undefined || text.toString().trim().length === 0;
+
+const yesterday = (): Date => {
+    return finnDateRelativtTilNå({ days: -1 });
+};
+
+const dateBeforeOrEqual = (latest: Date, dato: Date): boolean => isBefore(latest, dato);
+
+const datoBeforeOrEqual = (latest: Date, dato: string): boolean =>
+    isEmpty(dato) || dateBeforeOrEqual(parseISO(dato), latest);
+
+export const dateBeforeToday = (dato: string): boolean => datoBeforeOrEqual(yesterday(), dato);

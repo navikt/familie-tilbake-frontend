@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import styled from 'styled-components';
+
 import { vurderinger } from '../../../kodeverk';
 import { BeregningsresultatPeriode } from '../../../typer/vedtakTyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';

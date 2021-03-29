@@ -5,6 +5,8 @@ import { Behandlingstype, Behandlingstatus } from '../../frontend/typer/behandli
 import { IFagsak, IFagsakBehandling } from '../../frontend/typer/fagsak';
 import { IPerson } from '../../frontend/typer/person';
 
+export * from './KS_behandling_4';
+
 const bruker: IPerson = {
     navn: 'Test Testesen',
     kjønn: kjønnType.MANN,

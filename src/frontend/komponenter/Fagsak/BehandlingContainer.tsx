@@ -1,18 +1,23 @@
 import * as React from 'react';
 
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 
+import { useBehandling } from '../../context/BehandlingContext';
+import { IBehandling } from '../../typer/behandling';
 import { IFagsak } from '../../typer/fagsak';
+import {
+    erØnsketSideTilgjengelig,
+    finnSideAktivtSteg,
+} from '../Felleskomponenter/Venstremeny/sider';
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 import FaktaContainer from './Fakta/FaktaContainer';
 import ForeldelseContainer from './Foreldelse/ForeldelseContainer';
 import Høyremeny from './Høyremeny/Høyremeny';
-import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
-import { IBehandling } from '../../typer/behandling';
 import VedtakContainer from './Vedtak/VedtakContainer';
+import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
 
 const BEHANDLING_KONTEKST_PATH = '/fagsystem/:fagsystem/fagsak/:fagsakId/behandling/:behandlingId';
 
@@ -39,6 +44,27 @@ interface IProps {
 }
 
 const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
+    const history = useHistory();
+    const ønsketSide = history.location.pathname.split('/')[7];
+
+    const { aktivtSteg } = useBehandling();
+
+    React.useEffect(() => {
+        const ønsketSideLovlig = ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling);
+        if (!ønsketSideLovlig && aktivtSteg) {
+            const aktivSide = finnSideAktivtSteg(aktivtSteg);
+            if (aktivSide) {
+                history.push(
+                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${aktivSide?.href}`
+                );
+            }
+        } else if (!ønsketSideLovlig) {
+            history.push(
+                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+            );
+        }
+    }, [aktivtSteg, ønsketSide]);
+
     return behandling ? (
         <>
             <StyledVenstremenyContainer>

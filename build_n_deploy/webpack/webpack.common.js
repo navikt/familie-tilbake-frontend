@@ -11,6 +11,19 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.(ts|tsx)$/,
+                enforce: 'pre',
+                exclude: /node_modules/,
+                use: [
+                    {
+                        options: {
+                            eslintPath: require.resolve('eslint'),
+                        },
+                        loader: require.resolve('eslint-loader'),
+                    },
+                ],
+            },
+            {
                 test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
                 use: [`file-loader`],
             },

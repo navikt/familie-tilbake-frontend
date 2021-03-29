@@ -1,28 +1,55 @@
-import { HendelseType, HendelseUndertype } from '../../frontend/kodeverk';
+import { HendelseType, HendelseUndertype } from '../../../frontend/kodeverk';
 import {
+    Behandlingssteg,
+    Behandlingsstegstatus,
     Behandlingstatus,
     Behandlingstype,
     Behandlingårsak,
     IBehandling,
-} from '../../frontend/typer/behandling';
+} from '../../../frontend/typer/behandling';
 import {
     IFeilutbetalingFakta,
     Tilbakekrevingsvalg,
-} from '../../frontend/typer/feilutbetalingtyper';
+} from '../../../frontend/typer/feilutbetalingtyper';
 
-const ba_behandling_4: IBehandling = {
-    behandlingId: 'ba4',
-    eksternBrukId: '3',
+const ba_behandling_14: IBehandling = {
+    behandlingId: 'ba14',
+    eksternBrukId: '13',
     kanHenleggeBehandling: true,
     harVerge: true,
-    aktiv: true,
     type: Behandlingstype.TILBAKEKREVING,
     årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
+    behandlingsstegsinfo: [
+        {
+            behandlingssteg: Behandlingssteg.VARSEL,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.GRUNNLAG,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FAKTA,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FORELDELSE,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.VILKÅRSVURDERING,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FORESLÅ_VEDTAK,
+            behandlingsstegstatus: Behandlingsstegstatus.KLAR,
+        },
+    ],
 };
 
-const ba_feilutbetalingFakta_4: IFeilutbetalingFakta = {
+const ba_feilutbetalingFakta_14: IFeilutbetalingFakta = {
     totalFeilutbetaltPeriode: {
         fom: '2013-01-01',
         tom: '2020-09-01',
@@ -59,4 +86,4 @@ const ba_feilutbetalingFakta_4: IFeilutbetalingFakta = {
     begrunnelse: 'Dette er ein mock-begrunnelse!',
 };
 
-export { ba_behandling_4, ba_feilutbetalingFakta_4 };
+export { ba_behandling_14, ba_feilutbetalingFakta_14 };

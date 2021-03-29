@@ -1,3 +1,4 @@
+import { HendelseType, HendelseUndertype } from '../../../frontend/kodeverk';
 import {
     Behandlingssteg,
     Behandlingsstegstatus,
@@ -5,17 +6,16 @@ import {
     Behandlingstype,
     Behandlingårsak,
     IBehandling,
-} from '../../frontend/typer/behandling';
+} from '../../../frontend/typer/behandling';
 import {
     IFeilutbetalingFakta,
     Tilbakekrevingsvalg,
-} from '../../frontend/typer/feilutbetalingtyper';
+} from '../../../frontend/typer/feilutbetalingtyper';
 
-const ks_behandling_4: IBehandling = {
-    behandlingId: 'ks4',
-    eksternBrukId: '3',
+const ba_behandling_12: IBehandling = {
+    behandlingId: 'ba12',
+    eksternBrukId: '11',
     kanHenleggeBehandling: true,
-    erBehandlingPåVent: false,
     harVerge: true,
     type: Behandlingstype.TILBAKEKREVING,
     årsak: Behandlingårsak.NYE_OPPLYSNINGER,
@@ -44,12 +44,16 @@ const ks_behandling_4: IBehandling = {
         },
         {
             behandlingssteg: Behandlingssteg.FORESLÅ_VEDTAK,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FATTE_VEDTAK,
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
 };
 
-const ks_feilutbetalingFakta_4: IFeilutbetalingFakta = {
+const ba_feilutbetalingFakta_12: IFeilutbetalingFakta = {
     totalFeilutbetaltPeriode: {
         fom: '2013-01-01',
         tom: '2020-09-01',
@@ -70,6 +74,8 @@ const ks_feilutbetalingFakta_4: IFeilutbetalingFakta = {
                 tom: '2017-04-30',
             },
             feilutbetaltBeløp: 5000,
+            hendelsestype: HendelseType.BA_MEDLEMSKAP,
+            hendelsesundertype: HendelseUndertype.DØDSFALL,
         },
         {
             periode: {
@@ -77,9 +83,11 @@ const ks_feilutbetalingFakta_4: IFeilutbetalingFakta = {
                 tom: '2020-09-01',
             },
             feilutbetaltBeløp: 4000,
+            hendelsestype: HendelseType.BA_ANNET,
+            hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
         },
     ],
     begrunnelse: 'Dette er ein mock-begrunnelse!',
 };
 
-export { ks_behandling_4, ks_feilutbetalingFakta_4 };
+export { ba_behandling_12, ba_feilutbetalingFakta_12 };

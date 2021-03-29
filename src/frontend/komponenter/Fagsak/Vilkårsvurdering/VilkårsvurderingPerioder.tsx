@@ -7,10 +7,10 @@ import { Column, Row } from 'nav-frontend-grid';
 
 import { Periode, Tidslinje } from '@navikt/helse-frontend-tidslinje';
 
+import { VilkårsvurderingPeriodeProvider } from '../../../context/VilkårsvurderingPeriodeContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
 import { VilkårsvurderingPeriode } from '../../../typer/feilutbetalingtyper';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
-import { VilkårsvurderingPeriodeProvider } from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 
 const TidslinjeContainer = styled.div`

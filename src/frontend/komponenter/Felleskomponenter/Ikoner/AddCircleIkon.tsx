@@ -1,10 +1,6 @@
 import * as React from 'react';
 
-interface IProps {
-    test?: boolean;
-}
-
-const AddCircleIkon: React.FC<IProps> = () => {
+const AddCircleIkon: React.FC = () => {
     return (
         <svg
             width="18px"

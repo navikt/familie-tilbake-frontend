@@ -66,6 +66,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                     onChange={event => onChangeÅrsak(event)}
                     value={valgtÅrsak ? valgtÅrsak : '-'}
                     erLesevisning={erLesevisning}
+                    lesevisningVerdi={valgtÅrsak ? hendelsetyper[valgtÅrsak] : ''}
                 >
                     <option>-</option>
                     {hendelseTyper?.map(type => (
@@ -81,6 +82,9 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                         onChange={event => onChangeUnderÅrsak(event)}
                         value={valgtUnderÅrsak ? valgtUnderÅrsak : '-'}
                         erLesevisning={erLesevisning}
+                        lesevisningVerdi={
+                            valgtUnderÅrsak ? hendelseundertyper[valgtUnderÅrsak] : ''
+                        }
                     >
                         <option>-</option>
                         {hendelseUnderTyper.map(type => (
