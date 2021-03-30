@@ -63,6 +63,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling }) => {
                             onClick={() => {
                                 onBekreft(behandling.behandlingId);
                             }}
+                            type="hoved"
                         >
                             Bekreft
                         </Knapp>,

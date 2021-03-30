@@ -94,6 +94,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     </Flatknapp>,
                     <Knapp
                         key={'bekreft'}
+                        type="hoved"
                         onClick={() => {
                             onBekreft(behandling.behandlingId);
                         }}

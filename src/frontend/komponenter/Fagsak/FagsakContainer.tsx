@@ -54,9 +54,9 @@ const FagsakContainer: React.FC = () => {
         hentBehandlingMedEksternBrukId,
         harKravgrunnlag,
         ventegrunn,
+        visVenteModal,
+        settVisVenteModal,
     } = useBehandling();
-
-    const [visVenteModal, settVisVenteModal] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         if (fagsystem !== undefined && fagsakId !== undefined) {
@@ -67,15 +67,8 @@ const FagsakContainer: React.FC = () => {
     React.useEffect(() => {
         if (fagsak?.status === RessursStatus.SUKSESS && behandlingId) {
             hentBehandlingMedEksternBrukId(fagsak.data, behandlingId);
-            settVisVenteModal(false);
         }
     }, [fagsak, behandlingId]);
-
-    React.useEffect(() => {
-        if (ventegrunn) {
-            settVisVenteModal(true);
-        }
-    }, [ventegrunn]);
 
     const lukkVenteModal = () => {
         settVisVenteModal(false);
@@ -99,7 +92,7 @@ const FagsakContainer: React.FC = () => {
         case RessursStatus.SUKSESS: {
             switch (behandling?.status) {
                 case RessursStatus.SUKSESS:
-                    return (
+                    return !visVenteModal ? (
                         <>
                             <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
@@ -119,6 +112,8 @@ const FagsakContainer: React.FC = () => {
                                 </FagsakContainerContent>
                             )}
                         </>
+                    ) : (
+                        <div />
                     );
                 case RessursStatus.IKKE_TILGANG:
                     return (

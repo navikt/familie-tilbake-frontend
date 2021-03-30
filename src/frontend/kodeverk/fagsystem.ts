@@ -23,11 +23,11 @@ export const ytelsetype: Record<Ytelsetype, string> = {
 };
 
 const hendelseTyperForYtelse = {
-    BARNETRYGD: [HendelseType.BA_MEDLEMSKAP, HendelseType.BA_ANNET],
-    OVERGANGSSTØNAD: [HendelseType.EF_MEDLEMSKAP, HendelseType.EF_ANNET],
-    BARNETILSYN: [HendelseType.EF_MEDLEMSKAP, HendelseType.EF_ANNET],
-    SKOLEPENGER: [HendelseType.EF_MEDLEMSKAP, HendelseType.EF_ANNET],
-    KONTANTSTØTTE: [HendelseType.KS_MEDLEMSKAP, HendelseType.KS_ANNET],
+    BARNETRYGD: [HendelseType.BA_ANNET],
+    OVERGANGSSTØNAD: [HendelseType.EF_ANNET],
+    BARNETILSYN: [HendelseType.EF_ANNET],
+    SKOLEPENGER: [HendelseType.EF_ANNET],
+    KONTANTSTØTTE: [HendelseType.KS_ANNET],
 };
 
 export const hentHendelseTyper = (ytelse: Ytelsetype): HendelseType[] => {
