@@ -1,15 +1,40 @@
+import { kjønnType } from '@navikt/familie-typer';
+
+import { Fagsystem, Ytelsetype } from '../../../frontend/kodeverk';
 import {
+    Behandlingstype,
+    Behandlingstatus,
+    IBehandling,
+    Behandlingårsak,
     Behandlingssteg,
     Behandlingsstegstatus,
-    Behandlingstatus,
-    Behandlingstype,
-    Behandlingårsak,
-    IBehandling,
-} from '../../frontend/typer/behandling';
-import {
-    IFeilutbetalingFakta,
-    Tilbakekrevingsvalg,
-} from '../../frontend/typer/feilutbetalingtyper';
+} from '../../../frontend/typer/behandling';
+import { IFagsak, IFagsakBehandling } from '../../../frontend/typer/fagsak';
+import { IPerson } from '../../../frontend/typer/person';
+
+const bruker: IPerson = {
+    navn: 'Test Testesen',
+    kjønn: kjønnType.MANN,
+    fødselsdato: '1990-01-01',
+    personIdent: '12345600001',
+};
+
+const behandlinger_2: IFagsakBehandling[] = [
+    {
+        behandlingId: 'ks4',
+        eksternBrukId: '3',
+        type: Behandlingstype.REVURDERING_TILBAKEKREVING,
+        status: Behandlingstatus.OPPRETTET,
+    },
+];
+
+const fagsak_ks2: IFagsak = {
+    eksternFagsakId: 'ks2',
+    fagsystem: Fagsystem.KS,
+    ytelsestype: Ytelsetype.KONTANTSTØTTE,
+    bruker: bruker,
+    behandlinger: behandlinger_2,
+};
 
 const ks_behandling_4: IBehandling = {
     behandlingId: 'ks4',
@@ -49,37 +74,4 @@ const ks_behandling_4: IBehandling = {
     ],
 };
 
-const ks_feilutbetalingFakta_4: IFeilutbetalingFakta = {
-    totalFeilutbetaltPeriode: {
-        fom: '2013-01-01',
-        tom: '2020-09-01',
-    },
-    totaltFeilutbetaltBeløp: 9000,
-    varsletBeløp: 9300,
-    revurderingsvedtaksdato: '2020-12-05',
-    faktainfo: {
-        revurderingsårsak: 'Ny søknad',
-        revurderingsresultat: 'Opphør av ytelsen',
-        tilbakekrevingsvalg: Tilbakekrevingsvalg.OPPRETT_TILBAKEKREVING_UTEN_VARSEL,
-        konsekvensForYtelser: ['Opphør av ytelsen', 'Ytelsen redusert'],
-    },
-    feilutbetaltePerioder: [
-        {
-            periode: {
-                fom: '2013-01-01',
-                tom: '2017-04-30',
-            },
-            feilutbetaltBeløp: 5000,
-        },
-        {
-            periode: {
-                fom: '2017-05-01',
-                tom: '2020-09-01',
-            },
-            feilutbetaltBeløp: 4000,
-        },
-    ],
-    begrunnelse: 'Dette er ein mock-begrunnelse!',
-};
-
-export { ks_behandling_4, ks_feilutbetalingFakta_4 };
+export { fagsak_ks2, ks_behandling_4 };

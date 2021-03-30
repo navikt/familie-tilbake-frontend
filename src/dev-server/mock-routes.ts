@@ -4,15 +4,13 @@ import { Request, Response, Router } from 'express';
 
 import { byggFeiletRessurs, byggSuksessRessurs, RessursStatus } from '@navikt/familie-typer';
 
-import { fagsak_ba2, ba_behandling_4, ba_feilutbetalingFakta_4 } from './mock/ba2/BA_fagsak_2';
+import { fagsak_ba2, ba_behandling_4 } from './mock/ba2/BA_fagsak_2';
 import {
     fagsak_ba3,
     ba_behandling_6,
     ba_behandling_7,
     ba_behandling_8,
-    ba_feilutbetalingFakta_8,
     ba_behandling_9,
-    ba_feilutbetalingFakta_9,
 } from './mock/ba3/BA_fagsak_3';
 import {
     fagsak_ba4,
@@ -20,8 +18,17 @@ import {
     ba_behandling_13,
     ba_behandling_14,
 } from './mock/ba4/BA_fagsak_4';
-import { fagsak_ef2, ef_behandling_4, ef_feilutbetalingFakta_4 } from './mock/EF_fagsak_2';
-import { fagsak_ks2, ks_behandling_4, ks_feilutbetalingFakta_4 } from './mock/KS_fagsak_2';
+import { fagsak_ef2, ef_behandling_4 } from './mock/ef2/EF_fagsak_2';
+import { fagsak_ks2, ks_behandling_4 } from './mock/ks2/KS_fagsak_2';
+import {
+    ba_feilutbetalingFakta_behandlet_1,
+    ef_feilutbetalingFakta_behandlet_1,
+    ks_feilutbetalingFakta_behandlet_1,
+} from './mock/fakta/feilutbetalingFakta_behandlet';
+import {
+    feilutbetalingFakta_ubehandlet_2,
+    feilutbetalingFakta_ubehandlet_4,
+} from './mock/fakta/feilutbetalingFakta_ubehandlet';
 
 export const setupRouter = (router: Router) => {
     router.get('/user/profile', (_: Request, res: Response) => {
@@ -138,24 +145,27 @@ export const setupRouter = (router: Router) => {
     );
 
     router.get(
-        '/familie-tilbake/api/behandling/v1/:behandlingId/fakta',
+        '/familie-tilbake/api/behandling/:behandlingId/fakta/v1',
         (req: Request, res: Response) => {
             const { behandlingId } = req.params;
             switch (behandlingId) {
                 case 'ba4':
-                    res.send(byggSuksessRessurs(ba_feilutbetalingFakta_4));
+                case 'ba12':
+                case 'ba13':
+                case 'ba14':
+                    res.send(byggSuksessRessurs(ba_feilutbetalingFakta_behandlet_1));
                     return;
                 case 'ba8':
-                    res.send(byggSuksessRessurs(ba_feilutbetalingFakta_8));
+                    res.send(byggSuksessRessurs(feilutbetalingFakta_ubehandlet_4));
                     return;
                 case 'ba9':
-                    res.send(byggSuksessRessurs(ba_feilutbetalingFakta_9));
+                    res.send(byggSuksessRessurs(feilutbetalingFakta_ubehandlet_2));
                     return;
                 case 'ef4':
-                    res.send(byggSuksessRessurs(ef_feilutbetalingFakta_4));
+                    res.send(byggSuksessRessurs(ef_feilutbetalingFakta_behandlet_1));
                     return;
                 case 'ks4':
-                    res.send(byggSuksessRessurs(ks_feilutbetalingFakta_4));
+                    res.send(byggSuksessRessurs(ks_feilutbetalingFakta_behandlet_1));
                     return;
                 default:
                     res.send(
@@ -164,6 +174,15 @@ export const setupRouter = (router: Router) => {
                         )
                     );
             }
+        }
+    );
+
+    router.post(
+        '/familie-tilbake/api/behandling/:behandlingId/steg/v1',
+        (req: Request, res: Response) => {
+            const { behandlingId } = req.params;
+            console.log(`Har fått behandlet data på behandling ${behandlingId}: `, req.body);
+            res.send(byggSuksessRessurs('OK'));
         }
     );
 

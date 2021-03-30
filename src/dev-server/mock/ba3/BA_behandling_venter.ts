@@ -7,22 +7,7 @@ import {
     IBehandling,
     Venteårsak,
 } from '../../../frontend/typer/behandling';
-import {
-    IFeilutbetalingFakta,
-    Tilbakekrevingsvalg,
-} from '../../../frontend/typer/feilutbetalingtyper';
-
-export const dayIn21Days = () => {
-    const dayIn21Days = new Date();
-    dayIn21Days.setDate(dayIn21Days.getDate() + 21);
-    return dayIn21Days.toISOString().substring(0, 10);
-};
-
-const yesterday = () => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    return yesterday.toISOString().substring(0, 10);
-};
+import { dayIn21Days, yesterday } from '../utils';
 
 const ba_behandling_6: IBehandling = {
     behandlingId: 'ba6',
@@ -97,38 +82,6 @@ const ba_behandling_8: IBehandling = {
     ],
 };
 
-const ba_feilutbetalingFakta_8: IFeilutbetalingFakta = {
-    totalFeilutbetaltPeriode: {
-        fom: '2013-01-01',
-        tom: '2020-09-01',
-    },
-    totaltFeilutbetaltBeløp: 9000,
-    varsletBeløp: 9300,
-    revurderingsvedtaksdato: '2020-12-05',
-    faktainfo: {
-        revurderingsårsak: 'Ny søknad',
-        revurderingsresultat: 'Opphør av ytelsen',
-        tilbakekrevingsvalg: Tilbakekrevingsvalg.OPPRETT_TILBAKEKREVING_MED_VARSEL,
-        konsekvensForYtelser: ['Opphør av ytelsen', 'Ytelsen redusert'],
-    },
-    feilutbetaltePerioder: [
-        {
-            periode: {
-                fom: '2013-01-01',
-                tom: '2017-04-30',
-            },
-            feilutbetaltBeløp: 5000,
-        },
-        {
-            periode: {
-                fom: '2017-05-01',
-                tom: '2020-09-01',
-            },
-            feilutbetaltBeløp: 4000,
-        },
-    ],
-};
-
 const ba_behandling_9: IBehandling = {
     behandlingId: 'ba9',
     eksternBrukId: '8',
@@ -155,43 +108,4 @@ const ba_behandling_9: IBehandling = {
     ],
 };
 
-const ba_feilutbetalingFakta_9: IFeilutbetalingFakta = {
-    totalFeilutbetaltPeriode: {
-        fom: '2013-01-01',
-        tom: '2020-09-01',
-    },
-    totaltFeilutbetaltBeløp: 9000,
-    varsletBeløp: 9300,
-    revurderingsvedtaksdato: '2020-12-05',
-    faktainfo: {
-        revurderingsårsak: 'Ny søknad',
-        revurderingsresultat: 'Opphør av ytelsen',
-        tilbakekrevingsvalg: Tilbakekrevingsvalg.OPPRETT_TILBAKEKREVING_MED_VARSEL,
-        konsekvensForYtelser: ['Opphør av ytelsen', 'Ytelsen redusert'],
-    },
-    feilutbetaltePerioder: [
-        {
-            periode: {
-                fom: '2013-01-01',
-                tom: '2017-04-30',
-            },
-            feilutbetaltBeløp: 5000,
-        },
-        {
-            periode: {
-                fom: '2017-05-01',
-                tom: '2020-09-01',
-            },
-            feilutbetaltBeløp: 4000,
-        },
-    ],
-};
-
-export {
-    ba_behandling_6,
-    ba_behandling_7,
-    ba_behandling_8,
-    ba_feilutbetalingFakta_8,
-    ba_behandling_9,
-    ba_feilutbetalingFakta_9,
-};
+export { ba_behandling_6, ba_behandling_7, ba_behandling_8, ba_behandling_9 };
