@@ -48,12 +48,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const [visFeilmeldinger, settVisFeilmeldinger] = React.useState<boolean>(false);
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
         const [feilmeldinger, settFeilmeldinger] = React.useState<Feilmelding[]>();
-        const {
-            erStegBehandlet,
-            visVenteModal,
-            behandlingILesemodus,
-            hentBehandlingMedBehandlingId,
-        } = useBehandling();
+        const { erStegBehandlet, visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
         const { request } = useHttp();
         const history = useHistory();
 
@@ -276,7 +271,6 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         return {
             stegErBehandlet,
-            behandlingILesemodus,
             feilutbetalingFakta,
             skjemaData,
             oppdaterBegrunnelse,

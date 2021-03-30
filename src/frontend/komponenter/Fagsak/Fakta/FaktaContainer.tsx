@@ -12,9 +12,10 @@ import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { useBehandling } from '../../../context/BehandlingContext';
 import { Ytelsetype } from '../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
-import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
@@ -34,13 +35,6 @@ const StyledFeilutbetalingFakta = styled.div`
     }
 `;
 
-const Navigering = styled.div`
-    padding: 1rem 0;
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-`;
-
 const HenterContainer = styled(StyledFeilutbetalingFakta)`
     text-align: center;
 `;
@@ -51,7 +45,6 @@ interface IProps {
 
 const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
     const {
-        behandlingILesemodus,
         stegErBehandlet,
         skjemaData,
         feilutbetalingFakta,
@@ -63,6 +56,7 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
         feilmeldinger,
         senderInn,
     } = useFeilutbetalingFakta();
+    const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeBegrunnelse = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -183,7 +177,8 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
                             <Navigering>
                                 <div>
                                     <Knapp
-                                        type="hoved"
+                                        type={'hoved'}
+                                        mini={true}
                                         onClick={sendInnSkjema}
                                         spinner={senderInn}
                                         autoDisableVedSpinner

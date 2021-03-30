@@ -89,12 +89,14 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                             nullstillSkjema();
                             onClose();
                         }}
+                        mini={true}
                     >
                         Lukk
                     </Flatknapp>,
                     <Knapp
                         key={'bekreft'}
-                        type="hoved"
+                        type={'hoved'}
+                        mini={true}
                         onClick={() => {
                             onBekreft(behandling.behandlingId);
                         }}

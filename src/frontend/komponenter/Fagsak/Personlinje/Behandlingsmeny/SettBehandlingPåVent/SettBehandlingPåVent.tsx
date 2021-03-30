@@ -51,6 +51,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling }) => {
                     actions: [
                         <Flatknapp
                             key={'avbryt'}
+                            mini={true}
                             onClick={() => {
                                 nullstillSkjema();
                                 settVisModal(false);
@@ -63,7 +64,8 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling }) => {
                             onClick={() => {
                                 onBekreft(behandling.behandlingId);
                             }}
-                            type="hoved"
+                            type={'hoved'}
+                            mini={true}
                         >
                             Bekreft
                         </Knapp>,
