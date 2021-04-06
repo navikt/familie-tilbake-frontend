@@ -41,6 +41,9 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     React.useEffect(() => {
         if (periode.hendelsestype) {
             settHendelseUnderTyper(hentHendelseUndertyper(periode.hendelsestype));
+        } else if (erLesevisning) {
+            // når det er lesevisning og perioden ikke er behandlet
+            settHendelseUnderTyper([]);
         }
     }, [periode]);
 
