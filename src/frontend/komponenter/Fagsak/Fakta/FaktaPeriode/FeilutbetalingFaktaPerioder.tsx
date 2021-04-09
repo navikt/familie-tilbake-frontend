@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { HendelseType, hentHendelseTyper, Ytelsetype } from '../../../../kodeverk';
-import { FaktaPeriode } from '../../../../typer/feilutbetalingtyper';
+import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 import FeilutbetalingFaktaPeriode from './FeilutbetalingFaktaPeriodeSkjema';
 
 const StyledPeriodeTable = styled.table`
@@ -42,12 +42,12 @@ const StyledPeriodeTable = styled.table`
 
 interface IProps {
     ytelse: Ytelsetype;
-    perioder: Array<FaktaPeriode>;
+    perioder: FaktaPeriodeSkjemaData[];
     erLesevisning: boolean;
 }
 
 const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLesevisning }) => {
-    const [hendelseTyper, settHendelseTyper] = React.useState<Array<HendelseType>>();
+    const [hendelseTyper, settHendelseTyper] = React.useState<HendelseType[]>();
 
     React.useEffect(() => {
         settHendelseTyper(hentHendelseTyper(ytelse));
@@ -63,13 +63,13 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLes
                 </tr>
             </thead>
             <tbody>
-                {perioder.map((periode, index) => {
+                {perioder.map(periode => {
                     return (
                         <FeilutbetalingFaktaPeriode
                             hendelseTyper={hendelseTyper}
                             periode={periode}
-                            key={`formIndex${index + 1}`}
-                            index={index}
+                            key={`formIndex${periode.index + 1}`}
+                            index={periode.index}
                             erLesevisning={erLesevisning}
                         />
                     );

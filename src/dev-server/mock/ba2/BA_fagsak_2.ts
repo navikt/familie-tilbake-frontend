@@ -1,11 +1,16 @@
 import { kjønnType } from '@navikt/familie-typer';
 
 import { Fagsystem, Ytelsetype } from '../../../frontend/kodeverk';
-import { Behandlingstype, Behandlingstatus } from '../../../frontend/typer/behandling';
+import {
+    Behandlingstype,
+    Behandlingstatus,
+    IBehandling,
+    Behandlingårsak,
+    Behandlingssteg,
+    Behandlingsstegstatus,
+} from '../../../frontend/typer/behandling';
 import { IFagsak, IFagsakBehandling } from '../../../frontend/typer/fagsak';
 import { IPerson } from '../../../frontend/typer/person';
-
-export * from './BA_behandling_4';
 
 const bruker: IPerson = {
     navn: 'Test Testesen',
@@ -31,4 +36,42 @@ const fagsak_ba2: IFagsak = {
     behandlinger: behandlinger_2,
 };
 
-export { fagsak_ba2 };
+const ba_behandling_4: IBehandling = {
+    behandlingId: 'ba4',
+    eksternBrukId: '3',
+    kanHenleggeBehandling: true,
+    harVerge: true,
+    erBehandlingPåVent: false,
+    type: Behandlingstype.TILBAKEKREVING,
+    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
+    status: Behandlingstatus.UTREDES,
+    opprettetDato: '2020-12-02',
+    behandlingsstegsinfo: [
+        {
+            behandlingssteg: Behandlingssteg.VARSEL,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.GRUNNLAG,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FAKTA,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FORELDELSE,
+            behandlingsstegstatus: Behandlingsstegstatus.AUTOUTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.VILKÅRSVURDERING,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FORESLÅ_VEDTAK,
+            behandlingsstegstatus: Behandlingsstegstatus.KLAR,
+        },
+    ],
+};
+
+export { fagsak_ba2, ba_behandling_4 };

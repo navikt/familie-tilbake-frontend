@@ -2,8 +2,11 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import AlertStripe from 'nav-frontend-alertstriper';
 import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
+import { Knapp } from 'nav-frontend-knapper';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
@@ -11,14 +14,13 @@ import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Ytelsetype } from '../../../kodeverk';
-import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
-import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
-import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
+import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 
 const StyledFeilutbetalingFakta = styled.div`
     padding: 10px;
@@ -33,123 +35,175 @@ const StyledFeilutbetalingFakta = styled.div`
     }
 `;
 
-export const RadMedMargin = styled(Row)`
-    margin-bottom: 16px;
+const HenterContainer = styled(StyledFeilutbetalingFakta)`
+    text-align: center;
 `;
 
 interface IProps {
-    behandling: IBehandling;
     ytelse: Ytelsetype;
 }
 
-const FaktaContainer: React.FC<IProps> = ({ behandling, ytelse }) => {
-    const [feilutbetalingFakta, settFeilutbetalingFakta] = React.useState<IFeilutbetalingFakta>();
-    const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
-    const [begrunnelse, settBegrunnelse] = React.useState<string>();
-    const { behandlingILesemodus, hentFeilutbetalingFakta, erStegBehandlet } = useBehandling();
+const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
+    const {
+        stegErBehandlet,
+        skjemaData,
+        feilutbetalingFakta,
+        oppdaterBegrunnelse,
+        behandlePerioderSamlet,
+        settBehandlePerioderSamlet,
+        sendInnSkjema,
+        visFeilmeldinger,
+        feilmeldinger,
+        senderInn,
+    } = useFeilutbetalingFakta();
+    const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
-
-    React.useEffect(() => {
-        settStegErBehandlet(erStegBehandlet(Behandlingssteg.FAKTA));
-        const fakta = hentFeilutbetalingFakta(behandling.behandlingId);
-        if (fakta.status === RessursStatus.SUKSESS) {
-            settFeilutbetalingFakta(fakta.data);
-            settBegrunnelse(fakta.data?.begrunnelse);
-        }
-    }, [behandling]);
 
     const onChangeBegrunnelse = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const nyVerdi = e.target.value;
-        settBegrunnelse(nyVerdi);
+        oppdaterBegrunnelse(nyVerdi);
     };
 
-    return feilutbetalingFakta ? (
-        <StyledFeilutbetalingFakta>
-            <Undertittel>Fakta om feilutbetaling</Undertittel>
-            <Spacer20 />
-            {(!erLesevisning || stegErBehandlet) && (
-                <>
-                    <Steginformasjon
-                        behandletSteg={stegErBehandlet}
-                        infotekst={'Kontroller at korrekt hendelse er satt'}
-                    />
+    switch (feilutbetalingFakta?.status) {
+        case RessursStatus.SUKSESS:
+            return (
+                <StyledFeilutbetalingFakta>
+                    <Undertittel>Fakta om feilutbetaling</Undertittel>
                     <Spacer20 />
-                </>
-            )}
-            <RadMedMargin>
-                <Column sm="12" md="6">
-                    <RadMedMargin>
-                        <Column xs="12">
-                            <Undertittel>Feilutbetaling</Undertittel>
-                        </Column>
-                    </RadMedMargin>
-                    <RadMedMargin>
-                        <Column xs="12" md="4">
-                            <UndertekstBold>Periode med feilutbetaling</UndertekstBold>
-                            <Normaltekst>
-                                {`${formatterDatostring(
-                                    feilutbetalingFakta.totalFeilutbetaltPeriode.fom
-                                )} - ${formatterDatostring(
-                                    feilutbetalingFakta.totalFeilutbetaltPeriode.tom
-                                )}`}
-                            </Normaltekst>
-                        </Column>
-                        <Column xs="12" md="4">
-                            <UndertekstBold>Feilutbetalt beløp totalt</UndertekstBold>
-                            <Normaltekst className={'redText'}>
-                                {`${formatCurrencyNoKr(
-                                    feilutbetalingFakta.totaltFeilutbetaltBeløp
-                                )}`}
-                            </Normaltekst>
-                        </Column>
-                        <Column xs="12" md="4">
-                            <UndertekstBold>Tidligere varslet beløp</UndertekstBold>
-                            <Normaltekst>
-                                {`${formatCurrencyNoKr(feilutbetalingFakta.varsletBeløp)}`}
-                            </Normaltekst>
-                        </Column>
-                    </RadMedMargin>
-                    {!erLesevisning && (
-                        <RadMedMargin>
-                            <Column xs="11">
-                                <FamilieCheckbox
-                                    erLesevisning={erLesevisning}
-                                    label={'Behandle alle perioder samlet'}
-                                />
-                            </Column>
-                        </RadMedMargin>
+                    {(!erLesevisning || stegErBehandlet) && (
+                        <>
+                            <Steginformasjon
+                                behandletSteg={stegErBehandlet}
+                                infotekst={'Kontroller at korrekt hendelse er satt'}
+                            />
+                            <Spacer20 />
+                        </>
                     )}
                     <Row>
-                        <Column xs="11">
-                            {feilutbetalingFakta.feilutbetaltePerioder && (
-                                <FeilutbetalingFaktaPerioder
-                                    ytelse={ytelse}
-                                    erLesevisning={erLesevisning}
-                                    perioder={feilutbetalingFakta.feilutbetaltePerioder}
-                                />
+                        <Column sm="12" md="6">
+                            <Row>
+                                <Column xs="12">
+                                    <Undertittel>Feilutbetaling</Undertittel>
+                                </Column>
+                            </Row>
+                            <Spacer20 />
+                            <Row>
+                                <Column xs="12" md="4">
+                                    <UndertekstBold>Periode med feilutbetaling</UndertekstBold>
+                                    <Normaltekst>
+                                        {`${formatterDatostring(
+                                            feilutbetalingFakta.data.totalFeilutbetaltPeriode.fom
+                                        )} - ${formatterDatostring(
+                                            feilutbetalingFakta.data.totalFeilutbetaltPeriode.tom
+                                        )}`}
+                                    </Normaltekst>
+                                </Column>
+                                <Column xs="12" md="4">
+                                    <UndertekstBold>Feilutbetalt beløp totalt</UndertekstBold>
+                                    <Normaltekst className={'redText'}>
+                                        {`${formatCurrencyNoKr(
+                                            feilutbetalingFakta.data.totaltFeilutbetaltBeløp
+                                        )}`}
+                                    </Normaltekst>
+                                </Column>
+                                <Column xs="12" md="4">
+                                    <UndertekstBold>Tidligere varslet beløp</UndertekstBold>
+                                    <Normaltekst>
+                                        {feilutbetalingFakta.data.varsletBeløp
+                                            ? `${formatCurrencyNoKr(
+                                                  feilutbetalingFakta.data.varsletBeløp
+                                              )}`
+                                            : ''}
+                                    </Normaltekst>
+                                </Column>
+                            </Row>
+                            <Spacer20 />
+                            {!erLesevisning && (
+                                <>
+                                    <Row>
+                                        <Column xs="11">
+                                            <FamilieCheckbox
+                                                erLesevisning={erLesevisning}
+                                                label={'Behandle alle perioder samlet'}
+                                                checked={behandlePerioderSamlet === true}
+                                                onChange={() =>
+                                                    settBehandlePerioderSamlet(
+                                                        !behandlePerioderSamlet
+                                                    )
+                                                }
+                                            />
+                                        </Column>
+                                    </Row>
+                                    <Spacer20 />
+                                </>
                             )}
+                            <Row>
+                                <Column xs="11">
+                                    {skjemaData.perioder && (
+                                        <FeilutbetalingFaktaPerioder
+                                            ytelse={ytelse}
+                                            erLesevisning={erLesevisning}
+                                            perioder={skjemaData.perioder}
+                                        />
+                                    )}
+                                </Column>
+                            </Row>
+                        </Column>
+                        <Column sm="12" md="6">
+                            <FaktaRevurdering feilutbetalingFakta={feilutbetalingFakta.data} />
                         </Column>
                     </Row>
-                </Column>
-                <Column sm="12" md="6">
-                    <FaktaRevurdering feilutbetalingFakta={feilutbetalingFakta} />
-                </Column>
-            </RadMedMargin>
-            <Row>
-                <Column sm="12" md="6">
-                    <FamilieTilbakeTextArea
-                        name={'begrunnelse'}
-                        label={'Forklar årsaken(e) til feilutbetalingen'}
-                        erLesevisning={erLesevisning}
-                        value={begrunnelse ? begrunnelse : ''}
-                        onChange={event => onChangeBegrunnelse(event)}
-                        maxLength={1500}
-                        className={erLesevisning ? 'lesevisning' : ''}
-                    />
-                </Column>
-            </Row>
-        </StyledFeilutbetalingFakta>
-    ) : null;
+                    <Spacer20 />
+                    <Row>
+                        <Column sm="12" md="6">
+                            <FamilieTilbakeTextArea
+                                name={'begrunnelse'}
+                                label={'Forklar årsaken(e) til feilutbetalingen'}
+                                erLesevisning={erLesevisning}
+                                value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
+                                onChange={event => onChangeBegrunnelse(event)}
+                                maxLength={1500}
+                                className={erLesevisning ? 'lesevisning' : ''}
+                                feil={
+                                    visFeilmeldinger &&
+                                    feilmeldinger?.find(meld => meld.gjelderBegrunnelse)?.melding
+                                }
+                            />
+                        </Column>
+                    </Row>
+                    <Spacer20 />
+                    <Row>
+                        <Column xs="12" md="6">
+                            <Navigering>
+                                <div>
+                                    <Knapp
+                                        type={'hoved'}
+                                        mini={true}
+                                        onClick={sendInnSkjema}
+                                        spinner={senderInn}
+                                        autoDisableVedSpinner
+                                    >
+                                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                                    </Knapp>
+                                </div>
+                            </Navigering>
+                        </Column>
+                    </Row>
+                </StyledFeilutbetalingFakta>
+            );
+        case RessursStatus.HENTER:
+            return (
+                <HenterContainer>
+                    <Normaltekst>Henting av feilutbetalingen tar litt tid.</Normaltekst>
+                    <NavFrontendSpinner type="XXL" />
+                </HenterContainer>
+            );
+        case RessursStatus.FEILET:
+        case RessursStatus.FUNKSJONELL_FEIL:
+            return <AlertStripe children={feilutbetalingFakta.frontendFeilmelding} type="feil" />;
+        default:
+            return <div />;
+    }
 };
 
 export default FaktaContainer;

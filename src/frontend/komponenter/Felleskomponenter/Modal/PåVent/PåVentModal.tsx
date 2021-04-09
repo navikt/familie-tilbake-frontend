@@ -47,15 +47,6 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
         ventegrunn
     );
 
-    React.useEffect(() => {
-        if (ventegrunn.venteårsak) {
-            skjema.felter.årsak.verdi = ventegrunn.venteårsak;
-        }
-        if (ventegrunn.tidsfrist) {
-            skjema.felter.tidsfrist.verdi = ventegrunn.tidsfrist;
-        }
-    }, [ventegrunn]);
-
     const erVenterPåKravgrunnlag = ventegrunn.behandlingssteg === Behandlingssteg.GRUNNLAG;
     const erAutomatiskVent =
         ventegrunn.behandlingssteg === Behandlingssteg.VARSEL || erVenterPåKravgrunnlag;
@@ -89,11 +80,14 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                             nullstillSkjema();
                             onClose();
                         }}
+                        mini={true}
                     >
                         Lukk
                     </Flatknapp>,
                     <Knapp
                         key={'bekreft'}
+                        type={'hoved'}
+                        mini={true}
                         onClick={() => {
                             onBekreft(behandling.behandlingId);
                         }}

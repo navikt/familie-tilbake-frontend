@@ -1,5 +1,7 @@
 import { parseISO, differenceInCalendarYears, add, differenceInMonths, isBefore } from 'date-fns';
 
+import { isEmpty } from './validering';
+
 const datoformat: Intl.DateTimeFormatOptions = {
     day: '2-digit',
     month: '2-digit',
@@ -62,9 +64,6 @@ export const hentPeriodelengde = (fraDatoPeriode: string, tilDatoPeriode: string
 
     return formatterPeriodelengde(years, months);
 };
-
-const isEmpty = (text?: string | number | boolean | Date | null) =>
-    text === null || text === undefined || text.toString().trim().length === 0;
 
 const yesterday = (): Date => {
     return finnDateRelativtTilNå({ days: -1 });

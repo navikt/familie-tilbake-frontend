@@ -7,3 +7,10 @@ export const Spacer20 = styled.div`
 export const Spacer8 = styled.div`
     height: 8px;
 `;
+
+export const Navigering = styled.div`
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+`;

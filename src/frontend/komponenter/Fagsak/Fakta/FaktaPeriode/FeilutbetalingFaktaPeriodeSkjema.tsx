@@ -13,12 +13,13 @@ import {
     HendelseUndertype,
     hentHendelseUndertyper,
 } from '../../../../kodeverk';
-import { FaktaPeriode } from '../../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
+import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
+import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 interface IProps {
-    periode: FaktaPeriode;
-    hendelseTyper: Array<HendelseType> | undefined;
+    periode: FaktaPeriodeSkjemaData;
+    hendelseTyper: HendelseType[] | undefined;
     index: number;
     erLesevisning: boolean;
 }
@@ -30,26 +31,31 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     erLesevisning,
 }) => {
     const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<Array<HendelseUndertype>>();
-    const [valgtÅrsak, settValgtÅrsak] = React.useState<HendelseType>();
-    const [valgtUnderÅrsak, settValgtUnderÅrsak] = React.useState<HendelseUndertype>();
+    const {
+        oppdaterÅrsakPåPeriode,
+        oppdaterUnderårsakPåPeriode,
+        visFeilmeldinger,
+        feilmeldinger,
+    } = useFeilutbetalingFakta();
 
     React.useEffect(() => {
         if (periode.hendelsestype) {
             settHendelseUnderTyper(hentHendelseUndertyper(periode.hendelsestype));
-            settValgtÅrsak(periode.hendelsestype);
-            settValgtUnderÅrsak(periode.hendelsesundertype);
+        } else if (erLesevisning) {
+            // når det er lesevisning og perioden ikke er behandlet
+            settHendelseUnderTyper([]);
         }
     }, [periode]);
 
     const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const årsak = HendelseType[e.target.value as keyof typeof HendelseType];
-        settValgtÅrsak(årsak);
         settHendelseUnderTyper(hentHendelseUndertyper(årsak));
+        oppdaterÅrsakPåPeriode(periode, årsak);
     };
 
     const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const underÅrsak = HendelseUndertype[e.target.value as keyof typeof HendelseUndertype];
-        settValgtUnderÅrsak(underÅrsak);
+        oppdaterUnderårsakPåPeriode(periode, underÅrsak);
     };
 
     return (
@@ -64,9 +70,17 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                     id={`perioder.${index}.årsak`}
                     label={'Årsak'}
                     onChange={event => onChangeÅrsak(event)}
-                    value={valgtÅrsak ? valgtÅrsak : '-'}
+                    value={periode.hendelsestype || '-'}
                     erLesevisning={erLesevisning}
-                    lesevisningVerdi={valgtÅrsak ? hendelsetyper[valgtÅrsak] : ''}
+                    lesevisningVerdi={
+                        periode.hendelsestype ? hendelsetyper[periode.hendelsestype] : ''
+                    }
+                    feil={
+                        visFeilmeldinger &&
+                        feilmeldinger?.find(
+                            meld => meld.periode === periode.index && meld.gjelderHendelsetype
+                        )?.melding
+                    }
                 >
                     <option>-</option>
                     {hendelseTyper?.map(type => (
@@ -80,10 +94,19 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                         id={`perioder.${index}.underårsak`}
                         label={'Underårsak'}
                         onChange={event => onChangeUnderÅrsak(event)}
-                        value={valgtUnderÅrsak ? valgtUnderÅrsak : '-'}
+                        value={periode.hendelsesundertype || '-'}
                         erLesevisning={erLesevisning}
                         lesevisningVerdi={
-                            valgtUnderÅrsak ? hendelseundertyper[valgtUnderÅrsak] : ''
+                            periode.hendelsesundertype
+                                ? hendelseundertyper[periode.hendelsesundertype]
+                                : ''
+                        }
+                        feil={
+                            visFeilmeldinger &&
+                            feilmeldinger?.find(
+                                meld =>
+                                    meld.periode === periode.index && meld.gjelderHendelseundertype
+                            )?.melding
                         }
                     >
                         <option>-</option>

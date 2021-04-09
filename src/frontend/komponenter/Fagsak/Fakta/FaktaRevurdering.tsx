@@ -1,11 +1,17 @@
 import * as React from 'react';
 
+import styled from 'styled-components';
+
 import { Column, Row } from 'nav-frontend-grid';
 import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
 import { IFeilutbetalingFakta, tilbakekrevingsvalg } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring } from '../../../utils';
-import { RadMedMargin } from './FaktaContainer';
+import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
+
+export const RadMedMargin = styled(Row)`
+    margin-bottom: 16px;
+`;
 
 interface IProps {
     feilutbetalingFakta: IFeilutbetalingFakta;
@@ -14,11 +20,12 @@ interface IProps {
 const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
     return feilutbetalingFakta ? (
         <>
-            <RadMedMargin>
+            <Row>
                 <Column xs="12">
                     <Undertittel>Revurdering</Undertittel>
                 </Column>
-            </RadMedMargin>
+            </Row>
+            <Spacer20 />
             <RadMedMargin>
                 <Column xs="6">
                     <UndertekstBold>Årsak(er) til revurdering</UndertekstBold>

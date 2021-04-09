@@ -40,12 +40,15 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling }) => {
                             onClick={() => {
                                 settVisModal(false);
                             }}
+                            mini={true}
                         >
                             Avbryt
                         </Flatknapp>,
                         <Knapp
+                            type={'hoved'}
                             key={'bekreft'}
                             onClick={() => onOkTaAvVent(behandling.behandlingId)}
+                            mini={true}
                         >
                             Ok
                         </Knapp>,

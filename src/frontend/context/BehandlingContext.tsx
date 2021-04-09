@@ -2,6 +2,7 @@ import React from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
+import { useHistory } from 'react-router';
 
 import { useHttp } from '@navikt/familie-http';
 import {
@@ -19,7 +20,6 @@ import {
     Fagsystem,
     Foreldelsevurdering,
     HendelseType,
-    HendelseUndertype,
     SærligeGrunner,
     Underavsnittstype,
     Vedtaksresultat,
@@ -34,250 +34,11 @@ import {
 } from '../typer/behandling';
 import { IFagsak } from '../typer/fagsak';
 import {
-    IFeilutbetalingFakta,
     IFeilutbetalingForeldelse,
     IFeilutbetalingVilkårsvurdering,
-    Tilbakekrevingsvalg,
 } from '../typer/feilutbetalingtyper';
 import { IBeregningsresultat, IVedtaksbrev } from '../typer/vedtakTyper';
 import { useFagsak } from './FagsakContext';
-
-const feilUtbetalingFakta = new Map<string, IFeilutbetalingFakta>([
-    [
-        '2',
-        {
-            totalFeilutbetaltPeriode: { fom: '2013-01-01', tom: '2020-09-01' },
-            totaltFeilutbetaltBeløp: 9000,
-            varsletBeløp: 9300,
-            revurderingsvedtaksdato: '2020-12-05',
-            faktainfo: {
-                revurderingsårsak: 'Ny søknad',
-                revurderingsresultat: 'Opphør av ytelsen',
-                tilbakekrevingsvalg: Tilbakekrevingsvalg.OPPRETT_TILBAKEKREVING_UTEN_VARSEL,
-                konsekvensForYtelser: ['Opphør av ytelsen', 'Ytelsen redusert'],
-            },
-            feilutbetaltePerioder: [
-                {
-                    periode: { fom: '2013-01-01', tom: '2017-04-30' },
-                    feilutbetaltBeløp: 5000,
-                    hendelsestype: HendelseType.BA_MEDLEMSKAP,
-                    hendelsesundertype: HendelseUndertype.DØDSFALL,
-                },
-                {
-                    periode: { fom: '2017-05-01', tom: '2020-09-01' },
-                    feilutbetaltBeløp: 4000,
-                    hendelsestype: HendelseType.BA_ANNET,
-                    hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
-                },
-            ],
-            begrunnelse: 'Dette er ein mock-begrunnelse!',
-        },
-    ],
-    [
-        '3',
-        {
-            totalFeilutbetaltPeriode: { fom: '2013-02-01', tom: '2020-09-01' },
-            totaltFeilutbetaltBeløp: 39000,
-            varsletBeløp: 43000,
-            revurderingsvedtaksdato: '2020-12-05',
-            feilutbetaltePerioder: [
-                {
-                    periode: {
-                        fom: '2013-02-01',
-                        tom: '2013-11-01',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2014-02-01',
-                        tom: '2014-11-01',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2015-02-01',
-                        tom: '2015-11-01',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2016-02-01',
-                        tom: '2016-11-01',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2017-02-01',
-                        tom: '2017-11-01',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2018-02-01',
-                        tom: '2018-11-01',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-03-01',
-                        tom: '2019-09-01',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2020-04-01',
-                        tom: '2020-10-01',
-                    },
-                    feilutbetaltBeløp: 4000,
-                },
-            ],
-        },
-    ],
-    [
-        '4',
-        {
-            totalFeilutbetaltPeriode: {
-                fom: '2013-01-01',
-                tom: '2020-10-31',
-            },
-            totaltFeilutbetaltBeløp: 39000,
-            varsletBeløp: 43000,
-            revurderingsvedtaksdato: '2020-12-05',
-            feilutbetaltePerioder: [
-                {
-                    periode: {
-                        fom: '2013-01-01',
-                        tom: '2018-12-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-01-01',
-                        tom: '2019-01-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-02-01',
-                        tom: '2019-02-28',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-03-01',
-                        tom: '2019-03-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-04-01',
-                        tom: '2019-04-30',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-05-01',
-                        tom: '2019-05-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-06-01',
-                        tom: '2019-06-30',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-07-01',
-                        tom: '2019-07-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-08-01',
-                        tom: '2019-08-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-09-01',
-                        tom: '2019-09-30',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-10-01',
-                        tom: '2019-10-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-11-01',
-                        tom: '2019-11-30',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2019-12-01',
-                        tom: '2019-12-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                },
-                {
-                    periode: {
-                        fom: '2020-01-01',
-                        tom: '2020-10-31',
-                    },
-                    feilutbetaltBeløp: 4000,
-                },
-            ],
-        },
-    ],
-    [
-        '5',
-        {
-            totalFeilutbetaltPeriode: { fom: '2020-04-01', tom: '2020-08-31' },
-            totaltFeilutbetaltBeløp: 4000,
-            varsletBeløp: 4000,
-            revurderingsvedtaksdato: '2020-12-05',
-            faktainfo: {
-                revurderingsårsak: 'Ny søknad',
-                revurderingsresultat: 'Opphør av ytelsen',
-                tilbakekrevingsvalg: Tilbakekrevingsvalg.OPPRETT_TILBAKEKREVING_UTEN_VARSEL,
-                konsekvensForYtelser: ['Opphør av ytelsen', 'Ytelsen redusert'],
-            },
-            feilutbetaltePerioder: [
-                {
-                    periode: { fom: '2019-04-01', tom: '2019-05-31' },
-                    feilutbetaltBeløp: 2000,
-                },
-                {
-                    periode: { fom: '2019-07-01', tom: '2019-08-31' },
-                    feilutbetaltBeløp: 2000,
-                },
-            ],
-        },
-    ],
-]);
 
 const feilutbelingForeldelse = new Map<string, IFeilutbetalingForeldelse>([
     [
@@ -1403,10 +1164,12 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [behandling, settBehandling] = React.useState<Ressurs<IBehandling>>();
     const [aktivtSteg, settAktivtSteg] = React.useState<IBehandlingsstegstilstand>();
     const [ventegrunn, settVentegrunn] = React.useState<IBehandlingsstegstilstand>();
+    const [visVenteModal, settVisVenteModal] = React.useState<boolean>(false);
     const [harKravgrunnlag, settHarKravgrunnlag] = React.useState<boolean>();
     const [behandlingILesemodus, settBehandlingILesemodus] = React.useState<boolean>();
     const { fagsak } = useFagsak();
     const { request } = useHttp();
+    const history = useHistory();
 
     const hentBehandlingMedEksternBrukId = (fagsak: IFagsak, behandlingId: string): void => {
         const fagsakBehandling = fagsak.behandlinger.find(
@@ -1419,19 +1182,21 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         }
     };
 
-    const hentBehandlingMedBehandlingId = (behandlingId: string) => {
+    const hentBehandlingMedBehandlingId = (
+        behandlingId: string,
+        henterEtterInnsendingAvSteg?: boolean | false
+    ): void => {
         settBehandling(byggHenterRessurs());
-        settVentegrunn(null);
         settAktivtSteg(null);
         settHarKravgrunnlag(null);
         settBehandlingILesemodus(null);
+        settVentegrunn(null);
+        settVisVenteModal(false);
         request<void, IBehandling>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/v1/${behandlingId}`,
         })
             .then((hentetBehandling: Ressurs<IBehandling>) => {
-                settBehandling(hentetBehandling);
-
                 if (hentetBehandling.status === RessursStatus.SUKSESS) {
                     const erILeseModus =
                         hentetBehandling.data.erBehandlingPåVent ||
@@ -1460,9 +1225,16 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                             funnetAktivtsteg.behandlingsstegstatus === Behandlingsstegstatus.VENTER
                         ) {
                             settVentegrunn(funnetAktivtsteg);
+                            settVisVenteModal(true);
                         }
                     }
+                    if (henterEtterInnsendingAvSteg) {
+                        history.push(
+                            `/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/behandling/${hentetBehandling.data.eksternBrukId}`
+                        );
+                    }
                 }
+                settBehandling(hentetBehandling);
             })
             .catch((error: AxiosError) => {
                 console.log('Error: ', error);
@@ -1500,11 +1272,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
             return '5';
         }
     };
-    const hentFeilutbetalingFakta = (_behandlingId: string): Ressurs<IFeilutbetalingFakta> => {
-        const behandlingId = utledBehandlingId();
-        const fakta = feilUtbetalingFakta.get(behandlingId);
-        return fakta ? byggSuksessRessurs(fakta) : byggTomRessurs();
-    };
 
     const hentFeilutbetalingForeldelse = (
         _behandlingId: string
@@ -1541,9 +1308,10 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         behandlingILesemodus,
         aktivtSteg,
         ventegrunn,
+        visVenteModal,
+        settVisVenteModal,
         erStegBehandlet,
         harKravgrunnlag,
-        hentFeilutbetalingFakta,
         hentFeilutbetalingForeldelse,
         hentFeilutbetalingVilkårsvurdering,
         hentBeregningsresultat,

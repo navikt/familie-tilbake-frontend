@@ -19,7 +19,7 @@ export const tilbakekrevingsvalg: Record<Tilbakekrevingsvalg, string> = {
     IGNORER_TILBAKEKREVING: 'Avvent tilbakekreving',
 };
 
-type Periode = {
+export type Periode = {
     fom: string;
     tom: string;
 };
@@ -35,7 +35,7 @@ export type FaktaPeriode = {
 } & FeilutbetalingPeriode;
 
 export interface IFeilutbetalingFakta {
-    feilutbetaltePerioder?: FaktaPeriode[];
+    feilutbetaltePerioder: FaktaPeriode[];
     totalFeilutbetaltPeriode: Periode;
     totaltFeilutbetaltBeløp: number;
     varsletBeløp?: number;
