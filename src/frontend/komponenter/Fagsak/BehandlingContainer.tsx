@@ -15,6 +15,7 @@ import {
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 import FaktaContainer from './Fakta/FaktaContainer';
 import { FeilutbetalingFaktaProvider } from './Fakta/FeilutbetalingFaktaContext';
+import { FeilutbetalingForeldelseProvider } from './Foreldelse/FeilutbetalingForeldelseContext';
 import ForeldelseContainer from './Foreldelse/ForeldelseContainer';
 import Høyremeny from './Høyremeny/Høyremeny';
 import VedtakContainer from './Vedtak/VedtakContainer';
@@ -85,7 +86,14 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                     ></Route>
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
-                        render={() => <ForeldelseContainer behandling={behandling} />}
+                        render={() => (
+                            <FeilutbetalingForeldelseProvider
+                                behandling={behandling}
+                                fagsak={fagsak}
+                            >
+                                <ForeldelseContainer behandling={behandling} />
+                            </FeilutbetalingForeldelseProvider>
+                        )}
                     />
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}

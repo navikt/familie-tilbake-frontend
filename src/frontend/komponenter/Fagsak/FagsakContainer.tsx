@@ -59,7 +59,7 @@ const FagsakContainer: React.FC = () => {
     } = useBehandling();
 
     React.useEffect(() => {
-        if (fagsystem !== undefined && fagsakId !== undefined) {
+        if (!!fagsystem && !!fagsakId) {
             hentFagsak(fagsystem, fagsakId);
         }
     }, [fagsystem, fagsakId]);

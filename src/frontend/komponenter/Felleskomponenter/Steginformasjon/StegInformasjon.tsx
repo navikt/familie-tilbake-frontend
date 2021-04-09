@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import navFarger from 'nav-frontend-core';
 import { Normaltekst } from 'nav-frontend-typografi';
 
-import AdvarselIkon from '../Ikoner/AdvarselIkon';
+import { AdvarselIkon } from '../Ikoner/';
 
 const InlineNormaltekst = styled(Normaltekst)`
     display: inline-block;

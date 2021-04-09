@@ -18,7 +18,6 @@ import {
 const StyledContainer = styled.div`
     background-color: ${navFarger.orangeFocusLighten80};
     height: auto;
-    max-width: 500px;
     padding: 10px 20px 10px;
     top: 0;
     margin-top: 10px;

@@ -48,4 +48,4 @@ const AdvarselIkon: React.FC = () => {
     );
 };
 
-export default AdvarselIkon;
+export { AdvarselIkon };

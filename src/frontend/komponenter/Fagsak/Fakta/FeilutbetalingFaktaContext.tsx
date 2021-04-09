@@ -256,10 +256,10 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                         data: payload,
                     })
                         .then((respons: Ressurs<string>) => {
+                            settSenderInn(false);
                             if (respons.status === RessursStatus.SUKSESS) {
                                 hentBehandlingMedBehandlingId(behandling.behandlingId, true);
                             }
-                            settSenderInn(false);
                         })
                         .catch((error: AxiosError) => {
                             console.log('Error ved sending av oppdaterte fakta: ', error);
