@@ -18,6 +18,13 @@ import {
     ba_behandling_13,
     ba_behandling_14,
 } from './mock/ba4/BA_fagsak_4';
+import {
+    ba_behandling_16,
+    ba_behandling_17,
+    ba_behandling_18,
+    ba_behandling_19,
+    fagsak_ba5,
+} from './mock/ba5/BA_fagsak_5';
 import { fagsak_ef2, ef_behandling_4 } from './mock/ef2/EF_fagsak_2';
 import { fagsak_ks2, ks_behandling_4 } from './mock/ks2/KS_fagsak_2';
 import {
@@ -27,23 +34,19 @@ import {
     feilutbetalingFakta_ubehandlet_4,
 } from './mock/fakta/feilutbetalingFakta_ubehandlet';
 import {
-    feilutbetalingForeldelse_behandlet_1,
-    feilutbetalingForeldelse_behandlet_2,
-} from './mock/foreldelse/feilutbetalingForeldelse_behandlet';
-import {
+    feilutbetalingForeldelse_ubehandlet_1,
     feilutbetalingForeldelse_ubehandlet_2,
     feilutbetalingForeldelse_ubehandlet_3,
     feilutbetalingForeldelse_ubehandlet_4,
 } from './mock/foreldelse/feilutbetalingForeldelse_ubehandlet';
 import {
-    ba_behandling_16,
-    ba_behandling_17,
-    ba_behandling_18,
-    ba_behandling_19,
-    fagsak_ba5,
-} from './mock/ba5/BA_fagsak_5';
-import { FaktaPeriode, IFeilutbetalingFakta, Periode } from '../frontend/typer/feilutbetalingtyper';
-import { HendelseType, HendelseUndertype } from '../frontend/kodeverk';
+    FaktaPeriode,
+    ForeldelsePeriode,
+    IFeilutbetalingFakta,
+    IFeilutbetalingForeldelse,
+    Periode,
+} from '../frontend/typer/feilutbetalingtyper';
+import { Foreldelsevurdering, HendelseType, HendelseUndertype } from '../frontend/kodeverk';
 
 const behandleFaktaPeriode = (
     perioder: FaktaPeriode[],
@@ -72,6 +75,71 @@ const behandleFakta = (
         ...ubehandletFakta,
         begrunnelse: begrunnelse,
         feilutbetaltePerioder: behandletPerioder,
+    };
+};
+
+const behandleForeldelsePeriode = (
+    perioder: ForeldelsePeriode[],
+    antallForeldet: number = 0,
+    foreldelsesfrist?: string,
+    foreldelseBegrunnelse?: string,
+    antallTilleggsfrist: number = 0,
+    oppdagelsesdato?: string,
+    tilleggsfristBegrunnelse?: string,
+    antallIkkeForeldet?: number,
+    ikkeForeldetBegrunnelse?: string
+): ForeldelsePeriode[] => {
+    const antIkkFor = antallIkkeForeldet || perioder.length - antallForeldet - antallTilleggsfrist;
+    return perioder.map((per, index) => {
+        if (index < antallForeldet) {
+            return {
+                ...per,
+                foreldelsesvurderingstype: Foreldelsevurdering.FORELDET,
+                begrunnelse: foreldelseBegrunnelse,
+                foreldelsesfrist: foreldelsesfrist,
+            };
+        } else if (index < antallForeldet + antallTilleggsfrist) {
+            return {
+                ...per,
+                foreldelsesvurderingstype: Foreldelsevurdering.TILLEGGSFRIST,
+                begrunnelse: tilleggsfristBegrunnelse,
+                foreldelsesfrist: foreldelsesfrist,
+                oppdagelsesdato: oppdagelsesdato,
+            };
+        } else if (index < antallForeldet + antallTilleggsfrist + antIkkFor) {
+            return {
+                ...per,
+                foreldelsesvurderingstype: Foreldelsevurdering.IKKE_FORELDET,
+                begrunnelse: ikkeForeldetBegrunnelse,
+            };
+        } else {
+            return per;
+        }
+    });
+};
+
+const behandleForeldelse = (
+    ubehandletForeldelse: IFeilutbetalingForeldelse,
+    antallForeldet: number = 0,
+    foreldelsesfrist?: string,
+    antallTilleggsfrist: number = 0,
+    oppdagelsesdato?: string,
+    antallIkkeForeldet?: number
+): IFeilutbetalingForeldelse => {
+    const behandletPerioder = behandleForeldelsePeriode(
+        ubehandletForeldelse.foreldetPerioder,
+        antallForeldet,
+        foreldelsesfrist,
+        'Perioden er foreldet',
+        antallTilleggsfrist,
+        oppdagelsesdato,
+        'Perioden er ikke foreldet, tilleggsfrist benyttes',
+        antallIkkeForeldet,
+        'Perdioden er ikke foreldet'
+    );
+    return {
+        ...ubehandletForeldelse,
+        foreldetPerioder: behandletPerioder,
     };
 };
 
@@ -311,13 +379,33 @@ export const setupRouter = (router: Router) => {
                 case 'ba14':
                 case 'ef4':
                 case 'ks4':
-                    res.send(byggSuksessRessurs(feilutbetalingForeldelse_behandlet_1));
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleForeldelse(
+                                feilutbetalingForeldelse_ubehandlet_1,
+                                1,
+                                '2019-06-01',
+                                1,
+                                '2020-11-01'
+                            )
+                        )
+                    );
                     return;
                 case 'ba16':
                     res.send(byggSuksessRessurs(feilutbetalingForeldelse_ubehandlet_2));
                     return;
                 case 'ba17':
-                    res.send(byggSuksessRessurs(feilutbetalingForeldelse_behandlet_2));
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleForeldelse(
+                                feilutbetalingForeldelse_ubehandlet_2,
+                                2,
+                                '2017-01-10',
+                                2,
+                                '2020-11-10'
+                            )
+                        )
+                    );
                     return;
                 case 'ba18':
                     res.send(byggSuksessRessurs(feilutbetalingForeldelse_ubehandlet_3));
