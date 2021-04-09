@@ -4,7 +4,7 @@ import { Request, Response, Router } from 'express';
 
 import { byggFeiletRessurs, byggSuksessRessurs, RessursStatus } from '@navikt/familie-typer';
 
-import { fagsak_ba2, ba_behandling_4 } from './mock/ba2/BA_fagsak_2';
+import { fagsak_ba2, ba_behandling_4, ba_behandling_5 } from './mock/ba2/BA_fagsak_2';
 import {
     fagsak_ba3,
     ba_behandling_6,
@@ -48,7 +48,7 @@ import {
 } from '../frontend/typer/feilutbetalingtyper';
 import { Foreldelsevurdering, HendelseType, HendelseUndertype } from '../frontend/kodeverk';
 
-const behandleFaktaPeriode = (
+const behandleFaktaPerioder = (
     perioder: FaktaPeriode[],
     hendelsestype: HendelseType,
     hendelsesundertype: HendelseUndertype
@@ -66,7 +66,7 @@ const behandleFakta = (
     hendelsesundertype: HendelseUndertype,
     begrunnelse: string
 ): IFeilutbetalingFakta => {
-    const behandletPerioder = behandleFaktaPeriode(
+    const behandletPerioder = behandleFaktaPerioder(
         ubehandletFakta.feilutbetaltePerioder,
         hendelsestype,
         hendelsesundertype
@@ -78,7 +78,7 @@ const behandleFakta = (
     };
 };
 
-const behandleForeldelsePeriode = (
+const behandleForeldelsePerioder = (
     perioder: ForeldelsePeriode[],
     antallForeldet: number = 0,
     foreldelsesfrist?: string,
@@ -121,12 +121,12 @@ const behandleForeldelsePeriode = (
 const behandleForeldelse = (
     ubehandletForeldelse: IFeilutbetalingForeldelse,
     antallForeldet: number = 0,
-    foreldelsesfrist?: string,
     antallTilleggsfrist: number = 0,
+    foreldelsesfrist?: string,
     oppdagelsesdato?: string,
     antallIkkeForeldet?: number
 ): IFeilutbetalingForeldelse => {
-    const behandletPerioder = behandleForeldelsePeriode(
+    const behandletPerioder = behandleForeldelsePerioder(
         ubehandletForeldelse.foreldetPerioder,
         antallForeldet,
         foreldelsesfrist,
@@ -220,6 +220,9 @@ export const setupRouter = (router: Router) => {
                 case 'ba4':
                     res.send(byggSuksessRessurs(ba_behandling_4));
                     return;
+                case 'ba5':
+                    res.send(byggSuksessRessurs(ba_behandling_5));
+                    return;
                 case 'ba6':
                     res.send(byggSuksessRessurs(ba_behandling_6));
                     return;
@@ -292,6 +295,19 @@ export const setupRouter = (router: Router) => {
                         )
                     );
                     return;
+                case 'ba5':
+                case 'ba18':
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleFakta(
+                                feilutbetalingFakta_ubehandlet_3,
+                                HendelseType.BA_ANNET,
+                                HendelseUndertype.ANNET_FRITEKST,
+                                'Dette er ein mock-begrunnelse!'
+                            )
+                        )
+                    );
+                    return;
                 case 'ba8':
                     res.send(byggSuksessRessurs(feilutbetalingFakta_ubehandlet_4));
                     return;
@@ -304,18 +320,6 @@ export const setupRouter = (router: Router) => {
                         byggSuksessRessurs(
                             behandleFakta(
                                 feilutbetalingFakta_ubehandlet_2,
-                                HendelseType.BA_ANNET,
-                                HendelseUndertype.ANNET_FRITEKST,
-                                'Dette er ein mock-begrunnelse!'
-                            )
-                        )
-                    );
-                    return;
-                case 'ba18':
-                    res.send(
-                        byggSuksessRessurs(
-                            behandleFakta(
-                                feilutbetalingFakta_ubehandlet_3,
                                 HendelseType.BA_ANNET,
                                 HendelseUndertype.ANNET_FRITEKST,
                                 'Dette er ein mock-begrunnelse!'
@@ -374,6 +378,13 @@ export const setupRouter = (router: Router) => {
         (req: Request, res: Response) => {
             const { behandlingId } = req.params;
             switch (behandlingId) {
+                case 'ba5':
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleForeldelse(feilutbetalingForeldelse_ubehandlet_3, 0, 0)
+                        )
+                    );
+                    return;
                 case 'ba12':
                 case 'ba13':
                 case 'ba14':
@@ -384,8 +395,8 @@ export const setupRouter = (router: Router) => {
                             behandleForeldelse(
                                 feilutbetalingForeldelse_ubehandlet_1,
                                 1,
-                                '2019-06-01',
                                 1,
+                                '2019-06-01',
                                 '2020-11-01'
                             )
                         )
@@ -400,8 +411,8 @@ export const setupRouter = (router: Router) => {
                             behandleForeldelse(
                                 feilutbetalingForeldelse_ubehandlet_2,
                                 2,
-                                '2017-01-10',
                                 2,
+                                '2017-01-10',
                                 '2020-11-10'
                             )
                         )
