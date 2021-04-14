@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import classNames from 'classnames';
 import { DatepickerProps } from 'nav-datovelger/lib/Datepicker';
 import styled from 'styled-components';
 
@@ -19,9 +20,6 @@ const StyledDatovelger = styled(FamilieDatovelger)`
             border-bottom: 2px solid red;
         }
     }
-    .nav-datovelger__kalenderPortal__content {
-        position: fixed;
-    }
 `;
 
 const FeltFeilmelding = styled(Normaltekst)`
@@ -37,13 +35,13 @@ export interface FamilieTilbakeDatovelgerProps {
 
 const FamilieTilbakeDatovelger: React.FC<
     FamilieTilbakeDatovelgerProps & IDatovelgerProps & DatepickerProps
-> = ({ harFeil, feilmelding, ...props }) => {
+> = ({ harFeil, feilmelding, className, ...props }) => {
     return (
         <>
             <StyledDatovelger
                 inputProps={{ 'aria-invalid': harFeil }}
                 {...props}
-                className={harFeil ? 'harfeilifelt' : ''}
+                className={classNames(className, harFeil ? 'harfeilifelt' : '')}
             />
             {harFeil && <FeltFeilmelding>{feilmelding}</FeltFeilmelding>}
         </>
