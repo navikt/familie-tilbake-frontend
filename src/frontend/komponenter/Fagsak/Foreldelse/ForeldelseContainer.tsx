@@ -2,17 +2,20 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Column, Row } from 'nav-frontend-grid';
+import { Knapp } from 'nav-frontend-knapper';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Behandlingssteg, Behandlingsstegstatus, IBehandling } from '../../../typer/behandling';
-import { IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
+import { IBehandling } from '../../../typer/behandling';
 import { finnDatoRelativtTilNå } from '../../../utils';
-import { Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import { useFeilutbetalingForeldelse } from './FeilutbetalingForeldelseContext';
 import ForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
 
 export const getDate = (): string => {
@@ -23,72 +26,99 @@ const StyledForeldelse = styled.div`
     padding: 10px;
 `;
 
+const HenterContainer = styled(StyledForeldelse)`
+    text-align: center;
+`;
+
 interface IProps {
     behandling: IBehandling;
 }
 
 const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
-    const [
+    const {
         feilutbetalingForeldelse,
-        settFeilutbetalingForeldelse,
-    ] = React.useState<IFeilutbetalingForeldelse>();
-    const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
-    const [erAutoutført, settErAutoutført] = React.useState<boolean>();
-    const { erStegBehandlet, behandlingILesemodus, hentFeilutbetalingForeldelse } = useBehandling();
+        skjemaData,
+        stegErBehandlet,
+        erAutoutført,
+        gåTilNeste,
+        gåTilForrige,
+    } = useFeilutbetalingForeldelse();
+    const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
-    React.useEffect(() => {
-        const foreldelseSteg = behandling.behandlingsstegsinfo?.find(
-            stegInfo => stegInfo.behandlingssteg === Behandlingssteg.FORELDELSE
+    if (erAutoutført) {
+        return (
+            <StyledForeldelse>
+                <Undertittel>Foreldelse</Undertittel>
+                <Spacer20 />
+                <Normaltekst>Foreldelsesloven §§ 2 og 3</Normaltekst>
+                <Spacer8 />
+                <Normaltekst>Automatisk vurdert</Normaltekst>
+                <Spacer20 />
+                <Row>
+                    <Column xs="10" md="4">
+                        <Navigering>
+                            <div>
+                                <Knapp type={'hoved'} onClick={gåTilNeste} mini={true}>
+                                    Neste
+                                </Knapp>
+                            </div>
+                            <div>
+                                <Knapp onClick={gåTilForrige} mini={true}>
+                                    Forrige
+                                </Knapp>
+                            </div>
+                        </Navigering>
+                    </Column>
+                </Row>
+            </StyledForeldelse>
         );
-        const autoutført =
-            foreldelseSteg?.behandlingsstegstatus === Behandlingsstegstatus.AUTOUTFØRT;
-        settErAutoutført(autoutført);
+    }
 
-        if (!autoutført) {
-            settStegErBehandlet(erStegBehandlet(Behandlingssteg.FORELDELSE));
-            const foreldelse = hentFeilutbetalingForeldelse(behandling.behandlingId);
-            if (foreldelse.status === RessursStatus.SUKSESS) {
-                settFeilutbetalingForeldelse(foreldelse.data);
-            }
-        }
-    }, [behandling]);
-
-    return (
-        <StyledForeldelse>
-            <Undertittel>Foreldelse</Undertittel>
-            <Spacer20 />
-            {erAutoutført && (
-                <div>
-                    <Normaltekst>Foreldelsesloven §§ 2 og 3</Normaltekst>
-                    <Spacer8 />
-                    <Normaltekst>Automatisk vurdert</Normaltekst>
-                </div>
-            )}
-            {feilutbetalingForeldelse && (
-                <>
+    switch (feilutbetalingForeldelse?.status) {
+        case RessursStatus.SUKSESS:
+            return (
+                <StyledForeldelse>
+                    <Undertittel>Foreldelse</Undertittel>
+                    <Spacer20 />
                     {(!erLesevisning || stegErBehandlet) && (
                         <>
                             <Steginformasjon
                                 behandletSteg={stegErBehandlet}
                                 infotekst={`Perioden før ${getDate()} kan være foreldet. Del opp perioden ved behov og
-                            fastsett foreldelse`}
+                                fastsett foreldelse`}
                             />
                             <Spacer20 />
                         </>
                     )}
                     <Row>
                         <Column xs="12">
-                            <ForeldelsePerioder
-                                perioder={feilutbetalingForeldelse.perioder}
-                                erLesevisning={erLesevisning}
-                            />
+                            {skjemaData.length > 0 && (
+                                <ForeldelsePerioder
+                                    behandling={behandling}
+                                    perioder={skjemaData}
+                                    erLesevisning={erLesevisning}
+                                />
+                            )}
                         </Column>
                     </Row>
-                </>
-            )}
-        </StyledForeldelse>
-    );
+                </StyledForeldelse>
+            );
+        case RessursStatus.HENTER:
+            return (
+                <HenterContainer>
+                    <Normaltekst>Henting av feilutbetalingen tar litt tid.</Normaltekst>
+                    <NavFrontendSpinner type="XXL" />
+                </HenterContainer>
+            );
+        case RessursStatus.FEILET:
+        case RessursStatus.FUNKSJONELL_FEIL:
+            return (
+                <AlertStripe children={feilutbetalingForeldelse.frontendFeilmelding} type="feil" />
+            );
+        default:
+            return <div />;
+    }
 };
 
 export default ForeldelseContainer;

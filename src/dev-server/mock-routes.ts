@@ -4,7 +4,7 @@ import { Request, Response, Router } from 'express';
 
 import { byggFeiletRessurs, byggSuksessRessurs, RessursStatus } from '@navikt/familie-typer';
 
-import { fagsak_ba2, ba_behandling_4 } from './mock/ba2/BA_fagsak_2';
+import { fagsak_ba2, ba_behandling_4, ba_behandling_5 } from './mock/ba2/BA_fagsak_2';
 import {
     fagsak_ba3,
     ba_behandling_6,
@@ -18,17 +18,130 @@ import {
     ba_behandling_13,
     ba_behandling_14,
 } from './mock/ba4/BA_fagsak_4';
+import {
+    ba_behandling_16,
+    ba_behandling_17,
+    ba_behandling_18,
+    ba_behandling_19,
+    fagsak_ba5,
+} from './mock/ba5/BA_fagsak_5';
 import { fagsak_ef2, ef_behandling_4 } from './mock/ef2/EF_fagsak_2';
 import { fagsak_ks2, ks_behandling_4 } from './mock/ks2/KS_fagsak_2';
 import {
-    ba_feilutbetalingFakta_behandlet_1,
-    ef_feilutbetalingFakta_behandlet_1,
-    ks_feilutbetalingFakta_behandlet_1,
-} from './mock/fakta/feilutbetalingFakta_behandlet';
-import {
+    feilutbetalingFakta_ubehandlet_1,
     feilutbetalingFakta_ubehandlet_2,
+    feilutbetalingFakta_ubehandlet_3,
     feilutbetalingFakta_ubehandlet_4,
 } from './mock/fakta/feilutbetalingFakta_ubehandlet';
+import {
+    feilutbetalingForeldelse_ubehandlet_1,
+    feilutbetalingForeldelse_ubehandlet_2,
+    feilutbetalingForeldelse_ubehandlet_3,
+    feilutbetalingForeldelse_ubehandlet_4,
+} from './mock/foreldelse/feilutbetalingForeldelse_ubehandlet';
+import {
+    FaktaPeriode,
+    ForeldelsePeriode,
+    IFeilutbetalingFakta,
+    IFeilutbetalingForeldelse,
+    Periode,
+} from '../frontend/typer/feilutbetalingtyper';
+import { Foreldelsevurdering, HendelseType, HendelseUndertype } from '../frontend/kodeverk';
+
+const behandleFaktaPerioder = (
+    perioder: FaktaPeriode[],
+    hendelsestype: HendelseType,
+    hendelsesundertype: HendelseUndertype
+): FaktaPeriode[] => {
+    return perioder.map(per => ({
+        ...per,
+        hendelsestype: hendelsestype,
+        hendelsesundertype: hendelsesundertype,
+    }));
+};
+
+const behandleFakta = (
+    ubehandletFakta: IFeilutbetalingFakta,
+    hendelsestype: HendelseType,
+    hendelsesundertype: HendelseUndertype,
+    begrunnelse: string
+): IFeilutbetalingFakta => {
+    const behandletPerioder = behandleFaktaPerioder(
+        ubehandletFakta.feilutbetaltePerioder,
+        hendelsestype,
+        hendelsesundertype
+    );
+    return {
+        ...ubehandletFakta,
+        begrunnelse: begrunnelse,
+        feilutbetaltePerioder: behandletPerioder,
+    };
+};
+
+const behandleForeldelsePerioder = (
+    perioder: ForeldelsePeriode[],
+    antallForeldet: number = 0,
+    foreldelsesfrist?: string,
+    foreldelseBegrunnelse?: string,
+    antallTilleggsfrist: number = 0,
+    oppdagelsesdato?: string,
+    tilleggsfristBegrunnelse?: string,
+    antallIkkeForeldet?: number,
+    ikkeForeldetBegrunnelse?: string
+): ForeldelsePeriode[] => {
+    const antIkkFor = antallIkkeForeldet || perioder.length - antallForeldet - antallTilleggsfrist;
+    return perioder.map((per, index) => {
+        if (index < antallForeldet) {
+            return {
+                ...per,
+                foreldelsesvurderingstype: Foreldelsevurdering.FORELDET,
+                begrunnelse: foreldelseBegrunnelse,
+                foreldelsesfrist: foreldelsesfrist,
+            };
+        } else if (index < antallForeldet + antallTilleggsfrist) {
+            return {
+                ...per,
+                foreldelsesvurderingstype: Foreldelsevurdering.TILLEGGSFRIST,
+                begrunnelse: tilleggsfristBegrunnelse,
+                foreldelsesfrist: foreldelsesfrist,
+                oppdagelsesdato: oppdagelsesdato,
+            };
+        } else if (index < antallForeldet + antallTilleggsfrist + antIkkFor) {
+            return {
+                ...per,
+                foreldelsesvurderingstype: Foreldelsevurdering.IKKE_FORELDET,
+                begrunnelse: ikkeForeldetBegrunnelse,
+            };
+        } else {
+            return per;
+        }
+    });
+};
+
+const behandleForeldelse = (
+    ubehandletForeldelse: IFeilutbetalingForeldelse,
+    antallForeldet: number = 0,
+    antallTilleggsfrist: number = 0,
+    foreldelsesfrist?: string,
+    oppdagelsesdato?: string,
+    antallIkkeForeldet?: number
+): IFeilutbetalingForeldelse => {
+    const behandletPerioder = behandleForeldelsePerioder(
+        ubehandletForeldelse.foreldetPerioder,
+        antallForeldet,
+        foreldelsesfrist,
+        'Perioden er foreldet',
+        antallTilleggsfrist,
+        oppdagelsesdato,
+        'Perioden er ikke foreldet, tilleggsfrist benyttes',
+        antallIkkeForeldet,
+        'Perdioden er ikke foreldet'
+    );
+    return {
+        ...ubehandletForeldelse,
+        foreldetPerioder: behandletPerioder,
+    };
+};
 
 export const setupRouter = (router: Router) => {
     router.get('/user/profile', (_: Request, res: Response) => {
@@ -71,6 +184,9 @@ export const setupRouter = (router: Router) => {
             case 'ba4':
                 res.send(byggSuksessRessurs(fagsak_ba4));
                 return;
+            case 'ba5':
+                res.send(byggSuksessRessurs(fagsak_ba5));
+                return;
             case 'ef2':
                 res.send(byggSuksessRessurs(fagsak_ef2));
                 return;
@@ -104,6 +220,9 @@ export const setupRouter = (router: Router) => {
                 case 'ba4':
                     res.send(byggSuksessRessurs(ba_behandling_4));
                     return;
+                case 'ba5':
+                    res.send(byggSuksessRessurs(ba_behandling_5));
+                    return;
                 case 'ba6':
                     res.send(byggSuksessRessurs(ba_behandling_6));
                     return;
@@ -124,6 +243,18 @@ export const setupRouter = (router: Router) => {
                     return;
                 case 'ba14':
                     res.send(byggSuksessRessurs(ba_behandling_14));
+                    return;
+                case 'ba16':
+                    res.send(byggSuksessRessurs(ba_behandling_16));
+                    return;
+                case 'ba17':
+                    res.send(byggSuksessRessurs(ba_behandling_17));
+                    return;
+                case 'ba18':
+                    res.send(byggSuksessRessurs(ba_behandling_18));
+                    return;
+                case 'ba19':
+                    res.send(byggSuksessRessurs(ba_behandling_19));
                     return;
                 case 'ef4':
                     res.send(byggSuksessRessurs(ef_behandling_4));
@@ -153,7 +284,29 @@ export const setupRouter = (router: Router) => {
                 case 'ba12':
                 case 'ba13':
                 case 'ba14':
-                    res.send(byggSuksessRessurs(ba_feilutbetalingFakta_behandlet_1));
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleFakta(
+                                feilutbetalingFakta_ubehandlet_1,
+                                HendelseType.BA_ANNET,
+                                HendelseUndertype.ANNET_FRITEKST,
+                                'Dette er ein mock-begrunnelse!'
+                            )
+                        )
+                    );
+                    return;
+                case 'ba5':
+                case 'ba18':
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleFakta(
+                                feilutbetalingFakta_ubehandlet_3,
+                                HendelseType.BA_ANNET,
+                                HendelseUndertype.ANNET_FRITEKST,
+                                'Dette er ein mock-begrunnelse!'
+                            )
+                        )
+                    );
                     return;
                 case 'ba8':
                     res.send(byggSuksessRessurs(feilutbetalingFakta_ubehandlet_4));
@@ -161,11 +314,115 @@ export const setupRouter = (router: Router) => {
                 case 'ba9':
                     res.send(byggSuksessRessurs(feilutbetalingFakta_ubehandlet_2));
                     return;
+                case 'ba16':
+                case 'ba17':
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleFakta(
+                                feilutbetalingFakta_ubehandlet_2,
+                                HendelseType.BA_ANNET,
+                                HendelseUndertype.ANNET_FRITEKST,
+                                'Dette er ein mock-begrunnelse!'
+                            )
+                        )
+                    );
+                    return;
+                case 'ba19':
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleFakta(
+                                feilutbetalingFakta_ubehandlet_4,
+                                HendelseType.BA_ANNET,
+                                HendelseUndertype.ANNET_FRITEKST,
+                                'Dette er ein mock-begrunnelse!'
+                            )
+                        )
+                    );
+                    return;
                 case 'ef4':
-                    res.send(byggSuksessRessurs(ef_feilutbetalingFakta_behandlet_1));
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleFakta(
+                                feilutbetalingFakta_ubehandlet_1,
+                                HendelseType.EF_ANNET,
+                                HendelseUndertype.ANNET_FRITEKST,
+                                'Dette er ein mock-begrunnelse!'
+                            )
+                        )
+                    );
                     return;
                 case 'ks4':
-                    res.send(byggSuksessRessurs(ks_feilutbetalingFakta_behandlet_1));
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleFakta(
+                                feilutbetalingFakta_ubehandlet_1,
+                                HendelseType.KS_ANNET,
+                                HendelseUndertype.ANNET_FRITEKST,
+                                'Dette er ein mock-begrunnelse!'
+                            )
+                        )
+                    );
+                    return;
+                default:
+                    res.send(
+                        byggFeiletRessurs(
+                            'Ingen feilutbetaling for behandling med id ' + behandlingId
+                        )
+                    );
+            }
+        }
+    );
+
+    router.get(
+        '/familie-tilbake/api/behandling/:behandlingId/foreldelse/v1',
+        (req: Request, res: Response) => {
+            const { behandlingId } = req.params;
+            switch (behandlingId) {
+                case 'ba5':
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleForeldelse(feilutbetalingForeldelse_ubehandlet_3, 0, 0)
+                        )
+                    );
+                    return;
+                case 'ba12':
+                case 'ba13':
+                case 'ba14':
+                case 'ef4':
+                case 'ks4':
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleForeldelse(
+                                feilutbetalingForeldelse_ubehandlet_1,
+                                1,
+                                1,
+                                '2019-06-01',
+                                '2020-11-01'
+                            )
+                        )
+                    );
+                    return;
+                case 'ba16':
+                    res.send(byggSuksessRessurs(feilutbetalingForeldelse_ubehandlet_2));
+                    return;
+                case 'ba17':
+                    res.send(
+                        byggSuksessRessurs(
+                            behandleForeldelse(
+                                feilutbetalingForeldelse_ubehandlet_2,
+                                2,
+                                2,
+                                '2017-01-10',
+                                '2020-11-10'
+                            )
+                        )
+                    );
+                    return;
+                case 'ba18':
+                    res.send(byggSuksessRessurs(feilutbetalingForeldelse_ubehandlet_3));
+                    return;
+                case 'ba19':
+                    res.send(byggSuksessRessurs(feilutbetalingForeldelse_ubehandlet_4));
                     return;
                 default:
                     res.send(
@@ -183,6 +440,32 @@ export const setupRouter = (router: Router) => {
             const { behandlingId } = req.params;
             console.log(`Har fått behandlet data på behandling ${behandlingId}: `, req.body);
             res.send(byggSuksessRessurs('OK'));
+        }
+    );
+
+    router.post(
+        '/familie-tilbake/api/behandling/:behandlingId/beregn/v1',
+        (req: Request, res: Response) => {
+            const { behandlingId } = req.params;
+            console.log(
+                `Har fått nye perioder for å beregne på behandling ${behandlingId}: `,
+                req.body
+            );
+            const perioder: Periode[] = req.body;
+            res.send(
+                byggSuksessRessurs({
+                    beregnetPerioder: [
+                        {
+                            periode: perioder[0],
+                            feilutbetaltBeløp: 3000,
+                        },
+                        {
+                            periode: perioder[1],
+                            feilutbetaltBeløp: 2000,
+                        },
+                    ],
+                })
+            );
         }
     );
 

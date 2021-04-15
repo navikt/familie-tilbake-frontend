@@ -50,14 +50,14 @@ export interface IFeilutbetalingFakta {
 }
 
 export type ForeldelsePeriode = {
-    foreldelseVurderingType: Foreldelsevurdering;
+    foreldelsesvurderingstype?: Foreldelsevurdering;
     begrunnelse?: string;
     foreldelsesfrist?: string;
-    oppdagelsesDato?: string;
+    oppdagelsesdato?: string;
 } & FeilutbetalingPeriode;
 
 export interface IFeilutbetalingForeldelse {
-    perioder: ForeldelsePeriode[];
+    foreldetPerioder: ForeldelsePeriode[];
 }
 
 export type Aktsomhetsvurdering = {
@@ -99,4 +99,8 @@ export type VilkårsvurderingPeriode = {
 export interface IFeilutbetalingVilkårsvurdering {
     perioder: VilkårsvurderingPeriode[];
     rettsgebyr: number;
+}
+
+export interface IBeregnSplittetPeriodeRespons {
+    beregnetPerioder: FeilutbetalingPeriode[];
 }

@@ -1,4 +1,12 @@
-import { parseISO, differenceInCalendarYears, add, differenceInMonths, isBefore } from 'date-fns';
+import {
+    parseISO,
+    differenceInCalendarYears,
+    add,
+    differenceInMonths,
+    isBefore,
+    endOfMonth,
+    endOfDay,
+} from 'date-fns';
 
 import { isEmpty } from './validering';
 
@@ -75,3 +83,19 @@ const datoBeforeOrEqual = (latest: Date, dato: string): boolean =>
     isEmpty(dato) || dateBeforeOrEqual(parseISO(dato), latest);
 
 export const dateBeforeToday = (dato: string): boolean => datoBeforeOrEqual(yesterday(), dato);
+
+const getEndOfMonth = (dato: string): Date => {
+    return endOfMonth(parseISO(dato));
+};
+
+export const getEndOfMonthISODateStr = (dato?: string): string | null => {
+    if (!dato || isEmpty(dato)) return null;
+    const endOfMonth = getEndOfMonth(dato);
+    return endOfMonth.toISOString().substring(0, 10);
+};
+
+export const flyttDatoISODateStr = (dato: string, config: Duration): string => {
+    const aDate = endOfDay(parseISO(dato));
+    const newDate = add(aDate, config);
+    return newDate.toISOString().substring(0, 10);
+};
