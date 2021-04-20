@@ -18,7 +18,12 @@ import {
 } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { datoformatNorsk } from '../../../../utils';
-import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import {
+    Navigering,
+    PeriodeKontroll,
+    Spacer20,
+    Spacer8,
+} from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import {
     FamilieTilbakeTextArea,
@@ -34,10 +39,6 @@ const StyledContainer = styled.div`
     padding: 10px;
 `;
 
-const Spacer8 = styled.div`
-    height: 8px;
-`;
-
 interface IProps {
     behandling: IBehandling;
     periode: ForeldelsePeriodeSkjemeData;
@@ -45,14 +46,13 @@ interface IProps {
 }
 
 const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLesevisning }) => {
-    const { oppdaterPeriode, onSplitPeriode } = useFeilutbetalingForeldelse();
+    const { oppdaterPeriode, onSplitPeriode, lukkValgtPeriode } = useFeilutbetalingForeldelse();
     const {
         skjema,
         onBekreft,
     } = useForeldelsePeriodeSkjema((oppdatertPeriode: ForeldelsePeriodeSkjemeData) =>
         oppdaterPeriode(oppdatertPeriode)
     );
-    const { lukkValgtPeriode } = useFeilutbetalingForeldelse();
 
     React.useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');
@@ -60,10 +60,6 @@ const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLese
         skjema.felter.foreldelsesfrist.onChange(periode?.foreldelsesfrist || '');
         skjema.felter.oppdagelsesdato.onChange(periode?.oppdagelsesdato || '');
     }, [periode]);
-
-    const onChangeForeldet = (nyVerdi: Foreldelsevurdering) => {
-        skjema.felter.foreldelsesvurderingstype.validerOgSettFelt(nyVerdi);
-    };
 
     const erForeldet =
         skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.FORELDET;
@@ -84,33 +80,31 @@ const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLese
 
     return (
         <StyledContainer>
-            <Row>
-                <Column xs="8">
-                    <Row>
-                        <Column md="4">
-                            <Undertittel>Detaljer for valgt periode</Undertittel>
-                        </Column>
-                        {!erLesevisning && (
-                            <Column md="3">
-                                <SplittPeriode
-                                    behandling={behandling}
-                                    periode={periode}
-                                    onBekreft={onSplitPeriode}
-                                />
-                            </Column>
-                        )}
-                    </Row>
-                    <Row>
-                        <Column md="7">
-                            <PeriodeOppsummering
-                                fom={periode.periode.fom}
-                                tom={periode.periode.tom}
-                                beløp={periode.feilutbetaltBeløp}
+            <PeriodeKontroll>
+                <Row>
+                    <Column md="7">
+                        <Undertittel>Detaljer for valgt periode</Undertittel>
+                    </Column>
+                    {!erLesevisning && (
+                        <Column md="5">
+                            <SplittPeriode
+                                behandling={behandling}
+                                periode={periode}
+                                onBekreft={onSplitPeriode}
                             />
                         </Column>
-                    </Row>
-                </Column>
-            </Row>
+                    )}
+                </Row>
+                <Row>
+                    <Column md="12">
+                        <PeriodeOppsummering
+                            fom={periode.periode.fom}
+                            tom={periode.periode.tom}
+                            beløp={periode.feilutbetaltBeløp}
+                        />
+                    </Column>
+                </Row>
+            </PeriodeKontroll>
             <Spacer20 />
             <Row>
                 <Column md="8">
@@ -153,7 +147,9 @@ const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLese
                                 label={foreldelsevurderinger[type]}
                                 value={type}
                                 checked={skjema.felter.foreldelsesvurderingstype.verdi === type}
-                                onChange={() => onChangeForeldet(type)}
+                                onChange={() =>
+                                    skjema.felter.foreldelsesvurderingstype.validerOgSettFelt(type)
+                                }
                             />
                         ))}
                     </FamilieRadioGruppe>

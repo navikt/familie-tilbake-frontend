@@ -2,6 +2,10 @@ import styled from 'styled-components';
 
 import { Normaltekst } from 'nav-frontend-typografi';
 
+export const parseStringToNumber = (text: string): number => {
+    return Number(Math.round(parseFloat(text)));
+};
+
 export const formatCurrencyNoKr = (value?: string | number): string | undefined => {
     if (value === null || value === undefined) {
         return undefined;
@@ -11,9 +15,7 @@ export const formatCurrencyNoKr = (value?: string | number): string | undefined 
     if (Number.isNaN(newVal)) {
         return undefined;
     }
-    return Number(Math.round(parseFloat(newVal)))
-        .toLocaleString('nb-NO')
-        .replace(/,|\s/g, ' ');
+    return parseStringToNumber(newVal).toLocaleString('nb-NO').replace(/,|\s/g, ' ');
 };
 
 export const isNumeric = (val: string): boolean => {

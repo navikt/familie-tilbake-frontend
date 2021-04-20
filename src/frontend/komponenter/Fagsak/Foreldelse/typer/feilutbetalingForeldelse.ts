@@ -1,15 +1,12 @@
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { Periode } from '../../../../typer/feilutbetalingtyper';
+import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 
-export interface ForeldelsePeriodeSkjemeData {
-    index: string;
-    feilutbetaltBeløp: number;
-    periode: Periode;
+export interface ForeldelsePeriodeSkjemeData extends IPeriodeSkjemaData {
     foreldelsesvurderingstype?: Foreldelsevurdering;
     begrunnelse?: string;
     foreldelsesfrist?: string;
     oppdagelsesdato?: string;
-    erSplittet?: boolean | false;
 }
 
 export interface PeriodeForeldelseStegPayload {

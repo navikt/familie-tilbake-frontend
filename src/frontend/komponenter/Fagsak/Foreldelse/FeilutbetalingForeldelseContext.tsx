@@ -218,7 +218,6 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
             feilutbetalingForeldelse,
             erAutoutført,
             stegErBehandlet,
-            hentFeilutbetalingForeldelse,
             skjemaData,
             oppdaterPeriode,
             valgtPeriode,

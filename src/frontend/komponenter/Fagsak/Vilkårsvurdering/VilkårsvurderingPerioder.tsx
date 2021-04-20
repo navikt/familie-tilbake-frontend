@@ -1,72 +1,118 @@
 import * as React from 'react';
 
+import classNames from 'classnames';
 import styled from 'styled-components';
 
+import AlertStripe from 'nav-frontend-alertstriper';
 import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
+import { Knapp } from 'nav-frontend-knapper';
 
-import { Periode, Tidslinje } from '@navikt/helse-frontend-tidslinje';
+import { Periode } from '@navikt/helse-frontend-tidslinje';
 
-import { VilkårsvurderingPeriodeProvider } from '../../../context/VilkårsvurderingPeriodeContext';
-import { Foreldelsevurdering } from '../../../kodeverk';
-import { VilkårsvurderingPeriode } from '../../../typer/feilutbetalingtyper';
-import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { Vilkårsresultat } from '../../../kodeverk';
+import { IBehandling } from '../../../typer/behandling';
+import { NormaltekstBold } from '../../../utils';
+import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
+import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
+import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 
-const TidslinjeContainer = styled.div`
-    border: 1px solid ${navFarger.navGra60};
-    margin-bottom: 20px;
+const StyledAlertStripe = styled(AlertStripe)`
+    background-color: ${navFarger.navOransjeLighten80};
 
-    button.behandlet {
-        background-color: ${navFarger.navGronnLighten60};
-    }
-
-    button.ubehandlet {
-        background-color: ${navFarger.navLysGra};
+    .alertstripe__tekst {
+        max-width: fit-content;
     }
 `;
 
-const finnClassNamePeriode = (periode: VilkårsvurderingPeriode) => {
+const finnClassNamePeriode = (
+    periode: VilkårsvurderingPeriodeSkjemaData,
+    aktivPeriode: boolean
+) => {
+    const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
     if (
-        periode.vilkårsresultat ||
-        periode.foreldelse.foreldelseVurderingType === Foreldelsevurdering.FORELDET
+        periode.foreldet ||
+        (!!periode.vilkårsvurderingsresultatInfo &&
+            periode.vilkårsvurderingsresultatInfo.vilkårsvurderingsresultat ===
+                Vilkårsresultat.GOD_TRO &&
+            !periode.vilkårsvurderingsresultatInfo.godTro?.beløpErIBehold)
     ) {
-        return 'behandlet';
+        return classNames('avvist', aktivPeriodeCss);
+    } else if (
+        !!periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat &&
+        !!periode.begrunnelse
+    ) {
+        return classNames('behandlet', aktivPeriodeCss);
     }
-    return 'ubehandlet';
+    return classNames('ubehandlet', aktivPeriodeCss);
 };
 
-const genererRader = (perioder: VilkårsvurderingPeriode[]): Periode[][] => {
+const genererRader = (
+    perioder: VilkårsvurderingPeriodeSkjemaData[],
+    valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined
+): Periode[][] => {
     return [
         perioder.map(
-            (periode, index): Periode => ({
-                tom: new Date(periode.periode.tom),
-                fom: new Date(periode.periode.fom),
-                status: 'suksess',
-                id: `index_${index}`,
-                className: finnClassNamePeriode(periode),
-            })
+            (periode, index): Periode => {
+                const erAktivPeriode =
+                    !!valgtPeriode &&
+                    periode.periode.fom === valgtPeriode.periode.fom &&
+                    periode.periode.tom === valgtPeriode.periode.tom;
+                return {
+                    tom: new Date(periode.periode.tom),
+                    fom: new Date(periode.periode.fom),
+                    status: 'suksess',
+                    active: erAktivPeriode,
+                    id: `index_${index}`,
+                    className: finnClassNamePeriode(periode, erAktivPeriode),
+                };
+            }
         ),
     ];
 };
 
 interface IProps {
-    perioder: VilkårsvurderingPeriode[];
+    behandling: IBehandling;
+    perioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
 }
 
 const VilkårsvurderingPerioder: React.FC<IProps> = ({
+    behandling,
     perioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
 }) => {
     const [tidslinjeRader, settTidslinjeRader] = React.useState<Periode[][]>();
-    const [valgtPeriode, settValgtPeriode] = React.useState<VilkårsvurderingPeriode>();
+    const [disableBekreft, settDisableBekreft] = React.useState<boolean>(true);
+    const {
+        valgtPeriode,
+        settValgtPeriode,
+        stegErBehandlet,
+        gåTilForrige,
+        gåTilNeste,
+        behandletPerioder,
+        allePerioderBehandlet,
+        sendInnSkjema,
+        senderInn,
+        valideringsfeil,
+        valideringsFeilmelding,
+    } = useFeilutbetalingVilkårsvurdering();
 
     React.useEffect(() => {
-        settTidslinjeRader(genererRader(perioder));
-    }, [perioder]);
+        settTidslinjeRader(genererRader(perioder, valgtPeriode));
+    }, [perioder, valgtPeriode]);
+
+    React.useEffect(() => {
+        if (!valgtPeriode) {
+            settDisableBekreft(!allePerioderBehandlet);
+        } else {
+            settDisableBekreft(true);
+        }
+    }, [valgtPeriode, allePerioderBehandlet]);
 
     const onSelectPeriode = (periode: Periode) => {
         const periodeFom = periode.fom.toISOString().substring(0, 10);
@@ -79,11 +125,17 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
 
     return perioder && tidslinjeRader ? (
         <>
+            {valideringsfeil && (
+                <>
+                    <StyledAlertStripe type="feil">
+                        <NormaltekstBold>{valideringsFeilmelding}</NormaltekstBold>
+                    </StyledAlertStripe>
+                    <Spacer20 />
+                </>
+            )}
             <Row>
                 <Column xs="12">
-                    <TidslinjeContainer>
-                        <Tidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
-                    </TidslinjeContainer>
+                    <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
                 </Column>
             </Row>
             {valgtPeriode && (
@@ -91,16 +143,46 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                     <Spacer20 />
                     <Row>
                         <Column xs="12">
-                            <VilkårsvurderingPeriodeProvider periode={valgtPeriode}>
-                                <VilkårsvurderingPeriodeSkjema
-                                    erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
-                                    erLesevisning={erLesevisning}
-                                />
-                            </VilkårsvurderingPeriodeProvider>
+                            <VilkårsvurderingPeriodeSkjema
+                                behandling={behandling}
+                                periode={valgtPeriode}
+                                behandletPerioder={behandletPerioder}
+                                erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
+                                erLesevisning={erLesevisning}
+                            />
                         </Column>
                     </Row>
                 </>
             )}
+            <Row>
+                <Column md="12">
+                    <Navigering>
+                        <div>
+                            {stegErBehandlet && erLesevisning ? (
+                                <Knapp type={'hoved'} mini={true} onClick={gåTilNeste}>
+                                    Neste
+                                </Knapp>
+                            ) : (
+                                <Knapp
+                                    type={'hoved'}
+                                    mini={true}
+                                    onClick={sendInnSkjema}
+                                    spinner={senderInn}
+                                    autoDisableVedSpinner
+                                    disabled={disableBekreft}
+                                >
+                                    {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                                </Knapp>
+                            )}
+                        </div>
+                        <div>
+                            <Knapp type={'standard'} mini={true} onClick={gåTilForrige}>
+                                Forrige
+                            </Knapp>
+                        </div>
+                    </Navigering>
+                </Column>
+            </Row>
         </>
     ) : null;
 };

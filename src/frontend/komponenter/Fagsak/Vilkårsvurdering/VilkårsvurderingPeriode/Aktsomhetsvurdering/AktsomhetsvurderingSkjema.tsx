@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import { Radio } from 'nav-frontend-skjema';
 
-import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
+import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+
 import {
     Aktsomhet,
     aktsomheter,
@@ -11,29 +12,22 @@ import {
     Vilkårsresultat,
 } from '../../../../../kodeverk';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
+import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 import GradForsettSkjema from './GradForsettSkjema';
 import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
 
 interface IProps {
-    erTotalbeløpUnder4Rettsgebyr: boolean;
+    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
 }
 
-const AktsomhetsvurderingSkjema: React.FC<IProps> = ({
-    erTotalbeløpUnder4Rettsgebyr,
-    erLesevisning,
-}) => {
-    const {
-        vilkårsresultat,
-        aktsomhetsvurdering,
-        oppdaterAktsomhetsvurdering,
-    } = useVilkårsvurderingPeriode();
+const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const erForstodBurdeForstått =
-        vilkårsresultat?.vilkårsresultat === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
 
-    const onChangeAktsomhet = (type: Aktsomhet) => {
-        oppdaterAktsomhetsvurdering({ aktsomhet: type });
-    };
+    const ugyldigAktsomhetvurderingValgt =
+        skjema.visFeilmeldinger &&
+        skjema.felter.aktsomhetVurdering.valideringsstatus === Valideringsstatus.FEIL;
 
     return (
         <>
@@ -42,10 +36,17 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({
                 erLesevisning={erLesevisning}
                 legend={'I hvilken grad har mottaker handlet uaktsomt?'}
                 verdi={
-                    aktsomhetsvurdering?.aktsomhet
+                    skjema.felter.aktsomhetVurdering.verdi
                         ? erForstodBurdeForstått
-                            ? forstodBurdeForståttAktsomheter[aktsomhetsvurdering.aktsomhet]
-                            : aktsomheter[aktsomhetsvurdering.aktsomhet]
+                            ? forstodBurdeForståttAktsomheter[
+                                  skjema.felter.aktsomhetVurdering.verdi
+                              ]
+                            : aktsomheter[skjema.felter.aktsomhetVurdering.verdi]
+                        : ''
+                }
+                feil={
+                    ugyldigAktsomhetvurderingValgt
+                        ? skjema.felter.aktsomhetVurdering.feilmelding?.toString()
                         : ''
                 }
             >
@@ -54,8 +55,8 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({
                         name="handletUaktsomhetGrad"
                         key={type}
                         value={type}
-                        onChange={() => onChangeAktsomhet(type)}
-                        checked={aktsomhetsvurdering?.aktsomhet === type}
+                        onChange={() => skjema.felter.aktsomhetVurdering.validerOgSettFelt(type)}
+                        checked={skjema.felter.aktsomhetVurdering.verdi === type}
                         label={
                             erForstodBurdeForstått
                                 ? forstodBurdeForståttAktsomheter[type]
@@ -64,18 +65,11 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({
                     />
                 ))}
             </HorisontalFamilieRadioGruppe>
-            {aktsomhetsvurdering?.aktsomhet &&
-                (aktsomhetsvurdering.aktsomhet === Aktsomhet.FORSETT ? (
-                    <GradForsettSkjema
-                        erLesevisning={erLesevisning}
-                        erValgtResultatTypeForstoBurdeForstaatt={erForstodBurdeForstått}
-                    />
+            {skjema.felter.aktsomhetVurdering.verdi !== '' &&
+                (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.FORSETT ? (
+                    <GradForsettSkjema skjema={skjema} erLesevisning={erLesevisning} />
                 ) : (
-                    <GradUaktsomhetSkjema
-                        erValgtResultatTypeForstoBurdeForstaatt={erForstodBurdeForstått}
-                        erLesevisning={erLesevisning}
-                        erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
-                    />
+                    <GradUaktsomhetSkjema skjema={skjema} erLesevisning={erLesevisning} />
                 ))}
         </>
     );

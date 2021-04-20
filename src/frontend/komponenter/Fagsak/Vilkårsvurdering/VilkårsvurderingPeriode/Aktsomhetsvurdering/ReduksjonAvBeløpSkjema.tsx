@@ -7,12 +7,26 @@ import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
+import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
-import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
 import { Aktsomhet } from '../../../../../kodeverk';
-import { formatCurrencyNoKr, isNumeric } from '../../../../../utils';
+import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
+import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
+import {
+    ANDELER,
+    EGENDEFINERT,
+    jaNeiOptions,
+    OptionJA,
+    OptionNEI,
+    VilkårsvurderingSkjemaDefinisjon,
+} from '../VilkårsvurderingPeriodeSkjemaContext';
+
+const StyledLabel = styled(UndertekstBold)`
+    line-height: 1.375rem;
+    font-size: 1rem;
+`;
 
 const StyledNormaltekst = styled(Normaltekst)`
     padding-top: 15px;
@@ -31,86 +45,30 @@ const FlexColumn = styled.div`
     padding-right: 8px;
 `;
 
-const Feilmelding = styled(Normaltekst)`
-    color: red;
-`;
-
-export const EGENDEFINERT = 'Egendefinert';
-export const ANDELER = ['30', '50', '70', EGENDEFINERT];
-
 interface IProps {
-    harMerEnnEnAktivitet: boolean;
+    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
 }
 
-const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ harMerEnnEnAktivitet, erLesevisning }) => {
-    const {
-        vilkårsvurderingPeriode,
-        aktsomhetsvurdering,
-        oppdaterAktsomhetsvurdering,
-    } = useVilkårsvurderingPeriode();
-    const [feilIBeløp, settFeilIBeløp] = React.useState<boolean>(false);
-    const [erEgendefinert, settErEgendefinert] = React.useState<boolean>(false);
-    const [feilIAndelManuell, settFeilIAndelManuell] = React.useState<boolean>(false);
+const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+    const { valgtPeriode, kanIlleggeRenter } = useFeilutbetalingVilkårsvurdering();
+    const harMerEnnEnAktivitet = skjema.felter.harMerEnnEnAktivitet.verdi === true;
+    const erEgendefinert =
+        !isEmpty(skjema.felter.uaktsomAndelTilbakekreves.verdi) &&
+        (!ANDELER.includes(skjema.felter.uaktsomAndelTilbakekreves.verdi) ||
+            skjema.felter.uaktsomAndelTilbakekreves.verdi === EGENDEFINERT);
 
-    React.useEffect(() => {
-        if (aktsomhetsvurdering?.andelTilbakekreves && !erEgendefinert) {
-            settErEgendefinert(
-                !ANDELER.includes(aktsomhetsvurdering.andelTilbakekreves.toString())
-            );
-        }
-    }, [aktsomhetsvurdering]);
+    const ugyldigHarGrunnertilReduksjonValgt =
+        skjema.visFeilmeldinger &&
+        skjema.felter.harGrunnerTilReduksjon.valideringsstatus === Valideringsstatus.FEIL;
 
-    const onChangeHarGrunner = (harGrunn: boolean) => {
-        oppdaterAktsomhetsvurdering({ harGrunnerTilReduksjon: harGrunn });
-    };
+    const ugyldigIlleggRenterValgt =
+        skjema.visFeilmeldinger &&
+        skjema.felter.grovtUaktsomIlleggeRenter.valideringsstatus === Valideringsstatus.FEIL;
 
-    const onChangeAndelSelectTilbakekreves = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const val = e.target.value;
-        if (val === EGENDEFINERT) {
-            settErEgendefinert(true);
-            oppdaterAktsomhetsvurdering({ andelTilbakekreves: undefined });
-        } else {
-            const andel = Number.parseInt(val);
-            oppdaterAktsomhetsvurdering({ andelTilbakekreves: andel });
-        }
-    };
-
-    const onChangeAndelManuell = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
-        if (val.length === 0) {
-            oppdaterAktsomhetsvurdering({ andelTilbakekreves: undefined });
-            return;
-        }
-
-        if (isNumeric(val)) {
-            const nyVerdi = Number(val);
-            oppdaterAktsomhetsvurdering({ andelTilbakekreves: nyVerdi });
-            settFeilIAndelManuell(false);
-        } else {
-            settFeilIAndelManuell(true);
-        }
-    };
-
-    const onChangeTilbakekrevdBeløp = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
-        if (val.length === 0) {
-            oppdaterAktsomhetsvurdering({ tilbakekrevesBelop: undefined });
-            return;
-        }
-
-        if (isNumeric(val)) {
-            const nyVerdi = Number(val);
-            oppdaterAktsomhetsvurdering({ tilbakekrevesBelop: nyVerdi });
-            settFeilIBeløp(false);
-        } else {
-            settFeilIBeløp(true);
-        }
-    };
-
-    const onChangeRenter = (verdi: boolean) => {
-        oppdaterAktsomhetsvurdering({ ileggRenter: verdi });
-    };
+    const beskjedTilbakekreves = harMerEnnEnAktivitet
+        ? formatCurrencyNoKr(valgtPeriode?.feilutbetaltBeløp)
+        : '100 %';
 
     return (
         <>
@@ -120,25 +78,30 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ harMerEnnEnAktivitet, erLes
                         id="harGrunnerTilReduksjon"
                         legend={'Skal særlige grunner gi reduksjon av beløpet?'}
                         erLesevisning={erLesevisning}
-                        verdi={aktsomhetsvurdering?.harGrunnerTilReduksjon ? 'Ja' : 'Nei'}
+                        verdi={
+                            skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA ? 'Ja' : 'Nei'
+                        }
+                        feil={
+                            ugyldigHarGrunnertilReduksjonValgt
+                                ? skjema.felter.harGrunnerTilReduksjon.feilmelding?.toString()
+                                : ''
+                        }
                     >
-                        <Radio
-                            name="harGrunnerTilReduksjon"
-                            label="Ja"
-                            checked={aktsomhetsvurdering?.harGrunnerTilReduksjon === true}
-                            onChange={() => onChangeHarGrunner(true)}
-                        />
-                        <Radio
-                            name="harGrunnerTilReduksjon"
-                            label="Nei"
-                            value="false"
-                            checked={aktsomhetsvurdering?.harGrunnerTilReduksjon === false}
-                            onChange={() => onChangeHarGrunner(false)}
-                        />
+                        {jaNeiOptions.map(opt => (
+                            <Radio
+                                key={opt.label}
+                                name="harGrunnerTilReduksjon"
+                                label={opt.label}
+                                checked={skjema.felter.harGrunnerTilReduksjon.verdi === opt}
+                                onChange={() =>
+                                    skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(opt)
+                                }
+                            />
+                        ))}
                     </HorisontalFamilieRadioGruppe>
                 </Column>
             </Row>
-            {aktsomhetsvurdering?.harGrunnerTilReduksjon === true && (
+            {skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA && (
                 <ArrowBox alignOffset={erLesevisning ? 5 : 20} marginTop={erLesevisning ? 15 : 0}>
                     <Row>
                         <Column md="6">
@@ -150,14 +113,21 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ harMerEnnEnAktivitet, erLes
                                     <FlexRow>
                                         <FlexColumn>
                                             <FamilieSelect
+                                                {...skjema.felter.uaktsomAndelTilbakekreves.hentNavInputProps(
+                                                    skjema.visFeilmeldinger
+                                                )}
                                                 id="andelSomTilbakekreves"
                                                 label=""
                                                 erLesevisning={erLesevisning}
                                                 onChange={event =>
-                                                    onChangeAndelSelectTilbakekreves(event)
+                                                    skjema.felter.uaktsomAndelTilbakekreves.validerOgSettFelt(
+                                                        event.target.value
+                                                    )
                                                 }
                                                 bredde="xs"
-                                                value={aktsomhetsvurdering?.andelTilbakekreves}
+                                                value={
+                                                    skjema.felter.uaktsomAndelTilbakekreves.verdi
+                                                }
                                             >
                                                 <option>-</option>
                                                 {ANDELER.map(andel => (
@@ -179,10 +149,20 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ harMerEnnEnAktivitet, erLes
                                     <FlexRow>
                                         <FlexColumn>
                                             <FamilieInput
+                                                {...skjema.felter.uaktsomAndelTilbakekrevesManuelt.hentNavInputProps(
+                                                    skjema.visFeilmeldinger
+                                                )}
                                                 id="andelSomTilbakekrevesManuell"
                                                 erLesevisning={erLesevisning}
-                                                onChange={event => onChangeAndelManuell(event)}
-                                                value={aktsomhetsvurdering.andelTilbakekreves}
+                                                onChange={event =>
+                                                    skjema.felter.uaktsomAndelTilbakekrevesManuelt.validerOgSettFelt(
+                                                        event.target.value
+                                                    )
+                                                }
+                                                value={
+                                                    skjema.felter.uaktsomAndelTilbakekrevesManuelt
+                                                        .verdi
+                                                }
                                                 bredde="XS"
                                             />
                                         </FlexColumn>
@@ -190,24 +170,27 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ harMerEnnEnAktivitet, erLes
                                             <Normaltekst>%</Normaltekst>
                                         </FlexColumn>
                                     </FlexRow>
-                                    {feilIAndelManuell && (
-                                        <Feilmelding>Ikke en gyldig andel</Feilmelding>
-                                    )}
                                 </>
                             )}
                             {harMerEnnEnAktivitet && (
                                 <FamilieInput
+                                    {...skjema.felter.uaktsomTilbakekrevesBeløp.hentNavInputProps(
+                                        skjema.visFeilmeldinger
+                                    )}
                                     id="belopSomSkalTilbakekreves"
                                     label={'Angi beløp som skal tilbakekreves'}
                                     erLesevisning={erLesevisning}
-                                    onChange={event => onChangeTilbakekrevdBeløp(event)}
-                                    value={aktsomhetsvurdering.tilbakekrevesBelop}
-                                    feil={feilIBeløp ? 'Ikke et gyldig beløp' : null}
+                                    value={skjema.felter.uaktsomTilbakekrevesBeløp.verdi}
+                                    onChange={event =>
+                                        skjema.felter.uaktsomTilbakekrevesBeløp.validerOgSettFelt(
+                                            event.target.value
+                                        )
+                                    }
                                     bredde="S"
                                 />
                             )}
                         </Column>
-                        {aktsomhetsvurdering?.aktsomhet === Aktsomhet.GROVT_UAKTSOM && (
+                        {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET && (
                             <Column md="6">
                                 <UndertekstBold>Skal det tillegges renter?</UndertekstBold>
                                 <StyledNormaltekst>Nei</StyledNormaltekst>
@@ -216,41 +199,52 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ harMerEnnEnAktivitet, erLes
                     </Row>
                 </ArrowBox>
             )}
-            {aktsomhetsvurdering?.harGrunnerTilReduksjon === false && (
+            {skjema.felter.harGrunnerTilReduksjon.verdi === OptionNEI && (
                 <ArrowBox alignOffset={80}>
                     <Row>
                         <Column md="6">
-                            <UndertekstBold>
+                            <StyledLabel>
                                 {harMerEnnEnAktivitet
                                     ? 'Beløp som skal tilbakekreves'
                                     : 'Andel som skal tilbakekreves'}
-                            </UndertekstBold>
-                            <StyledNormaltekst>
-                                {harMerEnnEnAktivitet
-                                    ? formatCurrencyNoKr(vilkårsvurderingPeriode?.feilutbetaltBeløp)
-                                    : '100 %'}
-                            </StyledNormaltekst>
+                            </StyledLabel>
+                            {kanIlleggeRenter ? (
+                                <StyledNormaltekst>{beskjedTilbakekreves}</StyledNormaltekst>
+                            ) : (
+                                <Normaltekst>{beskjedTilbakekreves}</Normaltekst>
+                            )}
                         </Column>
-                        {aktsomhetsvurdering?.aktsomhet === Aktsomhet.GROVT_UAKTSOM && (
+                        {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET && (
                             <HorisontalFamilieRadioGruppe
                                 id="skalDetTilleggesRenter"
                                 legend={'Skal det tillegges renter?'}
-                                erLesevisning={erLesevisning}
-                                verdi={aktsomhetsvurdering.ileggRenter ? 'Ja' : 'Nei'}
+                                erLesevisning={erLesevisning || !kanIlleggeRenter}
+                                verdi={
+                                    skjema.felter.grovtUaktsomIlleggeRenter.verdi === OptionJA
+                                        ? 'Ja'
+                                        : 'Nei'
+                                }
+                                feil={
+                                    ugyldigIlleggRenterValgt
+                                        ? skjema.felter.grovtUaktsomIlleggeRenter.feilmelding?.toString()
+                                        : ''
+                                }
                             >
-                                <Radio
-                                    name="skalDetTilleggesRenter"
-                                    label="Ja"
-                                    checked={aktsomhetsvurdering?.ileggRenter === true}
-                                    onChange={() => onChangeRenter(true)}
-                                />
-                                <Radio
-                                    name="skalDetTilleggesRenter"
-                                    label="Nei"
-                                    value="false"
-                                    checked={aktsomhetsvurdering?.ileggRenter === false}
-                                    onChange={() => onChangeRenter(false)}
-                                />
+                                {jaNeiOptions.map(opt => (
+                                    <Radio
+                                        key={opt.label}
+                                        name="skalDetTilleggesRenter"
+                                        label={opt.label}
+                                        checked={
+                                            skjema.felter.grovtUaktsomIlleggeRenter.verdi === opt
+                                        }
+                                        onChange={() =>
+                                            skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(
+                                                opt
+                                            )
+                                        }
+                                    />
+                                ))}
                             </HorisontalFamilieRadioGruppe>
                         )}
                     </Row>

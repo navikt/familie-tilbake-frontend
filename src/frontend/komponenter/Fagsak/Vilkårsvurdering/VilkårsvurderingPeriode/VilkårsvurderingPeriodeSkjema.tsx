@@ -4,117 +4,266 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
+import { Knapp } from 'nav-frontend-knapper';
 import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst, Undertekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
 import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
+import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
-import { useVilkårsvurderingPeriode } from '../../../../context/VilkårsvurderingPeriodeContext';
 import {
-    Foreldelsevurdering,
+    SærligeGrunner,
     Vilkårsresultat,
     vilkårsresultater,
     vilkårsresultatTyper,
 } from '../../../../kodeverk';
-import { Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
+import { IBehandling } from '../../../../typer/behandling';
+import { formatCurrencyNoKr, formatterDatostring, isEmpty } from '../../../../utils';
+import {
+    Navigering,
+    PeriodeKontroll,
+    Spacer20,
+    Spacer8,
+} from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
+import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
+import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
-import AktsomhetGodTro from './GodTroSkjema';
+import GodTroSkjema from './GodTroSkjema';
+import SplittPeriode from './SplittPeriode/SplittPeriode';
 import TilbakekrevingAktivitetTabell from './TilbakekrevingAktivitetTabell';
+import {
+    ANDELER,
+    EGENDEFINERT,
+    finnJaNeiOption,
+    OptionNEI,
+    useVilkårsvurderingPeriodeSkjema,
+    VilkårsvurderingSkjemaDefinisjon,
+} from './VilkårsvurderingPeriodeSkjemaContext';
 
 const StyledContainer = styled.div`
     border: 1px solid ${navFarger.navGra60};
     padding: 10px;
 `;
 
+const settSkjemadataFraPeriode = (
+    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>,
+    periode: VilkårsvurderingPeriodeSkjemaData,
+    kanIlleggeRenter: boolean
+) => {
+    skjema.felter.vilkårsresultatBegrunnelse.onChange(periode?.begrunnelse || '');
+    skjema.felter.vilkårsresultatvurdering.onChange(
+        periode?.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat || ''
+    );
+    const erGodTro = periode.vilkårsvurderingsresultatInfo?.godTro;
+    skjema.felter.aktsomhetBegrunnelse.onChange(
+        (erGodTro
+            ? periode.vilkårsvurderingsresultatInfo?.godTro?.begrunnelse
+            : periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.begrunnelse) || ''
+    );
+    skjema.felter.erBeløpetIBehold.onChange(
+        finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.godTro?.beløpErIBehold) || ''
+    );
+    skjema.felter.godTroTilbakekrevesBeløp.onChange(
+        periode?.vilkårsvurderingsresultatInfo?.godTro?.beløpTilbakekreves?.toString() || ''
+    );
+    skjema.felter.aktsomhetVurdering.onChange(
+        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet || ''
+    );
+    skjema.felter.forstoIlleggeRenter.onChange(
+        !kanIlleggeRenter
+            ? OptionNEI
+            : finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.ileggRenter) || ''
+    );
+    skjema.felter.tilbakekrevSmåbeløp.onChange(
+        finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp) ||
+            ''
+    );
+    skjema.felter.særligeGrunnerBegrunnelse.onChange(
+        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunnerBegrunnelse || ''
+    );
+    skjema.felter.særligeGrunner.onChange(
+        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunner?.map(
+            dto => dto.særligGrunn
+        ) || []
+    );
+    const annetSærligGrunn = periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunner?.find(
+        dto => dto.særligGrunn === SærligeGrunner.ANNET
+    );
+    skjema.felter.særligeGrunnerAnnetBegrunnelse.onChange(annetSærligGrunn?.begrunnelse || '');
+
+    skjema.felter.harMerEnnEnAktivitet.onChange(
+        !!periode?.aktiviteter && periode.aktiviteter.length > 1
+    );
+    skjema.felter.harGrunnerTilReduksjon.onChange(
+        finnJaNeiOption(
+            periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunnerTilReduksjon
+        ) || ''
+    );
+
+    const andelTilbakekreves =
+        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.andelTilbakekreves?.toString() || '';
+    const erEgendefinert = !isEmpty(andelTilbakekreves) && !ANDELER.includes(andelTilbakekreves);
+    skjema.felter.uaktsomAndelTilbakekreves.onChange(
+        erEgendefinert ? EGENDEFINERT : andelTilbakekreves
+    );
+    skjema.felter.uaktsomAndelTilbakekrevesManuelt.onChange(
+        erEgendefinert ? andelTilbakekreves : ''
+    );
+
+    skjema.felter.uaktsomTilbakekrevesBeløp.onChange(
+        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.beløpTilbakekreves?.toString() || ''
+    );
+    skjema.felter.grovtUaktsomIlleggeRenter.onChange(
+        !kanIlleggeRenter
+            ? OptionNEI
+            : finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.ileggRenter) || ''
+    );
+};
 interface IProps {
+    behandling: IBehandling;
+    periode: VilkårsvurderingPeriodeSkjemaData;
+    behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
 }
 
 const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
+    behandling,
+    periode,
+    behandletPerioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
 }) => {
     const {
-        vilkårsvurderingPeriode,
-        vilkårsresultat,
-        oppdaterVilkårsresultat,
-        aktsomhetsvurdering,
-        oppdaterAktsomhetsvurdering,
-    } = useVilkårsvurderingPeriode();
+        kanIlleggeRenter,
+        oppdaterPeriode,
+        onSplitPeriode,
+        lukkValgtPeriode,
+    } = useFeilutbetalingVilkårsvurdering();
+    const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
+        (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
+            oppdaterPeriode(oppdatertPeriode);
+        }
+    );
 
-    const onChangeVilkårsresultat = (type: Vilkårsresultat) => {
-        oppdaterVilkårsresultat({ vilkårsresultat: type });
+    React.useEffect(() => {
+        skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
+        skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
+        settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
+    }, [periode]);
+
+    const onKopierPeriode = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const valgtPeriodeIndex = event.target.value;
+        if (valgtPeriodeIndex !== '-') {
+            const per = behandletPerioder.find(per => per.index === valgtPeriodeIndex);
+            if (per) {
+                settSkjemadataFraPeriode(skjema, per, kanIlleggeRenter);
+            }
+        }
     };
 
-    const onChangeBegrunnelse = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const nyVerdi = e.target.value;
-        oppdaterVilkårsresultat({ begrunnelse: nyVerdi });
-    };
+    const vilkårsresultatVurderingGjort = skjema.felter.vilkårsresultatvurdering.verdi !== '';
+    const erGodTro = skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GOD_TRO;
 
-    const onChangeAktsomhetBegrunnelse = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const nyVerdi = e.target.value;
-        oppdaterAktsomhetsvurdering({ begrunnelse: nyVerdi });
-    };
+    const ugyldigVilkårsresultatValgt =
+        skjema.visFeilmeldinger &&
+        skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.FEIL;
 
-    const onChange = () => {
-        // TODO
-    };
-
-    const erForeldet =
-        vilkårsvurderingPeriode?.foreldelse.foreldelseVurderingType ===
-        Foreldelsevurdering.FORELDET;
-
-    return vilkårsvurderingPeriode ? (
+    return periode ? (
         <StyledContainer>
-            <Row>
-                <Column xs="8">
-                    <Undertittel>Detaljer for valgt periode</Undertittel>
-                    <PeriodeOppsummering
-                        fom={vilkårsvurderingPeriode.periode.fom}
-                        tom={vilkårsvurderingPeriode.periode.tom}
-                        beløp={vilkårsvurderingPeriode.feilutbetaltBeløp}
-                        hendelsetype={vilkårsvurderingPeriode.hendelseType}
-                    />
-                </Column>
-            </Row>
-            <Spacer20 />
-            <TilbakekrevingAktivitetTabell ytelser={vilkårsvurderingPeriode.ytelser} />
-            <Spacer20 />
-            {!erLesevisning && !erForeldet && (
-                <>
-                    <Row>
-                        <Column md="10">
-                            <Undertekst>Kopier vilkårsvurdering fra</Undertekst>
-                            <FamilieSelect
-                                name="perioderForKopi"
-                                onChange={onChange}
-                                bredde="m"
-                                label=""
-                                erLesevisning={erLesevisning}
-                            >
-                                <option>-</option>
-                            </FamilieSelect>
+            <PeriodeKontroll>
+                <Row>
+                    <Column md="7">
+                        <Undertittel>Detaljer for valgt periode</Undertittel>
+                    </Column>
+                    {!erLesevisning && (
+                        <Column md="5">
+                            <SplittPeriode
+                                behandling={behandling}
+                                periode={periode}
+                                onBekreft={onSplitPeriode}
+                            />
                         </Column>
-                    </Row>
-                    <Spacer20 />
-                </>
-            )}
+                    )}
+                </Row>
+                <Row>
+                    <Column md="12">
+                        <PeriodeOppsummering
+                            fom={periode.periode.fom}
+                            tom={periode.periode.tom}
+                            beløp={periode.feilutbetaltBeløp}
+                            hendelsetype={periode.hendelsestype}
+                        />
+                    </Column>
+                </Row>
+            </PeriodeKontroll>
+            <Spacer20 />
+            {periode.reduserteBeløper?.map((beløp, index) => (
+                <React.Fragment key={`rb_${index}_${beløp.belop}`}>
+                    <Normaltekst>
+                        {beløp.trekk ? (
+                            <>
+                                Feilutbetalt beløp er redusert med{' '}
+                                <b>kr. {formatCurrencyNoKr(beløp.belop)},-</b> på grunn av trekk.
+                            </>
+                        ) : (
+                            <>
+                                Feilutbetalt beløp er redusert med{' '}
+                                <b>kr. {formatCurrencyNoKr(beløp.belop)},-</b> på grunn av
+                                etterbetaling innen samme periode.
+                            </>
+                        )}
+                    </Normaltekst>
+                    <Spacer8 />
+                </React.Fragment>
+            ))}
+            <TilbakekrevingAktivitetTabell ytelser={periode.aktiviteter} />
+            <Spacer20 />
+            {!erLesevisning &&
+                !periode.foreldet &&
+                behandletPerioder &&
+                behandletPerioder.length > 0 && (
+                    <>
+                        <Row>
+                            <Column md="10">
+                                <Undertekst>Kopier vilkårsvurdering fra</Undertekst>
+                                <FamilieSelect
+                                    name="perioderForKopi"
+                                    onChange={event => onKopierPeriode(event)}
+                                    bredde="m"
+                                    label=""
+                                    erLesevisning={erLesevisning}
+                                >
+                                    <option>-</option>
+                                    {behandletPerioder.map(per => (
+                                        <option
+                                            key={`${per.periode.fom}_${per.periode.tom}`}
+                                            value={per.index}
+                                        >
+                                            {`${formatterDatostring(
+                                                per.periode.fom
+                                            )} - ${formatterDatostring(per.periode.tom)}`}
+                                        </option>
+                                    ))}
+                                </FamilieSelect>
+                            </Column>
+                        </Row>
+                        <Spacer20 />
+                    </>
+                )}
             <Row>
-                <Column md={erForeldet ? '12' : '6'}>
+                <Column md={periode.foreldet ? '12' : '6'}>
                     <Row>
-                        {erForeldet ? (
+                        {periode.foreldet ? (
                             <Column md="12">
                                 <Row>
                                     <Column md="6">
                                         <UndertekstBold>Varsel</UndertekstBold>
                                         <Spacer8 />
                                         <Normaltekst>
-                                            {vilkårsvurderingPeriode.foreldelse?.begrunnelse
-                                                ? vilkårsvurderingPeriode.foreldelse.begrunnelse
-                                                : ''}
+                                            {periode.begrunnelse ? periode.begrunnelse : ''}
                                         </Normaltekst>
                                     </Column>
                                     <Column md="6">
@@ -131,19 +280,22 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                 <Undertittel>Vilkårene for tilbakekreving</Undertittel>
                                 <Spacer8 />
                                 <FamilieTilbakeTextArea
-                                    name="begrunnelse"
+                                    {...skjema.felter.vilkårsresultatBegrunnelse.hentNavInputProps(
+                                        skjema.visFeilmeldinger
+                                    )}
+                                    name="vilkårsresultatBegrunnelse"
                                     label={'Vilkårene for tilbakekreving'}
                                     placeholder={
                                         'Hvilke hendelser har ført til feilutbetalingen og vurder valg av hjemmel'
                                     }
-                                    erLesevisning={erLesevisning}
-                                    value={
-                                        vilkårsresultat?.begrunnelse
-                                            ? vilkårsresultat.begrunnelse
-                                            : ''
-                                    }
-                                    onChange={event => onChangeBegrunnelse(event)}
                                     maxLength={1500}
+                                    erLesevisning={erLesevisning}
+                                    value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
+                                    onChange={event =>
+                                        skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
+                                            event.target.value
+                                        )
+                                    }
                                 />
                                 <Spacer8 />
                                 <FamilieRadioGruppe
@@ -151,8 +303,17 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     erLesevisning={erLesevisning}
                                     legend={'Er vilkårene for tilbakekreving oppfylt?'}
                                     verdi={
-                                        vilkårsresultat?.vilkårsresultat
-                                            ? vilkårsresultater[vilkårsresultat.vilkårsresultat]
+                                        periode.vilkårsvurderingsresultatInfo
+                                            ?.vilkårsvurderingsresultat
+                                            ? vilkårsresultater[
+                                                  periode.vilkårsvurderingsresultatInfo
+                                                      ?.vilkårsvurderingsresultat
+                                              ]
+                                            : ''
+                                    }
+                                    feil={
+                                        ugyldigVilkårsresultatValgt
+                                            ? skjema.felter.vilkårsresultatvurdering.feilmelding?.toString()
                                             : ''
                                     }
                                 >
@@ -162,8 +323,15 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                             name="valgtVilkarResultatType"
                                             label={vilkårsresultater[type]}
                                             value={type}
-                                            checked={vilkårsresultat?.vilkårsresultat === type}
-                                            onChange={() => onChangeVilkårsresultat(type)}
+                                            checked={
+                                                skjema.felter.vilkårsresultatvurdering.verdi ===
+                                                type
+                                            }
+                                            onChange={() =>
+                                                skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(
+                                                    type
+                                                )
+                                            }
                                         />
                                     ))}
                                 </FamilieRadioGruppe>
@@ -174,39 +342,46 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                 <Column xs="12" md="6">
                     <Row>
                         <Column md="10">
-                            {vilkårsresultat?.vilkårsresultat && (
+                            {vilkårsresultatVurderingGjort && (
                                 <>
-                                    {vilkårsresultat.vilkårsresultat === Vilkårsresultat.GOD_TRO ? (
+                                    {erGodTro ? (
                                         <Undertittel>Beløpet mottatt i god tro</Undertittel>
                                     ) : (
                                         <Undertittel>Aktsomhet</Undertittel>
                                     )}
                                     <Spacer8 />
                                     <FamilieTilbakeTextArea
+                                        {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(
+                                            skjema.visFeilmeldinger
+                                        )}
                                         name="vurderingBegrunnelse"
                                         label={
-                                            vilkårsresultat.vilkårsresultat ===
-                                            Vilkårsresultat.GOD_TRO
+                                            erGodTro
                                                 ? 'Begrunn hvorfor mottaker er i god tro'
                                                 : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
                                         }
                                         erLesevisning={erLesevisning}
                                         value={
-                                            aktsomhetsvurdering?.begrunnelse
-                                                ? aktsomhetsvurdering.begrunnelse
+                                            skjema.felter.aktsomhetBegrunnelse
+                                                ? skjema.felter.aktsomhetBegrunnelse.verdi
                                                 : ''
                                         }
-                                        onChange={event => onChangeAktsomhetBegrunnelse(event)}
+                                        onChange={event =>
+                                            skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(
+                                                event.target.value
+                                            )
+                                        }
                                         maxLength={1500}
                                     />
                                     <Spacer8 />
-                                    {vilkårsresultat.vilkårsresultat === Vilkårsresultat.GOD_TRO ? (
-                                        <AktsomhetGodTro erLesevisning={erLesevisning} />
+                                    {erGodTro ? (
+                                        <GodTroSkjema
+                                            skjema={skjema}
+                                            erLesevisning={erLesevisning}
+                                        />
                                     ) : (
                                         <AktsomhetsvurderingSkjema
-                                            erTotalbeløpUnder4Rettsgebyr={
-                                                erTotalbeløpUnder4Rettsgebyr
-                                            }
+                                            skjema={skjema}
                                             erLesevisning={erLesevisning}
                                         />
                                     )}
@@ -216,6 +391,33 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     </Row>
                 </Column>
             </Row>
+            <Spacer20 />
+            {!erLesevisning && (
+                <>
+                    <Row>
+                        <Column xs="12" md="11">
+                            <Navigering>
+                                <div>
+                                    {!periode.foreldet && (
+                                        <Knapp
+                                            type={'hoved'}
+                                            mini={true}
+                                            onClick={() => onBekreft(periode)}
+                                        >
+                                            Bekreft
+                                        </Knapp>
+                                    )}
+                                </div>
+                                <div>
+                                    <Knapp mini={true} onClick={lukkValgtPeriode}>
+                                        Lukk
+                                    </Knapp>
+                                </div>
+                            </Navigering>
+                        </Column>
+                    </Row>
+                </>
+            )}
         </StyledContainer>
     ) : null;
 };

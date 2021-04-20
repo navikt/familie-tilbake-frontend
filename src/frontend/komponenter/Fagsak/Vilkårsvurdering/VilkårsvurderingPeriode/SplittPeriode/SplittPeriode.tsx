@@ -16,7 +16,7 @@ import { IBeregnSplittetPeriodeRespons, Periode } from '../../../../../typer/fei
 import { flyttDatoISODateStr, getEndOfMonthISODateStr } from '../../../../../utils';
 import Image from '../../../../Felleskomponenter/Image/Image';
 import DelOppPeriode from '../../../../Felleskomponenter/Modal/DelOppPeriode';
-import { ForeldelsePeriodeSkjemeData } from '../../typer/feilutbetalingForeldelse';
+import { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
 
 const InlineUndertekst = styled(Undertekst)`
     display: inline-block;
@@ -30,7 +30,7 @@ const StyledContainer = styled.div`
     }
 `;
 
-const konverterPeriode = (periode: ForeldelsePeriodeSkjemeData): TidslinjePeriode => {
+const konverterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): TidslinjePeriode => {
     return {
         tom: new Date(periode.periode.tom),
         fom: new Date(periode.periode.fom),
@@ -40,11 +40,11 @@ const konverterPeriode = (periode: ForeldelsePeriodeSkjemeData): TidslinjePeriod
 };
 
 interface IProps {
-    periode: ForeldelsePeriodeSkjemeData;
+    periode: VilkårsvurderingPeriodeSkjemaData;
     behandling: IBehandling;
     onBekreft: (
-        periode: ForeldelsePeriodeSkjemeData,
-        nyePerioder: ForeldelsePeriodeSkjemeData[]
+        periode: VilkårsvurderingPeriodeSkjemaData,
+        nyePerioder: VilkårsvurderingPeriodeSkjemaData[]
     ) => void;
 }
 
@@ -52,7 +52,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const [splittDato, settSplittDato] = React.useState<string>(periode.periode.tom);
     const [splittetPerioder, settSplittetPerioder] = React.useState<
-        ForeldelsePeriodeSkjemeData[]
+        VilkårsvurderingPeriodeSkjemaData[]
     >();
     const [tidslinjeRader, settTidslinjeRader] = React.useState<TidslinjePeriode[][]>();
     const { request } = useHttp();
@@ -67,7 +67,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
         const månedsslutt = getEndOfMonthISODateStr(nyVerdi);
         if (nyVerdi && månedsslutt) {
             const per: Periode = periode.periode;
-            const nyePerioder: ForeldelsePeriodeSkjemeData[] = [
+            const nyePerioder: VilkårsvurderingPeriodeSkjemaData[] = [
                 {
                     ...periode,
                     index: `${periode.index}_1`,
@@ -108,7 +108,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                 .then((response: Ressurs<IBeregnSplittetPeriodeRespons>) => {
                     if (response.status === RessursStatus.SUKSESS) {
                         const beregnetperioder = response.data.beregnetPerioder;
-                        const beregnetNyePerioder: ForeldelsePeriodeSkjemeData[] = [
+                        const beregnetNyePerioder: VilkårsvurderingPeriodeSkjemaData[] = [
                             {
                                 ...splittetPerioder[0],
                                 feilutbetaltBeløp: beregnetperioder[0].feilutbetaltBeløp,
