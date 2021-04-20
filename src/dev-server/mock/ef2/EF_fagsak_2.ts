@@ -26,6 +26,12 @@ const behandlinger_2: IFagsakBehandling[] = [
         type: Behandlingstype.REVURDERING_TILBAKEKREVING,
         status: Behandlingstatus.OPPRETTET,
     },
+    {
+        behandlingId: 'ef5',
+        eksternBrukId: '4',
+        type: Behandlingstype.REVURDERING_TILBAKEKREVING,
+        status: Behandlingstatus.OPPRETTET,
+    },
 ];
 
 const fagsak_ef2: IFagsak = {
@@ -74,4 +80,38 @@ const ef_behandling_4: IBehandling = {
     ],
 };
 
-export { fagsak_ef2, ef_behandling_4 };
+const ef_behandling_5: IBehandling = {
+    behandlingId: 'ef5',
+    eksternBrukId: '4',
+    kanHenleggeBehandling: true,
+    erBehandlingPåVent: false,
+    harVerge: true,
+    type: Behandlingstype.TILBAKEKREVING,
+    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
+    status: Behandlingstatus.UTREDES,
+    opprettetDato: '2020-12-02',
+    behandlingsstegsinfo: [
+        {
+            behandlingssteg: Behandlingssteg.VARSEL,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.GRUNNLAG,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FAKTA,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FORELDELSE,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.VILKÅRSVURDERING,
+            behandlingsstegstatus: Behandlingsstegstatus.KLAR,
+        },
+    ],
+};
+
+export { fagsak_ef2, ef_behandling_4, ef_behandling_5 };
