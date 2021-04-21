@@ -14,7 +14,7 @@ import {
 } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Ytelsetype } from '../../../kodeverk';
+import { Aktsomhet, Ytelsetype } from '../../../kodeverk';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import {
@@ -63,6 +63,7 @@ const [
     >();
     const [skjemaData, settSkjemaData] = React.useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
+    const [erAutoutført, settErAutoutført] = React.useState<boolean>();
     const [valgtPeriode, settValgtPeriode] = React.useState<VilkårsvurderingPeriodeSkjemaData>();
     const [kanIlleggeRenter, settKanIlleggeRenter] = React.useState<boolean>(true);
     const [behandletPerioder, settBehandletPerioder] = React.useState<
@@ -72,13 +73,19 @@ const [
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [valideringsfeil, settValideringsfeil] = React.useState<boolean>(false);
     const [valideringsFeilmelding, settValideringsFeilmelding] = React.useState<string>();
-    const { erStegBehandlet, visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
+    const {
+        erStegBehandlet,
+        erStegAutoutført,
+        visVenteModal,
+        hentBehandlingMedBehandlingId,
+    } = useBehandling();
     const { request } = useHttp();
     const history = useHistory();
 
     React.useEffect(() => {
         if (visVenteModal === false) {
             settStegErBehandlet(erStegBehandlet(Behandlingssteg.VILKÅRSVURDERING));
+            settErAutoutført(erStegAutoutført(Behandlingssteg.VILKÅRSVURDERING));
             hentFeilutbetalingVilkårsvurdering();
             settKanIlleggeRenter(fagsak.ytelsestype !== Ytelsetype.BARNETRYGD);
         }
@@ -169,7 +176,10 @@ const [
         if (erTotalbeløpUnder4Rettsgebyr(feilutbetalingVilkårsvurdering.data)) {
             const uforeldetPerioder = skjemaData.filter(per => !per.foreldet);
             const ikkeTilbakkrevSmåbeløpPerioder = uforeldetPerioder.filter(
-                per => !per.vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
+                per =>
+                    per.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet ===
+                        Aktsomhet.SIMPEL_UAKTSOMHET &&
+                    !per.vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
             );
             if (
                 ikkeTilbakkrevSmåbeløpPerioder.length > 0 &&
@@ -264,6 +274,7 @@ const [
     return {
         feilutbetalingVilkårsvurdering,
         stegErBehandlet,
+        erAutoutført,
         kanIlleggeRenter,
         skjemaData,
         oppdaterPeriode,

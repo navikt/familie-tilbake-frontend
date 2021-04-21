@@ -35,7 +35,9 @@ interface IProps {
 const Steginformasjon: React.FC<IProps> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
         <UbehandletSteg>
-            <AdvarselIkon />
+            <span>
+                <AdvarselIkon />
+            </span>
             <StyledNormaltekst>{infotekst}</StyledNormaltekst>
         </UbehandletSteg>
     ) : (

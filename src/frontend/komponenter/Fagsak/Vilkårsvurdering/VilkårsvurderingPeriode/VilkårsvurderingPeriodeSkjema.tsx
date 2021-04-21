@@ -178,7 +178,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     <Column md="7">
                         <Undertittel>Detaljer for valgt periode</Undertittel>
                     </Column>
-                    {!erLesevisning && (
+                    {!erLesevisning && !periode.foreldet && (
                         <Column md="5">
                             <SplittPeriode
                                 behandling={behandling}

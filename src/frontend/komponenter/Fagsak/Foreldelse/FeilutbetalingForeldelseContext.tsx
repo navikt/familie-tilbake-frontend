@@ -14,7 +14,7 @@ import {
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
-import { Behandlingssteg, Behandlingsstegstatus, IBehandling } from '../../../typer/behandling';
+import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
@@ -40,20 +40,19 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         const [valgtPeriode, settValgtPeriode] = React.useState<ForeldelsePeriodeSkjemeData>();
         const [allePerioderBehandlet, settAllePerioderBehandlet] = React.useState<boolean>(false);
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
-        const { erStegBehandlet, visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
+        const {
+            erStegBehandlet,
+            erStegAutoutført,
+            visVenteModal,
+            hentBehandlingMedBehandlingId,
+        } = useBehandling();
         const { request } = useHttp();
         const history = useHistory();
 
         React.useEffect(() => {
             if (visVenteModal === false) {
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.FORELDELSE));
-
-                const foreldelseSteg = behandling.behandlingsstegsinfo?.find(
-                    stegInfo => stegInfo.behandlingssteg === Behandlingssteg.FORELDELSE
-                );
-                const autoutført =
-                    foreldelseSteg &&
-                    foreldelseSteg.behandlingsstegstatus === Behandlingsstegstatus.AUTOUTFØRT;
+                const autoutført = erStegAutoutført(Behandlingssteg.FORELDELSE);
                 settErAutoutført(autoutført);
                 if (!autoutført) {
                     hentFeilutbetalingForeldelse();

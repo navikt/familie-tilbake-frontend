@@ -677,6 +677,21 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         return false;
     };
 
+    const erStegAutoutført = (steg: Behandlingssteg): boolean => {
+        console.log(`Er steg autoutført?`, steg);
+        if (behandling?.status === RessursStatus.SUKSESS) {
+            const behandlingSteg = behandling.data.behandlingsstegsinfo?.find(
+                stegInfo => stegInfo.behandlingssteg === steg
+            );
+            console.log('Behandlingsteginfo: ', behandlingSteg);
+            return (
+                behandlingSteg &&
+                behandlingSteg.behandlingsstegstatus === Behandlingsstegstatus.AUTOUTFØRT
+            );
+        }
+        return false;
+    };
+
     const utledBehandlingId = () => {
         if (
             behandling?.status === RessursStatus.SUKSESS &&
@@ -719,6 +734,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         visVenteModal,
         settVisVenteModal,
         erStegBehandlet,
+        erStegAutoutført,
         harKravgrunnlag,
         hentBeregningsresultat,
         hentVedtaksbrev,

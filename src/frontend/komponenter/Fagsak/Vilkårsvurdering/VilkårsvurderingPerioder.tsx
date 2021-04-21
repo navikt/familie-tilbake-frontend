@@ -23,6 +23,7 @@ const StyledAlertStripe = styled(AlertStripe)`
     background-color: ${navFarger.navOransjeLighten80};
 
     .alertstripe__tekst {
+        color: ${navFarger.navMorkGra};
         max-width: fit-content;
     }
 `;

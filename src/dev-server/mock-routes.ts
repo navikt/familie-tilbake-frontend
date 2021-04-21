@@ -230,45 +230,48 @@ export const setupRouter = (router: Router) => {
         }
     );
 
-    router.get('/familie-tilbake/api/fagsak/v1', (req: Request, res: Response) => {
-        const { fagsystem, fagsak: eksternFagsakId } = req.query;
-        switch (eksternFagsakId) {
-            case 'ba2':
-                res.send(byggSuksessRessurs(fagsak_ba2));
-                return;
-            case 'ba3':
-                res.send(byggSuksessRessurs(fagsak_ba3));
-                return;
-            case 'ba4':
-                res.send(byggSuksessRessurs(fagsak_ba4));
-                return;
-            case 'ba5':
-                res.send(byggSuksessRessurs(fagsak_ba5));
-                return;
-            case 'ef2':
-                res.send(byggSuksessRessurs(fagsak_ef2));
-                return;
-            case 'ks2':
-                res.send(byggSuksessRessurs(fagsak_ks2));
-                return;
-            case 'ba_it':
-            case 'ef_it':
-            case 'ks_it':
-                res.send({
-                    status: RessursStatus.IKKE_TILGANG,
-                });
-                return;
-            default:
-                res.send(
-                    byggFeiletRessurs(
-                        'Ingen fagsak fra fagsystemet ' +
-                            fagsystem +
-                            ' og med id ' +
-                            eksternFagsakId
-                    )
-                );
+    router.get(
+        '/familie-tilbake/api/fagsystem/:fagsystem/fagsak/:eksternFagsakId/v1',
+        (req: Request, res: Response) => {
+            const { fagsystem, eksternFagsakId } = req.params;
+            switch (eksternFagsakId) {
+                case 'ba2':
+                    res.send(byggSuksessRessurs(fagsak_ba2));
+                    return;
+                case 'ba3':
+                    res.send(byggSuksessRessurs(fagsak_ba3));
+                    return;
+                case 'ba4':
+                    res.send(byggSuksessRessurs(fagsak_ba4));
+                    return;
+                case 'ba5':
+                    res.send(byggSuksessRessurs(fagsak_ba5));
+                    return;
+                case 'ef2':
+                    res.send(byggSuksessRessurs(fagsak_ef2));
+                    return;
+                case 'ks2':
+                    res.send(byggSuksessRessurs(fagsak_ks2));
+                    return;
+                case 'ba_it':
+                case 'ef_it':
+                case 'ks_it':
+                    res.send({
+                        status: RessursStatus.IKKE_TILGANG,
+                    });
+                    return;
+                default:
+                    res.send(
+                        byggFeiletRessurs(
+                            'Ingen fagsak fra fagsystemet ' +
+                                fagsystem +
+                                ' og med id ' +
+                                eksternFagsakId
+                        )
+                    );
+            }
         }
-    });
+    );
 
     router.get(
         '/familie-tilbake/api/behandling/v1/:behandlingId',
@@ -637,6 +640,24 @@ export const setupRouter = (router: Router) => {
                         )
                     );
             }
+        }
+    );
+
+    router.get(
+        '/familie-tilbake/api/dokument/forhandsvis-vedtaksbrevtekst/:behandlingId',
+        (req: Request, res: Response) => {
+            const { behandlingId } = req.params;
+
+            res.send(byggFeiletRessurs(`Feiler for ${behandlingId}!!!!`));
+        }
+    );
+
+    router.get(
+        '/familie-tilbake/api/behandling/:behandlingId/beregn/resultat/v1',
+        (req: Request, res: Response) => {
+            const { behandlingId } = req.params;
+
+            res.send(byggFeiletRessurs(`Feiler for ${behandlingId}!!!!`));
         }
     );
 

@@ -35,6 +35,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
     const {
         feilutbetalingVilkårsvurdering,
         stegErBehandlet,
+        erAutoutført,
         skjemaData,
     } = useFeilutbetalingVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
@@ -50,11 +51,19 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
                 <StyledVilkårsvurdering>
                     <Undertittel>Tilbakekreving</Undertittel>
                     <Spacer20 />
-                    {(!erLesevisning || stegErBehandlet) && (
+                    {erAutoutført && (
+                        <>
+                            <Normaltekst>
+                                Automatisk vurdert. Alle perioder er foreldet.
+                            </Normaltekst>
+                            <Spacer20 />
+                        </>
+                    )}
+                    {!erAutoutført && (!erLesevisning || stegErBehandlet) && (
                         <>
                             <Steginformasjon
                                 behandletSteg={stegErBehandlet}
-                                infotekst={`Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering`}
+                                infotekst={`Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering.`}
                             />
                             <Spacer20 />
                         </>
