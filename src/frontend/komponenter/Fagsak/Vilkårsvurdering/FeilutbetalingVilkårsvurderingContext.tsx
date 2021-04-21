@@ -21,6 +21,7 @@ import {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
+import { sorterFeilutbetaltePerioder } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import {
     PeriodeVilkårsvurderingStegPayload,
@@ -94,7 +95,8 @@ const [
     React.useEffect(() => {
         if (feilutbetalingVilkårsvurdering?.status === RessursStatus.SUKSESS) {
             const perioder = feilutbetalingVilkårsvurdering.data.perioder;
-            const skjemaPerioder = perioder.map((fuFP, index) => {
+            const sortertePerioder = sorterFeilutbetaltePerioder(perioder);
+            const skjemaPerioder = sortertePerioder.map((fuFP, index) => {
                 const skjemaPeriode: VilkårsvurderingPeriodeSkjemaData = {
                     index: `idx_fpsd_${index}`,
                     ...fuFP,

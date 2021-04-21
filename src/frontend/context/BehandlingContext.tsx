@@ -678,12 +678,10 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     };
 
     const erStegAutoutført = (steg: Behandlingssteg): boolean => {
-        console.log(`Er steg autoutført?`, steg);
         if (behandling?.status === RessursStatus.SUKSESS) {
             const behandlingSteg = behandling.data.behandlingsstegsinfo?.find(
                 stegInfo => stegInfo.behandlingssteg === steg
             );
-            console.log('Behandlingsteginfo: ', behandlingSteg);
             return (
                 behandlingSteg &&
                 behandlingSteg.behandlingsstegstatus === Behandlingsstegstatus.AUTOUTFØRT

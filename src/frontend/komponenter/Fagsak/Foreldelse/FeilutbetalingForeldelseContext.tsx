@@ -17,6 +17,7 @@ import { Foreldelsevurdering } from '../../../kodeverk';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
+import { sorterFeilutbetaltePerioder } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import {
     ForeldelsePeriodeSkjemeData,
@@ -63,7 +64,8 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         React.useEffect(() => {
             if (feilutbetalingForeldelse?.status === RessursStatus.SUKSESS) {
                 const foreldetPerioder = feilutbetalingForeldelse.data.foreldetPerioder;
-                const skjemaPerioder = foreldetPerioder.map((fuFP, index) => {
+                const sortertePerioder = sorterFeilutbetaltePerioder(foreldetPerioder);
+                const skjemaPerioder = sortertePerioder.map((fuFP, index) => {
                     const skjemaPeriode: ForeldelsePeriodeSkjemeData = {
                         index: `idx_fpsd_${index}`,
                         feilutbetaltBeløp: fuFP.feilutbetaltBeløp,
