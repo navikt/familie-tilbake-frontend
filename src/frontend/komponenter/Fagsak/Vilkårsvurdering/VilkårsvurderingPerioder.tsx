@@ -93,6 +93,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         valgtPeriode,
         settValgtPeriode,
         stegErBehandlet,
+        erAutoutført,
         gåTilForrige,
         gåTilNeste,
         behandletPerioder,
@@ -159,7 +160,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                 <Column md="12">
                     <Navigering>
                         <div>
-                            {stegErBehandlet && erLesevisning ? (
+                            {erAutoutført || (stegErBehandlet && erLesevisning) ? (
                                 <Knapp type={'hoved'} mini={true} onClick={gåTilNeste}>
                                     Neste
                                 </Knapp>

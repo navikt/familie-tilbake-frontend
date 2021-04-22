@@ -29,11 +29,6 @@ import {
     VilkårsvurderingPeriodeSkjemaData,
 } from './typer/feilutbetalingVilkårsvurdering';
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
-
 const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData) => {
     return (
         periode.foreldet ||
@@ -54,6 +49,11 @@ export const erTotalbeløpUnder4Rettsgebyr = (vurdering: IFeilutbetalingVilkårs
     const totalbeløp = kalkulerTotalBeløp(vurdering?.perioder);
     return totalbeløp && vurdering?.rettsgebyr ? totalbeløp < vurdering?.rettsgebyr * 4 : false;
 };
+
+interface IProps {
+    behandling: IBehandling;
+    fagsak: IFagsak;
+}
 
 const [
     FeilutbetalingVilkårsvurderingProvider,

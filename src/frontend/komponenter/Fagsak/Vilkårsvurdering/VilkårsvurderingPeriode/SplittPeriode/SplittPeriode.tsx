@@ -75,6 +75,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                         fom: per.fom,
                         tom: månedsslutt,
                     },
+                    vilkårsvurderingsresultatInfo: undefined,
                     erSplittet: true,
                 },
                 {
@@ -84,6 +85,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                         fom: flyttDatoISODateStr(månedsslutt, { days: 1 }),
                         tom: per.tom,
                     },
+                    vilkårsvurderingsresultatInfo: undefined,
                     erSplittet: true,
                 },
             ];

@@ -39,7 +39,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
         skjemaData,
     } = useFeilutbetalingVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
-    const erLesevisning = !!behandlingILesemodus;
+    const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
     switch (feilutbetalingVilkårsvurdering?.status) {
         case RessursStatus.SUKSESS: {

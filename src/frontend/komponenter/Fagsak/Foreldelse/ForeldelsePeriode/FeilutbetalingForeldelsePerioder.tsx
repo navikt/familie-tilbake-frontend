@@ -14,7 +14,7 @@ import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
-import ForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
+import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
 
 const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean) => {
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
@@ -61,7 +61,11 @@ interface IProps {
     erLesevisning: boolean;
 }
 
-const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisning }) => {
+const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
+    behandling,
+    perioder,
+    erLesevisning,
+}) => {
     const [tidslinjeRader, settTidslinjeRader] = React.useState<Periode[][]>();
     const [disableBekreft, settDisableBekreft] = React.useState<boolean>(true);
     const {
@@ -109,7 +113,7 @@ const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisn
                     <Spacer20 />
                     <Row>
                         <Column xs="12">
-                            <ForeldelsePeriodeSkjema
+                            <FeilutbetalingForeldelsePeriodeSkjema
                                 behandling={behandling}
                                 periode={valgtPeriode}
                                 erLesevisning={erLesevisning}
@@ -152,4 +156,4 @@ const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisn
     ) : null;
 };
 
-export default ForeldelsePerioder;
+export default FeilutbetalingForeldelsePerioder;

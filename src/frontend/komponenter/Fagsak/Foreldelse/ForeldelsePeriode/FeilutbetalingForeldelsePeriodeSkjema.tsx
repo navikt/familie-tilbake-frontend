@@ -45,7 +45,11 @@ interface IProps {
     erLesevisning: boolean;
 }
 
-const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLesevisning }) => {
+const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
+    behandling,
+    periode,
+    erLesevisning,
+}) => {
     const { oppdaterPeriode, onSplitPeriode, lukkValgtPeriode } = useFeilutbetalingForeldelse();
     const {
         skjema,
@@ -232,4 +236,4 @@ const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLese
     );
 };
 
-export default ForeldelsePeriodeSkjema;
+export default FeilutbetalingForeldelsePeriodeSkjema;
