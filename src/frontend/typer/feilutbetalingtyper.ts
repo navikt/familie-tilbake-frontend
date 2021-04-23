@@ -60,25 +60,33 @@ export interface IFeilutbetalingForeldelse {
     foreldetPerioder: ForeldelsePeriode[];
 }
 
-export type Aktsomhetsvurdering = {
+export type GodTro = {
+    begrunnelse: string;
+    beløpErIBehold: boolean;
+    beløpTilbakekreves?: number;
+};
+
+export type SærligeGrunnerDto = {
+    særligGrunn: SærligeGrunner;
     begrunnelse?: string;
-    tilbakekrevesBelop?: number;
-    aktsomhet?: Aktsomhet;
-    særligeGrunner?: SærligeGrunner[];
-    harGrunnerTilReduksjon?: boolean;
+};
+
+export type Aktsomhetsvurdering = {
+    begrunnelse: string;
+    aktsomhet: Aktsomhet;
     andelTilbakekreves?: number;
     ileggRenter?: boolean;
-    tilbakekrevSelvOmBeløpErUnder4Rettsgebyr?: boolean;
-    annetBegrunnelse?: string;
-    særligGrunnerBegrunnelse?: string;
+    tilbakekrevSmåbeløp?: boolean;
+    særligeGrunnerBegrunnelse?: string;
+    særligeGrunner?: SærligeGrunnerDto[];
+    særligeGrunnerTilReduksjon?: boolean;
+    beløpTilbakekreves?: number;
 };
 
 export type VilkårsresultatInfo = {
-    vilkårsresultat?: Vilkårsresultat;
-    begrunnelse?: string;
-    erBeløpetIBehold?: boolean;
-    tilbakekrevesBelop?: number;
-    aktsomhetsvurdering?: Aktsomhetsvurdering;
+    vilkårsvurderingsresultat?: Vilkårsresultat;
+    godTro?: GodTro;
+    aktsomhet?: Aktsomhetsvurdering;
 };
 
 export type YtelseInfo = {
@@ -86,14 +94,18 @@ export type YtelseInfo = {
     beløp: number;
 };
 
+export type ReduserteBeløpInfo = {
+    trekk: boolean;
+    belop: number;
+};
+
 export type VilkårsvurderingPeriode = {
-    hendelseType?: HendelseType;
-    foreldelse: {
-        foreldelseVurderingType: Foreldelsevurdering;
-        begrunnelse?: string;
-    };
-    ytelser?: YtelseInfo[];
-    vilkårsresultat?: VilkårsresultatInfo;
+    hendelsestype: HendelseType;
+    aktiviteter?: YtelseInfo[];
+    reduserteBeløper?: ReduserteBeløpInfo[];
+    foreldet: boolean;
+    begrunnelse?: string;
+    vilkårsvurderingsresultatInfo?: VilkårsresultatInfo;
 } & FeilutbetalingPeriode;
 
 export interface IFeilutbetalingVilkårsvurdering {

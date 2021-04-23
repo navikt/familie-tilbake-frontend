@@ -17,6 +17,7 @@ import { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
+import { sorterFeilutbetaltePerioder } from '../../../utils';
 import {
     hasValidText,
     isEmpty,
@@ -62,7 +63,8 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         React.useEffect(() => {
             if (feilutbetalingFakta?.status === RessursStatus.SUKSESS) {
                 const data = feilutbetalingFakta.data;
-                const behandletPerioder = data.feilutbetaltePerioder.map((fuFP, index) => {
+                const sortertePerioder = sorterFeilutbetaltePerioder(data.feilutbetaltePerioder);
+                const behandletPerioder = sortertePerioder.map((fuFP, index) => {
                     const behandletPeriode: FaktaPeriodeSkjemaData = {
                         index,
                         feilutbetaltBeløp: fuFP.feilutbetaltBeløp,

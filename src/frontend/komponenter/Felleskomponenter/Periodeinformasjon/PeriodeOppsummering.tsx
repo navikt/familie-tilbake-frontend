@@ -49,17 +49,17 @@ const PeriodeOppsummering: React.FC<IProps> = ({ fom, tom, beløp, hendelsetype 
     return (
         <StyledContainer>
             <Row>
-                <Column xs="6">
+                <Column xs="7">
                     <NormaltekstBold>
                         {`${formatterDatostring(fom)} - ${formatterDatostring(tom)}`}
                     </NormaltekstBold>
                 </Column>
-                <Column xs="6">
+                <Column xs="5">
                     <Normaltekst>{hentPeriodelengde(fom, tom)}</Normaltekst>
                 </Column>
             </Row>
             <SumRad>
-                <Column xs="6">
+                <Column xs="7">
                     <Normaltekst>
                         Feilutbetaling :
                         <span className={classNames(beløp ? 'redNumber' : 'positivNumber')}>
@@ -67,7 +67,7 @@ const PeriodeOppsummering: React.FC<IProps> = ({ fom, tom, beløp, hendelsetype 
                         </span>
                     </Normaltekst>
                 </Column>
-                <Column xs="6">
+                <Column xs="5">
                     {hendelsetype && <Normaltekst>{hendelsetyper[hendelsetype]}</Normaltekst>}
                 </Column>
             </SumRad>

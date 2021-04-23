@@ -6,8 +6,10 @@ import {
     isBefore,
     endOfMonth,
     endOfDay,
+    differenceInMilliseconds,
 } from 'date-fns';
 
+import { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
 import { isEmpty } from './validering';
 
 const datoformat: Intl.DateTimeFormatOptions = {
@@ -98,4 +100,12 @@ export const flyttDatoISODateStr = (dato: string, config: Duration): string => {
     const aDate = endOfDay(parseISO(dato));
     const newDate = add(aDate, config);
     return newDate.toISOString().substring(0, 10);
+};
+
+export const sorterFeilutbetaltePerioder = <T extends FeilutbetalingPeriode>(
+    perioder: T[]
+): T[] => {
+    return perioder.sort((a, b) =>
+        differenceInMilliseconds(parseISO(a.periode.fom), parseISO(b.periode.fom))
+    );
 };

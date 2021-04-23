@@ -17,7 +17,7 @@ const [FagsakProvider, useFagsak] = createUseContext(() => {
         settFagsak(byggHenterRessurs());
         request<void, IFagsak>({
             method: 'GET',
-            url: `/familie-tilbake/api/fagsak/v1?fagsystem=${fagsystem}&fagsak=${eksternFagsakId}`,
+            url: `/familie-tilbake/api/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/v1`,
         })
             .then((hentetFagsak: Ressurs<IFagsak>) => {
                 settFagsak(hentetFagsak);

@@ -2,28 +2,29 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Column, Row } from 'nav-frontend-grid';
-import { Undertittel } from 'nav-frontend-typografi';
+import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Foreldelsevurdering } from '../../../kodeverk';
-import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
-import {
-    IFeilutbetalingVilkårsvurdering,
-    VilkårsvurderingPeriode,
-} from '../../../typer/feilutbetalingtyper';
+import { IBehandling } from '../../../typer/behandling';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import {
+    erTotalbeløpUnder4Rettsgebyr,
+    useFeilutbetalingVilkårsvurdering,
+} from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 
 const StyledVilkårsvurdering = styled.div`
     padding: 10px;
 `;
 
-export const RadMedMargin = styled(Row)`
-    margin-bottom: 16px;
+const HenterContainer = styled(StyledVilkårsvurdering)`
+    text-align: center;
 `;
 
 interface IProps {
@@ -31,62 +32,75 @@ interface IProps {
 }
 
 const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
-    const [
-        feilutbetalingVilkårsvurdering,
-        settFeilutbetalingVilkårsvurdering,
-    ] = React.useState<IFeilutbetalingVilkårsvurdering>();
-    const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
     const {
-        erStegBehandlet,
-        behandlingILesemodus,
-        hentFeilutbetalingVilkårsvurdering,
-    } = useBehandling();
-    const erLesevisning = !!behandlingILesemodus;
+        feilutbetalingVilkårsvurdering,
+        stegErBehandlet,
+        erAutoutført,
+        skjemaData,
+    } = useFeilutbetalingVilkårsvurdering();
+    const { behandlingILesemodus } = useBehandling();
+    const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
-    React.useEffect(() => {
-        settStegErBehandlet(erStegBehandlet(Behandlingssteg.VILKÅRSVURDERING));
-        const vilkårsvurdering = hentFeilutbetalingVilkårsvurdering(behandling.behandlingId);
-        if (vilkårsvurdering.status === RessursStatus.SUKSESS) {
-            settFeilutbetalingVilkårsvurdering(vilkårsvurdering.data);
-        }
-    }, [behandling]);
+    switch (feilutbetalingVilkårsvurdering?.status) {
+        case RessursStatus.SUKSESS: {
+            const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(
+                feilutbetalingVilkårsvurdering.data
+            );
 
-    const totalbeløp = feilutbetalingVilkårsvurdering?.perioder.reduce(
-        (acc: number, periode: VilkårsvurderingPeriode) =>
-            periode.foreldelse.foreldelseVurderingType !== Foreldelsevurdering.FORELDET
-                ? acc + periode.feilutbetaltBeløp
-                : acc,
-        0
-    );
-    const erTotalbeløpUnder4Rettsgebyr =
-        totalbeløp && feilutbetalingVilkårsvurdering?.rettsgebyr
-            ? totalbeløp < feilutbetalingVilkårsvurdering.rettsgebyr * 4
-            : false;
-
-    return feilutbetalingVilkårsvurdering ? (
-        <StyledVilkårsvurdering>
-            <Undertittel>Tilbakekreving</Undertittel>
-            <Spacer20 />
-            {(!erLesevisning || stegErBehandlet) && (
-                <>
-                    <Steginformasjon
-                        behandletSteg={stegErBehandlet}
-                        infotekst={`Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering`}
-                    />
+            return (
+                <StyledVilkårsvurdering>
+                    <Undertittel>Tilbakekreving</Undertittel>
                     <Spacer20 />
-                </>
-            )}
-            <RadMedMargin>
-                <Column xs="12">
-                    <VilkårsvurderingPerioder
-                        perioder={feilutbetalingVilkårsvurdering.perioder}
-                        erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
-                        erLesevisning={erLesevisning}
-                    />
-                </Column>
-            </RadMedMargin>
-        </StyledVilkårsvurdering>
-    ) : null;
+                    {erAutoutført && (
+                        <>
+                            <Normaltekst>
+                                Automatisk vurdert. Alle perioder er foreldet.
+                            </Normaltekst>
+                            <Spacer20 />
+                        </>
+                    )}
+                    {!erAutoutført && (!erLesevisning || stegErBehandlet) && (
+                        <>
+                            <Steginformasjon
+                                behandletSteg={stegErBehandlet}
+                                infotekst={`Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering.`}
+                            />
+                            <Spacer20 />
+                        </>
+                    )}
+                    <Row>
+                        <Column xs="12">
+                            {skjemaData && skjemaData.length > 0 && (
+                                <VilkårsvurderingPerioder
+                                    behandling={behandling}
+                                    perioder={skjemaData}
+                                    erTotalbeløpUnder4Rettsgebyr={totalbeløpErUnder4Rettsgebyr}
+                                    erLesevisning={erLesevisning}
+                                />
+                            )}
+                        </Column>
+                    </Row>
+                </StyledVilkårsvurdering>
+            );
+        }
+        case RessursStatus.HENTER:
+            return (
+                <HenterContainer>
+                    <Normaltekst>Henting av feilutbetalingen tar litt tid.</Normaltekst>
+                    <NavFrontendSpinner type="XXL" />
+                </HenterContainer>
+            );
+        case RessursStatus.FEILET:
+        case RessursStatus.FUNKSJONELL_FEIL:
+            return (
+                <AlertStripe
+                    children={feilutbetalingVilkårsvurdering.frontendFeilmelding}
+                    type="feil"
+                />
+            );
+        default:
+            return <div />;
+    }
 };
 
 export default VilkårsvurderingContainer;

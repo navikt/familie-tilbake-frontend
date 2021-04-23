@@ -44,6 +44,12 @@ const behandlinger_5: IFagsakBehandling[] = [
         type: Behandlingstype.TILBAKEKREVING,
         status: Behandlingstatus.OPPRETTET,
     },
+    {
+        behandlingId: 'ba20',
+        eksternBrukId: '19',
+        type: Behandlingstype.TILBAKEKREVING,
+        status: Behandlingstatus.OPPRETTET,
+    },
 ];
 
 const fagsak_ba5: IFagsak = {
@@ -174,4 +180,44 @@ const ba_behandling_19: IBehandling = {
     ],
 };
 
-export { fagsak_ba5, ba_behandling_16, ba_behandling_17, ba_behandling_18, ba_behandling_19 };
+const ba_behandling_20: IBehandling = {
+    behandlingId: 'ba20',
+    eksternBrukId: '19',
+    kanHenleggeBehandling: true,
+    harVerge: true,
+    type: Behandlingstype.TILBAKEKREVING,
+    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
+    status: Behandlingstatus.UTREDES,
+    opprettetDato: '2020-12-02',
+    behandlingsstegsinfo: [
+        {
+            behandlingssteg: Behandlingssteg.VARSEL,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.GRUNNLAG,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FAKTA,
+            behandlingsstegstatus: Behandlingsstegstatus.UTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.FORELDELSE,
+            behandlingsstegstatus: Behandlingsstegstatus.AUTOUTFØRT,
+        },
+        {
+            behandlingssteg: Behandlingssteg.VILKÅRSVURDERING,
+            behandlingsstegstatus: Behandlingsstegstatus.KLAR,
+        },
+    ],
+};
+
+export {
+    fagsak_ba5,
+    ba_behandling_16,
+    ba_behandling_17,
+    ba_behandling_18,
+    ba_behandling_19,
+    ba_behandling_20,
+};

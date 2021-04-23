@@ -15,15 +15,10 @@ import {
 } from '@navikt/familie-typer';
 
 import {
-    Aktsomhet,
     Avsnittstype,
     Fagsystem,
-    Foreldelsevurdering,
-    HendelseType,
-    SærligeGrunner,
     Underavsnittstype,
     Vedtaksresultat,
-    Vilkårsresultat,
     Vurdering,
 } from '../kodeverk/';
 import {
@@ -33,338 +28,8 @@ import {
     IBehandlingsstegstilstand,
 } from '../typer/behandling';
 import { IFagsak } from '../typer/fagsak';
-import { IFeilutbetalingVilkårsvurdering } from '../typer/feilutbetalingtyper';
 import { IBeregningsresultat, IVedtaksbrev } from '../typer/vedtakTyper';
 import { useFagsak } from './FagsakContext';
-
-const feilutbetalingVilkårsvurdering = new Map<string, IFeilutbetalingVilkårsvurdering>([
-    [
-        '2',
-        {
-            rettsgebyr: 1500,
-            perioder: [
-                {
-                    periode: {
-                        fom: '2013-01-01',
-                        tom: '2017-04-30',
-                    },
-                    ytelser: [
-                        { aktivitet: 'Arbeidstaker', beløp: 2000 },
-                        { aktivitet: 'Frilanser', beløp: 3000 },
-                    ],
-                    feilutbetaltBeløp: 5000,
-                    hendelseType: HendelseType.BA_MEDLEMSKAP,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.FORELDET,
-                        begrunnelse: 'Dette er ein mock-begrunnelse',
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2017-05-01',
-                        tom: '2020-09-01',
-                    },
-                    ytelser: [{ aktivitet: 'Arbeidstaker', beløp: 4000 }],
-                    feilutbetaltBeløp: 4000,
-                    hendelseType: HendelseType.BA_MEDLEMSKAP,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.TILLEGGSFRIST,
-                    },
-                    vilkårsresultat: {
-                        vilkårsresultat: Vilkårsresultat.FORSTO_BURDE_FORSTÅTT,
-                        begrunnelse: 'Dette er ein mock-begrunnelse',
-                        aktsomhetsvurdering: {
-                            begrunnelse: 'Dette er ein mock-begrunnelse',
-                            aktsomhet: Aktsomhet.GROVT_UAKTSOM,
-                            særligGrunnerBegrunnelse: 'Dette er ein mock-begrunnelse',
-                            harGrunnerTilReduksjon: true,
-                            andelTilbakekreves: 33,
-                            særligeGrunner: [
-                                SærligeGrunner.GRAD_AV_UAKTSOMHET,
-                                SærligeGrunner.HELT_ELLER_DELVIS_NAVS_FEIL,
-                                SærligeGrunner.ANNET,
-                            ],
-                            annetBegrunnelse: 'Dette er ein mock-begrunnelse',
-                        },
-                    },
-                },
-            ],
-        },
-    ],
-    [
-        '3',
-        {
-            rettsgebyr: 1300,
-            perioder: [
-                {
-                    periode: {
-                        fom: '2013-02-01',
-                        tom: '2013-11-01',
-                    },
-                    ytelser: [
-                        { aktivitet: 'Arbeidstaker', beløp: 2000 },
-                        { aktivitet: 'Frilanser', beløp: 3000 },
-                    ],
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2014-02-01',
-                        tom: '2014-11-01',
-                    },
-                    ytelser: [{ aktivitet: 'Arbeidstaker', beløp: 4000 }],
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2015-02-01',
-                        tom: '2015-11-01',
-                    },
-                    ytelser: [
-                        { aktivitet: 'Arbeidstaker', beløp: 2000 },
-                        { aktivitet: 'Frilanser', beløp: 3000 },
-                    ],
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2016-02-01',
-                        tom: '2016-11-01',
-                    },
-                    ytelser: [{ aktivitet: 'Arbeidstaker', beløp: 4000 }],
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2017-02-01',
-                        tom: '2017-11-01',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2018-02-01',
-                        tom: '2018-11-01',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-03-01',
-                        tom: '2019-09-01',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2020-04-01',
-                        tom: '2020-10-01',
-                    },
-                    feilutbetaltBeløp: 4000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-            ],
-        },
-    ],
-    [
-        '4',
-        {
-            rettsgebyr: 1500,
-            perioder: [
-                {
-                    periode: {
-                        fom: '2013-01-01',
-                        tom: '2018-12-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-01-01',
-                        tom: '2019-01-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-02-01',
-                        tom: '2019-02-28',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-03-01',
-                        tom: '2019-03-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-04-01',
-                        tom: '2019-04-30',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-05-01',
-                        tom: '2019-05-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-06-01',
-                        tom: '2019-06-30',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-07-01',
-                        tom: '2019-07-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-08-01',
-                        tom: '2019-08-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-09-01',
-                        tom: '2019-09-30',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-10-01',
-                        tom: '2019-10-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-11-01',
-                        tom: '2019-11-30',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2019-12-01',
-                        tom: '2019-12-31',
-                    },
-                    feilutbetaltBeløp: 5000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: {
-                        fom: '2020-01-01',
-                        tom: '2020-10-31',
-                    },
-                    feilutbetaltBeløp: 4000,
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-            ],
-        },
-    ],
-    [
-        '5',
-        {
-            rettsgebyr: 1500,
-            perioder: [
-                {
-                    periode: { fom: '2019-04-01', tom: '2019-05-31' },
-                    feilutbetaltBeløp: 2000,
-                    ytelser: [
-                        { aktivitet: 'Arbeidstaker', beløp: 1000 },
-                        { aktivitet: 'Frilanser', beløp: 1000 },
-                    ],
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-                {
-                    periode: { fom: '2019-07-01', tom: '2019-08-31' },
-                    feilutbetaltBeløp: 2000,
-                    ytelser: [{ aktivitet: 'Arbeidstaker', beløp: 2000 }],
-                    foreldelse: {
-                        foreldelseVurderingType: Foreldelsevurdering.IKKE_VURDERT,
-                    },
-                },
-            ],
-        },
-    ],
-]);
 
 const beregningsResultater = new Map<string, IBeregningsresultat>([
     [
@@ -1012,6 +677,19 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         return false;
     };
 
+    const erStegAutoutført = (steg: Behandlingssteg): boolean => {
+        if (behandling?.status === RessursStatus.SUKSESS) {
+            const behandlingSteg = behandling.data.behandlingsstegsinfo?.find(
+                stegInfo => stegInfo.behandlingssteg === steg
+            );
+            return (
+                behandlingSteg &&
+                behandlingSteg.behandlingsstegstatus === Behandlingsstegstatus.AUTOUTFØRT
+            );
+        }
+        return false;
+    };
+
     const utledBehandlingId = () => {
         if (
             behandling?.status === RessursStatus.SUKSESS &&
@@ -1030,14 +708,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         } else {
             return '5';
         }
-    };
-
-    const hentFeilutbetalingVilkårsvurdering = (
-        _behandlingId: string
-    ): Ressurs<IFeilutbetalingVilkårsvurdering> => {
-        const behandlingId = utledBehandlingId();
-        const vilkårsvurdering = feilutbetalingVilkårsvurdering.get(behandlingId);
-        return vilkårsvurdering ? byggSuksessRessurs(vilkårsvurdering) : byggTomRessurs();
     };
 
     const hentBeregningsresultat = (_behandlingId: string): Ressurs<IBeregningsresultat> => {
@@ -1062,8 +732,8 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         visVenteModal,
         settVisVenteModal,
         erStegBehandlet,
+        erStegAutoutført,
         harKravgrunnlag,
-        hentFeilutbetalingVilkårsvurdering,
         hentBeregningsresultat,
         hentVedtaksbrev,
     };

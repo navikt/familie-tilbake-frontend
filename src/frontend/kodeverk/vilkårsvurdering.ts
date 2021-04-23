@@ -1,48 +1,48 @@
 export enum Vilkårsresultat {
     FORSTO_BURDE_FORSTÅTT = 'FORSTO_BURDE_FORSTÅTT',
-    FEIL_OPPLYSNINGER = 'FEIL_OPPLYSNINGER',
-    MANGELFULL_OPPLYSNING = 'MANGELFULL_OPPLYSNING',
+    FEIL_OPPLYSNINGER_FRA_BRUKER = 'FEIL_OPPLYSNINGER_FRA_BRUKER',
+    MANGELFULLE_OPPLYSNINGER_FRA_BRUKER = 'MANGELFULLE_OPPLYSNINGER_FRA_BRUKER',
     GOD_TRO = 'GOD_TRO',
 }
 
 export const vilkårsresultater = {
     FORSTO_BURDE_FORSTÅTT:
         'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil (1. ledd, 1. punkt)',
-    FEIL_OPPLYSNINGER:
+    FEIL_OPPLYSNINGER_FRA_BRUKER:
         'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger (1. ledd, 2 punkt)',
-    MANGELFULL_OPPLYSNING:
+    MANGELFULLE_OPPLYSNINGER_FRA_BRUKER:
         'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger (1. ledd, 2 punkt)',
     GOD_TRO: 'Nei, mottaker har mottatt beløpet i god tro (1. ledd)',
 };
 
 export const vilkårsresultatTyper = [
     Vilkårsresultat.FORSTO_BURDE_FORSTÅTT,
-    Vilkårsresultat.FEIL_OPPLYSNINGER,
-    Vilkårsresultat.MANGELFULL_OPPLYSNING,
+    Vilkårsresultat.FEIL_OPPLYSNINGER_FRA_BRUKER,
+    Vilkårsresultat.MANGELFULLE_OPPLYSNINGER_FRA_BRUKER,
     Vilkårsresultat.GOD_TRO,
 ];
 
 export enum Aktsomhet {
     FORSETT = 'FORSETT',
-    GROVT_UAKTSOM = 'GROVT_UAKTSOM',
-    SIMPEL_UAKTSOM = 'SIMPEL_UAKTSOM',
+    GROV_UAKTSOMHET = 'GROV_UAKTSOMHET',
+    SIMPEL_UAKTSOMHET = 'SIMPEL_UAKTSOMHET',
 }
 
 export const aktsomheter = {
     FORSETT: 'Forsett',
-    GROVT_UAKTSOM: 'Grov uaktsomhet',
-    SIMPEL_UAKTSOM: 'Simpel uaktsomhet',
+    GROV_UAKTSOMHET: 'Grov uaktsomhet',
+    SIMPEL_UAKTSOMHET: 'Simpel uaktsomhet',
 };
 
 export const forstodBurdeForståttAktsomheter = {
     FORSETT: 'Forsto',
-    GROVT_UAKTSOM: 'Må ha forstått',
-    SIMPEL_UAKTSOM: 'Burde ha forstått',
+    GROV_UAKTSOMHET: 'Må ha forstått',
+    SIMPEL_UAKTSOMHET: 'Burde ha forstått',
 };
 
 export const aktsomhetTyper = [
-    Aktsomhet.SIMPEL_UAKTSOM,
-    Aktsomhet.GROVT_UAKTSOM,
+    Aktsomhet.SIMPEL_UAKTSOMHET,
+    Aktsomhet.GROV_UAKTSOMHET,
     Aktsomhet.FORSETT,
 ];
 

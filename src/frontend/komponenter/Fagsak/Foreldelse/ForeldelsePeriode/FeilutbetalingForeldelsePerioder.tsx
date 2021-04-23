@@ -1,64 +1,26 @@
 import * as React from 'react';
 
-import '@navikt/helse-frontend-tidslinje/lib/main.css';
-
 import classNames from 'classnames';
-import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
 import { Knapp } from 'nav-frontend-knapper';
 
-import { Periode, Tidslinje } from '@navikt/helse-frontend-tidslinje';
+import { Periode } from '@navikt/helse-frontend-tidslinje';
 
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
 import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
-import ForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
-
-const TidslinjeContainer = styled.div`
-    border: 1px solid ${navFarger.navGra60};
-    margin-bottom: 20px;
-
-    button.behandlet {
-        background-color: ${navFarger.navGronnLighten60};
-        border-color: ${navFarger.navGronnLighten40};
-
-        &.aktivPeriode {
-            background-color: ${navFarger.navGronnLighten40};
-            box-shadow: 0 0 0 2px ${navFarger.navGronn};
-        }
-    }
-
-    button.foreldet {
-        background-color: ${navFarger.navRodLighten60};
-        border-color: ${navFarger.navRodLighten40};
-
-        &.aktivPeriode {
-            background-color: ${navFarger.navRodLighten40};
-            box-shadow: 0 0 0 2px ${navFarger.navRod};
-        }
-    }
-
-    button.ubehandlet {
-        background-color: ${navFarger.navOransjeLighten60};
-        border-color: ${navFarger.navOransjeLighten40};
-
-        &.aktivPeriode {
-            background-color: ${navFarger.navOransjeLighten40};
-            box-shadow: 0 0 0 2px ${navFarger.navOransje};
-        }
-    }
-`;
+import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
 
 const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean) => {
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
     switch (periode.foreldelsesvurderingstype) {
         case Foreldelsevurdering.FORELDET:
-            return classNames('foreldet', aktivPeriodeCss);
+            return classNames('avvist', aktivPeriodeCss);
         case Foreldelsevurdering.TILLEGGSFRIST:
         case Foreldelsevurdering.IKKE_FORELDET:
             return classNames('behandlet', aktivPeriodeCss);
@@ -99,7 +61,11 @@ interface IProps {
     erLesevisning: boolean;
 }
 
-const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisning }) => {
+const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
+    behandling,
+    perioder,
+    erLesevisning,
+}) => {
     const [tidslinjeRader, settTidslinjeRader] = React.useState<Periode[][]>();
     const [disableBekreft, settDisableBekreft] = React.useState<boolean>(true);
     const {
@@ -139,9 +105,7 @@ const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisn
         <>
             <Row>
                 <Column xs="12">
-                    <TidslinjeContainer>
-                        <Tidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
-                    </TidslinjeContainer>
+                    <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
                 </Column>
             </Row>
             {!!valgtPeriode && (
@@ -149,7 +113,7 @@ const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisn
                     <Spacer20 />
                     <Row>
                         <Column xs="12">
-                            <ForeldelsePeriodeSkjema
+                            <FeilutbetalingForeldelsePeriodeSkjema
                                 behandling={behandling}
                                 periode={valgtPeriode}
                                 erLesevisning={erLesevisning}
@@ -192,4 +156,4 @@ const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisn
     ) : null;
 };
 
-export default ForeldelsePerioder;
+export default FeilutbetalingForeldelsePerioder;

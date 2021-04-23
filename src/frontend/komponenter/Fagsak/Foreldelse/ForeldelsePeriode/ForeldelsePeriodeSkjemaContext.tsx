@@ -1,6 +1,5 @@
 import {
     Avhengigheter,
-    feil,
     FeltState,
     ok,
     useFelt,
@@ -9,11 +8,7 @@ import {
 } from '@navikt/familie-skjema';
 
 import { Foreldelsevurdering } from '../../../../kodeverk';
-import {
-    definerteFeilmeldinger,
-    DEFINERT_FEILMELDING,
-    hasValidText,
-} from '../../../../utils/validering';
+import { erFeltetEmpty, validerTekstFelt } from '../../../../utils/validering';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
 const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter) => {
@@ -37,9 +32,7 @@ const useForeldelsePeriodeSkjema = (
     const foreldelsesvurderingstype = useFelt<Foreldelsevurdering | ''>({
         verdi: '',
         valideringsfunksjon: (felt: FeltState<Foreldelsevurdering | ''>) => {
-            return felt.verdi !== ''
-                ? ok(felt)
-                : feil(felt, definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT]);
+            return erFeltetEmpty(felt);
         },
     });
 
@@ -48,9 +41,7 @@ const useForeldelsePeriodeSkjema = (
         avhengigheter: { foreldelsesvurderingstype },
         valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltForeldelsesfrist(avhengigheter)) return ok(felt);
-            return felt.verdi !== ''
-                ? ok(felt)
-                : feil(felt, definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT]);
+            return erFeltetEmpty(felt);
         },
     });
 
@@ -59,9 +50,7 @@ const useForeldelsePeriodeSkjema = (
         avhengigheter: { foreldelsesvurderingstype },
         valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltOppdagelsesdato(avhengigheter)) return ok(felt);
-            return felt.verdi !== ''
-                ? ok(felt)
-                : feil(felt, definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT]);
+            return erFeltetEmpty(felt);
         },
     });
 
@@ -77,17 +66,7 @@ const useForeldelsePeriodeSkjema = (
         felter: {
             begrunnelse: useFelt<string | ''>({
                 verdi: '',
-                valideringsfunksjon: (felt: FeltState<string | ''>) => {
-                    if (felt.verdi !== '') {
-                        const feilmelding = hasValidText(felt.verdi);
-                        return !feilmelding ? ok(felt) : feil(felt, feilmelding);
-                    } else {
-                        return feil(
-                            felt,
-                            definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT]
-                        );
-                    }
-                },
+                valideringsfunksjon: validerTekstFelt,
             }),
             foreldelsesvurderingstype,
             foreldelsesfrist,

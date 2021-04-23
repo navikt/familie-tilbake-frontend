@@ -14,3 +14,7 @@ export const Navigering = styled.div`
     flex-direction: row-reverse;
     justify-content: space-between;
 `;
+
+export const PeriodeKontroll = styled.div`
+    max-width: 30rem;
+`;

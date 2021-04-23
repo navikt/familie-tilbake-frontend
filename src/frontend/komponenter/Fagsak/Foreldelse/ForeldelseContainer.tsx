@@ -16,7 +16,7 @@ import { finnDatoRelativtTilNå } from '../../../utils';
 import { Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { useFeilutbetalingForeldelse } from './FeilutbetalingForeldelseContext';
-import ForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
+import FeilutbetalingForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
 
 export const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });
@@ -44,7 +44,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
         gåTilForrige,
     } = useFeilutbetalingForeldelse();
     const { behandlingILesemodus } = useBehandling();
-    const erLesevisning = !!behandlingILesemodus;
+    const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
     if (erAutoutført) {
         return (
@@ -94,7 +94,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                     <Row>
                         <Column xs="12">
                             {skjemaData.length > 0 && (
-                                <ForeldelsePerioder
+                                <FeilutbetalingForeldelsePerioder
                                     behandling={behandling}
                                     perioder={skjemaData}
                                     erLesevisning={erLesevisning}

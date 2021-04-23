@@ -2,37 +2,40 @@ import * as React from 'react';
 
 import { Radio } from 'nav-frontend-skjema';
 
-import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
-import { Aktsomhet } from '../../../../../kodeverk';
+import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+
+import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
+import {
+    jaNeiOptions,
+    OptionJA,
+    OptionNEI,
+    VilkårsvurderingSkjemaDefinisjon,
+} from '../VilkårsvurderingPeriodeSkjemaContext';
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
 
 interface IProps {
-    erValgtResultatTypeForstoBurdeForstaatt: boolean;
-    erTotalbeløpUnder4Rettsgebyr: boolean;
+    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
 }
 
-const GradUaktsomhetSkjema: React.FC<IProps> = ({
-    erValgtResultatTypeForstoBurdeForstaatt,
-    erTotalbeløpUnder4Rettsgebyr,
-    erLesevisning,
-}) => {
-    const { aktsomhetsvurdering, oppdaterAktsomhetsvurdering } = useVilkårsvurderingPeriode();
-
-    const onTilbakekrevesUnder4Rettsgebyr = (tilbakekreves: boolean) => {
-        oppdaterAktsomhetsvurdering({
-            tilbakekrevSelvOmBeløpErUnder4Rettsgebyr: tilbakekreves,
-        });
-    };
+const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+    const erValgtResultatTypeForstoBurdeForstaatt =
+        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+    const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
+        skjema.visFeilmeldinger &&
+        skjema.felter.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.FEIL;
+    const erTotalbeløpUnder4Rettsgebyr = skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
 
     const grovUaktsomOffset = erValgtResultatTypeForstoBurdeForstaatt ? 175 : 195;
     const offset =
-        aktsomhetsvurdering?.aktsomhet === Aktsomhet.GROVT_UAKTSOM ? grovUaktsomOffset : 20;
+        skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET
+            ? grovUaktsomOffset
+            : 20;
     return (
         <ArrowBox alignOffset={erLesevisning ? 5 : offset} marginTop={erLesevisning ? 15 : 0}>
-            {aktsomhetsvurdering?.aktsomhet === Aktsomhet.SIMPEL_UAKTSOM &&
+            {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.SIMPEL_UAKTSOMHET &&
                 erTotalbeløpUnder4Rettsgebyr && (
                     <>
                         <HorisontalFamilieRadioGruppe
@@ -40,45 +43,39 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({
                             legend="Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?"
                             erLesevisning={erLesevisning}
                             verdi={
-                                aktsomhetsvurdering?.tilbakekrevSelvOmBeløpErUnder4Rettsgebyr
-                                    ? 'Ja'
-                                    : 'Nei'
+                                skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA ? 'Ja' : 'Nei'
+                            }
+                            feil={
+                                ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr
+                                    ? skjema.felter.tilbakekrevSmåbeløp.feilmelding?.toString()
+                                    : ''
                             }
                         >
-                            <Radio
-                                name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
-                                label="Ja"
-                                onChange={() => onTilbakekrevesUnder4Rettsgebyr(true)}
-                                checked={
-                                    aktsomhetsvurdering?.tilbakekrevSelvOmBeløpErUnder4Rettsgebyr ===
-                                    true
-                                }
-                            />
-                            <Radio
-                                name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
-                                label="Nei"
-                                value="false"
-                                checked={
-                                    aktsomhetsvurdering?.tilbakekrevSelvOmBeløpErUnder4Rettsgebyr ===
-                                    false
-                                }
-                                onChange={() => onTilbakekrevesUnder4Rettsgebyr(false)}
-                            />
+                            {jaNeiOptions.map(opt => (
+                                <Radio
+                                    key={opt.label}
+                                    name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
+                                    label={opt.label}
+                                    checked={skjema.felter.tilbakekrevSmåbeløp.verdi === opt}
+                                    onChange={() =>
+                                        skjema.felter.tilbakekrevSmåbeløp.validerOgSettFelt(opt)
+                                    }
+                                />
+                            ))}
                         </HorisontalFamilieRadioGruppe>
-                        {aktsomhetsvurdering?.tilbakekrevSelvOmBeløpErUnder4Rettsgebyr === true && (
-                            <SærligeGrunnerSkjema erLesevisning={erLesevisning} />
+                        {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA && (
+                            <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
                         )}
-                        {aktsomhetsvurdering?.tilbakekrevSelvOmBeløpErUnder4Rettsgebyr ===
-                            false && (
+                        {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI && (
                             <ArrowBox alignOffset={80}>
                                 Når 6. ledd anvendes må alle perioder behandles likt
                             </ArrowBox>
                         )}
                     </>
                 )}
-            {(aktsomhetsvurdering?.aktsomhet !== Aktsomhet.SIMPEL_UAKTSOM ||
+            {(skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.SIMPEL_UAKTSOMHET ||
                 !erTotalbeløpUnder4Rettsgebyr) && (
-                <SærligeGrunnerSkjema erLesevisning={erLesevisning} />
+                <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
             )}
         </ArrowBox>
     );

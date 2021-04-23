@@ -19,6 +19,7 @@ import { FeilutbetalingForeldelseProvider } from './Foreldelse/FeilutbetalingFor
 import ForeldelseContainer from './Foreldelse/ForeldelseContainer';
 import Høyremeny from './Høyremeny/Høyremeny';
 import VedtakContainer from './Vedtak/VedtakContainer';
+import { FeilutbetalingVilkårsvurderingProvider } from './Vilkårsvurdering/FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
 
 const BEHANDLING_KONTEKST_PATH = '/fagsystem/:fagsystem/fagsak/:fagsakId/behandling/:behandlingId';
@@ -97,7 +98,14 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                     />
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
-                        render={() => <VilkårsvurderingContainer behandling={behandling} />}
+                        render={() => (
+                            <FeilutbetalingVilkårsvurderingProvider
+                                behandling={behandling}
+                                fagsak={fagsak}
+                            >
+                                <VilkårsvurderingContainer behandling={behandling} />
+                            </FeilutbetalingVilkårsvurderingProvider>
+                        )}
                     />
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/vedtak'}

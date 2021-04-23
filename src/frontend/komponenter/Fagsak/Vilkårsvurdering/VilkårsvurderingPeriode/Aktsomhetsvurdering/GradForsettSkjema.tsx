@@ -6,29 +6,42 @@ import { Column, Row } from 'nav-frontend-grid';
 import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 
-import { useVilkårsvurderingPeriode } from '../../../../../context/VilkårsvurderingPeriodeContext';
+import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+
+import { Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
+import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
+import {
+    jaNeiOptions,
+    OptionJA,
+    VilkårsvurderingSkjemaDefinisjon,
+} from '../VilkårsvurderingPeriodeSkjemaContext';
+
+const StyledLabel = styled(UndertekstBold)`
+    line-height: 1.375rem;
+    font-size: 1rem;
+`;
 
 const StyledNormaltekst = styled(Normaltekst)`
     padding-top: 15px;
 `;
 
 interface IProps {
-    erValgtResultatTypeForstoBurdeForstaatt: boolean;
+    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
 }
 
-const GradForsettSkjema: React.FC<IProps> = ({
-    erValgtResultatTypeForstoBurdeForstaatt,
-    erLesevisning,
-}) => {
-    const { aktsomhetsvurdering, oppdaterAktsomhetsvurdering } = useVilkårsvurderingPeriode();
+const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+    const { kanIlleggeRenter } = useFeilutbetalingVilkårsvurdering();
 
-    const onChangeRenter = (verdi: boolean) => {
-        oppdaterAktsomhetsvurdering({ ileggRenter: verdi });
-    };
+    const erValgtResultatTypeForstoBurdeForstaatt =
+        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+
+    const ugyldigIlleggRenterValgt =
+        skjema.visFeilmeldinger &&
+        skjema.felter.forstoIlleggeRenter.valideringsstatus === Valideringsstatus.FEIL;
 
     return (
         <ArrowBox alignOffset={erValgtResultatTypeForstoBurdeForstaatt ? 305 : 350}>
@@ -36,40 +49,63 @@ const GradForsettSkjema: React.FC<IProps> = ({
                 <>
                     <Row>
                         <Column md="6">
-                            <UndertekstBold>Andel som skal tilbakekreves</UndertekstBold>
-                            <StyledNormaltekst>100 %</StyledNormaltekst>
+                            <StyledLabel>Andel som skal tilbakekreves</StyledLabel>
+                            {kanIlleggeRenter ? (
+                                <StyledNormaltekst>100 %</StyledNormaltekst>
+                            ) : (
+                                <Normaltekst>100 %</Normaltekst>
+                            )}
                         </Column>
                         <Column md="6">
                             <HorisontalFamilieRadioGruppe
                                 id="skalDetTilleggesRenter"
-                                erLesevisning={erLesevisning}
+                                erLesevisning={erLesevisning || !kanIlleggeRenter}
                                 legend={'Skal det tillegges renter?'}
-                                verdi={aktsomhetsvurdering?.ileggRenter ? 'Ja' : 'Nei'}
+                                verdi={
+                                    skjema.felter.forstoIlleggeRenter.verdi === OptionJA
+                                        ? 'Ja'
+                                        : 'Nei'
+                                }
+                                feil={
+                                    ugyldigIlleggRenterValgt
+                                        ? skjema.felter.forstoIlleggeRenter.feilmelding?.toString()
+                                        : ''
+                                }
                             >
-                                <Radio
-                                    name="skalDetTilleggesRenter"
-                                    label={'Ja'}
-                                    checked={aktsomhetsvurdering?.ileggRenter === true}
-                                    onChange={() => onChangeRenter(true)}
-                                />
-                                <Radio
-                                    name="skalDetTilleggesRenter"
-                                    label={'Nei'}
-                                    checked={aktsomhetsvurdering?.ileggRenter === false}
-                                    value="false"
-                                    onChange={() => onChangeRenter(false)}
-                                />
+                                {jaNeiOptions.map(opt => (
+                                    <Radio
+                                        key={opt.label}
+                                        name="skalDetTilleggesRenter"
+                                        label={opt.label}
+                                        checked={skjema.felter.forstoIlleggeRenter.verdi === opt}
+                                        onChange={() =>
+                                            skjema.felter.forstoIlleggeRenter.validerOgSettFelt(opt)
+                                        }
+                                    />
+                                ))}
                             </HorisontalFamilieRadioGruppe>
                         </Column>
                     </Row>
                 </>
             ) : (
-                <>
-                    <UndertekstBold>Andel som skal tilbakekreves</UndertekstBold>
-                    <Normaltekst>100 %</Normaltekst>
-                    <Spacer8 />
-                    <Normaltekst>Det legges til 10 % renter</Normaltekst>
-                </>
+                <Row>
+                    <Column md={kanIlleggeRenter ? '12' : '6'}>
+                        <StyledLabel>Andel som skal tilbakekreves</StyledLabel>
+                        <Normaltekst>100 %</Normaltekst>
+                        {kanIlleggeRenter && (
+                            <>
+                                <Spacer8 />
+                                <Normaltekst>Det legges til 10 % renter</Normaltekst>
+                            </>
+                        )}
+                    </Column>
+                    {!kanIlleggeRenter && (
+                        <Column md="6">
+                            <StyledLabel>Skal det tillegges renter?</StyledLabel>
+                            <Normaltekst>Nei</Normaltekst>
+                        </Column>
+                    )}
+                </Row>
             )}
         </ArrowBox>
     );
