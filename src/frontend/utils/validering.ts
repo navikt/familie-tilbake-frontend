@@ -55,10 +55,12 @@ export const validerNummerFelt = (
     if (isEmpty(felt.verdi))
         return feil(felt, definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT]);
     if (!isNumeric(felt.verdi)) return feil(felt, invalidValueMessage(felt.verdi));
-    if (!!maxVerdi && maxVerdi < Number(Math.round(parseFloat(felt.verdi))))
+    if (maxVerdi && maxVerdi < Number(Math.round(parseFloat(felt.verdi))))
         return feil(felt, invalidMaxValue(maxVerdi));
-    if (!!minVerdi && minVerdi > Number(Math.round(parseFloat(felt.verdi))))
+    if ((minVerdi || minVerdi === 0) && Number(Math.round(parseFloat(felt.verdi))) < minVerdi) {
+        console.log('verdien skulle vært ugyldig?!');
         return feil(felt, invalidMinValue(minVerdi));
+    }
 
     return ok(felt);
 };
