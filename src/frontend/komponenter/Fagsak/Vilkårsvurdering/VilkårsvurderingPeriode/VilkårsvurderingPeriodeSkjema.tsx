@@ -12,6 +12,7 @@ import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements
 import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
+    Aktsomhet,
     SærligeGrunner,
     Vilkårsresultat,
     vilkårsresultater,
@@ -68,6 +69,10 @@ const settSkjemadataFraPeriode = (
     skjema.felter.godTroTilbakekrevesBeløp.onChange(
         periode?.vilkårsvurderingsresultatInfo?.godTro?.beløpTilbakekreves?.toString() || ''
     );
+    const erForsett =
+        periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.FORSETT;
+    const erSimpelUaktsomhet =
+        periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.SIMPEL_UAKTSOMHET;
     skjema.felter.aktsomhetVurdering.onChange(
         periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet || ''
     );
@@ -77,11 +82,16 @@ const settSkjemadataFraPeriode = (
             : finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.ileggRenter) || ''
     );
     skjema.felter.tilbakekrevSmåbeløp.onChange(
-        finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp) ||
-            ''
+        erSimpelUaktsomhet
+            ? finnJaNeiOption(
+                  periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
+              ) || ''
+            : ''
     );
     skjema.felter.særligeGrunnerBegrunnelse.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunnerBegrunnelse || ''
+        !erForsett
+            ? periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunnerBegrunnelse || ''
+            : ''
     );
     skjema.felter.særligeGrunner.onChange(
         periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunner?.map(
@@ -97,9 +107,11 @@ const settSkjemadataFraPeriode = (
         !!periode?.aktiviteter && periode.aktiviteter.length > 1
     );
     skjema.felter.harGrunnerTilReduksjon.onChange(
-        finnJaNeiOption(
-            periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunnerTilReduksjon
-        ) || ''
+        !erForsett
+            ? finnJaNeiOption(
+                  periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunnerTilReduksjon
+              ) || ''
+            : ''
     );
 
     const andelTilbakekreves =
