@@ -388,7 +388,8 @@ const useVilkårsvurderingPeriodeSkjema = (
             skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.SIMPEL_UAKTSOMHET &&
             skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
         const skalIkkeVurdereSærligeGrunner =
-            skalVurderereSmåbeløp && skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI;
+            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.FORSETT ||
+            (skalVurderereSmåbeløp && skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI);
 
         const harGrunnerTilReduksjon =
             !skalIkkeVurdereSærligeGrunner &&
@@ -421,7 +422,9 @@ const useVilkårsvurderingPeriodeSkjema = (
                               ? skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi
                               : undefined,
                   })),
-            særligeGrunnerTilReduksjon: harGrunnerTilReduksjon,
+            særligeGrunnerTilReduksjon: !skalIkkeVurdereSærligeGrunner
+                ? harGrunnerTilReduksjon
+                : undefined,
             andelTilbakekreves: !harAndelTilbakekreves
                 ? undefined
                 : erEgendefinert

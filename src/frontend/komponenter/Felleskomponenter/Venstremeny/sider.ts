@@ -51,7 +51,6 @@ const aktiveBehandlingstegstatuser = [
     Behandlingsstegstatus.UTFØRT,
     Behandlingsstegstatus.AUTOUTFØRT,
     Behandlingsstegstatus.KLAR,
-    Behandlingsstegstatus.TILBAKEFØRT,
     Behandlingsstegstatus.VENTER,
 ];
 
