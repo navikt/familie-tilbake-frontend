@@ -56,7 +56,8 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
     const erEgendefinert =
         !isEmpty(skjema.felter.uaktsomAndelTilbakekreves.verdi) &&
         (!ANDELER.includes(skjema.felter.uaktsomAndelTilbakekreves.verdi) ||
-            skjema.felter.uaktsomAndelTilbakekreves.verdi === EGENDEFINERT);
+            skjema.felter.uaktsomAndelTilbakekreves.verdi === EGENDEFINERT) &&
+        skjema.felter.uaktsomAndelTilbakekreves.verdi !== '-';
 
     const ugyldigHarGrunnertilReduksjonValgt =
         skjema.visFeilmeldinger &&
