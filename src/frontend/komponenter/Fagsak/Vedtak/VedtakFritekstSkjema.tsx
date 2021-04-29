@@ -4,10 +4,11 @@ import styled from 'styled-components';
 
 import { Undertekst } from 'nav-frontend-typografi';
 
-import { VedtaksbrevUnderavsnitt } from '../../../typer/vedtakTyper';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { AddCircleIkon } from '../../Felleskomponenter/Ikoner';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
+import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
+import { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
 const LeggTilFritekst = styled.div`
     cursor: pointer;
@@ -20,23 +21,31 @@ const StyledUndertekst = styled(Undertekst)`
 `;
 
 interface IProps {
-    underavsnitt: VedtaksbrevUnderavsnitt;
+    avsnittIndex: string;
+    underavsnitt: UnderavsnittSkjemaData;
     maximumLength?: number;
     erLesevisning: boolean;
 }
 
-const VedtakFritekstSkjema: React.FC<IProps> = ({ underavsnitt, maximumLength, erLesevisning }) => {
+const VedtakFritekstSkjema: React.FC<IProps> = ({
+    avsnittIndex,
+    underavsnitt,
+    maximumLength,
+    erLesevisning,
+}) => {
     const [isTextfieldHidden, hideTextField] = React.useState<boolean>();
-    const [fritekst, settFritekst] = React.useState<string>();
+    const { oppdaterUnderavsnitt } = useFeilutbetalingVedtak();
 
     React.useEffect(() => {
         hideTextField(!underavsnitt.fritekst && !underavsnitt.fritekstPåkrevet);
-        settFritekst(underavsnitt.fritekst ? underavsnitt.fritekst : '');
     }, [underavsnitt]);
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const nyVerdi = e.target.value;
-        settFritekst(nyVerdi);
+        oppdaterUnderavsnitt(avsnittIndex, {
+            ...underavsnitt,
+            fritekst: nyVerdi,
+        });
     };
 
     return (
@@ -65,10 +74,10 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({ underavsnitt, maximumLength, e
                     <Spacer8 />
                     <FamilieTilbakeTextArea
                         name={'fritekst'}
-                        label={'Utdypende tekst'}
+                        label={!erLesevisning ? 'Utdypende tekst' : undefined}
                         erLesevisning={erLesevisning}
                         maxLength={maximumLength ? maximumLength : 4000}
-                        value={fritekst ? fritekst : ''}
+                        value={underavsnitt.fritekst ? underavsnitt.fritekst : ''}
                         onChange={event => onChange(event)}
                     />
                 </>

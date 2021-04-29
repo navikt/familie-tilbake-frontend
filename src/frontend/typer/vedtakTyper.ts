@@ -4,13 +4,13 @@ import { FeilutbetalingPeriode } from './feilutbetalingtyper';
 export type BeregningsresultatPeriode = {
     vurdering: Vurdering;
     andelAvBeløp?: number;
-    renterProsent?: number;
-    tilbakekrevingBeløp: number;
-    tilbakekrevingBeløpEtterSkatt: number;
+    renteprosent?: number;
+    tilbakekrevingsbeløp: number;
+    tilbakekrevesBeløpEtterSkatt: number;
 } & FeilutbetalingPeriode;
 
 export interface IBeregningsresultat {
-    perioder: BeregningsresultatPeriode[];
+    beregningsresultatsperioder: BeregningsresultatPeriode[];
     vedtaksresultat: Vedtaksresultat;
 }
 
@@ -30,7 +30,3 @@ export type VedtaksbrevAvsnitt = {
     overskrift?: string;
     underavsnittsliste: VedtaksbrevUnderavsnitt[];
 };
-
-export interface IVedtaksbrev {
-    avsnittsliste: VedtaksbrevAvsnitt[];
-}

@@ -18,6 +18,7 @@ import { FeilutbetalingFaktaProvider } from './Fakta/FeilutbetalingFaktaContext'
 import { FeilutbetalingForeldelseProvider } from './Foreldelse/FeilutbetalingForeldelseContext';
 import ForeldelseContainer from './Foreldelse/ForeldelseContainer';
 import Høyremeny from './Høyremeny/Høyremeny';
+import { FeilutbetalingVedtakProvider } from './Vedtak/FeilutbetalingVedtakContext';
 import VedtakContainer from './Vedtak/VedtakContainer';
 import { FeilutbetalingVilkårsvurderingProvider } from './Vilkårsvurdering/FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
@@ -109,7 +110,11 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                     />
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
-                        render={() => <VedtakContainer behandling={behandling} />}
+                        render={() => (
+                            <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
+                                <VedtakContainer behandling={behandling} />
+                            </FeilutbetalingVedtakProvider>
+                        )}
                     />
                     <Route path={BEHANDLING_KONTEKST_PATH + '/verge'}>
                         <div>Verge</div>
