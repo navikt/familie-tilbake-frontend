@@ -4,12 +4,12 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 import { Knapp } from 'nav-frontend-knapper';
-import { Normaltekst } from 'nav-frontend-typografi';
+import { Element, Normaltekst } from 'nav-frontend-typografi';
 
 import { Periode as TidslinjePeriode, Tidslinje } from '@navikt/helse-frontend-tidslinje';
 
 import { IPeriodeSkjemaData } from '../../../typer/periodeSkjemaData';
-import { formatterDatostring, NormaltekstBold } from '../../../utils';
+import { formatterDatostring } from '../../../utils';
 import { Spacer8 } from '../Flytelementer';
 import { FixedDatovelger } from '../Skjemaelementer';
 import UIModalWrapper from './UIModalWrapper';
@@ -77,7 +77,7 @@ const DelOppPeriode: React.FC<IProps> = ({
                 },
             }}
         >
-            <NormaltekstBold>Periode</NormaltekstBold>
+            <Element>Periode</Element>
             <Normaltekst>
                 {`${formatterDatostring(periode.periode.fom)} - ${formatterDatostring(
                     periode.periode.tom

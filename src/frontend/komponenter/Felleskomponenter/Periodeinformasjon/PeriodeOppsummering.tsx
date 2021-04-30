@@ -5,15 +5,10 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
-import { Normaltekst } from 'nav-frontend-typografi';
+import { Element, Normaltekst } from 'nav-frontend-typografi';
 
 import { HendelseType, hendelsetyper } from '../../../kodeverk';
-import {
-    formatterDatostring,
-    hentPeriodelengde,
-    formatCurrencyNoKr,
-    NormaltekstBold,
-} from '../../../utils';
+import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
 
 const StyledContainer = styled.div`
     background-color: ${navFarger.orangeFocusLighten80};
@@ -50,9 +45,7 @@ const PeriodeOppsummering: React.FC<IProps> = ({ fom, tom, beløp, hendelsetype 
         <StyledContainer>
             <Row>
                 <Column xs="7">
-                    <NormaltekstBold>
-                        {`${formatterDatostring(fom)} - ${formatterDatostring(tom)}`}
-                    </NormaltekstBold>
+                    <Element>{`${formatterDatostring(fom)} - ${formatterDatostring(tom)}`}</Element>
                 </Column>
                 <Column xs="5">
                     <Normaltekst>{hentPeriodelengde(fom, tom)}</Normaltekst>

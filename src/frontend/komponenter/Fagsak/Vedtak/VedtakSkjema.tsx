@@ -66,7 +66,9 @@ const VedtakSkjema: React.FC<IProps> = ({ avsnitter, erLesevisning }) => {
                             tittel={avsnitt.overskrift ? avsnitt.overskrift : ''}
                             apen={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
                             className={
-                                harPåkrevetFritekstMenIkkeUtfylt ? 'panelMedGulmarkering' : 'panel'
+                                !erLesevisning && harPåkrevetFritekstMenIkkeUtfylt
+                                    ? 'panelMedGulmarkering'
+                                    : 'panel'
                             }
                         >
                             {avsnitt.underavsnittsliste.map(underavsnitt => {

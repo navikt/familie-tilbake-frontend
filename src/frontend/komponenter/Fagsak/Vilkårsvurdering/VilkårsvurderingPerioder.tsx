@@ -7,12 +7,12 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
 import { Knapp } from 'nav-frontend-knapper';
+import { Element } from 'nav-frontend-typografi';
 
 import { Periode } from '@navikt/helse-frontend-tidslinje';
 
 import { Vilkårsresultat } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
-import { NormaltekstBold } from '../../../utils';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
@@ -130,7 +130,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
             {valideringsfeil && (
                 <>
                     <StyledAlertStripe type="feil">
-                        <NormaltekstBold>{valideringsFeilmelding}</NormaltekstBold>
+                        <Element>{valideringsFeilmelding}</Element>
                     </StyledAlertStripe>
                     <Spacer20 />
                 </>

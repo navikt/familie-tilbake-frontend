@@ -76,6 +76,10 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                         name={'fritekst'}
                         label={!erLesevisning ? 'Utdypende tekst' : undefined}
                         erLesevisning={erLesevisning}
+                        tekstLesevisning={underavsnitt.fritekst || 'Fritekst ikke utfylt'}
+                        className={
+                            erLesevisning && !underavsnitt.fritekst ? 'lesevisning_ikke_utfylt' : ''
+                        }
                         maxLength={maximumLength ? maximumLength : 4000}
                         value={underavsnitt.fritekst ? underavsnitt.fritekst : ''}
                         onChange={event => onChange(event)}
