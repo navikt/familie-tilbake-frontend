@@ -32,7 +32,7 @@
     "@navikt/familie-clipboard": "^3.1.4",
     "@navikt/familie-form-elements": "^2.2.14",
     "@navikt/familie-header": "^3.0.9",
-    "@navikt/familie-http": "^1.0.4",
+    "@navikt/familie-http": "^1.0.5",
     "@navikt/familie-logging": "^1.0.4",
     "@navikt/familie-skjema": "^1.1.2",
     "@navikt/familie-typer": "^3.0.13",

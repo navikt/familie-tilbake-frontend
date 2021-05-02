@@ -1588,10 +1588,10 @@
     prop-types "^15.7.2"
     styled-components "^5.2.1"
 
-"@navikt/familie-http@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-http/-/familie-http-1.0.4.tgz#81d9eeb6b7421d9119d3585919c0e8c0cec4b7ca"
-  integrity sha512-bYrZlFcskQYF9xUzY3zJvuhPge5LE7ePxL64qSZXSV7F27nMKplBlkh9RgdIWyBvvwzFgNQmgIFJbbI99RQ53g==
+"@navikt/familie-http@^1.0.4", "@navikt/familie-http@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-http/-/familie-http-1.0.5.tgz#94831ecf83dfd196c81572ca311c0af683b57516"
+  integrity sha512-0KE0IG4grjDXHVC0ZRbpA43q/hoCotdKDIWzGpT8glKM57utUIbP7K8pmWN/6bt3pX44SDf7KzwhN3GJj1ZWqg==
   dependencies:
     "@navikt/familie-typer" "^3.0.13"
     "@sentry/core" "^6.2.1"
