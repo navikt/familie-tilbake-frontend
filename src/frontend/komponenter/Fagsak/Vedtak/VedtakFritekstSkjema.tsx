@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { Undertekst } from 'nav-frontend-typografi';
 
+import { hasValidText } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { AddCircleIkon } from '../../Felleskomponenter/Ikoner';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
@@ -42,9 +43,12 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const nyVerdi = e.target.value;
+        const feilmelding = hasValidText(nyVerdi);
         oppdaterUnderavsnitt(avsnittIndex, {
             ...underavsnitt,
             fritekst: nyVerdi,
+            harFeil: !!feilmelding,
+            feilmelding: feilmelding || undefined,
         });
     };
 
@@ -83,7 +87,9 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                         maxLength={maximumLength ? maximumLength : 4000}
                         value={underavsnitt.fritekst ? underavsnitt.fritekst : ''}
                         onChange={event => onChange(event)}
+                        feil={underavsnitt.harFeil ? underavsnitt.feilmelding : null}
                     />
+                    <Spacer8 />
                 </>
             )}
         </>

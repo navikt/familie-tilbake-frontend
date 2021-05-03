@@ -9,6 +9,8 @@ export interface UnderavsnittSkjemaData {
     fritekstTillatt: boolean;
     overskrift?: string;
     fritekstPåkrevet: boolean;
+    harFeil?: boolean;
+    feilmelding?: string;
 }
 
 export interface AvsnittSkjemaData {

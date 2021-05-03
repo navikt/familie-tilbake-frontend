@@ -37,7 +37,8 @@ interface IProps {
 const skalVisesÅpen = (avsnitt: AvsnittSkjemaData) => {
     if (avsnitt.avsnittstype === Avsnittstype.OPPSUMMERING) {
         return avsnitt.underavsnittsliste.some(
-            underavsnitt => underavsnitt.fritekstPåkrevet && !underavsnitt.fritekst
+            underavsnitt =>
+                underavsnitt.fritekstPåkrevet && (!underavsnitt.fritekst || underavsnitt.harFeil)
         );
     }
     if (avsnitt.avsnittstype === Avsnittstype.PERIODE) {
@@ -47,7 +48,11 @@ const skalVisesÅpen = (avsnitt: AvsnittSkjemaData) => {
                     underavsnitt.underavsnittstype === Underavsnittstype.FAKTA ||
                     underavsnitt.underavsnittstype === Underavsnittstype.SÆRLIGEGRUNNER_ANNET
             )
-            .some(underavsnitt => underavsnitt.fritekstPåkrevet && !underavsnitt.fritekst);
+            .some(
+                underavsnitt =>
+                    underavsnitt.fritekstPåkrevet &&
+                    (!underavsnitt.fritekst || underavsnitt.harFeil)
+            );
     }
 
     return false;
