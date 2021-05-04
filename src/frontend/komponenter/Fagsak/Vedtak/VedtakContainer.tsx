@@ -56,6 +56,10 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
 
     if (!behandling) return null;
 
+    const harValideringsFeil = skjemaData.some(avs =>
+        avs.underavsnittsliste.some(uavs => uavs.harFeil)
+    );
+
     if (
         beregningsresultat?.status === RessursStatus.HENTER ||
         feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.HENTER
@@ -102,13 +106,17 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                                 onClick={sendInnSkjema}
                                 spinner={senderInn}
                                 autoDisableVedSpinner
-                                disabled={senderInn || disableBekreft}
+                                disabled={senderInn || disableBekreft || harValideringsFeil}
                             >
                                 Bekreft
                             </Knapp>
                         )}
                     </div>
-                    <div>{!harPåkrevetFritekstMenIkkeUtfylt && <ForhåndsvisVedtaksbrev />}</div>
+                    <div>
+                        {!harPåkrevetFritekstMenIkkeUtfylt && !harValideringsFeil && (
+                            <ForhåndsvisVedtaksbrev />
+                        )}
+                    </div>
                     <div>
                         <Knapp type={'standard'} mini={true} onClick={gåTilForrige}>
                             Forrige

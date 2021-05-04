@@ -17,7 +17,7 @@ import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
-import { isEmpty } from '../../../utils';
+import { isEmpty, hasValidText } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import {
     AvsnittSkjemaData,
@@ -203,8 +203,40 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             }
         };
 
+        const validerAlleAvsnittOk = () => {
+            let harFeil = false;
+            skjemaData.map(avs => {
+                const nyeUnderavsnitt = avs.underavsnittsliste.map(uavs => {
+                    let uavsFeil = false;
+                    let feilmelding = undefined;
+                    if (uavs.fritekstPåkrevet && !uavs.fritekst) {
+                        uavsFeil = true;
+                        feilmelding = 'Feltet er påkrevet';
+                    }
+                    if (!uavsFeil && !isEmpty(uavs.fritekst)) {
+                        // @ts-ignore
+                        feilmelding = hasValidText(uavs.fritekst);
+                        uavsFeil = !!feilmelding;
+                    }
+
+                    harFeil = harFeil || uavsFeil;
+                    return {
+                        ...uavs,
+                        harFeil: uavsFeil,
+                        feilmelding: feilmelding,
+                    };
+                });
+
+                return {
+                    ...avs,
+                    underavsnittsliste: nyeUnderavsnitt,
+                };
+            });
+            return !harFeil;
+        };
+
         const sendInnSkjema = () => {
-            if (!harPåkrevetFritekstMenIkkeUtfylt) {
+            if (!harPåkrevetFritekstMenIkkeUtfylt && validerAlleAvsnittOk()) {
                 settSenderInn(true);
                 settForeslåVedtakRespons(undefined);
                 const oppsummering = skjemaData.find(
