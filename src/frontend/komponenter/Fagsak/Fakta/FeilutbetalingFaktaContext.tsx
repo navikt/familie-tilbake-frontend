@@ -19,8 +19,7 @@ import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
 import {
-    hasValidText,
-    isEmpty,
+    validerTekst,
     definerteFeilmeldinger,
     DEFINERT_FEILMELDING,
 } from '../../../utils/validering';
@@ -173,20 +172,13 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const validerForInnsending = (): Feilmelding[] => {
             const feilmeldinger: Feilmelding[] = [];
-            if (isEmpty(skjemaData.begrunnelse)) {
+            //@ts-ignore
+            const feilmelding = validerTekst(skjemaData.begrunnelse);
+            if (feilmelding) {
                 feilmeldinger.push({
                     gjelderBegrunnelse: true,
-                    melding: definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT],
+                    melding: feilmelding,
                 });
-            } else {
-                //@ts-ignore
-                const feilmelding = hasValidText(skjemaData.begrunnelse);
-                if (feilmelding) {
-                    feilmeldinger.push({
-                        gjelderBegrunnelse: true,
-                        melding: feilmelding,
-                    });
-                }
             }
             for (const periode of skjemaData.perioder) {
                 const tomHendelsetype = !periode.hendelsestype;

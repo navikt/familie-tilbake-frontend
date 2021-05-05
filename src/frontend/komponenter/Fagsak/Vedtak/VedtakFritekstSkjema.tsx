@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Undertekst } from 'nav-frontend-typografi';
 
-import { hasValidText } from '../../../utils';
+import { hasValidText, validerMaxLength, validerMinLength } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { AddCircleIkon } from '../../Felleskomponenter/Ikoner';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
@@ -20,6 +20,8 @@ const StyledUndertekst = styled(Undertekst)`
     vertical-align: top;
     margin-left: 1ex;
 `;
+
+const minLength3 = validerMinLength(3);
 
 interface IProps {
     avsnittIndex: string;
@@ -42,8 +44,11 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
     }, [underavsnitt]);
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const maxLength = maximumLength ? maximumLength : 4000;
         const nyVerdi = e.target.value;
-        const feilmelding = hasValidText(nyVerdi);
+        let feilmelding = hasValidText(nyVerdi);
+        feilmelding = feilmelding || validerMaxLength(maxLength)(nyVerdi);
+        feilmelding = feilmelding || minLength3(nyVerdi);
         oppdaterUnderavsnitt(avsnittIndex, {
             ...underavsnitt,
             fritekst: nyVerdi,
@@ -85,6 +90,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                             erLesevisning && !underavsnitt.fritekst ? 'lesevisning_ikke_utfylt' : ''
                         }
                         maxLength={maximumLength ? maximumLength : 4000}
+                        minLength={3}
                         value={underavsnitt.fritekst ? underavsnitt.fritekst : ''}
                         onChange={event => onChange(event)}
                         feil={underavsnitt.harFeil ? underavsnitt.feilmelding : null}
