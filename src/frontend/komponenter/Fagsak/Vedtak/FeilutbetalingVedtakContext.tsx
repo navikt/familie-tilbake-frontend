@@ -33,19 +33,24 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
         .filter(avs => avs.avsnittstype === Avsnittstype.PERIODE)
         .map(avs => {
             const fakta = avs.underavsnittsliste.find(
-                uavs => uavs.underavsnittstype === Underavsnittstype.FAKTA
+                uavs => uavs.underavsnittstype === Underavsnittstype.FAKTA && uavs.fritekstTillatt
             );
             const foreldelse = avs.underavsnittsliste.find(
-                uavs => uavs.underavsnittstype === Underavsnittstype.FORELDELSE
+                uavs =>
+                    uavs.underavsnittstype === Underavsnittstype.FORELDELSE && uavs.fritekstTillatt
             );
             const særligeGrunner = avs.underavsnittsliste.find(
-                uavs => uavs.underavsnittstype === Underavsnittstype.SÆRLIGEGRUNNER
+                uavs =>
+                    uavs.underavsnittstype === Underavsnittstype.SÆRLIGEGRUNNER &&
+                    uavs.fritekstTillatt
             );
             const sæerligeGrunnerAnnet = avs.underavsnittsliste.find(
-                uavs => uavs.underavsnittstype === Underavsnittstype.SÆRLIGEGRUNNER_ANNET
+                uavs =>
+                    uavs.underavsnittstype === Underavsnittstype.SÆRLIGEGRUNNER_ANNET &&
+                    uavs.fritekstTillatt
             );
             const vilkår = avs.underavsnittsliste.find(
-                uavs => uavs.underavsnittstype === Underavsnittstype.VILKÅR
+                uavs => uavs.underavsnittstype === Underavsnittstype.VILKÅR && uavs.fritekstTillatt
             );
 
             return {
