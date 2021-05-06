@@ -4576,10 +4576,10 @@ dot-prop@^5.2.0:
   dependencies:
     is-obj "^2.0.0"
 
-dotenv@^8.5.1:
-  version "8.5.1"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.5.1.tgz#e3a4c7862daba51b92bce0da5c349f11faa28663"
-  integrity sha512-qC1FbhCH7UH7B+BcRNUDhAk04d/n+tnGGB1ctwndZkVFeehYJOn39pRWWzmdzpFqImyX1KB8tO0DCHLf8yRaYQ==
+dotenv@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-9.0.0.tgz#2408af4e39378375b7eebe30b7b54989e36d6e46"
+  integrity sha512-yy3x9XjojW8ROTBePD25AcMoHqGHsvHmtfw8QWlpEXyMMXXPj6brUA464AptUvHuTPRmNz6Sd3ZLNLeJl6dHJA==
 
 dotnet-deps-parser@5.0.0:
   version "5.0.0"
@@ -5512,12 +5512,26 @@ focus-trap-react@^8.4.2:
   dependencies:
     focus-trap "^6.3.0"
 
+focus-trap-react@^8.5.0:
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-8.5.0.tgz#c4d08609ed1da0976b856519fd2c97760524474c"
+  integrity sha512-YnQ3PtoszlXqHQQIYCnnTbWsXa6daEACXg9KkFvv357PkJUVp347G9L+e9WJwj2KgSIX+pTDcZFx+f7azo8dhw==
+  dependencies:
+    focus-trap "^6.4.0"
+
 focus-trap@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-6.3.0.tgz#31c08f0b6099705f71f6e0a16d88fbcc4c012586"
   integrity sha512-BBzvFfkPg5PqrVVCdQ1YOIVNKGvqG9YNVkiAUQFuDM66N8J9uADhs6mlYKrd30ofDJIzEniBnBKM7GO45iCzKQ==
   dependencies:
     tabbable "^5.1.5"
+
+focus-trap@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-6.4.0.tgz#e9951484fddf933d9b9b0e95b499f9420f6a54d6"
+  integrity sha512-RpH291GjfNhy1ek+Iwe00oCaqJN0sBaB+S/v7BpCIldf39IslPI7657nOZ6HwgoEHpjCmUJoAY+Mfgrm0rohvQ==
+  dependencies:
+    tabbable "^5.2.0"
 
 follow-redirects@^1.0.0, follow-redirects@^1.10.0:
   version "1.13.1"
@@ -7562,12 +7576,12 @@ nav-datovelger@^11.0.0:
   dependencies:
     focus-trap-react "^8.4.2"
 
-nav-datovelger@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/nav-datovelger/-/nav-datovelger-11.1.0.tgz#2acca6119fb39a887afb4179d5ccdac387cdb8d3"
-  integrity sha512-exrkxB23UtUnRfNSLtmYQumTxLVYHbHkcr2EOIKWRYsKy45o1VIdzFGMMaEireyFUUk/+gtXyquVNHsvGX1drQ==
+nav-datovelger@^11.1.2:
+  version "11.1.2"
+  resolved "https://registry.yarnpkg.com/nav-datovelger/-/nav-datovelger-11.1.2.tgz#a93eb06c8cfc39471c5d6ef7c29212e45ad75031"
+  integrity sha512-Zk2vU7hnSLGtfcogSsdi4cCpedIIDpzZncIsXzHCXJvs1u3sqx/CCcTMHONMKYVDuYLtw58dROaPcO3PuXrwDw==
   dependencies:
-    focus-trap-react "^8.4.2"
+    focus-trap-react "^8.5.0"
 
 nav-frontend-alertstriper-style@2.0.38:
   version "2.0.38"
@@ -10155,10 +10169,10 @@ snyk@^1.336.0:
     uuid "^3.3.2"
     wrap-ansi "^5.1.0"
 
-snyk@^1.582.0:
-  version "1.582.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.582.0.tgz#eb0dcc74bf3945c5d009d3eea6c0647903c6446d"
-  integrity sha512-FHPTzUPmN52YFDuX2GlOcItS70O30n8dAu+x9brvNiumUmmqYnnKARyc3r/uG4kbXyb8DDIIHcWP5XgGvBMpRg==
+snyk@^1.583.0:
+  version "1.583.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.583.0.tgz#ec16010aae7a7861baffa8951d7f3365d77c3c63"
+  integrity sha512-EMhNxF7mXJxwg6QM5udJ5Bsi1ZE/XJo2BMVpSiIYMFudds+GbP3WB8Bnj4oUepdCknTE45yVZZwZ0MsuVXwE7g==
   dependencies:
     "@open-policy-agent/opa-wasm" "^1.2.0"
     "@snyk/cli-interface" "2.11.0"
@@ -10182,7 +10196,6 @@ snyk@^1.582.0:
     lodash.assign "^4.2.0"
     lodash.camelcase "^4.3.0"
     lodash.clonedeep "^4.5.0"
-    lodash.endswith "^4.2.1"
     lodash.flatten "^4.4.0"
     lodash.flattendeep "^4.4.0"
     lodash.get "^4.4.2"
@@ -10634,6 +10647,11 @@ tabbable@^5.1.5:
   resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-5.1.5.tgz#efec48ede268d511c261e3b81facbb4782a35147"
   integrity sha512-oVAPrWgLLqrbvQE8XqcU7CVBq6SQbaIbHkhOca3u7/jzuQvyZycrUKPCGr04qpEIUslmUlULbSeN+m3QrKEykA==
 
+tabbable@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-5.2.0.tgz#4fba60991d8bb89d06e5d9455c92b453acf88fb2"
+  integrity sha512-0uyt8wbP0P3T4rrsfYg/5Rg3cIJ8Shl1RJ54QMqYxm1TLdWqJD1u6+RQjr2Lor3wmfT7JRHkirIwy99ydBsyPg==
+
 table@^6.0.4:
   version "6.0.7"
   resolved "https://registry.yarnpkg.com/table/-/table-6.0.7.tgz#e45897ffbcc1bcf9e8a87bf420f2c9e5a7a52a34"
@@ -10853,10 +10871,10 @@ triple-beam@^1.2.0, triple-beam@^1.3.0:
   resolved "https://registry.yarnpkg.com/triple-beam/-/triple-beam-1.3.0.tgz#a595214c7298db8339eeeee083e4d10bd8cb8dd9"
   integrity sha512-XrHUvV5HpdLmIj4uVMxHggLbFSZYIn7HEWsqePZcI50pco+MPqJ50wMGY794X7AOOhxOBAjbkqfAbEe/QMp2Lw==
 
-ts-loader@^9.1.1:
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.1.1.tgz#83f598c37e648f3b6b2350bfac6f58f9253d078c"
-  integrity sha512-u91MdIE4rtN/06Q881uUzVeMoYy+CdFXoanCQXVGRubKKxgLjqQ/H9nkDbp6klkiPv3t18KLjZbEofkJodM3ow==
+ts-loader@^9.1.2:
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.1.2.tgz#ba9b9abb05a514e8ff825791a3f6fcf793272728"
+  integrity sha512-ryMgATvLLl+z8zQvdlm6Pep0slmwxFWIEnq/5VdiLVjqQXnFJgO+qNLGIIP+d2N2jsFZ9MibZCVDb2bSp7OmEA==
   dependencies:
     chalk "^4.1.0"
     enhanced-resolve "^5.0.0"
