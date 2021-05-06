@@ -17,12 +17,12 @@ import { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
-import { sorterFeilutbetaltePerioder } from '../../../utils';
 import {
+    sorterFeilutbetaltePerioder,
     validerTekst,
     definerteFeilmeldinger,
     DEFINERT_FEILMELDING,
-} from '../../../utils/validering';
+} from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import {
     FaktaPeriodeSkjemaData,

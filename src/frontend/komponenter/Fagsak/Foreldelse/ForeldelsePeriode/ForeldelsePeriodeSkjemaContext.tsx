@@ -8,7 +8,7 @@ import {
 } from '@navikt/familie-skjema';
 
 import { Foreldelsevurdering } from '../../../../kodeverk';
-import { erFeltetEmpty, validerTekstFelt } from '../../../../utils/validering';
+import { erFeltetEmpty, validerTekstFelt } from '../../../../utils';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
 const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter) => {

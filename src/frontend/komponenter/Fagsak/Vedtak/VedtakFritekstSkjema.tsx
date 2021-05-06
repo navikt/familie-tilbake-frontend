@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Undertekst } from 'nav-frontend-typografi';
 
-import { hasValidText, validerMaxLength, validerMinLength } from '../../../utils';
+import { validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { AddCircleIkon } from '../../Felleskomponenter/Ikoner';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
@@ -20,9 +20,6 @@ const StyledUndertekst = styled(Undertekst)`
     vertical-align: top;
     margin-left: 1ex;
 `;
-
-const minLength3 = validerMinLength(3);
-
 interface IProps {
     avsnittIndex: string;
     underavsnitt: UnderavsnittSkjemaData;
@@ -46,9 +43,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const maxLength = maximumLength ? maximumLength : 4000;
         const nyVerdi = e.target.value;
-        let feilmelding = hasValidText(nyVerdi);
-        feilmelding = feilmelding || validerMaxLength(maxLength)(nyVerdi);
-        feilmelding = feilmelding || minLength3(nyVerdi);
+        const feilmelding = validerTekstMaksLengde(maxLength)(nyVerdi);
         oppdaterUnderavsnitt(avsnittIndex, {
             ...underavsnitt,
             fritekst: nyVerdi,

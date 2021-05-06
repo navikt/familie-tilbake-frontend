@@ -31,18 +31,14 @@ export const hasValidText = (text: string): ValideringsResultat => {
     return null;
 };
 
-export const validerMaxLength = (length: number) => (
-    text: string | undefined
-): ValideringsResultat => {
+const _validerMaxLength = (length: number) => (text: string | undefined): ValideringsResultat => {
     // @ts-ignore
     return isEmpty(text) || text.toString().trim().length <= length
         ? null
         : `Du kan skrive maksimalt ${length} tegn`;
 };
 
-export const validerMinLength = (length: number) => (
-    text: string | undefined
-): ValideringsResultat => {
+const _validerMinLength = (length: number) => (text: string | undefined): ValideringsResultat => {
     // @ts-ignore
     return isEmpty(text) || text.toString().trim().length >= length
         ? null
@@ -56,17 +52,29 @@ export const erFeltetEmpty = (felt: FeltState<any>) => {
         : feil(felt, definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT]);
 };
 
-const minLength3 = validerMinLength(3);
-const maxLength1500 = validerMaxLength(1500);
+const _minLength3 = _validerMinLength(3);
+const _maxLength1500 = _validerMaxLength(1500);
 
-export const validerTekst = (verdi: string): ValideringsResultat => {
+const _validerTekst = (
+    maxLength: (v: string) => ValideringsResultat,
+    minLength: (v: string) => ValideringsResultat,
+    verdi: string
+) => {
     if (isEmpty(verdi)) {
         return definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT];
     }
     let feilmelding = hasValidText(verdi);
-    feilmelding = feilmelding || maxLength1500(verdi);
-    feilmelding = feilmelding || minLength3(verdi);
+    feilmelding = feilmelding || maxLength(verdi);
+    feilmelding = feilmelding || minLength(verdi);
     return feilmelding;
+};
+
+export const validerTekstMaksLengde = (maxLengde: number) => (verdi: string) => {
+    return _validerTekst(_validerMaxLength(maxLengde), _minLength3, verdi);
+};
+
+export const validerTekst = (verdi: string): ValideringsResultat => {
+    return _validerTekst(_maxLength1500, _minLength3, verdi);
 };
 
 export const validerTekstFelt = (felt: FeltState<string | ''>) => {

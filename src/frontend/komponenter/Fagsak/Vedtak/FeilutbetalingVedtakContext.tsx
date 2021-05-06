@@ -17,7 +17,7 @@ import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
-import { isEmpty, hasValidText } from '../../../utils';
+import { isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import {
     AvsnittSkjemaData,
@@ -215,7 +215,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                     }
                     if (!uavsFeil && !isEmpty(uavs.fritekst)) {
                         // @ts-ignore
-                        feilmelding = hasValidText(uavs.fritekst);
+                        feilmelding = validerTekstMaksLengde(4000)(uavs.fritekst);
                         uavsFeil = !!feilmelding;
                     }
 
