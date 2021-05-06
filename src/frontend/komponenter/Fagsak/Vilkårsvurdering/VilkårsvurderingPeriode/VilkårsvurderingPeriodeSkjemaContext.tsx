@@ -14,8 +14,12 @@ import {
     GodTro,
     SærligeGrunnerDto,
 } from '../../../../typer/feilutbetalingtyper';
-import { parseStringToNumber } from '../../../../utils';
-import { validerTekstFelt, erFeltetEmpty, validerNummerFelt } from '../../../../utils/validering';
+import {
+    parseStringToNumber,
+    validerTekstFelt,
+    erFeltetEmpty,
+    validerNummerFelt,
+} from '../../../../utils';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
 export const EGENDEFINERT = 'Egendefinert';

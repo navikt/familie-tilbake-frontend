@@ -58,9 +58,9 @@ const VedtakPerioder: React.FC<IProps> = ({ perioder }) => {
                                     ? `${per.andelAvBeløp}%`
                                     : ''}
                             </td>
-                            <td>{per.renterProsent ? `${per.renterProsent}%` : ''}</td>
-                            <td>{formatCurrencyNoKr(per.tilbakekrevingBeløp)}</td>
-                            <td>{formatCurrencyNoKr(per.tilbakekrevingBeløpEtterSkatt)}</td>
+                            <td>{per.renteprosent ? `${per.renteprosent}%` : ''}</td>
+                            <td>{formatCurrencyNoKr(per.tilbakekrevingsbeløp)}</td>
+                            <td>{formatCurrencyNoKr(per.tilbakekrevesBeløpEtterSkatt)}</td>
                         </tr>
                     );
                 })}
@@ -78,13 +78,13 @@ const VedtakPerioder: React.FC<IProps> = ({ perioder }) => {
                     <td></td>
                     <td>
                         {formatCurrencyNoKr(
-                            perioder.reduce((sum, periode) => sum + periode.tilbakekrevingBeløp, 0)
+                            perioder.reduce((sum, periode) => sum + periode.tilbakekrevingsbeløp, 0)
                         )}
                     </td>
                     <td>
                         {formatCurrencyNoKr(
                             perioder.reduce(
-                                (sum, periode) => sum + periode.tilbakekrevingBeløpEtterSkatt,
+                                (sum, periode) => sum + periode.tilbakekrevesBeløpEtterSkatt,
                                 0
                             )
                         )}

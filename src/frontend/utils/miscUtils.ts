@@ -1,7 +1,3 @@
-import styled from 'styled-components';
-
-import { Normaltekst } from 'nav-frontend-typografi';
-
 export const parseStringToNumber = (text: string): number => {
     return Number(Math.round(parseFloat(text)));
 };
@@ -21,7 +17,3 @@ export const formatCurrencyNoKr = (value?: string | number): string | undefined 
 export const isNumeric = (val: string): boolean => {
     return !isNaN(Number(val));
 };
-
-export const NormaltekstBold = styled(Normaltekst)`
-    font-weight: 600;
-`;

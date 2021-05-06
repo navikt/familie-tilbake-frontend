@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Flatknapp, Knapp } from 'nav-frontend-knapper';
-import { Normaltekst } from 'nav-frontend-typografi';
+import { Element, Normaltekst } from 'nav-frontend-typografi';
 
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
@@ -13,12 +13,7 @@ import {
     manuelleÅrsaker,
     venteårsaker,
 } from '../../../../typer/behandling';
-import {
-    dateBeforeToday,
-    datoformatNorsk,
-    finnDateRelativtTilNå,
-    NormaltekstBold,
-} from '../../../../utils';
+import { dateBeforeToday, datoformatNorsk, finnDateRelativtTilNå } from '../../../../utils';
 import { Spacer20, Spacer8 } from '../../Flytelementer';
 import { FixedDatovelger } from '../../Skjemaelementer';
 import UIModalWrapper from '../UIModalWrapper';
@@ -108,9 +103,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                 {feilmelding && feilmelding !== '' && <Normaltekst>{feilmelding}</Normaltekst>}
                 {erFristenUtløpt && (
                     <>
-                        <NormaltekstBold>
-                            OBS! Fristen på denne behandlingen er utløpt!
-                        </NormaltekstBold>
+                        <Element>OBS! Fristen på denne behandlingen er utløpt!</Element>
                         <Spacer8 />
                         <Normaltekst>
                             Kontroller hvorfor Økonomi ikke har dannet et kravgrunnlag.

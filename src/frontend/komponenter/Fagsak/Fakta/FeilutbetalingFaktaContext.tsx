@@ -17,13 +17,12 @@ import { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
-import { sorterFeilutbetaltePerioder } from '../../../utils';
 import {
-    hasValidText,
-    isEmpty,
+    sorterFeilutbetaltePerioder,
+    validerTekst,
     definerteFeilmeldinger,
     DEFINERT_FEILMELDING,
-} from '../../../utils/validering';
+} from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import {
     FaktaPeriodeSkjemaData,
@@ -173,20 +172,13 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const validerForInnsending = (): Feilmelding[] => {
             const feilmeldinger: Feilmelding[] = [];
-            if (isEmpty(skjemaData.begrunnelse)) {
+            //@ts-ignore
+            const feilmelding = validerTekst(skjemaData.begrunnelse);
+            if (feilmelding) {
                 feilmeldinger.push({
                     gjelderBegrunnelse: true,
-                    melding: definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT],
+                    melding: feilmelding,
                 });
-            } else {
-                //@ts-ignore
-                const feilmelding = hasValidText(skjemaData.begrunnelse);
-                if (feilmelding) {
-                    feilmeldinger.push({
-                        gjelderBegrunnelse: true,
-                        melding: feilmelding,
-                    });
-                }
             }
             for (const periode of skjemaData.perioder) {
                 const tomHendelsetype = !periode.hendelsestype;
