@@ -36,16 +36,18 @@ interface IProps {
 const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const { kanIlleggeRenter } = useFeilutbetalingVilkårsvurdering();
 
-    const erValgtResultatTypeForstoBurdeForstaatt =
+    const erValgtResultatTypeForstoBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
 
     const ugyldigIlleggRenterValgt =
         skjema.visFeilmeldinger &&
         skjema.felter.forstoIlleggeRenter.valideringsstatus === Valideringsstatus.FEIL;
 
+    const forstoBurdeForståttOffset = erValgtResultatTypeForstoBurdeForstått ? 305 : 350;
+
     return (
-        <ArrowBox alignOffset={erValgtResultatTypeForstoBurdeForstaatt ? 305 : 350}>
-            {erValgtResultatTypeForstoBurdeForstaatt ? (
+        <ArrowBox alignOffset={erLesevisning ? 5 : forstoBurdeForståttOffset}>
+            {erValgtResultatTypeForstoBurdeForstått ? (
                 <>
                     <Row>
                         <Column md="6">

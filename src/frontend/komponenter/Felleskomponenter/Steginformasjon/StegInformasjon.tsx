@@ -20,6 +20,8 @@ const UbehandletSteg = styled.div`
     border: 1px solid ${navFarger.navOransjeDarken20};
     padding: 10px;
     border-radius: 4px;
+    display: flex;
+    flex-direction: row;
 
     ${StyledNormaltekst} {
         vertical-align: top;

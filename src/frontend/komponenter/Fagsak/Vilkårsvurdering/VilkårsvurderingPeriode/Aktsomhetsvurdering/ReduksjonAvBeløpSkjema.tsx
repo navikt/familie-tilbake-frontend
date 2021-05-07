@@ -73,37 +73,29 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
 
     return (
         <>
-            <Row>
-                <Column md="12">
-                    <HorisontalFamilieRadioGruppe
-                        id="harGrunnerTilReduksjon"
-                        legend={'Skal særlige grunner gi reduksjon av beløpet?'}
-                        erLesevisning={erLesevisning}
-                        verdi={
-                            skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA ? 'Ja' : 'Nei'
-                        }
-                        feil={
-                            ugyldigHarGrunnertilReduksjonValgt
-                                ? skjema.felter.harGrunnerTilReduksjon.feilmelding?.toString()
-                                : ''
-                        }
-                    >
-                        {jaNeiOptions.map(opt => (
-                            <Radio
-                                key={opt.label}
-                                name="harGrunnerTilReduksjon"
-                                label={opt.label}
-                                checked={skjema.felter.harGrunnerTilReduksjon.verdi === opt}
-                                onChange={() =>
-                                    skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(opt)
-                                }
-                            />
-                        ))}
-                    </HorisontalFamilieRadioGruppe>
-                </Column>
-            </Row>
+            <HorisontalFamilieRadioGruppe
+                id="harGrunnerTilReduksjon"
+                legend={'Skal særlige grunner gi reduksjon av beløpet?'}
+                erLesevisning={erLesevisning}
+                verdi={skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA ? 'Ja' : 'Nei'}
+                feil={
+                    ugyldigHarGrunnertilReduksjonValgt
+                        ? skjema.felter.harGrunnerTilReduksjon.feilmelding?.toString()
+                        : ''
+                }
+            >
+                {jaNeiOptions.map(opt => (
+                    <Radio
+                        key={opt.label}
+                        name="harGrunnerTilReduksjon"
+                        label={opt.label}
+                        checked={skjema.felter.harGrunnerTilReduksjon.verdi === opt}
+                        onChange={() => skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(opt)}
+                    />
+                ))}
+            </HorisontalFamilieRadioGruppe>
             {skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA && (
-                <ArrowBox alignOffset={erLesevisning ? 5 : 20} marginTop={erLesevisning ? 15 : 0}>
+                <ArrowBox alignOffset={erLesevisning ? 5 : 20}>
                     <Row>
                         <Column md="6">
                             {!harMerEnnEnAktivitet && !erEgendefinert && (
@@ -201,7 +193,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                 </ArrowBox>
             )}
             {skjema.felter.harGrunnerTilReduksjon.verdi === OptionNEI && (
-                <ArrowBox alignOffset={80}>
+                <ArrowBox alignOffset={erLesevisning ? 5 : 80}>
                     <Row>
                         <Column md="6">
                             <StyledLabel>

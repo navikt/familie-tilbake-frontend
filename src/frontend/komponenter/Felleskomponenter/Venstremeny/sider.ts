@@ -88,10 +88,7 @@ export const finnSideAktivtSteg = (aktivtSteg: IBehandlingsstegstilstand): ISide
         return sider.VEDTAK;
     }
 
-    const sideForSteg = Object.entries(sider).find(
-        ([_, side]) => side.steg === aktivtSteg.behandlingssteg
-    );
-    return sideForSteg ? sideForSteg[1] : undefined;
+    return finnSideForSteg(aktivtSteg.behandlingssteg);
 };
 
 export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBehandling): boolean => {
@@ -105,4 +102,9 @@ export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBeha
     }
 
     return !!funnetØnsketSide;
+};
+
+export const finnSideForSteg = (steg: Behandlingssteg): ISide | undefined => {
+    const sideForSteg = Object.entries(sider).find(([_, side]) => side.steg === steg);
+    return sideForSteg ? sideForSteg[1] : undefined;
 };

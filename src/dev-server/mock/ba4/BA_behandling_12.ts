@@ -12,6 +12,7 @@ const ba_behandling_12: IBehandling = {
     eksternBrukId: '11',
     kanHenleggeBehandling: true,
     harVerge: true,
+    kanEndres: true,
     type: Behandlingstype.TILBAKEKREVING,
     årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,

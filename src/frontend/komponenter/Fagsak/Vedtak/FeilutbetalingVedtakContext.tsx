@@ -274,7 +274,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                         }
                     })
                     .catch((error: AxiosError) => {
-                        console.log('Error ved sending av oppdaterte foreldelse: ', error);
+                        console.log('Error ved sending av foreslå vedtak: ', error);
                         settSenderInn(false);
                         settForeslåVedtakRespons(
                             byggFeiletRessurs('Ukjent feil ved sending av vedtak')
