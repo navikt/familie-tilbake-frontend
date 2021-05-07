@@ -93,7 +93,7 @@
     "react-router-hash-link": "^2.4.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "snyk": "^1.584.0",
+    "snyk": "^1.585.0",
     "styled-components": "~5.2.3",
     "uuid": "^8.3.0"
   },
