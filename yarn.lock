@@ -2449,10 +2449,10 @@
     "@types/react" "*"
     "@types/react-router" "*"
 
-"@types/react-router-hash-link@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@types/react-router-hash-link/-/react-router-hash-link-1.2.1.tgz#fba7dc351cef2985791023018b7a5dbd0653c843"
-  integrity sha512-jdzPGE8jFGq7fHUpPaKrJvLW1Yhoe5MQCrmgeesC+eSLseMj3cGCTYMDA4BNWG8JQmwO8NTYt/oT3uBZ77pmBA==
+"@types/react-router-hash-link@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-router-hash-link/-/react-router-hash-link-2.0.0.tgz#93189b39dcc4ac3f28616867aad134bbe7a41521"
+  integrity sha512-Y40Kjxu9IqpVFE7gUrRJvV23+iMkrM+gI8q4DCNfywG9Cv34lQ/rrO2uZJ6TjCF2faMy3Y9rizVue1jLFQzQYA==
   dependencies:
     "@types/react" "*"
     "@types/react-router-dom" "*"
@@ -7652,20 +7652,20 @@ nav-frontend-lukknapp-style@^1.1.1:
   resolved "https://registry.yarnpkg.com/nav-frontend-lukknapp-style/-/nav-frontend-lukknapp-style-1.1.1.tgz#07fedc36a393f5e0a0087f03ca3fa4bec836f907"
   integrity sha512-oXLLBTd9iIgVKWtlI+lCbcwbvTf1Vca0RXYYDLT6Nwi/v0lBXLrdYG4UUYLtq2WwBmhYaaPwir48UE12XR6lSA==
 
-nav-frontend-lukknapp@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/nav-frontend-lukknapp/-/nav-frontend-lukknapp-1.1.1.tgz#730660e111b4563ba47070c4fb2532e0e6b06def"
-  integrity sha512-62h+5WVbi/MJzk+ldJ5yIAwed63fHbigCaCNCX5ga/6JtSmVt6HQBtkq0OLctSlxPuP1tkCFFMZMFcQktTD+Dw==
+nav-frontend-lukknapp@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/nav-frontend-lukknapp/-/nav-frontend-lukknapp-1.2.0.tgz#39191aea02412fecaf0bda24288c6219d0e38e32"
+  integrity sha512-f3eO7fcIIXj2xh3ppudOIj2OlVBRJDazxz196gvuWxZ8ktgEFIuxVnfMN1bMcPx5GhAj6nmQs8100OmkZ75HCw==
 
 nav-frontend-modal-style@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/nav-frontend-modal-style/-/nav-frontend-modal-style-1.1.1.tgz#0fb1e435da6c52c7d00a27924f95af93b3a8405a"
   integrity sha512-rdh3n4Pw3lvGLsvNiVHHex7up8lgzWaoCrHhMHX/srd8+tKcMyTlirLpkWmEEj6ZJCIIWqhwpnshQmryfWdMhA==
 
-nav-frontend-modal@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/nav-frontend-modal/-/nav-frontend-modal-1.1.2.tgz#b39e98f6bb95b4d9e14997ea25df85edceefacc1"
-  integrity sha512-VklH7btMVWu+CyCkaT93SXyeCniIPqF9ua0CCz3eytn+yT0SeTicW8sEQaOC4hxBfR/yxh0NW3cpABGoAgo/XA==
+nav-frontend-modal@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/nav-frontend-modal/-/nav-frontend-modal-1.2.0.tgz#6708e2ea090affec0d4501258b8a7fde61599c13"
+  integrity sha512-Mvt53RdLzdxhtU5iIOgxR+gBKmc0ytUOx3xTKhgEQG55sK14UMj4VrBXMFwn8dDN/NthpUQjIHdC6DdQOYznhQ==
 
 nav-frontend-paneler-style@1.0.2:
   version "1.0.2"
