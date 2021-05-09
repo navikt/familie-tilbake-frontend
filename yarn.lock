@@ -1458,10 +1458,10 @@
   dependencies:
     "@navikt/nap-bem-utils" "1.0.1"
 
-"@navikt/ds-icons@^0.1.6":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@navikt/ds-icons/-/ds-icons-0.1.7.tgz#5e30a5c785aeb18aeed1bb25439975f5b11da5be"
-  integrity sha512-Xrihe7Tke/jCL5dsFWYe2qiQDbUhr+Mptan6kuWaXYKu66cN9hspjFDubkIi4QHEIVh3gQCoQi4CtdWc0C4AxQ==
+"@navikt/ds-icons@^0.2.1":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@navikt/ds-icons/-/ds-icons-0.2.2.tgz#5296982182ddb40c6bb6374cab4d3274ee64d880"
+  integrity sha512-r2UVHOVzxGk6wLBbRtMFBAYI5XD+lqHAktNuSmly6cre7PXgVfar+JcVHqEc1r1HSZxkC4Kl4EjlU/laOPSr0Q==
 
 "@navikt/familie-backend@5.0.21":
   version "5.0.21"
@@ -1506,7 +1506,7 @@
     nav-frontend-knapper-style "^1.1.2"
     react-tooltip "^4.2.15"
 
-"@navikt/familie-form-elements@^2.2.15", "@navikt/familie-form-elements@^2.2.18":
+"@navikt/familie-form-elements@^2.2.18":
   version "2.2.18"
   resolved "https://registry.yarnpkg.com/@navikt/familie-form-elements/-/familie-form-elements-2.2.18.tgz#fb3757814ecd2e1fec11acf4292214bfd3905f71"
   integrity sha512-61dwkjH8s+HLqmVzF5ABp3WhzEMA+w1E/4gkbYwOx1sLlUQkPjmyQ1O305lvQ5oPiwr+WO1vIJErSM5LmUTS4g==
@@ -1528,33 +1528,55 @@
     nav-frontend-typografi "^3.1.1"
     react-select "^4.0.13"
 
-"@navikt/familie-header@3.0.10":
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-header/-/familie-header-3.0.10.tgz#a2d0d7419b16e07dd655f63176cf88fe441b36ca"
-  integrity sha512-+eDF5lTiX53WQSPTJqvejt56GUO1udlsGsKupakDoi7I80TYaoIItVYu+GuNpWA1LsRu0efnvlHmQA+3ZU7OPw==
+"@navikt/familie-form-elements@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-form-elements/-/familie-form-elements-3.0.0.tgz#790cd42f9c26271fe68feb1c40ca7605d5412dd8"
+  integrity sha512-cLEA4+q/BB7k73DQXwaWFxmvApj+uzuL9QSW4qrZXsggkHGSWpOPx3risZ1pJn2SprFby11FjBpbdLpJwjQZvA==
+  dependencies:
+    "@navikt/fnrvalidator" "^1.1.3"
+    "@types/classnames" "^2.2.10"
+    "@types/react-select" "^3.0.28"
+    classnames "^2.2.6"
+    dayjs "^1.10.4"
+    nav-datovelger "^11.0.0"
+    nav-frontend-knapper "^2.1.2"
+    nav-frontend-knapper-style "^1.1.2"
+    nav-frontend-lenker "^1.1.1"
+    nav-frontend-lenker-style "^1.1.1"
+    nav-frontend-skjema "^3.2.1"
+    nav-frontend-skjema-style "^2.2.1"
+    nav-frontend-toggle "^1.1.2"
+    nav-frontend-toggle-style "^1.1.2"
+    nav-frontend-typografi "^3.1.1"
+    react-select "^4.0.13"
+
+"@navikt/familie-header@3.0.15":
+  version "3.0.15"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-header/-/familie-header-3.0.15.tgz#8cfd07c1616460ebb07d3de7c21bbdbfc1c3779a"
+  integrity sha512-QpSiC7wmjMY25775CDN63OoGHCx3Lu+LfkbALLeji5VydAed3BR7M3Z1FLlHQg07gWG3WvBkdD03yQiLGNDQEQ==
   dependencies:
     "@navikt/boxed-list-with-links" "^1.0.2"
-    "@navikt/ds-icons" "^0.1.6"
-    "@navikt/familie-form-elements" "^2.2.15"
-    "@navikt/familie-ikoner" "^3.1.10"
+    "@navikt/ds-icons" "^0.2.1"
+    "@navikt/familie-form-elements" "^3.0.0"
+    "@navikt/familie-ikoner" "^3.1.11"
     "@navikt/familie-typer" "^3.0.13"
     "@navikt/nap-user-panel" "^1.1.0"
     classnames "^2.2.6"
     lodash.throttle "^4.1.1"
-    nav-frontend-alertstriper "^3.0.51"
-    nav-frontend-alertstriper-style "2.0.38"
-    nav-frontend-core "^5.0.11"
+    nav-frontend-alertstriper "^3.1.1"
+    nav-frontend-alertstriper-style "^2.1.1"
+    nav-frontend-core "^5.1.1"
     nav-frontend-ikoner-assets "2.0.10"
     nav-frontend-js-utils "1.0.17"
-    nav-frontend-knapper "^2.0.32"
-    nav-frontend-knapper-style "^1.0.17"
-    nav-frontend-paneler "^2.0.32"
-    nav-frontend-paneler-style "1.0.2"
-    nav-frontend-popover "1.0.3"
-    nav-frontend-popover-style "1.0.2"
-    nav-frontend-skjema "^3.0.53"
-    nav-frontend-typografi "^3.0.4"
-    nav-frontend-typografi-style "^1.0.35"
+    nav-frontend-knapper "^2.1.2"
+    nav-frontend-knapper-style "^1.1.2"
+    nav-frontend-paneler "^2.1.1"
+    nav-frontend-paneler-style "1.1.1"
+    nav-frontend-popover "1.1.1"
+    nav-frontend-popover-style "1.1.1"
+    nav-frontend-skjema "^3.2.1"
+    nav-frontend-typografi "^3.1.1"
+    nav-frontend-typografi-style "^1.1.1"
     prop-types "^15.7.2"
     styled-components "^5.2.1"
 
@@ -1567,7 +1589,7 @@
     "@sentry/core" "^6.2.1"
     constate "^3.2.0"
 
-"@navikt/familie-ikoner@^3.1.10", "@navikt/familie-ikoner@^3.1.11":
+"@navikt/familie-ikoner@^3.1.11":
   version "3.1.11"
   resolved "https://registry.yarnpkg.com/@navikt/familie-ikoner/-/familie-ikoner-3.1.11.tgz#ca393580dd21f606a22862f910ac58692b0f719b"
   integrity sha512-SBDmiw5zUe/lmTTH+7JbVuOwGkOSW8d55l2Ey6XBv7gMeRMbwPaYm9lYJiff+2PLZQ+f/zzOM5Ojwadt2i5mZg==
@@ -3725,15 +3747,10 @@ ci-info@^2.0.0:
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-2.0.0.tgz#67a9e964be31a51e15e5010d58e6f12834002f46"
   integrity sha512-5tK7EtrZ0N+OLFMthtqOj4fI2Jeb88C4CAZPu25LDVUgXJ0A3Js4PMGqrn0JU1W0Mh1/Z8wZzYPxqUrXeBboCQ==
 
-classnames@*, classnames@^2.3.1:
+classnames@*, classnames@^2.2.6, classnames@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
   integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
-
-classnames@^2.2.6:
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
-  integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
 
 clean-css@^4.2.3:
   version "4.2.3"
@@ -7545,17 +7562,12 @@ nav-datovelger@^11.1.2:
   dependencies:
     focus-trap-react "^8.5.0"
 
-nav-frontend-alertstriper-style@2.0.38:
-  version "2.0.38"
-  resolved "https://registry.yarnpkg.com/nav-frontend-alertstriper-style/-/nav-frontend-alertstriper-style-2.0.38.tgz#c68ff029b2821074d062ecfdecf6fd81b0b46443"
-  integrity sha512-kIhB4V28gHt4UGMFJzb/I2k9tJh0gibv4kAnLjhC6d9oypuoWrmfc5q05r7Fq6nCu/kOiaeYHG28cOWhZvztcw==
-
 nav-frontend-alertstriper-style@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/nav-frontend-alertstriper-style/-/nav-frontend-alertstriper-style-2.1.1.tgz#f3becc89ca04166169f34847ab7f7ffe5e66c2a7"
   integrity sha512-WZrXXgWD9g4Kj64eZb2rad+qwZLd949gjJdtq8RlbRstdT4dx3aA3I5yTv2JaV1AruHDSlEXGJI5eAgcSL5r5A==
 
-nav-frontend-alertstriper@^3.0.51, nav-frontend-alertstriper@^3.1.1:
+nav-frontend-alertstriper@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/nav-frontend-alertstriper/-/nav-frontend-alertstriper-3.1.1.tgz#096cddc92e122453a924e47ff33946518d890dfb"
   integrity sha512-BNSSr1bqzQHqJHK/V7G+74U/CjvJrBloPnBtFXDUmsb+xFbLavIj4+EYZPD3NVJYOHFIOnNLPWyJJSWR+nA20Q==
@@ -7569,11 +7581,6 @@ nav-frontend-chevron@^1.0.28:
   version "1.0.28"
   resolved "https://registry.yarnpkg.com/nav-frontend-chevron/-/nav-frontend-chevron-1.0.28.tgz#1ec53e142f1b381ee9bd7874b505abd5bc3a6b2a"
   integrity sha512-gwM2eUTsUlEnxHoWJz4MU2nCGpmLWXBogiPDRd+gvdoDfD4qWMthm0ofaRz5yI3y7v5xKd+gzNq2Q2fDDO0Jvw==
-
-nav-frontend-core@^5.0.11:
-  version "5.0.11"
-  resolved "https://registry.yarnpkg.com/nav-frontend-core/-/nav-frontend-core-5.0.11.tgz#d2611a79f5f5372166a467a5f6e5eaccb8725086"
-  integrity sha512-5b1FMK1mPfnpsXgHMDLY8Tj4SiPXVFg9hXj//qTaO3W2lwMY4Df3dKh4R595OiuVu7IRutAIuocPtXv3ysmsag==
 
 nav-frontend-core@^5.1.1:
   version "5.1.1"
@@ -7617,22 +7624,12 @@ nav-frontend-js-utils@1.0.17, nav-frontend-js-utils@^1.0.17:
   dependencies:
     lodash.throttle "^4.1.1"
 
-nav-frontend-knapper-style@^1.0.16:
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/nav-frontend-knapper-style/-/nav-frontend-knapper-style-1.0.16.tgz#648612a3d5c5afdecb9cc0ec81e92c7108b5a620"
-  integrity sha512-LRG81mtg/48klu3K7Ow9KMUBT7FbcIR1+7L3DfEHdxt2k4FsvsjdPt48oVIgc2Nm2z4uEco4UkGPjYLv0s66MQ==
-
-nav-frontend-knapper-style@^1.0.17, nav-frontend-knapper-style@^1.1.2:
+nav-frontend-knapper-style@^1.0.16, nav-frontend-knapper-style@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/nav-frontend-knapper-style/-/nav-frontend-knapper-style-1.1.2.tgz#700c3ee14f8e757d0d4e706a4b1ee5488eae9a40"
   integrity sha512-A8y4PkjAUBTjs4HzWJuGvk1rwXHE5Slz2SsnedqPt79Oyy+/msp+f/WyIRSsCyzp2qcMQyhcj1JSccqglpBbBA==
 
-nav-frontend-knapper@^2.0.31:
-  version "2.0.31"
-  resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-2.0.31.tgz#2b748e01925b2352a30d24e6e5fdf2bdf4aa6519"
-  integrity sha512-6wYv/xHT1LUDepO+Svjl2fVvTLCcrIw2lwysoWnXdMO/ov7ggNn6jaEbbtxhCdl0dGwFCC4ErT059iRjTOdl7w==
-
-nav-frontend-knapper@^2.0.32, nav-frontend-knapper@^2.1.2:
+nav-frontend-knapper@^2.0.31, nav-frontend-knapper@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-2.1.2.tgz#ac383a7fa1eced32fefb7b494a0316301be1fa43"
   integrity sha512-AT1o7nQx9MqRhOH5YznahFVOPgh9ACkNf0JjFyZeWFJ8vcobvR/2skC+y0IGCo1GGYpDLPgpvRo4iJXnNl48uQ==
@@ -7667,35 +7664,25 @@ nav-frontend-modal@^1.2.0:
   resolved "https://registry.yarnpkg.com/nav-frontend-modal/-/nav-frontend-modal-1.2.0.tgz#6708e2ea090affec0d4501258b8a7fde61599c13"
   integrity sha512-Mvt53RdLzdxhtU5iIOgxR+gBKmc0ytUOx3xTKhgEQG55sK14UMj4VrBXMFwn8dDN/NthpUQjIHdC6DdQOYznhQ==
 
-nav-frontend-paneler-style@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/nav-frontend-paneler-style/-/nav-frontend-paneler-style-1.0.2.tgz#e10dfc27b18b2bd02d97d68194a33defca11beaa"
-  integrity sha512-tiG/jcokzKhi6xnuV+qdNM7YHk0NmATn/Mb5MwHnPGJs9AoTInyWPShtdOBUWLx+3//oXWn3iAd9dGLrE57MNg==
-
-nav-frontend-paneler-style@^1.1.1:
+nav-frontend-paneler-style@1.1.1, nav-frontend-paneler-style@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/nav-frontend-paneler-style/-/nav-frontend-paneler-style-1.1.1.tgz#e5531211858db2d986fc1c45bdd83a7fc77695dc"
   integrity sha512-50TS/hNHfREOmBnuVUS6ZYon6VRE5zDGlCktzjsCw7t58rTCrhlVk2X1SlIYl4MPvEZNg4qhS7EkOHSjgUpnbQ==
 
-nav-frontend-paneler@^2.0.32:
+nav-frontend-paneler@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/nav-frontend-paneler/-/nav-frontend-paneler-2.1.1.tgz#3fdf2bef1a4c3416d053051691de8329baf5f1bd"
   integrity sha512-o0RJnmNAnzoVluEAmA8b2wl9EQ03zjJI1HjsPJD3hqFj5upRS4MrW/fpB9u5PDK+CSc6y2ICM4um9kHrHG0low==
 
-nav-frontend-popover-style@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/nav-frontend-popover-style/-/nav-frontend-popover-style-1.0.2.tgz#177f1a437aa6d1a4ded5440dd5c4ae5d2d6b7be1"
-  integrity sha512-ATt5pSYiaS61qVS05SxQ8AB7lO1Fnp1+abpBLfspaNkiaeLlkAyQrbyPKIDs6ymlowNogTaQb8o9Sh3Pl/OuSg==
-
-nav-frontend-popover-style@^1.1.1:
+nav-frontend-popover-style@1.1.1, nav-frontend-popover-style@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/nav-frontend-popover-style/-/nav-frontend-popover-style-1.1.1.tgz#0e662c330989fe8ebed232d23b915234fb7f3d20"
   integrity sha512-6DVmHs1wPryX8lvX9d4hopM3ugY1CqD/KuUDuF7SQcxDbFCeIvAVnRvzKs5hlKnGjY0wM7izcBEk5qyfF3fung==
 
-nav-frontend-popover@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/nav-frontend-popover/-/nav-frontend-popover-1.0.3.tgz#f88b8daf512b2237a45d5b9962416990cb8a7244"
-  integrity sha512-fw6nlLdwHb7C1x8CdwwzpVTWCTolr1YHj1X6eTyYuNbzAHGGPMSFHIdW+ZhAHRY02Py6BrUKV1xA3eSuQvUoEA==
+nav-frontend-popover@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/nav-frontend-popover/-/nav-frontend-popover-1.1.1.tgz#b4f0ae095836b4fd17f946b7692ce0977ae9e10f"
+  integrity sha512-OeLsrNQRySRyG3Azb2WFJAxuZRIXXqgkMpeg3VV65rSHmyub8T+V/cLYtl/Gf/8oJ7eADqJrVgY5tLyduqFVig==
 
 nav-frontend-popover@^1.1.2:
   version "1.1.2"
@@ -7712,15 +7699,10 @@ nav-frontend-skjema-style@^2.2.2:
   resolved "https://registry.yarnpkg.com/nav-frontend-skjema-style/-/nav-frontend-skjema-style-2.2.2.tgz#6468e0dd16c5d5448997e1a071812ccddd415f93"
   integrity sha512-9rOQfmsGnMPm4bzhV8Nkl6NcG8d6elCsDo9oHyfxrohWA3uMD9EpDpBPNN2+CdOAaygq83i1ETS6nz1BeuyXzw==
 
-nav-frontend-skjema@^3.0.53, nav-frontend-skjema@^3.2.2:
+nav-frontend-skjema@^3.2.1, nav-frontend-skjema@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/nav-frontend-skjema/-/nav-frontend-skjema-3.2.2.tgz#884de28f37008e1c316cded8c889b94575be0121"
   integrity sha512-06NzjBnYMflMq0byxW8ftmSnCwW77C+Oa3HqtqIVC9ZdYAjMBpBNjN4H6trgEk3x7/IK6eXp9E4LQXJaFBgQqQ==
-
-nav-frontend-skjema@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/nav-frontend-skjema/-/nav-frontend-skjema-3.2.1.tgz#8cddce61cce97c606401c9df70c98d0c4f0fceea"
-  integrity sha512-4yhfei0B23E5z4HETWnWAvcAuZT1IHpODMzOfMPhYKXBGCkum5WpBIFvf9lhlxMva9I/xE03T2zL0MFfPzWOhw==
 
 nav-frontend-spinner-style@^1.0.2:
   version "1.0.2"
@@ -7742,21 +7724,7 @@ nav-frontend-toggle@^1.1.2:
   resolved "https://registry.yarnpkg.com/nav-frontend-toggle/-/nav-frontend-toggle-1.1.2.tgz#a3be9702223e68fbf1cc88a173ca2c12553398c2"
   integrity sha512-e7sV4uXzf37JIC7BBXNU7vTN4LiGce4xPMzhraXSgPYpt4jw/I9uNv+68RhTg8ygDp3IGDWcw7xvo1sy18/gBg==
 
-nav-frontend-typografi-style@^1.0.17:
-  version "1.0.32"
-  resolved "https://registry.yarnpkg.com/nav-frontend-typografi-style/-/nav-frontend-typografi-style-1.0.32.tgz#554cbf1dce9795f957c670681c7e780ccce78b5a"
-  integrity sha512-f/sBWQCvIhvEN0XdwJfRnlFJGWiWdSSVztE2O0Q0viURZQ7KrSEoUHKJCXdSlOmpWHSeOXi+87YVzQir3pDqfQ==
-  dependencies:
-    nav-frontend-core "^5.0.11"
-
-nav-frontend-typografi-style@^1.0.34:
-  version "1.0.34"
-  resolved "https://registry.yarnpkg.com/nav-frontend-typografi-style/-/nav-frontend-typografi-style-1.0.34.tgz#ab377665e5b6130d1c5c1bd8c073a9d914f06538"
-  integrity sha512-hEREMKAXLVjpE+ss605ZXU3T7MX4FLMH7qKLnsaHazoNGOSca5tRNbC53IfJmdMEQAAIbxch/HMknEpVKAXbGw==
-  dependencies:
-    nav-frontend-core "^5.0.11"
-
-nav-frontend-typografi-style@^1.0.35, nav-frontend-typografi-style@^1.1.1:
+nav-frontend-typografi-style@^1.0.17, nav-frontend-typografi-style@^1.0.34, nav-frontend-typografi-style@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/nav-frontend-typografi-style/-/nav-frontend-typografi-style-1.1.1.tgz#cfcfd6c9650ef3a1176e0954645feaf494723808"
   integrity sha512-AaXOmWMX+7kU/bFlzKgb4fLzUBEqedZfV00ri8TChWOoP+fR9t9cdBaWKkFiMQqlttA6n6IRrTCKYXhuquQWzQ==
@@ -7768,12 +7736,7 @@ nav-frontend-typografi@^2.0.16:
   resolved "https://registry.yarnpkg.com/nav-frontend-typografi/-/nav-frontend-typografi-2.0.39.tgz#036e602e1c6253685132b62f05e42aeafc50fb9c"
   integrity sha512-YJ2e+nB2C1GdpxkONM87W8to+6ij058WWa6s2k1ABdODtfiHKQd0hJEfgmW9WrJT5e2WM6kkal5IeH3qF3lVuw==
 
-nav-frontend-typografi@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/nav-frontend-typografi/-/nav-frontend-typografi-3.0.3.tgz#3a846259a26feb2b8a7f283e8ae672cab4f598ad"
-  integrity sha512-YHNHsX+7cIBcAtGDtLSafenN6qforgLDqvWPw5DtHAJtm7pnH1CGlpdU2RA/+nMPzeVwAxPkSEeH/T6cMiNyYw==
-
-nav-frontend-typografi@^3.0.4, nav-frontend-typografi@^3.1.1:
+nav-frontend-typografi@^3.0.3, nav-frontend-typografi@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/nav-frontend-typografi/-/nav-frontend-typografi-3.1.1.tgz#3d4b5fbac3e5a8a8a23969fa835c393bf003e3fc"
   integrity sha512-wxH1dCmmX/91zIZMKGuq0XcnIr5/nBTM8TSqTUp5UR3KnHZ0+/jID3hPEMwQPhaQTaseNW3yfBIjBolkxHcivQ==

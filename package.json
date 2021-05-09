@@ -26,7 +26,7 @@
     "@navikt/familie-backend": "5.0.21",
     "@navikt/familie-clipboard": "^3.1.6",
     "@navikt/familie-form-elements": "^2.2.18",
-    "@navikt/familie-header": "3.0.10",
+    "@navikt/familie-header": "3.0.15",
     "@navikt/familie-http": "^1.0.5",
     "@navikt/familie-logging": "^1.0.4",
     "@navikt/familie-skjema": "^1.1.4",
