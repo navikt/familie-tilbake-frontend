@@ -120,12 +120,13 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         return false;
     };
 
-    const erStegAvbrutt = (steg: Behandlingssteg): boolean => {
+    const erBehandlingReturnertFraBeslutter = (): boolean => {
         if (behandling?.status === RessursStatus.SUKSESS) {
             return behandling.data.behandlingsstegsinfo.some(
                 stegInfo =>
-                    stegInfo.behandlingssteg === steg &&
-                    stegInfo.behandlingsstegstatus === Behandlingsstegstatus.AVBRUTT
+                    stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
+                    (stegInfo.behandlingsstegstatus === Behandlingsstegstatus.AVBRUTT ||
+                        stegInfo.behandlingsstegstatus === Behandlingsstegstatus.TILBAKEFØRT)
             );
         }
         return false;
@@ -164,7 +165,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         settVisVenteModal,
         erStegBehandlet,
         erStegAutoutført,
-        erStegAvbrutt,
+        erBehandlingReturnertFraBeslutter,
         harVærtPåFatteVedtakSteget,
         harKravgrunnlag,
     };

@@ -82,7 +82,9 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
         }
     }, [behandling]);
 
-    const erPåFatteVedtak = aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK;
+    const disableSendMelding =
+        aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK ||
+        aktivtSteg?.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK;
 
     return (
         <StyledContainer>
@@ -112,7 +114,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         className={valgtMenyside === Menysider.SEND_BREV ? 'valgt' : ''}
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => settValgtMenyside(Menysider.SEND_BREV)}
-                        disabled={erPåFatteVedtak}
+                        disabled={disableSendMelding}
                     >
                         <SendBrevIkon />
                         Send brev

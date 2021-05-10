@@ -58,7 +58,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
         const {
             visVenteModal,
             erStegBehandlet,
-            erStegAvbrutt,
+            erBehandlingReturnertFraBeslutter,
             hentBehandlingMedBehandlingId,
         } = useBehandling();
         const { request } = useHttp();
@@ -68,7 +68,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             if (visVenteModal === false) {
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.FATTE_VEDTAK));
                 settFatteVedtakILåsemodus(
-                    !behandling.kanEndres || erStegAvbrutt(Behandlingssteg.FATTE_VEDTAK)
+                    !behandling.kanEndres || erBehandlingReturnertFraBeslutter()
                 );
                 hentTotrinnkontroll();
             }
@@ -187,9 +187,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
         };
 
         const sendInnSkjema = () => {
-            console.log('skal sende inn to-trinn!', skjemaData);
             if (validerToTrinn()) {
-                console.log('validert ok');
                 settSenderInn(false);
 
                 const payload: FatteVedtakStegPayload = {
@@ -205,7 +203,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                     }),
                 };
 
-                console.log('payload', payload);
                 request<FatteVedtakStegPayload, string>({
                     method: 'POST',
                     url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/steg/v1`,
