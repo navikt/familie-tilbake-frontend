@@ -182,6 +182,7 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
                                         onClick={sendInnSkjema}
                                         spinner={senderInn}
                                         autoDisableVedSpinner
+                                        disabled={erLesevisning && !stegErBehandlet}
                                     >
                                         {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
                                     </Knapp>

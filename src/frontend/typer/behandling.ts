@@ -77,6 +77,19 @@ export enum Behandlingssteg {
     AVSLUTTET = 'AVSLUTTET',
 }
 
+export const behandlingssteg: Record<Behandlingssteg, string> = {
+    VARSEL: 'Varsel',
+    GRUNNLAG: 'Kravgrunnlag',
+    VERGE: 'Verge',
+    FAKTA: 'Fakta om feilutbetaling',
+    FORELDELSE: 'Foreldelse',
+    VILKÅRSVURDERING: 'Tilbakekreving',
+    FORESLÅ_VEDTAK: 'Vedtak',
+    FATTE_VEDTAK: 'Fatte vedtak',
+    IVERKSETT_VEDTAK: 'Iverksetter vedtak',
+    AVSLUTTET: 'Avsluttet',
+};
+
 export const SaksbehandlerBehandlingssteg = [
     Behandlingssteg.VERGE,
     Behandlingssteg.FAKTA,
@@ -141,6 +154,7 @@ export interface IBehandling {
     årsak?: Behandlingårsak;
     //    skalBehandlesAutomatisk: boolean;
     erBehandlingPåVent?: boolean;
+    kanEndres: boolean;
     harVerge: boolean;
     kanHenleggeBehandling: boolean;
     behandlingsstegsinfo: IBehandlingsstegstilstand[];

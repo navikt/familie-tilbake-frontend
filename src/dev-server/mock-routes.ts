@@ -4,6 +4,24 @@ import { Request, Response, Router } from 'express';
 
 import { byggFeiletRessurs, byggSuksessRessurs, RessursStatus } from '@navikt/familie-typer';
 
+import {
+    Aktsomhet,
+    Foreldelsevurdering,
+    HendelseType,
+    HendelseUndertype,
+    SærligeGrunner,
+    Vilkårsresultat,
+} from '../frontend/kodeverk';
+import {
+    FaktaPeriode,
+    ForeldelsePeriode,
+    IFeilutbetalingFakta,
+    IFeilutbetalingForeldelse,
+    IFeilutbetalingVilkårsvurdering,
+    Periode,
+    VilkårsresultatInfo,
+    VilkårsvurderingPeriode,
+} from '../frontend/typer/feilutbetalingtyper';
 import { fagsak_ba2, ba_behandling_4, ba_behandling_5 } from './mock/ba2/BA_fagsak_2';
 import {
     fagsak_ba3,
@@ -26,8 +44,11 @@ import {
     ba_behandling_20,
     fagsak_ba5,
 } from './mock/ba5/BA_fagsak_5';
+import {
+    beregningsresultat_1,
+    beregningsresultat_3,
+} from './mock/behandlingsresultat/behandlingsresultat';
 import { fagsak_ef2, ef_behandling_4, ef_behandling_5 } from './mock/ef2/EF_fagsak_2';
-import { fagsak_ks2, ks_behandling_4 } from './mock/ks2/KS_fagsak_2';
 import {
     feilutbetalingFakta_ubehandlet_1,
     feilutbetalingFakta_ubehandlet_2,
@@ -40,35 +61,15 @@ import {
     feilutbetalingForeldelse_ubehandlet_3,
     feilutbetalingForeldelse_ubehandlet_4,
 } from './mock/foreldelse/feilutbetalingForeldelse_ubehandlet';
-import {
-    FaktaPeriode,
-    ForeldelsePeriode,
-    IFeilutbetalingFakta,
-    IFeilutbetalingForeldelse,
-    IFeilutbetalingVilkårsvurdering,
-    Periode,
-    VilkårsresultatInfo,
-    VilkårsvurderingPeriode,
-} from '../frontend/typer/feilutbetalingtyper';
-import {
-    Aktsomhet,
-    Foreldelsevurdering,
-    HendelseType,
-    HendelseUndertype,
-    SærligeGrunner,
-    Vilkårsresultat,
-} from '../frontend/kodeverk';
+import { fagsak_ks2, ks_behandling_4 } from './mock/ks2/KS_fagsak_2';
+import { totrinn_1 } from './mock/totrinn/totrinn';
+import { vedtaksbrevtekster_1 } from './mock/vedtak/brevsavsnitt';
 import {
     feilutbetalingVilkårsvurdering_ubehandlet_1,
     feilutbetalingVilkårsvurdering_ubehandlet_2,
     feilutbetalingVilkårsvurdering_ubehandlet_3,
     feilutbetalingVilkårsvurdering_ubehandlet_4,
 } from './mock/vilkårsvurdering/feilutbetalingVilkårsvurdering_ubehandlet';
-import { vedtaksbrevtekster_1 } from './mock/vedtak/brevsavsnitt';
-import {
-    beregningsresultat_1,
-    beregningsresultat_3,
-} from './mock/behandlingsresultat/behandlingsresultat';
 
 const behandleFaktaPerioder = (
     perioder: FaktaPeriode[],
@@ -102,9 +103,9 @@ const behandleFakta = (
 
 const behandleForeldelsePerioder = (
     perioder: ForeldelsePeriode[],
-    antallForeldet: number = 0,
+    antallForeldet = 0,
     foreldelsesfrist?: string,
-    antallTilleggsfrist: number = 0,
+    antallTilleggsfrist = 0,
     oppdagelsesdato?: string,
     antallIkkeForeldet?: number
 ): ForeldelsePeriode[] => {
@@ -139,8 +140,8 @@ const behandleForeldelsePerioder = (
 
 const behandleForeldelse = (
     ubehandletForeldelse: IFeilutbetalingForeldelse,
-    antallForeldet: number = 0,
-    antallTilleggsfrist: number = 0,
+    antallForeldet = 0,
+    antallTilleggsfrist = 0,
     foreldelsesfrist?: string,
     oppdagelsesdato?: string,
     antallIkkeForeldet?: number
@@ -760,6 +761,13 @@ export const setupRouter = (router: Router) => {
                         )
                     );
             }
+        }
+    );
+
+    router.get(
+        '/familie-tilbake/api/behandling/:behandlingId/totrinn/v1',
+        (_req: Request, res: Response) => {
+            res.send(byggSuksessRessurs(totrinn_1));
         }
     );
 

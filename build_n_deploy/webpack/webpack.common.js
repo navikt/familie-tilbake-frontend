@@ -7,6 +7,7 @@ module.exports = {
     entry: ['./src/frontend/index.tsx'],
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.less'],
+        fallback: { crypto: false },
     },
     module: {
         rules: [
@@ -33,6 +34,12 @@ module.exports = {
                 exclude: /node_modules/,
                 options: {
                     presets: ['react-app'],
+                },
+            },
+            {
+                test: /\.m?js/,
+                resolve: {
+                    fullySpecified: false,
                 },
             },
             {

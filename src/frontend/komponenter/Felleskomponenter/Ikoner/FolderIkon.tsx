@@ -1,0 +1,24 @@
+import * as React from 'react';
+
+const FolderIkon: React.FC = () => {
+    return (
+        <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <g id="folder">
+                <path
+                    id="Vector 4 (Stroke)"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M9 8V4H2V20H22V8H9ZM0 4V20C0 21.1046 0.895431 22 2 22H22C23.1046 22 24 21.1046 24 20V8C24 6.89543 23.1046 6 22 6H11V4C11 2.89543 10.1046 2 9 2H2C0.895431 2 0 2.89543 0 4Z"
+                />
+            </g>
+        </svg>
+    );
+};
+
+export default FolderIkon;

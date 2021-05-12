@@ -65,6 +65,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                 if (hentetBehandling.status === RessursStatus.SUKSESS) {
                     const erILeseModus =
                         hentetBehandling.data.erBehandlingPåVent ||
+                        hentetBehandling.data.kanEndres === false ||
                         hentetBehandling.data.behandlingsstegsinfo.some(
                             stegInfo =>
                                 stegInfo.behandlingssteg === Behandlingssteg.AVSLUTTET ||
@@ -119,6 +120,18 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         return false;
     };
 
+    const erBehandlingReturnertFraBeslutter = (): boolean => {
+        if (behandling?.status === RessursStatus.SUKSESS) {
+            return behandling.data.behandlingsstegsinfo.some(
+                stegInfo =>
+                    stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
+                    (stegInfo.behandlingsstegstatus === Behandlingsstegstatus.AVBRUTT ||
+                        stegInfo.behandlingsstegstatus === Behandlingsstegstatus.TILBAKEFØRT)
+            );
+        }
+        return false;
+    };
+
     const erStegAutoutført = (steg: Behandlingssteg): boolean => {
         if (behandling?.status === RessursStatus.SUKSESS) {
             const behandlingSteg = behandling.data.behandlingsstegsinfo?.find(
@@ -132,6 +145,15 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         return false;
     };
 
+    const harVærtPåFatteVedtakSteget = () => {
+        return (
+            behandling?.status === RessursStatus.SUKSESS &&
+            behandling.data.behandlingsstegsinfo.some(
+                bsi => bsi.behandlingssteg === Behandlingssteg.FATTE_VEDTAK
+            )
+        );
+    };
+
     return {
         behandling,
         hentBehandlingMedEksternBrukId,
@@ -143,6 +165,8 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         settVisVenteModal,
         erStegBehandlet,
         erStegAutoutført,
+        erBehandlingReturnertFraBeslutter,
+        harVærtPåFatteVedtakSteget,
         harKravgrunnlag,
     };
 });
