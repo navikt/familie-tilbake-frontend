@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import navFarger from 'nav-frontend-core';
 import { Flatknapp } from 'nav-frontend-knapper';
 
-import { Send, Folder, Clock } from '@navikt/ds-icons/esm';
+import { Send, Folder, Clock } from '@navikt/ds-icons';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
@@ -106,7 +106,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => settValgtMenyside(Menysider.HISTORIKK)}
                     >
-                        <Clock role="button" />
+                        <Clock />
                         Historikk
                     </StyledFlatknapp>
                     <StyledFlatknapp
