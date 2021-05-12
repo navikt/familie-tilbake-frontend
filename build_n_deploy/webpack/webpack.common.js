@@ -7,6 +7,7 @@ module.exports = {
     entry: ['./src/frontend/index.tsx'],
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.less'],
+        fallback: { crypto: false },
     },
     module: {
         rules: [
