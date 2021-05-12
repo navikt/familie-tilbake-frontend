@@ -5,14 +5,13 @@ import styled from 'styled-components';
 import navFarger from 'nav-frontend-core';
 import { Flatknapp } from 'nav-frontend-knapper';
 
+import { Send, Folder, Clock } from '@navikt/ds-icons/esm';
+
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
-import ClockIkon from '../../Felleskomponenter/Ikoner/ClockIkon';
 import FatteVedtakIkon from '../../Felleskomponenter/Ikoner/FatteVedtakIkon';
-import FolderIkon from '../../Felleskomponenter/Ikoner/FolderIkon';
-import SendBrevIkon from '../../Felleskomponenter/Ikoner/SendBrevIkon';
 import Behandlingskort from '../Behandlingskort/Behandlingskort';
 import Undermeny, { Menysider } from './Undermeny';
 
@@ -107,7 +106,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => settValgtMenyside(Menysider.HISTORIKK)}
                     >
-                        <ClockIkon />
+                        <Clock role="button" />
                         Historikk
                     </StyledFlatknapp>
                     <StyledFlatknapp
@@ -116,7 +115,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         onClick={() => settValgtMenyside(Menysider.SEND_BREV)}
                         disabled={disableSendMelding}
                     >
-                        <SendBrevIkon />
+                        <Send />
                         Send brev
                     </StyledFlatknapp>
                     <StyledFlatknapp
@@ -124,7 +123,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => settValgtMenyside(Menysider.DOKUMENTER)}
                     >
-                        <FolderIkon />
+                        <Folder />
                         Dokumenter
                     </StyledFlatknapp>
                 </StyledUndermenyContainer>
