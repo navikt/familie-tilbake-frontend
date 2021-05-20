@@ -5,21 +5,16 @@ import styled from 'styled-components';
 import navFarger from 'nav-frontend-core';
 import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
-import { ytelsetype } from '../../../kodeverk';
+import { ytelsetype } from '../../../../kodeverk';
 import {
     IBehandling,
     behandlingsstatuser,
     behandlingsresultater,
     Behandlingstype,
-} from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
-import { formatterDatostring } from '../../../utils';
-import Informasjonsbolk from '../../Felleskomponenter/Informasjonsbolk/Informasjonsbolk';
-
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+} from '../../../../typer/behandling';
+import { IFagsak } from '../../../../typer/fagsak';
+import { formatterDatostring } from '../../../../utils';
+import Informasjonsbolk from '../../../Felleskomponenter/Informasjonsbolk/Informasjonsbolk';
 
 const Container = styled.div`
     border: 1px solid ${navFarger.navGra40};
@@ -40,6 +35,11 @@ const StyledHr = styled.hr`
     border-bottom: 1px solid ${navFarger.navLysGra};
 `;
 
+interface IProps {
+    fagsak: IFagsak;
+    behandling: IBehandling;
+}
+
 const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
     const tittel =
         behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING
@@ -48,16 +48,10 @@ const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
     return (
         <Container>
             <StyledUndertittel>{tittel}</StyledUndertittel>
-            <Normaltekst>{`Opprettet: ${
-                behandling.opprettetDato ? formatterDatostring(behandling.opprettetDato) : ''
-            }`}</Normaltekst>
+            <Normaltekst>{ytelsetype[fagsak.ytelsestype]}</Normaltekst>
             <StyledHr />
             <Informasjonsbolk
                 informasjon={[
-                    {
-                        label: 'Ytelse',
-                        tekst: ytelsetype[fagsak.ytelsestype],
-                    },
                     {
                         label: 'Behandlingsstatus',
                         tekst: behandlingsstatuser[behandling.status],
@@ -67,6 +61,30 @@ const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
                         tekst: behandling.resultatstype
                             ? behandlingsresultater[behandling.resultatstype]
                             : '-',
+                    },
+                ]}
+            />
+            <Informasjonsbolk
+                informasjon={[
+                    {
+                        label: 'Opprettet',
+                        tekst: behandling.opprettetDato
+                            ? formatterDatostring(behandling.opprettetDato)
+                            : '-',
+                    },
+                    {
+                        label: 'Avsluttet',
+                        tekst: behandling.avsluttetDato
+                            ? formatterDatostring(behandling.avsluttetDato)
+                            : '-',
+                    },
+                ]}
+            />
+            <Informasjonsbolk
+                informasjon={[
+                    {
+                        label: 'Enhet',
+                        tekst: behandling.enhetskode ? behandling.enhetskode : '-',
                     },
                 ]}
             />

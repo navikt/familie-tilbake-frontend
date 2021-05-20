@@ -43,6 +43,7 @@ const ks_behandling_4: IBehandling = {
     erBehandlingPåVent: false,
     harVerge: true,
     kanEndres: true,
+    varselSendt: false,
     type: Behandlingstype.TILBAKEKREVING,
     årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,

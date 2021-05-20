@@ -12,19 +12,19 @@ import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import FatteVedtakIkon from '../../Felleskomponenter/Ikoner/FatteVedtakIkon';
-import Behandlingskort from '../Behandlingskort/Behandlingskort';
-import Undermeny, { Menysider } from './Undermeny';
+import Behandlingskort from './Behandlingskort/Behandlingskort';
+import Menykontainer, { Menysider } from './Menykontainer';
 
 const StyledContainer = styled.div`
     width: 25rem;
     height: calc(100vh - 8rem);
 `;
 
-const UndermenyContainer = styled.div`
+const HøyremenyContainer = styled.div`
     padding: 0 10px 0 10px;
 `;
 
-const StyledUndermenyContainer = styled.div`
+const Høyremenyvalg = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -32,7 +32,7 @@ const StyledUndermenyContainer = styled.div`
     color: ${navFarger.navBla};
 `;
 
-const StyledFlatknapp = styled(Flatknapp)`
+const Høyremenyknapp = styled(Flatknapp)`
     flex-direction: column;
     font-weight: normal;
     text-transform: none;
@@ -89,27 +89,35 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
         <StyledContainer>
             <Behandlingskort fagsak={fagsak} behandling={behandling} />
             <Spacer20 />
-            <UndermenyContainer>
-                <StyledUndermenyContainer>
+            <HøyremenyContainer>
+                <Høyremenyvalg>
                     {værtPåFatteVedtakSteget && (
-                        <StyledFlatknapp
+                        <Høyremenyknapp
                             className={valgtMenyside === Menysider.TOTRINN ? 'valgt' : ''}
                             onMouseDown={e => e.preventDefault()}
                             onClick={() => settValgtMenyside(Menysider.TOTRINN)}
                         >
                             <FatteVedtakIkon />
                             Fatte vedtak
-                        </StyledFlatknapp>
+                        </Høyremenyknapp>
                     )}
-                    <StyledFlatknapp
+                    <Høyremenyknapp
                         className={valgtMenyside === Menysider.HISTORIKK ? 'valgt' : ''}
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => settValgtMenyside(Menysider.HISTORIKK)}
                     >
                         <Clock />
                         Historikk
-                    </StyledFlatknapp>
-                    <StyledFlatknapp
+                    </Høyremenyknapp>
+                    <Høyremenyknapp
+                        className={valgtMenyside === Menysider.DOKUMENTER ? 'valgt' : ''}
+                        onMouseDown={e => e.preventDefault()}
+                        onClick={() => settValgtMenyside(Menysider.DOKUMENTER)}
+                    >
+                        <Folder />
+                        Dokumenter
+                    </Høyremenyknapp>
+                    <Høyremenyknapp
                         className={valgtMenyside === Menysider.SEND_BREV ? 'valgt' : ''}
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => settValgtMenyside(Menysider.SEND_BREV)}
@@ -117,19 +125,15 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                     >
                         <Send />
                         Send brev
-                    </StyledFlatknapp>
-                    <StyledFlatknapp
-                        className={valgtMenyside === Menysider.DOKUMENTER ? 'valgt' : ''}
-                        onMouseDown={e => e.preventDefault()}
-                        onClick={() => settValgtMenyside(Menysider.DOKUMENTER)}
-                    >
-                        <Folder />
-                        Dokumenter
-                    </StyledFlatknapp>
-                </StyledUndermenyContainer>
+                    </Høyremenyknapp>
+                </Høyremenyvalg>
                 <Spacer8 />
-                <Undermeny valgtMenyside={valgtMenyside} behandling={behandling} fagsak={fagsak} />
-            </UndermenyContainer>
+                <Menykontainer
+                    valgtMenyside={valgtMenyside}
+                    behandling={behandling}
+                    fagsak={fagsak}
+                />
+            </HøyremenyContainer>
         </StyledContainer>
     );
 };

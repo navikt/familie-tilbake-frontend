@@ -5,6 +5,7 @@ import { IFagsak } from '../../../typer/fagsak';
 import Dokumentlisting from './Dokumentlisting/Dokumentlisting';
 import Historikk from './Historikk/Historikk';
 import SendMelding from './SendMelding/SendMelding';
+import { SendMeldingProvider } from './SendMelding/SendMeldingContext';
 import Totrinnskontroll from './Totrinnskontroll/Totrinnskontroll';
 import { TotrinnskontrollProvider } from './Totrinnskontroll/TotrinnskontrollContext';
 
@@ -21,7 +22,7 @@ interface IProps {
     behandling: IBehandling;
 }
 
-const Undermeny: React.FC<IProps> = ({ valgtMenyside, fagsak, behandling }) => {
+const Menykontainer: React.FC<IProps> = ({ valgtMenyside, fagsak, behandling }) => {
     switch (valgtMenyside) {
         case Menysider.TOTRINN:
             return (
@@ -32,11 +33,15 @@ const Undermeny: React.FC<IProps> = ({ valgtMenyside, fagsak, behandling }) => {
         case Menysider.DOKUMENTER:
             return <Dokumentlisting />;
         case Menysider.SEND_BREV:
-            return <SendMelding />;
+            return (
+                <SendMeldingProvider behandling={behandling}>
+                    <SendMelding />
+                </SendMeldingProvider>
+            );
         case Menysider.HISTORIKK:
         default:
             return <Historikk />;
     }
 };
 
-export default Undermeny;
+export default Menykontainer;

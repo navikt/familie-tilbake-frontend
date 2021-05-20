@@ -729,12 +729,8 @@ export const setupRouter = (router: Router) => {
     router.post(
         '/familie-tilbake/api/dokument/forhandsvis-vedtaksbrev',
         (req: Request, res: Response) => {
-            const { behandlingId } = req.params;
-            console.log(
-                `Skal hente for vedtaksbrev for forhåndsvisning for behandling ${behandlingId}`
-            );
-            console.log('Payload', req.body);
-            res.send(byggSuksessRessurs(vedtaksbrevtekster_1));
+            console.log(`Skal hente for vedtaksbrev for forhåndsvisning for behandling`, req.body);
+            res.send(byggSuksessRessurs('OK'));
         }
     );
 
@@ -780,6 +776,12 @@ export const setupRouter = (router: Router) => {
             res.send(byggSuksessRessurs('OK'));
         }
     );
+
+    router.post('/familie-tilbake/api/dokument/forhandsvis', (req: Request, res: Response) => {
+        const payload = req.body;
+        console.log(`Skal forhåndsvise brev for behandling: `, payload);
+        res.send(byggSuksessRessurs('OK'));
+    });
 
     router.post(
         '/familie-tilbake/api/behandling/:behandlingId/beregn/v1',

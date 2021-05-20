@@ -49,7 +49,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
 
     const hentBehandlingMedBehandlingId = (
         behandlingId: string,
-        henterEtterInnsendingAvSteg?: boolean | false
+        henterEtterStatusendring?: boolean | false
     ): void => {
         settBehandling(byggHenterRessurs());
         settAktivtSteg(undefined);
@@ -94,7 +94,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                             settVisVenteModal(true);
                         }
                     }
-                    if (henterEtterInnsendingAvSteg) {
+                    if (henterEtterStatusendring) {
                         history.push(
                             // @ts-ignore - fagsak er hentet på dette tidspunktet
                             `/fagsystem/${fagsak?.data?.fagsystem}/fagsak/${fagsak?.data?.eksternFagsakId}/behandling/${hentetBehandling.data.eksternBrukId}`

@@ -37,20 +37,24 @@ export const behandlingsstatuser: Record<Behandlingstatus, string> = {
 };
 
 export enum Behandlingresultat {
-    INGEN_TILBAKEKREVING = 'INGEN_TILBAKEKREVING',
-    DELVIS_TILBAKEKREVING = 'DELVIS_TILBAKEKREVING',
+    INGEN_TILBAKEBETALING = 'INGEN_TILBAKEBETALING',
+    DELVIS_TILBAKEBETALING = 'DELVIS_TILBAKEBETALING',
     FULL_TILBAKEKREVING = 'FULL_TILBAKEKREVING',
     HENLAGT = 'HENLAGT',
-    HENLAGT_FEILAKTIG_OPPRETTET = 'HENLAGT_FEILAKTIG_OPPRETTET',
+    HENLAGT_FEILOPPRETTET = 'HENLAGT_FEILOPPRETTET',
+    HENLAGT_FEILOPPRETTET_MED_BREV = 'HENLAGT_FEILOPPRETTET_MED_BREV',
+    HENLAGT_FEILOPPRETTET_UTEN_BREV = 'HENLAGT_FEILOPPRETTET_UTEN_BREV',
     IKKE_VURDERT = 'IKKE_VURDERT',
 }
 
 export const behandlingsresultater: Record<Behandlingresultat, string> = {
-    INGEN_TILBAKEKREVING: 'Ingen tilbakekreving',
-    DELVIS_TILBAKEKREVING: 'Delvis tilbakekreving',
+    INGEN_TILBAKEBETALING: 'Ingen tilbakekreving',
+    DELVIS_TILBAKEBETALING: 'Delvis tilbakekreving',
     FULL_TILBAKEKREVING: 'Fortsatt innvilget',
     HENLAGT: 'Henlagt',
-    HENLAGT_FEILAKTIG_OPPRETTET: 'Henlagt (feilaktig opprettet)',
+    HENLAGT_FEILOPPRETTET: 'Henlagt (feilaktig opprettet)',
+    HENLAGT_FEILOPPRETTET_MED_BREV: 'Henlagt (feilaktig opprettet), med brev',
+    HENLAGT_FEILOPPRETTET_UTEN_BREV: 'Henlagt (feilaktig opprettet)',
     IKKE_VURDERT: 'Ikke vurdert',
 };
 
@@ -146,9 +150,10 @@ export interface IBehandling {
     eksternBrukId: string;
     //    endretAv: string;
     opprettetDato: string;
+    avsluttetDato?: string;
+    enhetskode?: string;
     resultatstype?: Behandlingresultat;
     status: Behandlingstatus;
-    //    totrinnskontroll?: ITotrinnskontroll;
     type: Behandlingstype;
     //    vedtakForBehandling: IVedtakForBehandling[];
     årsak?: Behandlingårsak;
@@ -157,5 +162,6 @@ export interface IBehandling {
     kanEndres: boolean;
     harVerge: boolean;
     kanHenleggeBehandling: boolean;
+    varselSendt: boolean;
     behandlingsstegsinfo: IBehandlingsstegstilstand[];
 }

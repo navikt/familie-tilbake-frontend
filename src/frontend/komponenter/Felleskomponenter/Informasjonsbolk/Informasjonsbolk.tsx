@@ -7,7 +7,7 @@ import { Element, Normaltekst } from 'nav-frontend-typografi';
 const StyledContainer = styled.div`
     column-count: 2;
     max-width: 30rem;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
 `;
 
 export interface IInformasjon {

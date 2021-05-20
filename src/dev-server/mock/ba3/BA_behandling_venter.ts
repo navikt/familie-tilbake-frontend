@@ -20,6 +20,7 @@ const ba_behandling_6: IBehandling = {
     opprettetDato: '2020-12-02',
     erBehandlingPåVent: true,
     kanEndres: true,
+    varselSendt: false,
     behandlingsstegsinfo: [
         {
             behandlingssteg: Behandlingssteg.VARSEL,
@@ -41,6 +42,7 @@ const ba_behandling_7: IBehandling = {
     opprettetDato: '2020-12-02',
     erBehandlingPåVent: true,
     kanEndres: true,
+    varselSendt: false,
     behandlingsstegsinfo: [
         {
             behandlingssteg: Behandlingssteg.VARSEL,
@@ -66,6 +68,7 @@ const ba_behandling_8: IBehandling = {
     opprettetDato: '2020-12-02',
     erBehandlingPåVent: true,
     kanEndres: true,
+    varselSendt: false,
     behandlingsstegsinfo: [
         {
             behandlingssteg: Behandlingssteg.VARSEL,
@@ -96,6 +99,7 @@ const ba_behandling_9: IBehandling = {
     opprettetDato: '2020-12-02',
     erBehandlingPåVent: false,
     kanEndres: true,
+    varselSendt: false,
     behandlingsstegsinfo: [
         {
             behandlingssteg: Behandlingssteg.VARSEL,
