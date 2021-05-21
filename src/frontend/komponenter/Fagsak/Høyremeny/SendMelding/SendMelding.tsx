@@ -6,6 +6,7 @@ import { Knapp } from 'nav-frontend-knapper';
 
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
 import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
@@ -28,7 +29,8 @@ interface IProps {
 
 const SendMelding: React.FC<IProps> = () => {
     const { maler, skjema, senderInn, sendBrev } = useSendMelding();
-    const erLesevisning = false;
+    const { behandlingILesemodus } = useBehandling();
+    const erLesevisning = !!behandlingILesemodus;
 
     const onChangeMal = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const nyMal = DokumentMal[e.target.value as keyof typeof DokumentMal];
@@ -57,9 +59,10 @@ const SendMelding: React.FC<IProps> = () => {
                 {...skjema.felter.maltype.hentNavInputProps(skjema.visFeilmeldinger)}
                 id="dokumentMal"
                 label={'Mal'}
-                erLesevisning={false}
+                erLesevisning={erLesevisning}
                 value={skjema.felter.maltype.verdi}
                 onChange={event => onChangeMal(event)}
+                lesevisningVerdi={'Velg brev'}
             >
                 <option value={''}>Velg brev</option>
                 {maler.map(mal => (
