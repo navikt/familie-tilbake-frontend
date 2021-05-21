@@ -82,6 +82,11 @@ export const validerTekstFelt = (felt: FeltState<string | ''>) => {
     return !feilmelding ? ok(felt) : feil(felt, feilmelding);
 };
 
+export const validerTekstFeltMaksLengde = (maxLengde: number, felt: FeltState<string | ''>) => {
+    const feilmelding = validerTekstMaksLengde(maxLengde)(felt.verdi);
+    return !feilmelding ? ok(felt) : feil(felt, feilmelding);
+};
+
 export const validerNummerFelt = (
     felt: FeltState<string | ''>,
     maxVerdi?: number,

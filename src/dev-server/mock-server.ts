@@ -11,6 +11,7 @@ const config = require('../../build_n_deploy/webpack/webpack.dev');
 const port = 8008;
 
 const compiler = webpack(config);
+// @ts-ignore
 const middleware = webpackDevMiddleware(compiler, {
     publicPath: config.output.publicPath,
     writeToDisk: true,

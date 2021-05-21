@@ -12,27 +12,33 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
-import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
-import { ForhåndsvisVedtaksbrev } from '../typer/feilutbetalingVedtak';
+import { DokumentMal } from '../../../../../kodeverk';
+import { useSendMelding } from '../SendMeldingContext';
 
-const useForhåndsvisVedtaksbrev = () => {
+export interface BrevPayload {
+    behandlingId: string;
+    brevmalkode: DokumentMal;
+    fritekst: string;
+}
+
+const useForhåndsvisBrev = () => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] = React.useState<Ressurs<string>>(
         byggTomRessurs()
     );
     const [visModal, settVisModal] = React.useState<boolean>(false);
-    const { hentBrevdata } = useFeilutbetalingVedtak();
+    const { hentBrevdata } = useSendMelding();
     const { request } = useHttp();
 
     const nullstillHentetForhåndsvisning = () => {
         settHentetForhåndsvisning(byggTomRessurs);
     };
 
-    const hentVedtaksbrev = () => {
+    const hentBrev = () => {
         settHentetForhåndsvisning(byggHenterRessurs());
         const payload = hentBrevdata();
-        request<ForhåndsvisVedtaksbrev, string>({
+        request<BrevPayload, string>({
             method: 'POST',
-            url: '/familie-tilbake/api/dokument/forhandsvis-vedtaksbrev',
+            url: '/familie-tilbake/api/dokument/forhandsvis',
             data: payload,
         })
             .then((response: Ressurs<string>) => {
@@ -64,9 +70,9 @@ const useForhåndsvisVedtaksbrev = () => {
         visModal,
         settVisModal,
         hentetForhåndsvisning,
-        hentVedtaksbrev,
+        hentBrev,
         nullstillHentetForhåndsvisning,
     };
 };
 
-export { useForhåndsvisVedtaksbrev };
+export { useForhåndsvisBrev };

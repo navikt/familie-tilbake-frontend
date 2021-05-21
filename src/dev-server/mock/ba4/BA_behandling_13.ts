@@ -16,6 +16,7 @@ const ba_behandling_13: IBehandling = {
     erBehandlingPåVent: true,
     kanEndres: true,
     harVerge: true,
+    varselSendt: false,
     type: Behandlingstype.TILBAKEKREVING,
     årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
