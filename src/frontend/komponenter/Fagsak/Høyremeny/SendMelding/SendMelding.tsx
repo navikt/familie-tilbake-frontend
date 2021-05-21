@@ -64,7 +64,9 @@ const SendMelding: React.FC<IProps> = () => {
                 onChange={event => onChangeMal(event)}
                 lesevisningVerdi={'Velg brev'}
             >
-                <option value={''}>Velg brev</option>
+                <option disabled={true} value={''}>
+                    Velg brev
+                </option>
                 {maler.map(mal => (
                     <option key={mal} value={mal}>
                         {dokumentMaler[mal]}
