@@ -15,6 +15,7 @@ import {
 import {
     Behandlingssteg,
     Behandlingsstegstatus,
+    Behandlingstatus,
     IBehandling,
     IBehandlingsstegstilstand,
 } from '../typer/behandling';
@@ -64,6 +65,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
             .then((hentetBehandling: Ressurs<IBehandling>) => {
                 if (hentetBehandling.status === RessursStatus.SUKSESS) {
                     const erILeseModus =
+                        hentetBehandling.data.status === Behandlingstatus.AVSLUTTET ||
                         hentetBehandling.data.erBehandlingPåVent ||
                         hentetBehandling.data.kanEndres === false ||
                         hentetBehandling.data.behandlingsstegsinfo.some(
@@ -80,11 +82,16 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                     );
                     settHarKravgrunnlag(harFåttKravgrunnlag);
 
-                    const funnetAktivtsteg = hentetBehandling.data.behandlingsstegsinfo.find(
-                        stegInfo =>
-                            stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR ||
-                            stegInfo.behandlingsstegstatus === Behandlingsstegstatus.VENTER
-                    );
+                    const funnetAktivtsteg =
+                        hentetBehandling.data.status === Behandlingstatus.AVSLUTTET
+                            ? null
+                            : hentetBehandling.data.behandlingsstegsinfo.find(
+                                  stegInfo =>
+                                      stegInfo.behandlingsstegstatus ===
+                                          Behandlingsstegstatus.KLAR ||
+                                      stegInfo.behandlingsstegstatus ===
+                                          Behandlingsstegstatus.VENTER
+                              );
                     if (funnetAktivtsteg) {
                         settAktivtSteg(funnetAktivtsteg);
                         if (

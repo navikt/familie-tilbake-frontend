@@ -52,7 +52,6 @@ const FagsakContainer: React.FC = () => {
     const {
         behandling,
         hentBehandlingMedEksternBrukId,
-        harKravgrunnlag,
         ventegrunn,
         visVenteModal,
         settVisVenteModal,
@@ -102,15 +101,12 @@ const FagsakContainer: React.FC = () => {
                                     type={'info'}
                                 />
                             )}
-
-                            {harKravgrunnlag && (
-                                <FagsakContainerContent>
-                                    <BehandlingContainer
-                                        fagsak={fagsak.data}
-                                        behandling={behandling.data}
-                                    />
-                                </FagsakContainerContent>
-                            )}
+                            <FagsakContainerContent>
+                                <BehandlingContainer
+                                    fagsak={fagsak.data}
+                                    behandling={behandling.data}
+                                />
+                            </FagsakContainerContent>
                         </>
                     ) : (
                         <div />
