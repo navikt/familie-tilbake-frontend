@@ -41,10 +41,11 @@ interface IProps {
 }
 
 const Behandlingsmeny: React.FC<IProps> = () => {
-    const { behandling, ventegrunn } = useBehandling();
+    const { behandling, ventegrunn, erStegBehandlet } = useBehandling();
     const [anker, settAnker] = React.useState<HTMLElement | undefined>(undefined);
 
     const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.GRUNNLAG;
+    const vedtakFattet = erStegBehandlet(Behandlingssteg.FATTE_VEDTAK);
 
     return (
         <>
@@ -74,7 +75,8 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                         <KnappBase mini={true}>Opprett revurdering</KnappBase>
                     </li>
                     {behandling?.status === RessursStatus.SUKSESS &&
-                        behandling.data.status !== Behandlingstatus.AVSLUTTET && (
+                        behandling.data.status !== Behandlingstatus.AVSLUTTET &&
+                        !vedtakFattet && (
                             <>
                                 <li>
                                     <HenleggBehandling behandling={behandling.data} />
