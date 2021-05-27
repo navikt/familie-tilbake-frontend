@@ -103,7 +103,9 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling }) => {
                         onChange={event => skjema.felter.årsak.onChange(event)}
                         required={true}
                     >
-                        <option value="-">-</option>
+                        <option value="" disabled>
+                            Velg årsak
+                        </option>
                         {manuelleÅrsaker.map((årsak, index) => (
                             <option key={`årsak_${index}`} value={årsak}>
                                 {venteårsaker[årsak]}

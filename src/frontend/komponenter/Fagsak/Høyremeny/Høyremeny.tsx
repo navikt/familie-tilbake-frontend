@@ -8,7 +8,7 @@ import { Flatknapp } from 'nav-frontend-knapper';
 import { Send, Folder, Clock } from '@navikt/ds-icons';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
+import { Behandlingssteg, Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import FatteVedtakIkon from '../../Felleskomponenter/Ikoner/FatteVedtakIkon';
@@ -82,6 +82,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
     }, [behandling]);
 
     const disableSendMelding =
+        behandling.status === Behandlingstatus.AVSLUTTET ||
         aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK ||
         aktivtSteg?.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK;
 

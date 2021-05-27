@@ -2,13 +2,18 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import { Sidetittel } from 'nav-frontend-typografi';
+
+import { Spacer20 } from './Flytelementer';
+
 const StyledContainer = styled.div`
     padding: 10px;
 `;
 
 const Dashboard: React.FC = () => (
     <StyledContainer>
-        <h2>NAV Familie - Tilbakekreving</h2>
+        <Sidetittel>NAV Familie - Tilbakekreving</Sidetittel>
+        <Spacer20 />
         <div>
             Velkommen til saksbehandlingsløsningen for tilbakekreving av ytelsene Barnetrygd,
             Konstantstøtte og Støtte til enslig forsørger.

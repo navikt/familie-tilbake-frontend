@@ -4,6 +4,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
+import { Normaltekst } from 'nav-frontend-typografi';
 
 import { useBehandling } from '../../context/BehandlingContext';
 import { IBehandling } from '../../typer/behandling';
@@ -36,6 +37,11 @@ const StyledMainContainer = styled.div`
     overflow: auto;
 `;
 
+const HenlagtContainer = styled.div`
+    padding: 10px;
+    text-align: center;
+`;
+
 const StyledHøyremenyContainer = styled.div`
     border-left: 1px solid ${navFarger.navGra20};
     overflow-x: hidden;
@@ -51,7 +57,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
     const history = useHistory();
     const ønsketSide = history.location.pathname.split('/')[7];
 
-    const { visVenteModal, aktivtSteg } = useBehandling();
+    const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
 
     React.useEffect(() => {
         if (visVenteModal === false) {
@@ -71,7 +77,18 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
         }
     }, [visVenteModal, aktivtSteg, ønsketSide]);
 
-    return behandling ? (
+    return behandling.erBehandlingHenlagt ? (
+        <>
+            <StyledMainContainer id={'fagsak-main'}>
+                <HenlagtContainer>
+                    <Normaltekst>Behandlingen er henlagt</Normaltekst>
+                </HenlagtContainer>
+            </StyledMainContainer>
+            <StyledHøyremenyContainer>
+                <Høyremeny fagsak={fagsak} behandling={behandling} />
+            </StyledHøyremenyContainer>
+        </>
+    ) : harKravgrunnlag ? (
         <>
             <StyledVenstremenyContainer>
                 <Venstremeny fagsak={fagsak} />
@@ -125,9 +142,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                 <Høyremeny fagsak={fagsak} behandling={behandling} />
             </StyledHøyremenyContainer>
         </>
-    ) : (
-        <div />
-    );
+    ) : null;
 };
 
 export default BehandlingContainer;

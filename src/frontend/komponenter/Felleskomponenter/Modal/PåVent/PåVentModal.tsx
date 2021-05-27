@@ -133,6 +133,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                 />
                 <Spacer20 />
                 <FamilieSelect
+                    {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
                     label={'Årsak'}
                     value={skjema.felter.årsak.verdi}
                     onChange={event => skjema.felter.årsak.onChange(event)}
@@ -141,7 +142,9 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     }
                     erLesevisning={erAutomatiskVent}
                 >
-                    <option value="-">-</option>
+                    <option value="" disabled>
+                        Velg årsak
+                    </option>
                     {muligeÅrsaker.map((årsak, index) => (
                         <option key={`årsak_${index}`} value={årsak}>
                             {venteårsaker[årsak]}

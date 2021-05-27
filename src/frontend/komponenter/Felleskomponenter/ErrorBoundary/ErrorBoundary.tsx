@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { Element } from 'nav-frontend-typografi';
+
 import { ISaksbehandler } from '@navikt/familie-typer';
 
 interface IProps {
@@ -29,7 +31,7 @@ class ErrorBoundary extends React.Component<IProps, IState> {
     render() {
         if (this.state.hasError) {
             // You can render any custom fallback UI
-            return <h1>Noe har gått feil!</h1>;
+            return <Element>Noe har gått feil!</Element>;
         }
 
         return this.props.children;

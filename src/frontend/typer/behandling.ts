@@ -158,6 +158,7 @@ export interface IBehandling {
     //    vedtakForBehandling: IVedtakForBehandling[];
     årsak?: Behandlingårsak;
     //    skalBehandlesAutomatisk: boolean;
+    erBehandlingHenlagt?: boolean;
     erBehandlingPåVent?: boolean;
     kanEndres: boolean;
     harVerge: boolean;

@@ -10,9 +10,10 @@ import Popover, { PopoverOrientering } from 'nav-frontend-popover';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { Behandlingssteg } from '../../../../typer/behandling';
+import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
+import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
 
 const StyledList = styled.ul`
@@ -40,10 +41,11 @@ interface IProps {
 }
 
 const Behandlingsmeny: React.FC<IProps> = () => {
-    const { behandling, ventegrunn } = useBehandling();
+    const { behandling, ventegrunn, erStegBehandlet } = useBehandling();
     const [anker, settAnker] = React.useState<HTMLElement | undefined>(undefined);
 
     const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.GRUNNLAG;
+    const vedtakFattet = erStegBehandlet(Behandlingssteg.FATTE_VEDTAK);
 
     return (
         <>
@@ -72,37 +74,34 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                     <li>
                         <KnappBase mini={true}>Opprett revurdering</KnappBase>
                     </li>
-                    {behandling?.status === RessursStatus.SUKSESS && (
-                        <>
-                            <li>
-                                <KnappBase
-                                    mini={true}
-                                    disabled={!behandling.data.kanHenleggeBehandling}
-                                >
-                                    Henlegg behandling
-                                </KnappBase>
-                            </li>
-                            {behandling.data.harVerge ? (
+                    {behandling?.status === RessursStatus.SUKSESS &&
+                        behandling.data.status !== Behandlingstatus.AVSLUTTET &&
+                        !vedtakFattet && (
+                            <>
                                 <li>
-                                    <KnappBase mini={true}>Fjern verge</KnappBase>
+                                    <HenleggBehandling behandling={behandling.data} />
                                 </li>
-                            ) : (
-                                <li>
-                                    <KnappBase mini={true}>Opprett verge</KnappBase>
-                                </li>
-                            )}
-                            <li>
-                                <KnappBase mini={true}>Bytt behandlingsenhet</KnappBase>
-                            </li>
-                            {!venterPåKravgrunnlag ? (
-                                behandling.data.erBehandlingPåVent || ventegrunn ? (
-                                    <GjennoptaBehandling behandling={behandling.data} />
+                                {behandling.data.harVerge ? (
+                                    <li>
+                                        <KnappBase mini={true}>Fjern verge</KnappBase>
+                                    </li>
                                 ) : (
-                                    <SettBehandlingPåVent behandling={behandling.data} />
-                                )
-                            ) : null}
-                        </>
-                    )}
+                                    <li>
+                                        <KnappBase mini={true}>Opprett verge</KnappBase>
+                                    </li>
+                                )}
+                                <li>
+                                    <KnappBase mini={true}>Bytt behandlingsenhet</KnappBase>
+                                </li>
+                                {!venterPåKravgrunnlag ? (
+                                    behandling.data.erBehandlingPåVent || ventegrunn ? (
+                                        <GjennoptaBehandling behandling={behandling.data} />
+                                    ) : (
+                                        <SettBehandlingPåVent behandling={behandling.data} />
+                                    )
+                                ) : null}
+                            </>
+                        )}
                 </StyledList>
             </Popover>
         </>
