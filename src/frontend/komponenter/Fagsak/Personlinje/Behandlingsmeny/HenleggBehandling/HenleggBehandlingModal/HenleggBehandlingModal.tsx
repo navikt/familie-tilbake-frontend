@@ -118,7 +118,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                         skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
                     }
                     erLesevisning={false}
-                    maxLength={1500}
+                    maxLength={200}
                 />
                 {visFritekst && (
                     <>

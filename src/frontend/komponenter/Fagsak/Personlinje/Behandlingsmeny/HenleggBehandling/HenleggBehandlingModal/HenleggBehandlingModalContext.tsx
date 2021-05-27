@@ -17,7 +17,11 @@ import {
     Behandlingstype,
     IBehandling,
 } from '../../../../../../typer/behandling';
-import { erFeltetEmpty, validerTekstFelt } from '../../../../../../utils';
+import {
+    erFeltetEmpty,
+    validerTekstFelt,
+    validerTekstFeltMaksLengde,
+} from '../../../../../../utils';
 
 const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter) =>
     avhengigheter?.behandlingstype.valideringsstatus === Valideringsstatus.OK &&
@@ -67,7 +71,7 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
             begrunnelse: useFelt<string | ''>({
                 verdi: '',
                 valideringsfunksjon: (felt: FeltState<string | ''>) => {
-                    return validerTekstFelt(felt);
+                    return validerTekstFeltMaksLengde(200, felt);
                 },
             }),
             fritekst: useFelt<string | ''>({
