@@ -70,7 +70,7 @@ interface IProps {
 }
 
 const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
-    const [valgtMenyside, settValgtMenyside] = React.useState<Menysider>(Menysider.HISTORIKK);
+    const [valgtMenyside, settValgtMenyside] = React.useState<Menysider>();
     const [værtPåFatteVedtakSteget, settVærtPåFatteVedtakSteget] = React.useState<boolean>(false);
     const { aktivtSteg, harVærtPåFatteVedtakSteget } = useBehandling();
 
@@ -78,6 +78,8 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
         if (harVærtPåFatteVedtakSteget()) {
             settVærtPåFatteVedtakSteget(true);
             settValgtMenyside(Menysider.TOTRINN);
+        } else {
+            settValgtMenyside(Menysider.HISTORIKK);
         }
     }, [behandling]);
 
@@ -128,12 +130,16 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         Send brev
                     </Høyremenyknapp>
                 </Høyremenyvalg>
-                <Spacer8 />
-                <Menykontainer
-                    valgtMenyside={valgtMenyside}
-                    behandling={behandling}
-                    fagsak={fagsak}
-                />
+                {valgtMenyside && (
+                    <>
+                        <Spacer8 />
+                        <Menykontainer
+                            valgtMenyside={valgtMenyside}
+                            behandling={behandling}
+                            fagsak={fagsak}
+                        />
+                    </>
+                )}
             </HøyremenyContainer>
         </StyledContainer>
     );

@@ -18,6 +18,11 @@ const datoformat: Intl.DateTimeFormatOptions = {
     year: 'numeric',
 };
 
+const tidformat: Intl.DateTimeFormatOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+};
+
 export enum datoformatNorsk {
     DATO = 'ddmmåå',
 }
@@ -27,6 +32,15 @@ export const formatterDato = (dato: Date) => dato.toLocaleDateString('no-NO', da
 export const formatterDatostring = (datoAsString: string) => {
     const dato = parseISO(datoAsString);
     return dato.toLocaleDateString('no-NO', datoformat);
+};
+
+export const formatterDatoOgTidstring = (datoAsString: string) => {
+    const dato = parseISO(datoAsString);
+    return `${dato.toLocaleDateString('no-NO', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+    })} ${dato.toLocaleTimeString('no-NO', tidformat)}`;
 };
 
 export const hentAlder = (fødselsdato: string) => {

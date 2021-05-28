@@ -4,16 +4,17 @@ import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import Dokumentlisting from './Dokumentlisting/Dokumentlisting';
 import Historikk from './Historikk/Historikk';
+import { HistorikkProvider } from './Historikk/HistorikkContext';
 import SendMelding from './SendMelding/SendMelding';
 import { SendMeldingProvider } from './SendMelding/SendMeldingContext';
 import Totrinnskontroll from './Totrinnskontroll/Totrinnskontroll';
 import { TotrinnskontrollProvider } from './Totrinnskontroll/TotrinnskontrollContext';
 
 export enum Menysider {
-    TOTRINN,
-    HISTORIKK,
-    SEND_BREV,
-    DOKUMENTER,
+    TOTRINN = `TOTRINN`,
+    HISTORIKK = 'HISTORIKK',
+    SEND_BREV = 'SEND_BREV',
+    DOKUMENTER = 'DOKUMENTER',
 }
 
 interface IProps {
@@ -40,7 +41,15 @@ const Menykontainer: React.FC<IProps> = ({ valgtMenyside, fagsak, behandling }) 
             );
         case Menysider.HISTORIKK:
         default:
-            return <Historikk />;
+            return (
+                <HistorikkProvider
+                    fagsak={fagsak}
+                    behandling={behandling}
+                    valgtMenyside={valgtMenyside}
+                >
+                    <Historikk />
+                </HistorikkProvider>
+            );
     }
 };
 
