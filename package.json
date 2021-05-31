@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@navikt/ds-icons": "^0.3.2",
-    "@navikt/familie-backend": "5.0.21",
+    "@navikt/familie-backend": "^5.0.26",
     "@navikt/familie-clipboard": "^3.1.6",
     "@navikt/familie-form-elements": "^3.0.2",
     "@navikt/familie-header": "^3.0.17",
