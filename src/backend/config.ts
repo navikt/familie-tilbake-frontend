@@ -23,7 +23,7 @@ const Environment = () => {
             buildPath: 'frontend_production',
             namespace: 'preprod',
             proxyUrl: 'https://familie-tilbake.dev-fss-pub.nais.io',
-            historikkUrl: 'https://familie-historikk.dev.intern.nav.no',
+            historikkUrl: 'http://familie-historikk',
             redisUrl: process.env.REDIS_HOST,
         };
     }
@@ -32,7 +32,7 @@ const Environment = () => {
         buildPath: 'frontend_production',
         namespace: 'production',
         proxyUrl: 'https://familie-tilbake.prod-fss-pub.nais.io',
-        historikkUrl: 'https://familie-historikk.intern.nav.no',
+        historikkUrl: 'http://familie-historikk',
         redisUrl: process.env.REDIS_HOST,
     };
 };
