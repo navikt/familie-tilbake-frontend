@@ -76,7 +76,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
         };
 
         const lagJournalpostLink = (innslag: IHistorikkInnslag) => {
-            return `/familie-tilbake/api/pdf/behandling/${behandling.behandlingId}/journalpost/${innslag.journalpostId}/hent/${innslag.dokumentId}`;
+            return `/familie-tilbake/api/pdf/behandling/${behandling.behandlingId}/journalpost/${innslag.journalpostId}/dokument/${innslag.dokumentId}`;
         };
 
         return {
