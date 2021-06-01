@@ -53,8 +53,6 @@ spec:
       value: preprod
     - name: APP_VERSION
       value: {{ VERSION }}
-    - name: REDIS_HOST
-      value: familie-tilbake-frontend-redis
     - name: FAMILIE_TILBAKE_CLIENT_ID
       value: dev-fss.teamfamilie.familie-tilbake
     - name: FAMILIE_HISTORIKK_CLIENT_ID

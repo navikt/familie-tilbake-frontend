@@ -16,7 +16,7 @@ const Environment = () => {
             namespace: 'e2e',
             proxyUrl: 'http://familie-tilbake:8030',
             historikkUrl: 'http://familie-historikk:8050',
-            // redisUrl: 'familie-redis',
+            //Har ikke satt opp redis
         };
     } else if (process.env.ENV === 'preprod') {
         return {
@@ -24,7 +24,7 @@ const Environment = () => {
             namespace: 'preprod',
             proxyUrl: 'https://familie-tilbake.dev-fss-pub.nais.io',
             historikkUrl: 'http://familie-historikk',
-            redisUrl: process.env.REDIS_HOST,
+            redisUrl: 'familie-tilbake-frontend-redis',
         };
     }
 
@@ -33,7 +33,7 @@ const Environment = () => {
         namespace: 'production',
         proxyUrl: 'https://familie-tilbake.prod-fss-pub.nais.io',
         historikkUrl: 'http://familie-historikk',
-        redisUrl: process.env.REDIS_HOST,
+        redisUrl: 'familie-tilbake-frontend-redis',
     };
 };
 const env = Environment();
@@ -41,6 +41,8 @@ const env = Environment();
 export const sessionConfig: ISessionKonfigurasjon = {
     cookieSecret: [`${process.env.COOKIE_KEY1}`, `${process.env.COOKIE_KEY2}`],
     navn: 'familie-tilbake-v1',
+    redisPassord: process.env.REDIS_PASSWORD,
+    redisUrl: env.redisUrl,
     secureCookie: !(process.env.ENV === 'local' || process.env.ENV === 'e2e'),
     sessionMaxAgeSekunder: 12 * 60 * 60,
 };
