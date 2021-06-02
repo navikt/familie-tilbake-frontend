@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
 import { useHttp } from '@navikt/familie-http';
@@ -103,18 +102,13 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: 
                 method: 'POST',
                 url: '/familie-tilbake/api/dokument/bestill',
                 data: hentBrevdata(),
-            })
-                .then((respons: Ressurs<void>) => {
-                    settSenderInn(false);
-                    if (respons.status === RessursStatus.SUKSESS) {
-                        nullstillSkjema();
-                        hentBehandlingMedBehandlingId(behandling.behandlingId, true);
-                    }
-                })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved bestilling av brev: ', error);
-                    settSenderInn(false);
-                });
+            }).then((respons: Ressurs<void>) => {
+                settSenderInn(false);
+                if (respons.status === RessursStatus.SUKSESS) {
+                    nullstillSkjema();
+                    hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                }
+            });
         } else {
             settSenderInn(false);
         }

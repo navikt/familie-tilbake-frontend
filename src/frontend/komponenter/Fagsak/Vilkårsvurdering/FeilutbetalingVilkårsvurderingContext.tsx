@@ -253,17 +253,12 @@ const [
                     method: 'POST',
                     url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/steg/v1`,
                     data: payload,
-                })
-                    .then((respons: Ressurs<string>) => {
-                        settSenderInn(false);
-                        if (respons.status === RessursStatus.SUKSESS) {
-                            hentBehandlingMedBehandlingId(behandling.behandlingId, true);
-                        }
-                    })
-                    .catch((error: AxiosError) => {
-                        console.log('Error ved sending av oppdaterte foreldelse: ', error);
-                        settSenderInn(false);
-                    });
+                }).then((respons: Ressurs<string>) => {
+                    settSenderInn(false);
+                    if (respons.status === RessursStatus.SUKSESS) {
+                        hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                    }
+                });
             }
         }
     };
