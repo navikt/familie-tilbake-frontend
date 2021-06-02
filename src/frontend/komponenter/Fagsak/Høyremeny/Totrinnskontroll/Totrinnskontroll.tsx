@@ -72,12 +72,14 @@ const Totrinnskontroll: React.FC<IProps> = () => {
                             </>
                         )}
                     {!fatteVedtakILåsemodus && (
-                        <Steginformasjon
-                            behandletSteg={stegErBehandlet}
-                            infotekst={'Kontroller endrede opplysninger og faglige vurderinger'}
-                        />
+                        <>
+                            <Steginformasjon
+                                behandletSteg={stegErBehandlet}
+                                infotekst={'Kontroller endrede opplysninger og faglige vurderinger'}
+                            />
+                            <Spacer20 />
+                        </>
                     )}
-                    <Spacer20 />
                     {skjemaData.map(totrinnSteg => {
                         const side = finnSideForSteg(totrinnSteg.behandlingssteg);
                         const vurdertIkkeGodkjent = totrinnSteg.godkjent === OptionIkkeGodkjent;

@@ -6,7 +6,7 @@ metadata:
   labels:
     team: teamfamilie
 spec:
-  image: bitnami/redis:6.0.9
+  image: bitnami/redis:6.2.3
   port: 6379
   replicas: # A single Redis-app doesn't scale
     min: 1
@@ -25,5 +25,6 @@ spec:
     inbound:
       rules:
         - application: familie-tilbake-frontend
+        - application: familie-tilbake-frontend-redis-exporter
   envFrom:
     - secret: familie-tilbake-frontend-redis

@@ -11,9 +11,15 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import backend, { IApp, ensureAuthenticated, envVar } from '@navikt/familie-backend';
 import { logInfo } from '@navikt/familie-logging';
 
-import { sessionConfig } from './config';
+import { oboHistorikkConfig, oboTilbakeConfig, sessionConfig } from './config';
 import { prometheusTellere } from './metrikker';
-import { attachToken, doProxy } from './proxy';
+import {
+    attachToken,
+    doHistorikkApiProxy,
+    doHistorikkStreamProxy,
+    doPdfProxy,
+    doProxy,
+} from './proxy';
 import setupRouter from './router';
 
 // eslint-disable-next-line
@@ -40,9 +46,29 @@ backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }
     }
 
     app.use(
+        '/familie-historikk/stream',
+        ensureAuthenticated(azureAuthClient, true),
+        attachToken(azureAuthClient, oboHistorikkConfig),
+        doHistorikkStreamProxy()
+    );
+    app.use(
+        '/familie-historikk/api',
+        ensureAuthenticated(azureAuthClient, true),
+        attachToken(azureAuthClient, oboHistorikkConfig),
+        doHistorikkApiProxy()
+    );
+
+    app.use(
+        '/familie-tilbake/api/pdf',
+        ensureAuthenticated(azureAuthClient, true),
+        attachToken(azureAuthClient, oboTilbakeConfig),
+        doPdfProxy()
+    );
+
+    app.use(
         '/familie-tilbake/api',
         ensureAuthenticated(azureAuthClient, true),
-        attachToken(azureAuthClient),
+        attachToken(azureAuthClient, oboTilbakeConfig),
         doProxy()
     );
 

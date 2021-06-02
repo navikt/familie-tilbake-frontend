@@ -4,6 +4,8 @@ import { Element } from 'nav-frontend-typografi';
 
 import { ISaksbehandler } from '@navikt/familie-typer';
 
+import { apiLoggFeil } from '../../../api/axios';
+
 interface IProps {
     autentisertSaksbehandler?: ISaksbehandler;
 }
@@ -26,6 +28,10 @@ class ErrorBoundary extends React.Component<IProps, IState> {
     // eslint-disable-next-line
     componentDidCatch(error: any, info: any) {
         console.log(error, info);
+
+        if (process.env.NODE_ENV !== 'development') {
+            apiLoggFeil(`En feil har oppstått i vedtaksløsningen: \n*Error*: ${error}`);
+        }
     }
 
     render() {

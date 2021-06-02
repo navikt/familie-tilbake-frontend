@@ -2,13 +2,8 @@ import path from 'path';
 
 import { Response, Request, Router } from 'express';
 
-import {
-    Client,
-    ensureAuthenticated,
-    // logRequest,
-    // LOG_LEVEL,
-    envVar,
-} from '@navikt/familie-backend';
+import { Client, ensureAuthenticated, envVar, logRequest } from '@navikt/familie-backend';
+import { LOG_LEVEL } from '@navikt/familie-logging';
 
 import { buildPath } from './config';
 import { prometheusTellere } from './metrikker';
@@ -26,8 +21,8 @@ export default (authClient: Client, router: Router) => {
     });
 
     // Feilhåndtering
-    router.post('/logg-feil', (_: Request, res: Response) => {
-        // logRequest(req, req.body.melding, LOG_LEVEL.ERROR);
+    router.post('/logg-feil', (req: Request, res: Response) => {
+        logRequest(req, req.body.melding, LOG_LEVEL.ERROR);
         res.status(200).send();
     });
 
