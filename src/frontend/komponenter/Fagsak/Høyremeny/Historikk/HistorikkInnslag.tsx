@@ -19,6 +19,7 @@ import {
 import { formatterDatoOgTidstring } from '../../../../utils';
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
 import { finnSideForSteg } from '../../../Felleskomponenter/Venstremeny/sider';
+import HentDokument from './HentDokument';
 import { useHistorikk } from './HistorikkContext';
 
 const Innslag = styled.div`
@@ -48,7 +49,8 @@ interface IProps {
 }
 
 const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
-    const { navigerTilSide, lagJournalpostLink } = useHistorikk();
+    const { navigerTilSide } = useHistorikk();
+    const [visDokument, settVisDokument] = React.useState<boolean>(false);
 
     const lagTittel = () => {
         if (innslag.type === Historikkinnslagstype.SKJERMLENKE && innslag.steg) {
@@ -89,7 +91,13 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
     const lagBrevLink = () => {
         return (
             <span>
-                <Lenke href={lagJournalpostLink(innslag)} target="_new">
+                <Lenke
+                    href={'#'}
+                    onClick={e => {
+                        e.preventDefault();
+                        settVisDokument(true);
+                    }}
+                >
                     <span>{innslag.tekst}</span>
                     <ExternalLink color={navFarger.navBla} />
                 </Lenke>
@@ -118,6 +126,14 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
                 </Undertekst>
                 {innslag.tekst && !typeBrev && tilpassTekst()}
                 {typeBrev && lagBrevLink()}
+                {visDokument && (
+                    <HentDokument
+                        innslag={innslag}
+                        onClose={() => {
+                            settVisDokument(false);
+                        }}
+                    />
+                )}
             </Innhold>
         </Innslag>
     );
