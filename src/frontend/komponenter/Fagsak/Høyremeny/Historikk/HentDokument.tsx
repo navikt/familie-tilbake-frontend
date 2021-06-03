@@ -25,11 +25,11 @@ const HentDokument: React.FC<IProps> = ({ innslag, onClose }) => {
     const { request } = useHttp();
 
     React.useEffect(() => {
+        settVisModal(true);
         request<void, string>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/journalpost/${innslag.journalpostId}/dokument/${innslag.dokumentId}`,
         }).then((response: Ressurs<string>) => {
-            settVisModal(true);
             if (response.status === RessursStatus.SUKSESS) {
                 settHentetDokument(byggDataRessurs(`data:application/pdf;base64,${response.data}`));
             } else if (
@@ -52,17 +52,15 @@ const HentDokument: React.FC<IProps> = ({ innslag, onClose }) => {
 
     return (
         <>
-            {visModal && (
-                <PdfVisningModal
-                    åpen={visModal}
-                    pdfdata={hentetDokument}
-                    onRequestClose={() => {
-                        nullstillHentetDokument();
-                        settVisModal(false);
-                        onClose();
-                    }}
-                />
-            )}
+            <PdfVisningModal
+                åpen={visModal}
+                pdfdata={hentetDokument}
+                onRequestClose={() => {
+                    nullstillHentetDokument();
+                    settVisModal(false);
+                    onClose();
+                }}
+            />
         </>
     );
 };
