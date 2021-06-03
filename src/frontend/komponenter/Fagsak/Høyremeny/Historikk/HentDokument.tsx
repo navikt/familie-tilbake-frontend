@@ -4,6 +4,7 @@ import { useHttp } from '@navikt/familie-http';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
+    byggHenterRessurs,
     byggTomRessurs,
     Ressurs,
     RessursStatus,
@@ -26,6 +27,7 @@ const HentDokument: React.FC<IProps> = ({ innslag, onClose }) => {
 
     React.useEffect(() => {
         settVisModal(true);
+        settHentetDokument(byggHenterRessurs());
         request<void, string>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/journalpost/${innslag.journalpostId}/dokument/${innslag.dokumentId}`,
