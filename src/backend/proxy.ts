@@ -42,7 +42,7 @@ const pdfProxyUrlRecord: Record<string, string> = {
 export const doPdfProxy: any = () => {
     return createProxyMiddleware('/familie-tilbake/api/pdf', {
         changeOrigin: true,
-        proxyTimeout: 300,
+        proxyTimeout: 3000,
         logLevel: 'info',
         onProxyReq: restream,
         pathRewrite: (path: string, _req: Request) => {
