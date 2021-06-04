@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { AxiosError } from 'axios';
 import styled from 'styled-components';
 
 import { Undertekst } from 'nav-frontend-typografi';
@@ -110,30 +109,26 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                     fom: per.periode.fom,
                     tom: per.periode.tom,
                 })),
-            })
-                .then((response: Ressurs<IBeregnSplittetPeriodeRespons>) => {
-                    if (response.status === RessursStatus.SUKSESS) {
-                        const beregnetperioder = response.data.beregnetPerioder;
-                        const beregnetNyePerioder: ForeldelsePeriodeSkjemeData[] = [
-                            {
-                                ...splittetPerioder[0],
-                                feilutbetaltBeløp: beregnetperioder[0].feilutbetaltBeløp,
-                            },
-                            {
-                                ...splittetPerioder[1],
-                                feilutbetaltBeløp: beregnetperioder[1].feilutbetaltBeløp,
-                            },
-                        ];
-                        settVisModal(false);
-                        settSplittDato('');
-                        settSplittetPerioder([]);
-                        settTidslinjeRader([]);
-                        onBekreft(periode, beregnetNyePerioder);
-                    }
-                })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved splitting av perioder: ', error);
-                });
+            }).then((response: Ressurs<IBeregnSplittetPeriodeRespons>) => {
+                if (response.status === RessursStatus.SUKSESS) {
+                    const beregnetperioder = response.data.beregnetPerioder;
+                    const beregnetNyePerioder: ForeldelsePeriodeSkjemeData[] = [
+                        {
+                            ...splittetPerioder[0],
+                            feilutbetaltBeløp: beregnetperioder[0].feilutbetaltBeløp,
+                        },
+                        {
+                            ...splittetPerioder[1],
+                            feilutbetaltBeløp: beregnetperioder[1].feilutbetaltBeløp,
+                        },
+                    ];
+                    settVisModal(false);
+                    settSplittDato('');
+                    settSplittetPerioder([]);
+                    settTidslinjeRader([]);
+                    onBekreft(periode, beregnetNyePerioder);
+                }
+            });
         }
     };
 

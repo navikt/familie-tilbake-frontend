@@ -42,6 +42,11 @@ spec:
         - "https://familie-tilbake-frontend.dev.intern.nav.no/auth/openid/callback"
   webproxy: true
   accessPolicy:
+    inbound:
+      rules:
+        - application: ida
+          namespace: default
+          cluster: prod-fss
     outbound:
       rules:
         - application: familie-tilbake-frontend-redis

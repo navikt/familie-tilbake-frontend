@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { AxiosError } from 'axios';
-
 import { useHttp } from '@navikt/familie-http';
 import {
     byggDataRessurs,
@@ -34,30 +32,24 @@ const useForhåndsvisVedtaksbrev = () => {
             method: 'POST',
             url: '/familie-tilbake/api/dokument/forhandsvis-vedtaksbrev',
             data: payload,
-        })
-            .then((response: Ressurs<string>) => {
-                settVisModal(true);
-                if (response.status === RessursStatus.SUKSESS) {
-                    settHentetForhåndsvisning(
-                        byggDataRessurs(`data:application/pdf;base64,${response.data}`)
-                    );
-                } else if (
-                    response.status === RessursStatus.FEILET ||
-                    response.status === RessursStatus.FUNKSJONELL_FEIL ||
-                    response.status === RessursStatus.IKKE_TILGANG
-                ) {
-                    settHentetForhåndsvisning(response);
-                } else {
-                    settHentetForhåndsvisning(
-                        byggFeiletRessurs('Ukjent feil, kunne ikke generere forhåndsvisning.')
-                    );
-                }
-            })
-            .catch((_error: AxiosError) => {
+        }).then((response: Ressurs<string>) => {
+            settVisModal(true);
+            if (response.status === RessursStatus.SUKSESS) {
+                settHentetForhåndsvisning(
+                    byggDataRessurs(`data:application/pdf;base64,${response.data}`)
+                );
+            } else if (
+                response.status === RessursStatus.FEILET ||
+                response.status === RessursStatus.FUNKSJONELL_FEIL ||
+                response.status === RessursStatus.IKKE_TILGANG
+            ) {
+                settHentetForhåndsvisning(response);
+            } else {
                 settHentetForhåndsvisning(
                     byggFeiletRessurs('Ukjent feil, kunne ikke generere forhåndsvisning.')
                 );
-            });
+            }
+        });
     };
 
     return {

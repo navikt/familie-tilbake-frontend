@@ -1,5 +1,3 @@
-import { AxiosError } from 'axios';
-
 import { useHttp } from '@navikt/familie-http';
 import {
     Avhengigheter,
@@ -103,19 +101,12 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
                 method: 'PUT',
                 url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/henlegg/v1`,
                 data: payload,
-            })
-                .then((response: Ressurs<string>) => {
-                    if (response.status === RessursStatus.SUKSESS) {
-                        settVisModal(false);
-                        hentBehandlingMedBehandlingId(behandling.behandlingId);
-                    }
-                })
-                .catch((error: AxiosError) => {
-                    console.log(
-                        `Error ved henleggelse av behandling ${behandling.behandlingId}: `,
-                        error
-                    );
-                });
+            }).then((response: Ressurs<string>) => {
+                if (response.status === RessursStatus.SUKSESS) {
+                    settVisModal(false);
+                    hentBehandlingMedBehandlingId(behandling.behandlingId);
+                }
+            });
         }
     };
 
