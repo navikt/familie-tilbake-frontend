@@ -4,7 +4,12 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
 import { useHttp } from '@navikt/familie-http';
-import { byggFeiletRessurs, byggHenterRessurs, Ressurs } from '@navikt/familie-typer';
+import {
+    byggFeiletRessurs,
+    byggHenterRessurs,
+    Ressurs,
+    RessursStatus,
+} from '@navikt/familie-typer';
 
 import { Fagsystem } from '../kodeverk';
 import { IFagsak } from '../typer/fagsak';
@@ -27,9 +32,16 @@ const [FagsakProvider, useFagsak] = createUseContext(() => {
             });
     };
 
+    const lagSaksoversiktUrl = () => {
+        return fagsak?.status === RessursStatus.SUKSESS
+            ? `/redirect/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/saksoversikt`
+            : '#';
+    };
+
     return {
         fagsak,
         hentFagsak,
+        lagSaksoversiktUrl,
     };
 });
 

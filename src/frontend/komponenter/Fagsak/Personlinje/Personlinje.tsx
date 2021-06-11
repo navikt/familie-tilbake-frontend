@@ -4,11 +4,14 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 import KnappBase from 'nav-frontend-knapper';
+import Lenke from 'nav-frontend-lenker';
 
+import { ExternalLink } from '@navikt/ds-icons';
 import { RessursStatus } from '@navikt/familie-typer';
 import Visittkort from '@navikt/familie-visittkort';
 
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { IFagsak } from '../../../typer/fagsak';
 import { IPerson } from '../../../typer/person';
 import { hentAlder } from '../../../utils';
@@ -39,6 +42,7 @@ interface IProps {
 
 const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
     const { behandling } = useBehandling();
+    const { lagSaksoversiktUrl } = useFagsak();
     return (
         <StyledContainer>
             <Visittkort
@@ -55,9 +59,15 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                     </KnappBase>
                 )}
 
-                <KnappBase mini={true} type={'flat'}>
-                    Gå til saksoversikt
-                </KnappBase>
+                <Lenke
+                    className={'visittkort__lenke'}
+                    href={lagSaksoversiktUrl()}
+                    onMouseDown={e => e.preventDefault()}
+                    target="_blank"
+                >
+                    <span>Gå til saksoversikt</span>
+                    <ExternalLink />
+                </Lenke>
 
                 <Behandlingsmeny fagsak={fagsak} />
             </Visittkort>
