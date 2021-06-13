@@ -35,7 +35,7 @@
     "@navikt/familie-visittkort": "^2.1.25",
     "@navikt/helse-frontend-tidslinje": "^6.1.8",
     "@navikt/nap-user-panel": "^1.1.0",
-    "@sentry/browser": "^6.5.1",
+    "@sentry/browser": "^6.6.0",
     "@sentry/core": "^6.5.1",
     "@types/classnames": "^2.3.1",
     "@types/deep-equal": "^1.0.1",
