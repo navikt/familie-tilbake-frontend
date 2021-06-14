@@ -9,6 +9,7 @@ const Environment = () => {
             namespace: 'local',
             proxyUrl: 'http://localhost:8030',
             historikkUrl: 'http://localhost:8050',
+            baSakUrl: 'http://localhost:8001',
         };
     } else if (process.env.ENV === 'e2e') {
         return {
@@ -16,6 +17,7 @@ const Environment = () => {
             namespace: 'e2e',
             proxyUrl: 'http://familie-tilbake:8030',
             historikkUrl: 'http://familie-historikk:8050',
+            baSakUrl: 'http://familie-ba-sak-frontend:8000',
             //Har ikke satt opp redis
         };
     } else if (process.env.ENV === 'preprod') {
@@ -24,6 +26,7 @@ const Environment = () => {
             namespace: 'preprod',
             proxyUrl: 'https://familie-tilbake.dev-fss-pub.nais.io',
             historikkUrl: 'http://familie-historikk',
+            baSakUrl: 'https://barnetrygd.dev.adeo.no',
             redisUrl: 'familie-tilbake-frontend-redis',
         };
     }
@@ -33,6 +36,7 @@ const Environment = () => {
         namespace: 'production',
         proxyUrl: 'https://familie-tilbake.prod-fss-pub.nais.io',
         historikkUrl: 'http://familie-historikk',
+        baSakUrl: 'https://barnetrygd.nais.adeo.no',
         redisUrl: 'familie-tilbake-frontend-redis',
     };
 };
@@ -69,3 +73,7 @@ export const buildPath = env.buildPath;
 export const proxyUrl = env.proxyUrl;
 export const historikkUrl = env.historikkUrl;
 export const namespace = env.namespace;
+
+export const redirectRecords: Record<string, string> = {
+    '/redirect/fagsystem/BA': env.baSakUrl,
+};

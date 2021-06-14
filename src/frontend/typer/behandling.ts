@@ -39,7 +39,7 @@ export const behandlingsstatuser: Record<Behandlingstatus, string> = {
 export enum Behandlingresultat {
     INGEN_TILBAKEBETALING = 'INGEN_TILBAKEBETALING',
     DELVIS_TILBAKEBETALING = 'DELVIS_TILBAKEBETALING',
-    FULL_TILBAKEKREVING = 'FULL_TILBAKEKREVING',
+    FULL_TILBAKEBETALING = 'FULL_TILBAKEBETALING',
     HENLAGT = 'HENLAGT',
     HENLAGT_FEILOPPRETTET = 'HENLAGT_FEILOPPRETTET',
     HENLAGT_FEILOPPRETTET_MED_BREV = 'HENLAGT_FEILOPPRETTET_MED_BREV',
@@ -50,7 +50,7 @@ export enum Behandlingresultat {
 export const behandlingsresultater: Record<Behandlingresultat, string> = {
     INGEN_TILBAKEBETALING: 'Ingen tilbakekreving',
     DELVIS_TILBAKEBETALING: 'Delvis tilbakekreving',
-    FULL_TILBAKEKREVING: 'Fortsatt innvilget',
+    FULL_TILBAKEBETALING: 'Full tilbakebetaling',
     HENLAGT: 'Henlagt',
     HENLAGT_FEILOPPRETTET: 'Henlagt (feilaktig opprettet)',
     HENLAGT_FEILOPPRETTET_MED_BREV: 'Henlagt (feilaktig opprettet), med brev',

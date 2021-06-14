@@ -19,6 +19,7 @@ import {
     doHistorikkStreamProxy,
     doPdfProxy,
     doProxy,
+    doRedirectProxy,
 } from './proxy';
 import setupRouter from './router';
 
@@ -71,6 +72,8 @@ backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }
         attachToken(azureAuthClient, oboTilbakeConfig),
         doProxy()
     );
+
+    app.use('/redirect', doRedirectProxy());
 
     // Sett opp express og router etter proxy. Spesielt viktig med tanke på større payloads
     app.use(express.json({ limit: '200mb' }));

@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Client, getOnBehalfOfAccessToken, IApi } from '@navikt/familie-backend';
 import { logError, stdoutLogger } from '@navikt/familie-logging';
 
-import { proxyUrl, historikkUrl } from './config';
+import { proxyUrl, historikkUrl, redirectRecords } from './config';
 
 const restream = (proxyReq: ClientRequest, req: Request, _res: Response) => {
     if (req.body) {
@@ -32,6 +32,22 @@ export const doProxy: any = () => {
         target: `${proxyUrl}`,
         logProvider: () => stdoutLogger,
     });
+};
+
+export const doRedirectProxy = () => {
+    return (req: Request, res: Response) => {
+        const urlKey = Object.keys(redirectRecords).find(k => req.originalUrl.includes(k));
+        let newUrl;
+        if (urlKey) {
+            newUrl = req.originalUrl.replace(urlKey, redirectRecords[urlKey]);
+            stdoutLogger.info(`Redirect ${urlKey} -> ${redirectRecords[urlKey]}`);
+            res.redirect(newUrl);
+        } else {
+            console.log(`Ustøttet redirect: ${req.originalUrl}`);
+            newUrl = req.originalUrl;
+            res.sendStatus(404);
+        }
+    };
 };
 
 const pdfProxyUrlRecord: Record<string, string> = {
