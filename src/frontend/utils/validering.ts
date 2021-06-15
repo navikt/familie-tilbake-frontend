@@ -1,3 +1,5 @@
+import { isValid, parseISO } from 'date-fns';
+
 import { feil, FeltState, ok } from '@navikt/familie-skjema';
 
 import { isNumeric } from './miscUtils';
@@ -103,4 +105,17 @@ export const validerNummerFelt = (
     }
 
     return ok(felt);
+};
+
+export const validerDato = (dato?: string): ValideringsResultat => {
+    if (!dato || isEmpty(dato)) {
+        return definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT];
+    }
+    const lestDato = parseISO(dato);
+    return isValid(lestDato) ? undefined : 'Ugyldig dato';
+};
+
+export const validerDatoFelt = (felt: FeltState<string | ''>) => {
+    const feilmelding = validerDato(felt.verdi);
+    return !feilmelding ? ok(felt) : feil(felt, feilmelding);
 };

@@ -5,6 +5,7 @@ import { useSkjema, useFelt, FeltState, feil, ok } from '@navikt/familie-skjema'
 import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
+import { isEmpty, validerDatoFelt } from '../../../../utils';
 
 export const usePåVentBehandling = (
     lukkModal: (suksess: boolean) => void,
@@ -13,7 +14,7 @@ export const usePåVentBehandling = (
     const [feilmelding, settFeilmelding] = useState<string>();
     const { request } = useHttp();
 
-    const { onSubmit, skjema, nullstillSkjema } = useSkjema<
+    const { onSubmit, skjema, nullstillSkjema, kanSendeSkjema } = useSkjema<
         {
             tidsfrist: string | '';
             årsak: Venteårsak | '';
@@ -24,7 +25,9 @@ export const usePåVentBehandling = (
             tidsfrist: useFelt<string | ''>({
                 verdi: ventegrunn?.tidsfrist ? ventegrunn.tidsfrist : '',
                 valideringsfunksjon: (felt: FeltState<string | ''>) => {
-                    return felt.verdi !== '' ? ok(felt) : feil(felt, 'Du må velge en tidsfrist');
+                    return isEmpty(felt.verdi)
+                        ? feil(felt, 'Du må velge en tidsfrist')
+                        : validerDatoFelt(felt);
                 },
             }),
             årsak: useFelt<Venteårsak | ''>({
@@ -37,25 +40,27 @@ export const usePåVentBehandling = (
     });
 
     const onBekreft = (behandlingId: string) => {
-        onSubmit(
-            {
-                method: 'PUT',
-                data: {
-                    behandlingId: behandlingId,
-                    venteårsak: skjema.felter.årsak.verdi,
-                    tidsfrist: skjema.felter.tidsfrist.verdi,
+        if (kanSendeSkjema()) {
+            onSubmit(
+                {
+                    method: 'PUT',
+                    data: {
+                        behandlingId: behandlingId,
+                        venteårsak: skjema.felter.årsak.verdi,
+                        tidsfrist: skjema.felter.tidsfrist.verdi,
+                    },
+                    url: `/familie-tilbake/api/behandling/${behandlingId}/vent/v1`,
                 },
-                url: `/familie-tilbake/api/behandling/${behandlingId}/vent/v1`,
-            },
-            (_ressurs: Ressurs<string>) => {
-                if (ventegrunn) {
-                    ventegrunn.tidsfrist = skjema.felter.tidsfrist.verdi;
-                    // @ts-ignore
-                    ventegrunn.venteårsak = skjema.felter.årsak.verdi;
+                (_ressurs: Ressurs<string>) => {
+                    if (ventegrunn) {
+                        ventegrunn.tidsfrist = skjema.felter.tidsfrist.verdi;
+                        // @ts-ignore
+                        ventegrunn.venteårsak = skjema.felter.årsak.verdi;
+                    }
+                    lukkModal(true);
                 }
-                lukkModal(true);
-            }
-        );
+            );
+        }
     };
 
     const onOkTaAvVent = (behandlingId: string) => {

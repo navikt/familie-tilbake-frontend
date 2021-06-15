@@ -44,7 +44,7 @@ export enum Behandlingresultat {
     HENLAGT_FEILOPPRETTET = 'HENLAGT_FEILOPPRETTET',
     HENLAGT_FEILOPPRETTET_MED_BREV = 'HENLAGT_FEILOPPRETTET_MED_BREV',
     HENLAGT_FEILOPPRETTET_UTEN_BREV = 'HENLAGT_FEILOPPRETTET_UTEN_BREV',
-    IKKE_VURDERT = 'IKKE_VURDERT',
+    IKKE_FASTSATT = 'IKKE_FASTSATT',
 }
 
 export const behandlingsresultater: Record<Behandlingresultat, string> = {
@@ -55,7 +55,7 @@ export const behandlingsresultater: Record<Behandlingresultat, string> = {
     HENLAGT_FEILOPPRETTET: 'Henlagt (feilaktig opprettet)',
     HENLAGT_FEILOPPRETTET_MED_BREV: 'Henlagt (feilaktig opprettet), med brev',
     HENLAGT_FEILOPPRETTET_UTEN_BREV: 'Henlagt (feilaktig opprettet)',
-    IKKE_VURDERT: 'Ikke vurdert',
+    IKKE_FASTSATT: 'Ikke fastsatt',
 };
 
 export enum Behandlingstype {

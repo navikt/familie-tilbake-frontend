@@ -86,7 +86,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                         onClick={() => {
                             onBekreft(behandling.behandlingId);
                         }}
-                        disabled={skjema.visFeilmeldinger || uendret}
+                        disabled={uendret}
                     >
                         Oppdater
                     </Knapp>,

@@ -4,17 +4,15 @@ import styled from 'styled-components';
 
 import { Undertekst } from 'nav-frontend-typografi';
 
-import { useHttp } from '@navikt/familie-http';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 import { Periode as TidslinjePeriode } from '@navikt/helse-frontend-tidslinje';
 
 import splitPeriodImageUrl from '../../../../../images/splitt.svg';
 import splitPeriodImageHoverUrl from '../../../../../images/splitt_hover.svg';
 import { IBehandling } from '../../../../../typer/behandling';
 import { IBeregnSplittetPeriodeRespons, Periode } from '../../../../../typer/feilutbetalingtyper';
-import { flyttDatoISODateStr, getEndOfMonthISODateStr } from '../../../../../utils';
+import { flyttDatoISODateStr } from '../../../../../utils';
 import Image from '../../../../Felleskomponenter/Image/Image';
-import DelOppPeriode from '../../../../Felleskomponenter/Modal/DelOppPeriode';
+import { DelOppPeriode, useDelOppPeriode } from '../../../../Felleskomponenter/Modal/DelOppPeriode';
 import { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
 
 const InlineUndertekst = styled(Undertekst)`
@@ -48,13 +46,20 @@ interface IProps {
 }
 
 const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => {
-    const [visModal, settVisModal] = React.useState<boolean>(false);
-    const [splittDato, settSplittDato] = React.useState<string>(periode.periode.tom);
     const [splittetPerioder, settSplittetPerioder] = React.useState<
         VilkårsvurderingPeriodeSkjemaData[]
     >();
-    const [tidslinjeRader, settTidslinjeRader] = React.useState<TidslinjePeriode[][]>();
-    const { request } = useHttp();
+    const {
+        visModal,
+        settVisModal,
+        splittDato,
+        settSplittDato,
+        tidslinjeRader,
+        settTidslinjeRader,
+        feilmelding,
+        vedDatoEndring,
+        sendInnSkjema,
+    } = useDelOppPeriode(periode.periode.tom, behandling.behandlingId);
 
     React.useEffect(() => {
         const perRad: TidslinjePeriode = konverterPeriode(periode);
@@ -63,8 +68,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
     }, [periode]);
 
     const onChangeDato = (nyVerdi?: string) => {
-        const månedsslutt = getEndOfMonthISODateStr(nyVerdi);
-        if (nyVerdi && månedsslutt) {
+        vedDatoEndring((månedsslutt: string) => {
             const per: Periode = periode.periode;
             const nyePerioder: VilkårsvurderingPeriodeSkjemaData[] = [
                 {
@@ -89,25 +93,21 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                 },
             ];
             settSplittetPerioder(nyePerioder);
-            settSplittDato(månedsslutt);
             settTidslinjeRader([
                 [konverterPeriode(nyePerioder[0]), konverterPeriode(nyePerioder[1])],
             ]);
-        }
+        }, nyVerdi);
     };
 
     const onSubmit = () => {
         if (splittetPerioder) {
-            request<Periode[], IBeregnSplittetPeriodeRespons>({
-                method: 'POST',
-                url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/beregn/v1`,
-                data: splittetPerioder.map(per => ({
+            sendInnSkjema(
+                splittetPerioder.map(per => ({
                     fom: per.periode.fom,
                     tom: per.periode.tom,
                 })),
-            }).then((response: Ressurs<IBeregnSplittetPeriodeRespons>) => {
-                if (response.status === RessursStatus.SUKSESS) {
-                    const beregnetperioder = response.data.beregnetPerioder;
+                (response: IBeregnSplittetPeriodeRespons) => {
+                    const beregnetperioder = response.beregnetPerioder;
                     const beregnetNyePerioder: VilkårsvurderingPeriodeSkjemaData[] = [
                         {
                             ...splittetPerioder[0],
@@ -118,13 +118,10 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                             feilutbetaltBeløp: beregnetperioder[1].feilutbetaltBeløp,
                         },
                     ];
-                    settVisModal(false);
-                    settSplittDato('');
                     settSplittetPerioder([]);
-                    settTidslinjeRader([]);
                     onBekreft(periode, beregnetNyePerioder);
                 }
-            });
+            );
         }
     };
 
@@ -147,6 +144,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                     settVisModal={settVisModal}
                     onChangeDato={onChangeDato}
                     onSubmit={onSubmit}
+                    feilmelding={feilmelding}
                 />
             )}
         </StyledContainer>

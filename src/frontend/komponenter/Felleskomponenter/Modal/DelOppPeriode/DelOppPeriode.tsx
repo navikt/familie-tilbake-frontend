@@ -8,11 +8,11 @@ import { Element, Normaltekst } from 'nav-frontend-typografi';
 
 import { Periode as TidslinjePeriode, Tidslinje } from '@navikt/helse-frontend-tidslinje';
 
-import { IPeriodeSkjemaData } from '../../../typer/periodeSkjemaData';
-import { formatterDatostring } from '../../../utils';
-import { Spacer8 } from '../Flytelementer';
-import { FixedDatovelger } from '../Skjemaelementer';
-import UIModalWrapper from './UIModalWrapper';
+import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
+import { formatterDatostring } from '../../../../utils';
+import { Spacer8 } from '../../Flytelementer';
+import { FixedDatovelger } from '../../Skjemaelementer';
+import UIModalWrapper from '../UIModalWrapper';
 
 const TidslinjeContainer = styled.div`
     border: 1px solid ${navFarger.navGra60};
@@ -32,9 +32,10 @@ interface IProps {
     settVisModal: (vis: boolean) => void;
     onChangeDato: (nyVerdi: string | undefined) => void;
     onSubmit: () => void;
+    feilmelding?: string;
 }
 
-const DelOppPeriode: React.FC<IProps> = ({
+export const DelOppPeriode: React.FC<IProps> = ({
     periode,
     tidslinjeRader,
     splittDato,
@@ -43,6 +44,7 @@ const DelOppPeriode: React.FC<IProps> = ({
     settVisModal,
     onChangeDato,
     onSubmit,
+    feilmelding,
 }) => {
     return (
         <UIModalWrapper
@@ -96,9 +98,9 @@ const DelOppPeriode: React.FC<IProps> = ({
                     maxDate: periode.periode.tom,
                 }}
                 onChange={(nyVerdi?: string) => onChangeDato(nyVerdi)}
+                harFeil={!!feilmelding}
+                feilmelding={feilmelding}
             />
         </UIModalWrapper>
     );
 };
-
-export default DelOppPeriode;
