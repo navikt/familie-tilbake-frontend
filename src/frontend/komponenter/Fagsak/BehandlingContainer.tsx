@@ -7,7 +7,7 @@ import navFarger from 'nav-frontend-core';
 import { Normaltekst } from 'nav-frontend-typografi';
 
 import { useBehandling } from '../../context/BehandlingContext';
-import { IBehandling } from '../../typer/behandling';
+import { Behandlingstatus, IBehandling } from '../../typer/behandling';
 import { IFagsak } from '../../typer/fagsak';
 import {
     erØnsketSideTilgjengelig,
@@ -70,9 +70,15 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                     );
                 }
             } else if (!ønsketSideLovlig) {
-                history.push(
-                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                );
+                if (behandling.status === Behandlingstatus.AVSLUTTET) {
+                    history.push(
+                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/vedtak`
+                    );
+                } else {
+                    history.push(
+                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                    );
+                }
             }
         }
     }, [visVenteModal, aktivtSteg, ønsketSide]);
