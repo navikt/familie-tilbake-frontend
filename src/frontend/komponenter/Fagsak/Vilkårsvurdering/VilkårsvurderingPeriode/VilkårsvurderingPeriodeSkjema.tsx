@@ -4,7 +4,9 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
+import Hjelpetekst from 'nav-frontend-hjelpetekst';
 import { Knapp } from 'nav-frontend-knapper';
+import { PopoverOrientering } from 'nav-frontend-popover';
 import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst, Undertekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
@@ -16,9 +18,13 @@ import {
     SærligeGrunner,
     Vilkårsresultat,
     vilkårsresultater,
+    vilkårsresultatHjelpetekster,
+    vilkårsresultatHjelpeteksterBarnetrygd,
     vilkårsresultatTyper,
+    Ytelsetype,
 } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
+import { IFagsak } from '../../../../typer/fagsak';
 import { formatCurrencyNoKr, formatterDatostring, isEmpty } from '../../../../utils';
 import {
     Navigering,
@@ -46,6 +52,12 @@ import {
 const StyledContainer = styled.div`
     border: 1px solid ${navFarger.navGra60};
     padding: 10px;
+`;
+
+const StyledHjelpetekst = styled(Hjelpetekst)`
+    width: 1rem;
+    height: 1rem;
+    margin-left: 0.5rem;
 `;
 
 const settSkjemadataFraPeriode = (
@@ -133,7 +145,24 @@ const settSkjemadataFraPeriode = (
             : finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.ileggRenter) || ''
     );
 };
+
+const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.ReactNode => {
+    const hjelpetekster =
+        fagsak.ytelsestype === Ytelsetype.BARNETRYGD
+            ? vilkårsresultatHjelpeteksterBarnetrygd
+            : vilkårsresultatHjelpetekster;
+    return (
+        <>
+            {vilkårsresultater[resultat]}
+            <StyledHjelpetekst type={PopoverOrientering.OverVenstre}>
+                {hjelpetekster[resultat]}
+            </StyledHjelpetekst>
+        </>
+    );
+};
+
 interface IProps {
+    fagsak: IFagsak;
     behandling: IBehandling;
     periode: VilkårsvurderingPeriodeSkjemaData;
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
@@ -147,6 +176,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     behandletPerioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
+    fagsak,
 }) => {
     const {
         kanIlleggeRenter,
@@ -172,6 +202,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             const per = behandletPerioder.find(per => per.index === valgtPeriodeIndex);
             if (per) {
                 settSkjemadataFraPeriode(skjema, per, kanIlleggeRenter);
+                event.target.value = '-';
             }
         }
     };
@@ -248,7 +279,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     label=""
                                     erLesevisning={erLesevisning}
                                 >
-                                    <option>-</option>
+                                    <option value="-">-</option>
                                     {behandletPerioder.map(per => (
                                         <option
                                             key={`${per.periode.fom}_${per.periode.tom}`}
@@ -333,7 +364,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         <Radio
                                             key={type}
                                             name="valgtVilkarResultatType"
-                                            label={vilkårsresultater[type]}
+                                            label={lagLabeltekster(fagsak, type)}
                                             value={type}
                                             checked={
                                                 skjema.felter.vilkårsresultatvurdering.verdi ===
@@ -369,8 +400,13 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         name="vurderingBegrunnelse"
                                         label={
                                             erGodTro
-                                                ? 'Begrunn hvorfor mottaker er i god tro'
+                                                ? 'Vurder om beløpet er i behold'
                                                 : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
+                                        }
+                                        placeholder={
+                                            erGodTro
+                                                ? 'Begrunn hvorfor beløpet er i behold / er ikke i behold'
+                                                : ''
                                         }
                                         erLesevisning={erLesevisning}
                                         value={

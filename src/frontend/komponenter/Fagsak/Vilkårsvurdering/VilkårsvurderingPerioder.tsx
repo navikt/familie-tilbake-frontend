@@ -13,6 +13,7 @@ import { Periode } from '@navikt/helse-frontend-tidslinje';
 
 import { Vilkårsresultat } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
+import { IFagsak } from '../../../typer/fagsak';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
@@ -76,6 +77,7 @@ const genererRader = (
 
 interface IProps {
     behandling: IBehandling;
+    fagsak: IFagsak;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
@@ -83,6 +85,7 @@ interface IProps {
 
 const VilkårsvurderingPerioder: React.FC<IProps> = ({
     behandling,
+    fagsak,
     perioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
@@ -151,6 +154,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                                 behandletPerioder={behandletPerioder}
                                 erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
                                 erLesevisning={erLesevisning}
+                                fagsak={fagsak}
                             />
                         </Column>
                     </Row>

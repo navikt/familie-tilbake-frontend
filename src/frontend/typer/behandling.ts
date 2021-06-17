@@ -148,16 +148,13 @@ export interface IBehandlingsstegstilstand {
 export interface IBehandling {
     behandlingId: string;
     eksternBrukId: string;
-    //    endretAv: string;
     opprettetDato: string;
     avsluttetDato?: string;
     enhetskode?: string;
     resultatstype?: Behandlingresultat;
     status: Behandlingstatus;
     type: Behandlingstype;
-    //    vedtakForBehandling: IVedtakForBehandling[];
     årsak?: Behandlingårsak;
-    //    skalBehandlesAutomatisk: boolean;
     erBehandlingHenlagt?: boolean;
     erBehandlingPåVent?: boolean;
     kanEndres: boolean;
@@ -165,4 +162,5 @@ export interface IBehandling {
     kanHenleggeBehandling: boolean;
     varselSendt: boolean;
     behandlingsstegsinfo: IBehandlingsstegstilstand[];
+    fagsystemsbehandlingId: string;
 }

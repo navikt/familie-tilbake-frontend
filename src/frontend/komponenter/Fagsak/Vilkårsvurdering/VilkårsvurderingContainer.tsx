@@ -10,7 +10,9 @@ import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
+import { Ytelsetype } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
+import { IFagsak } from '../../../typer/fagsak';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import {
@@ -28,10 +30,11 @@ const HenterContainer = styled(StyledVilkårsvurdering)`
 `;
 
 interface IProps {
+    fagsak: IFagsak;
     behandling: IBehandling;
 }
 
-const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
+const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
     const {
         feilutbetalingVilkårsvurdering,
         stegErBehandlet,
@@ -40,6 +43,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
     } = useFeilutbetalingVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
+    const erBarnetrygd = fagsak.ytelsestype === Ytelsetype.BARNETRYGD;
 
     switch (feilutbetalingVilkårsvurdering?.status) {
         case RessursStatus.SUKSESS: {
@@ -63,7 +67,11 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
                         <>
                             <Steginformasjon
                                 behandletSteg={stegErBehandlet}
-                                infotekst={`Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering.`}
+                                infotekst={
+                                    erBarnetrygd
+                                        ? 'Fastsett tilbakekreving etter barnetrygdloven § 13 og folketrygdloven § 22-15. Del opp perioden ved behov for ulik vurdering.'
+                                        : 'Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering.'
+                                }
                             />
                             <Spacer20 />
                         </>
@@ -76,6 +84,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ behandling }) => {
                                     perioder={skjemaData}
                                     erTotalbeløpUnder4Rettsgebyr={totalbeløpErUnder4Rettsgebyr}
                                     erLesevisning={erLesevisning}
+                                    fagsak={fagsak}
                                 />
                             )}
                         </Column>
