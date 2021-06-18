@@ -35,9 +35,10 @@ const Tidslinje = styled.div`
     background-image: radial-gradient(
         1px 1px at center,
         ${navFarger.navGra40} 1px,
-        transparent 1px
+        transparent 1px,
+        transparent 4px
     );
-    background-size: auto 5px;
+    background-size: 100% 5px;
 `;
 
 const Innhold = styled.div`

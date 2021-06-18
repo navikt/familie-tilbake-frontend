@@ -23,7 +23,7 @@
     ]
   },
   "dependencies": {
-    "@navikt/ds-icons": "^0.3.2",
+    "@navikt/ds-icons": "^0.3.3",
     "@navikt/familie-backend": "^5.0.26",
     "@navikt/familie-clipboard": "^3.1.6",
     "@navikt/familie-form-elements": "^3.0.3",
@@ -41,7 +41,7 @@
     "@types/deep-equal": "^1.0.1",
     "@types/express": "^4.17.12",
     "@types/react": "^17.0.11",
-    "@types/react-dom": "^17.0.7",
+    "@types/react-dom": "^17.0.8",
     "@types/react-modal": "^3.12.0",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-router-hash-link": "^2.4.0",
@@ -66,6 +66,8 @@
     "nav-frontend-ekspanderbartpanel-style": "^2.0.1",
     "nav-frontend-grid": "^2.0.1",
     "nav-frontend-grid-style": "^1.0.2",
+    "nav-frontend-hjelpetekst": "^3.0.2",
+    "nav-frontend-hjelpetekst-style": "^3.0.1",
     "nav-frontend-ikoner-assets": "^3.0.1",
     "nav-frontend-ikonknapper": "^2.0.1",
     "nav-frontend-js-utils": "^1.0.19",
@@ -96,7 +98,7 @@
     "react-router-hash-link": "^2.4.3",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "snyk": "^1.636.0",
+    "snyk": "^1.639.0",
     "styled-components": "^5.3.0",
     "uuid": "^8.3.0"
   },
@@ -130,20 +132,28 @@
     "html-webpack-plugin": "^5.3.1",
     "husky": "^6.0.0",
     "less": "^4.1.1",
-    "less-loader": "^9.1.0",
+    "less-loader": "^10.0.0",
     "lint-staged": "^11.0.0",
     "prettier": "~2.2.1",
     "react-refresh": "^0.10.0",
     "style-loader": "^2.0.0",
     "ts-loader": "^9.2.3",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
-    "typescript": "^4.3.3",
+    "typescript": "^4.3.4",
     "typescript-eslint": "^0.0.1-alpha.0",
-    "webpack": "^5.39.0",
+    "webpack": "^5.39.1",
     "webpack-cli": "^4.7.2",
     "webpack-dev-middleware": "^5.0.0",
     "webpack-hot-middleware": "^2.25.0",
     "webpack-merge": "^5.8.0"
   },
-  "snyk": true
+  "snyk": true,
+  "resolutions": {
+    "browserslist": "^4.16.5",
+    "color-string": "^1.5.5",
+    "glob-parent": "^6.0.0",
+    "hosted-git-info": "^3.0.8",
+    "lodash": "^4.17.21",
+    "normalize-url": "^4.5.1"
+  }
 }

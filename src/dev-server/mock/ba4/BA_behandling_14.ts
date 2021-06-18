@@ -10,6 +10,7 @@ import {
 const ba_behandling_14: IBehandling = {
     behandlingId: 'ba14',
     eksternBrukId: '13',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: true,
     kanEndres: true,
     harVerge: true,

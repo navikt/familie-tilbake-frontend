@@ -161,6 +161,13 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         );
     };
 
+    const lagLenkeTilRevurdering = () => {
+        return fagsak?.status === RessursStatus.SUKSESS &&
+            behandling?.status === RessursStatus.SUKSESS
+            ? `/redirect/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/${behandling.data.fagsystemsbehandlingId}`
+            : '#';
+    };
+
     return {
         behandling,
         hentBehandlingMedEksternBrukId,
@@ -175,6 +182,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         erBehandlingReturnertFraBeslutter,
         harVærtPåFatteVedtakSteget,
         harKravgrunnlag,
+        lagLenkeTilRevurdering,
     };
 });
 

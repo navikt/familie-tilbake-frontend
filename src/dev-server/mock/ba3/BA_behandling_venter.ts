@@ -12,6 +12,7 @@ import { dayIn21Days, yesterday } from '../utils';
 const ba_behandling_6: IBehandling = {
     behandlingId: 'ba6',
     eksternBrukId: '5',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: false,
     harVerge: false,
     type: Behandlingstype.TILBAKEKREVING,
@@ -34,6 +35,7 @@ const ba_behandling_6: IBehandling = {
 const ba_behandling_7: IBehandling = {
     behandlingId: 'ba7',
     eksternBrukId: '6',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: false,
     harVerge: true,
     type: Behandlingstype.TILBAKEKREVING,
@@ -60,6 +62,7 @@ const ba_behandling_7: IBehandling = {
 const ba_behandling_8: IBehandling = {
     behandlingId: 'ba8',
     eksternBrukId: '7',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: true,
     harVerge: false,
     type: Behandlingstype.TILBAKEKREVING,
@@ -91,6 +94,7 @@ const ba_behandling_8: IBehandling = {
 const ba_behandling_9: IBehandling = {
     behandlingId: 'ba9',
     eksternBrukId: '8',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: false,
     harVerge: false,
     type: Behandlingstype.TILBAKEKREVING,

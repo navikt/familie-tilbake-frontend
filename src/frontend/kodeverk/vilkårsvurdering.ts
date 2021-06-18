@@ -5,14 +5,30 @@ export enum Vilkårsresultat {
     GOD_TRO = 'GOD_TRO',
 }
 
-export const vilkårsresultater = {
+export const vilkårsresultater: Record<Vilkårsresultat, string> = {
     FORSTO_BURDE_FORSTÅTT:
-        'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil (1. ledd, 1. punkt)',
+        'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
     FEIL_OPPLYSNINGER_FRA_BRUKER:
-        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger (1. ledd, 2 punkt)',
+        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
     MANGELFULLE_OPPLYSNINGER_FRA_BRUKER:
-        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger (1. ledd, 2 punkt)',
-    GOD_TRO: 'Nei, mottaker har mottatt beløpet i god tro (1. ledd)',
+        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+    GOD_TRO: 'Nei, mottaker har mottatt beløpet i god tro',
+};
+
+export const vilkårsresultatHjelpetekster: Record<Vilkårsresultat, string> = {
+    FORSTO_BURDE_FORSTÅTT: 'Folketrygdloven § 22-15, 1. ledd, 1. punkt',
+    FEIL_OPPLYSNINGER_FRA_BRUKER: 'Folketrygdloven § 22-15, 1. ledd, 2. punkt',
+    MANGELFULLE_OPPLYSNINGER_FRA_BRUKER: 'Folketrygdloven § 22-15, 1. ledd, 2. punkt',
+    GOD_TRO: 'Folketrygdloven § 22-15, 1. ledd',
+};
+
+export const vilkårsresultatHjelpeteksterBarnetrygd: Record<Vilkårsresultat, string> = {
+    FORSTO_BURDE_FORSTÅTT: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
+    FEIL_OPPLYSNINGER_FRA_BRUKER:
+        'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
+    MANGELFULLE_OPPLYSNINGER_FRA_BRUKER:
+        'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
+    GOD_TRO: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd',
 };
 
 export const vilkårsresultatTyper = [
@@ -28,13 +44,13 @@ export enum Aktsomhet {
     SIMPEL_UAKTSOMHET = 'SIMPEL_UAKTSOMHET',
 }
 
-export const aktsomheter = {
+export const aktsomheter: Record<Aktsomhet, string> = {
     FORSETT: 'Forsett',
     GROV_UAKTSOMHET: 'Grov uaktsomhet',
     SIMPEL_UAKTSOMHET: 'Simpel uaktsomhet',
 };
 
-export const forstodBurdeForståttAktsomheter = {
+export const forstodBurdeForståttAktsomheter: Record<Aktsomhet, string> = {
     FORSETT: 'Forsto',
     GROV_UAKTSOMHET: 'Må ha forstått',
     SIMPEL_UAKTSOMHET: 'Burde ha forstått',
@@ -54,7 +70,7 @@ export enum SærligeGrunner {
     ANNET = 'ANNET',
 }
 
-export const særligegrunner = {
+export const særligegrunner: Record<SærligeGrunner, string> = {
     GRAD_AV_UAKTSOMHET: 'Graden av uaktsomhet hos den kravet retter seg mot',
     HELT_ELLER_DELVIS_NAVS_FEIL: 'Om feilen helt eller delvis kan tilskrives NAV',
     STØRRELSE_BELØP: 'Størrelsen på feilutbetalt beløp',

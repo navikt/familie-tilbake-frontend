@@ -127,7 +127,10 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                                 behandling={behandling}
                                 fagsak={fagsak}
                             >
-                                <VilkårsvurderingContainer behandling={behandling} />
+                                <VilkårsvurderingContainer
+                                    behandling={behandling}
+                                    fagsak={fagsak}
+                                />
                             </FeilutbetalingVilkårsvurderingProvider>
                         )}
                     />

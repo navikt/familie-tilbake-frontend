@@ -12,6 +12,7 @@ import { dayIn21Days } from '../utils';
 const ba_behandling_13: IBehandling = {
     behandlingId: 'ba13',
     eksternBrukId: '12',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: true,
     erBehandlingPåVent: true,
     kanEndres: true,

@@ -45,6 +45,7 @@ const fagsak_ef2: IFagsak = {
 const ef_behandling_4: IBehandling = {
     behandlingId: 'ef4',
     eksternBrukId: '3',
+    fagsystemsbehandlingId: 'ef123',
     kanHenleggeBehandling: true,
     erBehandlingPåVent: false,
     harVerge: true,
@@ -85,6 +86,7 @@ const ef_behandling_4: IBehandling = {
 const ef_behandling_5: IBehandling = {
     behandlingId: 'ef5',
     eksternBrukId: '4',
+    fagsystemsbehandlingId: 'ef123',
     kanHenleggeBehandling: true,
     erBehandlingPåVent: false,
     harVerge: true,

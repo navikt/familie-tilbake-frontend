@@ -63,6 +63,7 @@ const fagsak_ba5: IFagsak = {
 const ba_behandling_16: IBehandling = {
     behandlingId: 'ba16',
     eksternBrukId: '15',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: true,
     harVerge: true,
     kanEndres: true,
@@ -94,6 +95,7 @@ const ba_behandling_16: IBehandling = {
 const ba_behandling_17: IBehandling = {
     behandlingId: 'ba17',
     eksternBrukId: '16',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: true,
     harVerge: true,
     kanEndres: true,
@@ -129,6 +131,7 @@ const ba_behandling_17: IBehandling = {
 const ba_behandling_18: IBehandling = {
     behandlingId: 'ba18',
     eksternBrukId: '17',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: true,
     harVerge: true,
     kanEndres: true,
@@ -160,6 +163,7 @@ const ba_behandling_18: IBehandling = {
 const ba_behandling_19: IBehandling = {
     behandlingId: 'ba19',
     eksternBrukId: '18',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: true,
     harVerge: true,
     kanEndres: true,
@@ -191,6 +195,7 @@ const ba_behandling_19: IBehandling = {
 const ba_behandling_20: IBehandling = {
     behandlingId: 'ba20',
     eksternBrukId: '19',
+    fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: true,
     harVerge: true,
     kanEndres: true,

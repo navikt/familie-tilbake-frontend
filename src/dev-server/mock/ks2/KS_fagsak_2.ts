@@ -39,6 +39,7 @@ const fagsak_ks2: IFagsak = {
 const ks_behandling_4: IBehandling = {
     behandlingId: 'ks4',
     eksternBrukId: '3',
+    fagsystemsbehandlingId: 'ks123',
     kanHenleggeBehandling: true,
     erBehandlingPåVent: false,
     harVerge: true,

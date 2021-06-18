@@ -3,7 +3,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
-import KnappBase from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 
 import { ExternalLink } from '@navikt/ds-icons';
@@ -27,10 +26,7 @@ const StyledContainer = styled.div`
         border-bottom-color: ${navFarger.navGra20} !important;
 
         &__lenke {
-            margin: 0 3rem;
-        }
-        &__status {
-            text-indent: 1rem;
+            margin-right: 3rem;
         }
     }
 `;
@@ -41,7 +37,7 @@ interface IProps {
 }
 
 const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
-    const { behandling } = useBehandling();
+    const { behandling, lagLenkeTilRevurdering } = useBehandling();
     const { lagSaksoversiktUrl } = useFagsak();
     return (
         <StyledContainer>
@@ -54,9 +50,15 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                 <PlaceholderDiv />
 
                 {behandling?.status === RessursStatus.SUKSESS && (
-                    <KnappBase mini={true} type={'flat'}>
-                        Gå til revurderingen
-                    </KnappBase>
+                    <Lenke
+                        className={'visittkort__lenke'}
+                        href={lagLenkeTilRevurdering()}
+                        onMouseDown={e => e.preventDefault()}
+                        target="_blank"
+                    >
+                        <span>Gå til revurderingen</span>
+                        <ExternalLink />
+                    </Lenke>
                 )}
 
                 <Lenke

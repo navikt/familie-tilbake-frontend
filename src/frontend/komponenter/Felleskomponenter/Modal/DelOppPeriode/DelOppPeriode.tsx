@@ -76,6 +76,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
             style={{
                 content: {
                     width: '30rem',
+                    overflow: 'initial',
                 },
             }}
         >
