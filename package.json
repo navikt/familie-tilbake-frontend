@@ -147,5 +147,13 @@
     "webpack-hot-middleware": "^2.25.0",
     "webpack-merge": "^5.8.0"
   },
-  "snyk": true
+  "snyk": true,
+  "resolutions": {
+    "browserslist": "^4.16.5",
+    "color-string": "^1.5.5",
+    "glob-parent": "^6.0.0",
+    "hosted-git-info": "^3.0.8",
+    "lodash": "^4.17.21",
+    "normalize-url": "^4.5.1"
+  }
 }
