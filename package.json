@@ -60,8 +60,8 @@
     "@navikt/familie-visittkort": "^2.1.25",
     "@navikt/helse-frontend-tidslinje": "^6.1.8",
     "@navikt/nap-user-panel": "^1.1.0",
-    "@sentry/browser": "^6.7.1",
-    "@sentry/core": "^6.7.1",
+    "@sentry/browser": "^6.7.2",
+    "@sentry/core": "^6.7.2",
     "@types/classnames": "^2.3.1",
     "@types/deep-equal": "^1.0.1",
     "@types/express": "^4.17.12",
@@ -134,7 +134,7 @@
     "@peculiar/webcrypto": "^1.1.7",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
+    "@testing-library/react": "^12.0.0",
     "@testing-library/react-hooks": "^7.0.0",
     "@testing-library/user-event": "^13.1.9",
     "@types/jest": "^26.0.23",
@@ -186,11 +186,8 @@
   },
   "snyk": true,
   "resolutions": {
-    "browserslist": "^4.16.5",
-    "color-string": "^1.5.5",
     "glob-parent": "^6.0.0",
     "hosted-git-info": "^3.0.8",
-    "lodash": "^4.17.21",
-    "normalize-url": "^4.5.1"
+    "lodash": "^4.17.21"
   }
 }
