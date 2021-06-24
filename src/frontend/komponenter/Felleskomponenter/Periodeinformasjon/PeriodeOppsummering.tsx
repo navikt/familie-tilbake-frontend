@@ -11,7 +11,7 @@ import { HendelseType, hendelsetyper } from '../../../kodeverk';
 import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
 
 const StyledContainer = styled.div`
-    background-color: ${navFarger.orangeFocusLighten80};
+    background-color: ${navFarger.navOransjeLighten80};
     height: auto;
     padding: 10px 20px 10px;
     top: 0;
@@ -54,7 +54,7 @@ const PeriodeOppsummering: React.FC<IProps> = ({ fom, tom, beløp, hendelsetype 
             <SumRad>
                 <Column xs="7">
                     <Normaltekst>
-                        Feilutbetaling :
+                        Feilutbetaling:
                         <span className={classNames(beløp ? 'redNumber' : 'positivNumber')}>
                             {formatCurrencyNoKr(beløp)}
                         </span>

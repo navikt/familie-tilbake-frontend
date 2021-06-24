@@ -12,6 +12,7 @@
     "build:dev": "tsc & NODE_ENV=development webpack --config ./build_n_deploy/webpack/webpack.dev.js",
     "build:prod": "tsc & NODE_ENV=production webpack --config ./build_n_deploy/webpack/webpack.prod.js",
     "snyk-protect": "snyk protect",
+    "test": "jest",
     "lint": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint './src/**/*.{js,jsx,ts,tsx}' --fix",
     "prepare": "yarn run snyk-protect && husky install"
@@ -21,6 +22,30 @@
       "prettier --write",
       "eslint --fix src/ --max-warnings=0"
     ]
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "jsdom",
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "<rootDir>/src/frontend/tsconfig.json"
+      }
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/jest-setup.ts"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less|svg)$": "<rootDir>/src/mockFile.js",
+      "nav-(.*)-style": "<rootDir>/src/mockFile.js",
+      "nav-frontend-core": "<rootDir>/src/mockFile.js"
+    },
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!(@navikt)/)"
+    ],
+    "transform": {
+      "\\.[jt]s?$": "babel-jest",
+      "\\.[jt]sx?$": "babel-jest"
+    }
   },
   "dependencies": {
     "@navikt/ds-icons": "^0.3.3",
@@ -106,12 +131,19 @@
     "@axe-core/react": "~4.1.1",
     "@babel/core": "^7.14.6",
     "@babel/preset-react": "^7.14.5",
+    "@peculiar/webcrypto": "^1.1.7",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/react-hooks": "^7.0.0",
+    "@testing-library/user-event": "^13.1.9",
+    "@types/jest": "^26.0.23",
     "@types/webpack-dev-middleware": "^5.0.0",
     "@types/webpack-env": "^1.16.0",
     "@types/webpack-hot-middleware": "^2.25.4",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
+    "babel-jest": "^27.0.2",
     "babel-polyfill": "^6.26.0",
     "babel-preset-react-app": "^10.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
@@ -123,20 +155,25 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-app": "^6.2.2",
+    "eslint-plugin-testing-library": "^4.6.0",
     "express-static-gzip": "^2.1.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
     "husky": "^6.0.0",
+    "jest": "^27.0.4",
+    "jest-mock-extended": "^1.0.16",
     "less": "^4.1.1",
     "less-loader": "^10.0.0",
     "lint-staged": "^11.0.0",
     "prettier": "~2.2.1",
     "react-refresh": "^0.10.0",
     "style-loader": "^2.0.0",
+    "ts-jest": "^27.0.3",
     "ts-loader": "^9.2.3",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "typescript": "^4.3.4",
