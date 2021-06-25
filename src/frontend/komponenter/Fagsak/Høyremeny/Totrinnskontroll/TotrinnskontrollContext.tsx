@@ -84,12 +84,9 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                             const stegInfo = totrinn.find(tt => tt.behandlingssteg === steg);
                             return {
                                 index: `idx_steg_${index}`,
-                                // @ts-ignore
-                                behandlingssteg: stegInfo.behandlingssteg,
-                                // @ts-ignore
-                                godkjent: finnTotrinnGodkjenningOption(stegInfo.godkjent),
-                                // @ts-ignore
-                                begrunnelse: stegInfo.begrunnelse,
+                                behandlingssteg: stegInfo?.behandlingssteg as Behandlingssteg,
+                                godkjent: finnTotrinnGodkjenningOption(stegInfo?.godkjent),
+                                begrunnelse: stegInfo?.begrunnelse,
                             };
                         })
                 );

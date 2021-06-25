@@ -403,8 +403,7 @@ const useVilkårsvurderingPeriodeSkjema = (
 
         return {
             begrunnelse: skjema.felter.aktsomhetBegrunnelse.verdi,
-            // @ts-ignore - validert i validerAlleSynligeFelter
-            aktsomhet: skjema.felter.aktsomhetVurdering.verdi,
+            aktsomhet: skjema.felter.aktsomhetVurdering.verdi as Aktsomhet,
             ileggRenter:
                 !erForstoForsett && !erGrovtUaktsomhet
                     ? undefined
@@ -450,8 +449,8 @@ const useVilkårsvurderingPeriodeSkjema = (
                 ...periode,
                 begrunnelse: skjema.felter.vilkårsresultatBegrunnelse.verdi,
                 vilkårsvurderingsresultatInfo: {
-                    // @ts-ignore - validert i validerAlleSynligeFelter
-                    vilkårsvurderingsresultat: skjema.felter.vilkårsresultatvurdering.verdi,
+                    vilkårsvurderingsresultat: skjema.felter.vilkårsresultatvurdering
+                        .verdi as Vilkårsresultat,
                     godTro: erGodTro ? byggGodTro() : undefined,
                     aktsomhet: !erGodTro ? byggAktsomhet() : undefined,
                 },

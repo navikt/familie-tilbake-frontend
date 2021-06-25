@@ -14,10 +14,12 @@ import {
 } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Aktsomhet, Ytelsetype } from '../../../kodeverk';
+import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import {
+    Aktsomhetsvurdering,
+    GodTro,
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
@@ -236,15 +238,14 @@ const [
                 const payload: VilkårdsvurderingStegPayload = {
                     '@type': 'VILKÅRSVURDERING',
                     vilkårsvurderingsperioder: ikkeForeldetPerioder.map<PeriodeVilkårsvurderingStegPayload>(
-                        // @ts-ignore
                         per => {
                             const resultat = per.vilkårsvurderingsresultatInfo;
                             return {
                                 periode: per.periode,
-                                begrunnelse: per.begrunnelse,
-                                vilkårsvurderingsresultat: resultat?.vilkårsvurderingsresultat,
-                                godTroDto: resultat?.godTro,
-                                aktsomhetDto: resultat?.aktsomhet,
+                                begrunnelse: per.begrunnelse as string,
+                                vilkårsvurderingsresultat: resultat?.vilkårsvurderingsresultat as Vilkårsresultat,
+                                godTroDto: resultat?.godTro as GodTro,
+                                aktsomhetDto: resultat?.aktsomhet as Aktsomhetsvurdering,
                             };
                         }
                     ),

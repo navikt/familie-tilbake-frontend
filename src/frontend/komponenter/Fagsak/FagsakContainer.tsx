@@ -10,7 +10,7 @@ import { RessursStatus } from '@navikt/familie-typer';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { Fagsystem } from '../../kodeverk';
-import { IBehandlingsstegstilstand, venteårsaker } from '../../typer/behandling';
+import { IBehandlingsstegstilstand, Venteårsak, venteårsaker } from '../../typer/behandling';
 import { formatterDatostring } from '../../utils';
 import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
@@ -30,10 +30,8 @@ const StyledAlertStripe = styled(AlertStripe)`
 
 const venteBeskjed = (ventegrunn: IBehandlingsstegstilstand) => {
     return `Behandlingen er satt på vent: ${
-        // @ts-ignore
-        venteårsaker[ventegrunn.venteårsak]
-        // @ts-ignore
-    }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist)}`;
+        venteårsaker[ventegrunn.venteårsak as Venteårsak]
+    }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;
 };
 
 interface IProps {
