@@ -75,7 +75,7 @@
     "axios": "^0.21.1",
     "babel-loader": "^8.1.0",
     "classnames": "^2.3.1",
-    "constate": "^3.2.0",
+    "constate": "^3.3.0",
     "date-fns": "^2.22.1",
     "deep-equal": "^2.0.5",
     "dotenv": "^10.0.0",
