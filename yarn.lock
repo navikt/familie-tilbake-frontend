@@ -6432,26 +6432,12 @@ fn.name@1.x.x:
   resolved "https://registry.yarnpkg.com/fn.name/-/fn.name-1.1.0.tgz#26cad8017967aea8731bc42961d04a3d5988accc"
   integrity sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==
 
-focus-trap-react@^8.4.2:
-  version "8.4.2"
-  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-8.4.2.tgz#5b313605e0789a7beee1467785e455dc63388a98"
-  integrity sha512-yuItOIwgriOBMrbHDqbWMpQjGVs9SbtugYrT0vs0yPjHiPKja3NZ9dBMxDQrV1JhyojGK5d6j7ayqBS7Kcm9xQ==
-  dependencies:
-    focus-trap "^6.3.0"
-
-focus-trap-react@^8.5.0:
+focus-trap-react@^8.4.2, focus-trap-react@^8.6.0:
   version "8.6.0"
   resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-8.6.0.tgz#1f5062e6c1f190c878558b2234267c3fb91a5db5"
   integrity sha512-6NJf1mNlXatRJttJmvTRsnGRblERhyVS0YC54JlTZVIID0VafFkMFYv37JLzow7cMOeamT7W31qMuZ7LwTpEQw==
   dependencies:
     focus-trap "^6.5.1"
-
-focus-trap@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-6.3.0.tgz#31c08f0b6099705f71f6e0a16d88fbcc4c012586"
-  integrity sha512-BBzvFfkPg5PqrVVCdQ1YOIVNKGvqG9YNVkiAUQFuDM66N8J9uADhs6mlYKrd30ofDJIzEniBnBKM7GO45iCzKQ==
-  dependencies:
-    tabbable "^5.1.5"
 
 focus-trap@^6.5.1:
   version "6.5.1"
@@ -9064,12 +9050,12 @@ nav-datovelger@^11.0.0:
   dependencies:
     focus-trap-react "^8.4.2"
 
-nav-datovelger@^11.3.0:
-  version "11.4.0"
-  resolved "https://registry.yarnpkg.com/nav-datovelger/-/nav-datovelger-11.4.0.tgz#a3343d92f0b95a49e743fcac2a70ceb1bd444775"
-  integrity sha512-q1V9yW9qPM2Fkx3NVi6KO8OdxfANiMF3mnF+QmDSqT2OykIXLgW6A92W3gnSCQFJVAAP+OY6vGW5VIdrLnzv2Q==
+nav-datovelger@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/nav-datovelger/-/nav-datovelger-12.0.0.tgz#90668a6b974b47504549de4da86902632053b90c"
+  integrity sha512-biVlrgu4UXNL5Wq4iNlVEYJxM28I4+acN2jo7iELdawsAVxbhmgaG/NqiRCDQe4zDwOf7X+bT/UJHD4WiZEx9g==
   dependencies:
-    focus-trap-react "^8.5.0"
+    focus-trap-react "^8.6.0"
 
 nav-frontend-alertstriper-style@^2.1.1:
   version "2.1.1"
@@ -12291,11 +12277,6 @@ symbol-tree@^3.2.4:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
-
-tabbable@^5.1.5:
-  version "5.1.5"
-  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-5.1.5.tgz#efec48ede268d511c261e3b81facbb4782a35147"
-  integrity sha512-oVAPrWgLLqrbvQE8XqcU7CVBq6SQbaIbHkhOca3u7/jzuQvyZycrUKPCGr04qpEIUslmUlULbSeN+m3QrKEykA==
 
 tabbable@^5.2.0:
   version "5.2.0"
