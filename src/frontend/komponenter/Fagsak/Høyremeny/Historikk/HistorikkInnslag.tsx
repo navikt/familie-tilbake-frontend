@@ -61,7 +61,6 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
                 <Lenke
                     href="#"
                     onMouseDown={e => e.preventDefault()}
-                    // @ts-ignore
                     onClick={() => navigerTilSide(side)}
                 >
                     {innslag.tittel}

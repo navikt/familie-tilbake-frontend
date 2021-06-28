@@ -88,8 +88,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: 
     const hentBrevdata = (): BrevPayload => {
         return {
             behandlingId: behandling.behandlingId,
-            // @ts-ignore
-            brevmalkode: skjema.felter.maltype.verdi,
+            brevmalkode: skjema.felter.maltype.verdi as DokumentMal,
             fritekst: skjema.felter.fritekst.verdi,
         };
     };

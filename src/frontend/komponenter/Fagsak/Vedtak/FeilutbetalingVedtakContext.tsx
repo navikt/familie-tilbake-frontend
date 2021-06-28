@@ -219,8 +219,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                         feilmelding = 'Feltet er påkrevet';
                     }
                     if (!uavsFeil && !isEmpty(uavs.fritekst)) {
-                        // @ts-ignore
-                        feilmelding = validerTekstMaksLengde(4000)(uavs.fritekst);
+                        feilmelding = validerTekstMaksLengde(4000)(uavs.fritekst as string);
                         uavsFeil = !!feilmelding;
                     }
 

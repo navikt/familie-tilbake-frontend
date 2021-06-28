@@ -54,8 +54,7 @@ export const usePåVentBehandling = (
                 (_ressurs: Ressurs<string>) => {
                     if (ventegrunn) {
                         ventegrunn.tidsfrist = skjema.felter.tidsfrist.verdi;
-                        // @ts-ignore
-                        ventegrunn.venteårsak = skjema.felter.årsak.verdi;
+                        ventegrunn.venteårsak = skjema.felter.årsak.verdi as Venteårsak;
                     }
                     lukkModal(true);
                 }

@@ -18,7 +18,7 @@ import {
     HorisontalFamilieRadioGruppe,
 } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import { finnSideForSteg } from '../../../Felleskomponenter/Venstremeny/sider';
+import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {
     OptionGodkjent,
@@ -93,8 +93,7 @@ const Totrinnskontroll: React.FC<IProps> = () => {
                                             <Lenke
                                                 href="#"
                                                 onMouseDown={e => e.preventDefault()}
-                                                // @ts-ignore
-                                                onClick={() => navigerTilSide(side)}
+                                                onClick={() => navigerTilSide(side as ISide)}
                                             >
                                                 {behandlingssteg[totrinnSteg.behandlingssteg]}
                                             </Lenke>

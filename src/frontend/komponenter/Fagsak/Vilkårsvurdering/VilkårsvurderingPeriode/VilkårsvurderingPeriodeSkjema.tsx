@@ -55,9 +55,10 @@ const StyledContainer = styled.div`
 `;
 
 const StyledHjelpetekst = styled(Hjelpetekst)`
-    width: 1rem;
-    height: 1rem;
+    width: 1.3rem;
+    height: 1.3rem;
     margin-left: 0.5rem;
+    top: 4px;
 `;
 
 const settSkjemadataFraPeriode = (
@@ -154,7 +155,7 @@ const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.Rea
     return (
         <>
             {vilkårsresultater[resultat]}
-            <StyledHjelpetekst type={PopoverOrientering.OverVenstre}>
+            <StyledHjelpetekst type={PopoverOrientering.UnderVenstre}>
                 {hjelpetekster[resultat]}
             </StyledHjelpetekst>
         </>
