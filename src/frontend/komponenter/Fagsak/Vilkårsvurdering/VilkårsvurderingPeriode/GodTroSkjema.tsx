@@ -39,7 +39,6 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                 id="erBelopetIBehold"
                 erLesevisning={erLesevisning}
                 legend={'Er beløpet i behold?'}
-                // @ts-ignore
                 verdi={skjema.felter.erBeløpetIBehold.verdi === OptionJA ? 'Ja' : 'Nei'}
                 feil={
                     ugyldigErBeløpetIBeholdValgt
