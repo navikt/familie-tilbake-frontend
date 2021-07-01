@@ -51,11 +51,8 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
     erLesevisning,
 }) => {
     const { oppdaterPeriode, onSplitPeriode, lukkValgtPeriode } = useFeilutbetalingForeldelse();
-    const {
-        skjema,
-        onBekreft,
-    } = useForeldelsePeriodeSkjema((oppdatertPeriode: ForeldelsePeriodeSkjemeData) =>
-        oppdaterPeriode(oppdatertPeriode)
+    const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
+        (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
     );
 
     React.useEffect(() => {

@@ -46,9 +46,8 @@ interface IProps {
 }
 
 const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => {
-    const [splittetPerioder, settSplittetPerioder] = React.useState<
-        VilkårsvurderingPeriodeSkjemaData[]
-    >();
+    const [splittetPerioder, settSplittetPerioder] =
+        React.useState<VilkårsvurderingPeriodeSkjemaData[]>();
     const {
         visModal,
         settVisModal,

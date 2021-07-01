@@ -23,9 +23,8 @@ interface IProps {
 
 const [HistorikkProvider, useHistorikk] = createUseContext(
     ({ fagsak, behandling, valgtMenyside }: IProps) => {
-        const [historikkInnslag, settHistorikkInnslag] = React.useState<
-            Ressurs<IHistorikkInnslag[]>
-        >();
+        const [historikkInnslag, settHistorikkInnslag] =
+            React.useState<Ressurs<IHistorikkInnslag[]>>();
         const history = useHistory();
         const { request } = useHttp();
 

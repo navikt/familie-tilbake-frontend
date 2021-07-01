@@ -29,13 +29,8 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
     settVisModal,
     årsaker,
 }) => {
-    const {
-        skjema,
-        erÅrsakValgt,
-        erVisFritekst,
-        onBekreft,
-        nullstillSkjema,
-    } = useHenleggBehandlingSkjema({ behandling, settVisModal });
+    const { skjema, erÅrsakValgt, erVisFritekst, onBekreft, nullstillSkjema } =
+        useHenleggBehandlingSkjema({ behandling, settVisModal });
 
     React.useEffect(() => {
         skjema.felter.behandlingstype.onChange(behandling.type);

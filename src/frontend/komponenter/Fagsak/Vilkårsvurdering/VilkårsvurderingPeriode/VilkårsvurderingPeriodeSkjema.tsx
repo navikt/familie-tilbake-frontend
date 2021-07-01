@@ -111,9 +111,10 @@ const settSkjemadataFraPeriode = (
             dto => dto.særligGrunn
         ) || []
     );
-    const annetSærligGrunn = periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunner?.find(
-        dto => dto.særligGrunn === SærligeGrunner.ANNET
-    );
+    const annetSærligGrunn =
+        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunner?.find(
+            dto => dto.særligGrunn === SærligeGrunner.ANNET
+        );
     skjema.felter.særligeGrunnerAnnetBegrunnelse.onChange(annetSærligGrunn?.begrunnelse || '');
 
     skjema.felter.harMerEnnEnAktivitet.onChange(
@@ -179,12 +180,8 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erLesevisning,
     fagsak,
 }) => {
-    const {
-        kanIlleggeRenter,
-        oppdaterPeriode,
-        onSplitPeriode,
-        lukkValgtPeriode,
-    } = useFeilutbetalingVilkårsvurdering();
+    const { kanIlleggeRenter, oppdaterPeriode, onSplitPeriode, lukkValgtPeriode } =
+        useFeilutbetalingVilkårsvurdering();
     const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);

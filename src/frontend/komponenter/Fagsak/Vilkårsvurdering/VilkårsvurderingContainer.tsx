@@ -35,12 +35,8 @@ interface IProps {
 }
 
 const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
-    const {
-        feilutbetalingVilkårsvurdering,
-        stegErBehandlet,
-        erAutoutført,
-        skjemaData,
-    } = useFeilutbetalingVilkårsvurdering();
+    const { feilutbetalingVilkårsvurdering, stegErBehandlet, erAutoutført, skjemaData } =
+        useFeilutbetalingVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
     const erBarnetrygd = fagsak.ytelsestype === Ytelsetype.BARNETRYGD;

@@ -480,23 +480,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- feilaktige - grov uaktsomhet - ingen grunn til reduksjon', () => {
-        const {
-            getByLabelText,
-            getByRole,
-            getByTestId,
-            getByText,
-            queryAllByText,
-            queryByText,
-        } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-            />
-        );
+        const { getByLabelText, getByRole, getByTestId, getByText, queryAllByText, queryByText } =
+            render(
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                />
+            );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
@@ -691,23 +685,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- feilaktige - grov uaktsomhet - grunn til reduksjon - egendefinert', () => {
-        const {
-            getByLabelText,
-            getByRole,
-            getByText,
-            queryAllByText,
-            queryByRole,
-            queryByText,
-        } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-            />
-        );
+        const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole, queryByText } =
+            render(
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                />
+            );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();

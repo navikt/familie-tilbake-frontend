@@ -39,9 +39,8 @@ interface IProps {
 
 const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
     ({ behandling, fagsak }: IProps) => {
-        const [feilutbetalingFakta, settFeilutbetalingFakta] = React.useState<
-            Ressurs<IFeilutbetalingFakta>
-        >();
+        const [feilutbetalingFakta, settFeilutbetalingFakta] =
+            React.useState<Ressurs<IFeilutbetalingFakta>>();
         const [skjemaData, settSkjemaData] = React.useState<FaktaSkjemaData>({ perioder: [] });
         const [behandlePerioderSamlet, settBehandlePerioderSamlet] = React.useState<boolean>(false);
         const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
