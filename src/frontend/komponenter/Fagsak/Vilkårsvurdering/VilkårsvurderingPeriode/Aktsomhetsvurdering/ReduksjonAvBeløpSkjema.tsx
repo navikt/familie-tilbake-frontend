@@ -158,6 +158,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                         .verdi
                                                 }
                                                 bredde="XS"
+                                                data-testid="andelSomTilbakekrevesManuell"
                                             />
                                         </FlexColumn>
                                         <FlexColumn className="percentage">

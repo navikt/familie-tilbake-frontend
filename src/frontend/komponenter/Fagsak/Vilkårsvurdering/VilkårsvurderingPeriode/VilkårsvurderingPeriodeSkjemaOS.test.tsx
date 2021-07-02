@@ -4,7 +4,13 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { HendelseType, Ytelsetype } from '../../../../kodeverk';
+import {
+    Aktsomhet,
+    HendelseType,
+    SærligeGrunner,
+    Vilkårsresultat,
+    Ytelsetype,
+} from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
@@ -973,5 +979,169 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+    });
+
+    test('- mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ikke tilbakekreves', () => {
+        const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
+            <VilkårsvurderingPeriodeSkjema
+                behandling={behandling}
+                fagsak={fagsak}
+                periode={periode}
+                behandletPerioder={[]}
+                erTotalbeløpUnder4Rettsgebyr={true}
+                erLesevisning={false}
+            />
+        );
+
+        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
+        expect(queryByText('Aktsomhet')).toBeFalsy();
+
+        userEvent.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        userEvent.click(
+            getByLabelText(
+                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                {
+                    selector: 'input',
+                    exact: false,
+                }
+            )
+        );
+
+        userEvent.type(
+            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+            'begrunnelse'
+        );
+        userEvent.click(
+            getByLabelText('Simpel uaktsomhet', {
+                selector: 'input',
+            })
+        );
+
+        expect(
+            queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+        ).toBeTruthy();
+        expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeFalsy();
+
+        userEvent.click(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        );
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+
+        userEvent.click(
+            getByRole('radio', {
+                name: 'Nei',
+            })
+        );
+
+        expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeTruthy();
+
+        userEvent.click(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        );
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+    });
+
+    test('- åpner vurdert periode - god tro - beløp i behold', () => {
+        const { getByLabelText, getByText } = render(
+            <VilkårsvurderingPeriodeSkjema
+                behandling={behandling}
+                fagsak={fagsak}
+                periode={{
+                    ...periode,
+                    begrunnelse: 'Gitt i god tro',
+                    vilkårsvurderingsresultatInfo: {
+                        vilkårsvurderingsresultat: Vilkårsresultat.GOD_TRO,
+                        godTro: {
+                            begrunnelse: 'Deler av beløpet er i behold',
+                            beløpErIBehold: true,
+                            beløpTilbakekreves: 699,
+                        },
+                    },
+                }}
+                behandletPerioder={[]}
+                erTotalbeløpUnder4Rettsgebyr={true}
+                erLesevisning={false}
+            />
+        );
+        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
+        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Gitt i god tro');
+        expect(
+            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+                selector: 'input',
+                exact: false,
+            })
+        ).toBeChecked();
+        expect(getByLabelText('Ja')).toBeChecked();
+        expect(getByLabelText('Angi beløp som skal tilbakekreves')).toHaveValue('699');
+    });
+
+    test('- åpner vurdert periode - mangelfulle - simpel uaktsomhet - under 4 rettsgebyr', () => {
+        const { getByLabelText, getByTestId, getByText } = render(
+            <VilkårsvurderingPeriodeSkjema
+                behandling={behandling}
+                fagsak={fagsak}
+                periode={{
+                    ...periode,
+                    begrunnelse: 'Gitt mangelfulle opplysninger',
+                    vilkårsvurderingsresultatInfo: {
+                        vilkårsvurderingsresultat:
+                            Vilkårsresultat.MANGELFULLE_OPPLYSNINGER_FRA_BRUKER,
+                        aktsomhet: {
+                            begrunnelse: 'Vurdert aktsomhet til simpel',
+                            aktsomhet: Aktsomhet.SIMPEL_UAKTSOMHET,
+                            tilbakekrevSmåbeløp: true,
+                            særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
+                            særligeGrunner: [
+                                { særligGrunn: SærligeGrunner.GRAD_AV_UAKTSOMHET },
+                                { særligGrunn: SærligeGrunner.STØRRELSE_BELØP },
+                                {
+                                    særligGrunn: SærligeGrunner.ANNET,
+                                    begrunnelse: 'Dette er en annen begrunnelse',
+                                },
+                            ],
+                            særligeGrunnerTilReduksjon: true,
+                            andelTilbakekreves: 33,
+                        },
+                    },
+                }}
+                behandletPerioder={[]}
+                erTotalbeløpUnder4Rettsgebyr={true}
+                erLesevisning={false}
+            />
+        );
+        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
+        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue(
+            'Gitt mangelfulle opplysninger'
+        );
+        expect(
+            getByLabelText(
+                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                {
+                    selector: 'input',
+                    exact: false,
+                }
+            )
+        ).toBeChecked();
+        expect(getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')).toHaveValue(
+            'Vurdert aktsomhet til simpel'
+        );
+        expect(getByLabelText('Simpel uaktsomhet')).toBeChecked();
+        expect(
+            getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+        ).toBeTruthy();
+        expect(getByTestId('tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Ja')).toBeChecked();
+        expect(getByLabelText('Vurder særlige grunner du har vektlagt for resultatet')).toHaveValue(
+            'Det finnes særlige grunner'
+        );
+        expect(getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot')).toBeChecked();
+        expect(getByLabelText('Størrelsen på feilutbetalt beløp')).toBeChecked();
+        expect(getByLabelText('Annet')).toBeChecked();
+        expect(getByTestId('annetBegrunnelse')).toHaveValue('Dette er en annen begrunnelse');
+        expect(getByTestId('harGrunnerTilReduksjon_Ja')).toBeChecked();
+        expect(getByTestId('andelSomTilbakekrevesManuell')).toHaveValue('33');
     });
 });
