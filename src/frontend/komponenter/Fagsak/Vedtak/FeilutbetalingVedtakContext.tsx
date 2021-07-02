@@ -82,18 +82,13 @@ interface IProps {
 
 const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext(
     ({ fagsak, behandling }: IProps) => {
-        const [
-            feilutbetalingVedtaksbrevavsnitt,
-            settFeilutbetalingVedtaksbrevavsnitt,
-        ] = React.useState<Ressurs<VedtaksbrevAvsnitt[]>>();
-        const [beregningsresultat, settBeregningsresultat] = React.useState<
-            Ressurs<IBeregningsresultat>
-        >();
+        const [feilutbetalingVedtaksbrevavsnitt, settFeilutbetalingVedtaksbrevavsnitt] =
+            React.useState<Ressurs<VedtaksbrevAvsnitt[]>>();
+        const [beregningsresultat, settBeregningsresultat] =
+            React.useState<Ressurs<IBeregningsresultat>>();
         const [skjemaData, settSkjemaData] = React.useState<AvsnittSkjemaData[]>([]);
-        const [
-            harPåkrevetFritekstMenIkkeUtfylt,
-            settHarPåkrevetFritekstMenIkkeUtfylt,
-        ] = React.useState<boolean>(false);
+        const [harPåkrevetFritekstMenIkkeUtfylt, settHarPåkrevetFritekstMenIkkeUtfylt] =
+            React.useState<boolean>(false);
         const [disableBekreft, settDisableBekreft] = React.useState<boolean>(true);
         const [nonUsedKey, settNonUsedKey] = React.useState<string>(Date.now().toString());
         const [senderInn, settSenderInn] = React.useState<boolean>(false);

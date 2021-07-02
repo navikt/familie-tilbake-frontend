@@ -36,22 +36,20 @@ const genererRader = (
     valgtPeriode: ForeldelsePeriode | undefined
 ): Periode[][] => {
     return [
-        perioder.map(
-            (periode, index): Periode => {
-                const erAktivPeriode =
-                    !!valgtPeriode &&
-                    periode.periode.fom === valgtPeriode.periode.fom &&
-                    periode.periode.tom === valgtPeriode.periode.tom;
-                return {
-                    tom: new Date(periode.periode.tom),
-                    fom: new Date(periode.periode.fom),
-                    status: 'suksess',
-                    active: erAktivPeriode,
-                    id: `index_${index}`,
-                    className: finnClassNamePeriode(periode, erAktivPeriode),
-                };
-            }
-        ),
+        perioder.map((periode, index): Periode => {
+            const erAktivPeriode =
+                !!valgtPeriode &&
+                periode.periode.fom === valgtPeriode.periode.fom &&
+                periode.periode.tom === valgtPeriode.periode.tom;
+            return {
+                tom: new Date(periode.periode.tom),
+                fom: new Date(periode.periode.fom),
+                status: 'suksess',
+                active: erAktivPeriode,
+                id: `index_${index}`,
+                className: finnClassNamePeriode(periode, erAktivPeriode),
+            };
+        }),
     ];
 };
 

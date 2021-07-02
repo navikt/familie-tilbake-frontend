@@ -1,4 +1,4 @@
-import { ClientRequest } from 'http';
+import { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
 
 import { NextFunction, Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
@@ -9,9 +9,10 @@ import { logError, stdoutLogger } from '@navikt/familie-logging';
 
 import { proxyUrl, historikkUrl, redirectRecords } from './config';
 
-const restream = (proxyReq: ClientRequest, req: Request, _res: Response) => {
-    if (req.body) {
-        const bodyData = JSON.stringify(req.body);
+const restream = (proxyReq: ClientRequest, req: IncomingMessage, _res: OutgoingMessage): void => {
+    const requestBody = (req as Request).body;
+    if (requestBody) {
+        const bodyData = JSON.stringify(requestBody);
         proxyReq.setHeader('Content-Type', 'application/json');
         proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
         proxyReq.write(bodyData);

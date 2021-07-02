@@ -79,7 +79,7 @@ const avhengigheterOppfyltTilbakekrevesBeløpUnder4Rettsgebyr = (avhengigheter?:
 
 const erTilbakekrevBeløpUnder4Rettsgebyr = (avhengigheter?: Avhengigheter) =>
     avhengigheter?.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.OK &&
-    avhengigheter?.tilbakekrevSmåbeløp.verdi === true;
+    avhengigheter?.tilbakekrevSmåbeløp.verdi === OptionJA;
 
 const avhengigheterOppfyltSærligeGrunnerFelter = (avhengigheter?: Avhengigheter) =>
     (erAktsomhetsvurderingOppfylt(Aktsomhet.SIMPEL_UAKTSOMHET, avhengigheter) &&
@@ -332,13 +332,10 @@ const useVilkårsvurderingPeriodeSkjema = (
         },
     });
 
-    const {
-        skjema,
-        validerAlleSynligeFelter,
-        kanSendeSkjema,
-        hentFeilTilOppsummering,
-        nullstillSkjema,
-    } = useSkjema<VilkårsvurderingSkjemaDefinisjon, string>({
+    const { skjema, validerAlleSynligeFelter, kanSendeSkjema, nullstillSkjema } = useSkjema<
+        VilkårsvurderingSkjemaDefinisjon,
+        string
+    >({
         felter: {
             feilutbetaltBeløpPeriode,
             vilkårsresultatBegrunnelse: useFelt<string | ''>({
@@ -456,8 +453,6 @@ const useVilkårsvurderingPeriodeSkjema = (
                 },
             });
             nullstillSkjema();
-        } else {
-            hentFeilTilOppsummering().map(ff => console.log('Feil: ', ff));
         }
     };
 

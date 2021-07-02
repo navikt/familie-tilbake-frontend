@@ -172,6 +172,9 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         expect(queryByLabelText('Dato for når feilutbetaling ble oppdaget')).toBeTruthy();
 
         expect(getByLabelText('Vurdering')).toHaveValue('Vurdert');
+        expect(
+            getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
+        ).toBeChecked();
         expect(getByLabelText('Foreldelsesfrist')).toHaveValue('04.12.2019');
         expect(getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
             '18.09.2019'

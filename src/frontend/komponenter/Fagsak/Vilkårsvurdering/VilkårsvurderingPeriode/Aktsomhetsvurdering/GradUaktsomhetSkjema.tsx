@@ -60,6 +60,7 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                     onChange={() =>
                                         skjema.felter.tilbakekrevSmåbeløp.validerOgSettFelt(opt)
                                     }
+                                    data-testid={`tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_${opt.label}`}
                                 />
                             ))}
                         </HorisontalFamilieRadioGruppe>

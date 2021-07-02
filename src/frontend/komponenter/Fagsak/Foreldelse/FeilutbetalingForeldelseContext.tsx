@@ -32,21 +32,16 @@ interface IProps {
 
 const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUseContext(
     ({ behandling, fagsak }: IProps) => {
-        const [feilutbetalingForeldelse, settFeilutbetalingForeldelse] = React.useState<
-            Ressurs<IFeilutbetalingForeldelse>
-        >();
+        const [feilutbetalingForeldelse, settFeilutbetalingForeldelse] =
+            React.useState<Ressurs<IFeilutbetalingForeldelse>>();
         const [skjemaData, settSkjemaData] = React.useState<ForeldelsePeriodeSkjemeData[]>([]);
         const [erAutoutført, settErAutoutført] = React.useState<boolean>();
         const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
         const [valgtPeriode, settValgtPeriode] = React.useState<ForeldelsePeriodeSkjemeData>();
         const [allePerioderBehandlet, settAllePerioderBehandlet] = React.useState<boolean>(false);
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
-        const {
-            erStegBehandlet,
-            erStegAutoutført,
-            visVenteModal,
-            hentBehandlingMedBehandlingId,
-        } = useBehandling();
+        const { erStegBehandlet, erStegAutoutført, visVenteModal, hentBehandlingMedBehandlingId } =
+            useBehandling();
         const { request } = useHttp();
         const history = useHistory();
 

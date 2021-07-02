@@ -4,8 +4,10 @@ import { feil, FeltState, ok } from '@navikt/familie-skjema';
 
 import { isNumeric } from './miscUtils';
 
-const textRegex = /^[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'\-/\n%§!?@_()+:;,="&\n]*$/;
-const textGyldigRegex = /[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'\-/\n%§!?@_()+:;,="&\n]*/g;
+const textRegex =
+    /^[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'\-/\n%§!?@_()+:;,="&\n]*$/;
+const textGyldigRegex =
+    /[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'\-/\n%§!?@_()+:;,="&\n]*/g;
 
 export enum DEFINERT_FEILMELDING {
     OBLIGATORISK_FELT = 'OBLIGATORISK_FELT',
@@ -33,19 +35,23 @@ export const hasValidText = (text: string): ValideringsResultat => {
     return null;
 };
 
-const _validerMaxLength = (length: number) => (text: string | undefined): ValideringsResultat => {
-    // @ts-ignore
-    return isEmpty(text) || text.toString().trim().length <= length
-        ? null
-        : `Du kan skrive maksimalt ${length} tegn`;
-};
+const _validerMaxLength =
+    (length: number) =>
+    (text: string | undefined): ValideringsResultat => {
+        // @ts-ignore
+        return isEmpty(text) || text.toString().trim().length <= length
+            ? null
+            : `Du kan skrive maksimalt ${length} tegn`;
+    };
 
-const _validerMinLength = (length: number) => (text: string | undefined): ValideringsResultat => {
-    // @ts-ignore
-    return isEmpty(text) || text.toString().trim().length >= length
-        ? null
-        : `Du må skrive minst ${length} tegn`;
-};
+const _validerMinLength =
+    (length: number) =>
+    (text: string | undefined): ValideringsResultat => {
+        // @ts-ignore
+        return isEmpty(text) || text.toString().trim().length >= length
+            ? null
+            : `Du må skrive minst ${length} tegn`;
+    };
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export const erFeltetEmpty = (felt: FeltState<any>) => {

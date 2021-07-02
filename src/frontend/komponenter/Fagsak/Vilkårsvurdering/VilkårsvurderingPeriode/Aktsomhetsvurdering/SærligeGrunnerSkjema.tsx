@@ -106,6 +106,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                     event.target.value
                                 )
                             }
+                            data-testid={'annetBegrunnelse'}
                         />
                     </Column>
                 </Row>

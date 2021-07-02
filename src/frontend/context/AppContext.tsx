@@ -25,9 +25,8 @@ interface AuthProviderExports {
 const [AuthProvider, useAuth] = createUseContext(
     ({ autentisertSaksbehandler }: IProps): AuthProviderExports => {
         const [autentisert, settAutentisert] = React.useState(true);
-        const [innloggetSaksbehandler, settInnloggetSaksbehandler] = React.useState(
-            autentisertSaksbehandler
-        );
+        const [innloggetSaksbehandler, settInnloggetSaksbehandler] =
+            React.useState(autentisertSaksbehandler);
 
         React.useEffect(() => {
             if (autentisertSaksbehandler) {

@@ -91,6 +91,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                         label={opt.label}
                         checked={skjema.felter.harGrunnerTilReduksjon.verdi === opt}
                         onChange={() => skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(opt)}
+                        data-testid={`harGrunnerTilReduksjon_${opt.label}`}
                     />
                 ))}
             </HorisontalFamilieRadioGruppe>
@@ -157,6 +158,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                         .verdi
                                                 }
                                                 bredde="XS"
+                                                data-testid="andelSomTilbakekrevesManuell"
                                             />
                                         </FlexColumn>
                                         <FlexColumn className="percentage">
@@ -236,6 +238,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                 opt
                                             )
                                         }
+                                        data-testid={`skalDetTilleggesRenter_${opt.label}`}
                                     />
                                 ))}
                             </HorisontalFamilieRadioGruppe>
