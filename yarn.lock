@@ -2667,10 +2667,10 @@
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
   integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
 
-"@types/webpack-dev-middleware@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@types/webpack-dev-middleware/-/webpack-dev-middleware-5.0.0.tgz#b49502ba17919e08c41fb1fedd2591c515cbbba3"
-  integrity sha512-7fUhtC/5KwaR7CjEiYyp9jbeB1KFfH+3Ok7N1Uyuu5fLTBNrVTMwduKyiIsLY526f7KMLgsauqy6oeQaBzzHPA==
+"@types/webpack-dev-middleware@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@types/webpack-dev-middleware/-/webpack-dev-middleware-5.0.1.tgz#e4b4fc5dd1cf63bb351345f3e7cbfd5737af68d2"
+  integrity sha512-ovskG/ylZy/InKVhzcMLqIWSgagFASJJbRTcCHHV+PxMcAFR3vNdl8Tso17mka/zIlwIwpyksr/vgjyptcHCdw==
   dependencies:
     "@types/connect" "*"
     tapable "^2.1.1"
