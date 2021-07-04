@@ -168,7 +168,7 @@
     "jest": "^27.0.6",
     "jest-mock-extended": "^1.0.16",
     "less": "^4.1.1",
-    "less-loader": "^10.0.0",
+    "less-loader": "^10.0.1",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.2",
     "react-refresh": "^0.10.0",
