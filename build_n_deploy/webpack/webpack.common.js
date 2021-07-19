@@ -49,9 +49,7 @@ module.exports = {
                     {
                         loader: 'css-loader',
                         options: {
-                            modules: {
-                                compileType: 'icss',
-                            },
+                            modules: 'icss',
                         },
                     },
                     { loader: 'less-loader' },
