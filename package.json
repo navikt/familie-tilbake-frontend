@@ -186,7 +186,6 @@
   },
   "snyk": true,
   "resolutions": {
-    "glob-parent": "^6.0.0",
     "hosted-git-info": "^3.0.8"
   }
 }
