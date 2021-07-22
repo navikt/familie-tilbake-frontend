@@ -5,7 +5,6 @@ import createUseContext from 'constate';
 import deepEqual from 'deep-equal';
 import { useHistory } from 'react-router';
 
-import { useHttp } from '@navikt/familie-http';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -13,8 +12,13 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { useApiKall } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
+import {
+    PeriodeVilkårsvurderingStegPayload,
+    VilkårdsvurderingStegPayload,
+} from '../../../typer/api';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import {
@@ -25,11 +29,7 @@ import {
 } from '../../../typer/feilutbetalingtyper';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import {
-    PeriodeVilkårsvurderingStegPayload,
-    VilkårdsvurderingStegPayload,
-    VilkårsvurderingPeriodeSkjemaData,
-} from './typer/feilutbetalingVilkårsvurdering';
+import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 
 const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData) => {
     return (
@@ -48,8 +48,8 @@ const kalkulerTotalBeløp = (perioder: VilkårsvurderingPeriode[]) => {
 };
 
 export const erTotalbeløpUnder4Rettsgebyr = (vurdering: IFeilutbetalingVilkårsvurdering) => {
-    const totalbeløp = kalkulerTotalBeløp(vurdering?.perioder);
-    return totalbeløp && vurdering?.rettsgebyr ? totalbeløp < vurdering?.rettsgebyr * 4 : false;
+    const totalbeløp = kalkulerTotalBeløp(vurdering.perioder);
+    return totalbeløp && vurdering.rettsgebyr ? totalbeløp < vurdering.rettsgebyr * 4 : false;
 };
 
 interface IProps {
@@ -78,7 +78,8 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         const [valideringsFeilmelding, settValideringsFeilmelding] = React.useState<string>();
         const { erStegBehandlet, erStegAutoutført, visVenteModal, hentBehandlingMedBehandlingId } =
             useBehandling();
-        const { request } = useHttp();
+        const { gjerFeilutbetalingVilkårsvurderingKall, sendInnFeilutbetalingVilkårsvurdering } =
+            useApiKall();
         const history = useHistory();
 
         React.useEffect(() => {
@@ -123,10 +124,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
 
         const hentFeilutbetalingVilkårsvurdering = (): void => {
             settFeilutbetalingVilkårsvurdering(byggHenterRessurs());
-            request<void, IFeilutbetalingVilkårsvurdering>({
-                method: 'GET',
-                url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/vilkarsvurdering/v1`,
-            })
+            gjerFeilutbetalingVilkårsvurderingKall(behandling.behandlingId)
                 .then((hentetVilkårsvurdering: Ressurs<IFeilutbetalingVilkårsvurdering>) => {
                     settFeilutbetalingVilkårsvurdering(hentetVilkårsvurdering);
                 })
@@ -253,16 +251,14 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                                 };
                             }),
                     };
-                    request<VilkårdsvurderingStegPayload, string>({
-                        method: 'POST',
-                        url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/steg/v1`,
-                        data: payload,
-                    }).then((respons: Ressurs<string>) => {
-                        settSenderInn(false);
-                        if (respons.status === RessursStatus.SUKSESS) {
-                            hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                    sendInnFeilutbetalingVilkårsvurdering(behandling.behandlingId, payload).then(
+                        (respons: Ressurs<string>) => {
+                            settSenderInn(false);
+                            if (respons.status === RessursStatus.SUKSESS) {
+                                hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                            }
                         }
-                    });
+                    );
                 }
             }
         };

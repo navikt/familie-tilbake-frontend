@@ -2,7 +2,6 @@ import { HendelseType, Vilkårsresultat } from '../../../../kodeverk';
 import {
     Aktsomhetsvurdering,
     GodTro,
-    Periode,
     ReduserteBeløpInfo,
     YtelseInfo,
 } from '../../../../typer/feilutbetalingtyper';
@@ -21,17 +20,4 @@ export interface VilkårsvurderingPeriodeSkjemaData extends IPeriodeSkjemaData {
     foreldet: boolean;
     begrunnelse?: string;
     vilkårsvurderingsresultatInfo?: VilkårsresultatInfoSkjemaData;
-}
-
-export interface PeriodeVilkårsvurderingStegPayload {
-    periode: Periode;
-    vilkårsvurderingsresultat: Vilkårsresultat;
-    begrunnelse: string;
-    godTroDto: GodTro;
-    aktsomhetDto: Aktsomhetsvurdering;
-}
-
-export interface VilkårdsvurderingStegPayload {
-    '@type': string;
-    vilkårsvurderingsperioder: PeriodeVilkårsvurderingStegPayload[];
 }

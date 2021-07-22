@@ -1,10 +1,19 @@
 import { useHttp } from '@navikt/familie-http';
 import { Ressurs } from '@navikt/familie-typer';
 
-import { FaktaStegPayload, ForeldelseStegPayload } from '../typer/api';
-import { IFeilutbetalingFakta, IFeilutbetalingForeldelse } from '../typer/feilutbetalingtyper';
+import {
+    FaktaStegPayload,
+    ForeldelseStegPayload,
+    VilkårdsvurderingStegPayload,
+} from '../typer/api';
+import {
+    IFeilutbetalingFakta,
+    IFeilutbetalingForeldelse,
+    IFeilutbetalingVilkårsvurdering,
+} from '../typer/feilutbetalingtyper';
 
 const useApiKall = () => {
+    const behandlingerApiPrefix = '/familie-tilbake/api/behandling';
     const { request } = useHttp();
 
     const gjerFeilutbetalingFaktaKall = (
@@ -12,7 +21,7 @@ const useApiKall = () => {
     ): Promise<Ressurs<IFeilutbetalingFakta>> => {
         return request<void, IFeilutbetalingFakta>({
             method: 'GET',
-            url: `/familie-tilbake/api/behandling/${behandlingId}/fakta/v1`,
+            url: `${behandlingerApiPrefix}/${behandlingId}/fakta/v1`,
         });
     };
 
@@ -22,7 +31,7 @@ const useApiKall = () => {
     ): Promise<Ressurs<string>> => {
         return request<FaktaStegPayload, string>({
             method: 'POST',
-            url: `/familie-tilbake/api/behandling/${behandlingId}/steg/v1`,
+            url: `${behandlingerApiPrefix}/${behandlingId}/steg/v1`,
             data: payload,
         });
     };
@@ -32,7 +41,7 @@ const useApiKall = () => {
     ): Promise<Ressurs<IFeilutbetalingForeldelse>> => {
         return request<void, IFeilutbetalingForeldelse>({
             method: 'GET',
-            url: `/familie-tilbake/api/behandling/${behandlingId}/foreldelse/v1`,
+            url: `${behandlingerApiPrefix}/${behandlingId}/foreldelse/v1`,
         });
     };
 
@@ -42,7 +51,27 @@ const useApiKall = () => {
     ) => {
         return request<ForeldelseStegPayload, string>({
             method: 'POST',
-            url: `/familie-tilbake/api/behandling/${behandlingId}/steg/v1`,
+            url: `${behandlingerApiPrefix}/${behandlingId}/steg/v1`,
+            data: payload,
+        });
+    };
+
+    const gjerFeilutbetalingVilkårsvurderingKall = (
+        behandlingId: string
+    ): Promise<Ressurs<IFeilutbetalingVilkårsvurdering>> => {
+        return request<void, IFeilutbetalingVilkårsvurdering>({
+            method: 'GET',
+            url: `${behandlingerApiPrefix}/${behandlingId}/vilkarsvurdering/v1`,
+        });
+    };
+
+    const sendInnFeilutbetalingVilkårsvurdering = (
+        behandlingId: string,
+        payload: VilkårdsvurderingStegPayload
+    ) => {
+        return request<VilkårdsvurderingStegPayload, string>({
+            method: 'POST',
+            url: `${behandlingerApiPrefix}/${behandlingId}/steg/v1`,
             data: payload,
         });
     };
@@ -52,6 +81,8 @@ const useApiKall = () => {
         sendInnFeilutbetalingFakta,
         gjerFeilutbetalingForeldelseKall,
         sendInnFeilutbetalingForeldelse,
+        gjerFeilutbetalingVilkårsvurderingKall,
+        sendInnFeilutbetalingVilkårsvurdering,
     };
 };
 
