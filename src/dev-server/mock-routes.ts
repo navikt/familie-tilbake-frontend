@@ -361,7 +361,7 @@ export const setupRouter = (router: Router) => {
                         byggSuksessRessurs(
                             behandleFakta(
                                 feilutbetalingFakta_ubehandlet_1,
-                                HendelseType.BA_ANNET,
+                                HendelseType.ANNET,
                                 HendelseUndertype.ANNET_FRITEKST,
                                 'Dette er ein mock-begrunnelse!'
                             )
@@ -374,7 +374,7 @@ export const setupRouter = (router: Router) => {
                         byggSuksessRessurs(
                             behandleFakta(
                                 feilutbetalingFakta_ubehandlet_3,
-                                HendelseType.BA_ANNET,
+                                HendelseType.ANNET,
                                 HendelseUndertype.ANNET_FRITEKST,
                                 'Dette er ein mock-begrunnelse!'
                             )
@@ -393,7 +393,7 @@ export const setupRouter = (router: Router) => {
                         byggSuksessRessurs(
                             behandleFakta(
                                 feilutbetalingFakta_ubehandlet_2,
-                                HendelseType.BA_ANNET,
+                                HendelseType.ANNET,
                                 HendelseUndertype.ANNET_FRITEKST,
                                 'Dette er ein mock-begrunnelse!'
                             )
@@ -406,7 +406,7 @@ export const setupRouter = (router: Router) => {
                         byggSuksessRessurs(
                             behandleFakta(
                                 feilutbetalingFakta_ubehandlet_4,
-                                HendelseType.BA_ANNET,
+                                HendelseType.ANNET,
                                 HendelseUndertype.ANNET_FRITEKST,
                                 'Dette er ein mock-begrunnelse!'
                             )
@@ -418,7 +418,7 @@ export const setupRouter = (router: Router) => {
                         byggSuksessRessurs(
                             behandleFakta(
                                 feilutbetalingFakta_ubehandlet_1,
-                                HendelseType.EF_ANNET,
+                                HendelseType.ANNET,
                                 HendelseUndertype.ANNET_FRITEKST,
                                 'Dette er ein mock-begrunnelse!'
                             )
@@ -430,7 +430,7 @@ export const setupRouter = (router: Router) => {
                         byggSuksessRessurs(
                             behandleFakta(
                                 feilutbetalingFakta_ubehandlet_2,
-                                HendelseType.EF_ANNET,
+                                HendelseType.ANNET,
                                 HendelseUndertype.ANNET_FRITEKST,
                                 'Dette er ein mock-begrunnelse!'
                             )
@@ -442,7 +442,7 @@ export const setupRouter = (router: Router) => {
                         byggSuksessRessurs(
                             behandleFakta(
                                 feilutbetalingFakta_ubehandlet_1,
-                                HendelseType.KS_ANNET,
+                                HendelseType.ANNET,
                                 HendelseUndertype.ANNET_FRITEKST,
                                 'Dette er ein mock-begrunnelse!'
                             )
@@ -546,7 +546,7 @@ export const setupRouter = (router: Router) => {
                     res.send(
                         byggSuksessRessurs(
                             behandleVilkårsvurdering(
-                                feilutbetalingVilkårsvurdering_ubehandlet_1(HendelseType.BA_ANNET),
+                                feilutbetalingVilkårsvurdering_ubehandlet_1(HendelseType.ANNET),
                                 {
                                     vilkårsvurderingsresultat:
                                         Vilkårsresultat.FORSTO_BURDE_FORSTÅTT,
@@ -581,7 +581,7 @@ export const setupRouter = (router: Router) => {
                     res.send(
                         byggSuksessRessurs(
                             behandleVilkårsvurdering(
-                                feilutbetalingVilkårsvurdering_ubehandlet_3(HendelseType.BA_ANNET),
+                                feilutbetalingVilkårsvurdering_ubehandlet_3(HendelseType.ANNET),
                                 {
                                     vilkårsvurderingsresultat:
                                         Vilkårsresultat.FORSTO_BURDE_FORSTÅTT,
@@ -617,7 +617,7 @@ export const setupRouter = (router: Router) => {
                     res.send(
                         byggSuksessRessurs(
                             behandleVilkårsvurdering(
-                                feilutbetalingVilkårsvurdering_ubehandlet_2(HendelseType.BA_ANNET),
+                                feilutbetalingVilkårsvurdering_ubehandlet_2(HendelseType.ANNET),
                                 {},
                                 ``,
                                 2
@@ -628,7 +628,7 @@ export const setupRouter = (router: Router) => {
                 case 'ba20':
                     res.send(
                         byggSuksessRessurs(
-                            feilutbetalingVilkårsvurdering_ubehandlet_4(HendelseType.BA_ANNET)
+                            feilutbetalingVilkårsvurdering_ubehandlet_4(HendelseType.ANNET)
                         )
                     );
                     return;
@@ -636,7 +636,7 @@ export const setupRouter = (router: Router) => {
                     res.send(
                         byggSuksessRessurs(
                             behandleVilkårsvurdering(
-                                feilutbetalingVilkårsvurdering_ubehandlet_1(HendelseType.EF_ANNET),
+                                feilutbetalingVilkårsvurdering_ubehandlet_1(HendelseType.ANNET),
                                 {
                                     vilkårsvurderingsresultat:
                                         Vilkårsresultat.FORSTO_BURDE_FORSTÅTT,
@@ -670,7 +670,7 @@ export const setupRouter = (router: Router) => {
                 case 'ef5':
                     res.send(
                         byggSuksessRessurs(
-                            feilutbetalingVilkårsvurdering_ubehandlet_2(HendelseType.EF_ANNET)
+                            feilutbetalingVilkårsvurdering_ubehandlet_2(HendelseType.ANNET)
                         )
                     );
                     return;
@@ -678,7 +678,7 @@ export const setupRouter = (router: Router) => {
                     res.send(
                         byggSuksessRessurs(
                             behandleVilkårsvurdering(
-                                feilutbetalingVilkårsvurdering_ubehandlet_1(HendelseType.KS_ANNET),
+                                feilutbetalingVilkårsvurdering_ubehandlet_1(HendelseType.ANNET),
                                 {
                                     vilkårsvurderingsresultat:
                                         Vilkårsresultat.FORSTO_BURDE_FORSTÅTT,

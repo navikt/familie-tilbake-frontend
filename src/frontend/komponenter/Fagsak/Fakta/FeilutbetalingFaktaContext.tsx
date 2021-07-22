@@ -4,7 +4,6 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 import { useHistory } from 'react-router';
 
-import { useHttp } from '@navikt/familie-http';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -12,8 +11,10 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { useApiKall } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { HendelseType, HendelseUndertype } from '../../../kodeverk';
+import { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
@@ -24,13 +25,7 @@ import {
     DEFINERT_FEILMELDING,
 } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import {
-    FaktaPeriodeSkjemaData,
-    FaktaSkjemaData,
-    FaktaStegPayload,
-    Feilmelding,
-    PeriodeFaktaStegPayload,
-} from './typer/feilutbetalingFakta';
+import { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/feilutbetalingFakta';
 
 interface IProps {
     behandling: IBehandling;
@@ -48,7 +43,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
         const [feilmeldinger, settFeilmeldinger] = React.useState<Feilmelding[]>();
         const { erStegBehandlet, visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
-        const { request } = useHttp();
+        const { gjerFeilutbetalingFaktaKall, sendInnFeilutbetalingFakta } = useApiKall();
         const history = useHistory();
 
         React.useEffect(() => {
@@ -82,10 +77,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const hentFeilutbetalingFakta = (): void => {
             settFeilutbetalingFakta(byggHenterRessurs());
-            request<void, IFeilutbetalingFakta>({
-                method: 'GET',
-                url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/fakta/v1`,
-            })
+            gjerFeilutbetalingFaktaKall(behandling.behandlingId)
                 .then((hentetFakta: Ressurs<IFeilutbetalingFakta>) => {
                     settFeilutbetalingFakta(hentetFakta);
                 })
@@ -243,16 +235,14 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                             })
                         ),
                     };
-                    request<FaktaStegPayload, string>({
-                        method: 'POST',
-                        url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/steg/v1`,
-                        data: payload,
-                    }).then((respons: Ressurs<string>) => {
-                        settSenderInn(false);
-                        if (respons.status === RessursStatus.SUKSESS) {
-                            hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                    sendInnFeilutbetalingFakta(behandling.behandlingId, payload).then(
+                        (respons: Ressurs<string>) => {
+                            settSenderInn(false);
+                            if (respons.status === RessursStatus.SUKSESS) {
+                                hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                            }
                         }
-                    });
+                    );
                 }
             }
         };

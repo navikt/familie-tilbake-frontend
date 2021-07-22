@@ -19,7 +19,7 @@ describe('Tester: PeriodeOppsummering', () => {
     test('- med hendelsetype', () => {
         const { getByText } = render(
             <PeriodeOppsummering
-                hendelsetype={HendelseType.BA_ANNET}
+                hendelsetype={HendelseType.ANNET}
                 beløp={333}
                 fom={'2021-01-01'}
                 tom={'2021-04-30'}

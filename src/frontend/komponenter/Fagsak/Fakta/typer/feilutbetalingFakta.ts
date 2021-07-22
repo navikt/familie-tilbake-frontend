@@ -14,18 +14,6 @@ export interface FaktaSkjemaData {
     perioder: FaktaPeriodeSkjemaData[];
 }
 
-export interface PeriodeFaktaStegPayload {
-    periode: Periode;
-    hendelsestype: HendelseType;
-    hendelsesundertype: HendelseUndertype;
-}
-
-export interface FaktaStegPayload {
-    '@type': string;
-    begrunnelse: string;
-    feilutbetaltePerioder: PeriodeFaktaStegPayload[];
-}
-
 export interface Feilmelding {
     gjelderBegrunnelse: boolean;
     melding?: string;

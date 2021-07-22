@@ -19,7 +19,7 @@ describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
 
     test('Tester åpning av modal', () => {
         const periode: VilkårsvurderingPeriodeSkjemaData = {
-            hendelsestype: HendelseType.BA_ANNET,
+            hendelsestype: HendelseType.ANNET,
             index: 'i1',
             foreldet: false,
             feilutbetaltBeløp: 1333,

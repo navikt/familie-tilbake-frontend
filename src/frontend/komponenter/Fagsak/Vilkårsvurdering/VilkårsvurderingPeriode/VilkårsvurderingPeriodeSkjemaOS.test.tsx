@@ -42,7 +42,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     const periode: VilkårsvurderingPeriodeSkjemaData = {
         index: 'i2',
         feilutbetaltBeløp: 2333,
-        hendelsestype: HendelseType.EF_ANNET,
+        hendelsestype: HendelseType.ANNET,
         foreldet: false,
         periode: {
             fom: '2021-01-01',
