@@ -269,12 +269,11 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     <>
                         <Row>
                             <Column md="10">
-                                <Undertekst>Kopier vilkårsvurdering fra</Undertekst>
                                 <FamilieSelect
                                     name="perioderForKopi"
                                     onChange={event => onKopierPeriode(event)}
                                     bredde="m"
-                                    label=""
+                                    label={<Undertekst>Kopier vilkårsvurdering fra</Undertekst>}
                                     erLesevisning={erLesevisning}
                                 >
                                     <option value="-">-</option>

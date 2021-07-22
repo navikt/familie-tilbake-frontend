@@ -1,5 +1,5 @@
-import { Foreldelsevurdering, HendelseType, HendelseUndertype } from '../kodeverk';
-import { Periode } from './feilutbetalingtyper';
+import { Foreldelsevurdering, HendelseType, HendelseUndertype, Vilkårsresultat } from '../kodeverk';
+import { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
 
 export interface PeriodeFaktaStegPayload {
     periode: Periode;
@@ -24,4 +24,17 @@ export interface PeriodeForeldelseStegPayload {
 export interface ForeldelseStegPayload {
     '@type': string;
     foreldetPerioder: PeriodeForeldelseStegPayload[];
+}
+
+export interface PeriodeVilkårsvurderingStegPayload {
+    periode: Periode;
+    vilkårsvurderingsresultat: Vilkårsresultat;
+    begrunnelse: string;
+    godTroDto: GodTro;
+    aktsomhetDto: Aktsomhetsvurdering;
+}
+
+export interface VilkårdsvurderingStegPayload {
+    '@type': string;
+    vilkårsvurderingsperioder: PeriodeVilkårsvurderingStegPayload[];
 }
