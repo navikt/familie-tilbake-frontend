@@ -11,7 +11,7 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
-import { useApiKall } from '../../../api/behandling';
+import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
@@ -43,7 +43,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
         const [feilmeldinger, settFeilmeldinger] = React.useState<Feilmelding[]>();
         const { erStegBehandlet, visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
-        const { gjerFeilutbetalingFaktaKall, sendInnFeilutbetalingFakta } = useApiKall();
+        const { gjerFeilutbetalingFaktaKall, sendInnFeilutbetalingFakta } = useBehandlingApi();
         const history = useHistory();
 
         React.useEffect(() => {

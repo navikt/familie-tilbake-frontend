@@ -26,14 +26,3 @@ export interface TotrinnStegSkjemaData {
     begrunnelseFeilmelding?: string;
     feilmelding?: string;
 }
-
-export interface TotrinnsStegVurdering {
-    behandlingssteg: Behandlingssteg;
-    godkjent: boolean;
-    begrunnelse?: string;
-}
-
-export interface FatteVedtakStegPayload {
-    '@type': string;
-    totrinnsvurderinger: TotrinnsStegVurdering[];
-}

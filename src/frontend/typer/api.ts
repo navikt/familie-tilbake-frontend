@@ -1,4 +1,11 @@
-import { Foreldelsevurdering, HendelseType, HendelseUndertype, Vilkårsresultat } from '../kodeverk';
+import {
+    DokumentMal,
+    Foreldelsevurdering,
+    HendelseType,
+    HendelseUndertype,
+    Vilkårsresultat,
+} from '../kodeverk';
+import { Behandlingssteg } from './behandling';
 import { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
 
 export interface PeriodeFaktaStegPayload {
@@ -37,4 +44,49 @@ export interface PeriodeVilkårsvurderingStegPayload {
 export interface VilkårdsvurderingStegPayload {
     '@type': string;
     vilkårsvurderingsperioder: PeriodeVilkårsvurderingStegPayload[];
+}
+
+export interface PeriodeMedTekst {
+    periode: Periode;
+    faktaAvsnitt?: string;
+    foreldelseAvsnitt?: string;
+    vilkårAvsnitt?: string;
+    særligeGrunnerAvsnitt?: string;
+    særligeGrunnerAnnetAvsnitt?: string;
+}
+
+export interface ForeslåVedtakStegPayload {
+    '@type': string;
+    fritekstavsnitt: {
+        oppsummeringstekst?: string;
+        perioderMedTekst: PeriodeMedTekst[];
+    };
+}
+
+export interface TotrinnsStegVurdering {
+    behandlingssteg: Behandlingssteg;
+    godkjent: boolean;
+    begrunnelse?: string;
+}
+
+export interface FatteVedtakStegPayload {
+    '@type': string;
+    totrinnsvurderinger: TotrinnsStegVurdering[];
+}
+
+export interface ForhåndsvisVedtaksbrev {
+    behandlingId: string;
+    oppsummeringstekst?: string;
+    perioderMedTekst: PeriodeMedTekst[];
+}
+
+export interface BrevPayload {
+    behandlingId: string;
+    brevmalkode: DokumentMal;
+    fritekst: string;
+}
+
+export interface ForhåndsvisHenleggelsesbrevPayload {
+    behandlingId: string;
+    fritekst: string;
 }

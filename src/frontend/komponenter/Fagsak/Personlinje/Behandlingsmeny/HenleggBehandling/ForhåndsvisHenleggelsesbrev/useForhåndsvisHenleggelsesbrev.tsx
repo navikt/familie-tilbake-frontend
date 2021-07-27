@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { AxiosError } from 'axios';
 
-import { useHttp } from '@navikt/familie-http';
 import { ISkjema } from '@navikt/familie-skjema';
 import {
     byggDataRessurs,
@@ -13,13 +12,9 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { useDokumentApi } from '../../../../../../api/dokument';
 import { IBehandling } from '../../../../../../typer/behandling';
 import { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
-
-interface ForhåndsvisHenleggelsesbrevPayload {
-    behandlingId: string;
-    fritekst: string;
-}
 
 interface IProps {
     skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;
@@ -30,7 +25,7 @@ export const useForhåndsvisHenleggelsesbrev = ({ skjema }: IProps) => {
         byggTomRessurs()
     );
     const [visModal, settVisModal] = React.useState<boolean>(false);
-    const { request } = useHttp();
+    const { forhåndsvisHenleggelsesbrev } = useDokumentApi();
 
     const nullstillHentetForhåndsvisning = () => {
         settHentetForhåndsvisning(byggTomRessurs);
@@ -39,13 +34,9 @@ export const useForhåndsvisHenleggelsesbrev = ({ skjema }: IProps) => {
     const hentBrev = (behandling: IBehandling) => {
         settHentetForhåndsvisning(byggHenterRessurs());
 
-        request<ForhåndsvisHenleggelsesbrevPayload, string>({
-            method: 'POST',
-            url: '/familie-tilbake/api/dokument/forhandsvis-henleggelsesbrev',
-            data: {
-                behandlingId: behandling.behandlingId,
-                fritekst: skjema.felter.fritekst.verdi,
-            },
+        forhåndsvisHenleggelsesbrev({
+            behandlingId: behandling.behandlingId,
+            fritekst: skjema.felter.fritekst.verdi,
         })
             .then((response: Ressurs<string>) => {
                 settVisModal(true);

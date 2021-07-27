@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { useHttp } from '@navikt/familie-http';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -10,8 +9,8 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { useDokumentApi } from '../../../../api/dokument';
 import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
-import { ForhåndsvisVedtaksbrev } from '../typer/feilutbetalingVedtak';
 
 const useForhåndsvisVedtaksbrev = () => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] = React.useState<Ressurs<string>>(
@@ -19,7 +18,7 @@ const useForhåndsvisVedtaksbrev = () => {
     );
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBrevdata } = useFeilutbetalingVedtak();
-    const { request } = useHttp();
+    const { forhåndsvisVedtaksbrev } = useDokumentApi();
 
     const nullstillHentetForhåndsvisning = () => {
         settHentetForhåndsvisning(byggTomRessurs);
@@ -28,11 +27,7 @@ const useForhåndsvisVedtaksbrev = () => {
     const hentVedtaksbrev = () => {
         settHentetForhåndsvisning(byggHenterRessurs());
         const payload = hentBrevdata();
-        request<ForhåndsvisVedtaksbrev, string>({
-            method: 'POST',
-            url: '/familie-tilbake/api/dokument/forhandsvis-vedtaksbrev',
-            data: payload,
-        }).then((response: Ressurs<string>) => {
+        forhåndsvisVedtaksbrev(payload).then((response: Ressurs<string>) => {
             settVisModal(true);
             if (response.status === RessursStatus.SUKSESS) {
                 settHentetForhåndsvisning(

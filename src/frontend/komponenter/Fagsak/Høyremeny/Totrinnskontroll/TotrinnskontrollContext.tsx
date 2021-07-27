@@ -4,7 +4,6 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 import { useHistory } from 'react-router';
 
-import { useHttp } from '@navikt/familie-http';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -12,14 +11,15 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { useBehandlingApi } from '../../../../api/behandling';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer/api';
 import { behandlingssteg, Behandlingssteg, IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
 import { validerTekstMaksLengde } from '../../../../utils';
 import { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 import {
-    FatteVedtakStegPayload,
     OptionIkkeGodkjent,
     TotrinnGodkjenningOption,
     totrinnGodkjenningOptions,
@@ -61,7 +61,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             erBehandlingReturnertFraBeslutter,
             hentBehandlingMedBehandlingId,
         } = useBehandling();
-        const { request } = useHttp();
+        const { gjerTotrinnkontrollKall, sendInnFatteVedtak } = useBehandlingApi();
         const history = useHistory();
 
         React.useEffect(() => {
@@ -111,10 +111,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
         const hentTotrinnkontroll = () => {
             settTotrinnkontroll(byggHenterRessurs());
-            request<void, ITotrinnkontroll>({
-                method: 'GET',
-                url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/totrinn/v1`,
-            })
+            gjerTotrinnkontrollKall(behandling.behandlingId)
                 .then((hentetTotrinnkontroll: Ressurs<ITotrinnkontroll>) => {
                     settTotrinnkontroll(hentetTotrinnkontroll);
                 })
@@ -190,7 +187,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 const payload: FatteVedtakStegPayload = {
                     '@type': 'FATTE_VEDTAK',
                     // @ts-ignore
-                    totrinnsvurderinger: skjemaData.map(ttSteg => {
+                    totrinnsvurderinger: skjemaData.map<TotrinnsStegVurdering>(ttSteg => {
                         const ikkkGodkjent = ttSteg.godkjent === OptionIkkeGodkjent;
                         return {
                             behandlingssteg: ttSteg.behandlingssteg,
@@ -200,11 +197,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                     }),
                 };
 
-                request<FatteVedtakStegPayload, string>({
-                    method: 'POST',
-                    url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/steg/v1`,
-                    data: payload,
-                })
+                sendInnFatteVedtak(behandling.behandlingId, payload)
                     .then((respons: Ressurs<string>) => {
                         settSenderInn(false);
                         if (respons.status === RessursStatus.SUKSESS) {

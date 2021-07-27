@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import createUseContext from 'constate';
 
-import { useHttp } from '@navikt/familie-http';
 import {
     Avhengigheter,
     FeltState,
@@ -13,11 +12,12 @@ import {
 } from '@navikt/familie-skjema';
 import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal } from '../../../../kodeverk';
+import { BrevPayload } from '../../../../typer/api';
 import { IBehandling } from '../../../../typer/behandling';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../utils';
-import { BrevPayload } from './ForhåndsvisBrev/useForhåndsvisBrev';
 
 interface Mottaker {
     verdi: string;
@@ -47,7 +47,7 @@ interface IProps {
 const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: IProps) => {
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
-    const { request } = useHttp();
+    const { bestillBrev } = useDokumentApi();
 
     const maler = [
         behandling.varselSendt ? DokumentMal.KORRIGERT_VARSEL : DokumentMal.VARSEL,
@@ -97,11 +97,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: 
         validerAlleSynligeFelter();
         if (kanSendeSkjema()) {
             settSenderInn(true);
-            request<BrevPayload, void>({
-                method: 'POST',
-                url: '/familie-tilbake/api/dokument/bestill',
-                data: hentBrevdata(),
-            }).then((respons: Ressurs<void>) => {
+            bestillBrev(hentBrevdata()).then((respons: Ressurs<void>) => {
                 settSenderInn(false);
                 if (respons.status === RessursStatus.SUKSESS) {
                     nullstillSkjema();
