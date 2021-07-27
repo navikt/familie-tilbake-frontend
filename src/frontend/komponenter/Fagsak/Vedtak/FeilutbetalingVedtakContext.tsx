@@ -4,7 +4,6 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 import { useHistory } from 'react-router';
 
-import { useHttp } from '@navikt/familie-http';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -12,20 +11,20 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
+import {
+    ForeslåVedtakStegPayload,
+    ForhåndsvisVedtaksbrev,
+    PeriodeMedTekst,
+} from '../../../typer/api';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
 import { isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import {
-    AvsnittSkjemaData,
-    ForeslåVedtakStegPayload,
-    ForhåndsvisVedtaksbrev,
-    PeriodeMedTekst,
-    UnderavsnittSkjemaData,
-} from './typer/feilutbetalingVedtak';
+import { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
 const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[] => {
     // @ts-ignore - klager på periode men er trygt p.g.s. filtreringen
@@ -94,7 +93,8 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
         const [foreslåVedtakRespons, settForeslåVedtakRespons] = React.useState<Ressurs<string>>();
         const { visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
-        const { request } = useHttp();
+        const { gjerVedtaksbrevteksterKall, gjerBeregningsresultatKall, sendInnForeslåVedtak } =
+            useBehandlingApi();
         const history = useHistory();
 
         React.useEffect(() => {
@@ -141,10 +141,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
 
         const hentVedtaksbrevtekster = (): void => {
             settFeilutbetalingVedtaksbrevavsnitt(byggHenterRessurs());
-            request<void, VedtaksbrevAvsnitt[]>({
-                method: 'GET',
-                url: `/familie-tilbake/api/dokument/vedtaksbrevtekst/${behandling.behandlingId}`,
-            })
+            gjerVedtaksbrevteksterKall(behandling.behandlingId)
                 .then((hentetVedtaksbrevavsnitt: Ressurs<VedtaksbrevAvsnitt[]>) => {
                     settFeilutbetalingVedtaksbrevavsnitt(hentetVedtaksbrevavsnitt);
                 })
@@ -160,10 +157,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
 
         const hentBeregningsresultat = (): void => {
             settBeregningsresultat(byggHenterRessurs());
-            request<void, IBeregningsresultat>({
-                method: 'GET',
-                url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/beregn/resultat/v1`,
-            })
+            gjerBeregningsresultatKall(behandling.behandlingId)
                 .then((hentetBeregningsresultat: Ressurs<IBeregningsresultat>) => {
                     settBeregningsresultat(hentetBeregningsresultat);
                 })
@@ -251,11 +245,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                         perioderMedTekst: perioderMedTekst,
                     },
                 };
-                request<ForeslåVedtakStegPayload, string>({
-                    method: 'POST',
-                    url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/steg/v1`,
-                    data: payload,
-                })
+                sendInnForeslåVedtak(behandling.behandlingId, payload)
                     .then((respons: Ressurs<string>) => {
                         settSenderInn(false);
                         if (respons.status === RessursStatus.SUKSESS) {

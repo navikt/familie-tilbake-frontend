@@ -59,6 +59,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                     <Spacer8 />
                     <LeggTilFritekst
                         role="button"
+                        data-testid={`legg-til-fritekst-${avsnittIndex}-${underavsnitt.index}`}
                         onClick={e => {
                             e.preventDefault();
                             hideTextField(false);
@@ -78,6 +79,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                     <Spacer8 />
                     <FamilieTilbakeTextArea
                         name={'fritekst'}
+                        data-testid={`fritekst-${avsnittIndex}-${underavsnitt.index}`}
                         label={!erLesevisning ? 'Utdypende tekst' : undefined}
                         erLesevisning={erLesevisning}
                         tekstLesevisning={underavsnitt.fritekst || 'Fritekst ikke utfylt'}

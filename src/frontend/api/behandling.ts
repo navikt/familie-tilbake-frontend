@@ -3,7 +3,9 @@ import { Ressurs } from '@navikt/familie-typer';
 
 import {
     FaktaStegPayload,
+    FatteVedtakStegPayload,
     ForeldelseStegPayload,
+    ForeslåVedtakStegPayload,
     VilkårdsvurderingStegPayload,
 } from '../typer/api';
 import {
@@ -11,8 +13,10 @@ import {
     IFeilutbetalingForeldelse,
     IFeilutbetalingVilkårsvurdering,
 } from '../typer/feilutbetalingtyper';
+import { ITotrinnkontroll } from '../typer/totrinnTyper';
+import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyper';
 
-const useApiKall = () => {
+const useBehandlingApi = () => {
     const behandlingerApiPrefix = '/familie-tilbake/api/behandling';
     const { request } = useHttp();
 
@@ -48,7 +52,7 @@ const useApiKall = () => {
     const sendInnFeilutbetalingForeldelse = (
         behandlingId: string,
         payload: ForeldelseStegPayload
-    ) => {
+    ): Promise<Ressurs<string>> => {
         return request<ForeldelseStegPayload, string>({
             method: 'POST',
             url: `${behandlingerApiPrefix}/${behandlingId}/steg/v1`,
@@ -68,10 +72,57 @@ const useApiKall = () => {
     const sendInnFeilutbetalingVilkårsvurdering = (
         behandlingId: string,
         payload: VilkårdsvurderingStegPayload
-    ) => {
+    ): Promise<Ressurs<string>> => {
         return request<VilkårdsvurderingStegPayload, string>({
             method: 'POST',
             url: `${behandlingerApiPrefix}/${behandlingId}/steg/v1`,
+            data: payload,
+        });
+    };
+
+    const gjerVedtaksbrevteksterKall = (
+        behandlingId: string
+    ): Promise<Ressurs<VedtaksbrevAvsnitt[]>> => {
+        return request<void, VedtaksbrevAvsnitt[]>({
+            method: 'GET',
+            url: `/familie-tilbake/api/dokument/vedtaksbrevtekst/${behandlingId}`,
+        });
+    };
+
+    const gjerBeregningsresultatKall = (
+        behandlingId: string
+    ): Promise<Ressurs<IBeregningsresultat>> => {
+        return request<void, IBeregningsresultat>({
+            method: 'GET',
+            url: `/familie-tilbake/api/behandling/${behandlingId}/beregn/resultat/v1`,
+        });
+    };
+
+    const sendInnForeslåVedtak = (
+        behandlingId: string,
+        payload: ForeslåVedtakStegPayload
+    ): Promise<Ressurs<string>> => {
+        return request<ForeslåVedtakStegPayload, string>({
+            method: 'POST',
+            url: `/familie-tilbake/api/behandling/${behandlingId}/steg/v1`,
+            data: payload,
+        });
+    };
+
+    const gjerTotrinnkontrollKall = (behandlingId: string): Promise<Ressurs<ITotrinnkontroll>> => {
+        return request<void, ITotrinnkontroll>({
+            method: 'GET',
+            url: `/familie-tilbake/api/behandling/${behandlingId}/totrinn/v1`,
+        });
+    };
+
+    const sendInnFatteVedtak = (
+        behandlingId: string,
+        payload: FatteVedtakStegPayload
+    ): Promise<Ressurs<string>> => {
+        return request<FatteVedtakStegPayload, string>({
+            method: 'POST',
+            url: `/familie-tilbake/api/behandling/${behandlingId}/steg/v1`,
             data: payload,
         });
     };
@@ -83,7 +134,12 @@ const useApiKall = () => {
         sendInnFeilutbetalingForeldelse,
         gjerFeilutbetalingVilkårsvurderingKall,
         sendInnFeilutbetalingVilkårsvurdering,
+        gjerVedtaksbrevteksterKall,
+        gjerBeregningsresultatKall,
+        sendInnForeslåVedtak,
+        gjerTotrinnkontrollKall,
+        sendInnFatteVedtak,
     };
 };
 
-export { useApiKall };
+export { useBehandlingApi };

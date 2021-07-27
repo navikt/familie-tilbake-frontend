@@ -9,8 +9,7 @@ import { Radio } from 'nav-frontend-skjema';
 
 import { RessursStatus } from '@navikt/familie-typer';
 
-import { behandlingssteg, IBehandling } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
+import { behandlingssteg } from '../../../../typer/behandling';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import {
@@ -30,12 +29,7 @@ const StyledContainer = styled.div`
     margin-top: 10px;
 `;
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
-
-const Totrinnskontroll: React.FC<IProps> = () => {
+const Totrinnskontroll: React.FC = () => {
     const {
         totrinnkontroll,
         skjemaData,
@@ -110,6 +104,7 @@ const Totrinnskontroll: React.FC<IProps> = () => {
                                             <Radio
                                                 key={opt.label}
                                                 name={`stegetGodkjent_${totrinnSteg.index}`}
+                                                data-testid={`stegetGodkjent_${totrinnSteg.index}-${opt.verdi}`}
                                                 label={opt.label}
                                                 checked={totrinnSteg.godkjent === opt}
                                                 onChange={() =>

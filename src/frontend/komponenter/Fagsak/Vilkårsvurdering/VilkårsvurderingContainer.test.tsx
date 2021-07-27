@@ -6,7 +6,7 @@ import { mock } from 'jest-mock-extended';
 
 import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 
-import { useApiKall } from '../../../api/behandling';
+import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Aktsomhet, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
@@ -31,7 +31,7 @@ jest.mock('../../../context/BehandlingContext', () => ({
 }));
 
 jest.mock('../../../api/behandling', () => ({
-    useApiKall: jest.fn(),
+    useBehandlingApi: jest.fn(),
 }));
 
 describe('Tester: VilkårsvurderingContainer', () => {
@@ -70,7 +70,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
     ) => {
         if (vilkårsvurdering) {
             // @ts-ignore
-            useApiKall.mockImplementation(() => ({
+            useBehandlingApi.mockImplementation(() => ({
                 gjerFeilutbetalingVilkårsvurderingKall: () => {
                     const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
                         status: RessursStatus.SUKSESS,

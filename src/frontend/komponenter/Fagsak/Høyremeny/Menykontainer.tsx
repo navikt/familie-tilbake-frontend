@@ -28,7 +28,7 @@ const Menykontainer: React.FC<IProps> = ({ valgtMenyside, fagsak, behandling }) 
         case Menysider.TOTRINN:
             return (
                 <TotrinnskontrollProvider fagsak={fagsak} behandling={behandling}>
-                    <Totrinnskontroll fagsak={fagsak} behandling={behandling} />
+                    <Totrinnskontroll />
                 </TotrinnskontrollProvider>
             );
         case Menysider.DOKUMENTER:

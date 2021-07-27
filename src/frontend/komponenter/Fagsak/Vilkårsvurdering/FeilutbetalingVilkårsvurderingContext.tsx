@@ -12,7 +12,7 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
-import { useApiKall } from '../../../api/behandling';
+import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import {
@@ -79,7 +79,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         const { erStegBehandlet, erStegAutoutført, visVenteModal, hentBehandlingMedBehandlingId } =
             useBehandling();
         const { gjerFeilutbetalingVilkårsvurderingKall, sendInnFeilutbetalingVilkårsvurdering } =
-            useApiKall();
+            useBehandlingApi();
         const history = useHistory();
 
         React.useEffect(() => {
