@@ -184,8 +184,5 @@
     "webpack-hot-middleware": "^2.25.0",
     "webpack-merge": "^5.8.0"
   },
-  "snyk": true,
-  "resolutions": {
-    "hosted-git-info": "^3.0.8"
-  }
+  "snyk": true
 }
