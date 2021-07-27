@@ -55,7 +55,7 @@ const VedtakPerioder: React.FC<IProps> = ({ perioder }) => {
                             <td>{vurderinger[per.vurdering]}</td>
                             <td>
                                 {per.andelAvBeløp !== undefined && per.andelAvBeløp !== null
-                                    ? `${per.andelAvBeløp}%`
+                                    ? `${per.andelAvBeløp} %`
                                     : ''}
                             </td>
                             <td>{per.renteprosent ? `${per.renteprosent}%` : ''}</td>
