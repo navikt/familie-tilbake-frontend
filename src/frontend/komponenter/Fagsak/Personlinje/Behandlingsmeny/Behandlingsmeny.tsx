@@ -14,6 +14,7 @@ import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling'
 import { IFagsak } from '../../../../typer/fagsak';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
+import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
 
 const StyledList = styled.ul`
@@ -81,22 +82,34 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                         !vedtakFattetEllerFattes && (
                             <>
                                 <li>
-                                    <HenleggBehandling behandling={behandling.data} />
+                                    <HenleggBehandling
+                                        behandling={behandling.data}
+                                        onListElementClick={() => settAnker(undefined)}
+                                    />
                                 </li>
-                                {behandling.data.harVerge ? (
-                                    <li>
-                                        <KnappBase mini={true}>Fjern verge</KnappBase>
-                                    </li>
-                                ) : (
-                                    <li>
-                                        <KnappBase mini={true}>Opprett verge</KnappBase>
-                                    </li>
-                                )}
+                                <li>
+                                    <HenleggBehandling
+                                        behandling={behandling.data}
+                                        onListElementClick={() => settAnker(undefined)}
+                                    />
+                                </li>
+                                <li>
+                                    <OpprettFjernVerge
+                                        behandling={behandling.data}
+                                        onListElementClick={() => settAnker(undefined)}
+                                    />
+                                </li>
                                 {!venterPåKravgrunnlag ? (
                                     behandling.data.erBehandlingPåVent || ventegrunn ? (
-                                        <GjennoptaBehandling behandling={behandling.data} />
+                                        <GjennoptaBehandling
+                                            behandling={behandling.data}
+                                            onListElementClick={() => settAnker(undefined)}
+                                        />
                                     ) : (
-                                        <SettBehandlingPåVent behandling={behandling.data} />
+                                        <SettBehandlingPåVent
+                                            behandling={behandling.data}
+                                            onListElementClick={() => settAnker(undefined)}
+                                        />
                                     )
                                 ) : null}
                             </>

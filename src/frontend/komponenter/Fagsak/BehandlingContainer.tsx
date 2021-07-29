@@ -21,6 +21,7 @@ import ForeldelseContainer from './Foreldelse/ForeldelseContainer';
 import Høyremeny from './Høyremeny/Høyremeny';
 import { FeilutbetalingVedtakProvider } from './Vedtak/FeilutbetalingVedtakContext';
 import VedtakContainer from './Vedtak/VedtakContainer';
+import VergeContainer from './Verge/VergeContainer';
 import { FeilutbetalingVilkårsvurderingProvider } from './Vilkårsvurdering/FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
 
@@ -143,7 +144,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         )}
                     />
                     <Route path={BEHANDLING_KONTEKST_PATH + '/verge'}>
-                        <div>Verge</div>
+                        <VergeContainer behandling={behandling} />
                     </Route>
                 </Switch>
             </StyledMainContainer>

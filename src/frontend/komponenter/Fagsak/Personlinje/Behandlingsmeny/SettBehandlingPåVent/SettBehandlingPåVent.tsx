@@ -7,7 +7,7 @@ import { FamilieSelect } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { IBehandling, manuelleÅrsaker, venteårsaker } from '../../../../../typer/behandling';
+import { IBehandling, manuelleVenteÅrsaker, venteårsaker } from '../../../../../typer/behandling';
 import { datoformatNorsk } from '../../../../../utils';
 import { Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
@@ -17,9 +17,10 @@ import { FixedDatovelger } from '../../../../Felleskomponenter/Skjemaelementer/'
 
 interface IProps {
     behandling: IBehandling;
+    onListElementClick: () => void;
 }
 
-const SettBehandlingPåVent: React.FC<IProps> = ({ behandling }) => {
+const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClick }) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
 
@@ -39,7 +40,13 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling }) => {
 
     return (
         <>
-            <KnappBase mini={true} onClick={() => settVisModal(true)}>
+            <KnappBase
+                mini={true}
+                onClick={() => {
+                    settVisModal(true);
+                    onListElementClick();
+                }}
+            >
                 Sett behandling på vent
             </KnappBase>
 
@@ -106,7 +113,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling }) => {
                         <option value="" disabled>
                             Velg årsak
                         </option>
-                        {manuelleÅrsaker.map((årsak, index) => (
+                        {manuelleVenteÅrsaker.map((årsak, index) => (
                             <option key={`årsak_${index}`} value={årsak}>
                                 {venteårsaker[årsak]}
                             </option>
