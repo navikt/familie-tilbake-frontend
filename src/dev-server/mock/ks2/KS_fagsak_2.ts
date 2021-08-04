@@ -5,7 +5,6 @@ import {
     Behandlingstype,
     Behandlingstatus,
     IBehandling,
-    Behandlingårsak,
     Behandlingssteg,
     Behandlingsstegstatus,
 } from '../../../frontend/typer/behandling';
@@ -46,7 +45,6 @@ const ks_behandling_4: IBehandling = {
     kanEndres: true,
     varselSendt: false,
     type: Behandlingstype.TILBAKEKREVING,
-    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
     behandlingsstegsinfo: [

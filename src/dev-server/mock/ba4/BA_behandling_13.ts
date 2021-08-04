@@ -3,7 +3,6 @@ import {
     Behandlingsstegstatus,
     Behandlingstatus,
     Behandlingstype,
-    Behandlingårsak,
     IBehandling,
     Venteårsak,
 } from '../../../frontend/typer/behandling';
@@ -19,7 +18,6 @@ const ba_behandling_13: IBehandling = {
     harVerge: true,
     varselSendt: false,
     type: Behandlingstype.TILBAKEKREVING,
-    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
     behandlingsstegsinfo: [

@@ -4,7 +4,6 @@ import { Fagsystem, Ytelsetype } from '../../../frontend/kodeverk';
 import {
     Behandlingstype,
     Behandlingstatus,
-    Behandlingårsak,
     Behandlingssteg,
     Behandlingsstegstatus,
     IBehandling,
@@ -69,7 +68,6 @@ const ba_behandling_16: IBehandling = {
     kanEndres: true,
     varselSendt: false,
     type: Behandlingstype.TILBAKEKREVING,
-    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
     behandlingsstegsinfo: [
@@ -101,7 +99,6 @@ const ba_behandling_17: IBehandling = {
     kanEndres: true,
     varselSendt: false,
     type: Behandlingstype.TILBAKEKREVING,
-    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
     behandlingsstegsinfo: [
@@ -137,7 +134,6 @@ const ba_behandling_18: IBehandling = {
     kanEndres: true,
     varselSendt: false,
     type: Behandlingstype.TILBAKEKREVING,
-    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
     behandlingsstegsinfo: [
@@ -169,7 +165,6 @@ const ba_behandling_19: IBehandling = {
     kanEndres: true,
     varselSendt: false,
     type: Behandlingstype.TILBAKEKREVING,
-    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
     behandlingsstegsinfo: [
@@ -201,7 +196,6 @@ const ba_behandling_20: IBehandling = {
     kanEndres: true,
     varselSendt: false,
     type: Behandlingstype.TILBAKEKREVING,
-    årsak: Behandlingårsak.NYE_OPPLYSNINGER,
     status: Behandlingstatus.UTREDES,
     opprettetDato: '2020-12-02',
     behandlingsstegsinfo: [
