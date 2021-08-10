@@ -33,7 +33,6 @@ const useEndreBehandlendeEnhet = (behandlingId: string, lukkModal: (_vis: boolea
 
     const sendInn = () => {
         if (kanSendeSkjema()) {
-            console.log('kan sende inn');
             onSubmit(
                 {
                     method: 'PUT',
