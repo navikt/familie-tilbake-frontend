@@ -10,8 +10,10 @@ import Popover, { PopoverOrientering } from 'nav-frontend-popover';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { Fagsystem } from '../../../../kodeverk';
 import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
+import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
@@ -40,7 +42,7 @@ interface IProps {
     fagsak: IFagsak;
 }
 
-const Behandlingsmeny: React.FC<IProps> = () => {
+const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
     const [anker, settAnker] = React.useState<HTMLElement | undefined>(undefined);
 
@@ -99,6 +101,15 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                                         <SettBehandlingPåVent behandling={behandling.data} />
                                     )
                                 ) : null}
+                                {fagsak.fagsystem === Fagsystem.BA && (
+                                    <li>
+                                        <EndreBehandlendeEnhet
+                                            ytelse={fagsak.ytelsestype}
+                                            behandling={behandling.data}
+                                            onListElementClick={() => settAnker(undefined)}
+                                        />
+                                    </li>
+                                )}
                             </>
                         )}
                 </StyledList>
