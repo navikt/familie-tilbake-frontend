@@ -28,16 +28,12 @@ const Informasjonsbolk: React.FC<IProps> = ({ informasjon }) => {
     return (
         <StyledContainer>
             {informasjon.map((info: IInformasjon) => (
-                <div>
+                <div key={info.label + info.tekst}>
                     <div>
-                        <Normaltekst key={info.label + info.tekst} children={info.label} />
+                        <Normaltekst children={info.label} />
                     </div>
                     <div>
-                        <Element
-                            title={info.tekstTitle}
-                            key={info.tekst + info.label}
-                            children={info.tekst}
-                        />
+                        <Element title={info.tekstTitle} children={info.tekst} />
                     </div>
                 </div>
             ))}
