@@ -1,24 +1,26 @@
 export enum Behandlingårsak {
-    SØKNAD = 'SØKNAD',
-    FØDSELSHENDELSE = 'FØDSELSHENDELSE',
-    ÅRLIG_KONTROLL = 'ÅRLIG_KONTROLL',
-    DØDSFALL = 'DØDSFALL',
-    NYE_OPPLYSNINGER = 'NYE_OPPLYSNINGER',
-    TEKNISK_OPPHØR = 'TEKNISK_OPPHØR',
-    OMREGNING_6ÅR = 'OMREGNING_6ÅR',
-    OMREGNING_18ÅR = 'OMREGNING_18ÅR',
+    REVURDERING_KLAGE_NFP = 'REVURDERING_KLAGE_NFP',
+    REVURDERING_KLAGE_KA = 'REVURDERING_KLAGE_KA',
+    REVURDERING_OPPLYSNINGER_OM_VILKÅR = 'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
+    REVURDERING_OPPLYSNINGER_OM_FORELDELSE = 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
+    REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT = 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
 }
 
 export const behandlingårsaker: Record<Behandlingårsak, string> = {
-    SØKNAD: 'Søknad',
-    FØDSELSHENDELSE: 'Fødselshendelse',
-    ÅRLIG_KONTROLL: 'Årlig kontroll',
-    DØDSFALL: 'Dødsfall',
-    NYE_OPPLYSNINGER: 'Nye opplysninger',
-    TEKNISK_OPPHØR: 'Teknisk opphør',
-    OMREGNING_6ÅR: 'Omregning 6 år',
-    OMREGNING_18ÅR: 'Omregning 18 år',
+    REVURDERING_KLAGE_NFP: 'Revurdering NFP omgjør vedtak basert på klage',
+    REVURDERING_KLAGE_KA: 'Revurdering etter KA-behandlet klage',
+    REVURDERING_OPPLYSNINGER_OM_VILKÅR: 'Nye opplysninger om vilkårsvurdering',
+    REVURDERING_OPPLYSNINGER_OM_FORELDELSE: 'Nye opplysninger om foreldelse',
+    REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT:
+        'Feilutbetalt beløp helt eller delvis bortfalt',
 };
+
+export const behandlingÅrsaker = [
+    Behandlingårsak.REVURDERING_KLAGE_NFP,
+    Behandlingårsak.REVURDERING_KLAGE_KA,
+    Behandlingårsak.REVURDERING_OPPLYSNINGER_OM_VILKÅR,
+    Behandlingårsak.REVURDERING_OPPLYSNINGER_OM_FORELDELSE,
+];
 
 export enum Behandlingstatus {
     OPPRETTET = 'OPPRETTET',
@@ -67,6 +69,11 @@ export const behandlingstyper: Record<Behandlingstype, string> = {
     TILBAKEKREVING: 'Tilbakekreving',
     REVURDERING_TILBAKEKREVING: 'Revurdering tilbakekreving',
 };
+
+export const behandlingsTyper = [
+    Behandlingstype.TILBAKEKREVING,
+    Behandlingstype.REVURDERING_TILBAKEKREVING,
+];
 
 export enum Behandlingssteg {
     VARSEL = 'VARSEL',
@@ -160,7 +167,9 @@ export interface IBehandling {
     kanEndres: boolean;
     harVerge: boolean;
     kanHenleggeBehandling: boolean;
+    kanRevurderingOpprettes: boolean;
     varselSendt: boolean;
     behandlingsstegsinfo: IBehandlingsstegstilstand[];
     fagsystemsbehandlingId: string;
+    behandlingsårsakstype?: Behandlingårsak;
 }

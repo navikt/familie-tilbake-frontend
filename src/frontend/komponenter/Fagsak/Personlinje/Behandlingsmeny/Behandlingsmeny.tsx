@@ -16,6 +16,7 @@ import { IFagsak } from '../../../../typer/fagsak';
 import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
+import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
 
 const StyledList = styled.ul`
@@ -75,9 +76,15 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                 utenPil
             >
                 <StyledList role="menu" aria-labelledby={'behandlingsmeny-arialabel-knapp'}>
-                    <li>
-                        <KnappBase mini={true}>Opprett revurdering</KnappBase>
-                    </li>
+                    {behandling?.status === RessursStatus.SUKSESS && (
+                        <li>
+                            <OpprettBehandling
+                                behandling={behandling.data}
+                                fagsak={fagsak}
+                                onListElementClick={() => settAnker(undefined)}
+                            />
+                        </li>
+                    )}
                     {behandling?.status === RessursStatus.SUKSESS &&
                         behandling.data.status !== Behandlingstatus.AVSLUTTET &&
                         !vedtakFattetEllerFattes && (

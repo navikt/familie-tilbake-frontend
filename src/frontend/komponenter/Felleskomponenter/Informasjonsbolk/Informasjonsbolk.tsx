@@ -5,9 +5,13 @@ import styled from 'styled-components';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 
 const StyledContainer = styled.div`
-    column-count: 2;
     max-width: 30rem;
     padding: 0.5rem 0;
+
+    div {
+        width: 100%;
+        display: flex;
+    }
 `;
 
 export interface IInformasjon {
@@ -23,18 +27,16 @@ interface IProps {
 const Informasjonsbolk: React.FC<IProps> = ({ informasjon }) => {
     return (
         <StyledContainer>
-            {informasjon.map((info: IInformasjon) => {
-                return <Normaltekst key={info.label + info.tekst} children={info.label} />;
-            })}
-            {informasjon.map((info: IInformasjon) => {
-                return (
-                    <Element
-                        title={info.tekstTitle}
-                        key={info.tekst + info.label}
-                        children={info.tekst}
-                    />
-                );
-            })}
+            {informasjon.map((info: IInformasjon) => (
+                <div key={info.label + info.tekst}>
+                    <div>
+                        <Normaltekst children={info.label} />
+                    </div>
+                    <div>
+                        <Element title={info.tekstTitle} children={info.tekst} />
+                    </div>
+                </div>
+            ))}
         </StyledContainer>
     );
 };
