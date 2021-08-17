@@ -167,7 +167,9 @@ export interface IBehandling {
     kanEndres: boolean;
     harVerge: boolean;
     kanHenleggeBehandling: boolean;
+    kanRevurderingOpprettes: boolean;
     varselSendt: boolean;
     behandlingsstegsinfo: IBehandlingsstegstilstand[];
     fagsystemsbehandlingId: string;
+    behandlingsårsakstype?: Behandlingårsak;
 }

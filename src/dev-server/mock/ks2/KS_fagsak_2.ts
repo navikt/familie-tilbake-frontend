@@ -40,6 +40,7 @@ const ks_behandling_4: IBehandling = {
     eksternBrukId: '3',
     fagsystemsbehandlingId: 'ks123',
     kanHenleggeBehandling: true,
+    kanRevurderingOpprettes: false,
     erBehandlingPåVent: false,
     harVerge: true,
     kanEndres: true,

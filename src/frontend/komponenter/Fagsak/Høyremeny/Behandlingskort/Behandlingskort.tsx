@@ -11,6 +11,7 @@ import {
     behandlingsstatuser,
     behandlingsresultater,
     Behandlingstype,
+    behandlingårsaker,
 } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatostring } from '../../../../utils';
@@ -50,6 +51,17 @@ const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
             <StyledUndertittel>{tittel}</StyledUndertittel>
             <Normaltekst>{ytelsetype[fagsak.ytelsestype]}</Normaltekst>
             <StyledHr />
+            {behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING && (
+                <Informasjonsbolk
+                    informasjon={[
+                        {
+                            label: 'Behandlingsårsak',
+                            // @ts-ignore
+                            tekst: behandlingårsaker[behandling.behandlingsårsakstype],
+                        },
+                    ]}
+                />
+            )}
             <Informasjonsbolk
                 informasjon={[
                     {

@@ -76,16 +76,19 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                 utenPil
             >
                 <StyledList role="menu" aria-labelledby={'behandlingsmeny-arialabel-knapp'}>
+                    {behandling?.status === RessursStatus.SUKSESS && (
+                        <li>
+                            <OpprettBehandling
+                                behandling={behandling.data}
+                                fagsak={fagsak}
+                                onListElementClick={() => settAnker(undefined)}
+                            />
+                        </li>
+                    )}
                     {behandling?.status === RessursStatus.SUKSESS &&
                         behandling.data.status !== Behandlingstatus.AVSLUTTET &&
                         !vedtakFattetEllerFattes && (
                             <>
-                                <li>
-                                    <OpprettBehandling
-                                        behandling={behandling.data}
-                                        onListElementClick={() => settAnker(undefined)}
-                                    />
-                                </li>
                                 <li>
                                     <HenleggBehandling behandling={behandling.data} />
                                 </li>

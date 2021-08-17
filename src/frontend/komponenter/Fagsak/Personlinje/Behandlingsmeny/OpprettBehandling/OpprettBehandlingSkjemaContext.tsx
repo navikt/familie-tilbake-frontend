@@ -1,10 +1,16 @@
 import { useFelt, useSkjema } from '@navikt/familie-skjema';
+import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { Behandlingstype, Behandlingårsak } from '../../../../../typer/behandling';
+import { IFagsak } from '../../../../../typer/fagsak';
 import { erFeltetEmpty } from '../../../../../utils';
 
-const useOpprettBehandlingSkjema = () => {
-    const { skjema, kanSendeSkjema, nullstillSkjema } = useSkjema<
+const useOpprettBehandlingSkjema = (
+    fagsak: IFagsak,
+    behandlingId: string,
+    lukkModal: (_vis: boolean) => void
+) => {
+    const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
         {
             behandlingstype: Behandlingstype;
             behandlingsårsak: Behandlingårsak | '';
@@ -26,7 +32,24 @@ const useOpprettBehandlingSkjema = () => {
 
     const sendInn = () => {
         if (kanSendeSkjema()) {
-            console.log('kan sende inn');
+            onSubmit(
+                {
+                    method: 'POST',
+                    data: {
+                        ytelsestype: fagsak.ytelsestype,
+                        originalBehandlingId: behandlingId,
+                        årsakstype: skjema.felter.behandlingsårsak.verdi,
+                    },
+                    url: '/familie-tilbake/api/behandling/revurdering/v1',
+                },
+                (response: Ressurs<string>) => {
+                    if (response.status === RessursStatus.SUKSESS) {
+                        lukkModal(false);
+                        console.info('EksternId revurdering: ' + response.data);
+                        window.location.href = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${response.data}`;
+                    }
+                }
+            );
         }
     };
 

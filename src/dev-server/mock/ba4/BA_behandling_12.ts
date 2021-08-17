@@ -11,6 +11,7 @@ const ba_behandling_12: IBehandling = {
     eksternBrukId: '11',
     fagsystemsbehandlingId: 'ba123',
     kanHenleggeBehandling: true,
+    kanRevurderingOpprettes: false,
     harVerge: true,
     kanEndres: true,
     varselSendt: false,
