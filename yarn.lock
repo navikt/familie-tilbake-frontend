@@ -7896,10 +7896,10 @@ nav-datovelger@^11.0.0:
   dependencies:
     focus-trap-react "^8.5.0"
 
-nav-datovelger@^12.0.0:
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/nav-datovelger/-/nav-datovelger-12.0.0.tgz#90668a6b974b47504549de4da86902632053b90c"
-  integrity sha512-biVlrgu4UXNL5Wq4iNlVEYJxM28I4+acN2jo7iELdawsAVxbhmgaG/NqiRCDQe4zDwOf7X+bT/UJHD4WiZEx9g==
+nav-datovelger@^12.1.1:
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/nav-datovelger/-/nav-datovelger-12.1.1.tgz#70f9023ef6ff8eceba25c899a4a75be58106d989"
+  integrity sha512-SmbDpBJK+153ypcRIw8RboJn9rS+e6JH8aKjL2FBtw/1+EFnsrLgI9Mu48TNgGiZRIQ88RjSOFOebsmL2qgB0w==
   dependencies:
     focus-trap-react "^8.6.0"
 
