@@ -14,7 +14,7 @@ import {
     IBehandling,
 } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
-import { hentFrontendFeilmelding } from '../../../../../utils/ressursUtils';
+import { hentFrontendFeilmelding } from '../../../../../utils/';
 import { Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';

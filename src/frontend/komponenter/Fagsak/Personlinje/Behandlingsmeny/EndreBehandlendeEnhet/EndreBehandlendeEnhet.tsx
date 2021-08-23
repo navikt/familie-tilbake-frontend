@@ -9,7 +9,7 @@ import { RessursStatus } from '@navikt/familie-typer';
 import { Ytelsetype } from '../../../../../kodeverk';
 import { IBehandling } from '../../../../../typer/behandling';
 import { finnMuligeEnheter, IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
-import { hentFrontendFeilmelding } from '../../../../../utils/ressursUtils';
+import { hentFrontendFeilmelding } from '../../../../../utils/';
 import { Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
@@ -42,6 +42,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                     settVisModal(true);
                     onListElementClick();
                 }}
+                disabled={!behandling.kanEndres}
             >
                 Endre behandlende enhet
             </KnappBase>
