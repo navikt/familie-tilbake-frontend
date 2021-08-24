@@ -25,7 +25,11 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling }) => {
 
     return (
         <>
-            <KnappBase mini={true} onClick={() => settVisModal(true)}>
+            <KnappBase
+                mini={true}
+                onClick={() => settVisModal(true)}
+                disabled={!behandling.kanEndres}
+            >
                 Fortsett behandlingen
             </KnappBase>
 

@@ -33,8 +33,14 @@ const StyledList = styled.ul`
         justify-content: left;
 
         &--disabled {
-            color: ${navFarger.navLysBla};
-            background-color: ${navFarger.navLysBlaLighten80};
+            color: ${navFarger.navBla};
+            background-color: ${navFarger.navLysGra};
+            opacity: 35%;
+
+            :hover {
+                color: ${navFarger.navBlaDarken40};
+                background-color: ${navFarger.navGra20};
+            }
         }
     }
 `;
@@ -87,7 +93,8 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                     )}
                     {behandling?.status === RessursStatus.SUKSESS &&
                         behandling.data.status !== Behandlingstatus.AVSLUTTET &&
-                        !vedtakFattetEllerFattes && (
+                        !vedtakFattetEllerFattes &&
+                        behandling.data.kanEndres && (
                             <>
                                 <li>
                                     <HenleggBehandling behandling={behandling.data} />

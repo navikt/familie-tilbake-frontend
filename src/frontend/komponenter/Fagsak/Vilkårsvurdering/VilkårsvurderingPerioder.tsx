@@ -111,7 +111,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
 
     React.useEffect(() => {
         if (!valgtPeriode) {
-            settDisableBekreft(!allePerioderBehandlet);
+            settDisableBekreft(!allePerioderBehandlet || !behandling.kanEndres);
         } else {
             settDisableBekreft(true);
         }

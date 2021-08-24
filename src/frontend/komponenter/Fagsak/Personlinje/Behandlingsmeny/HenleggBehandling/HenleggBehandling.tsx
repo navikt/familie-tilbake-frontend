@@ -32,7 +32,7 @@ const HenleggBehandling: React.FC<IProps> = ({ behandling }) => {
         <>
             <KnappBase
                 mini={true}
-                disabled={!behandling.kanHenleggeBehandling}
+                disabled={!behandling.kanHenleggeBehandling || !behandling.kanEndres}
                 onClick={() => settVisModal(true)}
             >
                 Henlegg behandlingen og avslutt
