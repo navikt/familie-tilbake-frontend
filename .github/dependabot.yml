@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
-    open-pull-requests-limit: 30
+    open-pull-requests-limit: 10
   - package-ecosystem: "docker"
     directory: "/" # Location of package manifests
     schedule:
