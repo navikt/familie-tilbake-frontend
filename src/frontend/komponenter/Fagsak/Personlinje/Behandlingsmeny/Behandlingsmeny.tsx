@@ -4,16 +4,18 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 import { Menyknapp } from 'nav-frontend-ikonknapper';
-import KnappBase from 'nav-frontend-knapper';
 import Popover, { PopoverOrientering } from 'nav-frontend-popover';
 
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { Fagsystem } from '../../../../kodeverk';
 import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
+import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
+import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
 import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
 
@@ -31,8 +33,14 @@ const StyledList = styled.ul`
         justify-content: left;
 
         &--disabled {
-            color: ${navFarger.navLysBla};
-            background-color: ${navFarger.navLysBlaLighten80};
+            color: ${navFarger.navBla};
+            background-color: ${navFarger.navLysGra};
+            opacity: 35%;
+
+            :hover {
+                color: ${navFarger.navBlaDarken40};
+                background-color: ${navFarger.navGra20};
+            }
         }
     }
 `;
@@ -41,7 +49,7 @@ interface IProps {
     fagsak: IFagsak;
 }
 
-const Behandlingsmeny: React.FC<IProps> = () => {
+const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
     const [anker, settAnker] = React.useState<HTMLElement | undefined>(undefined);
 
@@ -74,12 +82,19 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                 utenPil
             >
                 <StyledList role="menu" aria-labelledby={'behandlingsmeny-arialabel-knapp'}>
-                    <li>
-                        <KnappBase mini={true}>Opprett revurdering</KnappBase>
-                    </li>
+                    {behandling?.status === RessursStatus.SUKSESS && (
+                        <li>
+                            <OpprettBehandling
+                                behandling={behandling.data}
+                                fagsak={fagsak}
+                                onListElementClick={() => settAnker(undefined)}
+                            />
+                        </li>
+                    )}
                     {behandling?.status === RessursStatus.SUKSESS &&
                         behandling.data.status !== Behandlingstatus.AVSLUTTET &&
-                        !vedtakFattetEllerFattes && (
+                        !vedtakFattetEllerFattes &&
+                        behandling.data.kanEndres && (
                             <>
                                 <li>
                                     <HenleggBehandling
@@ -112,6 +127,15 @@ const Behandlingsmeny: React.FC<IProps> = () => {
                                         />
                                     )
                                 ) : null}
+                                {fagsak.fagsystem === Fagsystem.BA && (
+                                    <li>
+                                        <EndreBehandlendeEnhet
+                                            ytelse={fagsak.ytelsestype}
+                                            behandling={behandling.data}
+                                            onListElementClick={() => settAnker(undefined)}
+                                        />
+                                    </li>
+                                )}
                             </>
                         )}
                 </StyledList>

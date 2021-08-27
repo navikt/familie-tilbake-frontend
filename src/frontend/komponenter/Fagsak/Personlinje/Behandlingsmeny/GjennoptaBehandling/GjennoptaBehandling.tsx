@@ -32,6 +32,7 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                     settVisModal(true);
                     onListElementClick();
                 }}
+                disabled={!behandling.kanEndres}
             >
                 Fortsett behandlingen
             </KnappBase>

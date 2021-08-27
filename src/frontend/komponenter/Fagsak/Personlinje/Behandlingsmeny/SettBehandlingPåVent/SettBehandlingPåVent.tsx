@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import KnappBase, { Flatknapp, Knapp } from 'nav-frontend-knapper';
+import { SkjemaGruppe } from 'nav-frontend-skjema';
 import { Normaltekst } from 'nav-frontend-typografi';
 
 import { FamilieSelect } from '@navikt/familie-form-elements';
@@ -8,7 +9,7 @@ import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling, manuelleVenteÅrsaker, venteårsaker } from '../../../../../typer/behandling';
-import { datoformatNorsk } from '../../../../../utils';
+import { datoformatNorsk, hentFrontendFeilmelding } from '../../../../../utils';
 import { Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 import { maxTidsfrist, minTidsfrist } from '../../../../Felleskomponenter/Modal/PåVent/PåVentModal';
@@ -46,6 +47,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                     settVisModal(true);
                     onListElementClick();
                 }}
+                disabled={!behandling.kanEndres}
             >
                 Sett behandling på vent
             </KnappBase>
@@ -85,7 +87,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                     },
                 }}
             >
-                <>
+                <SkjemaGruppe feil={hentFrontendFeilmelding(skjema.submitRessurs)}>
                     {feilmelding && feilmelding !== '' && <Normaltekst>{feilmelding}</Normaltekst>}
                     <FixedDatovelger
                         {...skjema.felter.tidsfrist.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
@@ -119,7 +121,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                             </option>
                         ))}
                     </FamilieSelect>
-                </>
+                </SkjemaGruppe>
             </UIModalWrapper>
         </>
     );

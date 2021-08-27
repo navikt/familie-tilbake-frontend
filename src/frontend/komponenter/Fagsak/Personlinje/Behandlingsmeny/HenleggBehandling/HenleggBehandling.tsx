@@ -33,7 +33,7 @@ const HenleggBehandling: React.FC<IProps> = ({ behandling, onListElementClick })
         <>
             <KnappBase
                 mini={true}
-                disabled={!behandling.kanHenleggeBehandling}
+                disabled={!behandling.kanHenleggeBehandling || !behandling.kanEndres}
                 onClick={() => {
                     settVisModal(true);
                     onListElementClick();

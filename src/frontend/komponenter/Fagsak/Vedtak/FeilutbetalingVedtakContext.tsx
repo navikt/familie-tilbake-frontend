@@ -235,7 +235,9 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 const oppsummering = skjemaData.find(
                     avs => avs.avsnittstype === Avsnittstype.OPPSUMMERING
                 );
-                const oppsummeringTekst = oppsummering?.underavsnittsliste[0].fritekst;
+                const oppsummeringTekst = oppsummering?.underavsnittsliste.find(
+                    uavs => uavs.fritekstTillatt
+                )?.fritekst;
                 const perioderMedTekst: PeriodeMedTekst[] = hentPerioderMedTekst(skjemaData);
 
                 const payload: ForeslåVedtakStegPayload = {
@@ -271,7 +273,9 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             const oppsummering = skjemaData.find(
                 avs => avs.avsnittstype === Avsnittstype.OPPSUMMERING
             );
-            const oppsummeringTekst = oppsummering?.underavsnittsliste[0].fritekst;
+            const oppsummeringTekst = oppsummering?.underavsnittsliste.find(
+                uavs => uavs.fritekstTillatt
+            )?.fritekst;
             const perioderMedTekst: PeriodeMedTekst[] = hentPerioderMedTekst(skjemaData);
             return {
                 behandlingId: behandling.behandlingId,
