@@ -247,7 +247,14 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             }
         };
 
+        const gåTilForrige = () => {
+            history.push(
+                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
+            );
+        };
+
         return {
+            behandling,
             stegErBehandlet,
             feilutbetalingFakta,
             skjemaData,
@@ -261,6 +268,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             visFeilmeldinger,
             feilmeldinger,
             senderInn,
+            gåTilForrige,
         };
     }
 );

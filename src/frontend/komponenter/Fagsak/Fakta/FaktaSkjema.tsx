@@ -30,6 +30,7 @@ const FaktaSkjema: React.FC<IProps> = ({
     erLesevisning,
 }) => {
     const {
+        behandling,
         stegErBehandlet,
         oppdaterBegrunnelse,
         behandlePerioderSamlet,
@@ -38,6 +39,7 @@ const FaktaSkjema: React.FC<IProps> = ({
         visFeilmeldinger,
         feilmeldinger,
         senderInn,
+        gåTilForrige,
     } = useFeilutbetalingFakta();
 
     const onChangeBegrunnelse = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -151,6 +153,13 @@ const FaktaSkjema: React.FC<IProps> = ({
                                 {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
                             </Knapp>
                         </div>
+                        {behandling.harVerge && (
+                            <div>
+                                <Knapp type={'standard'} mini={true} onClick={gåTilForrige}>
+                                    Forrige
+                                </Knapp>
+                            </div>
+                        )}
                     </Navigering>
                 </Column>
             </Row>

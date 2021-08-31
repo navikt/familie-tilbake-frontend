@@ -5,6 +5,7 @@ import {
     HendelseUndertype,
     Vilkårsresultat,
 } from '../kodeverk';
+import { Vergetype } from '../kodeverk/verge';
 import { Behandlingssteg } from './behandling';
 import { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
 
@@ -89,4 +90,25 @@ export interface BrevPayload {
 export interface ForhåndsvisHenleggelsesbrevPayload {
     behandlingId: string;
     fritekst: string;
+}
+
+export interface VergeDto {
+    type: Vergetype;
+    ident?: string;
+    orgNr?: string;
+    begrunnelse: string;
+    navn: string;
+}
+
+export interface VergePayload {
+    type: Vergetype;
+    ident?: string;
+    orgNr?: string;
+    begrunnelse: string;
+    navn: string;
+}
+
+export interface VergeStegPayload {
+    '@type': string;
+    verge: VergePayload;
 }

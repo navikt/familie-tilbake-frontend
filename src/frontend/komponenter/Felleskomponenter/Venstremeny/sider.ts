@@ -57,8 +57,8 @@ const aktiveBehandlingstegstatuser = [
 export const erSidenAktiv = (side: ISide, behandling: IBehandling): boolean => {
     if (side === sider.VERGE) {
         return (
-            behandling.harVerge &&
-            (!behandling.behandlingsstegsinfo ||
+            behandling.harVerge ||
+            (behandling.behandlingsstegsinfo &&
                 sjekkOmSidenErAktiv(side, behandling.behandlingsstegsinfo))
         );
     }

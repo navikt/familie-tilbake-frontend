@@ -6,6 +6,8 @@ import {
     FatteVedtakStegPayload,
     ForeldelseStegPayload,
     ForeslåVedtakStegPayload,
+    VergeDto,
+    VergeStegPayload,
     VilkårdsvurderingStegPayload,
 } from '../typer/api';
 import {
@@ -127,6 +129,24 @@ const useBehandlingApi = () => {
         });
     };
 
+    const gjerVergeKall = (behandlingId: string): Promise<Ressurs<VergeDto>> => {
+        return request<void, VergeDto>({
+            method: 'GET',
+            url: `/familie-tilbake/api/behandling/v1/${behandlingId}/verge`,
+        });
+    };
+
+    const sendInnVerge = (
+        behandlingId: string,
+        payload: VergeStegPayload
+    ): Promise<Ressurs<string>> => {
+        return request<VergeStegPayload, string>({
+            method: 'POST',
+            url: `/familie-tilbake/api/behandling/${behandlingId}/steg/v1`,
+            data: payload,
+        });
+    };
+
     return {
         gjerFeilutbetalingFaktaKall,
         sendInnFeilutbetalingFakta,
@@ -139,6 +159,8 @@ const useBehandlingApi = () => {
         sendInnForeslåVedtak,
         gjerTotrinnkontrollKall,
         sendInnFatteVedtak,
+        gjerVergeKall,
+        sendInnVerge,
     };
 };
 

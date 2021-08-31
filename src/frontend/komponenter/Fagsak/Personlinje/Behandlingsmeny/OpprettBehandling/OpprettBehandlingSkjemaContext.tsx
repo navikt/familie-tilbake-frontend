@@ -45,7 +45,6 @@ const useOpprettBehandlingSkjema = (
                 (response: Ressurs<string>) => {
                     if (response.status === RessursStatus.SUKSESS) {
                         lukkModal(false);
-                        console.info('EksternId revurdering: ' + response.data);
                         window.location.href = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${response.data}`;
                     }
                 }
