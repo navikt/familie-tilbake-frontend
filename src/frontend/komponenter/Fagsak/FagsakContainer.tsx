@@ -20,6 +20,10 @@ import Personlinje from './Personlinje/Personlinje';
 const FagsakContainerContent = styled.div`
     display: flex;
     height: calc(100vh - 6rem);
+
+    &.venter {
+        height: calc(100vh - 9.7rem);
+    }
 `;
 
 const StyledAlertStripe = styled(AlertStripe)`
@@ -99,7 +103,7 @@ const FagsakContainer: React.FC = () => {
                                     type={'info'}
                                 />
                             )}
-                            <FagsakContainerContent>
+                            <FagsakContainerContent className={ventegrunn ? 'venter' : ''}>
                                 <BehandlingContainer
                                     fagsak={fagsak.data}
                                     behandling={behandling.data}

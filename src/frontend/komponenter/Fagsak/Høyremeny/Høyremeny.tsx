@@ -17,7 +17,6 @@ import Menykontainer, { Menysider } from './Menykontainer';
 
 const StyledContainer = styled.div`
     width: 25rem;
-    height: calc(100vh - 8rem);
 `;
 
 const HøyremenyContainer = styled.div`

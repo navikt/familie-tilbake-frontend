@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 import { Menyknapp } from 'nav-frontend-ikonknapper';
-import KnappBase from 'nav-frontend-knapper';
 import Popover, { PopoverOrientering } from 'nav-frontend-popover';
 
 import { RessursStatus } from '@navikt/familie-typer';
@@ -17,6 +16,7 @@ import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
 import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
+import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
 
 const StyledList = styled.ul`
@@ -97,22 +97,34 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                         behandling.data.kanEndres && (
                             <>
                                 <li>
-                                    <HenleggBehandling behandling={behandling.data} />
+                                    <HenleggBehandling
+                                        behandling={behandling.data}
+                                        onListElementClick={() => settAnker(undefined)}
+                                    />
                                 </li>
-                                {behandling.data.harVerge ? (
-                                    <li>
-                                        <KnappBase mini={true}>Fjern verge</KnappBase>
-                                    </li>
-                                ) : (
-                                    <li>
-                                        <KnappBase mini={true}>Opprett verge</KnappBase>
-                                    </li>
-                                )}
+                                <li>
+                                    <HenleggBehandling
+                                        behandling={behandling.data}
+                                        onListElementClick={() => settAnker(undefined)}
+                                    />
+                                </li>
+                                <li>
+                                    <OpprettFjernVerge
+                                        behandling={behandling.data}
+                                        onListElementClick={() => settAnker(undefined)}
+                                    />
+                                </li>
                                 {!venterPåKravgrunnlag ? (
                                     behandling.data.erBehandlingPåVent || ventegrunn ? (
-                                        <GjennoptaBehandling behandling={behandling.data} />
+                                        <GjennoptaBehandling
+                                            behandling={behandling.data}
+                                            onListElementClick={() => settAnker(undefined)}
+                                        />
                                     ) : (
-                                        <SettBehandlingPåVent behandling={behandling.data} />
+                                        <SettBehandlingPåVent
+                                            behandling={behandling.data}
+                                            onListElementClick={() => settAnker(undefined)}
+                                        />
                                     )
                                 ) : null}
                                 {fagsak.fagsystem === Fagsystem.BA && (

@@ -10,9 +10,10 @@ import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 
 interface IProps {
     behandling: IBehandling;
+    onListElementClick: () => void;
 }
 
-const GjennoptaBehandling: React.FC<IProps> = ({ behandling }) => {
+const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick }) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
 
     const { hentBehandlingMedBehandlingId } = useBehandling();
@@ -27,7 +28,10 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling }) => {
         <>
             <KnappBase
                 mini={true}
-                onClick={() => settVisModal(true)}
+                onClick={() => {
+                    settVisModal(true);
+                    onListElementClick();
+                }}
                 disabled={!behandling.kanEndres}
             >
                 Fortsett behandlingen

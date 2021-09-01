@@ -10,7 +10,7 @@ import {
     Behandlingssteg,
     IBehandling,
     IBehandlingsstegstilstand,
-    manuelleÅrsaker,
+    manuelleVenteÅrsaker,
     venteårsaker,
 } from '../../../../typer/behandling';
 import { dateBeforeToday, datoformatNorsk, finnDateRelativtTilNå } from '../../../../utils';
@@ -47,9 +47,9 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
         ventegrunn.behandlingssteg === Behandlingssteg.VARSEL || erVenterPåKravgrunnlag;
 
     const muligeÅrsaker =
-        ventegrunn.venteårsak && !manuelleÅrsaker.includes(ventegrunn.venteårsak)
-            ? manuelleÅrsaker.concat([ventegrunn.venteårsak])
-            : manuelleÅrsaker;
+        ventegrunn.venteårsak && !manuelleVenteÅrsaker.includes(ventegrunn.venteårsak)
+            ? manuelleVenteÅrsaker.concat([ventegrunn.venteårsak])
+            : manuelleVenteÅrsaker;
 
     const erFristenUtløpt =
         erVenterPåKravgrunnlag && ventegrunn.tidsfrist && dateBeforeToday(ventegrunn.tidsfrist);

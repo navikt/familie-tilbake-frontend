@@ -18,9 +18,10 @@ const getÅrsaker = (behandling: IBehandling) => {
 
 interface IProps {
     behandling: IBehandling;
+    onListElementClick: () => void;
 }
 
-const HenleggBehandling: React.FC<IProps> = ({ behandling }) => {
+const HenleggBehandling: React.FC<IProps> = ({ behandling, onListElementClick }) => {
     const [årsaker, settÅrsaker] = React.useState<Behandlingresultat[]>([]);
     const [visModal, settVisModal] = React.useState<boolean>(false);
 
@@ -33,7 +34,10 @@ const HenleggBehandling: React.FC<IProps> = ({ behandling }) => {
             <KnappBase
                 mini={true}
                 disabled={!behandling.kanHenleggeBehandling || !behandling.kanEndres}
-                onClick={() => settVisModal(true)}
+                onClick={() => {
+                    settVisModal(true);
+                    onListElementClick();
+                }}
             >
                 Henlegg behandlingen og avslutt
             </KnappBase>

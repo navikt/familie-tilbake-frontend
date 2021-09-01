@@ -129,7 +129,7 @@ export enum Venteårsak {
     VENT_PÅ_MULIG_MOTREGNING = 'VENT_PÅ_MULIG_MOTREGNING',
 }
 
-export const manuelleÅrsaker = [
+export const manuelleVenteÅrsaker = [
     Venteårsak.AVVENTER_DOKUMENTASJON,
     Venteårsak.UTVIDET_TILSVAR_FRIST,
     Venteårsak.ENDRE_TILKJENT_YTELSE,
