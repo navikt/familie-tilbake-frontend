@@ -11,7 +11,12 @@ import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { vedtaksresultater } from '../../../kodeverk';
-import { Behandlingstatus, IBehandling } from '../../../typer/behandling';
+import {
+    Behandlingstatus,
+    Behandlingstype,
+    Behandlingårsak,
+    IBehandling,
+} from '../../../typer/behandling';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
@@ -49,6 +54,10 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
     } = useFeilutbetalingVedtak();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
+    const erRevurderingBortfaltBeløp =
+        behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
+        behandling.behandlingsårsakstype ===
+            Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
 
     React.useEffect(() => {
         // console.log('bør no trigge re-rendring');
@@ -97,7 +106,11 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                 <Spacer20 />
                 <VedtakPerioder perioder={beregningsresultat.data.beregningsresultatsperioder} />
                 <Spacer20 />
-                <VedtakSkjema avsnitter={skjemaData} erLesevisning={erLesevisning} />
+                <VedtakSkjema
+                    avsnitter={skjemaData}
+                    erLesevisning={erLesevisning}
+                    erRevurderingBortfaltBeløp={erRevurderingBortfaltBeløp}
+                />
                 <Spacer20 />
                 <StyledNavigering>
                     <div>

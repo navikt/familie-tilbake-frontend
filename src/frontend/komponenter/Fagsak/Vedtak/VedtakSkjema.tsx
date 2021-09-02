@@ -32,6 +32,7 @@ const StyledEkspanderbartpanel = styled(Ekspanderbartpanel)`
 interface IProps {
     avsnitter: AvsnittSkjemaData[];
     erLesevisning: boolean;
+    erRevurderingBortfaltBeløp: boolean;
 }
 
 const skalVisesÅpen = (avsnitt: AvsnittSkjemaData) => {
@@ -58,7 +59,11 @@ const skalVisesÅpen = (avsnitt: AvsnittSkjemaData) => {
     return false;
 };
 
-const VedtakSkjema: React.FC<IProps> = ({ avsnitter, erLesevisning }) => {
+const VedtakSkjema: React.FC<IProps> = ({
+    avsnitter,
+    erLesevisning,
+    erRevurderingBortfaltBeløp,
+}) => {
     return (
         <StyledSkjema>
             <Undertittel>Vedtaksbrev</Undertittel>
@@ -97,6 +102,9 @@ const VedtakSkjema: React.FC<IProps> = ({ avsnitter, erLesevisning }) => {
                                                 avsnittIndex={avsnitt.index}
                                                 underavsnitt={underavsnitt}
                                                 erLesevisning={erLesevisning}
+                                                maximumLength={
+                                                    erRevurderingBortfaltBeløp ? 10000 : undefined
+                                                }
                                             />
                                         )}
                                         <Spacer8 />
