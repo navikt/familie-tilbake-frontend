@@ -19,7 +19,7 @@ import {
     ForhåndsvisVedtaksbrev,
     PeriodeMedTekst,
 } from '../../../typer/api';
-import { IBehandling } from '../../../typer/behandling';
+import { Behandlingstype, Behandlingårsak, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
 import { isEmpty, validerTekstMaksLengde } from '../../../utils';
@@ -198,6 +198,10 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
         };
 
         const validerAlleAvsnittOk = () => {
+            const erRevurderingBortfaltBeløp =
+                behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
+                behandling.behandlingsårsakstype ===
+                    Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
             let harFeil = false;
             skjemaData.map(avs => {
                 const nyeUnderavsnitt = avs.underavsnittsliste.map(uavs => {
@@ -208,7 +212,9 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                         feilmelding = 'Feltet er påkrevet';
                     }
                     if (!uavsFeil && !isEmpty(uavs.fritekst)) {
-                        feilmelding = validerTekstMaksLengde(4000)(uavs.fritekst as string);
+                        feilmelding = validerTekstMaksLengde(
+                            erRevurderingBortfaltBeløp ? 10000 : 4000
+                        )(uavs.fritekst as string);
                         uavsFeil = !!feilmelding;
                     }
 
