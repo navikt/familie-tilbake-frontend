@@ -1446,17 +1446,17 @@
     "@navikt/fnrvalidator" "^1.1.2"
     nav-frontend-skjema "^3.0.6"
 
-"@navikt/familie-form-elements@^3.1.0", "@navikt/familie-form-elements@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@navikt/familie-form-elements/-/familie-form-elements-3.2.0.tgz#fb702dba079c74a24492b240cacccfedae2cf7b4"
-  integrity sha512-stW3ypZPSNPaB2V/fmr8XIZB2e95ucQDHyJUa8/yQtuOhguzXTRD88Ub+iaFRxICcM9rbjULyxoG1tTDsnYJxQ==
+"@navikt/familie-form-elements@^3.2.0", "@navikt/familie-form-elements@^3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@navikt/familie-form-elements/-/familie-form-elements-3.2.2.tgz#54aac2a7f874abf915396eb4ba2654d72e4463f8"
+  integrity sha512-gJrq8uscoztSsOwlpZ9UMuzFE58uJtfKSnUJa5ZbRbb/UZor9rLW1KK2bLcnN2ubQACLtaysmfwZMk1jK9c2gg==
   dependencies:
     "@navikt/fnrvalidator" "^1.1.3"
     "@types/classnames" "^2.2.10"
     "@types/react-select" "^3.0.28"
     classnames "^2.2.6"
     dayjs "^1.10.4"
-    nav-datovelger "^11.0.0"
+    nav-datovelger "^12.1.2"
     nav-frontend-knapper "^2.1.2"
     nav-frontend-knapper-style "^1.1.2"
     nav-frontend-lenker "^1.1.1"
@@ -4680,7 +4680,7 @@ fn.name@1.x.x:
   resolved "https://registry.yarnpkg.com/fn.name/-/fn.name-1.1.0.tgz#26cad8017967aea8731bc42961d04a3d5988accc"
   integrity sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==
 
-focus-trap-react@^8.5.0, focus-trap-react@^8.6.0:
+focus-trap-react@^8.6.0:
   version "8.7.1"
   resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-8.7.1.tgz#a9e4dc866db5e6794bdb751cad9ddc8989598ec5"
   integrity sha512-1bCCtdZXSzYVrMEcvHfHq+706OSM5r3iZsBFXy9zbnf3+5dyCFiEVWix7Sf6jUaOgshjpyDvZHiBhSlcsO9k3A==
@@ -6551,17 +6551,10 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-nav-datovelger@^11.0.0:
-  version "11.4.0"
-  resolved "https://registry.yarnpkg.com/nav-datovelger/-/nav-datovelger-11.4.0.tgz#a3343d92f0b95a49e743fcac2a70ceb1bd444775"
-  integrity sha512-q1V9yW9qPM2Fkx3NVi6KO8OdxfANiMF3mnF+QmDSqT2OykIXLgW6A92W3gnSCQFJVAAP+OY6vGW5VIdrLnzv2Q==
-  dependencies:
-    focus-trap-react "^8.5.0"
-
-nav-datovelger@^12.1.1:
-  version "12.1.1"
-  resolved "https://registry.yarnpkg.com/nav-datovelger/-/nav-datovelger-12.1.1.tgz#70f9023ef6ff8eceba25c899a4a75be58106d989"
-  integrity sha512-SmbDpBJK+153ypcRIw8RboJn9rS+e6JH8aKjL2FBtw/1+EFnsrLgI9Mu48TNgGiZRIQ88RjSOFOebsmL2qgB0w==
+nav-datovelger@^12.1.1, nav-datovelger@^12.1.2:
+  version "12.1.2"
+  resolved "https://registry.yarnpkg.com/nav-datovelger/-/nav-datovelger-12.1.2.tgz#cdf1b702526eed29a7203831cd4809161479615d"
+  integrity sha512-Lh0fTX4rc2FeQbdL3y5kI2YsMkl1IFRwLUUMrgTQO/gFelw6PvW47wxV1ZJlcAZAJjc/w/M4w86dKRrh80aYhw==
   dependencies:
     focus-trap-react "^8.6.0"
 
