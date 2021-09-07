@@ -24,7 +24,7 @@ const Environment = () => {
         return {
             buildPath: 'frontend_production',
             namespace: 'preprod',
-            proxyUrl: 'https://familie-tilbake',
+            proxyUrl: 'http://familie-tilbake',
             historikkUrl: 'http://familie-historikk',
             baSakUrl: 'https://barnetrygd.dev.adeo.no',
             redisUrl: 'familie-tilbake-frontend-redis',
@@ -34,7 +34,7 @@ const Environment = () => {
     return {
         buildPath: 'frontend_production',
         namespace: 'production',
-        proxyUrl: 'https://familie-tilbake',
+        proxyUrl: 'http://familie-tilbake',
         historikkUrl: 'http://familie-historikk',
         baSakUrl: 'https://barnetrygd.nais.adeo.no',
         redisUrl: 'familie-tilbake-frontend-redis',
