@@ -9,7 +9,6 @@ const settAzureAdPropsFraEnv = () => {
 };
 
 const konfigurerAzure = () => {
-    const host = 'familie-tilbake-frontend';
     const callbackPath = '/auth/openid/callback';
     switch (process.env.ENV) {
         case 'local':
@@ -25,14 +24,14 @@ const konfigurerAzure = () => {
             process.env.GRAPH_API = 'http://familie-mock-server:1337/graph/me';
             break;
         case 'preprod':
-            process.env.AAD_LOGOUT_REDIRECT_URL = `https://login.microsoftonline.com/navq.onmicrosoft.com/oauth2/logout?post_logout_redirect_uri=https:\\\\${host}.dev.intern.nav.no`;
-            process.env.AAD_REDIRECT_URL = `https://${host}.dev.intern.nav.no${callbackPath}`;
+            process.env.AAD_LOGOUT_REDIRECT_URL = `https://login.microsoftonline.com/navq.onmicrosoft.com/oauth2/logout?post_logout_redirect_uri=https:\\\\familie-tilbake-frontend.dev.intern.nav.no`;
+            process.env.AAD_REDIRECT_URL = `https://familie-tilbake-frontend.dev.intern.nav.no${callbackPath}`;
             process.env.GRAPH_API = 'https://graph.microsoft.com/v1.0/me';
             settAzureAdPropsFraEnv();
             break;
         case 'production':
-            process.env.AAD_LOGOUT_REDIRECT_URL = `https://login.microsoftonline.com/navno.onmicrosoft.com/oauth2/logout?post_logout_redirect_uri=https:\\\\${host}.intern.nav.no`;
-            process.env.AAD_REDIRECT_URL = `https://${host}.intern.nav.no${callbackPath}`;
+            process.env.AAD_LOGOUT_REDIRECT_URL = `https://login.microsoftonline.com/navno.onmicrosoft.com/oauth2/logout?post_logout_redirect_uri=https:\\\\familietilbakekreving.intern.nav.no`;
+            process.env.AAD_REDIRECT_URL = `https://familietilbakekreving.intern.nav.no${callbackPath}`;
             process.env.GRAPH_API = 'https://graph.microsoft.com/v1.0/me';
             settAzureAdPropsFraEnv();
             break;

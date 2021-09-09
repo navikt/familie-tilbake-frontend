@@ -49,17 +49,16 @@ spec:
           cluster: prod-fss
     outbound:
       rules:
+        - application: familie-tilbake
         - application: familie-tilbake-frontend-redis
         - application: familie-historikk
-      external: 
-        - host: familie-tilbake.dev-fss-pub.nais.io
   env:
     - name: ENV
       value: preprod
     - name: APP_VERSION
       value: {{ VERSION }}
     - name: FAMILIE_TILBAKE_CLIENT_ID
-      value: dev-fss.teamfamilie.familie-tilbake
+      value: dev-gcp.teamfamilie.familie-tilbake
     - name: FAMILIE_HISTORIKK_CLIENT_ID
       value: dev-gcp.teamfamilie.familie-historikk
   envFrom:
