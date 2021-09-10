@@ -20,6 +20,7 @@ export const behandlingÅrsaker = [
     Behandlingårsak.REVURDERING_KLAGE_KA,
     Behandlingårsak.REVURDERING_OPPLYSNINGER_OM_VILKÅR,
     Behandlingårsak.REVURDERING_OPPLYSNINGER_OM_FORELDELSE,
+    Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT,
 ];
 
 export enum Behandlingstatus {
@@ -161,7 +162,6 @@ export interface IBehandling {
     resultatstype?: Behandlingresultat;
     status: Behandlingstatus;
     type: Behandlingstype;
-    årsak?: Behandlingårsak;
     erBehandlingHenlagt?: boolean;
     erBehandlingPåVent?: boolean;
     kanEndres: boolean;
