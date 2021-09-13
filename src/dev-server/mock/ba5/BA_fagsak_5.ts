@@ -8,7 +8,7 @@ import {
     Behandlingsstegstatus,
     IBehandling,
 } from '../../../frontend/typer/behandling';
-import { IFagsak, IFagsakBehandling } from '../../../frontend/typer/fagsak';
+import { IFagsak, IFagsakBehandling, Målform } from '../../../frontend/typer/fagsak';
 import { IPerson } from '../../../frontend/typer/person';
 
 const bruker: IPerson = {
@@ -57,6 +57,7 @@ const fagsak_ba5: IFagsak = {
     ytelsestype: Ytelsetype.BARNETRYGD,
     bruker: bruker,
     behandlinger: behandlinger_5,
+    språkkode: Målform.NB,
 };
 
 const ba_behandling_16: IBehandling = {

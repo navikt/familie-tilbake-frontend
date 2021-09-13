@@ -10,6 +10,7 @@ import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
+import { IFagsak, Målform } from '../../../../typer/fagsak';
 import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
 
@@ -49,15 +50,19 @@ describe('Tester: SendMelding', () => {
         const behandling = mock<IBehandling>({
             varselSendt: false,
         });
+        const fagsak = mock<IFagsak>({
+            språkkode: Målform.NB,
+        });
 
-        const { getByText, getByLabelText, getByRole, queryByRole } = render(
+        const { getByText, getByLabelText, getByRole, queryByRole, queryByText } = render(
             <SendMeldingProvider behandling={behandling}>
-                <SendMelding />
+                <SendMelding fagsak={fagsak} />
             </SendMeldingProvider>
         );
 
         expect(getByText('Mottaker')).toBeTruthy();
         expect(getByLabelText('Mal')).toHaveLength(3);
+        expect(queryByText('Bokmål')).toBeFalsy();
 
         expect(
             getByRole('button', {
@@ -79,7 +84,8 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeDisabled();
 
-        userEvent.type(getByLabelText('Fritekst'), 'Fritekst i varselbrev');
+        expect(getByText('Bokmål')).toBeTruthy();
+        userEvent.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
 
         expect(
             getByRole('button', {
@@ -121,15 +127,19 @@ describe('Tester: SendMelding', () => {
         const behandling = mock<IBehandling>({
             varselSendt: true,
         });
+        const fagsak = mock<IFagsak>({
+            språkkode: Målform.NN,
+        });
 
-        const { getByText, getByLabelText, getByRole } = render(
+        const { getByText, getByLabelText, getByRole, queryByText } = render(
             <SendMeldingProvider behandling={behandling}>
-                <SendMelding />
+                <SendMelding fagsak={fagsak} />
             </SendMeldingProvider>
         );
 
         expect(getByText('Mottaker')).toBeTruthy();
         expect(getByLabelText('Mal')).toHaveLength(3);
+        expect(queryByText('Nynorsk')).toBeFalsy();
 
         expect(
             getByRole('button', {
@@ -138,7 +148,9 @@ describe('Tester: SendMelding', () => {
         ).toBeDisabled();
 
         userEvent.selectOptions(getByLabelText('Mal'), DokumentMal.KORRIGERT_VARSEL);
-        userEvent.type(getByLabelText('Fritekst'), 'Fritekst i varselbrev');
+
+        expect(getByText('Nynorsk')).toBeTruthy();
+        userEvent.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
 
         expect(
             getByRole('button', {
@@ -174,15 +186,17 @@ describe('Tester: SendMelding', () => {
         const behandling = mock<IBehandling>({
             varselSendt: true,
         });
+        const fagsak = mock<IFagsak>({
+            språkkode: Målform.NB,
+        });
 
         const { getByText, getByLabelText, getByRole } = render(
             <SendMeldingProvider behandling={behandling}>
-                <SendMelding />
+                <SendMelding fagsak={fagsak} />
             </SendMeldingProvider>
         );
 
         expect(getByText('Mottaker')).toBeTruthy();
-
         expect(
             getByRole('button', {
                 name: 'Send brev',
@@ -191,7 +205,7 @@ describe('Tester: SendMelding', () => {
 
         userEvent.selectOptions(getByLabelText('Mal'), DokumentMal.INNHENT_DOKUMENTASJON);
         userEvent.type(
-            getByLabelText('Liste over dokumenter (skriv ett dokument pr. linje)'),
+            getByRole('textbox', { name: 'Liste over dokumenter (skriv ett dokument pr. linje)' }),
             'Liste over dokument'
         );
 
@@ -229,10 +243,13 @@ describe('Tester: SendMelding', () => {
         const behandling = mock<IBehandling>({
             varselSendt: false,
         });
+        const fagsak = mock<IFagsak>({
+            språkkode: Målform.NB,
+        });
 
         const { getByText, getByRole, queryByLabelText } = render(
             <SendMeldingProvider behandling={behandling}>
-                <SendMelding />
+                <SendMelding fagsak={fagsak} />
             </SendMeldingProvider>
         );
 
