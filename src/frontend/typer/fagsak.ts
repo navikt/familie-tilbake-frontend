@@ -2,6 +2,16 @@ import { Fagsystem, Ytelsetype } from '../kodeverk';
 import { Behandlingstatus, Behandlingstype } from './behandling';
 import { IPerson } from './person';
 
+export enum Målform {
+    NB = 'NB',
+    NN = 'NN',
+}
+
+export const målform: Record<Målform, string> = {
+    NB: 'Bokmål',
+    NN: 'Nynorsk',
+};
+
 export interface IFagsakBehandling {
     behandlingId: string;
     eksternBrukId: string;
@@ -13,7 +23,7 @@ export interface IFagsak {
     status?: string;
     fagsystem: Fagsystem;
     ytelsestype: Ytelsetype;
-    språkkode?: string;
+    språkkode: Målform;
     bruker: IPerson;
     behandlinger: IFagsakBehandling[];
 }

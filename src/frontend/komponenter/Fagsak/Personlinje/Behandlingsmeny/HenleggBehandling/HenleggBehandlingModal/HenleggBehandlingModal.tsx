@@ -10,14 +10,19 @@ import {
     behandlingsresultater,
     IBehandling,
 } from '../../../../../../typer/behandling';
+import { IFagsak, målform } from '../../../../../../typer/fagsak';
 import { Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../../Felleskomponenter/Modal/UIModalWrapper';
-import { FamilieTilbakeTextArea } from '../../../../../Felleskomponenter/Skjemaelementer';
+import {
+    FamilieTilbakeTextArea,
+    LabelMedSpråk,
+} from '../../../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
 
 interface IProps {
     behandling: IBehandling;
+    fagsak: IFagsak;
     visModal: boolean;
     settVisModal: (vis: boolean) => void;
     årsaker: Behandlingresultat[];
@@ -25,6 +30,7 @@ interface IProps {
 
 const HenleggBehandlingModal: React.FC<IProps> = ({
     behandling,
+    fagsak,
     visModal,
     settVisModal,
     årsaker,
@@ -104,6 +110,26 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                         </option>
                     ))}
                 </FamilieSelect>
+                {visFritekst && (
+                    <>
+                        <Spacer20 />
+                        <FamilieTilbakeTextArea
+                            {...skjema.felter.fritekst.hentNavInputProps(skjema.visFeilmeldinger)}
+                            label={
+                                <LabelMedSpråk
+                                    label={`Fritekst til brev`}
+                                    språk={målform[fagsak.språkkode]}
+                                />
+                            }
+                            value={skjema.felter.fritekst.verdi || ''}
+                            onChange={event =>
+                                skjema.felter.fritekst.validerOgSettFelt(event.target.value)
+                            }
+                            erLesevisning={false}
+                            maxLength={1500}
+                        />
+                    </>
+                )}
                 <Spacer20 />
                 <FamilieTilbakeTextArea
                     {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
@@ -115,21 +141,6 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                     erLesevisning={false}
                     maxLength={200}
                 />
-                {visFritekst && (
-                    <>
-                        <Spacer20 />
-                        <FamilieTilbakeTextArea
-                            {...skjema.felter.fritekst.hentNavInputProps(skjema.visFeilmeldinger)}
-                            label={`Fritekst til brev`}
-                            value={skjema.felter.fritekst.verdi || ''}
-                            onChange={event =>
-                                skjema.felter.fritekst.validerOgSettFelt(event.target.value)
-                            }
-                            erLesevisning={false}
-                            maxLength={1500}
-                        />
-                    </>
-                )}
             </>
         </UIModalWrapper>
     );

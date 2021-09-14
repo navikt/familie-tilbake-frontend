@@ -5,6 +5,7 @@ import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
 export * from './FamilieTilbakeTextArea';
 export * from './FamilieTilbakeDatovelger';
 export * from './FixedDatovelger';
+export * from './LabelMedSpråk';
 
 export const HorisontalFamilieRadioGruppe = styled(FamilieRadioGruppe)`
     margin-bottom: 12px;
