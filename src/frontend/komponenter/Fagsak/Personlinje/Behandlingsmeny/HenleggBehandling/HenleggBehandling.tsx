@@ -3,6 +3,7 @@ import * as React from 'react';
 import KnappBase from 'nav-frontend-knapper';
 
 import { Behandlingresultat, Behandlingstype, IBehandling } from '../../../../../typer/behandling';
+import { IFagsak } from '../../../../../typer/fagsak';
 import HenleggBehandlingModal from './HenleggBehandlingModal/HenleggBehandlingModal';
 
 const getÅrsaker = (behandling: IBehandling) => {
@@ -18,10 +19,11 @@ const getÅrsaker = (behandling: IBehandling) => {
 
 interface IProps {
     behandling: IBehandling;
+    fagsak: IFagsak;
     onListElementClick: () => void;
 }
 
-const HenleggBehandling: React.FC<IProps> = ({ behandling, onListElementClick }) => {
+const HenleggBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElementClick }) => {
     const [årsaker, settÅrsaker] = React.useState<Behandlingresultat[]>([]);
     const [visModal, settVisModal] = React.useState<boolean>(false);
 
@@ -45,6 +47,7 @@ const HenleggBehandling: React.FC<IProps> = ({ behandling, onListElementClick })
             {visModal && (
                 <HenleggBehandlingModal
                     behandling={behandling}
+                    fagsak={fagsak}
                     visModal={visModal}
                     settVisModal={settVisModal}
                     årsaker={årsaker}

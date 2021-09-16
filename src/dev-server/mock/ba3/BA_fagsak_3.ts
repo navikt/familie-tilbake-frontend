@@ -2,7 +2,7 @@ import { kjønnType } from '@navikt/familie-typer';
 
 import { Fagsystem, Ytelsetype } from '../../../frontend/kodeverk';
 import { Behandlingstatus, Behandlingstype } from '../../../frontend/typer/behandling';
-import { IFagsak, IFagsakBehandling } from '../../../frontend/typer/fagsak';
+import { IFagsak, IFagsakBehandling, Målform } from '../../../frontend/typer/fagsak';
 import { IPerson } from '../../../frontend/typer/person';
 
 export * from './BA_behandling_venter';
@@ -47,6 +47,7 @@ const fagsak_ba3: IFagsak = {
     ytelsestype: Ytelsetype.BARNETRYGD,
     bruker: bruker,
     behandlinger: behandlinger_3,
+    språkkode: Målform.NB,
 };
 
 export { fagsak_ba3 };

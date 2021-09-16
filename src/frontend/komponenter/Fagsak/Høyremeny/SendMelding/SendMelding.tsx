@@ -8,8 +8,9 @@ import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
+import { IFagsak, målform } from '../../../../typer/fagsak';
 import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
-import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
+import { FamilieTilbakeTextArea, LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding, Mottakere } from './SendMeldingContext';
 
@@ -24,10 +25,10 @@ const tekstfeltLabel = (mal: DokumentMal) => {
 };
 
 interface IProps {
-    test?: boolean;
+    fagsak: IFagsak;
 }
 
-const SendMelding: React.FC<IProps> = () => {
+const SendMelding: React.FC<IProps> = ({ fagsak }) => {
     const { maler, skjema, senderInn, sendBrev } = useSendMelding();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -78,7 +79,13 @@ const SendMelding: React.FC<IProps> = () => {
                     <Spacer20 />
                     <FamilieTilbakeTextArea
                         {...skjema.felter.fritekst.hentNavInputProps(skjema.visFeilmeldinger)}
-                        label={tekstfeltLabel(skjema.felter.maltype.verdi)}
+                        label={
+                            <LabelMedSpråk
+                                label={tekstfeltLabel(skjema.felter.maltype.verdi)}
+                                språk={målform[fagsak.språkkode]}
+                            />
+                        }
+                        aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}
                         erLesevisning={erLesevisning}
                         value={skjema.felter.fritekst.verdi}
                         onChange={event =>
