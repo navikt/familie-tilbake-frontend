@@ -1,4 +1,3 @@
-import { useHttp } from '@navikt/familie-http';
 import {
     Avhengigheter,
     FeltState,
@@ -9,7 +8,9 @@ import {
 } from '@navikt/familie-skjema';
 import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import { useBehandlingApi } from '../../../../../../api/behandling';
 import { useBehandling } from '../../../../../../context/BehandlingContext';
+import { HenleggBehandlingPaylod } from '../../../../../../typer/api';
 import {
     Behandlingresultat,
     Behandlingstype,
@@ -34,12 +35,6 @@ export type HenleggelseSkjemaDefinisjon = {
     fritekst: string | '';
 };
 
-interface HenleggBehandlingPaylod {
-    behandlingsresultatstype: Behandlingresultat;
-    begrunnelse: string;
-    fritekst: string;
-}
-
 interface IProps {
     behandling: IBehandling;
     settVisModal: (vis: boolean) => void;
@@ -47,7 +42,7 @@ interface IProps {
 
 export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps) => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
-    const { request } = useHttp();
+    const { henleggBehandling } = useBehandlingApi();
 
     const årsakkode = useFelt<Behandlingresultat | ''>({
         verdi: '',
@@ -87,26 +82,23 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
         skjemanavn: 'henleggBehandling',
     });
 
-    const onBekreft = (id: string) => {
+    const onBekreft = () => {
         validerAlleSynligeFelter();
         if (kanSendeSkjema()) {
-            console.log('Henlegger behandling ', id);
             const payload: HenleggBehandlingPaylod = {
                 //@ts-ignore
                 behandlingsresultatstype: skjema.felter.årsakkode.verdi,
                 begrunnelse: skjema.felter.begrunnelse.verdi,
                 fritekst: skjema.felter.fritekst.verdi,
             };
-            request<HenleggBehandlingPaylod, string>({
-                method: 'PUT',
-                url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/henlegg/v1`,
-                data: payload,
-            }).then((response: Ressurs<string>) => {
-                if (response.status === RessursStatus.SUKSESS) {
-                    settVisModal(false);
-                    hentBehandlingMedBehandlingId(behandling.behandlingId);
+            henleggBehandling(behandling.behandlingId, payload).then(
+                (response: Ressurs<string>) => {
+                    if (response.status === RessursStatus.SUKSESS) {
+                        settVisModal(false);
+                        hentBehandlingMedBehandlingId(behandling.behandlingId);
+                    }
                 }
-            });
+            );
         }
     };
 
@@ -117,11 +109,24 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
         skjema.felter.behandlingstype.verdi === Behandlingstype.REVURDERING_TILBAKEKREVING &&
         skjema.felter.årsakkode.verdi === Behandlingresultat.HENLAGT_FEILOPPRETTET_MED_BREV;
 
+    const erKanForhåndsvise = () => {
+        switch (skjema.felter.behandlingstype.verdi) {
+            case Behandlingstype.REVURDERING_TILBAKEKREVING:
+                return (
+                    erVisFritekst() &&
+                    skjema.felter.fritekst.valideringsstatus === Valideringsstatus.OK
+                );
+            case Behandlingstype.TILBAKEKREVING:
+            default:
+                return behandling.varselSendt && erÅrsakValgt();
+        }
+    };
+
     return {
         skjema,
-        erÅrsakValgt,
         erVisFritekst,
         onBekreft,
         nullstillSkjema,
+        erKanForhåndsvise,
     };
 };

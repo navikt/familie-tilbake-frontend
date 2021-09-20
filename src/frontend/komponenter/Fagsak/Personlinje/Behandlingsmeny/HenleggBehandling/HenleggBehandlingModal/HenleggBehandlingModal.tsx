@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Flatknapp, Knapp } from 'nav-frontend-knapper';
 
 import { FamilieSelect } from '@navikt/familie-form-elements';
-import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
     Behandlingresultat,
@@ -35,7 +34,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
     settVisModal,
     årsaker,
 }) => {
-    const { skjema, erÅrsakValgt, erVisFritekst, onBekreft, nullstillSkjema } =
+    const { skjema, erVisFritekst, onBekreft, nullstillSkjema, erKanForhåndsvise } =
         useHenleggBehandlingSkjema({ behandling, settVisModal });
 
     React.useEffect(() => {
@@ -47,12 +46,8 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
         skjema.felter.årsakkode.validerOgSettFelt(årsak);
     };
 
-    const årsakValgt = erÅrsakValgt();
     const visFritekst = erVisFritekst();
-    const kanForhåndsvise =
-        behandling.varselSendt &&
-        årsakValgt &&
-        (!visFritekst || skjema.felter.fritekst.valideringsstatus === Valideringsstatus.OK);
+    const kanForhåndsvise = erKanForhåndsvise();
 
     return (
         <UIModalWrapper
@@ -80,7 +75,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                     <Knapp
                         key={'bekreft'}
                         onClick={() => {
-                            onBekreft(behandling.behandlingId);
+                            onBekreft();
                         }}
                         type={'hoved'}
                         mini={true}
@@ -121,6 +116,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                                     språk={målform[fagsak.språkkode]}
                                 />
                             }
+                            aria-label={`Fritekst til brev`}
                             value={skjema.felter.fritekst.verdi || ''}
                             onChange={event =>
                                 skjema.felter.fritekst.validerOgSettFelt(event.target.value)

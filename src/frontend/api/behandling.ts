@@ -6,6 +6,7 @@ import {
     FatteVedtakStegPayload,
     ForeldelseStegPayload,
     ForeslåVedtakStegPayload,
+    HenleggBehandlingPaylod,
     VergeDto,
     VergeStegPayload,
     VilkårdsvurderingStegPayload,
@@ -147,6 +148,14 @@ const useBehandlingApi = () => {
         });
     };
 
+    const henleggBehandling = (behandlingId: string, payload: HenleggBehandlingPaylod) => {
+        return request<HenleggBehandlingPaylod, string>({
+            method: 'PUT',
+            url: `/familie-tilbake/api/behandling/${behandlingId}/henlegg/v1`,
+            data: payload,
+        });
+    };
+
     return {
         gjerFeilutbetalingFaktaKall,
         sendInnFeilutbetalingFakta,
@@ -161,6 +170,7 @@ const useBehandlingApi = () => {
         sendInnFatteVedtak,
         gjerVergeKall,
         sendInnVerge,
+        henleggBehandling,
     };
 };
 
