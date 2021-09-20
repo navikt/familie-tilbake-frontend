@@ -1,6 +1,7 @@
 export * from './AddCircleIkon';
 export * from './AdvarselIkon';
 export * from './BeslutterIkon';
+export * from './DokumentIkon';
 export * from './FatteVedtakIkon';
 export * from './FolderIkon';
 export * from './ClockIkon';
