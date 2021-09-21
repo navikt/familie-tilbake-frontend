@@ -7,7 +7,7 @@ import { Undertekst } from 'nav-frontend-typografi';
 
 import { IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
-import { formatterDato, hentDatoRegistrertSendt } from '../../../../utils';
+import { formatterDatoOgTid, hentDatoRegistrertSendt } from '../../../../utils';
 import { DokumentIkon } from '../../../Felleskomponenter/Ikoner';
 import Dokumentvisning from './Dokumentvisning';
 
@@ -64,7 +64,7 @@ const JournalpostVisning: React.FC<IProps> = ({ journalpost }) => {
                     />
                 ))}
                 <Undertekst>
-                    {`${datoRegistrertSendt ? formatterDato(datoRegistrertSendt) : '-'} | `}
+                    {`${datoRegistrertSendt ? formatterDatoOgTid(datoRegistrertSendt) : '-'} | `}
                     {typer[journalpost.journalposttype]}
                 </Undertekst>
             </Innhold>

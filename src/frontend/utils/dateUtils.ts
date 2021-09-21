@@ -31,6 +31,13 @@ export enum datoformatNorsk {
 
 export const formatterDato = (dato: Date) => dato.toLocaleDateString('no-NO', datoformat);
 
+export const formatterDatoOgTid = (dato: Date) =>
+    `${dato.toLocaleDateString('no-NO', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+    })} ${dato.toLocaleTimeString('no-NO', tidformat)}`;
+
 export const formatterDatostring = (datoAsString: string) => {
     const dato = parseISO(datoAsString);
     return dato.toLocaleDateString('no-NO', datoformat);
