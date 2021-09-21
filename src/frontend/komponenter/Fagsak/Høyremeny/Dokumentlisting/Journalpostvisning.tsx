@@ -32,7 +32,6 @@ const Dialog = styled.div`
 
 const Innhold = styled.div`
     margin-bottom: 1.5rem;
-    width: fit-content;
 `;
 
 const typer: Record<Journalposttype, string> = {

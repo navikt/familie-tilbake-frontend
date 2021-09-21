@@ -10,8 +10,8 @@ import { IDokumentInfo, IJournalpost } from '@navikt/familie-typer';
 
 import HentDokument from './HentDokument';
 
-const Dokument = styled.div`
-    margin-bottom: 0.1rem;
+const Dokument = styled.span`
+    display: block;
 `;
 
 interface IProps {
