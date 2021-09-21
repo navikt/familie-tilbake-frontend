@@ -9,6 +9,8 @@ import {
     differenceInMilliseconds,
 } from 'date-fns';
 
+import { IJournalpostRelevantDato, JournalpostDatotype } from '@navikt/familie-typer';
+
 import { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
 import { isEmpty } from './validering';
 
@@ -122,4 +124,25 @@ export const sorterFeilutbetaltePerioder = <T extends FeilutbetalingPeriode>(
     return perioder.sort((a, b) =>
         differenceInMilliseconds(parseISO(a.periode.fom), parseISO(b.periode.fom))
     );
+};
+
+export const hentDatoRegistrertSendt = (
+    relevanteDatoer: IJournalpostRelevantDato[],
+    journalposttype: string
+) => {
+    let datoRegistrert = relevanteDatoer.find(dato => {
+        if (journalposttype === 'I') {
+            return dato.datotype === JournalpostDatotype.DATO_REGISTRERT;
+        } else if (journalposttype === 'U') {
+            return dato.datotype === JournalpostDatotype.DATO_EKSPEDERT;
+        } else {
+            return dato.datotype === JournalpostDatotype.DATO_JOURNALFOERT;
+        }
+    });
+    datoRegistrert =
+        datoRegistrert ||
+        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DATO_JOURNALFOERT);
+
+    // @ts-ignore
+    return parseISO(datoRegistrert.dato);
 };

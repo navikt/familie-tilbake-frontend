@@ -7,7 +7,7 @@ import { Undertekst } from 'nav-frontend-typografi';
 
 import { IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
-import { formatterDatoOgTidstring } from '../../../../utils';
+import { formatterDato, hentDatoRegistrertSendt } from '../../../../utils';
 import { DokumentIkon } from '../../../Felleskomponenter/Ikoner';
 import Dokumentvisning from './Dokumentvisning';
 
@@ -46,6 +46,10 @@ interface IProps {
 }
 
 const JournalpostVisning: React.FC<IProps> = ({ journalpost }) => {
+    const datoRegistrertSendt = hentDatoRegistrertSendt(
+        journalpost.relevanteDatoer,
+        journalpost.journalposttype
+    );
     return (
         <Journalpost>
             <Dialog>
@@ -60,11 +64,7 @@ const JournalpostVisning: React.FC<IProps> = ({ journalpost }) => {
                     />
                 ))}
                 <Undertekst>
-                    {`${
-                        journalpost.datoMottatt
-                            ? formatterDatoOgTidstring(journalpost.datoMottatt)
-                            : '-'
-                    } | `}
+                    {`${datoRegistrertSendt ? formatterDato(datoRegistrertSendt) : '-'} | `}
                     {typer[journalpost.journalposttype]}
                 </Undertekst>
             </Innhold>

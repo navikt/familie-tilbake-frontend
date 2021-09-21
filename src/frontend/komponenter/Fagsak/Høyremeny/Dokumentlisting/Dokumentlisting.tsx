@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { parseISO } from 'date-fns';
 import styled from 'styled-components';
 
 import AlertStripe from 'nav-frontend-alertstriper';
@@ -9,6 +8,7 @@ import { Normaltekst } from 'nav-frontend-typografi';
 
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { hentDatoRegistrertSendt } from '../../../../utils';
 import { useDokumentlisting } from './DokumentlistingContext';
 import JournalpostVisning from './Journalpostvisning';
 
@@ -23,13 +23,10 @@ const Dokumentlisting: React.FC = () => {
         case RessursStatus.SUKSESS:
             const poster = journalposter.data;
             poster.sort((a, b) => {
-                if (!a.datoMottatt) {
-                    return -1;
-                }
-                if (!b.datoMottatt) {
-                    return 1;
-                }
-                return parseISO(b.datoMottatt).getTime() - parseISO(a.datoMottatt).getTime();
+                return (
+                    hentDatoRegistrertSendt(b.relevanteDatoer, b.journalposttype).getTime() -
+                    hentDatoRegistrertSendt(a.relevanteDatoer, b.journalposttype).getTime()
+                );
             });
             return (
                 <StyledContainer>
