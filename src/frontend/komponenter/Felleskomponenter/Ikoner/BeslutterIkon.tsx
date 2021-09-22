@@ -1,23 +1,14 @@
 import * as React from 'react';
 
+import { DecisionFilled } from '@navikt/ds-icons';
+
+import { TidslinjeIkonbakgrunn } from './ikonelementer';
+
 const BeslutterIkon: React.FC = () => {
     return (
-        <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <rect width="24" height="24" fill="white" />
-            <circle cx="12" cy="12" r="12" fill="#F1F1F1" />
-            <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M6.23631 7.19607L9.30325 4L10.2653 4.92317L6.29519 9.06044L4 6.95261L4.90187 5.97057L6.23631 7.19607ZM14.6562 10.6667C14.6562 12.1394 13.4623 13.3333 11.9896 13.3333C10.5168 13.3333 9.32292 12.1394 9.32292 10.6667C9.32292 9.19391 10.5168 8 11.9896 8C13.4623 8 14.6562 9.19391 14.6562 10.6667ZM8.65625 17.6296V20H15.3229V17.6296C15.3229 16.5656 14.974 15.6542 14.3602 15.0034C13.7463 14.3526 12.9016 14 11.9896 14C11.0775 14 10.2328 14.3526 9.61898 15.0034C9.00519 15.6542 8.65625 16.5656 8.65625 17.6296ZM16.0297 9.09521L17.5235 7.52697L19.0172 9.09521L20 8.16667L18.455 6.54891L19.9948 4.93229L19.0261 4L17.5235 5.57343L16.0208 4L15.0521 4.93229L16.5919 6.54891L15.0469 8.16667L16.0297 9.09521Z"
-                fill="#6A6A6A"
-            />
-        </svg>
+        <TidslinjeIkonbakgrunn>
+            <DecisionFilled fontSize="15" />
+        </TidslinjeIkonbakgrunn>
     );
 };
 

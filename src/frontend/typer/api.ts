@@ -6,7 +6,7 @@ import {
     Vilkårsresultat,
 } from '../kodeverk';
 import { Vergetype } from '../kodeverk/verge';
-import { Behandlingssteg } from './behandling';
+import { Behandlingresultat, Behandlingssteg } from './behandling';
 import { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
 
 export interface PeriodeFaktaStegPayload {
@@ -111,4 +111,10 @@ export interface VergePayload {
 export interface VergeStegPayload {
     '@type': string;
     verge: VergePayload;
+}
+
+export interface HenleggBehandlingPaylod {
+    behandlingsresultatstype: Behandlingresultat;
+    begrunnelse: string;
+    fritekst: string;
 }
