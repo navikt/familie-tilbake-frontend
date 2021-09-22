@@ -1,0 +1,53 @@
+name: Build&deploy to dev
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE: ghcr.io/navikt/familie-tilbake-frontend:${{ github.sha }}
+  IMAGE_LATEST: ghcr.io/navikt/familie-tilbake-frontend:latest
+  VERSION: familie-tilbake-frontend:${{ github.sha }}
+
+jobs:
+  build:
+    name: Build and push Docker container
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@ab80d026d4753220c4243394c07c7d80f9638d06
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and publish Docker image
+        run: |
+          yarn
+          yarn build
+          yarn test
+          docker build . -t ${IMAGE} -t ${IMAGE_LATEST}
+          docker push ${IMAGE}
+          docker push ${IMAGE_LATEST} 
+  deploy:
+    name: Deploy to NAIS / GCP
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy til dev-gcp
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: build_n_deploy/naiserator/naiserator_dev_gcp.yaml
+          VAR: VERSION=${{ env.VERSION }}
+      - name: Deploy til prod-gcp
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: build_n_deploy/naiserator/naiserator_prod_gcp.yaml
+          VAR: VERSION=${{ env.VERSION }}
