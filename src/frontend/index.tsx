@@ -8,14 +8,12 @@ import ReactDOM from 'react-dom';
 import App from './komponenter/App';
 
 // eslint-disable-next-line
-const packageConfig = require('../../package.json');
 const environment = window.location.hostname;
 
 if (process.env.NODE_ENV !== 'development') {
     init({
         dsn: 'https://e88ebf3bc63346d6a4c2baba674afed3@sentry.gc.nav.no/83',
         environment,
-        release: packageConfig.version,
         integrations: [new Integrations.BrowserTracing()],
         tracesSampleRate: 0.2,
     });
