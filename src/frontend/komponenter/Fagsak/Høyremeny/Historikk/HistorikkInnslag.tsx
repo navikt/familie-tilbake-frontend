@@ -117,7 +117,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
             <Innhold>
                 <Element>{lagTittel()}</Element>
                 <Undertekst>
-                    {formatterDatoOgTidstring(innslag.opprettetTid)} |{' '}
+                    {`${formatterDatoOgTidstring(innslag.opprettetTid)} | `}
                     {innslag.aktør === Aktør.VEDTAKSLØSNING
                         ? applikasjoner[innslag.applikasjon]
                         : `${innslag.aktørIdent.toLocaleLowerCase()} (${aktører[

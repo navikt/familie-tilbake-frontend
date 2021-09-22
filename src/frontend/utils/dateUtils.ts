@@ -9,6 +9,8 @@ import {
     differenceInMilliseconds,
 } from 'date-fns';
 
+import { IJournalpostRelevantDato, JournalpostDatotype } from '@navikt/familie-typer';
+
 import { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
 import { isEmpty } from './validering';
 
@@ -28,6 +30,13 @@ export enum datoformatNorsk {
 }
 
 export const formatterDato = (dato: Date) => dato.toLocaleDateString('no-NO', datoformat);
+
+export const formatterDatoOgTid = (dato: Date) =>
+    `${dato.toLocaleDateString('no-NO', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+    })} ${dato.toLocaleTimeString('no-NO', tidformat)}`;
 
 export const formatterDatostring = (datoAsString: string) => {
     const dato = parseISO(datoAsString);
@@ -122,4 +131,25 @@ export const sorterFeilutbetaltePerioder = <T extends FeilutbetalingPeriode>(
     return perioder.sort((a, b) =>
         differenceInMilliseconds(parseISO(a.periode.fom), parseISO(b.periode.fom))
     );
+};
+
+export const hentDatoRegistrertSendt = (
+    relevanteDatoer: IJournalpostRelevantDato[],
+    journalposttype: string
+) => {
+    let datoRegistrert = relevanteDatoer.find(dato => {
+        if (journalposttype === 'I') {
+            return dato.datotype === JournalpostDatotype.DATO_REGISTRERT;
+        } else if (journalposttype === 'U') {
+            return dato.datotype === JournalpostDatotype.DATO_EKSPEDERT;
+        } else {
+            return dato.datotype === JournalpostDatotype.DATO_JOURNALFOERT;
+        }
+    });
+    datoRegistrert =
+        datoRegistrert ||
+        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DATO_JOURNALFOERT);
+
+    // @ts-ignore
+    return parseISO(datoRegistrert.dato);
 };

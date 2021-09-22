@@ -3,6 +3,7 @@ import * as React from 'react';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import Dokumentlisting from './Dokumentlisting/Dokumentlisting';
+import { DokumentlistingProvider } from './Dokumentlisting/DokumentlistingContext';
 import Historikk from './Historikk/Historikk';
 import { HistorikkProvider } from './Historikk/HistorikkContext';
 import SendMelding from './SendMelding/SendMelding';
@@ -32,7 +33,11 @@ const Menykontainer: React.FC<IProps> = ({ valgtMenyside, fagsak, behandling }) 
                 </TotrinnskontrollProvider>
             );
         case Menysider.DOKUMENTER:
-            return <Dokumentlisting />;
+            return (
+                <DokumentlistingProvider behandling={behandling} valgtMenyside={valgtMenyside}>
+                    <Dokumentlisting />
+                </DokumentlistingProvider>
+            );
         case Menysider.SEND_BREV:
             return (
                 <SendMeldingProvider behandling={behandling}>

@@ -61,7 +61,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
                     settHistorikkInnslag(hentetHistorikk);
                 })
                 .catch((error: AxiosError) => {
-                    console.log('Error ved henting av fakta: ', error);
+                    console.log('Error ved henting av historikk: ', error);
                     settHistorikkInnslag(
                         byggFeiletRessurs('Ukjent feil ved henting av logg for behandling')
                     );
