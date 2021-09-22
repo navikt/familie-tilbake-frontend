@@ -2,6 +2,7 @@ import React from 'react';
 
 import axe from '@axe-core/react';
 import { init } from '@sentry/browser';
+import { Integrations } from '@sentry/tracing';
 import ReactDOM from 'react-dom';
 
 import App from './komponenter/App';
@@ -15,6 +16,8 @@ if (process.env.NODE_ENV !== 'development') {
         dsn: 'https://e88ebf3bc63346d6a4c2baba674afed3@sentry.gc.nav.no/83',
         environment,
         release: packageConfig.version,
+        integrations: [new Integrations.BrowserTracing()],
+        tracesSampleRate: 0.2,
     });
 }
 
