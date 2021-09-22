@@ -9,7 +9,7 @@ spec:
   image: {{ image }}
   team: teamfamilie
   replicas:
-    min: 1
+    min: 2
     max: 2
     cpuThresholdPercentage: 50
   port: 8000
@@ -50,7 +50,7 @@ spec:
         - application: familie-historikk
   env:
     - name: ENV
-      value: prod
+      value: production
     - name: APP_VERSION
       value: {{ VERSION }}
     - name: FAMILIE_TILBAKE_CLIENT_ID
