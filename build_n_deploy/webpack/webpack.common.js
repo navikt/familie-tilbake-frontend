@@ -57,7 +57,6 @@ module.exports = {
             },
         ],
     },
-    devtool: 'inline-source-map',
     plugins: [
         new HtmlWebpackPlugin({
             template: path.join(process.cwd(), '/src/frontend/index.html'),

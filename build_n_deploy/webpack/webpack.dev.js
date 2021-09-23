@@ -20,6 +20,7 @@ const config = merge.mergeWithRules({
         path: path.join(process.cwd(), 'frontend_development'),
         publicPath: '/assets/',
     },
+    devtool: 'inline-source-map',
     plugins: [new ReactRefreshWebpackPlugin(), new webpack.HotModuleReplacementPlugin()],
     module: {
         rules: [

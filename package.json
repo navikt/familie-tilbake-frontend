@@ -64,6 +64,7 @@
     "@sentry/browser": "^6.13.2",
     "@sentry/core": "^6.13.2",
     "@sentry/tracing": "^6.13.2",
+    "@sentry/webpack-plugin": "^1.17.1",
     "@types/classnames": "^2.3.1",
     "@types/deep-equal": "^1.0.1",
     "@types/express": "^4.17.13",
@@ -127,7 +128,7 @@
     "react-router-hash-link": "^2.4.3",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "snyk": "^1.718.0",
+    "snyk": "^1.720.0",
     "styled-components": "^5.3.1",
     "uuid": "^8.3.0"
   },
