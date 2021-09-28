@@ -159,6 +159,20 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             settValgtPeriode(førsteUbehandletPeriode);
         };
 
+        const nestePeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+            const index = skjemaData.findIndex(bfp => bfp.index === periode.index);
+            if (index < skjemaData.length - 1) {
+                settValgtPeriode(skjemaData[index + 1]);
+            }
+        };
+
+        const forrigePeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+            const index = skjemaData.findIndex(bfp => bfp.index === periode.index);
+            if (index > 0) {
+                settValgtPeriode(skjemaData[index - 1]);
+            }
+        };
+
         const onSplitPeriode = (
             periode: VilkårsvurderingPeriodeSkjemaData,
             nyePerioder: VilkårsvurderingPeriodeSkjemaData[]
@@ -287,6 +301,8 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             sendInnSkjema,
             onSplitPeriode,
             lukkValgtPeriode,
+            nestePeriode,
+            forrigePeriode,
         };
     });
 
