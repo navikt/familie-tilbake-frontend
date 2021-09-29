@@ -27,11 +27,11 @@ const TidslinjeContainer = styled.div`
     }
 
     button.avvist {
-        background-color: ${navFarger.navRodLighten60};
-        border-color: ${navFarger.navRodLighten40};
+        background-color: ${navFarger.redErrorLighten40};
+        border-color: ${navFarger.redErrorLighten20};
 
         &.aktivPeriode {
-            background-color: ${navFarger.navRodLighten40};
+            background-color: ${navFarger.redErrorLighten20};
             box-shadow: 0 0 0 2px ${navFarger.navRod};
         }
     }
