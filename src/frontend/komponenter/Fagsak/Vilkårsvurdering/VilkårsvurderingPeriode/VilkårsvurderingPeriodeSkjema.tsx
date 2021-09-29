@@ -26,14 +26,10 @@ import {
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { formatCurrencyNoKr, formatterDatostring, isEmpty } from '../../../../utils';
-import {
-    Navigering,
-    PeriodeKontroll,
-    Spacer20,
-    Spacer8,
-} from '../../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
+import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
@@ -180,8 +176,14 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erLesevisning,
     fagsak,
 }) => {
-    const { kanIlleggeRenter, oppdaterPeriode, onSplitPeriode, lukkValgtPeriode } =
-        useFeilutbetalingVilkårsvurdering();
+    const {
+        kanIlleggeRenter,
+        oppdaterPeriode,
+        onSplitPeriode,
+        lukkValgtPeriode,
+        nestePeriode,
+        forrigePeriode,
+    } = useFeilutbetalingVilkårsvurdering();
     const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
@@ -214,32 +216,36 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
 
     return periode ? (
         <StyledContainer>
-            <PeriodeKontroll>
-                <Row>
-                    <Column md="7">
-                        <Undertittel>Detaljer for valgt periode</Undertittel>
-                    </Column>
+            <Row>
+                <Column lg="4" md="7" sm="12">
+                    <Undertittel>Detaljer for valgt periode</Undertittel>
+                </Column>
+                <Column lg="2" md="2" sm="6">
                     {!erLesevisning && !periode.foreldet && (
-                        <Column md="5">
-                            <SplittPeriode
-                                behandling={behandling}
-                                periode={periode}
-                                onBekreft={onSplitPeriode}
-                            />
-                        </Column>
-                    )}
-                </Row>
-                <Row>
-                    <Column md="12">
-                        <PeriodeOppsummering
-                            fom={periode.periode.fom}
-                            tom={periode.periode.tom}
-                            beløp={periode.feilutbetaltBeløp}
-                            hendelsetype={periode.hendelsestype}
+                        <SplittPeriode
+                            behandling={behandling}
+                            periode={periode}
+                            onBekreft={onSplitPeriode}
                         />
-                    </Column>
-                </Row>
-            </PeriodeKontroll>
+                    )}
+                </Column>
+                <Column lg="6" md="3" sm="6">
+                    <PeriodeController
+                        nestePeriode={() => nestePeriode(periode)}
+                        forrigePeriode={() => forrigePeriode(periode)}
+                    />
+                </Column>
+            </Row>
+            <Row>
+                <Column lg="6" md="9" sm="12">
+                    <PeriodeOppsummering
+                        fom={periode.periode.fom}
+                        tom={periode.periode.tom}
+                        beløp={periode.feilutbetaltBeløp}
+                        hendelsetype={periode.hendelsestype}
+                    />
+                </Column>
+            </Row>
             <Spacer20 />
             {periode.reduserteBeløper?.map((beløp, index) => (
                 <React.Fragment key={`rb_${index}_${beløp.belop}`}>

@@ -18,17 +18,13 @@ import {
 } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { datoformatNorsk } from '../../../../utils';
-import {
-    Navigering,
-    PeriodeKontroll,
-    Spacer20,
-    Spacer8,
-} from '../../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import {
     FamilieTilbakeTextArea,
     FamilieTilbakeDatovelger,
 } from '../../../Felleskomponenter/Skjemaelementer';
+import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
@@ -50,7 +46,8 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
     periode,
     erLesevisning,
 }) => {
-    const { oppdaterPeriode, onSplitPeriode, lukkValgtPeriode } = useFeilutbetalingForeldelse();
+    const { oppdaterPeriode, onSplitPeriode, lukkValgtPeriode, nestePeriode, forrigePeriode } =
+        useFeilutbetalingForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
     );
@@ -81,31 +78,35 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
 
     return (
         <StyledContainer>
-            <PeriodeKontroll>
-                <Row>
-                    <Column md="7">
-                        <Undertittel>Detaljer for valgt periode</Undertittel>
-                    </Column>
+            <Row>
+                <Column lg="4" md="7" sm="12">
+                    <Undertittel>Detaljer for valgt periode</Undertittel>
+                </Column>
+                <Column lg="2" md="2" sm="6">
                     {!erLesevisning && (
-                        <Column md="5">
-                            <SplittPeriode
-                                behandling={behandling}
-                                periode={periode}
-                                onBekreft={onSplitPeriode}
-                            />
-                        </Column>
-                    )}
-                </Row>
-                <Row>
-                    <Column md="12">
-                        <PeriodeOppsummering
-                            fom={periode.periode.fom}
-                            tom={periode.periode.tom}
-                            beløp={periode.feilutbetaltBeløp}
+                        <SplittPeriode
+                            behandling={behandling}
+                            periode={periode}
+                            onBekreft={onSplitPeriode}
                         />
-                    </Column>
-                </Row>
-            </PeriodeKontroll>
+                    )}
+                </Column>
+                <Column lg="6" md="3" sm="6">
+                    <PeriodeController
+                        nestePeriode={() => nestePeriode(periode)}
+                        forrigePeriode={() => forrigePeriode(periode)}
+                    />
+                </Column>
+            </Row>
+            <Row>
+                <Column lg="6" md="9" sm="12">
+                    <PeriodeOppsummering
+                        fom={periode.periode.fom}
+                        tom={periode.periode.tom}
+                        beløp={periode.feilutbetaltBeløp}
+                    />
+                </Column>
+            </Row>
             <Spacer20 />
             <Row>
                 <Column md="8">
