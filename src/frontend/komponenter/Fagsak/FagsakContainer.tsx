@@ -12,6 +12,7 @@ import { useFagsak } from '../../context/FagsakContext';
 import { Fagsystem } from '../../kodeverk';
 import { IBehandlingsstegstilstand, Venteårsak, venteårsaker } from '../../typer/behandling';
 import { formatterDatostring } from '../../utils';
+import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
 import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 import BehandlingContainer from './BehandlingContainer';
@@ -23,12 +24,6 @@ const FagsakContainerContent = styled.div`
 
     &.venter {
         height: calc(100vh - 9.7rem);
-    }
-`;
-
-const StyledAlertStripe = styled(AlertStripe)`
-    .alertstripe__tekst {
-        max-width: fit-content;
     }
 `;
 
@@ -98,10 +93,7 @@ const FagsakContainer: React.FC = () => {
                             <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
                             {ventegrunn && (
-                                <StyledAlertStripe
-                                    children={venteBeskjed(ventegrunn)}
-                                    type={'info'}
-                                />
+                                <FTAlertStripe children={venteBeskjed(ventegrunn)} type={'info'} />
                             )}
                             <FagsakContainerContent className={ventegrunn ? 'venter' : ''}>
                                 <BehandlingContainer

@@ -3,7 +3,6 @@ import * as React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import AlertStripe from 'nav-frontend-alertstriper';
 import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
 import { Knapp } from 'nav-frontend-knapper';
@@ -14,18 +13,17 @@ import { Periode } from '@navikt/helse-frontend-tidslinje';
 import { Vilkårsresultat } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { FTAlertStripe, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 
-const StyledAlertStripe = styled(AlertStripe)`
+const StyledAlertStripe = styled(FTAlertStripe)`
     background-color: ${navFarger.navOransjeLighten80};
 
     .alertstripe__tekst {
         color: ${navFarger.navMorkGra};
-        max-width: fit-content;
     }
 `;
 

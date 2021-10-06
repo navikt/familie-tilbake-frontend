@@ -9,7 +9,7 @@ import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
-import { IBehandling } from '../../../typer/behandling';
+import { Behandlingstype, Behandlingårsak, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import {
     BeregningsresultatPeriode,
@@ -167,7 +167,7 @@ describe('Tester: VedtakContainer', () => {
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getAllByText, getByRole, queryByRole } = render(
+        const { getByText, getAllByText, getByRole, queryByRole, queryByText } = render(
             <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
                 <VedtakContainer behandling={behandling} />
             </FeilutbetalingVedtakProvider>
@@ -176,6 +176,12 @@ describe('Tester: VedtakContainer', () => {
         await waitFor(async () => {
             expect(getByText('Vedtak')).toBeTruthy();
         });
+
+        expect(
+            queryByText(
+                'Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes av saksbehandler fra klagebehandlingen'
+            )
+        ).toBeFalsy();
 
         expect(getByText('01.01.2020 - 31.03.2020')).toBeTruthy();
         expect(getByText('01.05.2020 - 30.06.2020')).toBeTruthy();
@@ -243,7 +249,7 @@ describe('Tester: VedtakContainer', () => {
         });
     });
 
-    test('- vis og fyll ut - 2 fritekst påkrevet', async () => {
+    test('- vis og fyll ut - 2 fritekst påkrevet - revurdering nye opplysninger', async () => {
         setupMock(
             false,
             [
@@ -289,18 +295,28 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({
+            type: Behandlingstype.REVURDERING_TILBAKEKREVING,
+            behandlingsårsakstype: Behandlingårsak.REVURDERING_OPPLYSNINGER_OM_VILKÅR,
+        });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } = render(
-            <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                <VedtakContainer behandling={behandling} />
-            </FeilutbetalingVedtakProvider>
-        );
+        const { getByText, getByRole, getAllByRole, getByTestId, queryByRole, queryByText } =
+            render(
+                <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
+                    <VedtakContainer behandling={behandling} />
+                </FeilutbetalingVedtakProvider>
+            );
 
         await waitFor(async () => {
             expect(getByText('Vedtak')).toBeTruthy();
         });
+
+        expect(
+            queryByText(
+                'Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes av saksbehandler fra klagebehandlingen'
+            )
+        ).toBeFalsy();
 
         expect(
             queryByRole('button', {
@@ -358,7 +374,131 @@ describe('Tester: VedtakContainer', () => {
         });
     });
 
-    test('- vis og fyll ut - 1 fritekst påkrevet - fyller ut 1 ekstra fritekst', async () => {
+    test('- vis og fyll ut - 2 fritekst påkrevet - revurdering klage KA', async () => {
+        setupMock(
+            false,
+            [
+                {
+                    ...avsnitt[0],
+                    underavsnittsliste: [
+                        {
+                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: false,
+                        },
+                    ],
+                },
+                {
+                    ...avsnitt[1],
+                    underavsnittsliste: [
+                        {
+                            underavsnittstype: Underavsnittstype.FAKTA,
+                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: true,
+                        },
+                    ],
+                },
+                {
+                    ...avsnitt[2],
+                    underavsnittsliste: [
+                        {
+                            underavsnittstype: Underavsnittstype.FAKTA,
+                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
+                            fritekstTillatt: true,
+                            fritekstPåkrevet: true,
+                        },
+                        {
+                            underavsnittstype: Underavsnittstype.VILKÅR,
+                            overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
+                            brødtekst: 'Dette er en tekst!',
+                            fritekstTillatt: false,
+                            fritekstPåkrevet: false,
+                        },
+                    ],
+                },
+            ],
+            beregningsresultat
+        );
+        const behandling = mock<IBehandling>({
+            type: Behandlingstype.REVURDERING_TILBAKEKREVING,
+            behandlingsårsakstype: Behandlingårsak.REVURDERING_KLAGE_KA,
+        });
+        const fagsak = mock<IFagsak>();
+
+        const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } = render(
+            <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
+                <VedtakContainer behandling={behandling} />
+            </FeilutbetalingVedtakProvider>
+        );
+
+        await waitFor(async () => {
+            expect(getByText('Vedtak')).toBeTruthy();
+        });
+
+        expect(
+            getByText(
+                'Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes av saksbehandler fra klagebehandlingen'
+            )
+        ).toBeTruthy();
+
+        expect(
+            queryByRole('button', {
+                name: 'Forhåndsvis vedtaksbrev',
+            })
+        ).toBeFalsy();
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(getByText('Du må betale tilbake barnetrygden')).toBeTruthy();
+        expect(
+            getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
+        ).toBeTruthy();
+        expect(
+            getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
+        ).toBeTruthy();
+
+        expect(
+            getAllByRole('textbox', {
+                name: `Utdypende tekst`,
+            })
+        ).toHaveLength(2);
+
+        userEvent.type(
+            getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
+            'Fritekst påkrevet'
+        );
+        userEvent.type(
+            getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
+            'Fritekst påkrevet'
+        );
+
+        expect(
+            queryByRole('button', {
+                name: 'Forhåndsvis vedtaksbrev',
+            })
+        ).toBeTruthy();
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
+
+        await waitFor(async () => {
+            userEvent.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            );
+        });
+    });
+
+    test('- vis og fyll ut - 1 fritekst påkrevet - fyller ut 1 ekstra fritekst - revurdering NFP', async () => {
         setupMock(
             false,
             [
@@ -404,7 +544,10 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({
+            type: Behandlingstype.REVURDERING_TILBAKEKREVING,
+            behandlingsårsakstype: Behandlingårsak.REVURDERING_KLAGE_NFP,
+        });
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } = render(
@@ -416,6 +559,12 @@ describe('Tester: VedtakContainer', () => {
         await waitFor(async () => {
             expect(getByText('Vedtak')).toBeTruthy();
         });
+
+        expect(
+            getByText(
+                'Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes av saksbehandler fra klagebehandlingen'
+            )
+        ).toBeTruthy();
 
         expect(
             queryByRole('button', {

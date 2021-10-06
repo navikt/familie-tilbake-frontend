@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
+import { Element, Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -17,7 +17,7 @@ import {
     Behandlingårsak,
     IBehandling,
 } from '../../../typer/behandling';
-import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { FTAlertStripe, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
 import VedtakPerioder from './VedtakPerioder';
@@ -54,6 +54,9 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
     } = useFeilutbetalingVedtak();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
+    const erRevurderingKlage =
+        behandling.behandlingsårsakstype === Behandlingårsak.REVURDERING_KLAGE_KA ||
+        behandling.behandlingsårsakstype === Behandlingårsak.REVURDERING_KLAGE_NFP;
     const erRevurderingBortfaltBeløp =
         behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
         behandling.behandlingsårsakstype ===
@@ -99,6 +102,20 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                     )}
                 <Undertittel>Vedtak</Undertittel>
                 <Spacer20 />
+                {erRevurderingKlage && (
+                    <>
+                        <FTAlertStripe
+                            type="info"
+                            children={
+                                <Element>
+                                    Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes
+                                    av saksbehandler fra klagebehandlingen
+                                </Element>
+                            }
+                        />
+                        <Spacer20 />
+                    </>
+                )}
                 <UndertekstBold>Resultat</UndertekstBold>
                 <Normaltekst>
                     {vedtaksresultater[beregningsresultat.data.vedtaksresultat]}

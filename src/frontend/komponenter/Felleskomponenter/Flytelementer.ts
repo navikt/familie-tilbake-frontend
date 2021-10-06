@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import AlertStripe from 'nav-frontend-alertstriper';
+
 export const Spacer20 = styled.div`
     height: 20px;
 `;
@@ -13,4 +15,10 @@ export const Navigering = styled.div`
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
+`;
+
+export const FTAlertStripe = styled(AlertStripe)`
+    .alertstripe__tekst {
+        max-width: fit-content;
+    }
 `;
