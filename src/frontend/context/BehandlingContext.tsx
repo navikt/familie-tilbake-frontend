@@ -71,7 +71,9 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                         hentetBehandling.data.behandlingsstegsinfo.some(
                             stegInfo =>
                                 stegInfo.behandlingssteg === Behandlingssteg.AVSLUTTET ||
-                                stegInfo.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK ||
+                                (stegInfo.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK &&
+                                    stegInfo.behandlingsstegstatus !==
+                                        Behandlingsstegstatus.TILBAKEFØRT) ||
                                 (stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
                                     stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR)
                         );
