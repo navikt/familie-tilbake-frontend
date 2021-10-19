@@ -15,7 +15,7 @@
     "test": "jest",
     "lint": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint './src/**/*.{js,jsx,ts,tsx}' --fix",
-    "prepare": "yarn run snyk-protect && husky install"
+    "prepare": "yarn husky install"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,css}": [
@@ -48,7 +48,7 @@
     }
   },
   "dependencies": {
-    "@navikt/ds-icons": "^0.5.5",
+    "@navikt/ds-icons": "^0.5.6",
     "@navikt/familie-backend": "^5.0.26",
     "@navikt/familie-clipboard": "^3.1.6",
     "@navikt/familie-form-element": "^1.0.1-alpha.164",
@@ -64,7 +64,7 @@
     "@sentry/browser": "^6.13.3",
     "@sentry/core": "^6.13.3",
     "@sentry/tracing": "^6.13.3",
-    "@sentry/webpack-plugin": "^1.18.1",
+    "@sentry/webpack-plugin": "^1.18.2",
     "@types/classnames": "^2.3.1",
     "@types/deep-equal": "^1.0.1",
     "@types/express": "^4.17.13",
@@ -128,7 +128,7 @@
     "react-router-hash-link": "^2.4.3",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "snyk": "^1.738.0",
+    "snyk": "^1.741.0",
     "styled-components": "^5.3.1",
     "uuid": "^8.3.0"
   },
@@ -141,14 +141,14 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
-    "@testing-library/user-event": "^13.4.1",
+    "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.0.2",
     "@types/webpack-dev-middleware": "^5.0.2",
     "@types/webpack-env": "^1.16.3",
     "@types/webpack-hot-middleware": "^2.25.5",
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "babel-jest": "^27.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "babel-jest": "^27.3.1",
     "babel-polyfill": "^6.26.0",
     "babel-preset-react-app": "^10.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
@@ -170,7 +170,7 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.4.0",
     "husky": "^7.0.2",
-    "jest": "^27.3.0",
+    "jest": "^27.3.1",
     "jest-mock-extended": "^2.0.4",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
