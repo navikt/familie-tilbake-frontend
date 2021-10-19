@@ -37,7 +37,7 @@ export enum HendelseUndertype {
 
 export const hendelseundertyper: Record<HendelseUndertype, string> = {
     ANNET_FRITEKST: 'Annet fritekst',
-    BOR_IKKE_MED_BARN: 'Søker bor ikke med barn eller ikke lenger fast omsorg for barn',
+    BOR_IKKE_MED_BARN: 'Bor ikke med barn - ikke fast omsorg',
     BARN_FLYTTET_FRA_NORGE: 'Barn flyttet fra Norge',
     BRUKER_FLYTTET_FRA_NORGE: 'Bruker flyttet fra Norge',
     BARN_BOR_IKKE_I_NORGE: 'Barn bor ikke i Norge',
