@@ -2,6 +2,7 @@ const path = require('path');
 
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin')
 
 module.exports = {
     entry: ['./src/frontend/index.tsx'],
@@ -9,21 +10,22 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.less'],
         fallback: { crypto: false },
     },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.join(process.cwd(), '/src/frontend/index.html'),
+            inject: 'body',
+            alwaysWriteToDisk: true,
+        }),
+        new CaseSensitivePathsPlugin(),
+        new ESLintPlugin({
+            extensions: [`ts`, `tsx`],
+            exclude: [
+                `/node_modules/`,
+              ],
+        })
+    ],
     module: {
         rules: [
-            {
-                test: /\.(ts|tsx)$/,
-                enforce: 'pre',
-                exclude: /node_modules/,
-                use: [
-                    {
-                        options: {
-                            eslintPath: require.resolve('eslint'),
-                        },
-                        loader: require.resolve('eslint-loader'),
-                    },
-                ],
-            },
             {
                 test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
                 use: [`file-loader`],
@@ -57,12 +59,4 @@ module.exports = {
             },
         ],
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: path.join(process.cwd(), '/src/frontend/index.html'),
-            inject: 'body',
-            alwaysWriteToDisk: true,
-        }),
-        new CaseSensitivePathsPlugin(),
-    ],
 };
