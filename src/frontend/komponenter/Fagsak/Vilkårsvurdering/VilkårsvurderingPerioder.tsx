@@ -10,7 +10,7 @@ import { Element } from 'nav-frontend-typografi';
 
 import { Periode } from '@navikt/helse-frontend-tidslinje';
 
-import { Vilkårsresultat } from '../../../kodeverk';
+import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { FTAlertStripe, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
@@ -29,7 +29,8 @@ const StyledAlertStripe = styled(FTAlertStripe)`
 
 const finnClassNamePeriode = (
     periode: VilkårsvurderingPeriodeSkjemaData,
-    aktivPeriode: boolean
+    aktivPeriode: boolean,
+    erTotalbeløpUnder4Rettsgebyr: boolean
 ) => {
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
     if (
@@ -37,7 +38,11 @@ const finnClassNamePeriode = (
         (!!periode.vilkårsvurderingsresultatInfo &&
             periode.vilkårsvurderingsresultatInfo.vilkårsvurderingsresultat ===
                 Vilkårsresultat.GOD_TRO &&
-            !periode.vilkårsvurderingsresultatInfo.godTro?.beløpErIBehold)
+            !periode.vilkårsvurderingsresultatInfo.godTro?.beløpErIBehold) ||
+        (periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet ===
+            Aktsomhet.SIMPEL_UAKTSOMHET &&
+            erTotalbeløpUnder4Rettsgebyr &&
+            !periode.vilkårsvurderingsresultatInfo.aktsomhet.tilbakekrevSmåbeløp)
     ) {
         return classNames('avvist', aktivPeriodeCss);
     } else if (
@@ -51,7 +56,8 @@ const finnClassNamePeriode = (
 
 const genererRader = (
     perioder: VilkårsvurderingPeriodeSkjemaData[],
-    valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined
+    valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined,
+    erTotalbeløpUnder4Rettsgebyr: boolean
 ): Periode[][] => {
     return [
         perioder.map((periode, index): Periode => {
@@ -65,7 +71,11 @@ const genererRader = (
                 status: 'suksess',
                 active: erAktivPeriode,
                 id: `index_${index}`,
-                className: finnClassNamePeriode(periode, erAktivPeriode),
+                className: finnClassNamePeriode(
+                    periode,
+                    erAktivPeriode,
+                    erTotalbeløpUnder4Rettsgebyr
+                ),
             };
         }),
     ];
@@ -104,7 +114,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
     } = useFeilutbetalingVilkårsvurdering();
 
     React.useEffect(() => {
-        settTidslinjeRader(genererRader(perioder, valgtPeriode));
+        settTidslinjeRader(genererRader(perioder, valgtPeriode, erTotalbeløpUnder4Rettsgebyr));
     }, [perioder, valgtPeriode]);
 
     React.useEffect(() => {
