@@ -6,7 +6,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst } from 'nav-frontend-typografi';
 
-import { RessursStatus } from '@navikt/familie-typer';
+import { Journalstatus, RessursStatus } from '@navikt/familie-typer';
 
 import { hentDatoRegistrertSendt } from '../../../../utils';
 import { useDokumentlisting } from './DokumentlistingContext';
@@ -23,6 +23,12 @@ const Dokumentlisting: React.FC = () => {
         case RessursStatus.SUKSESS:
             const poster = journalposter.data;
             poster.sort((a, b) => {
+                if (a.journalstatus !== Journalstatus.FERDIGSTILT) {
+                    return 1;
+                }
+                if (b.journalstatus !== Journalstatus.FERDIGSTILT) {
+                    return -1;
+                }
                 return (
                     hentDatoRegistrertSendt(b.relevanteDatoer, b.journalposttype).getTime() -
                     hentDatoRegistrertSendt(a.relevanteDatoer, b.journalposttype).getTime()
