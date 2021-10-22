@@ -10,6 +10,7 @@ const Environment = () => {
             proxyUrl: 'http://localhost:8030',
             historikkUrl: 'http://localhost:8050',
             baSakUrl: 'http://localhost:8001',
+            forvalterRolle: 'dec3ee50-b683-4644-9507-520e8f054ac2',
         };
     } else if (process.env.ENV === 'e2e') {
         return {
@@ -18,6 +19,7 @@ const Environment = () => {
             proxyUrl: 'http://familie-tilbake:8030',
             historikkUrl: 'http://familie-historikk:8050',
             baSakUrl: 'http://familie-ba-sak-frontend:8000',
+            forvalterRolle: 'temp',
             //Har ikke satt opp redis
         };
     } else if (process.env.ENV === 'preprod') {
@@ -28,6 +30,7 @@ const Environment = () => {
             historikkUrl: 'http://familie-historikk',
             baSakUrl: 'https://barnetrygd.dev.adeo.no',
             redisUrl: 'familie-tilbake-frontend-redis',
+            forvalterRolle: 'c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b',
         };
     }
 
@@ -38,6 +41,7 @@ const Environment = () => {
         historikkUrl: 'http://familie-historikk',
         baSakUrl: 'https://barnetrygd.nais.adeo.no',
         redisUrl: 'familie-tilbake-frontend-redis',
+        forvalterRolle: '3d718ae5-f25e-47a4-b4b3-084a97604c1d',
     };
 };
 const env = Environment();
@@ -73,6 +77,7 @@ export const buildPath = env.buildPath;
 export const proxyUrl = env.proxyUrl;
 export const historikkUrl = env.historikkUrl;
 export const namespace = env.namespace;
+export const forvalterRolle = env.forvalterRolle;
 
 export const redirectRecords: Record<string, string> = {
     '/redirect/fagsystem/BA': env.baSakUrl,
