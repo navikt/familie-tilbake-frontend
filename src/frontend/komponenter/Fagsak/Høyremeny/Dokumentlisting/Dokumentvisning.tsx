@@ -6,7 +6,7 @@ import navFarger from 'nav-frontend-core';
 import Lenke from 'nav-frontend-lenker';
 
 import { ExternalLink } from '@navikt/ds-icons';
-import { IDokumentInfo, IJournalpost } from '@navikt/familie-typer';
+import { IDokumentInfo, IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
 import HentDokument from './HentDokument';
 
@@ -24,24 +24,30 @@ const Dokumentvisning: React.FC<IProps> = ({ journalpost, dokument }) => {
 
     return (
         <Dokument>
-            <Lenke
-                href="#"
-                onClick={e => {
-                    e.preventDefault();
-                    settVisDokument(true);
-                }}
-            >
+            {journalpost.journalposttype === Journalposttype.N ? (
                 <span>{dokument.tittel}</span>
-                <ExternalLink color={navFarger.navBla} />
-            </Lenke>
-            {visDokument && (
-                <HentDokument
-                    journalpost={journalpost}
-                    dokument={dokument}
-                    onClose={() => {
-                        settVisDokument(false);
-                    }}
-                />
+            ) : (
+                <>
+                    <Lenke
+                        href="#"
+                        onClick={e => {
+                            e.preventDefault();
+                            settVisDokument(true);
+                        }}
+                    >
+                        <span>{dokument.tittel}</span>
+                        <ExternalLink color={navFarger.navBla} />
+                    </Lenke>
+                    {visDokument && (
+                        <HentDokument
+                            journalpost={journalpost}
+                            dokument={dokument}
+                            onClose={() => {
+                                settVisDokument(false);
+                            }}
+                        />
+                    )}
+                </>
             )}
         </Dokument>
     );
