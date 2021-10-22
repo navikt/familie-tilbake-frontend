@@ -6,7 +6,7 @@ import navFarger from 'nav-frontend-core';
 import Lenke from 'nav-frontend-lenker';
 
 import { ExternalLink } from '@navikt/ds-icons';
-import { IDokumentInfo, IJournalpost, Journalstatus } from '@navikt/familie-typer';
+import { IDokumentInfo, IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
 import HentDokument from './HentDokument';
 
@@ -24,7 +24,7 @@ const Dokumentvisning: React.FC<IProps> = ({ journalpost, dokument }) => {
 
     return (
         <Dokument>
-            {journalpost.journalstatus !== Journalstatus.FERDIGSTILT ? (
+            {journalpost.journalposttype === Journalposttype.N ? (
                 <span>{dokument.tittel}</span>
             ) : (
                 <>

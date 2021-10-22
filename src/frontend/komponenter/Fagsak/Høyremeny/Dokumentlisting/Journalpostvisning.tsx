@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import navFarger from 'nav-frontend-core';
 import { Undertekst } from 'nav-frontend-typografi';
 
-import { IJournalpost, Journalposttype, Journalstatus } from '@navikt/familie-typer';
+import { IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
 import { formatterDatoOgTid, hentDatoRegistrertSendt } from '../../../../utils';
 import { DokumentIkon } from '../../../Felleskomponenter/Ikoner';
@@ -45,10 +45,10 @@ interface IProps {
 }
 
 const JournalpostVisning: React.FC<IProps> = ({ journalpost }) => {
-    const datoRegistrertSendt =
-        journalpost.journalstatus === Journalstatus.FERDIGSTILT
-            ? hentDatoRegistrertSendt(journalpost.relevanteDatoer, journalpost.journalposttype)
-            : null;
+    const datoRegistrertSendt = hentDatoRegistrertSendt(
+        journalpost.relevanteDatoer,
+        journalpost.journalposttype
+    );
     return (
         <Journalpost>
             <Dialog>
