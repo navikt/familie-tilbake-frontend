@@ -148,7 +148,8 @@ export const hentDatoRegistrertSendt = (
     });
     datoRegistrert =
         datoRegistrert ||
-        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DATO_JOURNALFOERT);
+        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DATO_JOURNALFOERT) ||
+        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DATO_DOKUMENT);
 
     // @ts-ignore
     return parseISO(datoRegistrert.dato);
