@@ -152,7 +152,7 @@ const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.Rea
     return (
         <>
             {vilkårsresultater[resultat]}
-            <StyledHjelpetekst type={PopoverOrientering.UnderVenstre}>
+            <StyledHjelpetekst type={PopoverOrientering.UnderVenstre} tittel="Lovhjemmel">
                 {hjelpetekster[resultat]}
             </StyledHjelpetekst>
         </>

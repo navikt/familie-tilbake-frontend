@@ -7,7 +7,7 @@ import { TidslinjeIkonbakgrunn } from './ikonelementer';
 const SystemIkon: React.FC = () => {
     return (
         <TidslinjeIkonbakgrunn>
-            <AutomaticSystem fontSize="15" />
+            <AutomaticSystem fontSize="15" aria-label="System" />
         </TidslinjeIkonbakgrunn>
     );
 };

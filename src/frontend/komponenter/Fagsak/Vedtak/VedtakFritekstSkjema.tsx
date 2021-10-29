@@ -2,22 +2,19 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import Lenke from 'nav-frontend-lenker';
 import { Undertekst } from 'nav-frontend-typografi';
+
+import { AddCircle } from '@navikt/ds-icons';
 
 import { validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
-import { AddCircleIkon } from '../../Felleskomponenter/Ikoner';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
-const LeggTilFritekst = styled.div`
-    cursor: pointer;
-`;
-
 const StyledUndertekst = styled(Undertekst)`
     display: inline-block;
-    vertical-align: top;
     margin-left: 1ex;
 `;
 interface IProps {
@@ -57,21 +54,24 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
             {isTextfieldHidden && !erLesevisning && (
                 <>
                     <Spacer8 />
-                    <LeggTilFritekst
+                    <Lenke
                         role="button"
                         data-testid={`legg-til-fritekst-${avsnittIndex}-${underavsnitt.index}`}
                         onClick={e => {
                             e.preventDefault();
                             hideTextField(false);
                         }}
-                        onKeyDown={e => {
-                            e.preventDefault();
-                            hideTextField(false);
+                        onKeyUp={e => {
+                            const key = e.code || e.keyCode;
+                            if (key === 'Space' || key === 'Enter' || key === 32 || key === 13) {
+                                hideTextField(false);
+                            }
                         }}
+                        href="#"
                     >
-                        <AddCircleIkon />
+                        <AddCircle aria-label="Legg til utdypende tekst" />
                         <StyledUndertekst>Legg til utdypende tekst</StyledUndertekst>
-                    </LeggTilFritekst>
+                    </Lenke>
                 </>
             )}
             {!isTextfieldHidden && (

@@ -108,7 +108,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => settValgtMenyside(Menysider.HISTORIKK)}
                     >
-                        <Clock />
+                        <Clock aria-label="Historikk" />
                         Historikk
                     </Høyremenyknapp>
                     <Høyremenyknapp
@@ -116,7 +116,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => settValgtMenyside(Menysider.DOKUMENTER)}
                     >
-                        <Folder />
+                        <Folder aria-label="Dokumenter" />
                         Dokumenter
                     </Høyremenyknapp>
                     <Høyremenyknapp
@@ -125,7 +125,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         onClick={() => settValgtMenyside(Menysider.SEND_BREV)}
                         disabled={disableSendMelding}
                     >
-                        <Send />
+                        <Send aria-label="Send brev" />
                         Send brev
                     </Høyremenyknapp>
                 </Høyremenyvalg>

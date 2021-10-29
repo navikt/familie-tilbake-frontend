@@ -14,6 +14,7 @@ const FatteVedtakIkon: React.FC = () => {
             viewBox="0 0 24 24"
             enableBackground="new 0 0 24 24"
             xmlSpace="preserve"
+            aria-label="Fatte vedtak"
         >
             <g>
                 <path

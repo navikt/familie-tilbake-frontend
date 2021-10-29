@@ -57,7 +57,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                         target="_blank"
                     >
                         <span>Gå til revurderingen</span>
-                        <ExternalLink />
+                        <ExternalLink aria-label="Gå til revurderingen" />
                     </Lenke>
                 )}
 
@@ -68,7 +68,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                     target="_blank"
                 >
                     <span>Gå til saksoversikt</span>
-                    <ExternalLink />
+                    <ExternalLink aria-label="Gå til saksoversikt" />
                 </Lenke>
 
                 <Behandlingsmeny fagsak={fagsak} />

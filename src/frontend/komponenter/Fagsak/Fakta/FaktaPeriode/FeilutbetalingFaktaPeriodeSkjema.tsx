@@ -65,7 +65,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                 <FamilieSelect
                     id={`perioder.${index}.årsak`}
                     data-testid={`perioder.${index}.årsak`}
-                    label={'Årsak'}
+                    label={<span className="sr-only">Årsak</span>}
                     onChange={event => onChangeÅrsak(event)}
                     value={periode.hendelsestype || '-'}
                     erLesevisning={erLesevisning}
@@ -90,7 +90,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                     <FamilieSelect
                         id={`perioder.${index}.underårsak`}
                         data-testid={`perioder.${index}.underårsak`}
-                        label={'Underårsak'}
+                        label={<span className="sr-only">Underårsak</span>}
                         onChange={event => onChangeUnderÅrsak(event)}
                         value={periode.hendelsesundertype || '-'}
                         erLesevisning={erLesevisning}
