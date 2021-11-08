@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import {
     byggFeiletRessurs,
@@ -95,7 +95,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
         const { visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
         const { gjerVedtaksbrevteksterKall, gjerBeregningsresultatKall, sendInnForeslåVedtak } =
             useBehandlingApi();
-        const history = useHistory();
+        const navigate = useNavigate();
 
         React.useEffect(() => {
             if (visVenteModal === false) {
@@ -172,7 +172,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
         };
 
         const gåTilForrige = () => {
-            history.push(
+            navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VILKÅRSVURDERING.href}`
             );
         };

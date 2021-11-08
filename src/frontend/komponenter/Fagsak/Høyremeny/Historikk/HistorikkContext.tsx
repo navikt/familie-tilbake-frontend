@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import { useHttp } from '@navikt/familie-http';
 import { byggFeiletRessurs, byggHenterRessurs, Ressurs } from '@navikt/familie-typer';
@@ -25,7 +25,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
     ({ fagsak, behandling, valgtMenyside }: IProps) => {
         const [historikkInnslag, settHistorikkInnslag] =
             React.useState<Ressurs<IHistorikkInnslag[]>>();
-        const history = useHistory();
+        const navigate = useNavigate();
         const { request } = useHttp();
 
         React.useEffect(() => {
@@ -69,7 +69,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
         };
 
         const navigerTilSide = (side: ISide) => {
-            history.push(
+            navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );
         };

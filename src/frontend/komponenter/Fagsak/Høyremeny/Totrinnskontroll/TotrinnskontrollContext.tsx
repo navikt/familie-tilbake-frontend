@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import {
     byggFeiletRessurs,
@@ -62,7 +62,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             hentBehandlingMedBehandlingId,
         } = useBehandling();
         const { gjerTotrinnkontrollKall, sendInnFatteVedtak } = useBehandlingApi();
-        const history = useHistory();
+        const navigate = useNavigate();
 
         React.useEffect(() => {
             if (visVenteModal === false) {
@@ -220,7 +220,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
         };
 
         const navigerTilSide = (side: ISide) => {
-            history.push(
+            navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );
         };

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import { useApp } from '../context/AppContext';
 import { BehandlingProvider } from '../context/BehandlingContext';
@@ -21,14 +21,14 @@ const Container: React.FC = () => {
                     <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
                     <FagsakProvider>
                         <BehandlingProvider>
-                            <Switch>
+                            <Routes>
                                 <Route
-                                    path="/fagsystem/:fagsystem/fagsak/:fagsakId"
-                                    component={FagsakContainer}
+                                    path="/fagsystem/:fagsystem/fagsak/:fagsakId/*"
+                                    element={<FagsakContainer />}
                                 />
-                                <Route exact={true} path="/" component={Dashboard} />
-                                <Route path="/*" component={Feilmelding} />
-                            </Switch>
+                                <Route path="/" element={<Dashboard />} />
+                                <Route path="/*" element={<Feilmelding />} />
+                            </Routes>
                         </BehandlingProvider>
                     </FagsakProvider>
                 </main>

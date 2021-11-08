@@ -3,7 +3,7 @@ import * as React from 'react';
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 import deepEqual from 'deep-equal';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import {
     byggFeiletRessurs,
@@ -80,7 +80,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             useBehandling();
         const { gjerFeilutbetalingVilkårsvurderingKall, sendInnFeilutbetalingVilkårsvurdering } =
             useBehandlingApi();
-        const history = useHistory();
+        const navigate = useNavigate();
 
         React.useEffect(() => {
             if (visVenteModal === false) {
@@ -139,13 +139,13 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         };
 
         const gåTilNeste = () => {
-            history.push(
+            navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VEDTAK.href}`
             );
         };
 
         const gåTilForrige = () => {
-            history.push(
+            navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FORELDELSE.href}`
             );
         };
