@@ -790,7 +790,7 @@ describe('Tester: VedtakContainer', () => {
             queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
-        ).toBeTruthy();
+        ).toBeFalsy();
 
         expect(
             queryByRole('button', {

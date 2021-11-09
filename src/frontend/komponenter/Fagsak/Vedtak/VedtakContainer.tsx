@@ -11,12 +11,7 @@ import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { vedtaksresultater } from '../../../kodeverk';
-import {
-    Behandlingstatus,
-    Behandlingstype,
-    Behandlingårsak,
-    IBehandling,
-} from '../../../typer/behandling';
+import { Behandlingstype, Behandlingårsak, IBehandling } from '../../../typer/behandling';
 import { FTAlertStripe, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
@@ -71,8 +66,6 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
     const harValideringsFeil = skjemaData.some(avs =>
         avs.underavsnittsliste.some(uavs => uavs.harFeil)
     );
-
-    const erAvsluttet = behandling.status === Behandlingstatus.AVSLUTTET;
 
     if (
         beregningsresultat?.status === RessursStatus.HENTER ||
@@ -147,7 +140,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                     <div>
                         {!harPåkrevetFritekstMenIkkeUtfylt &&
                             !harValideringsFeil &&
-                            !erAvsluttet && <ForhåndsvisVedtaksbrev />}
+                            !erLesevisning && <ForhåndsvisVedtaksbrev />}
                     </div>
                     <div>
                         <Knapp type={'standard'} mini={true} onClick={gåTilForrige}>
