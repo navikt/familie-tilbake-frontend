@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
     Avhengigheter,
@@ -48,7 +48,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
     const [vergeRespons, settVergeRepons] = React.useState<Ressurs<string>>();
     const { gjerVergeKall, sendInnVerge } = useBehandlingApi();
     const { erStegBehandlet, erStegAutoutført, hentBehandlingMedBehandlingId } = useBehandling();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         if (behandling.harVerge) {
@@ -161,7 +161,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
 
     const sendInn = () => {
         if (stegErBehandlet && !harEndretOpplysninger()) {
-            history.push(
+            navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FAKTA.href}`
             );
         } else if (kanSendeSkjema()) {

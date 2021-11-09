@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
@@ -26,7 +26,7 @@ import { VergeProvider } from './Verge/VergeContext';
 import { FeilutbetalingVilkårsvurderingProvider } from './Vilkårsvurdering/FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
 
-const BEHANDLING_KONTEKST_PATH = '/fagsystem/:fagsystem/fagsak/:fagsakId/behandling/:behandlingId';
+const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
 const StyledVenstremenyContainer = styled.div`
     min-width: 10rem;
@@ -56,8 +56,9 @@ interface IProps {
 }
 
 const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
-    const history = useHistory();
-    const ønsketSide = history.location.pathname.split('/')[7];
+    const navigate = useNavigate();
+    const location = useLocation();
+    const ønsketSide = location.pathname.split('/')[7];
 
     const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
 
@@ -67,17 +68,17 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
             if (!ønsketSideLovlig && aktivtSteg) {
                 const aktivSide = finnSideAktivtSteg(aktivtSteg);
                 if (aktivSide) {
-                    history.push(
+                    navigate(
                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${aktivSide?.href}`
                     );
                 }
             } else if (!ønsketSideLovlig) {
                 if (behandling.status === Behandlingstatus.AVSLUTTET) {
-                    history.push(
+                    navigate(
                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/vedtak`
                     );
                 } else {
-                    history.push(
+                    navigate(
                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                     );
                 }
@@ -102,29 +103,30 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                 <Venstremeny fagsak={fagsak} />
             </StyledVenstremenyContainer>
             <StyledMainContainer id={'fagsak-main'}>
-                <Switch>
+                <Routes>
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/fakta'}
-                        render={() => (
+                        element={
                             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
                                 <FaktaContainer ytelse={fagsak.ytelsestype} />
                             </FeilutbetalingFaktaProvider>
-                        )}
-                    ></Route>
+                        }
+                    />
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
-                        render={() => (
+                        element={
                             <FeilutbetalingForeldelseProvider
                                 behandling={behandling}
                                 fagsak={fagsak}
                             >
                                 <ForeldelseContainer behandling={behandling} />
                             </FeilutbetalingForeldelseProvider>
-                        )}
+                        }
                     />
+
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
-                        render={() => (
+                        element={
                             <FeilutbetalingVilkårsvurderingProvider
                                 behandling={behandling}
                                 fagsak={fagsak}
@@ -134,22 +136,27 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                                     fagsak={fagsak}
                                 />
                             </FeilutbetalingVilkårsvurderingProvider>
-                        )}
+                        }
                     />
+
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
-                        render={() => (
+                        element={
                             <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
                                 <VedtakContainer behandling={behandling} />
                             </FeilutbetalingVedtakProvider>
-                        )}
+                        }
                     />
-                    <Route path={BEHANDLING_KONTEKST_PATH + '/verge'}>
-                        <VergeProvider behandling={behandling} fagsak={fagsak}>
-                            <VergeContainer />
-                        </VergeProvider>
-                    </Route>
-                </Switch>
+
+                    <Route
+                        path={BEHANDLING_KONTEKST_PATH + '/verge'}
+                        element={
+                            <VergeProvider behandling={behandling} fagsak={fagsak}>
+                                <VergeContainer />
+                            </VergeProvider>
+                        }
+                    />
+                </Routes>
             </StyledMainContainer>
             <StyledHøyremenyContainer>
                 <Høyremeny fagsak={fagsak} behandling={behandling} />

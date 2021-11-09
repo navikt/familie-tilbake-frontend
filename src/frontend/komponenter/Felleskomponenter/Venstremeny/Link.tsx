@@ -1,8 +1,7 @@
 import React, { ReactChild } from 'react';
 
 import classNames from 'classnames';
-import { useLocation } from 'react-router';
-import { NavHashLink as NavLink } from 'react-router-hash-link';
+import { Link as NavLink, useLocation } from 'react-router-dom';
 
 interface Props {
     children: ReactChild;
@@ -22,24 +21,16 @@ const Link: React.FC<Props> = ({ active = true, id, to, children, className }) =
         <NavLink
             id={id}
             to={to}
-            tabIndex={0}
             onClick={onClick}
-            activeClassName={''}
             className={classNames(
                 className,
                 `${location.pathname}${location.hash}` === to ? 'active' : ''
             )}
-            scroll={el => {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }}
         >
             {children}
         </NavLink>
     ) : (
-        // eslint-disable-next-line
-        <a key={id} className={classNames('inactive', className)}>
-            {children}
-        </a>
+        <span className={classNames('inactive', className)}>{children}</span>
     );
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import { useHttp } from '@navikt/familie-http';
 import {
@@ -35,7 +35,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [behandlingILesemodus, settBehandlingILesemodus] = React.useState<boolean>();
     const { fagsak } = useFagsak();
     const { request } = useHttp();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const hentBehandlingMedEksternBrukId = (fagsak: IFagsak, behandlingId: string): void => {
         const fagsakBehandling = fagsak.behandlinger.find(
@@ -104,7 +104,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                         }
                     }
                     if (henterEtterStatusendring) {
-                        history.push(
+                        navigate(
                             // @ts-ignore - fagsak er hentet på dette tidspunktet
                             `/fagsystem/${fagsak?.data?.fagsystem}/fagsak/${fagsak?.data?.eksternFagsakId}/behandling/${hentetBehandling.data.eksternBrukId}`
                         );

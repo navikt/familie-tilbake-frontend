@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useHistory, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import AlertStripe from 'nav-frontend-alertstriper';
@@ -33,17 +33,12 @@ const venteBeskjed = (ventegrunn: IBehandlingsstegstilstand) => {
     }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;
 };
 
-interface IProps {
-    fagsystem: string;
-    fagsakId: string;
-}
-
 const FagsakContainer: React.FC = () => {
-    const { fagsystem: fagsystemParam, fagsakId } = useParams<IProps>();
+    const { fagsystem: fagsystemParam, fagsakId } = useParams();
     const fagsystem = Fagsystem[fagsystemParam as keyof typeof Fagsystem];
 
-    const history = useHistory();
-    const behandlingId = history.location.pathname.split('/')[6];
+    const location = useLocation();
+    const behandlingId = location.pathname.split('/')[6];
 
     const { fagsak, hentFagsak } = useFagsak();
     const {

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import {
     byggFeiletRessurs,
@@ -44,7 +44,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const [feilmeldinger, settFeilmeldinger] = React.useState<Feilmelding[]>();
         const { erStegBehandlet, visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
         const { gjerFeilutbetalingFaktaKall, sendInnFeilutbetalingFakta } = useBehandlingApi();
-        const history = useHistory();
+        const navigate = useNavigate();
 
         React.useEffect(() => {
             if (visVenteModal === false) {
@@ -210,7 +210,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const sendInnSkjema = () => {
             if (stegErBehandlet && !harEndretOpplysninger()) {
-                history.push(
+                navigate(
                     `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FORELDELSE.href}`
                 );
             } else {
@@ -248,7 +248,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         };
 
         const gåTilForrige = () => {
-            history.push(
+            navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
             );
         };
