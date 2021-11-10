@@ -73,9 +73,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                                 stegInfo.behandlingssteg === Behandlingssteg.AVSLUTTET ||
                                 (stegInfo.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK &&
                                     stegInfo.behandlingsstegstatus !==
-                                        Behandlingsstegstatus.TILBAKEFØRT) ||
-                                (stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
-                                    stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR)
+                                        Behandlingsstegstatus.TILBAKEFØRT)
                         );
                     settBehandlingILesemodus(erILeseModus);
 
