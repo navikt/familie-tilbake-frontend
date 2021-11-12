@@ -10,7 +10,7 @@ const Environment = () => {
             proxyUrl: 'http://localhost:8030',
             historikkUrl: 'http://localhost:8050',
             baSakUrl: 'http://localhost:8001',
-            efSakUrl: 'http://localhost:8002',
+            efSakUrl: 'http://localhost:8002/ekstern',
         };
     } else if (process.env.ENV === 'e2e') {
         return {
@@ -19,7 +19,7 @@ const Environment = () => {
             proxyUrl: 'http://familie-tilbake:8030',
             historikkUrl: 'http://familie-historikk:8050',
             baSakUrl: 'http://familie-ba-sak-frontend:8000',
-            efSakUrl: 'http://familie-ef-sak-frontend:8000',
+            efSakUrl: 'http://familie-ef-sak-frontend:8000/ekstern',
             //Har ikke satt opp redis
         };
     } else if (process.env.ENV === 'preprod') {
