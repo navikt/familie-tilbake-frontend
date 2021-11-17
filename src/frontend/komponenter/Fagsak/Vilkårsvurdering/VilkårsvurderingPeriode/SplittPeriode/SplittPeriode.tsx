@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import Lenke from 'nav-frontend-lenker';
 import { Undertekst } from 'nav-frontend-typografi';
 
 import { Periode as TidslinjePeriode } from '@navikt/helse-frontend-tidslinje';
@@ -126,13 +127,28 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
 
     return periode && tidslinjeRader ? (
         <StyledContainer>
-            <Image
-                src={splitPeriodImageUrl}
-                srcHover={splitPeriodImageHoverUrl}
-                altText={'Del opp perioden'}
-                onClick={_event => settVisModal(true)}
-            />
-            <InlineUndertekst>Del opp perioden</InlineUndertekst>
+            <Lenke
+                href="#"
+                role="button"
+                onClick={_event => {
+                    settVisModal(true);
+                }}
+                onKeyUp={e => {
+                    const key = e.code || e.keyCode;
+                    if (key === 'Space' || key === 'Enter' || key === 32 || key === 13) {
+                        settVisModal(true);
+                    }
+                }}
+                ariaLabel="Del opp perioden"
+            >
+                <Image
+                    src={splitPeriodImageUrl}
+                    srcHover={splitPeriodImageHoverUrl}
+                    altText={'Del opp perioden'}
+                    aria-label="Del opp perioden"
+                />
+                <InlineUndertekst>Del opp perioden</InlineUndertekst>
+            </Lenke>
             {visModal && (
                 <DelOppPeriode
                     periode={periode}
