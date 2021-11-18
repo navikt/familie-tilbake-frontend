@@ -604,7 +604,7 @@ describe('Tester: VedtakContainer', () => {
         );
         expect(
             getAllByRole('button', {
-                name: 'Pluss-tegn i sirkel Legg til utdypende tekst',
+                name: 'Legg til utdypende tekst Legg til utdypende tekst',
             })
         ).toHaveLength(2);
         userEvent.click(getByTestId('legg-til-fritekst-idx_avsnitt_2-idx_underavsnitt_0'));
