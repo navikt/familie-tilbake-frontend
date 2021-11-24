@@ -27,6 +27,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
     return (
         <Controller>
             <NavigeringsKnapp
+                aria-label="Forrige periode"
                 onClick={e => {
                     e.preventDefault();
                     forrigePeriode();
@@ -35,6 +36,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
                 <BackFilled aria-label="Forrige periode" />
             </NavigeringsKnapp>
             <NavigeringsKnapp
+                aria-label="Neste periode"
                 onClick={e => {
                     e.preventDefault();
                     nestePeriode();

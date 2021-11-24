@@ -111,7 +111,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                     skjema.visFeilmeldinger
                                                 )}
                                                 id="andelSomTilbakekreves"
-                                                label=""
+                                                aria-label="Angi andel som skal tilbakekreves"
                                                 erLesevisning={erLesevisning}
                                                 onChange={event =>
                                                     skjema.felter.uaktsomAndelTilbakekreves.validerOgSettFelt(
@@ -147,6 +147,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                     skjema.visFeilmeldinger
                                                 )}
                                                 id="andelSomTilbakekrevesManuell"
+                                                aria-label="Angi andel som skal tilbakekreves - fritekst"
                                                 erLesevisning={erLesevisning}
                                                 onChange={event =>
                                                     skjema.felter.uaktsomAndelTilbakekrevesManuelt.validerOgSettFelt(

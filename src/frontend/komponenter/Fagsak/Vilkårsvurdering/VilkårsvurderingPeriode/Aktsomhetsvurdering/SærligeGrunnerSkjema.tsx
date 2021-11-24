@@ -98,6 +98,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                 skjema.visFeilmeldinger
                             )}
                             name="annetBegrunnelse"
+                            aria-label="Begrunnelse: Annet"
                             maxLength={1500}
                             erLesevisning={erLesevisning}
                             value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}

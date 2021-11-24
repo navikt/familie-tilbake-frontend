@@ -16,7 +16,7 @@ const StyledNormaltekst = styled(InlineNormaltekst)`
 `;
 
 const UbehandletSteg = styled.div`
-    background-color: ${navFarger.orangeFocusLighten60};
+    background-color: ${navFarger.navOransjeLighten60};
     border: 1px solid ${navFarger.navOransjeDarken20};
     padding: 10px;
     border-radius: 4px;
@@ -37,9 +37,7 @@ interface IProps {
 const Steginformasjon: React.FC<IProps> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
         <UbehandletSteg>
-            <span>
-                <AdvarselIkon />
-            </span>
+            <AdvarselIkon />
             <StyledNormaltekst>{infotekst}</StyledNormaltekst>
         </UbehandletSteg>
     ) : (
