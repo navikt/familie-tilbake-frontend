@@ -33,10 +33,6 @@ const StyledPeriodeTable = styled.table`
 
     .skjemaelement {
         margin: 5px;
-
-        &__label {
-            display: none;
-        }
     }
 `;
 

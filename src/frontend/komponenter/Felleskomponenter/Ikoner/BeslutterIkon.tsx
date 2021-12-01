@@ -7,7 +7,7 @@ import { TidslinjeIkonbakgrunn } from './ikonelementer';
 const BeslutterIkon: React.FC = () => {
     return (
         <TidslinjeIkonbakgrunn>
-            <DecisionFilled fontSize="15" />
+            <DecisionFilled fontSize="15" aria-label="Beslutter" />
         </TidslinjeIkonbakgrunn>
     );
 };

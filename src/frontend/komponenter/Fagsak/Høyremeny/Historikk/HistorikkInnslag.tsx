@@ -99,7 +99,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
                     }}
                 >
                     <span>{innslag.tekst}</span>
-                    <ExternalLink color={navFarger.navBla} />
+                    <ExternalLink color={navFarger.navBla} aria-label={`Åpne ${innslag.tekst}`} />
                 </Lenke>
             </span>
         );

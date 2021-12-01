@@ -412,7 +412,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         userEvent.type(
             getByRole('textbox', {
-                name: '',
+                name: 'Begrunnelse: Annet',
             }),
             'begrunnelse'
         );
@@ -663,7 +663,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByLabelText('Nei')).toBeTruthy();
         expect(
             getByRole('combobox', {
-                name: '',
+                name: 'Angi andel som skal tilbakekreves',
             })
         ).toBeTruthy();
 
@@ -677,7 +677,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         userEvent.selectOptions(
             getByRole('combobox', {
-                name: '',
+                name: 'Angi andel som skal tilbakekreves',
             }),
             '30'
         );
@@ -747,7 +747,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             getByRole('combobox', {
-                name: '',
+                name: 'Angi andel som skal tilbakekreves',
             })
         ).toBeTruthy();
 
@@ -766,7 +766,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         userEvent.selectOptions(
             getByRole('combobox', {
-                name: '',
+                name: 'Angi andel som skal tilbakekreves',
             }),
             'Egendefinert'
         );
@@ -780,7 +780,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         userEvent.type(
             getByRole('textbox', {
-                name: '',
+                name: 'Angi andel som skal tilbakekreves - fritekst',
             }),
             '22'
         );
@@ -890,7 +890,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Skal det tillegges renter?')).toBeFalsy();
         expect(
             getByRole('combobox', {
-                name: '',
+                name: 'Angi andel som skal tilbakekreves',
             })
         ).toBeTruthy();
 
@@ -904,7 +904,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         userEvent.selectOptions(
             getByRole('combobox', {
-                name: '',
+                name: 'Angi andel som skal tilbakekreves',
             }),
             '30'
         );

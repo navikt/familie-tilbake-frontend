@@ -36,7 +36,10 @@ const Dokumentvisning: React.FC<IProps> = ({ journalpost, dokument }) => {
                         }}
                     >
                         <span>{dokument.tittel}</span>
-                        <ExternalLink color={navFarger.navBla} />
+                        <ExternalLink
+                            color={navFarger.navBla}
+                            aria-label={`Åpne ${dokument.tittel}`}
+                        />
                     </Lenke>
                     {visDokument && (
                         <HentDokument

@@ -9,6 +9,9 @@ const AdvarselIkon: React.FC = () => {
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
+            role="img"
+            aria-label="Advarsel ikon"
+            focusable={false}
         >
             <title>Advarsel ikon</title>
             <g id="Symbols" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
