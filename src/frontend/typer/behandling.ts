@@ -7,7 +7,7 @@ export enum Behandlingårsak {
 }
 
 export const behandlingårsaker: Record<Behandlingårsak, string> = {
-    REVURDERING_KLAGE_NFP: 'Revurdering NFP omgjør vedtak basert på klage',
+    REVURDERING_KLAGE_NFP: 'Klage tilbakekreving NFP/ NAY omgjør vedtak',
     REVURDERING_KLAGE_KA: 'Revurdering etter KA-behandlet klage',
     REVURDERING_OPPLYSNINGER_OM_VILKÅR: 'Nye opplysninger om vilkårsvurdering',
     REVURDERING_OPPLYSNINGER_OM_FORELDELSE: 'Nye opplysninger om foreldelse',
