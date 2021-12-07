@@ -6,6 +6,7 @@ import { SkjemaGruppe } from 'nav-frontend-skjema';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Ytelsetype } from '../../../../../kodeverk';
 import { IBehandling } from '../../../../../typer/behandling';
 import { finnMuligeEnheter, IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
@@ -26,6 +27,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
     const [behandendeEnheter, settBehandendeEnheter] = React.useState<IArbeidsfordelingsenhet[]>(
         []
     );
+    const { behandlingILesemodus } = useBehandling();
     const { skjema, sendInn } = useEndreBehandlendeEnhet(behandling.behandlingId, () => {
         settVisModal(false);
     });
@@ -42,7 +44,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                     settVisModal(true);
                     onListElementClick();
                 }}
-                disabled={!behandling.kanEndres}
+                disabled={!behandling.kanEndres || behandlingILesemodus}
             >
                 Endre behandlende enhet
             </KnappBase>

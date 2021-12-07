@@ -17,7 +17,7 @@ interface IProps {
 const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick }) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
-    const { hentBehandlingMedBehandlingId, aktivtSteg } = useBehandling();
+    const { hentBehandlingMedBehandlingId, aktivtSteg, behandlingILesemodus } = useBehandling();
     const { request } = useHttp();
 
     const kanFjerneVerge =
@@ -66,6 +66,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
                     settVisModal(true);
                     onListElementClick();
                 }}
+                disabled={!behandling.kanEndres || behandlingILesemodus}
             >
                 {kanFjerneVerge ? 'Fjern verge/fullmektig' : 'Opprett verge/fullmektig'}
             </KnappBase>
