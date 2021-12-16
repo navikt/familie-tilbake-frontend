@@ -51,6 +51,11 @@ Anbefaler også å laste ned Visual Studio Code fra Microsoft store for å kunne
 
 ---
 # Henvendelser
+Spørsmål knyttet til koden eller prosjektet kan rettes til:
+
+* Henning Solberg, `henning.solberg@nav.no`
+* Geir Roger Moen, `geir.roger.moen@nav.no`
+
 ## For NAV-ansatte
 
 Interne henvendelser kan sendes via Slack i kanalen #team-familie-tilbakekreving eller kanalen #team-familie.
