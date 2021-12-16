@@ -51,10 +51,7 @@ Anbefaler også å laste ned Visual Studio Code fra Microsoft store for å kunne
 
 ---
 # Henvendelser
-Spørsmål knyttet til koden eller prosjektet kan rettes til:
-
-* Henning Solberg, `henning.solberg@nav.no`
-* Geir Roger Moen, `geir.roger.moen@nav.no`
+Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub.
 
 ## For NAV-ansatte
 
