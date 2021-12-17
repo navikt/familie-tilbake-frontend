@@ -1,8 +1,12 @@
 module.exports = {
     "extends": [
         "eslint:recommended",
-        "plugin:react-app/recommended",
+        "plugin:import/typescript",
+        "plugin:import/recommended",
+        "plugin:flowtype/recommended",
         "plugin:jsx-a11y/recommended",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "prettier",
@@ -18,7 +22,11 @@ module.exports = {
     },
     "plugins": [
         "@typescript-eslint",
-        "react-app",
+        "import",
+        "flowtype",
+        "jsx-a11y",
+        "react",
+        "react-hooks",
         "prettier",
         "import"
     ],
@@ -41,7 +49,9 @@ module.exports = {
         "@typescript-eslint/no-var-requires": "warn",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-unused-vars": ["warn", { "vars": "all","args": "all", "argsIgnorePattern": "^_" }],
-        "react-app/react-hooks/exhaustive-deps": "off",
+        "react/no-children-prop": "off",
+        "react-hooks/exhaustive-deps": "off",
+        "flowtype/no-types-missing-file-annotation": "off",
         "import/named": "error",
         "import/namespace": "error",
         "import/default": "error",

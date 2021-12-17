@@ -11,7 +11,7 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { Behandlingssteg, Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
-import FatteVedtakIkon from '../../Felleskomponenter/Ikoner/FatteVedtakIkon';
+import { FatteVedtakIkon } from '../../Felleskomponenter/Ikoner';
 import Behandlingskort from './Behandlingskort/Behandlingskort';
 import Menykontainer, { Menysider } from './Menykontainer';
 
