@@ -39,4 +39,4 @@ const FatteVedtakIkon: React.FC = () => {
     );
 };
 
-export default FatteVedtakIkon;
+export { FatteVedtakIkon };

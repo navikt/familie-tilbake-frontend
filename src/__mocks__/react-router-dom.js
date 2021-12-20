@@ -1,3 +1,4 @@
+/* eslint-disable */
 const originalModule = jest.requireActual('react-router-dom');
 
 module.exports = {
@@ -6,3 +7,5 @@ module.exports = {
     useLocation: jest.fn(),
     useNavigate: jest.fn(),
 };
+
+/* eslint-disable */
