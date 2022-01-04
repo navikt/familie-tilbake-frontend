@@ -49,9 +49,8 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
     } = useFeilutbetalingVedtak();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
-    const erRevurderingKlage =
-        behandling.behandlingsårsakstype === Behandlingårsak.REVURDERING_KLAGE_KA ||
-        behandling.behandlingsårsakstype === Behandlingårsak.REVURDERING_KLAGE_NFP;
+    const erRevurderingKlageKA =
+        behandling.behandlingsårsakstype === Behandlingårsak.REVURDERING_KLAGE_KA;
     const erRevurderingBortfaltBeløp =
         behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
         behandling.behandlingsårsakstype ===
@@ -95,7 +94,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                     )}
                 <Undertittel>Vedtak</Undertittel>
                 <Spacer20 />
-                {erRevurderingKlage && (
+                {erRevurderingKlageKA && (
                     <>
                         <FTAlertStripe
                             type="info"
@@ -140,7 +139,8 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                     <div>
                         {!harPåkrevetFritekstMenIkkeUtfylt &&
                             !harValideringsFeil &&
-                            !erLesevisning && <ForhåndsvisVedtaksbrev />}
+                            !erLesevisning &&
+                            !erRevurderingKlageKA && <ForhåndsvisVedtaksbrev />}
                     </div>
                     <div>
                         <Knapp type={'standard'} mini={true} onClick={gåTilForrige}>
