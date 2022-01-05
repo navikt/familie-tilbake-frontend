@@ -76,7 +76,7 @@ export const doPdfProxy: any = () => {
                 dokumentData += chunk;
             });
 
-            res.end = () => {
+            res.end(() => {
                 try {
                     let dataVises = 'Ukjent feil ved visning dokument';
                     let visfrontendFeilmelding = true;
@@ -101,7 +101,7 @@ export const doPdfProxy: any = () => {
                 } catch (error) {
                     logError(`Proxying av pdf feilet: ${error}`);
                 }
-            };
+            });
         },
     });
 };
