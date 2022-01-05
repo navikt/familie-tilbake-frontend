@@ -481,7 +481,7 @@ describe('Tester: VedtakContainer', () => {
             queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
-        ).toBeTruthy();
+        ).toBeFalsy();
 
         expect(
             getByRole('button', {
@@ -550,21 +550,22 @@ describe('Tester: VedtakContainer', () => {
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } = render(
-            <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                <VedtakContainer behandling={behandling} />
-            </FeilutbetalingVedtakProvider>
-        );
+        const { getByText, getByRole, getAllByRole, getByTestId, queryByText, queryByRole } =
+            render(
+                <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
+                    <VedtakContainer behandling={behandling} />
+                </FeilutbetalingVedtakProvider>
+            );
 
         await waitFor(async () => {
             expect(getByText('Vedtak')).toBeTruthy();
         });
 
         expect(
-            getByText(
+            queryByText(
                 'Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes av saksbehandler fra klagebehandlingen'
             )
-        ).toBeTruthy();
+        ).toBeFalsy();
 
         expect(
             queryByRole('button', {

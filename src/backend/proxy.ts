@@ -2,7 +2,6 @@ import { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
 
 import { NextFunction, Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { v4 as uuidv4 } from 'uuid';
 
 import { Client, getOnBehalfOfAccessToken, IApi } from '@navikt/familie-backend';
 import { logError, stdoutLogger } from '@navikt/familie-logging';
@@ -77,7 +76,7 @@ export const doPdfProxy: any = () => {
                 dokumentData += chunk;
             });
 
-            res.end = () => {
+            res.end(() => {
                 try {
                     let dataVises = 'Ukjent feil ved visning dokument';
                     let visfrontendFeilmelding = true;
@@ -102,7 +101,7 @@ export const doPdfProxy: any = () => {
                 } catch (error) {
                     logError(`Proxying av pdf feilet: ${error}`);
                 }
-            };
+            });
         },
     });
 };
@@ -141,7 +140,6 @@ export const doHistorikkStreamProxy: any = () => {
 export const attachToken = (authClient: Client, oboConfig: IApi) => {
     return async (req: Request, _res: Response, next: NextFunction) => {
         getOnBehalfOfAccessToken(authClient, req, oboConfig).then((accessToken: string) => {
-            req.headers['Nav-Call-Id'] = uuidv4();
             req.headers.Authorization = `Bearer ${accessToken}`;
             return next();
         });
