@@ -11,7 +11,12 @@ import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { vedtaksresultater } from '../../../kodeverk';
-import { Behandlingstype, Behandlingårsak, IBehandling } from '../../../typer/behandling';
+import {
+    Behandlingssteg,
+    Behandlingstype,
+    Behandlingårsak,
+    IBehandling,
+} from '../../../typer/behandling';
 import { FTAlertStripe, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
@@ -47,7 +52,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
         harPåkrevetFritekstMenIkkeUtfylt,
         foreslåVedtakRespons,
     } = useFeilutbetalingVedtak();
-    const { behandlingILesemodus } = useBehandling();
+    const { behandlingILesemodus, aktivtSteg } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA =
         behandling.behandlingsårsakstype === Behandlingårsak.REVURDERING_KLAGE_KA;
@@ -65,6 +70,13 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
     const harValideringsFeil = skjemaData.some(avs =>
         avs.underavsnittsliste.some(uavs => uavs.harFeil)
     );
+    const kanViseForhåndsvisning =
+        !harPåkrevetFritekstMenIkkeUtfylt &&
+        !harValideringsFeil &&
+        (!erLesevisning ||
+            (behandling.kanEndres &&
+                aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK)) &&
+        !erRevurderingKlageKA;
 
     if (
         beregningsresultat?.status === RessursStatus.HENTER ||
@@ -136,12 +148,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                             </Knapp>
                         )}
                     </div>
-                    <div>
-                        {!harPåkrevetFritekstMenIkkeUtfylt &&
-                            !harValideringsFeil &&
-                            !erLesevisning &&
-                            !erRevurderingKlageKA && <ForhåndsvisVedtaksbrev />}
-                    </div>
+                    <div>{kanViseForhåndsvisning && <ForhåndsvisVedtaksbrev />}</div>
                     <div>
                         <Knapp type={'standard'} mini={true} onClick={gåTilForrige}>
                             Forrige
