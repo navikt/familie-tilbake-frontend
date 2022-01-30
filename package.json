@@ -48,7 +48,7 @@
     }
   },
   "dependencies": {
-    "@navikt/ds-icons": "^0.7.2",
+    "@navikt/ds-icons": "^0.8.0",
     "@navikt/familie-backend": "^5.0.30",
     "@navikt/familie-clipboard": "^3.1.6",
     "@navikt/familie-form-element": "^1.0.1-alpha.164",

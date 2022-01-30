@@ -1563,10 +1563,10 @@
   resolved "https://registry.yarnpkg.com/@navikt/ds-icons/-/ds-icons-0.2.2.tgz#5296982182ddb40c6bb6374cab4d3274ee64d880"
   integrity sha512-r2UVHOVzxGk6wLBbRtMFBAYI5XD+lqHAktNuSmly6cre7PXgVfar+JcVHqEc1r1HSZxkC4Kl4EjlU/laOPSr0Q==
 
-"@navikt/ds-icons@^0.7.2":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@navikt/ds-icons/-/ds-icons-0.7.2.tgz#cc3608d5cb0771c9f82bbfea6379b3c19c1ef86a"
-  integrity sha512-uacrYlNo5nVfu+D1ZhTnTpiYCrOIDVk792OdnrUqDSV5fyMF6HFeBi4BenmnoUjRhmQjUl0nth7G4TI+ZfwrGw==
+"@navikt/ds-icons@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@navikt/ds-icons/-/ds-icons-0.8.0.tgz#84577f8df17be4a1c7c85cdab4206c2c1762002d"
+  integrity sha512-3pYfJqASlyzz+Fysw4rCFRFJwOuLezKfLKtCRpJNmHNBKJqvbdvaXzY/73+BR85ZfEdqEMfuiwHEJyaunbmjlQ==
   dependencies:
     uuid "^8.3.2"
 
