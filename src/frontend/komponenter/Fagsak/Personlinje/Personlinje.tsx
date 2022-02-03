@@ -7,7 +7,7 @@ import Lenke from 'nav-frontend-lenker';
 
 import { ExternalLink } from '@navikt/ds-icons';
 import { RessursStatus } from '@navikt/familie-typer';
-import Visittkort from '@navikt/familie-visittkort';
+import { Visittkort } from '@navikt/familie-visittkort';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
