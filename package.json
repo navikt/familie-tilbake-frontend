@@ -130,7 +130,7 @@
   },
   "devDependencies": {
     "@axe-core/react": "^4.3.2",
-    "@babel/core": "^7.16.12",
+    "@babel/core": "^7.17.0",
     "@babel/preset-react": "^7.16.7",
     "@peculiar/webcrypto": "^1.2.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
