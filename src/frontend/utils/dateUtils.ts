@@ -108,6 +108,7 @@ const datoBeforeOrEqual = (latest: Date, dato: string): boolean =>
     isEmpty(dato) || dateBeforeOrEqual(parseISO(dato), latest);
 
 export const dateBeforeToday = (dato: string): boolean => datoBeforeOrEqual(yesterday(), dato);
+export const dateBeforeOrToday = (dato: string): boolean => datoBeforeOrEqual(new Date(), dato);
 
 const getEndOfMonth = (dato: string): Date => {
     return endOfMonth(parseISO(dato));

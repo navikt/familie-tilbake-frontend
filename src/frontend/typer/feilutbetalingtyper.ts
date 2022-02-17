@@ -96,7 +96,7 @@ export type YtelseInfo = {
 
 export type ReduserteBeløpInfo = {
     trekk: boolean;
-    belop: number;
+    beløp: number;
 };
 
 export type VilkårsvurderingPeriode = {

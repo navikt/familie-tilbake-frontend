@@ -112,8 +112,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                             type="info"
                             children={
                                 <Element>
-                                    Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes
-                                    av saksbehandler fra klagebehandlingen
+                                    Vedtaksbrev sendes ikke ut fra denne behandlingen.
                                 </Element>
                             }
                         />

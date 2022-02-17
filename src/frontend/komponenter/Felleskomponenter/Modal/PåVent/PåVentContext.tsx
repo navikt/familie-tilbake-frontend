@@ -5,7 +5,15 @@ import { useSkjema, useFelt, FeltState, feil, ok } from '@navikt/familie-skjema'
 import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
-import { isEmpty, validerDatoFelt } from '../../../../utils';
+import { isEmpty, validerDato, dateBeforeOrToday } from '../../../../utils';
+
+const validerTidsfrist = (tidsfrist: FeltState<string | ''>): FeltState<string | ''> => {
+    const feilmelding = validerDato(tidsfrist.verdi);
+    if (feilmelding) return feil(tidsfrist, feilmelding);
+    return dateBeforeOrToday(tidsfrist.verdi)
+        ? feil(tidsfrist, 'Fristen må være større enn dagens dato')
+        : ok(tidsfrist);
+};
 
 export const usePåVentBehandling = (
     lukkModal: (suksess: boolean) => void,
@@ -27,7 +35,7 @@ export const usePåVentBehandling = (
                 valideringsfunksjon: (felt: FeltState<string | ''>) => {
                     return isEmpty(felt.verdi)
                         ? feil(felt, 'Du må velge en tidsfrist')
-                        : validerDatoFelt(felt);
+                        : validerTidsfrist(felt);
                 },
             }),
             årsak: useFelt<Venteårsak | ''>({
@@ -51,12 +59,20 @@ export const usePåVentBehandling = (
                     },
                     url: `/familie-tilbake/api/behandling/${behandlingId}/vent/v1`,
                 },
-                (_ressurs: Ressurs<string>) => {
+                () => {
                     if (ventegrunn) {
                         ventegrunn.tidsfrist = skjema.felter.tidsfrist.verdi;
                         ventegrunn.venteårsak = skjema.felter.årsak.verdi as Venteårsak;
                     }
                     lukkModal(true);
+                },
+                (response: Ressurs<string>) => {
+                    if (
+                        response.status === RessursStatus.FEILET ||
+                        response.status === RessursStatus.FUNKSJONELL_FEIL
+                    ) {
+                        settFeilmelding(response.frontendFeilmelding);
+                    }
                 }
             );
         }
