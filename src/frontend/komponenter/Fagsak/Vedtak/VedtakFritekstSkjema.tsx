@@ -7,7 +7,7 @@ import { Undertekst } from 'nav-frontend-typografi';
 
 import { AddCircle } from '@navikt/ds-icons';
 
-import { validerTekstMaksLengde } from '../../../utils';
+import { isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
@@ -40,7 +40,10 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const maxLength = maximumLength ? maximumLength : 4000;
         const nyVerdi = e.target.value;
-        const feilmelding = validerTekstMaksLengde(maxLength)(nyVerdi);
+        const feilmelding =
+            isEmpty(nyVerdi) && !underavsnitt.fritekstPåkrevet
+                ? undefined
+                : validerTekstMaksLengde(maxLength)(nyVerdi);
         oppdaterUnderavsnitt(avsnittIndex, {
             ...underavsnitt,
             fritekst: nyVerdi,
