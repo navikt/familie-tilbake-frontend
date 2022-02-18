@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+import styled from 'styled-components';
+
+import navFarger from 'nav-frontend-core';
 import { Flatknapp, Knapp } from 'nav-frontend-knapper';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 
@@ -18,6 +21,14 @@ import { Spacer20, Spacer8 } from '../../Flytelementer';
 import { FixedDatovelger } from '../../Skjemaelementer';
 import UIModalWrapper from '../UIModalWrapper';
 import { usePåVentBehandling } from './PåVentContext';
+
+const FeilContainer = styled.div`
+    margin-top: 2rem;
+
+    & .typo-normal {
+        color: ${navFarger.redError};
+    }
+`;
 
 export const minTidsfrist = (): string => {
     const minDato = new Date();
@@ -100,7 +111,6 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
             }}
         >
             <>
-                {feilmelding && feilmelding !== '' && <Normaltekst>{feilmelding}</Normaltekst>}
                 {erFristenUtløpt && (
                     <>
                         <Element>OBS! Fristen på denne behandlingen er utløpt!</Element>
@@ -130,6 +140,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     feilmelding={
                         ugyldigDatoValgt ? skjema.felter.tidsfrist.feilmelding?.toString() : ''
                     }
+                    erLesesvisning={erVenterPåKravgrunnlag}
                 />
                 <Spacer20 />
                 <FamilieSelect
@@ -151,6 +162,11 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                         </option>
                     ))}
                 </FamilieSelect>
+                {feilmelding && feilmelding !== '' && (
+                    <FeilContainer>
+                        <Normaltekst>{feilmelding}</Normaltekst>
+                    </FeilContainer>
+                )}
             </>
         </UIModalWrapper>
     );

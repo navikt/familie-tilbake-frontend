@@ -25,7 +25,7 @@ import {
 } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
-import { formatCurrencyNoKr, formatterDatostring, isEmpty } from '../../../../utils';
+import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
@@ -247,25 +247,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                 </Column>
             </Row>
             <Spacer20 />
-            {periode.reduserteBeløper?.map((beløp, index) => (
-                <React.Fragment key={`rb_${index}_${beløp.belop}`}>
-                    <Normaltekst>
-                        {beløp.trekk ? (
-                            <>
-                                Feilutbetalt beløp er redusert med{' '}
-                                <b>kr. {formatCurrencyNoKr(beløp.belop)},-</b> på grunn av trekk.
-                            </>
-                        ) : (
-                            <>
-                                Feilutbetalt beløp er redusert med{' '}
-                                <b>kr. {formatCurrencyNoKr(beløp.belop)},-</b> på grunn av
-                                etterbetaling innen samme periode.
-                            </>
-                        )}
-                    </Normaltekst>
-                    <Spacer8 />
-                </React.Fragment>
-            ))}
             <TilbakekrevingAktivitetTabell ytelser={periode.aktiviteter} />
             <Spacer20 />
             {!erLesevisning &&

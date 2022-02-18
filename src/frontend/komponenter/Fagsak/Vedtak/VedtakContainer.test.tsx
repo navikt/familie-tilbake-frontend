@@ -436,11 +436,7 @@ describe('Tester: VedtakContainer', () => {
             expect(getByText('Vedtak')).toBeTruthy();
         });
 
-        expect(
-            getByText(
-                'Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes av saksbehandler fra klagebehandlingen'
-            )
-        ).toBeTruthy();
+        expect(getByText('Vedtaksbrev sendes ikke ut fra denne behandlingen.')).toBeTruthy();
 
         expect(
             queryByRole('button', {
