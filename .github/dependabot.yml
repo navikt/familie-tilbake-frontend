@@ -3,8 +3,8 @@ updates:
   - package-ecosystem: "npm"
     directory: "/" # Location of package manifests
     schedule:
-      interval: "weekly"
-      day: "sunday"
+      interval: "daily"
+      day: "18:00"
     open-pull-requests-limit: 10
     ignore:
      - dependency-name: "*"

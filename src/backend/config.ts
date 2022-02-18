@@ -28,7 +28,7 @@ const Environment = () => {
             namespace: 'preprod',
             proxyUrl: 'http://familie-tilbake',
             historikkUrl: 'http://familie-historikk',
-            baSakUrl: 'https://barnetrygd.dev.adeo.no',
+            baSakUrl: 'https://barnetrygd.dev.intern.nav.no',
             efSakUrl: 'https://ensligmorellerfar.dev.intern.nav.no/ekstern',
             redisUrl: 'familie-tilbake-frontend-redis',
         };
@@ -39,7 +39,7 @@ const Environment = () => {
         namespace: 'production',
         proxyUrl: 'http://familie-tilbake',
         historikkUrl: 'http://familie-historikk',
-        baSakUrl: 'https://barnetrygd.nais.adeo.no',
+        baSakUrl: 'https://barnetrygd.intern.nav.no',
         efSakUrl: 'https://ensligmorellerfar.intern.nav.no/ekstern',
         redisUrl: 'familie-tilbake-frontend-redis',
     };
