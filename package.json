@@ -129,7 +129,7 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
-    "@axe-core/react": "^4.3.2",
+    "@axe-core/react": "^4.4.0",
     "@babel/core": "^7.17.0",
     "@babel/preset-react": "^7.16.7",
     "@peculiar/webcrypto": "^1.2.3",
