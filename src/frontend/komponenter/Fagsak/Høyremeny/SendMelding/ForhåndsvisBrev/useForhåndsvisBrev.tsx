@@ -10,6 +10,7 @@ import {
 } from '@navikt/familie-typer';
 
 import { useDokumentApi } from '../../../../../api/dokument';
+import { base64ToArrayBuffer } from '../../../../../utils';
 import { useSendMelding } from '../SendMeldingContext';
 
 const useForhåndsvisBrev = () => {
@@ -30,9 +31,10 @@ const useForhåndsvisBrev = () => {
         forhåndsvisBrev(payload).then((response: Ressurs<string>) => {
             settVisModal(true);
             if (response.status === RessursStatus.SUKSESS) {
-                settHentetForhåndsvisning(
-                    byggDataRessurs(`data:application/pdf;base64,${response.data}`)
-                );
+                const blob = new Blob([base64ToArrayBuffer(response.data)], {
+                    type: 'application/pdf',
+                });
+                settHentetForhåndsvisning(byggDataRessurs(window.URL.createObjectURL(blob)));
             } else if (
                 response.status === RessursStatus.FEILET ||
                 response.status === RessursStatus.FUNKSJONELL_FEIL ||
