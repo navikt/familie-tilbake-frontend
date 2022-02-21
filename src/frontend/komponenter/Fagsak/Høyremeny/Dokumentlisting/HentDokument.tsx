@@ -12,6 +12,7 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { base64ToArrayBuffer } from '../../../../utils';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { useDokumentlisting } from './DokumentlistingContext';
 
@@ -35,7 +36,10 @@ const HentDokument: React.FC<IProps> = ({ journalpost, dokument, onClose }) => {
             url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/journalpost/${journalpost.journalpostId}/dokument/${dokument.dokumentInfoId}`,
         }).then((response: Ressurs<string>) => {
             if (response.status === RessursStatus.SUKSESS) {
-                settHentetDokument(byggDataRessurs(`data:application/pdf;base64,${response.data}`));
+                const blob = new Blob([base64ToArrayBuffer(response.data)], {
+                    type: 'application/pdf',
+                });
+                settHentetDokument(byggDataRessurs(window.URL.createObjectURL(blob)));
             } else if (
                 response.status === RessursStatus.FEILET ||
                 response.status === RessursStatus.FUNKSJONELL_FEIL ||
