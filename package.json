@@ -134,7 +134,7 @@
     "@babel/preset-react": "^7.16.7",
     "@peculiar/webcrypto": "^1.2.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
-    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.5.0",
