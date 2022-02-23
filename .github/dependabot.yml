@@ -12,9 +12,6 @@ updates:
       time: "18:00"
     open-pull-requests-limit: 10
     registries: "*"
-    ignore:
-     - dependency-name: "*"
-       update-types: ["version-update:semver-patch"]
   - package-ecosystem: "docker"
     directory: "/" # Location of package manifests
     schedule:
