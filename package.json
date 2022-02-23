@@ -140,7 +140,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.4.0",
     "@types/webpack-env": "^1.16.3",
-    "@types/webpack-hot-middleware": "^2.25.5",
+    "@types/webpack-hot-middleware": "^2.25.6",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
     "babel-jest": "^27.5.0",
