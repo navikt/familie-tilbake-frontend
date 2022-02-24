@@ -59,7 +59,7 @@
     "@navikt/familie-typer": "^4.0.0",
     "@navikt/familie-visittkort": "^3.0.0",
     "@navikt/helse-frontend-tidslinje": "^6.1.8",
-    "@sentry/browser": "^6.17.3",
+    "@sentry/browser": "^6.17.9",
     "@sentry/core": "^6.17.3",
     "@sentry/tracing": "^6.17.3",
     "@sentry/webpack-plugin": "^1.18.4",
