@@ -5107,10 +5107,10 @@ express-session@^1.17.1:
     safe-buffer "5.2.1"
     uid-safe "~2.1.5"
 
-express-static-gzip@^2.1.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/express-static-gzip/-/express-static-gzip-2.1.1.tgz#ee3a0eca3f10348bcd214095fbb46f8d0f8cb471"
-  integrity sha512-J+xSzdr5lj1cIuZey0ac6nUv22VE7GrdwTERqE8DsrqSXLm1zjeYWTVbK37t8exGwobxBXeWU2bM7eSMjBR4YA==
+express-static-gzip@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/express-static-gzip/-/express-static-gzip-2.1.5.tgz#e45b512ef5596a068c45f729d7e0cc0b429b08b4"
+  integrity sha512-bgiQ1fY7ltuUrSzg0WoN7ycoAd7r2VEw7durn/3k0jCMUC5wydF0K36ouIuJPE+MNDwK5uoSaVgIBVNemwxWgw==
   dependencies:
     serve-static "^1.14.1"
 
