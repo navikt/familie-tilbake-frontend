@@ -54,7 +54,7 @@
     "@navikt/familie-form-elements": "^4.0.0",
     "@navikt/familie-header": "^4.0.0",
     "@navikt/familie-http": "^2.0.0",
-    "@navikt/familie-logging": "^2.0.0",
+    "@navikt/familie-logging": "^3.0.0",
     "@navikt/familie-skjema": "^2.0.0",
     "@navikt/familie-typer": "^4.0.0",
     "@navikt/familie-visittkort": "^3.0.0",
