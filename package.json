@@ -55,7 +55,7 @@
     "@navikt/familie-header": "^4.0.0",
     "@navikt/familie-http": "^2.0.0",
     "@navikt/familie-logging": "^2.0.0",
-    "@navikt/familie-skjema": "^2.0.0",
+    "@navikt/familie-skjema": "^3.0.0",
     "@navikt/familie-typer": "^4.0.0",
     "@navikt/familie-visittkort": "^3.0.0",
     "@navikt/helse-frontend-tidslinje": "^6.1.8",
