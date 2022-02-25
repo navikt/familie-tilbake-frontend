@@ -1661,17 +1661,17 @@
     nav-frontend-typografi-style "^2.0.1"
     react-select "^4.0.13"
 
-"@navikt/familie-header@^4.0.0":
-  version "4.0.0"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-header/4.0.0/478f43b7d9b062d1c05f3bf718a71e453b500a28cb0aa870c924bd3cfaf571a7#e84a11c55e2ad5d8f102b2e3e73d62b7baeaaf9e"
-  integrity sha512-t4qguHBSCyhlWWFAE/zsgCufccpFIuUNgauPz/gATr4TI+JDxXzxkcU/KiJ1lJ605KYfb2ivTElYLfNVLSDFlA==
+"@navikt/familie-header@^4.0.1":
+  version "4.0.1"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-header/4.0.1/62a033d9ef8a79626e4754fc3498a14037a85d9334c0f2e831142f26cc83bada#e04a6010e6094b9c28b91de83938c0f59df5789d"
+  integrity sha512-c6kKSi73KEsTZd/f1bHAOD0plaADUtHOtWjN4kQURIwU4wGRszkNzroaT5ggC2hvj9pI9yPpbGjylinFla1oZg==
   dependencies:
     "@babel/preset-typescript" "^7.15.0"
     "@navikt/boxed-list-with-links" "^1.0.2"
     "@navikt/ds-icons" "^0.2.1"
     "@navikt/familie-form-elements" "^4.0.0"
-    "@navikt/familie-ikoner" "^4.0.0"
-    "@navikt/familie-typer" "^4.0.0"
+    "@navikt/familie-ikoner" "^4.0.1"
+    "@navikt/familie-typer" "^5.0.0"
     "@navikt/familie-validering" "^2.0.0"
     "@navikt/nap-user-panel" "^1.1.0"
     "@types/jest" "^27.0.1"
@@ -1705,12 +1705,12 @@
     "@sentry/core" "^6.2.1"
     constate "^3.2.0"
 
-"@navikt/familie-ikoner@^4.0.0":
-  version "4.0.0"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-ikoner/4.0.0/18361c23dc026f7daf514fd3a82e6ffeac6fab878a64a223e55165ed0869f501#2c3d968c951ff21c141f33f42f17e4ba128c856f"
-  integrity sha512-YcRRdUF0F0npDOUC+AUaKgp4h4XQJ2WDnYXcUoVyhaMpEgzkJq38rc69bV3CJEQlO5WaCaNk/nypwmFAc9Mkww==
+"@navikt/familie-ikoner@^4.0.0", "@navikt/familie-ikoner@^4.0.1":
+  version "4.0.1"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-ikoner/4.0.1/3e14afdbf7322fe36173dab08de45e49e26736e84e4066e6c3ca8987af5a361e#2f92679e39e207eb4ed9e1f3a69950c187fcf362"
+  integrity sha512-XPPFvX/20GpwnIcuqsuqu9fSqfwO5i+y637HbmcPQ7yv15s0bGHWaujnJm6HU6/G17te0UApJ71cFH/YwnVphg==
   dependencies:
-    "@navikt/familie-typer" "^4.0.0"
+    "@navikt/familie-typer" "^5.0.0"
 
 "@navikt/familie-logging@^2.0.0":
   version "2.0.0"
@@ -1734,6 +1734,11 @@
   version "4.0.0"
   resolved "https://npm.pkg.github.com/download/@navikt/familie-typer/4.0.0/adda0a9283e562ad0b509d1e3a0bc5e6dfffecb2250ed4cb45d8325d35bc58ab#d74b795678bd5c5d80e5e662dd2c4989b300cfd0"
   integrity sha512-GxXL7TcUa/XTOSG5AEhP/U7rVcENFZRLw9AQlOqnByb3HYX0EeFSRdruXvR/km/NCpVmGC6wOVoiKZk7A4WjAw==
+
+"@navikt/familie-typer@^5.0.0":
+  version "5.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-typer/5.0.0/457a7865af7d164c5ea26ba942fec62da74e02c0fdcd48165fc6c1c8c9d19f1c#9b59ac4a1b044de72586339c2e3e4af60c9baac4"
+  integrity sha512-rHc1Q+ND28qJ02A7ddn7Y3LDZBelvZv/g528GvxNhgYidpN+nD75czbUje/x3ZwD3W+f+WealUlcDMf057DTGg==
 
 "@navikt/familie-validering@^2.0.0":
   version "2.0.0"
