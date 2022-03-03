@@ -1833,16 +1833,16 @@
   dependencies:
     tslib "^2.0.0"
 
-"@peculiar/webcrypto@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@peculiar/webcrypto/-/webcrypto-1.2.3.tgz#79268ef0a8068bed2a40fc33bc68b4d3546fe2cc"
-  integrity sha512-q7wDfZy3k/tpnsYB23/MyyDkjn6IdHh8w+xwoVMS5cu6CjVoFzngXDZEOOuSE4zus2yO6ciQhhHxd4XkLpwVnQ==
+"@peculiar/webcrypto@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@peculiar/webcrypto/-/webcrypto-1.3.1.tgz#cd152b5d41841b4296983425fbeb9defb085bb0a"
+  integrity sha512-BdzqCnzquMaoPYsFqWP/Q8SNslweb6A+oVaVbt9JBuXuvb528CEDUGVA0NSEZrgXj8jt++2kx3anChiKhOV3Nw==
   dependencies:
     "@peculiar/asn1-schema" "^2.0.44"
     "@peculiar/json-schema" "^1.1.12"
-    pvtsutils "^1.2.1"
+    pvtsutils "^1.2.2"
     tslib "^2.3.1"
-    webcrypto-core "^1.4.0"
+    webcrypto-core "^1.6.0"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.4":
   version "0.5.4"
@@ -2694,6 +2694,11 @@
     "@typescript-eslint/types" "5.12.1"
     eslint-visitor-keys "^3.0.0"
 
+"@typescript/lib-dom@npm:@types/web":
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/@types/web/-/web-0.0.54.tgz#1e92b09b80212e7c2024c49fa9d455fab9057593"
+  integrity sha512-LYaiVWt3ZzwTb4Hj9eqDXjN+GI+YphBYJdo3/cQC+qICk1SdbXW1t3YImUaQYKf9//JEM9089ll+owgl/WKuHg==
+
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"
@@ -3118,7 +3123,7 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-asn1js@^2.1.1:
+asn1js@^2.1.1, asn1js@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/asn1js/-/asn1js-2.2.0.tgz#d890fcdda86b8a005693df14a986bfb2c2069c57"
   integrity sha512-oagLNqpfNv7CvmyMoexMDNyVDSiq1rya0AEUgcLlNHdHgNl6U/hi8xY370n5y+ZIFEXOx0J4B1qF2NDjMRxklA==
@@ -4826,7 +4831,7 @@ eslint-plugin-react-hooks@^4.3.0:
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.3.0.tgz#318dbf312e06fab1c835a4abef00121751ac1172"
   integrity sha512-XslZy0LnMn+84NEG9jSGR6eGqaZB3133L8xewQo3fQagbQuGt7a63gf+P1NGKZavEYEC3UXaWEAA/AqDkuN6xA==
 
-eslint-plugin-react@^7.27.1, eslint-plugin-react@^7.28.0:
+eslint-plugin-react@^7.27.1:
   version "7.28.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.28.0.tgz#8f3ff450677571a659ce76efc6d80b6a525adbdf"
   integrity sha512-IOlFIRHzWfEQQKcAD4iyYDndHwTQiCMcJVJjxempf203jnNLUnW34AXLrV33+nEXoifJE2ZEGmcjKPL8957eSw==
@@ -4842,6 +4847,26 @@ eslint-plugin-react@^7.27.1, eslint-plugin-react@^7.28.0:
     object.hasown "^1.1.0"
     object.values "^1.1.5"
     prop-types "^15.7.2"
+    resolve "^2.0.0-next.3"
+    semver "^6.3.0"
+    string.prototype.matchall "^4.0.6"
+
+eslint-plugin-react@^7.29.2:
+  version "7.29.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.29.2.tgz#2d4da69d30d0a736efd30890dc6826f3e91f3f7c"
+  integrity sha512-ypEBTKOy5liFQXZWMchJ3LN0JX1uPI6n7MN7OPHKacqXAxq5gYC30TdO7wqGYQyxD1OrzpobdHC3hDmlRWDg9w==
+  dependencies:
+    array-includes "^3.1.4"
+    array.prototype.flatmap "^1.2.5"
+    doctrine "^2.1.0"
+    estraverse "^5.3.0"
+    jsx-ast-utils "^2.4.1 || ^3.0.0"
+    minimatch "^3.1.2"
+    object.entries "^1.1.5"
+    object.fromentries "^2.0.5"
+    object.hasown "^1.1.0"
+    object.values "^1.1.5"
+    prop-types "^15.8.1"
     resolve "^2.0.0-next.3"
     semver "^6.3.0"
     string.prototype.matchall "^4.0.6"
@@ -7733,6 +7758,13 @@ minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
+minimatch@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.2.tgz#19cd194bfd3e428f049a70817c038d89ab4be35b"
+  integrity sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==
+  dependencies:
+    brace-expansion "^1.1.7"
+
 minimist@^1.1.1, minimist@^1.2.0, minimist@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
@@ -8991,10 +9023,17 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-pvtsutils@^1.2.0, pvtsutils@^1.2.1:
+pvtsutils@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/pvtsutils/-/pvtsutils-1.2.1.tgz#8212e846ca9afb21e40cebb0691755649f9f498a"
   integrity sha512-Q867jEr30lBR2YSFFLZ0/XsEvpweqH6Kj096wmlRAFXrdRGPCNq2iz9B5Tk085EZ+OBZyYAVA5UhPkjSHGrUzQ==
+  dependencies:
+    tslib "^2.3.1"
+
+pvtsutils@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/pvtsutils/-/pvtsutils-1.2.2.tgz#62ef6bc0513cbc255ee02574dedeaa41272d6101"
+  integrity sha512-OALo5ZEdqiI127i64+CXwkCOyFHUA+tCQgaUO/MvRDFXWPr53f2sx28ECNztUEzuyu5xvuuD1EB/szg9mwJoGA==
   dependencies:
     tslib "^2.3.1"
 
@@ -10760,15 +10799,16 @@ watchpack@^2.3.1:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
 
-webcrypto-core@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/webcrypto-core/-/webcrypto-core-1.4.0.tgz#9a395920792bcfa4605dc64aaf264156f79e873e"
-  integrity sha512-HY3Zo0GcRIQUUDnlZ/shGjN+4f7LVMkdJZoGPog+oHhJsJdMz6iM8Za5xZ0t6qg7Fx/JXXz+oBv2J2p982hGTQ==
+webcrypto-core@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/webcrypto-core/-/webcrypto-core-1.6.0.tgz#46a8c09ebf8efada148c60f9e747c8c3d1e844d3"
+  integrity sha512-jBBhCjNrdqp2iMtbxiHPtBSWvBt/gxmtV6AfaQ/tWopxKX79WBUoydamDFObPsUIR7F3vLRJwCKCBLkCEpGe3A==
   dependencies:
     "@peculiar/asn1-schema" "^2.0.44"
     "@peculiar/json-schema" "^1.1.12"
-    asn1js "^2.1.1"
-    pvtsutils "^1.2.0"
+    "@typescript/lib-dom" "npm:@types/web"
+    asn1js "^2.2.0"
+    pvtsutils "^1.2.2"
     tslib "^2.3.1"
 
 webidl-conversions@^3.0.0:

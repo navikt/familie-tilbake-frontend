@@ -11,6 +11,7 @@ import { apiLoggFeil } from '../../../api/axios';
 
 interface IProps {
     autentisertSaksbehandler?: ISaksbehandler;
+    children: React.ReactNode;
 }
 
 interface IState {
