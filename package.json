@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "NODE_ENV=production node node_dist/backend/server.js",
+    "start": "NODE_ENV=production node --loader ts-node/esm --es-module-specifier-resolution=node node_dist/backend/server.js",
     "start:mock": "tsc && NODE_ENV=development node node_dist/dev-server/mock-server.js",
     "start:dev": "tsc && NODE_ENV=development node --loader ts-node/esm --es-module-specifier-resolution=node node_dist/backend/server.js",
     "build": "yarn build:prod",
