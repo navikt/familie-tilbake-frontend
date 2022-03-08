@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
@@ -27,12 +27,12 @@ const erStegUtført = (status: Behandlingsstegstatus) => {
 };
 
 const [BehandlingProvider, useBehandling] = createUseContext(() => {
-    const [behandling, settBehandling] = React.useState<Ressurs<IBehandling>>();
-    const [aktivtSteg, settAktivtSteg] = React.useState<IBehandlingsstegstilstand>();
-    const [ventegrunn, settVentegrunn] = React.useState<IBehandlingsstegstilstand>();
-    const [visVenteModal, settVisVenteModal] = React.useState<boolean>(false);
-    const [harKravgrunnlag, settHarKravgrunnlag] = React.useState<boolean>();
-    const [behandlingILesemodus, settBehandlingILesemodus] = React.useState<boolean>();
+    const [behandling, settBehandling] = useState<Ressurs<IBehandling>>();
+    const [aktivtSteg, settAktivtSteg] = useState<IBehandlingsstegstilstand>();
+    const [ventegrunn, settVentegrunn] = useState<IBehandlingsstegstilstand>();
+    const [visVenteModal, settVisVenteModal] = useState<boolean>(false);
+    const [harKravgrunnlag, settHarKravgrunnlag] = useState<boolean>();
+    const [behandlingILesemodus, settBehandlingILesemodus] = useState<boolean>();
     const { fagsak } = useFagsak();
     const { request } = useHttp();
     const navigate = useNavigate();

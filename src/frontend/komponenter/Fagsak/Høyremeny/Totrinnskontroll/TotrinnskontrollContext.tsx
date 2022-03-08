@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
@@ -46,15 +46,15 @@ interface IProps {
 
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
     ({ fagsak, behandling }: IProps) => {
-        const [totrinnkontroll, settTotrinnkontroll] = React.useState<Ressurs<ITotrinnkontroll>>();
-        const [skjemaData, settSkjemaData] = React.useState<TotrinnStegSkjemaData[]>([]);
-        const [fatteVedtakILåsemodus, settFatteVedtakILåsemodus] = React.useState<boolean>(false);
-        const [nonUsedKey, settNonUsedKey] = React.useState<string>(Date.now().toString());
-        const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
-        const [senderInn, settSenderInn] = React.useState<boolean>(false);
-        const [fatteVedtakRespons, settFatteVedtakRespons] = React.useState<Ressurs<string>>();
-        const [disableBekreft, settDisableBekreft] = React.useState<boolean>(true);
-        const [sendTilSaksbehandler, settSendTilSaksbehandler] = React.useState<boolean>(true);
+        const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<ITotrinnkontroll>>();
+        const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
+        const [fatteVedtakILåsemodus, settFatteVedtakILåsemodus] = useState<boolean>(false);
+        const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
+        const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
+        const [senderInn, settSenderInn] = useState<boolean>(false);
+        const [fatteVedtakRespons, settFatteVedtakRespons] = useState<Ressurs<string>>();
+        const [disableBekreft, settDisableBekreft] = useState<boolean>(true);
+        const [sendTilSaksbehandler, settSendTilSaksbehandler] = useState<boolean>(true);
         const {
             visVenteModal,
             erStegBehandlet,
@@ -64,7 +64,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
         const { gjerTotrinnkontrollKall, sendInnFatteVedtak } = useBehandlingApi();
         const navigate = useNavigate();
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (visVenteModal === false) {
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.FATTE_VEDTAK));
                 settFatteVedtakILåsemodus(
@@ -74,7 +74,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             }
         }, [behandling]);
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (totrinnkontroll?.status === RessursStatus.SUKSESS) {
                 const totrinn = totrinnkontroll.data.totrinnsstegsinfo;
                 settSkjemaData(
@@ -93,7 +93,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             }
         }, [totrinnkontroll]);
 
-        React.useEffect(() => {
+        useEffect(() => {
             const stegIkkeVurdert = skjemaData.some(totrinn => !totrinn.godkjent);
             const alleGodkjent =
                 !stegIkkeVurdert &&

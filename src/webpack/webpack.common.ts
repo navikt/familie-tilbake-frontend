@@ -1,10 +1,12 @@
-const path = require('path');
+import path from 'path';
 
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin')
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
+import ESLintPlugin from 'eslint-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+// eslint-disable-next-line
+import webpack from 'webpack';
 
-module.exports = {
+const commonConfig: webpack.Configuration = {
     entry: ['./src/frontend/index.tsx'],
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.less'],
@@ -19,10 +21,8 @@ module.exports = {
         new CaseSensitivePathsPlugin(),
         new ESLintPlugin({
             extensions: [`ts`, `tsx`],
-            exclude: [
-                `/node_modules/`,
-              ],
-        })
+            exclude: [`/node_modules/`],
+        }),
     ],
     module: {
         rules: [
@@ -60,3 +60,5 @@ module.exports = {
         ],
     },
 };
+
+export default commonConfig;

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
@@ -16,10 +16,10 @@ interface IProps {
 
 const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
     ({ behandling, valgtMenyside }: IProps) => {
-        const [journalposter, settJournalposter] = React.useState<Ressurs<IJournalpost[]>>();
+        const [journalposter, settJournalposter] = useState<Ressurs<IJournalpost[]>>();
         const { request } = useHttp();
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (valgtMenyside === Menysider.DOKUMENTER) {
                 hentDokumentlisting();
             }

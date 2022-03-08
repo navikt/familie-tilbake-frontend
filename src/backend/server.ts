@@ -2,9 +2,10 @@ import './konfigurerApp';
 
 import path from 'path';
 
-import express, { NextFunction, Request, Response } from 'express';
+import { json, urlencoded, NextFunction, Request, Response } from 'express';
 import expressStaticGzip from 'express-static-gzip';
 import { v4 as uuidv4 } from 'uuid';
+// eslint-disable-next-line
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
@@ -12,6 +13,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import backend, { IApp, ensureAuthenticated, envVar } from '@navikt/familie-backend';
 import { logInfo } from '@navikt/familie-logging';
 
+import config from '../../src/webpack/webpack.dev';
 import { oboHistorikkConfig, oboTilbakeConfig, sessionConfig } from './config';
 import { prometheusTellere } from './metrikker';
 import {
@@ -24,9 +26,6 @@ import {
 } from './proxy';
 import setupRouter from './router';
 
-// eslint-disable-next-line
-const config = require('../../build_n_deploy/webpack/webpack.dev');
-
 const port = 8000;
 
 backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }: IApp) => {
@@ -34,14 +33,12 @@ backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }
 
     if (process.env.NODE_ENV === 'development') {
         const compiler = webpack(config);
-        // @ts-ignore
         middleware = webpackDevMiddleware(compiler, {
-            publicPath: config.output.publicPath,
+            publicPath: config.output?.publicPath,
             writeToDisk: true,
         });
 
         app.use(middleware);
-        // @ts-ignore
         app.use(webpackHotMiddleware(compiler));
     } else {
         app.use('/assets', expressStaticGzip(path.join(process.cwd(), 'frontend_production'), {}));
@@ -83,8 +80,8 @@ backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }
     app.use('/redirect', doRedirectProxy());
 
     // Sett opp express og router etter proxy. Spesielt viktig med tanke på større payloads
-    app.use(express.json({ limit: '200mb' }));
-    app.use(express.urlencoded({ limit: '200mb', extended: true }));
+    app.use(json({ limit: '200mb' }));
+    app.use(urlencoded({ limit: '200mb', extended: true }));
     app.use('/', setupRouter(azureAuthClient, router));
 
     app.listen(port, '0.0.0.0', () => {

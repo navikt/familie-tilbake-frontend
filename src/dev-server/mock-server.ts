@@ -1,5 +1,5 @@
-import express from 'express';
-import webpack from 'webpack';
+import express, { json, urlencoded, Router } from 'express';
+import { webpack } from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
@@ -21,9 +21,9 @@ const app = express();
 app.use(middleware);
 app.use(webpackHotMiddleware(compiler));
 
-app.use(express.json({ limit: '200mb' }));
-app.use(express.urlencoded({ limit: '200mb', extended: true }));
-app.use('/', setupRouter(express.Router()));
+app.use(json({ limit: '200mb' }));
+app.use(urlencoded({ limit: '200mb', extended: true }));
+app.use('/', setupRouter(Router()));
 
 app.listen(port, '0.0.0.0', () => {
     console.info('=== mock-server startet på http://localhost:%s/', port);
