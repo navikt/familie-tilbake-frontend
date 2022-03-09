@@ -203,7 +203,7 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Til godkjenning',
             })
         ).toBeDisabled();
 
@@ -236,14 +236,14 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Til godkjenning',
             })
         ).toBeEnabled();
 
         await waitFor(async () => {
             userEvent.click(
                 getByRole('button', {
-                    name: 'Bekreft',
+                    name: 'Til godkjenning',
                 })
             );
         });
@@ -326,7 +326,7 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Til godkjenning',
             })
         ).toBeDisabled();
 
@@ -361,14 +361,14 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Til godkjenning',
             })
         ).toBeEnabled();
 
         await waitFor(async () => {
             userEvent.click(
                 getByRole('button', {
-                    name: 'Bekreft',
+                    name: 'Til godkjenning',
                 })
             );
         });
@@ -446,7 +446,7 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Til godkjenning',
             })
         ).toBeDisabled();
 
@@ -481,14 +481,14 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Til godkjenning',
             })
         ).toBeEnabled();
 
         await waitFor(async () => {
             userEvent.click(
                 getByRole('button', {
-                    name: 'Bekreft',
+                    name: 'Til godkjenning',
                 })
             );
         });
@@ -571,7 +571,7 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Til godkjenning',
             })
         ).toBeDisabled();
 
@@ -620,14 +620,14 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Til godkjenning',
             })
         ).toBeEnabled();
 
         await waitFor(async () => {
             userEvent.click(
                 getByRole('button', {
-                    name: 'Bekreft',
+                    name: 'Til godkjenning',
                 })
             );
         });
@@ -695,7 +695,7 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Til godkjenning',
             })
         ).toBeEnabled();
 
@@ -791,7 +791,7 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             queryByRole('button', {
-                name: 'Bekreft',
+                name: 'Til godkjenning',
             })
         ).toBeFalsy();
 
