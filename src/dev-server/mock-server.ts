@@ -1,19 +1,17 @@
 import express, { json, urlencoded, Router } from 'express';
-import { webpack } from 'webpack';
+// eslint-disable-next-line
+import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
+import config from '../../src/webpack/webpack.dev';
 import { setupRouter } from './mock-routes';
-
-// eslint-disable-next-line
-const config = require('../../build_n_deploy/webpack/webpack.dev');
 
 const port = 8008;
 
 const compiler = webpack(config);
-// @ts-ignore
 const middleware = webpackDevMiddleware(compiler, {
-    publicPath: config.output.publicPath,
+    publicPath: config.output?.publicPath,
     writeToDisk: true,
 });
 
