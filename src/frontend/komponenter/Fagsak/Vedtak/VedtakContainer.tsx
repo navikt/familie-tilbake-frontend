@@ -143,7 +143,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                                 autoDisableVedSpinner
                                 disabled={senderInn || disableBekreft || harValideringsFeil}
                             >
-                                Bekreft
+                                Til godkjenning
                             </Knapp>
                         )}
                     </div>

@@ -17,6 +17,7 @@ const middleware = webpackDevMiddleware(compiler, {
 
 const app = express();
 app.use(middleware);
+// @ts-ignore
 app.use(webpackHotMiddleware(compiler));
 
 app.use(json({ limit: '200mb' }));
