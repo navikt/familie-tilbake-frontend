@@ -1,20 +1,20 @@
-const path = require('path');
+import path from 'path';
 
-const merge = require('webpack-merge');
-const TerserPlugin = require('terser-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const SentryCliPlugin = require('@sentry/webpack-plugin');
+import SentryCliPlugin from '@sentry/webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import { mergeWithRules } from 'webpack-merge';
 
-const baseConfig = require('./webpack.common');
+import baseConfig from './webpack.common';
 
-const config = merge.mergeWithRules({
+const prodConfig = mergeWithRules({
     module: {
         rules: {
             test: 'match',
             use: 'replace',
-        }
-    }
+        },
+    },
 })(baseConfig, {
     mode: 'production',
     entry: [path.join(process.cwd(), 'src/frontend/index.tsx')],
@@ -65,4 +65,4 @@ const config = merge.mergeWithRules({
     },
 });
 
-module.exports = config;
+export default prodConfig;

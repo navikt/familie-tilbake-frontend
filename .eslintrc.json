@@ -1,4 +1,4 @@
-module.exports = {
+{
     "extends": [
         "eslint:recommended",
         "plugin:import/typescript",
@@ -10,7 +10,7 @@ module.exports = {
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "prettier",
-        "plugin:prettier/recommended",
+        "plugin:prettier/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -22,7 +22,6 @@ module.exports = {
     },
     "plugins": [
         "@typescript-eslint",
-        "import",
         "flowtype",
         "jsx-a11y",
         "react",
@@ -42,7 +41,7 @@ module.exports = {
                 "tsx": "never"
             }
         ],
-        '@typescript-eslint/ban-ts-comment': 'off',
+        "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "prettier/prettier": "error",
         "@typescript-eslint/interface-name-prefix": "off",
@@ -97,6 +96,14 @@ module.exports = {
     "settings": {
         "react": {
             "version": "detect"
+        },
+        "import/parsers": {
+            "@typescript-eslint/parser": [ ".ts", ".tsx" ]
+        },
+        "import/resolver": {
+            "typescript": {
+                "alwaysTryTypes": true
+            }
         }
     }
 }

@@ -1,12 +1,13 @@
-const path = require('path');
+import path from 'path';
 
-const webpack = require('webpack');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-const merge = require('webpack-merge');
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+// eslint-disable-next-line
+import webpack from 'webpack';
+import { mergeWithRules } from 'webpack-merge';
 
-const baseConfig = require('./webpack.common');
+import baseConfig from './webpack.common';
 
-const config = merge.mergeWithRules({
+const devConfig: webpack.Configuration = mergeWithRules({
     module: {
         rules: {
             test: 'match',
@@ -37,4 +38,4 @@ const config = merge.mergeWithRules({
     },
 });
 
-module.exports = config;
+export default devConfig;

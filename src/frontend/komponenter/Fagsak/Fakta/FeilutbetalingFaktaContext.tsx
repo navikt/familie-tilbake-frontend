@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
@@ -35,25 +35,25 @@ interface IProps {
 const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
     ({ behandling, fagsak }: IProps) => {
         const [feilutbetalingFakta, settFeilutbetalingFakta] =
-            React.useState<Ressurs<IFeilutbetalingFakta>>();
-        const [skjemaData, settSkjemaData] = React.useState<FaktaSkjemaData>({ perioder: [] });
-        const [behandlePerioderSamlet, settBehandlePerioderSamlet] = React.useState<boolean>(false);
-        const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
-        const [visFeilmeldinger, settVisFeilmeldinger] = React.useState<boolean>(false);
-        const [senderInn, settSenderInn] = React.useState<boolean>(false);
-        const [feilmeldinger, settFeilmeldinger] = React.useState<Feilmelding[]>();
+            useState<Ressurs<IFeilutbetalingFakta>>();
+        const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({ perioder: [] });
+        const [behandlePerioderSamlet, settBehandlePerioderSamlet] = useState<boolean>(false);
+        const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
+        const [visFeilmeldinger, settVisFeilmeldinger] = useState<boolean>(false);
+        const [senderInn, settSenderInn] = useState<boolean>(false);
+        const [feilmeldinger, settFeilmeldinger] = useState<Feilmelding[]>();
         const { erStegBehandlet, visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
         const { gjerFeilutbetalingFaktaKall, sendInnFeilutbetalingFakta } = useBehandlingApi();
         const navigate = useNavigate();
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (visVenteModal === false) {
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.FAKTA));
                 hentFeilutbetalingFakta();
             }
         }, [behandling, visVenteModal]);
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (feilutbetalingFakta?.status === RessursStatus.SUKSESS) {
                 const data = feilutbetalingFakta.data;
                 const sortertePerioder = sorterFeilutbetaltePerioder(data.feilutbetaltePerioder);

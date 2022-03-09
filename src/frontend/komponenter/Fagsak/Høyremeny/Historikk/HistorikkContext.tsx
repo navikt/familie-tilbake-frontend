@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
@@ -23,12 +23,11 @@ interface IProps {
 
 const [HistorikkProvider, useHistorikk] = createUseContext(
     ({ fagsak, behandling, valgtMenyside }: IProps) => {
-        const [historikkInnslag, settHistorikkInnslag] =
-            React.useState<Ressurs<IHistorikkInnslag[]>>();
+        const [historikkInnslag, settHistorikkInnslag] = useState<Ressurs<IHistorikkInnslag[]>>();
         const navigate = useNavigate();
         const { request } = useHttp();
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (valgtMenyside === Menysider.HISTORIKK) {
                 hentHistorikkinnslag();
 
