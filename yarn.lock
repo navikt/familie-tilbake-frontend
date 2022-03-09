@@ -1607,10 +1607,10 @@
   dependencies:
     uuid "^8.3.2"
 
-"@navikt/familie-backend@7.0.1-alpha.2":
-  version "7.0.1-alpha.2"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-backend/7.0.1-alpha.2/931bc6ad1009e071899e8cc6637ae7c7fd569293dbf01fa4b936690cfcdb1c4c#21f89066e32b44ca99ab5809c7f7668dde3da169"
-  integrity sha512-h+i5bUT02SbTLt8g+ksX94eld9SHMDzf17fiGm4KMi7ehY3RvBFedaAra5Rt666WppuWzIttRg/PHkGemSZAmA==
+"@navikt/familie-backend@^7.0.1":
+  version "7.0.1"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-backend/7.0.1/c0d1255ff0270d465fd3c12f5abcaa7f425a2a83b06bbcfb43238ff598d9c0f2#22318de2bbfe74c62e8df8dec68053336b7494f8"
+  integrity sha512-xRUJ0JVCbnMwAV/7C6GXIUHJEHqC3uQ+CbyW0RxZwdr5yrDiAdNoUrx6FP88im23dRUDjOn2GyJdpgmzwROZaw==
   dependencies:
     "@navikt/familie-logging" "^3.0.0"
     "@types/connect-redis" "~0.0.18"
@@ -1846,16 +1846,16 @@
   dependencies:
     tslib "^2.0.0"
 
-"@peculiar/webcrypto@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@peculiar/webcrypto/-/webcrypto-1.3.1.tgz#cd152b5d41841b4296983425fbeb9defb085bb0a"
-  integrity sha512-BdzqCnzquMaoPYsFqWP/Q8SNslweb6A+oVaVbt9JBuXuvb528CEDUGVA0NSEZrgXj8jt++2kx3anChiKhOV3Nw==
+"@peculiar/webcrypto@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@peculiar/webcrypto/-/webcrypto-1.3.2.tgz#8ea98f1410068cf7da0c7e74758a21caa26caf8d"
+  integrity sha512-oUgNj+8oT7uROEMEpZZ3U+kZjyxj1KXuvA8P5kiMUveTya9eyS8KTqu/dzdEtYC3u7dvjknVz+0sUfkWOBHfQg==
   dependencies:
     "@peculiar/asn1-schema" "^2.0.44"
     "@peculiar/json-schema" "^1.1.12"
     pvtsutils "^1.2.2"
     tslib "^2.3.1"
-    webcrypto-core "^1.6.0"
+    webcrypto-core "^1.7.1"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.4":
   version "0.5.4"
@@ -1877,14 +1877,14 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.0.tgz#7f698254aadf921e48dda8c0a6b304026b8a9323"
   integrity sha512-JLo+Y592QzIE+q7Dl2pMUtt4q8SKYI5jDrZxrozEQxnGVOyYE+GWK9eLkwTaeN9DDctlaRAQ3TBmzZ1qdLE30A==
 
-"@sentry/browser@^6.18.1":
-  version "6.18.1"
-  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-6.18.1.tgz#7c61d53260a6cd8999a46a0bd3159773b93fd1ea"
-  integrity sha512-OZmk6RNcdQWxUkC8HBEruqpWUsaX/+pb1J/R5cDfHNeePLbDj9b8KFfs9QkgyZmmEP6l0Nu80TuDsdPF0q4uyw==
+"@sentry/browser@^6.18.2":
+  version "6.18.2"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-6.18.2.tgz#f980add635c242420a7f0c4dd3ed5668f1f39513"
+  integrity sha512-EsqKSNboi2gOiMuEwQranLucxrARi00y2vgUnaPXcqTKTlVlHDetoWHvq8/r29idA1JHGka5tDrwrmWccWIkrg==
   dependencies:
-    "@sentry/core" "6.18.1"
-    "@sentry/types" "6.18.1"
-    "@sentry/utils" "6.18.1"
+    "@sentry/core" "6.18.2"
+    "@sentry/types" "6.18.2"
+    "@sentry/utils" "6.18.2"
     tslib "^1.9.3"
 
 "@sentry/cli@^1.73.0":
@@ -1900,15 +1900,15 @@
     proxy-from-env "^1.1.0"
     which "^2.0.2"
 
-"@sentry/core@6.18.1", "@sentry/core@^6.18.1":
-  version "6.18.1"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-6.18.1.tgz#6d09c4f59b30b62d5d288b5f3f3af56f1f7e6336"
-  integrity sha512-9V8Q+3Asi+3RL67CSIMMZ9mjMsu2/hrpQszYStX7hPPpAZIlAKk2MT5B+na/r80iWKhy+3Ts6aDFF218QtnsVw==
+"@sentry/core@6.18.2", "@sentry/core@^6.18.2":
+  version "6.18.2"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-6.18.2.tgz#d27619b7b4a4b90e2cfdc254d40ee9d630b251b9"
+  integrity sha512-r5ad/gq5S/JHc9sd5CUhZQT9ojQ+f+thk/AoGeGawX/8HURZYAgIqD565d6FK0VsZEDkdRMl58z1Qon20h3y1g==
   dependencies:
-    "@sentry/hub" "6.18.1"
-    "@sentry/minimal" "6.18.1"
-    "@sentry/types" "6.18.1"
-    "@sentry/utils" "6.18.1"
+    "@sentry/hub" "6.18.2"
+    "@sentry/minimal" "6.18.2"
+    "@sentry/types" "6.18.2"
+    "@sentry/utils" "6.18.2"
     tslib "^1.9.3"
 
 "@sentry/core@^6.2.1":
@@ -1931,13 +1931,13 @@
     "@sentry/utils" "6.17.9"
     tslib "^1.9.3"
 
-"@sentry/hub@6.18.1":
-  version "6.18.1"
-  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-6.18.1.tgz#fcfb8cb84515efefaf4e48472305ea5a71455abb"
-  integrity sha512-+zGzgc/xX3an/nKA3ELMn9YD9VmqbNaNwWZ5/SjNUvzsYHh2UNZ7YzT8WawQsRVOXLljyCKxkWpFB4EchiYGbw==
+"@sentry/hub@6.18.2":
+  version "6.18.2"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-6.18.2.tgz#fdb8536f61899fd48f3d1b49a6957348ad729ec5"
+  integrity sha512-d0AugekMkbnN12b4EXMjseJxtLPc9S20DGobCPUb4oAQT6S2oDQEj1jwP6PQ5vtgyy+GMYWxBMgqAQ4pjVYISQ==
   dependencies:
-    "@sentry/types" "6.18.1"
-    "@sentry/utils" "6.18.1"
+    "@sentry/types" "6.18.2"
+    "@sentry/utils" "6.18.2"
     tslib "^1.9.3"
 
 "@sentry/minimal@6.17.9":
@@ -1949,24 +1949,24 @@
     "@sentry/types" "6.17.9"
     tslib "^1.9.3"
 
-"@sentry/minimal@6.18.1":
-  version "6.18.1"
-  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.18.1.tgz#eac73d2262589930aa0bb33e0e12380ac5b766a9"
-  integrity sha512-dm+0MuasWNi/LASvHX+09oCo8IBZY5WpMK8qXvQMnwQ9FVfklrjcfEI3666WORDCmeUhDCSeL2MbjPDm+AmPLg==
+"@sentry/minimal@6.18.2":
+  version "6.18.2"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.18.2.tgz#581c2fc030b9c89f1fcdc3e4855b91ce6c95db56"
+  integrity sha512-n7KYuo34W2LxE+3dnZ47of7XHuORINCnXq66XH72eoj67tf0XeWbIhEJrYGmoLRyRfoCYYrBLWiDl/uTjLzrzQ==
   dependencies:
-    "@sentry/hub" "6.18.1"
-    "@sentry/types" "6.18.1"
+    "@sentry/hub" "6.18.2"
+    "@sentry/types" "6.18.2"
     tslib "^1.9.3"
 
-"@sentry/tracing@^6.18.1":
-  version "6.18.1"
-  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-6.18.1.tgz#7cc54b328dd051102900ade53e907e7441426f83"
-  integrity sha512-OxozmSfxGx246Ae1XhO01I7ZWxO3briwMBh55E5KyjQb8fuS9gVE7Uy8ZRs5hhNjDutFAU7nMtC0zipfVxP6fg==
+"@sentry/tracing@^6.18.2":
+  version "6.18.2"
+  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-6.18.2.tgz#163ecf0042aeb300c12952a91784fda6630085ef"
+  integrity sha512-hg6NLqrqJ5sUPTyWEQ2RqdnhQVnyLtx8II0IyWxQLDWD8UCe3Mu6G7mroDtakPWcP+lWz6OnKfMEfuhMcxR8fw==
   dependencies:
-    "@sentry/hub" "6.18.1"
-    "@sentry/minimal" "6.18.1"
-    "@sentry/types" "6.18.1"
-    "@sentry/utils" "6.18.1"
+    "@sentry/hub" "6.18.2"
+    "@sentry/minimal" "6.18.2"
+    "@sentry/types" "6.18.2"
+    "@sentry/utils" "6.18.2"
     tslib "^1.9.3"
 
 "@sentry/types@6.17.9":
@@ -1974,10 +1974,10 @@
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.17.9.tgz#d579c33cde0301adaf8ff4762479ad017bf0dffa"
   integrity sha512-xuulX6qUCL14ayEOh/h6FUIvZtsi1Bx34dSOaWDrjXUOJHJAM7214uiqW1GZxPJ13YuaUIubjTSfDmSQ9CBzTw==
 
-"@sentry/types@6.18.1":
-  version "6.18.1"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.18.1.tgz#e2de38dd0da8096a5d22f8effc6756c919266ede"
-  integrity sha512-wp741NoBKnXE/4T9L723sWJ8EcNMxeTIT1smgNJOfbPwrsDICoYmGEt6JFa05XHpWBGI66WuNvnDjoHVeh6zhA==
+"@sentry/types@6.18.2":
+  version "6.18.2"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.18.2.tgz#f528fec8b75c19d5a6976004e71703184c6cf7be"
+  integrity sha512-WzpJf/Q5aORTzrSwer/As1NlO90dBAQpaHV2ikDDKqOyMWEgjKb5/4gh59p9gH8JMMnLetP1AvQel0fOj5UnUw==
 
 "@sentry/utils@6.17.9":
   version "6.17.9"
@@ -1987,12 +1987,12 @@
     "@sentry/types" "6.17.9"
     tslib "^1.9.3"
 
-"@sentry/utils@6.18.1":
-  version "6.18.1"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-6.18.1.tgz#1aa819502b042540612f4db7bcb86c7b176f5a6b"
-  integrity sha512-IFZmuvA+c5lDGlZEri13JSyUP0BHelzY0S4dcKxAzskPW+BtBdQDgYGV90iED1y+IRMLawWb34GF7HyJSouN1Q==
+"@sentry/utils@6.18.2":
+  version "6.18.2"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-6.18.2.tgz#c572a3ff49113e7dc4c97db1a18d117f199b9fff"
+  integrity sha512-EC619jesknyu4xpwud5WC/5odYLz6JUy7OSFy5405PpdGeh/m8XUvuJAx4zDx0Iz/Mlk0S1Md+ZcQwqkv39dkw==
   dependencies:
-    "@sentry/types" "6.18.1"
+    "@sentry/types" "6.18.2"
     tslib "^1.9.3"
 
 "@sentry/webpack-plugin@^1.18.8":
@@ -2602,6 +2602,11 @@
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
   integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
 
+"@types/web@^0.0.55":
+  version "0.0.55"
+  resolved "https://registry.yarnpkg.com/@types/web/-/web-0.0.55.tgz#0677cd86c6a4dd8c3592bd5f36435aa7e1b99028"
+  integrity sha512-YMH9aZrSJIMRMioCUwrgauI3iS/w2wRFN45Xxm0FE9Tt3hqaqkvOzjDFGsNjyKZzz7GJC0ilb+0tv59ytSUbrQ==
+
 "@types/webpack-env@^1.16.3":
   version "1.16.3"
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.16.3.tgz#b776327a73e561b71e7881d0cd6d34a1424db86a"
@@ -2788,11 +2793,6 @@
   dependencies:
     "@typescript-eslint/types" "5.12.1"
     eslint-visitor-keys "^3.0.0"
-
-"@typescript/lib-dom@npm:@types/web":
-  version "0.0.54"
-  resolved "https://registry.yarnpkg.com/@types/web/-/web-0.0.54.tgz#1e92b09b80212e7c2024c49fa9d455fab9057593"
-  integrity sha512-LYaiVWt3ZzwTb4Hj9eqDXjN+GI+YphBYJdo3/cQC+qICk1SdbXW1t3YImUaQYKf9//JEM9089ll+owgl/WKuHg==
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
@@ -10016,10 +10016,10 @@ snyk@^1.473.0:
   resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.848.0.tgz#ab290dc4e9978bdc64ac53c3b06254b1141d2f02"
   integrity sha512-hVPv6F+4o2OrTPj/qrdoJ5NffFi2zgo5Q1pHp/XgmP4alIE7TIeHsJnFFNrCpyNpMYCMOUrpc33c4ZQcCkaqAA==
 
-snyk@^1.856.0:
-  version "1.856.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.856.0.tgz#5b744c5b7dd9a57ee45414cd89f701174ad19ee4"
-  integrity sha512-pJc09EVtmErs6hFwHv3jPt1iHNqfkN4QqES20sl5eGRXQaXeG+HAQXx00QezSZDdZ9eXyEbtJdIsk0V/4WzWVA==
+snyk@^1.864.0:
+  version "1.864.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.864.0.tgz#7e44e2807e2e710cb4a15b0a68bb18c786f8aedb"
+  integrity sha512-/RDg1P+uR0czvTZduVUoDvR7hhxi5bjqfp50ZBdRSL6pth2QG3jR6TQJ/GyJeIYpZkXQclU8jRRzg8L+MQG7zA==
 
 source-map-js@^1.0.1, source-map-js@^1.0.2:
   version "1.0.2"
@@ -10949,14 +10949,14 @@ watchpack@^2.3.1:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
 
-webcrypto-core@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/webcrypto-core/-/webcrypto-core-1.6.0.tgz#46a8c09ebf8efada148c60f9e747c8c3d1e844d3"
-  integrity sha512-jBBhCjNrdqp2iMtbxiHPtBSWvBt/gxmtV6AfaQ/tWopxKX79WBUoydamDFObPsUIR7F3vLRJwCKCBLkCEpGe3A==
+webcrypto-core@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/webcrypto-core/-/webcrypto-core-1.7.1.tgz#eb30112c28d0f75442cfb52cae59676c7fe155ef"
+  integrity sha512-Gw2zLzYSJ7Imp5lLDu3CcWB5oTTACMDEE2PjoLfttGgIhd7BfackBdVgEzd9ZM/i65gpNq0+IelL0JZ48QwzNg==
   dependencies:
     "@peculiar/asn1-schema" "^2.0.44"
     "@peculiar/json-schema" "^1.1.12"
-    "@typescript/lib-dom" "npm:@types/web"
+    "@types/web" "^0.0.55"
     asn1js "^2.2.0"
     pvtsutils "^1.2.2"
     tslib "^2.3.1"
