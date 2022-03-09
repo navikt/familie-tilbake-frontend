@@ -9,10 +9,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
-"@axe-core/react@^4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@axe-core/react/-/react-4.4.0.tgz#7b5e6b0c1bf7cd0bcfeafb4d32d1fee6b7d98e38"
-  integrity sha512-ieVt1MbAFuE2KqjkDnqJR6vckST8WWWTiMGb3apmXD6TWAG2puV6oN1J8naUp2UpeYmnljdNyfi5Qt/f9c8h0w==
+"@axe-core/react@^4.4.1":
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/@axe-core/react/-/react-4.4.1.tgz#f9921bf185493a8c5ac5f49149a45650126f9b36"
+  integrity sha512-uOk7nQZ98C3sDt92Xa9BpuN/wVcd0iiwZ/RxrNk9dCdZJzc2cz9Q+zkubIZiQ+UlGK6yRhIaKMqqZhq9VtUgpw==
   dependencies:
     axe-core "^4.4.1"
     requestidlecallback "^0.3.0"
