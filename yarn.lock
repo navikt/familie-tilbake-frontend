@@ -1649,10 +1649,10 @@
     nav-frontend-knapper-style "^1.1.2"
     react-tooltip "^4.2.15"
 
-"@navikt/familie-form-elements@^4.0.0":
-  version "4.0.0"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-form-elements/4.0.0/44e15ff850b4ca2df6988e039dc6e8ea6fb8b648c387967809106e1a47e3afa5#f96574d6b605865138426afb87f96c9bd33d325f"
-  integrity sha512-LvrE8yE+h+c+OREOxDvsI6FsZKew01/UGyrF67HW4NOkCw1kKMvpiFns+vblvJFDeG+2Mh/+6P1vrQHsIWyj+A==
+"@navikt/familie-form-elements@^4.0.0", "@navikt/familie-form-elements@^4.0.1":
+  version "4.0.1"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-form-elements/4.0.1/f3cb92360aa185af196d811c89fafe4e0de4ff8e89248e72b5e3a9ae7d05cda6#da69687053f3d57dfffef5ed757174b4cb2a50f7"
+  integrity sha512-o38MfH7lO4vRfqRVjdbEuRvFGk7TgYLGG672plpxr9hUlrn0xiMjZIq5Pb+zJg/Ln+LBQdFUba5jDWU33NaAYg==
   dependencies:
     "@navikt/fnrvalidator" "^1.1.3"
     "@types/classnames" "^2.2.10"
