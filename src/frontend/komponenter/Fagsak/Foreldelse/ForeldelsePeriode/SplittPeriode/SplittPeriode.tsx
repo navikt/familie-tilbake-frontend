@@ -59,6 +59,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
         feilmelding,
         vedDatoEndring,
         sendInnSkjema,
+        validateNyPeriode,
     } = useDelOppPeriode(periode.periode.tom, behandling.behandlingId);
 
     React.useEffect(() => {
@@ -70,6 +71,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
     const onChangeDato = (nyVerdi?: string) => {
         vedDatoEndring((månedsslutt: string) => {
             const per: Periode = periode.periode;
+            validateNyPeriode(per, månedsslutt);
             const nyePerioder: ForeldelsePeriodeSkjemeData[] = [
                 {
                     ...periode,
