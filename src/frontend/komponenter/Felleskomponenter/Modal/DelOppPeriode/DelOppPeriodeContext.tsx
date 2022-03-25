@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import { useHttp } from '@navikt/familie-http';
+import { Periode as TidslinjePeriode } from '@navikt/familie-tidslinje';
 import { Ressurs, RessursStatus } from '@navikt/familie-typer';
-import { Periode as TidslinjePeriode } from '@navikt/helse-frontend-tidslinje';
 
 import { IBeregnSplittetPeriodeRespons, Periode } from '../../../../typer/feilutbetalingtyper';
 import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';

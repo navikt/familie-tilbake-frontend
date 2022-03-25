@@ -8,7 +8,7 @@ import { Column, Row } from 'nav-frontend-grid';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element } from 'nav-frontend-typografi';
 
-import { Periode } from '@navikt/helse-frontend-tidslinje';
+import { Periode } from '@navikt/familie-tidslinje';
 
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
