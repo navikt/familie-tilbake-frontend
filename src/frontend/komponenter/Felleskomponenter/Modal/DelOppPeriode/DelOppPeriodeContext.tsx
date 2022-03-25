@@ -46,6 +46,12 @@ export const useDelOppPeriode = (tom: string, behandlingId: string) => {
         });
     };
 
+    const validateNyPeriode = (periode: Periode, månedsslutt: string) => {
+        if (periode.fom > månedsslutt || månedsslutt > periode.tom) {
+            settFeilmelding('t.o.m. måned er utenfor perioden');
+        }
+    };
+
     return {
         visModal,
         settVisModal,
@@ -56,5 +62,6 @@ export const useDelOppPeriode = (tom: string, behandlingId: string) => {
         feilmelding,
         vedDatoEndring,
         sendInnSkjema,
+        validateNyPeriode,
     };
 };
