@@ -1743,6 +1743,13 @@
     deep-equal "^2.0.5"
     hashids "^2.2.8"
 
+"@navikt/familie-tidslinje@^1.1.0":
+  version "1.1.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-tidslinje/1.1.0/642bdb0e5ec66bf41ebdd1a7b1e64bf27569edee064f943dcc17e8d8270b0c26#a06aaebf4516a4faf4bc3efdb8d56aef5225a9e9"
+  integrity sha512-Lqp+VvcQuZOAM9sQkKFsMGXprYotsCpQ8T9Bbz4m30rILPE2z4QNaEzV9xndCbkt2hrYPH8YKXNrSkpO3M5A2g==
+  dependencies:
+    nanoid "^3.1.18"
+
 "@navikt/familie-typer@^5.0.0":
   version "5.0.0"
   resolved "https://npm.pkg.github.com/download/@navikt/familie-typer/5.0.0/457a7865af7d164c5ea26ba942fec62da74e02c0fdcd48165fc6c1c8c9d19f1c#9b59ac4a1b044de72586339c2e3e4af60c9baac4"
@@ -1779,13 +1786,6 @@
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/@navikt/fnrvalidator/-/fnrvalidator-1.1.4.tgz#22a776ba05a90c1ba5316a4f7567f9a45abcda04"
   integrity sha512-IroYFqa8PpzVxtIk6ifeEQBFzsI2QJX/FSIQyBtJvpp2D8Cb5Z9+hGNFppCILWR+QYbY8Dkk48la7K5fPGXeWQ==
-
-"@navikt/helse-frontend-tidslinje@^6.1.8":
-  version "6.1.8"
-  resolved "https://registry.yarnpkg.com/@navikt/helse-frontend-tidslinje/-/helse-frontend-tidslinje-6.1.8.tgz#34369fe4a6b0a90d0a807df326ae225b14d196fe"
-  integrity sha512-VXXWjkh/UT+/8K8iV8mQw2aR2/64/k7OpINJ9z9MUvS/n1Qv6qBEj8n3anz7FR8tyEVkc+jLFKbQ6QNybFQkJw==
-  dependencies:
-    nanoid "^3.1.18"
 
 "@navikt/nap-bem-utils@1.0.1":
   version "1.0.1"
@@ -8038,15 +8038,15 @@ ms@2.1.3, ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-nanoid@^3.1.18, nanoid@^3.1.30:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.2.0.tgz#62667522da6673971cca916a6d3eff3f415ff80c"
-  integrity sha512-fmsZYa9lpn69Ad5eDn7FMcnnSR+8R34W9qJEijxYhTbfOWzr22n1QxCMzXLK+ODyW2973V3Fux959iQoUxzUIA==
-
-nanoid@^3.3.1:
+nanoid@^3.1.18, nanoid@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.1.tgz#6347a18cac88af88f58af0b3594b723d5e99bb35"
   integrity sha512-n6Vs/3KGyxPQd6uO0eH4Bv0ojGSUvuLlIHtC3Y0kEO23YRge8H9x1GCzLn28YX0H66pMkxuaeESFq4tKISKwdw==
+
+nanoid@^3.1.30:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.2.0.tgz#62667522da6673971cca916a6d3eff3f415ff80c"
+  integrity sha512-fmsZYa9lpn69Ad5eDn7FMcnnSR+8R34W9qJEijxYhTbfOWzr22n1QxCMzXLK+ODyW2973V3Fux959iQoUxzUIA==
 
 nanomatch@^1.2.9:
   version "1.2.13"
