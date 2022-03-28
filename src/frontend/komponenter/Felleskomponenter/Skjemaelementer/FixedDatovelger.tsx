@@ -14,6 +14,10 @@ const StyledDatovelger = styled(FamilieTilbakeDatovelger)`
     .nav-datovelger__kalenderPortal__content {
         position: fixed;
     }
+
+    & div.nav-datovelger div.DayPicker-Caption {
+        padding: 0rem 0.5rem;
+    }
 `;
 
 const FixedDatovelger: React.FC<
