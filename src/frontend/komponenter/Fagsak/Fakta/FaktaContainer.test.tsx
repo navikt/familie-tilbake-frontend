@@ -238,7 +238,7 @@ describe('Tester: FaktaContainer', () => {
         });
     });
 
-    test('- vis utfylt skjema', async () => {
+    test('- vis utfylt skjema - Barnetrygd', async () => {
         setupMock(true, false, {
             ...feilutbetalingFakta,
             feilutbetaltePerioder: [
@@ -249,7 +249,7 @@ describe('Tester: FaktaContainer', () => {
                 },
                 {
                     ...perioder[1],
-                    hendelsestype: HendelseType.ANNET,
+                    hendelsestype: HendelseType.ANNET_BA,
                     hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
                 },
                 {
@@ -274,7 +274,7 @@ describe('Tester: FaktaContainer', () => {
         });
 
         expect(getByTestId('perioder.0.årsak')).toHaveValue(HendelseType.BOSATT_I_RIKET);
-        expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.ANNET);
+        expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.ANNET_BA);
         expect(getByTestId('perioder.2.årsak')).toHaveValue(HendelseType.BARNS_ALDER);
 
         expect(getByTestId('perioder.0.underårsak')).toHaveValue(
@@ -294,7 +294,61 @@ describe('Tester: FaktaContainer', () => {
         ).toBeTruthy();
     });
 
-    test('- vis utfylt skjema - lesevisning', async () => {
+    test('- vis utfylt skjema - Overgangsstønad', async () => {
+        setupMock(true, false, {
+            ...feilutbetalingFakta,
+            feilutbetaltePerioder: [
+                {
+                    ...perioder[0],
+                    hendelsestype: HendelseType.ENSLIG_FORSØRGER,
+                    hendelsesundertype: HendelseUndertype.UGIFT,
+                },
+                {
+                    ...perioder[1],
+                    hendelsestype: HendelseType.ANNET,
+                    hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
+                },
+                {
+                    ...perioder[2],
+                    hendelsestype: HendelseType.YRKESRETTET_AKTIVITET,
+                    hendelsesundertype: HendelseUndertype.ARBEID,
+                },
+            ],
+            begrunnelse: 'Dette er en test-begrunnelse',
+        });
+        const behandling = mock<IBehandling>();
+        const fagsak = mock<IFagsak>();
+
+        const { getByText, getByLabelText, getByTestId, getByRole } = render(
+            <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
+                <FaktaContainer ytelse={Ytelsetype.OVERGANGSSTØNAD} />
+            </FeilutbetalingFaktaProvider>
+        );
+
+        await waitFor(async () => {
+            expect(getByText('Fakta om feilutbetaling')).toBeTruthy();
+        });
+
+        expect(getByTestId('perioder.0.årsak')).toHaveValue(HendelseType.ENSLIG_FORSØRGER);
+        expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.ANNET);
+        expect(getByTestId('perioder.2.årsak')).toHaveValue(HendelseType.YRKESRETTET_AKTIVITET);
+
+        expect(getByTestId('perioder.0.underårsak')).toHaveValue(HendelseUndertype.UGIFT);
+        expect(getByTestId('perioder.1.underårsak')).toHaveValue(HendelseUndertype.ANNET_FRITEKST);
+        expect(getByTestId('perioder.2.underårsak')).toHaveValue(HendelseUndertype.ARBEID);
+
+        expect(getByLabelText('Forklar årsaken(e) til feilutbetalingen')).toHaveValue(
+            'Dette er en test-begrunnelse'
+        );
+
+        expect(
+            getByRole('button', {
+                name: 'Neste',
+            })
+        ).toBeTruthy();
+    });
+
+    test('- vis utfylt skjema - lesevisning - Barnetrygd', async () => {
         setupMock(true, true, {
             ...feilutbetalingFakta,
             feilutbetaltePerioder: [
@@ -305,7 +359,7 @@ describe('Tester: FaktaContainer', () => {
                 },
                 {
                     ...perioder[1],
-                    hendelsestype: HendelseType.ANNET,
+                    hendelsestype: HendelseType.ANNET_BA,
                     hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
                 },
                 {
@@ -335,6 +389,56 @@ describe('Tester: FaktaContainer', () => {
         expect(getByText('Annet fritekst')).toBeTruthy();
         expect(getByText('Barns alder')).toBeTruthy();
         expect(getByText('Barn over 6 år')).toBeTruthy();
+        expect(getByText('Dette er en test-begrunnelse')).toBeTruthy();
+
+        expect(
+            getByRole('button', {
+                name: 'Neste',
+            })
+        ).toBeTruthy();
+    });
+
+    test('- vis utfylt skjema - lesevisning - Overgangsstønad', async () => {
+        setupMock(true, true, {
+            ...feilutbetalingFakta,
+            feilutbetaltePerioder: [
+                {
+                    ...perioder[0],
+                    hendelsestype: HendelseType.ENSLIG_FORSØRGER,
+                    hendelsesundertype: HendelseUndertype.UGIFT,
+                },
+                {
+                    ...perioder[1],
+                    hendelsestype: HendelseType.ANNET,
+                    hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
+                },
+                {
+                    ...perioder[2],
+                    hendelsestype: HendelseType.YRKESRETTET_AKTIVITET,
+                    hendelsesundertype: HendelseUndertype.ARBEID,
+                },
+            ],
+            begrunnelse: 'Dette er en test-begrunnelse',
+        });
+        const behandling = mock<IBehandling>();
+        const fagsak = mock<IFagsak>();
+
+        const { getByText, getByRole } = render(
+            <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
+                <FaktaContainer ytelse={Ytelsetype.OVERGANGSSTØNAD} />
+            </FeilutbetalingFaktaProvider>
+        );
+
+        await waitFor(async () => {
+            expect(getByText('Fakta om feilutbetaling')).toBeTruthy();
+        });
+
+        expect(getByText('§15-4 Enslig forsørger')).toBeTruthy();
+        expect(getByText('Ugift (3. ledd)')).toBeTruthy();
+        expect(getByText('Annet')).toBeTruthy();
+        expect(getByText('Annet fritekst')).toBeTruthy();
+        expect(getByText('§15-6 Yrkesrettet aktivitet')).toBeTruthy();
+        expect(getByText('Arbeid')).toBeTruthy();
         expect(getByText('Dette er en test-begrunnelse')).toBeTruthy();
 
         expect(
