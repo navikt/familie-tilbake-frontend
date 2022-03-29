@@ -30,7 +30,9 @@ const hendelseTyperForYtelse = {
         HendelseType.DØDSFALL,
         HendelseType.DELT_BOSTED,
         HendelseType.BARNS_ALDER,
-        HendelseType.ANNET,
+        HendelseType.MEDLEMSKAP_BA,
+        HendelseType.UTVIDET,
+        HendelseType.ANNET_BA,
     ],
     OVERGANGSSTØNAD: [
         HendelseType.MEDLEMSKAP,
