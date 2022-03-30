@@ -249,7 +249,7 @@ describe('Tester: FaktaContainer', () => {
                 },
                 {
                     ...perioder[1],
-                    hendelsestype: HendelseType.ANNET_BA,
+                    hendelsestype: HendelseType.ANNET,
                     hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
                 },
                 {
@@ -274,7 +274,7 @@ describe('Tester: FaktaContainer', () => {
         });
 
         expect(getByTestId('perioder.0.årsak')).toHaveValue(HendelseType.BOSATT_I_RIKET);
-        expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.ANNET_BA);
+        expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.ANNET);
         expect(getByTestId('perioder.2.årsak')).toHaveValue(HendelseType.BARNS_ALDER);
 
         expect(getByTestId('perioder.0.underårsak')).toHaveValue(
@@ -359,7 +359,7 @@ describe('Tester: FaktaContainer', () => {
                 },
                 {
                     ...perioder[1],
-                    hendelsestype: HendelseType.ANNET_BA,
+                    hendelsestype: HendelseType.ANNET,
                     hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
                 },
                 {

@@ -32,7 +32,9 @@ const hendelseTyperForYtelse = {
         HendelseType.BARNS_ALDER,
         HendelseType.MEDLEMSKAP_BA,
         HendelseType.UTVIDET,
-        HendelseType.ANNET_BA,
+        HendelseType.SATSER,
+        HendelseType.SMÅBARNSTILLEGG,
+        HendelseType.ANNET,
     ],
     OVERGANGSSTØNAD: [
         HendelseType.MEDLEMSKAP,

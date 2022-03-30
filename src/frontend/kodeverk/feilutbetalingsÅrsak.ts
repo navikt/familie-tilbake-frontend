@@ -1,5 +1,6 @@
 export enum HendelseType {
     // Felles
+    ANNET = 'ANNET',
     DØDSFALL = 'DØDSFALL',
     // Barnetrygd
     BOR_MED_SØKER = 'BOR_MED_SØKER',
@@ -9,12 +10,12 @@ export enum HendelseType {
     BARNS_ALDER = 'BARNS_ALDER',
     MEDLEMSKAP_BA = 'MEDLEMSKAP_BA',
     UTVIDET = 'UTVIDET',
-    ANNET_BA = 'ANNET_BA',
+    SATSER = 'SATSER',
+    SMÅBARNSTILLEGG = 'SMÅBARNSTILLEGG',
     // Felles Enslig forsørger
     MEDLEMSKAP = 'MEDLEMSKAP',
     OPPHOLD_I_NORGE = 'OPPHOLD_I_NORGE',
     ENSLIG_FORSØRGER = 'ENSLIG_FORSØRGER',
-    ANNET = 'ANNET',
     // Overgangsstønad
     OVERGANGSSTØNAD = 'OVERGANGSSTØNAD',
     YRKESRETTET_AKTIVITET = 'YRKESRETTET_AKTIVITET',
@@ -29,6 +30,7 @@ export enum HendelseType {
 
 export const hendelsetyper: Record<HendelseType, string> = {
     // Felles
+    ANNET: 'Annet',
     DØDSFALL: 'Dødsfall',
     // Barnetrygd
     BOR_MED_SØKER: 'Bor med søker',
@@ -38,12 +40,12 @@ export const hendelsetyper: Record<HendelseType, string> = {
     BARNS_ALDER: 'Barns alder',
     MEDLEMSKAP_BA: 'Medlemskap',
     UTVIDET: 'Utvidet',
-    ANNET_BA: 'Annet',
+    SATSER: 'Satser',
+    SMÅBARNSTILLEGG: 'Småbarnstillegg',
     // Felles Enslig forsørger
     MEDLEMSKAP: '§15-2 Medlemskap',
     OPPHOLD_I_NORGE: '§15-3 Opphold i Norge',
     ENSLIG_FORSØRGER: '§15-4 Enslig forsørger',
-    ANNET: 'Annet',
     // Overgangsstønad
     OVERGANGSSTØNAD: '§15-5 Overgangsstønad',
     YRKESRETTET_AKTIVITET: '§15-6 Yrkesrettet aktivitet',
@@ -248,14 +250,9 @@ export const hendelseundertyper: Record<HendelseUndertype, string> = {
 
 const undertyper = {
     // Felles
+    ANNET: [HendelseUndertype.ANNET_FRITEKST],
     DØDSFALL: [HendelseUndertype.BARN_DØD, HendelseUndertype.BRUKER_DØD],
     // Barnetrygd
-    ANNET_BA: [
-        HendelseUndertype.ANNET_FRITEKST,
-        HendelseUndertype.SATSENDRING,
-        HendelseUndertype.SMÅBARNSTILLEGG_3_ÅR,
-        HendelseUndertype.SMÅBARNSTILLEGG_OVERGANGSSTØNAD,
-    ],
     BOR_MED_SØKER: [HendelseUndertype.BOR_IKKE_MED_BARN],
     BOSATT_I_RIKET: [
         HendelseUndertype.BARN_FLYTTET_FRA_NORGE,
@@ -294,6 +291,11 @@ const undertyper = {
         HendelseUndertype.EKTEFELLE_INSTITUSJON,
         HendelseUndertype.SAMBOER_INSTITUSJON,
     ],
+    SATSER: [HendelseUndertype.SATSENDRING],
+    SMÅBARNSTILLEGG: [
+        HendelseUndertype.SMÅBARNSTILLEGG_3_ÅR,
+        HendelseUndertype.SMÅBARNSTILLEGG_OVERGANGSSTØNAD,
+    ],
     // Felles Enslig forsørger
     MEDLEMSKAP: [HendelseUndertype.MEDLEM_SISTE_5_ÅR, HendelseUndertype.LOVLIG_OPPHOLD],
     OPPHOLD_I_NORGE: [
@@ -313,7 +315,6 @@ const undertyper = {
         HendelseUndertype.NÆRE_BOFORHOLD,
         HendelseUndertype.FORELDRE_LEVER_SAMMEN,
     ],
-    ANNET: [HendelseUndertype.ANNET_FRITEKST],
     // Overgangsstønad
     OVERGANGSSTØNAD: [HendelseUndertype.BARN_8_ÅR],
     YRKESRETTET_AKTIVITET: [
