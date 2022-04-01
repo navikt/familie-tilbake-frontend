@@ -1,12 +1,10 @@
 import * as React from 'react';
 
-import '@navikt/helse-frontend-tidslinje/lib/main.css';
-
 import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 
-import { Periode, Tidslinje } from '@navikt/helse-frontend-tidslinje';
+import { Periode, Tidslinje } from '@navikt/familie-tidslinje';
 
 const TidslinjeContainer = styled.div`
     border: 1px solid ${navFarger.navGra60};
@@ -16,7 +14,7 @@ const TidslinjeContainer = styled.div`
         max-width: max-content;
     }
 
-    button.behandlet {
+    & div.tidslinje .behandlet {
         background-color: ${navFarger.navGronnLighten60};
         border-color: ${navFarger.navGronnLighten40};
 
@@ -26,7 +24,7 @@ const TidslinjeContainer = styled.div`
         }
     }
 
-    button.avvist {
+    & div.tidslinje .avvist {
         background-color: ${navFarger.redErrorLighten40};
         border-color: ${navFarger.redErrorLighten20};
 
@@ -36,7 +34,7 @@ const TidslinjeContainer = styled.div`
         }
     }
 
-    button.ubehandlet {
+    & div.tidslinje .ubehandlet {
         background-color: ${navFarger.navOransjeLighten60};
         border-color: ${navFarger.navOransjeLighten40};
 
