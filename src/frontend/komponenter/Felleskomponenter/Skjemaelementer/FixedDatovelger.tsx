@@ -3,14 +3,9 @@ import * as React from 'react';
 import { DatepickerProps } from 'nav-datovelger/lib/Datepicker';
 import styled from 'styled-components';
 
-import { IDatovelgerProps } from '@navikt/familie-form-elements';
+import { FamilieDatovelger, IDatovelgerProps } from '@navikt/familie-form-elements';
 
-import {
-    FamilieTilbakeDatovelger,
-    FamilieTilbakeDatovelgerProps,
-} from './FamilieTilbakeDatovelger';
-
-const StyledDatovelger = styled(FamilieTilbakeDatovelger)`
+const StyledDatovelger = styled(FamilieDatovelger)`
     .nav-datovelger__kalenderPortal__content {
         position: fixed;
     }
@@ -20,9 +15,7 @@ const StyledDatovelger = styled(FamilieTilbakeDatovelger)`
     }
 `;
 
-const FixedDatovelger: React.FC<
-    FamilieTilbakeDatovelgerProps & IDatovelgerProps & DatepickerProps
-> = ({ ...props }) => {
+const FixedDatovelger: React.FC<IDatovelgerProps & DatepickerProps> = ({ ...props }) => {
     return <StyledDatovelger {...props} />;
 };
 

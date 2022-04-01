@@ -8,7 +8,7 @@ import { Knapp } from 'nav-frontend-knapper';
 import { Radio } from 'nav-frontend-skjema';
 import { Undertittel } from 'nav-frontend-typografi';
 
-import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
+import { FamilieDatovelger, FamilieRadioGruppe } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -20,10 +20,7 @@ import { IBehandling } from '../../../../typer/behandling';
 import { datoformatNorsk } from '../../../../utils';
 import { Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import {
-    FamilieTilbakeTextArea,
-    FamilieTilbakeDatovelger,
-} from '../../../Felleskomponenter/Skjemaelementer';
+import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
@@ -158,7 +155,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                 </Column>
                 <Column md="7">
                     {(erForeldet || erMedTilleggsfrist) && (
-                        <FamilieTilbakeDatovelger
+                        <FamilieDatovelger
                             id="foreldelsesfrist"
                             label={'Foreldelsesfrist'}
                             erLesesvisning={erLesevisning}
@@ -169,8 +166,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                             }}
                             valgtDato={skjema.felter.foreldelsesfrist.verdi}
                             placeholder={datoformatNorsk.DATO}
-                            harFeil={ugyldigForeldelsesfristValgt}
-                            feilmelding={
+                            feil={
                                 ugyldigForeldelsesfristValgt
                                     ? skjema.felter.foreldelsesfrist.feilmelding?.toString()
                                     : ''
@@ -180,7 +176,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                     {erMedTilleggsfrist && (
                         <>
                             <Spacer8 />
-                            <FamilieTilbakeDatovelger
+                            <FamilieDatovelger
                                 id="oppdagelsesDato"
                                 label={'Dato for når feilutbetaling ble oppdaget'}
                                 erLesesvisning={erLesevisning}
@@ -194,8 +190,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                     maxDate: new Date().toISOString(),
                                 }}
                                 placeholder={datoformatNorsk.DATO}
-                                harFeil={ugyldigOppdagelsesdatoValgt}
-                                feilmelding={
+                                feil={
                                     ugyldigOppdagelsesdatoValgt
                                         ? skjema.felter.oppdagelsesdato.feilmelding?.toString()
                                         : ''

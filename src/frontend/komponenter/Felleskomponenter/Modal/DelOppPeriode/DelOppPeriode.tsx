@@ -99,8 +99,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
                     maxDate: periode.periode.tom,
                 }}
                 onChange={(nyVerdi?: string) => onChangeDato(nyVerdi)}
-                harFeil={!!feilmelding}
-                feilmelding={feilmelding}
+                feil={feilmelding}
             />
         </UIModalWrapper>
     );

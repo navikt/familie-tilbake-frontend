@@ -136,10 +136,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     limitations={{ minDate: minTidsfrist(), maxDate: maxTidsfrist() }}
                     placeholder={datoformatNorsk.DATO}
                     valgtDato={skjema.felter.tidsfrist.verdi}
-                    harFeil={ugyldigDatoValgt}
-                    feilmelding={
-                        ugyldigDatoValgt ? skjema.felter.tidsfrist.feilmelding?.toString() : ''
-                    }
+                    feil={ugyldigDatoValgt ? skjema.felter.tidsfrist.feilmelding?.toString() : ''}
                     erLesesvisning={erVenterPåKravgrunnlag}
                 />
                 <Spacer20 />
