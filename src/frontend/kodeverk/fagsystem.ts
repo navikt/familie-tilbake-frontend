@@ -30,6 +30,10 @@ const hendelseTyperForYtelse = {
         HendelseType.DØDSFALL,
         HendelseType.DELT_BOSTED,
         HendelseType.BARNS_ALDER,
+        HendelseType.MEDLEMSKAP_BA,
+        HendelseType.UTVIDET,
+        HendelseType.SATSER,
+        HendelseType.SMÅBARNSTILLEGG,
         HendelseType.ANNET,
     ],
     OVERGANGSSTØNAD: [
