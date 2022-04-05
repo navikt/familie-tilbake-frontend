@@ -97,6 +97,13 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                 <Høyremeny fagsak={fagsak} behandling={behandling} />
             </StyledHøyremenyContainer>
         </>
+    ) : !harKravgrunnlag ? (
+        <>
+            <StyledMainContainer id={'fagsak-main'} />
+            <StyledHøyremenyContainer>
+                <Høyremeny fagsak={fagsak} behandling={behandling} />
+            </StyledHøyremenyContainer>
+        </>
     ) : harKravgrunnlag ? (
         <>
             <StyledVenstremenyContainer>
