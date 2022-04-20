@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
 import Lenke from 'nav-frontend-lenker';
 
 import { ExternalLink } from '@navikt/ds-icons';
@@ -23,7 +22,7 @@ const PlaceholderDiv = styled.div`
 const StyledContainer = styled.div`
     .visittkort {
         padding: 0 1rem;
-        border-bottom-color: ${navFarger.navGra20} !important;
+        border-bottom-color: var(--navds-global-color-gray-300);
 
         &__lenke {
             margin-right: 3rem;

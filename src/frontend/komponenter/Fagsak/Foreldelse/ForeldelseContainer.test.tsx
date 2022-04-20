@@ -236,7 +236,12 @@ describe('Tester: ForeldelseContainer', () => {
 
         expect(getByLabelText('Vurdering')).toHaveValue('Begrunnelse 1');
         expect(getByLabelText('Perioden er foreldet')).toBeChecked();
-        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
+        expect(
+            getByLabelText('Foreldelsesfrist', {
+                selector: 'input',
+                exact: false,
+            })
+        ).toHaveValue('01.01.2021');
 
         userEvent.click(
             getByRole('button', {
@@ -250,7 +255,12 @@ describe('Tester: ForeldelseContainer', () => {
         expect(
             getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
         ).toBeChecked();
-        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
+        expect(
+            getByLabelText('Foreldelsesfrist', {
+                selector: 'input',
+                exact: false,
+            })
+        ).toHaveValue('01.01.2021');
         expect(getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
             '24.12.2020'
         );

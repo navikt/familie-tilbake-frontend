@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
 import { Normaltekst } from 'nav-frontend-typografi';
 
 import { useBehandling } from '../../context/BehandlingContext';
@@ -30,7 +29,7 @@ const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
 const StyledVenstremenyContainer = styled.div`
     min-width: 10rem;
-    border-right: 1px solid ${navFarger.navGra20};
+    border-right: 1px solid var(--navds-global-color-gray-300);
     overflow: hidden;
 `;
 
@@ -45,7 +44,7 @@ const HenlagtContainer = styled.div`
 `;
 
 const StyledHøyremenyContainer = styled.div`
-    border-left: 1px solid ${navFarger.navGra20};
+    border-left: 1px solid var(--navds-global-color-gray-300);
     overflow-x: hidden;
     overflow-y: scroll;
 `;

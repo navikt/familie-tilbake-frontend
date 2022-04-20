@@ -1,12 +1,10 @@
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-
 export const TidslinjeIkonbakgrunn = styled.div`
     display: inline-block;
-    background-color: ${navFarger.navGra20};
+    background-color: var(--navds-global-color-gray-300);
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    padding-top: 4px;
+    padding-top: 3px;
 `;

@@ -2,13 +2,12 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
-import { Knapp } from 'nav-frontend-knapper';
 import { Radio } from 'nav-frontend-skjema';
-import { Undertittel } from 'nav-frontend-typografi';
 
-import { FamilieDatovelger, FamilieRadioGruppe } from '@navikt/familie-form-elements';
+import { ExternalLink } from '@navikt/ds-icons';
+import { BodyLong, Heading, HelpText, Link } from '@navikt/ds-react';
+import { FamilieDatovelger, FamilieRadioGruppe, FlexDiv } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -18,7 +17,7 @@ import {
 } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { datoformatNorsk } from '../../../../utils';
-import { Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
@@ -28,8 +27,16 @@ import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
 
 const StyledContainer = styled.div`
-    border: 1px solid ${navFarger.navGra60};
+    border: 1px solid var(--navds-global-color-gray-600);
     padding: 10px;
+`;
+
+const StyledHelpText = styled(HelpText)`
+    margin-left: 1rem;
+`;
+
+const StyledHelpTextContainer = styled.div`
+    max-width: 26rem;
 `;
 
 interface IProps {
@@ -73,11 +80,60 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
         skjema.visFeilmeldinger &&
         skjema.felter.oppdagelsesdato.valideringsstatus === Valideringsstatus.FEIL;
 
+    const lagForeldelsesfristHjelpetekst = () => {
+        if (skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.TILLEGGSFRIST) {
+            return (
+                <>
+                    <BodyLong size="small" spacing>
+                        NAVI trenger tid for fristavbrytende tiltak. Husk å legge til nok tid ved
+                        fastsettelse av frist. Se rutine for
+                        <Link
+                            href="https://navno.sharepoint.com/sites/fag-og-ytelser-fagsystemer/SitePages/Foreldelse-av-tilbakebetalingskrav.aspx"
+                            target="_blank"
+                        >
+                            foreldelse av tilbakebetalingskrav
+                            <ExternalLink />
+                        </Link>
+                    </BodyLong>
+                    <BodyLong size="small">
+                        Dette er kun en intern frist, og vil ikke komme i vedtaksbrevet.
+                    </BodyLong>
+                </>
+            );
+        } else if (skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.FORELDET) {
+            return (
+                <>
+                    <BodyLong size="small" spacing>
+                        NAVI trenger tid for fristavbrytende tiltak. Husk å legge til nok tid ved
+                        fastsettelse av frist.
+                    </BodyLong>
+                    <BodyLong size="small" spacing>
+                        Sett foreldelesfristen minimum 6 uker frem i tid. Se rutine for
+                        <Link
+                            href="https://navno.sharepoint.com/sites/fag-og-ytelser-fagsystemer/SitePages/Foreldelse-av-tilbakebetalingskrav.aspx"
+                            target="_blank"
+                        >
+                            foreldelse av tilbakebetalingskrav
+                            <ExternalLink />
+                        </Link>
+                    </BodyLong>
+                    <BodyLong size="small">
+                        Dette er kun en intern frist, og vil ikke komme i vedtaksbrevet.
+                    </BodyLong>
+                </>
+            );
+        } else {
+            return null;
+        }
+    };
+
     return (
         <StyledContainer>
             <Row>
                 <Column lg="4" md="7" sm="12">
-                    <Undertittel>Detaljer for valgt periode</Undertittel>
+                    <Heading spacing size="small" level="5">
+                        Detaljer for valgt periode
+                    </Heading>
                 </Column>
                 <Column lg="2" md="2" sm="6">
                     {!erLesevisning && (
@@ -154,31 +210,12 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                     </FamilieRadioGruppe>
                 </Column>
                 <Column md="7">
-                    {(erForeldet || erMedTilleggsfrist) && (
-                        <FamilieDatovelger
-                            id="foreldelsesfrist"
-                            label={'Foreldelsesfrist'}
-                            erLesesvisning={erLesevisning}
-                            onChange={(nyDato?: string) => {
-                                skjema.felter.foreldelsesfrist.validerOgSettFelt(
-                                    nyDato ? nyDato : ''
-                                );
-                            }}
-                            valgtDato={skjema.felter.foreldelsesfrist.verdi}
-                            placeholder={datoformatNorsk.DATO}
-                            feil={
-                                ugyldigForeldelsesfristValgt
-                                    ? skjema.felter.foreldelsesfrist.feilmelding?.toString()
-                                    : ''
-                            }
-                        />
-                    )}
                     {erMedTilleggsfrist && (
                         <>
-                            <Spacer8 />
                             <FamilieDatovelger
                                 id="oppdagelsesDato"
                                 label={'Dato for når feilutbetaling ble oppdaget'}
+                                description={'Datoen kommer i vedtaksbrevet'}
                                 erLesesvisning={erLesevisning}
                                 onChange={(nyDato?: string) => {
                                     skjema.felter.oppdagelsesdato.validerOgSettFelt(
@@ -196,7 +233,42 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                         : ''
                                 }
                             />
+                            <Spacer20 />
                         </>
+                    )}
+                    {(erForeldet || erMedTilleggsfrist) && (
+                        <FamilieDatovelger
+                            id="foreldelsesfrist"
+                            label={
+                                <FlexDiv>
+                                    Foreldelsesfrist
+                                    <StyledHelpText
+                                        title="Hjelpetekst foreldelsesfrist"
+                                        placement="right"
+                                    >
+                                        <StyledHelpTextContainer>
+                                            {lagForeldelsesfristHjelpetekst()}
+                                        </StyledHelpTextContainer>
+                                    </StyledHelpText>
+                                </FlexDiv>
+                            }
+                            description={
+                                !erMedTilleggsfrist ? 'Datoen kommer i vedtaksbrevet' : undefined
+                            }
+                            erLesesvisning={erLesevisning}
+                            onChange={(nyDato?: string) => {
+                                skjema.felter.foreldelsesfrist.validerOgSettFelt(
+                                    nyDato ? nyDato : ''
+                                );
+                            }}
+                            valgtDato={skjema.felter.foreldelsesfrist.verdi}
+                            placeholder={datoformatNorsk.DATO}
+                            feil={
+                                ugyldigForeldelsesfristValgt
+                                    ? skjema.felter.foreldelsesfrist.feilmelding?.toString()
+                                    : ''
+                            }
+                        />
                     )}
                 </Column>
             </Row>
@@ -207,18 +279,14 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                         <Column md="8">
                             <Navigering>
                                 <div>
-                                    <Knapp
-                                        type={'hoved'}
-                                        mini={true}
-                                        onClick={() => onBekreft(periode)}
-                                    >
+                                    <FTButton variant="primary" onClick={() => onBekreft(periode)}>
                                         Bekreft
-                                    </Knapp>
+                                    </FTButton>
                                 </div>
                                 <div>
-                                    <Knapp mini={true} onClick={lukkValgtPeriode}>
+                                    <FTButton variant="secondary" onClick={lukkValgtPeriode}>
                                         Lukk
-                                    </Knapp>
+                                    </FTButton>
                                 </div>
                             </Navigering>
                         </Column>

@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import ModalWrapper from 'nav-frontend-modal';
 
+import '@navikt/ds-css';
+import '@navikt/ds-css-internal';
 import { ISaksbehandler } from '@navikt/familie-typer';
 
 import { hentInnloggetBruker } from '../api/saksbehandler';
