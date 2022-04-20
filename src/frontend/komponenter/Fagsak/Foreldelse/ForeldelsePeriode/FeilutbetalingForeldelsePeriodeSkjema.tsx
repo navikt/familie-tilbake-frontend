@@ -240,17 +240,21 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                         <FamilieDatovelger
                             id="foreldelsesfrist"
                             label={
-                                <FlexDiv>
-                                    Foreldelsesfrist
-                                    <StyledHelpText
-                                        title="Hjelpetekst foreldelsesfrist"
-                                        placement="right"
-                                    >
-                                        <StyledHelpTextContainer>
-                                            {lagForeldelsesfristHjelpetekst()}
-                                        </StyledHelpTextContainer>
-                                    </StyledHelpText>
-                                </FlexDiv>
+                                erLesevisning ? (
+                                    <>Foreldelsesfrist</>
+                                ) : (
+                                    <FlexDiv>
+                                        Foreldelsesfrist
+                                        <StyledHelpText
+                                            title="Hjelpetekst foreldelsesfrist"
+                                            placement="right"
+                                        >
+                                            <StyledHelpTextContainer>
+                                                {lagForeldelsesfristHjelpetekst()}
+                                            </StyledHelpTextContainer>
+                                        </StyledHelpText>
+                                    </FlexDiv>
+                                )
                             }
                             description={
                                 !erMedTilleggsfrist ? 'Datoen kommer i vedtaksbrevet' : undefined

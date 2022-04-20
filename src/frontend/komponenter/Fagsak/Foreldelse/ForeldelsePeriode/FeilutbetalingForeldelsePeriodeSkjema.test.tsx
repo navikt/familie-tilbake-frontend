@@ -91,7 +91,12 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
 
         userEvent.click(getByLabelText('Perioden er foreldet'));
 
-        expect(queryByLabelText('Foreldelsesfrist')).toBeTruthy();
+        expect(
+            queryByLabelText('Foreldelsesfrist', {
+                selector: 'input',
+                exact: false,
+            })
+        ).toBeTruthy();
 
         userEvent.click(
             getByRole('button', {
@@ -101,7 +106,13 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         userEvent.type(getByLabelText('Vurdering'), 'begrunnelse');
-        userEvent.type(getByLabelText('Foreldelsesfrist'), '2020-09-14');
+        userEvent.type(
+            getByLabelText('Foreldelsesfrist', {
+                selector: 'input',
+                exact: false,
+            }),
+            '2020-09-14'
+        );
 
         userEvent.click(
             getByRole('button', {
@@ -128,7 +139,12 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
             getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
         );
 
-        expect(queryByLabelText('Foreldelsesfrist')).toBeTruthy();
+        expect(
+            queryByLabelText('Foreldelsesfrist', {
+                selector: 'input',
+                exact: false,
+            })
+        ).toBeTruthy();
         expect(queryByLabelText('Dato for når feilutbetaling ble oppdaget')).toBeTruthy();
 
         userEvent.click(
@@ -139,7 +155,13 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(3);
 
         userEvent.type(getByLabelText('Vurdering'), 'begrunnelse');
-        userEvent.type(getByLabelText('Foreldelsesfrist'), '2020-09-14');
+        userEvent.type(
+            getByLabelText('Foreldelsesfrist', {
+                selector: 'input',
+                exact: false,
+            }),
+            '2020-09-14'
+        );
         userEvent.type(getByLabelText('Dato for når feilutbetaling ble oppdaget'), '2020-06-14');
 
         userEvent.click(
@@ -168,14 +190,24 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByLabelText('Foreldelsesfrist')).toBeTruthy();
+        expect(
+            queryByLabelText('Foreldelsesfrist', {
+                selector: 'input',
+                exact: false,
+            })
+        ).toBeTruthy();
         expect(queryByLabelText('Dato for når feilutbetaling ble oppdaget')).toBeTruthy();
 
         expect(getByLabelText('Vurdering')).toHaveValue('Vurdert');
         expect(
             getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
         ).toBeChecked();
-        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('04.12.2019');
+        expect(
+            getByLabelText('Foreldelsesfrist', {
+                selector: 'input',
+                exact: false,
+            })
+        ).toHaveValue('04.12.2019');
         expect(getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
             '18.09.2019'
         );
