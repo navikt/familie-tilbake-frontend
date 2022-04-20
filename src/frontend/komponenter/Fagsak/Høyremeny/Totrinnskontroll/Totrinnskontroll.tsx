@@ -3,7 +3,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 import { Radio } from 'nav-frontend-skjema';
 
@@ -11,7 +10,7 @@ import { RessursStatus } from '@navikt/familie-typer';
 
 import { behandlingssteg } from '../../../../typer/behandling';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import {
     FamilieTilbakeTextArea,
     HorisontalFamilieRadioGruppe,
@@ -144,32 +143,30 @@ const Totrinnskontroll: React.FC = () => {
                     {!erLesevisning && (
                         <Navigering>
                             <div>
-                                <Knapp
-                                    type={'hoved'}
-                                    mini={true}
+                                <FTButton
+                                    size="small"
+                                    variant="primary"
                                     onClick={sendInnSkjema}
-                                    spinner={senderInn}
-                                    autoDisableVedSpinner
+                                    loading={senderInn}
                                     disabled={senderInn || disableBekreft || sendTilSaksbehandler}
                                 >
                                     Godkjenn
                                     <br />
                                     vedtaket
-                                </Knapp>
+                                </FTButton>
                             </div>
                             <div>
-                                <Knapp
-                                    type={'hoved'}
-                                    mini={true}
+                                <FTButton
+                                    size="small"
+                                    variant="primary"
                                     onClick={sendInnSkjema}
-                                    spinner={senderInn}
-                                    autoDisableVedSpinner
+                                    loading={senderInn}
                                     disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
                                 >
                                     Send til
                                     <br />
                                     saksbehandler
-                                </Knapp>
+                                </FTButton>
                             </div>
                         </Navigering>
                     )}

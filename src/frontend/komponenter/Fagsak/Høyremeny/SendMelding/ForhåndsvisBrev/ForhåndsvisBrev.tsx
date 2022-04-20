@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { Flatknapp } from 'nav-frontend-knapper';
-
+import { FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import PdfVisningModal from '../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { useSendMelding } from '../SendMeldingContext';
 import { useForhåndsvisBrev } from './useForhåndsvisBrev';
@@ -28,8 +27,9 @@ const ForhåndsvisBrev: React.FC<IProps> = () => {
 
     return (
         <>
-            <Flatknapp
-                mini
+            <FTButton
+                size="small"
+                variant="tertiary"
                 onClick={() => {
                     if (kanSendeSkjema()) {
                         settVisModal(true);
@@ -37,7 +37,7 @@ const ForhåndsvisBrev: React.FC<IProps> = () => {
                 }}
             >
                 Forhåndsvis
-            </Flatknapp>
+            </FTButton>
             {visModal && (
                 <PdfVisningModal
                     åpen={visModal}

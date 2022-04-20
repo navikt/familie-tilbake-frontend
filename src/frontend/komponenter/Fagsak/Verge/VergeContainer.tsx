@@ -3,7 +3,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
-import { Knapp } from 'nav-frontend-knapper';
 import { SkjemaGruppe } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
@@ -13,7 +12,7 @@ import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergeTyper, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
-import { Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { useVerge } from './VergeContext';
@@ -171,14 +170,13 @@ const VergeContainer: React.FC = () => {
                         <Column xs="12" md="6">
                             <Navigering>
                                 <div>
-                                    <Knapp
-                                        type={'hoved'}
-                                        mini={true}
-                                        onClick={() => sendInn()}
+                                    <FTButton
+                                        variant="primary"
+                                        onClick={sendInn}
                                         disabled={erLesevisning && !stegErBehandlet}
                                     >
                                         {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                                    </Knapp>
+                                    </FTButton>
                                 </div>
                             </Navigering>
                         </Column>
