@@ -117,9 +117,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                             <ExternalLink />
                         </Link>
                     </BodyLong>
-                    <BodyLong size="small">
-                        Dette er kun en intern frist, og vil ikke komme i vedtaksbrevet.
-                    </BodyLong>
+                    <BodyLong size="small">Denne fristen kommer i vedtaksbrevet.</BodyLong>
                 </>
             );
         } else {
