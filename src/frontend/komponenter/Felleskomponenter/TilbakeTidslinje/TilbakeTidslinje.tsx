@@ -53,7 +53,7 @@ interface IProps {
 const TilbakeTidslinje: React.FC<IProps> = ({ rader, onSelectPeriode }) => {
     return (
         <TidslinjeContainer>
-            <Tidslinje rader={rader} onSelectPeriode={onSelectPeriode} />
+            <Tidslinje kompakt rader={rader} onSelectPeriode={onSelectPeriode} />
         </TidslinjeContainer>
     );
 };

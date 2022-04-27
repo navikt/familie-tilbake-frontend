@@ -7,7 +7,7 @@ import { Radio } from 'nav-frontend-skjema';
 
 import { ExternalLink } from '@navikt/ds-icons';
 import { BodyLong, Heading, HelpText, Link } from '@navikt/ds-react';
-import { FamilieDatovelger, FamilieRadioGruppe, FlexDiv } from '@navikt/familie-form-elements';
+import { FamilieRadioGruppe, FlexDiv } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -19,7 +19,7 @@ import { IBehandling } from '../../../../typer/behandling';
 import { datoformatNorsk } from '../../../../utils';
 import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
+import { FamilieTilbakeTextArea, FTDatovelger } from '../../../Felleskomponenter/Skjemaelementer';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
@@ -210,7 +210,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                 <Column md="7">
                     {erMedTilleggsfrist && (
                         <>
-                            <FamilieDatovelger
+                            <FTDatovelger
                                 id="oppdagelsesDato"
                                 label={'Dato for når feilutbetaling ble oppdaget'}
                                 description={'Datoen kommer i vedtaksbrevet'}
@@ -235,7 +235,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                         </>
                     )}
                     {(erForeldet || erMedTilleggsfrist) && (
-                        <FamilieDatovelger
+                        <FTDatovelger
                             id="foreldelsesfrist"
                             label={
                                 erLesevisning ? (
