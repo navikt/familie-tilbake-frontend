@@ -2,14 +2,12 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { Knapp } from 'nav-frontend-knapper';
-
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
 import { IFagsak, målform } from '../../../../typer/fagsak';
-import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea, LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding, Mottakere } from './SendMeldingContext';
@@ -98,16 +96,15 @@ const SendMelding: React.FC<IProps> = ({ fagsak }) => {
             <Spacer20 />
             <Navigering>
                 <div>
-                    <Knapp
-                        type={'hoved'}
-                        mini
-                        disabled={!kanSende}
-                        spinner={senderInn}
-                        autoDisableVedSpinner
+                    <FTButton
+                        size="small"
+                        variant="primary"
                         onClick={() => sendBrev()}
+                        loading={senderInn}
+                        disabled={!kanSende}
                     >
                         Send brev
-                    </Knapp>
+                    </FTButton>
                 </div>
                 {kanSende && (
                     <div>

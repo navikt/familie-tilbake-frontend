@@ -3,7 +3,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
@@ -17,7 +16,12 @@ import {
     Behandlingårsak,
     IBehandling,
 } from '../../../typer/behandling';
-import { FTAlertStripe, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import {
+    FTAlertStripe,
+    FTButton,
+    Navigering,
+    Spacer20,
+} from '../../Felleskomponenter/Flytelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
 import VedtakPerioder from './VedtakPerioder';
@@ -135,23 +139,21 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                 <StyledNavigering>
                     <div>
                         {!erLesevisning && (
-                            <Knapp
-                                type={'hoved'}
-                                mini={true}
+                            <FTButton
+                                variant="primary"
                                 onClick={sendInnSkjema}
-                                spinner={senderInn}
-                                autoDisableVedSpinner
+                                loading={senderInn}
                                 disabled={senderInn || disableBekreft || harValideringsFeil}
                             >
                                 Til godkjenning
-                            </Knapp>
+                            </FTButton>
                         )}
                     </div>
                     <div>{kanViseForhåndsvisning && <ForhåndsvisVedtaksbrev />}</div>
                     <div>
-                        <Knapp type={'standard'} mini={true} onClick={gåTilForrige}>
+                        <FTButton variant="secondary" onClick={gåTilForrige}>
                             Forrige
-                        </Knapp>
+                        </FTButton>
                     </div>
                 </StyledNavigering>
             </StyledVedtak>

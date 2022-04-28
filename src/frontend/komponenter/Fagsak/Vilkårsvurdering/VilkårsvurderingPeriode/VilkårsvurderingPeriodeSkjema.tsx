@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
 import Hjelpetekst from 'nav-frontend-hjelpetekst';
-import { Knapp } from 'nav-frontend-knapper';
 import { PopoverOrientering } from 'nav-frontend-popover';
 import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst, Undertekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
@@ -26,7 +25,7 @@ import {
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatostring, isEmpty } from '../../../../utils';
-import { Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
@@ -431,19 +430,18 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                             <Navigering>
                                 <div>
                                     {!periode.foreldet && (
-                                        <Knapp
-                                            type={'hoved'}
-                                            mini={true}
+                                        <FTButton
+                                            variant="primary"
                                             onClick={() => onBekreft(periode)}
                                         >
                                             Bekreft
-                                        </Knapp>
+                                        </FTButton>
                                     )}
                                 </div>
                                 <div>
-                                    <Knapp mini={true} onClick={lukkValgtPeriode}>
+                                    <FTButton variant="secondary" onClick={lukkValgtPeriode}>
                                         Lukk
-                                    </Knapp>
+                                    </FTButton>
                                 </div>
                             </Navigering>
                         </Column>

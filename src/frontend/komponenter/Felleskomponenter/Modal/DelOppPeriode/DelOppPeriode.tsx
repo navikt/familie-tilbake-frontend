@@ -88,7 +88,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
             </Normaltekst>
             <Spacer8 />
             <TidslinjeContainer>
-                <Tidslinje rader={tidslinjeRader} />
+                <Tidslinje kompakt rader={tidslinjeRader} />
             </TidslinjeContainer>
             <FixedDatovelger
                 id={'splittDato'}

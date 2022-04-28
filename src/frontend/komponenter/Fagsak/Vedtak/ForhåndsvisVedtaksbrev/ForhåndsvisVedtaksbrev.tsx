@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { Flatknapp } from 'nav-frontend-knapper';
-
+import { FTButton } from '../../../Felleskomponenter/Flytelementer';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { useForhåndsvisVedtaksbrev } from './useForhåndsvisVedtaksbrev';
 
@@ -26,7 +25,9 @@ const ForhåndsvisVedtaksbrev: React.FC<IProps> = () => {
 
     return (
         <>
-            <Flatknapp onClick={() => settVisModal(true)}>Forhåndsvis vedtaksbrev</Flatknapp>
+            <FTButton variant="tertiary" onClick={() => settVisModal(true)}>
+                Forhåndsvis vedtaksbrev
+            </FTButton>
             {visModal && (
                 <PdfVisningModal
                     åpen={visModal}

@@ -2,18 +2,16 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Column, Row } from 'nav-frontend-grid';
-import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
+import { Alert, BodyShort, Heading } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IBehandling } from '../../../typer/behandling';
 import { finnDatoRelativtTilNå } from '../../../utils';
-import { Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { useFeilutbetalingForeldelse } from './FeilutbetalingForeldelseContext';
 import FeilutbetalingForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
@@ -49,24 +47,23 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
     if (erAutoutført) {
         return (
             <StyledForeldelse>
-                <Undertittel>Foreldelse</Undertittel>
-                <Spacer20 />
-                <Normaltekst>Foreldelsesloven §§ 2 og 3</Normaltekst>
-                <Spacer8 />
-                <Normaltekst>Automatisk vurdert</Normaltekst>
-                <Spacer20 />
+                <Heading spacing size="small" level="2">
+                    Foreldelse
+                </Heading>
+                <BodyShort spacing>Foreldelsesloven §§ 2 og 3</BodyShort>
+                <BodyShort spacing>Automatisk vurdert</BodyShort>
                 <Row>
                     <Column xs="10" md="4">
                         <Navigering>
                             <div>
-                                <Knapp type={'hoved'} onClick={gåTilNeste} mini={true}>
+                                <FTButton variant="primary" onClick={gåTilNeste}>
                                     Neste
-                                </Knapp>
+                                </FTButton>
                             </div>
                             <div>
-                                <Knapp onClick={gåTilForrige} mini={true}>
+                                <FTButton variant="secondary" onClick={gåTilForrige}>
                                     Forrige
-                                </Knapp>
+                                </FTButton>
                             </div>
                         </Navigering>
                     </Column>
@@ -79,8 +76,9 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
         case RessursStatus.SUKSESS:
             return (
                 <StyledForeldelse>
-                    <Undertittel>Foreldelse</Undertittel>
-                    <Spacer20 />
+                    <Heading spacing size="small" level="2">
+                        Foreldelse
+                    </Heading>
                     {(!erLesevisning || stegErBehandlet) && (
                         <>
                             <Steginformasjon
@@ -107,14 +105,14 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
         case RessursStatus.HENTER:
             return (
                 <HenterContainer>
-                    <Normaltekst>Henting av feilutbetalingen tar litt tid.</Normaltekst>
+                    <BodyShort spacing>Henting av feilutbetalingen tar litt tid.</BodyShort>
                     <NavFrontendSpinner type="XXL" />
                 </HenterContainer>
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
             return (
-                <AlertStripe children={feilutbetalingForeldelse.frontendFeilmelding} type="feil" />
+                <Alert variant="error" children={feilutbetalingForeldelse.frontendFeilmelding} />
             );
         default:
             return <div />;

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
-import { Knapp } from 'nav-frontend-knapper';
 import { Element } from 'nav-frontend-typografi';
 
 import { Periode } from '@navikt/familie-tidslinje';
@@ -13,7 +12,12 @@ import { Periode } from '@navikt/familie-tidslinje';
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import { FTAlertStripe, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import {
+    FTAlertStripe,
+    FTButton,
+    Navigering,
+    Spacer20,
+} from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
@@ -171,26 +175,24 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                     <Navigering>
                         <div>
                             {erAutoutført || (stegErBehandlet && erLesevisning) ? (
-                                <Knapp type={'hoved'} mini={true} onClick={gåTilNeste}>
+                                <FTButton variant="primary" onClick={gåTilNeste}>
                                     Neste
-                                </Knapp>
+                                </FTButton>
                             ) : (
-                                <Knapp
-                                    type={'hoved'}
-                                    mini={true}
+                                <FTButton
+                                    variant="primary"
                                     onClick={sendInnSkjema}
-                                    spinner={senderInn}
-                                    autoDisableVedSpinner
+                                    loading={senderInn}
                                     disabled={disableBekreft}
                                 >
                                     {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                                </Knapp>
+                                </FTButton>
                             )}
                         </div>
                         <div>
-                            <Knapp type={'standard'} mini={true} onClick={gåTilForrige}>
+                            <FTButton variant="secondary" onClick={gåTilForrige}>
                                 Forrige
-                            </Knapp>
+                            </FTButton>
                         </div>
                     </Navigering>
                 </Column>

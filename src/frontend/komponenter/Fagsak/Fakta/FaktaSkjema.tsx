@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { Column, Row } from 'nav-frontend-grid';
-import { Knapp } from 'nav-frontend-knapper';
 import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
@@ -9,7 +8,7 @@ import { FamilieCheckbox } from '@navikt/familie-form-elements';
 import { Ytelsetype } from '../../../kodeverk';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
-import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
@@ -142,22 +141,20 @@ const FaktaSkjema: React.FC<IProps> = ({
                 <Column xs="12" md="6">
                     <Navigering>
                         <div>
-                            <Knapp
-                                type={'hoved'}
-                                mini={true}
+                            <FTButton
+                                variant="primary"
                                 onClick={sendInnSkjema}
-                                spinner={senderInn}
-                                autoDisableVedSpinner
+                                loading={senderInn}
                                 disabled={erLesevisning && !stegErBehandlet}
                             >
                                 {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                            </Knapp>
+                            </FTButton>
                         </div>
                         {behandling.harVerge && (
                             <div>
-                                <Knapp type={'standard'} mini={true} onClick={gåTilForrige}>
+                                <FTButton variant="secondary" onClick={gåTilForrige}>
                                     Forrige
-                                </Knapp>
+                                </FTButton>
                             </div>
                         )}
                     </Navigering>
