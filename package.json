@@ -140,7 +140,7 @@
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/case-sensitive-paths-webpack-plugin": "^2.1.6",
-    "@types/jest": "^27.4.1",
+    "@types/jest": "^27.5.0",
     "@types/webpack-env": "^1.16.4",
     "@types/webpack-hot-middleware": "^2.25.6",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
