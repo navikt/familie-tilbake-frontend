@@ -54,7 +54,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
             >
                 {bruker.dødsdato && (
                     <DødsfallTag variant="info">
-                        Død {formatterDatostring(bruker.dødsdato)}
+                        Død: {formatterDatostring(bruker.dødsdato)}
                     </DødsfallTag>
                 )}
                 <PlaceholderDiv />
@@ -66,13 +66,13 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                         target="_blank"
                     >
                         <span>Gå til revurderingen</span>
-                        <ExternalLink />
+                        <ExternalLink aria-label="Gå til revurderingen" />
                     </Link>
                 )}
 
                 <Link className={'visittkort__lenke'} href={lagSaksoversiktUrl()} target="_blank">
                     <span>Gå til saksoversikt</span>
-                    <ExternalLink />
+                    <ExternalLink aria-label="Gå til saksoversikt" />
                 </Link>
 
                 <Behandlingsmeny fagsak={fagsak} />
