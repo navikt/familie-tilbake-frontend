@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import Etikett from 'nav-frontend-etiketter';
-import { Element } from 'nav-frontend-typografi';
+import { Label, Tag } from '@navikt/ds-react';
 
 const LabelFlex = styled.div`
     display: flex;
@@ -11,6 +10,10 @@ const LabelFlex = styled.div`
 
     .label {
         max-width: 80%;
+    }
+
+    .språkkode .navds-tag--info {
+        padding: 0.16rem var(--navds-spacing-2);
     }
 `;
 
@@ -23,12 +26,12 @@ const LabelMedSpråk: React.FC<IProps> = ({ label, språk }) => {
     return (
         <LabelFlex>
             <div className="label">
-                <Element>{label}</Element>
+                <Label size="small">{label}</Label>
             </div>
             <div className="språkkode">
-                <Etikett type="info" mini>
+                <Tag variant="info" size="small">
                     {språk}
-                </Etikett>
+                </Tag>
             </div>
         </LabelFlex>
     );

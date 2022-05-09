@@ -92,7 +92,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                             target="_blank"
                         >
                             foreldelse av tilbakebetalingskrav
-                            <ExternalLink />
+                            <ExternalLink aria-label="Gå til rutine for foreldelse" />
                         </Link>
                     </BodyLong>
                     <BodyLong size="small">
@@ -114,7 +114,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                             target="_blank"
                         >
                             foreldelse av tilbakebetalingskrav
-                            <ExternalLink />
+                            <ExternalLink aria-label="Gå til rutine for foreldelse" />
                         </Link>
                     </BodyLong>
                     <BodyLong size="small">Denne fristen kommer i vedtaksbrevet.</BodyLong>
@@ -246,6 +246,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                         <StyledHelpText
                                             title="Hjelpetekst foreldelsesfrist"
                                             placement="right"
+                                            aria-label="Hjelpetekst foreldelsesfrist"
                                         >
                                             <StyledHelpTextContainer>
                                                 {lagForeldelsesfristHjelpetekst()}
