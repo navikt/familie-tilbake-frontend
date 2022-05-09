@@ -5,4 +5,5 @@ export interface IPerson {
     navn: string;
     fødselsdato: string;
     kjønn: kjønnType;
+    dødsdato?: string;
 }

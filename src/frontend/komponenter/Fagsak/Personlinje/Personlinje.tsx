@@ -2,9 +2,8 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import Lenke from 'nav-frontend-lenker';
-
 import { ExternalLink } from '@navikt/ds-icons';
+import { Link, Tag } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 import { Visittkort } from '@navikt/familie-visittkort';
 
@@ -12,7 +11,7 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { IFagsak } from '../../../typer/fagsak';
 import { IPerson } from '../../../typer/person';
-import { hentAlder } from '../../../utils';
+import { formatterDatostring, hentAlder } from '../../../utils';
 import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
 
 const PlaceholderDiv = styled.div`
@@ -28,6 +27,13 @@ const StyledContainer = styled.div`
             margin-right: 3rem;
         }
     }
+`;
+
+const DødsfallTag = styled(Tag)`
+    color: var(--navds-global-color-white);
+    background-color: var(--navds-global-color-gray-900);
+    border-color: var(--navds-global-color-gray-900);
+    margin-left: 1.5rem;
 `;
 
 interface IProps {
@@ -46,29 +52,28 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                 kjønn={bruker.kjønn}
                 alder={hentAlder(bruker.fødselsdato)}
             >
+                {bruker.dødsdato && (
+                    <DødsfallTag variant="info">
+                        Død {formatterDatostring(bruker.dødsdato)}
+                    </DødsfallTag>
+                )}
                 <PlaceholderDiv />
 
                 {behandling?.status === RessursStatus.SUKSESS && (
-                    <Lenke
+                    <Link
                         className={'visittkort__lenke'}
                         href={lagLenkeTilRevurdering()}
-                        onMouseDown={e => e.preventDefault()}
                         target="_blank"
                     >
                         <span>Gå til revurderingen</span>
-                        <ExternalLink aria-label="Gå til revurderingen" />
-                    </Lenke>
+                        <ExternalLink />
+                    </Link>
                 )}
 
-                <Lenke
-                    className={'visittkort__lenke'}
-                    href={lagSaksoversiktUrl()}
-                    onMouseDown={e => e.preventDefault()}
-                    target="_blank"
-                >
+                <Link className={'visittkort__lenke'} href={lagSaksoversiktUrl()} target="_blank">
                     <span>Gå til saksoversikt</span>
-                    <ExternalLink aria-label="Gå til saksoversikt" />
-                </Lenke>
+                    <ExternalLink />
+                </Link>
 
                 <Behandlingsmeny fagsak={fagsak} />
             </Visittkort>
