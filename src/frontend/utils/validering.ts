@@ -37,6 +37,7 @@ export const hasValidText = (text: string): ValideringsResultat => {
 
 const _validerMaxLength =
     (length: number) =>
+    // eslint-disable-next-line
     (text: string | undefined): ValideringsResultat => {
         // @ts-ignore
         return isEmpty(text) || text.toString().trim().length <= length
@@ -46,6 +47,7 @@ const _validerMaxLength =
 
 const _validerMinLength =
     (length: number) =>
+    // eslint-disable-next-line
     (text: string | undefined): ValideringsResultat => {
         // @ts-ignore
         return isEmpty(text) || text.toString().trim().length >= length

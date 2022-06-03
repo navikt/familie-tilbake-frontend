@@ -129,7 +129,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
         <StyledContainer>
             <Row>
                 <Column lg="4" md="7" sm="12">
-                    <Heading spacing size="small" level="5">
+                    <Heading spacing size="small" level="2">
                         Detaljer for valgt periode
                     </Heading>
                 </Column>

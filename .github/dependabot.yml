@@ -13,6 +13,7 @@ updates:
     open-pull-requests-limit: 15
     registries: "*"
     ignore:
+      - dependency-name: "snyk" # kommer så ofte. oppdateres med yarn outdated og yarn upgrade
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
   - package-ecosystem: "docker"
