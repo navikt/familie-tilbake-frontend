@@ -2,26 +2,22 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
-import Modal from 'nav-frontend-modal';
-import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Undertittel } from 'nav-frontend-typografi';
-
+import { Modal, Loader, Heading, Alert } from '@navikt/ds-react';
 import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 const StyledModal = styled(Modal)`
-    width: 50rem;
-    height: 80%;
+    width: 90%;
+    height: 90%;
 
-    section {
+    div.navds-modal__content {
         height: 100%;
-        margin-right: 1.1rem;
+        margin-right: var(--navds-spacing-6);
     }
 
-    button {
-        margin-right: -0.7rem;
-        width: 1.5rem;
-        height: 1.5rem;
+    button.navds-modal__button {
+        right: var(--navds-spacing-1);
+        top: var(--navds-spacing-3);
+        padding: 4px;
     }
 `;
 
@@ -40,12 +36,14 @@ interface IProps {
 const PdfVisningModal: React.FC<IProps> = ({ onRequestClose, pdfdata, åpen }) => {
     return (
         <StyledModal
+            open={åpen}
+            onClose={onRequestClose}
+            shouldCloseOnOverlayClick={false}
             className={'pdfvisning-modal'}
-            isOpen={åpen}
-            onRequestClose={onRequestClose}
-            contentLabel={'pdfvisning'}
         >
-            <Dokument pdfdata={pdfdata} />
+            <Modal.Content>
+                <Dokument pdfdata={pdfdata} />
+            </Modal.Content>
         </StyledModal>
     );
 };
@@ -55,8 +53,14 @@ const Dokument: React.FC<{ pdfdata: Ressurs<string> }> = ({ pdfdata }) => {
         case RessursStatus.HENTER:
             return (
                 <div className={'pdfvisning-modal__spinner'}>
-                    <Undertittel children={'Innhenter dokument'} />
-                    <NavFrontendSpinner className={'pdfvisning-modal__spinner--item'} />
+                    <Heading spacing size="small" level="2" children={'Innhenter dokument'} />
+                    <Loader
+                        size="2xlarge"
+                        title="venter..."
+                        transparent={false}
+                        variant="neutral"
+                        className={'pdfvisning-modal__spinner--item'}
+                    />
                 </div>
             );
         case RessursStatus.SUKSESS:
@@ -65,7 +69,8 @@ const Dokument: React.FC<{ pdfdata: Ressurs<string> }> = ({ pdfdata }) => {
         case RessursStatus.FUNKSJONELL_FEIL:
         case RessursStatus.IKKE_TILGANG:
             return (
-                <AlertStripeFeil
+                <Alert
+                    variant="error"
                     className={'pdfvisning-modal__document--feil'}
                     children={pdfdata.frontendFeilmelding}
                 />
