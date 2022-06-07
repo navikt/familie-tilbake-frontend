@@ -1,9 +1,6 @@
 import * as React from 'react';
 
-import navFarger from 'nav-frontend-core';
-import { Column, Row } from 'nav-frontend-grid';
-import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Normaltekst } from 'nav-frontend-typografi';
+import { BodyShort, Cell, Grid, Loader } from '@navikt/ds-react';
 
 import UIModalWrapper from './UIModalWrapper';
 
@@ -17,19 +14,19 @@ const HenterBehandling: React.FC = () => {
             }}
             style={{
                 overlay: {
-                    backgroundColor: navFarger.navGra40,
+                    backgroundColor: 'var(--navds-global-color-gray-400)',
                 },
             }}
         >
-            <Row>
-                <Column md="10">
-                    <Normaltekst>Henting av behandlingen tar litt tid.</Normaltekst>
-                    <Normaltekst>Vennligst vent!</Normaltekst>
-                </Column>
-                <Column md="2">
-                    <NavFrontendSpinner type="L" />
-                </Column>
-            </Row>
+            <Grid>
+                <Cell xs={10}>
+                    <BodyShort>Henting av behandlingen tar litt tid.</BodyShort>
+                    <BodyShort>Vennligst vent!</BodyShort>
+                </Cell>
+                <Cell xs={2}>
+                    <Loader size="xlarge" title="venter..." transparent={false} variant="neutral" />
+                </Cell>
+            </Grid>
         </UIModalWrapper>
     );
 };
