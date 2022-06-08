@@ -1753,10 +1753,10 @@
   dependencies:
     uuid "^8.3.2"
 
-"@navikt/ds-react@^0.18.7":
-  version "0.18.7"
-  resolved "https://npm.pkg.github.com/download/@navikt/ds-react/0.18.7/cc851715328ba211806c99d5b18ca2a354a000f50e20265dd4f6f1306a0e32f1#4deff9ea66174f16a91ab0bbe9b36d7d39c6133f"
-  integrity sha512-wrEvzb6lJQPbowhwYO4vi6WH/w0hHNQbljoeEIx0b46X5220OG/jb6Iiwi2Eol1cgactlohloPHHZjWmILDS+Q==
+"@navikt/ds-react@^0.19.1":
+  version "0.19.1"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-react/0.19.1/68b714f8aa8228d71e9fac97c711a14c77f7bf2813112c02c68bb228fad534a3#fa10e49e3f76e9c98e64fb79c1161b69d8bb2634"
+  integrity sha512-CBryelnckJQVxjEdI1sT47evewLgPZ9VuD3bdMqVayEVrgmb4CBFg92XF8Q6TQb1R5K1sE5mOacUeKLqGTREUg==
   dependencies:
     "@floating-ui/react-dom" "0.6.0"
     "@material-ui/core" "^4.12.3"
