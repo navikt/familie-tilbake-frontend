@@ -52,7 +52,7 @@
     "@navikt/ds-css": "^0.17.3",
     "@navikt/ds-css-internal": "^0.7.3",
     "@navikt/ds-icons": "^0.8.13",
-    "@navikt/ds-react": "^0.18.7",
+    "@navikt/ds-react": "^0.19.12",
     "@navikt/familie-backend": "^7.0.1",
     "@navikt/familie-clipboard": "^4.0.1",
     "@navikt/familie-form-elements": "^4.0.2",
