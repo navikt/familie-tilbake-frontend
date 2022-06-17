@@ -49,7 +49,7 @@
     }
   },
   "dependencies": {
-    "@navikt/ds-css": "^0.17.3",
+    "@navikt/ds-css": "^0.18.14",
     "@navikt/ds-css-internal": "^0.7.3",
     "@navikt/ds-icons": "^0.8.13",
     "@navikt/ds-react": "^0.18.7",
