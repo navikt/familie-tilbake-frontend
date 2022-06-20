@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Flatknapp, Knapp } from 'nav-frontend-knapper';
+import styled from 'styled-components';
 
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
@@ -10,7 +10,7 @@ import {
     IBehandling,
 } from '../../../../../../typer/behandling';
 import { IFagsak, målform } from '../../../../../../typer/fagsak';
-import { Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
+import { FTButton, Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../../Felleskomponenter/Modal/UIModalWrapper';
 import {
     FamilieTilbakeTextArea,
@@ -18,6 +18,12 @@ import {
 } from '../../../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
+
+const StyledModal = styled(UIModalWrapper)`
+    & > button.navds-button {
+        margin: 0px var(--navds-spacing-1) 0px var(--navds-spacing-1);
+    }
+`;
 
 interface IProps {
     behandling: IBehandling;
@@ -50,7 +56,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
     const kanForhåndsvise = erKanForhåndsvise();
 
     return (
-        <UIModalWrapper
+        <StyledModal
             modal={{
                 tittel: 'Behandlingen henlegges',
                 visModal: visModal,
@@ -62,26 +68,27 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                         skjema={skjema}
                         kanForhåndsvise={kanForhåndsvise}
                     />,
-                    <Flatknapp
+                    <FTButton
+                        variant="tertiary"
                         key={'avbryt'}
-                        mini={true}
                         onClick={() => {
                             nullstillSkjema();
                             settVisModal(false);
                         }}
+                        size="small"
                     >
                         Avbryt
-                    </Flatknapp>,
-                    <Knapp
+                    </FTButton>,
+                    <FTButton
+                        variant="primary"
                         key={'bekreft'}
                         onClick={() => {
                             onBekreft();
                         }}
-                        type={'hoved'}
-                        mini={true}
+                        size="small"
                     >
                         Henlegg behandling
-                    </Knapp>,
+                    </FTButton>,
                 ],
             }}
             style={{
@@ -138,7 +145,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                     maxLength={200}
                 />
             </>
-        </UIModalWrapper>
+        </StyledModal>
     );
 };
 

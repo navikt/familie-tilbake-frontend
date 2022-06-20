@@ -28,6 +28,9 @@ const StyledModal = styled(Modal)`
                 .knapp:not(:first-child) {
                     margin-left: 1rem;
                 }
+                .navds-button:not(:first-child) {
+                    margin-left: 1rem;
+                }
             }
         }
     }
