@@ -56,12 +56,14 @@ export interface PeriodeMedTekst {
     særligeGrunnerAnnetAvsnitt?: string;
 }
 
+export interface Fritekstavsnitt {
+    oppsummeringstekst?: string;
+    perioderMedTekst: PeriodeMedTekst[];
+}
+
 export interface ForeslåVedtakStegPayload {
     '@type': string;
-    fritekstavsnitt: {
-        oppsummeringstekst?: string;
-        perioderMedTekst: PeriodeMedTekst[];
-    };
+    fritekstavsnitt: Fritekstavsnitt;
 }
 
 export interface TotrinnsStegVurdering {

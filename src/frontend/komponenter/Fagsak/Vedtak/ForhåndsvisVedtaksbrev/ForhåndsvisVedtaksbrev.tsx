@@ -13,7 +13,7 @@ const ForhåndsvisVedtaksbrev: React.FC<IProps> = () => {
         hentetForhåndsvisning,
         hentVedtaksbrev,
         visModal,
-        settVisModal,
+        kanViseForhåndsvisning,
         nullstillHentetForhåndsvisning,
     } = useForhåndsvisVedtaksbrev();
 
@@ -25,7 +25,7 @@ const ForhåndsvisVedtaksbrev: React.FC<IProps> = () => {
 
     return (
         <>
-            <FTButton variant="tertiary" onClick={() => settVisModal(true)}>
+            <FTButton variant="tertiary" onClick={() => kanViseForhåndsvisning()}>
                 Forhåndsvis vedtaksbrev
             </FTButton>
             {visModal && (
@@ -34,7 +34,6 @@ const ForhåndsvisVedtaksbrev: React.FC<IProps> = () => {
                     pdfdata={hentetForhåndsvisning}
                     onRequestClose={() => {
                         nullstillHentetForhåndsvisning();
-                        settVisModal(false);
                     }}
                 />
             )}

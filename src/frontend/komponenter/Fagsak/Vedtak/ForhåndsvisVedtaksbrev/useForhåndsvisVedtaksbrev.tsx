@@ -18,11 +18,18 @@ const useForhåndsvisVedtaksbrev = () => {
         byggTomRessurs()
     );
     const [visModal, settVisModal] = React.useState<boolean>(false);
-    const { hentBrevdata } = useFeilutbetalingVedtak();
+    const { hentBrevdata, validerAlleAvsnittOk } = useFeilutbetalingVedtak();
     const { forhåndsvisVedtaksbrev } = useDokumentApi();
 
     const nullstillHentetForhåndsvisning = () => {
         settHentetForhåndsvisning(byggTomRessurs);
+        settVisModal(false);
+    };
+
+    const kanViseForhåndsvisning = () => {
+        if (validerAlleAvsnittOk(false)) {
+            settVisModal(true);
+        }
     };
 
     const hentVedtaksbrev = () => {
@@ -51,7 +58,7 @@ const useForhåndsvisVedtaksbrev = () => {
 
     return {
         visModal,
-        settVisModal,
+        kanViseForhåndsvisning,
         hentetForhåndsvisning,
         hentVedtaksbrev,
         nullstillHentetForhåndsvisning,
