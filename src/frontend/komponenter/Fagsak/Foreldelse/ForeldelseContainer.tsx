@@ -3,9 +3,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 
-import { Alert, BodyShort, Heading } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -105,8 +104,13 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
         case RessursStatus.HENTER:
             return (
                 <HenterContainer>
-                    <BodyShort spacing>Henting av feilutbetalingen tar litt tid.</BodyShort>
-                    <NavFrontendSpinner type="XXL" />
+                    <BodyLong>Henting av feilutbetalingen tar litt tid.</BodyLong>
+                    <Loader
+                        size="2xlarge"
+                        title="henter..."
+                        transparent={false}
+                        variant="neutral"
+                    />
                 </HenterContainer>
             );
         case RessursStatus.FEILET:

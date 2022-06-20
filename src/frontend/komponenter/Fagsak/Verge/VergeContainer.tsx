@@ -4,9 +4,9 @@ import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 import { SkjemaGruppe } from 'nav-frontend-skjema';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
+import { BodyLong, Loader } from '@navikt/ds-react';
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -40,8 +40,13 @@ const VergeContainer: React.FC = () => {
             <Spacer20 />
             {henterData ? (
                 <div>
-                    <Normaltekst>Henting av vergeinformasjon tar litt tid.</Normaltekst>
-                    <NavFrontendSpinner type="XXL" />
+                    <BodyLong>Henting av vergeinformasjon tar litt tid.</BodyLong>
+                    <Loader
+                        size="2xlarge"
+                        title="henter..."
+                        transparent={false}
+                        variant="neutral"
+                    />
                 </div>
             ) : (
                 <>

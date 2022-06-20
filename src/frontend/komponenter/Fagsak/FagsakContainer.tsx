@@ -3,8 +3,7 @@ import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import AlertStripe from 'nav-frontend-alertstriper';
-
+import { Alert } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../context/BehandlingContext';
@@ -88,7 +87,7 @@ const FagsakContainer: React.FC = () => {
                             <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
                             {ventegrunn && (
-                                <FTAlertStripe children={venteBeskjed(ventegrunn)} type={'info'} />
+                                <FTAlertStripe children={venteBeskjed(ventegrunn)} variant="info" />
                             )}
                             <FagsakContainerContent className={ventegrunn ? 'venter' : ''}>
                                 <BehandlingContainer
@@ -102,28 +101,25 @@ const FagsakContainer: React.FC = () => {
                     );
                 case RessursStatus.IKKE_TILGANG:
                     return (
-                        <AlertStripe
+                        <Alert
                             children={`Du har ikke tilgang til å se denne behandlingen.`}
-                            type={'advarsel'}
+                            variant="warning"
                         />
                     );
                 case RessursStatus.FEILET:
                 case RessursStatus.FUNKSJONELL_FEIL:
-                    return <AlertStripe children={behandling.frontendFeilmelding} type={'feil'} />;
+                    return <Alert children={behandling.frontendFeilmelding} variant="error" />;
                 default:
                     return <div />;
             }
         }
         case RessursStatus.IKKE_TILGANG:
             return (
-                <AlertStripe
-                    children={`Du har ikke tilgang til å se denne saken.`}
-                    type={'advarsel'}
-                />
+                <Alert children={`Du har ikke tilgang til å se denne saken.`} variant="warning" />
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
-            return <AlertStripe children={fagsak.frontendFeilmelding} type={'feil'} />;
+            return <Alert children={fagsak.frontendFeilmelding} variant="error" />;
         default:
             return <div />;
     }

@@ -2,9 +2,8 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { Undertittel } from 'nav-frontend-typografi';
+import { Heading } from '@navikt/ds-react';
 
-import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import AvsnittSkjema, { avsnittKey } from './AvsnittSkjema';
 import { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
@@ -25,8 +24,9 @@ const VedtakSkjema: React.FC<IProps> = ({
 }) => {
     return (
         <StyledSkjema>
-            <Undertittel>Vedtaksbrev</Undertittel>
-            <Spacer8 />
+            <Heading size="small" level="2" spacing>
+                Vedtaksbrev
+            </Heading>
             {avsnitter.map(avsnitt => {
                 return (
                     <AvsnittSkjema

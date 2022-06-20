@@ -2,10 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import AlertStripe from 'nav-frontend-alertstriper';
-import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Normaltekst } from 'nav-frontend-typografi';
-
+import { Alert, BodyLong, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { hentDatoRegistrertSendt } from '../../../../utils';
@@ -39,13 +36,13 @@ const Dokumentlisting: React.FC = () => {
         case RessursStatus.HENTER:
             return (
                 <div>
-                    <Normaltekst>Henting av dokumenter tar litt tid.</Normaltekst>
-                    <NavFrontendSpinner type="L" />
+                    <BodyLong>Henting av dokumenter tar litt tid.</BodyLong>
+                    <Loader size="large" title="henter..." transparent={false} variant="neutral" />
                 </div>
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
-            return <AlertStripe children={journalposter.frontendFeilmelding} type="feil" />;
+            return <Alert children={journalposter.frontendFeilmelding} variant="error" />;
         default:
             return <div />;
     }
