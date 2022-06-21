@@ -3,10 +3,9 @@ import * as React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
-import { Element } from 'nav-frontend-typografi';
 
+import { BodyShort } from '@navikt/ds-react';
 import { Periode } from '@navikt/familie-tidslinje';
 
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
@@ -23,12 +22,8 @@ import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurd
 import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 
-const StyledAlertStripe = styled(FTAlertStripe)`
-    background-color: ${navFarger.navOransjeLighten80};
-
-    .alertstripe__tekst {
-        color: ${navFarger.navMorkGra};
-    }
+const ValideringsFeilmelding = styled(BodyShort)`
+    font-weight: bold;
 `;
 
 const finnClassNamePeriode = (
@@ -142,9 +137,9 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         <>
             {valideringsfeil && (
                 <>
-                    <StyledAlertStripe type="feil">
-                        <Element>{valideringsFeilmelding}</Element>
-                    </StyledAlertStripe>
+                    <FTAlertStripe variant="error">
+                        <ValideringsFeilmelding>{valideringsFeilmelding}</ValideringsFeilmelding>
+                    </FTAlertStripe>
                     <Spacer20 />
                 </>
             )}

@@ -2,11 +2,10 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import AlertStripe from 'nav-frontend-alertstriper';
 import navFarger from 'nav-frontend-core';
-import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
+import { Undertittel } from 'nav-frontend-typografi';
 
+import { Alert, BodyLong, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -68,13 +67,18 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
         case RessursStatus.HENTER:
             return (
                 <HenterContainer>
-                    <Normaltekst>Henting av feilutbetalingen tar litt tid.</Normaltekst>
-                    <NavFrontendSpinner type="XXL" />
+                    <BodyLong>Henting av feilutbetalingen tar litt tid.</BodyLong>
+                    <Loader
+                        size="2xlarge"
+                        title="henter..."
+                        transparent={false}
+                        variant="neutral"
+                    />
                 </HenterContainer>
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
-            return <AlertStripe children={feilutbetalingFakta.frontendFeilmelding} type="feil" />;
+            return <Alert children={feilutbetalingFakta.frontendFeilmelding} variant="error" />;
         default:
             return <div />;
     }

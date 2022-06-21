@@ -5,6 +5,7 @@ import {
     BrevPayload,
     ForhåndsvisHenleggelsesbrevPayload,
     ForhåndsvisVedtaksbrev,
+    Fritekstavsnitt,
 } from '../typer/api';
 
 const useDokumentApi = () => {
@@ -45,7 +46,24 @@ const useDokumentApi = () => {
         });
     };
 
-    return { bestillBrev, forhåndsvisBrev, forhåndsvisVedtaksbrev, forhåndsvisHenleggelsesbrev };
+    const lagreUtkastVedtaksbrev = (
+        behandlingId: string,
+        payload: Fritekstavsnitt
+    ): Promise<Ressurs<string>> => {
+        return request<Fritekstavsnitt, string>({
+            method: 'POST',
+            url: `${dokumentApiPrefix}/vedtaksbrevtekst/${behandlingId}/utkast`,
+            data: payload,
+        });
+    };
+
+    return {
+        bestillBrev,
+        forhåndsvisBrev,
+        forhåndsvisVedtaksbrev,
+        forhåndsvisHenleggelsesbrev,
+        lagreUtkastVedtaksbrev,
+    };
 };
 
 export { useDokumentApi };

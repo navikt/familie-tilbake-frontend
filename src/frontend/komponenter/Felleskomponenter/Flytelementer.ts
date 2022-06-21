@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
-import AlertStripe from 'nav-frontend-alertstriper';
-
-import { Button } from '@navikt/ds-react';
+import { Alert, Button } from '@navikt/ds-react';
 
 export const Spacer20 = styled.div`
     height: 20px;
@@ -19,8 +17,8 @@ export const Navigering = styled.div`
     justify-content: space-between;
 `;
 
-export const FTAlertStripe = styled(AlertStripe)`
-    .alertstripe__tekst {
+export const FTAlertStripe = styled(Alert)`
+    .navds-alert__wrapper {
         max-width: fit-content;
     }
 `;

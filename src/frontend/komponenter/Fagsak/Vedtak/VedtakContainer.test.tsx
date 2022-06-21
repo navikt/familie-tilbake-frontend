@@ -199,7 +199,7 @@ describe('Tester: VedtakContainer', () => {
             queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
-        ).toBeFalsy();
+        ).toBeTruthy();
 
         expect(
             getByRole('button', {
@@ -322,7 +322,7 @@ describe('Tester: VedtakContainer', () => {
             queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
-        ).toBeFalsy();
+        ).toBeTruthy();
 
         expect(
             getByRole('button', {
@@ -567,7 +567,7 @@ describe('Tester: VedtakContainer', () => {
             queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
-        ).toBeFalsy();
+        ).toBeTruthy();
 
         expect(
             getByRole('button', {

@@ -12,11 +12,13 @@ import {
 } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../api/behandling';
+import { useDokumentApi } from '../../../api/dokument';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import {
     ForeslåVedtakStegPayload,
     ForhåndsvisVedtaksbrev,
+    Fritekstavsnitt,
     PeriodeMedTekst,
 } from '../../../typer/api';
 import { Behandlingstype, Behandlingårsak, IBehandling } from '../../../typer/behandling';
@@ -95,6 +97,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
         const { visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
         const { gjerVedtaksbrevteksterKall, gjerBeregningsresultatKall, sendInnForeslåVedtak } =
             useBehandlingApi();
+        const { lagreUtkastVedtaksbrev } = useDokumentApi();
         const navigate = useNavigate();
 
         React.useEffect(() => {
@@ -197,7 +200,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             }
         };
 
-        const validerAlleAvsnittOk = () => {
+        const validerAlleAvsnittOk = (validerPåkrevetFritekst: boolean) => {
             const erRevurderingBortfaltBeløp =
                 behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
                 behandling.behandlingsårsakstype ===
@@ -207,7 +210,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 const nyeUnderavsnitt = avs.underavsnittsliste.map(uavs => {
                     let uavsFeil = false;
                     let feilmelding = undefined;
-                    if (uavs.fritekstPåkrevet && !uavs.fritekst) {
+                    if (uavs.fritekstPåkrevet && !uavs.fritekst && validerPåkrevetFritekst) {
                         uavsFeil = true;
                         feilmelding = 'Feltet er påkrevet';
                     }
@@ -234,24 +237,28 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             return !harFeil;
         };
 
+        const lagFritekstavsnitt = (): Fritekstavsnitt => {
+            const oppsummering = skjemaData.find(
+                avs => avs.avsnittstype === Avsnittstype.OPPSUMMERING
+            );
+            const oppsummeringTekst = oppsummering?.underavsnittsliste.find(
+                uavs => uavs.fritekstTillatt
+            )?.fritekst;
+            const perioderMedTekst: PeriodeMedTekst[] = hentPerioderMedTekst(skjemaData);
+
+            return {
+                oppsummeringstekst: oppsummeringTekst,
+                perioderMedTekst: perioderMedTekst,
+            };
+        };
+
         const sendInnSkjema = () => {
-            if (!harPåkrevetFritekstMenIkkeUtfylt && validerAlleAvsnittOk()) {
+            if (!harPåkrevetFritekstMenIkkeUtfylt && validerAlleAvsnittOk(true)) {
                 settSenderInn(true);
                 settForeslåVedtakRespons(undefined);
-                const oppsummering = skjemaData.find(
-                    avs => avs.avsnittstype === Avsnittstype.OPPSUMMERING
-                );
-                const oppsummeringTekst = oppsummering?.underavsnittsliste.find(
-                    uavs => uavs.fritekstTillatt
-                )?.fritekst;
-                const perioderMedTekst: PeriodeMedTekst[] = hentPerioderMedTekst(skjemaData);
-
                 const payload: ForeslåVedtakStegPayload = {
                     '@type': 'FORESLÅ_VEDTAK',
-                    fritekstavsnitt: {
-                        oppsummeringstekst: oppsummeringTekst,
-                        perioderMedTekst: perioderMedTekst,
-                    },
+                    fritekstavsnitt: lagFritekstavsnitt(),
                 };
                 sendInnForeslåVedtak(behandling.behandlingId, payload)
                     .then((respons: Ressurs<string>) => {
@@ -270,6 +277,32 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                         settSenderInn(false);
                         settForeslåVedtakRespons(
                             byggFeiletRessurs('Ukjent feil ved sending av vedtak')
+                        );
+                    });
+            }
+        };
+
+        const lagreUtkast = () => {
+            if (validerAlleAvsnittOk(false)) {
+                settSenderInn(true);
+                settForeslåVedtakRespons(undefined);
+                lagreUtkastVedtaksbrev(behandling.behandlingId, lagFritekstavsnitt())
+                    .then((respons: Ressurs<string>) => {
+                        settSenderInn(false);
+                        if (respons.status === RessursStatus.SUKSESS) {
+                            hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                        } else if (
+                            respons.status === RessursStatus.FEILET ||
+                            respons.status === RessursStatus.FUNKSJONELL_FEIL
+                        ) {
+                            settForeslåVedtakRespons(respons);
+                        }
+                    })
+                    .catch((error: AxiosError) => {
+                        console.log('Error ved mellomlagring av vedtak: ', error);
+                        settSenderInn(false);
+                        settForeslåVedtakRespons(
+                            byggFeiletRessurs('Ukjent feil ved mellomlagring av vedtak')
                         );
                     });
             }
@@ -303,6 +336,8 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             sendInnSkjema,
             hentBrevdata,
             foreslåVedtakRespons,
+            validerAlleAvsnittOk,
+            lagreUtkast,
         };
     }
 );

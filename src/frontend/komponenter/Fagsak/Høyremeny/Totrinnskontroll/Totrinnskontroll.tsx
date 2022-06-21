@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import AlertStripe from 'nav-frontend-alertstriper';
 import Lenke from 'nav-frontend-lenker';
 import { Radio } from 'nav-frontend-skjema';
 
+import { Alert } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { behandlingssteg } from '../../../../typer/behandling';
@@ -58,9 +58,9 @@ const Totrinnskontroll: React.FC = () => {
                         (fatteVedtakRespons.status === RessursStatus.FEILET ||
                             fatteVedtakRespons.status === RessursStatus.FUNKSJONELL_FEIL) && (
                             <>
-                                <AlertStripe type="feil">
+                                <Alert variant="error">
                                     {fatteVedtakRespons.frontendFeilmelding}
-                                </AlertStripe>
+                                </Alert>
                                 <Spacer20 />
                             </>
                         )}

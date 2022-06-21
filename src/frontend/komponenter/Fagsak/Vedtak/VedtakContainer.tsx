@@ -2,10 +2,9 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import AlertStripe from 'nav-frontend-alertstriper';
-import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element, Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
+import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
+import { Alert, BodyLong, BodyShort, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -16,12 +15,7 @@ import {
     Behandlingårsak,
     IBehandling,
 } from '../../../typer/behandling';
-import {
-    FTAlertStripe,
-    FTButton,
-    Navigering,
-    Spacer20,
-} from '../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
 import VedtakPerioder from './VedtakPerioder';
@@ -39,6 +33,21 @@ const StyledNavigering = styled(Navigering)`
     width: 90%;
 `;
 
+const StyledAlert = styled(Alert)`
+    width: 90%;
+    margin-bottom: var(--navds-spacing-3);
+`;
+
+const VarselbrevInfo = styled(BodyShort)`
+    font-weight: bold;
+`;
+
+const KnappeDiv = styled.div`
+    & button {
+        margin: 0px var(--navds-spacing-1) 0px var(--navds-spacing-1);
+    }
+`;
+
 interface IProps {
     behandling: IBehandling;
 }
@@ -53,8 +62,8 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
         senderInn,
         disableBekreft,
         sendInnSkjema,
-        harPåkrevetFritekstMenIkkeUtfylt,
         foreslåVedtakRespons,
+        lagreUtkast,
     } = useFeilutbetalingVedtak();
     const { behandlingILesemodus, aktivtSteg } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -75,8 +84,6 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
         avs.underavsnittsliste.some(uavs => uavs.harFeil)
     );
     const kanViseForhåndsvisning =
-        !harPåkrevetFritekstMenIkkeUtfylt &&
-        !harValideringsFeil &&
         (!erLesevisning ||
             (behandling.kanEndres &&
                 aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK)) &&
@@ -88,8 +95,8 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
     ) {
         return (
             <HenterContainer>
-                <Normaltekst>Henting av feilutbetalingen tar litt tid.</Normaltekst>
-                <NavFrontendSpinner type="XXL" />
+                <BodyLong>Henting av feilutbetalingen tar litt tid.</BodyLong>
+                <Loader size="2xlarge" title="henter..." transparent={false} variant="neutral" />
             </HenterContainer>
         );
     } else if (
@@ -98,26 +105,16 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
     ) {
         return (
             <StyledVedtak>
-                {foreslåVedtakRespons &&
-                    (foreslåVedtakRespons.status === RessursStatus.FEILET ||
-                        foreslåVedtakRespons.status === RessursStatus.FUNKSJONELL_FEIL) && (
-                        <>
-                            <AlertStripe type="feil">
-                                {foreslåVedtakRespons.frontendFeilmelding}
-                            </AlertStripe>
-                            <Spacer20 />
-                        </>
-                    )}
                 <Undertittel>Vedtak</Undertittel>
                 <Spacer20 />
                 {erRevurderingKlageKA && (
                     <>
-                        <FTAlertStripe
-                            type="info"
+                        <StyledAlert
+                            variant="info"
                             children={
-                                <Element>
+                                <VarselbrevInfo>
                                     Vedtaksbrev sendes ikke ut fra denne behandlingen.
-                                </Element>
+                                </VarselbrevInfo>
                             }
                         />
                         <Spacer20 />
@@ -136,6 +133,13 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                     erRevurderingBortfaltBeløp={erRevurderingBortfaltBeløp}
                 />
                 <Spacer20 />
+                {foreslåVedtakRespons &&
+                    (foreslåVedtakRespons.status === RessursStatus.FEILET ||
+                        foreslåVedtakRespons.status === RessursStatus.FUNKSJONELL_FEIL) && (
+                        <StyledAlert variant="error">
+                            {foreslåVedtakRespons.frontendFeilmelding}
+                        </StyledAlert>
+                    )}
                 <StyledNavigering>
                     <div>
                         {!erLesevisning && (
@@ -149,7 +153,19 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                             </FTButton>
                         )}
                     </div>
-                    <div>{kanViseForhåndsvisning && <ForhåndsvisVedtaksbrev />}</div>
+                    <KnappeDiv>
+                        {kanViseForhåndsvisning && <ForhåndsvisVedtaksbrev />}
+                        {!erLesevisning && !erRevurderingKlageKA && (
+                            <FTButton
+                                variant="tertiary"
+                                onClick={lagreUtkast}
+                                loading={senderInn}
+                                disabled={senderInn}
+                            >
+                                Lagre utkast
+                            </FTButton>
+                        )}
+                    </KnappeDiv>
                     <div>
                         <FTButton variant="secondary" onClick={gåTilForrige}>
                             Forrige
@@ -162,15 +178,15 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
         beregningsresultat?.status === RessursStatus.FEILET ||
         beregningsresultat?.status === RessursStatus.FUNKSJONELL_FEIL
     ) {
-        return <AlertStripe children={beregningsresultat.frontendFeilmelding} type="feil" />;
+        return <Alert children={beregningsresultat.frontendFeilmelding} variant="error" />;
     } else if (
         feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.FEILET ||
         feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.FUNKSJONELL_FEIL
     ) {
         return (
-            <AlertStripe
+            <Alert
                 children={feilutbetalingVedtaksbrevavsnitt.frontendFeilmelding}
-                type="feil"
+                variant="error"
             />
         );
     } else {
