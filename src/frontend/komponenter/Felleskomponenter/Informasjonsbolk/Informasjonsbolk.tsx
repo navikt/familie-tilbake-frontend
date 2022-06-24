@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { Element, Normaltekst } from 'nav-frontend-typografi';
+import { BodyShort, Heading } from '@navikt/ds-react';
 
 const StyledContainer = styled.div`
     max-width: 30rem;
@@ -30,10 +30,15 @@ const Informasjonsbolk: React.FC<IProps> = ({ informasjon }) => {
             {informasjon.map((info: IInformasjon) => (
                 <div key={info.label + info.tekst}>
                     <div>
-                        <Normaltekst children={info.label} />
+                        <BodyShort size="small">{info.label}</BodyShort>
                     </div>
                     <div>
-                        <Element title={info.tekstTitle} children={info.tekst} />
+                        <Heading
+                            size="xsmall"
+                            level="3"
+                            title={info.tekstTitle}
+                            children={info.tekst}
+                        />
                     </div>
                 </div>
             ))}
