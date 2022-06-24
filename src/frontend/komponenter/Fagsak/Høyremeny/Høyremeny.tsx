@@ -33,11 +33,16 @@ const StyledTabs = styled(Tabs.Tab)`
     }
 `;
 
+interface IToggleVisningHøyremenyProps {
+    åpenhøyremeny: boolean;
+    harventegrunn: boolean;
+}
+
 const ToggleVisningHøyremeny = styled(Button)`
     position: absolute;
-    margin-left: ${(props: { åpenhøyremeny: boolean }) =>
+    margin-left: ${(props: IToggleVisningHøyremenyProps) =>
         !props.åpenhøyremeny ? '-20px' : '-17px'};
-    top: 365px;
+    top: ${(props: IToggleVisningHøyremenyProps) => (props.harventegrunn ? '427px' : '365px')};
     width: 34px;
     min-width: 34px;
     height: 34px;
@@ -52,8 +57,11 @@ interface IProps {
 }
 
 const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
-    const { harVærtPåFatteVedtakSteget, åpenHøyremeny, settÅpenHøyremeny } = useBehandling();
+    const { harVærtPåFatteVedtakSteget, åpenHøyremeny, settÅpenHøyremeny, ventegrunn } =
+        useBehandling();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
+
+    const harVentegrunn = ventegrunn !== undefined;
 
     return (
         <>
@@ -67,6 +75,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         }}
                         size="small"
                         åpenhøyremeny={åpenHøyremeny ? 1 : 0}
+                        harventegrunn={harVentegrunn ? 1 : 0}
                     >
                         <Next aria-label="Skjul høyremeny" />
                     </ToggleVisningHøyremeny>
@@ -172,6 +181,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                         }}
                         size="small"
                         åpenhøyremeny={åpenHøyremeny ? 1 : 0}
+                        harventegrunn={harVentegrunn ? 1 : 0}
                     >
                         <Back aria-label="Åpne høyremeny" />
                     </ToggleVisningHøyremeny>
