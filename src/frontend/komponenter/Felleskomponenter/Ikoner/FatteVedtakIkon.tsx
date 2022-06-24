@@ -1,6 +1,11 @@
 import * as React from 'react';
 
-const FatteVedtakIkon: React.FC = () => {
+interface IProps {
+    width?: number;
+    height?: number;
+}
+
+const FatteVedtakIkon: React.FC<IProps> = ({ height = 24, width = 24 }) => {
     return (
         <svg
             version="1.1"
@@ -9,8 +14,8 @@ const FatteVedtakIkon: React.FC = () => {
             xmlnsXlink="http://www.w3.org/1999/xlink"
             x="0px"
             y="0px"
-            width="24px"
-            height="24px"
+            width={`${width}px`}
+            height={`${height}px`}
             viewBox="0 0 24 24"
             enableBackground="new 0 0 24 24"
             xmlSpace="preserve"

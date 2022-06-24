@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
+import { BodyShort, Heading } from '@navikt/ds-react';
 
 import { ytelsetype } from '../../../../kodeverk';
 import {
@@ -18,22 +17,17 @@ import { formatterDatostring } from '../../../../utils';
 import Informasjonsbolk from '../../../Felleskomponenter/Informasjonsbolk/Informasjonsbolk';
 
 const Container = styled.div`
-    border: 1px solid ${navFarger.navGra40};
-    border-left: 0.5rem solid ${navFarger.navGra40};
+    border: 1px solid var(--navds-global-color-gray-400);
+    border-left: 0.5rem solid var(--navds-global-color-gray-400);
     border-radius: 0.25rem;
-    padding: 0.5rem;
-    margin: 0.5rem;
-    border-left-color: ${navFarger.navGra40};
-`;
-
-const StyledUndertittel = styled(Undertittel)`
-    font-size: 1rem;
-    margin-bottom: 0.2rem;
+    padding: var(--navds-spacing-2);
+    margin: var(--navds-spacing-2);
+    margin-bottom: var(--navds-spacing-8);
 `;
 
 const StyledHr = styled.hr`
     border: none;
-    border-bottom: 1px solid ${navFarger.navLysGra};
+    border-bottom: 1px solid var(--navds-global-color-gray-100);
 `;
 
 interface IProps {
@@ -48,8 +42,10 @@ const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
             : 'Tilbakekreving';
     return (
         <Container>
-            <StyledUndertittel>{tittel}</StyledUndertittel>
-            <Normaltekst>{ytelsetype[fagsak.ytelsestype]}</Normaltekst>
+            <Heading size="xsmall" level="2">
+                {tittel}
+            </Heading>
+            <BodyShort>{ytelsetype[fagsak.ytelsestype]}</BodyShort>
             <StyledHr />
             {behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING && (
                 <Informasjonsbolk
@@ -67,6 +63,7 @@ const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
                     {
                         label: 'Behandlingsstatus',
                         tekst: behandlingsstatuser[behandling.status],
+                        tekstTitle: 'Test',
                     },
                     {
                         label: 'Resultat',
