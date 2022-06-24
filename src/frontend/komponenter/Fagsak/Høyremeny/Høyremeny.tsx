@@ -2,65 +2,48 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-import { Flatknapp } from 'nav-frontend-knapper';
-
-import { Send, Folder, Clock } from '@navikt/ds-icons';
+import { Send, Folder, Clock, Back, Next, Decision } from '@navikt/ds-icons';
+import { Button, Tabs } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Behandlingssteg, Behandlingstatus, IBehandling } from '../../../typer/behandling';
+import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import { Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
-import { FatteVedtakIkon } from '../../Felleskomponenter/Ikoner';
 import Behandlingskort from './Behandlingskort/Behandlingskort';
 import Menykontainer, { Menysider } from './Menykontainer';
 
 const StyledContainer = styled.div`
-    width: 25rem;
+    width: ${(props: { værtPåFatteVedtakSteget: boolean }) =>
+        props.værtPåFatteVedtakSteget ? '28rem' : '22rem'};
 `;
 
 const HøyremenyContainer = styled.div`
     padding: 0 10px 0 10px;
+    margin-top: var(--navds-spacing-4);
 `;
 
-const Høyremenyvalg = styled.div`
+const StyledTabList = styled(Tabs.List)`
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    font-size: 12px;
-    color: ${navFarger.navBla};
+    justify-content: center;
+    width: 100%;
 `;
 
-const Høyremenyknapp = styled(Flatknapp)`
-    flex-direction: column;
-    font-weight: normal;
-    text-transform: none;
-    letter-spacing: inherit;
-    padding: 5px 1rem 5px 1rem;
+const StyledTabs = styled(Tabs.Tab)`
+    & span {
+        font-size: 1rem;
+    }
+`;
 
-    &.valgt {
-        border-bottom: 2px solid ${navFarger.navBla};
-        background-color: ${navFarger.navLysGra};
-        border-radius: 5px 5px 0px 0px;
-    }
-    &.knapp--disabled {
-        background-color: ${navFarger.navBla};
-        opacity: 20%;
-        border-color: ${navFarger.navBla};
-        border-radius: 5px 5px 0px 0px;
-    }
-    &:hover {
-        border-radius: 5px 5px 0px 0px;
-
-        &.valgt {
-            background-color: ${navFarger.navLysGra};
-        }
-        &.knapp--disabled {
-            background-color: ${navFarger.navBla};
-            opacity: 20%;
-            border-color: ${navFarger.navBla};
-        }
-    }
+const ToggleVisningHøyremeny = styled(Button)`
+    position: absolute;
+    margin-left: ${(props: { åpenhøyremeny: boolean }) =>
+        !props.åpenhøyremeny ? '-20px' : '-17px'};
+    top: 365px;
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    padding: 0px;
+    border-radius: 50%;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 `;
 
 interface IProps {
@@ -69,78 +52,132 @@ interface IProps {
 }
 
 const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
-    const [valgtMenyside, settValgtMenyside] = React.useState<Menysider>();
-    const [værtPåFatteVedtakSteget, settVærtPåFatteVedtakSteget] = React.useState<boolean>(false);
-    const { aktivtSteg, harVærtPåFatteVedtakSteget } = useBehandling();
-
-    React.useEffect(() => {
-        if (harVærtPåFatteVedtakSteget()) {
-            settVærtPåFatteVedtakSteget(true);
-            settValgtMenyside(Menysider.TOTRINN);
-        } else {
-            settValgtMenyside(Menysider.HISTORIKK);
-        }
-    }, [behandling]);
-
-    const disableSendMelding =
-        behandling.status === Behandlingstatus.AVSLUTTET ||
-        aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK ||
-        aktivtSteg?.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK;
+    const { harVærtPåFatteVedtakSteget, åpenHøyremeny, settÅpenHøyremeny } = useBehandling();
+    const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
 
     return (
-        <StyledContainer>
-            <Behandlingskort fagsak={fagsak} behandling={behandling} />
-            <Spacer20 />
-            <HøyremenyContainer>
-                <Høyremenyvalg>
-                    {værtPåFatteVedtakSteget && (
-                        <Høyremenyknapp
-                            className={valgtMenyside === Menysider.TOTRINN ? 'valgt' : ''}
-                            onMouseDown={e => e.preventDefault()}
-                            onClick={() => settValgtMenyside(Menysider.TOTRINN)}
-                        >
-                            <FatteVedtakIkon />
-                            Fatte vedtak
-                        </Høyremenyknapp>
-                    )}
-                    <Høyremenyknapp
-                        className={valgtMenyside === Menysider.HISTORIKK ? 'valgt' : ''}
-                        onMouseDown={e => e.preventDefault()}
-                        onClick={() => settValgtMenyside(Menysider.HISTORIKK)}
+        <>
+            {åpenHøyremeny ? (
+                <>
+                    <ToggleVisningHøyremeny
+                        variant="secondary"
+                        onMouseDown={(e: React.MouseEvent) => e.preventDefault()}
+                        onClick={() => {
+                            settÅpenHøyremeny(!åpenHøyremeny);
+                        }}
+                        size="small"
+                        åpenhøyremeny={åpenHøyremeny ? 1 : 0}
                     >
-                        <Clock aria-label="Historikk" />
-                        Historikk
-                    </Høyremenyknapp>
-                    <Høyremenyknapp
-                        className={valgtMenyside === Menysider.DOKUMENTER ? 'valgt' : ''}
-                        onMouseDown={e => e.preventDefault()}
-                        onClick={() => settValgtMenyside(Menysider.DOKUMENTER)}
+                        <Next aria-label="Skjul høyremeny" />
+                    </ToggleVisningHøyremeny>
+                    <StyledContainer værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}>
+                        <Behandlingskort fagsak={fagsak} behandling={behandling} />
+                        <div>
+                            <Tabs defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}>
+                                <StyledTabList>
+                                    {værtPåFatteVedtakSteget && (
+                                        <StyledTabs
+                                            value="to-trinn"
+                                            label="Fatte vedtak"
+                                            icon={
+                                                <Decision
+                                                    height={18}
+                                                    width={18}
+                                                    aria-label="Ikon fatte vedtak"
+                                                />
+                                            }
+                                            iconPosition="top"
+                                        />
+                                    )}
+                                    <StyledTabs
+                                        value="logg"
+                                        label="Historikk"
+                                        icon={
+                                            <Clock
+                                                height={18}
+                                                width={18}
+                                                aria-label="Ikon historikk"
+                                            />
+                                        }
+                                        iconPosition="top"
+                                    />
+                                    <StyledTabs
+                                        value="dokumenter"
+                                        label="Dokumenter"
+                                        icon={
+                                            <Folder
+                                                height={18}
+                                                width={18}
+                                                aria-label="Ikon dokumenter"
+                                            />
+                                        }
+                                        iconPosition="top"
+                                    />
+                                    <StyledTabs
+                                        value="send-brev"
+                                        label="Send brev"
+                                        icon={
+                                            <Send
+                                                height={18}
+                                                width={18}
+                                                aria-label="Ikon send brev"
+                                            />
+                                        }
+                                        iconPosition="top"
+                                    />
+                                </StyledTabList>
+                                <HøyremenyContainer>
+                                    {værtPåFatteVedtakSteget && (
+                                        <Tabs.Panel value="to-trinn">
+                                            <Menykontainer
+                                                valgtMenyside={Menysider.TOTRINN}
+                                                behandling={behandling}
+                                                fagsak={fagsak}
+                                            />
+                                        </Tabs.Panel>
+                                    )}
+                                    <Tabs.Panel value="logg">
+                                        <Menykontainer
+                                            valgtMenyside={Menysider.HISTORIKK}
+                                            behandling={behandling}
+                                            fagsak={fagsak}
+                                        />
+                                    </Tabs.Panel>
+                                    <Tabs.Panel value="dokumenter">
+                                        <Menykontainer
+                                            valgtMenyside={Menysider.DOKUMENTER}
+                                            behandling={behandling}
+                                            fagsak={fagsak}
+                                        />
+                                    </Tabs.Panel>
+                                    <Tabs.Panel value="send-brev">
+                                        <Menykontainer
+                                            valgtMenyside={Menysider.SEND_BREV}
+                                            behandling={behandling}
+                                            fagsak={fagsak}
+                                        />
+                                    </Tabs.Panel>
+                                </HøyremenyContainer>
+                            </Tabs>
+                        </div>
+                    </StyledContainer>
+                </>
+            ) : (
+                <div>
+                    <ToggleVisningHøyremeny
+                        variant="secondary"
+                        onMouseDown={(e: React.MouseEvent) => e.preventDefault()}
+                        onClick={() => {
+                            settÅpenHøyremeny(!åpenHøyremeny);
+                        }}
+                        size="small"
+                        åpenhøyremeny={åpenHøyremeny ? 1 : 0}
                     >
-                        <Folder aria-label="Dokumenter" />
-                        Dokumenter
-                    </Høyremenyknapp>
-                    <Høyremenyknapp
-                        className={valgtMenyside === Menysider.SEND_BREV ? 'valgt' : ''}
-                        onMouseDown={e => e.preventDefault()}
-                        onClick={() => settValgtMenyside(Menysider.SEND_BREV)}
-                        disabled={disableSendMelding}
-                    >
-                        <Send aria-label="Send brev" />
-                        Send brev
-                    </Høyremenyknapp>
-                </Høyremenyvalg>
-                {valgtMenyside && (
-                    <>
-                        <Spacer8 />
-                        <Menykontainer
-                            valgtMenyside={valgtMenyside}
-                            behandling={behandling}
-                            fagsak={fagsak}
-                        />
-                    </>
-                )}
-            </HøyremenyContainer>
-        </StyledContainer>
+                        <Back aria-label="Åpne høyremeny" />
+                    </ToggleVisningHøyremeny>
+                </div>
+            )}
+        </>
     );
 };
 

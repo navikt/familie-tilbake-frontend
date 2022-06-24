@@ -33,6 +33,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [visVenteModal, settVisVenteModal] = useState<boolean>(false);
     const [harKravgrunnlag, settHarKravgrunnlag] = useState<boolean>();
     const [behandlingILesemodus, settBehandlingILesemodus] = useState<boolean>();
+    const [åpenHøyremeny, settÅpenHøyremeny] = useState(true);
     const { fagsak } = useFagsak();
     const { request } = useHttp();
     const navigate = useNavigate();
@@ -185,6 +186,8 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         harVærtPåFatteVedtakSteget,
         harKravgrunnlag,
         lagLenkeTilRevurdering,
+        åpenHøyremeny,
+        settÅpenHøyremeny,
     };
 });
 
