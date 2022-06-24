@@ -83,7 +83,7 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
 
     React.useEffect(() => {
         if (!valgtPeriode) {
-            settDisableBekreft(!allePerioderBehandlet || !behandling.kanEndres);
+            settDisableBekreft(!allePerioderBehandlet || !behandling.kanEndres || erLesevisning);
         } else {
             settDisableBekreft(true);
         }
