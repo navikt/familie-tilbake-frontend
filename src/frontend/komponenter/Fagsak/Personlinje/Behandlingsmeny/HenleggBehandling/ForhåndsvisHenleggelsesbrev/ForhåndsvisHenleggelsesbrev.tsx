@@ -7,7 +7,7 @@ import Lenke from 'nav-frontend-lenker';
 import { Undertekst } from 'nav-frontend-typografi';
 
 import { ExternalLink } from '@navikt/ds-icons';
-import { ISkjema } from '@navikt/familie-skjema';
+import { type ISkjema } from '@navikt/familie-skjema';
 
 import { IBehandling } from '../../../../../../typer/behandling';
 import PdfVisningModal from '../../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';

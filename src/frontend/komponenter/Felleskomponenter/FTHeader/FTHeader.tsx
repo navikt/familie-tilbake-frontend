@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Header } from '@navikt/familie-header';
-import { ISaksbehandler } from '@navikt/familie-typer';
+import { type ISaksbehandler } from '@navikt/familie-typer';
 
 export interface IHeaderProps {
     innloggetSaksbehandler?: ISaksbehandler;

@@ -1,6 +1,6 @@
 import { isValid, parseISO } from 'date-fns';
 
-import { feil, FeltState, ok } from '@navikt/familie-skjema';
+import { feil, type FeltState, ok } from '@navikt/familie-skjema';
 
 import { isNumeric } from './miscUtils';
 

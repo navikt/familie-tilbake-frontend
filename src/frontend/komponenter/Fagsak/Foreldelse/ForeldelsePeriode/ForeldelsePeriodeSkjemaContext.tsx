@@ -1,6 +1,6 @@
 import {
-    Avhengigheter,
-    FeltState,
+    type Avhengigheter,
+    type FeltState,
     ok,
     useFelt,
     useSkjema,

@@ -1,5 +1,5 @@
-import { FeltState, useFelt, useSkjema } from '@navikt/familie-skjema';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type FeltState, useFelt, useSkjema } from '@navikt/familie-skjema';
+import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../utils';

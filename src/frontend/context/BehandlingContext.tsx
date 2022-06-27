@@ -8,7 +8,7 @@ import { useHttp } from '@navikt/familie-http';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
-    Ressurs,
+    type Ressurs,
     RessursStatus,
 } from '@navikt/familie-typer';
 

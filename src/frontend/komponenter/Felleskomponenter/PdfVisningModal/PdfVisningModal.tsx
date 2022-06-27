@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Modal, Loader, Heading, Alert } from '@navikt/ds-react';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 const StyledModal = styled(Modal)`
     width: 90%;

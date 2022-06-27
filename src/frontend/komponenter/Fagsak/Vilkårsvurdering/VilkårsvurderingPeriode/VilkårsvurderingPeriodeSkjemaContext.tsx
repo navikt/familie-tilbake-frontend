@@ -1,7 +1,7 @@
 import {
-    Avhengigheter,
+    type Avhengigheter,
     feil,
-    FeltState,
+    type FeltState,
     ok,
     useFelt,
     useSkjema,

@@ -1,5 +1,5 @@
 import { useHttp } from '@navikt/familie-http';
-import { Ressurs } from '@navikt/familie-typer';
+import { type Ressurs } from '@navikt/familie-typer';
 
 import {
     BrevPayload,

@@ -5,7 +5,7 @@ import createUseContext from 'constate';
 import { useNavigate } from 'react-router-dom';
 
 import { useHttp } from '@navikt/familie-http';
-import { byggFeiletRessurs, byggHenterRessurs, Ressurs } from '@navikt/familie-typer';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '@navikt/familie-typer';
 
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';

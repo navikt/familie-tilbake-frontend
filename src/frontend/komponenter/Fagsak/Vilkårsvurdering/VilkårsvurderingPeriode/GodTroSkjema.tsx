@@ -6,7 +6,7 @@ import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst } from 'nav-frontend-typografi';
 
 import { FamilieInput } from '@navikt/familie-form-elements';
-import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';

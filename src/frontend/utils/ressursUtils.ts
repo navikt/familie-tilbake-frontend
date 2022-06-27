@@ -1,4 +1,4 @@
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 export const hentFrontendFeilmelding = <T>(ressurs: Ressurs<T>): string | undefined =>
     ressurs.status === RessursStatus.FEILET ||

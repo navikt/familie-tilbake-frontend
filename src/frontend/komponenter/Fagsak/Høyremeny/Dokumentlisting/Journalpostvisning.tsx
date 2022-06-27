@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import navFarger from 'nav-frontend-core';
 import { Undertekst } from 'nav-frontend-typografi';
 
-import { IJournalpost, Journalposttype } from '@navikt/familie-typer';
+import { type IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
 import { formatterDatoOgTid, hentDatoRegistrertSendt } from '../../../../utils';
 import { DokumentIkon } from '../../../Felleskomponenter/Ikoner';

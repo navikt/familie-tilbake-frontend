@@ -6,9 +6,9 @@ import {
     byggFeiletRessurs,
     byggHenterRessurs,
     byggTomRessurs,
-    IDokumentInfo,
-    IJournalpost,
-    Ressurs,
+    type IDokumentInfo,
+    type IJournalpost,
+    type Ressurs,
     RessursStatus,
 } from '@navikt/familie-typer';
 

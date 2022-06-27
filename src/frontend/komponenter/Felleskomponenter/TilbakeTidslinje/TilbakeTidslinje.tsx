@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 
-import { Periode, Tidslinje } from '@navikt/familie-tidslinje';
+import { type Periode, Tidslinje } from '@navikt/familie-tidslinje';
 
 const TidslinjeContainer = styled.div`
     border: 1px solid ${navFarger.navGra60};

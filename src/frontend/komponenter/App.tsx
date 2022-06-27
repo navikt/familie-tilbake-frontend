@@ -5,7 +5,7 @@ import ModalWrapper from 'nav-frontend-modal';
 import '@navikt/ds-css';
 import '@navikt/ds-css-internal';
 import { Modal } from '@navikt/ds-react';
-import { ISaksbehandler } from '@navikt/familie-typer';
+import { type ISaksbehandler } from '@navikt/familie-typer';
 
 import { hentInnloggetBruker } from '../api/saksbehandler';
 import { AppProvider } from '../context/AppContext';

@@ -6,7 +6,7 @@ import { Column, Row } from 'nav-frontend-grid';
 import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 
-import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';

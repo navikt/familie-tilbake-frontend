@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
-    Ressurs,
+    type Ressurs,
     RessursStatus,
 } from '@navikt/familie-typer';
 

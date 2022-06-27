@@ -5,14 +5,14 @@ import createUseContext from 'constate';
 import { useNavigate } from 'react-router-dom';
 
 import {
-    Avhengigheter,
-    FeltState,
+    type Avhengigheter,
+    type FeltState,
     ok,
     useFelt,
     useSkjema,
     Valideringsstatus,
 } from '@navikt/familie-skjema';
-import { byggFeiletRessurs, Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { byggFeiletRessurs, type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
