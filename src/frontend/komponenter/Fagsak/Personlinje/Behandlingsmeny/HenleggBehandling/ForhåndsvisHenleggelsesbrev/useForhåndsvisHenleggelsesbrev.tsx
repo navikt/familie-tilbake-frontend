@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import { AxiosError } from 'axios';
 
-import { ISkjema } from '@navikt/familie-skjema';
+import { type ISkjema } from '@navikt/familie-skjema';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
     byggHenterRessurs,
     byggTomRessurs,
-    Ressurs,
+    type Ressurs,
     RessursStatus,
 } from '@navikt/familie-typer';
 

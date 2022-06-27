@@ -3,7 +3,7 @@ import * as React from 'react';
 import createUseContext from 'constate';
 
 import { HttpProvider, useHttp } from '@navikt/familie-http';
-import { ISaksbehandler, Ressurs } from '@navikt/familie-typer';
+import type { ISaksbehandler, Ressurs } from '@navikt/familie-typer';
 
 interface IInfo {
     appImage: string;

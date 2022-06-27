@@ -1,5 +1,5 @@
 import { useFelt, useSkjema } from '@navikt/familie-skjema';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { Behandlingstype, Behandlingårsak } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';

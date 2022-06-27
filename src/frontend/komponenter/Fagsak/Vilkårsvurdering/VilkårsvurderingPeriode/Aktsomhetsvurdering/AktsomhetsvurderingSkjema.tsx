@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Radio } from 'nav-frontend-skjema';
 
-import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
     Aktsomhet,

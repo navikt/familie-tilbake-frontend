@@ -7,7 +7,7 @@ import { CheckboxGruppe } from 'nav-frontend-skjema';
 import { UndertekstBold } from 'nav-frontend-typografi';
 
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
-import { ISkjema } from '@navikt/familie-skjema';
+import { type ISkjema } from '@navikt/familie-skjema';
 
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 import { Spacer20, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { Periode } from '@navikt/familie-tidslinje';
+import { type Periode } from '@navikt/familie-tidslinje';
 
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';

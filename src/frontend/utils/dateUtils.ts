@@ -9,7 +9,7 @@ import {
     differenceInMilliseconds,
 } from 'date-fns';
 
-import { IJournalpostRelevantDato, JournalpostDatotype } from '@navikt/familie-typer';
+import { type IJournalpostRelevantDato, JournalpostDatotype } from '@navikt/familie-typer';
 
 import { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
 import { isEmpty } from './validering';

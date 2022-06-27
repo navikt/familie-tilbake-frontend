@@ -6,7 +6,7 @@ import navFarger from 'nav-frontend-core';
 import Lenke from 'nav-frontend-lenker';
 
 import { ExternalLink } from '@navikt/ds-icons';
-import { IDokumentInfo, IJournalpost, Journalposttype } from '@navikt/familie-typer';
+import { type IDokumentInfo, type IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
 import HentDokument from './HentDokument';
 

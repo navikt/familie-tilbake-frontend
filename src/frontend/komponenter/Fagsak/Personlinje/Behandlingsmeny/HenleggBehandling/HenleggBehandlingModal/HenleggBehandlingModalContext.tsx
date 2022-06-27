@@ -1,12 +1,12 @@
 import {
-    Avhengigheter,
-    FeltState,
+    type Avhengigheter,
+    type FeltState,
     ok,
     useFelt,
     useSkjema,
     Valideringsstatus,
 } from '@navikt/familie-skjema';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../../../../api/behandling';
 import { useBehandling } from '../../../../../../context/BehandlingContext';

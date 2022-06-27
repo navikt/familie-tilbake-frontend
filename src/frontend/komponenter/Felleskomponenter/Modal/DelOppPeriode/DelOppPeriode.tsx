@@ -6,7 +6,7 @@ import navFarger from 'nav-frontend-core';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 
-import { Periode as TidslinjePeriode, Tidslinje } from '@navikt/familie-tidslinje';
+import { type Periode as TidslinjePeriode, Tidslinje } from '@navikt/familie-tidslinje';
 
 import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 import { formatterDatostring } from '../../../../utils';

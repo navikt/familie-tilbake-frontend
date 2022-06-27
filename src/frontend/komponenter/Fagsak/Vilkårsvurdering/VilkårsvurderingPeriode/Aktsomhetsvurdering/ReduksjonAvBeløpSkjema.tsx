@@ -7,7 +7,7 @@ import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
-import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Aktsomhet } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';

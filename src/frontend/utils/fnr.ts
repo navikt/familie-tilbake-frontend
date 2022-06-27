@@ -1,4 +1,4 @@
-import { feil, FeltState, ok } from '@navikt/familie-skjema';
+import { feil, type FeltState, ok } from '@navikt/familie-skjema';
 
 import { definerteFeilmeldinger, DEFINERT_FEILMELDING, isEmpty } from './validering';
 

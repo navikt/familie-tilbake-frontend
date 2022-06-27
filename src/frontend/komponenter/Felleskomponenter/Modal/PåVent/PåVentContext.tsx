@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import { useHttp } from '@navikt/familie-http';
-import { useSkjema, useFelt, FeltState, feil, ok } from '@navikt/familie-skjema';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { useSkjema, useFelt, type FeltState, feil, ok } from '@navikt/familie-skjema';
+import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
 import { isEmpty, validerDato, dateBeforeOrToday } from '../../../../utils';

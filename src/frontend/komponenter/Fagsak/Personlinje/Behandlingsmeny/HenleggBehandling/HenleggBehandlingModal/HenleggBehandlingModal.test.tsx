@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import ReactModal from 'react-modal';
 
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../../../../api/behandling';
 import { useBehandling } from '../../../../../../context/BehandlingContext';

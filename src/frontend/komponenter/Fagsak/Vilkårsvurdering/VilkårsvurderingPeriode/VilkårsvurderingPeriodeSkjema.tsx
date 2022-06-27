@@ -10,7 +10,7 @@ import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst, Undertekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
 import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
-import { ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
     Aktsomhet,

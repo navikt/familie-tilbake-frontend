@@ -3,14 +3,14 @@ import * as React from 'react';
 import createUseContext from 'constate';
 
 import {
-    Avhengigheter,
-    FeltState,
+    type Avhengigheter,
+    type FeltState,
     ok,
     useFelt,
     useSkjema,
     Valideringsstatus,
 } from '@navikt/familie-skjema';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';

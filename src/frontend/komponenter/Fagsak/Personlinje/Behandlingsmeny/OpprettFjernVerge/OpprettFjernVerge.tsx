@@ -3,7 +3,7 @@ import * as React from 'react';
 import KnappBase, { Flatknapp, Knapp } from 'nav-frontend-knapper';
 
 import { useHttp } from '@navikt/familie-http';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Behandlingssteg, IBehandling } from '../../../../../typer/behandling';

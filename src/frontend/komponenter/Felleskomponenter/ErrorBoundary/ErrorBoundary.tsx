@@ -5,7 +5,7 @@ import { captureException, configureScope, withScope } from '@sentry/core';
 
 import { Element } from 'nav-frontend-typografi';
 
-import { ISaksbehandler } from '@navikt/familie-typer';
+import { type ISaksbehandler } from '@navikt/familie-typer';
 
 import { apiLoggFeil } from '../../../api/axios';
 
