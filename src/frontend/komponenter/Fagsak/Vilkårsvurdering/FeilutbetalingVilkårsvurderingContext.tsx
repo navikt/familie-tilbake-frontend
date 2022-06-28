@@ -188,16 +188,22 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             if (feilutbetalingVilkårsvurdering?.status !== RessursStatus.SUKSESS) return false; // Skal ikke være mulig, så return false ok
 
             if (erTotalbeløpUnder4Rettsgebyr(feilutbetalingVilkårsvurdering.data)) {
-                const uforeldetPerioder = skjemaData.filter(per => !per.foreldet);
-                const ikkeTilbakkrevSmåbeløpPerioder = uforeldetPerioder.filter(
+                const filtrertePerioder = skjemaData
+                    .filter(per => !per.foreldet)
+                    .filter(
+                        per =>
+                            per.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat !==
+                            Vilkårsresultat.GOD_TRO
+                    );
+                const ikkeTilbakekrevSmåbeløpPerioder = filtrertePerioder.filter(
                     per =>
                         per.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet ===
                             Aktsomhet.SIMPEL_UAKTSOMHET &&
                         !per.vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
                 );
                 if (
-                    ikkeTilbakkrevSmåbeløpPerioder.length > 0 &&
-                    ikkeTilbakkrevSmåbeløpPerioder.length !== uforeldetPerioder.length
+                    ikkeTilbakekrevSmåbeløpPerioder.length > 0 &&
+                    ikkeTilbakekrevSmåbeløpPerioder.length !== filtrertePerioder.length
                 ) {
                     settValideringsFeilmelding(
                         'Totalbeløpet er under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
