@@ -42,7 +42,7 @@ const ToggleVisningHøyremeny = styled(Button)`
     position: absolute;
     margin-left: ${(props: IToggleVisningHøyremenyProps) =>
         !props.åpenhøyremeny ? '-20px' : '-17px'};
-    top: ${(props: IToggleVisningHøyremenyProps) => (props.harventegrunn ? '427px' : '365px')};
+    top: ${(props: IToggleVisningHøyremenyProps) => (props.harventegrunn ? '440px' : '378px')};
     width: 34px;
     min-width: 34px;
     height: 34px;
