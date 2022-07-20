@@ -108,7 +108,7 @@ export const validerNummerFelt = (
     if (maxVerdi && maxVerdi < Number(Math.round(parseFloat(felt.verdi))))
         return feil(felt, invalidMaxValue(maxVerdi));
     if ((minVerdi || minVerdi === 0) && Number(Math.round(parseFloat(felt.verdi))) < minVerdi) {
-        console.log('verdien skulle vært ugyldig?!');
+        console.log(`verdien skulle vært ugyldig?!, min: ${minVerdi}, verdi: ${felt.verdi}`);
         return feil(felt, invalidMinValue(minVerdi));
     }
 

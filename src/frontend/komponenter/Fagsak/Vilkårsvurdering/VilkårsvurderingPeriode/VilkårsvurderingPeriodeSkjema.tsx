@@ -50,8 +50,7 @@ const StyledContainer = styled.div`
 
 const StyledVilkårsresultatRadio = styled(Radio)`
     div.navds-help-text {
-        display: inline;
-        margin-left: 0.5rem;
+        margin-left: 0.2rem;
     }
 `;
 
@@ -148,7 +147,7 @@ const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.Rea
             ? vilkårsresultatHjelpeteksterBarnetrygd
             : vilkårsresultatHjelpetekster;
     return (
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'inline-flex' }}>
             {vilkårsresultater[resultat]}
             <HelpText placement="right" aria-label={hjelpetekster[resultat]} role="tooltip">
                 {hjelpetekster[resultat]}
