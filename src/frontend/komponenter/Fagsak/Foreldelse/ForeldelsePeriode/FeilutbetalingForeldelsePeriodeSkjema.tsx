@@ -244,7 +244,6 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                     <FlexDiv>
                                         Foreldelsesfrist
                                         <StyledHelpText
-                                            title="Hjelpetekst foreldelsesfrist"
                                             placement="right"
                                             aria-label="Hjelpetekst foreldelsesfrist"
                                         >

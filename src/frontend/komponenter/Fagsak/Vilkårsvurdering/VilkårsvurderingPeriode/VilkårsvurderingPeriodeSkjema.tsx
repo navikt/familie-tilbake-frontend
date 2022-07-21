@@ -4,11 +4,10 @@ import styled from 'styled-components';
 
 import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
-import Hjelpetekst from 'nav-frontend-hjelpetekst';
-import { PopoverOrientering } from 'nav-frontend-popover';
 import { Radio } from 'nav-frontend-skjema';
 import { Normaltekst, Undertekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
+import { HelpText } from '@navikt/ds-react';
 import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -49,11 +48,10 @@ const StyledContainer = styled.div`
     padding: 10px;
 `;
 
-const StyledHjelpetekst = styled(Hjelpetekst)`
-    width: 1.3rem;
-    height: 1.3rem;
-    margin-left: 0.5rem;
-    top: 4px;
+const StyledVilkårsresultatRadio = styled(Radio)`
+    div.navds-help-text {
+        margin-left: 0.2rem;
+    }
 `;
 
 const settSkjemadataFraPeriode = (
@@ -149,12 +147,12 @@ const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.Rea
             ? vilkårsresultatHjelpeteksterBarnetrygd
             : vilkårsresultatHjelpetekster;
     return (
-        <>
+        <div style={{ display: 'inline-flex' }}>
             {vilkårsresultater[resultat]}
-            <StyledHjelpetekst type={PopoverOrientering.UnderVenstre} tittel="Lovhjemmel">
+            <HelpText placement="right" aria-label={hjelpetekster[resultat]} role="tooltip">
                 {hjelpetekster[resultat]}
-            </StyledHjelpetekst>
-        </>
+            </HelpText>
+        </div>
     );
 };
 
@@ -344,7 +342,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     }
                                 >
                                     {vilkårsresultatTyper.map(type => (
-                                        <Radio
+                                        <StyledVilkårsresultatRadio
                                             key={type}
                                             name="valgtVilkarResultatType"
                                             label={lagLabeltekster(fagsak, type)}
