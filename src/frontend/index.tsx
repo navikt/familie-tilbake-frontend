@@ -27,8 +27,4 @@ if (process.env.NODE_ENV !== 'production') {
 const container = document.getElementById('app');
 // eslint-disable-next-line
 const root = createRoot(container!);
-root.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
-);
+root.render(<App />);
