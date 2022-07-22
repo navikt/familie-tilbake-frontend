@@ -2078,12 +2078,12 @@
   resolved "https://npm.pkg.github.com/download/@navikt/ds-css-internal/0.7.7/a92e6c01b8889e026b70fb1e298c8eadb49083784b75c0deb443c1e65f524d5e#ff5df8ad05bf734863dec441178200b680a41c41"
   integrity sha512-GiWQ4m9ksagS8GN/ifCgVksOttiOW2eSfqnsuL9GNQaDbRQLpxSvmej2c2uTkgj3+fgpJi7f9rHdcQfDplOL0A==
 
-"@navikt/ds-css@^0.18.27":
+"@navikt/ds-css@^0.18.27", "@navikt/ds-css@^0.18.x":
   version "0.18.27"
   resolved "https://npm.pkg.github.com/download/@navikt/ds-css/0.18.27/09aef1ba9b86cb9ca987e4f9427beb008f0ff9d44f670537e5afbf38f3aca761#77a464d3dc1299e8b64329d8e18f43a05a70c6f2"
   integrity sha512-JK+EqtuUcehxSRI6YqyZuVeDLXotoZLYmED6DM77+atCRvphpPDc9fQuzXkByI25s9crNdXaS0sRCXSYSS62yA==
 
-"@navikt/ds-icons@^0.8.20":
+"@navikt/ds-icons@^0.8.20", "@navikt/ds-icons@^0.8.x":
   version "0.8.20"
   resolved "https://npm.pkg.github.com/download/@navikt/ds-icons/0.8.20/ba6319506a1be93bdcf630eab40a8daade25347c87bb3f69d4ca14af3de37cec#b3c52f1839929d2e755b1ce6da44b4e02caf6f7e"
   integrity sha512-ftX5GHpH8WdGXfw94P5M3Nn1Bma/MI3TaL1zlMnXBoqs/lFo6V3BeKNTcGoFTE7mJLJDE8qrcvewCWK2E6pkgw==
@@ -2159,6 +2159,17 @@
     nav-frontend-core "^6.0.1"
     nav-frontend-knapper "^3.1.2"
     nav-frontend-knapper-style "^2.1.1"
+    react-tooltip "^4.2.21"
+
+"@navikt/familie-clipboard@^5.0.0":
+  version "5.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-clipboard/5.0.0/64e85e3897e8bc00151eb41dd30205fc6ebeb93b6908196b1a0dbb249f6658b8#93140419518f1333f0ff7f265b71fc6878d64129"
+  integrity sha512-6hqx0EjPrMpJt8JiFKi0la9ffPt8U3unTs2nuFks7kop7i0AKtcXn7RmOvaEAN/uuwAsm1CVrasPJaW3AC8rRA==
+  dependencies:
+    "@navikt/ds-css" "^0.18.x"
+    "@navikt/ds-icons" "^0.8.x"
+    "@types/react-tooltip" "^4.2.4"
+    framer-motion "^6.3.16"
     react-tooltip "^4.2.21"
 
 "@navikt/familie-form-elements@^4.0.3":

@@ -55,7 +55,7 @@
     "@navikt/ds-react": "^0.19.25",
     "@navikt/ds-react-internal": "^0.14.26",
     "@navikt/familie-backend": "^7.0.4",
-    "@navikt/familie-clipboard": "^4.0.2",
+    "@navikt/familie-clipboard": "^5.0.0",
     "@navikt/familie-form-elements": "^4.0.3",
     "@navikt/familie-http": "^3.0.1",
     "@navikt/familie-logging": "^3.0.1",
