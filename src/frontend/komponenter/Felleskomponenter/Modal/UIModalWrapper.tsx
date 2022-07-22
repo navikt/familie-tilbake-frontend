@@ -49,6 +49,7 @@ export interface IModal {
 interface IProps {
     modal: IModal;
     style?: ReactModal.Styles;
+    children: React.ReactNode;
 }
 
 const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, style, children }) => {
