@@ -37,7 +37,8 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         },
     };
 
-    test('- vurderer periode ikke foreldet ', () => {
+    test('- vurderer periode ikke foreldet ', async () => {
+        const user = userEvent.setup();
         const { getByRole, getByText, getByLabelText, queryAllByText, queryByLabelText } = render(
             <FeilutbetalingForeldelsePeriodeSkjema
                 behandling={behandling}
@@ -49,27 +50,27 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByLabelText('Foreldelsesfrist')).toBeFalsy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.click(getByLabelText('Perioden er ikke foreldet'));
+        await user.click(getByLabelText('Perioden er ikke foreldet'));
 
         expect(queryByLabelText('Foreldelsesfrist')).toBeFalsy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        userEvent.type(getByLabelText('Vurdering'), 'begrunnelse');
+        await user.type(getByLabelText('Vurdering'), 'begrunnelse');
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
@@ -78,6 +79,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
     });
 
     test('- vurderer periode foreldet ', async () => {
+        const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, queryByLabelText, queryAllByText } = render(
             <FeilutbetalingForeldelsePeriodeSkjema
                 behandling={behandling}
@@ -89,7 +91,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByLabelText('Foreldelsesfrist')).toBeFalsy();
 
-        userEvent.click(getByLabelText('Perioden er foreldet'));
+        await user.click(getByLabelText('Perioden er foreldet'));
 
         expect(
             queryByLabelText('Foreldelsesfrist', {
@@ -98,15 +100,15 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
             })
         ).toBeTruthy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.type(getByLabelText('Vurdering'), 'begrunnelse');
-        userEvent.type(
+        await user.type(getByLabelText('Vurdering'), 'begrunnelse');
+        await user.type(
             getByLabelText('Foreldelsesfrist', {
                 selector: 'input',
                 exact: false,
@@ -114,7 +116,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
             '2020-09-14'
         );
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
@@ -122,7 +124,8 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- vurderer periode til å bruke tilleggsfrist ', () => {
+    test('- vurderer periode til å bruke tilleggsfrist ', async () => {
+        const user = userEvent.setup();
         const { getByText, getByRole, getByLabelText, queryByLabelText, queryAllByText } = render(
             <FeilutbetalingForeldelsePeriodeSkjema
                 behandling={behandling}
@@ -135,7 +138,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         expect(queryByLabelText('Foreldelsesfrist')).toBeFalsy();
         expect(queryByLabelText('Dato for når feilutbetaling ble oppdaget')).toBeFalsy();
 
-        userEvent.click(
+        await user.click(
             getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
         );
 
@@ -147,24 +150,24 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         ).toBeTruthy();
         expect(queryByLabelText('Dato for når feilutbetaling ble oppdaget')).toBeTruthy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(3);
 
-        userEvent.type(getByLabelText('Vurdering'), 'begrunnelse');
-        userEvent.type(
+        await user.type(getByLabelText('Vurdering'), 'begrunnelse');
+        await user.type(
             getByLabelText('Foreldelsesfrist', {
                 selector: 'input',
                 exact: false,
             }),
             '2020-09-14'
         );
-        userEvent.type(getByLabelText('Dato for når feilutbetaling ble oppdaget'), '2020-06-14');
+        await user.type(getByLabelText('Dato for når feilutbetaling ble oppdaget'), '2020-06-14');
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })

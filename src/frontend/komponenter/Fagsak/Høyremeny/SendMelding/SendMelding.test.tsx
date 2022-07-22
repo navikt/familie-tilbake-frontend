@@ -32,6 +32,7 @@ jest.mock('../../../../api/dokument', () => ({
 
 describe('Tester: SendMelding', () => {
     test('- fyller ut skjema og sender varsel', async () => {
+        const user = userEvent.setup();
         // @ts-ignore
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
@@ -60,9 +61,11 @@ describe('Tester: SendMelding', () => {
             </SendMeldingProvider>
         );
 
-        expect(getByText('Mottaker')).toBeTruthy();
-        expect(getByLabelText('Mal')).toHaveLength(3);
-        expect(queryByText('Bokmål')).toBeFalsy();
+        await waitFor(async () => {
+            expect(getByText('Mottaker')).toBeTruthy();
+            expect(getByLabelText('Mal')).toHaveLength(3);
+            expect(queryByText('Bokmål')).toBeFalsy();
+        });
 
         expect(
             getByRole('button', {
@@ -76,7 +79,7 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeFalsy();
 
-        userEvent.selectOptions(getByLabelText('Mal'), DokumentMal.VARSEL);
+        await user.selectOptions(getByLabelText('Mal'), DokumentMal.VARSEL);
 
         expect(
             getByRole('button', {
@@ -85,7 +88,7 @@ describe('Tester: SendMelding', () => {
         ).toBeDisabled();
 
         expect(getByText('Bokmål')).toBeTruthy();
-        userEvent.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
+        await user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
 
         expect(
             getByRole('button', {
@@ -99,16 +102,15 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeTruthy();
 
-        await waitFor(async () => {
-            userEvent.click(
-                getByRole('button', {
-                    name: 'Send brev',
-                })
-            );
-        });
+        await user.click(
+            getByRole('button', {
+                name: 'Send brev',
+            })
+        );
     });
 
     test('- fyller ut skjema og sender korrigert varsel', async () => {
+        const user = userEvent.setup();
         // @ts-ignore
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
@@ -137,9 +139,11 @@ describe('Tester: SendMelding', () => {
             </SendMeldingProvider>
         );
 
-        expect(getByText('Mottaker')).toBeTruthy();
-        expect(getByLabelText('Mal')).toHaveLength(3);
-        expect(queryByText('Nynorsk')).toBeFalsy();
+        await waitFor(async () => {
+            expect(getByText('Mottaker')).toBeTruthy();
+            expect(getByLabelText('Mal')).toHaveLength(3);
+            expect(queryByText('Nynorsk')).toBeFalsy();
+        });
 
         expect(
             getByRole('button', {
@@ -147,10 +151,10 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeDisabled();
 
-        userEvent.selectOptions(getByLabelText('Mal'), DokumentMal.KORRIGERT_VARSEL);
+        await user.selectOptions(getByLabelText('Mal'), DokumentMal.KORRIGERT_VARSEL);
 
         expect(getByText('Nynorsk')).toBeTruthy();
-        userEvent.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
+        await user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
 
         expect(
             getByRole('button', {
@@ -158,16 +162,15 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeTruthy();
 
-        await waitFor(async () => {
-            userEvent.click(
-                getByRole('button', {
-                    name: 'Send brev',
-                })
-            );
-        });
+        await user.click(
+            getByRole('button', {
+                name: 'Send brev',
+            })
+        );
     });
 
     test('- fyller ut skjema og sender innhent dokumentasjon', async () => {
+        const user = userEvent.setup();
         // @ts-ignore
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
@@ -196,15 +199,17 @@ describe('Tester: SendMelding', () => {
             </SendMeldingProvider>
         );
 
-        expect(getByText('Mottaker')).toBeTruthy();
+        await waitFor(async () => {
+            expect(getByText('Mottaker')).toBeTruthy();
+        });
         expect(
             getByRole('button', {
                 name: 'Send brev',
             })
         ).toBeDisabled();
 
-        userEvent.selectOptions(getByLabelText('Mal'), DokumentMal.INNHENT_DOKUMENTASJON);
-        userEvent.type(
+        await user.selectOptions(getByLabelText('Mal'), DokumentMal.INNHENT_DOKUMENTASJON);
+        await user.type(
             getByRole('textbox', { name: 'Liste over dokumenter (skriv ett dokument pr. linje)' }),
             'Liste over dokument'
         );
@@ -215,13 +220,11 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeTruthy();
 
-        await waitFor(async () => {
-            userEvent.click(
-                getByRole('button', {
-                    name: 'Send brev',
-                })
-            );
-        });
+        await user.click(
+            getByRole('button', {
+                name: 'Send brev',
+            })
+        );
     });
 
     test('- lesevisning - venter på svar på manuelt brev', async () => {
