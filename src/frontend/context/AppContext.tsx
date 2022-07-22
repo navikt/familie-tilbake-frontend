@@ -13,6 +13,10 @@ interface IInfo {
 }
 
 interface IProps {
+    children: React.ReactNode;
+}
+
+interface AppProps {
     autentisertSaksbehandler: ISaksbehandler | undefined;
 }
 
@@ -23,7 +27,7 @@ interface AuthProviderExports {
 }
 
 const [AuthProvider, useAuth] = createUseContext(
-    ({ autentisertSaksbehandler }: IProps): AuthProviderExports => {
+    ({ autentisertSaksbehandler }: AppProps): AuthProviderExports => {
         const [autentisert, settAutentisert] = React.useState(true);
         const [innloggetSaksbehandler, settInnloggetSaksbehandler] =
             React.useState(autentisertSaksbehandler);
@@ -67,7 +71,7 @@ const [AppContentProvider, useApp] = createUseContext(() => {
     };
 });
 
-const AuthOgHttpProvider: React.FC = ({ children }) => {
+const AuthOgHttpProvider: React.FC<IProps> = ({ children }) => {
     const { innloggetSaksbehandler, settAutentisert } = useAuth();
 
     return (
@@ -80,7 +84,7 @@ const AuthOgHttpProvider: React.FC = ({ children }) => {
     );
 };
 
-const AppProvider: React.FC<IProps> = ({ autentisertSaksbehandler, children }) => {
+const AppProvider: React.FC<AppProps & IProps> = ({ autentisertSaksbehandler, children }) => {
     return (
         <AuthProvider autentisertSaksbehandler={autentisertSaksbehandler}>
             <AuthOgHttpProvider children={children} />

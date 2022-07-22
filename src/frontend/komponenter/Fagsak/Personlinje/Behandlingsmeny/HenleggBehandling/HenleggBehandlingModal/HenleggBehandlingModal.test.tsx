@@ -54,6 +54,7 @@ describe('Tester: HenleggBehandlingModal', () => {
     });
 
     test('- henlegger behandling med varsel sendt', async () => {
+        const user = userEvent.setup();
         const behandling = mock<IBehandling>({
             type: Behandlingstype.TILBAKEKREVING,
             varselSendt: true,
@@ -77,32 +78,31 @@ describe('Tester: HenleggBehandlingModal', () => {
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Henlegg behandling',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.selectOptions(
+        await user.selectOptions(
             getByLabelText('Velg årsak'),
             Behandlingresultat.HENLAGT_FEILOPPRETTET
         );
-        userEvent.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
+        await user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
 
         expect(getByText('Informer søker:')).toBeTruthy();
         expect(getByText('Forhåndsvis brev')).toBeTruthy();
 
-        await waitFor(async () => {
-            userEvent.click(
-                getByRole('button', {
-                    name: 'Henlegg behandling',
-                })
-            );
-        });
+        await user.click(
+            getByRole('button', {
+                name: 'Henlegg behandling',
+            })
+        );
     });
 
     test('- henlegger behandling med varsel ikke sendt', async () => {
+        const user = userEvent.setup();
         const behandling = mock<IBehandling>({
             type: Behandlingstype.TILBAKEKREVING,
             varselSendt: false,
@@ -126,32 +126,31 @@ describe('Tester: HenleggBehandlingModal', () => {
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Henlegg behandling',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.selectOptions(
+        await user.selectOptions(
             getByLabelText('Velg årsak'),
             Behandlingresultat.HENLAGT_FEILOPPRETTET
         );
-        userEvent.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
+        await user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
 
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        await waitFor(async () => {
-            userEvent.click(
-                getByRole('button', {
-                    name: 'Henlegg behandling',
-                })
-            );
-        });
+        await user.click(
+            getByRole('button', {
+                name: 'Henlegg behandling',
+            })
+        );
     });
 
     test('- henlegger revurdering, med brev', async () => {
+        const user = userEvent.setup();
         const behandling = mock<IBehandling>({
             type: Behandlingstype.REVURDERING_TILBAKEKREVING,
         });
@@ -179,20 +178,20 @@ describe('Tester: HenleggBehandlingModal', () => {
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Henlegg behandling',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.selectOptions(
+        await user.selectOptions(
             getByLabelText('Velg årsak'),
             Behandlingresultat.HENLAGT_FEILOPPRETTET_MED_BREV
         );
-        userEvent.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
+        await user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Henlegg behandling',
             })
@@ -202,7 +201,7 @@ describe('Tester: HenleggBehandlingModal', () => {
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        userEvent.type(
+        await user.type(
             getByRole('textbox', { name: 'Fritekst til brev' }),
             'Revurdering er feilopprettet'
         );
@@ -210,16 +209,15 @@ describe('Tester: HenleggBehandlingModal', () => {
         expect(getByText('Informer søker:')).toBeTruthy();
         expect(getByText('Forhåndsvis brev')).toBeTruthy();
 
-        await waitFor(async () => {
-            userEvent.click(
-                getByRole('button', {
-                    name: 'Henlegg behandling',
-                })
-            );
-        });
+        await user.click(
+            getByRole('button', {
+                name: 'Henlegg behandling',
+            })
+        );
     });
 
     test('- henlegger revurdering, uten brev', async () => {
+        const user = userEvent.setup();
         const behandling = mock<IBehandling>({
             type: Behandlingstype.REVURDERING_TILBAKEKREVING,
         });
@@ -248,29 +246,27 @@ describe('Tester: HenleggBehandlingModal', () => {
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Henlegg behandling',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.selectOptions(
+        await user.selectOptions(
             getByLabelText('Velg årsak'),
             Behandlingresultat.HENLAGT_FEILOPPRETTET_UTEN_BREV
         );
-        userEvent.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
+        await user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
 
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
         expect(queryByRole('textbox', { name: 'Fritekst til brev' })).toBeFalsy();
 
-        await waitFor(async () => {
-            userEvent.click(
-                getByRole('button', {
-                    name: 'Henlegg behandling',
-                })
-            );
-        });
+        await user.click(
+            getByRole('button', {
+                name: 'Henlegg behandling',
+            })
+        );
     });
 });

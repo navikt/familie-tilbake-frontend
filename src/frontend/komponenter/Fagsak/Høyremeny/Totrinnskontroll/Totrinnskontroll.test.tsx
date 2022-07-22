@@ -51,6 +51,7 @@ describe('Tester: Totrinnskontroll', () => {
     };
 
     test('- vis og fyll ut - godkjenner', async () => {
+        const user = userEvent.setup();
         setupMock(false, {
             totrinnsstegsinfo: [
                 {
@@ -90,37 +91,40 @@ describe('Tester: Totrinnskontroll', () => {
         expect(getByText('Tilbakekreving')).toBeTruthy();
         expect(getByText('Vedtak')).toBeTruthy();
 
-        expect(
-            getByRole('button', {
-                name: 'Godkjenn vedtaket',
-            })
-        ).toBeDisabled();
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeDisabled();
-
-        userEvent.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
-        userEvent.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
-        userEvent.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
-
-        expect(
-            getByRole('button', {
-                name: 'Godkjenn vedtaket',
-            })
-        ).toBeEnabled();
-
         await waitFor(async () => {
-            userEvent.click(
+            expect(
                 getByRole('button', {
                     name: 'Godkjenn vedtaket',
                 })
-            );
+            ).toBeDisabled();
+            expect(
+                getByRole('button', {
+                    name: 'Send til saksbehandler',
+                })
+            ).toBeDisabled();
         });
+
+        await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
+        await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
+        await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
+
+        await waitFor(async () => {
+            expect(
+                getByRole('button', {
+                    name: 'Godkjenn vedtaket',
+                })
+            ).toBeEnabled();
+        });
+
+        await user.click(
+            getByRole('button', {
+                name: 'Godkjenn vedtaket',
+            })
+        );
     });
 
     test('- vis og fyll ut - sender tilbake', async () => {
+        const user = userEvent.setup();
         setupMock(false, {
             totrinnsstegsinfo: [
                 {
@@ -166,48 +170,50 @@ describe('Tester: Totrinnskontroll', () => {
         expect(getByText('Tilbakekreving')).toBeTruthy();
         expect(getByText('Vedtak')).toBeTruthy();
 
-        expect(
-            getByRole('button', {
-                name: 'Godkjenn vedtaket',
-            })
-        ).toBeDisabled();
+        await waitFor(async () => {
+            expect(
+                getByRole('button', {
+                    name: 'Godkjenn vedtaket',
+                })
+            ).toBeDisabled();
+            expect(
+                getByRole('button', {
+                    name: 'Send til saksbehandler',
+                })
+            ).toBeDisabled();
+        });
+
+        await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
+        await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
+        await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
+        await user.click(getByTestId('stegetGodkjent_idx_steg_3-false'));
+
         expect(
             getByRole('button', {
                 name: 'Send til saksbehandler',
             })
         ).toBeDisabled();
 
-        userEvent.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
-        userEvent.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
-        userEvent.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
-        userEvent.click(getByTestId('stegetGodkjent_idx_steg_3-false'));
-
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeDisabled();
-
-        userEvent.type(
+        await user.type(
             getByRole('textbox', {
                 name: 'Begrunnelse',
             }),
             'Vurder på nytt!!!!'
         );
 
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeEnabled();
-
         await waitFor(async () => {
-            userEvent.click(
+            expect(
                 getByRole('button', {
                     name: 'Send til saksbehandler',
                 })
-            );
+            ).toBeEnabled();
         });
+
+        await user.click(
+            getByRole('button', {
+                name: 'Send til saksbehandler',
+            })
+        );
     });
 
     test('- vis utfylt - sendt tilbake', async () => {

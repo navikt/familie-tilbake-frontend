@@ -17,7 +17,8 @@ describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
         ReactModal.setAppElement(document.createElement('div'));
     });
 
-    test('Tester åpning av modal', () => {
+    test('Tester åpning av modal', async () => {
+        const user = userEvent.setup();
         const periode: VilkårsvurderingPeriodeSkjemaData = {
             hendelsestype: HendelseType.ANNET,
             index: 'i1',
@@ -47,7 +48,7 @@ describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
         expect(queryAllByText('Del opp perioden')).toHaveLength(1);
         expect(queryByText('01.01.2021 - 30.04.2021')).toBeFalsy();
 
-        userEvent.click(getByAltText('Del opp perioden'));
+        await user.click(getByAltText('Del opp perioden'));
 
         expect(queryAllByText('Del opp perioden')).toHaveLength(2);
         expect(queryByText('01.01.2021 - 30.04.2021')).toBeTruthy();

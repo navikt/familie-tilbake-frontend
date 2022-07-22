@@ -126,6 +126,7 @@ describe('Tester: VedtakContainer', () => {
     };
 
     test('- vis og fyll ut - 1 fritekst påkrevet', async () => {
+        const user = userEvent.setup();
         setupMock(
             false,
             [
@@ -201,11 +202,13 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeTruthy();
 
-        expect(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
-        ).toBeDisabled();
+        await waitFor(async () => {
+            expect(
+                getByRole('button', {
+                    name: 'Til godkjenning',
+                })
+            ).toBeDisabled();
+        });
 
         expect(getByText('Du må betale tilbake barnetrygden')).toBeTruthy();
         expect(
@@ -221,7 +224,7 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeTruthy();
 
-        userEvent.type(
+        await user.type(
             getByRole('textbox', {
                 name: `Utdypende tekst`,
             }),
@@ -234,22 +237,23 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeTruthy();
 
-        expect(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
-        ).toBeEnabled();
-
         await waitFor(async () => {
-            userEvent.click(
+            expect(
                 getByRole('button', {
                     name: 'Til godkjenning',
                 })
-            );
+            ).toBeEnabled();
         });
+
+        await user.click(
+            getByRole('button', {
+                name: 'Til godkjenning',
+            })
+        );
     });
 
     test('- vis og fyll ut - 2 fritekst påkrevet - revurdering nye opplysninger', async () => {
+        const user = userEvent.setup();
         setupMock(
             false,
             [
@@ -324,11 +328,13 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeTruthy();
 
-        expect(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
-        ).toBeDisabled();
+        await waitFor(async () => {
+            expect(
+                getByRole('button', {
+                    name: 'Til godkjenning',
+                })
+            ).toBeDisabled();
+        });
 
         expect(getByText('Du må betale tilbake barnetrygden')).toBeTruthy();
         expect(
@@ -344,11 +350,11 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toHaveLength(2);
 
-        userEvent.type(
+        await user.type(
             getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
             'Fritekst påkrevet'
         );
-        userEvent.type(
+        await user.type(
             getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
             'Fritekst påkrevet'
         );
@@ -359,22 +365,23 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeTruthy();
 
-        expect(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
-        ).toBeEnabled();
-
         await waitFor(async () => {
-            userEvent.click(
+            expect(
                 getByRole('button', {
                     name: 'Til godkjenning',
                 })
-            );
+            ).toBeEnabled();
         });
+
+        await user.click(
+            getByRole('button', {
+                name: 'Til godkjenning',
+            })
+        );
     });
 
     test('- vis og fyll ut - 2 fritekst påkrevet - revurdering klage KA', async () => {
+        const user = userEvent.setup();
         setupMock(
             false,
             [
@@ -444,11 +451,13 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeFalsy();
 
-        expect(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
-        ).toBeDisabled();
+        await waitFor(async () => {
+            expect(
+                getByRole('button', {
+                    name: 'Til godkjenning',
+                })
+            ).toBeDisabled();
+        });
 
         expect(getByText('Du må betale tilbake barnetrygden')).toBeTruthy();
         expect(
@@ -464,11 +473,11 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toHaveLength(2);
 
-        userEvent.type(
+        await user.type(
             getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
             'Fritekst påkrevet'
         );
-        userEvent.type(
+        await user.type(
             getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
             'Fritekst påkrevet'
         );
@@ -479,22 +488,23 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeFalsy();
 
-        expect(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
-        ).toBeEnabled();
-
         await waitFor(async () => {
-            userEvent.click(
+            expect(
                 getByRole('button', {
                     name: 'Til godkjenning',
                 })
-            );
+            ).toBeEnabled();
         });
+
+        await user.click(
+            getByRole('button', {
+                name: 'Til godkjenning',
+            })
+        );
     });
 
     test('- vis og fyll ut - 1 fritekst påkrevet - fyller ut 1 ekstra fritekst - revurdering NFP', async () => {
+        const user = userEvent.setup();
         setupMock(
             false,
             [
@@ -569,11 +579,13 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeTruthy();
 
-        expect(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
-        ).toBeDisabled();
+        await waitFor(async () => {
+            expect(
+                getByRole('button', {
+                    name: 'Til godkjenning',
+                })
+            ).toBeDisabled();
+        });
 
         expect(getByText('Du må betale tilbake barnetrygden')).toBeTruthy();
         expect(
@@ -594,7 +606,7 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeFalsy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
             })
@@ -604,13 +616,16 @@ describe('Tester: VedtakContainer', () => {
                 name: 'Legg til utdypende tekst Legg til utdypende tekst',
             })
         ).toHaveLength(2);
-        userEvent.click(getByTestId('legg-til-fritekst-idx_avsnitt_2-idx_underavsnitt_0'));
+        await user.click(getByTestId('legg-til-fritekst-idx_avsnitt_2-idx_underavsnitt_0'));
 
-        userEvent.type(
+        await user.type(
             getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
             'Fritekst påkrevet'
         );
-        userEvent.type(getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'), 'Fritekst ekstra');
+        await user.type(
+            getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
+            'Fritekst ekstra'
+        );
 
         expect(
             queryByRole('button', {
@@ -618,22 +633,23 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeTruthy();
 
-        expect(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
-        ).toBeEnabled();
-
         await waitFor(async () => {
-            userEvent.click(
+            expect(
                 getByRole('button', {
                     name: 'Til godkjenning',
                 })
-            );
+            ).toBeEnabled();
         });
+
+        await user.click(
+            getByRole('button', {
+                name: 'Til godkjenning',
+            })
+        );
     });
 
     test('- vis utfylt - 1 fritekst påkrevet - 1 ekstra fritekst', async () => {
+        const user = userEvent.setup();
         setupMock(
             false,
             [
@@ -693,13 +709,15 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeTruthy();
 
-        expect(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
-        ).toBeEnabled();
+        await waitFor(async () => {
+            expect(
+                getByRole('button', {
+                    name: 'Til godkjenning',
+                })
+            ).toBeEnabled();
+            expect(getByText('Du må betale tilbake barnetrygden')).toBeTruthy();
+        });
 
-        expect(getByText('Du må betale tilbake barnetrygden')).toBeTruthy();
         expect(
             getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
         ).toBeTruthy();
@@ -710,12 +728,12 @@ describe('Tester: VedtakContainer', () => {
         expect(queryByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0')).toBeFalsy();
         expect(queryByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0')).toBeFalsy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
             })
         );
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
             })
@@ -730,6 +748,7 @@ describe('Tester: VedtakContainer', () => {
     });
 
     test('- vis utfylt - lesevisning', async () => {
+        const user = userEvent.setup();
         setupMock(
             true,
             [
@@ -795,7 +814,9 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeFalsy();
 
-        expect(getByText('Du må betale tilbake barnetrygden')).toBeTruthy();
+        await waitFor(async () => {
+            expect(getByText('Du må betale tilbake barnetrygden')).toBeTruthy();
+        });
         expect(
             getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
         ).toBeTruthy();
@@ -806,12 +827,12 @@ describe('Tester: VedtakContainer', () => {
         expect(queryByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0')).toBeFalsy();
         expect(queryByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0')).toBeFalsy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
             })
         );
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
             })

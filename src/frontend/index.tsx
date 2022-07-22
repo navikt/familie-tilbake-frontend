@@ -3,7 +3,8 @@ import React from 'react';
 import axe from '@axe-core/react';
 import { init } from '@sentry/browser';
 import { Integrations } from '@sentry/tracing';
-import ReactDOM, { render } from 'react-dom';
+import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import App from './komponenter/App';
 
@@ -23,9 +24,7 @@ if (process.env.NODE_ENV !== 'production') {
     axe(React, ReactDOM, 1000, {});
 }
 
-render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>,
-    document.getElementById('app')
-);
+const container = document.getElementById('app');
+// eslint-disable-next-line
+const root = createRoot(container!);
+root.render(<App />);

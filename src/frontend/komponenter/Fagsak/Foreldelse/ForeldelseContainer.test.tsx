@@ -93,6 +93,7 @@ describe('Tester: ForeldelseContainer', () => {
     };
 
     test('- vis og fyll ut perioder og send inn', async () => {
+        const user = userEvent.setup();
         setupMock(false, false, false, feilutbetalingForeldelse);
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>();
@@ -105,9 +106,8 @@ describe('Tester: ForeldelseContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Foreldelse')).toBeTruthy();
+            expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         });
-
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
 
         expect(getByText('01.01.2020 - 31.03.2020')).toBeTruthy();
         expect(getByText('3 måneder')).toBeTruthy();
@@ -119,17 +119,17 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toBeDisabled();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.type(getByLabelText('Vurdering'), 'Begrunnelse 1');
-        userEvent.click(getByLabelText('Perioden er ikke foreldet'));
+        await user.type(getByLabelText('Vurdering'), 'Begrunnelse 1');
+        await user.click(getByLabelText('Perioden er ikke foreldet'));
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
@@ -146,17 +146,17 @@ describe('Tester: ForeldelseContainer', () => {
         expect(getByText('2 måneder')).toBeTruthy();
         expect(getByText('1 333')).toBeTruthy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.type(getByLabelText('Vurdering'), 'Begrunnelse 2');
-        userEvent.click(getByLabelText('Perioden er ikke foreldet'));
+        await user.type(getByLabelText('Vurdering'), 'Begrunnelse 2');
+        await user.click(getByLabelText('Perioden er ikke foreldet'));
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
@@ -171,16 +171,15 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toBeEnabled();
 
-        await waitFor(async () => {
-            userEvent.click(
-                getByRole('button', {
-                    name: 'Bekreft og fortsett',
-                })
-            );
-        });
+        await user.click(
+            getByRole('button', {
+                name: 'Bekreft og fortsett',
+            })
+        );
     });
 
     test('- vis utfylt', async () => {
+        const user = userEvent.setup();
         setupMock(true, false, false, {
             foreldetPerioder: [
                 {
@@ -209,17 +208,16 @@ describe('Tester: ForeldelseContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Foreldelse')).toBeTruthy();
+            expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
+
+            expect(
+                getByRole('button', {
+                    name: 'Neste',
+                })
+            ).toBeEnabled();
         });
 
-        expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
-
-        expect(
-            getByRole('button', {
-                name: 'Neste',
-            })
-        ).toBeEnabled();
-
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'suksess fra 01.01.2020 til og med 31.03.2020',
             })
@@ -243,7 +241,7 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toHaveValue('01.01.2021');
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'suksess fra 01.05.2020 til og med 30.06.2020',
             })
@@ -265,7 +263,7 @@ describe('Tester: ForeldelseContainer', () => {
             '24.12.2020'
         );
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Lukk',
             })
@@ -279,6 +277,7 @@ describe('Tester: ForeldelseContainer', () => {
     });
 
     test('- vis utfylt - lesevisning', async () => {
+        const user = userEvent.setup();
         setupMock(true, true, false, {
             foreldetPerioder: [
                 {
@@ -307,17 +306,16 @@ describe('Tester: ForeldelseContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Foreldelse')).toBeTruthy();
+            expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
+
+            expect(
+                getByRole('button', {
+                    name: 'Neste',
+                })
+            ).toBeEnabled();
         });
 
-        expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
-
-        expect(
-            getByRole('button', {
-                name: 'Neste',
-            })
-        ).toBeEnabled();
-
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'suksess fra 01.01.2020 til og med 31.03.2020',
             })
@@ -342,7 +340,7 @@ describe('Tester: ForeldelseContainer', () => {
         expect(getByText('Perioden er foreldet')).toBeTruthy();
         expect(getByText('01.01.2021')).toBeTruthy();
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'suksess fra 01.05.2020 til og med 30.06.2020',
             })
@@ -384,15 +382,14 @@ describe('Tester: ForeldelseContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Foreldelse')).toBeTruthy();
+            expect(getByText('Foreldelsesloven §§ 2 og 3')).toBeTruthy();
+            expect(getByText('Automatisk vurdert')).toBeTruthy();
+
+            expect(
+                getByRole('button', {
+                    name: 'Neste',
+                })
+            ).toBeEnabled();
         });
-
-        expect(getByText('Foreldelsesloven §§ 2 og 3')).toBeTruthy();
-        expect(getByText('Automatisk vurdert')).toBeTruthy();
-
-        expect(
-            getByRole('button', {
-                name: 'Neste',
-            })
-        ).toBeEnabled();
     });
 });

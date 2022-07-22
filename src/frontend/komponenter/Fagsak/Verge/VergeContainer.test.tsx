@@ -65,6 +65,7 @@ describe('Tester: VergeContainer', () => {
     };
 
     test('- fyller ut advokat', async () => {
+        const user = userEvent.setup();
         setupMock(false, false, false);
         const behandling = mock<IBehandling>({
             harVerge: false,
@@ -81,38 +82,38 @@ describe('Tester: VergeContainer', () => {
             expect(getByText('Verge')).toBeTruthy();
         });
 
-        userEvent.click(
+        await user.click(
+            getByRole('button', {
+                name: 'Bekreft og fortsett',
+            })
+        );
+
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+
+        await user.selectOptions(getByLabelText('Vergetype'), Vergetype.ADVOKAT);
+
+        await user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat');
+
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft og fortsett',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.selectOptions(getByLabelText('Vergetype'), Vergetype.ADVOKAT);
+        await user.type(getByLabelText('Navn'), 'Advokat Advokatesen');
+        await user.type(getByLabelText('Organisasjonsnummer'), 'DummyOrg');
 
-        userEvent.type(getByLabelText('Begrunn endringene'), 'Verge er advokat');
-
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft og fortsett',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
-
-        userEvent.type(getByLabelText('Navn'), 'Advokat Advokatesen');
-        userEvent.type(getByLabelText('Organisasjonsnummer'), 'DummyOrg');
-
-        await waitFor(async () => {
-            userEvent.click(
-                getByRole('button', {
-                    name: 'Bekreft og fortsett',
-                })
-            );
-            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        });
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('- fyller ut verge for barn', async () => {
+        const user = userEvent.setup();
         setupMock(false, false, false);
         const behandling = mock<IBehandling>({
             harVerge: false,
@@ -129,47 +130,44 @@ describe('Tester: VergeContainer', () => {
             expect(getByText('Verge')).toBeTruthy();
         });
 
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft og fortsett',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.selectOptions(getByLabelText('Vergetype'), Vergetype.VERGE_FOR_BARN);
+        await user.selectOptions(getByLabelText('Vergetype'), Vergetype.VERGE_FOR_BARN);
+        await user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat');
 
-        userEvent.type(getByLabelText('Begrunn endringene'), 'Verge er advokat');
-
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft og fortsett',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        userEvent.type(getByLabelText('Navn'), 'Verge Vergesen');
+        await user.type(getByLabelText('Navn'), 'Verge Vergesen');
+        await user.type(getByLabelText('Fødselsnummer'), '12sdf678901');
 
-        userEvent.type(getByLabelText('Fødselsnummer'), '12sdf678901');
-
-        userEvent.click(
+        await user.click(
             getByRole('button', {
                 name: 'Bekreft og fortsett',
             })
         );
+        expect(queryByText('Du må skrive minst 3 tegn')).toBeFalsy();
         expect(queryByText('Ugyldig fødselsnummer')).toBeTruthy();
 
-        userEvent.clear(getByLabelText('Fødselsnummer'));
-        userEvent.type(getByLabelText('Fødselsnummer'), '27106903129');
+        await user.clear(getByLabelText('Fødselsnummer'));
+        await user.type(getByLabelText('Fødselsnummer'), '27106903129');
 
-        await waitFor(async () => {
-            userEvent.click(
-                getByRole('button', {
-                    name: 'Bekreft og fortsett',
-                })
-            );
-            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-            expect(queryByText('Ugyldig fødselsnummer')).toBeFalsy();
-        });
+        await user.click(
+            getByRole('button', {
+                name: 'Bekreft og fortsett',
+            })
+        );
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        expect(queryByText('Ugyldig fødselsnummer')).toBeFalsy();
     });
 
     test('- vis utfylt - advokat - autoutført', async () => {
@@ -192,9 +190,8 @@ describe('Tester: VergeContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Verge')).toBeTruthy();
+            expect(getByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')).toBeTruthy();
         });
-
-        expect(getByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')).toBeTruthy();
 
         expect(
             getByRole('button', {
@@ -229,15 +226,16 @@ describe('Tester: VergeContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Verge')).toBeTruthy();
+            expect(
+                queryByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
+            ).toBeFalsy();
+
+            expect(
+                getByRole('button', {
+                    name: 'Neste',
+                })
+            ).toBeEnabled();
         });
-
-        expect(queryByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')).toBeFalsy();
-
-        expect(
-            getByRole('button', {
-                name: 'Neste',
-            })
-        ).toBeEnabled();
 
         expect(getByLabelText('Vergetype')).toHaveValue(Vergetype.VERGE_FOR_BARN);
         expect(getByLabelText('Begrunn endringene')).toHaveValue('Verge er opprettet');
@@ -266,15 +264,16 @@ describe('Tester: VergeContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Verge')).toBeTruthy();
+            expect(
+                queryByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
+            ).toBeFalsy();
+
+            expect(
+                getByRole('button', {
+                    name: 'Neste',
+                })
+            ).toBeEnabled();
         });
-
-        expect(queryByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')).toBeFalsy();
-
-        expect(
-            getByRole('button', {
-                name: 'Neste',
-            })
-        ).toBeEnabled();
 
         expect(getByText('Advokat/advokatfullmektig')).toBeTruthy();
         expect(getByText('Bruker har engasjert advokat')).toBeTruthy();
@@ -303,9 +302,8 @@ describe('Tester: VergeContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Verge')).toBeTruthy();
+            expect(getByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')).toBeTruthy();
         });
-
-        expect(getByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')).toBeTruthy();
 
         expect(
             getByRole('button', {
