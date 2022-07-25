@@ -73,11 +73,8 @@ export const DelOppPeriode: React.FC<IProps> = ({
                     </Knapp>,
                 ],
             }}
-            style={{
-                content: {
-                    width: '30rem',
-                    overflow: 'initial',
-                },
+            modelStyleProps={{
+                width: '30rem',
             }}
         >
             <Element>Periode</Element>

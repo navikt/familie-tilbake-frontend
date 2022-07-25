@@ -80,11 +80,9 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                         </Knapp>,
                     ],
                 }}
-                style={{
-                    content: {
-                        width: '25rem',
-                        minHeight: '15rem',
-                    },
+                modelStyleProps={{
+                    width: '25rem',
+                    minHeight: '15rem',
                 }}
             >
                 <SkjemaGruppe feil={hentFrontendFeilmelding(skjema.submitRessurs)}>

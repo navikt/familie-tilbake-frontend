@@ -2,10 +2,9 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
 import { Flatknapp, Knapp } from 'nav-frontend-knapper';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
 
+import { BodyLong, Heading } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -17,7 +16,7 @@ import {
     venteårsaker,
 } from '../../../../typer/behandling';
 import { dateBeforeToday, datoformatNorsk, finnDateRelativtTilNå } from '../../../../utils';
-import { Spacer20, Spacer8 } from '../../Flytelementer';
+import { Spacer20 } from '../../Flytelementer';
 import { FixedDatovelger } from '../../Skjemaelementer';
 import UIModalWrapper from '../UIModalWrapper';
 import { usePåVentBehandling } from './PåVentContext';
@@ -26,7 +25,7 @@ const FeilContainer = styled.div`
     margin-top: 2rem;
 
     & .typo-normal {
-        color: ${navFarger.redError};
+        color: var(--navds-global-color-red-500);
     }
 `;
 
@@ -103,28 +102,26 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     </Knapp>,
                 ],
             }}
-            style={{
-                content: {
-                    width: erFristenUtløpt ? '35rem' : '25rem',
-                    minHeight: '18rem',
-                },
+            modelStyleProps={{
+                width: erFristenUtløpt ? '35rem' : '25rem',
+                minHeight: '18rem',
             }}
         >
             <>
                 {erFristenUtløpt && (
                     <>
-                        <Element>OBS! Fristen på denne behandlingen er utløpt!</Element>
-                        <Spacer8 />
-                        <Normaltekst>
+                        <Heading level="3" size="xsmall" spacing>
+                            OBS! Fristen på denne behandlingen er utløpt!
+                        </Heading>
+                        <BodyLong size="small">
                             Kontroller hvorfor Økonomi ikke har dannet et kravgrunnlag.
-                        </Normaltekst>
-                        <Normaltekst>
+                        </BodyLong>
+                        <BodyLong size="small">
                             Dersom det feilutbetalte beløpet er bortfalt skal saken henlegges.
-                        </Normaltekst>
-                        <Normaltekst>
+                        </BodyLong>
+                        <BodyLong size="small" spacing>
                             For mer informasjon, se rutine under tilbakekreving.
-                        </Normaltekst>
-                        <Spacer20 />
+                        </BodyLong>
                     </>
                 )}
                 <FixedDatovelger
@@ -161,7 +158,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                 </FamilieSelect>
                 {feilmelding && feilmelding !== '' && (
                     <FeilContainer>
-                        <Normaltekst>{feilmelding}</Normaltekst>
+                        <BodyLong size="small">{feilmelding}</BodyLong>
                     </FeilContainer>
                 )}
             </>

@@ -100,13 +100,11 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
                         </Knapp>,
                     ],
                 }}
-                style={{
-                    content: {
-                        width: '20rem',
-                        minHeight: '10rem',
-                    },
+                modelStyleProps={{
+                    width: '20rem',
+                    minHeight: '10rem',
                 }}
-            ></UIModalWrapper>
+            />
         </>
     );
 };

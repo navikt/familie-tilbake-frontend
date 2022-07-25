@@ -62,11 +62,9 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                         </Knapp>,
                     ],
                 }}
-                style={{
-                    content: {
-                        width: '20rem',
-                        minHeight: '10rem',
-                    },
+                modelStyleProps={{
+                    width: '20rem',
+                    minHeight: '10rem',
                 }}
             >
                 <>{feilmelding && feilmelding !== '' && <Normaltekst>{feilmelding}</Normaltekst>}</>

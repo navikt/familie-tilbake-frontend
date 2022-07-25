@@ -91,10 +91,8 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                     </FTButton>,
                 ],
             }}
-            style={{
-                content: {
-                    width: '36rem',
-                },
+            modelStyleProps={{
+                width: '36rem',
             }}
         >
             <>
