@@ -59,7 +59,7 @@
     "@navikt/familie-form-elements": "^5.0.0",
     "@navikt/familie-http": "^3.0.1",
     "@navikt/familie-logging": "^3.0.1",
-    "@navikt/familie-skjema": "^3.0.3",
+    "@navikt/familie-skjema": "^4.0.0",
     "@navikt/familie-tidslinje": "^1.1.3",
     "@navikt/familie-typer": "^5.0.0",
     "@navikt/familie-visittkort": "^3.0.5",

@@ -1764,10 +1764,10 @@
   dependencies:
     winston "^3.8.1"
 
-"@navikt/familie-skjema@^3.0.3":
-  version "3.0.3"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-skjema/3.0.3/45ff3a818ba7c8b384178505d94d527a44921a3ae9db22a0881367def35ed327#bd62eefde58f01b74b2df76ff8754be1118f12be"
-  integrity sha512-O59xSQXlYqcKQlZYhkp+7gtd+DKb+XCp2KcVHV18dr7wbhvdH8pmWcSCsoZ1tQyIx9eDYbMNZz7boSdUWOdGKA==
+"@navikt/familie-skjema@^4.0.0":
+  version "4.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-skjema/4.0.0/63b50c8a9dfaded4d61ff78a8bfe85b74507a6e9012c8c804355d29bc106bacc#4b84a4d2d4e3dee3cc8e7894d463e4bc1e3b75e5"
+  integrity sha512-O2l7balx8tRl8t8Jl7fJ+o9khtqflEMnLJgnLP/4woZLBXXRAtyKQQdWhNeXLpiWb9PPmDwoOJ5picwwxlMAug==
   dependencies:
     "@navikt/familie-http" "^3.0.1"
     "@navikt/familie-typer" "^5.0.0"
