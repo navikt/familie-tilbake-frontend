@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import KnappBase, { Flatknapp, Knapp } from 'nav-frontend-knapper';
-
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Behandlingssteg, IBehandling } from '../../../../../typer/behandling';
+import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 
 interface IProps {
@@ -60,8 +59,8 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
 
     return (
         <>
-            <KnappBase
-                mini={true}
+            <BehandlingsMenyButton
+                variant="tertiary"
                 onClick={() => {
                     settVisModal(true);
                     onListElementClick();
@@ -69,7 +68,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
                 disabled={!behandling.kanEndres || behandlingILesemodus}
             >
                 {kanFjerneVerge ? 'Fjern verge/fullmektig' : 'Opprett verge/fullmektig'}
-            </KnappBase>
+            </BehandlingsMenyButton>
 
             <UIModalWrapper
                 modal={{
@@ -79,34 +78,33 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
                     visModal: visModal,
                     lukkKnapp: false,
                     actions: [
-                        <Flatknapp
+                        <FTButton
+                            variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
                                 settVisModal(false);
                             }}
-                            mini={true}
+                            size="small"
                         >
                             Avbryt
-                        </Flatknapp>,
-                        <Knapp
-                            type={'hoved'}
+                        </FTButton>,
+                        <FTButton
+                            variant="primary"
                             key={'bekreft'}
                             disabled={senderInn}
                             spinner={senderInn}
                             onClick={() => opprettEllerFjern()}
-                            mini={true}
+                            size="small"
                         >
                             Ok
-                        </Knapp>,
+                        </FTButton>,
                     ],
                 }}
-                style={{
-                    content: {
-                        width: '20rem',
-                        minHeight: '10rem',
-                    },
+                modelStyleProps={{
+                    width: '20rem',
+                    minHeight: '10rem',
                 }}
-            ></UIModalWrapper>
+            />
         </>
     );
 };

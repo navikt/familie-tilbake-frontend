@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import KnappBase, { Flatknapp, Knapp } from 'nav-frontend-knapper';
-import { Normaltekst } from 'nav-frontend-typografi';
+import { BodyLong } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling } from '../../../../../typer/behandling';
+import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 
@@ -26,8 +26,8 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
 
     return (
         <>
-            <KnappBase
-                mini={true}
+            <BehandlingsMenyButton
+                variant="tertiary"
                 onClick={() => {
                     settVisModal(true);
                     onListElementClick();
@@ -35,7 +35,7 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                 disabled={!behandling.kanEndres}
             >
                 Fortsett behandlingen
-            </KnappBase>
+            </BehandlingsMenyButton>
 
             <UIModalWrapper
                 modal={{
@@ -43,33 +43,32 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                     visModal: visModal,
                     lukkKnapp: false,
                     actions: [
-                        <Flatknapp
+                        <FTButton
+                            variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
                                 settVisModal(false);
                             }}
-                            mini={true}
+                            size="small"
                         >
                             Avbryt
-                        </Flatknapp>,
-                        <Knapp
-                            type={'hoved'}
+                        </FTButton>,
+                        <FTButton
+                            variant="primary"
                             key={'bekreft'}
                             onClick={() => onOkTaAvVent(behandling.behandlingId)}
-                            mini={true}
+                            size="small"
                         >
                             Ok
-                        </Knapp>,
+                        </FTButton>,
                     ],
                 }}
-                style={{
-                    content: {
-                        width: '20rem',
-                        minHeight: '10rem',
-                    },
+                modelStyleProps={{
+                    width: '20rem',
+                    minHeight: '10rem',
                 }}
             >
-                <>{feilmelding && feilmelding !== '' && <Normaltekst>{feilmelding}</Normaltekst>}</>
+                <>{feilmelding && feilmelding !== '' && <BodyLong>{feilmelding}</BodyLong>}</>
             </UIModalWrapper>
         </>
     );

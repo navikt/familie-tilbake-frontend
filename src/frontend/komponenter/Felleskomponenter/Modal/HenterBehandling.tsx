@@ -12,11 +12,6 @@ const HenterBehandling: React.FC = () => {
                 lukkKnapp: false,
                 visModal: true,
             }}
-            style={{
-                overlay: {
-                    backgroundColor: 'var(--navds-global-color-gray-400)',
-                },
-            }}
         >
             <Grid>
                 <Cell xs={10}>
