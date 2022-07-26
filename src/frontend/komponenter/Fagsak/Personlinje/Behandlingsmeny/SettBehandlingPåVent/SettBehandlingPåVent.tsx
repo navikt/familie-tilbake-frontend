@@ -1,16 +1,16 @@
 import * as React from 'react';
 
-import KnappBase, { Flatknapp, Knapp } from 'nav-frontend-knapper';
+import KnappBase from 'nav-frontend-knapper';
 import { SkjemaGruppe } from 'nav-frontend-skjema';
-import { Normaltekst } from 'nav-frontend-typografi';
 
+import { BodyLong } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling, manuelleVenteÅrsaker, venteårsaker } from '../../../../../typer/behandling';
 import { datoformatNorsk, hentFrontendFeilmelding } from '../../../../../utils';
-import { Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
+import { FTButton, Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 import { maxTidsfrist, minTidsfrist } from '../../../../Felleskomponenter/Modal/PåVent/PåVentModal';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
@@ -58,26 +58,27 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                     visModal: visModal,
                     lukkKnapp: false,
                     actions: [
-                        <Flatknapp
+                        <FTButton
+                            variant="tertiary"
                             key={'avbryt'}
-                            mini={true}
                             onClick={() => {
                                 nullstillSkjema();
                                 settVisModal(false);
                             }}
+                            size="small"
                         >
                             Avbryt
-                        </Flatknapp>,
-                        <Knapp
+                        </FTButton>,
+                        <FTButton
+                            variant="primary"
                             key={'bekreft'}
                             onClick={() => {
                                 onBekreft(behandling.behandlingId);
                             }}
-                            type={'hoved'}
-                            mini={true}
+                            size="small"
                         >
                             Bekreft
-                        </Knapp>,
+                        </FTButton>,
                     ],
                 }}
                 modelStyleProps={{
@@ -86,7 +87,9 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                 }}
             >
                 <SkjemaGruppe feil={hentFrontendFeilmelding(skjema.submitRessurs)}>
-                    {feilmelding && feilmelding !== '' && <Normaltekst>{feilmelding}</Normaltekst>}
+                    {feilmelding && feilmelding !== '' && (
+                        <BodyLong size="small">{feilmelding}</BodyLong>
+                    )}
                     <FixedDatovelger
                         {...skjema.felter.tidsfrist.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                         id={'frist'}

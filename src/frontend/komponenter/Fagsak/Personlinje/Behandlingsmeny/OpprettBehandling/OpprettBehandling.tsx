@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import KnappBase, { Flatknapp, Knapp } from 'nav-frontend-knapper';
+import KnappBase from 'nav-frontend-knapper';
 import { SkjemaGruppe } from 'nav-frontend-skjema';
 
 import { FamilieSelect } from '@navikt/familie-form-elements';
@@ -15,7 +15,7 @@ import {
 } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
-import { Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
+import { FTButton, Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';
 
@@ -52,25 +52,27 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                     visModal: visModal,
                     lukkKnapp: false,
                     actions: [
-                        <Flatknapp
+                        <FTButton
+                            variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
                                 nullstillSkjema();
                                 settVisModal(false);
                             }}
-                            mini={true}
+                            size="small"
                         >
                             Avbryt
-                        </Flatknapp>,
-                        <Knapp
-                            type={'hoved'}
+                        </FTButton>,
+                        <FTButton
+                            variant="primary"
                             key={'bekreft'}
                             onClick={() => {
                                 sendInn();
                             }}
+                            size="small"
                         >
                             Ok
-                        </Knapp>,
+                        </FTButton>,
                     ],
                 }}
             >

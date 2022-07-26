@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import KnappBase, { Flatknapp, Knapp } from 'nav-frontend-knapper';
+import KnappBase from 'nav-frontend-knapper';
 import { SkjemaGruppe } from 'nav-frontend-skjema';
 
 import { FamilieSelect } from '@navikt/familie-form-elements';
@@ -11,7 +11,7 @@ import { Ytelsetype } from '../../../../../kodeverk';
 import { IBehandling } from '../../../../../typer/behandling';
 import { finnMuligeEnheter, IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
-import { Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
+import { FTButton, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
@@ -55,24 +55,25 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                     visModal: visModal,
                     lukkKnapp: false,
                     actions: [
-                        <Flatknapp
+                        <FTButton
+                            variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
                                 settVisModal(false);
                             }}
-                            mini={true}
+                            size="small"
                         >
                             Avbryt
-                        </Flatknapp>,
-                        <Knapp
+                        </FTButton>,
+                        <FTButton
+                            variant="primary"
                             disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
-                            type={'hoved'}
                             key={'bekreft'}
                             onClick={() => sendInn()}
-                            mini={true}
+                            size="small"
                         >
                             Bekreft
-                        </Knapp>,
+                        </FTButton>,
                     ],
                 }}
             >

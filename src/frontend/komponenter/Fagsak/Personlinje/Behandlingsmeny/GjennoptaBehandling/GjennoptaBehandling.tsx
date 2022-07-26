@@ -1,10 +1,12 @@
 import * as React from 'react';
 
-import KnappBase, { Flatknapp, Knapp } from 'nav-frontend-knapper';
-import { Normaltekst } from 'nav-frontend-typografi';
+import KnappBase from 'nav-frontend-knapper';
+
+import { BodyLong } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling } from '../../../../../typer/behandling';
+import { FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 
@@ -43,23 +45,24 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                     visModal: visModal,
                     lukkKnapp: false,
                     actions: [
-                        <Flatknapp
+                        <FTButton
+                            variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
                                 settVisModal(false);
                             }}
-                            mini={true}
+                            size="small"
                         >
                             Avbryt
-                        </Flatknapp>,
-                        <Knapp
-                            type={'hoved'}
+                        </FTButton>,
+                        <FTButton
+                            variant="primary"
                             key={'bekreft'}
                             onClick={() => onOkTaAvVent(behandling.behandlingId)}
-                            mini={true}
+                            size="small"
                         >
                             Ok
-                        </Knapp>,
+                        </FTButton>,
                     ],
                 }}
                 modelStyleProps={{
@@ -67,7 +70,7 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                     minHeight: '10rem',
                 }}
             >
-                <>{feilmelding && feilmelding !== '' && <Normaltekst>{feilmelding}</Normaltekst>}</>
+                <>{feilmelding && feilmelding !== '' && <BodyLong>{feilmelding}</BodyLong>}</>
             </UIModalWrapper>
         </>
     );

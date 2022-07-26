@@ -2,8 +2,6 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { Flatknapp, Knapp } from 'nav-frontend-knapper';
-
 import { BodyLong, Heading } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
@@ -16,7 +14,7 @@ import {
     venteårsaker,
 } from '../../../../typer/behandling';
 import { dateBeforeToday, datoformatNorsk, finnDateRelativtTilNå } from '../../../../utils';
-import { Spacer20 } from '../../Flytelementer';
+import { FTButton, Spacer20 } from '../../Flytelementer';
 import { FixedDatovelger } from '../../Skjemaelementer';
 import UIModalWrapper from '../UIModalWrapper';
 import { usePåVentBehandling } from './PåVentContext';
@@ -79,27 +77,28 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                 visModal: true,
                 lukkKnapp: false,
                 actions: [
-                    <Flatknapp
+                    <FTButton
+                        variant="tertiary"
                         key={'avbryt'}
                         onClick={() => {
                             nullstillSkjema();
                             onClose();
                         }}
-                        mini={true}
+                        size="small"
                     >
                         Lukk
-                    </Flatknapp>,
-                    <Knapp
+                    </FTButton>,
+                    <FTButton
+                        variant="primary"
                         key={'bekreft'}
-                        type={'hoved'}
-                        mini={true}
                         onClick={() => {
                             onBekreft(behandling.behandlingId);
                         }}
                         disabled={uendret}
+                        size="small"
                     >
                         Oppdater
-                    </Knapp>,
+                    </FTButton>,
                 ],
             }}
             modelStyleProps={{

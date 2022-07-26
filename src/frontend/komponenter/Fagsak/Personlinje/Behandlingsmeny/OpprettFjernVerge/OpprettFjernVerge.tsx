@@ -1,12 +1,13 @@
 import * as React from 'react';
 
-import KnappBase, { Flatknapp, Knapp } from 'nav-frontend-knapper';
+import KnappBase from 'nav-frontend-knapper';
 
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Behandlingssteg, IBehandling } from '../../../../../typer/behandling';
+import { FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 
 interface IProps {
@@ -79,25 +80,26 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
                     visModal: visModal,
                     lukkKnapp: false,
                     actions: [
-                        <Flatknapp
+                        <FTButton
+                            variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
                                 settVisModal(false);
                             }}
-                            mini={true}
+                            size="small"
                         >
                             Avbryt
-                        </Flatknapp>,
-                        <Knapp
-                            type={'hoved'}
+                        </FTButton>,
+                        <FTButton
+                            variant="primary"
                             key={'bekreft'}
                             disabled={senderInn}
                             spinner={senderInn}
                             onClick={() => opprettEllerFjern()}
-                            mini={true}
+                            size="small"
                         >
                             Ok
-                        </Knapp>,
+                        </FTButton>,
                     ],
                 }}
                 modelStyleProps={{

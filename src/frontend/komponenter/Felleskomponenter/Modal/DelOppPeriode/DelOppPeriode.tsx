@@ -2,21 +2,18 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-import { Knapp } from 'nav-frontend-knapper';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
-
+import { BodyShort, Label } from '@navikt/ds-react';
 import { type Periode as TidslinjePeriode, Tidslinje } from '@navikt/familie-tidslinje';
 
 import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 import { formatterDatostring } from '../../../../utils';
-import { Spacer8 } from '../../Flytelementer';
+import { FTButton } from '../../Flytelementer';
 import { FixedDatovelger } from '../../Skjemaelementer';
 import UIModalWrapper from '../UIModalWrapper';
 
 const TidslinjeContainer = styled.div`
-    border: 1px solid ${navFarger.navGra60};
-    margin-bottom: 20px;
+    border: 1px solid var(--navds-semantic-color-border);
+    margin-bottom: var(--navds-spacing-6);
 
     .etiketter div:last-child {
         max-width: max-content;
@@ -53,37 +50,37 @@ export const DelOppPeriode: React.FC<IProps> = ({
                 visModal: visModal,
                 lukkKnapp: false,
                 actions: [
-                    <Knapp
+                    <FTButton
+                        variant="tertiary"
                         key={'avbryt'}
                         onClick={() => {
                             settVisModal(false);
                         }}
-                        mini={true}
+                        size="small"
                     >
                         Lukk
-                    </Knapp>,
-                    <Knapp
+                    </FTButton>,
+                    <FTButton
+                        variant="primary"
                         key={'bekreft'}
-                        type={'hoved'}
-                        mini={true}
                         onClick={onSubmit}
                         disabled={senderInn}
+                        size="small"
                     >
                         Bekreft
-                    </Knapp>,
+                    </FTButton>,
                 ],
             }}
             modelStyleProps={{
                 width: '30rem',
             }}
         >
-            <Element>Periode</Element>
-            <Normaltekst>
+            <Label size="small">Periode</Label>
+            <BodyShort size="small" spacing>
                 {`${formatterDatostring(periode.periode.fom)} - ${formatterDatostring(
                     periode.periode.tom
                 )}`}
-            </Normaltekst>
-            <Spacer8 />
+            </BodyShort>
             <TidslinjeContainer>
                 <Tidslinje kompakt rader={tidslinjeRader} />
             </TidslinjeContainer>
