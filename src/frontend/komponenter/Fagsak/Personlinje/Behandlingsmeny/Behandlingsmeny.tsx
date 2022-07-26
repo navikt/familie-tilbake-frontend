@@ -20,27 +20,7 @@ import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent
 const StyledList = styled.ul`
     list-style-type: none;
     padding: 0;
-    text-align: left;
-    min-width: 190px;
-
-    .knapp {
-        border: none;
-        margin: 0.1rem 0;
-        width: 100%;
-        display: flex;
-        justify-content: left;
-
-        &--disabled {
-            color: var(--navds-global-color-blue-500);
-            background-color: var(--navds-global-color-gray-100);
-            opacity: 35%;
-
-            :hover {
-                color: var(--navds-global-color-blue-900);
-                background-color: var(--navds-global-color-gray-300);
-            }
-        }
-    }
+    min-width: 210px;
 `;
 
 const StyledButton = styled(Button)`

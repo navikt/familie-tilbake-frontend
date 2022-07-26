@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import KnappBase from 'nav-frontend-knapper';
 import { SkjemaGruppe } from 'nav-frontend-skjema';
 
 import { FamilieSelect } from '@navikt/familie-form-elements';
@@ -11,7 +10,11 @@ import { Ytelsetype } from '../../../../../kodeverk';
 import { IBehandling } from '../../../../../typer/behandling';
 import { finnMuligeEnheter, IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
-import { FTButton, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
+import {
+    BehandlingsMenyButton,
+    FTButton,
+    Spacer8,
+} from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
@@ -38,8 +41,8 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
 
     return (
         <>
-            <KnappBase
-                mini={true}
+            <BehandlingsMenyButton
+                variant="tertiary"
                 onClick={() => {
                     settVisModal(true);
                     onListElementClick();
@@ -47,7 +50,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                 disabled={!behandling.kanEndres || behandlingILesemodus}
             >
                 Endre behandlende enhet
-            </KnappBase>
+            </BehandlingsMenyButton>
 
             <UIModalWrapper
                 modal={{

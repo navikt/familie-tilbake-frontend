@@ -1,13 +1,11 @@
 import * as React from 'react';
 
-import KnappBase from 'nav-frontend-knapper';
-
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Behandlingssteg, IBehandling } from '../../../../../typer/behandling';
-import { FTButton } from '../../../../Felleskomponenter/Flytelementer';
+import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 
 interface IProps {
@@ -61,8 +59,8 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
 
     return (
         <>
-            <KnappBase
-                mini={true}
+            <BehandlingsMenyButton
+                variant="tertiary"
                 onClick={() => {
                     settVisModal(true);
                     onListElementClick();
@@ -70,7 +68,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
                 disabled={!behandling.kanEndres || behandlingILesemodus}
             >
                 {kanFjerneVerge ? 'Fjern verge/fullmektig' : 'Opprett verge/fullmektig'}
-            </KnappBase>
+            </BehandlingsMenyButton>
 
             <UIModalWrapper
                 modal={{

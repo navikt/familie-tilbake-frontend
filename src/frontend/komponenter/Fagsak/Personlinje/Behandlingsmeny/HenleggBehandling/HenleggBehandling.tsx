@@ -1,9 +1,8 @@
 import * as React from 'react';
 
-import KnappBase from 'nav-frontend-knapper';
-
 import { Behandlingresultat, Behandlingstype, IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
+import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import HenleggBehandlingModal from './HenleggBehandlingModal/HenleggBehandlingModal';
 
 const getÅrsaker = (behandling: IBehandling) => {
@@ -33,8 +32,8 @@ const HenleggBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
 
     return (
         <>
-            <KnappBase
-                mini={true}
+            <BehandlingsMenyButton
+                variant="tertiary"
                 disabled={!behandling.kanHenleggeBehandling || !behandling.kanEndres}
                 onClick={() => {
                     settVisModal(true);
@@ -42,7 +41,7 @@ const HenleggBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                 }}
             >
                 Henlegg behandlingen og avslutt
-            </KnappBase>
+            </BehandlingsMenyButton>
 
             {visModal && (
                 <HenleggBehandlingModal

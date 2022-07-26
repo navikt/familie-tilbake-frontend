@@ -1,12 +1,10 @@
 import * as React from 'react';
 
-import KnappBase from 'nav-frontend-knapper';
-
 import { BodyLong } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling } from '../../../../../typer/behandling';
-import { FTButton } from '../../../../Felleskomponenter/Flytelementer';
+import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 
@@ -28,8 +26,8 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
 
     return (
         <>
-            <KnappBase
-                mini={true}
+            <BehandlingsMenyButton
+                variant="tertiary"
                 onClick={() => {
                     settVisModal(true);
                     onListElementClick();
@@ -37,7 +35,7 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                 disabled={!behandling.kanEndres}
             >
                 Fortsett behandlingen
-            </KnappBase>
+            </BehandlingsMenyButton>
 
             <UIModalWrapper
                 modal={{
