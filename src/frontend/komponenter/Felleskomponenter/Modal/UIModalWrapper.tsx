@@ -19,27 +19,27 @@ const StyledModal = styled(Modal)`
     min-height: ${({ styleProps }: ModelStyleProps) =>
         styleProps?.minHeight ? styleProps.minHeight : '12rem'};
     padding: 1rem;
+`;
 
-    div.navds-modal__content {
-        padding: 0.5rem 1.5rem;
+const StyledModalContent = styled(Modal.Content)`
+    padding: 0.5rem 1.5rem;
+`;
 
-        .uimodal__content--inner-content {
-            margin-top: 2rem;
-        }
+const ModalInnerContent = styled.div`
+    margin-top: 2rem;
+`;
 
-        .uimodal__content--actions {
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: flex-end;
+const StyledModalActions = styled.div`
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
 
-            .knapp:not(:first-child) {
-                margin-left: 1rem;
-            }
-            .navds-button:not(:first-child) {
-                margin-left: 1rem;
-            }
-        }
+    .knapp:not(:first-child) {
+        margin-left: 1rem;
+    }
+    .navds-button:not(:first-child) {
+        margin-left: 1rem;
     }
 `;
 
@@ -72,15 +72,19 @@ const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, modelStyleProp
             aria-label="Opprett/Fjern verge"
             styleProps={modelStyleProps}
         >
-            <Modal.Content className="uimodal__content">
+            <StyledModalContent className="uimodal__content">
                 <Heading level="2" size="small">
                     {tittel}
                 </Heading>
-                <div className="uimodal__content--inner-content">
+                <ModalInnerContent className="uimodal__content--inner-content">
                     {innhold ? innhold() : children}
-                </div>
-                {actions && <div className="uimodal__content--actions"> {actions} </div>}
-            </Modal.Content>
+                </ModalInnerContent>
+                {actions && (
+                    <StyledModalActions className="uimodal__content--actions">
+                        {actions}
+                    </StyledModalActions>
+                )}
+            </StyledModalContent>
         </StyledModal>
     );
 };
