@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Alert, Button } from '@navikt/ds-react';
+import { Alert, Button, Detail } from '@navikt/ds-react';
 
 export const Spacer20 = styled.div`
     height: 20px;
@@ -45,4 +45,8 @@ export const BehandlingsMenyButton = styled(Button)`
     &:disabled:hover {
         background-color: var(--navds-semantic-color-interaction-primary-hover-subtle);
     }
+`;
+
+export const DetailBold = styled(Detail)`
+    font-weight: var(--navds-font-weight-bold);
 `;

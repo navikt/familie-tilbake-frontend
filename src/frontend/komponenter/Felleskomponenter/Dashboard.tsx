@@ -2,9 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { Sidetittel } from 'nav-frontend-typografi';
-
-import { Spacer20 } from './Flytelementer';
+import { BodyLong, Heading } from '@navikt/ds-react';
 
 const StyledContainer = styled.div`
     padding: 10px;
@@ -12,12 +10,13 @@ const StyledContainer = styled.div`
 
 const Dashboard: React.FC = () => (
     <StyledContainer>
-        <Sidetittel>NAV Familie - Tilbakekreving</Sidetittel>
-        <Spacer20 />
-        <div>
+        <Heading level="1" size="xlarge" spacing>
+            NAV Familie - Tilbakekreving
+        </Heading>
+        <BodyLong size="small">
             Velkommen til saksbehandlingsløsningen for tilbakekreving av ytelsene Barnetrygd,
             Konstantstøtte og Støtte til enslig forsørger.
-        </div>
+        </BodyLong>
     </StyledContainer>
 );
 

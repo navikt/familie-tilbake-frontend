@@ -4,8 +4,8 @@ import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 import { Radio } from 'nav-frontend-skjema';
-import { Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 
+import { BodyShort, Label } from '@navikt/ds-react';
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -23,12 +23,7 @@ import {
     VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-const StyledLabel = styled(UndertekstBold)`
-    line-height: 1.375rem;
-    font-size: 1rem;
-`;
-
-const StyledNormaltekst = styled(Normaltekst)`
+const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;
 `;
 
@@ -101,9 +96,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                         <Column md="6">
                             {!harMerEnnEnAktivitet && !erEgendefinert && (
                                 <>
-                                    <UndertekstBold>
-                                        Angi andel som skal tilbakekreves
-                                    </UndertekstBold>
+                                    <Label size="small">Angi andel som skal tilbakekreves</Label>
                                     <FlexRow>
                                         <FlexColumn>
                                             <FamilieSelect
@@ -137,9 +130,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                             )}
                             {!harMerEnnEnAktivitet && erEgendefinert && (
                                 <>
-                                    <UndertekstBold>
-                                        Angi andel som skal tilbakekreves
-                                    </UndertekstBold>
+                                    <Label size="small">Angi andel som skal tilbakekreves</Label>
                                     <FlexRow>
                                         <FlexColumn>
                                             <FamilieInput
@@ -162,9 +153,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                 data-testid="andelSomTilbakekrevesManuell"
                                             />
                                         </FlexColumn>
-                                        <FlexColumn className="percentage">
-                                            <Normaltekst>%</Normaltekst>
-                                        </FlexColumn>
+                                        <FlexColumn className="percentage">%</FlexColumn>
                                     </FlexRow>
                                 </>
                             )}
@@ -188,8 +177,8 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                         </Column>
                         {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET && (
                             <Column md="6">
-                                <UndertekstBold>Skal det tillegges renter?</UndertekstBold>
-                                <StyledNormaltekst>Nei</StyledNormaltekst>
+                                <Label size="small">Skal det tillegges renter?</Label>
+                                <StyledNormaltekst size="small">Nei</StyledNormaltekst>
                             </Column>
                         )}
                     </Row>
@@ -199,15 +188,17 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                 <ArrowBox alignOffset={erLesevisning ? 5 : 80}>
                     <Row>
                         <Column md="6">
-                            <StyledLabel>
+                            <Label size="small" spacing={harMerEnnEnAktivitet}>
                                 {harMerEnnEnAktivitet
                                     ? 'Beløp som skal tilbakekreves'
                                     : 'Andel som skal tilbakekreves'}
-                            </StyledLabel>
+                            </Label>
                             {kanIlleggeRenter ? (
-                                <StyledNormaltekst>{beskjedTilbakekreves}</StyledNormaltekst>
+                                <StyledNormaltekst size="small">
+                                    {beskjedTilbakekreves}
+                                </StyledNormaltekst>
                             ) : (
-                                <Normaltekst>{beskjedTilbakekreves}</Normaltekst>
+                                <BodyShort size="small">{beskjedTilbakekreves}</BodyShort>
                             )}
                         </Column>
                         {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET && (
@@ -225,6 +216,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                         ? skjema.felter.grovtUaktsomIlleggeRenter.feilmelding?.toString()
                                         : ''
                                 }
+                                margin-bottom="none"
                             >
                                 {jaNeiOptions.map(opt => (
                                     <Radio

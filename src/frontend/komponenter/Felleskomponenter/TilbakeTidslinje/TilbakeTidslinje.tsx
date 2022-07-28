@@ -2,12 +2,10 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-
 import { type Periode, Tidslinje } from '@navikt/familie-tidslinje';
 
 const TidslinjeContainer = styled.div`
-    border: 1px solid ${navFarger.navGra60};
+    border: 1px solid var(--navds-semantic-color-border);
     margin-bottom: 20px;
 
     .etiketter div:last-child {
@@ -15,32 +13,32 @@ const TidslinjeContainer = styled.div`
     }
 
     & div.tidslinje .behandlet {
-        background-color: ${navFarger.navGronnLighten60};
-        border-color: ${navFarger.navGronnLighten40};
+        background-color: var(--navds-global-color-green-200);
+        border-color: var(--navds-global-color-green-400);
 
         &.aktivPeriode {
-            background-color: ${navFarger.navGronnLighten40};
-            box-shadow: 0 0 0 2px ${navFarger.navGronn};
+            background-color: var(--navds-global-color-green-300);
+            box-shadow: 0 0 0 2px var(--navds-global-color-green-500);
         }
     }
 
     & div.tidslinje .avvist {
-        background-color: ${navFarger.redErrorLighten40};
-        border-color: ${navFarger.redErrorLighten20};
+        background-color: var(--navds-global-color-red-300);
+        border-color: var(--navds-global-color-red-500);
 
         &.aktivPeriode {
-            background-color: ${navFarger.redErrorLighten20};
-            box-shadow: 0 0 0 2px ${navFarger.navRod};
+            background-color: var(--navds-global-color-red-400);
+            box-shadow: 0 0 0 2px var(--navds-global-color-red-600);
         }
     }
 
     & div.tidslinje .ubehandlet {
-        background-color: ${navFarger.navOransjeLighten60};
-        border-color: ${navFarger.navOransjeLighten40};
+        background-color: var(--navds-global-color-orange-200);
+        border-color: var(--navds-global-color-orange-400);
 
         &.aktivPeriode {
-            background-color: ${navFarger.navOransjeLighten40};
-            box-shadow: 0 0 0 2px ${navFarger.navOransje};
+            background-color: var(--navds-global-color-orange-300);
+            box-shadow: 0 0 0 2px var(--navds-global-color-orange-500);
         }
     }
 `;

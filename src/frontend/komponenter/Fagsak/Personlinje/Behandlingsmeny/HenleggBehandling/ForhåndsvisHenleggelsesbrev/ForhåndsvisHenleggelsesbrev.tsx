@@ -2,11 +2,8 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-import Lenke from 'nav-frontend-lenker';
-import { Undertekst } from 'nav-frontend-typografi';
-
 import { ExternalLink } from '@navikt/ds-icons';
+import { Detail, Link } from '@navikt/ds-react';
 import { type ISkjema } from '@navikt/familie-skjema';
 
 import { IBehandling } from '../../../../../../typer/behandling';
@@ -42,8 +39,8 @@ const ForhåndsvisHenleggelsesBrev: React.FC<IProps> = ({ behandling, skjema, ka
 
     return kanForhåndsvise ? (
         <StyledContainer>
-            <Undertekst>Informer søker: </Undertekst>
-            <Lenke
+            <Detail size="small">Informer søker: </Detail>
+            <Link
                 href="#"
                 onMouseDown={e => e.preventDefault()}
                 onClick={e => {
@@ -51,9 +48,9 @@ const ForhåndsvisHenleggelsesBrev: React.FC<IProps> = ({ behandling, skjema, ka
                     settVisModal(true);
                 }}
             >
-                <span>Forhåndsvis brev</span>
-                <ExternalLink color={navFarger.navBla} />
-            </Lenke>
+                Forhåndsvis brev
+                <ExternalLink />
+            </Link>
             {visModal && (
                 <PdfVisningModal
                     åpen={visModal}

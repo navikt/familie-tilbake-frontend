@@ -8,7 +8,8 @@ export * from './FTDatovelger';
 export * from './LabelMedSpråk';
 
 export const HorisontalFamilieRadioGruppe = styled(FamilieRadioGruppe)`
-    margin-bottom: 12px;
+    margin-bottom: ${(props: { marginbottom?: string }) =>
+        props.marginbottom ? props.marginbottom : '12px'};
 
     .skjemaelement {
         float: left;

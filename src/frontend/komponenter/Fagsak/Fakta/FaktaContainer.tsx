@@ -2,10 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-import { Undertittel } from 'nav-frontend-typografi';
-
-import { Alert, BodyLong, Loader } from '@navikt/ds-react';
+import { Alert, BodyLong, Heading, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -23,8 +20,8 @@ const StyledFeilutbetalingFakta = styled.div`
     }
 
     .redText {
-        color: ${navFarger.navRod};
-        font-weight: bold;
+        color: var(--navds-semantic-color-feedback-danger-text);
+        font-weight: var(--navds-font-weight-bold);
     }
 `;
 
@@ -45,8 +42,9 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
         case RessursStatus.SUKSESS:
             return (
                 <StyledFeilutbetalingFakta>
-                    <Undertittel>Fakta om feilutbetaling</Undertittel>
-                    <Spacer20 />
+                    <Heading level="2" size="small" spacing>
+                        Fakta om feilutbetaling
+                    </Heading>
                     {(!erLesevisning || stegErBehandlet) && (
                         <>
                             <Steginformasjon

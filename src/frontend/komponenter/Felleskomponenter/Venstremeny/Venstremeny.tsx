@@ -3,8 +3,6 @@ import * as React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -16,29 +14,29 @@ const StyledNav = styled.nav`
     display: flex;
     flex: 1;
     flex-direction: column;
-    background: white;
+    background: var(--navds-semantic-color-canvas-background-light);
     padding: 2rem 0;
 `;
 
 const StyledLink = styled(Link)`
     text-decoration: none;
     padding: 0.5rem 3rem 0.5rem 2rem;
-    color: ${navFarger.navGra80};
+    color: var(--navds-semantic-color-text);
 
     &.hover-effekt:hover {
-        background: ${navFarger.navLysGra};
+        background: var(--navds-semantic-color-canvas-background);
     }
 
     &.active {
-        background: ${navFarger.navLysGra};
+        background: var(--navds-semantic-color-canvas-background);
     }
 
     &.active {
-        box-shadow: inset 0.35rem 0 0 0 ${navFarger.navBla};
+        box-shadow: inset 0.35rem 0 0 0 var(--navds-semantic-color-focus);
     }
 
     &:focus {
-        box-shadow: 0 0 0 3px ${navFarger.fokusFarge};
+        box-shadow: inset 0.35rem 0 0 0 var(--navds-semantic-color-focus);
         outline: none;
     }
 
@@ -47,7 +45,11 @@ const StyledLink = styled(Link)`
     }
 
     &.inactive {
-        color: ${navFarger.navLysGra};
+        color: var(--navds-global-color-gray-300);
+
+        &:hover {
+            cursor: not-allowed;
+        }
     }
 `;
 

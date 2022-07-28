@@ -65,13 +65,13 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                         href={lagLenkeTilRevurdering()}
                         target="_blank"
                     >
-                        <span>Gå til revurderingen</span>
+                        Gå til revurderingen
                         <ExternalLink aria-label="Gå til revurderingen" />
                     </Link>
                 )}
 
                 <Link className={'visittkort__lenke'} href={lagSaksoversiktUrl()} target="_blank">
-                    <span>Gå til saksoversikt</span>
+                    Gå til saksoversikt
                     <ExternalLink aria-label="Gå til saksoversikt" />
                 </Link>
 

@@ -2,11 +2,8 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-import Lenke from 'nav-frontend-lenker';
-import { Element, Normaltekst, Undertekst } from 'nav-frontend-typografi';
-
 import { ExternalLink } from '@navikt/ds-icons';
+import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
 
 import { Behandlingssteg } from '../../../../typer/behandling';
 import {
@@ -34,7 +31,7 @@ const Tidslinje = styled.div`
     text-align: center;
     background-image: radial-gradient(
         1px 1px at center,
-        ${navFarger.navGra40} 1px,
+        var(--navds-global-color-gray-400) 1px,
         transparent 1px,
         transparent 4px
     );
@@ -58,13 +55,13 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
             const steg = Behandlingssteg[innslag.steg as keyof typeof Behandlingssteg];
             const side = finnSideForSteg(steg);
             return steg && side ? (
-                <Lenke
+                <Link
                     href="#"
-                    onMouseDown={e => e.preventDefault()}
+                    onMouseDown={(e: React.MouseEvent) => e.preventDefault()}
                     onClick={() => navigerTilSide(side)}
                 >
                     {innslag.tittel}
-                </Lenke>
+                </Link>
             ) : null;
         }
         return innslag.tittel;
@@ -78,29 +75,29 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
             const begrunnelse = innslag.tekst?.substring(indexÅrsakMedBegrunnelse + 15);
             return (
                 <>
-                    <Normaltekst>{årsak}</Normaltekst>
-                    <Normaltekst>
+                    <BodyShort size="small">{årsak}</BodyShort>
+                    <BodyLong size="small">
                         Begrunnelse: <em>{begrunnelse}</em>
-                    </Normaltekst>
+                    </BodyLong>
                 </>
             );
         }
-        return <Normaltekst>{innslag.tekst}</Normaltekst>;
+        return <BodyShort size="small">{innslag.tekst}</BodyShort>;
     };
 
     const lagBrevLink = () => {
         return (
             <span>
-                <Lenke
+                <Link
                     href={'#'}
-                    onClick={e => {
+                    onClick={(e: React.MouseEvent) => {
                         e.preventDefault();
                         settVisDokument(true);
                     }}
                 >
-                    <span>{innslag.tekst}</span>
-                    <ExternalLink color={navFarger.navBla} aria-label={`Åpne ${innslag.tekst}`} />
-                </Lenke>
+                    {innslag.tekst}
+                    <ExternalLink aria-label={`Åpne ${innslag.tekst}`} />
+                </Link>
             </span>
         );
     };
@@ -115,15 +112,15 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
                 {innslag.aktør === Aktør.SAKSBEHANDLER && <SaksbehandlerIkon />}
             </Tidslinje>
             <Innhold>
-                <Element>{lagTittel()}</Element>
-                <Undertekst>
+                <Label size="small">{lagTittel()}</Label>
+                <Detail size="small">
                     {`${formatterDatoOgTidstring(innslag.opprettetTid)} | `}
                     {innslag.aktør === Aktør.VEDTAKSLØSNING
                         ? applikasjoner[innslag.applikasjon]
                         : `${innslag.aktørIdent.toLocaleLowerCase()} (${aktører[
                               innslag.aktør
                           ].toLocaleLowerCase()})`}
-                </Undertekst>
+                </Detail>
                 {innslag.tekst && !typeBrev && tilpassTekst()}
                 {typeBrev && lagBrevLink()}
                 {visDokument && (

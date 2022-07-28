@@ -3,15 +3,15 @@ import * as React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
+
+import { BodyShort, Label } from '@navikt/ds-react';
 
 import { HendelseType, hendelsetyper } from '../../../kodeverk';
 import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
 
 const StyledContainer = styled.div`
-    background-color: ${navFarger.navOransjeLighten80};
+    background-color: var(--navds-global-color-orange-100);
     height: auto;
     padding: 10px 20px 10px;
     top: 0;
@@ -22,13 +22,13 @@ const SumRad = styled(Row)`
     margin-top: 20px;
 
     .positivNumber {
-        font-weight: bold;
+        font-weight: var(--navds-font-weight-bold);
         margin-left: 8px;
     }
 
     .redNumber {
-        color: ${navFarger.navRod};
-        font-weight: bold;
+        color: var(--navds-semantic-color-feedback-danger-text);
+        font-weight: var(--navds-font-weight-bold);
         margin-left: 8px;
     }
 `;
@@ -45,23 +45,27 @@ const PeriodeOppsummering: React.FC<IProps> = ({ fom, tom, beløp, hendelsetype 
         <StyledContainer>
             <Row>
                 <Column xs="7">
-                    <Element>{`${formatterDatostring(fom)} - ${formatterDatostring(tom)}`}</Element>
+                    <Label size="small">{`${formatterDatostring(fom)} - ${formatterDatostring(
+                        tom
+                    )}`}</Label>
                 </Column>
                 <Column xs="5">
-                    <Normaltekst>{hentPeriodelengde(fom, tom)}</Normaltekst>
+                    <BodyShort size="small">{hentPeriodelengde(fom, tom)}</BodyShort>
                 </Column>
             </Row>
             <SumRad>
                 <Column xs="7">
-                    <Normaltekst>
+                    <BodyShort size="small">
                         Feilutbetaling:
                         <span className={classNames(beløp ? 'redNumber' : 'positivNumber')}>
                             {formatCurrencyNoKr(beløp)}
                         </span>
-                    </Normaltekst>
+                    </BodyShort>
                 </Column>
                 <Column xs="5">
-                    {hendelsetype && <Normaltekst>{hendelsetyper[hendelsetype]}</Normaltekst>}
+                    {hendelsetype && (
+                        <BodyShort size="small">{hendelsetyper[hendelsetype]}</BodyShort>
+                    )}
                 </Column>
             </SumRad>
         </StyledContainer>

@@ -27,7 +27,7 @@ import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
 
 const StyledContainer = styled.div`
-    border: 1px solid var(--navds-global-color-gray-600);
+    border: 1px solid var(--navds-semantic-color-border);
     padding: 10px;
 `;
 
@@ -129,7 +129,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
         <StyledContainer>
             <Row>
                 <Column lg="4" md="7" sm="12">
-                    <Heading spacing size="small" level="2">
+                    <Heading size="small" level="2">
                         Detaljer for valgt periode
                     </Heading>
                 </Column>

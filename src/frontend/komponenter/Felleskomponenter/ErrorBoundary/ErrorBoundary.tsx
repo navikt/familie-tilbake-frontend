@@ -3,8 +3,7 @@ import * as React from 'react';
 import { showReportDialog } from '@sentry/browser';
 import { captureException, configureScope, withScope } from '@sentry/core';
 
-import { Element } from 'nav-frontend-typografi';
-
+import { Label } from '@navikt/ds-react';
 import { type ISaksbehandler } from '@navikt/familie-typer';
 
 import { apiLoggFeil } from '../../../api/axios';
@@ -61,7 +60,7 @@ class ErrorBoundary extends React.Component<IProps, IState> {
     render() {
         if (this.state.hasError) {
             // You can render any custom fallback UI
-            return <Element>Noe har gått feil!</Element>;
+            return <Label size="small">Noe har gått feil!</Label>;
         }
 
         return this.props.children;

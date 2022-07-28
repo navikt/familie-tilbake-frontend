@@ -2,12 +2,10 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
 import { Column, Row } from 'nav-frontend-grid';
 import { Radio } from 'nav-frontend-skjema';
-import { Normaltekst, Undertekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
-import { HelpText } from '@navikt/ds-react';
+import { BodyShort, Detail, Heading, HelpText } from '@navikt/ds-react';
 import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -24,7 +22,13 @@ import {
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatostring, isEmpty } from '../../../../utils';
-import { FTButton, Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
+import {
+    DetailBold,
+    FTButton,
+    Navigering,
+    Spacer20,
+    Spacer8,
+} from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
@@ -44,7 +48,7 @@ import {
 } from './VilkårsvurderingPeriodeSkjemaContext';
 
 const StyledContainer = styled.div`
-    border: 1px solid ${navFarger.navGra60};
+    border: 1px solid var(--navds-semantic-color-border);
     padding: 10px;
 `;
 
@@ -215,7 +219,9 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         <StyledContainer>
             <Row>
                 <Column lg="4" md="7" sm="12">
-                    <Undertittel>Detaljer for valgt periode</Undertittel>
+                    <Heading size="small" level="2">
+                        Detaljer for valgt periode
+                    </Heading>
                 </Column>
                 <Column lg="2" md="2" sm="6">
                     {!erLesevisning && !periode.foreldet && (
@@ -257,7 +263,9 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     name="perioderForKopi"
                                     onChange={event => onKopierPeriode(event)}
                                     bredde="m"
-                                    label={<Undertekst>Kopier vilkårsvurdering fra</Undertekst>}
+                                    label={
+                                        <Detail size="small">Kopier vilkårsvurdering fra</Detail>
+                                    }
                                     erLesevisning={erLesevisning}
                                 >
                                     <option value="-">-</option>
@@ -284,25 +292,26 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                             <Column md="12">
                                 <Row>
                                     <Column md="6">
-                                        <UndertekstBold>Varsel</UndertekstBold>
-                                        <Spacer8 />
-                                        <Normaltekst>
+                                        <DetailBold size="small" spacing>
+                                            Varsel
+                                        </DetailBold>
+                                        <BodyShort size="small">
                                             {periode.begrunnelse ? periode.begrunnelse : ''}
-                                        </Normaltekst>
+                                        </BodyShort>
                                     </Column>
                                     <Column md="6">
-                                        <UndertekstBold>
+                                        <DetailBold size="small" spacing>
                                             Vurder om perioden er foreldet
-                                        </UndertekstBold>
-                                        <Spacer8 />
-                                        <Normaltekst>Perioden er foreldet</Normaltekst>
+                                        </DetailBold>
+                                        <BodyShort size="small">Perioden er foreldet</BodyShort>
                                     </Column>
                                 </Row>
                             </Column>
                         ) : (
                             <Column md="10">
-                                <Undertittel>Vilkårene for tilbakekreving</Undertittel>
-                                <Spacer8 />
+                                <Heading size="small" level="2" spacing>
+                                    Vilkårene for tilbakekreving
+                                </Heading>
                                 <FamilieTilbakeTextArea
                                     {...skjema.felter.vilkårsresultatBegrunnelse.hentNavInputProps(
                                         skjema.visFeilmeldinger
@@ -369,11 +378,14 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                             {vilkårsresultatVurderingGjort && (
                                 <>
                                     {erGodTro ? (
-                                        <Undertittel>Beløpet mottatt i god tro</Undertittel>
+                                        <Heading size="small" level="2" spacing>
+                                            Beløpet mottatt i god tro
+                                        </Heading>
                                     ) : (
-                                        <Undertittel>Aktsomhet</Undertittel>
+                                        <Heading size="small" level="2" spacing>
+                                            Aktsomhet
+                                        </Heading>
                                     )}
-                                    <Spacer8 />
                                     <FamilieTilbakeTextArea
                                         {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(
                                             skjema.visFeilmeldinger

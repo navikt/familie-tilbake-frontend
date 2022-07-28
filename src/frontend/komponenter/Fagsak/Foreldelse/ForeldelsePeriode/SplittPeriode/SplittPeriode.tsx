@@ -2,9 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import Lenke from 'nav-frontend-lenker';
-import { Undertekst } from 'nav-frontend-typografi';
-
+import { Detail, Link } from '@navikt/ds-react';
 import { type Periode as TidslinjePeriode } from '@navikt/familie-tidslinje';
 
 import splitPeriodImageUrl from '../../../../../images/splitt.svg';
@@ -16,16 +14,12 @@ import Image from '../../../../Felleskomponenter/Image/Image';
 import { DelOppPeriode, useDelOppPeriode } from '../../../../Felleskomponenter/Modal/DelOppPeriode';
 import { ForeldelsePeriodeSkjemeData } from '../../typer/feilutbetalingForeldelse';
 
-const InlineUndertekst = styled(Undertekst)`
-    display: inline-block;
+const InlineUndertekst = styled(Detail)`
+    margin-left: 0.1rem;
 `;
 
 const StyledContainer = styled.div`
     text-align: right;
-
-    ${InlineUndertekst} {
-        margin-left: 1ex;
-    }
 `;
 
 const konverterPeriode = (periode: ForeldelsePeriodeSkjemeData): TidslinjePeriode => {
@@ -133,7 +127,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
 
     return periode && tidslinjeRader ? (
         <StyledContainer>
-            <Lenke
+            <Link
                 href="#"
                 role="button"
                 onClick={_event => {
@@ -145,7 +139,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                         settVisModal(true);
                     }
                 }}
-                ariaLabel="Del opp perioden"
+                aria-label="Del opp perioden"
             >
                 <Image
                     src={splitPeriodImageUrl}
@@ -153,8 +147,8 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                     altText={'Del opp perioden'}
                     aria-label="Del opp perioden"
                 />
-                <InlineUndertekst>Del opp perioden</InlineUndertekst>
-            </Lenke>
+                <InlineUndertekst size="small">Del opp perioden</InlineUndertekst>
+            </Link>
             {visModal && (
                 <DelOppPeriode
                     periode={periode}

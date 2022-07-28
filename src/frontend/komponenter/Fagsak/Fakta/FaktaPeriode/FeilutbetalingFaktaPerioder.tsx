@@ -2,37 +2,19 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import { Table } from '@navikt/ds-react';
+
 import { HendelseType, hentHendelseTyper, Ytelsetype } from '../../../../kodeverk';
 import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 import FeilutbetalingFaktaPeriode from './FeilutbetalingFaktaPeriodeSkjema';
 
-const StyledPeriodeTable = styled.table`
-    width: 100%;
-
-    th {
-        border-bottom: 1px solid black;
-        text-align: left;
-    }
-
+const StyledPeriodeTable = styled(Table)`
     td {
         vertical-align: top;
-    }
 
-    th,
-    td {
-        padding: 5px;
-
-        :last-child {
-            text-align: right;
+        &:nth-of-type(2) {
+            padding-top: 0px;
         }
-    }
-
-    tbody tr:last-child td {
-        border-bottom: 1px solid black;
-    }
-
-    .skjemaelement {
-        margin: 5px;
     }
 `;
 
@@ -50,15 +32,17 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLes
     }, [ytelse]);
 
     return (
-        <StyledPeriodeTable cellSpacing={0} cellPadding={0}>
-            <thead>
-                <tr>
-                    <th>Periode</th>
-                    <th>Hendelse</th>
-                    <th>Feilutbetalt beløp</th>
-                </tr>
-            </thead>
-            <tbody>
+        <StyledPeriodeTable size="small">
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
+                    <Table.HeaderCell scope="col">Hendelse</Table.HeaderCell>
+                    <Table.HeaderCell scope="col" align="right">
+                        Feilutbetalt beløp
+                    </Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
                 {perioder.map(periode => {
                     return (
                         <FeilutbetalingFaktaPeriode
@@ -70,7 +54,7 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLes
                         />
                     );
                 })}
-            </tbody>
+            </Table.Body>
         </StyledPeriodeTable>
     );
 };
