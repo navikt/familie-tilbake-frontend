@@ -1655,7 +1655,7 @@
     copy-to-clipboard "^3.3.1"
     react-merge-refs "^1.1.0"
 
-"@navikt/ds-react@^0.19.25":
+"@navikt/ds-react@^0.19.25", "@navikt/ds-react@^0.19.x":
   version "0.19.25"
   resolved "https://npm.pkg.github.com/download/@navikt/ds-react/0.19.25/6cc4b49e3eee98dabda9ed67ad60ecab339972c65ece87056284ca4f12c0c30d#db43b172eab1c6efe62c6d00690b1d2ac5d33ea5"
   integrity sha512-PAA06TEWnfbXJJGxC77eyCN/QfDiKoVFD163F6AGedT58icJQBkqtTcPC0HSpsxbtvJL6Z/ophgeD4LnCsSLhw==
@@ -1706,6 +1706,17 @@
   version "5.0.0"
   resolved "https://npm.pkg.github.com/download/@navikt/familie-clipboard/5.0.0/64e85e3897e8bc00151eb41dd30205fc6ebeb93b6908196b1a0dbb249f6658b8#93140419518f1333f0ff7f265b71fc6878d64129"
   integrity sha512-6hqx0EjPrMpJt8JiFKi0la9ffPt8U3unTs2nuFks7kop7i0AKtcXn7RmOvaEAN/uuwAsm1CVrasPJaW3AC8rRA==
+  dependencies:
+    "@navikt/ds-css" "^0.18.x"
+    "@navikt/ds-icons" "^0.8.x"
+    "@types/react-tooltip" "^4.2.4"
+    framer-motion "^6.3.16"
+    react-tooltip "^4.2.21"
+
+"@navikt/familie-clipboard@^6.0.0":
+  version "6.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-clipboard/6.0.0/7c744de677d26aad357989a3d4387deccb688243e44fee2686eda67edd9ac2b7#61cc41ecf55ce7b69704dbb34fac6bde4ca8636b"
+  integrity sha512-T6SZpTW4hLRaGDbOr1jaOVg5GFQL7VEY5bXQGYVxc866fQPeiKMwCa8MeAEv8AAENmjpllw/wIIOtrlm9OlatA==
   dependencies:
     "@navikt/ds-css" "^0.18.x"
     "@navikt/ds-icons" "^0.8.x"
@@ -1786,20 +1797,17 @@
   resolved "https://npm.pkg.github.com/download/@navikt/familie-typer/5.0.0/457a7865af7d164c5ea26ba942fec62da74e02c0fdcd48165fc6c1c8c9d19f1c#9b59ac4a1b044de72586339c2e3e4af60c9baac4"
   integrity sha512-rHc1Q+ND28qJ02A7ddn7Y3LDZBelvZv/g528GvxNhgYidpN+nD75czbUje/x3ZwD3W+f+WealUlcDMf057DTGg==
 
-"@navikt/familie-visittkort@^3.0.5":
-  version "3.0.5"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-visittkort/3.0.5/d9b62330a42ecea17544b6159df40df173e4832763559d0b9e9e3fe67e36fe9f#51734be7f679d0c8578d2a12fcefeb7d602a74aa"
-  integrity sha512-LWef8YIp9snWzlgrZR6OWtl6aPktC58ssifjl7ojb7KByX9X8hRtWohF7H4jsf5JLD6cpkTqv2AdDJ+pt7OIjA==
+"@navikt/familie-visittkort@^4.0.0":
+  version "4.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-visittkort/4.0.0/502853f7b47f286070c158c8d377f3f82b99e111065079428d8abc0949657d86#f5c04e71801a15c15ea16d9027c0dd1da1a3220f"
+  integrity sha512-5dxiD5wQQ5DkVk+qKYJmEn1pLz9zFLwqoiBdu7ISwXI7wcpxFdIN1lQZ2Z6PSKQopqLplLEKRUWP7vsg+rJizQ==
   dependencies:
-    "@navikt/familie-clipboard" "^5.0.0"
+    "@navikt/ds-css" "^0.18.x"
+    "@navikt/ds-react" "^0.19.x"
+    "@navikt/familie-clipboard" "^6.0.0"
     "@navikt/familie-ikoner" "^4.0.2"
     "@navikt/familie-typer" "^5.0.0"
     classnames "^2.3.1"
-    nav-frontend-core "^6.0.1"
-    nav-frontend-knapper "^3.1.2"
-    nav-frontend-knapper-style "^2.1.1"
-    nav-frontend-typografi "^4.0.1"
-    nav-frontend-typografi-style "^2.0.1"
     prop-types "^15.8.1"
 
 "@navikt/fnrvalidator@^1.3.0":
