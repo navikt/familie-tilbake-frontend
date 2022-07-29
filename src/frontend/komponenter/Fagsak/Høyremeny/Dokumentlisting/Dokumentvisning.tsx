@@ -2,10 +2,8 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-import Lenke from 'nav-frontend-lenker';
-
 import { ExternalLink } from '@navikt/ds-icons';
+import { Link } from '@navikt/ds-react';
 import { type IDokumentInfo, type IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
 import HentDokument from './HentDokument';
@@ -28,19 +26,16 @@ const Dokumentvisning: React.FC<IProps> = ({ journalpost, dokument }) => {
                 <span>{dokument.tittel}</span>
             ) : (
                 <>
-                    <Lenke
+                    <Link
                         href="#"
-                        onClick={e => {
+                        onClick={(e: React.MouseEvent) => {
                             e.preventDefault();
                             settVisDokument(true);
                         }}
                     >
-                        <span>{dokument.tittel}</span>
-                        <ExternalLink
-                            color={navFarger.navBla}
-                            aria-label={`Åpne ${dokument.tittel}`}
-                        />
-                    </Lenke>
+                        {dokument.tittel}
+                        <ExternalLink aria-label={`Åpne ${dokument.tittel}`} />
+                    </Link>
                     {visDokument && (
                         <HentDokument
                             journalpost={journalpost}

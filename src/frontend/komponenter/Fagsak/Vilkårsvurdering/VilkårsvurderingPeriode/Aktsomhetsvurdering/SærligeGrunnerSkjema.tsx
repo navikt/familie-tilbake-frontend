@@ -4,13 +4,12 @@ import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 import { CheckboxGruppe } from 'nav-frontend-skjema';
-import { UndertekstBold } from 'nav-frontend-typografi';
 
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
 import { type ISkjema } from '@navikt/familie-skjema';
 
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
-import { Spacer20, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
+import { DetailBold, Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
 import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
@@ -56,8 +55,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
 
     return (
         <div>
-            <UndertekstBold>Særlige grunner 4. ledd</UndertekstBold>
-            <Spacer8 />
+            <DetailBold spacing>Særlige grunner 4. ledd</DetailBold>
             <FamilieTilbakeTextArea
                 {...skjema.felter.særligeGrunnerBegrunnelse.hentNavInputProps(
                     skjema.visFeilmeldinger

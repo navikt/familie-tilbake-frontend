@@ -3,8 +3,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Radio } from 'nav-frontend-skjema';
-import { Normaltekst } from 'nav-frontend-typografi';
 
+import { BodyShort } from '@navikt/ds-react';
 import { FamilieInput } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -78,7 +78,7 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                 )}
                 {harVurderBeløpIBehold && !harBeløpetIBehold && (
                     <ArrowBox alignOffset={80}>
-                        <Normaltekst>Ingen tilbakekreving</Normaltekst>
+                        <BodyShort size="small">Ingen tilbakekreving</BodyShort>
                     </ArrowBox>
                 )}
             </ArrowBoxContainer>

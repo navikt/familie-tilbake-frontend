@@ -2,9 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
-import { Undertekst } from 'nav-frontend-typografi';
-
+import { Detail } from '@navikt/ds-react';
 import { type IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
 import { formatterDatoOgTid, hentDatoRegistrertSendt } from '../../../../utils';
@@ -23,7 +21,7 @@ const Dialog = styled.div`
     text-align: center;
     background-image: radial-gradient(
         1px 1px at center,
-        ${navFarger.navGra40} 1px,
+        var(--navds-global-color-gray-400) 1px,
         transparent 1px,
         transparent 4px
     );
@@ -62,10 +60,10 @@ const JournalpostVisning: React.FC<IProps> = ({ journalpost }) => {
                         dokument={dok}
                     />
                 ))}
-                <Undertekst>
+                <Detail size="small">
                     {`${datoRegistrertSendt ? formatterDatoOgTid(datoRegistrertSendt) : '-'} | `}
                     {typer[journalpost.journalposttype]}
-                </Undertekst>
+                </Detail>
             </Innhold>
         </Journalpost>
     );

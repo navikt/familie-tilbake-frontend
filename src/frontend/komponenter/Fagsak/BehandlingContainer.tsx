@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { Normaltekst } from 'nav-frontend-typografi';
+import { BodyShort } from '@navikt/ds-react';
 
 import { useBehandling } from '../../context/BehandlingContext';
 import { Behandlingstatus, IBehandling } from '../../typer/behandling';
@@ -89,7 +89,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
         <>
             <StyledMainContainer id={'fagsak-main'}>
                 <HenlagtContainer>
-                    <Normaltekst>Behandlingen er henlagt</Normaltekst>
+                    <BodyShort size="small">Behandlingen er henlagt</BodyShort>
                 </HenlagtContainer>
             </StyledMainContainer>
             <StyledHøyremenyContainer>

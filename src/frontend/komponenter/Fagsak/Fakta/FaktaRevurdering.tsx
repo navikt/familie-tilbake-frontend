@@ -3,11 +3,12 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
-import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
+
+import { BodyShort, Heading } from '@navikt/ds-react';
 
 import { IFeilutbetalingFakta, tilbakekrevingsvalg } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring } from '../../../utils';
-import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { DetailBold, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 
 export const RadMedMargin = styled(Row)`
     margin-bottom: 16px;
@@ -22,49 +23,53 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
         <>
             <Row>
                 <Column xs="12">
-                    <Undertittel>Revurdering</Undertittel>
+                    <Heading level="2" size="small">
+                        Revurdering
+                    </Heading>
                 </Column>
             </Row>
             <Spacer20 />
             <RadMedMargin>
                 <Column xs="6">
-                    <UndertekstBold>Årsak(er) til revurdering</UndertekstBold>
+                    <DetailBold size="small">Årsak(er) til revurdering</DetailBold>
                     {feilutbetalingFakta.faktainfo?.revurderingsårsak && (
-                        <Normaltekst>{feilutbetalingFakta.faktainfo.revurderingsårsak}</Normaltekst>
+                        <BodyShort size="small">
+                            {feilutbetalingFakta.faktainfo.revurderingsårsak}
+                        </BodyShort>
                     )}
                 </Column>
                 <Column xs="6">
-                    <UndertekstBold>Dato for revurderingsvedtak</UndertekstBold>
-                    <Normaltekst>
+                    <DetailBold size="small">Dato for revurderingsvedtak</DetailBold>
+                    <BodyShort size="small">
                         {formatterDatostring(feilutbetalingFakta.revurderingsvedtaksdato)}
-                    </Normaltekst>
+                    </BodyShort>
                 </Column>
             </RadMedMargin>
             <RadMedMargin>
                 <Column xs="6">
-                    <UndertekstBold>Resultat</UndertekstBold>
+                    <DetailBold size="small">Resultat</DetailBold>
                     {feilutbetalingFakta.faktainfo?.revurderingsresultat && (
-                        <Normaltekst>
+                        <BodyShort size="small">
                             {feilutbetalingFakta.faktainfo.revurderingsresultat}
-                        </Normaltekst>
+                        </BodyShort>
                     )}
                 </Column>
                 <Column xs="6">
-                    <UndertekstBold>Konsekvens</UndertekstBold>
+                    <DetailBold size="small">Konsekvens</DetailBold>
                     {feilutbetalingFakta.faktainfo?.konsekvensForYtelser && (
-                        <Normaltekst>
+                        <BodyShort size="small">
                             {feilutbetalingFakta.faktainfo.konsekvensForYtelser?.join(', ')}
-                        </Normaltekst>
+                        </BodyShort>
                     )}
                 </Column>
             </RadMedMargin>
             <Row>
                 <Column xs="6">
-                    <UndertekstBold>Tilbakekrevingsvalg</UndertekstBold>
+                    <DetailBold size="small">Tilbakekrevingsvalg</DetailBold>
                     {feilutbetalingFakta.faktainfo?.tilbakekrevingsvalg && (
-                        <Normaltekst>
+                        <BodyShort size="small">
                             {tilbakekrevingsvalg[feilutbetalingFakta.faktainfo.tilbakekrevingsvalg]}
-                        </Normaltekst>
+                        </BodyShort>
                     )}
                 </Column>
             </Row>

@@ -2,16 +2,12 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { Normaltekst } from 'nav-frontend-typografi';
+import { Alert, BodyShort, Label } from '@navikt/ds-react';
 
-import { Alert } from '@navikt/ds-react';
-
-const InlineNormaltekst = styled(Normaltekst)`
-    display: inline-block;
-`;
-
-const StyledNormaltekst = styled(InlineNormaltekst)`
-    font-weight: 600;
+const StyledDiv = styled.div`
+    p {
+        display: inline;
+    }
 `;
 
 const StyledAlert = styled(Alert)`
@@ -29,10 +25,9 @@ const Steginformasjon: React.FC<IProps> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
         <StyledAlert variant="warning" children={infotekst} />
     ) : (
-        <div>
-            <StyledNormaltekst>Behandlet:</StyledNormaltekst>{' '}
-            <InlineNormaltekst>{infotekst}</InlineNormaltekst>
-        </div>
+        <StyledDiv>
+            <Label size="small">Behandlet:</Label> <BodyShort size="small">{infotekst}</BodyShort>
+        </StyledDiv>
     );
 };
 

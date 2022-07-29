@@ -2,9 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
-
-import { Alert, BodyLong, BodyShort, Loader } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -15,7 +13,7 @@ import {
     Behandlingårsak,
     IBehandling,
 } from '../../../typer/behandling';
-import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
 import VedtakPerioder from './VedtakPerioder';
@@ -39,7 +37,7 @@ const StyledAlert = styled(Alert)`
 `;
 
 const VarselbrevInfo = styled(BodyShort)`
-    font-weight: bold;
+    font-weight: var(--navds-font-weight-bold);
 `;
 
 const KnappeDiv = styled.div`
@@ -105,8 +103,9 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
     ) {
         return (
             <StyledVedtak>
-                <Undertittel>Vedtak</Undertittel>
-                <Spacer20 />
+                <Heading level="2" size="small" spacing>
+                    Vedtak
+                </Heading>
                 {erRevurderingKlageKA && (
                     <>
                         <StyledAlert
@@ -120,11 +119,10 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                         <Spacer20 />
                     </>
                 )}
-                <UndertekstBold>Resultat</UndertekstBold>
-                <Normaltekst>
+                <DetailBold size="small">Resultat</DetailBold>
+                <BodyLong size="small" spacing>
                     {vedtaksresultater[beregningsresultat.data.vedtaksresultat]}
-                </Normaltekst>
-                <Spacer20 />
+                </BodyLong>
                 <VedtakPerioder perioder={beregningsresultat.data.beregningsresultatsperioder} />
                 <Spacer20 />
                 <VedtakSkjema

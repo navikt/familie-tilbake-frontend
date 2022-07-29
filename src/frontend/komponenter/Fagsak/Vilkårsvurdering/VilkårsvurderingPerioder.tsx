@@ -23,7 +23,7 @@ import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkå
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 
 const ValideringsFeilmelding = styled(BodyShort)`
-    font-weight: bold;
+    font-weight: var(--navds-font-weight-bold);
 `;
 
 const finnClassNamePeriode = (
@@ -137,7 +137,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         <>
             {valideringsfeil && (
                 <>
-                    <FTAlertStripe variant="error">
+                    <FTAlertStripe variant="error" fullWidth>
                         <ValideringsFeilmelding>{valideringsFeilmelding}</ValideringsFeilmelding>
                     </FTAlertStripe>
                     <Spacer20 />

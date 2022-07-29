@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import classNames from 'classnames';
 
-import { Normaltekst } from 'nav-frontend-typografi';
-
+import { BodyShort, Table } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import {
@@ -55,13 +54,13 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     };
 
     return (
-        <tr>
-            <td>
-                <Normaltekst>{`${formatterDatostring(periode.periode.fom)} - ${formatterDatostring(
-                    periode.periode.tom
-                )}`}</Normaltekst>
-            </td>
-            <td>
+        <Table.Row>
+            <Table.DataCell>
+                <BodyShort size="small">{`${formatterDatostring(
+                    periode.periode.fom
+                )} - ${formatterDatostring(periode.periode.tom)}`}</BodyShort>
+            </Table.DataCell>
+            <Table.DataCell>
                 <FamilieSelect
                     id={`perioder.${index}.årsak`}
                     data-testid={`perioder.${index}.årsak`}
@@ -115,11 +114,11 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                         ))}
                     </FamilieSelect>
                 )}
-            </td>
-            <td className={classNames('redText')}>
-                <Normaltekst>{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</Normaltekst>
-            </td>
-        </tr>
+            </Table.DataCell>
+            <Table.DataCell align="right" className={classNames('redText')}>
+                <BodyShort size="small">{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</BodyShort>
+            </Table.DataCell>
+        </Table.Row>
     );
 };
 

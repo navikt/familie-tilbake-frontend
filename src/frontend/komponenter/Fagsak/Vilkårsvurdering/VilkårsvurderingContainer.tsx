@@ -3,9 +3,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
-import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 
-import { Alert, BodyLong, Loader } from '@navikt/ds-react';
+import { Alert, BodyLong, Heading, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -48,14 +47,14 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
 
             return (
                 <StyledVilkårsvurdering>
-                    <Undertittel>Tilbakekreving</Undertittel>
-                    <Spacer20 />
+                    <Heading level="2" size="small" spacing>
+                        Tilbakekreving
+                    </Heading>
                     {erAutoutført && (
                         <>
-                            <Normaltekst>
+                            <BodyLong size="small" spacing>
                                 Automatisk vurdert. Alle perioder er foreldet.
-                            </Normaltekst>
-                            <Spacer20 />
+                            </BodyLong>
                         </>
                     )}
                     {!erAutoutført && (!erLesevisning || stegErBehandlet) && (

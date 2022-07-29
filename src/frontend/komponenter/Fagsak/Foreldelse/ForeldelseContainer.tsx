@@ -49,8 +49,12 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                 <Heading spacing size="small" level="2">
                     Foreldelse
                 </Heading>
-                <BodyShort spacing>Foreldelsesloven §§ 2 og 3</BodyShort>
-                <BodyShort spacing>Automatisk vurdert</BodyShort>
+                <BodyShort size="small" spacing>
+                    Foreldelsesloven §§ 2 og 3
+                </BodyShort>
+                <BodyLong size="small" spacing>
+                    Automatisk vurdert
+                </BodyLong>
                 <Row>
                     <Column xs="10" md="4">
                         <Navigering>

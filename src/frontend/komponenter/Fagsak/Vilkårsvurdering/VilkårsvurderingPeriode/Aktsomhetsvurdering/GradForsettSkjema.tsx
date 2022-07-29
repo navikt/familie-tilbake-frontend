@@ -4,13 +4,12 @@ import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 import { Radio } from 'nav-frontend-skjema';
-import { Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 
+import { BodyShort, Label } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
 import {
@@ -19,12 +18,7 @@ import {
     VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-const StyledLabel = styled(UndertekstBold)`
-    line-height: 1.375rem;
-    font-size: 1rem;
-`;
-
-const StyledNormaltekst = styled(Normaltekst)`
+const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;
 `;
 
@@ -51,11 +45,11 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                 <>
                     <Row>
                         <Column md="6">
-                            <StyledLabel>Andel som skal tilbakekreves</StyledLabel>
+                            <Label size="small">Andel som skal tilbakekreves</Label>
                             {kanIlleggeRenter ? (
-                                <StyledNormaltekst>100 %</StyledNormaltekst>
+                                <StyledNormaltekst size="small">100 %</StyledNormaltekst>
                             ) : (
-                                <Normaltekst>100 %</Normaltekst>
+                                <BodyShort size="small">100 %</BodyShort>
                             )}
                         </Column>
                         <Column md="6">
@@ -73,6 +67,7 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                         ? skjema.felter.forstoIlleggeRenter.feilmelding?.toString()
                                         : ''
                                 }
+                                marginbottom="none"
                             >
                                 {jaNeiOptions.map(opt => (
                                     <Radio
@@ -92,19 +87,22 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
             ) : (
                 <Row>
                     <Column md={kanIlleggeRenter ? '12' : '6'}>
-                        <StyledLabel>Andel som skal tilbakekreves</StyledLabel>
-                        <Normaltekst>100 %</Normaltekst>
+                        <Label size="small">Andel som skal tilbakekreves</Label>
+                        <BodyShort size="small" spacing>
+                            100 %
+                        </BodyShort>
                         {kanIlleggeRenter && (
                             <>
-                                <Spacer8 />
-                                <Normaltekst>Det legges til 10 % renter</Normaltekst>
+                                <BodyShort size="small">Det legges til 10 % renter</BodyShort>
                             </>
                         )}
                     </Column>
                     {!kanIlleggeRenter && (
                         <Column md="6">
-                            <StyledLabel>Skal det tillegges renter?</StyledLabel>
-                            <Normaltekst>Nei</Normaltekst>
+                            <Label size="small">Skal det tillegges renter?</Label>
+                            <BodyShort size="small" spacing>
+                                Nei
+                            </BodyShort>
                         </Column>
                     )}
                 </Row>

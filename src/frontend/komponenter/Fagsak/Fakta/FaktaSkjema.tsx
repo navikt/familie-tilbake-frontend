@@ -1,14 +1,14 @@
 import * as React from 'react';
 
 import { Column, Row } from 'nav-frontend-grid';
-import { Normaltekst, UndertekstBold, Undertittel } from 'nav-frontend-typografi';
 
+import { BodyShort, Heading } from '@navikt/ds-react';
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
 
 import { Ytelsetype } from '../../../kodeverk';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
-import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
@@ -52,36 +52,38 @@ const FaktaSkjema: React.FC<IProps> = ({
                 <Column sm="12" md="6">
                     <Row>
                         <Column xs="12">
-                            <Undertittel>Feilutbetaling</Undertittel>
+                            <Heading level="2" size="small">
+                                Feilutbetaling
+                            </Heading>
                         </Column>
                     </Row>
                     <Spacer20 />
                     <Row>
                         <Column xs="12" md="4">
-                            <UndertekstBold>Periode med feilutbetaling</UndertekstBold>
-                            <Normaltekst>
+                            <DetailBold size="small">Periode med feilutbetaling</DetailBold>
+                            <BodyShort size="small">
                                 {`${formatterDatostring(
                                     feilutbetalingFakta.totalFeilutbetaltPeriode.fom
                                 )} - ${formatterDatostring(
                                     feilutbetalingFakta.totalFeilutbetaltPeriode.tom
                                 )}`}
-                            </Normaltekst>
+                            </BodyShort>
                         </Column>
                         <Column xs="12" md="4">
-                            <UndertekstBold>Feilutbetalt beløp totalt</UndertekstBold>
-                            <Normaltekst className={'redText'}>
+                            <DetailBold size="small">Feilutbetalt beløp totalt</DetailBold>
+                            <BodyShort size="small" className={'redText'}>
                                 {`${formatCurrencyNoKr(
                                     feilutbetalingFakta.totaltFeilutbetaltBeløp
                                 )}`}
-                            </Normaltekst>
+                            </BodyShort>
                         </Column>
                         <Column xs="12" md="4">
-                            <UndertekstBold>Tidligere varslet beløp</UndertekstBold>
-                            <Normaltekst>
+                            <DetailBold size="small">Tidligere varslet beløp</DetailBold>
+                            <BodyShort size="small">
                                 {feilutbetalingFakta.varsletBeløp
                                     ? `${formatCurrencyNoKr(feilutbetalingFakta.varsletBeløp)}`
                                     : ''}
-                            </Normaltekst>
+                            </BodyShort>
                         </Column>
                     </Row>
                     <Spacer20 />
