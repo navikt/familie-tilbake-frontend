@@ -126,7 +126,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "13.3.0",
     "@testing-library/react-hooks": "^8.0.1",
-    "@testing-library/user-event": "^14.3.0",
+    "@testing-library/user-event": "^14.4.1",
     "@types/case-sensitive-paths-webpack-plugin": "^2.1.6",
     "@types/jest": "28.1.6",
     "@types/webpack-env": "^1.17.0",
