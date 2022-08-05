@@ -20,12 +20,14 @@ import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import {
     sorterFeilutbetaltePerioder,
-    validerTekst,
     definerteFeilmeldinger,
     DEFINERT_FEILMELDING,
+    validerTekstMaksLengde,
 } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/feilutbetalingFakta';
+
+const _validerTekst3000 = validerTekstMaksLengde(3000);
 
 interface IProps {
     behandling: IBehandling;
@@ -164,7 +166,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const validerForInnsending = (): Feilmelding[] => {
             const feilmeldinger: Feilmelding[] = [];
             //@ts-ignore
-            const feilmelding = validerTekst(skjemaData.begrunnelse);
+            const feilmelding = _validerTekst3000(skjemaData.begrunnelse);
             if (feilmelding) {
                 feilmeldinger.push({
                     gjelderBegrunnelse: true,

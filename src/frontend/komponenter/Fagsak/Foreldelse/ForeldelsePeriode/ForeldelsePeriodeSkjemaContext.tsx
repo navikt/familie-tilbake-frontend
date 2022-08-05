@@ -8,7 +8,7 @@ import {
 } from '@navikt/familie-skjema';
 
 import { Foreldelsevurdering } from '../../../../kodeverk';
-import { erFeltetEmpty, validerDatoFelt, validerTekstFelt } from '../../../../utils';
+import { erFeltetEmpty, validerDatoFelt, validerTekstFeltMaksLengde } from '../../../../utils';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
 const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter) => {
@@ -66,7 +66,8 @@ const useForeldelsePeriodeSkjema = (
         felter: {
             begrunnelse: useFelt<string | ''>({
                 verdi: '',
-                valideringsfunksjon: validerTekstFelt,
+                valideringsfunksjon: (felt: FeltState<string | ''>) =>
+                    validerTekstFeltMaksLengde(3000, felt),
             }),
             foreldelsesvurderingstype,
             foreldelsesfrist,

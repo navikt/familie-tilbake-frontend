@@ -321,7 +321,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     placeholder={
                                         'Hvilke hendelser har ført til feilutbetalingen og vurder valg av hjemmel'
                                     }
-                                    maxLength={1500}
+                                    maxLength={3000}
                                     erLesevisning={erLesevisning}
                                     value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
                                     onChange={event =>
@@ -412,7 +412,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                                 event.target.value
                                             )
                                         }
-                                        maxLength={1500}
+                                        maxLength={3000}
                                     />
                                     <Spacer8 />
                                     {erGodTro ? (

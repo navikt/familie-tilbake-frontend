@@ -166,7 +166,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                         id={'begrunnelse'}
                         name="begrunnelse"
                         label={'Vurdering'}
-                        maxLength={1500}
+                        maxLength={3000}
                         erLesevisning={erLesevisning}
                         value={skjema.felter.begrunnelse.verdi}
                         onChange={event =>

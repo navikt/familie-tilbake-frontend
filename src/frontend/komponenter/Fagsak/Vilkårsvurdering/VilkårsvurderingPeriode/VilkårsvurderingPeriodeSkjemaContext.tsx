@@ -16,9 +16,9 @@ import {
 } from '../../../../typer/feilutbetalingtyper';
 import {
     parseStringToNumber,
-    validerTekstFelt,
     erFeltetEmpty,
     validerNummerFelt,
+    validerTekstFeltMaksLengde,
 } from '../../../../utils';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
@@ -136,7 +136,7 @@ const useVilkårsvurderingPeriodeSkjema = (
         valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
             if (avhengigheter?.vilkårsresultatvurdering.valideringsstatus !== Valideringsstatus.OK)
                 return ok(felt);
-            return validerTekstFelt(felt);
+            return validerTekstFeltMaksLengde(3000, felt);
         },
     });
 
@@ -212,7 +212,7 @@ const useVilkårsvurderingPeriodeSkjema = (
         },
         valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltSærligeGrunnerFelter(avhengigheter)) return ok(felt);
-            return validerTekstFelt(felt);
+            return validerTekstFeltMaksLengde(3000, felt);
         },
     });
 
@@ -247,7 +247,7 @@ const useVilkårsvurderingPeriodeSkjema = (
         },
         valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltSærligGrunnAnnetBegrunnelse(avhengigheter)) return ok(felt);
-            return validerTekstFelt(felt);
+            return validerTekstFeltMaksLengde(3000, felt);
         },
     });
 
@@ -341,7 +341,8 @@ const useVilkårsvurderingPeriodeSkjema = (
             vilkårsresultatBegrunnelse: useFelt<string | ''>({
                 feltId: 'vilkårsresultatBegrunnelse',
                 verdi: '',
-                valideringsfunksjon: validerTekstFelt,
+                valideringsfunksjon: (felt: FeltState<string | ''>) =>
+                    validerTekstFeltMaksLengde(3000, felt),
             }),
             vilkårsresultatvurdering,
             erBeløpetIBehold,
