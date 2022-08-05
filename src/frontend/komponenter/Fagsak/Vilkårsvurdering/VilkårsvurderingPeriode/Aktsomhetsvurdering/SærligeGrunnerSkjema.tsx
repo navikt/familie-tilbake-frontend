@@ -62,7 +62,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                 )}
                 name="sarligGrunnerBegrunnelse"
                 label={'Vurder særlige grunner du har vektlagt for resultatet'}
-                maxLength={1500}
+                maxLength={3000}
                 erLesevisning={erLesevisning}
                 value={skjema.felter.særligeGrunnerBegrunnelse.verdi}
                 onChange={event =>
@@ -97,7 +97,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                             )}
                             name="annetBegrunnelse"
                             aria-label="Begrunnelse: Annet"
-                            maxLength={1500}
+                            maxLength={3000}
                             erLesevisning={erLesevisning}
                             value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
                             onChange={event =>

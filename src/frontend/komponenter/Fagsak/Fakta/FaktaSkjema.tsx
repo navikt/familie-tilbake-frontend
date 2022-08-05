@@ -129,7 +129,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                         erLesevisning={erLesevisning}
                         value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
                         onChange={event => onChangeBegrunnelse(event)}
-                        maxLength={1500}
+                        maxLength={3000}
                         className={erLesevisning ? 'lesevisning' : ''}
                         feil={
                             visFeilmeldinger &&

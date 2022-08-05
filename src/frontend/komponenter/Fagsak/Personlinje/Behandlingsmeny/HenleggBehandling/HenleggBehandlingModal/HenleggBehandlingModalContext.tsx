@@ -16,11 +16,7 @@ import {
     Behandlingstype,
     IBehandling,
 } from '../../../../../../typer/behandling';
-import {
-    erFeltetEmpty,
-    validerTekstFelt,
-    validerTekstFeltMaksLengde,
-} from '../../../../../../utils';
+import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../../utils';
 
 const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter) =>
     avhengigheter?.behandlingstype.valideringsstatus === Valideringsstatus.OK &&
@@ -75,7 +71,7 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
                     avhengigheter?: Avhengigheter
                 ) => {
                     if (!erAvhengigheterOppfyltFritekst(avhengigheter)) return ok(felt);
-                    return validerTekstFelt(felt);
+                    return validerTekstFeltMaksLengde(1500, felt);
                 },
             }),
         },
