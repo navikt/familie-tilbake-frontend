@@ -2,43 +2,59 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import {
+    NavdsGlobalColorGreen200,
+    NavdsGlobalColorGreen300,
+    NavdsGlobalColorGreen400,
+    NavdsGlobalColorGreen500,
+    NavdsGlobalColorOrange200,
+    NavdsGlobalColorOrange300,
+    NavdsGlobalColorOrange400,
+    NavdsGlobalColorOrange500,
+    NavdsGlobalColorRed300,
+    NavdsGlobalColorRed400,
+    NavdsGlobalColorRed500,
+    NavdsGlobalColorRed600,
+    NavdsSemanticColorBorder,
+    NavdsSpacing5,
+} from '@navikt/ds-tokens/dist/tokens';
 import { type Periode, Tidslinje } from '@navikt/familie-tidslinje';
 
 const TidslinjeContainer = styled.div`
-    border: 1px solid var(--navds-semantic-color-border);
-    margin-bottom: 20px;
+    border: 1px solid ${NavdsSemanticColorBorder};
+    margin-bottom: ${NavdsSpacing5};
 
     .etiketter div:last-child {
         max-width: max-content;
     }
 
     & div.tidslinje .behandlet {
-        background-color: var(--navds-global-color-green-200);
-        border-color: var(--navds-global-color-green-400);
+        background-color: ${NavdsGlobalColorGreen200};
+        border-color: ${NavdsGlobalColorGreen400};
 
         &.aktivPeriode {
-            background-color: var(--navds-global-color-green-300);
-            box-shadow: 0 0 0 2px var(--navds-global-color-green-500);
+            background-color: ${NavdsGlobalColorGreen300};
+            box-shadow: 0 0 0 2px ${NavdsGlobalColorGreen500};
         }
     }
 
     & div.tidslinje .avvist {
-        background-color: var(--navds-global-color-red-300);
-        border-color: var(--navds-global-color-red-500);
+        background-color: ${NavdsGlobalColorRed300};
+        border-color: ${NavdsGlobalColorRed500};
 
         &.aktivPeriode {
-            background-color: var(--navds-global-color-red-400);
-            box-shadow: 0 0 0 2px var(--navds-global-color-red-600);
+            background-color: ${NavdsGlobalColorRed400};
+            box-shadow: 0 0 0 2px ${NavdsGlobalColorRed600};
         }
     }
 
     & div.tidslinje .ubehandlet {
-        background-color: var(--navds-global-color-orange-200);
-        border-color: var(--navds-global-color-orange-400);
+        background-color: ${NavdsGlobalColorOrange200};
+        border-color: ${NavdsGlobalColorOrange400};
 
         &.aktivPeriode {
-            background-color: var(--navds-global-color-orange-300);
-            box-shadow: 0 0 0 2px var(--navds-global-color-orange-500);
+            background-color: ${NavdsGlobalColorOrange300};
+            box-shadow: 0 0 0 2px ${NavdsGlobalColorOrange500};
         }
     }
 `;

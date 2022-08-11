@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
-
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
@@ -11,10 +9,6 @@ import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flyte
 import { FamilieTilbakeTextArea, LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding, Mottakere } from './SendMeldingContext';
-
-const StyledContainer = styled.div`
-    margin-top: 10px;
-`;
 
 const tekstfeltLabel = (mal: DokumentMal) => {
     return mal === DokumentMal.INNHENT_DOKUMENTASJON
@@ -39,7 +33,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak }) => {
     const kanSende = skjema.felter.maltype.verdi !== '' && skjema.felter.fritekst.verdi !== '';
 
     return (
-        <StyledContainer>
+        <div>
             <FamilieSelect
                 id="mottaker"
                 label={'Mottaker'}
@@ -112,7 +106,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak }) => {
                     </div>
                 )}
             </Navigering>
-        </StyledContainer>
+        </div>
     );
 };
 

@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
-
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import {
@@ -18,12 +16,6 @@ import {
 } from '../../../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
-
-const StyledModal = styled(UIModalWrapper)`
-    & > button.navds-button {
-        margin: 0px var(--navds-spacing-1) 0px var(--navds-spacing-1);
-    }
-`;
 
 interface IProps {
     behandling: IBehandling;
@@ -56,11 +48,12 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
     const kanForhåndsvise = erKanForhåndsvise();
 
     return (
-        <StyledModal
+        <UIModalWrapper
             modal={{
                 tittel: 'Behandlingen henlegges',
                 visModal: visModal,
                 lukkKnapp: false,
+                ariaLabel: 'Henlegg behandlingen',
                 actions: [
                     <ForhåndsvisHenleggelsesBrev
                         key={'forhåndsvis-henleggelsesbrev'}
@@ -143,7 +136,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                     maxLength={200}
                 />
             </>
-        </StyledModal>
+        </UIModalWrapper>
     );
 };
 

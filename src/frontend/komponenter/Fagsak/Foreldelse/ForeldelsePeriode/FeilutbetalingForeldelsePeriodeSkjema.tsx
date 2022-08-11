@@ -7,6 +7,11 @@ import { Radio } from 'nav-frontend-skjema';
 
 import { ExternalLink } from '@navikt/ds-icons';
 import { BodyLong, Heading, HelpText, Link } from '@navikt/ds-react';
+import {
+    NavdsSemanticColorBorder,
+    NavdsSpacing3,
+    NavdsSpacing4,
+} from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe, FlexDiv } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -27,12 +32,12 @@ import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
 
 const StyledContainer = styled.div`
-    border: 1px solid var(--navds-semantic-color-border);
-    padding: 10px;
+    border: 1px solid ${NavdsSemanticColorBorder};
+    padding: ${NavdsSpacing3};
 `;
 
 const StyledHelpText = styled(HelpText)`
-    margin-left: 1rem;
+    margin-left: ${NavdsSpacing4};
 `;
 
 const StyledHelpTextContainer = styled.div`

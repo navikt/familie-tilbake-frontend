@@ -1,17 +1,25 @@
 import styled from 'styled-components';
 
 import { Alert, Button, Detail } from '@navikt/ds-react';
+import {
+    NavdsFontWeightBold,
+    NavdsSemanticColorInteractionPrimaryHoverSubtle,
+    NavdsSpacing2,
+    NavdsSpacing4,
+    NavdsSpacing5,
+    NavdsSpacing8,
+} from '@navikt/ds-tokens/dist/tokens';
 
 export const Spacer20 = styled.div`
-    height: 20px;
+    height: ${NavdsSpacing5};
 `;
 
 export const Spacer8 = styled.div`
-    height: 8px;
+    height: ${NavdsSpacing2};
 `;
 
 export const Navigering = styled.div`
-    padding: 1rem 0;
+    padding: ${NavdsSpacing4} 0;
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
@@ -24,8 +32,8 @@ export const FTAlertStripe = styled(Alert)`
 `;
 
 export const FTButton = styled(Button)`
-    padding-right: 2rem;
-    padding-left: 2rem;
+    padding-right: ${NavdsSpacing8};
+    padding-left: ${NavdsSpacing8};
 `;
 
 export const BehandlingsMenyButton = styled(Button)`
@@ -35,18 +43,18 @@ export const BehandlingsMenyButton = styled(Button)`
     span {
         width: 100%;
         text-align: left;
-        padding: 0rem 0.5rem;
+        padding: 0rem ${NavdsSpacing2};
     }
 
     & .navds-body-short {
-        font-weight: var(--navds-font-weight-bold);
+        font-weight: ${NavdsFontWeightBold};
     }
 
     &:disabled:hover {
-        background-color: var(--navds-semantic-color-interaction-primary-hover-subtle);
+        background-color: ${NavdsSemanticColorInteractionPrimaryHoverSubtle};
     }
 `;
 
 export const DetailBold = styled(Detail)`
-    font-weight: var(--navds-font-weight-bold);
+    font-weight: ${NavdsFontWeightBold};
 `;

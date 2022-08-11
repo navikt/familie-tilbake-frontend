@@ -3,6 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { BodyShort, Label } from '@navikt/ds-react';
+import { NavdsSemanticColorBorder, NavdsSpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { type Periode as TidslinjePeriode, Tidslinje } from '@navikt/familie-tidslinje';
 
 import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
@@ -12,8 +13,8 @@ import { FixedDatovelger } from '../../Skjemaelementer';
 import UIModalWrapper from '../UIModalWrapper';
 
 const TidslinjeContainer = styled.div`
-    border: 1px solid var(--navds-semantic-color-border);
-    margin-bottom: var(--navds-spacing-6);
+    border: 1px solid ${NavdsSemanticColorBorder};
+    margin-bottom: ${NavdsSpacing6};
 
     .etiketter div:last-child {
         max-width: max-content;

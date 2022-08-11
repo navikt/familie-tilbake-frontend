@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { ExternalLink } from '@navikt/ds-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
+import { NavdsGlobalColorGray400, NavdsSpacing6 } from '@navikt/ds-tokens/dist/tokens';
 
 import { Behandlingssteg } from '../../../../typer/behandling';
 import {
@@ -22,7 +23,6 @@ import { useHistorikk } from './HistorikkContext';
 const Innslag = styled.div`
     display: flex;
     flex-direction: row;
-    line-height: 1.5rem;
 `;
 
 const Tidslinje = styled.div`
@@ -31,7 +31,7 @@ const Tidslinje = styled.div`
     text-align: center;
     background-image: radial-gradient(
         1px 1px at center,
-        var(--navds-global-color-gray-400) 1px,
+        ${NavdsGlobalColorGray400} 1px,
         transparent 1px,
         transparent 4px
     );
@@ -39,7 +39,7 @@ const Tidslinje = styled.div`
 `;
 
 const Innhold = styled.div`
-    margin-bottom: 1.5rem;
+    margin-bottom: ${NavdsSpacing6};
 `;
 
 interface IProps {

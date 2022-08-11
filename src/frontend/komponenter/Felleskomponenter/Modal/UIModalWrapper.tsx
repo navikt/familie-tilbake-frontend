@@ -51,6 +51,7 @@ export interface IModal {
     onClose?: () => void;
     tittel: string;
     visModal: boolean;
+    ariaLabel?: string;
 }
 
 interface IProps {
@@ -60,7 +61,7 @@ interface IProps {
 }
 
 const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, modelStyleProps, children }) => {
-    const { tittel, visModal, onClose, lukkKnapp, actions, className, innhold } = modal;
+    const { tittel, visModal, onClose, lukkKnapp, actions, className, innhold, ariaLabel } = modal;
 
     return (
         <StyledModal
@@ -69,7 +70,7 @@ const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, modelStyleProp
             closeButton={lukkKnapp}
             open={visModal}
             onClose={(): void => onClose && onClose()}
-            aria-label="Opprett/Fjern verge"
+            aria-label={ariaLabel ? ariaLabel : tittel}
             styleProps={modelStyleProps}
         >
             <StyledModalContent className="uimodal__content">

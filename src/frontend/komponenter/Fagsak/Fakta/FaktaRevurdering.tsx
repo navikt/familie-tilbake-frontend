@@ -5,13 +5,14 @@ import styled from 'styled-components';
 import { Column, Row } from 'nav-frontend-grid';
 
 import { BodyShort, Heading } from '@navikt/ds-react';
+import { NavdsSpacing4 } from '@navikt/ds-tokens/dist/tokens';
 
 import { IFeilutbetalingFakta, tilbakekrevingsvalg } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring } from '../../../utils';
 import { DetailBold, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 
 export const RadMedMargin = styled(Row)`
-    margin-bottom: 16px;
+    margin-bottom: ${NavdsSpacing4};
 `;
 
 interface IProps {
