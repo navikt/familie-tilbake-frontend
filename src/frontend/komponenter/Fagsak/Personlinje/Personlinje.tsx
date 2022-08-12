@@ -4,6 +4,14 @@ import styled from 'styled-components';
 
 import { ExternalLink } from '@navikt/ds-icons';
 import { Link, Tag } from '@navikt/ds-react';
+import {
+    NavdsGlobalColorGray900,
+    NavdsSemanticColorBorderMuted,
+    NavdsSemanticColorTextInverted,
+    NavdsSpacing12,
+    NavdsSpacing4,
+    NavdsSpacing6,
+} from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 import { Visittkort } from '@navikt/familie-visittkort';
 
@@ -20,20 +28,20 @@ const PlaceholderDiv = styled.div`
 
 const StyledContainer = styled.div`
     .visittkort {
-        padding: 0 1rem;
-        border-bottom-color: var(--navds-global-color-gray-300);
+        padding: 0 ${NavdsSpacing4};
+        border-bottom-color: ${NavdsSemanticColorBorderMuted};
 
         &__lenke {
-            margin-right: 3rem;
+            margin-right: ${NavdsSpacing12};
         }
     }
 `;
 
 const DødsfallTag = styled(Tag)`
-    color: var(--navds-global-color-white);
-    background-color: var(--navds-global-color-gray-900);
-    border-color: var(--navds-global-color-gray-900);
-    margin-left: 1.5rem;
+    color: ${NavdsSemanticColorTextInverted};
+    background-color: ${NavdsGlobalColorGray900};
+    border-color: ${NavdsGlobalColorGray900};
+    margin-left: ${NavdsSpacing6};
 `;
 
 interface IProps {

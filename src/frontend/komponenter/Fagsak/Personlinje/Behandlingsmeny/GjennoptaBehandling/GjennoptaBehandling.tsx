@@ -42,6 +42,7 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                     tittel: 'Ta behandlingen av vent?',
                     visModal: visModal,
                     lukkKnapp: false,
+                    ariaLabel: 'Gjenoppta behandlingen',
                     actions: [
                         <FTButton
                             variant="tertiary"

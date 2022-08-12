@@ -2,22 +2,28 @@ import React, { ReactNode } from 'react';
 
 import styled from 'styled-components';
 
+import {
+    NavdsSemanticColorBorder,
+    NavdsSemanticColorCanvasBackgroundLight,
+    NavdsSpacing3,
+    NavdsSpacing4,
+} from '@navikt/ds-tokens/dist/tokens';
+
 const borderRadius = 4;
 
 const ArrowBoxTop = styled.div`
     .arrowBoxTop${props => props.theme.alignOffset} {
-        background: var(--navds-global-color-white);
-        border: 1px solid var(--navds-semantic-color-border);
+        border: 1px solid ${NavdsSemanticColorBorder};
         border-radius: ${borderRadius}px;
-        padding: 15px;
-        margin-bottom: 10px;
+        padding: ${NavdsSpacing4};
+        margin-bottom: ${NavdsSpacing3};
         margin-top: ${props => props.theme.marginTop}px;
         margin-left: ${props => props.theme.marginLeft}px;
         position: relative;
     }
     .arrowBoxTop${props => props.theme.alignOffset}:before {
-        background: var(--navds-global-color-white);
-        border: 1px solid var(--navds-semantic-color-border);
+        background: ${NavdsSemanticColorCanvasBackgroundLight};
+        border: 1px solid ${NavdsSemanticColorBorder};
         border-bottom-width: 0;
         border-right-width: 0;
         content: '';
@@ -34,19 +40,18 @@ const ArrowBoxTop = styled.div`
 
 const ArrowBoxLeft = styled.div`
     .arrowBoxLeft${props => props.theme.alignOffset} {
-        background: var(--navds-global-color-white);
-        border: 1px solid var(--navds-semantic-color-border);
+        border: 1px solid ${NavdsSemanticColorBorder};
         border-radius: ${borderRadius}px;
-        padding: 15px;
-        margin-bottom: 10px;
+        padding: ${NavdsSpacing4};
+        margin-bottom: ${NavdsSpacing3};
         margin-top: ${props => props.theme.marginTop}px;
         margin-left: ${props => props.theme.marginLeft}px;
         position: relative;
     }
 
     .arrowBoxLeft${props => props.theme.alignOffset}:before {
-        background: var(--navds-global-color-white);
-        border: 1px solid var(--navds-semantic-color-border);
+        background: ${NavdsSemanticColorCanvasBackgroundLight};
+        border: 1px solid ${NavdsSemanticColorBorder};
         border-bottom-width: 0;
         border-right-width: 0;
         content: '';

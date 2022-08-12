@@ -3,6 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { BodyLong, Heading } from '@navikt/ds-react';
+import { NavdsSemanticColorFeedbackDangerText, NavdsSpacing8 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -20,10 +21,10 @@ import UIModalWrapper from '../UIModalWrapper';
 import { usePåVentBehandling } from './PåVentContext';
 
 const FeilContainer = styled.div`
-    margin-top: 2rem;
+    margin-top: ${NavdsSpacing8};
 
     & .typo-normal {
-        color: var(--navds-global-color-red-500);
+        color: ${NavdsSemanticColorFeedbackDangerText};
     }
 `;
 

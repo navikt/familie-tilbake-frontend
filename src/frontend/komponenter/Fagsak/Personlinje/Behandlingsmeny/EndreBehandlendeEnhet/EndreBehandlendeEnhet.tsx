@@ -57,6 +57,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                     tittel: 'Endre enhet for denne behandlingen',
                     visModal: visModal,
                     lukkKnapp: false,
+                    ariaLabel: 'Endre behandlende enhet',
                     actions: [
                         <FTButton
                             variant="tertiary"

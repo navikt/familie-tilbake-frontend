@@ -19,10 +19,10 @@ import Personlinje from './Personlinje/Personlinje';
 
 const FagsakContainerContent = styled.div`
     display: flex;
-    height: calc(100vh - 6rem);
+    height: calc(100vh - 7rem);
 
     &.venter {
-        height: calc(100vh - 9.7rem);
+        height: calc(100vh - 10.9rem);
     }
 `;
 

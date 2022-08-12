@@ -3,6 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Detail } from '@navikt/ds-react';
+import { NavdsGlobalColorGray400, NavdsSpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { type IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
 import { formatterDatoOgTid, hentDatoRegistrertSendt } from '../../../../utils';
@@ -12,7 +13,6 @@ import Dokumentvisning from './Dokumentvisning';
 const Journalpost = styled.div`
     display: flex;
     flex-direction: row;
-    line-height: 1.5rem;
 `;
 
 const Dialog = styled.div`
@@ -21,7 +21,7 @@ const Dialog = styled.div`
     text-align: center;
     background-image: radial-gradient(
         1px 1px at center,
-        var(--navds-global-color-gray-400) 1px,
+        ${NavdsGlobalColorGray400} 1px,
         transparent 1px,
         transparent 4px
     );
@@ -29,7 +29,7 @@ const Dialog = styled.div`
 `;
 
 const Innhold = styled.div`
-    margin-bottom: 1.5rem;
+    margin-bottom: ${NavdsSpacing6};
 `;
 
 const typer: Record<Journalposttype, string> = {

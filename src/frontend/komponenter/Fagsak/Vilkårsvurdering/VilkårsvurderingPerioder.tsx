@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Column, Row } from 'nav-frontend-grid';
 
 import { BodyShort } from '@navikt/ds-react';
+import { NavdsFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import { type Periode } from '@navikt/familie-tidslinje';
 
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
@@ -23,7 +24,7 @@ import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkå
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 
 const ValideringsFeilmelding = styled(BodyShort)`
-    font-weight: var(--navds-font-weight-bold);
+    font-weight: ${NavdsFontWeightBold};
 `;
 
 const finnClassNamePeriode = (

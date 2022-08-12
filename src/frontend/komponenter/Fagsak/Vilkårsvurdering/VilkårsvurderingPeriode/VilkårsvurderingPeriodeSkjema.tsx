@@ -6,6 +6,7 @@ import { Column, Row } from 'nav-frontend-grid';
 import { Radio } from 'nav-frontend-skjema';
 
 import { BodyShort, Detail, Heading, HelpText } from '@navikt/ds-react';
+import { NavdsSemanticColorBorder, NavdsSpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -48,8 +49,8 @@ import {
 } from './VilkårsvurderingPeriodeSkjemaContext';
 
 const StyledContainer = styled.div`
-    border: 1px solid var(--navds-semantic-color-border);
-    padding: 10px;
+    border: 1px solid ${NavdsSemanticColorBorder};
+    padding: ${NavdsSpacing3};
 `;
 
 const StyledVilkårsresultatRadio = styled(Radio)`

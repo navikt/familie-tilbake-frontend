@@ -3,6 +3,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Alert, BodyLong, Heading, Loader } from '@navikt/ds-react';
+import {
+    NavdsFontWeightBold,
+    NavdsSemanticColorFeedbackDangerText,
+    NavdsSpacing3,
+} from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -13,15 +18,11 @@ import FaktaSkjema from './FaktaSkjema';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 
 const StyledFeilutbetalingFakta = styled.div`
-    padding: 10px;
-
-    .typo-undertekst {
-        margin-bottom: 10px;
-    }
+    padding: ${NavdsSpacing3};
 
     .redText {
-        color: var(--navds-semantic-color-feedback-danger-text);
-        font-weight: var(--navds-font-weight-bold);
+        color: ${NavdsSemanticColorFeedbackDangerText};
+        font-weight: ${NavdsFontWeightBold};
     }
 `;
 

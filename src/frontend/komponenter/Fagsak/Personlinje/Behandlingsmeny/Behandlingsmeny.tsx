@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { ExpandFilled } from '@navikt/ds-icons';
 import { Button, Popover } from '@navikt/ds-react';
+import { NavdsFontSizeXlarge, NavdsFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
@@ -25,8 +26,8 @@ const StyledList = styled.ul`
 
 const StyledButton = styled(Button)`
     & .navds-body-short {
-        font-size: 1.25rem;
-        font-weight: var(--navds-font-weight-bold);
+        font-size: ${NavdsFontSizeXlarge};
+        font-weight: ${NavdsFontWeightBold};
     }
 `;
 
