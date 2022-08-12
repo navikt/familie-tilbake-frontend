@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { ExternalLink } from '@navikt/ds-icons';
 import { Link, Tag } from '@navikt/ds-react';
 import {
-    NavdsGlobalColorGray300,
     NavdsGlobalColorGray900,
+    NavdsSemanticColorBorderMuted,
     NavdsSemanticColorTextInverted,
     NavdsSpacing12,
     NavdsSpacing4,
@@ -29,7 +29,7 @@ const PlaceholderDiv = styled.div`
 const StyledContainer = styled.div`
     .visittkort {
         padding: 0 ${NavdsSpacing4};
-        border-bottom-color: ${NavdsGlobalColorGray300};
+        border-bottom-color: ${NavdsSemanticColorBorderMuted};
 
         &__lenke {
             margin-right: ${NavdsSpacing12};

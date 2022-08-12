@@ -4,7 +4,7 @@ import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { BodyShort } from '@navikt/ds-react';
-import { NavdsGlobalColorGray300, NavdsSpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import { NavdsSemanticColorBorderMuted, NavdsSpacing3 } from '@navikt/ds-tokens/dist/tokens';
 
 import { useBehandling } from '../../context/BehandlingContext';
 import { Behandlingstatus, IBehandling } from '../../typer/behandling';
@@ -30,7 +30,7 @@ const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
 const StyledVenstremenyContainer = styled.div`
     min-width: 10rem;
-    border-right: 1px solid ${NavdsGlobalColorGray300};
+    border-right: 1px solid ${NavdsSemanticColorBorderMuted};
     overflow: hidden;
 `;
 
@@ -45,7 +45,7 @@ const HenlagtContainer = styled.div`
 `;
 
 const StyledHøyremenyContainer = styled.div`
-    border-left: 1px solid ${NavdsGlobalColorGray300};
+    border-left: 1px solid ${NavdsSemanticColorBorderMuted};
     overflow-x: hidden;
     overflow-y: scroll;
 `;
