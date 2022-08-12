@@ -1715,15 +1715,10 @@
   resolved "https://npm.pkg.github.com/download/@navikt/ds-css-internal/0.7.7/a92e6c01b8889e026b70fb1e298c8eadb49083784b75c0deb443c1e65f524d5e#ff5df8ad05bf734863dec441178200b680a41c41"
   integrity sha512-GiWQ4m9ksagS8GN/ifCgVksOttiOW2eSfqnsuL9GNQaDbRQLpxSvmej2c2uTkgj3+fgpJi7f9rHdcQfDplOL0A==
 
-"@navikt/ds-css@^0.18.28":
+"@navikt/ds-css@^0.18.28", "@navikt/ds-css@^0.18.x":
   version "0.18.28"
   resolved "https://npm.pkg.github.com/download/@navikt/ds-css/0.18.28/7b0c9a625aa9eb11c5dc73fbdc23e05830adb880692e5862a158d00ac9572705#27ab888c3996fbe59ed221dd7d6cb1f076f5bb4d"
   integrity sha512-3JXoRgqZF1a67paXEDHb7cg2PiipUbbT4YS0fQZ+TRh9S78tw12vZeFenNrQCYliAYaRkdyuIFRF1wT9BlhlpQ==
-
-"@navikt/ds-css@^0.18.x":
-  version "0.18.27"
-  resolved "https://npm.pkg.github.com/download/@navikt/ds-css/0.18.27/09aef1ba9b86cb9ca987e4f9427beb008f0ff9d44f670537e5afbf38f3aca761#77a464d3dc1299e8b64329d8e18f43a05a70c6f2"
-  integrity sha512-JK+EqtuUcehxSRI6YqyZuVeDLXotoZLYmED6DM77+atCRvphpPDc9fQuzXkByI25s9crNdXaS0sRCXSYSS62yA==
 
 "@navikt/ds-icons@^0.8.20", "@navikt/ds-icons@^0.8.x":
   version "0.8.20"
@@ -1744,7 +1739,7 @@
     copy-to-clipboard "^3.3.1"
     react-merge-refs "^1.1.0"
 
-"@navikt/ds-react@^0.19.27":
+"@navikt/ds-react@^0.19.27", "@navikt/ds-react@^0.19.x":
   version "0.19.27"
   resolved "https://npm.pkg.github.com/download/@navikt/ds-react/0.19.27/7b509fbb2c46e30f9b6c638cabdb182dc5d97311d65cbc5f7d7fc7dac1d0a3e5#b04406abd8a5669841638c1fdc01db0962dcfb03"
   integrity sha512-CqiS6Lqhe2IaWTaZ8b4ZNx6lOAZ1+GcY1o2dh0xHUgjo9PGd3iHfSHevuekOxs/nHXHuvBWjne6bqZtBZ3JRUQ==
@@ -1800,6 +1795,17 @@
   version "5.0.0"
   resolved "https://npm.pkg.github.com/download/@navikt/familie-clipboard/5.0.0/64e85e3897e8bc00151eb41dd30205fc6ebeb93b6908196b1a0dbb249f6658b8#93140419518f1333f0ff7f265b71fc6878d64129"
   integrity sha512-6hqx0EjPrMpJt8JiFKi0la9ffPt8U3unTs2nuFks7kop7i0AKtcXn7RmOvaEAN/uuwAsm1CVrasPJaW3AC8rRA==
+  dependencies:
+    "@navikt/ds-css" "^0.18.x"
+    "@navikt/ds-icons" "^0.8.x"
+    "@types/react-tooltip" "^4.2.4"
+    framer-motion "^6.3.16"
+    react-tooltip "^4.2.21"
+
+"@navikt/familie-clipboard@^6.0.0":
+  version "6.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-clipboard/6.0.0/7c744de677d26aad357989a3d4387deccb688243e44fee2686eda67edd9ac2b7#61cc41ecf55ce7b69704dbb34fac6bde4ca8636b"
+  integrity sha512-T6SZpTW4hLRaGDbOr1jaOVg5GFQL7VEY5bXQGYVxc866fQPeiKMwCa8MeAEv8AAENmjpllw/wIIOtrlm9OlatA==
   dependencies:
     "@navikt/ds-css" "^0.18.x"
     "@navikt/ds-icons" "^0.8.x"
@@ -1880,20 +1886,17 @@
   resolved "https://npm.pkg.github.com/download/@navikt/familie-typer/5.0.0/457a7865af7d164c5ea26ba942fec62da74e02c0fdcd48165fc6c1c8c9d19f1c#9b59ac4a1b044de72586339c2e3e4af60c9baac4"
   integrity sha512-rHc1Q+ND28qJ02A7ddn7Y3LDZBelvZv/g528GvxNhgYidpN+nD75czbUje/x3ZwD3W+f+WealUlcDMf057DTGg==
 
-"@navikt/familie-visittkort@^3.0.5":
-  version "3.0.5"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-visittkort/3.0.5/d9b62330a42ecea17544b6159df40df173e4832763559d0b9e9e3fe67e36fe9f#51734be7f679d0c8578d2a12fcefeb7d602a74aa"
-  integrity sha512-LWef8YIp9snWzlgrZR6OWtl6aPktC58ssifjl7ojb7KByX9X8hRtWohF7H4jsf5JLD6cpkTqv2AdDJ+pt7OIjA==
+"@navikt/familie-visittkort@^4.0.1":
+  version "4.0.1"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-visittkort/4.0.1/c8089307f4f513faf5f73ccdb37814f0e7ed8eeab70846be560bde154bcbf86d#7219f97e6d84116564d8a17fdd90a3543646e42d"
+  integrity sha512-wGY7uUATknEjCT+B1WFXPzKxdoC+2FBobEjQ9bP0xbQ1PXKhiPv40JG7/l+72Jt2EqFjqkW8SIFmIbrRiySmeQ==
   dependencies:
-    "@navikt/familie-clipboard" "^5.0.0"
+    "@navikt/ds-css" "^0.18.x"
+    "@navikt/ds-react" "^0.19.x"
+    "@navikt/familie-clipboard" "^6.0.0"
     "@navikt/familie-ikoner" "^4.0.2"
     "@navikt/familie-typer" "^5.0.0"
     classnames "^2.3.1"
-    nav-frontend-core "^6.0.1"
-    nav-frontend-knapper "^3.1.2"
-    nav-frontend-knapper-style "^2.1.1"
-    nav-frontend-typografi "^4.0.1"
-    nav-frontend-typografi-style "^2.0.1"
     prop-types "^15.8.1"
 
 "@navikt/fnrvalidator@^1.3.0":
