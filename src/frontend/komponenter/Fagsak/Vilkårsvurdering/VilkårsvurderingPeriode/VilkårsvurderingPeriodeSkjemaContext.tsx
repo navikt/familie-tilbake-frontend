@@ -318,7 +318,7 @@ const useVilkårsvurderingPeriodeSkjema = (
         valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltMerEnnAktivitetFelter(avhengigheter)) return ok(felt);
             if (!erFeltetEmpty(felt) && ANDELER.includes(felt.verdi)) ok(felt);
-            return validerNummerFelt(felt, avhengigheter?.feilutbetaltBeløpPeriode.verdi, 1);
+            return validerNummerFelt(felt, avhengigheter?.feilutbetaltBeløpPeriode.verdi, 0);
         },
     });
 
