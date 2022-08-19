@@ -1762,10 +1762,10 @@
     react-popper "^2.2.5"
     uuid "^8.3.2"
 
-"@navikt/ds-tokens@^0.9.8":
-  version "0.9.8"
-  resolved "https://npm.pkg.github.com/download/@navikt/ds-tokens/0.9.8/469390dc1f26a91f5c64792afa8f935d78612f00184a3f26058602f8cbc849da#2f3226abe39844915337395390159235bb9fd1cc"
-  integrity sha512-44I4NS19RU9xQMgIBNZu2kLerhRN4BtnxOP40haqgo7n83XYVaJExSmwtspbnkzB9NUvvECjKkAsFNfZLjRqNQ==
+"@navikt/ds-tokens@^1.0.2":
+  version "1.0.2"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-tokens/1.0.2/648ea6ada6198cbf883fbb22db622d366b4ba9816d349845404a72598e94bbef#b809aa41ffe5eee26bfdee2758711caa70cdf799"
+  integrity sha512-z0VFZHhBVOfNhLYYau5YG4CKZCbc/7V7LWIUoCdvWVlK7zgR6JL4qrGqbUsH8rxWdhodHdL6Fpv/0oIVMDrzqw==
 
 "@navikt/familie-backend@^7.0.4":
   version "7.0.4"
