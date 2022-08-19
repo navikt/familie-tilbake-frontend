@@ -65,7 +65,7 @@
     "@navikt/familie-typer": "^5.0.0",
     "@navikt/familie-visittkort": "^3.0.5",
     "@sentry/browser": "^7.10.0",
-    "@sentry/core": "^7.10.0",
+    "@sentry/core": "^7.11.1",
     "@sentry/tracing": "^7.10.0",
     "@sentry/webpack-plugin": "^1.19.0",
     "@types/classnames": "^2.3.1",
