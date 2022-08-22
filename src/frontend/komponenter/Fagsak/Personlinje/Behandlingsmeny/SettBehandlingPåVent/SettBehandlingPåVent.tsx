@@ -1,18 +1,17 @@
 import * as React from 'react';
 
-import { SkjemaGruppe } from 'nav-frontend-skjema';
-
-import { BodyLong } from '@navikt/ds-react';
+import { ErrorMessage } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling, manuelleVenteÅrsaker, venteårsaker } from '../../../../../typer/behandling';
-import { datoformatNorsk, hentFrontendFeilmelding } from '../../../../../utils';
+import { datoformatNorsk } from '../../../../../utils';
 import {
     BehandlingsMenyButton,
     FTButton,
     Spacer20,
+    Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 import { maxTidsfrist, minTidsfrist } from '../../../../Felleskomponenter/Modal/PåVent/PåVentModal';
@@ -89,10 +88,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                     minHeight: '15rem',
                 }}
             >
-                <SkjemaGruppe feil={hentFrontendFeilmelding(skjema.submitRessurs)}>
-                    {feilmelding && feilmelding !== '' && (
-                        <BodyLong size="small">{feilmelding}</BodyLong>
-                    )}
+                <>
                     <FixedDatovelger
                         {...skjema.felter.tidsfrist.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                         id={'frist'}
@@ -124,7 +120,15 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                             </option>
                         ))}
                     </FamilieSelect>
-                </SkjemaGruppe>
+                    {feilmelding && feilmelding !== '' && (
+                        <>
+                            <Spacer8 />
+                            <div className="skjemaelement__feilmelding">
+                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
+                            </div>
+                        </>
+                    )}
+                </>
             </UIModalWrapper>
         </>
     );

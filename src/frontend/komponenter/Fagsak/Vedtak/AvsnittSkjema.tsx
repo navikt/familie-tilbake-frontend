@@ -2,9 +2,10 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import navFarger from 'nav-frontend-core';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
+
+import { BodyLong, Heading } from '@navikt/ds-react';
+import { NavdsSemanticColorFeedbackWarningBorder } from '@navikt/ds-tokens/dist/tokens';
 
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
@@ -19,7 +20,7 @@ const StyledEkspanderbartpanel = styled(Ekspanderbartpanel)`
 
     &.panelMedGulmarkering {
         border: 1px solid black;
-        border-left-color: ${navFarger.navOransjeLighten20};
+        border-left-color: ${NavdsSemanticColorFeedbackWarningBorder};
         border-left-width: 5px;
         padding: 1px 1px 1px 1px;
     }
@@ -94,10 +95,12 @@ const AvsnittSkjema: React.FC<IProps> = ({
                             }
                         >
                             {underavsnitt.overskrift && (
-                                <Element>{underavsnitt.overskrift}</Element>
+                                <Heading level="3" size="xsmall">
+                                    {underavsnitt.overskrift}
+                                </Heading>
                             )}
                             {underavsnitt.brødtekst && (
-                                <Normaltekst>{underavsnitt.brødtekst}</Normaltekst>
+                                <BodyLong size="small">{underavsnitt.brødtekst}</BodyLong>
                             )}
                             {underavsnitt.fritekstTillatt && (
                                 <VedtakFritekstSkjema

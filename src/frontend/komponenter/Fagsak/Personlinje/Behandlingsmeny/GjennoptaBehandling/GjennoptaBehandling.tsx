@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { BodyLong } from '@navikt/ds-react';
+import { ErrorMessage } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling } from '../../../../../typer/behandling';
@@ -69,7 +69,13 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                     minHeight: '10rem',
                 }}
             >
-                <>{feilmelding && feilmelding !== '' && <BodyLong>{feilmelding}</BodyLong>}</>
+                <>
+                    {feilmelding && feilmelding !== '' && (
+                        <div className="skjemaelement__feilmelding">
+                            <ErrorMessage size="small">{feilmelding}</ErrorMessage>
+                        </div>
+                    )}
+                </>
             </UIModalWrapper>
         </>
     );

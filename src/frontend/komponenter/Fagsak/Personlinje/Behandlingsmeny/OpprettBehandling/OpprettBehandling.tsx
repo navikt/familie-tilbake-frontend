@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { SkjemaGruppe } from 'nav-frontend-skjema';
-
+import { ErrorMessage } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import {
@@ -18,6 +17,7 @@ import {
     BehandlingsMenyButton,
     FTButton,
     Spacer20,
+    Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';
@@ -35,6 +35,8 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
         behandling.behandlingId,
         settVisModal
     );
+
+    const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
     return (
         <>
@@ -79,7 +81,7 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                     ],
                 }}
             >
-                <SkjemaGruppe feil={hentFrontendFeilmelding(skjema.submitRessurs)}>
+                <>
                     <FamilieSelect
                         erLesevisning={true}
                         name={'Behandling'}
@@ -115,7 +117,15 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                             </option>
                         ))}
                     </FamilieSelect>
-                </SkjemaGruppe>
+                    {feilmelding && (
+                        <>
+                            <Spacer8 />
+                            <div className="skjemaelement__feilmelding">
+                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
+                            </div>
+                        </>
+                    )}
+                </>
             </UIModalWrapper>
         </>
     );
