@@ -1294,12 +1294,32 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.6.2.tgz#f2813f0e5f3d5ed7af5029e1a082203dadf02b7d"
   integrity sha512-jktYRmZwmau63adUG3GKOAVCofBXkk55S/zQ94XOorAHhwqFIOFAy1rSp2N0Wp6/tGbe9V3u/ExlGZypyY17rg==
 
+"@floating-ui/core@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.0.1.tgz#00e64d74e911602c8533957af0cce5af6b2e93c8"
+  integrity sha512-bO37brCPfteXQfFY0DyNDGB3+IMe4j150KFQcgJ5aBP295p9nBGeHEs/p0czrRbtlHq4Px/yoPXO/+dOCcF4uA==
+
 "@floating-ui/dom@^0.4.0":
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-0.4.5.tgz#2e88d16646119cc67d44683f75ee99840475bbfa"
   integrity sha512-b+prvQgJt8pieaKYMSJBXHxX/DYwdLsAWxKYqnO5dO2V4oo/TYBZJAUQCVNjTWWsrs6o4VDrNcP9+E70HAhJdw==
   dependencies:
     "@floating-ui/core" "^0.6.2"
+
+"@floating-ui/dom@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.0.1.tgz#3321d4e799d6ac2503e729131d07ad0e714aabeb"
+  integrity sha512-wBDiLUKWU8QNPNOTAFHiIAkBv1KlHauG2AhqjSeh2H+wR8PX+AArXfz8NkRexH5PgMJMmSOS70YS89AbWYh5dA==
+  dependencies:
+    "@floating-ui/core" "^1.0.1"
+
+"@floating-ui/react-dom-interactions@0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom-interactions/-/react-dom-interactions-0.9.2.tgz#9a364cc44ecbc242b5218dff0e0d071de115e13a"
+  integrity sha512-1I0urs4jlGuo4FRukvjtMmdUwxqvgwtTlESEPVwEvFGHXVh1PKkKaPZJ0Dcp9B8DQt4ewQEbwJxsoker2pDYTQ==
+  dependencies:
+    "@floating-ui/react-dom" "^1.0.0"
+    aria-hidden "^1.1.3"
 
 "@floating-ui/react-dom@0.6.0":
   version "0.6.0"
@@ -1308,6 +1328,13 @@
   dependencies:
     "@floating-ui/dom" "^0.4.0"
     use-isomorphic-layout-effect "^1.1.1"
+
+"@floating-ui/react-dom@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-1.0.0.tgz#e0975966694433f1f0abffeee5d8e6bb69b7d16e"
+  integrity sha512-uiOalFKPG937UCLm42RxjESTWUVpbbatvlphQAU6bsv+ence6IoVG8JOUZcy8eW81NkU+Idiwvx10WFLmR4MIg==
+  dependencies:
+    "@floating-ui/dom" "^1.0.0"
 
 "@humanwhocodes/config-array@^0.10.4":
   version "0.10.4"
@@ -1732,17 +1759,20 @@
   dependencies:
     uuid "^8.3.2"
 
-"@navikt/ds-react-internal@^0.14.28":
-  version "0.14.28"
-  resolved "https://npm.pkg.github.com/download/@navikt/ds-react-internal/0.14.28/0b4c6230a891caad7893b3c3f707b0f2b8f20da53d2ac0aba4f0f318783e0e1a#e0d8c27dee0b0d2ee0c85310f21941d602d6ffb2"
-  integrity sha512-aEld4Env9kZHmGD+SH+fia59RdHT7NiO+oMzh3Q26ML28UIpbiNM72bLmcu/6mkyBjxlUQD09T8JoiYxczUejQ==
+"@navikt/ds-icons@^1.0.2":
+  version "1.1.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-icons/1.1.0/0acd58e3e0c42f44d02ed705eb66f4fa71e6c3a5#0acd58e3e0c42f44d02ed705eb66f4fa71e6c3a5"
+  integrity sha512-OooAPGAtgpfo+TQLVGNf2doVEmD8G9iVRlwW4dz5qYal48gArLAxM45oNuJP/rVXe5Y1VrWybSJhi3pZcw/iig==
+
+"@navikt/ds-react-internal@^1.1.0":
+  version "1.1.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-react-internal/1.1.0/58bcb635261a74df50d70223a139d51260fc5d98#58bcb635261a74df50d70223a139d51260fc5d98"
+  integrity sha512-aGNvICvzhOVGUpk8VygFdXAmGkVre4ZxJtkWXuid5VQoorOGGSQMyOgn6HgLYe21r3mOEfxsRcgr343ZMERR4w==
   dependencies:
-    "@navikt/ds-icons" "^0.8.20"
-    "@navikt/ds-react" "^0.19.27"
-    "@popperjs/core" "^2.10.1"
-    classnames "^2.3.1"
+    "@navikt/ds-icons" "^1.0.2"
+    "@navikt/ds-react" "^1.0.2"
+    clsx "^1.1.1"
     copy-to-clipboard "^3.3.1"
-    react-merge-refs "^1.1.0"
 
 "@navikt/ds-react@^0.19.27":
   version "0.19.27"
@@ -1761,6 +1791,18 @@
     react-modal "3.15.1"
     react-popper "^2.2.5"
     uuid "^8.3.2"
+
+"@navikt/ds-react@^1.0.2":
+  version "1.1.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-react/1.1.0/eae9280e85ecf1ad15ebb145171fb80d55388b4e#eae9280e85ecf1ad15ebb145171fb80d55388b4e"
+  integrity sha512-gkL2S5gFVvoUehp2c1VMzTm+W3vGqE9HpKFPV2Mp0m3J4BAP3u/j36huBotPYqoApYMMDjq2QIwsP84BRdPgrA==
+  dependencies:
+    "@floating-ui/react-dom-interactions" "0.9.2"
+    "@navikt/ds-icons" "^1.0.2"
+    "@radix-ui/react-tabs" "1.0.0"
+    "@radix-ui/react-toggle-group" "1.0.0"
+    clsx "^1.1.1"
+    react-modal "3.15.1"
 
 "@navikt/ds-tokens@^0.9.8":
   version "0.9.8"
@@ -2062,7 +2104,7 @@
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-compose-refs" "1.0.0"
 
-"@radix-ui/react-tabs@^1.0.0":
+"@radix-ui/react-tabs@1.0.0", "@radix-ui/react-tabs@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-tabs/-/react-tabs-1.0.0.tgz#135c67f1f2bd9ada69a3f6e38dd897d459af5fe5"
   integrity sha512-oKUwEDsySVC0uuSEH7SHCVt1+ijmiDFAI9p+fHCtuZdqrRDKIFs09zp5nrmu4ggP6xqSx9lj1VSblnDH+n3IBA==
@@ -2077,7 +2119,7 @@
     "@radix-ui/react-roving-focus" "1.0.0"
     "@radix-ui/react-use-controllable-state" "1.0.0"
 
-"@radix-ui/react-toggle-group@^1.0.0":
+"@radix-ui/react-toggle-group@1.0.0", "@radix-ui/react-toggle-group@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-toggle-group/-/react-toggle-group-1.0.0.tgz#6e78ffb13e0b4c1f789828930330638f4ba9c06d"
   integrity sha512-R/5sK4/BPgOYWAsheFaFpNFh0sLPHdqsBcqO5KW2+Foy36B2KBYrGd6Hu4HnzgivawVX+mSmVNhAwHA8Yb1hLA==
@@ -3387,6 +3429,13 @@ argparse@^2.0.1:
   resolved "https://registry.yarnpkg.com/argparse/-/argparse-2.0.1.tgz#246f50f3ca78a3240f6c997e8a9bd1eac49e4b38"
   integrity sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==
 
+aria-hidden@^1.1.3:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/aria-hidden/-/aria-hidden-1.2.1.tgz#ad8c1edbde360b454eb2bf717ea02da00bfee0f8"
+  integrity sha512-PN344VAf9j1EAi+jyVHOJ8XidQdPVssGco39eNcsGdM4wcsILtxrKLkbuiMfLWYROK1FjRQasMWCBttrhjnr6A==
+  dependencies:
+    tslib "^2.0.0"
+
 aria-query@^4.2.2:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/aria-query/-/aria-query-4.2.2.tgz#0d2ca6c9aceb56b8977e9fed6aed7e15bbd2f83b"
@@ -3985,7 +4034,7 @@ clone-response@^1.0.2:
   dependencies:
     mimic-response "^1.0.0"
 
-clsx@^1.0.4:
+clsx@^1.0.4, clsx@^1.1.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
   integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
