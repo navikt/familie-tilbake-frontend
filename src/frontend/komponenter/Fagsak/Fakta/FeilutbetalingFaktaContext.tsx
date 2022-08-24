@@ -271,6 +271,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             feilmeldinger,
             senderInn,
             gåTilForrige,
+            fagsak,
         };
     }
 );

@@ -2,13 +2,14 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { ExternalLink } from '@navikt/ds-icons';
+import { ExternalLink, Office1Filled } from '@navikt/ds-icons';
 import { Link, Tag } from '@navikt/ds-react';
 import {
     NavdsGlobalColorGray900,
     NavdsSemanticColorBorderMuted,
     NavdsSemanticColorTextInverted,
     NavdsSpacing12,
+    NavdsSpacing2,
     NavdsSpacing4,
     NavdsSpacing6,
 } from '@navikt/ds-tokens/dist/tokens';
@@ -44,6 +45,22 @@ const DødsfallTag = styled(Tag)`
     margin-left: ${NavdsSpacing6};
 `;
 
+const InstitusjonsTag = styled(Tag)`
+    margin-left: ${NavdsSpacing6};
+
+    svg {
+        margin-right: ${NavdsSpacing2};
+    }
+`;
+
+const MaksLengdeInstitusjonNavn = styled.span`
+    max-width: 10rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: clip;
+    display: inline-block;
+`;
+
 interface IProps {
     bruker: IPerson;
     fagsak: IFagsak;
@@ -61,9 +78,19 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                 alder={hentAlder(bruker.fødselsdato)}
             >
                 {bruker.dødsdato && (
-                    <DødsfallTag variant="info">
+                    <DødsfallTag variant="info" size="small">
                         Død: {formatterDatostring(bruker.dødsdato)}
                     </DødsfallTag>
+                )}
+                {fagsak.institusjon && (
+                    <InstitusjonsTag variant="info" size="small">
+                        <Office1Filled />
+                        <MaksLengdeInstitusjonNavn title={fagsak.institusjon.navn}>
+                            {fagsak.institusjon.navn}
+                        </MaksLengdeInstitusjonNavn>
+                        <div className="visittkort__pipe">|</div>
+                        {fagsak.institusjon.organisasjonsnummer}
+                    </InstitusjonsTag>
                 )}
                 <PlaceholderDiv />
 

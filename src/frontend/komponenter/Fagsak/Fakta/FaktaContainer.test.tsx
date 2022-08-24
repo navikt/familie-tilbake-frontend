@@ -74,6 +74,9 @@ describe('Tester: FaktaContainer', () => {
         },
         begrunnelse: undefined,
     };
+    const fagsak = mock<IFagsak>({
+        institusjon: undefined,
+    });
 
     const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: IFeilutbetalingFakta) => {
         // @ts-ignore
@@ -106,7 +109,6 @@ describe('Tester: FaktaContainer', () => {
         const user = userEvent.setup();
         setupMock(false, false, feilutbetalingFakta);
         const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
@@ -185,7 +187,6 @@ describe('Tester: FaktaContainer', () => {
         const user = userEvent.setup();
         setupMock(false, false, feilutbetalingFakta);
         const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
 
         const { getByText, getByLabelText, getByRole, getAllByRole, getByTestId, queryAllByText } =
             render(
@@ -269,7 +270,6 @@ describe('Tester: FaktaContainer', () => {
             begrunnelse: 'Dette er en test-begrunnelse',
         });
         const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
 
         const { getByText, getByLabelText, getByTestId, getByRole } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
@@ -329,7 +329,6 @@ describe('Tester: FaktaContainer', () => {
             begrunnelse: 'Dette er en test-begrunnelse',
         });
         const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
 
         const { getByText, getByLabelText, getByTestId, getByRole } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
@@ -387,7 +386,6 @@ describe('Tester: FaktaContainer', () => {
             begrunnelse: 'Dette er en test-begrunnelse',
         });
         const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
@@ -440,7 +438,6 @@ describe('Tester: FaktaContainer', () => {
             begrunnelse: 'Dette er en test-begrunnelse',
         });
         const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
