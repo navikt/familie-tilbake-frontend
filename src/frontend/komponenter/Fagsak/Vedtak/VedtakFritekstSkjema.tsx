@@ -2,10 +2,8 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import Lenke from 'nav-frontend-lenker';
-import { Undertekst } from 'nav-frontend-typografi';
-
 import { AddCircle } from '@navikt/ds-icons';
+import { BodyShort, Link } from '@navikt/ds-react';
 
 import { isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
@@ -13,7 +11,7 @@ import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer'
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
-const StyledUndertekst = styled(Undertekst)`
+const StyledUndertekst = styled(BodyShort)`
     display: inline-block;
     margin-left: 1ex;
 `;
@@ -57,7 +55,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
             {isTextfieldHidden && !erLesevisning && (
                 <>
                     <Spacer8 />
-                    <Lenke
+                    <Link
                         role="button"
                         data-testid={`legg-til-fritekst-${avsnittIndex}-${underavsnitt.index}`}
                         onClick={e => {
@@ -73,8 +71,8 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                         href="#"
                     >
                         <AddCircle aria-label="Legg til utdypende tekst" />
-                        <StyledUndertekst>Legg til utdypende tekst</StyledUndertekst>
-                    </Lenke>
+                        <StyledUndertekst size="small">Legg til utdypende tekst</StyledUndertekst>
+                    </Link>
                 </>
             )}
             {!isTextfieldHidden && (

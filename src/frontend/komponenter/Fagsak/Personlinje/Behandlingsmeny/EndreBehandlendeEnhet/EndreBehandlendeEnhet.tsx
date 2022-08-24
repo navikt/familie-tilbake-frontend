@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { SkjemaGruppe } from 'nav-frontend-skjema';
-
+import { ErrorMessage } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -38,6 +37,8 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
     React.useEffect(() => {
         settBehandendeEnheter(finnMuligeEnheter(ytelse));
     }, [ytelse]);
+
+    const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
     return (
         <>
@@ -81,7 +82,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                     ],
                 }}
             >
-                <SkjemaGruppe feil={hentFrontendFeilmelding(skjema.submitRessurs)}>
+                <>
                     <FamilieSelect
                         {...skjema.felter.enhet.hentNavInputProps(skjema.visFeilmeldinger)}
                         erLesevisning={false}
@@ -108,7 +109,15 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                         onChange={e => skjema.felter.begrunnelse.validerOgSettFelt(e.target.value)}
                         maxLength={400}
                     />
-                </SkjemaGruppe>
+                    {feilmelding && (
+                        <>
+                            <Spacer8 />
+                            <div className="skjemaelement__feilmelding">
+                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
+                            </div>
+                        </>
+                    )}
+                </>
             </UIModalWrapper>
         </>
     );
