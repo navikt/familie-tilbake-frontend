@@ -1744,11 +1744,13 @@
     framer-motion "^6.3.16"
     react-tooltip "^4.2.21"
 
-"@navikt/familie-form-elements@^5.0.0":
-  version "5.0.0"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-form-elements/5.0.0/1c87a49285893f23ae1c63ba06356317dba1f74c#1c87a49285893f23ae1c63ba06356317dba1f74c"
-  integrity sha512-Vwbzbu2dVuAc0mNRbDdCAEZ4LgOvUZOcOHlhks7yX7LGFdqCt6QNHIgcr/2W8AuJPsMLFGk2sVfNZHjMNQLaYA==
+"@navikt/familie-form-elements@^6.0.0":
+  version "6.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-form-elements/6.0.0/422ac4ae8aee5ba901e1b332200a770c33e33af2#422ac4ae8aee5ba901e1b332200a770c33e33af2"
+  integrity sha512-0DzzXNef77i6FPxFobBIZHcQRmROCTasjO7uJhhg7n4PflnPt4nqJQbcvNU+nPsv75VA39jGpxpOZJywlfJsAQ==
   dependencies:
+    "@navikt/ds-css" "^0.18.x"
+    "@navikt/ds-react" "^0.19.x"
     "@navikt/fnrvalidator" "^1.3.0"
     "@types/classnames" "^2.3.1"
     "@types/react-select" "^5.0.1"
