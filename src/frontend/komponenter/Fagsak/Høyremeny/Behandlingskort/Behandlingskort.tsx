@@ -51,7 +51,10 @@ const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
             <Heading size="xsmall" level="2">
                 {tittel}
             </Heading>
-            <BodyShort>{ytelsetype[fagsak.ytelsestype]}</BodyShort>
+            <BodyShort>
+                {ytelsetype[fagsak.ytelsestype]}
+                {fagsak.institusjon ? ' - Institusjon' : null}
+            </BodyShort>
             <StyledHr />
             {behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING && (
                 <Informasjonsbolk
@@ -69,7 +72,6 @@ const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
                     {
                         label: 'Behandlingsstatus',
                         tekst: behandlingsstatuser[behandling.status],
-                        tekstTitle: 'Test',
                     },
                     {
                         label: 'Resultat',

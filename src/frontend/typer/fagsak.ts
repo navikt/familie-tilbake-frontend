@@ -12,6 +12,11 @@ export const målform: Record<Målform, string> = {
     NN: 'Nynorsk',
 };
 
+export interface IInstitusjon {
+    organisasjonsnummer: string;
+    navn: string;
+}
+
 export interface IFagsakBehandling {
     behandlingId: string;
     eksternBrukId: string;
@@ -26,4 +31,5 @@ export interface IFagsak {
     språkkode: Målform;
     bruker: IPerson;
     behandlinger: IFagsakBehandling[];
+    institusjon?: IInstitusjon;
 }

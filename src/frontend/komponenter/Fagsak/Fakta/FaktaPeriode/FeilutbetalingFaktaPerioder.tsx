@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Table } from '@navikt/ds-react';
 
 import { HendelseType, hentHendelseTyper, Ytelsetype } from '../../../../kodeverk';
+import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
 import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 import FeilutbetalingFaktaPeriode from './FeilutbetalingFaktaPeriodeSkjema';
 
@@ -26,9 +27,10 @@ interface IProps {
 
 const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLesevisning }) => {
     const [hendelseTyper, settHendelseTyper] = React.useState<HendelseType[]>();
+    const { fagsak } = useFeilutbetalingFakta();
 
     React.useEffect(() => {
-        settHendelseTyper(hentHendelseTyper(ytelse));
+        settHendelseTyper(hentHendelseTyper(ytelse, !!fagsak.institusjon));
     }, [ytelse]);
 
     return (

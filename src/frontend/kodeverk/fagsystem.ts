@@ -67,6 +67,9 @@ const hendelseTyperForYtelse = {
     KONTANTSTØTTE: [HendelseType.ANNET],
 };
 
-export const hentHendelseTyper = (ytelse: Ytelsetype): HendelseType[] => {
+export const hentHendelseTyper = (ytelse: Ytelsetype, erInstitusjon: boolean): HendelseType[] => {
+    if (erInstitusjon && ytelse === Ytelsetype.BARNETRYGD) {
+        return [HendelseType.ANNET];
+    }
     return hendelseTyperForYtelse[ytelse];
 };
