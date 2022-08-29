@@ -29,7 +29,7 @@
     "@navikt/ds-css-internal": "^0.7.7",
     "@navikt/ds-icons": "^0.8.20",
     "@navikt/ds-react": "^0.19.27",
-    "@navikt/ds-react-internal": "^0.14.28",
+    "@navikt/ds-react-internal": "^1.2.3",
     "@navikt/ds-tokens": "^0.9.8",
     "@navikt/familie-backend": "^7.0.4",
     "@navikt/familie-form-elements": "^5.0.0",
