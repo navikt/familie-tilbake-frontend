@@ -1669,6 +1669,11 @@
   dependencies:
     uuid "^8.3.2"
 
+"@navikt/ds-icons@^1.2.3":
+  version "1.2.3"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-icons/1.2.3/712c1c4b98bf18cd1edbd3a07beb2581a1a4f1f7#712c1c4b98bf18cd1edbd3a07beb2581a1a4f1f7"
+  integrity sha512-09LUHis7U2RFNHqAQyFe8dtyZ+lfR+CKDLkxihG+xnbhK/pR+QZdfDtuQhz3Y9KeOKx+p0QQWFs8e8pxkJhxeQ==
+
 "@navikt/ds-react-internal@^0.14.28":
   version "0.14.28"
   resolved "https://npm.pkg.github.com/download/@navikt/ds-react-internal/0.14.28/e0d8c27dee0b0d2ee0c85310f21941d602d6ffb2#e0d8c27dee0b0d2ee0c85310f21941d602d6ffb2"
