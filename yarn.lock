@@ -1652,10 +1652,10 @@
     hey-listen "^1.0.8"
     tslib "^2.3.1"
 
-"@navikt/ds-css-internal@^0.7.7":
-  version "0.7.7"
-  resolved "https://npm.pkg.github.com/download/@navikt/ds-css-internal/0.7.7/ff5df8ad05bf734863dec441178200b680a41c41#ff5df8ad05bf734863dec441178200b680a41c41"
-  integrity sha512-GiWQ4m9ksagS8GN/ifCgVksOttiOW2eSfqnsuL9GNQaDbRQLpxSvmej2c2uTkgj3+fgpJi7f9rHdcQfDplOL0A==
+"@navikt/ds-css-internal@^1.2.4":
+  version "1.2.4"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-css-internal/1.2.4/498376e6fa467a6b4a9c2e856c1c09472d67f005#498376e6fa467a6b4a9c2e856c1c09472d67f005"
+  integrity sha512-rcuycGyApktUVjaK1sn3+htbQfsV8kjEhYPbS9A1QTQ4/xEs00zk8m7OtRQJEnNXVf9gQcrIWQgRP/lLX2r9Ig==
 
 "@navikt/ds-css@^0.18.29", "@navikt/ds-css@^0.18.x":
   version "0.18.29"
