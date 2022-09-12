@@ -3,9 +3,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
-import { Radio } from 'nav-frontend-skjema';
 
-import { BodyShort, Detail, Heading, HelpText } from '@navikt/ds-react';
+import { BodyShort, Detail, Heading, HelpText, Radio } from '@navikt/ds-react';
 import { NavdsSemanticColorBorder, NavdsSpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
@@ -23,13 +22,7 @@ import {
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatostring, isEmpty } from '../../../../utils';
-import {
-    DetailBold,
-    FTButton,
-    Navigering,
-    Spacer20,
-    Spacer8,
-} from '../../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
@@ -54,8 +47,13 @@ const StyledContainer = styled.div`
 `;
 
 const StyledVilkårsresultatRadio = styled(Radio)`
-    div.navds-help-text {
-        margin-left: 0.2rem;
+    .navds-help-text {
+        margin-left: 0.3rem;
+        display: inline-block;
+    }
+
+    .navds-popover {
+        min-width: max-content;
     }
 `;
 
@@ -154,9 +152,12 @@ const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.Rea
     return (
         <div style={{ display: 'inline-flex' }}>
             {vilkårsresultater[resultat]}
-            <HelpText placement="right" aria-label={hjelpetekster[resultat]} role="tooltip">
-                {hjelpetekster[resultat]}
-            </HelpText>
+            <HelpText
+                placement="right"
+                aria-label={hjelpetekster[resultat]}
+                role="tooltip"
+                children={hjelpetekster[resultat]}
+            />
         </div>
     );
 };
@@ -259,15 +260,15 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                 behandletPerioder.length > 0 && (
                     <>
                         <Row>
-                            <Column md="10">
+                            <Column md="3">
                                 <FamilieSelect
                                     name="perioderForKopi"
                                     onChange={event => onKopierPeriode(event)}
-                                    bredde="m"
                                     label={
                                         <Detail size="small">Kopier vilkårsvurdering fra</Detail>
                                     }
                                     erLesevisning={erLesevisning}
+                                    size="small"
                                 >
                                     <option value="-">-</option>
                                     {behandletPerioder.map(per => (
@@ -293,17 +294,17 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                             <Column md="12">
                                 <Row>
                                     <Column md="6">
-                                        <DetailBold size="small" spacing>
+                                        <Heading size="xsmall" level="2" spacing>
                                             Varsel
-                                        </DetailBold>
-                                        <BodyShort size="small">
+                                        </Heading>
+                                        <BodyShort>
                                             {periode.begrunnelse ? periode.begrunnelse : ''}
                                         </BodyShort>
                                     </Column>
                                     <Column md="6">
-                                        <DetailBold size="small" spacing>
+                                        <Heading size="xsmall" level="2" spacing>
                                             Vurder om perioden er foreldet
-                                        </DetailBold>
+                                        </Heading>
                                         <BodyShort size="small">Perioden er foreldet</BodyShort>
                                     </Column>
                                 </Row>
@@ -331,42 +332,41 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         )
                                     }
                                 />
-                                <Spacer8 />
+                                <Spacer20 />
                                 <FamilieRadioGruppe
                                     id="valgtVilkarResultatType"
                                     erLesevisning={erLesevisning}
                                     legend={'Er vilkårene for tilbakekreving oppfylt?'}
-                                    verdi={
-                                        periode.vilkårsvurderingsresultatInfo
-                                            ?.vilkårsvurderingsresultat
+                                    value={
+                                        !erLesevisning
+                                            ? skjema.felter.vilkårsresultatvurdering.verdi
+                                            : periode.vilkårsvurderingsresultatInfo
+                                                  ?.vilkårsvurderingsresultat
                                             ? vilkårsresultater[
                                                   periode.vilkårsvurderingsresultatInfo
                                                       ?.vilkårsvurderingsresultat
                                               ]
                                             : ''
                                     }
-                                    feil={
+                                    error={
                                         ugyldigVilkårsresultatValgt
                                             ? skjema.felter.vilkårsresultatvurdering.feilmelding?.toString()
                                             : ''
+                                    }
+                                    onChange={(val: Vilkårsresultat) =>
+                                        skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(
+                                            val
+                                        )
                                     }
                                 >
                                     {vilkårsresultatTyper.map(type => (
                                         <StyledVilkårsresultatRadio
                                             key={type}
                                             name="valgtVilkarResultatType"
-                                            label={lagLabeltekster(fagsak, type)}
                                             value={type}
-                                            checked={
-                                                skjema.felter.vilkårsresultatvurdering.verdi ===
-                                                type
-                                            }
-                                            onChange={() =>
-                                                skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(
-                                                    type
-                                                )
-                                            }
-                                        />
+                                        >
+                                            {lagLabeltekster(fagsak, type)}
+                                        </StyledVilkårsresultatRadio>
                                     ))}
                                 </FamilieRadioGruppe>
                             </Column>
@@ -375,7 +375,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                 </Column>
                 <Column xs="12" md="6">
                     <Row>
-                        <Column md="10">
+                        <Column md="11">
                             {vilkårsresultatVurderingGjort && (
                                 <>
                                     {erGodTro ? (
@@ -415,7 +415,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         }
                                         maxLength={3000}
                                     />
-                                    <Spacer8 />
+                                    <Spacer20 />
                                     {erGodTro ? (
                                         <GodTroSkjema
                                             skjema={skjema}

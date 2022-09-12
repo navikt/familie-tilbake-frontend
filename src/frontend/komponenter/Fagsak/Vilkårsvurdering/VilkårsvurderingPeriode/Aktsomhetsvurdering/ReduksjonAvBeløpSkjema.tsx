@@ -3,9 +3,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
-import { Radio } from 'nav-frontend-skjema';
 
-import { BodyShort, Label } from '@navikt/ds-react';
+import { BodyShort, Label, Radio } from '@navikt/ds-react';
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -17,6 +16,7 @@ import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårs
 import {
     ANDELER,
     EGENDEFINERT,
+    JaNeiOption,
     jaNeiOptions,
     OptionJA,
     OptionNEI,
@@ -28,15 +28,14 @@ const StyledNormaltekst = styled(BodyShort)`
 `;
 
 const FlexRow = styled.div`
-    margin-top: 5px;
     display: flex;
     flex: 0 0 100%;
     flex-flow: row nowrap;
+    align-items: center;
 `;
 
 const FlexColumn = styled.div`
     flex: 0 1 auto;
-    padding-left: 8px;
     padding-right: 8px;
 `;
 
@@ -66,43 +65,55 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
         ? formatCurrencyNoKr(valgtPeriode?.feilutbetaltBeløp)
         : '100 %';
 
+    const erGrovtUaktsomhet = skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET;
+
     return (
         <>
             <HorisontalFamilieRadioGruppe
                 id="harGrunnerTilReduksjon"
                 legend={'Skal særlige grunner gi reduksjon av beløpet?'}
                 erLesevisning={erLesevisning}
-                verdi={skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA ? 'Ja' : 'Nei'}
-                feil={
+                value={
+                    !erLesevisning
+                        ? skjema.felter.harGrunnerTilReduksjon.verdi
+                        : skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA
+                        ? 'Ja'
+                        : 'Nei'
+                }
+                error={
                     ugyldigHarGrunnertilReduksjonValgt
                         ? skjema.felter.harGrunnerTilReduksjon.feilmelding?.toString()
                         : ''
+                }
+                onChange={(val: JaNeiOption) =>
+                    skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(val)
                 }
             >
                 {jaNeiOptions.map(opt => (
                     <Radio
                         key={opt.label}
                         name="harGrunnerTilReduksjon"
-                        label={opt.label}
-                        checked={skjema.felter.harGrunnerTilReduksjon.verdi === opt}
-                        onChange={() => skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(opt)}
                         data-testid={`harGrunnerTilReduksjon_${opt.label}`}
-                    />
+                        value={opt}
+                    >
+                        {opt.label}
+                    </Radio>
                 ))}
             </HorisontalFamilieRadioGruppe>
             {skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA && (
                 <ArrowBox alignOffset={erLesevisning ? 5 : 20}>
                     <Row>
-                        <Column md="6">
+                        <Column md={!erGrovtUaktsomhet ? '12' : '6'}>
                             {!harMerEnnEnAktivitet && !erEgendefinert && (
                                 <>
-                                    <Label size="small">Angi andel som skal tilbakekreves</Label>
+                                    <Label>Angi andel som skal tilbakekreves</Label>
                                     <FlexRow>
                                         <FlexColumn>
                                             <FamilieSelect
                                                 {...skjema.felter.uaktsomAndelTilbakekreves.hentNavInputProps(
                                                     skjema.visFeilmeldinger
                                                 )}
+                                                label={null}
                                                 id="andelSomTilbakekreves"
                                                 aria-label="Angi andel som skal tilbakekreves"
                                                 erLesevisning={erLesevisning}
@@ -111,10 +122,10 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                         event.target.value
                                                     )
                                                 }
-                                                bredde="xs"
                                                 value={
                                                     skjema.felter.uaktsomAndelTilbakekreves.verdi
                                                 }
+                                                style={{ width: '100px' }}
                                             >
                                                 <option>-</option>
                                                 {ANDELER.map(andel => (
@@ -124,19 +135,24 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                 ))}
                                             </FamilieSelect>
                                         </FlexColumn>
-                                        <FlexColumn>%</FlexColumn>
+                                        <FlexColumn>
+                                            <BodyShort as="span" style={{ marginTop: '5px' }}>
+                                                %
+                                            </BodyShort>
+                                        </FlexColumn>
                                     </FlexRow>
                                 </>
                             )}
                             {!harMerEnnEnAktivitet && erEgendefinert && (
                                 <>
-                                    <Label size="small">Angi andel som skal tilbakekreves</Label>
+                                    <Label>Angi andel som skal tilbakekreves</Label>
                                     <FlexRow>
                                         <FlexColumn>
                                             <FamilieInput
                                                 {...skjema.felter.uaktsomAndelTilbakekrevesManuelt.hentNavInputProps(
                                                     skjema.visFeilmeldinger
                                                 )}
+                                                label={null}
                                                 id="andelSomTilbakekrevesManuell"
                                                 aria-label="Angi andel som skal tilbakekreves - fritekst"
                                                 erLesevisning={erLesevisning}
@@ -149,11 +165,16 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                     skjema.felter.uaktsomAndelTilbakekrevesManuelt
                                                         .verdi
                                                 }
-                                                bredde="XS"
                                                 data-testid="andelSomTilbakekrevesManuell"
+                                                style={{ width: '100px' }}
                                             />
                                         </FlexColumn>
-                                        <FlexColumn className="percentage">%</FlexColumn>
+                                        <FlexColumn
+                                            className="percentage"
+                                            style={{ paddingTop: '5px' }}
+                                        >
+                                            %
+                                        </FlexColumn>
                                     </FlexRow>
                                 </>
                             )}
@@ -171,14 +192,14 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                             event.target.value
                                         )
                                     }
-                                    bredde="S"
+                                    style={{ width: '100px' }}
                                 />
                             )}
                         </Column>
-                        {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET && (
+                        {erGrovtUaktsomhet && (
                             <Column md="6">
-                                <Label size="small">Skal det tillegges renter?</Label>
-                                <StyledNormaltekst size="small">Nei</StyledNormaltekst>
+                                <Label>Skal det tillegges renter?</Label>
+                                <StyledNormaltekst>Nei</StyledNormaltekst>
                             </Column>
                         )}
                     </Row>
@@ -187,52 +208,49 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
             {skjema.felter.harGrunnerTilReduksjon.verdi === OptionNEI && (
                 <ArrowBox alignOffset={erLesevisning ? 5 : 80}>
                     <Row>
-                        <Column md="6">
-                            <Label size="small" spacing={harMerEnnEnAktivitet}>
+                        <Column md={!erGrovtUaktsomhet ? '12' : '6'}>
+                            <Label spacing={harMerEnnEnAktivitet}>
                                 {harMerEnnEnAktivitet
                                     ? 'Beløp som skal tilbakekreves'
                                     : 'Andel som skal tilbakekreves'}
                             </Label>
                             {kanIlleggeRenter ? (
-                                <StyledNormaltekst size="small">
-                                    {beskjedTilbakekreves}
-                                </StyledNormaltekst>
+                                <StyledNormaltekst>{beskjedTilbakekreves}</StyledNormaltekst>
                             ) : (
-                                <BodyShort size="small">{beskjedTilbakekreves}</BodyShort>
+                                <BodyShort>{beskjedTilbakekreves}</BodyShort>
                             )}
                         </Column>
-                        {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET && (
+                        {erGrovtUaktsomhet && (
                             <HorisontalFamilieRadioGruppe
                                 id="skalDetTilleggesRenter"
                                 legend={'Skal det tillegges renter?'}
                                 erLesevisning={erLesevisning || !kanIlleggeRenter}
-                                verdi={
-                                    skjema.felter.grovtUaktsomIlleggeRenter.verdi === OptionJA
+                                value={
+                                    !erLesevisning && kanIlleggeRenter
+                                        ? skjema.felter.grovtUaktsomIlleggeRenter.verdi
+                                        : skjema.felter.grovtUaktsomIlleggeRenter.verdi === OptionJA
                                         ? 'Ja'
                                         : 'Nei'
                                 }
-                                feil={
+                                error={
                                     ugyldigIlleggRenterValgt
                                         ? skjema.felter.grovtUaktsomIlleggeRenter.feilmelding?.toString()
                                         : ''
                                 }
                                 margin-bottom="none"
+                                onChange={(val: JaNeiOption) =>
+                                    skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(val)
+                                }
                             >
                                 {jaNeiOptions.map(opt => (
                                     <Radio
                                         key={opt.label}
                                         name="skalDetTilleggesRenter"
-                                        label={opt.label}
-                                        checked={
-                                            skjema.felter.grovtUaktsomIlleggeRenter.verdi === opt
-                                        }
-                                        onChange={() =>
-                                            skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(
-                                                opt
-                                            )
-                                        }
                                         data-testid={`skalDetTilleggesRenter_${opt.label}`}
-                                    />
+                                        value={opt}
+                                    >
+                                        {opt.label}
+                                    </Radio>
                                 ))}
                             </HorisontalFamilieRadioGruppe>
                         )}

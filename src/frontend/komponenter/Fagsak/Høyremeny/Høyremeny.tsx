@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Send, Folder, Clock, Decision, NextFilled, BackFilled } from '@navikt/ds-icons';
 import { Button, Tabs } from '@navikt/ds-react';
-import { NavdsSpacing4 } from '@navikt/ds-tokens/dist/tokens';
+import { NavdsFontSizeMedium, NavdsSpacing4 } from '@navikt/ds-tokens/dist/tokens';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IBehandling } from '../../../typer/behandling';
@@ -30,7 +30,7 @@ const StyledTabList = styled(Tabs.List)`
 
 const StyledTabs = styled(Tabs.Tab)`
     & span {
-        font-size: 1rem;
+        font-size: ${NavdsFontSizeMedium};
     }
 `;
 
@@ -47,7 +47,7 @@ const ToggleVisningHøyremeny = styled(Button)`
     width: 34px;
     min-width: 34px;
     height: 34px;
-    padding: 0px;
+    padding: 5px 0 0 0;
     border-radius: 50%;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 `;
@@ -78,16 +78,19 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                 title={åpenHøyremeny ? 'Skjul høyremeny' : 'Vis høyremeny'}
             >
                 {åpenHøyremeny ? (
-                    <NextFilled aria-label="Skjul høyremeny" />
+                    <NextFilled aria-label="Skjul høyremeny" width={22} height={22} />
                 ) : (
-                    <BackFilled aria-label="Vis høyremeny" />
+                    <BackFilled aria-label="Vis høyremeny" width={22} height={22} />
                 )}
             </ToggleVisningHøyremeny>
             {åpenHøyremeny && (
                 <StyledContainer værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}>
                     <Behandlingskort fagsak={fagsak} behandling={behandling} />
                     <div>
-                        <Tabs defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}>
+                        <Tabs
+                            defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
+                            iconPosition="top"
+                        >
                             <StyledTabList>
                                 {værtPåFatteVedtakSteget && (
                                     <StyledTabs
@@ -100,7 +103,6 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                                 aria-label="Ikon fatte vedtak"
                                             />
                                         }
-                                        iconPosition="top"
                                     />
                                 )}
                                 <StyledTabs
@@ -109,7 +111,6 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                     icon={
                                         <Clock height={18} width={18} aria-label="Ikon historikk" />
                                     }
-                                    iconPosition="top"
                                 />
                                 <StyledTabs
                                     value="dokumenter"
@@ -121,7 +122,6 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                             aria-label="Ikon dokumenter"
                                         />
                                     }
-                                    iconPosition="top"
                                 />
                                 <StyledTabs
                                     value="send-brev"
@@ -129,7 +129,6 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                     icon={
                                         <Send height={18} width={18} aria-label="Ikon send brev" />
                                     }
-                                    iconPosition="top"
                                 />
                             </StyledTabList>
                             <HøyremenyContainer>

@@ -14,6 +14,12 @@ updates:
     registries: "*"
     ignore:
       - dependency-name: "snyk" # kommer så ofte. oppdateres med yarn outdated og yarn upgrade
+      - dependency-name: "@navikt/ds-css" # ds-pakkene må følge versjonen i familie-felles-frontend
+      - dependency-name: "@navikt/ds-css-internal"
+      - dependency-name: "@navikt/ds-icons"
+      - dependency-name: "@navikt/ds-react"
+      - dependency-name: "@navikt/ds-react-internal"
+      - dependency-name: "@navikt/ds-tokens"
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
   - package-ecosystem: "docker"

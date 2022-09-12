@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import { Radio } from 'nav-frontend-skjema';
-
+import { Radio } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
 import {
+    JaNeiOption,
     jaNeiOptions,
     OptionJA,
     OptionNEI,
@@ -28,7 +28,7 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
         skjema.felter.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.FEIL;
     const erTotalbeløpUnder4Rettsgebyr = skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
 
-    const grovUaktsomOffset = erValgtResultatTypeForstoBurdeForstaatt ? 175 : 195;
+    const grovUaktsomOffset = erValgtResultatTypeForstoBurdeForstaatt ? 193 : 213;
     const offset =
         skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET
             ? grovUaktsomOffset
@@ -42,26 +42,31 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                             id="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
                             legend="Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?"
                             erLesevisning={erLesevisning}
-                            verdi={
-                                skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA ? 'Ja' : 'Nei'
+                            value={
+                                !erLesevisning
+                                    ? skjema.felter.tilbakekrevSmåbeløp.verdi
+                                    : skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA
+                                    ? 'Ja'
+                                    : 'Nei'
                             }
-                            feil={
+                            error={
                                 ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr
                                     ? skjema.felter.tilbakekrevSmåbeløp.feilmelding?.toString()
                                     : ''
+                            }
+                            onChange={(val: JaNeiOption) =>
+                                skjema.felter.tilbakekrevSmåbeløp.validerOgSettFelt(val)
                             }
                         >
                             {jaNeiOptions.map(opt => (
                                 <Radio
                                     key={opt.label}
                                     name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
-                                    label={opt.label}
-                                    checked={skjema.felter.tilbakekrevSmåbeløp.verdi === opt}
-                                    onChange={() =>
-                                        skjema.felter.tilbakekrevSmåbeløp.validerOgSettFelt(opt)
-                                    }
+                                    value={opt}
                                     data-testid={`tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_${opt.label}`}
-                                />
+                                >
+                                    {opt.label}
+                                </Radio>
                             ))}
                         </HorisontalFamilieRadioGruppe>
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA && (

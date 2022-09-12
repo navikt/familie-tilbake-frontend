@@ -91,7 +91,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                         minLength={3}
                         value={underavsnitt.fritekst ? underavsnitt.fritekst : ''}
                         onChange={event => onChange(event)}
-                        feil={underavsnitt.harFeil ? underavsnitt.feilmelding : null}
+                        error={underavsnitt.harFeil ? underavsnitt.feilmelding : null}
                     />
                     <Spacer8 />
                 </>

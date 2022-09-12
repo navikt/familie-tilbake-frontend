@@ -2,9 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { Radio } from 'nav-frontend-skjema';
-
-import { Alert, Link } from '@navikt/ds-react';
+import { Alert, Link, Radio } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { behandlingssteg } from '../../../../typer/behandling';
@@ -20,6 +18,7 @@ import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {
     OptionGodkjent,
     OptionIkkeGodkjent,
+    TotrinnGodkjenningOption,
     totrinnGodkjenningOptions,
 } from './typer/totrinnSkjemaTyper';
 
@@ -92,12 +91,17 @@ const Totrinnskontroll: React.FC = () => {
                                                 {behandlingssteg[totrinnSteg.behandlingssteg]}
                                             </Link>
                                         }
-                                        verdi={
-                                            totrinnSteg.godkjent === OptionGodkjent
+                                        value={
+                                            !erLesevisning
+                                                ? totrinnSteg.godkjent
+                                                : totrinnSteg.godkjent === OptionGodkjent
                                                 ? 'Godkjent'
                                                 : totrinnSteg.godkjent === OptionIkkeGodkjent
                                                 ? 'Vurder på nytt'
                                                 : 'Ikke vurdert'
+                                        }
+                                        onChange={(val: TotrinnGodkjenningOption) =>
+                                            oppdaterGodkjenning(totrinnSteg.index, val)
                                         }
                                     >
                                         {totrinnGodkjenningOptions.map(opt => (
@@ -105,12 +109,10 @@ const Totrinnskontroll: React.FC = () => {
                                                 key={opt.label}
                                                 name={`stegetGodkjent_${totrinnSteg.index}`}
                                                 data-testid={`stegetGodkjent_${totrinnSteg.index}-${opt.verdi}`}
-                                                label={opt.label}
-                                                checked={totrinnSteg.godkjent === opt}
-                                                onChange={() =>
-                                                    oppdaterGodkjenning(totrinnSteg.index, opt)
-                                                }
-                                            />
+                                                value={opt}
+                                            >
+                                                {opt.label}
+                                            </Radio>
                                         ))}
                                     </HorisontalFamilieRadioGruppe>
                                     {vurdertIkkeGodkjent && (
@@ -128,7 +130,7 @@ const Totrinnskontroll: React.FC = () => {
                                                             event.target.value
                                                         )
                                                     }
-                                                    feil={
+                                                    error={
                                                         totrinnSteg.harFeilIBegrunnelse
                                                             ? totrinnSteg.begrunnelseFeilmelding
                                                             : null

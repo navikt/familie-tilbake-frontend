@@ -2,13 +2,18 @@ import * as React from 'react';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyShort, Heading } from '@navikt/ds-react';
-import { FamilieCheckbox } from '@navikt/familie-form-elements';
+import { BodyShort, Checkbox, Heading } from '@navikt/ds-react';
 
 import { Ytelsetype } from '../../../kodeverk';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
-import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import {
+    DetailBold,
+    FTButton,
+    Navigering,
+    Spacer20,
+    Spacer8,
+} from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
@@ -91,17 +96,19 @@ const FaktaSkjema: React.FC<IProps> = ({
                         <>
                             <Row>
                                 <Column xs="11">
-                                    <FamilieCheckbox
-                                        erLesevisning={erLesevisning}
-                                        label={'Behandle alle perioder samlet'}
+                                    <Checkbox
+                                        size="small"
+                                        disabled={erLesevisning}
                                         checked={behandlePerioderSamlet === true}
                                         onChange={() =>
                                             settBehandlePerioderSamlet(!behandlePerioderSamlet)
                                         }
-                                    />
+                                    >
+                                        Behandle alle perioder samlet
+                                    </Checkbox>
                                 </Column>
                             </Row>
-                            <Spacer20 />
+                            <Spacer8 />
                         </>
                     )}
                     <Row>
@@ -131,7 +138,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                         onChange={event => onChangeBegrunnelse(event)}
                         maxLength={3000}
                         className={erLesevisning ? 'lesevisning' : ''}
-                        feil={
+                        error={
                             visFeilmeldinger &&
                             feilmeldinger?.find(meld => meld.gjelderBegrunnelse)?.melding
                         }

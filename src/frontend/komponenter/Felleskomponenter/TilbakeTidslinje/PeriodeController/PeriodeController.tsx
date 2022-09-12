@@ -15,7 +15,7 @@ const NavigeringsKnapp = styled(Button)`
     height: 26px;
     min-height: auto;
     min-width: auto;
-    padding: 0px;
+    padding: 5px 0 0 0;
 `;
 
 interface IProps {
@@ -35,7 +35,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
                 }}
                 size="small"
             >
-                <BackFilled aria-label="Forrige periode" />
+                <BackFilled aria-label="Forrige periode" width={18} height={18} />
             </NavigeringsKnapp>
             <NavigeringsKnapp
                 variant="secondary"
@@ -46,7 +46,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
                 }}
                 size="small"
             >
-                <NextFilled aria-label="Neste periode" />
+                <NextFilled aria-label="Neste periode" width={18} height={18} />
             </NavigeringsKnapp>
         </Controller>
     );

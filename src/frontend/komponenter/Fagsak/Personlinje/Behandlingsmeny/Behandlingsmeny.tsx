@@ -25,7 +25,7 @@ const StyledList = styled.ul`
 `;
 
 const StyledButton = styled(Button)`
-    & .navds-body-short {
+    & .navds-label {
         font-size: ${NavdsFontSizeXlarge};
         font-weight: ${NavdsFontWeightBold};
     }

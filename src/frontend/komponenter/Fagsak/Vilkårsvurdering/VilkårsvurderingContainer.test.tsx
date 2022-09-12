@@ -420,7 +420,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByText('01.01.2020 - 31.03.2020', {
-                selector: 'p',
+                selector: 'label',
             })
         ).toBeTruthy();
 
@@ -450,7 +450,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByText('01.05.2020 - 30.06.2020', {
-                selector: 'p',
+                selector: 'label',
             })
         ).toBeTruthy();
 
@@ -549,7 +549,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByText('01.01.2020 - 31.03.2020', {
-                selector: 'p',
+                selector: 'label',
             })
         ).toBeTruthy();
 
@@ -569,7 +569,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByText('01.05.2020 - 30.06.2020', {
-                selector: 'p',
+                selector: 'label',
             })
         ).toBeTruthy();
 

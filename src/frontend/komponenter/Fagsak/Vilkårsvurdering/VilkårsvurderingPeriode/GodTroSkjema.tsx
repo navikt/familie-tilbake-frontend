@@ -2,15 +2,14 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { Radio } from 'nav-frontend-skjema';
-
-import { BodyShort } from '@navikt/ds-react';
+import { BodyShort, Radio } from '@navikt/ds-react';
 import { FamilieInput } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';
 import {
+    JaNeiOption,
     jaNeiOptions,
     OptionJA,
     VilkårsvurderingSkjemaDefinisjon,
@@ -39,26 +38,31 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                 id="erBelopetIBehold"
                 erLesevisning={erLesevisning}
                 legend={'Er beløpet i behold?'}
-                verdi={skjema.felter.erBeløpetIBehold.verdi === OptionJA ? 'Ja' : 'Nei'}
-                feil={
+                value={
+                    !erLesevisning
+                        ? skjema.felter.erBeløpetIBehold.verdi
+                        : skjema.felter.erBeløpetIBehold.verdi === OptionJA
+                        ? 'Ja'
+                        : 'Nei'
+                }
+                error={
                     ugyldigErBeløpetIBeholdValgt
                         ? skjema.felter.erBeløpetIBehold.feilmelding?.toString()
                         : ''
                 }
+                onChange={(val: JaNeiOption) =>
+                    skjema.felter.erBeløpetIBehold.validerOgSettFelt(val)
+                }
             >
                 {jaNeiOptions.map(opt => (
-                    <Radio
-                        key={opt.label}
-                        name="erBelopetIBehold"
-                        label={opt.label}
-                        checked={skjema.felter.erBeløpetIBehold.verdi === opt}
-                        onChange={() => skjema.felter.erBeløpetIBehold.validerOgSettFelt(opt)}
-                    />
+                    <Radio key={opt.label} name="erBelopetIBehold" value={opt}>
+                        {opt.label}
+                    </Radio>
                 ))}
             </HorisontalFamilieRadioGruppe>
             <ArrowBoxContainer>
                 {harVurderBeløpIBehold && harBeløpetIBehold && (
-                    <ArrowBox alignOffset={20}>
+                    <ArrowBox alignOffset={23}>
                         <FamilieInput
                             {...skjema.felter.godTroTilbakekrevesBeløp.hentNavInputProps(
                                 skjema.visFeilmeldinger
@@ -72,12 +76,12 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                 )
                             }
                             value={skjema.felter.godTroTilbakekrevesBeløp.verdi}
-                            bredde="S"
+                            style={{ width: '6rem' }}
                         />
                     </ArrowBox>
                 )}
                 {harVurderBeløpIBehold && !harBeløpetIBehold && (
-                    <ArrowBox alignOffset={80}>
+                    <ArrowBox alignOffset={83}>
                         <BodyShort size="small">Ingen tilbakekreving</BodyShort>
                     </ArrowBox>
                 )}

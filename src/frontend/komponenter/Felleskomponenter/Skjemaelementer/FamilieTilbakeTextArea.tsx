@@ -8,6 +8,10 @@ import { FamilieTextarea, IFamilieTextareaProps } from '@navikt/familie-form-ele
 const StyledFamilieTextArea = styled(FamilieTextarea)`
     min-height: 100px;
 
+    .navds-label {
+        width: 100%;
+    }
+
     &.lesevisning {
         min-height: auto;
 
