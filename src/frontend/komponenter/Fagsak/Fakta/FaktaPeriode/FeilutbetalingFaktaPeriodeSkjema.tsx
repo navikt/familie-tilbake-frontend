@@ -36,7 +36,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     React.useEffect(() => {
         if (periode.hendelsestype) {
             settHendelseUnderTyper(hentHendelseUndertyper(periode.hendelsestype));
-        } else if (erLesevisning) {
+        } else if (erLesevisning || !periode.hendelsestype) {
             // når det er lesevisning og perioden ikke er behandlet
             settHendelseUnderTyper([]);
         }
@@ -71,12 +71,13 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                     lesevisningVerdi={
                         periode.hendelsestype ? hendelsetyper[periode.hendelsestype] : ''
                     }
-                    feil={
+                    error={
                         visFeilmeldinger &&
                         feilmeldinger?.find(
                             meld => meld.periode === periode.index && meld.gjelderHendelsetype
                         )?.melding
                     }
+                    size={erLesevisning ? 'medium' : 'small'}
                 >
                     <option>-</option>
                     {hendelseTyper?.map(type => (
@@ -85,7 +86,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                         </option>
                     ))}
                 </FamilieSelect>
-                {hendelseUnderTyper && (
+                {hendelseUnderTyper && hendelseUnderTyper.length > 0 && (
                     <FamilieSelect
                         id={`perioder.${index}.underårsak`}
                         data-testid={`perioder.${index}.underårsak`}
@@ -98,13 +99,14 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                                 ? hendelseundertyper[periode.hendelsesundertype]
                                 : ''
                         }
-                        feil={
+                        error={
                             visFeilmeldinger &&
                             feilmeldinger?.find(
                                 meld =>
                                     meld.periode === periode.index && meld.gjelderHendelseundertype
                             )?.melding
                         }
+                        size={erLesevisning ? 'medium' : 'small'}
                     >
                         <option>-</option>
                         {hendelseUnderTyper.map(type => (

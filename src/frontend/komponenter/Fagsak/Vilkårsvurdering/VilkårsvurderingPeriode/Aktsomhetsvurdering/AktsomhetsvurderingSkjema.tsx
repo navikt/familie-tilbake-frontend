@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { Radio } from 'nav-frontend-skjema';
-
+import { Radio } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -35,8 +34,10 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                 id="handletUaktsomhetGrad"
                 erLesevisning={erLesevisning}
                 legend={'I hvilken grad har mottaker handlet uaktsomt?'}
-                verdi={
-                    skjema.felter.aktsomhetVurdering.verdi
+                value={
+                    !erLesevisning
+                        ? skjema.felter.aktsomhetVurdering.verdi
+                        : skjema.felter.aktsomhetVurdering.verdi
                         ? erForstodBurdeForstått
                             ? forstodBurdeForståttAktsomheter[
                                   skjema.felter.aktsomhetVurdering.verdi
@@ -44,25 +45,21 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                             : aktsomheter[skjema.felter.aktsomhetVurdering.verdi]
                         : ''
                 }
-                feil={
+                error={
                     ugyldigAktsomhetvurderingValgt
                         ? skjema.felter.aktsomhetVurdering.feilmelding?.toString()
                         : ''
                 }
+                onChange={(val: Aktsomhet) =>
+                    skjema.felter.aktsomhetVurdering.validerOgSettFelt(val)
+                }
             >
                 {aktsomhetTyper.map(type => (
-                    <Radio
-                        name="handletUaktsomhetGrad"
-                        key={type}
-                        value={type}
-                        onChange={() => skjema.felter.aktsomhetVurdering.validerOgSettFelt(type)}
-                        checked={skjema.felter.aktsomhetVurdering.verdi === type}
-                        label={
-                            erForstodBurdeForstått
-                                ? forstodBurdeForståttAktsomheter[type]
-                                : aktsomheter[type]
-                        }
-                    />
+                    <Radio name="handletUaktsomhetGrad" key={type} value={type}>
+                        {erForstodBurdeForstått
+                            ? forstodBurdeForståttAktsomheter[type]
+                            : aktsomheter[type]}
+                    </Radio>
                 ))}
             </HorisontalFamilieRadioGruppe>
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&

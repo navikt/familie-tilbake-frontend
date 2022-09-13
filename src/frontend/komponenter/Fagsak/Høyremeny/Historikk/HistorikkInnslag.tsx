@@ -75,14 +75,14 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
             const begrunnelse = innslag.tekst?.substring(indexÅrsakMedBegrunnelse + 15);
             return (
                 <>
-                    <BodyShort size="small">{årsak}</BodyShort>
+                    <BodyShort>{årsak}</BodyShort>
                     <BodyLong size="small">
                         Begrunnelse: <em>{begrunnelse}</em>
                     </BodyLong>
                 </>
             );
         }
-        return <BodyShort size="small">{innslag.tekst}</BodyShort>;
+        return <BodyShort>{innslag.tekst}</BodyShort>;
     };
 
     const lagBrevLink = () => {
@@ -112,7 +112,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
                 {innslag.aktør === Aktør.SAKSBEHANDLER && <SaksbehandlerIkon />}
             </Tidslinje>
             <Innhold>
-                <Label size="small">{lagTittel()}</Label>
+                <Label>{lagTittel()}</Label>
                 <Detail size="small">
                     {`${formatterDatoOgTidstring(innslag.opprettetTid)} | `}
                     {innslag.aktør === Aktør.VEDTAKSLØSNING

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { NavdsSpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
 
 export * from './FamilieTilbakeTextArea';
@@ -11,20 +12,8 @@ export const HorisontalFamilieRadioGruppe = styled(FamilieRadioGruppe)`
     margin-bottom: ${(props: { marginbottom?: string }) =>
         props.marginbottom ? props.marginbottom : '12px'};
 
-    .skjemaelement {
-        float: left;
-        margin-right: 10px;
-    }
-
-    &.skjemagruppe {
-        &.radiogruppe {
-            .skjemaelement {
-                margin-bottom: 5px;
-            }
-        }
-    }
-
-    div:last-child {
-        margin-top: 30px;
+    .navds-radio {
+        display: inline-block;
+        margin-right: ${NavdsSpacing3};
     }
 `;

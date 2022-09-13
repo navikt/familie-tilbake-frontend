@@ -3,9 +3,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
-import { Radio } from 'nav-frontend-skjema';
 
-import { BodyShort, Label } from '@navikt/ds-react';
+import { BodyShort, Label, Radio } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Vilkårsresultat } from '../../../../../kodeverk';
@@ -13,6 +12,7 @@ import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
 import {
+    JaNeiOption,
     jaNeiOptions,
     OptionJA,
     VilkårsvurderingSkjemaDefinisjon,
@@ -37,7 +37,7 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
         skjema.visFeilmeldinger &&
         skjema.felter.forstoIlleggeRenter.valideringsstatus === Valideringsstatus.FEIL;
 
-    const forstoBurdeForståttOffset = erValgtResultatTypeForstoBurdeForstått ? 305 : 350;
+    const forstoBurdeForståttOffset = erValgtResultatTypeForstoBurdeForstått ? 340 : 385;
 
     return (
         <ArrowBox alignOffset={erLesevisning ? 5 : forstoBurdeForståttOffset}>
@@ -45,11 +45,11 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                 <>
                     <Row>
                         <Column md="6">
-                            <Label size="small">Andel som skal tilbakekreves</Label>
+                            <Label>Andel som skal tilbakekreves</Label>
                             {kanIlleggeRenter ? (
-                                <StyledNormaltekst size="small">100 %</StyledNormaltekst>
+                                <StyledNormaltekst>100 %</StyledNormaltekst>
                             ) : (
-                                <BodyShort size="small">100 %</BodyShort>
+                                <BodyShort>100 %</BodyShort>
                             )}
                         </Column>
                         <Column md="6">
@@ -57,28 +57,31 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                 id="skalDetTilleggesRenter"
                                 erLesevisning={erLesevisning || !kanIlleggeRenter}
                                 legend={'Skal det tillegges renter?'}
-                                verdi={
-                                    skjema.felter.forstoIlleggeRenter.verdi === OptionJA
+                                value={
+                                    !erLesevisning && kanIlleggeRenter
+                                        ? skjema.felter.forstoIlleggeRenter.verdi
+                                        : skjema.felter.forstoIlleggeRenter.verdi === OptionJA
                                         ? 'Ja'
                                         : 'Nei'
                                 }
-                                feil={
+                                error={
                                     ugyldigIlleggRenterValgt
                                         ? skjema.felter.forstoIlleggeRenter.feilmelding?.toString()
                                         : ''
                                 }
                                 marginbottom="none"
+                                onChange={(val: JaNeiOption) =>
+                                    skjema.felter.forstoIlleggeRenter.validerOgSettFelt(val)
+                                }
                             >
                                 {jaNeiOptions.map(opt => (
                                     <Radio
                                         key={opt.label}
                                         name="skalDetTilleggesRenter"
-                                        label={opt.label}
-                                        checked={skjema.felter.forstoIlleggeRenter.verdi === opt}
-                                        onChange={() =>
-                                            skjema.felter.forstoIlleggeRenter.validerOgSettFelt(opt)
-                                        }
-                                    />
+                                        value={opt}
+                                    >
+                                        {opt.label}
+                                    </Radio>
                                 ))}
                             </HorisontalFamilieRadioGruppe>
                         </Column>
@@ -87,10 +90,8 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
             ) : (
                 <Row>
                     <Column md={kanIlleggeRenter ? '12' : '6'}>
-                        <Label size="small">Andel som skal tilbakekreves</Label>
-                        <BodyShort size="small" spacing>
-                            100 %
-                        </BodyShort>
+                        <Label>Andel som skal tilbakekreves</Label>
+                        <BodyShort>100 %</BodyShort>
                         {kanIlleggeRenter && (
                             <>
                                 <BodyShort size="small">Det legges til 10 % renter</BodyShort>
@@ -99,10 +100,8 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                     </Column>
                     {!kanIlleggeRenter && (
                         <Column md="6">
-                            <Label size="small">Skal det tillegges renter?</Label>
-                            <BodyShort size="small" spacing>
-                                Nei
-                            </BodyShort>
+                            <Label>Skal det tillegges renter?</Label>
+                            <BodyShort>Nei</BodyShort>
                         </Column>
                     )}
                 </Row>

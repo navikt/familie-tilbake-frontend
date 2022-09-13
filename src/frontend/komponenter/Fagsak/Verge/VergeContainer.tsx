@@ -121,7 +121,6 @@ const VergeContainer: React.FC = () => {
                                                     event.target.value
                                                 )
                                             }
-                                            bredde="S"
                                         />
                                     ) : (
                                         <FamilieInput
@@ -136,7 +135,6 @@ const VergeContainer: React.FC = () => {
                                                     event.target.value
                                                 )
                                             }
-                                            bredde="S"
                                         />
                                     )}
                                 </Column>
