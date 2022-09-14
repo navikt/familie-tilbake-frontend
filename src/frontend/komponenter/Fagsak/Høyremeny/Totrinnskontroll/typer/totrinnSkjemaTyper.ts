@@ -20,7 +20,7 @@ export const totrinnGodkjenningOptions = [OptionGodkjent, OptionIkkeGodkjent];
 export interface TotrinnStegSkjemaData {
     index: string;
     behandlingssteg: Behandlingssteg;
-    godkjent?: TotrinnGodkjenningOption;
+    godkjent: TotrinnGodkjenningOption | '';
     begrunnelse?: string;
     harFeilIBegrunnelse?: boolean;
     begrunnelseFeilmelding?: string;

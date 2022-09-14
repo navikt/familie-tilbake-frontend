@@ -15,6 +15,8 @@ import { ForeldelsePeriode, IFeilutbetalingForeldelse } from '../../../typer/fei
 import { FeilutbetalingForeldelseProvider } from './FeilutbetalingForeldelseContext';
 import ForeldelseContainer from './ForeldelseContainer';
 
+jest.setTimeout(10000);
+
 jest.mock('@navikt/familie-http', () => {
     return {
         useHttp: () => ({
