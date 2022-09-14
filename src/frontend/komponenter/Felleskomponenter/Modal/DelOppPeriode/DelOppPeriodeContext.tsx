@@ -46,10 +46,12 @@ export const useDelOppPeriode = (tom: string, behandlingId: string) => {
         });
     };
 
-    const validateNyPeriode = (periode: Periode, månedsslutt: string) => {
-        if (periode.fom > månedsslutt || månedsslutt > periode.tom) {
+    const validateNyPeriode = (periode: Periode, månedsslutt: string): boolean => {
+        if (periode.fom > månedsslutt || månedsslutt >= periode.tom) {
             settFeilmelding('t.o.m. måned er utenfor perioden');
+            return false;
         }
+        return true;
     };
 
     return {
