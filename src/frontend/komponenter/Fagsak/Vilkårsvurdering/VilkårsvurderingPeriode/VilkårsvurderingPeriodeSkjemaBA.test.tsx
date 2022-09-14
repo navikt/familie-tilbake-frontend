@@ -16,6 +16,8 @@ import { IFagsak } from '../../../../typer/fagsak';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
 
+jest.setTimeout(10000);
+
 jest.mock('@navikt/familie-http', () => {
     return {
         useHttp: () => ({

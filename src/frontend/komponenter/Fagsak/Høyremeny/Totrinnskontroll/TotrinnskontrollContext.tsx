@@ -26,8 +26,9 @@ import {
     TotrinnStegSkjemaData,
 } from './typer/totrinnSkjemaTyper';
 
-const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | undefined => {
-    return totrinnGodkjenningOptions.find(opt => opt.verdi === verdi);
+const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
+    const option = totrinnGodkjenningOptions.find(opt => opt.verdi === verdi);
+    return option || '';
 };
 
 const validerTekst2000 = validerTekstMaksLengde(2000);
@@ -158,7 +159,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
         const validerToTrinn = () => {
             let harFeil = false;
-            skjemaData.map(totrinn => {
+            const nySkjemaData = skjemaData.map(totrinn => {
                 let feilmelding;
                 let begrunnelseFeilmelding;
                 if (!totrinn.godkjent) {
@@ -177,6 +178,8 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                     begrunnelseFeilmelding: begrunnelseFeilmelding || undefined,
                 };
             });
+            settSkjemaData(nySkjemaData);
+            settNonUsedKey(Date.now().toString());
             return !harFeil;
         };
 
@@ -191,6 +194,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                         const ikkkGodkjent = ttSteg.godkjent === OptionIkkeGodkjent;
                         return {
                             behandlingssteg: ttSteg.behandlingssteg,
+                            // @ts-ignore
                             godkjent: ttSteg.godkjent?.verdi,
                             begrunnelse: ikkkGodkjent ? ttSteg.begrunnelse : null,
                         };

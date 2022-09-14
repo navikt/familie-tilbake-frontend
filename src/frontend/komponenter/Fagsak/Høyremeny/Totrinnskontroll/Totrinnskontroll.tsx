@@ -103,6 +103,9 @@ const Totrinnskontroll: React.FC = () => {
                                         onChange={(val: TotrinnGodkjenningOption) =>
                                             oppdaterGodkjenning(totrinnSteg.index, val)
                                         }
+                                        error={
+                                            totrinnSteg.feilmelding ? totrinnSteg.feilmelding : null
+                                        }
                                     >
                                         {totrinnGodkjenningOptions.map(opt => (
                                             <Radio
