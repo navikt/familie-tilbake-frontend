@@ -65,33 +65,37 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
     const onChangeDato = (nyVerdi?: string) => {
         vedDatoEndring((månedsslutt: string) => {
             const per: Periode = periode.periode;
-            validateNyPeriode(per, månedsslutt);
-            const nyePerioder: VilkårsvurderingPeriodeSkjemaData[] = [
-                {
-                    ...periode,
-                    index: `${periode.index}_1`,
-                    periode: {
-                        fom: per.fom,
-                        tom: månedsslutt,
+            if (validateNyPeriode(per, månedsslutt)) {
+                const nyePerioder: VilkårsvurderingPeriodeSkjemaData[] = [
+                    {
+                        ...periode,
+                        index: `${periode.index}_1`,
+                        periode: {
+                            fom: per.fom,
+                            tom: månedsslutt,
+                        },
+                        vilkårsvurderingsresultatInfo: undefined,
+                        erSplittet: true,
                     },
-                    vilkårsvurderingsresultatInfo: undefined,
-                    erSplittet: true,
-                },
-                {
-                    ...periode,
-                    index: `${periode.index}_2`,
-                    periode: {
-                        fom: flyttDatoISODateStr(månedsslutt, { days: 1 }),
-                        tom: per.tom,
+                    {
+                        ...periode,
+                        index: `${periode.index}_2`,
+                        periode: {
+                            fom: flyttDatoISODateStr(månedsslutt, { days: 1 }),
+                            tom: per.tom,
+                        },
+                        vilkårsvurderingsresultatInfo: undefined,
+                        erSplittet: true,
                     },
-                    vilkårsvurderingsresultatInfo: undefined,
-                    erSplittet: true,
-                },
-            ];
-            settSplittetPerioder(nyePerioder);
-            settTidslinjeRader([
-                [konverterPeriode(nyePerioder[0]), konverterPeriode(nyePerioder[1])],
-            ]);
+                ];
+                settSplittetPerioder(nyePerioder);
+                settTidslinjeRader([
+                    [konverterPeriode(nyePerioder[0]), konverterPeriode(nyePerioder[1])],
+                ]);
+            } else {
+                settSplittetPerioder([periode]);
+                settSplittDato(periode.periode.tom);
+            }
         }, nyVerdi);
     };
 

@@ -9,6 +9,7 @@ const StyledDatovelger = styled(FamilieDatovelger)`
     & div.nav-datovelger div.DayPicker-Caption {
         & div.nav-datovelger__yearSelector {
             & div[class='selectContainer'] {
+                display: inline-block;
                 select {
                     width: fit-content;
                 }
