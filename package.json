@@ -103,7 +103,7 @@
     "@types/webpack-hot-middleware": "^2.25.6",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
-    "babel-jest": "^29.0.3",
+    "babel-jest": "^29.1.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-react-app": "^10.0.1",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
