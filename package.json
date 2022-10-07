@@ -39,7 +39,7 @@
     "@navikt/familie-tidslinje": "^2.0.1",
     "@navikt/familie-typer": "^5.0.0",
     "@navikt/familie-visittkort": "^4.0.2",
-    "@sentry/browser": "^7.12.1",
+    "@sentry/browser": "^7.14.2",
     "@sentry/core": "^7.12.1",
     "@sentry/tracing": "^7.12.1",
     "@sentry/webpack-plugin": "^1.19.0",
