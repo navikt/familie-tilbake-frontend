@@ -61,7 +61,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 const sortertePerioder = sorterFeilutbetaltePerioder(data.feilutbetaltePerioder);
                 const behandletPerioder = sortertePerioder.map((fuFP, index) => {
                     const behandletPeriode: FaktaPeriodeSkjemaData = {
-                        index,
+                        index: `idx_fpsd_${index}`,
                         feilutbetaltBeløp: fuFP.feilutbetaltBeløp,
                         periode: fuFP.periode,
                         hendelsestype: fuFP.hendelsestype || undefined,
@@ -161,6 +161,16 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                     begrunnelse: skjemaData.begrunnelse,
                 });
             }
+        };
+
+        const onSplitPeriode = (
+            periode: FaktaPeriodeSkjemaData,
+            nyePerioder: FaktaPeriodeSkjemaData[]
+        ) => {
+            const perioder = skjemaData.perioder;
+            const index = perioder.findIndex(bfp => bfp.index === periode.index);
+            perioder.splice(index, 1, ...nyePerioder);
+            settSkjemaData({ ...skjemaData, perioder: perioder });
         };
 
         const validerForInnsending = (): Feilmelding[] => {
@@ -272,6 +282,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             senderInn,
             gåTilForrige,
             fagsak,
+            onSplitPeriode,
         };
     }
 );

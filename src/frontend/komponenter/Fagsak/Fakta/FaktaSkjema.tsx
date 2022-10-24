@@ -112,7 +112,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                         </>
                     )}
                     <Row>
-                        <Column xs="11">
+                        <Column xs="12">
                             {skjemaData.perioder && (
                                 <FeilutbetalingFaktaPerioder
                                     ytelse={ytelse}

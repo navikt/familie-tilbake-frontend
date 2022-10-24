@@ -2,9 +2,10 @@ import { HendelseType, HendelseUndertype } from '../../../../kodeverk';
 import { Periode } from '../../../../typer/feilutbetalingtyper';
 
 export interface FaktaPeriodeSkjemaData {
-    index: number;
+    index: string;
     feilutbetaltBeløp: number;
     periode: Periode;
+    erSplittet?: boolean | false;
     hendelsestype?: HendelseType | null;
     hendelsesundertype?: HendelseUndertype;
 }
@@ -17,7 +18,7 @@ export interface FaktaSkjemaData {
 export interface Feilmelding {
     gjelderBegrunnelse: boolean;
     melding?: string;
-    periode?: number;
+    periode?: string;
     gjelderHendelsetype?: boolean;
     gjelderHendelseundertype?: boolean;
 }

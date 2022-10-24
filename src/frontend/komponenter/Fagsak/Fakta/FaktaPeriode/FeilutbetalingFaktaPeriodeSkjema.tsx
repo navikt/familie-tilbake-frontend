@@ -15,11 +15,12 @@ import {
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
 import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
+import SplittPeriode from './SplittPeriode';
 
 interface IProps {
     periode: FaktaPeriodeSkjemaData;
     hendelseTyper: HendelseType[] | undefined;
-    index: number;
+    index: string;
     erLesevisning: boolean;
 }
 
@@ -30,8 +31,14 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     erLesevisning,
 }) => {
     const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<Array<HendelseUndertype>>();
-    const { oppdaterÅrsakPåPeriode, oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger } =
-        useFeilutbetalingFakta();
+    const {
+        oppdaterÅrsakPåPeriode,
+        oppdaterUnderårsakPåPeriode,
+        visFeilmeldinger,
+        feilmeldinger,
+        behandling,
+        onSplitPeriode,
+    } = useFeilutbetalingFakta();
 
     React.useEffect(() => {
         if (periode.hendelsestype) {
@@ -119,6 +126,13 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
             </Table.DataCell>
             <Table.DataCell align="right" className={classNames('redText')}>
                 <BodyShort size="small">{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</BodyShort>
+            </Table.DataCell>
+            <Table.DataCell align="right">
+                <SplittPeriode
+                    behandling={behandling}
+                    periode={periode}
+                    onBekreft={onSplitPeriode}
+                />
             </Table.DataCell>
         </Table.Row>
     );

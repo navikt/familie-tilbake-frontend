@@ -42,6 +42,7 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLes
                     <Table.HeaderCell scope="col" align="right">
                         Feilutbetalt beløp
                     </Table.HeaderCell>
+                    <Table.HeaderCell />
                 </Table.Row>
             </Table.Header>
             <Table.Body>
