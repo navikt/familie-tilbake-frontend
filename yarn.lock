@@ -15,12 +15,12 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@axe-core/react@^4.4.5":
-  version "4.4.5"
-  resolved "https://registry.yarnpkg.com/@axe-core/react/-/react-4.4.5.tgz#552e32d491270d61df12bae9aded0672b3ea6ae9"
-  integrity sha512-f5ZoUKg2snKgtonlP1rCTeAHPCjP99id4HvAFGSyHXq/GyE5/y38Ljf3hi1hqfpm2wMPRSeM3qksgNypbves7Q==
+"@axe-core/react@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@axe-core/react/-/react-4.5.0.tgz#f45932110132faa221097cba95ea52ab381767aa"
+  integrity sha512-dH810c1PDuq2ZPK9ESPr5mJtxTU9CL/gpVl1oMgQiMKY2430nCDbaacmJVSbXQW0oWUEErE32eQ9vLfr2YP5eQ==
   dependencies:
-    axe-core "^4.4.1"
+    axe-core "^4.5.0"
     requestidlecallback "^0.3.0"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.18.6":
@@ -3510,10 +3510,10 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
 
-axe-core@^4.4.1, axe-core@^4.4.3:
-  version "4.4.3"
-  resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.4.3.tgz#11c74d23d5013c0fa5d183796729bc3482bd2f6f"
-  integrity sha512-32+ub6kkdhhWick/UjvEwRchgoetXqTK14INLqbGm5U2TzBkBNF3nQtLYm8ovxSkQWArjEQvftCKryjZaATu3w==
+axe-core@^4.4.3, axe-core@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.5.0.tgz#6efe2ecdba205fcc9d7ddb3d48c2cf630f70eb5e"
+  integrity sha512-4+rr8eQ7+XXS5nZrKcMO/AikHL0hVqy+lHWAnE3xdHl+aguag8SOQ6eEqLexwLNWgXIMfunGuD3ON1/6Kyet0A==
 
 axios@^0.21.0:
   version "0.21.4"
