@@ -78,7 +78,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                 <>
                     <BodyLong size="small" spacing>
                         NAVI trenger tid for fristavbrytende tiltak. Husk å legge til nok tid ved
-                        fastsettelse av frist. Se rutine for
+                        fastsettelse av frist. Se rutine for&nbsp;
                         <Link
                             href="https://navno.sharepoint.com/sites/TeamFamiliekopi/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x012000AFBC2229208A6546861937F2075F148E&id=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving%2FForeldelse%20av%20tilbakebetalingskrav%2Epdf&parent=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving"
                             target="_blank"
@@ -100,7 +100,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                         fastsettelse av frist.
                     </BodyLong>
                     <BodyLong size="small" spacing>
-                        Sett foreldelesfristen minimum 6 uker frem i tid. Se rutine for
+                        Sett foreldelesfristen minimum 6 uker frem i tid. Se rutine for&nbsp;
                         <Link
                             href="https://navno.sharepoint.com/sites/TeamFamiliekopi/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x012000AFBC2229208A6546861937F2075F148E&id=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving%2FForeldelse%20av%20tilbakebetalingskrav%2Epdf&parent=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving"
                             target="_blank"

@@ -3,8 +3,8 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
-import ReactModal from 'react-modal';
 
+import { Modal } from '@navikt/ds-react';
 import { HttpProvider } from '@navikt/familie-http';
 
 import { IBehandling } from '../../../../../typer/behandling';
@@ -13,7 +13,7 @@ import SplittPeriode from './SplittPeriode';
 
 describe('Tester: SplittPeriode - Foreldelse', () => {
     beforeEach(() => {
-        ReactModal.setAppElement(document.createElement('div'));
+        Modal?.setAppElement?.(document.createElement('div'));
     });
 
     test('Tester åpning av modal', async () => {
