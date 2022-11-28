@@ -245,7 +245,11 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
-        expect(queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')).toBeFalsy();
+        expect(
+            queryByLabelText(
+                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+            )
+        ).toBeFalsy();
         expect(
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil')
         ).toBeFalsy();
@@ -263,7 +267,9 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
         expect(
-            queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')
+            queryByLabelText(
+                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+            )
         ).toBeTruthy();
         expect(
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil')
@@ -277,7 +283,9 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+            getByLabelText(
+                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+            ),
             'begrunnelse'
         );
         await user.click(
@@ -322,7 +330,11 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
-        expect(queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')).toBeFalsy();
+        expect(
+            queryByLabelText(
+                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+            )
+        ).toBeFalsy();
         expect(
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil')
         ).toBeFalsy();
@@ -347,7 +359,9 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeFalsy();
 
         await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+            getByLabelText(
+                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+            ),
             'begrunnelse'
         );
         await user.click(
