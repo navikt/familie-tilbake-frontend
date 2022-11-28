@@ -136,6 +136,7 @@ export enum HendelseUndertype {
     SELVSTENDIG_NÆRINGSDRIVENDE_ENDRET_INNTEKT = 'SELVSTENDIG_NÆRINGSDRIVENDE_ENDRET_INNTEKT',
     UFØRETRYGD = 'UFØRETRYGD',
     GJENLEVENDE_EKTEFELLE = 'GJENLEVENDE_EKTEFELLE',
+    BARN_FYLT_1_ÅR = 'BARN_FYLT_1_ÅR',
     // Barnetilsyn
     IKKE_ARBEID = 'IKKE_ARBEID',
     EGEN_VIRKSOMHET = 'EGEN_VIRKSOMHET',
@@ -230,6 +231,7 @@ export const hendelseundertyper: Record<HendelseUndertype, string> = {
     SELVSTENDIG_NÆRINGSDRIVENDE_ENDRET_INNTEKT: 'Selvstendig næringsdrivende, endret inntekt',
     UFØRETRYGD: 'Uføretrygd',
     GJENLEVENDE_EKTEFELLE: 'Gjenlevende ektefelle',
+    BARN_FYLT_1_ÅR: 'Barn fylt 1 år',
     // Barnetilsyn
     IKKE_ARBEID: 'Arbeid (1. ledd)',
     EGEN_VIRKSOMHET: 'Egen virksomhet (1. ledd)',
@@ -322,6 +324,7 @@ const undertyper = {
         HendelseUndertype.REELL_ARBEIDSSØKER,
         HendelseUndertype.UTDANNING,
         HendelseUndertype.ETABLERER_EGEN_VIRKSOMHET,
+        HendelseUndertype.BARN_FYLT_1_ÅR,
     ],
     STØNADSPERIODE: [
         HendelseUndertype.HOVEDPERIODE_3_ÅR,
