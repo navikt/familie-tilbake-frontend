@@ -395,7 +395,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         label={
                                             erGodTro
                                                 ? 'Vurder om beløpet er i behold'
-                                                : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
+                                                : 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
                                         }
                                         placeholder={
                                             erGodTro

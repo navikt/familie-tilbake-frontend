@@ -246,7 +246,9 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
         expect(queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')).toBeFalsy();
-        expect(queryByText('I hvilken grad har mottaker handlet uaktsomt?')).toBeFalsy();
+        expect(
+            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil')
+        ).toBeFalsy();
 
         await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
         await user.click(
@@ -263,7 +265,9 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(
             queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')
         ).toBeTruthy();
-        expect(queryByText('I hvilken grad har mottaker handlet uaktsomt?')).toBeTruthy();
+        expect(
+            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil')
+        ).toBeTruthy();
 
         await user.click(
             getByRole('button', {
@@ -329,7 +333,9 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
         expect(queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')).toBeFalsy();
-        expect(queryByText('I hvilken grad har mottaker handlet uaktsomt?')).toBeFalsy();
+        expect(
+            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil')
+        ).toBeFalsy();
 
         await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
         await user.click(
@@ -603,7 +609,9 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
         expect(queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')).toBeFalsy();
-        expect(queryByText('I hvilken grad har mottaker handlet uaktsomt?')).toBeFalsy();
+        expect(
+            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil')
+        ).toBeFalsy();
 
         await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
         await user.click(

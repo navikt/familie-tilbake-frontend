@@ -162,7 +162,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+            getByLabelText(
+                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+            ),
             'Begrunnelse aktsomhet 1'
         );
         await user.click(getByLabelText('Burde ha forstått'));
@@ -211,7 +213,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
         );
 
         await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+            getByLabelText(
+                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+            ),
             'Begrunnelse aktsomhet 2'
         );
         await user.click(getByLabelText('Burde ha forstått'));
@@ -435,7 +439,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
             )
         ).toBeChecked();
         expect(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')
+            getByLabelText(
+                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+            )
         ).toHaveTextContent('Begrunnelse aktsomhet 1');
         expect(getByLabelText('Forsto')).toBeChecked();
 
