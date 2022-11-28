@@ -10,6 +10,7 @@ Saksbehandlerapplikasjon for tilbakekreving av ytelsene barnetrygd, konstantstø
 * Åpne `http://localhost:8000` i nettleseren din
 
 Appen krever at applikasjonene [familie-tilbake](https://github.com/navikt/familie-tilbake) og [familie-historikk](https://github.com/navikt/familie-historikk) kjører lokalt.
+For å generere testdata må du kjøre `familie-tilbake`, `familie-historikk` og kjøre en test i [familie-tilbake-e2e](https://github.com/navikt/familie-tilbake-e2e)
 
 Appen krever en del environment variabler og legges til i .env fila i root på prosjektet.
 ```
