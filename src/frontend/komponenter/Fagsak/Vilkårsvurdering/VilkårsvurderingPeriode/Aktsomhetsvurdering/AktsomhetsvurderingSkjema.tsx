@@ -11,7 +11,10 @@ import {
     Vilkårsresultat,
 } from '../../../../../kodeverk';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
-import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
+import {
+    OptionNEI,
+    VilkårsvurderingSkjemaDefinisjon,
+} from '../VilkårsvurderingPeriodeSkjemaContext';
 import GradForsettSkjema from './GradForsettSkjema';
 import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
 
@@ -50,9 +53,17 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                         ? skjema.felter.aktsomhetVurdering.feilmelding?.toString()
                         : ''
                 }
-                onChange={(val: Aktsomhet) =>
-                    skjema.felter.aktsomhetVurdering.validerOgSettFelt(val)
-                }
+                onChange={(val: Aktsomhet) => {
+                    const skalPreutfylleUtenRenter =
+                        val === Aktsomhet.FORSETT &&
+                        skjema.felter.forstoIlleggeRenter.verdi === '' &&
+                        skjema.felter.vilkårsresultatvurdering.verdi ===
+                            Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+                    if (skalPreutfylleUtenRenter) {
+                        skjema.felter.forstoIlleggeRenter.validerOgSettFelt(OptionNEI);
+                    }
+                    return skjema.felter.aktsomhetVurdering.validerOgSettFelt(val);
+                }}
             >
                 {aktsomhetTyper.map(type => (
                     <Radio name="handletUaktsomhetGrad" key={type} value={type}>
