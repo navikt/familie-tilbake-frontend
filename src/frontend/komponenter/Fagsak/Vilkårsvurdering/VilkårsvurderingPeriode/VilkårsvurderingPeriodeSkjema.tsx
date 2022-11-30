@@ -212,6 +212,8 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
 
     const vilkårsresultatVurderingGjort = skjema.felter.vilkårsresultatvurdering.verdi !== '';
     const erGodTro = skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GOD_TRO;
+    const erForstodBurdeForstått =
+        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
 
     const ugyldigVilkårsresultatValgt =
         skjema.visFeilmeldinger &&
@@ -395,6 +397,8 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         label={
                                             erGodTro
                                                 ? 'Vurder om beløpet er i behold'
+                                                : erForstodBurdeForstått
+                                                ? 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
                                                 : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
                                         }
                                         placeholder={
