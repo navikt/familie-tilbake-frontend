@@ -33,7 +33,11 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
             <HorisontalFamilieRadioGruppe
                 id="handletUaktsomhetGrad"
                 erLesevisning={erLesevisning}
-                legend={'I hvilken grad har mottaker handlet uaktsomt?'}
+                legend={
+                    erForstodBurdeForstått
+                        ? 'I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?'
+                        : 'I hvilken grad har mottaker handlet uaktsomt?'
+                }
                 value={
                     !erLesevisning
                         ? skjema.felter.aktsomhetVurdering.verdi
