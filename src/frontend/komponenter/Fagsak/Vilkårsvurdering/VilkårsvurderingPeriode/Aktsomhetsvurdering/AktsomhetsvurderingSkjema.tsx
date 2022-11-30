@@ -35,7 +35,7 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                 erLesevisning={erLesevisning}
                 legend={
                     erForstodBurdeForstått
-                        ? 'I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil'
+                        ? 'I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?'
                         : 'I hvilken grad har mottaker handlet uaktsomt?'
                 }
                 value={

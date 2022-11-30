@@ -251,7 +251,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             )
         ).toBeFalsy();
         expect(
-            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil')
+            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeFalsy();
 
         await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
@@ -272,7 +272,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             )
         ).toBeTruthy();
         expect(
-            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil')
+            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeTruthy();
 
         await user.click(
@@ -346,7 +346,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             )
         ).toBeFalsy();
         expect(
-            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil')
+            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeFalsy();
 
         await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
