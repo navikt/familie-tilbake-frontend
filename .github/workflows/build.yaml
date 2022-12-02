@@ -1,6 +1,8 @@
-name: Build&deploy to dev
+name: Build
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 env:
@@ -36,17 +38,3 @@ jobs:
           yarn test
           docker build . -t ${IMAGE}
           docker push ${IMAGE}
-  deploy:
-    if: github.event.pull_request.draft == false && github.actor != 'dependabot[bot]'
-    name: Deploy to NAIS / GCP
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Deploy til dev-gcp
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: build_n_deploy/naiserator/naiserator_dev_gcp.yaml
-          VAR: VERSION=${{ env.VERSION }}
