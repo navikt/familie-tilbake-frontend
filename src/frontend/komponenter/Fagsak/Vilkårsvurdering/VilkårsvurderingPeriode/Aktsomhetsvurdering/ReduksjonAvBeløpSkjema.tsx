@@ -8,7 +8,7 @@ import { BodyShort, Label, Radio } from '@navikt/ds-react';
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
-import { Aktsomhet } from '../../../../../kodeverk';
+import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
@@ -85,9 +85,17 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                         ? skjema.felter.harGrunnerTilReduksjon.feilmelding?.toString()
                         : ''
                 }
-                onChange={(val: JaNeiOption) =>
-                    skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(val)
-                }
+                onChange={(val: JaNeiOption) => {
+                    const skalPreutfylleUtenRenter =
+                        val === OptionNEI &&
+                        skjema.felter.grovtUaktsomIlleggeRenter.verdi === '' &&
+                        skjema.felter.vilkårsresultatvurdering.verdi ===
+                            Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+                    if (skalPreutfylleUtenRenter) {
+                        skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(OptionNEI);
+                    }
+                    return skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(val);
+                }}
             >
                 {jaNeiOptions.map(opt => (
                     <Radio

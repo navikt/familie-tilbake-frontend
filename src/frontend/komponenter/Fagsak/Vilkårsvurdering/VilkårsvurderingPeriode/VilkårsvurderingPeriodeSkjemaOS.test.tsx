@@ -298,21 +298,16 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('100 %')).toBeTruthy();
         expect(getByText('Skal det tillegges renter?')).toBeTruthy();
         expect(getByLabelText('Nei')).toBeTruthy();
+        expect(getByLabelText('Ja')).toBeTruthy();
+
+        expect(getByLabelText('Nei')).toBeChecked();
 
         await user.click(
             getByRole('button', {
                 name: 'Bekreft',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.click(getByLabelText('Nei'));
-
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
-        );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
@@ -426,6 +421,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('100 %')).toBeTruthy();
         expect(getByText('Skal det tillegges renter?')).toBeTruthy();
         expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeTruthy();
+        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeTruthy();
+        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
 
         await user.click(
             getByRole('button', {
@@ -433,7 +430,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
 
         await user.type(
