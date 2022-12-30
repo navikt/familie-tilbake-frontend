@@ -3,7 +3,7 @@ import { HendelseType } from './feilutbetalingsÅrsak';
 export enum Fagsystem {
     BA = 'BA',
     EF = 'EF',
-    KS = 'KS',
+    KS = 'KONT',
 }
 
 export enum Ytelsetype {
