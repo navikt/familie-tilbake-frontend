@@ -1759,10 +1759,20 @@
   resolved "https://npm.pkg.github.com/download/@navikt/ds-css/1.5.10/c36bc38c2694f6aab87bd0905c9078cc1ea2c3b2#c36bc38c2694f6aab87bd0905c9078cc1ea2c3b2"
   integrity sha512-Y+6EIHi48GPAx/fJR5Egacr//oUpoNUhmDE7dDK9h4EumFZvqyidYv7+ZBkqFfo8uJKjSlj/51mTK0/kqFTvow==
 
+"@navikt/ds-css@2.0.x":
+  version "2.0.11"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-css/2.0.11/b5804628c7444bc4c663003dc22eade72a504841#b5804628c7444bc4c663003dc22eade72a504841"
+  integrity sha512-pZnLmCPJ07afdrJxMcVrgMzmmHZntPJeAiQ5L6Wj+v6gzwsiPqdxQ00ASpt9YRef3AuksM6lW/M4S9vMTpnOdg==
+
 "@navikt/ds-icons@1.5.x", "@navikt/ds-icons@^1.5.10":
   version "1.5.10"
   resolved "https://npm.pkg.github.com/download/@navikt/ds-icons/1.5.10/40c493b2be774d2baada7ea158a88ed7c9bd661e#40c493b2be774d2baada7ea158a88ed7c9bd661e"
   integrity sha512-0IOEbIo+NjKEUtyRna7KMSIi950qpU73t7sazhlQzvTm2akT24mNkLn+aHpRv7dZ4pwlUPv4d80+IGk2W/pvbw==
+
+"@navikt/ds-icons@2.0.x", "@navikt/ds-icons@^2.0.11":
+  version "2.0.11"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-icons/2.0.11/b0c6323b77d1f9d40b55756f3b3ff86b232b72b9#b0c6323b77d1f9d40b55756f3b3ff86b232b72b9"
+  integrity sha512-0PFE3+/CtEVrLsFmeMCfMP2IzLkTIcJ2CfOBpf2qRIPo4YzeyEFPJwMkjsREi73YzDsCmEeWNAU1w6i7F4lFAQ==
 
 "@navikt/ds-react-internal@1.5.x":
   version "1.5.10"
@@ -1788,10 +1798,29 @@
     react-day-picker "8.3.4"
     react-modal "3.15.1"
 
+"@navikt/ds-react@2.0.x":
+  version "2.0.11"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-react/2.0.11/e64a5c4799fb7aea23a4482ecfa35b2341b1506a#e64a5c4799fb7aea23a4482ecfa35b2341b1506a"
+  integrity sha512-k28/DO1PAGqeeAkxSeXrv+hjnK93DfjxRIhIcsokvTbNV4MLWgeOLffCEQsV3wf1FisOlzKG3KpdscQCN03pvw==
+  dependencies:
+    "@floating-ui/react-dom-interactions" "0.9.2"
+    "@navikt/ds-icons" "^2.0.11"
+    "@radix-ui/react-tabs" "1.0.0"
+    "@radix-ui/react-toggle-group" "1.0.0"
+    clsx "^1.2.1"
+    date-fns "2.29.3"
+    react-day-picker "8.3.4"
+    react-modal "3.15.1"
+
 "@navikt/ds-tokens@1.5.x":
   version "1.5.10"
   resolved "https://npm.pkg.github.com/download/@navikt/ds-tokens/1.5.10/50dff1b8975c56a8f75ed55b229d89970064085b#50dff1b8975c56a8f75ed55b229d89970064085b"
   integrity sha512-JZUlaU4nStdajoIATljGE3HYv2Mf+SfcIw0T9p2zWXcQsDKmbFVc32y2w/payew6HGdgoMtxfral+rc9wMIpWw==
+
+"@navikt/ds-tokens@2.0.x":
+  version "2.0.11"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-tokens/2.0.11/81a3ac7f36a95602a7f173b790ebf9aa723a3c1c#81a3ac7f36a95602a7f173b790ebf9aa723a3c1c"
+  integrity sha512-8XjiHb35QRHQMYo/0Xzspg2CzsGCsd2Dvn+F4vpVHzITCk/HcpCjEeQ8tiLbpb+OVbmkKY4ykSOFuitMEH4QSA==
 
 "@navikt/familie-backend@^7.0.11":
   version "7.0.11"
@@ -1822,14 +1851,14 @@
     request-promise "^4.2.5"
     snyk "^1.473.0"
 
-"@navikt/familie-clipboard@^6.0.9":
-  version "6.0.9"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-clipboard/6.0.9/4c2d11cc61326aa009cc7b84e858d67eec821485#4c2d11cc61326aa009cc7b84e858d67eec821485"
-  integrity sha512-K+4twPG6d5xQMZhJwHO2nvQrdaHFAYXIENiqWfRCSz0NoHgTB3qvVtzsjhEoxmqGIYjScSYtN3Zhd1Vj31Dz3Q==
+"@navikt/familie-clipboard@^7.0.0":
+  version "7.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-clipboard/7.0.0/e2b4311c6ec6fb89721c0f2b40fd4b4c8272fcb1#e2b4311c6ec6fb89721c0f2b40fd4b4c8272fcb1"
+  integrity sha512-BoeuG/unQCYbIpNTkrJyVeR4NyYzB+sW8RRFH0qnGENJb1EbTWuVM1iOLxx3MrML4Ql8tQyPLDMQXG8fYionAA==
   dependencies:
-    "@navikt/ds-css" "1.5.x"
-    "@navikt/ds-icons" "1.5.x"
-    "@navikt/ds-tokens" "1.5.x"
+    "@navikt/ds-css" "2.0.x"
+    "@navikt/ds-icons" "2.0.x"
+    "@navikt/ds-tokens" "2.0.x"
     "@types/react-tooltip" "^4.2.4"
     framer-motion "^6.3.16"
     react-tooltip "^4.2.21"
@@ -1865,12 +1894,12 @@
     "@sentry/core" "^7.5.0"
     constate "^3.3.2"
 
-"@navikt/familie-ikoner@^4.0.10":
-  version "4.0.10"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-ikoner/4.0.10/897559a68fd03f835e86e35f9fa2444513457f24#897559a68fd03f835e86e35f9fa2444513457f24"
-  integrity sha512-hh2Z/o8nOv23HF19/H1rurLKRjd3JlFtCxmvGk0ykaFYUQfuDsYFRt4LLv+lB+KXkNas52bXWF8GOF24gR3tew==
+"@navikt/familie-ikoner@^5.0.0":
+  version "5.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-ikoner/5.0.0/ae90beb6ee5c8b1dd6408bef4c57bb34e7e8e035#ae90beb6ee5c8b1dd6408bef4c57bb34e7e8e035"
+  integrity sha512-vv3fTH2Rvgd/+NAlMihSpcmR2PM11qyHwoRVMHwLGNlPEMz31RBiVs6H5zswLCqeDILZKhOwFgw6/3Cu7/fCQg==
   dependencies:
-    "@navikt/familie-typer" "^5.0.7"
+    "@navikt/familie-typer" "^6.0.0"
 
 "@navikt/familie-logging@^3.0.8":
   version "3.0.8"
@@ -1903,17 +1932,22 @@
   resolved "https://npm.pkg.github.com/download/@navikt/familie-typer/5.0.7/cf38ed32da8b674801bfbe9e46578fdf1ae7c616#cf38ed32da8b674801bfbe9e46578fdf1ae7c616"
   integrity sha512-KKX4q1KXnxf5IE7qWd0udkhy3G0lNM54Qhlv9a5XUTjOhelhGzSufWZCyT1GUoWzJtiZ1xF30td/LJE886VFjA==
 
-"@navikt/familie-visittkort@^4.0.12":
-  version "4.0.12"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-visittkort/4.0.12/79e7161cef3e0d0c509ce73f1d4391ecdf4ea24f#79e7161cef3e0d0c509ce73f1d4391ecdf4ea24f"
-  integrity sha512-5QY+y8WhG6j4UueI4io7xXuUMHIBaWwEgr1POgSvMbMA/KJ3hCnpcl0qsq6kzwxnu1x1a6jRNTCWwPIvcxz49A==
+"@navikt/familie-typer@^6.0.0":
+  version "6.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-typer/6.0.0/aae58456e8b99d6cf91c2c8f8ffd1bcb794319ef#aae58456e8b99d6cf91c2c8f8ffd1bcb794319ef"
+  integrity sha512-gnq4YXna3GVRkJi7bVmAfftDLowPpa6hc/iTgLQeA/1cVI6XL6pY0oGs5vClcKQsusqlwX4EojHOQLLEa1Ypdg==
+
+"@navikt/familie-visittkort@^5.0.0":
+  version "5.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-visittkort/5.0.0/2a3750c85130f0b028ef034594d8fc58826deb38#2a3750c85130f0b028ef034594d8fc58826deb38"
+  integrity sha512-/AHPAHogF7O09d5SSBWzaPK7I4smqU6+dtJ1W+AA27TWbfmqMcZBADQjTi5gQ0hAaSU9ZjD0jR7DXH0VvJcgrg==
   dependencies:
-    "@navikt/ds-css" "1.5.x"
-    "@navikt/ds-react" "1.5.x"
-    "@navikt/ds-tokens" "1.5.x"
-    "@navikt/familie-clipboard" "^6.0.9"
-    "@navikt/familie-ikoner" "^4.0.10"
-    "@navikt/familie-typer" "^5.0.7"
+    "@navikt/ds-css" "2.0.x"
+    "@navikt/ds-react" "2.0.x"
+    "@navikt/ds-tokens" "2.0.x"
+    "@navikt/familie-clipboard" "^7.0.0"
+    "@navikt/familie-ikoner" "^5.0.0"
+    "@navikt/familie-typer" "^6.0.0"
     classnames "^2.3.1"
     prop-types "^15.8.1"
 
