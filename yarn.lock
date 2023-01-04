@@ -1879,6 +1879,13 @@
   dependencies:
     winston "^3.8.1"
 
+"@navikt/familie-logging@^5.0.0":
+  version "5.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-logging/5.0.0/944b2415d9b067e44d0804cac3304a310da35d96#944b2415d9b067e44d0804cac3304a310da35d96"
+  integrity sha512-4LSwyqKRUynVxY65aIBaxfF/DyRGnEneXtP2LrK2KnmHWuXhfKSctLcf2nAIsLkELikSicXCE9dtIfgw4hjZ3g==
+  dependencies:
+    winston "^3.8.1"
+
 "@navikt/familie-skjema@^4.0.16":
   version "4.0.16"
   resolved "https://npm.pkg.github.com/download/@navikt/familie-skjema/4.0.16/6ffa80f800f253834e26af3e6630d9f07f836fa6#6ffa80f800f253834e26af3e6630d9f07f836fa6"
