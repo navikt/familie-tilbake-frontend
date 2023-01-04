@@ -38,7 +38,7 @@
     "@navikt/familie-skjema": "^4.0.16",
     "@navikt/familie-tidslinje": "^2.0.9",
     "@navikt/familie-typer": "^5.0.7",
-    "@navikt/familie-visittkort": "^4.0.12",
+    "@navikt/familie-visittkort": "^6.0.0",
     "@sentry/browser": "^7.21.1",
     "@sentry/core": "^7.21.1",
     "@sentry/tracing": "^7.21.1",
