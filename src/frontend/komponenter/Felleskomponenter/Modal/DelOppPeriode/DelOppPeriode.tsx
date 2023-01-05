@@ -87,7 +87,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
             </TidslinjeContainer>
             <FixedDatovelger
                 id={'splittDato'}
-                valgtDato={splittDato}
+                value={splittDato}
                 label={'Angi t.o.m. måned for første periode'}
                 limitations={{
                     minDate: periode.periode.fom,
