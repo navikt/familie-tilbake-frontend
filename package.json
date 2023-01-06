@@ -34,7 +34,7 @@
     "@navikt/familie-backend": "^7.0.11",
     "@navikt/familie-form-elements": "^6.3.10",
     "@navikt/familie-http": "^3.0.8",
-    "@navikt/familie-logging": "^3.0.8",
+    "@navikt/familie-logging": "^6.0.0",
     "@navikt/familie-skjema": "^4.0.16",
     "@navikt/familie-tidslinje": "^2.0.9",
     "@navikt/familie-typer": "^5.0.7",
