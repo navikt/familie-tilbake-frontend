@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
-import { NavdsGlobalColorGray300 } from '@navikt/ds-tokens/dist/tokens';
+import { AGray300 } from '@navikt/ds-tokens/dist/tokens';
 
 export const TidslinjeIkonbakgrunn = styled.div`
     display: inline-block;
-    background-color: ${NavdsGlobalColorGray300};
+    background-color: ${AGray300};
     width: 26px;
     height: 26px;
     border-radius: 50%;

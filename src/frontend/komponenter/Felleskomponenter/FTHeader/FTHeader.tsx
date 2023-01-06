@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import { Link } from '@navikt/ds-react';
 import { Dropdown, Header } from '@navikt/ds-react-internal';
 import {
-    NavdsFontLineHeightHeadingMedium,
-    NavdsFontSizeHeadingMedium,
-    NavdsSemanticColorTextInverted,
-    NavdsSpacing3,
+    AFontLineHeightHeadingMedium,
+    AFontSizeHeadingMedium,
+    ATextOnInverted,
+    ASpacing3,
 } from '@navikt/ds-tokens/dist/tokens';
 import { type ISaksbehandler } from '@navikt/familie-typer';
 
@@ -17,14 +17,14 @@ const StyledHeader = styled(Header)`
 `;
 
 const StyledTitle = styled(Header.Title)`
-    margin-left: ${NavdsSpacing3};
-    font-size: ${NavdsFontSizeHeadingMedium};
-    line-height: ${NavdsFontLineHeightHeadingMedium};
+    margin-left: ${ASpacing3};
+    font-size: ${AFontSizeHeadingMedium};
+    line-height: ${AFontLineHeightHeadingMedium};
     border: none;
 `;
 
 const StyledLink = styled(Link)`
-    color: ${NavdsSemanticColorTextInverted};
+    color: ${ATextOnInverted};
     text-decoration: none;
 `;
 

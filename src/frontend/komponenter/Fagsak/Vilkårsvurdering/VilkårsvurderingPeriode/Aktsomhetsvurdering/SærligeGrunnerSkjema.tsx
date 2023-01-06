@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Column, Row } from 'nav-frontend-grid';
 
 import { CheckboxGroup } from '@navikt/ds-react';
-import { NavdsSpacing2 } from '@navikt/ds-tokens/dist/tokens';
+import { ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
 import { type ISkjema } from '@navikt/familie-skjema';
 
@@ -17,7 +17,7 @@ import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 
 const StyledCheckboxGruppe = styled(CheckboxGroup)`
     .lese-felt {
-        margin-bottom: ${NavdsSpacing2};
+        margin-bottom: ${ASpacing2};
     }
 `;
 

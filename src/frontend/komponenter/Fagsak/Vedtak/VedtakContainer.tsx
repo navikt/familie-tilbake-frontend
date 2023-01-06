@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
-import { NavdsFontWeightBold, NavdsSpacing1, NavdsSpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import { AFontWeightBold, ASpacing1, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -21,7 +21,7 @@ import VedtakPerioder from './VedtakPerioder';
 import VedtakSkjema from './VedtakSkjema';
 
 const StyledVedtak = styled.div`
-    padding: ${NavdsSpacing3};
+    padding: ${ASpacing3};
 `;
 
 const HenterContainer = styled(StyledVedtak)`
@@ -34,16 +34,16 @@ const StyledNavigering = styled(Navigering)`
 
 const StyledAlert = styled(Alert)`
     width: 90%;
-    margin-bottom: ${NavdsSpacing3};
+    margin-bottom: ${ASpacing3};
 `;
 
 const VarselbrevInfo = styled(BodyShort)`
-    font-weight: ${NavdsFontWeightBold};
+    font-weight: ${AFontWeightBold};
 `;
 
 const KnappeDiv = styled.div`
     & button {
-        margin: 0 ${NavdsSpacing1};
+        margin: 0 ${ASpacing1};
     }
 `;
 

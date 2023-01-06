@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { NavdsSpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
 
 export * from './FamilieTilbakeTextArea';
@@ -14,6 +14,6 @@ export const HorisontalFamilieRadioGruppe = styled(FamilieRadioGruppe)`
 
     .navds-radio {
         display: inline-block;
-        margin-right: ${NavdsSpacing3};
+        margin-right: ${ASpacing3};
     }
 `;

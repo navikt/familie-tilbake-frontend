@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Send, Folder, Clock, Decision, NextFilled, BackFilled } from '@navikt/ds-icons';
 import { Button, Tabs } from '@navikt/ds-react';
-import { NavdsFontSizeMedium, NavdsSpacing4 } from '@navikt/ds-tokens/dist/tokens';
+import { AFontSizeMedium, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IBehandling } from '../../../typer/behandling';
@@ -19,7 +19,7 @@ const StyledContainer = styled.div`
 
 const HøyremenyContainer = styled.div`
     padding: 0 10px 0 10px;
-    margin-top: ${NavdsSpacing4};
+    margin-top: ${ASpacing4};
 `;
 
 const StyledTabList = styled(Tabs.List)`
@@ -30,7 +30,7 @@ const StyledTabList = styled(Tabs.List)`
 
 const StyledTabs = styled(Tabs.Tab)`
     & span {
-        font-size: ${NavdsFontSizeMedium};
+        font-size: ${AFontSizeMedium};
     }
 `;
 
