@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Label, Tag } from '@navikt/ds-react';
-import { NavdsSpacing2 } from '@navikt/ds-tokens/dist/tokens';
+import { ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
 
 const LabelFlex = styled.div`
     display: flex;
@@ -14,7 +14,7 @@ const LabelFlex = styled.div`
     }
 
     .språkkode .navds-tag--info {
-        padding: 0.16rem ${NavdsSpacing2};
+        padding: 0.16rem ${ASpacing2};
     }
 `;
 

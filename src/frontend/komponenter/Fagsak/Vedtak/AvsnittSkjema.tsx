@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 
 import { BodyLong, Heading } from '@navikt/ds-react';
-import { NavdsSemanticColorFeedbackWarningBorder } from '@navikt/ds-tokens/dist/tokens';
+import { ABorderWarning } from '@navikt/ds-tokens/dist/tokens';
 
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
@@ -20,7 +20,7 @@ const StyledEkspanderbartpanel = styled(Ekspanderbartpanel)`
 
     &.panelMedGulmarkering {
         border: 1px solid black;
-        border-left-color: ${NavdsSemanticColorFeedbackWarningBorder};
+        border-left-color: ${ABorderWarning};
         border-left-width: 5px;
         padding: 1px 1px 1px 1px;
     }

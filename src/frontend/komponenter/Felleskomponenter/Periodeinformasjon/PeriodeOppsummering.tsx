@@ -7,32 +7,32 @@ import { Column, Row } from 'nav-frontend-grid';
 
 import { BodyShort, Label } from '@navikt/ds-react';
 import {
-    NavdsFontWeightBold,
-    NavdsGlobalColorOrange100,
-    NavdsSemanticColorFeedbackDangerText,
-    NavdsSpacing2,
-    NavdsSpacing3,
-    NavdsSpacing5,
+    AFontWeightBold,
+    AOrange100,
+    ATextDanger,
+    ASpacing2,
+    ASpacing3,
+    ASpacing5,
 } from '@navikt/ds-tokens/dist/tokens';
 
 import { HendelseType, hendelsetyper } from '../../../kodeverk';
 import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
 
 const StyledContainer = styled.div`
-    background-color: ${NavdsGlobalColorOrange100};
+    background-color: ${AOrange100};
     height: auto;
-    padding: ${NavdsSpacing3} ${NavdsSpacing5};
+    padding: ${ASpacing3} ${ASpacing5};
     top: 0;
-    margin-top: ${NavdsSpacing3};
+    margin-top: ${ASpacing3};
 `;
 
 const SumRad = styled(Row)`
-    margin-top: ${NavdsSpacing5};
+    margin-top: ${ASpacing5};
 
     .redNumber {
-        color: ${NavdsSemanticColorFeedbackDangerText};
-        font-weight: ${NavdsFontWeightBold};
-        margin-left: ${NavdsSpacing2};
+        color: ${ATextDanger};
+        font-weight: ${AFontWeightBold};
+        margin-left: ${ASpacing2};
     }
 `;
 

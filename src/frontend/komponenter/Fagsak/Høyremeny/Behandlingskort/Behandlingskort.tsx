@@ -3,12 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { BodyShort, Heading } from '@navikt/ds-react';
-import {
-    NavdsGlobalColorGray100,
-    NavdsGlobalColorGray400,
-    NavdsSpacing2,
-    NavdsSpacing8,
-} from '@navikt/ds-tokens/dist/tokens';
+import { AGray100, AGray400, ASpacing2, ASpacing8 } from '@navikt/ds-tokens/dist/tokens';
 
 import { ytelsetype } from '../../../../kodeverk';
 import {
@@ -23,17 +18,17 @@ import { formatterDatostring } from '../../../../utils';
 import Informasjonsbolk from '../../../Felleskomponenter/Informasjonsbolk/Informasjonsbolk';
 
 const Container = styled.div`
-    border: 1px solid ${NavdsGlobalColorGray400};
-    border-left: 0.5rem solid ${NavdsGlobalColorGray400};
+    border: 1px solid ${AGray400};
+    border-left: 0.5rem solid ${AGray400};
     border-radius: 0.25rem;
-    padding: ${NavdsSpacing2};
-    margin: ${NavdsSpacing2};
-    margin-bottom: ${NavdsSpacing8};
+    padding: ${ASpacing2};
+    margin: ${ASpacing2};
+    margin-bottom: ${ASpacing8};
 `;
 
 const StyledHr = styled.hr`
     border: none;
-    border-bottom: 1px solid ${NavdsGlobalColorGray100};
+    border-bottom: 1px solid ${AGray100};
 `;
 
 interface IProps {

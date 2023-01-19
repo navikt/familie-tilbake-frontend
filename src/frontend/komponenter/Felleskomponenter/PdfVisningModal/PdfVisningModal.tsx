@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { Modal, Loader, Heading, Alert } from '@navikt/ds-react';
-import { NavdsSpacing1, NavdsSpacing3, NavdsSpacing6 } from '@navikt/ds-tokens/dist/tokens';
+import { ASpacing1, ASpacing3, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 const StyledModal = styled(Modal)`
@@ -12,13 +12,13 @@ const StyledModal = styled(Modal)`
 
     div.navds-modal__content {
         height: 100%;
-        margin-right: ${NavdsSpacing6};
+        margin-right: ${ASpacing6};
     }
 
     button.navds-modal__button {
-        right: ${NavdsSpacing1};
-        top: ${NavdsSpacing3};
-        padding: ${NavdsSpacing1};
+        right: ${ASpacing1};
+        top: ${ASpacing3};
+        padding: ${ASpacing1};
     }
 `;
 

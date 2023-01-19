@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { ExternalLink } from '@navikt/ds-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
-import { NavdsGlobalColorGray400, NavdsSpacing6 } from '@navikt/ds-tokens/dist/tokens';
+import { AGray400, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 
 import { Behandlingssteg } from '../../../../typer/behandling';
 import {
@@ -31,7 +31,7 @@ const Tidslinje = styled.div`
     text-align: center;
     background-image: radial-gradient(
         1px 1px at center,
-        ${NavdsGlobalColorGray400} 1px,
+        ${AGray400} 1px,
         transparent 1px,
         transparent 4px
     );
@@ -39,7 +39,7 @@ const Tidslinje = styled.div`
 `;
 
 const Innhold = styled.div`
-    margin-bottom: ${NavdsSpacing6};
+    margin-bottom: ${ASpacing6};
 `;
 
 interface IProps {

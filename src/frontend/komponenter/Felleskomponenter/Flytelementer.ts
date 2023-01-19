@@ -2,24 +2,24 @@ import styled from 'styled-components';
 
 import { Alert, Button, Detail } from '@navikt/ds-react';
 import {
-    NavdsFontWeightBold,
-    NavdsSemanticColorInteractionPrimaryHoverSubtle,
-    NavdsSpacing2,
-    NavdsSpacing4,
-    NavdsSpacing5,
-    NavdsSpacing8,
+    AFontWeightBold,
+    ASurfaceActionSubtleHover,
+    ASpacing2,
+    ASpacing4,
+    ASpacing5,
+    ASpacing8,
 } from '@navikt/ds-tokens/dist/tokens';
 
 export const Spacer20 = styled.div`
-    height: ${NavdsSpacing5};
+    height: ${ASpacing5};
 `;
 
 export const Spacer8 = styled.div`
-    height: ${NavdsSpacing2};
+    height: ${ASpacing2};
 `;
 
 export const Navigering = styled.div`
-    padding: ${NavdsSpacing4} 0;
+    padding: ${ASpacing4} 0;
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
@@ -32,8 +32,8 @@ export const FTAlertStripe = styled(Alert)`
 `;
 
 export const FTButton = styled(Button)`
-    padding-right: ${NavdsSpacing8};
-    padding-left: ${NavdsSpacing8};
+    padding-right: ${ASpacing8};
+    padding-left: ${ASpacing8};
 `;
 
 export const BehandlingsMenyButton = styled(Button)`
@@ -43,18 +43,18 @@ export const BehandlingsMenyButton = styled(Button)`
     span {
         width: 100%;
         text-align: left;
-        padding: 0rem ${NavdsSpacing2};
+        padding: 0rem ${ASpacing2};
     }
 
     & .navds-body-short {
-        font-weight: ${NavdsFontWeightBold};
+        font-weight: ${AFontWeightBold};
     }
 
     &:disabled:hover {
-        background-color: ${NavdsSemanticColorInteractionPrimaryHoverSubtle};
+        background-color: ${ASurfaceActionSubtleHover};
     }
 `;
 
 export const DetailBold = styled(Detail)`
-    font-weight: ${NavdsFontWeightBold};
+    font-weight: ${AFontWeightBold};
 `;

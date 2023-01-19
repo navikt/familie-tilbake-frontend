@@ -5,13 +5,13 @@ import styled from 'styled-components';
 import { ExternalLink, Office1Filled } from '@navikt/ds-icons';
 import { Link, Tag } from '@navikt/ds-react';
 import {
-    NavdsGlobalColorGray900,
-    NavdsSemanticColorBorderMuted,
-    NavdsSemanticColorTextInverted,
-    NavdsSpacing12,
-    NavdsSpacing2,
-    NavdsSpacing4,
-    NavdsSpacing6,
+    AGray900,
+    ABorderDefault,
+    ATextOnInverted,
+    ASpacing12,
+    ASpacing2,
+    ASpacing4,
+    ASpacing6,
 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 import { Visittkort } from '@navikt/familie-visittkort';
@@ -29,27 +29,27 @@ const PlaceholderDiv = styled.div`
 
 const StyledContainer = styled.div`
     .visittkort {
-        padding: 0 ${NavdsSpacing4};
-        border-bottom-color: ${NavdsSemanticColorBorderMuted};
+        padding: 0 ${ASpacing4};
+        border-bottom-color: ${ABorderDefault};
 
         &__lenke {
-            margin-right: ${NavdsSpacing12};
+            margin-right: ${ASpacing12};
         }
     }
 `;
 
 const DødsfallTag = styled(Tag)`
-    color: ${NavdsSemanticColorTextInverted};
-    background-color: ${NavdsGlobalColorGray900};
-    border-color: ${NavdsGlobalColorGray900};
-    margin-left: ${NavdsSpacing6};
+    color: ${ATextOnInverted};
+    background-color: ${AGray900};
+    border-color: ${AGray900};
+    margin-left: ${ASpacing6};
 `;
 
 const InstitusjonsTag = styled(Tag)`
-    margin-left: ${NavdsSpacing6};
+    margin-left: ${ASpacing6};
 
     svg {
-        margin-right: ${NavdsSpacing2};
+        margin-right: ${ASpacing2};
     }
 `;
 

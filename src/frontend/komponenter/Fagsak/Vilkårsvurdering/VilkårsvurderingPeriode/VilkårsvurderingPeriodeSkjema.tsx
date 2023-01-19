@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Column, Row } from 'nav-frontend-grid';
 
 import { BodyShort, Detail, Heading, HelpText, Radio } from '@navikt/ds-react';
-import { NavdsSemanticColorBorder, NavdsSpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -42,8 +42,8 @@ import {
 } from './VilkårsvurderingPeriodeSkjemaContext';
 
 const StyledContainer = styled.div`
-    border: 1px solid ${NavdsSemanticColorBorder};
-    padding: ${NavdsSpacing3};
+    border: 1px solid ${ABorderStrong};
+    padding: ${ASpacing3};
 `;
 
 const StyledVilkårsresultatRadio = styled(Radio)`

@@ -2,28 +2,23 @@ import React, { ReactNode } from 'react';
 
 import styled from 'styled-components';
 
-import {
-    NavdsSemanticColorBorder,
-    NavdsSemanticColorCanvasBackgroundLight,
-    NavdsSpacing3,
-    NavdsSpacing4,
-} from '@navikt/ds-tokens/dist/tokens';
+import { ABorderStrong, ABgDefault, ASpacing3, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
 
 const borderRadius = 4;
 
 const ArrowBoxTop = styled.div`
     .arrowBoxTop${props => props.theme.alignOffset} {
-        border: 1px solid ${NavdsSemanticColorBorder};
+        border: 1px solid ${ABorderStrong};
         border-radius: ${borderRadius}px;
-        padding: ${NavdsSpacing4};
-        margin-bottom: ${NavdsSpacing3};
+        padding: ${ASpacing4};
+        margin-bottom: ${ASpacing3};
         margin-top: ${props => props.theme.marginTop}px;
         margin-left: ${props => props.theme.marginLeft}px;
         position: relative;
     }
     .arrowBoxTop${props => props.theme.alignOffset}:before {
-        background: ${NavdsSemanticColorCanvasBackgroundLight};
-        border: 1px solid ${NavdsSemanticColorBorder};
+        background: ${ABgDefault};
+        border: 1px solid ${ABorderStrong};
         border-bottom-width: 0;
         border-right-width: 0;
         content: '';
@@ -40,18 +35,18 @@ const ArrowBoxTop = styled.div`
 
 const ArrowBoxLeft = styled.div`
     .arrowBoxLeft${props => props.theme.alignOffset} {
-        border: 1px solid ${NavdsSemanticColorBorder};
+        border: 1px solid ${ABorderStrong};
         border-radius: ${borderRadius}px;
-        padding: ${NavdsSpacing4};
-        margin-bottom: ${NavdsSpacing3};
+        padding: ${ASpacing4};
+        margin-bottom: ${ASpacing3};
         margin-top: ${props => props.theme.marginTop}px;
         margin-left: ${props => props.theme.marginLeft}px;
         position: relative;
     }
 
     .arrowBoxLeft${props => props.theme.alignOffset}:before {
-        background: ${NavdsSemanticColorCanvasBackgroundLight};
-        border: 1px solid ${NavdsSemanticColorBorder};
+        background: ${ABgDefault};
+        border: 1px solid ${ABorderStrong};
         border-bottom-width: 0;
         border-right-width: 0;
         content: '';

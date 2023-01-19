@@ -4,13 +4,13 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 
 import {
-    NavdsGlobalColorGray300,
-    NavdsSemanticColorCanvasBackground,
-    NavdsSemanticColorFocus,
-    NavdsSemanticColorText,
-    NavdsSpacing12,
-    NavdsSpacing2,
-    NavdsSpacing8,
+    AGray300,
+    ABgSubtle,
+    ABorderFocus,
+    ATextDefault,
+    ASpacing12,
+    ASpacing2,
+    ASpacing8,
 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -23,28 +23,28 @@ const StyledNav = styled.nav`
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding: ${NavdsSpacing8} 0;
+    padding: ${ASpacing8} 0;
 `;
 
 const StyledLink = styled(Link)`
     text-decoration: none;
-    padding: ${NavdsSpacing2} ${NavdsSpacing12} ${NavdsSpacing2} ${NavdsSpacing8};
-    color: ${NavdsSemanticColorText};
+    padding: ${ASpacing2} ${ASpacing12} ${ASpacing2} ${ASpacing8};
+    color: ${ATextDefault};
 
     &.hover-effekt:hover {
-        background: ${NavdsSemanticColorCanvasBackground};
+        background: ${ABgSubtle};
     }
 
     &.active {
-        background: ${NavdsSemanticColorCanvasBackground};
+        background: ${ABgSubtle};
     }
 
     &.active {
-        box-shadow: inset 0.35rem 0 0 0 ${NavdsSemanticColorFocus};
+        box-shadow: inset 0.35rem 0 0 0 ${ABorderFocus};
     }
 
     &:focus {
-        box-shadow: inset 0.35rem 0 0 0 ${NavdsSemanticColorFocus};
+        box-shadow: inset 0.35rem 0 0 0 ${ABorderFocus};
         outline: none;
     }
 
@@ -53,7 +53,7 @@ const StyledLink = styled(Link)`
     }
 
     &.inactive {
-        color: ${NavdsGlobalColorGray300};
+        color: ${AGray300};
 
         &:hover {
             cursor: not-allowed;

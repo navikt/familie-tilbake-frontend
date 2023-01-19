@@ -6,7 +6,7 @@ import { Column, Row } from 'nav-frontend-grid';
 
 import { ExternalLink } from '@navikt/ds-icons';
 import { BodyLong, Heading, Link, Radio, ReadMore } from '@navikt/ds-react';
-import { NavdsSemanticColorBorder, NavdsSpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -27,8 +27,8 @@ import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
 
 const StyledContainer = styled.div`
-    border: 1px solid ${NavdsSemanticColorBorder};
-    padding: ${NavdsSpacing3};
+    border: 1px solid ${ABorderStrong};
+    padding: ${ASpacing3};
 `;
 
 interface IProps {
