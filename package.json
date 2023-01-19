@@ -78,7 +78,7 @@
     "react-collapse": "^5.1.1",
     "react-day-picker": "^7.4.10",
     "react-dom": "^18.2.0",
-    "react-modal": "3.15.x",
+    "react-modal": "3.16.x",
     "react-router-dom": "^6.4.3",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
