@@ -98,7 +98,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                         }
                         limitations={{ minDate: minTidsfrist(), maxDate: maxTidsfrist() }}
                         placeholder={datoformatNorsk.DATO}
-                        valgtDato={skjema.felter.tidsfrist.verdi}
+                        value={skjema.felter.tidsfrist.verdi}
                         feil={
                             ugyldigDatoValgt ? skjema.felter.tidsfrist.feilmelding?.toString() : ''
                         }

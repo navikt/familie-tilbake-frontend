@@ -1829,10 +1829,10 @@
     framer-motion "^6.3.16"
     react-tooltip "^4.2.21"
 
-"@navikt/familie-form-elements@^8.0.0":
-  version "8.0.0"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-form-elements/8.0.0/e169099c86fa0e98126a0d8846e86d403c9da6ae#e169099c86fa0e98126a0d8846e86d403c9da6ae"
-  integrity sha512-zz8Dw9txyrBI7qTmBj2Cw9PWDP16ycqQSneudY9I9BbvzrWXkO7y6TgEOZaz6FmLcSLQ7cElBeBTTYWScxyqGA==
+"@navikt/familie-form-elements@^9.0.0":
+  version "9.0.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-form-elements/9.0.0/75ed6c1e1791849cdee97a48a39b1e93d9e62aac#75ed6c1e1791849cdee97a48a39b1e93d9e62aac"
+  integrity sha512-qGpHtVKTxCal1wisDGjVdnCQVSoM2MjGNFDsHEbSX9QekWzT4MhCLTS3e21n75e8Wd6uy08YAE0a5DU+ldDl/A==
   dependencies:
     "@navikt/ds-css" "2.0.x"
     "@navikt/ds-react" "2.0.x"

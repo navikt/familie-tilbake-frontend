@@ -210,7 +210,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                         nyDato ? nyDato : ''
                                     );
                                 }}
-                                valgtDato={skjema.felter.oppdagelsesdato.verdi}
+                                value={skjema.felter.oppdagelsesdato.verdi}
                                 limitations={{
                                     maxDate: new Date().toISOString(),
                                 }}
@@ -240,7 +240,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                         nyDato ? nyDato : ''
                                     );
                                 }}
-                                valgtDato={skjema.felter.foreldelsesfrist.verdi}
+                                value={skjema.felter.foreldelsesfrist.verdi}
                                 placeholder={datoformatNorsk.DATO}
                                 feil={
                                     ugyldigForeldelsesfristValgt
