@@ -7,7 +7,7 @@ metadata:
   labels:
     team: teamfamilie
 spec:
-  logoutUrl: "https://familie-tilbake-frontend.dev.intern.nav.no"
+  logoutUrl: "https://familie-tilbake-frontend.intern.dev.nav.no"
   tenant: trygdeetaten.no
   claims:
     groups:
@@ -19,7 +19,7 @@ spec:
       - id: 19dcbfde-4cdb-4c64-a1ea-ac9802b03339 # 0000-GA-Enslig-Forsorger-Veileder
       - id: c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b # forvalterrolle 
   replyUrls:
-    - url: "http://familie-tilbake-frontend.dev.intern.nav.no/auth/openid/callback"
+    - url: "http://familie-tilbake-frontend.intern.dev.nav.no/auth/openid/callback"
     - url: "http://localhost:8000/auth/openid/callback"
   secretName: azuread-familie-tilbake-frontend-lokal
 
