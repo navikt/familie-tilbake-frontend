@@ -23,7 +23,7 @@ spec:
     enabled: true
     path: /metrics
   ingresses:
-    - https://familie-tilbake-frontend.dev.intern.nav.no
+    - https://familie-tilbake-frontend.intern.dev.nav.no
   vault:
     enabled: false
   azure:
@@ -40,7 +40,7 @@ spec:
       enabled: true
       tenant: trygdeetaten.no
       replyURLs:
-        - "https://familie-tilbake-frontend.dev.intern.nav.no/auth/openid/callback"
+        - "https://familie-tilbake-frontend.intern.dev.nav.no/auth/openid/callback"
   webproxy: true
   accessPolicy:
     inbound:

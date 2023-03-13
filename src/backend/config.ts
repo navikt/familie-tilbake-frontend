@@ -30,9 +30,9 @@ const Environment = () => {
             namespace: 'preprod',
             proxyUrl: 'http://familie-tilbake',
             historikkUrl: 'http://familie-historikk',
-            baSakUrl: 'https://barnetrygd.dev.intern.nav.no',
-            efSakUrl: 'https://ensligmorellerfar.dev.intern.nav.no/ekstern',
-            ksSakUrl: 'https://kontantstotte.dev.intern.nav.no',
+            baSakUrl: 'https://barnetrygd.intern.dev.nav.no',
+            efSakUrl: 'https://ensligmorellerfar.intern.dev.nav.no/ekstern',
+            ksSakUrl: 'https://kontantstotte.intern.dev.nav.no',
             redisUrl: 'familie-tilbake-frontend-redis',
         };
     }
