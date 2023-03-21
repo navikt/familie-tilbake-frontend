@@ -40,7 +40,7 @@
     "@navikt/familie-typer": "^8.0.0",
     "@navikt/familie-visittkort": "^7.0.0",
     "@sentry/browser": "^7.21.1",
-    "@sentry/core": "^7.21.1",
+    "@sentry/core": "^7.44.1",
     "@sentry/tracing": "^7.21.1",
     "@sentry/webpack-plugin": "^1.20.0",
     "@types/classnames": "^2.3.1",
