@@ -13,15 +13,15 @@ import { hentFrontendFeilmelding } from '../../../utils';
 import { FTButton, Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import { useVerge } from './VergeContext';
+import { useBrevmottaker } from './BrevmottakerContext';
 
 const StyledVerge = styled.div`
     padding: 10px;
 `;
 
-const VergeContainer: React.FC = () => {
+const BrevmottakerContainer: React.FC = () => {
     const { behandling, skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } =
-        useVerge();
+        useBrevmottaker();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
@@ -188,4 +188,4 @@ const VergeContainer: React.FC = () => {
     );
 };
 
-export default VergeContainer;
+export default BrevmottakerContainer;

@@ -12,8 +12,8 @@ import { Vergetype } from '../../../kodeverk/verge';
 import { VergeDto } from '../../../typer/api';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import VergeContainer from './VergeContainer';
-import { VergeProvider } from './VergeContext';
+import BrevmottakerContainer from './BrevmottakerContainer';
+import { BrevmottakerProvider } from './BrevmottakerContext';
 
 jest.mock('@navikt/familie-http', () => {
     return {
@@ -31,7 +31,7 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
 }));
 
-describe('Tester: VergeContainer', () => {
+describe('Tester: BrevmottakerContainer', () => {
     const setupMock = (
         behandlet: boolean,
         lesevisning: boolean,
@@ -73,9 +73,9 @@ describe('Tester: VergeContainer', () => {
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getByLabelText, queryAllByText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
+            <BrevmottakerProvider behandling={behandling} fagsak={fagsak}>
+                <BrevmottakerContainer />
+            </BrevmottakerProvider>
         );
 
         await waitFor(async () => {
@@ -121,9 +121,9 @@ describe('Tester: VergeContainer', () => {
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
+            <BrevmottakerProvider behandling={behandling} fagsak={fagsak}>
+                <BrevmottakerContainer />
+            </BrevmottakerProvider>
         );
 
         await waitFor(async () => {
@@ -183,9 +183,9 @@ describe('Tester: VergeContainer', () => {
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getByLabelText, queryByLabelText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
+            <BrevmottakerProvider behandling={behandling} fagsak={fagsak}>
+                <BrevmottakerContainer />
+            </BrevmottakerProvider>
         );
 
         await waitFor(async () => {
@@ -219,9 +219,9 @@ describe('Tester: VergeContainer', () => {
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
+            <BrevmottakerProvider behandling={behandling} fagsak={fagsak}>
+                <BrevmottakerContainer />
+            </BrevmottakerProvider>
         );
 
         await waitFor(async () => {
@@ -257,9 +257,9 @@ describe('Tester: VergeContainer', () => {
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, queryByText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
+            <BrevmottakerProvider behandling={behandling} fagsak={fagsak}>
+                <BrevmottakerContainer />
+            </BrevmottakerProvider>
         );
 
         await waitFor(async () => {
@@ -295,9 +295,9 @@ describe('Tester: VergeContainer', () => {
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, queryByText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
+            <BrevmottakerProvider behandling={behandling} fagsak={fagsak}>
+                <BrevmottakerContainer />
+            </BrevmottakerProvider>
         );
 
         await waitFor(async () => {
