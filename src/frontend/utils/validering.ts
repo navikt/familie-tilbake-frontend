@@ -5,9 +5,9 @@ import { feil, type FeltState, ok } from '@navikt/familie-skjema';
 import { isNumeric } from './miscUtils';
 
 const textRegex =
-    /^[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'\-/\n%§!?@_()+:;,="&\n]*$/;
+    /^[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'‐—–\-/\n%§!?#@_()+:;,="&\n]*$/;
 const textGyldigRegex =
-    /[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'\-/\n%§!?@_()+:;,="&\n]*/g;
+    /[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'‐—–\-/\n%§!?#@_()+:;,="&\n]*/g;
 
 export enum DEFINERT_FEILMELDING {
     OBLIGATORISK_FELT = 'OBLIGATORISK_FELT',
