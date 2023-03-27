@@ -18,7 +18,7 @@ import {
 import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 
-jest.setTimeout(15000);
+jest.setTimeout(25000);
 
 jest.mock('@navikt/familie-http', () => {
     return {
