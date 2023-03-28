@@ -13,15 +13,33 @@ import { hentFrontendFeilmelding } from '../../../utils';
 import { FTButton, Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import Brevmottaker from './Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
 
 const StyledVerge = styled.div`
     padding: 10px;
 `;
 
+const StyledBrevmottaker = styled.div`
+    padding: 2.5rem;
+`;
+
+const FlexDiv = styled.div`
+    display: flex;
+    justify-content: start;
+`;
+
 const BrevmottakerContainer: React.FC = () => {
-    const { behandling, skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } =
-        useBrevmottaker();
+    const {
+        behandling,
+        skjema,
+        henterData,
+        stegErBehandlet,
+        erAutoutført,
+        sendInn,
+        vergeRespons,
+        manuelleBrevmottakere,
+    } = useBrevmottaker();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
@@ -34,7 +52,20 @@ const BrevmottakerContainer: React.FC = () => {
 
     const feilmelding = vergeRespons && hentFrontendFeilmelding(vergeRespons);
 
-    return (
+    return manuelleBrevmottakere.length > 1 ? (
+        <StyledBrevmottaker>
+            <Heading size={'large'} level={'1'} children={'Brevmottaker(e)'} />
+            <FlexDiv>
+                {manuelleBrevmottakere.map(respons => (
+                    <Brevmottaker
+                        key={respons.id}
+                        brevmottakerRespons={respons}
+                        erLesevisning={erLesevisning}
+                    />
+                ))}
+            </FlexDiv>
+        </StyledBrevmottaker>
+    ) : (
         <StyledVerge>
             <Heading level="2" size="small" spacing>
                 Verge

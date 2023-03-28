@@ -7,6 +7,7 @@ import {
 } from '../kodeverk';
 import { Vergetype } from '../kodeverk/verge';
 import { Behandlingresultat, Behandlingssteg } from './behandling';
+import { IBrevmottaker } from './Brevmottaker';
 import { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
 
 export interface PeriodeFaktaStegPayload {
@@ -92,6 +93,11 @@ export interface BrevPayload {
 export interface ForhåndsvisHenleggelsesbrevPayload {
     behandlingId: string;
     fritekst: string;
+}
+
+export interface ManuellBrevmottakerResponseDto {
+    id: string;
+    brevmottaker: IBrevmottaker;
 }
 
 export interface VergeDto {

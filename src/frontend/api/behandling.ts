@@ -7,6 +7,7 @@ import {
     ForeldelseStegPayload,
     ForeslåVedtakStegPayload,
     HenleggBehandlingPaylod,
+    ManuellBrevmottakerResponseDto,
     VergeDto,
     VergeStegPayload,
     VilkårdsvurderingStegPayload,
@@ -137,6 +138,25 @@ const useBehandlingApi = () => {
         });
     };
 
+    const fjernManuellBrevmottaker = (
+        behandlingId: string,
+        brevmottakerId: string
+    ): Promise<Ressurs<string>> => {
+        return request<void, string>({
+            method: 'DELETE',
+            url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}/${brevmottakerId}`,
+        });
+    };
+
+    const hentManuelleBrevmottakere = (
+        behandlingId: string
+    ): Promise<Ressurs<ManuellBrevmottakerResponseDto[]>> => {
+        return request<void, ManuellBrevmottakerResponseDto[]>({
+            method: 'GET',
+            url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}`,
+        });
+    };
+
     const sendInnVerge = (
         behandlingId: string,
         payload: VergeStegPayload
@@ -171,6 +191,8 @@ const useBehandlingApi = () => {
         gjerVergeKall,
         sendInnVerge,
         henleggBehandling,
+        fjernManuellBrevmottaker,
+        hentManuelleBrevmottakere,
     };
 };
 

@@ -17,7 +17,7 @@ import { byggFeiletRessurs, type Ressurs, RessursStatus } from '@navikt/familie-
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype } from '../../../kodeverk/verge';
-import { VergeDto, VergeStegPayload } from '../../../typer/api';
+import { ManuellBrevmottakerResponseDto, VergeDto, VergeStegPayload } from '../../../typer/api';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import {
@@ -44,10 +44,14 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
         const [erAutoutført, settErAutoutført] = React.useState<boolean>();
         const [verge, settVerge] = React.useState<VergeDto>();
+        const [brevmottakere, settBrevMottakere] = React.useState<ManuellBrevmottakerResponseDto[]>(
+            []
+        );
         const [henterData, settHenterData] = React.useState<boolean>(false);
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
         const [vergeRespons, settVergeRepons] = React.useState<Ressurs<string>>();
-        const { gjerVergeKall, sendInnVerge } = useBehandlingApi();
+        const { gjerVergeKall, sendInnVerge, fjernManuellBrevmottaker, hentManuelleBrevmottakere } =
+            useBehandlingApi();
         const { erStegBehandlet, erStegAutoutført, hentBehandlingMedBehandlingId } =
             useBehandling();
         const navigate = useNavigate();
@@ -58,9 +62,30 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                 settErAutoutført(erStegAutoutført(Behandlingssteg.VERGE));
                 settHenterData(true);
                 hentVerge();
+            } else {
+                hentBrevmottakere();
             }
         }, [behandling]);
 
+        const fjernBrevmottaker = (brevmottakerId: string) => {
+            fjernManuellBrevmottaker(behandling.behandlingId, brevmottakerId).then(
+                (respons: Ressurs<string>) => {
+                    if (respons.status === RessursStatus.SUKSESS) {
+                        settBrevMottakere(prevState =>
+                            prevState.filter(brevmottaker => brevmottaker.id !== brevmottakerId)
+                        );
+                    }
+                }
+            );
+        };
+
+        const hentBrevmottakere = () => {
+            hentManuelleBrevmottakere(behandling.behandlingId).then(respons => {
+                if (respons.status === RessursStatus.SUKSESS) {
+                    settBrevMottakere(respons.data);
+                }
+            });
+        };
         const hentVerge = () => {
             gjerVergeKall(behandling.behandlingId).then((respons: Ressurs<VergeDto>) => {
                 if (respons.status === RessursStatus.SUKSESS) {
@@ -214,6 +239,8 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             senderInn,
             sendInn,
             vergeRespons,
+            manuelleBrevmottakere: brevmottakere,
+            fjernBrevmottaker,
         };
     }
 );
