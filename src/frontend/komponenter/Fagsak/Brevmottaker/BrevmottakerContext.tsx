@@ -117,6 +117,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                 }
             });
         };
+
         const hentVerge = () => {
             gjerVergeKall(behandling.behandlingId).then((respons: Ressurs<VergeDto>) => {
                 if (respons.status === RessursStatus.SUKSESS) {
