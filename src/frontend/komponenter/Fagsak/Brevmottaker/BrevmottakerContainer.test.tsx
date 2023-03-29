@@ -9,7 +9,7 @@ import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype } from '../../../kodeverk/verge';
-import { VergeDto } from '../../../typer/api';
+import { ManuellBrevmottakerResponseDto, VergeDto } from '../../../typer/api';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import BrevmottakerContainer from './BrevmottakerContainer';
@@ -54,6 +54,13 @@ describe('Tester: BrevmottakerContainer', () => {
                 });
                 return Promise.resolve(ressurs);
             },
+            hentManuelleBrevmottakere: () => {
+                const ressurs = mock<Ressurs<ManuellBrevmottakerResponseDto[]>>({
+                    status: RessursStatus.SUKSESS,
+                    data: [],
+                });
+                return Promise.resolve(ressurs);
+            },
         }));
         // @ts-ignore
         useBehandling.mockImplementation(() => ({
@@ -69,6 +76,7 @@ describe('Tester: BrevmottakerContainer', () => {
         setupMock(false, false, false);
         const behandling = mock<IBehandling>({
             harVerge: false,
+            harManuelleBrevmottakere: false,
         });
         const fagsak = mock<IFagsak>();
 
@@ -117,6 +125,7 @@ describe('Tester: BrevmottakerContainer', () => {
         setupMock(false, false, false);
         const behandling = mock<IBehandling>({
             harVerge: false,
+            harManuelleBrevmottakere: false,
         });
         const fagsak = mock<IFagsak>();
 
@@ -179,6 +188,7 @@ describe('Tester: BrevmottakerContainer', () => {
         });
         const behandling = mock<IBehandling>({
             harVerge: true,
+            harManuelleBrevmottakere: false,
         });
         const fagsak = mock<IFagsak>();
 
@@ -215,6 +225,7 @@ describe('Tester: BrevmottakerContainer', () => {
         });
         const behandling = mock<IBehandling>({
             harVerge: true,
+            harManuelleBrevmottakere: false,
         });
         const fagsak = mock<IFagsak>();
 
@@ -253,6 +264,7 @@ describe('Tester: BrevmottakerContainer', () => {
         });
         const behandling = mock<IBehandling>({
             harVerge: true,
+            harManuelleBrevmottakere: false,
         });
         const fagsak = mock<IFagsak>();
 
@@ -291,6 +303,7 @@ describe('Tester: BrevmottakerContainer', () => {
         });
         const behandling = mock<IBehandling>({
             harVerge: true,
+            harManuelleBrevmottakere: false,
         });
         const fagsak = mock<IFagsak>();
 
