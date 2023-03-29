@@ -17,9 +17,15 @@ export enum SideId {
     VILKÅRSVURDERING = 'VILKÅRSVURDERING',
     VERGE = 'VERGE',
     VEDTAK = 'VEDTAK',
+    BREVMOTTAKER = 'BREVMOTTAKER',
 }
 
 export const sider: Record<SideId, ISide> = {
+    BREVMOTTAKER: {
+        href: 'verge',
+        navn: 'Brevmottaker(e)',
+        steg: Behandlingssteg.VERGE,
+    },
     VERGE: {
         href: 'verge',
         navn: 'Verge',
@@ -75,7 +81,15 @@ const sjekkOmSidenErAktiv = (side: ISide, behandlingsstegsinfo: IBehandlingssteg
         .some(stegInfo => stegInfo.behandlingssteg === side.steg);
 };
 
-export const visSide = (_side: ISide, _åpenBehandling: IBehandling) => {
+export const visSide = (side: ISide, åpenBehandling: IBehandling) => {
+    if (side.steg === Behandlingssteg.VERGE) {
+        switch (side.navn) {
+            case 'Brevmottaker(e)':
+                return åpenBehandling.harManuelleBrevmottakere;
+            case 'Verge':
+                return !åpenBehandling.harManuelleBrevmottakere;
+        }
+    }
     return true;
 };
 

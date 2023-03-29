@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyLong, ErrorMessage, Heading, Loader } from '@navikt/ds-react';
+import { BodyLong, Button, ErrorMessage, Heading, Loader } from '@navikt/ds-react';
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -29,6 +29,10 @@ const FlexDiv = styled.div`
     justify-content: start;
 `;
 
+const NesteKnapp = styled(Button)`
+    margin-top: 3rem;
+`;
+
 const BrevmottakerContainer: React.FC = () => {
     const {
         behandling,
@@ -38,7 +42,8 @@ const BrevmottakerContainer: React.FC = () => {
         erAutoutført,
         sendInn,
         vergeRespons,
-        manuelleBrevmottakere,
+        brevmottakere,
+        gåTilNeste,
     } = useBrevmottaker();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -52,18 +57,22 @@ const BrevmottakerContainer: React.FC = () => {
 
     const feilmelding = vergeRespons && hentFrontendFeilmelding(vergeRespons);
 
-    return manuelleBrevmottakere.length > 1 ? (
+    return behandling.harManuelleBrevmottakere ? (
         <StyledBrevmottaker>
             <Heading size={'large'} level={'1'} children={'Brevmottaker(e)'} />
             <FlexDiv>
-                {manuelleBrevmottakere.map(respons => (
+                {Object.keys(brevmottakere).map(id => (
                     <Brevmottaker
-                        key={respons.id}
-                        brevmottakerRespons={respons}
+                        key={id}
+                        brevmottaker={brevmottakere[id]}
+                        id={id}
                         erLesevisning={erLesevisning}
                     />
                 ))}
             </FlexDiv>
+            <NesteKnapp variant="primary" onClick={gåTilNeste}>
+                Neste
+            </NesteKnapp>
         </StyledBrevmottaker>
     ) : (
         <StyledVerge>

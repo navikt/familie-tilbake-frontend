@@ -172,4 +172,5 @@ export interface IBehandling {
     behandlingsstegsinfo: IBehandlingsstegstilstand[];
     fagsystemsbehandlingId: string;
     behandlingsårsakstype?: Behandlingårsak;
+    harManuelleBrevmottakere?: boolean;
 }

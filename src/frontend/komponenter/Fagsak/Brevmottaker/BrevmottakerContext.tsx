@@ -17,8 +17,9 @@ import { byggFeiletRessurs, type Ressurs, RessursStatus } from '@navikt/familie-
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype } from '../../../kodeverk/verge';
-import { ManuellBrevmottakerResponseDto, VergeDto, VergeStegPayload } from '../../../typer/api';
+import { VergeDto, VergeStegPayload } from '../../../typer/api';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
+import { IBrevmottaker, MottakerType } from '../../../typer/Brevmottaker';
 import { IFagsak } from '../../../typer/fagsak';
 import {
     erFeltetEmpty,
@@ -44,9 +45,6 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
         const [erAutoutført, settErAutoutført] = React.useState<boolean>();
         const [verge, settVerge] = React.useState<VergeDto>();
-        const [brevmottakere, settBrevMottakere] = React.useState<ManuellBrevmottakerResponseDto[]>(
-            []
-        );
         const [henterData, settHenterData] = React.useState<boolean>(false);
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
         const [vergeRespons, settVergeRepons] = React.useState<Ressurs<string>>();
@@ -56,14 +54,23 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             useBehandling();
         const navigate = useNavigate();
 
+        const bruker: { [id: string]: IBrevmottaker } = {
+            ['bruker']: {
+                type: MottakerType.BRUKER,
+                navn: fagsak.bruker.navn,
+                personIdent: fagsak.bruker.personIdent,
+            },
+        };
+        const [brevmottakere, settBrevMottakere] = React.useState(bruker);
+
         React.useEffect(() => {
-            if (behandling.harVerge) {
+            if (behandling.harManuelleBrevmottakere) {
+                hentBrevmottakere();
+            } else if (behandling.harVerge) {
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.VERGE));
                 settErAutoutført(erStegAutoutført(Behandlingssteg.VERGE));
                 settHenterData(true);
                 hentVerge();
-            } else {
-                hentBrevmottakere();
             }
         }, [behandling]);
 
@@ -71,18 +78,42 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             fjernManuellBrevmottaker(behandling.behandlingId, brevmottakerId).then(
                 (respons: Ressurs<string>) => {
                     if (respons.status === RessursStatus.SUKSESS) {
-                        settBrevMottakere(prevState =>
-                            prevState.filter(brevmottaker => brevmottaker.id !== brevmottakerId)
-                        );
+                        const { [brevmottakerId]: fjernetMottaker, ...resterende } = brevmottakere;
+                        if (erstatterMottakerTypeBruker(fjernetMottaker.type)) {
+                            settBrevMottakere({ ...bruker, ...resterende });
+                        } else {
+                            settBrevMottakere({ ...resterende });
+                        }
                     }
                 }
+            );
+        };
+
+        const erstatterMottakerTypeBruker = (mottakerType: MottakerType) => {
+            return (
+                mottakerType === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
+                mottakerType === MottakerType.DØDSBO
             );
         };
 
         const hentBrevmottakere = () => {
             hentManuelleBrevmottakere(behandling.behandlingId).then(respons => {
                 if (respons.status === RessursStatus.SUKSESS) {
-                    settBrevMottakere(respons.data);
+                    const manuelleBrevmottakere: { [id: string]: IBrevmottaker } = {};
+                    respons.data
+                        .sort((a, b) => a.brevmottaker.type.localeCompare(b.brevmottaker.type))
+                        .forEach(responsDto => {
+                            manuelleBrevmottakere[responsDto.id] = responsDto.brevmottaker;
+                        });
+                    if (
+                        Object.values(manuelleBrevmottakere).some(mottaker =>
+                            erstatterMottakerTypeBruker(mottaker.type)
+                        )
+                    ) {
+                        settBrevMottakere(manuelleBrevmottakere);
+                    } else {
+                        settBrevMottakere({ ...bruker, ...manuelleBrevmottakere });
+                    }
                 }
             });
         };
@@ -230,6 +261,12 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             }
         };
 
+        const gåTilNeste = () => {
+            navigate(
+                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FAKTA.href}`
+            );
+        };
+
         return {
             behandling,
             stegErBehandlet,
@@ -239,8 +276,9 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             senderInn,
             sendInn,
             vergeRespons,
-            manuelleBrevmottakere: brevmottakere,
+            brevmottakere,
             fjernBrevmottaker,
+            gåTilNeste,
         };
     }
 );

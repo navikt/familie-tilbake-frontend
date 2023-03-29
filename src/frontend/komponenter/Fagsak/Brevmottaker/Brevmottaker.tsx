@@ -3,12 +3,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Delete } from '@navikt/ds-icons';
-import { Heading, Button } from '@navikt/ds-react';
+import { Button, Heading } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import CountryData from '@navikt/land-verktoy';
 
-import { ManuellBrevmottakerResponseDto } from '../../../typer/api';
-import { mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import { IBrevmottaker, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
 
 const FlexDiv = styled.div`
@@ -37,22 +36,22 @@ const DefinitionList = styled.dl`
 `;
 
 interface IProps {
-    brevmottakerRespons: ManuellBrevmottakerResponseDto;
+    brevmottaker: IBrevmottaker;
+    id: string;
     erLesevisning: boolean;
 }
 
-const Brevmottaker: React.FC<IProps> = ({ brevmottakerRespons, erLesevisning }) => {
-    const { id, brevmottaker } = brevmottakerRespons;
+const Brevmottaker: React.FC<IProps> = ({ brevmottaker, id, erLesevisning }) => {
     const { fjernBrevmottaker } = useBrevmottaker();
-    const land = CountryData.getCountryInstance('nb').findByValue(
-        brevmottaker.manuellAdresseInfo?.landkode
-    );
+    const land = brevmottaker.manuellAdresseInfo
+        ? CountryData.getCountryInstance('nb').findByValue(brevmottaker.manuellAdresseInfo.landkode)
+        : undefined;
 
     return (
         <StyledDiv>
             <FlexDiv>
                 <Heading size="medium" children={mottakerTypeVisningsnavn[brevmottaker.type]} />
-                {!erLesevisning && (
+                {!erLesevisning && brevmottaker.type !== MottakerType.BRUKER && (
                     <Button
                         variant={'tertiary'}
                         onClick={() => fjernBrevmottaker(id)}
@@ -68,16 +67,32 @@ const Brevmottaker: React.FC<IProps> = ({ brevmottakerRespons, erLesevisning }) 
             <DefinitionList>
                 <dt>Navn</dt>
                 <dd>{brevmottaker.navn}</dd>
-                <dt>Adresselinje 1</dt>
-                <dd>{brevmottaker.manuellAdresseInfo?.adresselinje1}</dd>
-                <dt>Adresselinje 2</dt>
-                <dd>{brevmottaker.manuellAdresseInfo?.adresselinje2 || '-'}</dd>
-                <dt>Postnummer</dt>
-                <dd>{brevmottaker.manuellAdresseInfo?.postnummer}</dd>
-                <dt>Poststed</dt>
-                <dd>{brevmottaker.manuellAdresseInfo?.poststed}</dd>
-                <dt>Land</dt>
-                <dd>{land.label}</dd>
+                {brevmottaker.personIdent && (
+                    <>
+                        <dt>Fødselsnummer</dt>
+                        <dd>{brevmottaker.personIdent}</dd>
+                    </>
+                )}
+                {brevmottaker.organisasjonsnummer && (
+                    <>
+                        <dt>Organisasjonsnummer</dt>
+                        <dd>{brevmottaker.organisasjonsnummer}</dd>
+                    </>
+                )}
+                {brevmottaker.manuellAdresseInfo && (
+                    <>
+                        <dt>Adresselinje 1</dt>
+                        <dd>{brevmottaker.manuellAdresseInfo?.adresselinje1}</dd>
+                        <dt>Adresselinje 2</dt>
+                        <dd>{brevmottaker.manuellAdresseInfo?.adresselinje2 || '-'}</dd>
+                        <dt>Postnummer</dt>
+                        <dd>{brevmottaker.manuellAdresseInfo?.postnummer}</dd>
+                        <dt>Poststed</dt>
+                        <dd>{brevmottaker.manuellAdresseInfo?.poststed}</dd>
+                        <dt>Land</dt>
+                        <dd>{land.label}</dd>
+                    </>
+                )}
             </DefinitionList>
         </StyledDiv>
     );

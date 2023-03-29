@@ -5,6 +5,7 @@ export enum MottakerType {
     FULLMEKTIG = 'FULLMEKTIG',
     VERGE = 'VERGE',
     DØDSBO = 'DØDSBO',
+    BRUKER = 'BRUKER',
 }
 
 export interface ManuellAdresseInfo {
@@ -28,4 +29,5 @@ export const mottakerTypeVisningsnavn: Record<MottakerType, string> = {
     FULLMEKTIG: 'Fullmektig',
     VERGE: 'Verge',
     DØDSBO: 'Dødsbo',
+    BRUKER: 'Bruker',
 };
