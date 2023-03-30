@@ -61,14 +61,17 @@ const BrevmottakerContainer: React.FC = () => {
         <StyledBrevmottaker>
             <Heading size={'large'} level={'1'} children={'Brevmottaker(e)'} />
             <FlexDiv>
-                {Object.keys(brevmottakere).map(id => (
-                    <Brevmottaker
-                        key={id}
-                        brevmottaker={brevmottakere[id]}
-                        id={id}
-                        erLesevisning={erLesevisning}
-                    />
-                ))}
+                {Object.keys(brevmottakere)
+                    .sort((a, b) => brevmottakere[a].type.localeCompare(brevmottakere[b].type))
+                    .map(id => (
+                        <Brevmottaker
+                            key={id}
+                            brevmottaker={brevmottakere[id]}
+                            brevmottakerId={id}
+                            behandlingId={behandling.behandlingId}
+                            erLesevisning={erLesevisning}
+                        />
+                    ))}
             </FlexDiv>
             <NesteKnapp variant="primary" onClick={gåTilNeste}>
                 Neste

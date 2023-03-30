@@ -8,7 +8,7 @@ import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import CountryData from '@navikt/land-verktoy';
 
 import { IBrevmottaker, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
-import { useBrevmottaker } from './BrevmottakerContext';
+import useLeggTilFjernBrevmottaker from './useLeggTilFjernBrevmottaker';
 
 const FlexDiv = styled.div`
     display: flex;
@@ -37,12 +37,18 @@ const DefinitionList = styled.dl`
 
 interface IProps {
     brevmottaker: IBrevmottaker;
-    id: string;
+    brevmottakerId: string;
+    behandlingId: string;
     erLesevisning: boolean;
 }
 
-const Brevmottaker: React.FC<IProps> = ({ brevmottaker, id, erLesevisning }) => {
-    const { fjernBrevmottaker } = useBrevmottaker();
+const Brevmottaker: React.FC<IProps> = ({
+    brevmottaker,
+    brevmottakerId,
+    behandlingId,
+    erLesevisning,
+}) => {
+    const { fjernBrevMottakerOgOppdaterState } = useLeggTilFjernBrevmottaker(behandlingId);
     const land = brevmottaker.manuellAdresseInfo
         ? CountryData.getCountryInstance('nb').findByValue(brevmottaker.manuellAdresseInfo.landkode)
         : undefined;
@@ -54,7 +60,7 @@ const Brevmottaker: React.FC<IProps> = ({ brevmottaker, id, erLesevisning }) => 
                 {!erLesevisning && brevmottaker.type !== MottakerType.BRUKER && (
                     <Button
                         variant={'tertiary'}
-                        onClick={() => fjernBrevmottaker(id)}
+                        onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
                         loading={false}
                         disabled={false}
                         size={'small'}

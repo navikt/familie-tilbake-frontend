@@ -48,8 +48,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         const [henterData, settHenterData] = React.useState<boolean>(false);
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
         const [vergeRespons, settVergeRepons] = React.useState<Ressurs<string>>();
-        const { gjerVergeKall, sendInnVerge, fjernManuellBrevmottaker, hentManuelleBrevmottakere } =
-            useBehandlingApi();
+        const { gjerVergeKall, sendInnVerge, hentManuelleBrevmottakere } = useBehandlingApi();
         const { erStegBehandlet, erStegAutoutført, hentBehandlingMedBehandlingId } =
             useBehandling();
         const navigate = useNavigate();
@@ -74,46 +73,43 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             }
         }, [behandling]);
 
-        const fjernBrevmottaker = (brevmottakerId: string) => {
-            fjernManuellBrevmottaker(behandling.behandlingId, brevmottakerId).then(
-                (respons: Ressurs<string>) => {
-                    if (respons.status === RessursStatus.SUKSESS) {
-                        const { [brevmottakerId]: fjernetMottaker, ...resterende } = brevmottakere;
-                        if (erstatterMottakerTypeBruker(fjernetMottaker.type)) {
-                            settBrevMottakere({ ...bruker, ...resterende });
-                        } else {
-                            settBrevMottakere({ ...resterende });
-                        }
-                    }
-                }
+        React.useEffect(() => {
+            if (skalEkskludereDefaultMottaker()) {
+                fjernBrevmottaker('bruker');
+            } else if (!Object.keys(brevmottakere).includes('bruker')) {
+                settBrevMottakere({ ...bruker, ...brevmottakere });
+            }
+        }, [brevmottakere]);
+
+        const skalEkskludereDefaultMottaker = () => {
+            return Object.values(brevmottakere).some(
+                brevmottaker =>
+                    brevmottaker.type === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
+                    brevmottaker.type === MottakerType.DØDSBO
             );
         };
 
-        const erstatterMottakerTypeBruker = (mottakerType: MottakerType) => {
-            return (
-                mottakerType === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
-                mottakerType === MottakerType.DØDSBO
-            );
+        const leggTilEllerOppdaterBrevmottaker = (id: string, brevmottaker: IBrevmottaker) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { [id]: _gammelVersjon, ...andreMottakere } = brevmottakere;
+            settBrevMottakere({ [id]: brevmottaker, ...andreMottakere });
+        };
+
+        const fjernBrevmottaker = (id: string) => {
+            const { [id]: fjernet, ...gjenværende } = brevmottakere;
+            if (fjernet !== undefined) {
+                settBrevMottakere(gjenværende);
+            }
         };
 
         const hentBrevmottakere = () => {
             hentManuelleBrevmottakere(behandling.behandlingId).then(respons => {
                 if (respons.status === RessursStatus.SUKSESS) {
                     const manuelleBrevmottakere: { [id: string]: IBrevmottaker } = {};
-                    respons.data
-                        .sort((a, b) => a.brevmottaker.type.localeCompare(b.brevmottaker.type))
-                        .forEach(responsDto => {
-                            manuelleBrevmottakere[responsDto.id] = responsDto.brevmottaker;
-                        });
-                    if (
-                        Object.values(manuelleBrevmottakere).some(mottaker =>
-                            erstatterMottakerTypeBruker(mottaker.type)
-                        )
-                    ) {
-                        settBrevMottakere(manuelleBrevmottakere);
-                    } else {
-                        settBrevMottakere({ ...bruker, ...manuelleBrevmottakere });
-                    }
+                    respons.data.forEach(responsDto => {
+                        manuelleBrevmottakere[responsDto.id] = responsDto.brevmottaker;
+                    });
+                    settBrevMottakere(manuelleBrevmottakere);
                 }
             });
         };
@@ -279,6 +275,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             vergeRespons,
             brevmottakere,
             fjernBrevmottaker,
+            leggTilEllerOppdaterBrevmottaker,
             gåTilNeste,
         };
     }
