@@ -17,7 +17,6 @@ export interface ILeggTilFjernBrevmottakerSkjema {
 }
 
 const useLeggTilFjernBrevmottaker = (behandlingId: string) => {
-    //const { settToast } = useApp();
     const { fjernBrevmottaker, leggTilEllerOppdaterBrevmottaker } = useBrevmottaker();
     const { fjernManuellBrevmottaker } = useBehandlingApi();
 
@@ -137,10 +136,6 @@ const useLeggTilFjernBrevmottaker = (behandlingId: string) => {
                         const id = mottakerId || response.data;
                         leggTilEllerOppdaterBrevmottaker(id, manuellBrevmottakerRequest);
                         nullstillSkjema();
-                        // settToast(ToastTyper.BREVMOTTAKER_LAGRET, {
-                        //     alertType: AlertType.SUCCESS,
-                        //     tekst: 'Mottaker ble lagret',
-                        // });
                     }
                 }
             );
@@ -152,10 +147,6 @@ const useLeggTilFjernBrevmottaker = (behandlingId: string) => {
     const fjernBrevMottakerOgOppdaterState = (mottakerId: string) => {
         fjernManuellBrevmottaker(behandlingId, mottakerId).then((respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.SUKSESS) {
-                // settToast(ToastTyper.BREVMOTTAKER_FJERNET, {
-                //     alertType: AlertType.SUCCESS,
-                //     tekst: 'Mottaker fjernet',
-                // });
                 fjernBrevmottaker(mottakerId);
             }
         });
