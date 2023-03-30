@@ -15,7 +15,6 @@ import {
 } from '../Felleskomponenter/Venstremeny/sider';
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 import BrevmottakerContainer from './Brevmottaker/BrevmottakerContainer';
-import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
 import FaktaContainer from './Fakta/FaktaContainer';
 import { FeilutbetalingFaktaProvider } from './Fakta/FeilutbetalingFaktaContext';
 import { FeilutbetalingForeldelseProvider } from './Foreldelse/FeilutbetalingForeldelseContext';
@@ -23,6 +22,7 @@ import ForeldelseContainer from './Foreldelse/ForeldelseContainer';
 import Høyremeny from './Høyremeny/Høyremeny';
 import { FeilutbetalingVedtakProvider } from './Vedtak/FeilutbetalingVedtakContext';
 import VedtakContainer from './Vedtak/VedtakContainer';
+import { BrevmottakerProvider } from './Verge/VergeContext';
 import { FeilutbetalingVilkårsvurderingProvider } from './Vilkårsvurdering/FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
 

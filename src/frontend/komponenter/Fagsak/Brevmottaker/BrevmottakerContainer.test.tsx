@@ -12,8 +12,8 @@ import { Vergetype } from '../../../kodeverk/verge';
 import { ManuellBrevmottakerResponseDto, VergeDto } from '../../../typer/api';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
+import { BrevmottakerProvider } from '../Verge/VergeContext';
 import BrevmottakerContainer from './BrevmottakerContainer';
-import { BrevmottakerProvider } from './BrevmottakerContext';
 
 jest.mock('@navikt/familie-http', () => {
     return {

@@ -13,8 +13,8 @@ import { hentFrontendFeilmelding } from '../../../utils';
 import { FTButton, Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import { useBrevmottaker } from '../Verge/VergeContext';
 import Brevmottaker from './Brevmottaker';
-import { useBrevmottaker } from './BrevmottakerContext';
 
 const StyledVerge = styled.div`
     padding: 10px;

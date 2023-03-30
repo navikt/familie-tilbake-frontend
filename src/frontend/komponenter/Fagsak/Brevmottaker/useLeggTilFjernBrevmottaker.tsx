@@ -4,7 +4,7 @@ import type { Ressurs } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { IBrevmottaker, MottakerType } from '../../../typer/Brevmottaker';
-import { useBrevmottaker } from './BrevmottakerContext';
+import { useBrevmottaker } from '../Verge/VergeContext';
 
 export interface ILeggTilFjernBrevmottakerSkjema {
     mottaker: MottakerType | '';
