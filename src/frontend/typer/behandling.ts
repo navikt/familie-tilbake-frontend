@@ -80,6 +80,7 @@ export enum Behandlingssteg {
     VARSEL = 'VARSEL',
     GRUNNLAG = 'GRUNNLAG',
     VERGE = 'VERGE',
+    BREVMOTTAKER = 'BREVMOTTAKER',
     FAKTA = 'FAKTA',
     FORELDELSE = 'FORELDELSE',
     VILKÅRSVURDERING = 'VILKÅRSVURDERING',
@@ -93,6 +94,7 @@ export const behandlingssteg: Record<Behandlingssteg, string> = {
     VARSEL: 'Varsel',
     GRUNNLAG: 'Kravgrunnlag',
     VERGE: 'Verge',
+    BREVMOTTAKER: 'Brevmottaker',
     FAKTA: 'Fakta om feilutbetaling',
     FORELDELSE: 'Foreldelse',
     VILKÅRSVURDERING: 'Tilbakekreving',
@@ -173,4 +175,5 @@ export interface IBehandling {
     fagsystemsbehandlingId: string;
     behandlingsårsakstype?: Behandlingårsak;
     harManuelleBrevmottakere?: boolean;
+    støtterManuelleBrevmottakere?: boolean;
 }

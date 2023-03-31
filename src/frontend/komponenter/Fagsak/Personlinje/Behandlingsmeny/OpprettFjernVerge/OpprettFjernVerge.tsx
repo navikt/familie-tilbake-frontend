@@ -73,7 +73,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
 
     return (
         <>
-            {!behandling.harManuelleBrevmottakere && (
+            {!behandling.støtterManuelleBrevmottakere && (
                 <BehandlingsMenyButton
                     variant="tertiary"
                     onClick={() => {

@@ -8,7 +8,7 @@ import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import CountryData from '@navikt/land-verktoy';
 
 import { IBrevmottaker, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
-import useLeggTilFjernBrevmottaker from './useLeggTilFjernBrevmottaker';
+import { useBrevmottaker } from './BrevmottakerContext';
 
 const FlexDiv = styled.div`
     display: flex;
@@ -42,13 +42,8 @@ interface IProps {
     erLesevisning: boolean;
 }
 
-const Brevmottaker: React.FC<IProps> = ({
-    brevmottaker,
-    brevmottakerId,
-    behandlingId,
-    erLesevisning,
-}) => {
-    const { fjernBrevMottakerOgOppdaterState } = useLeggTilFjernBrevmottaker(behandlingId);
+const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevisning }) => {
+    const { fjernBrevMottakerOgOppdaterState } = useBrevmottaker();
     const land = brevmottaker.manuellAdresseInfo
         ? CountryData.getCountryInstance('nb').findByValue(brevmottaker.manuellAdresseInfo.landkode)
         : undefined;

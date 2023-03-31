@@ -22,9 +22,9 @@ export enum SideId {
 
 export const sider: Record<SideId, ISide> = {
     BREVMOTTAKER: {
-        href: 'verge',
+        href: 'brevmottakere',
         navn: 'Brevmottaker(e)',
-        steg: Behandlingssteg.VERGE,
+        steg: Behandlingssteg.BREVMOTTAKER,
     },
     VERGE: {
         href: 'verge',
@@ -82,13 +82,13 @@ const sjekkOmSidenErAktiv = (side: ISide, behandlingsstegsinfo: IBehandlingssteg
 };
 
 export const visSide = (side: ISide, åpenBehandling: IBehandling) => {
+    if (side.steg === Behandlingssteg.BREVMOTTAKER) {
+        return åpenBehandling.behandlingsstegsinfo
+            .map(value => value.behandlingssteg)
+            .includes(side.steg);
+    }
     if (side.steg === Behandlingssteg.VERGE) {
-        switch (side.navn) {
-            case 'Brevmottaker(e)':
-                return åpenBehandling.harManuelleBrevmottakere;
-            case 'Verge':
-                return !åpenBehandling.harManuelleBrevmottakere;
-        }
+        return !åpenBehandling.støtterManuelleBrevmottakere;
     }
     return true;
 };
