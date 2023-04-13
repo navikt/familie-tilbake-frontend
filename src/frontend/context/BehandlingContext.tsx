@@ -31,7 +31,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [aktivtSteg, settAktivtSteg] = useState<IBehandlingsstegstilstand>();
     const [ventegrunn, settVentegrunn] = useState<IBehandlingsstegstilstand>();
     const [visVenteModal, settVisVenteModal] = useState<boolean>(false);
-    const [visBrevmottakerModal, settVisBrevmottakerModal] = useState<boolean>(false);
     const [harKravgrunnlag, settHarKravgrunnlag] = useState<boolean>();
     const [behandlingILesemodus, settBehandlingILesemodus] = useState<boolean>();
     const [åpenHøyremeny, settÅpenHøyremeny] = useState(true);
@@ -52,8 +51,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
 
     const hentBehandlingMedBehandlingId = (
         behandlingId: string,
-        henterEtterStatusendring?: boolean | false,
-        ønsketPathEtterHenting?: string | undefined
+        henterEtterStatusendring?: boolean | false
     ): void => {
         settBehandling(byggHenterRessurs());
         settAktivtSteg(undefined);
@@ -111,8 +109,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                             // @ts-ignore - fagsak er hentet på dette tidspunktet
                             `/fagsystem/${fagsak?.data?.fagsystem}/fagsak/${fagsak?.data?.eksternFagsakId}/behandling/${hentetBehandling.data.eksternBrukId}`
                         );
-                    } else if (ønsketPathEtterHenting !== undefined) {
-                        navigate(ønsketPathEtterHenting);
                     }
                 }
                 settBehandling(hentetBehandling);
@@ -192,8 +188,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         lagLenkeTilRevurdering,
         åpenHøyremeny,
         settÅpenHøyremeny,
-        visBrevmottakerModal,
-        settVisBrevmottakerModal,
     };
 });
 

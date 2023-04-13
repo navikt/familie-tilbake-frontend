@@ -26,16 +26,25 @@ interface IProps {
     fagsak: IFagsak;
 }
 
+const skalEkskludereDefaultMottaker = (brevmottakere: IBrevmottaker[]) => {
+    return brevmottakere.some(
+        brevmottaker =>
+            brevmottaker.type === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
+            brevmottaker.type === MottakerType.DØDSBO
+    );
+};
+
 const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
     ({ behandling, fagsak }: IProps) => {
-        const bruker: { [id: string]: IBrevmottaker } = {
-            ['bruker']: {
-                type: MottakerType.BRUKER,
-                navn: fagsak.bruker.navn,
-                personIdent: fagsak.bruker.personIdent,
-            },
+        const bruker: IBrevmottaker = {
+            type: MottakerType.BRUKER,
+            navn: fagsak.bruker.navn,
+            personIdent: fagsak.bruker.personIdent,
         };
-        const [brevmottakere, settBrevMottakere] = React.useState(bruker);
+        const defaultMottaker = 'bruker';
+        const [brevmottakere, settBrevMottakere] = React.useState({ [defaultMottaker]: bruker } as {
+            [id: string]: IBrevmottaker;
+        });
 
         const { fjernManuellBrevmottaker, hentManuelleBrevmottakere } = useBehandlingApi();
         const navigate = useNavigate();
@@ -47,20 +56,12 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         }, [behandling]);
 
         React.useEffect(() => {
-            if (skalEkskludereDefaultMottaker()) {
-                fjernBrevmottaker('bruker');
-            } else if (!Object.keys(brevmottakere).includes('bruker')) {
-                settBrevMottakere({ ...bruker, ...brevmottakere });
+            if (skalEkskludereDefaultMottaker(Object.values(brevmottakere))) {
+                fjernBrevmottaker(defaultMottaker);
+            } else if (!Object.keys(brevmottakere).includes(defaultMottaker)) {
+                leggTilEllerOppdaterBrevmottaker(defaultMottaker, bruker);
             }
         }, [brevmottakere]);
-
-        const skalEkskludereDefaultMottaker = () => {
-            return Object.values(brevmottakere).some(
-                brevmottaker =>
-                    brevmottaker.type === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
-                    brevmottaker.type === MottakerType.DØDSBO
-            );
-        };
 
         const hentBrevmottakere = () => {
             hentManuelleBrevmottakere(behandling.behandlingId).then(respons => {
@@ -75,9 +76,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         };
 
         const leggTilEllerOppdaterBrevmottaker = (id: string, brevmottaker: IBrevmottaker) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { [id]: _gammelVersjon, ...andreMottakere } = brevmottakere;
-            settBrevMottakere({ [id]: brevmottaker, ...andreMottakere });
+            settBrevMottakere({ ...brevmottakere, [id]: brevmottaker });
         };
 
         const fjernBrevmottaker = (id: string) => {

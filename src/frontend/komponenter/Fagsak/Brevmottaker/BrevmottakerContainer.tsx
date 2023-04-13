@@ -27,28 +27,26 @@ const BrevmottakerContainer: React.FC = () => {
     const erLesevisning = !!behandlingILesemodus;
 
     return (
-        <div>
-            <StyledBrevmottaker>
-                <Heading size={'large'} level={'1'} children={'Brevmottaker(e)'} />
-                <FlexDiv>
-                    {Object.keys(brevmottakere)
-                        .sort((a, b) => brevmottakere[a].type.localeCompare(brevmottakere[b].type))
-                        .map(id => (
-                            <div key={id}>
-                                <Brevmottaker
-                                    brevmottaker={brevmottakere[id]}
-                                    brevmottakerId={id}
-                                    behandlingId={behandling.behandlingId}
-                                    erLesevisning={erLesevisning}
-                                />
-                            </div>
-                        ))}
-                </FlexDiv>
-                <NesteKnapp variant="primary" onClick={gåTilNeste}>
-                    Neste
-                </NesteKnapp>
-            </StyledBrevmottaker>
-        </div>
+        <StyledBrevmottaker>
+            <Heading size={'large'} level={'1'} children={'Brevmottaker(e)'} />
+            <FlexDiv>
+                {Object.keys(brevmottakere)
+                    .sort((a, b) => brevmottakere[a].type.localeCompare(brevmottakere[b].type))
+                    .map(id => (
+                        <div key={id}>
+                            <Brevmottaker
+                                brevmottaker={brevmottakere[id]}
+                                brevmottakerId={id}
+                                behandlingId={behandling.behandlingId}
+                                erLesevisning={erLesevisning}
+                            />
+                        </div>
+                    ))}
+            </FlexDiv>
+            <NesteKnapp variant="primary" onClick={gåTilNeste}>
+                Neste
+            </NesteKnapp>
+        </StyledBrevmottaker>
     );
 };
 

@@ -56,8 +56,6 @@ const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevi
                     <Button
                         variant={'tertiary'}
                         onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
-                        loading={false}
-                        disabled={false}
                         size={'small'}
                         icon={<Delete />}
                     >
