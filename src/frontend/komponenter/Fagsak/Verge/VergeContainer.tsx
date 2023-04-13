@@ -82,11 +82,13 @@ const VergeContainer: React.FC = () => {
                                 <option disabled={true} value={''}>
                                     Velg vergetype
                                 </option>
-                                {vergeTyper.map(opt => (
-                                    <option key={opt} value={opt}>
-                                        {vergetyper[opt]}
-                                    </option>
-                                ))}
+                                {vergeTyper
+                                    .filter(type => type !== Vergetype.UDEFINERT)
+                                    .map(opt => (
+                                        <option key={opt} value={opt}>
+                                            {vergetyper[opt]}
+                                        </option>
+                                    ))}
                             </FamilieSelect>
                         </Column>
                     </Row>

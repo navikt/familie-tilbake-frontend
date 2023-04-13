@@ -4,12 +4,12 @@ import styled from 'styled-components';
 
 import { Fieldset } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
+import { FamilieInput } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 import CountrySelect from '@navikt/landvelger';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import { MottakerType } from '../../../typer/Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
 
 const PostnummerOgStedContainer = styled.div`
@@ -31,40 +31,13 @@ const StyledFieldset = styled(Fieldset)`
     }
 `;
 
-const MottakerSelect = styled(FamilieSelect)`
-    max-width: 19rem;
-`;
-
-interface IProps {
-    behandlingId: string;
-}
-
-const BrevmottakerSkjema: React.FC<IProps> = () => {
+const BrevmottakerSkjema: React.FC = () => {
     const { behandlingILesemodus } = useBehandling();
     const { skjema } = useBrevmottaker();
     const erLesevisning = behandlingILesemodus;
     return (
         <>
             <StyledFieldset legend="Skjema for å legge til eller fjerne brevmottaker" hideLegend>
-                <MottakerSelect
-                    {...skjema.felter.mottaker.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                    erLesevisning={erLesevisning}
-                    label="Mottaker"
-                    onChange={(event): void => {
-                        skjema.felter.mottaker.validerOgSettFelt(
-                            event.target.value as MottakerType
-                        );
-                    }}
-                >
-                    <option value="">Velg</option>
-                    {Object.values(MottakerType)
-                        .filter(type => type !== MottakerType.BRUKER)
-                        .map(mottaker => (
-                            <option value={mottaker} key={mottaker}>
-                                {mottakerTypeVisningsnavn[mottaker]}
-                            </option>
-                        ))}
-                </MottakerSelect>
                 <FamilieInput
                     {...skjema.felter.navn.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                     erLesevisning={erLesevisning}
@@ -109,18 +82,19 @@ const BrevmottakerSkjema: React.FC<IProps> = () => {
                         }}
                     />
                 </PostnummerOgStedContainer>
-
                 <CountrySelect
                     id={'country-select-brevmottaker'}
+                    label={'Land'}
                     flags
                     excludeList={
                         skjema.felter.mottaker.verdi === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
                             ? ['NO']
-                            : []
+                            : undefined
                     }
+                    values={skjema.felter.land.verdi}
                     isDisabled={erLesevisning}
-                    onOptionSelected={(land: { landkode: string }) => {
-                        skjema.felter.land.validerOgSettFelt(land.landkode);
+                    onOptionSelected={(land: { alpha2: string }) => {
+                        skjema.felter.land.validerOgSettFelt(land.alpha2);
                     }}
                     error={
                         skjema.visFeilmeldinger &&

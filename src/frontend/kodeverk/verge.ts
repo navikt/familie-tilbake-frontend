@@ -4,6 +4,7 @@ export enum Vergetype {
     VERGE_FOR_VOKSEN = 'VERGE_FOR_VOKSEN',
     ADVOKAT = 'ADVOKAT',
     ANNEN_FULLMEKTIG = 'ANNEN_FULLMEKTIG',
+    UDEFINERT = 'UDEFINERT',
 }
 
 export const vergetyper: Record<Vergetype, string> = {
@@ -12,6 +13,7 @@ export const vergetyper: Record<Vergetype, string> = {
     VERGE_FOR_VOKSEN: 'Verge for voksen',
     ADVOKAT: 'Advokat/advokatfullmektig',
     ANNEN_FULLMEKTIG: 'Annen fullmektig',
+    UDEFINERT: 'Udefinert',
 };
 
 export const vergeTyper = [
