@@ -184,10 +184,10 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                         poststed: skjema.felter.poststed.verdi,
                         landkode: skjema.felter.land.verdi,
                     },
+                    ...((type === MottakerType.VERGE || type === MottakerType.FULLMEKTIG) && {
+                        vergetype: Vergetype.UDEFINERT,
+                    }),
                 };
-                if (type === MottakerType.VERGE || type === MottakerType.FULLMEKTIG) {
-                    manuellBrevmottakerRequest.vergetype = Vergetype.UDEFINERT;
-                }
 
                 onSubmit(
                     {
