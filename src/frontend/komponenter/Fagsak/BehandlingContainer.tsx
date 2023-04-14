@@ -14,6 +14,8 @@ import {
     finnSideAktivtSteg,
 } from '../Felleskomponenter/Venstremeny/sider';
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
+import BrevmottakerContainer from './Brevmottaker/BrevmottakerContainer';
+import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
 import FaktaContainer from './Fakta/FaktaContainer';
 import { FeilutbetalingFaktaProvider } from './Fakta/FeilutbetalingFaktaContext';
 import { FeilutbetalingForeldelseProvider } from './Foreldelse/FeilutbetalingForeldelseContext';
@@ -161,6 +163,15 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                             <VergeProvider behandling={behandling} fagsak={fagsak}>
                                 <VergeContainer />
                             </VergeProvider>
+                        }
+                    />
+
+                    <Route
+                        path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
+                        element={
+                            <BrevmottakerProvider behandling={behandling} fagsak={fagsak}>
+                                <BrevmottakerContainer />
+                            </BrevmottakerProvider>
                         }
                     />
                 </Routes>

@@ -73,16 +73,18 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
 
     return (
         <>
-            <BehandlingsMenyButton
-                variant="tertiary"
-                onClick={() => {
-                    settVisModal(true);
-                    onListElementClick();
-                }}
-                disabled={!behandling.kanEndres || behandlingILesemodus}
-            >
-                {kanFjerneVerge ? 'Fjern verge/fullmektig' : 'Opprett verge/fullmektig'}
-            </BehandlingsMenyButton>
+            {!behandling.støtterManuelleBrevmottakere && (
+                <BehandlingsMenyButton
+                    variant="tertiary"
+                    onClick={() => {
+                        settVisModal(true);
+                        onListElementClick();
+                    }}
+                    disabled={!behandling.kanEndres || behandlingILesemodus}
+                >
+                    {kanFjerneVerge ? 'Fjern verge/fullmektig' : 'Opprett verge/fullmektig'}
+                </BehandlingsMenyButton>
+            )}
 
             <UIModalWrapper
                 modal={{
