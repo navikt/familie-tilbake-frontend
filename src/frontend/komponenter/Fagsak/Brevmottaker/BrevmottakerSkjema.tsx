@@ -8,7 +8,6 @@ import { FamilieInput } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 import CountrySelect from '@navikt/landvelger';
 
-import { useBehandling } from '../../../context/BehandlingContext';
 import { MottakerType } from '../../../typer/Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
 
@@ -32,15 +31,12 @@ const StyledFieldset = styled(Fieldset)`
 `;
 
 const BrevmottakerSkjema: React.FC = () => {
-    const { behandlingILesemodus } = useBehandling();
     const { skjema } = useBrevmottaker();
-    const erLesevisning = behandlingILesemodus;
     return (
         <>
-            <StyledFieldset legend="Skjema for å legge til eller fjerne brevmottaker" hideLegend>
+            <StyledFieldset legend="Skjema for manuell registrering av brevmottaker" hideLegend>
                 <FamilieInput
                     {...skjema.felter.navn.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                    erLesevisning={erLesevisning}
                     label={'Navn'}
                     onChange={(event): void => {
                         skjema.felter.navn.validerOgSettFelt(event.target.value);
@@ -48,7 +44,6 @@ const BrevmottakerSkjema: React.FC = () => {
                 />
                 <FamilieInput
                     {...skjema.felter.adresselinje1.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                    erLesevisning={erLesevisning}
                     label={'Adresselinje 1'}
                     onChange={(event): void => {
                         skjema.felter.adresselinje1.validerOgSettFelt(event.target.value);
@@ -56,7 +51,6 @@ const BrevmottakerSkjema: React.FC = () => {
                 />
                 <FamilieInput
                     {...skjema.felter.adresselinje2.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                    erLesevisning={erLesevisning}
                     label={'Adresselinje 2 (valgfri)'}
                     onChange={(event): void => {
                         skjema.felter.adresselinje2.validerOgSettFelt(event.target.value);
@@ -67,7 +61,6 @@ const BrevmottakerSkjema: React.FC = () => {
                         {...skjema.felter.postnummer.hentNavBaseSkjemaProps(
                             skjema.visFeilmeldinger
                         )}
-                        erLesevisning={erLesevisning}
                         label={'Postnummer'}
                         onChange={(event): void => {
                             skjema.felter.postnummer.validerOgSettFelt(event.target.value);
@@ -75,7 +68,6 @@ const BrevmottakerSkjema: React.FC = () => {
                     />
                     <FamilieInput
                         {...skjema.felter.poststed.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                        erLesevisning={erLesevisning}
                         label={'Poststed'}
                         onChange={(event): void => {
                             skjema.felter.poststed.validerOgSettFelt(event.target.value);
@@ -92,7 +84,6 @@ const BrevmottakerSkjema: React.FC = () => {
                             : undefined
                     }
                     values={skjema.felter.land.verdi}
-                    isDisabled={erLesevisning}
                     onOptionSelected={(land: { alpha2: string }) => {
                         skjema.felter.land.validerOgSettFelt(land.alpha2);
                     }}

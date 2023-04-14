@@ -87,12 +87,11 @@ export const LeggTilEndreBrevmottakerModal: React.FC<Props> = ({ brevmottakerId 
             </StyledHeading>
             <FlexContainer>
                 <StyledFieldset
-                    legend="Skjema for å legge til eller fjerne brevmottaker"
+                    legend="Skjema for å legge til eller redigere brevmottaker"
                     hideLegend
                 >
                     <MottakerSelect
                         {...skjema.felter.mottaker.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                        //erLesevisning={erLesevisning}
                         label="Mottaker"
                         onChange={(event): void => {
                             const nyMottakerType = event.target.value as MottakerType;
