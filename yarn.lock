@@ -1912,7 +1912,20 @@
     classnames "^2.3.1"
     prop-types "^15.8.1"
 
-"@navikt/land-verktoy@3.2.10":
+"@navikt/flagg-ikoner@^3.2.7":
+  version "3.2.7"
+  resolved "https://npm.pkg.github.com/download/@navikt/flagg-ikoner/3.2.7/14809a69ed573ebe9ae05666b25b23a70bd9286c#14809a69ed573ebe9ae05666b25b23a70bd9286c"
+  integrity sha512-ENe/LokFTw1/ihJ+trQeb0ta0b+plj9I4kjIAR7Pd9tyNMtOHd/X+H0S2tQxDznwzyM6nd6uPh09sSQgxB1bLg==
+  dependencies:
+    svg-country-flags "^1.2.10"
+    uuid "^9.0.0"
+
+"@navikt/hoykontrast@^3.1.3":
+  version "3.1.3"
+  resolved "https://npm.pkg.github.com/download/@navikt/hoykontrast/3.1.3/43802c32f4977c987c0b25191741694ec1027fd8#43802c32f4977c987c0b25191741694ec1027fd8"
+  integrity sha512-SymfAjW4K+gXTbMcP1rSeahkSlNM2K0l2np8U4Dkd3njKXD3AD53zW+zpVUiVyOmOCrpFbIPYUnbO3r8bqPIQQ==
+
+"@navikt/land-verktoy@^3.2.10":
   version "3.2.10"
   resolved "https://npm.pkg.github.com/download/@navikt/land-verktoy/3.2.10/e77121939d18b82cb96a4eca7f208e4a37d714b5#e77121939d18b82cb96a4eca7f208e4a37d714b5"
   integrity sha512-NsWuQLO0FxpMH6ElOx+SU9szWA2aA1twxmhry6oUttItuY4t4tC7XKzBll0fVuB/+5Rmv8h50adcLjWPUywPZQ==
@@ -1920,6 +1933,11 @@
     "@piotrgorecki/i18n-currency-name" "^1.3.0"
     country-data-list "^1.2.2"
     i18n-iso-countries "^7.5.0"
+
+"@navikt/landvelger@^3.1.5":
+  version "3.1.5"
+  resolved "https://npm.pkg.github.com/download/@navikt/landvelger/3.1.5/4ffd24c5cd50cc60f9140f29027ecd7643e5d088#4ffd24c5cd50cc60f9140f29027ecd7643e5d088"
+  integrity sha512-Ij4NzV7ZPUxWfwTEbnkpSsBPrmYW93lYluYNfdaS+CKcE999YC/MQvpiVs3keO751+VXREqb80pONSEJYmdzsQ==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -9385,6 +9403,11 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
+
+svg-country-flags@^1.2.10:
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/svg-country-flags/-/svg-country-flags-1.2.10.tgz#b1b94e9f08f065d7b3d0ff9ab359898edd4dd3b0"
+  integrity sha512-xrqwo0TYf/h2cfPvGpjdSuSguUbri4vNNizBnwzoZnX0xGo3O5nGJMlbYEp7NOYcnPGBm6LE2axqDWSB847bLw==
 
 svgo@^2.7.0:
   version "2.8.0"

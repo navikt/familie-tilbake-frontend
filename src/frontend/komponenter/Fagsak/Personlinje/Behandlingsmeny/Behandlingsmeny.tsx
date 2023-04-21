@@ -14,6 +14,7 @@ import { IFagsak } from '../../../../typer/fagsak';
 import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
+import LeggTilFjernBrevmottakere from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
 import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
 import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
@@ -88,12 +89,22 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                             onListElementClick={() => settVisMeny(false)}
                                         />
                                     </li>
-                                    <li>
-                                        <OpprettFjernVerge
-                                            behandling={behandling.data}
-                                            onListElementClick={() => settVisMeny(false)}
-                                        />
-                                    </li>
+                                    {behandling.data.støtterManuelleBrevmottakere ? (
+                                        <li>
+                                            <LeggTilFjernBrevmottakere
+                                                behandling={behandling.data}
+                                                fagsak={fagsak}
+                                                onListElementClick={() => settVisMeny(false)}
+                                            />
+                                        </li>
+                                    ) : (
+                                        <li>
+                                            <OpprettFjernVerge
+                                                behandling={behandling.data}
+                                                onListElementClick={() => settVisMeny(false)}
+                                            />
+                                        </li>
+                                    )}
                                     {!venterPåKravgrunnlag &&
                                         (behandling.data.erBehandlingPåVent || ventegrunn ? (
                                             <li>
