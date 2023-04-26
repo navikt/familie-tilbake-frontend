@@ -81,6 +81,7 @@ const ba_behandling_4: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
+    brevmottakere: [],
 };
 
 const ba_behandling_5: IBehandling = {
@@ -118,6 +119,7 @@ const ba_behandling_5: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
+    brevmottakere: [],
 };
 
 export { fagsak_ba2, ba_behandling_4, ba_behandling_5 };

@@ -7,6 +7,12 @@ export enum Målform {
     NN = 'NN',
 }
 
+export enum FagsakType {
+    NORMAL = 'NORMAL',
+    BARN_ENSLIG_MINDREÅRIG = 'BARN_ENSLIG_MINDREÅRIG',
+    INSTITUSJON = 'INSTITUSJON',
+}
+
 export const målform: Record<Målform, string> = {
     NB: 'Bokmål',
     NN: 'Nynorsk',

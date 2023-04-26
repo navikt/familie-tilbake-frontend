@@ -65,8 +65,8 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         })
             .then((hentetBehandling: Ressurs<IBehandling>) => {
                 if (hentetBehandling.status === RessursStatus.SUKSESS) {
-                    const erILeseModus =
-                        hentetBehandling.data.status === Behandlingstatus.AVSLUTTET ||
+                    const erILeseModus = false;
+                    /*  hentetBehandling.data.status === Behandlingstatus.AVSLUTTET ||
                         hentetBehandling.data.erBehandlingPåVent ||
                         hentetBehandling.data.kanEndres === false ||
                         hentetBehandling.data.behandlingsstegsinfo.some(
@@ -77,7 +77,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                                         Behandlingsstegstatus.TILBAKEFØRT) ||
                                 (stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
                                     stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR)
-                        );
+                        ); */
                     settBehandlingILesemodus(erILeseModus);
 
                     const harFåttKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo.some(
@@ -173,6 +173,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
 
     return {
         behandling,
+        settBehandling,
         hentBehandlingMedEksternBrukId,
         hentBehandlingMedBehandlingId,
         behandlingILesemodus,

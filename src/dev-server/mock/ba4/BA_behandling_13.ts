@@ -49,6 +49,7 @@ const ba_behandling_13: IBehandling = {
             tidsfrist: dayIn21Days(),
         },
     ],
+    brevmottakere: [],
 };
 
 export { ba_behandling_13 };

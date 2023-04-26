@@ -15,6 +15,7 @@ import {
     IBehandling,
 } from '../../../typer/behandling';
 import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+// import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
 import VedtakPerioder from './VedtakPerioder';
@@ -73,6 +74,12 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
 
+    const harManuelleBrevmottakere = behandling.harManuelleBrevmottakere;
+    /* const { minimalFagsak: minimalFagsakRessurs } = useFagsakContext();
+    const personer = behandling?.personer ?? [];
+    const brevmottakere = behandling?.brevmottakere ?? [];
+    const minimalFagsak = hentDataFraRessurs(minimalFagsakRessurs); */
+
     React.useEffect(() => {
         // console.log('bør no trigge re-rendring');
     }, [nonUsedKey]);
@@ -118,6 +125,19 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                             }
                         />
                         <Spacer20 />
+                    </>
+                )}
+                {harManuelleBrevmottakere && (
+                    <>
+                        {/*
+                        <BrevmottakereAlert
+                          brevmottakere={brevmottakere}
+                          institusjon={minimalFagsak?.institusjon}
+                          personer={personer}
+                          åpenBehandling={behandling}
+                          fagsakType={minimalFagsak?.fagsakType}
+                        />
+                        <Spacer20 /> */}
                     </>
                 )}
                 <DetailBold size="small">Resultat</DetailBold>
