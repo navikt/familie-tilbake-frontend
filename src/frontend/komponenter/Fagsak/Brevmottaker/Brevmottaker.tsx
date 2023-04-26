@@ -2,11 +2,12 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-import { Delete } from '@navikt/ds-icons';
+import { Delete, Edit } from '@navikt/ds-icons';
 import { Button, Heading } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import CountryData from '@navikt/land-verktoy';
 
+import { useBehandling } from '../../../context/BehandlingContext';
 import { IBrevmottaker, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
 
@@ -24,8 +25,8 @@ const StyledDiv = styled.div`
 const DefinitionList = styled.dl`
     display: grid;
     grid-gap: 1rem;
-    grid-template-columns: 10rem 20rem;
-    margin-left: 1rem;
+    grid-template-columns: 10.5rem 20rem;
+    margin-left: 0.2rem;
 
     dt {
         font-weight: ${AFontWeightBold};
@@ -43,7 +44,8 @@ interface IProps {
 }
 
 const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevisning }) => {
-    const { fjernBrevMottakerOgOppdaterState } = useBrevmottaker();
+    const { fjernBrevMottakerOgOppdaterState, settBrevmottakerTilEndring } = useBrevmottaker();
+    const { settVisBrevmottakerModal } = useBehandling();
     const land = brevmottaker.manuellAdresseInfo
         ? CountryData.getCountryInstance('nb').findByValue(brevmottaker.manuellAdresseInfo.landkode)
         : undefined;
@@ -93,6 +95,19 @@ const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevi
                     </>
                 )}
             </DefinitionList>
+            {!erLesevisning && brevmottaker.type !== MottakerType.BRUKER && (
+                <Button
+                    variant={'tertiary'}
+                    onClick={() => {
+                        settBrevmottakerTilEndring(brevmottakerId);
+                        settVisBrevmottakerModal(true);
+                    }}
+                    size={'small'}
+                    icon={<Edit />}
+                >
+                    {'Endre'}
+                </Button>
+            )}
         </StyledDiv>
     );
 };

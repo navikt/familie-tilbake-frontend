@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import styled from 'styled-components';
 
 import { Button, Fieldset, Heading, Label, Modal, Radio, RadioGroup } from '@navikt/ds-react';
 import { ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { FamilieSelect } from '@navikt/familie-form-elements';
+import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import {
+    AdresseKilde,
+    adresseKilder,
+    MottakerType,
+    mottakerTypeVisningsnavn,
+} from '../../../typer/Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
 import BrevmottakerSkjema from './BrevmottakerSkjema';
 
@@ -45,34 +50,42 @@ const ModalKnapperad = styled.div`
     gap: 1rem;
 `;
 
-interface Props {
-    brevmottakerId?: string;
-}
+const kanMottakerTypeHaAdresseKilde = (mottakerType: MottakerType, adresseKilde: AdresseKilde) =>
+    mottakerType === MottakerType.FULLMEKTIG ||
+    adresseKilde === AdresseKilde.MANUELL_REGISTRERING ||
+    (mottakerType !== MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE &&
+        adresseKilde !== AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER);
 
-enum AdresseKilde {
-    MANUELL_REGISTRERING = 'MANUELL_REGISTRERING',
-    OPPSLAG_REGISTER = 'OPPSLAG_REGISTER',
-    OPPSLAG_ORGANISASJONSREGISTER = 'OPPSLAG_ORGANISASJONSREGISTER',
-    UDEFINERT = 'UDEFINERT',
-}
-
-const adresseKilder: Record<AdresseKilde, string> = {
-    MANUELL_REGISTRERING: 'Manuell registrering',
-    OPPSLAG_REGISTER: 'Oppslag i register',
-    OPPSLAG_ORGANISASJONSREGISTER: 'Oppslag i organisasjonsregister',
-    UDEFINERT: 'Udefinert',
-};
-
-export const LeggTilEndreBrevmottakerModal: React.FC<Props> = ({ brevmottakerId }: Props) => {
-    const heading = !brevmottakerId ? 'Legg til brevmottaker' : 'Endre brevmottaker';
+export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     const { visBrevmottakerModal, settVisBrevmottakerModal } = useBehandling();
-    const { skjema, nullstillSkjema, valideringErOk, lagreBrevmottakerOgOppdaterState } =
-        useBrevmottaker();
-    const [adresseKilde, settAdresseKilde] = useState<AdresseKilde>(AdresseKilde.UDEFINERT);
+    const {
+        skjema,
+        nullstillSkjema,
+        adresseKilde,
+        settAdresseKilde,
+        valideringErOk,
+        settVisfeilmeldinger,
+        lagreBrevmottakerOgOppdaterState,
+        brevmottakerTilEndring,
+        settBrevmottakerTilEndring,
+    } = useBrevmottaker();
+
+    const heading = brevmottakerTilEndring ? 'Endre brevmottaker' : 'Legg til brevmottaker';
     const lukkModal = () => {
         settVisBrevmottakerModal(false);
         settAdresseKilde(AdresseKilde.UDEFINERT);
+        settBrevmottakerTilEndring(undefined);
         nullstillSkjema();
+    };
+
+    const nullstillManuellAdresseInput = () => {
+        skjema.felter.navn.nullstill();
+        skjema.felter.adresselinje1.nullstill();
+        skjema.felter.adresselinje2.nullstill();
+        skjema.felter.postnummer.nullstill();
+        skjema.felter.poststed.nullstill();
+        skjema.felter.land.nullstill();
+        settVisfeilmeldinger(false);
     };
 
     return (
@@ -96,6 +109,10 @@ export const LeggTilEndreBrevmottakerModal: React.FC<Props> = ({ brevmottakerId 
                         onChange={(event): void => {
                             const nyMottakerType = event.target.value as MottakerType;
                             skjema.felter.mottaker.validerOgSettFelt(nyMottakerType);
+                            if (!kanMottakerTypeHaAdresseKilde(nyMottakerType, adresseKilde)) {
+                                settAdresseKilde(AdresseKilde.UDEFINERT);
+                                nullstillManuellAdresseInput();
+                            }
                         }}
                     >
                         <option value={''} disabled={true}>
@@ -115,7 +132,10 @@ export const LeggTilEndreBrevmottakerModal: React.FC<Props> = ({ brevmottakerId 
                             <RadioGroup
                                 legend={<Label>Adresse</Label>}
                                 value={adresseKilde}
-                                onChange={(val: AdresseKilde) => settAdresseKilde(val)}
+                                onChange={(val: AdresseKilde) => {
+                                    settAdresseKilde(val);
+                                    nullstillManuellAdresseInput();
+                                }}
                             >
                                 <Radio
                                     name={'manuellRegistrering'}
@@ -145,6 +165,44 @@ export const LeggTilEndreBrevmottakerModal: React.FC<Props> = ({ brevmottakerId 
                     {(adresseKilde === AdresseKilde.MANUELL_REGISTRERING ||
                         skjema.felter.mottaker.verdi ===
                             MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE) && <BrevmottakerSkjema />}
+                    {adresseKilde === AdresseKilde.OPPSLAG_REGISTER && (
+                        <FamilieInput
+                            {...skjema.felter.fødselsnummer.hentNavBaseSkjemaProps(
+                                skjema.visFeilmeldinger
+                            )}
+                            label={'Fødselsnummer'}
+                            onChange={(event): void => {
+                                skjema.felter.fødselsnummer.validerOgSettFelt(event.target.value);
+                            }}
+                        />
+                    )}
+                    {adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER && (
+                        <>
+                            <FamilieInput
+                                {...skjema.felter.organisasjonsnummer.hentNavBaseSkjemaProps(
+                                    skjema.visFeilmeldinger
+                                )}
+                                label={'Organisasjonsnummer'}
+                                onChange={(event): void => {
+                                    skjema.felter.organisasjonsnummer.validerOgSettFelt(
+                                        event.target.value
+                                    );
+                                }}
+                            />
+                            <FamilieInput
+                                {...skjema.felter.navn.hentNavBaseSkjemaProps(
+                                    skjema.visFeilmeldinger
+                                )}
+                                label={'Kontaktperson i organisasjonen'}
+                                description={
+                                    'Navnet vises etter organisasjonsnavnet slik “Organisasjon AS v/ Navn Navnesen”'
+                                }
+                                onChange={(event): void => {
+                                    skjema.felter.navn.validerOgSettFelt(event.target.value);
+                                }}
+                            />
+                        </>
+                    )}
                 </StyledFieldset>
                 <ModalKnapperad>
                     <>
@@ -153,10 +211,10 @@ export const LeggTilEndreBrevmottakerModal: React.FC<Props> = ({ brevmottakerId 
                             loading={skjema.submitRessurs.status === RessursStatus.HENTER}
                             disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
                             onClick={() =>
-                                lagreBrevmottakerOgOppdaterState(brevmottakerId, lukkModal)
+                                lagreBrevmottakerOgOppdaterState(brevmottakerTilEndring, lukkModal)
                             }
                         >
-                            Legg til mottaker
+                            {brevmottakerTilEndring ? 'Lagre endringer' : 'Legg til'}
                         </Button>
                         <Button variant="tertiary" onClick={lukkModal}>
                             Avbryt
