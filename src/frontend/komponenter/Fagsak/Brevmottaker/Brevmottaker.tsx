@@ -24,7 +24,8 @@ const StyledDiv = styled.div`
 
 const DefinitionList = styled.dl`
     display: grid;
-    grid-gap: 1rem;
+    row-gap: 1rem;
+    column-gap: 2rem;
     grid-template-columns: 10.5rem 20rem;
     margin-left: 0.2rem;
 
@@ -49,6 +50,7 @@ const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevi
     const land = brevmottaker.manuellAdresseInfo
         ? CountryData.getCountryInstance('nb').findByValue(brevmottaker.manuellAdresseInfo.landkode)
         : undefined;
+    const [organisasjonsnavn, kontaktperson] = brevmottaker.navn.split(' v/ ');
 
     return (
         <StyledDiv>
@@ -66,18 +68,29 @@ const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevi
                 )}
             </FlexDiv>
             <DefinitionList>
-                <dt>Navn</dt>
-                <dd>{brevmottaker.navn}</dd>
+                {brevmottaker.organisasjonsnummer ? (
+                    <>
+                        {kontaktperson && (
+                            <>
+                                <dt>Kontaktperson</dt>
+                                <dd>{kontaktperson}</dd>
+                            </>
+                        )}
+                        <dt>Organisasjonsnummer</dt>
+                        <dd>{brevmottaker.organisasjonsnummer}</dd>
+                        <dt>Organisasjonsnavn</dt>
+                        <dd>{organisasjonsnavn}</dd>
+                    </>
+                ) : (
+                    <>
+                        <dt>Navn</dt>
+                        <dd>{brevmottaker.navn}</dd>
+                    </>
+                )}
                 {brevmottaker.personIdent && (
                     <>
                         <dt>Fødselsnummer</dt>
                         <dd>{brevmottaker.personIdent}</dd>
-                    </>
-                )}
-                {brevmottaker.organisasjonsnummer && (
-                    <>
-                        <dt>Organisasjonsnummer</dt>
-                        <dd>{brevmottaker.organisasjonsnummer}</dd>
                     </>
                 )}
                 {brevmottaker.manuellAdresseInfo && (

@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-import { Fieldset, Label } from '@navikt/ds-react';
+import { Fieldset } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieInput } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
@@ -30,41 +30,24 @@ const StyledFieldset = styled(Fieldset)`
     }
 `;
 
-const BrevmottakerSkjema: React.FC = () => {
-    const { skjema, bruker } = useBrevmottaker();
-    const [mottakerErBruker, settMottakerErBruker] = React.useState(false);
-    React.useEffect(() => {
-        if (
-            skjema.felter.mottaker.verdi === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
-            skjema.felter.mottaker.verdi === MottakerType.DØDSBO
-        ) {
-            skjema.felter.navn.validerOgSettFelt(bruker.navn);
-            settMottakerErBruker(true);
-        } else {
-            mottakerErBruker && skjema.felter.navn.nullstill();
-            settMottakerErBruker(false);
-        }
-    }, [skjema.felter.mottaker.verdi]);
+interface IProps {
+    mottakerErBruker: boolean;
+}
+
+const BrevmottakerSkjema: React.FC<IProps> = ({ mottakerErBruker }) => {
+    const { skjema } = useBrevmottaker();
 
     return (
         <>
             <StyledFieldset legend="Skjema for manuell registrering av brevmottaker" hideLegend>
-                {mottakerErBruker ? (
-                    <>
-                        <Label>Navn</Label>
-                        <ul>
-                            <li key="bruker">{bruker.navn}</li>
-                        </ul>
-                    </>
-                ) : (
-                    <FamilieInput
-                        {...skjema.felter.navn.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                        label={'Navn'}
-                        onChange={(event): void => {
-                            skjema.felter.navn.validerOgSettFelt(event.target.value);
-                        }}
-                    />
-                )}
+                <FamilieInput
+                    {...skjema.felter.navn.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
+                    label={'Navn'}
+                    erLesevisning={mottakerErBruker}
+                    onChange={(event): void => {
+                        skjema.felter.navn.validerOgSettFelt(event.target.value);
+                    }}
+                />
                 <FamilieInput
                     {...skjema.felter.adresselinje1.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                     label={'Adresselinje 1'}

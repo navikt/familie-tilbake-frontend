@@ -50,11 +50,9 @@ const ModalKnapperad = styled.div`
     gap: 1rem;
 `;
 
-const kanMottakerTypeHaAdresseKilde = (mottakerType: MottakerType, adresseKilde: AdresseKilde) =>
-    mottakerType === MottakerType.FULLMEKTIG ||
-    adresseKilde === AdresseKilde.MANUELL_REGISTRERING ||
-    (mottakerType !== MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE &&
-        adresseKilde !== AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER);
+const erMottakerBruker = (mottakerType: MottakerType) =>
+    mottakerType === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
+    mottakerType === MottakerType.DØDSBO;
 
 export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     const { visBrevmottakerModal, settVisBrevmottakerModal } = useBehandling();
@@ -68,9 +66,25 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         lagreBrevmottakerOgOppdaterState,
         brevmottakerTilEndring,
         settBrevmottakerTilEndring,
+        bruker,
     } = useBrevmottaker();
 
     const heading = brevmottakerTilEndring ? 'Endre brevmottaker' : 'Legg til brevmottaker';
+    const [mottakerErBruker, settMottakerErBruker] = React.useState(
+        skjema.felter.mottaker.verdi ? erMottakerBruker(skjema.felter.mottaker.verdi) : false
+    );
+
+    React.useEffect(() => {
+        if (skjema.felter.mottaker.verdi && erMottakerBruker(skjema.felter.mottaker.verdi)) {
+            settMottakerErBruker(true);
+            skjema.felter.navn.validerOgSettFelt(bruker.navn);
+            settAdresseKilde(AdresseKilde.MANUELL_REGISTRERING);
+        } else {
+            mottakerErBruker && skjema.felter.navn.nullstill();
+            settMottakerErBruker(false);
+        }
+    }, [skjema.felter.mottaker.verdi]);
+
     const lukkModal = () => {
         settVisBrevmottakerModal(false);
         settAdresseKilde(AdresseKilde.UDEFINERT);
@@ -109,9 +123,8 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                         onChange={(event): void => {
                             const nyMottakerType = event.target.value as MottakerType;
                             skjema.felter.mottaker.validerOgSettFelt(nyMottakerType);
-                            if (!kanMottakerTypeHaAdresseKilde(nyMottakerType, adresseKilde)) {
+                            if (adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER) {
                                 settAdresseKilde(AdresseKilde.UDEFINERT);
-                                nullstillManuellAdresseInput();
                             }
                         }}
                     >
@@ -126,45 +139,43 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                 </option>
                             ))}
                     </MottakerSelect>
-                    {skjema.felter.mottaker.verdi &&
-                        skjema.felter.mottaker.verdi !==
-                            MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE && (
-                            <RadioGroup
-                                legend={<Label>Adresse</Label>}
-                                value={adresseKilde}
-                                onChange={(val: AdresseKilde) => {
-                                    settAdresseKilde(val);
-                                    nullstillManuellAdresseInput();
-                                }}
+                    {skjema.felter.mottaker.verdi && !mottakerErBruker && (
+                        <RadioGroup
+                            legend={<Label>Adresse</Label>}
+                            value={adresseKilde}
+                            onChange={(val: AdresseKilde) => {
+                                settAdresseKilde(val);
+                                nullstillManuellAdresseInput();
+                            }}
+                        >
+                            <Radio
+                                name={'manuellRegistrering'}
+                                value={AdresseKilde.MANUELL_REGISTRERING}
+                                id={'manuell-registrering'}
                             >
+                                {adresseKilder[AdresseKilde.MANUELL_REGISTRERING]}
+                            </Radio>
+                            <Radio
+                                name={'oppslagRegister'}
+                                value={AdresseKilde.OPPSLAG_REGISTER}
+                                id={'oppslag-i-register'}
+                            >
+                                {adresseKilder[AdresseKilde.OPPSLAG_REGISTER]}
+                            </Radio>
+                            {skjema.felter.mottaker.verdi === MottakerType.FULLMEKTIG && (
                                 <Radio
-                                    name={'manuellRegistrering'}
-                                    value={AdresseKilde.MANUELL_REGISTRERING}
-                                    id={'manuell-registrering'}
+                                    name={'oppslagOrgRegister'}
+                                    value={AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER}
+                                    id={'oppslag-i-organisasjonsregister'}
                                 >
-                                    {adresseKilder[AdresseKilde.MANUELL_REGISTRERING]}
+                                    {adresseKilder[AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER]}
                                 </Radio>
-                                <Radio
-                                    name={'oppslagRegister'}
-                                    value={AdresseKilde.OPPSLAG_REGISTER}
-                                    id={'oppslag-i-register'}
-                                >
-                                    {adresseKilder[AdresseKilde.OPPSLAG_REGISTER]}
-                                </Radio>
-                                {skjema.felter.mottaker.verdi === MottakerType.FULLMEKTIG && (
-                                    <Radio
-                                        name={'oppslagOrgRegister'}
-                                        value={AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER}
-                                        id={'oppslag-i-organisasjonsregister'}
-                                    >
-                                        {adresseKilder[AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER]}
-                                    </Radio>
-                                )}
-                            </RadioGroup>
-                        )}
-                    {(adresseKilde === AdresseKilde.MANUELL_REGISTRERING ||
-                        skjema.felter.mottaker.verdi ===
-                            MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE) && <BrevmottakerSkjema />}
+                            )}
+                        </RadioGroup>
+                    )}
+                    {adresseKilde === AdresseKilde.MANUELL_REGISTRERING && (
+                        <BrevmottakerSkjema mottakerErBruker={mottakerErBruker} />
+                    )}
                     {adresseKilde === AdresseKilde.OPPSLAG_REGISTER && (
                         <FamilieInput
                             {...skjema.felter.fødselsnummer.hentNavBaseSkjemaProps(
