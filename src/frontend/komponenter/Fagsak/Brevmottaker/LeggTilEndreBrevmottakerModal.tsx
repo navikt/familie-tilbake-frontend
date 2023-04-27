@@ -75,15 +75,21 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     );
 
     React.useEffect(() => {
-        if (skjema.felter.mottaker.verdi && erMottakerBruker(skjema.felter.mottaker.verdi)) {
-            settMottakerErBruker(true);
+        settMottakerErBruker(
+            skjema.felter.mottaker.verdi ? erMottakerBruker(skjema.felter.mottaker.verdi) : false
+        );
+    }, [skjema.felter.mottaker.verdi]);
+
+    React.useEffect(() => {
+        if (mottakerErBruker) {
             skjema.felter.navn.validerOgSettFelt(bruker.navn);
             settAdresseKilde(AdresseKilde.MANUELL_REGISTRERING);
+            nullstillManuellAdresseInput();
         } else {
-            mottakerErBruker && skjema.felter.navn.nullstill();
-            settMottakerErBruker(false);
+            settAdresseKilde(AdresseKilde.UDEFINERT);
+            nullstillManuellAdresseInput(true);
         }
-    }, [skjema.felter.mottaker.verdi]);
+    }, [mottakerErBruker]);
 
     const lukkModal = () => {
         settVisBrevmottakerModal(false);
@@ -92,8 +98,8 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         nullstillSkjema();
     };
 
-    const nullstillManuellAdresseInput = () => {
-        skjema.felter.navn.nullstill();
+    const nullstillManuellAdresseInput = (inkludertNavn?: boolean) => {
+        inkludertNavn && skjema.felter.navn.nullstill();
         skjema.felter.adresselinje1.nullstill();
         skjema.felter.adresselinje2.nullstill();
         skjema.felter.postnummer.nullstill();
@@ -124,6 +130,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                             const nyMottakerType = event.target.value as MottakerType;
                             skjema.felter.mottaker.validerOgSettFelt(nyMottakerType);
                             if (adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER) {
+                                // Skjuler input-feltet for orgnr for ny mottakertype != fullmektig
                                 settAdresseKilde(AdresseKilde.UDEFINERT);
                             }
                         }}
@@ -145,7 +152,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                             value={adresseKilde}
                             onChange={(val: AdresseKilde) => {
                                 settAdresseKilde(val);
-                                nullstillManuellAdresseInput();
+                                nullstillManuellAdresseInput(true);
                             }}
                         >
                             <Radio
