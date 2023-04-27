@@ -11,7 +11,7 @@ import type { IInstitusjon } from '../../../typer/fagsak';
 import type { IPerson } from '../../../typer/person';
 import BrevmottakerListe from '../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 
-export const BehandlingKorrigertAlert = styled(Alert)`
+export const StyledAlert = styled(Alert)`
     margin-bottom: 1.5rem;
 `;
 
@@ -33,7 +33,7 @@ export const BrevmottakereAlert: React.FC<Props> = ({
     return (
         <>
             {brevmottakere && brevmottakere.length !== 0 && (
-                <BehandlingKorrigertAlert variant="info">
+                <StyledAlert variant="info">
                     Brevmottaker(e) er endret, og vedtak sendes til:
                     <BrevmottakerListe
                         brevmottakere={brevmottakere}
@@ -48,7 +48,7 @@ export const BrevmottakereAlert: React.FC<Props> = ({
                     >
                         Se detaljer
                     </Button>
-                </BehandlingKorrigertAlert>
+                </StyledAlert>
             )}
         </>
     );

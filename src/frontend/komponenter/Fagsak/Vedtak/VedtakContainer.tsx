@@ -86,20 +86,21 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const hentBrevmottakere = () => {
         hentManuelleBrevmottakere(behandling.behandlingId).then(respons => {
             if (respons.status === RessursStatus.SUKSESS) {
-                const brevmottakere = respons.data.map(responseDto => {
+                console.log('SUKSESS');
+                const tmpBrevmottakere = respons.data.map(responseDto => {
                     return responseDto.brevmottaker;
                 });
-                settBrevmottakere(brevmottakere);
+                console.log('Brevmottakere', brevmottakere);
+                settBrevmottakere(tmpBrevmottakere);
+                console.log('Brevmottakere etter', brevmottakere);
             }
         });
     };
+
     React.useEffect(() => {
+        console.log('hentBrevmottakere');
         hentBrevmottakere();
     }, []);
-    /* const { minimalFagsak: minimalFagsakRessurs } = useFagsakContext();
-    const personer = behandling?.personer ?? [];
-    const brevmottakere = behandling?.brevmottakere ?? [];
-    const minimalFagsak = hentDataFraRessurs(minimalFagsakRessurs); */
 
     React.useEffect(() => {
         // console.log('bør no trigge re-rendring');
