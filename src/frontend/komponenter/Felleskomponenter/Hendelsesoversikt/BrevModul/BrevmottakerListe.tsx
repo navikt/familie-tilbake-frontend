@@ -1,82 +1,69 @@
 import React from 'react';
 
-import { FagsakType } from '../../../../typer/fagsak';
-import type { IInstitusjon } from '../../../../typer/institusjon-og-verge';
-import { type IGrunnlagPerson, PersonType } from '../../../../typer/person';
+import { IBrevmottaker, MottakerType } from '../../../../typer/Brevmottaker';
+import { IInstitusjon } from '../../../../typer/fagsak';
+import { IPerson } from '../../../../typer/person';
 import { formaterIdent, lagPersonLabel } from '../../../../utils/formatter';
-import {
-    type IRestBrevmottaker,
-    Mottaker,
-} from '../../../Fagsak/Personlinje/Behandlingsmeny/LeggTilEllerFjernBrevmottakere/useLeggTilFjernBrevmottaker';
 
 interface IProps {
-    personer: IGrunnlagPerson[];
+    bruker: IPerson;
     institusjon: IInstitusjon | undefined;
-    brevmottakere: IRestBrevmottaker[];
-    fagsakType?: FagsakType;
+    brevmottakere: IBrevmottaker[];
 }
 
-const BrevmottakerListe: React.FC<IProps> = ({
-    personer,
-    institusjon,
-    brevmottakere,
-    fagsakType,
-}) => {
+const BrevmottakerListe: React.FC<IProps> = ({ bruker, institusjon, brevmottakere }) => {
     const skalViseInstitusjon = !!institusjon;
     const harUtenlandskAdresse = brevmottakere.some(
-        mottaker => mottaker.type === Mottaker.BRUKER_MED_UTENLANDSK_ADRESSE
+        mottaker => mottaker.type === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
     );
-    const harFullmektig = brevmottakere.some(mottaker => mottaker.type === Mottaker.FULLMEKTIG);
-    const harVerge = brevmottakere.some(mottaker => mottaker.type === Mottaker.VERGE);
+    const harFullmektig = brevmottakere.some(mottaker => mottaker.type === MottakerType.FULLMEKTIG);
+    const harVerge = brevmottakere.some(mottaker => mottaker.type === MottakerType.VERGE);
     const harManuellDødsboadresse = brevmottakere.some(
-        mottaker => mottaker.type === Mottaker.DØDSBO
+        mottaker => mottaker.type === MottakerType.DØDSBO
     );
 
-    const søker = personer.find(person => person.type === PersonType.SØKER);
+    //const søker = personer.find(person => person.type === PersonType.SØKER);
     const skalViseSøker =
-        søker && !institusjon && !harManuellDødsboadresse && !harUtenlandskAdresse;
-
-    const skalViseEnsligMindreårig = fagsakType === FagsakType.BARN_ENSLIG_MINDREÅRIG;
+        bruker && !institusjon && !harManuellDødsboadresse && !harUtenlandskAdresse;
 
     return (
         <ul>
             {skalViseSøker && (
-                <li key="søker">{lagPersonLabel(søker.personIdent || '', personer)}</li>
-            )}
-            {skalViseEnsligMindreårig && (
-                <li key="barnet">
-                    {lagPersonLabel(
-                        personer.find(person => person.type === PersonType.BARN)?.personIdent || '',
-                        personer
-                    )}
-                </li>
+                <li key="søker">{lagPersonLabel(bruker.personIdent || '', bruker)}</li>
             )}
             {skalViseInstitusjon && (
                 <li key="institusjon">{`Institusjon | ${
                     institusjon.navn?.concat(' |') || ''
-                } ${formaterIdent(institusjon.orgNummer)}`}</li>
+                } ${formaterIdent(institusjon.organisasjonsnummer)}`}</li>
             )}
-            {harUtenlandskAdresse && !harFullmektig && søker && (
-                <li key="utenlandsk-adresse">
-                    {lagPersonLabel(søker.personIdent, personer)} | Utenlandsk adresse
-                </li>
-            )}
-            {harUtenlandskAdresse && harFullmektig && søker && (
-                <li key="kort-utenlandsk-adresse">
-                    {søker.navn} | {formaterIdent(søker.personIdent)} | Utenlandsk adresse
-                </li>
-            )}
-            {harManuellDødsboadresse && søker && <li key="dødsbo">{søker.navn} | Dødsbo</li>}
+            {harUtenlandskAdresse &&
+                brevmottakere
+                    .filter(
+                        mottaker => mottaker.type === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
+                    )
+                    .map((mottaker, index) => (
+                        <li key={`utenlandsk-adresse-${index}`}>
+                            {mottaker.navn} | Utenlandsk adresse
+                        </li>
+                    ))}
+            {harManuellDødsboadresse &&
+                brevmottakere
+                    .filter(mottaker => mottaker.type === MottakerType.DØDSBO)
+                    .map((mottaker, index) => (
+                        <li key={`doedsbo-${index}`}>{mottaker.navn} | Dødsbo</li>
+                    ))}
             {harFullmektig &&
                 brevmottakere
-                    .filter(mottaker => mottaker.type === Mottaker.FULLMEKTIG)
-                    .map(mottaker => (
-                        <li key={`fullmektig-${mottaker.id}`}>{mottaker.navn} | Fullmektig</li>
+                    .filter(mottaker => mottaker.type === MottakerType.FULLMEKTIG)
+                    .map((mottaker, index) => (
+                        <li key={`fullmektig-${index}`}>{mottaker.navn} | Fullmektig</li>
                     ))}
             {harVerge &&
                 brevmottakere
-                    .filter(mottaker => mottaker.type === Mottaker.VERGE)
-                    .map(mottaker => <li key={`verge-${mottaker.id}`}>{mottaker.navn} | Verge</li>)}
+                    .filter(mottaker => mottaker.type === MottakerType.VERGE)
+                    .map((mottaker, index) => (
+                        <li key={`verge-${index}`}>{mottaker.navn} | Verge</li>
+                    ))}
         </ul>
     );
 };

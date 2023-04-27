@@ -12,4 +12,9 @@ global.console = {
     // error: jest.fn(),
 };
 
-global.crypto = new Crypto();
+const crypto = new Crypto();
+Object.defineProperty(global, 'crypto', {
+    get() {
+        return crypto;
+    },
+});

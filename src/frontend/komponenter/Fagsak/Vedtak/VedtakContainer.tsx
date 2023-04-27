@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 
 import styled from 'styled-components';
 
@@ -6,6 +7,7 @@ import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing1, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { vedtaksresultater } from '../../../kodeverk';
 import {
@@ -14,8 +16,11 @@ import {
     Behandlingårsak,
     IBehandling,
 } from '../../../typer/behandling';
+import { IBrevmottaker } from '../../../typer/Brevmottaker';
+import { IFagsak } from '../../../typer/fagsak';
 import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
-// import { BrevmottakereAlert } from './BrevmottakereAlert';
+import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
 import VedtakPerioder from './VedtakPerioder';
@@ -50,9 +55,10 @@ const KnappeDiv = styled.div`
 
 interface IProps {
     behandling: IBehandling;
+    fagsak: IFagsak;
 }
 
-const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
+const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const {
         feilutbetalingVedtaksbrevavsnitt,
         beregningsresultat,
@@ -66,6 +72,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
         lagreUtkast,
     } = useFeilutbetalingVedtak();
     const { behandlingILesemodus, aktivtSteg } = useBehandling();
+    const { hentManuelleBrevmottakere } = useBehandlingApi();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA =
         behandling.behandlingsårsakstype === Behandlingårsak.REVURDERING_KLAGE_KA;
@@ -74,7 +81,21 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
 
-    const harManuelleBrevmottakere = behandling.harManuelleBrevmottakere;
+    // const brevmottakere: IBrevmottaker[] = [];
+    const [brevmottakere, settBrevmottakere] = useState<IBrevmottaker[]>([]);
+    const hentBrevmottakere = () => {
+        hentManuelleBrevmottakere(behandling.behandlingId).then(respons => {
+            if (respons.status === RessursStatus.SUKSESS) {
+                const brevmottakere = respons.data.map(responseDto => {
+                    return responseDto.brevmottaker;
+                });
+                settBrevmottakere(brevmottakere);
+            }
+        });
+    };
+    React.useEffect(() => {
+        hentBrevmottakere();
+    }, []);
     /* const { minimalFagsak: minimalFagsakRessurs } = useFagsakContext();
     const personer = behandling?.personer ?? [];
     const brevmottakere = behandling?.brevmottakere ?? [];
@@ -127,17 +148,15 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                         <Spacer20 />
                     </>
                 )}
-                {harManuelleBrevmottakere && (
+                {behandling.harManuelleBrevmottakere && (
                     <>
-                        {/*
                         <BrevmottakereAlert
-                          brevmottakere={brevmottakere}
-                          institusjon={minimalFagsak?.institusjon}
-                          personer={personer}
-                          åpenBehandling={behandling}
-                          fagsakType={minimalFagsak?.fagsakType}
+                            brevmottakere={brevmottakere}
+                            institusjon={fagsak?.institusjon}
+                            bruker={fagsak.bruker}
+                            linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`}
                         />
-                        <Spacer20 /> */}
+                        <Spacer20 />
                     </>
                 )}
                 <DetailBold size="small">Resultat</DetailBold>

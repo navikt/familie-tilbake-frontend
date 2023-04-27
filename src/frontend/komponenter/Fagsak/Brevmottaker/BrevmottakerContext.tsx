@@ -7,6 +7,7 @@ import { feil, ok, useFelt, useSkjema } from '@navikt/familie-skjema';
 import { byggHenterRessurs, type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../api/behandling';
+import { Vergetype } from '../../../kodeverk/verge';
 import { IBehandling } from '../../../typer/behandling';
 import { IBrevmottaker, MottakerType } from '../../../typer/Brevmottaker';
 import { IFagsak } from '../../../typer/fagsak';
@@ -165,12 +166,13 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             skjemanavn: 'Legg til eller endre brevmottaker',
         });
 
-        const lagreBrevmottakerOgOppdaterState = (mottakerId?: string) => {
+        const lagreBrevmottakerOgOppdaterState = (mottakerId?: string, lukkModal?: () => void) => {
             if (kanSendeSkjema()) {
                 settSubmitRessurs(byggHenterRessurs());
                 settVisfeilmeldinger(false);
+                const type = skjema.felter.mottaker.verdi as MottakerType;
                 const manuellBrevmottakerRequest: IBrevmottaker = {
-                    type: skjema.felter.mottaker.verdi as MottakerType,
+                    type: type,
                     navn: skjema.felter.navn.verdi,
                     manuellAdresseInfo: {
                         adresselinje1: skjema.felter.adresselinje1.verdi,
@@ -182,7 +184,11 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                         poststed: skjema.felter.poststed.verdi,
                         landkode: skjema.felter.land.verdi,
                     },
+                    ...((type === MottakerType.VERGE || type === MottakerType.FULLMEKTIG) && {
+                        vergetype: Vergetype.UDEFINERT,
+                    }),
                 };
+
                 onSubmit(
                     {
                         method: mottakerId ? 'PUT' : 'POST',
@@ -195,7 +201,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                         if (response.status === RessursStatus.SUKSESS) {
                             const id = mottakerId || response.data;
                             leggTilEllerOppdaterBrevmottaker(id, manuellBrevmottakerRequest);
-                            nullstillSkjema();
+                            lukkModal ? lukkModal() : nullstillSkjema();
                         }
                     }
                 );
@@ -224,6 +230,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             behandling,
             brevmottakere,
             skjema,
+            nullstillSkjema,
             valideringErOk,
             lagreBrevmottakerOgOppdaterState,
             fjernBrevMottakerOgOppdaterState,

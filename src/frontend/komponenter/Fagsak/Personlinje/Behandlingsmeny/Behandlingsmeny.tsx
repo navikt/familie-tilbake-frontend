@@ -14,6 +14,7 @@ import { IFagsak } from '../../../../typer/fagsak';
 import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
+import LeggTilFjernBrevmottakere from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
 import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
 import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
@@ -36,14 +37,14 @@ interface IProps {
 }
 
 const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
-    const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
+    const { behandling, ventegrunn } = useBehandling(); // erStegBehandlet, aktivtSteg
     const [visMeny, settVisMeny] = React.useState<boolean>(false);
     const buttonRef = React.useRef(null);
 
     const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.GRUNNLAG;
-    const vedtakFattetEllerFattes =
+    /* const vedtakFattetEllerFattes =
         erStegBehandlet(Behandlingssteg.FATTE_VEDTAK) ||
-        aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK;
+        aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK; */
 
     return (
         <>
@@ -77,9 +78,7 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                             </li>
                         )}
                         {behandling?.status === RessursStatus.SUKSESS &&
-                            behandling.data.status !== Behandlingstatus.AVSLUTTET &&
-                            !vedtakFattetEllerFattes &&
-                            behandling.data.kanEndres && (
+                            behandling.data.status !== Behandlingstatus.AVSLUTTET && (
                                 <>
                                     <li>
                                         <HenleggBehandling
@@ -88,12 +87,22 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                             onListElementClick={() => settVisMeny(false)}
                                         />
                                     </li>
-                                    <li>
-                                        <OpprettFjernVerge
-                                            behandling={behandling.data}
-                                            onListElementClick={() => settVisMeny(false)}
-                                        />
-                                    </li>
+                                    {behandling.data.støtterManuelleBrevmottakere ? (
+                                        <li>
+                                            <LeggTilFjernBrevmottakere
+                                                behandling={behandling.data}
+                                                fagsak={fagsak}
+                                                onListElementClick={() => settVisMeny(false)}
+                                            />
+                                        </li>
+                                    ) : (
+                                        <li>
+                                            <OpprettFjernVerge
+                                                behandling={behandling.data}
+                                                onListElementClick={() => settVisMeny(false)}
+                                            />
+                                        </li>
+                                    )}
                                     {!venterPåKravgrunnlag &&
                                         (behandling.data.erBehandlingPåVent || ventegrunn ? (
                                             <li>

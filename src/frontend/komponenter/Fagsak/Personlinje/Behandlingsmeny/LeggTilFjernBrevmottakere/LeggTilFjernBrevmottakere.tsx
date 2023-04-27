@@ -5,34 +5,56 @@ import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { Behandlingssteg, IBehandling } from '../../../../../typer/behandling';
+import {
+    Behandlingssteg,
+    Behandlingsstegstatus,
+    IBehandling,
+} from '../../../../../typer/behandling';
+import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
+import { sider } from '../../../../Felleskomponenter/Venstremeny/sider';
 
 interface IProps {
     behandling: IBehandling;
+    fagsak: IFagsak;
     onListElementClick: () => void;
 }
 
-const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick }) => {
-    const [visModal, settVisModal] = React.useState<boolean>(false);
+const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
+    behandling,
+    fagsak,
+    onListElementClick,
+}) => {
+    const [visFjernModal, settVisFjernModal] = React.useState<boolean>(false);
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string>();
-    const { hentBehandlingMedBehandlingId, aktivtSteg, behandlingILesemodus } = useBehandling();
+    const { hentBehandlingMedBehandlingId, behandlingILesemodus, settVisBrevmottakerModal } =
+        useBehandling();
     const { request } = useHttp();
 
-    const kanFjerneVerge =
-        behandling.harVerge || aktivtSteg?.behandlingssteg === Behandlingssteg.VERGE;
+    const kanFjerneManuelleBrevmottakere =
+        behandling.harManuelleBrevmottakere ||
+        behandling.behandlingsstegsinfo.some(
+            steg =>
+                steg.behandlingssteg === Behandlingssteg.BREVMOTTAKER &&
+                steg.behandlingsstegstatus !== Behandlingsstegstatus.TILBAKEFØRT
+        );
 
-    const opprettVerge = () => {
+    const opprettBrevmottakerSteg = () => {
+        settSenderInn(true);
         request<void, string>({
             method: 'POST',
-            url: `/familie-tilbake/api/behandling/v1/${behandling.behandlingId}/verge`,
+            url: `/familie-tilbake/api/brevmottaker/manuell/${behandling.behandlingId}/aktiver`,
         }).then((respons: Ressurs<string>) => {
+            settSenderInn(false);
             if (respons.status === RessursStatus.SUKSESS) {
-                settSenderInn(false);
-                settVisModal(false);
-                hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                settVisBrevmottakerModal(true);
+                hentBehandlingMedBehandlingId(
+                    behandling.behandlingId,
+                    false,
+                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`
+                );
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||
@@ -43,14 +65,15 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
         });
     };
 
-    const fjernVerge = () => {
+    const fjernBrevmottakerSteg = () => {
+        settSenderInn(true);
         request<void, string>({
             method: 'PUT',
-            url: `/familie-tilbake/api/behandling/v1/${behandling.behandlingId}/verge`,
+            url: `/familie-tilbake/api/brevmottaker/manuell/${behandling.behandlingId}/deaktiver`,
         }).then((respons: Ressurs<string>) => {
+            settSenderInn(false);
             if (respons.status === RessursStatus.SUKSESS) {
-                settSenderInn(false);
-                settVisModal(false);
+                settVisFjernModal(false);
                 hentBehandlingMedBehandlingId(behandling.behandlingId, true);
             } else if (
                 respons.status === RessursStatus.FEILET ||
@@ -62,12 +85,11 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
         });
     };
 
-    const opprettEllerFjern = () => {
-        settSenderInn(true);
-        if (kanFjerneVerge) {
-            fjernVerge();
+    const opprettEllerFjernSteg = () => {
+        if (kanFjerneManuelleBrevmottakere) {
+            settVisFjernModal(true);
         } else {
-            opprettVerge();
+            opprettBrevmottakerSteg();
         }
     };
 
@@ -76,41 +98,40 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
             <BehandlingsMenyButton
                 variant="tertiary"
                 onClick={() => {
-                    settVisModal(true);
+                    opprettEllerFjernSteg();
                     onListElementClick();
                 }}
                 disabled={!behandling.kanEndres || behandlingILesemodus}
             >
-                {kanFjerneVerge ? 'Fjern verge/fullmektig' : 'Opprett verge/fullmektig'}
+                {kanFjerneManuelleBrevmottakere ? 'Fjern brevmottaker(e)' : 'Legg til brevmottaker'}
             </BehandlingsMenyButton>
 
             <UIModalWrapper
                 modal={{
-                    tittel: kanFjerneVerge
-                        ? 'Fjern verge/fullmektig?'
-                        : 'Opprett verge/fullmektig?',
-                    visModal: visModal,
-                    lukkKnapp: false,
+                    tittel: 'Ønsker du å fjerne brevmottaker(e)?',
+                    visModal: visFjernModal,
+                    lukkKnapp: true,
+                    onClose: () => settVisFjernModal(false),
                     actions: [
                         <FTButton
                             variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
-                                settVisModal(false);
+                                settVisFjernModal(false);
                             }}
                             size="small"
                         >
-                            Avbryt
+                            Nei, behold
                         </FTButton>,
                         <FTButton
                             variant="primary"
                             key={'bekreft'}
                             disabled={senderInn}
                             loading={senderInn}
-                            onClick={() => opprettEllerFjern()}
+                            onClick={() => fjernBrevmottakerSteg()}
                             size="small"
                         >
-                            Ok
+                            Ja, fjern
                         </FTButton>,
                     ],
                 }}
@@ -120,6 +141,10 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
                 }}
             >
                 <>
+                    <div>
+                        Dette vil både fjerne eventuelt registrerte brevmottakere og fjerne steget
+                        &quot;Brevmottaker(e)&quot;.
+                    </div>
                     {feilmelding && feilmelding !== '' && (
                         <div className="skjemaelement__feilmelding">
                             <ErrorMessage size="small">{feilmelding}</ErrorMessage>
@@ -131,4 +156,4 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
     );
 };
 
-export default OpprettFjernVerge;
+export default LeggTilFjernBrevmottakere;

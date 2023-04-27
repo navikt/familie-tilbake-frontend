@@ -1,5 +1,5 @@
 import { YtelseType } from '../typer/beregning';
-import type { IGrunnlagPerson } from '../typer/person';
+import type { IGrunnlagPerson, IPerson } from '../typer/person';
 import { PersonType } from '../typer/person';
 import type { IBarnMedOpplysninger } from '../typer/søknad';
 import type { IUtbetalingsperiodeDetalj } from '../typer/vedtaksperiode';
@@ -98,10 +98,9 @@ export const formaterNavnAlderOgIdent = (person: {
     )}`;
 };
 
-export const lagPersonLabel = (ident: string, personer: IGrunnlagPerson[]): string => {
-    const person = personer.find(person => person.personIdent === ident);
-    if (person) {
-        return formaterNavnAlderOgIdent({ ...person });
+export const lagPersonLabel = (ident: string, bruker: IPerson): string => {
+    if (bruker) {
+        return formaterNavnAlderOgIdent({ ...bruker });
     } else {
         return ident;
     }

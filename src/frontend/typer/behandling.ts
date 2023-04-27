@@ -1,6 +1,3 @@
-import type { IRestBrevmottaker } from '../komponenter/Fagsak/Personlinje/Behandlingsmeny/LeggTilEllerFjernBrevmottakere/useLeggTilFjernBrevmottaker';
-import type { IVedtakForBehandling } from './vedtak';
-
 export enum Behandlingårsak {
     REVURDERING_KLAGE_NFP = 'REVURDERING_KLAGE_NFP',
     REVURDERING_KLAGE_KA = 'REVURDERING_KLAGE_KA',
@@ -179,6 +176,4 @@ export interface IBehandling {
     behandlingsårsakstype?: Behandlingårsak;
     harManuelleBrevmottakere?: boolean;
     støtterManuelleBrevmottakere?: boolean;
-    brevmottakere: IRestBrevmottaker[];
-    vedtak?: IVedtakForBehandling;
 }

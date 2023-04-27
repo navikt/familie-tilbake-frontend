@@ -1,38 +1,34 @@
 import * as React from 'react';
-import { useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Search } from '@navikt/ds-icons';
 import { Alert, Button } from '@navikt/ds-react';
 
-import type { IBehandling } from '../../../typer/behandling';
-import type { FagsakType } from '../../../typer/fagsak';
-import type { IInstitusjon } from '../../../typer/institusjon-og-verge';
-import type { IGrunnlagPerson } from '../../../typer/person';
+import { IBrevmottaker } from '../../../typer/Brevmottaker';
+import type { IInstitusjon } from '../../../typer/fagsak';
+import type { IPerson } from '../../../typer/person';
 import BrevmottakerListe from '../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
-import { LeggTilBrevmottakerModal } from '../Personlinje/Behandlingsmeny/LeggTilEllerFjernBrevmottakere/LeggTilBrevmottakerModal';
-import type { IRestBrevmottaker } from '../Personlinje/Behandlingsmeny/LeggTilEllerFjernBrevmottakere/useLeggTilFjernBrevmottaker';
+
 export const BehandlingKorrigertAlert = styled(Alert)`
     margin-bottom: 1.5rem;
 `;
 
 interface Props {
-    brevmottakere: IRestBrevmottaker[];
+    brevmottakere: IBrevmottaker[];
     institusjon?: IInstitusjon;
-    personer: IGrunnlagPerson[];
-    åpenBehandling: IBehandling;
-    fagsakType?: FagsakType;
+    bruker: IPerson;
+    linkTilBrevmottakerSteg: string;
 }
 
 export const BrevmottakereAlert: React.FC<Props> = ({
     brevmottakere,
     institusjon,
-    personer,
-    åpenBehandling,
-    fagsakType,
+    bruker,
+    linkTilBrevmottakerSteg,
 }) => {
-    const [visManuelleMottakereModal, settVisManuelleMottakereModal] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <>
@@ -42,12 +38,11 @@ export const BrevmottakereAlert: React.FC<Props> = ({
                     <BrevmottakerListe
                         brevmottakere={brevmottakere}
                         institusjon={institusjon}
-                        personer={personer}
-                        fagsakType={fagsakType}
+                        bruker={bruker}
                     />
                     <Button
                         variant={'tertiary'}
-                        onClick={() => settVisManuelleMottakereModal(true)}
+                        onClick={() => navigate(linkTilBrevmottakerSteg)}
                         icon={<Search />}
                         size={'xsmall'}
                     >
@@ -55,12 +50,6 @@ export const BrevmottakereAlert: React.FC<Props> = ({
                     </Button>
                 </BehandlingKorrigertAlert>
             )}
-
-            <LeggTilBrevmottakerModal
-                åpenBehandling={åpenBehandling}
-                visModal={visManuelleMottakereModal}
-                lukkModal={() => settVisManuelleMottakereModal(false)}
-            />
         </>
     );
 };
