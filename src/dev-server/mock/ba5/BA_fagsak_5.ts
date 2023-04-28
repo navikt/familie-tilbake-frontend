@@ -90,7 +90,7 @@ const ba_behandling_16: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
-    brevmottakere: [],
+    manuelleBrevmottakere: [],
 };
 
 const ba_behandling_17: IBehandling = {
@@ -127,7 +127,7 @@ const ba_behandling_17: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
-    brevmottakere: [],
+    manuelleBrevmottakere: [],
 };
 
 const ba_behandling_18: IBehandling = {
@@ -160,7 +160,7 @@ const ba_behandling_18: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
-    brevmottakere: [],
+    manuelleBrevmottakere: [],
 };
 
 const ba_behandling_19: IBehandling = {
@@ -193,7 +193,7 @@ const ba_behandling_19: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
-    brevmottakere: [],
+    manuelleBrevmottakere: [],
 };
 
 const ba_behandling_20: IBehandling = {
@@ -230,7 +230,7 @@ const ba_behandling_20: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
-    brevmottakere: [],
+    manuelleBrevmottakere: [],
 };
 
 export {

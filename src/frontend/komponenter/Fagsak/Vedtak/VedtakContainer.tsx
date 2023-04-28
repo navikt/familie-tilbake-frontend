@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 
 import styled from 'styled-components';
 
@@ -7,7 +6,6 @@ import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing1, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
-import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { vedtaksresultater } from '../../../kodeverk';
 import {
@@ -16,7 +14,6 @@ import {
     Behandlingårsak,
     IBehandling,
 } from '../../../typer/behandling';
-import { IBrevmottaker } from '../../../typer/Brevmottaker';
 import { IFagsak } from '../../../typer/fagsak';
 import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
@@ -72,7 +69,6 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         lagreUtkast,
     } = useFeilutbetalingVedtak();
     const { behandlingILesemodus, aktivtSteg } = useBehandling();
-    const { hentManuelleBrevmottakere } = useBehandlingApi();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA =
         behandling.behandlingsårsakstype === Behandlingårsak.REVURDERING_KLAGE_KA;
@@ -80,27 +76,6 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
-
-    // const brevmottakere: IBrevmottaker[] = [];
-    const [brevmottakere, settBrevmottakere] = useState<IBrevmottaker[]>([]);
-    const hentBrevmottakere = () => {
-        hentManuelleBrevmottakere(behandling.behandlingId).then(respons => {
-            if (respons.status === RessursStatus.SUKSESS) {
-                console.log('SUKSESS');
-                const tmpBrevmottakere = respons.data.map(responseDto => {
-                    return responseDto.brevmottaker;
-                });
-                console.log('Brevmottakere', brevmottakere);
-                settBrevmottakere(tmpBrevmottakere);
-                console.log('Brevmottakere etter', brevmottakere);
-            }
-        });
-    };
-
-    React.useEffect(() => {
-        console.log('hentBrevmottakere');
-        hentBrevmottakere();
-    }, []);
 
     React.useEffect(() => {
         // console.log('bør no trigge re-rendring');
@@ -152,7 +127,9 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                 {behandling.harManuelleBrevmottakere && (
                     <>
                         <BrevmottakereAlert
-                            brevmottakere={brevmottakere}
+                            brevmottakere={behandling.manuelleBrevmottakere.map(
+                                brevmottakerDto => brevmottakerDto.brevmottaker
+                            )}
                             institusjon={fagsak?.institusjon}
                             bruker={fagsak.bruker}
                             linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`}

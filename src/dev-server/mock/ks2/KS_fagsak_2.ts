@@ -75,7 +75,7 @@ const ks_behandling_4: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
-    brevmottakere: [],
+    manuelleBrevmottakere: [],
 };
 
 export { fagsak_ks2, ks_behandling_4 };

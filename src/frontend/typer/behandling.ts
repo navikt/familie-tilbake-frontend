@@ -1,3 +1,5 @@
+import { ManuellBrevmottakerResponseDto } from './api';
+
 export enum Behandlingårsak {
     REVURDERING_KLAGE_NFP = 'REVURDERING_KLAGE_NFP',
     REVURDERING_KLAGE_KA = 'REVURDERING_KLAGE_KA',
@@ -176,4 +178,5 @@ export interface IBehandling {
     behandlingsårsakstype?: Behandlingårsak;
     harManuelleBrevmottakere?: boolean;
     støtterManuelleBrevmottakere?: boolean;
+    manuelleBrevmottakere: ManuellBrevmottakerResponseDto[];
 }

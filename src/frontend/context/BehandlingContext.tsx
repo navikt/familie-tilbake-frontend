@@ -67,7 +67,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         })
             .then((hentetBehandling: Ressurs<IBehandling>) => {
                 if (hentetBehandling.status === RessursStatus.SUKSESS) {
-                    /* const erILeseModus =
+                    const erILeseModus =
                         hentetBehandling.data.status === Behandlingstatus.AVSLUTTET ||
                         hentetBehandling.data.erBehandlingPåVent ||
                         hentetBehandling.data.kanEndres === false ||
@@ -79,8 +79,8 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                                         Behandlingsstegstatus.TILBAKEFØRT) ||
                                 (stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
                                     stegInfo.behandlingsstegstatus === Behandlingsstegstatus.KLAR)
-                        ); */
-                    settBehandlingILesemodus(false);
+                        );
+                    settBehandlingILesemodus(erILeseModus);
 
                     const harFåttKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo.some(
                         stegInfo => stegInfo.behandlingssteg === Behandlingssteg.FAKTA

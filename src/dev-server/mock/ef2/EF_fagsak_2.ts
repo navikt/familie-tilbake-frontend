@@ -81,7 +81,7 @@ const ef_behandling_4: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
-    brevmottakere: [],
+    manuelleBrevmottakere: [],
 };
 
 const ef_behandling_5: IBehandling = {
@@ -119,7 +119,7 @@ const ef_behandling_5: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
-    brevmottakere: [],
+    manuelleBrevmottakere: [],
 };
 
 export { fagsak_ef2, ef_behandling_4, ef_behandling_5 };
