@@ -62,7 +62,7 @@ const opprettManuellBrevmottakerRequest = (
 
     return {
         type: type,
-        navn: skjema.felter.navn.verdi || 'Placeholder', // Placeholder erstattes av navn fra registeroppslag
+        navn: skjema.felter.navn.verdi || ' ', // blank input erstattes med navn hentet fra register
         ...(adresseKilde === AdresseKilde.OPPSLAG_REGISTER
             ? {
                   personIdent: skjema.felter.fødselsnummer.verdi,
