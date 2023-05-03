@@ -1,12 +1,9 @@
 import * as React from 'react';
-import { useState } from 'react';
 
 import createUseContext from 'constate';
 
 import { HttpProvider, useHttp } from '@navikt/familie-http';
 import type { ISaksbehandler, Ressurs } from '@navikt/familie-typer';
-
-import type { IToast, ToastTyper } from '../komponenter/Felleskomponenter/Toast/typer';
 
 interface IInfo {
     appImage: string;
@@ -53,7 +50,6 @@ const [AuthProvider, useAuth] = createUseContext(
 const [AppContentProvider, useApp] = createUseContext(() => {
     const { autentisert, innloggetSaksbehandler } = useAuth();
     const { request } = useHttp();
-    const [toasts, settToasts] = useState<{ [toastId: string]: IToast }>({});
 
     const hentTilbakeInfo = (): void => {
         request<void, IInfo>({
@@ -72,12 +68,6 @@ const [AppContentProvider, useApp] = createUseContext(() => {
         autentisert,
         innloggetSaksbehandler,
         hentTilbakeInfo,
-        settToast: (toastId: ToastTyper, toast: IToast) =>
-            settToasts({
-                ...toasts,
-                [toastId]: toast,
-            }),
-        settToasts,
     };
 });
 

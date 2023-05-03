@@ -37,14 +37,14 @@ interface IProps {
 }
 
 const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
-    const { behandling, ventegrunn } = useBehandling(); // erStegBehandlet, aktivtSteg
+    const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
     const [visMeny, settVisMeny] = React.useState<boolean>(false);
     const buttonRef = React.useRef(null);
 
     const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.GRUNNLAG;
-    /* const vedtakFattetEllerFattes =
+    const vedtakFattetEllerFattes =
         erStegBehandlet(Behandlingssteg.FATTE_VEDTAK) ||
-        aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK; */
+        aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK;
 
     return (
         <>
@@ -78,7 +78,9 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                             </li>
                         )}
                         {behandling?.status === RessursStatus.SUKSESS &&
-                            behandling.data.status !== Behandlingstatus.AVSLUTTET && (
+                            behandling.data.status !== Behandlingstatus.AVSLUTTET &&
+                            !vedtakFattetEllerFattes &&
+                            behandling.data.kanEndres && (
                                 <>
                                     <li>
                                         <HenleggBehandling

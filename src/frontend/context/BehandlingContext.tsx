@@ -177,7 +177,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
 
     return {
         behandling,
-        settBehandling,
         hentBehandlingMedEksternBrukId,
         hentBehandlingMedBehandlingId,
         behandlingILesemodus,

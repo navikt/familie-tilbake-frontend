@@ -16,14 +16,12 @@ const BrevmottakerListe: React.FC<IProps> = ({ bruker, institusjon, brevmottaker
     const harUtenlandskAdresse = brevmottakere.some(
         mottaker => mottaker.type === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
     );
-    console.log(harUtenlandskAdresse);
     const harFullmektig = brevmottakere.some(mottaker => mottaker.type === MottakerType.FULLMEKTIG);
     const harVerge = brevmottakere.some(mottaker => mottaker.type === MottakerType.VERGE);
     const harManuellDødsboadresse = brevmottakere.some(
         mottaker => mottaker.type === MottakerType.DØDSBO
     );
 
-    //const søker = personer.find(person => person.type === PersonType.SØKER);
     const skalViseSøker =
         bruker && !institusjon && !harManuellDødsboadresse && !harUtenlandskAdresse;
 
