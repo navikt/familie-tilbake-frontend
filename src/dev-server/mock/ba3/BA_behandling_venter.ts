@@ -29,6 +29,7 @@ const ba_behandling_6: IBehandling = {
             tidsfrist: dayIn21Days(),
         },
     ],
+    manuelleBrevmottakere: [],
 };
 
 const ba_behandling_7: IBehandling = {
@@ -56,6 +57,7 @@ const ba_behandling_7: IBehandling = {
             tidsfrist: yesterday(),
         },
     ],
+    manuelleBrevmottakere: [],
 };
 
 const ba_behandling_8: IBehandling = {
@@ -88,6 +90,7 @@ const ba_behandling_8: IBehandling = {
             tidsfrist: dayIn21Days(),
         },
     ],
+    manuelleBrevmottakere: [],
 };
 
 const ba_behandling_9: IBehandling = {
@@ -117,6 +120,7 @@ const ba_behandling_9: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
+    manuelleBrevmottakere: [],
 };
 
 export { ba_behandling_6, ba_behandling_7, ba_behandling_8, ba_behandling_9 };

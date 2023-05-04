@@ -44,6 +44,7 @@ const ba_behandling_14: IBehandling = {
             behandlingsstegstatus: Behandlingsstegstatus.KLAR,
         },
     ],
+    manuelleBrevmottakere: [],
 };
 
 export { ba_behandling_14 };

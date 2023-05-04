@@ -165,12 +165,14 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({
+            manuelleBrevmottakere: [],
+        });
         const fagsak = mock<IFagsak>();
 
         const { getByText, getAllByText, getByRole, queryByRole, queryByText } = render(
             <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                <VedtakContainer behandling={behandling} />
+                <VedtakContainer behandling={behandling} fagsak={fagsak} />
             </FeilutbetalingVedtakProvider>
         );
 
@@ -302,13 +304,14 @@ describe('Tester: VedtakContainer', () => {
         const behandling = mock<IBehandling>({
             type: Behandlingstype.REVURDERING_TILBAKEKREVING,
             behandlingsårsakstype: Behandlingårsak.REVURDERING_OPPLYSNINGER_OM_VILKÅR,
+            manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole, queryByText } =
             render(
                 <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                    <VedtakContainer behandling={behandling} />
+                    <VedtakContainer behandling={behandling} fagsak={fagsak} />
                 </FeilutbetalingVedtakProvider>
             );
 
@@ -430,12 +433,13 @@ describe('Tester: VedtakContainer', () => {
         const behandling = mock<IBehandling>({
             type: Behandlingstype.REVURDERING_TILBAKEKREVING,
             behandlingsårsakstype: Behandlingårsak.REVURDERING_KLAGE_KA,
+            manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } = render(
             <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                <VedtakContainer behandling={behandling} />
+                <VedtakContainer behandling={behandling} fagsak={fagsak} />
             </FeilutbetalingVedtakProvider>
         );
 
@@ -553,13 +557,14 @@ describe('Tester: VedtakContainer', () => {
         const behandling = mock<IBehandling>({
             type: Behandlingstype.REVURDERING_TILBAKEKREVING,
             behandlingsårsakstype: Behandlingårsak.REVURDERING_KLAGE_NFP,
+            manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByText, queryByRole } =
             render(
                 <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                    <VedtakContainer behandling={behandling} />
+                    <VedtakContainer behandling={behandling} fagsak={fagsak} />
                 </FeilutbetalingVedtakProvider>
             );
 
@@ -690,12 +695,14 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({
+            manuelleBrevmottakere: [],
+        });
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getByTestId, queryByRole, queryByTestId } = render(
             <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                <VedtakContainer behandling={behandling} />
+                <VedtakContainer behandling={behandling} fagsak={fagsak} />
             </FeilutbetalingVedtakProvider>
         );
 
@@ -789,12 +796,14 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({
+            manuelleBrevmottakere: [],
+        });
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, queryByRole, queryByTestId } = render(
             <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                <VedtakContainer behandling={behandling} />
+                <VedtakContainer behandling={behandling} fagsak={fagsak} />
             </FeilutbetalingVedtakProvider>
         );
 

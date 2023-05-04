@@ -14,7 +14,10 @@ import {
     Behandlingårsak,
     IBehandling,
 } from '../../../typer/behandling';
+import { IFagsak } from '../../../typer/fagsak';
 import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
 import VedtakPerioder from './VedtakPerioder';
@@ -49,9 +52,10 @@ const KnappeDiv = styled.div`
 
 interface IProps {
     behandling: IBehandling;
+    fagsak: IFagsak;
 }
 
-const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
+const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const {
         feilutbetalingVedtaksbrevavsnitt,
         beregningsresultat,
@@ -116,6 +120,19 @@ const VedtakContainer: React.FC<IProps> = ({ behandling }) => {
                                     Vedtaksbrev sendes ikke ut fra denne behandlingen.
                                 </VarselbrevInfo>
                             }
+                        />
+                        <Spacer20 />
+                    </>
+                )}
+                {behandling.harManuelleBrevmottakere && (
+                    <>
+                        <BrevmottakereAlert
+                            brevmottakere={behandling.manuelleBrevmottakere.map(
+                                brevmottakerDto => brevmottakerDto.brevmottaker
+                            )}
+                            institusjon={fagsak?.institusjon}
+                            bruker={fagsak.bruker}
+                            linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`}
                         />
                         <Spacer20 />
                     </>
