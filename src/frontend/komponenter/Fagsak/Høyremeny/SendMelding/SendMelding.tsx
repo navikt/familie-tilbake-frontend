@@ -1,14 +1,17 @@
 import * as React from 'react';
 
+import { Heading } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
+import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak, målform } from '../../../../typer/fagsak';
 import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 import { FamilieTilbakeTextArea, LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
-import { useSendMelding, Mottakere } from './SendMeldingContext';
+import { useSendMelding } from './SendMeldingContext';
 
 const tekstfeltLabel = (mal: DokumentMal) => {
     return mal === DokumentMal.INNHENT_DOKUMENTASJON
@@ -18,9 +21,10 @@ const tekstfeltLabel = (mal: DokumentMal) => {
 
 interface IProps {
     fagsak: IFagsak;
+    behandling: IBehandling;
 }
 
-const SendMelding: React.FC<IProps> = ({ fagsak }) => {
+const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
     const { maler, skjema, senderInn, sendBrev } = useSendMelding();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -34,19 +38,24 @@ const SendMelding: React.FC<IProps> = ({ fagsak }) => {
 
     return (
         <div>
-            <FamilieSelect
-                id="mottaker"
-                label={'Mottaker'}
-                erLesevisning={true}
-                value={skjema.felter.mottaker.verdi.verdi}
-                lesevisningVerdi={skjema.felter.mottaker.verdi.label}
-            >
-                {Mottakere.map(opt => (
-                    <option key={opt.verdi} value={opt.verdi}>
-                        {opt.label}
-                    </option>
-                ))}
-            </FamilieSelect>
+            {behandling.harManuelleBrevmottakere ? (
+                <>
+                    <Heading size="xsmall">Brev sendes til:</Heading>
+                    <BrevmottakerListe
+                        brevmottakere={behandling.manuelleBrevmottakere.map(
+                            brevmottakerDto => brevmottakerDto.brevmottaker
+                        )}
+                        institusjon={fagsak?.institusjon}
+                        bruker={fagsak.bruker}
+                        harMargin={false}
+                    />
+                </>
+            ) : (
+                <div>
+                    <Heading size="xsmall">Mottaker</Heading>
+                    <p className="navds-body-short">Søker</p>
+                </div>
+            )}
             <Spacer20 />
             <FamilieSelect
                 {...skjema.felter.maltype.hentNavInputProps(skjema.visFeilmeldinger)}
