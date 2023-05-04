@@ -57,7 +57,7 @@ describe('Tester: SendMelding', () => {
 
         const { getByText, getByLabelText, getByRole, queryByRole, queryByText } = render(
             <SendMeldingProvider behandling={behandling}>
-                <SendMelding fagsak={fagsak} />
+                <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );
 
@@ -135,7 +135,7 @@ describe('Tester: SendMelding', () => {
 
         const { getByText, getByLabelText, getByRole, queryByText } = render(
             <SendMeldingProvider behandling={behandling}>
-                <SendMelding fagsak={fagsak} />
+                <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );
 
@@ -195,7 +195,7 @@ describe('Tester: SendMelding', () => {
 
         const { getByText, getByLabelText, getByRole } = render(
             <SendMeldingProvider behandling={behandling}>
-                <SendMelding fagsak={fagsak} />
+                <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );
 
@@ -252,7 +252,7 @@ describe('Tester: SendMelding', () => {
 
         const { getByText, getByRole, queryByLabelText } = render(
             <SendMeldingProvider behandling={behandling}>
-                <SendMelding fagsak={fagsak} />
+                <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );
 
