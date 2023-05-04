@@ -124,7 +124,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         <Spacer20 />
                     </>
                 )}
-                {behandling.harManuelleBrevmottakere && (
+                {behandling.manuelleBrevmottakere.length && (
                     <>
                         <BrevmottakereAlert
                             brevmottakere={behandling.manuelleBrevmottakere.map(

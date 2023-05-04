@@ -38,7 +38,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
 
     return (
         <div>
-            {behandling.harManuelleBrevmottakere ? (
+            {behandling.manuelleBrevmottakere.length ? (
                 <>
                     <Heading size="xsmall">Brev sendes til:</Heading>
                     <BrevmottakerListe
