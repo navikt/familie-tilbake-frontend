@@ -50,6 +50,7 @@ describe('Tester: SendMelding', () => {
         }));
         const behandling = mock<IBehandling>({
             varselSendt: false,
+            manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NB,
@@ -128,6 +129,7 @@ describe('Tester: SendMelding', () => {
         }));
         const behandling = mock<IBehandling>({
             varselSendt: true,
+            manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NN,
@@ -188,6 +190,7 @@ describe('Tester: SendMelding', () => {
         }));
         const behandling = mock<IBehandling>({
             varselSendt: true,
+            manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NB,
@@ -245,6 +248,7 @@ describe('Tester: SendMelding', () => {
         }));
         const behandling = mock<IBehandling>({
             varselSendt: false,
+            manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NB,
