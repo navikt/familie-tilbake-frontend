@@ -50,6 +50,7 @@ describe('Tester: SendMelding', () => {
         }));
         const behandling = mock<IBehandling>({
             varselSendt: false,
+            harManuelleBrevmottakere: false,
             manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>({
@@ -129,6 +130,7 @@ describe('Tester: SendMelding', () => {
         }));
         const behandling = mock<IBehandling>({
             varselSendt: true,
+            harManuelleBrevmottakere: false,
             manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>({
@@ -190,6 +192,7 @@ describe('Tester: SendMelding', () => {
         }));
         const behandling = mock<IBehandling>({
             varselSendt: true,
+            harManuelleBrevmottakere: false,
             manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>({
@@ -248,6 +251,7 @@ describe('Tester: SendMelding', () => {
         }));
         const behandling = mock<IBehandling>({
             varselSendt: false,
+            harManuelleBrevmottakere: false,
             manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>({
