@@ -11,7 +11,7 @@ interface IProps {
     bruker: IPerson;
     institusjon: IInstitusjon | undefined;
     brevmottakere: IBrevmottaker[];
-    harMargin: boolean;
+    harMargin?: boolean;
 }
 interface UlProps {
     harMargin: boolean;
