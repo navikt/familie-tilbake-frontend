@@ -45,7 +45,11 @@ interface IProps {
 }
 
 const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevisning }) => {
-    const { fjernBrevMottakerOgOppdaterState, settBrevmottakerTilEndring } = useBrevmottaker();
+    const {
+        fjernBrevMottakerOgOppdaterState,
+        settBrevmottakerTilEndring,
+        validerAlleSynligeFelter,
+    } = useBrevmottaker();
     const { settVisBrevmottakerModal } = useBehandling();
     const land = brevmottaker.manuellAdresseInfo
         ? CountryData.getCountryInstance('nb').findByValue(brevmottaker.manuellAdresseInfo.landkode)
@@ -114,6 +118,7 @@ const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevi
                     onClick={() => {
                         settBrevmottakerTilEndring(brevmottakerId);
                         settVisBrevmottakerModal(true);
+                        validerAlleSynligeFelter();
                     }}
                     size={'small'}
                     icon={<Edit />}

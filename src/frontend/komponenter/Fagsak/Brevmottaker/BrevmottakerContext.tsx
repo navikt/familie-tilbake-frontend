@@ -201,6 +201,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             nullstillSkjema,
             settSubmitRessurs,
             valideringErOk,
+            validerAlleSynligeFelter,
         } = useSkjema<ILeggTilEndreBrevmottakerSkjema, string>({
             felter: {
                 mottaker: useFelt<MottakerType | ''>({
@@ -351,6 +352,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             brevmottakerTilEndring,
             settBrevmottakerTilEndring,
             bruker,
+            validerAlleSynligeFelter,
         };
     }
 );
