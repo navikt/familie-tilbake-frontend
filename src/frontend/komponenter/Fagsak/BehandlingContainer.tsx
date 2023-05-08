@@ -152,7 +152,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                         element={
                             <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                                <VedtakContainer behandling={behandling} />
+                                <VedtakContainer behandling={behandling} fagsak={fagsak} />
                             </FeilutbetalingVedtakProvider>
                         }
                     />

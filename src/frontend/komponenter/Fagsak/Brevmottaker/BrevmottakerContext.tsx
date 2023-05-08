@@ -8,6 +8,7 @@ import { feil, type FeltState, type ISkjema, ok, useFelt, useSkjema } from '@nav
 import { byggHenterRessurs, type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../api/behandling';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype } from '../../../kodeverk/verge';
 import { IBehandling } from '../../../typer/behandling';
 import { AdresseKilde, IBrevmottaker, MottakerType } from '../../../typer/Brevmottaker';
@@ -147,13 +148,16 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         const [adresseKilde, settAdresseKilde] = useState<AdresseKilde>(AdresseKilde.UDEFINERT);
         const [brevmottakerTilEndring, settBrevmottakerTilEndring] = useState<string | undefined>();
 
-        const { fjernManuellBrevmottaker, hentManuelleBrevmottakere } = useBehandlingApi();
+        const { hentBehandlingMedBehandlingId } = useBehandling();
+        const { fjernManuellBrevmottaker } = useBehandlingApi();
         const navigate = useNavigate();
 
         React.useEffect(() => {
-            if (behandling.harManuelleBrevmottakere) {
-                hentBrevmottakere();
-            }
+            const manuelleBrevmottakere: { [id: string]: IBrevmottaker } = {};
+            behandling.manuelleBrevmottakere.forEach(value => {
+                manuelleBrevmottakere[value.id] = value.brevmottaker;
+            });
+            settBrevMottakere(manuelleBrevmottakere);
         }, [behandling]);
 
         React.useEffect(() => {
@@ -177,18 +181,6 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                 );
             }
         }, [brevmottakerTilEndring]);
-
-        const hentBrevmottakere = () => {
-            hentManuelleBrevmottakere(behandling.behandlingId).then(respons => {
-                if (respons.status === RessursStatus.SUKSESS) {
-                    const manuelleBrevmottakere: { [id: string]: IBrevmottaker } = {};
-                    respons.data.forEach(responsDto => {
-                        manuelleBrevmottakere[responsDto.id] = responsDto.brevmottaker;
-                    });
-                    settBrevMottakere(manuelleBrevmottakere);
-                }
-            });
-        };
 
         const leggTilEllerOppdaterBrevmottaker = (id: string, brevmottaker: IBrevmottaker) => {
             settBrevMottakere({ ...brevmottakere, [id]: brevmottaker });
@@ -318,16 +310,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                     },
                     (response: Ressurs<string>) => {
                         if (response.status === RessursStatus.SUKSESS) {
-                            if (
-                                adresseKilde === AdresseKilde.OPPSLAG_REGISTER ||
-                                adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
-                            ) {
-                                hentBrevmottakere();
-                            } else {
-                                const id = mottakerId || response.data;
-                                leggTilEllerOppdaterBrevmottaker(id, manuellBrevmottakerRequest);
-                            }
-
+                            hentBehandlingMedBehandlingId(behandling.behandlingId);
                             lukkModal ? lukkModal() : nullstillSkjema();
                         }
                     }
@@ -341,7 +324,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             fjernManuellBrevmottaker(behandling.behandlingId, mottakerId).then(
                 (respons: Ressurs<string>) => {
                     if (respons.status === RessursStatus.SUKSESS) {
-                        fjernBrevmottaker(mottakerId);
+                        hentBehandlingMedBehandlingId(behandling.behandlingId);
                     }
                 }
             );

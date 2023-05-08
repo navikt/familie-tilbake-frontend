@@ -111,6 +111,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                     tittel: 'Ønsker du å fjerne brevmottaker(e)?',
                     visModal: visFjernModal,
                     lukkKnapp: true,
+                    onClose: () => settVisFjernModal(false),
                     actions: [
                         <FTButton
                             variant="tertiary"
