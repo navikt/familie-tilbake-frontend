@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Heading } from '@navikt/ds-react';
+import { BodyShort, Heading } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
@@ -40,7 +40,9 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
         <div>
             {behandling.manuelleBrevmottakere.length ? (
                 <>
-                    <Heading size="xsmall">Brev sendes til:</Heading>
+                    <Heading size="xsmall" spacing>
+                        Brev sendes til:
+                    </Heading>
                     <BrevmottakerListe
                         brevmottakere={behandling.manuelleBrevmottakere.map(
                             brevmottakerDto => brevmottakerDto.brevmottaker
@@ -53,7 +55,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
             ) : (
                 <div>
                     <Heading size="xsmall">Mottaker</Heading>
-                    <p className="navds-body-short">Søker</p>
+                    <BodyShort>Søker</BodyShort>
                 </div>
             )}
             <Spacer20 />
