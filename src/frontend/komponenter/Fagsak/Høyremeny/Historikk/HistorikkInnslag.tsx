@@ -25,6 +25,10 @@ const Innslag = styled.div`
     flex-direction: row;
 `;
 
+const StyledBodyShort = styled(BodyShort)`
+    white-space: pre-line;
+`;
+
 const Tidslinje = styled.div`
     width: 3.5rem;
     min-width: 3.5rem;
@@ -82,7 +86,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
                 </>
             );
         }
-        return <BodyShort>{innslag.tekst}</BodyShort>;
+        return <StyledBodyShort>{innslag.tekst}</StyledBodyShort>;
     };
 
     const lagBrevLink = () => {
