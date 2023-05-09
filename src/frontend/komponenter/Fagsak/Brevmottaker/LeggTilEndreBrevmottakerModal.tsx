@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-import { Button, Fieldset, Heading, Label, Modal, Radio, RadioGroup } from '@navikt/ds-react';
+import { Button, Fieldset, Heading, Modal, Radio, RadioGroup } from '@navikt/ds-react';
 import { ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
@@ -145,7 +145,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                     </MottakerSelect>
                     {!erMottakerBruker(skjema.felter.mottaker.verdi) && (
                         <RadioGroup
-                            legend={<Label>Adresse</Label>}
+                            legend={'Adresse'}
                             value={adresseKilde}
                             onChange={(val: AdresseKilde) => {
                                 settAdresseKilde(val);
@@ -153,24 +153,18 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                             }}
                         >
                             <Radio
-                                name={'manuellRegistrering'}
-                                value={AdresseKilde.MANUELL_REGISTRERING}
                                 id={'manuell-registrering'}
+                                value={AdresseKilde.MANUELL_REGISTRERING}
                             >
                                 {adresseKilder[AdresseKilde.MANUELL_REGISTRERING]}
                             </Radio>
-                            <Radio
-                                name={'oppslagRegister'}
-                                value={AdresseKilde.OPPSLAG_REGISTER}
-                                id={'oppslag-i-register'}
-                            >
+                            <Radio id={'oppslag-i-register'} value={AdresseKilde.OPPSLAG_REGISTER}>
                                 {adresseKilder[AdresseKilde.OPPSLAG_REGISTER]}
                             </Radio>
                             {skjema.felter.mottaker.verdi === MottakerType.FULLMEKTIG && (
                                 <Radio
-                                    name={'oppslagOrgRegister'}
-                                    value={AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER}
                                     id={'oppslag-i-organisasjonsregister'}
+                                    value={AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER}
                                 >
                                     {adresseKilder[AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER]}
                                 </Radio>
