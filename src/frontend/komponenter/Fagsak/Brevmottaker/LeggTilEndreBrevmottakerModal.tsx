@@ -64,12 +64,12 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         valideringErOk,
         settVisfeilmeldinger,
         lagreBrevmottakerOgOppdaterState,
-        brevmottakerTilEndring,
-        settBrevmottakerTilEndring,
+        brevmottakerIdTilEndring,
+        settBrevmottakerIdTilEndring,
         bruker,
     } = useBrevmottaker();
 
-    const heading = brevmottakerTilEndring ? 'Endre brevmottaker' : 'Legg til brevmottaker';
+    const heading = brevmottakerIdTilEndring ? 'Endre brevmottaker' : 'Legg til brevmottaker';
     const [navnErPreutfylt, settNavnErPreutfylt] = React.useState(false);
 
     React.useEffect(() => {
@@ -83,7 +83,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     const lukkModal = () => {
         settVisBrevmottakerModal(false);
         settAdresseKilde(AdresseKilde.UDEFINERT);
-        settBrevmottakerTilEndring(undefined);
+        settBrevmottakerIdTilEndring(undefined);
         nullstillSkjema();
     };
 
@@ -226,10 +226,13 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                             loading={skjema.submitRessurs.status === RessursStatus.HENTER}
                             disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
                             onClick={() =>
-                                lagreBrevmottakerOgOppdaterState(brevmottakerTilEndring, lukkModal)
+                                lagreBrevmottakerOgOppdaterState(
+                                    brevmottakerIdTilEndring,
+                                    lukkModal
+                                )
                             }
                         >
-                            {brevmottakerTilEndring ? 'Lagre endringer' : 'Legg til'}
+                            {brevmottakerIdTilEndring ? 'Lagre endringer' : 'Legg til'}
                         </Button>
                         <Button variant="tertiary" onClick={lukkModal}>
                             Avbryt

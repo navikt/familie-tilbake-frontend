@@ -47,7 +47,7 @@ interface IProps {
 const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevisning }) => {
     const {
         fjernBrevMottakerOgOppdaterState,
-        settBrevmottakerTilEndring,
+        settBrevmottakerIdTilEndring,
         validerAlleSynligeFelter,
     } = useBrevmottaker();
     const { settVisBrevmottakerModal } = useBehandling();
@@ -116,7 +116,7 @@ const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevi
                 <Button
                     variant={'tertiary'}
                     onClick={() => {
-                        settBrevmottakerTilEndring(brevmottakerId);
+                        settBrevmottakerIdTilEndring(brevmottakerId);
                         settVisBrevmottakerModal(true);
                         validerAlleSynligeFelter();
                     }}

@@ -94,7 +94,7 @@ const populerSkjema = (
     skjema: ISkjema<ILeggTilEndreBrevmottakerSkjema, string>,
     brevmottaker: IBrevmottaker
 ) => {
-    const eventuellKontaktperson = brevmottaker.navn.split(' v/ ')[1];
+    const [, eventuellKontaktperson] = brevmottaker.navn.split(' v/ ');
     const manuellAdresseInfo = brevmottaker.manuellAdresseInfo;
     skjema.felter.mottaker.validerOgSettFelt(brevmottaker.type);
     skjema.felter.navn.validerOgSettFelt(
@@ -146,7 +146,9 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             [id: string]: IBrevmottaker;
         });
         const [adresseKilde, settAdresseKilde] = useState<AdresseKilde>(AdresseKilde.UDEFINERT);
-        const [brevmottakerTilEndring, settBrevmottakerTilEndring] = useState<string | undefined>();
+        const [brevmottakerIdTilEndring, settBrevmottakerIdTilEndring] = useState<
+            string | undefined
+        >();
 
         const { hentBehandlingMedBehandlingId } = useBehandling();
         const { fjernManuellBrevmottaker } = useBehandlingApi();
@@ -169,18 +171,18 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         }, [brevmottakere]);
 
         React.useEffect(() => {
-            if (brevmottakerTilEndring) {
-                const opprinneligInput = brevmottakere[brevmottakerTilEndring];
-                populerSkjema(skjema, opprinneligInput);
+            if (brevmottakerIdTilEndring) {
+                const lagretBrevmottaker = brevmottakere[brevmottakerIdTilEndring];
+                populerSkjema(skjema, lagretBrevmottaker);
                 settAdresseKilde(
-                    opprinneligInput.personIdent
+                    lagretBrevmottaker.personIdent
                         ? AdresseKilde.OPPSLAG_REGISTER
-                        : opprinneligInput.organisasjonsnummer
+                        : lagretBrevmottaker.organisasjonsnummer
                         ? AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
                         : AdresseKilde.MANUELL_REGISTRERING
                 );
             }
-        }, [brevmottakerTilEndring]);
+        }, [brevmottakerIdTilEndring]);
 
         const leggTilEllerOppdaterBrevmottaker = (id: string, brevmottaker: IBrevmottaker) => {
             settBrevMottakere({ ...brevmottakere, [id]: brevmottaker });
@@ -349,8 +351,8 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             adresseKilde,
             settAdresseKilde,
             settVisfeilmeldinger,
-            brevmottakerTilEndring,
-            settBrevmottakerTilEndring,
+            brevmottakerIdTilEndring,
+            settBrevmottakerIdTilEndring,
             bruker,
             validerAlleSynligeFelter,
         };
