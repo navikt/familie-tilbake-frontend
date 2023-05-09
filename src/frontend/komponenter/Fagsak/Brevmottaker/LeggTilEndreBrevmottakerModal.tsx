@@ -50,7 +50,7 @@ const ModalKnapperad = styled.div`
     gap: 1rem;
 `;
 
-const erMottakerBruker = (mottakerType: MottakerType) =>
+const erMottakerBruker = (mottakerType: MottakerType | '') =>
     mottakerType === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
     mottakerType === MottakerType.DØDSBO;
 
@@ -70,26 +70,15 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     } = useBrevmottaker();
 
     const heading = brevmottakerTilEndring ? 'Endre brevmottaker' : 'Legg til brevmottaker';
-    const [mottakerErBruker, settMottakerErBruker] = React.useState(
-        skjema.felter.mottaker.verdi ? erMottakerBruker(skjema.felter.mottaker.verdi) : false
-    );
+    const [navnErPreutfylt, settNavnErPreutfylt] = React.useState(false);
 
     React.useEffect(() => {
-        settMottakerErBruker(
-            skjema.felter.mottaker.verdi ? erMottakerBruker(skjema.felter.mottaker.verdi) : false
-        );
-    }, [skjema.felter.mottaker.verdi]);
-
-    React.useEffect(() => {
-        if (mottakerErBruker) {
-            skjema.felter.navn.validerOgSettFelt(bruker.navn);
-            settAdresseKilde(AdresseKilde.MANUELL_REGISTRERING);
-            nullstillManuellAdresseInput();
-        } else {
-            settAdresseKilde(AdresseKilde.UDEFINERT);
-            nullstillManuellAdresseInput(true);
+        const navnSkalVærePreutfylt = erMottakerBruker(skjema.felter.mottaker.verdi);
+        if (navnSkalVærePreutfylt !== navnErPreutfylt) {
+            skjema.felter.navn.validerOgSettFelt((navnSkalVærePreutfylt && bruker.navn) || '');
+            settNavnErPreutfylt(navnSkalVærePreutfylt);
         }
-    }, [mottakerErBruker]);
+    }, [skjema.felter.mottaker.verdi]);
 
     const lukkModal = () => {
         settVisBrevmottakerModal(false);
@@ -107,6 +96,10 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         skjema.felter.land.nullstill();
         settVisfeilmeldinger(false);
     };
+
+    const skalNullstilleAdresseInputVedNyMottakerType = (nyMottakerType: MottakerType) =>
+        erMottakerBruker(nyMottakerType) !== erMottakerBruker(skjema.felter.mottaker.verdi) ||
+        adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER;
 
     return (
         <StyledModal
@@ -128,11 +121,15 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                         label="Mottaker"
                         onChange={(event): void => {
                             const nyMottakerType = event.target.value as MottakerType;
-                            skjema.felter.mottaker.validerOgSettFelt(nyMottakerType);
-                            if (adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER) {
-                                // Skjuler input-feltet for orgnr for ny mottakertype != fullmektig
-                                settAdresseKilde(AdresseKilde.UDEFINERT);
+                            if (skalNullstilleAdresseInputVedNyMottakerType(nyMottakerType)) {
+                                nullstillManuellAdresseInput();
+                                settAdresseKilde(
+                                    erMottakerBruker(nyMottakerType)
+                                        ? AdresseKilde.MANUELL_REGISTRERING
+                                        : AdresseKilde.UDEFINERT
+                                );
                             }
+                            skjema.felter.mottaker.validerOgSettFelt(nyMottakerType);
                         }}
                     >
                         <option value={''} disabled={true}>
@@ -146,7 +143,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                 </option>
                             ))}
                     </MottakerSelect>
-                    {skjema.felter.mottaker.verdi && !mottakerErBruker && (
+                    {!erMottakerBruker(skjema.felter.mottaker.verdi) && (
                         <RadioGroup
                             legend={<Label>Adresse</Label>}
                             value={adresseKilde}
@@ -181,7 +178,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                         </RadioGroup>
                     )}
                     {adresseKilde === AdresseKilde.MANUELL_REGISTRERING && (
-                        <BrevmottakerSkjema mottakerErBruker={mottakerErBruker} />
+                        <BrevmottakerSkjema navnErPreutfylt={navnErPreutfylt} />
                     )}
                     {adresseKilde === AdresseKilde.OPPSLAG_REGISTER && (
                         <FamilieInput
