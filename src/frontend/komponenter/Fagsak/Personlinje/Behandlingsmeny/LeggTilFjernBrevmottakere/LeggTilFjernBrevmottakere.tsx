@@ -34,7 +34,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
     const { request } = useHttp();
 
     const kanFjerneManuelleBrevmottakere =
-        behandling.harManuelleBrevmottakere ||
+        behandling.manuelleBrevmottakere.length ||
         behandling.behandlingsstegsinfo.some(
             steg =>
                 steg.behandlingssteg === Behandlingssteg.BREVMOTTAKER &&
