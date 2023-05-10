@@ -143,34 +143,38 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                 </option>
                             ))}
                     </MottakerSelect>
-                    {!erMottakerBruker(skjema.felter.mottaker.verdi) && (
-                        <RadioGroup
-                            legend={'Adresse'}
-                            value={adresseKilde}
-                            onChange={(val: AdresseKilde) => {
-                                settAdresseKilde(val);
-                                nullstillManuellAdresseInput(true);
-                            }}
-                        >
-                            <Radio
-                                id={'manuell-registrering'}
-                                value={AdresseKilde.MANUELL_REGISTRERING}
+                    {skjema.felter.mottaker.verdi &&
+                        !erMottakerBruker(skjema.felter.mottaker.verdi) && (
+                            <RadioGroup
+                                legend={'Adresse'}
+                                value={adresseKilde}
+                                onChange={(val: AdresseKilde) => {
+                                    settAdresseKilde(val);
+                                    nullstillManuellAdresseInput(true);
+                                }}
                             >
-                                {adresseKilder[AdresseKilde.MANUELL_REGISTRERING]}
-                            </Radio>
-                            <Radio id={'oppslag-i-register'} value={AdresseKilde.OPPSLAG_REGISTER}>
-                                {adresseKilder[AdresseKilde.OPPSLAG_REGISTER]}
-                            </Radio>
-                            {skjema.felter.mottaker.verdi === MottakerType.FULLMEKTIG && (
                                 <Radio
-                                    id={'oppslag-i-organisasjonsregister'}
-                                    value={AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER}
+                                    id={'manuell-registrering'}
+                                    value={AdresseKilde.MANUELL_REGISTRERING}
                                 >
-                                    {adresseKilder[AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER]}
+                                    {adresseKilder[AdresseKilde.MANUELL_REGISTRERING]}
                                 </Radio>
-                            )}
-                        </RadioGroup>
-                    )}
+                                <Radio
+                                    id={'oppslag-i-register'}
+                                    value={AdresseKilde.OPPSLAG_REGISTER}
+                                >
+                                    {adresseKilder[AdresseKilde.OPPSLAG_REGISTER]}
+                                </Radio>
+                                {skjema.felter.mottaker.verdi === MottakerType.FULLMEKTIG && (
+                                    <Radio
+                                        id={'oppslag-i-organisasjonsregister'}
+                                        value={AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER}
+                                    >
+                                        {adresseKilder[AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER]}
+                                    </Radio>
+                                )}
+                            </RadioGroup>
+                        )}
                     {adresseKilde === AdresseKilde.MANUELL_REGISTRERING && (
                         <BrevmottakerSkjema navnErPreutfylt={navnErPreutfylt} />
                     )}
