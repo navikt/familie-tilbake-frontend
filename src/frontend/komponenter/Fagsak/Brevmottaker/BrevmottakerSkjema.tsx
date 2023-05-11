@@ -30,14 +30,20 @@ const StyledFieldset = styled(Fieldset)`
     }
 `;
 
-const BrevmottakerSkjema: React.FC = () => {
+interface IProps {
+    navnErPreutfylt: boolean;
+}
+
+const BrevmottakerSkjema: React.FC<IProps> = ({ navnErPreutfylt }) => {
     const { skjema } = useBrevmottaker();
+
     return (
         <>
             <StyledFieldset legend="Skjema for manuell registrering av brevmottaker" hideLegend>
                 <FamilieInput
                     {...skjema.felter.navn.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                     label={'Navn'}
+                    erLesevisning={navnErPreutfylt}
                     onChange={(event): void => {
                         skjema.felter.navn.validerOgSettFelt(event.target.value);
                     }}
