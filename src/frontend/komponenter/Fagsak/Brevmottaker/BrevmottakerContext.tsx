@@ -23,6 +23,7 @@ interface ILeggTilEndreBrevmottakerSkjema {
     poststed: string;
     land: string;
 }
+
 interface IProps {
     behandling: IBehandling;
     fagsak: IFagsak;
@@ -79,6 +80,12 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             }
         };
 
+        const mottaker = useFelt<MottakerType | ''>({
+            verdi: '',
+            valideringsfunksjon: felt =>
+                felt.verdi !== '' ? ok(felt) : feil(felt, 'Feltet er påkrevd'),
+        });
+
         const {
             skjema,
             kanSendeSkjema,
@@ -89,11 +96,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             valideringErOk,
         } = useSkjema<ILeggTilEndreBrevmottakerSkjema, string>({
             felter: {
-                mottaker: useFelt<MottakerType | ''>({
-                    verdi: '',
-                    valideringsfunksjon: felt =>
-                        felt.verdi !== '' ? ok(felt) : feil(felt, 'Feltet er påkrevd'),
-                }),
+                mottaker,
                 navn: useFelt<string>({
                     verdi: '',
                     valideringsfunksjon: felt => {
@@ -147,13 +150,24 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                 }),
                 land: useFelt<string>({
                     verdi: '',
-                    valideringsfunksjon: felt =>
-                        felt.verdi !== ''
+                    valideringsfunksjon: (felt, avhengigheter) => {
+                        const norgeErUlovligValgt =
+                            avhengigheter?.mottaker.verdi ===
+                                MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE && felt.verdi === 'NO';
+                        if (norgeErUlovligValgt) {
+                            return feil(
+                                felt,
+                                'Norge kan ikke være satt for bruker med utenlandsk adresse'
+                            );
+                        }
+                        return felt.verdi !== ''
                             ? ok(felt)
                             : feil(
                                   felt,
                                   'Feltet er påkrevd. Velg Norge dersom brevet skal sendes innenlands.'
-                              ),
+                              );
+                    },
+                    avhengigheter: { mottaker },
                 }),
             },
             skjemanavn: 'Legg til eller endre brevmottaker',
@@ -230,5 +244,4 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         };
     }
 );
-
 export { BrevmottakerProvider, useBrevmottaker };
