@@ -195,6 +195,18 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             }
         };
 
+        const feilNårUtenlandskAdresseHarNorgeSomLand = (
+            mottaker: MottakerType,
+            felt: FeltState<string>
+        ) => {
+            const norgeErUlovligValgt =
+                mottaker === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE && felt.verdi === 'NO';
+
+            if (norgeErUlovligValgt) {
+                return feil(felt, 'Norge kan ikke være satt for bruker med utenlandsk adresse');
+            }
+        };
+
         const mottaker = useFelt<MottakerType | ''>({
             verdi: '',
             valideringsfunksjon: felt =>
@@ -285,24 +297,17 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                     verdi: '',
                     avhengigheter: { adresseKilde, mottaker },
                     valideringsfunksjon: (felt, avhengigheter) => {
-                        if (
-                            avhengigheter?.adresseKilde === AdresseKilde.MANUELL_REGISTRERING ||
-                            avhengigheter?.adresseKilde === AdresseKilde.UDEFINERT
-                        ) {
-                            const norgeErUlovligValgt =
-                                avhengigheter?.mottaker.verdi ===
-                                    MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE &&
-                                felt.verdi === 'NO';
-
-                            if (norgeErUlovligValgt) {
-                                return feil(
-                                    felt,
-                                    'Norge kan ikke være satt for bruker med utenlandsk adresse'
-                                );
-                            }
-                            return felt.verdi !== '' ? ok(felt) : feil(felt, 'Feltet er påkrevd');
-                        }
-                        return ok(felt);
+                        return (
+                            feilNårUtenlandskAdresseHarNorgeSomLand(
+                                avhengigheter?.mottaker.verdi,
+                                felt
+                            ) ||
+                            validerPåkrevdFeltForManuellRegistrering(
+                                felt,
+                                avhengigheter?.adresseKilde,
+                                2
+                            )
+                        );
                     },
                 }),
             },
