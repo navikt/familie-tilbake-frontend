@@ -31,3 +31,17 @@ export const mottakerTypeVisningsnavn: Record<MottakerType, string> = {
     DØDSBO: 'Dødsbo',
     BRUKER: 'Bruker',
 };
+
+export enum AdresseKilde {
+    MANUELL_REGISTRERING = 'MANUELL_REGISTRERING',
+    OPPSLAG_REGISTER = 'OPPSLAG_REGISTER',
+    OPPSLAG_ORGANISASJONSREGISTER = 'OPPSLAG_ORGANISASJONSREGISTER',
+    UDEFINERT = 'UDEFINERT',
+}
+
+export const adresseKilder: Record<AdresseKilde, string> = {
+    MANUELL_REGISTRERING: 'Manuell registrering',
+    OPPSLAG_REGISTER: 'Oppslag i register',
+    OPPSLAG_ORGANISASJONSREGISTER: 'Oppslag i organisasjonsregister',
+    UDEFINERT: 'Udefinert',
+};

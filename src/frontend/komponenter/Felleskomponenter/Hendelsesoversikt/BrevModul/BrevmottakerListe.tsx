@@ -1,5 +1,7 @@
 import React from 'react';
 
+import styled from 'styled-components';
+
 import { IBrevmottaker, MottakerType } from '../../../../typer/Brevmottaker';
 import { IInstitusjon } from '../../../../typer/fagsak';
 import { IPerson } from '../../../../typer/person';
@@ -9,9 +11,21 @@ interface IProps {
     bruker: IPerson;
     institusjon: IInstitusjon | undefined;
     brevmottakere: IBrevmottaker[];
+    harMargin?: boolean;
 }
+interface UlProps {
+    harMargin: boolean;
+}
+const StyledUl = styled.ul`
+    ${(props: UlProps) => (props.harMargin ? `` : `margin-top:0;margin-bottom:0;`)};
+`;
 
-const BrevmottakerListe: React.FC<IProps> = ({ bruker, institusjon, brevmottakere }) => {
+const BrevmottakerListe: React.FC<IProps> = ({
+    bruker,
+    institusjon,
+    brevmottakere,
+    harMargin = true,
+}) => {
     const skalViseInstitusjon = !!institusjon;
     const harUtenlandskAdresse = brevmottakere.some(
         mottaker => mottaker.type === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
@@ -26,7 +40,7 @@ const BrevmottakerListe: React.FC<IProps> = ({ bruker, institusjon, brevmottaker
         bruker && !institusjon && !harManuellDødsboadresse && !harUtenlandskAdresse;
 
     return (
-        <ul>
+        <StyledUl harMargin={harMargin}>
             {skalViseSøker && (
                 <li key="søker">{lagPersonLabel(bruker.personIdent || '', bruker)}</li>
             )}
@@ -63,7 +77,7 @@ const BrevmottakerListe: React.FC<IProps> = ({ bruker, institusjon, brevmottaker
                     .map((mottaker, index) => (
                         <li key={`verge-${index}`}>{mottaker.navn} | Verge</li>
                     ))}
-        </ul>
+        </StyledUl>
     );
 };
 
