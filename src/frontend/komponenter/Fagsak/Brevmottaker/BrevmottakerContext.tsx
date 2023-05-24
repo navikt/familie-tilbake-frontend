@@ -195,6 +195,24 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             }
         };
 
+        const feilNårUtenlandskAdresseHarNorgeSomLand = (
+            mottaker: MottakerType,
+            felt: FeltState<string>
+        ) => {
+            const norgeErUlovligValgt =
+                mottaker === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE && felt.verdi === 'NO';
+
+            if (norgeErUlovligValgt) {
+                return feil(felt, 'Norge kan ikke være satt for bruker med utenlandsk adresse');
+            }
+        };
+
+        const mottaker = useFelt<MottakerType | ''>({
+            verdi: '',
+            valideringsfunksjon: felt =>
+                felt.verdi !== '' ? ok(felt) : feil(felt, 'Feltet er påkrevd'),
+        });
+
         const {
             skjema,
             kanSendeSkjema,
@@ -206,11 +224,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             validerAlleSynligeFelter,
         } = useSkjema<ILeggTilEndreBrevmottakerSkjema, string>({
             felter: {
-                mottaker: useFelt<MottakerType | ''>({
-                    verdi: '',
-                    valideringsfunksjon: felt =>
-                        felt.verdi !== '' ? ok(felt) : feil(felt, 'Feltet er påkrevd'),
-                }),
+                mottaker,
                 fødselsnummer: useFelt<string>({
                     verdi: '',
                     avhengigheter: { adresseKilde },
@@ -281,14 +295,20 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                 }),
                 land: useFelt<string>({
                     verdi: '',
-                    avhengigheter: { adresseKilde },
-                    valideringsfunksjon: (felt, avhengigheter) =>
-                        validerPåkrevdFeltForManuellRegistrering(
-                            felt,
-                            avhengigheter?.adresseKilde,
-                            2,
-                            'Feltet er påkrevd. Velg Norge dersom brevet skal sendes innenlands.'
-                        ),
+                    avhengigheter: { adresseKilde, mottaker },
+                    valideringsfunksjon: (felt, avhengigheter) => {
+                        return (
+                            feilNårUtenlandskAdresseHarNorgeSomLand(
+                                avhengigheter?.mottaker.verdi,
+                                felt
+                            ) ||
+                            validerPåkrevdFeltForManuellRegistrering(
+                                felt,
+                                avhengigheter?.adresseKilde,
+                                2
+                            )
+                        );
+                    },
                 }),
             },
             skjemanavn: 'Legg til eller endre brevmottaker',
