@@ -54,12 +54,12 @@ const erMottakerBruker = (mottakerType: MottakerType | '') =>
     mottakerType === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
     mottakerType === MottakerType.DØDSBO;
 
-const preutfyltNavnFixed = (mottaker: MottakerType | '', land: string, navn: string) =>
-    mottaker === MottakerType.DØDSBO
-        ? !land || land === 'NO'
-            ? `${navn} v/dødsbo`
-            : `Estate of ${navn}`
-        : navn;
+const preutfyltNavnFixed = (mottaker: MottakerType | '', land: string, navn: string) => {
+    if (mottaker === MottakerType.DØDSBO) {
+        return !land || land === 'NO' ? `${navn} v/dødsbo` : `Estate of ${navn}`;
+    }
+    return navn;
+};
 
 export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     const { visBrevmottakerModal, settVisBrevmottakerModal } = useBehandling();
