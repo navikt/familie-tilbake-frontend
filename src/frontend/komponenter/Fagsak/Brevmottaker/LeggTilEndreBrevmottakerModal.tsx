@@ -82,9 +82,13 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     React.useEffect(() => {
         const { mottaker, navn, land } = skjema.felter;
         const navnSkalVærePreutfylt = erMottakerBruker(mottaker.verdi);
-        navn.validerOgSettFelt(
-            navnSkalVærePreutfylt ? preutfyltNavnFixed(mottaker.verdi, land.verdi, bruker.navn) : ''
-        );
+        if (navnSkalVærePreutfylt || navnSkalVærePreutfylt !== navnErPreutfylt) {
+            navn.validerOgSettFelt(
+                navnSkalVærePreutfylt
+                    ? preutfyltNavnFixed(mottaker.verdi, land.verdi, bruker.navn)
+                    : ''
+            );
+        }
         settNavnErPreutfylt(navnSkalVærePreutfylt);
     }, [skjema.felter.mottaker.verdi, skjema.felter.land.verdi]);
 
