@@ -11,7 +11,12 @@ import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype } from '../../../kodeverk/verge';
 import { IBehandling } from '../../../typer/behandling';
-import { AdresseKilde, IBrevmottaker, MottakerType } from '../../../typer/Brevmottaker';
+import {
+    AdresseKilde,
+    IBrevmottaker,
+    MottakerType,
+    mottakerTypeVisningsnavn,
+} from '../../../typer/Brevmottaker';
 import { IFagsak } from '../../../typer/fagsak';
 import { isNumeric } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
@@ -50,6 +55,45 @@ const validerPåkrevdFeltForManuellRegistrering = (
         return (
             feilNårFeltetErTomt(felt, feilmelding) ||
             feilNårFeltetOverskriderMakslengde(felt, maksLengde)
+        );
+    }
+    return ok(felt);
+};
+
+const validerValgtMottakerType = (
+    felt: FeltState<MottakerType | ''>,
+    behandling: IBehandling,
+    idTilMottakerUnderEndring: string | undefined
+) => {
+    const eksisterendeMottaker = behandling.manuelleBrevmottakere.find(
+        mottaker => mottaker.id !== idTilMottakerUnderEndring
+    )?.brevmottaker;
+
+    if (felt.verdi === '') {
+        return feil(felt, 'Feltet er påkrevd');
+    }
+    if (eksisterendeMottaker !== undefined) {
+        const eksisterendeBrevmottakerType = eksisterendeMottaker.type;
+        if (felt.verdi === eksisterendeBrevmottakerType) {
+            return feil(felt, `${mottakerTypeVisningsnavn[felt.verdi]} er allerede lagt til`);
+        }
+        if (
+            felt.verdi === MottakerType.DØDSBO ||
+            eksisterendeBrevmottakerType === MottakerType.DØDSBO
+        ) {
+            return feil(felt, 'Dødsbo kan ikke kombineres med andre brevmottakere');
+        }
+        if (
+            felt.verdi === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
+            eksisterendeBrevmottakerType === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
+        ) {
+            return ok(felt);
+        }
+        return feil(
+            felt,
+            `${
+                mottakerTypeVisningsnavn[eksisterendeBrevmottakerType]
+            } kan ikke kombineres med ${mottakerTypeVisningsnavn[felt.verdi].toLowerCase()}.`
         );
     }
     return ok(felt);
@@ -129,6 +173,7 @@ interface ILeggTilEndreBrevmottakerSkjema {
     poststed: string;
     land: string;
 }
+
 interface IProps {
     behandling: IBehandling;
     fagsak: IFagsak;
@@ -209,8 +254,13 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
 
         const mottaker = useFelt<MottakerType | ''>({
             verdi: '',
-            valideringsfunksjon: felt =>
-                felt.verdi !== '' ? ok(felt) : feil(felt, 'Feltet er påkrevd'),
+            avhengigheter: { behandling, brevmottakerIdTilEndring },
+            valideringsfunksjon: (felt, avhenigheter) =>
+                validerValgtMottakerType(
+                    felt,
+                    avhenigheter?.behandling,
+                    avhenigheter?.brevmottakerIdTilEndring
+                ),
         });
 
         const {
