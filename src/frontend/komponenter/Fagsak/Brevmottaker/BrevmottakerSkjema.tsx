@@ -31,11 +31,13 @@ const StyledFieldset = styled(Fieldset)`
 `;
 
 interface IProps {
-    navnErPreutfylt: boolean;
+    preutfyltNavn?: string;
 }
 
-const BrevmottakerSkjema: React.FC<IProps> = ({ navnErPreutfylt }) => {
+const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
     const { skjema } = useBrevmottaker();
+
+    preutfyltNavn && skjema.felter.navn.validerOgSettFelt(preutfyltNavn);
 
     return (
         <>
@@ -43,7 +45,7 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ navnErPreutfylt }) => {
                 <FamilieInput
                     {...skjema.felter.navn.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                     label={'Navn'}
-                    erLesevisning={navnErPreutfylt}
+                    erLesevisning={!!preutfyltNavn}
                     onChange={(event): void => {
                         skjema.felter.navn.validerOgSettFelt(event.target.value);
                     }}
