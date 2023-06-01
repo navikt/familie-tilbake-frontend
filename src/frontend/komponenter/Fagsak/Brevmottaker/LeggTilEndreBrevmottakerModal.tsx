@@ -54,6 +54,13 @@ const erMottakerBruker = (mottakerType: MottakerType | '') =>
     mottakerType === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
     mottakerType === MottakerType.DØDSBO;
 
+const preutfyltNavnFixed = (mottaker: MottakerType | '', land: string, navn: string) => {
+    if (mottaker === MottakerType.DØDSBO) {
+        return !land || land === 'NO' ? `${navn} v/dødsbo` : `Estate of ${navn}`;
+    }
+    return navn;
+};
+
 export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     const { visBrevmottakerModal, settVisBrevmottakerModal } = useBehandling();
     const {
@@ -73,12 +80,17 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     const [navnErPreutfylt, settNavnErPreutfylt] = React.useState(false);
 
     React.useEffect(() => {
-        const navnSkalVærePreutfylt = erMottakerBruker(skjema.felter.mottaker.verdi);
-        if (navnSkalVærePreutfylt !== navnErPreutfylt) {
-            skjema.felter.navn.validerOgSettFelt((navnSkalVærePreutfylt && bruker.navn) || '');
-            settNavnErPreutfylt(navnSkalVærePreutfylt);
+        const { mottaker, navn, land } = skjema.felter;
+        const navnSkalVærePreutfylt = erMottakerBruker(mottaker.verdi);
+        if (navnSkalVærePreutfylt || navnSkalVærePreutfylt !== navnErPreutfylt) {
+            navn.validerOgSettFelt(
+                navnSkalVærePreutfylt
+                    ? preutfyltNavnFixed(mottaker.verdi, land.verdi, bruker.navn)
+                    : ''
+            );
         }
-    }, [skjema.felter.mottaker.verdi]);
+        settNavnErPreutfylt(navnSkalVærePreutfylt);
+    }, [skjema.felter.mottaker.verdi, skjema.felter.land.verdi]);
 
     const lukkModal = () => {
         settVisBrevmottakerModal(false);
