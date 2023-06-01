@@ -64,7 +64,15 @@ const hendelseTyperForYtelse = {
         HendelseType.DØDSFALL,
         HendelseType.ANNET,
     ],
-    KONTANTSTØTTE: [HendelseType.ANNET],
+    KONTANTSTØTTE: [
+        HendelseType.BOSATT_I_RIKET,
+        HendelseType.BOR_MED_SØKER,
+        HendelseType.BARNEHAGEPLASS,
+        HendelseType.MEDLEMSKAP_KS,
+        HendelseType.MEDLEMSKAP_ANNEN_FORELDER,
+        HendelseType.BARNS_ALDER_KS,
+        HendelseType.ANNET,
+    ],
 };
 
 export const hentHendelseTyper = (ytelse: Ytelsetype, erInstitusjon: boolean): HendelseType[] => {
