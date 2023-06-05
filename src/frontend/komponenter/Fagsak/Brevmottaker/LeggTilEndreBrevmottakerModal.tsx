@@ -77,20 +77,11 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     } = useBrevmottaker();
 
     const heading = brevmottakerIdTilEndring ? 'Endre brevmottaker' : 'Legg til brevmottaker';
-    const [navnErPreutfylt, settNavnErPreutfylt] = React.useState(false);
 
-    React.useEffect(() => {
-        const { mottaker, navn, land } = skjema.felter;
-        const navnSkalVærePreutfylt = erMottakerBruker(mottaker.verdi);
-        if (navnSkalVærePreutfylt || navnSkalVærePreutfylt !== navnErPreutfylt) {
-            navn.validerOgSettFelt(
-                navnSkalVærePreutfylt
-                    ? preutfyltNavnFixed(mottaker.verdi, land.verdi, bruker.navn)
-                    : ''
-            );
-        }
-        settNavnErPreutfylt(navnSkalVærePreutfylt);
-    }, [skjema.felter.mottaker.verdi, skjema.felter.land.verdi]);
+    const { mottaker, land } = skjema.felter;
+    const preutfyltNavn = erMottakerBruker(mottaker.verdi)
+        ? preutfyltNavnFixed(mottaker.verdi, land.verdi, bruker.navn)
+        : undefined;
 
     const lukkModal = () => {
         settVisBrevmottakerModal(false);
@@ -188,7 +179,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                             </RadioGroup>
                         )}
                     {adresseKilde === AdresseKilde.MANUELL_REGISTRERING && (
-                        <BrevmottakerSkjema navnErPreutfylt={navnErPreutfylt} />
+                        <BrevmottakerSkjema preutfyltNavn={preutfyltNavn} />
                     )}
                     {adresseKilde === AdresseKilde.OPPSLAG_REGISTER && (
                         <FamilieInput
