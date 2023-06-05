@@ -26,6 +26,11 @@ export enum HendelseType {
     STØNAD_TIL_BARNETILSYN = 'STØNAD_TIL_BARNETILSYN',
     // Skolepenger
     SKOLEPENGER = 'SKOLEPENGER',
+    // Kontantstøtte
+    BARNEHAGEPLASS = 'BARNEHAGEPLASS',
+    MEDLEMSKAP_KS = 'MEDLEMSKAP_KS',
+    BARNS_ALDER_KS = 'BARNS_ALDER_KS',
+    MEDLEMSKAP_ANNEN_FORELDER = 'MEDLEMSKAP_ANNEN_FORELDER',
 }
 
 export const hendelsetyper: Record<HendelseType, string> = {
@@ -56,6 +61,11 @@ export const hendelsetyper: Record<HendelseType, string> = {
     STØNAD_TIL_BARNETILSYN: '§15-10 Stønad til barnetilsyn',
     // Skolepenger
     SKOLEPENGER: '§15-11 Skolepenger',
+    // Kontantstøtte
+    BARNEHAGEPLASS: 'Barnehageplass',
+    MEDLEMSKAP_KS: 'Medlemskap',
+    BARNS_ALDER_KS: 'Barnets alder',
+    MEDLEMSKAP_ANNEN_FORELDER: 'Medlemskap annen forelder',
 };
 
 export enum HendelseUndertype {
@@ -151,6 +161,9 @@ export enum HendelseUndertype {
     // Skolepenger
     IKKE_RETT_TIL_OVERGANGSSTØNAD = 'IKKE_RETT_TIL_OVERGANGSSTØNAD',
     SLUTTET_I_UTDANNING = 'SLUTTET_I_UTDANNING',
+    // Kontanstøtte
+    FULLTID_BARNEHAGEPLASS = 'FULLTID_BARNEHAGEPLASS',
+    OVER_2_ÅR = 'OVER_2_ÅR',
 }
 
 export const hendelseundertyper: Record<HendelseUndertype, string> = {
@@ -248,6 +261,9 @@ export const hendelseundertyper: Record<HendelseUndertype, string> = {
     // Skolepenger
     IKKE_RETT_TIL_OVERGANGSSTØNAD: 'Ikke rett til overgangsstønad (5. ledd)',
     SLUTTET_I_UTDANNING: 'Sluttet i utdanning',
+    // Kontantstøtte
+    FULLTID_BARNEHAGEPLASS: 'Fulltid barnehageplass',
+    OVER_2_ÅR: 'Barn over 2 år',
 };
 
 const undertyper = {
@@ -365,6 +381,10 @@ const undertyper = {
         HendelseUndertype.IKKE_RETT_TIL_OVERGANGSSTØNAD,
         HendelseUndertype.SLUTTET_I_UTDANNING,
     ],
+    BARNEHAGEPLASS: [HendelseUndertype.FULLTID_BARNEHAGEPLASS],
+    MEDLEMSKAP_KS: [],
+    MEDLEMSKAP_ANNEN_FORELDER: [],
+    BARNS_ALDER_KS: [HendelseUndertype.OVER_2_ÅR],
 };
 
 export const hentHendelseUndertyper = (hendelseType: HendelseType): HendelseUndertype[] => {
