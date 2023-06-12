@@ -55,7 +55,7 @@
     "@types/react-modal": "^3.13.1",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26",
-    "@types/uuid": "^8.3.4",
+    "@types/uuid": "^9.0.2",
     "axios": "^0.27.2",
     "babel-loader": "^9.1.0",
     "classnames": "^2.3.2",
