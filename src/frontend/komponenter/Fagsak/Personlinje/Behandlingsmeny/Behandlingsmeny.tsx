@@ -89,22 +89,6 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                             onListElementClick={() => settVisMeny(false)}
                                         />
                                     </li>
-                                    {behandling.data.støtterManuelleBrevmottakere ? (
-                                        <li>
-                                            <LeggTilFjernBrevmottakere
-                                                behandling={behandling.data}
-                                                fagsak={fagsak}
-                                                onListElementClick={() => settVisMeny(false)}
-                                            />
-                                        </li>
-                                    ) : (
-                                        <li>
-                                            <OpprettFjernVerge
-                                                behandling={behandling.data}
-                                                onListElementClick={() => settVisMeny(false)}
-                                            />
-                                        </li>
-                                    )}
                                     {!venterPåKravgrunnlag &&
                                         (behandling.data.erBehandlingPåVent || ventegrunn ? (
                                             <li>
@@ -125,6 +109,22 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                         <li>
                                             <EndreBehandlendeEnhet
                                                 ytelse={fagsak.ytelsestype}
+                                                behandling={behandling.data}
+                                                onListElementClick={() => settVisMeny(false)}
+                                            />
+                                        </li>
+                                    )}
+                                    {behandling.data.støtterManuelleBrevmottakere ? (
+                                        <li>
+                                            <LeggTilFjernBrevmottakere
+                                                behandling={behandling.data}
+                                                fagsak={fagsak}
+                                                onListElementClick={() => settVisMeny(false)}
+                                            />
+                                        </li>
+                                    ) : (
+                                        <li>
+                                            <OpprettFjernVerge
                                                 behandling={behandling.data}
                                                 onListElementClick={() => settVisMeny(false)}
                                             />
