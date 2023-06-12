@@ -50,7 +50,7 @@ const BrevmottakerContainer: React.FC = () => {
                                     behandlingId={behandling.behandlingId}
                                     erLesevisning={erLesevisning}
                                 />
-                                {antallBrevmottakere == 1 && (
+                                {antallBrevmottakere == 1 && !erLesevisning && (
                                     <LeggTilKnapp
                                         variant="tertiary"
                                         size="small"

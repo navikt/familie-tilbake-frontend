@@ -115,13 +115,15 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                         </li>
                                     )}
                                     {behandling.data.støtterManuelleBrevmottakere ? (
-                                        <li>
-                                            <LeggTilFjernBrevmottakere
-                                                behandling={behandling.data}
-                                                fagsak={fagsak}
-                                                onListElementClick={() => settVisMeny(false)}
-                                            />
-                                        </li>
+                                        !behandling.data.erBehandlingPåVent && (
+                                            <li>
+                                                <LeggTilFjernBrevmottakere
+                                                    behandling={behandling.data}
+                                                    fagsak={fagsak}
+                                                    onListElementClick={() => settVisMeny(false)}
+                                                />
+                                            </li>
+                                        )
                                     ) : (
                                         <li>
                                             <OpprettFjernVerge
