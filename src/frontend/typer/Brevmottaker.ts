@@ -41,7 +41,7 @@ export enum AdresseKilde {
 
 export const adresseKilder: Record<AdresseKilde, string> = {
     MANUELL_REGISTRERING: 'Manuell registrering',
-    OPPSLAG_REGISTER: 'Oppslag i register',
+    OPPSLAG_REGISTER: 'Oppslag i personregister',
     OPPSLAG_ORGANISASJONSREGISTER: 'Oppslag i organisasjonsregister',
     UDEFINERT: 'Udefinert',
 };
