@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-import { Delete, Edit } from '@navikt/ds-icons';
+import { AddCircle, Delete, Edit } from '@navikt/ds-icons';
 import { Button, Heading } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import CountryData from '@navikt/land-verktoy';
@@ -37,14 +37,24 @@ const DefinitionList = styled.dl`
     }
 `;
 
+const LeggTilKnapp = styled(Button)`
+    margin-top: 1rem;
+`;
+
 interface IProps {
     brevmottaker: IBrevmottaker;
     brevmottakerId: string;
     behandlingId: string;
     erLesevisning: boolean;
+    antallBrevmottakere: number;
 }
 
-const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevisning }) => {
+const Brevmottaker: React.FC<IProps> = ({
+    brevmottaker,
+    brevmottakerId,
+    erLesevisning,
+    antallBrevmottakere,
+}) => {
     const {
         fjernBrevMottakerOgOppdaterState,
         settBrevmottakerIdTilEndring,
@@ -126,6 +136,21 @@ const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevi
                     {'Endre'}
                 </Button>
             )}
+
+            {!erLesevisning &&
+                brevmottaker.type === MottakerType.BRUKER &&
+                antallBrevmottakere > 1 && (
+                    <LeggTilKnapp
+                        variant="tertiary"
+                        size="small"
+                        icon={<AddCircle />}
+                        onClick={() => {
+                            settVisBrevmottakerModal(true);
+                        }}
+                    >
+                        {'Legg til ny mottaker'}
+                    </LeggTilKnapp>
+                )}
         </StyledDiv>
     );
 };
