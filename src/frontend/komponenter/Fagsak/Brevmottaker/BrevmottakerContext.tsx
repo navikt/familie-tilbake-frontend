@@ -218,14 +218,22 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         React.useEffect(() => {
             if (brevmottakerIdTilEndring) {
                 const lagretBrevmottaker = brevmottakere[brevmottakerIdTilEndring];
-                populerSkjema(skjema, lagretBrevmottaker);
-                settAdresseKilde(
-                    lagretBrevmottaker.personIdent
-                        ? AdresseKilde.OPPSLAG_REGISTER
-                        : lagretBrevmottaker.organisasjonsnummer
-                        ? AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
-                        : AdresseKilde.MANUELL_REGISTRERING
-                );
+                const erBruker = brevmottakerIdTilEndring === 'bruker';
+                if (erBruker) {
+                    skjema.felter.mottaker.validerOgSettFelt(
+                        MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
+                    );
+                    settAdresseKilde(AdresseKilde.MANUELL_REGISTRERING);
+                } else {
+                    populerSkjema(skjema, lagretBrevmottaker);
+                    settAdresseKilde(
+                        lagretBrevmottaker.personIdent
+                            ? AdresseKilde.OPPSLAG_REGISTER
+                            : lagretBrevmottaker.organisasjonsnummer
+                            ? AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
+                            : AdresseKilde.MANUELL_REGISTRERING
+                    );
+                }
             }
         }, [brevmottakerIdTilEndring]);
 
@@ -372,14 +380,14 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                     skjema,
                     adresseKilde
                 );
-
+                const mottakerIdUlikBruker = mottakerId !== 'bruker' ? mottakerId : undefined;
                 onSubmit(
                     {
-                        method: mottakerId ? 'PUT' : 'POST',
+                        method: mottakerIdUlikBruker ? 'PUT' : 'POST',
                         data: manuellBrevmottakerRequest,
                         url: `/familie-tilbake/api/brevmottaker/manuell/${
                             behandling.behandlingId
-                        }/${mottakerId || ''}`,
+                        }/${mottakerIdUlikBruker || ''}`,
                     },
                     (response: Ressurs<string>) => {
                         if (response.status === RessursStatus.SUKSESS) {

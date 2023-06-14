@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-import { AddCircle, Delete, Edit } from '@navikt/ds-icons';
+import { Delete, Edit } from '@navikt/ds-icons';
 import { Button, Heading } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import CountryData from '@navikt/land-verktoy';
@@ -37,7 +37,7 @@ const DefinitionList = styled.dl`
     }
 `;
 
-const LeggTilKnapp = styled(Button)`
+const EndreBrukerKnapp = styled(Button)`
     margin-top: 1rem;
 `;
 
@@ -140,16 +140,17 @@ const Brevmottaker: React.FC<IProps> = ({
             {!erLesevisning &&
                 brevmottaker.type === MottakerType.BRUKER &&
                 antallBrevmottakere > 1 && (
-                    <LeggTilKnapp
+                    <EndreBrukerKnapp
                         variant="tertiary"
                         size="small"
-                        icon={<AddCircle />}
+                        icon={<Edit />}
                         onClick={() => {
+                            settBrevmottakerIdTilEndring(brevmottakerId);
                             settVisBrevmottakerModal(true);
                         }}
                     >
-                        {'Legg til ny mottaker'}
-                    </LeggTilKnapp>
+                        {'Endre'}
+                    </EndreBrukerKnapp>
                 )}
         </StyledDiv>
     );
