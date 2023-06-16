@@ -27,10 +27,14 @@ export enum HendelseType {
     // Skolepenger
     SKOLEPENGER = 'SKOLEPENGER',
     // Kontantstøtte
-    BARNEHAGEPLASS = 'BARNEHAGEPLASS',
-    MEDLEMSKAP_KS = 'MEDLEMSKAP_KS',
-    BARNS_ALDER_KS = 'BARNS_ALDER_KS',
-    MEDLEMSKAP_ANNEN_FORELDER = 'MEDLEMSKAP_ANNEN_FORELDER',
+    VILKÅR_BARN = 'VILKÅR_BARN',
+    VILKÅR_SØKER = 'VILKÅR_SØKER',
+    BARN_I_FOSTERHJEM_ELLER_INSTITUSJON = 'BARN_I_FOSTERHJEM_ELLER_INSTITUSJON',
+    KONTANTSTØTTENS_STØRRELSE = 'KONTANTSTØTTENS_STØRRELSE',
+    STØTTEPERIODE = 'STØTTEPERIODE',
+    UTBETALING = 'UTBETALING',
+    KONTANTSTØTTE_FOR_ADOPTERTE_BARN = 'KONTANTSTØTTE_FOR_ADOPTERTE_BARN',
+    ANNET_KS = 'ANNET_KS',
 }
 
 export const hendelsetyper: Record<HendelseType, string> = {
@@ -62,17 +66,20 @@ export const hendelsetyper: Record<HendelseType, string> = {
     // Skolepenger
     SKOLEPENGER: '§15-11 Skolepenger',
     // Kontantstøtte
-    BARNEHAGEPLASS: 'Barnehageplass',
-    MEDLEMSKAP_KS: 'Medlemskap',
-    BARNS_ALDER_KS: 'Barnets alder',
-    MEDLEMSKAP_ANNEN_FORELDER: 'Medlemskap annen forelder',
+    VILKÅR_BARN: '§2 Vilkår barn',
+    VILKÅR_SØKER: '§3 Vilkår søker (støttemottaker)',
+    BARN_I_FOSTERHJEM_ELLER_INSTITUSJON: '§6 Barn i fosterhjem eller institusjon',
+    KONTANTSTØTTENS_STØRRELSE: '§7 Kontantstøttens størrelse',
+    STØTTEPERIODE: '§8 Støtteperiode',
+    UTBETALING: '§9 Utbetaling',
+    KONTANTSTØTTE_FOR_ADOPTERTE_BARN: '§10 Kontantstøtte for adopterte barn',
+    ANNET_KS: 'Annet',
 };
 
 export enum HendelseUndertype {
     // Felles
     ANNET_FRITEKST = 'ANNET_FRITEKST',
     BRUKER_FLYTTET_FRA_NORGE = 'BRUKER_FLYTTET_FRA_NORGE',
-    BARN_FLYTTET_FRA_NORGE = 'BARN_FLYTTET_FRA_NORGE',
     BARN_DØD = 'BARN_DØD',
     BRUKER_DØD = 'BRUKER_DØD',
     // Barnetrygd
@@ -164,6 +171,32 @@ export enum HendelseUndertype {
     // Kontanstøtte
     FULLTID_BARNEHAGEPLASS = 'FULLTID_BARNEHAGEPLASS',
     OVER_2_ÅR = 'OVER_2_ÅR',
+    BARN_IKKE_BOSATT = 'BARN_IKKE_BOSATT',
+    BARN_IKKE_OPPHOLDSTILLATELSE = 'BARN_IKKE_OPPHOLDSTILLATELSE',
+    BARN_FLYTTET_FRA_NORGE = 'BARN_FLYTTET_FRA_NORGE',
+    BARN_OVER_2_ÅR = 'BARN_OVER_2_ÅR',
+    DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN = 'DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN',
+    DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS = 'DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS',
+    SØKER_IKKE_MEDLEM_FOLKETRYGDEN = 'SØKER_IKKE_MEDLEM_FOLKETRYGDEN',
+    SØKER_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS = 'SØKER_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS',
+    BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN = 'BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN',
+    BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS = 'BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS',
+    BARN_BOR_IKKE_HOS_SØKER = 'BARN_BOR_IKKE_HOS_SØKER',
+    UTENLANDSOPPHOLD_OVER_3_MÅNEDER = 'UTENLANDSOPPHOLD_OVER_3_MÅNEDER',
+    SØKER_FLYTTET_FRA_NORGE = 'SØKER_FLYTTET_FRA_NORGE',
+    SØKER_IKKE_BOSATT = 'SØKER_IKKE_BOSATT',
+    SØKER_IKKE_OPPHOLDSTILLATELSE = 'SØKER_IKKE_OPPHOLDSTILLATELSE',
+    SØKER_IKKE_OPPHOLDSTILLATELSE_I_MER_ENN_12_MÅNEDER = 'SØKER_IKKE_OPPHOLDSTILLATELSE_I_MER_ENN_12_MÅNEDER',
+    BARN_I_FOSTERHJEM = 'BARN_I_FOSTERHJEM',
+    BARN_I_INSTITUSJON = 'BARN_I_INSTITUSJON',
+    FULLTIDSPLASS_BARNEHAGE = 'FULLTIDSPLASS_BARNEHAGE',
+    DELTIDSPLASS_BARNEHAGEPLASS = 'DELTIDSPLASS_BARNEHAGEPLASS',
+    ØKT_TIMEANTALL_I_BARNEHAGE = 'ØKT_TIMEANTALL_I_BARNEHAGE',
+    BARN_2_ÅR = 'BARN_2_ÅR',
+    DELT_BOSTED_AVTALE_OPPHØRT = 'DELT_BOSTED_AVTALE_OPPHØRT',
+    DOBBELUTBETALING = 'DOBBELUTBETALING',
+    MER_ENN_11_MÅNEDER = 'MER_ENN_11_MÅNEDER',
+    BARN_STARTET_PÅ_SKOLEN = 'BARN_STARTET_PÅ_SKOLEN',
 }
 
 export const hendelseundertyper: Record<HendelseUndertype, string> = {
@@ -264,6 +297,34 @@ export const hendelseundertyper: Record<HendelseUndertype, string> = {
     // Kontantstøtte
     FULLTID_BARNEHAGEPLASS: 'Fulltid barnehageplass',
     OVER_2_ÅR: 'Barn over 2 år',
+    BARN_IKKE_BOSATT: 'Barn ikke bosatt',
+    BARN_IKKE_OPPHOLDSTILLATELSE: 'Barn ikke oppholdstillatelse',
+    BARN_OVER_2_ÅR: 'Barn over 2 år',
+    DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN: 'Den andre forelderen ikke medlem folketrygden',
+    DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS:
+        'Den andre forelderen ikke medlem folketrygden eller EØS',
+    SØKER_IKKE_MEDLEM_FOLKETRYGDEN: 'Søker ikke medlem folketrygden',
+    SØKER_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS: 'Søker ikke medlem folketrygden eller EØS',
+    BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN: 'Begge foreldrene ikke medlem folketrygden',
+    BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS:
+        'Begge foreldrene ikke medlem folketrygden eller EØS',
+    BARN_BOR_IKKE_HOS_SØKER: 'Barn bor ikke hos søker',
+    UTENLANDSOPPHOLD_OVER_3_MÅNEDER: 'Utenlandsopphold over 3 måneder',
+    SØKER_FLYTTET_FRA_NORGE: 'Søker flyttet fra Norge',
+    SØKER_IKKE_BOSATT: 'Søker ikke bosatt',
+    SØKER_IKKE_OPPHOLDSTILLATELSE: 'Søker ikke oppholdstillatelse',
+    SØKER_IKKE_OPPHOLDSTILLATELSE_I_MER_ENN_12_MÅNEDER:
+        'Søker ikke oppholdstillatelse i mer enn 12 måneder',
+    BARN_I_FOSTERHJEM: 'Barn i fosterhjem',
+    BARN_I_INSTITUSJON: 'Barn i institusjon',
+    FULLTIDSPLASS_BARNEHAGE: 'Fulltidsplass barnehage',
+    DELTIDSPLASS_BARNEHAGEPLASS: 'Deltidsplass barnehageplass',
+    ØKT_TIMEANTALL_I_BARNEHAGE: 'Økt timeantall i barnehage',
+    BARN_2_ÅR: 'Barn 2 år',
+    DELT_BOSTED_AVTALE_OPPHØRT: 'Delt bosted, avtale opphørt',
+    DOBBELUTBETALING: 'Dobbelutbetaling',
+    MER_ENN_11_MÅNEDER: 'Mer enn 11 måneder',
+    BARN_STARTET_PÅ_SKOLEN: 'Barn startet på skolen',
 };
 
 const undertyper = {
@@ -381,10 +442,49 @@ const undertyper = {
         HendelseUndertype.IKKE_RETT_TIL_OVERGANGSSTØNAD,
         HendelseUndertype.SLUTTET_I_UTDANNING,
     ],
-    BARNEHAGEPLASS: [HendelseUndertype.FULLTID_BARNEHAGEPLASS],
-    MEDLEMSKAP_KS: [],
-    MEDLEMSKAP_ANNEN_FORELDER: [],
-    BARNS_ALDER_KS: [HendelseUndertype.OVER_2_ÅR],
+    VILKÅR_BARN: [
+        HendelseUndertype.FULLTIDSPLASS_BARNEHAGE,
+        HendelseUndertype.DELTIDSPLASS_BARNEHAGEPLASS,
+        HendelseUndertype.BARN_IKKE_BOSATT,
+        HendelseUndertype.BARN_IKKE_OPPHOLDSTILLATELSE,
+        HendelseUndertype.BARN_FLYTTET_FRA_NORGE,
+        HendelseUndertype.BARN_OVER_2_ÅR,
+    ],
+    VILKÅR_SØKER: [
+        HendelseUndertype.DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN,
+        HendelseUndertype.DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS,
+        HendelseUndertype.SØKER_IKKE_MEDLEM_FOLKETRYGDEN,
+        HendelseUndertype.SØKER_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS,
+        HendelseUndertype.BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN,
+        HendelseUndertype.BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS,
+        HendelseUndertype.BARN_BOR_IKKE_HOS_SØKER,
+        HendelseUndertype.UTENLANDSOPPHOLD_OVER_3_MÅNEDER,
+        HendelseUndertype.SØKER_FLYTTET_FRA_NORGE,
+        HendelseUndertype.SØKER_IKKE_BOSATT,
+        HendelseUndertype.SØKER_IKKE_OPPHOLDSTILLATELSE,
+        HendelseUndertype.SØKER_IKKE_OPPHOLDSTILLATELSE_I_MER_ENN_12_MÅNEDER,
+    ],
+    BARN_I_FOSTERHJEM_ELLER_INSTITUSJON: [
+        HendelseUndertype.BARN_I_FOSTERHJEM,
+        HendelseUndertype.BARN_I_INSTITUSJON,
+    ],
+    KONTANTSTØTTENS_STØRRELSE: [
+        HendelseUndertype.FULLTIDSPLASS_BARNEHAGE,
+        HendelseUndertype.DELTIDSPLASS_BARNEHAGEPLASS,
+        HendelseUndertype.ØKT_TIMEANTALL_I_BARNEHAGE,
+        HendelseUndertype.SATSENDRING,
+    ],
+    STØTTEPERIODE: [HendelseUndertype.BARN_2_ÅR],
+    UTBETALING: [HendelseUndertype.DELT_BOSTED_AVTALE_OPPHØRT, HendelseUndertype.DOBBELUTBETALING],
+    KONTANTSTØTTE_FOR_ADOPTERTE_BARN: [
+        HendelseUndertype.MER_ENN_11_MÅNEDER,
+        HendelseUndertype.BARN_STARTET_PÅ_SKOLEN,
+    ],
+    ANNET_KS: [
+        HendelseUndertype.ANNET_FRITEKST,
+        HendelseUndertype.BARN_DØD,
+        HendelseUndertype.BRUKER_DØD,
+    ],
 };
 
 export const hentHendelseUndertyper = (hendelseType: HendelseType): HendelseUndertype[] => {
