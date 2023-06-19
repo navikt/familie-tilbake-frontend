@@ -81,13 +81,16 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         const { gjerFeilutbetalingVilkårsvurderingKall, sendInnFeilutbetalingVilkårsvurdering } =
             useBehandlingApi();
         const navigate = useNavigate();
+        const kanIleggeRenter = ![Ytelsetype.BARNETRYGD, Ytelsetype.KONTANTSTØTTE].includes(
+            fagsak.ytelsestype
+        );
 
         React.useEffect(() => {
             if (visVenteModal === false) {
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.VILKÅRSVURDERING));
                 settErAutoutført(erStegAutoutført(Behandlingssteg.VILKÅRSVURDERING));
                 hentFeilutbetalingVilkårsvurdering();
-                settKanIlleggeRenter(fagsak.ytelsestype !== Ytelsetype.BARNETRYGD);
+                settKanIlleggeRenter(kanIleggeRenter);
             }
         }, [behandling, visVenteModal]);
 
