@@ -8,7 +8,12 @@ import { Alert, BodyLong, Heading, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Ytelsetype } from '../../../kodeverk';
+import {
+    Ytelsetype,
+    vilkårsvurderingStegInfotekst,
+    vilkårsvurderingStegInfotekstKontantstøtte,
+    vilkårsvurderingStegInfotekstBarnetrygd,
+} from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
@@ -37,7 +42,14 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         useFeilutbetalingVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
-    const erBarnetrygd = fagsak.ytelsestype === Ytelsetype.BARNETRYGD;
+
+    const stegInfotekst = {
+        [Ytelsetype.BARNETRYGD]: vilkårsvurderingStegInfotekstBarnetrygd,
+        [Ytelsetype.KONTANTSTØTTE]: vilkårsvurderingStegInfotekstKontantstøtte,
+        [Ytelsetype.BARNETILSYN]: vilkårsvurderingStegInfotekst,
+        [Ytelsetype.OVERGANGSSTØNAD]: vilkårsvurderingStegInfotekst,
+        [Ytelsetype.SKOLEPENGER]: vilkårsvurderingStegInfotekst,
+    }[fagsak.ytelsestype];
 
     switch (feilutbetalingVilkårsvurdering?.status) {
         case RessursStatus.SUKSESS: {
@@ -61,11 +73,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
                         <>
                             <Steginformasjon
                                 behandletSteg={stegErBehandlet}
-                                infotekst={
-                                    erBarnetrygd
-                                        ? 'Fastsett tilbakekreving etter barnetrygdloven § 13 og folketrygdloven § 22-15. Del opp perioden ved behov for ulik vurdering.'
-                                        : 'Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering.'
-                                }
+                                infotekst={stegInfotekst}
                             />
                             <Spacer20 />
                         </>

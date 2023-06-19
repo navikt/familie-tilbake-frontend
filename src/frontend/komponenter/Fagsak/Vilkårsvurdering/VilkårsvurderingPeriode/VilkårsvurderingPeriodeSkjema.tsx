@@ -16,6 +16,7 @@ import {
     vilkårsresultater,
     vilkårsresultatHjelpetekster,
     vilkårsresultatHjelpeteksterBarnetrygd,
+    vilkårsresultatHjelpeteksterKontantstøtte,
     vilkårsresultatTyper,
     Ytelsetype,
 } from '../../../../kodeverk';
@@ -145,10 +146,14 @@ const settSkjemadataFraPeriode = (
 };
 
 const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.ReactNode => {
-    const hjelpetekster =
-        fagsak.ytelsestype === Ytelsetype.BARNETRYGD
-            ? vilkårsresultatHjelpeteksterBarnetrygd
-            : vilkårsresultatHjelpetekster;
+    const hjelpetekster = {
+        [Ytelsetype.BARNETRYGD]: vilkårsresultatHjelpeteksterBarnetrygd,
+        [Ytelsetype.KONTANTSTØTTE]: vilkårsresultatHjelpeteksterKontantstøtte,
+        [Ytelsetype.BARNETILSYN]: vilkårsresultatHjelpetekster,
+        [Ytelsetype.OVERGANGSSTØNAD]: vilkårsresultatHjelpetekster,
+        [Ytelsetype.SKOLEPENGER]: vilkårsresultatHjelpetekster,
+    }[fagsak.ytelsestype];
+
     return (
         <div style={{ display: 'inline-flex' }}>
             {vilkårsresultater[resultat]}
