@@ -31,6 +31,24 @@ export const vilkårsresultatHjelpeteksterBarnetrygd: Record<Vilkårsresultat, s
     GOD_TRO: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd',
 };
 
+export const vilkårsresultatHjelpeteksterKontantstøtte: Record<Vilkårsresultat, string> = {
+    FORSTO_BURDE_FORSTÅTT: 'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
+    FEIL_OPPLYSNINGER_FRA_BRUKER:
+        'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
+    MANGELFULLE_OPPLYSNINGER_FRA_BRUKER:
+        'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
+    GOD_TRO: 'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd',
+};
+
+export const vilkårsvurderingStegInfotekst =
+    'Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering.';
+
+export const vilkårsvurderingStegInfotekstBarnetrygd =
+    'Fastsett tilbakekreving etter barnetrygdloven § 13 og folketrygdloven § 22-15. Del opp perioden ved behov for ulik vurdering.';
+
+export const vilkårsvurderingStegInfotekstKontantstøtte =
+    'Fastsett tilbakekreving etter kontantstøtteloven § 11 og folketrygdloven § 22-15. Del opp perioden ved behov for ulik vurdering.';
+
 export const vilkårsresultatTyper = [
     Vilkårsresultat.FORSTO_BURDE_FORSTÅTT,
     Vilkårsresultat.FEIL_OPPLYSNINGER_FRA_BRUKER,
