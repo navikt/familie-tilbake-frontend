@@ -9,11 +9,11 @@ import { ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
 import { type ISkjema } from '@navikt/familie-skjema';
 
+import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 import { DetailBold, Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
 import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
-import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 
 const StyledCheckboxGruppe = styled(CheckboxGroup)`
     .lese-felt {

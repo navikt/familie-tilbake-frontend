@@ -6,14 +6,6 @@ import styled from 'styled-components';
 import { BodyShort } from '@navikt/ds-react';
 import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 
-import { useBehandling } from '../../context/BehandlingContext';
-import { Behandlingstatus, IBehandling } from '../../typer/behandling';
-import { IFagsak } from '../../typer/fagsak';
-import {
-    erØnsketSideTilgjengelig,
-    finnSideAktivtSteg,
-} from '../Felleskomponenter/Venstremeny/sider';
-import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 import BrevmottakerContainer from './Brevmottaker/BrevmottakerContainer';
 import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
 import FaktaContainer from './Fakta/FaktaContainer';
@@ -27,6 +19,14 @@ import VergeContainer from './Verge/VergeContainer';
 import { VergeProvider } from './Verge/VergeContext';
 import { FeilutbetalingVilkårsvurderingProvider } from './Vilkårsvurdering/FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
+import { useBehandling } from '../../context/BehandlingContext';
+import { Behandlingstatus, IBehandling } from '../../typer/behandling';
+import { IFagsak } from '../../typer/fagsak';
+import {
+    erØnsketSideTilgjengelig,
+    finnSideAktivtSteg,
+} from '../Felleskomponenter/Venstremeny/sider';
+import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 

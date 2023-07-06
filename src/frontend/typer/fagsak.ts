@@ -1,6 +1,6 @@
-import { Fagsystem, Ytelsetype } from '../kodeverk';
 import { Behandlingstatus, Behandlingstype } from './behandling';
 import { IPerson } from './person';
+import { Fagsystem, Ytelsetype } from '../kodeverk';
 
 export enum Målform {
     NB = 'NB',

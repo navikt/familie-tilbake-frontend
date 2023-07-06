@@ -10,10 +10,10 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { useHistorikk } from './HistorikkContext';
 import { IHistorikkInnslag } from '../../../../typer/historikk';
 import { base64ToArrayBuffer } from '../../../../utils';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
-import { useHistorikk } from './HistorikkContext';
 
 interface IProps {
     innslag: IHistorikkInnslag;

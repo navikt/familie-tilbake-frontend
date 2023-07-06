@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { Alert } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import BehandlingContainer from './BehandlingContainer';
+import Personlinje from './Personlinje/Personlinje';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { Fagsystem } from '../../kodeverk';
@@ -14,8 +16,6 @@ import { formatterDatostring } from '../../utils';
 import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
 import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
-import BehandlingContainer from './BehandlingContainer';
-import Personlinje from './Personlinje/Personlinje';
 
 const FagsakContainerContent = styled.div`
     display: flex;

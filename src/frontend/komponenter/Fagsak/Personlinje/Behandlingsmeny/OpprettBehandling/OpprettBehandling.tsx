@@ -3,6 +3,7 @@ import * as React from 'react';
 import { ErrorMessage } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
+import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';
 import {
     Behandlingstype,
     behandlingsTyper,
@@ -20,7 +21,6 @@ import {
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
-import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';
 
 interface IProps {
     behandling: IBehandling;

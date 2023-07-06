@@ -9,6 +9,18 @@ import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
+import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
+import GodTroSkjema from './GodTroSkjema';
+import SplittPeriode from './SplittPeriode/SplittPeriode';
+import TilbakekrevingAktivitetTabell from './TilbakekrevingAktivitetTabell';
+import {
+    ANDELER,
+    EGENDEFINERT,
+    finnJaNeiOption,
+    OptionNEI,
+    useVilkårsvurderingPeriodeSkjema,
+    VilkårsvurderingSkjemaDefinisjon,
+} from './VilkårsvurderingPeriodeSkjemaContext';
 import {
     Aktsomhet,
     SærligeGrunner,
@@ -29,18 +41,6 @@ import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelement
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
-import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
-import GodTroSkjema from './GodTroSkjema';
-import SplittPeriode from './SplittPeriode/SplittPeriode';
-import TilbakekrevingAktivitetTabell from './TilbakekrevingAktivitetTabell';
-import {
-    ANDELER,
-    EGENDEFINERT,
-    finnJaNeiOption,
-    OptionNEI,
-    useVilkårsvurderingPeriodeSkjema,
-    VilkårsvurderingSkjemaDefinisjon,
-} from './VilkårsvurderingPeriodeSkjemaContext';
 
 const StyledContainer = styled.div`
     border: 1px solid ${ABorderStrong};

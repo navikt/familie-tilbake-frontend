@@ -6,6 +6,8 @@ import { mock } from 'jest-mock-extended';
 
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import { FeilutbetalingVedtakProvider } from './FeilutbetalingVedtakContext';
+import VedtakContainer from './VedtakContainer';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
@@ -16,8 +18,6 @@ import {
     IBeregningsresultat,
     VedtaksbrevAvsnitt,
 } from '../../../typer/vedtakTyper';
-import { FeilutbetalingVedtakProvider } from './FeilutbetalingVedtakContext';
-import VedtakContainer from './VedtakContainer';
 
 jest.mock('@navikt/familie-http', () => {
     return {

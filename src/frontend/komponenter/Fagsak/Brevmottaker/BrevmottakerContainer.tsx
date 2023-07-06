@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import { AddCircle } from '@navikt/ds-icons';
 import { Button, Heading } from '@navikt/ds-react';
 
-import { useBehandling } from '../../../context/BehandlingContext';
 import Brevmottaker from './Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
 import { LeggTilEndreBrevmottakerModal } from './LeggTilEndreBrevmottakerModal';
+import { useBehandling } from '../../../context/BehandlingContext';
 
 const StyledBrevmottaker = styled.div`
     padding: 2.5rem;

@@ -4,10 +4,10 @@ import styled from 'styled-components';
 
 import { Table } from '@navikt/ds-react';
 
+import FeilutbetalingFaktaPeriode from './FeilutbetalingFaktaPeriodeSkjema';
 import { HendelseType, hentHendelseTyper, Ytelsetype } from '../../../../kodeverk';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
 import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
-import FeilutbetalingFaktaPeriode from './FeilutbetalingFaktaPeriodeSkjema';
 
 const StyledPeriodeTable = styled(Table)`
     td {

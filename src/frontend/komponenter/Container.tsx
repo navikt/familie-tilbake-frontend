@@ -2,14 +2,14 @@ import * as React from 'react';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import { useApp } from '../context/AppContext';
-import { BehandlingProvider } from '../context/BehandlingContext';
-import { FagsakProvider } from '../context/FagsakContext';
 import FagsakContainer from './Fagsak/FagsakContainer';
 import Dashboard from './Felleskomponenter/Dashboard';
 import Feilmelding from './Felleskomponenter/Feilmelding';
 import FTHeader from './Felleskomponenter/FTHeader/FTHeader';
 import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
+import { useApp } from '../context/AppContext';
+import { BehandlingProvider } from '../context/BehandlingContext';
+import { FagsakProvider } from '../context/FagsakContext';
 
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();

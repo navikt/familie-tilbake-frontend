@@ -6,14 +6,14 @@ import { mock } from 'jest-mock-extended';
 
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import VergeContainer from './VergeContainer';
+import { VergeProvider } from './VergeContext';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype } from '../../../kodeverk/verge';
 import { VergeDto } from '../../../typer/api';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import VergeContainer from './VergeContainer';
-import { VergeProvider } from './VergeContext';
 
 jest.mock('@navikt/familie-http', () => {
     return {

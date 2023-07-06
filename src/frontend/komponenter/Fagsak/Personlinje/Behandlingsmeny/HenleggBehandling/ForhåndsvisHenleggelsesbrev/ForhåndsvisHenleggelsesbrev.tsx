@@ -6,10 +6,10 @@ import { ExternalLink } from '@navikt/ds-icons';
 import { Detail, Link } from '@navikt/ds-react';
 import { type ISkjema } from '@navikt/familie-skjema';
 
+import { useForhåndsvisHenleggelsesbrev } from './useForhåndsvisHenleggelsesbrev';
 import { IBehandling } from '../../../../../../typer/behandling';
 import PdfVisningModal from '../../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
-import { useForhåndsvisHenleggelsesbrev } from './useForhåndsvisHenleggelsesbrev';
 
 const StyledContainer = styled.div`
     margin-top: -5px;

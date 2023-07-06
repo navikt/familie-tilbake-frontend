@@ -5,10 +5,10 @@ import '@navikt/ds-css-internal';
 import { Modal } from '@navikt/ds-react';
 import { type ISaksbehandler } from '@navikt/familie-typer';
 
-import { hentInnloggetBruker } from '../api/saksbehandler';
-import { AppProvider } from '../context/AppContext';
 import Container from './Container';
 import ErrorBoundary from './Felleskomponenter/ErrorBoundary/ErrorBoundary';
+import { hentInnloggetBruker } from '../api/saksbehandler';
+import { AppProvider } from '../context/AppContext';
 
 Modal?.setAppElement?.(document.getElementById('modal-a11y-wrapper'));
 

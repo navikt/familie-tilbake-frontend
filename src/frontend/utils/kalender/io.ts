@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 
-import { datoformat } from '../formatter';
 import type { DagMånedÅr, FamilieIsoDate } from './typer';
 import { antallDagerIMåned } from './typer';
+import { datoformat } from '../formatter';
 
 export const parseIso8601String = (dato: FamilieIsoDate): DagMånedÅr => {
     const dayjsDato = dayjs(dato, datoformat.ISO_DAG);

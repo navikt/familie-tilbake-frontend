@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import { Alert, BodyLong, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
-import { hentDatoRegistrertSendt } from '../../../../utils';
 import { useDokumentlisting } from './DokumentlistingContext';
 import JournalpostVisning from './Journalpostvisning';
+import { hentDatoRegistrertSendt } from '../../../../utils';
 
 const StyledContainer = styled.div`
     margin-top: 10px;

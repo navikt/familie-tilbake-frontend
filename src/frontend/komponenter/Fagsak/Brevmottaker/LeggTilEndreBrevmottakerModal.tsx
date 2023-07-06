@@ -7,6 +7,8 @@ import { ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { useBrevmottaker } from './BrevmottakerContext';
+import BrevmottakerSkjema from './BrevmottakerSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import {
     AdresseKilde,
@@ -14,8 +16,6 @@ import {
     MottakerType,
     mottakerTypeVisningsnavn,
 } from '../../../typer/Brevmottaker';
-import { useBrevmottaker } from './BrevmottakerContext';
-import BrevmottakerSkjema from './BrevmottakerSkjema';
 
 const StyledModal = styled(Modal)`
     padding: 1rem;

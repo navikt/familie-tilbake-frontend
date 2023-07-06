@@ -1,5 +1,5 @@
-import type { IPerson } from '../typer/person';
 import { iDag, kalenderDato, kalenderDatoTilDate, kalenderDiff } from './kalender';
+import type { IPerson } from '../typer/person';
 
 export enum datoformat {
     MÅNED = 'MM.YY',

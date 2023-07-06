@@ -6,14 +6,14 @@ import { BodyShort, Radio } from '@navikt/ds-react';
 import { FamilieInput } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
-import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';
 import {
     JaNeiOption,
     jaNeiOptions,
     OptionJA,
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
+import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
+import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';
 
 const ArrowBoxContainer = styled.div`
     width: 300px;

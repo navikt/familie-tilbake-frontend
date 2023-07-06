@@ -7,10 +7,10 @@ import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { BodyLong, Heading } from '@navikt/ds-react';
 import { ABorderWarning } from '@navikt/ds-tokens/dist/tokens';
 
-import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
-import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
+import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
+import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 
 const StyledEkspanderbartpanel = styled(Ekspanderbartpanel)`
     &.panel {

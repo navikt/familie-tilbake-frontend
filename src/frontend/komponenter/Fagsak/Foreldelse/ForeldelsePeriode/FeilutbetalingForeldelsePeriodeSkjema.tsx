@@ -10,6 +10,8 @@ import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
+import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
+import SplittPeriode from './SplittPeriode/SplittPeriode';
 import {
     Foreldelsevurdering,
     foreldelsevurderinger,
@@ -23,8 +25,6 @@ import { FamilieTilbakeTextArea, FTDatovelger } from '../../../Felleskomponenter
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
-import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
-import SplittPeriode from './SplittPeriode/SplittPeriode';
 
 const StyledContainer = styled.div`
     border: 1px solid ${ABorderStrong};

@@ -6,6 +6,8 @@ import { mock } from 'jest-mock-extended';
 
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import FaktaContainer from './FaktaContainer';
+import { FeilutbetalingFaktaProvider } from './FeilutbetalingFaktaContext';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { HendelseType, HendelseUndertype, Ytelsetype } from '../../../kodeverk';
@@ -16,8 +18,6 @@ import {
     IFeilutbetalingFakta,
     Tilbakekrevingsvalg,
 } from '../../../typer/feilutbetalingtyper';
-import FaktaContainer from './FaktaContainer';
-import { FeilutbetalingFaktaProvider } from './FeilutbetalingFaktaContext';
 
 jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: jest.fn(),

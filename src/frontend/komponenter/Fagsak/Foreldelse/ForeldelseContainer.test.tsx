@@ -6,14 +6,14 @@ import { mock } from 'jest-mock-extended';
 
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import { FeilutbetalingForeldelseProvider } from './FeilutbetalingForeldelseContext';
+import ForeldelseContainer from './ForeldelseContainer';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { ForeldelsePeriode, IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
-import { FeilutbetalingForeldelseProvider } from './FeilutbetalingForeldelseContext';
-import ForeldelseContainer from './ForeldelseContainer';
 
 jest.setTimeout(10000);
 

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Radio } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
+import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
@@ -13,7 +14,6 @@ import {
     OptionNEI,
     VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
-import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
 
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;

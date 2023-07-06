@@ -11,6 +11,12 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import {
+    OptionIkkeGodkjent,
+    TotrinnGodkjenningOption,
+    totrinnGodkjenningOptions,
+    TotrinnStegSkjemaData,
+} from './typer/totrinnSkjemaTyper';
 import { useBehandlingApi } from '../../../../api/behandling';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer/api';
@@ -19,12 +25,6 @@ import { IFagsak } from '../../../../typer/fagsak';
 import { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
 import { validerTekstMaksLengde } from '../../../../utils';
 import { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
-import {
-    OptionIkkeGodkjent,
-    TotrinnGodkjenningOption,
-    totrinnGodkjenningOptions,
-    TotrinnStegSkjemaData,
-} from './typer/totrinnSkjemaTyper';
 
 const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
     const option = totrinnGodkjenningOptions.find(opt => opt.verdi === verdi);

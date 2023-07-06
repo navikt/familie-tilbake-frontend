@@ -4,6 +4,7 @@ import { ErrorMessage } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Ytelsetype } from '../../../../../kodeverk';
 import { IBehandling } from '../../../../../typer/behandling';
@@ -16,7 +17,6 @@ import {
 } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
-import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 
 interface IProps {
     ytelse: Ytelsetype;

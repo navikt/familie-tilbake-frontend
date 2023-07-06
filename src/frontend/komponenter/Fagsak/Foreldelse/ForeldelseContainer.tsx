@@ -7,13 +7,13 @@ import { Column, Row } from 'nav-frontend-grid';
 import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { useFeilutbetalingForeldelse } from './FeilutbetalingForeldelseContext';
+import FeilutbetalingForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IBehandling } from '../../../typer/behandling';
 import { finnDatoRelativtTilNå } from '../../../utils';
 import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import { useFeilutbetalingForeldelse } from './FeilutbetalingForeldelseContext';
-import FeilutbetalingForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
 
 export const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });

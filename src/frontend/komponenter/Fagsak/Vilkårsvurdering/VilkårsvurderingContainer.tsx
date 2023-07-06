@@ -7,6 +7,11 @@ import { Column, Row } from 'nav-frontend-grid';
 import { Alert, BodyLong, Heading, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import {
+    erTotalbeløpUnder4Rettsgebyr,
+    useFeilutbetalingVilkårsvurdering,
+} from './FeilutbetalingVilkårsvurderingContext';
+import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
 import {
     Ytelsetype,
@@ -18,11 +23,6 @@ import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import {
-    erTotalbeløpUnder4Rettsgebyr,
-    useFeilutbetalingVilkårsvurdering,
-} from './FeilutbetalingVilkårsvurderingContext';
-import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 
 const StyledVilkårsvurdering = styled.div`
     padding: 10px;

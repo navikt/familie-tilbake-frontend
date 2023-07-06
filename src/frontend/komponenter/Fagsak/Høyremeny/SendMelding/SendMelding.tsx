@@ -3,6 +3,8 @@ import * as React from 'react';
 import { BodyShort, Heading } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
+import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
+import { useSendMelding } from './SendMeldingContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
@@ -10,8 +12,6 @@ import { IFagsak, målform } from '../../../../typer/fagsak';
 import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 import { FamilieTilbakeTextArea, LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
-import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
-import { useSendMelding } from './SendMeldingContext';
 
 const tekstfeltLabel = (mal: DokumentMal) => {
     return mal === DokumentMal.INNHENT_DOKUMENTASJON

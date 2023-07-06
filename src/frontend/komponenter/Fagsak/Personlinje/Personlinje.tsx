@@ -16,12 +16,12 @@ import {
 import { RessursStatus } from '@navikt/familie-typer';
 import { Visittkort } from '@navikt/familie-visittkort';
 
+import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { IFagsak } from '../../../typer/fagsak';
 import { IPerson } from '../../../typer/person';
 import { formatterDatostring, hentAlder } from '../../../utils';
-import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
 
 const PlaceholderDiv = styled.div`
     flex: 1;

@@ -7,10 +7,6 @@ import { Button, Popover } from '@navikt/ds-react';
 import { AFontSizeXlarge, AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
-import { useBehandling } from '../../../../context/BehandlingContext';
-import { Fagsystem } from '../../../../kodeverk';
-import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
 import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
@@ -18,6 +14,10 @@ import LeggTilFjernBrevmottakere from './LeggTilFjernBrevmottakere/LeggTilFjernB
 import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
 import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
+import { useBehandling } from '../../../../context/BehandlingContext';
+import { Fagsystem } from '../../../../kodeverk';
+import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
+import { IFagsak } from '../../../../typer/fagsak';
 
 const StyledList = styled.ul`
     list-style-type: none;

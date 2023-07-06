@@ -4,6 +4,7 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
+import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
 import {
     Aktsomhet,
     HendelseType,
@@ -14,7 +15,6 @@ import {
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
-import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
 
 jest.setTimeout(10000);
 

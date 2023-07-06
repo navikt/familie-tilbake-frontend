@@ -9,6 +9,9 @@ import { BodyShort } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import { type Periode } from '@navikt/familie-tidslinje';
 
+import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
+import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
+import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
@@ -19,9 +22,6 @@ import {
     Spacer20,
 } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
-import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
-import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
-import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 
 const ValideringsFeilmelding = styled(BodyShort)`
     font-weight: ${AFontWeightBold};

@@ -1,9 +1,9 @@
 import * as React from 'react';
 
+import HenleggBehandlingModal from './HenleggBehandlingModal/HenleggBehandlingModal';
 import { Behandlingresultat, Behandlingstype, IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
-import HenleggBehandlingModal from './HenleggBehandlingModal/HenleggBehandlingModal';
 
 const getÅrsaker = (behandling: IBehandling) => {
     if (behandling.type === Behandlingstype.TILBAKEKREVING) {

@@ -8,8 +8,8 @@ import { FamilieInput } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 import CountrySelect from '@navikt/landvelger';
 
-import { MottakerType } from '../../../typer/Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
+import { MottakerType } from '../../../typer/Brevmottaker';
 
 const PostnummerOgStedContainer = styled.div`
     display: grid;

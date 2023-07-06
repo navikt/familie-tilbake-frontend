@@ -5,11 +5,11 @@ import styled from 'styled-components';
 import { AddCircle } from '@navikt/ds-icons';
 import { BodyShort, Link } from '@navikt/ds-react';
 
+import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
+import { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import { isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
-import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
-import { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
 const StyledUndertekst = styled(BodyShort)`
     display: inline-block;

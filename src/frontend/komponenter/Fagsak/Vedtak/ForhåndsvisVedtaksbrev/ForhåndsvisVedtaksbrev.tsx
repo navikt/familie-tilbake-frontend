@@ -1,8 +1,8 @@
 import * as React from 'react';
 
+import { useForhåndsvisVedtaksbrev } from './useForhåndsvisVedtaksbrev';
 import { FTButton } from '../../../Felleskomponenter/Flytelementer';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
-import { useForhåndsvisVedtaksbrev } from './useForhåndsvisVedtaksbrev';
 
 interface IProps {
     test?: boolean;

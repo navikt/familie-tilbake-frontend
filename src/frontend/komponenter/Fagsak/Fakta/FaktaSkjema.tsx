@@ -4,6 +4,10 @@ import { Column, Row } from 'nav-frontend-grid';
 
 import { BodyShort, Checkbox, Heading } from '@navikt/ds-react';
 
+import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
+import FaktaRevurdering from './FaktaRevurdering';
+import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
+import { FaktaSkjemaData } from './typer/feilutbetalingFakta';
 import { Ytelsetype } from '../../../kodeverk';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
@@ -15,10 +19,6 @@ import {
     Spacer8,
 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
-import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
-import FaktaRevurdering from './FaktaRevurdering';
-import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
-import { FaktaSkjemaData } from './typer/feilutbetalingFakta';
 
 interface IProps {
     ytelse: Ytelsetype;

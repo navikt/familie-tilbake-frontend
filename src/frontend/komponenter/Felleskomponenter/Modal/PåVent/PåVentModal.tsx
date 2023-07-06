@@ -7,6 +7,7 @@ import { ATextDanger, ASpacing8 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
+import { usePåVentBehandling } from './PåVentContext';
 import {
     Behandlingssteg,
     IBehandling,
@@ -18,7 +19,6 @@ import { dateBeforeToday, datoformatNorsk, finnDateRelativtTilNå } from '../../
 import { FTButton, Spacer20 } from '../../Flytelementer';
 import { FixedDatovelger } from '../../Skjemaelementer';
 import UIModalWrapper from '../UIModalWrapper';
-import { usePåVentBehandling } from './PåVentContext';
 
 const FeilContainer = styled.div`
     margin-top: ${ASpacing8};

@@ -1,9 +1,9 @@
 import * as React from 'react';
 
+import { useForhåndsvisBrev } from './useForhåndsvisBrev';
 import { FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import PdfVisningModal from '../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { useSendMelding } from '../SendMeldingContext';
-import { useForhåndsvisBrev } from './useForhåndsvisBrev';
 
 interface IProps {
     test?: boolean;

@@ -7,10 +7,10 @@ import { mock } from 'jest-mock-extended';
 import { Modal } from '@navikt/ds-react';
 import { HttpProvider } from '@navikt/familie-http';
 
+import SplittPeriode from './SplittPeriode';
 import { HendelseType } from '../../../../../kodeverk';
 import { IBehandling } from '../../../../../typer/behandling';
 import { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
-import SplittPeriode from './SplittPeriode';
 
 describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
     beforeEach(() => {

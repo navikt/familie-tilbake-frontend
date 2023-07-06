@@ -5,6 +5,13 @@ import styled from 'styled-components';
 import { Alert, Link, Radio } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { useTotrinnskontroll } from './TotrinnskontrollContext';
+import {
+    OptionGodkjent,
+    OptionIkkeGodkjent,
+    TotrinnGodkjenningOption,
+    totrinnGodkjenningOptions,
+} from './typer/totrinnSkjemaTyper';
 import { behandlingssteg } from '../../../../typer/behandling';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
@@ -14,13 +21,6 @@ import {
 } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
-import { useTotrinnskontroll } from './TotrinnskontrollContext';
-import {
-    OptionGodkjent,
-    OptionIkkeGodkjent,
-    TotrinnGodkjenningOption,
-    totrinnGodkjenningOptions,
-} from './typer/totrinnSkjemaTyper';
 
 const StyledContainer = styled.div`
     margin-top: 10px;

@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
+import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
 import {
     Behandlingresultat,
     behandlingsresultater,
@@ -15,7 +16,6 @@ import {
     LabelMedSpråk,
 } from '../../../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
-import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
 
 interface IProps {
     behandling: IBehandling;

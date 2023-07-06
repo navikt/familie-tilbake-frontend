@@ -6,13 +6,13 @@ import { mock } from 'jest-mock-extended';
 
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import SendMelding from './SendMelding';
+import { SendMeldingProvider } from './SendMeldingContext';
 import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak, Målform } from '../../../../typer/fagsak';
-import SendMelding from './SendMelding';
-import { SendMeldingProvider } from './SendMeldingContext';
 
 jest.mock('@navikt/familie-http', () => {
     return {

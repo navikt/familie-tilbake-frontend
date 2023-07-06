@@ -14,10 +14,10 @@ import {
 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
-import { useBehandling } from '../../../context/BehandlingContext';
-import { IFagsak } from '../../../typer/fagsak';
 import Link from './Link';
 import { erSidenAktiv, sider, visSide } from './sider';
+import { useBehandling } from '../../../context/BehandlingContext';
+import { IFagsak } from '../../../typer/fagsak';
 
 const StyledNav = styled.nav`
     display: flex;
