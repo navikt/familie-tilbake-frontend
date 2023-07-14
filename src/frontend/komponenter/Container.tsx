@@ -10,6 +10,7 @@ import Dashboard from './Felleskomponenter/Dashboard';
 import Feilmelding from './Felleskomponenter/Feilmelding';
 import FTHeader from './Felleskomponenter/FTHeader/FTHeader';
 import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
+import Toasts from './Felleskomponenter/Toast/Toasts';
 
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
@@ -17,21 +18,24 @@ const Container: React.FC = () => {
     return (
         <Router>
             {autentisert ? (
-                <main>
-                    <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
-                    <FagsakProvider>
-                        <BehandlingProvider>
-                            <Routes>
-                                <Route
-                                    path="/fagsystem/:fagsystem/fagsak/:fagsakId/*"
-                                    element={<FagsakContainer />}
-                                />
-                                <Route path="/" element={<Dashboard />} />
-                                <Route path="/*" element={<Feilmelding />} />
-                            </Routes>
-                        </BehandlingProvider>
-                    </FagsakProvider>
-                </main>
+                <>
+                    <Toasts />
+                    <main>
+                        <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
+                        <FagsakProvider>
+                            <BehandlingProvider>
+                                <Routes>
+                                    <Route
+                                        path="/fagsystem/:fagsystem/fagsak/:fagsakId/*"
+                                        element={<FagsakContainer />}
+                                    />
+                                    <Route path="/" element={<Dashboard />} />
+                                    <Route path="/*" element={<Feilmelding />} />
+                                </Routes>
+                            </BehandlingProvider>
+                        </FagsakProvider>
+                    </main>
+                </>
             ) : (
                 <UgyldigSesjon />
             )}
