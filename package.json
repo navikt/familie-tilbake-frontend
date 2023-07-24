@@ -44,7 +44,7 @@
     "@navikt/land-verktoy": "^3.2.10",
     "@navikt/landvelger": "^3.1.5",
     "@sentry/browser": "^7.21.1",
-    "@sentry/core": "^7.21.1",
+    "@sentry/core": "^7.60.0",
     "@sentry/tracing": "^7.21.1",
     "@sentry/webpack-plugin": "^1.20.0",
     "@types/classnames": "^2.3.1",
