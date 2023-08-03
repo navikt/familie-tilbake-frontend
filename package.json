@@ -32,7 +32,7 @@
     "@navikt/ds-react-internal": "2.0.x",
     "@navikt/ds-tokens": "2.0.x",
     "@navikt/familie-backend": "^10.0.1",
-    "@navikt/familie-form-elements": "^9.0.0",
+    "@navikt/familie-form-elements": "^11.0.0",
     "@navikt/familie-http": "^6.0.2",
     "@navikt/familie-logging": "^6.0.0",
     "@navikt/familie-skjema": "^7.0.6",
