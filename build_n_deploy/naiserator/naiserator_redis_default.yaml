@@ -16,7 +16,6 @@ spec:
     max: 1
   resources: # you need to monitor need your self
     limits:
-      cpu: 100m
       memory: 128Mi
     requests:
       cpu: 100m
