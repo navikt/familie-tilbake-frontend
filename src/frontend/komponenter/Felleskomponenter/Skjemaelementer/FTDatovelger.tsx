@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DatepickerProps } from 'nav-datovelger/lib/Datepicker';
 import styled from 'styled-components';
 
-import { FamilieDatovelger, IDatovelgerProps } from '@navikt/familie-form-elements';
+import { FamilieDatovelger, IDatovelgerProps } from '@navikt/familie-datovelger';
 
 const StyledDatovelger = styled(FamilieDatovelger)`
     & div.nav-datovelger div.DayPicker-Caption {

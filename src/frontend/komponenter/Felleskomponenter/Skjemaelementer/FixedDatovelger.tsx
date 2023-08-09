@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DatepickerProps } from 'nav-datovelger/lib/Datepicker';
 import styled from 'styled-components';
 
-import { IDatovelgerProps } from '@navikt/familie-form-elements';
+import { IDatovelgerProps } from '@navikt/familie-datovelger';
 
 import { FTDatovelger } from './FTDatovelger';
 
