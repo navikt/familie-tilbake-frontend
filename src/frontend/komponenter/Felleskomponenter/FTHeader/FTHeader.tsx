@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import { Link, Dropdown, InternalHeader as NavHeader } from '@navikt/ds-react';
+import { Link, Dropdown, InternalHeader } from '@navikt/ds-react';
 import {
     AFontLineHeightHeadingMedium,
     AFontSizeHeadingMedium,
@@ -11,11 +11,11 @@ import {
 } from '@navikt/ds-tokens/dist/tokens';
 import { type ISaksbehandler } from '@navikt/familie-typer';
 
-const StyledHeader = styled(NavHeader)`
+const StyledHeader = styled(InternalHeader)`
     justify-content: space-between;
 `;
 
-const StyledTitle = styled(NavHeader.Title)`
+const StyledTitle = styled(InternalHeader.Title)`
     margin-left: ${ASpacing3};
     font-size: ${AFontSizeHeadingMedium};
     line-height: ${AFontLineHeightHeadingMedium};
@@ -38,7 +38,7 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
                 <StyledLink href="/">NAV Familie - Tilbakekreving</StyledLink>
             </StyledTitle>
             <Dropdown>
-                <NavHeader.UserButton
+                <InternalHeader.UserButton
                     as={Dropdown.Toggle}
                     name={innloggetSaksbehandler?.displayName || 'ukjent'}
                     description={
