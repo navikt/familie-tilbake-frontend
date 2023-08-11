@@ -49,9 +49,9 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
                 />
                 <Dropdown.Menu>
                     <Dropdown.Menu.List>
-                        <Dropdown.Menu.List.Item>
-                            <a href={`${window.origin}/auth/logout`}>Logg ut</a>
-                        </Dropdown.Menu.List.Item>
+                        <a href={`${window.origin}/auth/logout`}>
+                            <Dropdown.Menu.List.Item>Logg ut</Dropdown.Menu.List.Item>
+                        </a>
                     </Dropdown.Menu.List>
                 </Dropdown.Menu>
             </Dropdown>
