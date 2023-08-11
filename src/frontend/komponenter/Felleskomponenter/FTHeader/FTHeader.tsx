@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import styled from 'styled-components';
-
-import { Link, Dropdown, InternalHeader } from '@navikt/ds-react';
+import { Link } from 'react-router-dom';
+import { Dropdown, InternalHeader } from '@navikt/ds-react';
 import {
     AFontLineHeightHeadingMedium,
     AFontSizeHeadingMedium,
@@ -35,7 +35,7 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
     return (
         <StyledHeader>
             <StyledTitle as="h1">
-                <StyledLink href="/">NAV Familie - Tilbakekreving</StyledLink>
+                <StyledLink to="/">NAV Familie - Tilbakekreving</StyledLink>
             </StyledTitle>
             <Dropdown>
                 <InternalHeader.UserButton
@@ -50,7 +50,7 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
                 <Dropdown.Menu>
                     <Dropdown.Menu.List>
                         <Dropdown.Menu.List.Item>
-                            <Link href={`${window.origin}/auth/logout`}>Logg ut</Link>
+                            <a href={`${window.origin}/auth/logout`}>Logg ut</a>
                         </Dropdown.Menu.List.Item>
                     </Dropdown.Menu.List>
                 </Dropdown.Menu>
