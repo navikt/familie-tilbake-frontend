@@ -1695,9 +1695,9 @@
     tslib "^2.3.1"
 
 "@navikt/aksel-icons@4.x", "@navikt/aksel-icons@^4.10.0":
-  version "4.10.0"
-  resolved "https://npm.pkg.github.com/download/@navikt/aksel-icons/4.10.0/8218e07de12b1b2fc3cbbe241bcc04be58276051#8218e07de12b1b2fc3cbbe241bcc04be58276051"
-  integrity sha512-LCDRzme8VRkyQzeEXJbN+9iIdDFIgmg12pOgpJNmLdwDooMqxnqjZ/cgQEuz/TpYNfrlL14Thur+U0U1XWmX8Q==
+  version "4.11.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/aksel-icons/4.11.0/8a5b90cbc5147eeaf1bb8c5a766d41acd0d94482#8a5b90cbc5147eeaf1bb8c5a766d41acd0d94482"
+  integrity sha512-4BD1QodgV6F10Ci48UGAialV7XhGnOk0EoKGRqWlHvnkjcK8SyDtJbidK7Oona3aAD8XDviown7BLdpZefn4tA==
 
 "@navikt/ds-css@2.0.x":
   version "2.0.18"
