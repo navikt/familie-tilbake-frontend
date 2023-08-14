@@ -20,6 +20,7 @@ import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
 import { useApp } from '../../../../context/AppContext';
 import HentOppdatertKravgrunnlag from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
+import SettBehandlingTilbakeTilFakta from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
 
 const StyledList = styled.ul`
     list-style-type: none;
@@ -101,12 +102,20 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                         />
                                     </li>
                                     {erForvalter && (
-                                        <li>
-                                            <HentOppdatertKravgrunnlag
-                                                behandling={behandling.data}
-                                                onListElementClick={() => settVisMeny(false)}
-                                            />
-                                        </li>
+                                        <>
+                                            <li>
+                                                <HentOppdatertKravgrunnlag
+                                                    behandling={behandling.data}
+                                                    onListElementClick={() => settVisMeny(false)}
+                                                />
+                                            </li>
+                                            <li>
+                                                <SettBehandlingTilbakeTilFakta
+                                                    behandling={behandling.data}
+                                                    onListElementClick={() => settVisMeny(false)}
+                                                />
+                                            </li>
+                                        </>
                                     )}
                                     {!venterPåKravgrunnlag &&
                                         (behandling.data.erBehandlingPåVent || ventegrunn ? (
