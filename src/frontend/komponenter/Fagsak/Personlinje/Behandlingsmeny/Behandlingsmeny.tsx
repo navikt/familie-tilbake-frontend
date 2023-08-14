@@ -42,12 +42,14 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
     const [visMeny, settVisMeny] = React.useState<boolean>(false);
     const buttonRef = React.useRef(null);
+
     const { innloggetSaksbehandler } = useApp();
-    const erProd = !window.location.hostname.includes('dev');
+    const erProd =
+        !window.location.hostname.includes('dev') &&
+        !window.location.hostname.includes('localhost');
     const forvalterGruppe = erProd
         ? '3d718ae5-f25e-47a4-b4b3-084a97604c1d'
         : 'c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b';
-
     const erForvalter = innloggetSaksbehandler?.groups?.some(group => group === forvalterGruppe);
 
     const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.GRUNNLAG;

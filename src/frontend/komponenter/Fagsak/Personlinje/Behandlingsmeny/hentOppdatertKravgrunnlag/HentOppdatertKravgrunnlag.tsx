@@ -24,7 +24,7 @@ const HentOppdatertKravgrunnlag: React.FC<IProps> = ({ behandling, onListElement
         }).then((respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.SUKSESS) {
                 settToast(ToastTyper.KRAVGRUNNLAG_HENTET, {
-                    alertType: AlertType.WARNING,
+                    alertType: AlertType.INFO,
                     tekst: 'Hentet korrigert kravgrunnlag',
                 });
             } else if (
