@@ -7,6 +7,7 @@ import { useApp } from '../../../../../context/AppContext';
 import { IBehandling } from '../../../../../typer/behandling';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 
 interface IProps {
     behandling: IBehandling;
@@ -16,6 +17,7 @@ interface IProps {
 const HentOppdatertKravgrunnlag: React.FC<IProps> = ({ behandling, onListElementClick }) => {
     const { request } = useHttp();
     const { settToast } = useApp();
+    const { hentBehandlingMedBehandlingId } = useBehandling();
 
     const hentKorrigertKravgrunnlag = () => {
         request<void, string>({
@@ -27,6 +29,7 @@ const HentOppdatertKravgrunnlag: React.FC<IProps> = ({ behandling, onListElement
                     alertType: AlertType.INFO,
                     tekst: 'Hentet korrigert kravgrunnlag',
                 });
+                hentBehandlingMedBehandlingId(behandling.behandlingId, true);
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||

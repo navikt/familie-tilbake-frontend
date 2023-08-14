@@ -7,6 +7,7 @@ import { useApp } from '../../../../../context/AppContext';
 import { IBehandling } from '../../../../../typer/behandling';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 
 interface IProps {
     behandling: IBehandling;
@@ -16,6 +17,7 @@ interface IProps {
 const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({ behandling, onListElementClick }) => {
     const { request } = useHttp();
     const { settToast } = useApp();
+    const { hentBehandlingMedBehandlingId } = useBehandling();
 
     const settBehandlingTilbakeTilFakta = () => {
         request<void, string>({
@@ -27,6 +29,7 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({ behandling, onListEle
                     alertType: AlertType.INFO,
                     tekst: 'Flyttet behandling tilbake til fakta',
                 });
+                hentBehandlingMedBehandlingId(behandling.behandlingId, true);
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||
