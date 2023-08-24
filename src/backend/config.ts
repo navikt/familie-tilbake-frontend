@@ -22,7 +22,6 @@ const Environment = () => {
             baSakUrl: 'http://familie-ba-sak-frontend:8000',
             efSakUrl: 'http://familie-ef-sak-frontend:8000/ekstern',
             ksSakUrl: 'http://familie-ks-sak-frontend:8000',
-            //Har ikke satt opp redis
         };
     } else if (process.env.ENV === 'preprod') {
         return {
@@ -33,7 +32,6 @@ const Environment = () => {
             baSakUrl: 'https://barnetrygd.intern.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.intern.dev.nav.no/ekstern',
             ksSakUrl: 'https://kontantstotte.intern.dev.nav.no',
-            redisUrl: 'familie-tilbake-frontend-redis',
         };
     }
 
@@ -45,7 +43,6 @@ const Environment = () => {
         baSakUrl: 'https://barnetrygd.intern.nav.no',
         efSakUrl: 'https://ensligmorellerfar.intern.nav.no/ekstern',
         ksSakUrl: 'https://kontantstotte.intern.nav.no',
-        redisUrl: 'familie-tilbake-frontend-redis',
     };
 };
 const env = Environment();
@@ -53,8 +50,9 @@ const env = Environment();
 export const sessionConfig: ISessionKonfigurasjon = {
     cookieSecret: [`${process.env.COOKIE_KEY1}`, `${process.env.COOKIE_KEY2}`],
     navn: 'familie-tilbake-v1',
-    redisPassord: process.env.REDIS_PASSWORD,
-    redisUrl: env.redisUrl,
+    redisFullUrl: process.env.REDIS_URI_SESSIONS,
+    redisBrukernavn: process.env.REDIS_USERNAME_SESSIONS,
+    redisPassord: process.env.REDIS_PASSWORD_SESSIONS,
     secureCookie: !(process.env.ENV === 'local' || process.env.ENV === 'e2e'),
     sessionMaxAgeSekunder: 12 * 60 * 60,
 };
