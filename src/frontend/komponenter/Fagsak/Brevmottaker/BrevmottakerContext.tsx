@@ -373,13 +373,13 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                     adresseKilde
                 );
 
+                const mottakerIdPostfix = `${mottakerId ? `/${mottakerId}` : ''}`;
+
                 onSubmit(
                     {
                         method: mottakerId ? 'PUT' : 'POST',
                         data: manuellBrevmottakerRequest,
-                        url: `/familie-tilbake/api/brevmottaker/manuell/${
-                            behandling.behandlingId
-                        }/${mottakerId || ''}`,
+                        url: `/familie-tilbake/api/brevmottaker/manuell/${behandling.behandlingId}${mottakerIdPostfix}`,
                     },
                     (response: Ressurs<string>) => {
                         if (response.status === RessursStatus.SUKSESS) {
