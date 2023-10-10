@@ -99,7 +99,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/react-hooks": "^8.0.1",
-    "@testing-library/user-event": "^14.4.3",
+    "@testing-library/user-event": "^14.5.1",
     "@types/case-sensitive-paths-webpack-plugin": "^2.1.6",
     "@types/jest": "^29.5.2",
     "@types/webpack-env": "^1.18.1",
