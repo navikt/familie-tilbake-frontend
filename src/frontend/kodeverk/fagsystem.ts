@@ -65,13 +65,14 @@ const hendelseTyperForYtelse = {
         HendelseType.ANNET,
     ],
     KONTANTSTØTTE: [
-        HendelseType.BOSATT_I_RIKET,
-        HendelseType.BOR_MED_SØKER,
-        HendelseType.BARNEHAGEPLASS,
-        HendelseType.MEDLEMSKAP_KS,
-        HendelseType.MEDLEMSKAP_ANNEN_FORELDER,
-        HendelseType.BARNS_ALDER_KS,
-        HendelseType.ANNET,
+        HendelseType.VILKÅR_BARN,
+        HendelseType.VILKÅR_SØKER,
+        HendelseType.BARN_I_FOSTERHJEM_ELLER_INSTITUSJON,
+        HendelseType.KONTANTSTØTTENS_STØRRELSE,
+        HendelseType.STØTTEPERIODE,
+        HendelseType.UTBETALING,
+        HendelseType.KONTANTSTØTTE_FOR_ADOPTERTE_BARN,
+        HendelseType.ANNET_KS,
     ],
 };
 

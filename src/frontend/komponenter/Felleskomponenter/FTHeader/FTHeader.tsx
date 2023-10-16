@@ -1,9 +1,8 @@
 import * as React from 'react';
 
 import styled from 'styled-components';
-
-import { Link } from '@navikt/ds-react';
-import { Dropdown, Header } from '@navikt/ds-react-internal';
+import { Link } from 'react-router-dom';
+import { Dropdown, InternalHeader } from '@navikt/ds-react';
 import {
     AFontLineHeightHeadingMedium,
     AFontSizeHeadingMedium,
@@ -12,11 +11,11 @@ import {
 } from '@navikt/ds-tokens/dist/tokens';
 import { type ISaksbehandler } from '@navikt/familie-typer';
 
-const StyledHeader = styled(Header)`
+const StyledHeader = styled(InternalHeader)`
     justify-content: space-between;
 `;
 
-const StyledTitle = styled(Header.Title)`
+const StyledTitle = styled(InternalHeader.Title)`
     margin-left: ${ASpacing3};
     font-size: ${AFontSizeHeadingMedium};
     line-height: ${AFontLineHeightHeadingMedium};
@@ -36,10 +35,10 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
     return (
         <StyledHeader>
             <StyledTitle as="h1">
-                <StyledLink href="/">NAV Familie - Tilbakekreving</StyledLink>
+                <StyledLink to="/">NAV Familie - Tilbakekreving</StyledLink>
             </StyledTitle>
             <Dropdown>
-                <Header.UserButton
+                <InternalHeader.UserButton
                     as={Dropdown.Toggle}
                     name={innloggetSaksbehandler?.displayName || 'ukjent'}
                     description={
@@ -50,9 +49,9 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
                 />
                 <Dropdown.Menu>
                     <Dropdown.Menu.List>
-                        <Dropdown.Menu.List.Item>
-                            <Link href={`${window.origin}/auth/logout`}>Logg ut</Link>
-                        </Dropdown.Menu.List.Item>
+                        <a href={`${window.origin}/auth/logout`}>
+                            <Dropdown.Menu.List.Item>Logg ut</Dropdown.Menu.List.Item>
+                        </a>
                     </Dropdown.Menu.List>
                 </Dropdown.Menu>
             </Dropdown>

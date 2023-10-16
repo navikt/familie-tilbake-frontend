@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 
 import { ErrorMessage } from '@navikt/ds-react';
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import {
     Behandlingssteg,
@@ -13,6 +15,7 @@ import {
 import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
+import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
 import { sider } from '../../../../Felleskomponenter/Venstremeny/sider';
 
 interface IProps {
@@ -32,6 +35,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
     const { hentBehandlingMedBehandlingId, behandlingILesemodus, settVisBrevmottakerModal } =
         useBehandling();
     const { request } = useHttp();
+    const { settToast } = useApp();
 
     const kanFjerneManuelleBrevmottakere =
         behandling.manuelleBrevmottakere.length ||
@@ -92,6 +96,16 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
             opprettBrevmottakerSteg();
         }
     };
+
+    useEffect(() => {
+        if (feilmelding && feilmelding !== '') {
+            settToast(ToastTyper.BREVMOTTAKER_IKKE_TILLAT, {
+                alertType: AlertType.WARNING,
+                tekst: feilmelding,
+            });
+            settFeilmelding('');
+        }
+    }, [feilmelding]);
 
     return (
         <>

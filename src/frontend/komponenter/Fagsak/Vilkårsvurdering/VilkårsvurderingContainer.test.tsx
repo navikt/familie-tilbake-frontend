@@ -104,6 +104,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         setupMock(false, false, false, feilutbetalingVilkårsvurdering);
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>();
+        fagsak.ytelsestype = Ytelsetype.BARNETILSYN;
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
             render(
@@ -275,7 +276,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
         const user = userEvent.setup();
         setupMock(false, false, false, feilutbetalingVilkårsvurdering);
         const behandling = mock<IBehandling>();
+
         const fagsak = mock<IFagsak>();
+        fagsak.ytelsestype = Ytelsetype.BARNETILSYN;
 
         const { getByText, getByRole, getByLabelText, queryAllByText } = render(
             <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
@@ -591,6 +594,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>();
+        fagsak.ytelsestype = Ytelsetype.BARNETILSYN;
 
         const { getByText, getByRole } = render(
             <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>

@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import '@navikt/ds-css';
-import '@navikt/ds-css-internal';
 import { Modal } from '@navikt/ds-react';
 import { type ISaksbehandler } from '@navikt/familie-typer';
 

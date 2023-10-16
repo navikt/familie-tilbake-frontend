@@ -11,7 +11,6 @@ spec:
   replicas:
     min: 2
     max: 2
-    cpuThresholdPercentage: 50
   port: 8000
   liveness:
     path: /isAlive
@@ -47,7 +46,6 @@ spec:
     outbound:
       rules:
         - application: familie-tilbake
-        - application: familie-tilbake-frontend-redis
         - application: familie-historikk
   env:
     - name: ENV
@@ -60,11 +58,15 @@ spec:
       value: prod-gcp.teamfamilie.familie-historikk
   envFrom:
     - secret: familie-tilbake-frontend
-    - secret: familie-tilbake-frontend-redis
   resources:
     limits:
-      cpu: 2000m
       memory: 1024Mi
     requests:
       memory: 512Mi
       cpu: 200m
+
+  redis:
+    - instance: sessions
+      access: readwrite
+    - instance: lookup
+      access: read

@@ -14,6 +14,7 @@ import {
     MottakerType,
     mottakerTypeVisningsnavn,
 } from '../../../typer/Brevmottaker';
+import { hentFrontendFeilmelding } from '../../../utils';
 import { useBrevmottaker } from './BrevmottakerContext';
 import BrevmottakerSkjema from './BrevmottakerSkjema';
 
@@ -32,6 +33,9 @@ const FlexContainer = styled.div`
 const StyledFieldset = styled(Fieldset)`
     &.navds-fieldset > :not(:first-child):not(:empty) {
         margin-top: ${ASpacing6};
+    }
+    p.navds-error-message.navds-label {
+        max-width: 33rem;
     }
 `;
 
@@ -118,6 +122,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                 <StyledFieldset
                     legend="Skjema for å legge til eller redigere brevmottaker"
                     hideLegend
+                    error={skjema.visFeilmeldinger && hentFrontendFeilmelding(skjema.submitRessurs)}
                 >
                     <MottakerSelect
                         {...skjema.felter.mottaker.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
