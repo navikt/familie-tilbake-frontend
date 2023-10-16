@@ -1694,7 +1694,12 @@
     hey-listen "^1.0.8"
     tslib "^2.3.1"
 
-"@navikt/aksel-icons@4.x", "@navikt/aksel-icons@^4.10.0":
+"@navikt/aksel-icons@5.x":
+  version "5.7.0"
+  resolved "https://npm.pkg.github.com/download/@navikt/aksel-icons/5.7.0/30fecac47d4e3e01529b12506a4c7ee76cdf343d#30fecac47d4e3e01529b12506a4c7ee76cdf343d"
+  integrity sha512-biP32qaEpfGe39TzdNrXeNtN+2pqtVwha1XN3QKHxZIW1h2jfE+qoUSVPjp9XDRXo7c+9zg1gVMcFmECiynfcQ==
+
+"@navikt/aksel-icons@^4.10.0":
   version "4.10.0"
   resolved "https://npm.pkg.github.com/download/@navikt/aksel-icons/4.10.0/8218e07de12b1b2fc3cbbe241bcc04be58276051#8218e07de12b1b2fc3cbbe241bcc04be58276051"
   integrity sha512-LCDRzme8VRkyQzeEXJbN+9iIdDFIgmg12pOgpJNmLdwDooMqxnqjZ/cgQEuz/TpYNfrlL14Thur+U0U1XWmX8Q==
