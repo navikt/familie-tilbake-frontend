@@ -380,11 +380,11 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                     skjema,
                     adresseKilde
                 );
-                const mottakerIdPostfix = `${mottakerId ? `/${mottakerId}` : ''}`;
+                const mottakerIdPostfix = `${mottakerId !== 'bruker' ? `/${mottakerId}` : ''}`;
 
                 onSubmit(
                     {
-                        method: mottakerId ? 'PUT' : 'POST',
+                        method: mottakerIdPostfix ? 'PUT' : 'POST',
                         data: manuellBrevmottakerRequest,
                         url: `/familie-tilbake/api/brevmottaker/manuell/${behandling.behandlingId}${mottakerIdPostfix}`,
                     },
