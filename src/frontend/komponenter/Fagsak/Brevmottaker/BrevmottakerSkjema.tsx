@@ -37,7 +37,9 @@ interface IProps {
 const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
     const { skjema } = useBrevmottaker();
 
-    preutfyltNavn && skjema.felter.navn.validerOgSettFelt(preutfyltNavn);
+    React.useEffect(() => {
+        preutfyltNavn && skjema.felter.navn.validerOgSettFelt(preutfyltNavn);
+    });
 
     return (
         <>

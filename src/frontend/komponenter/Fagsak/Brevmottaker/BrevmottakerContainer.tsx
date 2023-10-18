@@ -6,6 +6,7 @@ import { AddCircle } from '@navikt/ds-icons';
 import { Button, Heading } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../context/BehandlingContext';
+import { MottakerType } from '../../../typer/Brevmottaker';
 import Brevmottaker from './Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
 import { LeggTilEndreBrevmottakerModal } from './LeggTilEndreBrevmottakerModal';
@@ -49,17 +50,20 @@ const BrevmottakerContainer: React.FC = () => {
                                     brevmottakerId={id}
                                     behandlingId={behandling.behandlingId}
                                     erLesevisning={erLesevisning}
+                                    antallBrevmottakere={antallBrevmottakere}
                                 />
-                                {antallBrevmottakere == 1 && !erLesevisning && (
-                                    <LeggTilKnapp
-                                        variant="tertiary"
-                                        size="small"
-                                        icon={<AddCircle />}
-                                        onClick={() => settVisBrevmottakerModal(true)}
-                                    >
-                                        Legg til ny mottaker
-                                    </LeggTilKnapp>
-                                )}
+                                {antallBrevmottakere == 1 &&
+                                    !erLesevisning &&
+                                    MottakerType.DØDSBO !== brevmottakere[id].type && (
+                                        <LeggTilKnapp
+                                            variant="tertiary"
+                                            size="small"
+                                            icon={<AddCircle />}
+                                            onClick={() => settVisBrevmottakerModal(true)}
+                                        >
+                                            Legg til ny mottaker
+                                        </LeggTilKnapp>
+                                    )}
                             </div>
                         ))}
                 </FlexDiv>

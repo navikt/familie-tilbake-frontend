@@ -37,14 +37,24 @@ const DefinitionList = styled.dl`
     }
 `;
 
+const EndreBrukerKnapp = styled(Button)`
+    margin-top: 1rem;
+`;
+
 interface IProps {
     brevmottaker: IBrevmottaker;
     brevmottakerId: string;
     behandlingId: string;
     erLesevisning: boolean;
+    antallBrevmottakere: number;
 }
 
-const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevisning }) => {
+const Brevmottaker: React.FC<IProps> = ({
+    brevmottaker,
+    brevmottakerId,
+    erLesevisning,
+    antallBrevmottakere,
+}) => {
     const {
         fjernBrevMottakerOgOppdaterState,
         settBrevmottakerIdTilEndring,
@@ -126,6 +136,22 @@ const Brevmottaker: React.FC<IProps> = ({ brevmottaker, brevmottakerId, erLesevi
                     {'Endre'}
                 </Button>
             )}
+
+            {!erLesevisning &&
+                brevmottaker.type === MottakerType.BRUKER &&
+                antallBrevmottakere > 1 && (
+                    <EndreBrukerKnapp
+                        variant="tertiary"
+                        size="small"
+                        icon={<Edit />}
+                        onClick={() => {
+                            settBrevmottakerIdTilEndring(brevmottakerId);
+                            settVisBrevmottakerModal(true);
+                        }}
+                    >
+                        {'Endre'}
+                    </EndreBrukerKnapp>
+                )}
         </StyledDiv>
     );
 };
