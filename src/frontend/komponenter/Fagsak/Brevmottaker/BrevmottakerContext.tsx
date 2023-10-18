@@ -380,7 +380,9 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                     skjema,
                     adresseKilde
                 );
-                const mottakerIdPostfix = `${'bruker' !== mottakerId ? `/${mottakerId}` : ''}`;
+                const mottakerIdPostfix = `${
+                    mottakerId && mottakerId !== 'bruker' ? `/${mottakerId}` : ''
+                }`;
 
                 onSubmit(
                     {
