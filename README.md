@@ -12,29 +12,9 @@ Saksbehandlerapplikasjon for tilbakekreving av ytelsene barnetrygd, konstantstø
 Appen krever at applikasjonene [familie-tilbake](https://github.com/navikt/familie-tilbake) og [familie-historikk](https://github.com/navikt/familie-historikk) kjører lokalt.
 For å generere testdata må du kjøre `familie-tilbake`, `familie-historikk` og kjøre en test i [familie-tilbake-e2e](https://github.com/navikt/familie-tilbake-e2e)
 
-Appen krever en del environment variabler og legges til i .env fila i root på prosjektet.
-```
-    COOKIE_KEY1='<any string of length 32>'
-    COOKIE_KEY2='<any string of length 32>'
-    SESSION_SECRET='<any string of length 32>'
-    
-    CLIENT_ID='<AZURE_APP_CLIENT_ID fra secret>'
-    CLIENT_SECRET='<AZURE_APP_CLIENT_ID fra secret>'
-    FAMILIE_TILBAKE_CLIENT_ID=<AZURE_APP_CLIENT_ID fra secret til azuread-familie-tilbake-lokal>
-    FAMILIE_HISTORIKK_CLIENT_ID=<AZURE_APP_CLIENT_ID fra secret til azuread-familie-historikk-lokal>
+## Miljøvariabler
+Miljøvariabler kan genereres ved å kjøre `sh hent-og-lagre-miljøvariabler.sh` (Krever at du er pålogget Naicdevice og er logget inn på google (`gcloud auth login`) )
 
-    ENV=local
-    APP_VERSION=0.0.1
-```
-Verdiene til disse variablene kan hentes ut fra cluster med kommandoene:
-```
-kubectl -n teamfamilie get secret azuread-familie-tilbake-frontend-lokal -o json | jq '.data | map_values(@base64d)'
-
-kubectl -n teamfamilie get secret azuread-familie-tilbake-lokal -o json | jq '.data | map_values(@base64d)'
-
-kubectl -n teamfamilie get secret azuread-familie-historikk-lokal -o json | jq '.data | map_values(@base64d)'
-```
-#
 ### For Windows-brukere
 
 Applikasjonen kjører ikke på Windows via GitBash as is. En måte å løse det på er å kjøre den via Linux.
