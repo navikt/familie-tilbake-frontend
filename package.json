@@ -92,6 +92,7 @@
   "devDependencies": {
     "@axe-core/react": "^4.7.3",
     "@babel/core": "^7.22.6",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-react": "^7.22.5",
     "@jest/types": "^29.6.0",
     "@peculiar/webcrypto": "^1.4.3",
