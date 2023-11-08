@@ -83,8 +83,6 @@
     "react-dom": "^18.2.0",
     "react-modal": "3.16.x",
     "react-router-dom": "^6.14.1",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.6",
     "snyk": "^1.1187.0",
     "styled-components": "^5.3.11",
     "uuid": "^9.0.0"
