@@ -22,6 +22,18 @@ updates:
       - dependency-name: "@navikt/ds-tokens"
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
+    groups:
+      minor-and-patch-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      major-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
   - package-ecosystem: "docker"
     directory: "/" # Location of package manifests
     schedule:
