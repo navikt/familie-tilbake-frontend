@@ -2329,7 +2329,7 @@
     proxy-from-env "^1.1.0"
     which "^2.0.2"
 
-"@sentry/core@7.62.0", "@sentry/core@^7.48.0", "@sentry/core@^7.57.0":
+"@sentry/core@7.62.0":
   version "7.62.0"
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.62.0.tgz#3d9571741b052b1f2fa8fb8ae0088de8e79b4f4e"
   integrity sha512-l6n+c3mSlWa+FhT/KBrAU1BtbaLYCljf5MuGlH6NKRpnBcrZCbzk8ZuFcSND+gr2SqxycQkhEWX1zxVHPDdZxw==
@@ -2337,6 +2337,14 @@
     "@sentry/types" "7.62.0"
     "@sentry/utils" "7.62.0"
     tslib "^2.4.1 || ^1.9.3"
+
+"@sentry/core@^7.48.0", "@sentry/core@^7.80.1":
+  version "7.80.1"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.80.1.tgz#ccb85e15495bf0c8b142ca1713408c64e38c9f4c"
+  integrity sha512-3Yh+O9Q86MxwIuJFYtuSSoUCpdx99P1xDAqL0FIPTJ+ekaVMiUJq9NmyaNh9uN2myPSmxvEXW6q3z37zta9ZHg==
+  dependencies:
+    "@sentry/types" "7.80.1"
+    "@sentry/utils" "7.80.1"
 
 "@sentry/node@^7.36.0":
   version "7.62.0"
@@ -2373,6 +2381,11 @@
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.62.0.tgz#f15729f656459ffa3a5998fafe9d17ee7fb1c9ff"
   integrity sha512-oPy/fIT3o2VQWLTq01R2W/jt13APYMqZCVa0IT3lF9lgxzgfTbeZl3nX2FgCcc8ntDZC0dVw03dL+wLvjPqQpQ==
 
+"@sentry/types@7.80.1":
+  version "7.80.1"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.80.1.tgz#dc720d6f2da0b510d586814451a04a2cdd2f4a9d"
+  integrity sha512-CVu4uPVTOI3U9kYiOdA085R7jX5H1oVODbs9y+A8opJ0dtJTMueCXgZyE8oXQ0NjGVs6HEeaLkOuiV0mj8X3yw==
+
 "@sentry/utils@7.62.0":
   version "7.62.0"
   resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.62.0.tgz#915501c6056d704a9625239a1f584a7b2e4492ea"
@@ -2380,6 +2393,13 @@
   dependencies:
     "@sentry/types" "7.62.0"
     tslib "^2.4.1 || ^1.9.3"
+
+"@sentry/utils@7.80.1":
+  version "7.80.1"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.80.1.tgz#1c719f41b4d2c818363551fc40776a274b71efff"
+  integrity sha512-bfFm2e/nEn+b9++QwjNEYCbS7EqmteT8uf0XUs7PljusSimIqqxDtK1pfD9zjynPgC8kW/fVBKv0pe2LufomeA==
+  dependencies:
+    "@sentry/types" "7.80.1"
 
 "@sentry/webpack-plugin@^1.20.1":
   version "1.20.1"
