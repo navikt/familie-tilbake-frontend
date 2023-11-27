@@ -8665,7 +8665,7 @@ slice-ansi@^5.0.0:
     ansi-styles "^6.0.0"
     is-fullwidth-code-point "^4.0.0"
 
-snyk@^1.1142.0, snyk@^1.1187.0:
+snyk@^1.1142.0:
   version "1.1200.0"
   resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.1200.0.tgz#6fbaeb9610ae999b89a84d1e152608f88d11f5e2"
   integrity sha512-sWC5mC489SN7jylQuFDN9HyYI2eAiFbRjx+R0me902/+k20I/WHMdIwyJEcPz/rCYDUy9xALpVGb7r1GBwoKjQ==
