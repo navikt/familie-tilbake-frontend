@@ -34,9 +34,6 @@ const commonConfig: webpack.Configuration = {
                 test: /\.(js|jsx|ts|tsx)$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/,
-                options: {
-                    presets: ['react-app'],
-                },
             },
             {
                 test: /\.m?js/,
