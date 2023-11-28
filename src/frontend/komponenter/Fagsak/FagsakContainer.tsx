@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { useLocation, useParams } from 'react-router-dom';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Alert } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';

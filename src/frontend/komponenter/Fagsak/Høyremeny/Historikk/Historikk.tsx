@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { parseISO } from 'date-fns';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Alert, BodyLong, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';

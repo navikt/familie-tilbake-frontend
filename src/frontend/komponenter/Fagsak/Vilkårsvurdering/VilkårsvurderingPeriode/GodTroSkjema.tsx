@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { BodyShort, Radio } from '@navikt/ds-react';
 import { FamilieInput } from '@navikt/familie-form-elements';

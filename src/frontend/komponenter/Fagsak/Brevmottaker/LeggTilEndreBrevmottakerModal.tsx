@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Button, Fieldset, Heading, Modal, Radio, RadioGroup } from '@navikt/ds-react';
 import { ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';

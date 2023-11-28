@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Search } from '@navikt/ds-icons';
 import { Alert, Button } from '@navikt/ds-react';

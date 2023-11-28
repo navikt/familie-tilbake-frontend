@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Alert, Button, Detail } from '@navikt/ds-react';
 import {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { ExpandFilled } from '@navikt/ds-icons';
 import { Button, Popover } from '@navikt/ds-react';

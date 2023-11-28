@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { ExternalLink, Office1Filled } from '@navikt/ds-icons';
 import { Link, Tag } from '@navikt/ds-react';

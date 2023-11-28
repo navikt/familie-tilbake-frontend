@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { AddCircle } from '@navikt/ds-icons';
 import { Button, Heading } from '@navikt/ds-react';
