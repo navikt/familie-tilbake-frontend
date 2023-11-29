@@ -22,9 +22,8 @@ interface IProps {
 }
 
 export const useForhåndsvisHenleggelsesbrev = ({ skjema }: IProps) => {
-    const [hentetForhåndsvisning, settHentetForhåndsvisning] = React.useState<Ressurs<string>>(
-        byggTomRessurs()
-    );
+    const [hentetForhåndsvisning, settHentetForhåndsvisning] =
+        React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { forhåndsvisHenleggelsesbrev } = useDokumentApi();
 

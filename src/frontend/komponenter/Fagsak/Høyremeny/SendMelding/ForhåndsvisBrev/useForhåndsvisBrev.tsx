@@ -14,9 +14,8 @@ import { base64ToArrayBuffer } from '../../../../../utils';
 import { useSendMelding } from '../SendMeldingContext';
 
 const useForhåndsvisBrev = () => {
-    const [hentetForhåndsvisning, settHentetForhåndsvisning] = React.useState<Ressurs<string>>(
-        byggTomRessurs()
-    );
+    const [hentetForhåndsvisning, settHentetForhåndsvisning] =
+        React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBrevdata } = useSendMelding();
     const { forhåndsvisBrev } = useDokumentApi();

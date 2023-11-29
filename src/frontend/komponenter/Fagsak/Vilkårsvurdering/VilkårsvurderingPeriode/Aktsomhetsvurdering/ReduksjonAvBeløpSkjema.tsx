@@ -77,8 +77,8 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                     !erLesevisning
                         ? skjema.felter.harGrunnerTilReduksjon.verdi
                         : skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA
-                        ? 'Ja'
-                        : 'Nei'
+                          ? 'Ja'
+                          : 'Nei'
                 }
                 error={
                     ugyldigHarGrunnertilReduksjonValgt
@@ -237,8 +237,8 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                     !erLesevisning && kanIlleggeRenter
                                         ? skjema.felter.grovtUaktsomIlleggeRenter.verdi
                                         : skjema.felter.grovtUaktsomIlleggeRenter.verdi === OptionJA
-                                        ? 'Ja'
-                                        : 'Nei'
+                                          ? 'Ja'
+                                          : 'Nei'
                                 }
                                 error={
                                     ugyldigIlleggRenterValgt

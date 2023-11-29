@@ -14,9 +14,8 @@ import { base64ToArrayBuffer } from '../../../../utils';
 import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
 
 const useForhåndsvisVedtaksbrev = () => {
-    const [hentetForhåndsvisning, settHentetForhåndsvisning] = React.useState<Ressurs<string>>(
-        byggTomRessurs()
-    );
+    const [hentetForhåndsvisning, settHentetForhåndsvisning] =
+        React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBrevdata, validerAlleAvsnittOk } = useFeilutbetalingVedtak();
     const { forhåndsvisVedtaksbrev } = useDokumentApi();

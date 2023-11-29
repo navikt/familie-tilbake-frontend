@@ -46,8 +46,8 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                 !erLesevisning
                                     ? skjema.felter.tilbakekrevSmåbeløp.verdi
                                     : skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA
-                                    ? 'Ja'
-                                    : 'Nei'
+                                      ? 'Ja'
+                                      : 'Nei'
                             }
                             error={
                                 ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr

@@ -45,12 +45,12 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                     !erLesevisning
                         ? skjema.felter.aktsomhetVurdering.verdi
                         : skjema.felter.aktsomhetVurdering.verdi
-                        ? erForstodBurdeForstått
-                            ? forstodBurdeForståttAktsomheter[
-                                  skjema.felter.aktsomhetVurdering.verdi
-                              ]
-                            : aktsomheter[skjema.felter.aktsomhetVurdering.verdi]
-                        : ''
+                          ? erForstodBurdeForstått
+                              ? forstodBurdeForståttAktsomheter[
+                                    skjema.felter.aktsomhetVurdering.verdi
+                                ]
+                              : aktsomheter[skjema.felter.aktsomhetVurdering.verdi]
+                          : ''
                 }
                 error={
                     ugyldigAktsomhetvurderingValgt

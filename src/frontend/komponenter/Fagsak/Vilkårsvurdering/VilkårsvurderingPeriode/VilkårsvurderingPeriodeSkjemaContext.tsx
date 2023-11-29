@@ -406,8 +406,8 @@ const useVilkårsvurderingPeriodeSkjema = (
                 !erForstoForsett && !erGrovtUaktsomhet
                     ? undefined
                     : erForstoForsett
-                    ? skjema.felter.forstoIlleggeRenter.verdi === OptionJA
-                    : skjema.felter.grovtUaktsomIlleggeRenter.verdi === OptionJA,
+                      ? skjema.felter.forstoIlleggeRenter.verdi === OptionJA
+                      : skjema.felter.grovtUaktsomIlleggeRenter.verdi === OptionJA,
             tilbakekrevSmåbeløp: skalVurderereSmåbeløp
                 ? skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA
                 : undefined,
@@ -429,8 +429,8 @@ const useVilkårsvurderingPeriodeSkjema = (
             andelTilbakekreves: !harAndelTilbakekreves
                 ? undefined
                 : erEgendefinert
-                ? parseStringToNumber(skjema.felter.uaktsomAndelTilbakekrevesManuelt.verdi)
-                : parseStringToNumber(skjema.felter.uaktsomAndelTilbakekreves.verdi),
+                  ? parseStringToNumber(skjema.felter.uaktsomAndelTilbakekrevesManuelt.verdi)
+                  : parseStringToNumber(skjema.felter.uaktsomAndelTilbakekreves.verdi),
             beløpTilbakekreves:
                 !erForstoForsett && !harAndelTilbakekreves && harGrunnerTilReduksjon
                     ? parseStringToNumber(skjema.felter.uaktsomTilbakekrevesBeløp.verdi)
