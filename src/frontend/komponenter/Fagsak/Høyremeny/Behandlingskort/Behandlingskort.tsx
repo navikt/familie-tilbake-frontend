@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { BodyShort, Heading } from '@navikt/ds-react';
 import { AGray100, AGray400, ASpacing2, ASpacing8 } from '@navikt/ds-tokens/dist/tokens';

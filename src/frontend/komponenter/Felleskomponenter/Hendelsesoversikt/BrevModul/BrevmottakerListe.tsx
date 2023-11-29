@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { IBrevmottaker, MottakerType } from '../../../../typer/Brevmottaker';
 import { IInstitusjon } from '../../../../typer/fagsak';

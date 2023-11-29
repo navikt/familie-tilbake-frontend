@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import classNames from 'classnames';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 

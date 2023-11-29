@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Detail } from '@navikt/ds-react';
 import { AGray400, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';

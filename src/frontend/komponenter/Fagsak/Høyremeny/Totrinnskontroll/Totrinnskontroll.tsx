@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Alert, Link, Radio } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Alert } from '@navikt/ds-react';
 

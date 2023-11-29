@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { BodyShort } from '@navikt/ds-react';
 import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';

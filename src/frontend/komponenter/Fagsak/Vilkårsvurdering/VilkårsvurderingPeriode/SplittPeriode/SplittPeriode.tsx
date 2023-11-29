@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Detail, Link } from '@navikt/ds-react';
 import { type Periode as TidslinjePeriode } from '@navikt/familie-tidslinje';

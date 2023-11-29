@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { BackFilled, NextFilled } from '@navikt/ds-icons';
 import { Button } from '@navikt/ds-react';

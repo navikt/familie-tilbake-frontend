@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { DatepickerProps } from 'nav-datovelger/lib/Datepicker';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { FamilieDatovelger, IDatovelgerProps } from '@navikt/familie-datovelger';
 

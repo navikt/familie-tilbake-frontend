@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Delete, Edit } from '@navikt/ds-icons';
 import { Button, Heading } from '@navikt/ds-react';

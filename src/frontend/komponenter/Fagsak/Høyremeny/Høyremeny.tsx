@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Send, Folder, Clock, Decision, NextFilled, BackFilled } from '@navikt/ds-icons';
 import { Button, Tabs } from '@navikt/ds-react';

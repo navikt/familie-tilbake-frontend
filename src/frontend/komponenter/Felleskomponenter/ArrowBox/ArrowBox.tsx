@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { ABorderStrong, ABgDefault, ASpacing3, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
 

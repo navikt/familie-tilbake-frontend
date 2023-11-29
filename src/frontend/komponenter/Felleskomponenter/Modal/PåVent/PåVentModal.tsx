@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { BodyLong, Heading } from '@navikt/ds-react';
 import { ATextDanger, ASpacing8 } from '@navikt/ds-tokens/dist/tokens';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { ExternalLink } from '@navikt/ds-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';

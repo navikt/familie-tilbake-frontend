@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Alert, BodyLong, Heading, Loader } from '@navikt/ds-react';
 import { AFontWeightBold, ATextDanger, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import classNames from 'classnames';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 import { Heading, Modal } from '@navikt/ds-react';
 

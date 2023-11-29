@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import classNames from 'classnames';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 import { IFamilieTextareaProps } from '@navikt/familie-form-elements/src/textarea';
 import { FamilieTextarea } from '@navikt/familie-form-elements';
 
