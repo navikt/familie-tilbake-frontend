@@ -348,12 +348,12 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         !erLesevisning
                                             ? skjema.felter.vilkårsresultatvurdering.verdi
                                             : periode.vilkårsvurderingsresultatInfo
-                                                  ?.vilkårsvurderingsresultat
-                                            ? vilkårsresultater[
-                                                  periode.vilkårsvurderingsresultatInfo
-                                                      ?.vilkårsvurderingsresultat
-                                              ]
-                                            : ''
+                                                    ?.vilkårsvurderingsresultat
+                                              ? vilkårsresultater[
+                                                    periode.vilkårsvurderingsresultatInfo
+                                                        ?.vilkårsvurderingsresultat
+                                                ]
+                                              : ''
                                     }
                                     error={
                                         ugyldigVilkårsresultatValgt
@@ -403,8 +403,8 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                             erGodTro
                                                 ? 'Vurder om beløpet er i behold'
                                                 : erForstodBurdeForstått
-                                                ? 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-                                                : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
+                                                  ? 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+                                                  : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
                                         }
                                         placeholder={
                                             erGodTro

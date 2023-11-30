@@ -61,8 +61,8 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                     !erLesevisning && kanIlleggeRenter
                                         ? skjema.felter.forstoIlleggeRenter.verdi
                                         : skjema.felter.forstoIlleggeRenter.verdi === OptionJA
-                                        ? 'Ja'
-                                        : 'Nei'
+                                          ? 'Ja'
+                                          : 'Nei'
                                 }
                                 error={
                                     ugyldigIlleggRenterValgt

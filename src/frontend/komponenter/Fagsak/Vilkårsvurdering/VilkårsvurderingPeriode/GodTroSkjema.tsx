@@ -42,8 +42,8 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                     !erLesevisning
                         ? skjema.felter.erBeløpetIBehold.verdi
                         : skjema.felter.erBeløpetIBehold.verdi === OptionJA
-                        ? 'Ja'
-                        : 'Nei'
+                          ? 'Ja'
+                          : 'Nei'
                 }
                 error={
                     ugyldigErBeløpetIBeholdValgt

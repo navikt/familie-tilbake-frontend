@@ -95,10 +95,10 @@ const Totrinnskontroll: React.FC = () => {
                                             !erLesevisning
                                                 ? totrinnSteg.godkjent
                                                 : totrinnSteg.godkjent === OptionGodkjent
-                                                ? 'Godkjent'
-                                                : totrinnSteg.godkjent === OptionIkkeGodkjent
-                                                ? 'Vurder på nytt'
-                                                : 'Ikke vurdert'
+                                                  ? 'Godkjent'
+                                                  : totrinnSteg.godkjent === OptionIkkeGodkjent
+                                                    ? 'Vurder på nytt'
+                                                    : 'Ikke vurdert'
                                         }
                                         onChange={(val: TotrinnGodkjenningOption) =>
                                             oppdaterGodkjenning(totrinnSteg.index, val)

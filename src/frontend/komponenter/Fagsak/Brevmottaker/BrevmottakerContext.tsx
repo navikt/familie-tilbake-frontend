@@ -113,21 +113,21 @@ const opprettManuellBrevmottakerRequest = (
                   personIdent: skjema.felter.fødselsnummer.verdi,
               }
             : adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
-            ? {
-                  organisasjonsnummer: skjema.felter.organisasjonsnummer.verdi,
-              }
-            : {
-                  manuellAdresseInfo: {
-                      adresselinje1: skjema.felter.adresselinje1.verdi,
-                      adresselinje2:
-                          skjema.felter.adresselinje2.verdi !== ''
-                              ? skjema.felter.adresselinje2.verdi
-                              : undefined,
-                      postnummer: skjema.felter.postnummer.verdi,
-                      poststed: skjema.felter.poststed.verdi,
-                      landkode: skjema.felter.land.verdi,
-                  },
-              }),
+              ? {
+                    organisasjonsnummer: skjema.felter.organisasjonsnummer.verdi,
+                }
+              : {
+                    manuellAdresseInfo: {
+                        adresselinje1: skjema.felter.adresselinje1.verdi,
+                        adresselinje2:
+                            skjema.felter.adresselinje2.verdi !== ''
+                                ? skjema.felter.adresselinje2.verdi
+                                : undefined,
+                        postnummer: skjema.felter.postnummer.verdi,
+                        poststed: skjema.felter.poststed.verdi,
+                        landkode: skjema.felter.land.verdi,
+                    },
+                }),
         ...((type === MottakerType.VERGE || type === MottakerType.FULLMEKTIG) && {
             vergetype: Vergetype.UDEFINERT,
         }),
@@ -230,8 +230,8 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                         lagretBrevmottaker.personIdent
                             ? AdresseKilde.OPPSLAG_REGISTER
                             : lagretBrevmottaker.organisasjonsnummer
-                            ? AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
-                            : AdresseKilde.MANUELL_REGISTRERING
+                              ? AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
+                              : AdresseKilde.MANUELL_REGISTRERING
                     );
                 }
             }
