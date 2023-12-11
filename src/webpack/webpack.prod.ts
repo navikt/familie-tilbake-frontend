@@ -39,12 +39,6 @@ const prodConfig = mergeWithRules({
             project: 'familie-tilbake-frontend',
             authToken: process.env.SENTRY_AUTH_TOKEN,
             url: 'https://sentry.gc.nav.no/',
-            release: process.env.SENTRY_RELEASE,
-            urlPrefix: `~/assets`,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            errorHandler: (err, invokeErr, compilation) => {
-                compilation.warnings.push('Sentry CLI Plugin: ' + err.message);
-            },
         }),
     ],
     optimization: {
