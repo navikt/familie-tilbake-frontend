@@ -1,6 +1,6 @@
 import path from 'path';
 
-import SentryCliPlugin from '@sentry/webpack-plugin';
+import { sentryWebpackPlugin } from '@sentry/webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
@@ -31,14 +31,14 @@ const prodConfig = mergeWithRules({
             threshold: 10240,
             minRatio: 0.8,
         }),
-        new SentryCliPlugin({
-            include: 'frontend_production',
+        sentryWebpackPlugin({
+            sourcemaps: {
+                assets: ['frontend_production'],
+            },
             org: 'nav',
             project: 'familie-tilbake-frontend',
             authToken: process.env.SENTRY_AUTH_TOKEN,
             url: 'https://sentry.gc.nav.no/',
-            release: process.env.SENTRY_RELEASE,
-            urlPrefix: `~/assets`,
         }),
     ],
     optimization: {
