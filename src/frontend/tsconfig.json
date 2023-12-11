@@ -4,7 +4,8 @@
         "rootDir": ".",
         "module": "esnext",
         "allowSyntheticDefaultImports": true,
-        "typeRoots": ["../../node_modules/@types", "./@types"]
+        "typeRoots": ["../../node_modules/@types", "../../node_modules", "./@types"],
+        "types": ["@testing-library/jest-dom"]
     },
     "exclude": [
         "../../node_modules",
