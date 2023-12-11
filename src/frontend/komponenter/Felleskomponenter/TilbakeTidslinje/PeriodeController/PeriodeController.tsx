@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { BackFilled, NextFilled } from '@navikt/ds-icons';
+import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { Button } from '@navikt/ds-react';
 
 const Controller = styled.div`
@@ -35,7 +35,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
                 }}
                 size="small"
             >
-                <BackFilled aria-label="Forrige periode" width={18} height={18} />
+                <ChevronLeftIcon aria-label="Forrige periode" width={20} height={20} />
             </NavigeringsKnapp>
             <NavigeringsKnapp
                 variant="secondary"
@@ -46,7 +46,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
                 }}
                 size="small"
             >
-                <NextFilled aria-label="Neste periode" width={18} height={18} />
+                <ChevronRightIcon aria-label="Neste periode" width={20} height={20} />
             </NavigeringsKnapp>
         </Controller>
     );

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { ExternalLink, Office1Filled } from '@navikt/ds-icons';
+import { Buldings3Icon, ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Link, Tag } from '@navikt/ds-react';
 import {
     AGray900,
@@ -84,7 +84,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                 )}
                 {fagsak.institusjon && (
                     <InstitusjonsTag variant="info" size="small">
-                        <Office1Filled />
+                        <Buldings3Icon width={20} height={20} />
                         <MaksLengdeInstitusjonNavn title={fagsak.institusjon.navn}>
                             {fagsak.institusjon.navn}
                         </MaksLengdeInstitusjonNavn>
@@ -101,13 +101,17 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                         target="_blank"
                     >
                         Gå til revurderingen
-                        <ExternalLink aria-label="Gå til revurderingen" />
+                        <ExternalLinkIcon
+                            aria-label="Gå til revurderingen"
+                            width={22}
+                            height={22}
+                        />
                     </Link>
                 )}
 
                 <Link className={'visittkort__lenke'} href={lagSaksoversiktUrl()} target="_blank">
                     Gå til saksoversikt
-                    <ExternalLink aria-label="Gå til saksoversikt" />
+                    <ExternalLinkIcon aria-label="Gå til saksoversikt" width={22} height={22} />
                 </Link>
 
                 <Behandlingsmeny fagsak={fagsak} />

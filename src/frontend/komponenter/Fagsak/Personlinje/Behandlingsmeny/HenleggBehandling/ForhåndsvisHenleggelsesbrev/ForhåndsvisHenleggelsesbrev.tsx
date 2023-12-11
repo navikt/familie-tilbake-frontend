@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { ExternalLink } from '@navikt/ds-icons';
+import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Detail, Link } from '@navikt/ds-react';
 import { type ISkjema } from '@navikt/familie-skjema';
 
@@ -49,7 +49,7 @@ const ForhåndsvisHenleggelsesBrev: React.FC<IProps> = ({ behandling, skjema, ka
                 }}
             >
                 Forhåndsvis brev
-                <ExternalLink />
+                <ExternalLinkIcon />
             </Link>
             {visModal && (
                 <PdfVisningModal

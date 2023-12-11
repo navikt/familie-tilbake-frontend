@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { ExpandFilled } from '@navikt/ds-icons';
+import { ChevronDownIcon } from '@navikt/aksel-icons';
 import { Button, Popover } from '@navikt/ds-react';
 import { AFontSizeXlarge, AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
@@ -68,7 +68,7 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                 onClick={() => settVisMeny(!visMeny)}
             >
                 Behandlingsmeny
-                <ExpandFilled />
+                <ChevronDownIcon width={22} height={22} />
             </StyledButton>
 
             {buttonRef && (

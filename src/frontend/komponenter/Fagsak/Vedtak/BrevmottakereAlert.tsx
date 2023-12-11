@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
-import { Search } from '@navikt/ds-icons';
+import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Alert, Button } from '@navikt/ds-react';
 
 import { IBrevmottaker } from '../../../typer/Brevmottaker';
@@ -43,7 +43,7 @@ export const BrevmottakereAlert: React.FC<Props> = ({
                     <Button
                         variant={'tertiary'}
                         onClick={() => navigate(linkTilBrevmottakerSteg)}
-                        icon={<Search />}
+                        icon={<MagnifyingGlassIcon />}
                         size={'xsmall'}
                     >
                         Se detaljer

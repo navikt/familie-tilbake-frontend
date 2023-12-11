@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { ExternalLink } from '@navikt/ds-icons';
+import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
 import { AGray400, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 
@@ -100,7 +100,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
                     }}
                 >
                     {innslag.tekst}
-                    <ExternalLink aria-label={`Åpne ${innslag.tekst}`} />
+                    <ExternalLinkIcon aria-label={`Åpne ${innslag.tekst}`} />
                 </Link>
             </span>
         );

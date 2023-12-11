@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { ExternalLink } from '@navikt/ds-icons';
+import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, Heading, Link, Radio, ReadMore } from '@navikt/ds-react';
 import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
@@ -84,7 +84,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                             target="_blank"
                         >
                             foreldelse av tilbakebetalingskrav
-                            <ExternalLink aria-label="Gå til rutine for foreldelse" />
+                            <ExternalLinkIcon aria-label="Gå til rutine for foreldelse" />
                         </Link>
                     </BodyLong>
                     <BodyLong size="small">
@@ -106,7 +106,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                             target="_blank"
                         >
                             foreldelse av tilbakebetalingskrav
-                            <ExternalLink aria-label="Gå til rutine for foreldelse" />
+                            <ExternalLinkIcon aria-label="Gå til rutine for foreldelse" />
                         </Link>
                     </BodyLong>
                     <BodyLong size="small">Denne fristen kommer i vedtaksbrevet.</BodyLong>
