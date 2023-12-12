@@ -86,9 +86,9 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                 title={åpenHøyremeny ? 'Skjul høyremeny' : 'Vis høyremeny'}
             >
                 {åpenHøyremeny ? (
-                    <ChevronRightIcon aria-label="Skjul høyremeny" width={24} height={24} />
+                    <ChevronRightIcon aria-label="Skjul høyremeny" fontSize={'1.5rem'} />
                 ) : (
-                    <ChevronLeftIcon aria-label="Vis høyremeny" width={22} height={22} />
+                    <ChevronLeftIcon aria-label="Vis høyremeny" fontSize={'1.5rem'} />
                 )}
             </ToggleVisningHøyremeny>
             {åpenHøyremeny && (
@@ -106,8 +106,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                         label="Fatte vedtak"
                                         icon={
                                             <PersonGavelIcon
-                                                height={24}
-                                                width={24}
+                                                fontSize={'1.5rem'}
                                                 aria-label="Ikon fatte vedtak"
                                             />
                                         }
@@ -118,8 +117,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                     label="Historikk"
                                     icon={
                                         <ClockIcon
-                                            height={24}
-                                            width={24}
+                                            fontSize={'1.5rem'}
                                             aria-label="Ikon historikk"
                                         />
                                     }
@@ -129,8 +127,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                     label="Dokumenter"
                                     icon={
                                         <FolderIcon
-                                            height={24}
-                                            width={24}
+                                            fontSize={'1.5rem'}
                                             aria-label="Ikon dokumenter"
                                         />
                                     }
@@ -140,8 +137,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                     label="Send brev"
                                     icon={
                                         <PaperplaneIcon
-                                            height={24}
-                                            width={24}
+                                            fontSize={'1.5rem'}
                                             aria-label="Ikon send brev"
                                         />
                                     }

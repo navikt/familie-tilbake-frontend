@@ -35,7 +35,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
                 }}
                 size="small"
             >
-                <ChevronLeftIcon aria-label="Forrige periode" width={20} height={20} />
+                <ChevronLeftIcon aria-label="Forrige periode" fontSize={'1.3rem'} />
             </NavigeringsKnapp>
             <NavigeringsKnapp
                 variant="secondary"
@@ -46,7 +46,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
                 }}
                 size="small"
             >
-                <ChevronRightIcon aria-label="Neste periode" width={20} height={20} />
+                <ChevronRightIcon aria-label="Neste periode" fontSize={'1.3rem'} />
             </NavigeringsKnapp>
         </Controller>
     );

@@ -101,17 +101,13 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                         target="_blank"
                     >
                         Gå til revurderingen
-                        <ExternalLinkIcon
-                            aria-label="Gå til revurderingen"
-                            width={22}
-                            height={22}
-                        />
+                        <ExternalLinkIcon aria-label="Gå til revurderingen" fontSize={'1.375rem'} />
                     </Link>
                 )}
 
                 <Link className={'visittkort__lenke'} href={lagSaksoversiktUrl()} target="_blank">
                     Gå til saksoversikt
-                    <ExternalLinkIcon aria-label="Gå til saksoversikt" width={22} height={22} />
+                    <ExternalLinkIcon aria-label="Gå til saksoversikt" fontSize={'1.375rem'} />
                 </Link>
 
                 <Behandlingsmeny fagsak={fagsak} />
