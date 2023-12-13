@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { AddCircle } from '@navikt/ds-icons';
+import { PlusCircleIcon } from '@navikt/aksel-icons';
 import { BodyShort, Link } from '@navikt/ds-react';
 
 import { isEmpty, validerTekstMaksLengde } from '../../../utils';
@@ -70,7 +70,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                         }}
                         href="#"
                     >
-                        <AddCircle aria-label="Legg til utdypende tekst" />
+                        <PlusCircleIcon aria-label="Legg til utdypende tekst" />
                         <StyledUndertekst size="small">Legg til utdypende tekst</StyledUndertekst>
                     </Link>
                 </>

@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import { DecisionFilled } from '@navikt/ds-icons';
+import { PersonGavelFillIcon } from '@navikt/aksel-icons';
 
 import { TidslinjeIkonbakgrunn } from './ikonelementer';
 
 const BeslutterIkon: React.FC = () => {
     return (
         <TidslinjeIkonbakgrunn>
-            <DecisionFilled fontSize="15" aria-label="Beslutter" />
+            <PersonGavelFillIcon fontSize={'1.2rem'} aria-label="Beslutter" />
         </TidslinjeIkonbakgrunn>
     );
 };

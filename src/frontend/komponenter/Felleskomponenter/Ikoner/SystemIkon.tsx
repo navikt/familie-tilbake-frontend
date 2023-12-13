@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import { AutomaticSystem } from '@navikt/ds-icons';
+import { CogRotationFillIcon } from '@navikt/aksel-icons';
 
 import { TidslinjeIkonbakgrunn } from './ikonelementer';
 
 const SystemIkon: React.FC = () => {
     return (
         <TidslinjeIkonbakgrunn>
-            <AutomaticSystem fontSize="15" aria-label="System" />
+            <CogRotationFillIcon fontSize={'1.2rem'} aria-label="System" />
         </TidslinjeIkonbakgrunn>
     );
 };

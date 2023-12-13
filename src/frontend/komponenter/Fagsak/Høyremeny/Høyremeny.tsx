@@ -2,7 +2,14 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Send, Folder, Clock, Decision, NextFilled, BackFilled } from '@navikt/ds-icons';
+import {
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    ClockIcon,
+    FolderIcon,
+    PaperplaneIcon,
+    PersonGavelIcon,
+} from '@navikt/aksel-icons';
 import { Button, Tabs } from '@navikt/ds-react';
 import { AFontSizeMedium, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
 
@@ -79,9 +86,9 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                 title={åpenHøyremeny ? 'Skjul høyremeny' : 'Vis høyremeny'}
             >
                 {åpenHøyremeny ? (
-                    <NextFilled aria-label="Skjul høyremeny" width={22} height={22} />
+                    <ChevronRightIcon aria-label="Skjul høyremeny" fontSize={'1.5rem'} />
                 ) : (
-                    <BackFilled aria-label="Vis høyremeny" width={22} height={22} />
+                    <ChevronLeftIcon aria-label="Vis høyremeny" fontSize={'1.5rem'} />
                 )}
             </ToggleVisningHøyremeny>
             {åpenHøyremeny && (
@@ -98,9 +105,8 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                         value="to-trinn"
                                         label="Fatte vedtak"
                                         icon={
-                                            <Decision
-                                                height={18}
-                                                width={18}
+                                            <PersonGavelIcon
+                                                fontSize={'1.5rem'}
                                                 aria-label="Ikon fatte vedtak"
                                             />
                                         }
@@ -110,16 +116,18 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                     value="logg"
                                     label="Historikk"
                                     icon={
-                                        <Clock height={18} width={18} aria-label="Ikon historikk" />
+                                        <ClockIcon
+                                            fontSize={'1.5rem'}
+                                            aria-label="Ikon historikk"
+                                        />
                                     }
                                 />
                                 <StyledTabs
                                     value="dokumenter"
                                     label="Dokumenter"
                                     icon={
-                                        <Folder
-                                            height={18}
-                                            width={18}
+                                        <FolderIcon
+                                            fontSize={'1.5rem'}
                                             aria-label="Ikon dokumenter"
                                         />
                                     }
@@ -128,7 +136,10 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                     value="send-brev"
                                     label="Send brev"
                                     icon={
-                                        <Send height={18} width={18} aria-label="Ikon send brev" />
+                                        <PaperplaneIcon
+                                            fontSize={'1.5rem'}
+                                            aria-label="Ikon send brev"
+                                        />
                                     }
                                 />
                             </StyledTabList>

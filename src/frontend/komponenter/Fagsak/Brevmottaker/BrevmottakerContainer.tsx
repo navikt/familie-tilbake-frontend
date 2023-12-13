@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { AddCircle } from '@navikt/ds-icons';
+import { PlusCircleIcon } from '@navikt/aksel-icons';
 import { Button, Heading } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -58,7 +58,7 @@ const BrevmottakerContainer: React.FC = () => {
                                         <LeggTilKnapp
                                             variant="tertiary"
                                             size="small"
-                                            icon={<AddCircle />}
+                                            icon={<PlusCircleIcon />}
                                             onClick={() => settVisBrevmottakerModal(true)}
                                         >
                                             Legg til ny mottaker

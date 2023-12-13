@@ -2,7 +2,7 @@ import React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Delete, Edit } from '@navikt/ds-icons';
+import { PencilIcon, TrashIcon } from '@navikt/aksel-icons';
 import { Button, Heading } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import CountryData from '@navikt/land-verktoy';
@@ -75,7 +75,7 @@ const Brevmottaker: React.FC<IProps> = ({
                         variant={'tertiary'}
                         onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
                         size={'small'}
-                        icon={<Delete />}
+                        icon={<TrashIcon />}
                     >
                         {'Fjern'}
                     </Button>
@@ -131,7 +131,7 @@ const Brevmottaker: React.FC<IProps> = ({
                         validerAlleSynligeFelter();
                     }}
                     size={'small'}
-                    icon={<Edit />}
+                    icon={<PencilIcon />}
                 >
                     {'Endre'}
                 </Button>
@@ -143,7 +143,7 @@ const Brevmottaker: React.FC<IProps> = ({
                     <EndreBrukerKnapp
                         variant="tertiary"
                         size="small"
-                        icon={<Edit />}
+                        icon={<PencilIcon />}
                         onClick={() => {
                             settBrevmottakerIdTilEndring(brevmottakerId);
                             settVisBrevmottakerModal(true);

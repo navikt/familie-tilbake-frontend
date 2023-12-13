@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { ExternalLink } from '@navikt/ds-icons';
+import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Link } from '@navikt/ds-react';
 import { type IDokumentInfo, type IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
@@ -34,7 +34,7 @@ const Dokumentvisning: React.FC<IProps> = ({ journalpost, dokument }) => {
                         }}
                     >
                         {dokument.tittel}
-                        <ExternalLink aria-label={`Åpne ${dokument.tittel}`} />
+                        <ExternalLinkIcon aria-label={`Åpne ${dokument.tittel}`} />
                     </Link>
                     {visDokument && (
                         <HentDokument
