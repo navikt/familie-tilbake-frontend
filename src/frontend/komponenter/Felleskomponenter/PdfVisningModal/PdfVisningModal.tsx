@@ -36,15 +36,10 @@ interface IProps {
 
 const PdfVisningModal: React.FC<IProps> = ({ onRequestClose, pdfdata, åpen }) => {
     return (
-        <StyledModal
-            open={åpen}
-            onClose={onRequestClose}
-            shouldCloseOnOverlayClick={false}
-            className={'pdfvisning-modal'}
-        >
-            <Modal.Content>
+        <StyledModal open={åpen} onClose={onRequestClose} className={'pdfvisning-modal'}>
+            <Modal.Body>
                 <Dokument pdfdata={pdfdata} />
-            </Modal.Content>
+            </Modal.Body>
         </StyledModal>
     );
 };

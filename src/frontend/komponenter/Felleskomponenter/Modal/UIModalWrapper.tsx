@@ -21,7 +21,7 @@ const StyledModal = styled(Modal)`
     padding: 1rem;
 `;
 
-const StyledModalContent = styled(Modal.Content)`
+const StyledModalBody = styled(Modal.Body)`
     padding: 0.5rem 1.5rem;
 `;
 
@@ -66,14 +66,13 @@ const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, modelStyleProp
     return (
         <StyledModal
             className={classNames(className, 'uimodal')}
-            shouldCloseOnOverlayClick={false}
             closeButton={lukkKnapp}
             open={visModal}
             onClose={(): void => onClose && onClose()}
             aria-label={ariaLabel ? ariaLabel : tittel}
             styleProps={modelStyleProps}
         >
-            <StyledModalContent className="uimodal__content">
+            <StyledModalBody className="uimodal__content">
                 <Heading level="2" size="small">
                     {tittel}
                 </Heading>
@@ -85,7 +84,7 @@ const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, modelStyleProp
                         {actions}
                     </StyledModalActions>
                 )}
-            </StyledModalContent>
+            </StyledModalBody>
         </StyledModal>
     );
 };
