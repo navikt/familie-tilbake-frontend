@@ -26,7 +26,7 @@ const StyledModalBody = styled(Modal.Body)`
 `;
 
 const ModalInnerContent = styled.div`
-    margin-top: 2rem;
+    margin-top: 1rem;
 `;
 
 const StyledModalActions = styled.div`
@@ -66,25 +66,30 @@ const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, modelStyleProp
     return (
         <StyledModal
             className={classNames(className, 'uimodal')}
-            closeButton={lukkKnapp}
             open={visModal}
             onClose={(): void => onClose && onClose()}
             aria-label={ariaLabel ? ariaLabel : tittel}
             styleProps={modelStyleProps}
+            portal={true}
         >
-            <StyledModalBody className="uimodal__content">
+            <Modal.Header closeButton={lukkKnapp}>
                 <Heading level="2" size="small">
                     {tittel}
                 </Heading>
+            </Modal.Header>
+
+            <StyledModalBody className="uimodal__content">
                 <ModalInnerContent className="uimodal__content--inner-content">
                     {innhold ? innhold() : children}
                 </ModalInnerContent>
-                {actions && (
+            </StyledModalBody>
+            {actions && (
+                <Modal.Footer>
                     <StyledModalActions className="uimodal__content--actions">
                         {actions}
                     </StyledModalActions>
-                )}
-            </StyledModalBody>
+                </Modal.Footer>
+            )}
         </StyledModal>
     );
 };
