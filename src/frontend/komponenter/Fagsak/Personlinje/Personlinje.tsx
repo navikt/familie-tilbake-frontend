@@ -84,7 +84,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                 )}
                 {fagsak.institusjon && (
                     <InstitusjonsTag variant="info" size="small">
-                        <Buldings3Icon width={20} height={20} />
+                        <Buldings3Icon fontSize={'1.25rem'} />
                         <MaksLengdeInstitusjonNavn title={fagsak.institusjon.navn}>
                             {fagsak.institusjon.navn}
                         </MaksLengdeInstitusjonNavn>
