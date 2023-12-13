@@ -4,7 +4,6 @@ import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { Modal } from '@navikt/ds-react';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../../../../api/behandling';
@@ -35,8 +34,6 @@ jest.mock('../../../../../../api/behandling', () => ({
 
 describe('Tester: HenleggBehandlingModal', () => {
     beforeEach(() => {
-        Modal?.setAppElement?.(document.createElement('div'));
-
         // @ts-ignore
         useBehandlingApi.mockImplementation(() => ({
             henleggBehandling: () => {
