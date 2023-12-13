@@ -65,7 +65,7 @@ const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, modelStyleProp
 
     return (
         <StyledModal
-            className={classNames(className, 'uimodal')}
+            className={classNames(className)}
             open={visModal}
             onClose={(): void => onClose && onClose()}
             aria-label={ariaLabel ? ariaLabel : tittel}
@@ -77,17 +77,12 @@ const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, modelStyleProp
                     {tittel}
                 </Heading>
             </Modal.Header>
-
-            <StyledModalBody className="uimodal__content">
-                <ModalInnerContent className="uimodal__content--inner-content">
-                    {innhold ? innhold() : children}
-                </ModalInnerContent>
+            <StyledModalBody>
+                <ModalInnerContent>{innhold ? innhold() : children}</ModalInnerContent>
             </StyledModalBody>
             {actions && (
                 <Modal.Footer>
-                    <StyledModalActions className="uimodal__content--actions">
-                        {actions}
-                    </StyledModalActions>
+                    <StyledModalActions>{actions}</StyledModalActions>
                 </Modal.Footer>
             )}
         </StyledModal>
