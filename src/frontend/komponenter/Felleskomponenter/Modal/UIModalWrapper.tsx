@@ -14,7 +14,7 @@ interface ModelStyleProps {
     styleProps?: StyleProps;
 }
 
-const StyledModal = styled(Modal)`
+const StyledModal = styled(Modal)<ModelStyleProps>`
     width: ${({ styleProps }: ModelStyleProps) => (styleProps?.width ? styleProps.width : '30rem')};
     min-height: ${({ styleProps }: ModelStyleProps) =>
         styleProps?.minHeight ? styleProps.minHeight : '12rem'};
