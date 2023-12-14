@@ -18,9 +18,6 @@ import { hentFrontendFeilmelding } from '../../../utils';
 import { useBrevmottaker } from './BrevmottakerContext';
 import BrevmottakerSkjema from './BrevmottakerSkjema';
 
-const StyledModal = styled(Modal)`
-    padding: 1rem;
-`;
 const FlexContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -97,7 +94,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER;
 
     return (
-        <StyledModal
+        <Modal
             open={visBrevmottakerModal}
             onClose={lukkModal}
             header={{ heading: heading, size: 'medium' }}
@@ -237,6 +234,6 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                     Avbryt
                 </Button>
             </Modal.Footer>
-        </StyledModal>
+        </Modal>
     );
 };
