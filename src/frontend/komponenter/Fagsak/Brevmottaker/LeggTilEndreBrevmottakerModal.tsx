@@ -109,7 +109,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER;
 
     return (
-        <StyledModal open={visBrevmottakerModal} aria-label={heading} onClose={lukkModal}>
+        <StyledModal open={visBrevmottakerModal} aria-label={heading} onBeforeClose={lukkModal}>
             <StyledHeading level="2" size="medium" id="modal-heading">
                 {heading}
             </StyledHeading>
