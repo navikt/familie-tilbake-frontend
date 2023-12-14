@@ -10,9 +10,10 @@ const StyledModal = styled(Modal)`
     width: 90%;
     height: 90%;
 
-    div.navds-modal__content {
+    div.navds-modal__body {
         height: 100%;
         margin-right: ${ASpacing6};
+        overflow: hidden;
     }
 
     button.navds-modal__button {
@@ -40,7 +41,8 @@ const PdfVisningModal: React.FC<IProps> = ({ onRequestClose, pdfdata, åpen }) =
             open={åpen}
             onBeforeClose={onRequestClose}
             className={'pdfvisning-modal'}
-            closeOnBackdropClick={true}
+            header={{ heading: '', closeButton: true }}
+            width={'100rem'}
         >
             <Modal.Body>
                 <Dokument pdfdata={pdfdata} />
