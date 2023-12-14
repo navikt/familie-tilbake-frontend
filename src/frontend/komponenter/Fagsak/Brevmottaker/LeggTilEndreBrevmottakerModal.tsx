@@ -2,8 +2,8 @@ import React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Button, Fieldset, Heading, Modal, Radio, RadioGroup } from '@navikt/ds-react';
-import { ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
+import { Button, Fieldset, Modal, Radio, RadioGroup } from '@navikt/ds-react';
+import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -21,15 +21,6 @@ import BrevmottakerSkjema from './BrevmottakerSkjema';
 const StyledModal = styled(Modal)`
     padding: 1rem;
 `;
-
-const StyledModalHeader = styled(Modal.Header)`
-    padding: 0;
-`;
-
-const StyledModalBody = styled(Modal.Body)`
-    padding: 0;
-`;
-
 const FlexContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -47,19 +38,8 @@ const StyledFieldset = styled(Fieldset)`
     }
 `;
 
-const StyledHeading = styled(Heading)`
-    margin-bottom: ${ASpacing2};
-`;
-
 const MottakerSelect = styled(FamilieSelect)`
     max-width: 19rem;
-`;
-
-const ModalKnapperad = styled.div`
-    margin-top: 1rem;
-    display: flex;
-    justify-content: flex-start;
-    gap: 1rem;
 `;
 
 const erMottakerBruker = (mottakerType: MottakerType | '') =>
@@ -117,13 +97,12 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER;
 
     return (
-        <StyledModal open={visBrevmottakerModal} aria-label={heading} onBeforeClose={lukkModal}>
-            <StyledModalHeader closeButton={true}>
-                <StyledHeading level="2" size="medium" id="modal-heading">
-                    {heading}
-                </StyledHeading>
-            </StyledModalHeader>
-            <StyledModalBody>
+        <StyledModal
+            open={visBrevmottakerModal}
+            onBeforeClose={lukkModal}
+            header={{ heading: heading, size: 'medium' }}
+        >
+            <Modal.Body>
                 <FlexContainer>
                     <StyledFieldset
                         legend="Skjema for å legge til eller redigere brevmottaker"
@@ -242,28 +221,21 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                         )}
                     </StyledFieldset>
                 </FlexContainer>
-            </StyledModalBody>
+            </Modal.Body>
             <Modal.Footer>
-                <ModalKnapperad>
-                    <>
-                        <Button
-                            variant={valideringErOk() ? 'primary' : 'secondary'}
-                            loading={skjema.submitRessurs.status === RessursStatus.HENTER}
-                            disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
-                            onClick={() =>
-                                lagreBrevmottakerOgOppdaterState(
-                                    brevmottakerIdTilEndring,
-                                    lukkModal
-                                )
-                            }
-                        >
-                            {brevmottakerIdTilEndring ? 'Lagre endringer' : 'Legg til'}
-                        </Button>
-                        <Button variant="tertiary" onClick={lukkModal}>
-                            Avbryt
-                        </Button>
-                    </>
-                </ModalKnapperad>
+                <Button
+                    variant={valideringErOk() ? 'primary' : 'secondary'}
+                    loading={skjema.submitRessurs.status === RessursStatus.HENTER}
+                    disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
+                    onClick={() =>
+                        lagreBrevmottakerOgOppdaterState(brevmottakerIdTilEndring, lukkModal)
+                    }
+                >
+                    {brevmottakerIdTilEndring ? 'Lagre endringer' : 'Legg til'}
+                </Button>
+                <Button variant="tertiary" onClick={lukkModal}>
+                    Avbryt
+                </Button>
             </Modal.Footer>
         </StyledModal>
     );
