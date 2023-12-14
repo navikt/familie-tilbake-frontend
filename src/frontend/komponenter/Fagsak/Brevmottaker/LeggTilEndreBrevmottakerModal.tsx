@@ -99,7 +99,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
     return (
         <StyledModal
             open={visBrevmottakerModal}
-            onBeforeClose={lukkModal}
+            onClose={lukkModal}
             header={{ heading: heading, size: 'medium' }}
         >
             <Modal.Body>

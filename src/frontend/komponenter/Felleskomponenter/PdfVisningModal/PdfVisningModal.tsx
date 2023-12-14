@@ -39,7 +39,7 @@ const PdfVisningModal: React.FC<IProps> = ({ onRequestClose, pdfdata, åpen }) =
     return (
         <StyledModal
             open={åpen}
-            onBeforeClose={onRequestClose}
+            onClose={onRequestClose}
             className={'pdfvisning-modal'}
             header={{ heading: '', closeButton: true }}
             width={'100rem'}
