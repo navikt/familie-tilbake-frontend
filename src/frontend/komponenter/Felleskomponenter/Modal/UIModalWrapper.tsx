@@ -11,13 +11,14 @@ interface StyleProps {
 }
 
 interface ModelStyleProps {
-    styleProps?: StyleProps;
+    $styleProps?: StyleProps;
 }
 
 const StyledModal = styled(Modal)<ModelStyleProps>`
-    width: ${({ styleProps }: ModelStyleProps) => (styleProps?.width ? styleProps.width : '30rem')};
-    min-height: ${({ styleProps }: ModelStyleProps) =>
-        styleProps?.minHeight ? styleProps.minHeight : '12rem'};
+    width: ${({ $styleProps }: ModelStyleProps) =>
+        $styleProps?.width ? $styleProps.width : '30rem'};
+    min-height: ${({ $styleProps }: ModelStyleProps) =>
+        $styleProps?.minHeight ? $styleProps.minHeight : '12rem'};
     padding: 1rem;
 `;
 
@@ -69,7 +70,7 @@ const UIModalWrapper: React.FunctionComponent<IProps> = ({ modal, modelStyleProp
             open={visModal}
             onClose={(): void => onClose && onClose()}
             aria-label={ariaLabel ? ariaLabel : tittel}
-            styleProps={modelStyleProps}
+            $styleProps={modelStyleProps}
             portal={true}
         >
             <Modal.Header closeButton={lukkKnapp}>
