@@ -22,6 +22,14 @@ const StyledModal = styled(Modal)`
     padding: 1rem;
 `;
 
+const StyledModalHeader = styled(Modal.Header)`
+    padding: 0;
+`;
+
+const StyledModalBody = styled(Modal.Body)`
+    padding: 0;
+`;
+
 const FlexContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -48,7 +56,7 @@ const MottakerSelect = styled(FamilieSelect)`
 `;
 
 const ModalKnapperad = styled.div`
-    margin-top: 2.5rem;
+    margin-top: 1rem;
     display: flex;
     justify-content: flex-start;
     gap: 1rem;
@@ -110,116 +118,132 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
 
     return (
         <StyledModal open={visBrevmottakerModal} aria-label={heading} onBeforeClose={lukkModal}>
-            <StyledHeading level="2" size="medium" id="modal-heading">
-                {heading}
-            </StyledHeading>
-            <FlexContainer>
-                <StyledFieldset
-                    legend="Skjema for å legge til eller redigere brevmottaker"
-                    hideLegend
-                    error={skjema.visFeilmeldinger && hentFrontendFeilmelding(skjema.submitRessurs)}
-                >
-                    <MottakerSelect
-                        {...skjema.felter.mottaker.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                        label="Mottaker"
-                        onChange={(event): void => {
-                            const nyMottakerType = event.target.value as MottakerType;
-                            if (skalNullstilleAdresseInputVedNyMottakerType(nyMottakerType)) {
-                                nullstillManuellAdresseInput();
-                                settAdresseKilde(
-                                    erMottakerBruker(nyMottakerType)
-                                        ? AdresseKilde.MANUELL_REGISTRERING
-                                        : AdresseKilde.UDEFINERT
-                                );
-                            }
-                            skjema.felter.mottaker.validerOgSettFelt(nyMottakerType);
-                        }}
+            <StyledModalHeader closeButton={true}>
+                <StyledHeading level="2" size="medium" id="modal-heading">
+                    {heading}
+                </StyledHeading>
+            </StyledModalHeader>
+            <StyledModalBody>
+                <FlexContainer>
+                    <StyledFieldset
+                        legend="Skjema for å legge til eller redigere brevmottaker"
+                        hideLegend
+                        error={
+                            skjema.visFeilmeldinger && hentFrontendFeilmelding(skjema.submitRessurs)
+                        }
                     >
-                        <option value={''} disabled={true}>
-                            Velg
-                        </option>
-                        {Object.values(MottakerType)
-                            .filter(type => type !== MottakerType.BRUKER)
-                            .map(mottaker => (
-                                <option value={mottaker} key={mottaker}>
-                                    {mottakerTypeVisningsnavn[mottaker]}
-                                </option>
-                            ))}
-                    </MottakerSelect>
-                    {skjema.felter.mottaker.verdi &&
-                        !erMottakerBruker(skjema.felter.mottaker.verdi) && (
-                            <RadioGroup
-                                legend={'Adresse'}
-                                value={adresseKilde}
-                                onChange={(val: AdresseKilde) => {
-                                    settAdresseKilde(val);
-                                    nullstillManuellAdresseInput(true);
-                                }}
-                            >
-                                <Radio
-                                    id={'manuell-registrering'}
-                                    value={AdresseKilde.MANUELL_REGISTRERING}
-                                >
-                                    {adresseKilder[AdresseKilde.MANUELL_REGISTRERING]}
-                                </Radio>
-                                <Radio
-                                    id={'oppslag-i-register'}
-                                    value={AdresseKilde.OPPSLAG_REGISTER}
-                                >
-                                    {adresseKilder[AdresseKilde.OPPSLAG_REGISTER]}
-                                </Radio>
-                                {skjema.felter.mottaker.verdi === MottakerType.FULLMEKTIG && (
-                                    <Radio
-                                        id={'oppslag-i-organisasjonsregister'}
-                                        value={AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER}
-                                    >
-                                        {adresseKilder[AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER]}
-                                    </Radio>
-                                )}
-                            </RadioGroup>
-                        )}
-                    {adresseKilde === AdresseKilde.MANUELL_REGISTRERING && (
-                        <BrevmottakerSkjema preutfyltNavn={preutfyltNavn} />
-                    )}
-                    {adresseKilde === AdresseKilde.OPPSLAG_REGISTER && (
-                        <FamilieInput
-                            {...skjema.felter.fødselsnummer.hentNavBaseSkjemaProps(
+                        <MottakerSelect
+                            {...skjema.felter.mottaker.hentNavBaseSkjemaProps(
                                 skjema.visFeilmeldinger
                             )}
-                            label={'Fødselsnummer'}
+                            label="Mottaker"
                             onChange={(event): void => {
-                                skjema.felter.fødselsnummer.validerOgSettFelt(event.target.value);
+                                const nyMottakerType = event.target.value as MottakerType;
+                                if (skalNullstilleAdresseInputVedNyMottakerType(nyMottakerType)) {
+                                    nullstillManuellAdresseInput();
+                                    settAdresseKilde(
+                                        erMottakerBruker(nyMottakerType)
+                                            ? AdresseKilde.MANUELL_REGISTRERING
+                                            : AdresseKilde.UDEFINERT
+                                    );
+                                }
+                                skjema.felter.mottaker.validerOgSettFelt(nyMottakerType);
                             }}
-                        />
-                    )}
-                    {adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER && (
-                        <>
+                        >
+                            <option value={''} disabled={true}>
+                                Velg
+                            </option>
+                            {Object.values(MottakerType)
+                                .filter(type => type !== MottakerType.BRUKER)
+                                .map(mottaker => (
+                                    <option value={mottaker} key={mottaker}>
+                                        {mottakerTypeVisningsnavn[mottaker]}
+                                    </option>
+                                ))}
+                        </MottakerSelect>
+                        {skjema.felter.mottaker.verdi &&
+                            !erMottakerBruker(skjema.felter.mottaker.verdi) && (
+                                <RadioGroup
+                                    legend={'Adresse'}
+                                    value={adresseKilde}
+                                    onChange={(val: AdresseKilde) => {
+                                        settAdresseKilde(val);
+                                        nullstillManuellAdresseInput(true);
+                                    }}
+                                >
+                                    <Radio
+                                        id={'manuell-registrering'}
+                                        value={AdresseKilde.MANUELL_REGISTRERING}
+                                    >
+                                        {adresseKilder[AdresseKilde.MANUELL_REGISTRERING]}
+                                    </Radio>
+                                    <Radio
+                                        id={'oppslag-i-register'}
+                                        value={AdresseKilde.OPPSLAG_REGISTER}
+                                    >
+                                        {adresseKilder[AdresseKilde.OPPSLAG_REGISTER]}
+                                    </Radio>
+                                    {skjema.felter.mottaker.verdi === MottakerType.FULLMEKTIG && (
+                                        <Radio
+                                            id={'oppslag-i-organisasjonsregister'}
+                                            value={AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER}
+                                        >
+                                            {
+                                                adresseKilder[
+                                                    AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
+                                                ]
+                                            }
+                                        </Radio>
+                                    )}
+                                </RadioGroup>
+                            )}
+                        {adresseKilde === AdresseKilde.MANUELL_REGISTRERING && (
+                            <BrevmottakerSkjema preutfyltNavn={preutfyltNavn} />
+                        )}
+                        {adresseKilde === AdresseKilde.OPPSLAG_REGISTER && (
                             <FamilieInput
-                                {...skjema.felter.organisasjonsnummer.hentNavBaseSkjemaProps(
+                                {...skjema.felter.fødselsnummer.hentNavBaseSkjemaProps(
                                     skjema.visFeilmeldinger
                                 )}
-                                label={'Organisasjonsnummer'}
+                                label={'Fødselsnummer'}
                                 onChange={(event): void => {
-                                    skjema.felter.organisasjonsnummer.validerOgSettFelt(
+                                    skjema.felter.fødselsnummer.validerOgSettFelt(
                                         event.target.value
                                     );
                                 }}
                             />
-                            <FamilieInput
-                                {...skjema.felter.navn.hentNavBaseSkjemaProps(
-                                    skjema.visFeilmeldinger
-                                )}
-                                label={'Kontaktperson i organisasjonen'}
-                                description={
-                                    'Navnet vises etter organisasjonsnavnet slik “Organisasjon AS v/ Navn Navnesen”'
-                                }
-                                onChange={(event): void => {
-                                    skjema.felter.navn.validerOgSettFelt(event.target.value);
-                                }}
-                            />
-                        </>
-                    )}
-                </StyledFieldset>
+                        )}
+                        {adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER && (
+                            <>
+                                <FamilieInput
+                                    {...skjema.felter.organisasjonsnummer.hentNavBaseSkjemaProps(
+                                        skjema.visFeilmeldinger
+                                    )}
+                                    label={'Organisasjonsnummer'}
+                                    onChange={(event): void => {
+                                        skjema.felter.organisasjonsnummer.validerOgSettFelt(
+                                            event.target.value
+                                        );
+                                    }}
+                                />
+                                <FamilieInput
+                                    {...skjema.felter.navn.hentNavBaseSkjemaProps(
+                                        skjema.visFeilmeldinger
+                                    )}
+                                    label={'Kontaktperson i organisasjonen'}
+                                    description={
+                                        'Navnet vises etter organisasjonsnavnet slik “Organisasjon AS v/ Navn Navnesen”'
+                                    }
+                                    onChange={(event): void => {
+                                        skjema.felter.navn.validerOgSettFelt(event.target.value);
+                                    }}
+                                />
+                            </>
+                        )}
+                    </StyledFieldset>
+                </FlexContainer>
+            </StyledModalBody>
+            <Modal.Footer>
                 <ModalKnapperad>
                     <>
                         <Button
@@ -240,7 +264,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                         </Button>
                     </>
                 </ModalKnapperad>
-            </FlexContainer>
+            </Modal.Footer>
         </StyledModal>
     );
 };
