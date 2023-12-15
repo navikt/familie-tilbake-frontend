@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import { ErrorMessage } from '@navikt/ds-react';
+import { ErrorMessage, Modal } from '@navikt/ds-react';
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
@@ -14,7 +14,6 @@ import {
 } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
-import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
 import { sider } from '../../../../Felleskomponenter/Venstremeny/sider';
 
@@ -120,23 +119,28 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                 {kanFjerneManuelleBrevmottakere ? 'Fjern brevmottaker(e)' : 'Legg til brevmottaker'}
             </BehandlingsMenyButton>
 
-            <UIModalWrapper
-                modal={{
-                    tittel: 'Ønsker du å fjerne brevmottaker(e)?',
-                    visModal: visFjernModal,
-                    lukkKnapp: true,
-                    onClose: () => settVisFjernModal(false),
-                    actions: [
-                        <FTButton
-                            variant="tertiary"
-                            key={'avbryt'}
-                            onClick={() => {
-                                settVisFjernModal(false);
-                            }}
-                            size="small"
-                        >
-                            Nei, behold
-                        </FTButton>,
+            {visFjernModal && (
+                <Modal
+                    open
+                    header={{ heading: 'Ønsker du å fjerne brevmottaker(e)?', size: 'medium' }}
+                    portal={true}
+                    width="small"
+                    onClose={() => {
+                        settVisFjernModal(false);
+                    }}
+                >
+                    <Modal.Body>
+                        <div>
+                            Dette vil både fjerne eventuelt registrerte brevmottakere og fjerne
+                            steget &quot;Brevmottaker(e)&quot;.
+                        </div>
+                        {feilmelding && feilmelding !== '' && (
+                            <div className="skjemaelement__feilmelding">
+                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
+                            </div>
+                        )}
+                    </Modal.Body>
+                    <Modal.Footer>
                         <FTButton
                             variant="primary"
                             key={'bekreft'}
@@ -146,26 +150,20 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                             size="small"
                         >
                             Ja, fjern
-                        </FTButton>,
-                    ],
-                }}
-                modelStyleProps={{
-                    width: '20rem',
-                    minHeight: '10rem',
-                }}
-            >
-                <>
-                    <div>
-                        Dette vil både fjerne eventuelt registrerte brevmottakere og fjerne steget
-                        &quot;Brevmottaker(e)&quot;.
-                    </div>
-                    {feilmelding && feilmelding !== '' && (
-                        <div className="skjemaelement__feilmelding">
-                            <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                        </div>
-                    )}
-                </>
-            </UIModalWrapper>
+                        </FTButton>
+                        <FTButton
+                            variant="tertiary"
+                            key={'avbryt'}
+                            onClick={() => {
+                                settVisFjernModal(false);
+                            }}
+                            size="small"
+                        >
+                            Nei, behold
+                        </FTButton>
+                    </Modal.Footer>
+                </Modal>
+            )}
         </>
     );
 };
