@@ -49,7 +49,7 @@ describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
         expect(queryByText('01.01.2021 - 30.04.2021')).toBeTruthy();
         expect(
             getByText('Del opp perioden', {
-                selector: 'h2',
+                selector: 'p',
             })
         ).toBeTruthy();
         expect(getByLabelText('Angi t.o.m. måned for første periode')).toBeTruthy();
