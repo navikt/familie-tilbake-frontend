@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ErrorMessage, Modal, BodyShort } from '@navikt/ds-react';
+import { ErrorMessage, Modal } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling } from '../../../../../typer/behandling';
@@ -50,7 +50,6 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                     }}
                 >
                     <Modal.Body>
-                        <BodyShort>Ønsker du å fortsette behandlingen?</BodyShort>
                         {feilmelding && feilmelding !== '' && (
                             <div className="skjemaelement__feilmelding">
                                 <ErrorMessage size="small">{feilmelding}</ErrorMessage>
