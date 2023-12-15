@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ErrorMessage } from '@navikt/ds-react';
+import { ErrorMessage, Modal } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -14,7 +14,6 @@ import {
     FTButton,
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
-import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 
@@ -30,9 +29,12 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
         []
     );
     const { behandlingILesemodus } = useBehandling();
-    const { skjema, sendInn } = useEndreBehandlendeEnhet(behandling.behandlingId, () => {
-        settVisModal(false);
-    });
+    const { skjema, sendInn, nullstillSkjema } = useEndreBehandlendeEnhet(
+        behandling.behandlingId,
+        () => {
+            settVisModal(false);
+        }
+    );
 
     React.useEffect(() => {
         settBehandendeEnheter(finnMuligeEnheter(ytelse));
@@ -52,14 +54,57 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
             >
                 Endre behandlende enhet
             </BehandlingsMenyButton>
-
-            <UIModalWrapper
-                modal={{
-                    tittel: 'Endre enhet for denne behandlingen',
-                    visModal: visModal,
-                    lukkKnapp: false,
-                    ariaLabel: 'Endre behandlende enhet',
-                    actions: [
+            {visModal && (
+                <Modal
+                    open
+                    header={{ heading: 'Endre enhet for behandlingen', size: 'medium' }}
+                    portal={true}
+                    onClose={() => {
+                        nullstillSkjema();
+                        settVisModal(false);
+                    }}
+                >
+                    <Modal.Body>
+                        <FamilieSelect
+                            {...skjema.felter.enhet.hentNavInputProps(skjema.visFeilmeldinger)}
+                            erLesevisning={false}
+                            name="enhet"
+                            label={'Velg ny enhet'}
+                            value={skjema.felter.enhet.verdi}
+                            onChange={e => skjema.felter.enhet.validerOgSettFelt(e.target.value)}
+                        >
+                            <option value={''} disabled={true}>
+                                Velg ny enhet
+                            </option>
+                            {behandendeEnheter.map(enhet => (
+                                <option key={enhet.enhetId} value={enhet.enhetId}>
+                                    {enhet.enhetNavn}
+                                </option>
+                            ))}
+                        </FamilieSelect>
+                        <Spacer8 />
+                        <FamilieTilbakeTextArea
+                            {...skjema.felter.begrunnelse.hentNavInputProps(
+                                skjema.visFeilmeldinger
+                            )}
+                            label={'Begrunnelse'}
+                            erLesevisning={false}
+                            value={skjema.felter.begrunnelse.verdi}
+                            onChange={e =>
+                                skjema.felter.begrunnelse.validerOgSettFelt(e.target.value)
+                            }
+                            maxLength={400}
+                        />
+                        {feilmelding && (
+                            <>
+                                <Spacer8 />
+                                <div className="skjemaelement__feilmelding">
+                                    <ErrorMessage size="small">{feilmelding}</ErrorMessage>
+                                </div>
+                            </>
+                        )}
+                    </Modal.Body>
+                    <Modal.Footer>
                         <FTButton
                             variant="tertiary"
                             key={'avbryt'}
@@ -69,7 +114,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                             size="small"
                         >
                             Avbryt
-                        </FTButton>,
+                        </FTButton>
                         <FTButton
                             variant="primary"
                             disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
@@ -78,47 +123,10 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                             size="small"
                         >
                             Bekreft
-                        </FTButton>,
-                    ],
-                }}
-            >
-                <>
-                    <FamilieSelect
-                        {...skjema.felter.enhet.hentNavInputProps(skjema.visFeilmeldinger)}
-                        erLesevisning={false}
-                        name="enhet"
-                        label={'Velg ny enhet'}
-                        value={skjema.felter.enhet.verdi}
-                        onChange={e => skjema.felter.enhet.validerOgSettFelt(e.target.value)}
-                    >
-                        <option value={''} disabled={true}>
-                            Velg ny enhet
-                        </option>
-                        {behandendeEnheter.map(enhet => (
-                            <option key={enhet.enhetId} value={enhet.enhetId}>
-                                {enhet.enhetNavn}
-                            </option>
-                        ))}
-                    </FamilieSelect>
-                    <Spacer8 />
-                    <FamilieTilbakeTextArea
-                        {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
-                        label={'Begrunnelse'}
-                        erLesevisning={false}
-                        value={skjema.felter.begrunnelse.verdi}
-                        onChange={e => skjema.felter.begrunnelse.validerOgSettFelt(e.target.value)}
-                        maxLength={400}
-                    />
-                    {feilmelding && (
-                        <>
-                            <Spacer8 />
-                            <div className="skjemaelement__feilmelding">
-                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                            </div>
-                        </>
-                    )}
-                </>
-            </UIModalWrapper>
+                        </FTButton>
+                    </Modal.Footer>
+                </Modal>
+            )}
         </>
     );
 };
