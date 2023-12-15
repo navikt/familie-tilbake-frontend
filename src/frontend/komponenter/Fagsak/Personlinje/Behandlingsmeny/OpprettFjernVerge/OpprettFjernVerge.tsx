@@ -1,13 +1,12 @@
 import * as React from 'react';
 
-import { ErrorMessage } from '@navikt/ds-react';
+import { ErrorMessage, Modal } from '@navikt/ds-react';
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Behandlingssteg, IBehandling } from '../../../../../typer/behandling';
 import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
-import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 
 interface IProps {
     behandling: IBehandling;
@@ -84,24 +83,29 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
                 {kanFjerneVerge ? 'Fjern verge/fullmektig' : 'Opprett verge/fullmektig'}
             </BehandlingsMenyButton>
 
-            <UIModalWrapper
-                modal={{
-                    tittel: kanFjerneVerge
-                        ? 'Fjern verge/fullmektig?'
-                        : 'Opprett verge/fullmektig?',
-                    visModal: visModal,
-                    lukkKnapp: false,
-                    actions: [
-                        <FTButton
-                            variant="tertiary"
-                            key={'avbryt'}
-                            onClick={() => {
-                                settVisModal(false);
-                            }}
-                            size="small"
-                        >
-                            Avbryt
-                        </FTButton>,
+            {visModal && (
+                <Modal
+                    open
+                    header={{
+                        heading: kanFjerneVerge
+                            ? 'Fjern verge/fullmektig?'
+                            : 'Opprett verge/fullmektig?',
+                        size: 'medium',
+                    }}
+                    portal={true}
+                    width="small"
+                    onClose={() => {
+                        settVisModal(false);
+                    }}
+                >
+                    <Modal.Body>
+                        {feilmelding && feilmelding !== '' && (
+                            <div className="skjemaelement__feilmelding">
+                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
+                            </div>
+                        )}
+                    </Modal.Body>
+                    <Modal.Footer>
                         <FTButton
                             variant="primary"
                             key={'bekreft'}
@@ -111,22 +115,20 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
                             size="small"
                         >
                             Ok
-                        </FTButton>,
-                    ],
-                }}
-                modelStyleProps={{
-                    width: '20rem',
-                    minHeight: '10rem',
-                }}
-            >
-                <>
-                    {feilmelding && feilmelding !== '' && (
-                        <div className="skjemaelement__feilmelding">
-                            <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                        </div>
-                    )}
-                </>
-            </UIModalWrapper>
+                        </FTButton>
+                        <FTButton
+                            variant="tertiary"
+                            key={'avbryt'}
+                            onClick={() => {
+                                settVisModal(false);
+                            }}
+                            size="small"
+                        >
+                            Avbryt
+                        </FTButton>
+                    </Modal.Footer>
+                </Modal>
+            )}
         </>
     );
 };
