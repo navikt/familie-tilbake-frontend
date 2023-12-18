@@ -4,13 +4,14 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyLong, ErrorMessage, Heading, Loader, Textarea } from '@navikt/ds-react';
+import { BodyLong, ErrorMessage, Heading, Loader } from '@navikt/ds-react';
 import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergeTyper, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
 import { FTButton, Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
+import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { useVerge } from './VergeContext';
 
@@ -145,13 +146,13 @@ const VergeContainer: React.FC = () => {
                     <Spacer20 />
                     <Row>
                         <Column md="12" lg="6">
-                            <Textarea
+                            <FamilieTilbakeTextArea
                                 {...skjema.felter.begrunnelse.hentNavInputProps(
                                     skjema.visFeilmeldinger
                                 )}
                                 label={'Begrunn endringene'}
                                 value={skjema.felter.begrunnelse.verdi}
-                                readOnly={erLesevisning}
+                                erLesevisning={erLesevisning}
                                 onChange={event =>
                                     skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
                                 }
