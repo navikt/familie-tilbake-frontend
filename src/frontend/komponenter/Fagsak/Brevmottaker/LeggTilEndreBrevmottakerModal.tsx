@@ -65,8 +65,6 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         bruker,
     } = useBrevmottaker();
 
-    const heading = brevmottakerIdTilEndring ? 'Endre brevmottaker' : 'Legg til brevmottaker';
-
     const { mottaker, land } = skjema.felter;
     const preutfyltNavn = erMottakerBruker(mottaker.verdi)
         ? preutfyltNavnFixed(mottaker.verdi, land.verdi, bruker.navn)
@@ -97,7 +95,10 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         <Modal
             open={visBrevmottakerModal}
             onClose={lukkModal}
-            header={{ heading: heading, size: 'medium' }}
+            header={{
+                heading: brevmottakerIdTilEndring ? 'Endre brevmottaker' : 'Legg til brevmottaker',
+                size: 'medium',
+            }}
         >
             <Modal.Body>
                 <FlexContainer>
