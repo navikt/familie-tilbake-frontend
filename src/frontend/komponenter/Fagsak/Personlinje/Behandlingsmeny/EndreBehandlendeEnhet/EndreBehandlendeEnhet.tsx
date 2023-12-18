@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { ErrorMessage, Modal } from '@navikt/ds-react';
-import { FamilieSelect } from '@navikt/familie-form-elements';
+import { ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
@@ -65,13 +64,11 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                     }}
                 >
                     <Modal.Body>
-                        <FamilieSelect
+                        <Select
                             {...skjema.felter.enhet.hentNavInputProps(skjema.visFeilmeldinger)}
-                            erLesevisning={false}
+                            readOnly={false}
                             name="enhet"
                             label={'Velg ny enhet'}
-                            value={skjema.felter.enhet.verdi}
-                            onChange={e => skjema.felter.enhet.validerOgSettFelt(e.target.value)}
                         >
                             <option value={''} disabled={true}>
                                 Velg ny enhet
@@ -81,7 +78,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                                     {enhet.enhetNavn}
                                 </option>
                             ))}
-                        </FamilieSelect>
+                        </Select>
                         <Spacer8 />
                         <FamilieTilbakeTextArea
                             {...skjema.felter.begrunnelse.hentNavInputProps(
