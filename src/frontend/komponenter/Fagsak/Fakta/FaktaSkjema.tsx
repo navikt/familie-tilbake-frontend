@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyShort, Checkbox, Heading } from '@navikt/ds-react';
+import { BodyShort, Checkbox, Heading, Textarea } from '@navikt/ds-react';
 
 import { Ytelsetype } from '../../../kodeverk';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
@@ -14,7 +14,6 @@ import {
     Spacer20,
     Spacer8,
 } from '../../Felleskomponenter/Flytelementer';
-import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
@@ -130,10 +129,10 @@ const FaktaSkjema: React.FC<IProps> = ({
             <Spacer20 />
             <Row>
                 <Column sm="12" md="6">
-                    <FamilieTilbakeTextArea
+                    <Textarea
                         name={'begrunnelse'}
                         label={'Forklar årsaken(e) til feilutbetalingen'}
-                        erLesevisning={erLesevisning}
+                        readOnly={erLesevisning}
                         value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
                         onChange={event => onChangeBegrunnelse(event)}
                         maxLength={3000}
