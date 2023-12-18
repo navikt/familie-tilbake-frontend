@@ -106,6 +106,15 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                     </Modal.Body>
                     <Modal.Footer>
                         <FTButton
+                            variant="primary"
+                            disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
+                            key={'bekreft'}
+                            onClick={() => sendInn()}
+                            size="small"
+                        >
+                            Bekreft
+                        </FTButton>
+                        <FTButton
                             variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
@@ -114,15 +123,6 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                             size="small"
                         >
                             Avbryt
-                        </FTButton>
-                        <FTButton
-                            variant="primary"
-                            disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
-                            key={'bekreft'}
-                            onClick={() => sendInn()}
-                            size="small"
-                        >
-                            Bekreft
                         </FTButton>
                     </Modal.Footer>
                 </Modal>
