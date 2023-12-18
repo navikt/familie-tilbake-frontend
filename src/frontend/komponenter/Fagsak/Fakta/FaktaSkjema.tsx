@@ -64,7 +64,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                     <Spacer20 />
                     <Row>
                         <Column xs="12" md="4">
-                            <DetailBold size="small">Periode med feilutbetaling</DetailBold>
+                            <DetailBold>Periode med feilutbetaling</DetailBold>
                             <BodyShort size="small">
                                 {`${formatterDatostring(
                                     feilutbetalingFakta.totalFeilutbetaltPeriode.fom
@@ -74,7 +74,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             </BodyShort>
                         </Column>
                         <Column xs="12" md="4">
-                            <DetailBold size="small">Feilutbetalt beløp totalt</DetailBold>
+                            <DetailBold>Feilutbetalt beløp totalt</DetailBold>
                             <BodyShort size="small" className={'redText'}>
                                 {`${formatCurrencyNoKr(
                                     feilutbetalingFakta.totaltFeilutbetaltBeløp
@@ -82,7 +82,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             </BodyShort>
                         </Column>
                         <Column xs="12" md="4">
-                            <DetailBold size="small">Tidligere varslet beløp</DetailBold>
+                            <DetailBold>Tidligere varslet beløp</DetailBold>
                             <BodyShort size="small">
                                 {feilutbetalingFakta.varsletBeløp
                                     ? `${formatCurrencyNoKr(feilutbetalingFakta.varsletBeløp)}`

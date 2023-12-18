@@ -60,7 +60,7 @@ const JournalpostVisning: React.FC<IProps> = ({ journalpost }) => {
                         dokument={dok}
                     />
                 ))}
-                <Detail size="small">
+                <Detail>
                     {`${datoRegistrertSendt ? formatterDatoOgTid(datoRegistrertSendt) : '-'} | `}
                     {typer[journalpost.journalposttype]}
                 </Detail>
