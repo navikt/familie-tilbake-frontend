@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ErrorMessage } from '@navikt/ds-react';
+import { ErrorMessage, Modal } from '@navikt/ds-react';
 import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import {
@@ -19,7 +19,6 @@ import {
     Spacer20,
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
-import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';
 
 interface IProps {
@@ -51,12 +50,72 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                 Opprett behandling
             </BehandlingsMenyButton>
 
-            <UIModalWrapper
-                modal={{
-                    tittel: 'Opprett behandling',
-                    visModal: visModal,
-                    lukkKnapp: false,
-                    actions: [
+            {visModal && (
+                <Modal
+                    open
+                    header={{ heading: 'Opprett behandling', size: 'medium' }}
+                    portal={true}
+                    width="small"
+                    onClose={() => {
+                        settVisModal(false);
+                    }}
+                >
+                    <Modal.Body>
+                        <FamilieSelect
+                            erLesevisning={true}
+                            name={'Behandling'}
+                            label={'Type behandling'}
+                            value={skjema.felter.behandlingstype.verdi}
+                            lesevisningVerdi={
+                                behandlingstyper[Behandlingstype.REVURDERING_TILBAKEKREVING]
+                            }
+                        >
+                            {behandlingsTyper.map(opt => (
+                                <option key={opt} value={opt}>
+                                    {behandlingstyper[opt]}
+                                </option>
+                            ))}
+                        </FamilieSelect>
+                        <Spacer20 />
+                        <FamilieSelect
+                            {...skjema.felter.behandlingsårsak.hentNavBaseSkjemaProps(
+                                skjema.visFeilmeldinger
+                            )}
+                            erLesevisning={false}
+                            name={'Behandling'}
+                            label={'Årsak til revuderingen'}
+                            value={skjema.felter.behandlingsårsak.verdi}
+                            onChange={event => skjema.felter.behandlingsårsak.onChange(event)}
+                        >
+                            <option disabled={true} value={''}>
+                                Velg årsak til revurderingen
+                            </option>
+                            {behandlingÅrsaker.map(opt => (
+                                <option key={opt} value={opt}>
+                                    {behandlingårsaker[opt]}
+                                </option>
+                            ))}
+                        </FamilieSelect>
+                        {feilmelding && (
+                            <>
+                                <Spacer8 />
+                                <div className="skjemaelement__feilmelding">
+                                    <ErrorMessage size="small">{feilmelding}</ErrorMessage>
+                                </div>
+                            </>
+                        )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <FTButton
+                            variant="primary"
+                            key={'bekreft'}
+                            onClick={() => {
+                                sendInn();
+                            }}
+                            size="small"
+                        >
+                            Ok
+                        </FTButton>
                         <FTButton
                             variant="tertiary"
                             key={'avbryt'}
@@ -67,66 +126,10 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                             size="small"
                         >
                             Avbryt
-                        </FTButton>,
-                        <FTButton
-                            variant="primary"
-                            key={'bekreft'}
-                            onClick={() => {
-                                sendInn();
-                            }}
-                            size="small"
-                        >
-                            Ok
-                        </FTButton>,
-                    ],
-                }}
-            >
-                <>
-                    <FamilieSelect
-                        erLesevisning={true}
-                        name={'Behandling'}
-                        label={'Type behandling'}
-                        value={skjema.felter.behandlingstype.verdi}
-                        lesevisningVerdi={
-                            behandlingstyper[Behandlingstype.REVURDERING_TILBAKEKREVING]
-                        }
-                    >
-                        {behandlingsTyper.map(opt => (
-                            <option key={opt} value={opt}>
-                                {behandlingstyper[opt]}
-                            </option>
-                        ))}
-                    </FamilieSelect>
-                    <Spacer20 />
-                    <FamilieSelect
-                        {...skjema.felter.behandlingsårsak.hentNavBaseSkjemaProps(
-                            skjema.visFeilmeldinger
-                        )}
-                        erLesevisning={false}
-                        name={'Behandling'}
-                        label={'Årsak til revuderingen'}
-                        value={skjema.felter.behandlingsårsak.verdi}
-                        onChange={event => skjema.felter.behandlingsårsak.onChange(event)}
-                    >
-                        <option disabled={true} value={''}>
-                            Velg årsak til revurderingen
-                        </option>
-                        {behandlingÅrsaker.map(opt => (
-                            <option key={opt} value={opt}>
-                                {behandlingårsaker[opt]}
-                            </option>
-                        ))}
-                    </FamilieSelect>
-                    {feilmelding && (
-                        <>
-                            <Spacer8 />
-                            <div className="skjemaelement__feilmelding">
-                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                            </div>
-                        </>
-                    )}
-                </>
-            </UIModalWrapper>
+                        </FTButton>
+                    </Modal.Footer>
+                </Modal>
+            )}
         </>
     );
 };

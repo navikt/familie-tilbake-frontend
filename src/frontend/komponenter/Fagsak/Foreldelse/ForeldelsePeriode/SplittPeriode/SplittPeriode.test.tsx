@@ -4,7 +4,6 @@ import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { Modal } from '@navikt/ds-react';
 import { HttpProvider } from '@navikt/familie-http';
 
 import { IBehandling } from '../../../../../typer/behandling';
@@ -12,10 +11,6 @@ import { ForeldelsePeriodeSkjemeData } from '../../typer/feilutbetalingForeldels
 import SplittPeriode from './SplittPeriode';
 
 describe('Tester: SplittPeriode - Foreldelse', () => {
-    beforeEach(() => {
-        Modal?.setAppElement?.(document.createElement('div'));
-    });
-
     test('Tester åpning av modal', async () => {
         const user = userEvent.setup();
         const periode: ForeldelsePeriodeSkjemeData = {
@@ -51,7 +46,7 @@ describe('Tester: SplittPeriode - Foreldelse', () => {
         expect(queryByText('01.01.2021 - 30.04.2021')).toBeTruthy();
         expect(
             getByText('Del opp perioden', {
-                selector: 'h2',
+                selector: 'p',
             })
         ).toBeTruthy();
         expect(getByLabelText('Angi t.o.m. måned for første periode')).toBeTruthy();

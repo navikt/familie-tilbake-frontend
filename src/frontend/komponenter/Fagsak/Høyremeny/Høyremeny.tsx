@@ -19,9 +19,8 @@ import { IFagsak } from '../../../typer/fagsak';
 import Behandlingskort from './Behandlingskort/Behandlingskort';
 import Menykontainer, { Menysider } from './Menykontainer';
 
-const StyledContainer = styled.div`
-    width: ${(props: { værtPåFatteVedtakSteget: boolean }) =>
-        props.værtPåFatteVedtakSteget ? '28rem' : '22rem'};
+const StyledContainer = styled.div<{ $værtPåFatteVedtakSteget: boolean }>`
+    width: ${({ $værtPåFatteVedtakSteget }) => ($værtPåFatteVedtakSteget ? '28rem' : '22rem')};
 `;
 
 const HøyremenyContainer = styled.div`
@@ -46,7 +45,7 @@ interface IToggleVisningHøyremenyProps {
     harventegrunn: boolean;
 }
 
-const ToggleVisningHøyremeny = styled(Button)`
+const ToggleVisningHøyremeny = styled(Button)<IToggleVisningHøyremenyProps>`
     position: absolute;
     margin-left: ${(props: IToggleVisningHøyremenyProps) =>
         !props.åpenhøyremeny ? '-20px' : '-17px'};
@@ -92,7 +91,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                 )}
             </ToggleVisningHøyremeny>
             {åpenHøyremeny && (
-                <StyledContainer værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}>
+                <StyledContainer $værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}>
                     <Behandlingskort fagsak={fagsak} behandling={behandling} />
                     <div>
                         <Tabs

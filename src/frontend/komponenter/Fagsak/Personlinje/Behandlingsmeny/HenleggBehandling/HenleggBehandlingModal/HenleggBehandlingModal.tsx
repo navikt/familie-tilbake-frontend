@@ -9,7 +9,7 @@ import {
 } from '../../../../../../typer/behandling';
 import { IFagsak, målform } from '../../../../../../typer/fagsak';
 import { FTButton, Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
-import UIModalWrapper from '../../../../../Felleskomponenter/Modal/UIModalWrapper';
+import { Modal } from '@navikt/ds-react';
 import {
     FamilieTilbakeTextArea,
     LabelMedSpråk,
@@ -48,95 +48,102 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
     const kanForhåndsvise = erKanForhåndsvise();
 
     return (
-        <UIModalWrapper
-            modal={{
-                tittel: 'Behandlingen henlegges',
-                visModal: visModal,
-                lukkKnapp: false,
-                ariaLabel: 'Henlegg behandlingen',
-                actions: [
-                    <ForhåndsvisHenleggelsesBrev
-                        key={'forhåndsvis-henleggelsesbrev'}
-                        behandling={behandling}
-                        skjema={skjema}
-                        kanForhåndsvise={kanForhåndsvise}
-                    />,
-                    <FTButton
-                        variant="tertiary"
-                        key={'avbryt'}
-                        onClick={() => {
-                            nullstillSkjema();
-                            settVisModal(false);
-                        }}
-                        size="small"
-                    >
-                        Avbryt
-                    </FTButton>,
-                    <FTButton
-                        variant="primary"
-                        key={'bekreft'}
-                        onClick={() => {
-                            onBekreft();
-                        }}
-                        size="small"
-                    >
-                        Henlegg behandling
-                    </FTButton>,
-                ],
-            }}
-            modelStyleProps={{
-                width: '36rem',
-            }}
-        >
-            <>
-                <FamilieSelect
-                    {...skjema.felter.årsakkode.hentNavInputProps(skjema.visFeilmeldinger)}
-                    label={`Velg årsak`}
-                    onChange={e => onChangeÅrsakskode(e)}
+        <>
+            {visModal && (
+                <Modal
+                    open
+                    header={{ heading: 'Behandlingen henlegges', size: 'medium' }}
+                    portal={true}
+                    width="small"
+                    onClose={() => {
+                        nullstillSkjema();
+                        settVisModal(false);
+                    }}
                 >
-                    <option value="" disabled={true}>
-                        Velg årsak til henleggelse
-                    </option>
-                    {årsaker.map(årsak => (
-                        <option key={årsak} value={årsak}>
-                            {behandlingsresultater[årsak]}
-                        </option>
-                    ))}
-                </FamilieSelect>
-                {visFritekst && (
-                    <>
+                    <Modal.Body>
+                        <FamilieSelect
+                            {...skjema.felter.årsakkode.hentNavInputProps(skjema.visFeilmeldinger)}
+                            label={`Velg årsak`}
+                            onChange={e => onChangeÅrsakskode(e)}
+                        >
+                            <option value="" disabled={true}>
+                                Velg årsak til henleggelse
+                            </option>
+                            {årsaker.map(årsak => (
+                                <option key={årsak} value={årsak}>
+                                    {behandlingsresultater[årsak]}
+                                </option>
+                            ))}
+                        </FamilieSelect>
+                        {visFritekst && (
+                            <>
+                                <Spacer20 />
+                                <FamilieTilbakeTextArea
+                                    {...skjema.felter.fritekst.hentNavInputProps(
+                                        skjema.visFeilmeldinger
+                                    )}
+                                    label={
+                                        <LabelMedSpråk
+                                            label={`Fritekst til brev`}
+                                            språk={målform[fagsak.språkkode]}
+                                        />
+                                    }
+                                    aria-label={`Fritekst til brev`}
+                                    value={skjema.felter.fritekst.verdi || ''}
+                                    onChange={event =>
+                                        skjema.felter.fritekst.validerOgSettFelt(event.target.value)
+                                    }
+                                    erLesevisning={false}
+                                    maxLength={1500}
+                                />
+                            </>
+                        )}
                         <Spacer20 />
                         <FamilieTilbakeTextArea
-                            {...skjema.felter.fritekst.hentNavInputProps(skjema.visFeilmeldinger)}
-                            label={
-                                <LabelMedSpråk
-                                    label={`Fritekst til brev`}
-                                    språk={målform[fagsak.språkkode]}
-                                />
-                            }
-                            aria-label={`Fritekst til brev`}
-                            value={skjema.felter.fritekst.verdi || ''}
+                            {...skjema.felter.begrunnelse.hentNavInputProps(
+                                skjema.visFeilmeldinger
+                            )}
+                            label={`Begrunnelse`}
+                            value={skjema.felter.begrunnelse.verdi || ''}
                             onChange={event =>
-                                skjema.felter.fritekst.validerOgSettFelt(event.target.value)
+                                skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
                             }
                             erLesevisning={false}
-                            maxLength={1500}
+                            maxLength={200}
                         />
-                    </>
-                )}
-                <Spacer20 />
-                <FamilieTilbakeTextArea
-                    {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
-                    label={`Begrunnelse`}
-                    value={skjema.felter.begrunnelse.verdi || ''}
-                    onChange={event =>
-                        skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
-                    }
-                    erLesevisning={false}
-                    maxLength={200}
-                />
-            </>
-        </UIModalWrapper>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <ForhåndsvisHenleggelsesBrev
+                            key={'forhåndsvis-henleggelsesbrev'}
+                            behandling={behandling}
+                            skjema={skjema}
+                            kanForhåndsvise={kanForhåndsvise}
+                        />
+                        <FTButton
+                            variant="primary"
+                            key={'bekreft'}
+                            onClick={() => {
+                                onBekreft();
+                            }}
+                            size="small"
+                        >
+                            Henlegg behandling
+                        </FTButton>
+                        <FTButton
+                            variant="tertiary"
+                            key={'avbryt'}
+                            onClick={() => {
+                                nullstillSkjema();
+                                settVisModal(false);
+                            }}
+                            size="small"
+                        >
+                            Avbryt
+                        </FTButton>
+                    </Modal.Footer>
+                </Modal>
+            )}
+        </>
     );
 };
 

@@ -4,7 +4,6 @@ import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { Modal } from '@navikt/ds-react';
 import { HttpProvider } from '@navikt/familie-http';
 
 import { HendelseType } from '../../../../../kodeverk';
@@ -13,10 +12,6 @@ import { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVi
 import SplittPeriode from './SplittPeriode';
 
 describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
-    beforeEach(() => {
-        Modal?.setAppElement?.(document.createElement('div'));
-    });
-
     test('Tester åpning av modal', async () => {
         const user = userEvent.setup();
         const periode: VilkårsvurderingPeriodeSkjemaData = {
@@ -54,7 +49,7 @@ describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
         expect(queryByText('01.01.2021 - 30.04.2021')).toBeTruthy();
         expect(
             getByText('Del opp perioden', {
-                selector: 'h2',
+                selector: 'p',
             })
         ).toBeTruthy();
         expect(getByLabelText('Angi t.o.m. måned for første periode')).toBeTruthy();

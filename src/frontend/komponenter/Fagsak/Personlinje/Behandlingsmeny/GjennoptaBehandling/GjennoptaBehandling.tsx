@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import { ErrorMessage } from '@navikt/ds-react';
+import { ErrorMessage, Modal } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling } from '../../../../../typer/behandling';
 import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
-import UIModalWrapper from '../../../../Felleskomponenter/Modal/UIModalWrapper';
 
 interface IProps {
     behandling: IBehandling;
@@ -17,12 +16,14 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
     const [visModal, settVisModal] = React.useState<boolean>(false);
 
     const { hentBehandlingMedBehandlingId } = useBehandling();
-    const { feilmelding, onOkTaAvVent } = usePåVentBehandling((suksess: boolean) => {
-        settVisModal(false);
-        if (suksess) {
-            hentBehandlingMedBehandlingId(behandling.behandlingId);
+    const { feilmelding, onOkTaAvVent, nullstillSkjema } = usePåVentBehandling(
+        (suksess: boolean) => {
+            settVisModal(false);
+            if (suksess) {
+                hentBehandlingMedBehandlingId(behandling.behandlingId);
+            }
         }
-    });
+    );
 
     return (
         <>
@@ -37,13 +38,33 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                 Fortsett behandlingen
             </BehandlingsMenyButton>
 
-            <UIModalWrapper
-                modal={{
-                    tittel: 'Ta behandlingen av vent?',
-                    visModal: visModal,
-                    lukkKnapp: false,
-                    ariaLabel: 'Gjenoppta behandlingen',
-                    actions: [
+            {visModal && (
+                <Modal
+                    open
+                    header={{ heading: 'Ta behandlingen av vent?', size: 'medium' }}
+                    portal={true}
+                    width="small"
+                    onClose={() => {
+                        nullstillSkjema();
+                        settVisModal(false);
+                    }}
+                >
+                    <Modal.Body>
+                        {feilmelding && feilmelding !== '' && (
+                            <div className="skjemaelement__feilmelding">
+                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
+                            </div>
+                        )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <FTButton
+                            variant="primary"
+                            key={'bekreft'}
+                            onClick={() => onOkTaAvVent(behandling.behandlingId)}
+                            size="small"
+                        >
+                            Ok
+                        </FTButton>
                         <FTButton
                             variant="tertiary"
                             key={'avbryt'}
@@ -53,30 +74,10 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                             size="small"
                         >
                             Avbryt
-                        </FTButton>,
-                        <FTButton
-                            variant="primary"
-                            key={'bekreft'}
-                            onClick={() => onOkTaAvVent(behandling.behandlingId)}
-                            size="small"
-                        >
-                            Ok
-                        </FTButton>,
-                    ],
-                }}
-                modelStyleProps={{
-                    width: '20rem',
-                    minHeight: '10rem',
-                }}
-            >
-                <>
-                    {feilmelding && feilmelding !== '' && (
-                        <div className="skjemaelement__feilmelding">
-                            <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                        </div>
-                    )}
-                </>
-            </UIModalWrapper>
+                        </FTButton>
+                    </Modal.Footer>
+                </Modal>
+            )}
         </>
     );
 };
