@@ -30,14 +30,15 @@ const NesteKnapp = styled(Button)`
 
 const BrevmottakerContainer: React.FC = () => {
     const { behandling, brevmottakere, gåTilNeste } = useBrevmottaker();
-    const { behandlingILesemodus, settVisBrevmottakerModal } = useBehandling();
+    const { behandlingILesemodus, visBrevmottakerModal, settVisBrevmottakerModal } =
+        useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
     const antallBrevmottakere = Object.keys(brevmottakere).length;
 
     return (
         <div>
-            <LeggTilEndreBrevmottakerModal />
+            {visBrevmottakerModal && <LeggTilEndreBrevmottakerModal />}
             <StyledBrevmottaker>
                 <Heading size={'large'} level={'1'} children={'Brevmottaker(e)'} />
                 <FlexDiv>

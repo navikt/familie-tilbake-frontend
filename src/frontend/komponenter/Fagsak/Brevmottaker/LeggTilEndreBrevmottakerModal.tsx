@@ -51,7 +51,7 @@ const preutfyltNavnFixed = (mottaker: MottakerType | '', land: string, navn: str
 };
 
 export const LeggTilEndreBrevmottakerModal: React.FC = () => {
-    const { visBrevmottakerModal, settVisBrevmottakerModal } = useBehandling();
+    const { settVisBrevmottakerModal } = useBehandling();
     const {
         skjema,
         nullstillSkjema,
@@ -93,7 +93,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
 
     return (
         <Modal
-            open={visBrevmottakerModal}
+            open={true}
             onClose={lukkModal}
             header={{
                 heading: brevmottakerIdTilEndring ? 'Endre brevmottaker' : 'Legg til brevmottaker',
