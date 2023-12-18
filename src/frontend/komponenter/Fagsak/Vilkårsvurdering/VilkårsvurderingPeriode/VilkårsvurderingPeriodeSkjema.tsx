@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyShort, Detail, Heading, HelpText, Radio } from '@navikt/ds-react';
+import { BodyShort, Detail, Heading, HelpText, Radio, Textarea } from '@navikt/ds-react';
 import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
@@ -25,7 +25,6 @@ import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import { FamilieTilbakeTextArea } from '../../../Felleskomponenter/Skjemaelementer';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
@@ -321,7 +320,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                 <Heading size="small" level="2" spacing>
                                     Vilkårene for tilbakekreving
                                 </Heading>
-                                <FamilieTilbakeTextArea
+                                <Textarea
                                     {...skjema.felter.vilkårsresultatBegrunnelse.hentNavInputProps(
                                         skjema.visFeilmeldinger
                                     )}
@@ -331,7 +330,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         'Hvilke hendelser har ført til feilutbetalingen og vurder valg av hjemmel'
                                     }
                                     maxLength={3000}
-                                    erLesevisning={erLesevisning}
+                                    readOnly={erLesevisning}
                                     value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
                                     onChange={event =>
                                         skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
@@ -394,7 +393,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                             Aktsomhet
                                         </Heading>
                                     )}
-                                    <FamilieTilbakeTextArea
+                                    <Textarea
                                         {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(
                                             skjema.visFeilmeldinger
                                         )}
@@ -411,7 +410,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                                 ? 'Begrunn hvorfor beløpet er i behold / er ikke i behold'
                                                 : ''
                                         }
-                                        erLesevisning={erLesevisning}
+                                        readOnly={erLesevisning}
                                         value={
                                             skjema.felter.aktsomhetBegrunnelse
                                                 ? skjema.felter.aktsomhetBegrunnelse.verdi
