@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { FamilieSelect } from '@navikt/familie-form-elements';
-
 import {
     Behandlingresultat,
     behandlingsresultater,
@@ -9,7 +7,7 @@ import {
 } from '../../../../../../typer/behandling';
 import { IFagsak, målform } from '../../../../../../typer/fagsak';
 import { FTButton, Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
-import { Modal } from '@navikt/ds-react';
+import { Modal, Select } from '@navikt/ds-react';
 import {
     FamilieTilbakeTextArea,
     LabelMedSpråk,
@@ -61,7 +59,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                     }}
                 >
                     <Modal.Body>
-                        <FamilieSelect
+                        <Select
                             {...skjema.felter.årsakkode.hentNavInputProps(skjema.visFeilmeldinger)}
                             label={`Velg årsak`}
                             onChange={e => onChangeÅrsakskode(e)}
@@ -74,7 +72,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                                     {behandlingsresultater[årsak]}
                                 </option>
                             ))}
-                        </FamilieSelect>
+                        </Select>
                         {visFritekst && (
                             <>
                                 <Spacer20 />
