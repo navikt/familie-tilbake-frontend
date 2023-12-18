@@ -7,11 +7,8 @@ import {
 } from '../../../../../../typer/behandling';
 import { IFagsak, målform } from '../../../../../../typer/fagsak';
 import { FTButton, Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
-import { Modal, Select } from '@navikt/ds-react';
-import {
-    FamilieTilbakeTextArea,
-    LabelMedSpråk,
-} from '../../../../../Felleskomponenter/Skjemaelementer';
+import { Modal, Select, Textarea } from '@navikt/ds-react';
+import { LabelMedSpråk } from '../../../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
 
@@ -76,7 +73,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                         {visFritekst && (
                             <>
                                 <Spacer20 />
-                                <FamilieTilbakeTextArea
+                                <Textarea
                                     {...skjema.felter.fritekst.hentNavInputProps(
                                         skjema.visFeilmeldinger
                                     )}
@@ -91,13 +88,13 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                                     onChange={event =>
                                         skjema.felter.fritekst.validerOgSettFelt(event.target.value)
                                     }
-                                    erLesevisning={false}
+                                    readOnly={false}
                                     maxLength={1500}
                                 />
                             </>
                         )}
                         <Spacer20 />
-                        <FamilieTilbakeTextArea
+                        <Textarea
                             {...skjema.felter.begrunnelse.hentNavInputProps(
                                 skjema.visFeilmeldinger
                             )}
@@ -106,7 +103,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                             onChange={event =>
                                 skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
                             }
-                            erLesevisning={false}
+                            readOnly={false}
                             maxLength={200}
                         />
                     </Modal.Body>
