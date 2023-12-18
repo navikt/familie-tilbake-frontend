@@ -120,6 +120,16 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                             kanForhåndsvise={kanForhåndsvise}
                         />
                         <FTButton
+                            variant="primary"
+                            key={'bekreft'}
+                            onClick={() => {
+                                onBekreft();
+                            }}
+                            size="small"
+                        >
+                            Henlegg behandling
+                        </FTButton>
+                        <FTButton
                             variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
@@ -129,16 +139,6 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                             size="small"
                         >
                             Avbryt
-                        </FTButton>
-                        <FTButton
-                            variant="primary"
-                            key={'bekreft'}
-                            onClick={() => {
-                                onBekreft();
-                            }}
-                            size="small"
-                        >
-                            Henlegg behandling
                         </FTButton>
                     </Modal.Footer>
                 </Modal>
