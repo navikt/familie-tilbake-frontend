@@ -4,14 +4,13 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { CheckboxGroup } from '@navikt/ds-react';
+import { CheckboxGroup, Textarea } from '@navikt/ds-react';
 import { ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieCheckbox } from '@navikt/familie-form-elements';
 import { type ISkjema } from '@navikt/familie-skjema';
 
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 import { DetailBold, Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
-import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
 import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 
@@ -44,14 +43,14 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     return (
         <div>
             <DetailBold spacing>Særlige grunner 4. ledd</DetailBold>
-            <FamilieTilbakeTextArea
+            <Textarea
                 {...skjema.felter.særligeGrunnerBegrunnelse.hentNavInputProps(
                     skjema.visFeilmeldinger
                 )}
                 name="sarligGrunnerBegrunnelse"
                 label={'Vurder særlige grunner du har vektlagt for resultatet'}
                 maxLength={3000}
-                erLesevisning={erLesevisning}
+                readOnly={erLesevisning}
                 value={skjema.felter.særligeGrunnerBegrunnelse.verdi}
                 onChange={event =>
                     skjema.felter.særligeGrunnerBegrunnelse.validerOgSettFelt(event.target.value)
@@ -82,7 +81,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                 <Row>
                     <Column md="1" />
                     <Column md="10">
-                        <FamilieTilbakeTextArea
+                        <Textarea
                             {...skjema.felter.særligeGrunnerAnnetBegrunnelse.hentNavInputProps(
                                 skjema.visFeilmeldinger
                             )}
@@ -90,7 +89,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                             name="annetBegrunnelse"
                             aria-label="Begrunnelse: Annet"
                             maxLength={3000}
-                            erLesevisning={erLesevisning}
+                            readOnly={erLesevisning}
                             value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
                             onChange={event =>
                                 skjema.felter.særligeGrunnerAnnetBegrunnelse.validerOgSettFelt(
