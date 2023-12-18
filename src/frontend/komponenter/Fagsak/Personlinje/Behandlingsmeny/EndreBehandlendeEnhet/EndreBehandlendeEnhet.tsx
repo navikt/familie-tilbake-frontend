@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ErrorMessage, Modal, Select } from '@navikt/ds-react';
+import { ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
@@ -13,7 +13,6 @@ import {
     FTButton,
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
-import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 
 interface IProps {
@@ -80,16 +79,12 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                             ))}
                         </Select>
                         <Spacer8 />
-                        <FamilieTilbakeTextArea
+                        <Textarea
                             {...skjema.felter.begrunnelse.hentNavInputProps(
                                 skjema.visFeilmeldinger
                             )}
                             label={'Begrunnelse'}
-                            erLesevisning={false}
-                            value={skjema.felter.begrunnelse.verdi}
-                            onChange={e =>
-                                skjema.felter.begrunnelse.validerOgSettFelt(e.target.value)
-                            }
+                            readOnly={false}
                             maxLength={400}
                         />
                         {feilmelding && (
