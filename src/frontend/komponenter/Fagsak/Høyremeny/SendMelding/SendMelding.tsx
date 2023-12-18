@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { BodyShort, Heading } from '@navikt/ds-react';
-import { FamilieSelect } from '@navikt/familie-form-elements';
+import { BodyShort, Heading, Select, Textarea } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
@@ -9,7 +8,7 @@ import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak, målform } from '../../../../typer/fagsak';
 import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
-import { FamilieTilbakeTextArea, LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
+import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
 
@@ -59,14 +58,13 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
                 </div>
             )}
             <Spacer20 />
-            <FamilieSelect
+            <Select
                 {...skjema.felter.maltype.hentNavInputProps(skjema.visFeilmeldinger)}
                 id="dokumentMal"
                 label={'Mal'}
-                erLesevisning={erLesevisning}
+                readOnly={erLesevisning}
                 value={skjema.felter.maltype.verdi}
                 onChange={event => onChangeMal(event)}
-                lesevisningVerdi={'Velg brev'}
             >
                 <option disabled={true} value={''}>
                     Velg brev
@@ -76,11 +74,11 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
                         {dokumentMaler[mal]}
                     </option>
                 ))}
-            </FamilieSelect>
+            </Select>
             {!!skjema.felter.maltype.verdi && (
                 <>
                     <Spacer20 />
-                    <FamilieTilbakeTextArea
+                    <Textarea
                         {...skjema.felter.fritekst.hentNavInputProps(skjema.visFeilmeldinger)}
                         label={
                             <LabelMedSpråk
@@ -89,7 +87,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
                             />
                         }
                         aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}
-                        erLesevisning={erLesevisning}
+                        readOnly={erLesevisning}
                         value={skjema.felter.fritekst.verdi}
                         onChange={event =>
                             skjema.felter.fritekst.validerOgSettFelt(event.target.value)
