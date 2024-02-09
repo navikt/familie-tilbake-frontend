@@ -13,6 +13,16 @@ const Environment = () => {
             efSakUrl: 'http://localhost:8002/ekstern',
             ksSakUrl: 'http://localhost:8003',
         };
+    } else if (process.env.ENV === 'lokalt-mot-preprod') {
+        return {
+            buildPath: 'frontend_development',
+            namespace: 'local',
+            proxyUrl: 'http://familie-tilbake.intern.dev.nav.no',
+            historikkUrl: 'http://familie-historikk.intern.nav.no',
+            baSakUrl: 'https://barnetrygd.intern.dev.nav.no',
+            efSakUrl: 'https://ensligmorellerfar.intern.dev.nav.no/ekstern',
+            ksSakUrl: 'https://kontantstotte.intern.dev.nav.no',
+        };
     } else if (process.env.ENV === 'e2e') {
         return {
             buildPath: 'frontend_production',
@@ -53,7 +63,11 @@ export const sessionConfig: ISessionKonfigurasjon = {
     redisFullUrl: process.env.REDIS_URI_SESSIONS,
     redisBrukernavn: process.env.REDIS_USERNAME_SESSIONS,
     redisPassord: process.env.REDIS_PASSWORD_SESSIONS,
-    secureCookie: !(process.env.ENV === 'local' || process.env.ENV === 'e2e'),
+    secureCookie: !(
+        process.env.ENV === 'local' ||
+        process.env.ENV === 'e2e' ||
+        process.env.ENV === 'lokalt-mot-preprod'
+    ),
     sessionMaxAgeSekunder: 12 * 60 * 60,
 };
 
