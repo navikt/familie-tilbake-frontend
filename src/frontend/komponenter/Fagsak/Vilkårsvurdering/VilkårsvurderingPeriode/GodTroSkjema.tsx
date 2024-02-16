@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { BodyShort, Radio } from '@navikt/ds-react';
-import { FamilieInput } from '@navikt/familie-form-elements';
+import { BodyShort, Radio, TextField } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
@@ -63,13 +62,13 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
             <ArrowBoxContainer>
                 {harVurderBeløpIBehold && harBeløpetIBehold && (
                     <ArrowBox alignOffset={23}>
-                        <FamilieInput
+                        <TextField
                             {...skjema.felter.godTroTilbakekrevesBeløp.hentNavInputProps(
                                 skjema.visFeilmeldinger
                             )}
                             id="tilbakekrevdBelop"
                             label={'Angi beløp som skal tilbakekreves'}
-                            erLesevisning={erLesevisning}
+                            readOnly={erLesevisning}
                             onChange={event =>
                                 skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
                                     event.target.value

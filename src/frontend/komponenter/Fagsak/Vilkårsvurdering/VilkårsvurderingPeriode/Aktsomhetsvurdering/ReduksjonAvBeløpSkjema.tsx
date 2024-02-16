@@ -4,8 +4,8 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyShort, Label, Radio } from '@navikt/ds-react';
-import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
+import { BodyShort, Label, Radio, TextField } from '@navikt/ds-react';
+import { FamilieSelect } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
@@ -156,14 +156,14 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                     <Label>Angi andel som skal tilbakekreves</Label>
                                     <FlexRow>
                                         <FlexColumn>
-                                            <FamilieInput
+                                            <TextField
                                                 {...skjema.felter.uaktsomAndelTilbakekrevesManuelt.hentNavInputProps(
                                                     skjema.visFeilmeldinger
                                                 )}
                                                 label={null}
                                                 id="andelSomTilbakekrevesManuell"
                                                 aria-label="Angi andel som skal tilbakekreves - fritekst"
-                                                erLesevisning={erLesevisning}
+                                                readOnly={erLesevisning}
                                                 onChange={event =>
                                                     skjema.felter.uaktsomAndelTilbakekrevesManuelt.validerOgSettFelt(
                                                         event.target.value
@@ -187,13 +187,13 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                 </>
                             )}
                             {harMerEnnEnAktivitet && (
-                                <FamilieInput
+                                <TextField
                                     {...skjema.felter.uaktsomTilbakekrevesBeløp.hentNavInputProps(
                                         skjema.visFeilmeldinger
                                     )}
                                     id="belopSomSkalTilbakekreves"
                                     label={'Angi beløp som skal tilbakekreves'}
-                                    erLesevisning={erLesevisning}
+                                    readOnly={erLesevisning}
                                     value={skjema.felter.uaktsomTilbakekrevesBeløp.verdi}
                                     onChange={event =>
                                         skjema.felter.uaktsomTilbakekrevesBeløp.validerOgSettFelt(

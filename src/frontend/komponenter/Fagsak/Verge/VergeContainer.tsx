@@ -4,8 +4,8 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyLong, ErrorMessage, Heading, Loader } from '@navikt/ds-react';
-import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
+import { BodyLong, ErrorMessage, Heading, Loader, TextField } from '@navikt/ds-react';
+import { FamilieSelect } from '@navikt/familie-form-elements';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergeTyper, vergetyper } from '../../../kodeverk/verge';
@@ -97,12 +97,12 @@ const VergeContainer: React.FC = () => {
                             <Spacer8 />
                             <Row>
                                 <Column sm="12" md="6" lg="3">
-                                    <FamilieInput
+                                    <TextField
                                         {...skjema.felter.navn.hentNavInputProps(
                                             skjema.visFeilmeldinger
                                         )}
                                         label={'Navn'}
-                                        erLesevisning={erLesevisning}
+                                        readOnly={erLesevisning}
                                         value={skjema.felter.navn.verdi}
                                         onChange={event =>
                                             skjema.felter.navn.validerOgSettFelt(event.target.value)
@@ -111,12 +111,12 @@ const VergeContainer: React.FC = () => {
                                 </Column>
                                 <Column sm="12" md="6" lg="3">
                                     {skjema.felter.vergetype.verdi === Vergetype.ADVOKAT ? (
-                                        <FamilieInput
+                                        <TextField
                                             {...skjema.felter.organisasjonsnummer.hentNavInputProps(
                                                 skjema.visFeilmeldinger
                                             )}
                                             label={'Organisasjonsnummer'}
-                                            erLesevisning={erLesevisning}
+                                            readOnly={erLesevisning}
                                             value={skjema.felter.organisasjonsnummer.verdi}
                                             onChange={event =>
                                                 skjema.felter.organisasjonsnummer.validerOgSettFelt(
@@ -125,12 +125,12 @@ const VergeContainer: React.FC = () => {
                                             }
                                         />
                                     ) : (
-                                        <FamilieInput
+                                        <TextField
                                             {...skjema.felter.fødselsnummer.hentNavInputProps(
                                                 skjema.visFeilmeldinger
                                             )}
                                             label={'Fødselsnummer'}
-                                            erLesevisning={erLesevisning}
+                                            readOnly={erLesevisning}
                                             value={skjema.felter.fødselsnummer.verdi}
                                             onChange={event =>
                                                 skjema.felter.fødselsnummer.validerOgSettFelt(

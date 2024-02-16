@@ -2,9 +2,8 @@ import React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Button, Fieldset, Modal, Radio, RadioGroup, Select } from '@navikt/ds-react';
+import { Button, Fieldset, Modal, Radio, RadioGroup, Select, TextField } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { FamilieInput } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -178,7 +177,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                             <BrevmottakerSkjema preutfyltNavn={preutfyltNavn} />
                         )}
                         {adresseKilde === AdresseKilde.OPPSLAG_REGISTER && (
-                            <FamilieInput
+                            <TextField
                                 {...skjema.felter.fødselsnummer.hentNavBaseSkjemaProps(
                                     skjema.visFeilmeldinger
                                 )}
@@ -192,7 +191,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                         )}
                         {adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER && (
                             <>
-                                <FamilieInput
+                                <TextField
                                     {...skjema.felter.organisasjonsnummer.hentNavBaseSkjemaProps(
                                         skjema.visFeilmeldinger
                                     )}
@@ -203,7 +202,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                         );
                                     }}
                                 />
-                                <FamilieInput
+                                <TextField
                                     {...skjema.felter.navn.hentNavBaseSkjemaProps(
                                         skjema.visFeilmeldinger
                                     )}
