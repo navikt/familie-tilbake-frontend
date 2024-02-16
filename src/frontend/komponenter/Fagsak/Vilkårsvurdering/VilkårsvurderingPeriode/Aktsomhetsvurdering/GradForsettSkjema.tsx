@@ -14,7 +14,6 @@ import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårs
 import {
     JaNeiOption,
     jaNeiOptions,
-    OptionJA,
     VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
 
@@ -53,37 +52,40 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                             )}
                         </Column>
                         <Column md="6">
-                            <HorisontalRadioGroup
-                                id="skalDetTilleggesRenter"
-                                readOnly={erLesevisning || !kanIlleggeRenter}
-                                legend={'Skal det tillegges renter?'}
-                                value={
-                                    !erLesevisning && kanIlleggeRenter
-                                        ? skjema.felter.forstoIlleggeRenter.verdi
-                                        : skjema.felter.forstoIlleggeRenter.verdi === OptionJA
-                                          ? 'Ja'
-                                          : 'Nei'
-                                }
-                                error={
-                                    ugyldigIlleggRenterValgt
-                                        ? skjema.felter.forstoIlleggeRenter.feilmelding?.toString()
-                                        : ''
-                                }
-                                marginbottom="none"
-                                onChange={(val: JaNeiOption) =>
-                                    skjema.felter.forstoIlleggeRenter.validerOgSettFelt(val)
-                                }
-                            >
-                                {jaNeiOptions.map(opt => (
-                                    <Radio
-                                        key={opt.label}
-                                        name="skalDetTilleggesRenter"
-                                        value={opt}
-                                    >
-                                        {opt.label}
-                                    </Radio>
-                                ))}
-                            </HorisontalRadioGroup>
+                            {erLesevisning || !kanIlleggeRenter ? (
+                                <>
+                                    <Label>Skal det tillegges renter?</Label>
+                                    <BodyShort>
+                                        {skjema.felter.grovtUaktsomIlleggeRenter.verdi &&
+                                            skjema.felter.grovtUaktsomIlleggeRenter.verdi.label}
+                                    </BodyShort>
+                                </>
+                            ) : (
+                                <HorisontalRadioGroup
+                                    id="skalDetTilleggesRenter"
+                                    legend={'Skal det tillegges renter?'}
+                                    value={skjema.felter.forstoIlleggeRenter.verdi}
+                                    error={
+                                        ugyldigIlleggRenterValgt
+                                            ? skjema.felter.forstoIlleggeRenter.feilmelding?.toString()
+                                            : ''
+                                    }
+                                    marginbottom="none"
+                                    onChange={(val: JaNeiOption) =>
+                                        skjema.felter.forstoIlleggeRenter.validerOgSettFelt(val)
+                                    }
+                                >
+                                    {jaNeiOptions.map(opt => (
+                                        <Radio
+                                            key={opt.label}
+                                            name="skalDetTilleggesRenter"
+                                            value={opt}
+                                        >
+                                            {opt.label}
+                                        </Radio>
+                                    ))}
+                                </HorisontalRadioGroup>
+                            )}
                         </Column>
                     </Row>
                 </>
