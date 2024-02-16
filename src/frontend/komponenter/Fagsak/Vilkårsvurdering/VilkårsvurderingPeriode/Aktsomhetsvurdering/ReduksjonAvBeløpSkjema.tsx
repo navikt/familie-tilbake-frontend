@@ -240,11 +240,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                 <HorisontalRadioGroup
                                     id="skalDetTilleggesRenter"
                                     legend={'Skal det tillegges renter?'}
-                                    value={
-                                        skjema.felter.grovtUaktsomIlleggeRenter.verdi === OptionJA
-                                            ? OptionJA
-                                            : OptionNEI
-                                    }
+                                    value={skjema.felter.grovtUaktsomIlleggeRenter.verdi}
                                     error={
                                         ugyldigIlleggRenterValgt
                                             ? skjema.felter.grovtUaktsomIlleggeRenter.feilmelding?.toString()
