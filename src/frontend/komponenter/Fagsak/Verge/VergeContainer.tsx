@@ -4,11 +4,10 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyLong, ErrorMessage, Heading, Loader, TextField } from '@navikt/ds-react';
-import { FamilieSelect } from '@navikt/familie-form-elements';
+import { BodyLong, ErrorMessage, Heading, Loader, Select, TextField } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Vergetype, vergeTyper, vergetyper } from '../../../kodeverk/verge';
+import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
 import { FTButton, Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
@@ -20,8 +19,7 @@ const StyledVerge = styled.div`
 `;
 
 const VergeContainer: React.FC = () => {
-    const { behandling, skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } =
-        useVerge();
+    const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } = useVerge();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
@@ -63,33 +61,27 @@ const VergeContainer: React.FC = () => {
                     <Spacer20 />
                     <Row>
                         <Column sm="12" md="6" lg="3">
-                            <FamilieSelect
+                            <Select
                                 {...skjema.felter.vergetype.hentNavInputProps(
                                     skjema.visFeilmeldinger
                                 )}
                                 id="vergeType"
                                 label={'Vergetype'}
-                                erLesevisning={erLesevisning}
+                                readOnly={erLesevisning}
                                 value={skjema.felter.vergetype.verdi}
-                                lesevisningVerdi={
-                                    behandling.harVerge
-                                        ? // @ts-ignore
-                                          vergetyper[skjema.felter.vergetype.verdi]
-                                        : '-'
-                                }
                                 onChange={event => onChangeVergeType(event)}
                             >
                                 <option disabled={true} value={''}>
                                     Velg vergetype
                                 </option>
-                                {vergeTyper
+                                {Object.values(Vergetype)
                                     .filter(type => type !== Vergetype.UDEFINERT)
                                     .map(opt => (
                                         <option key={opt} value={opt}>
                                             {vergetyper[opt]}
                                         </option>
                                     ))}
-                            </FamilieSelect>
+                            </Select>
                         </Column>
                     </Row>
                     {vergetypeValgt && (

@@ -15,11 +15,3 @@ export const vergetyper: Record<Vergetype, string> = {
     ANNEN_FULLMEKTIG: 'Annen fullmektig',
     UDEFINERT: 'Udefinert',
 };
-
-export const vergeTyper = [
-    Vergetype.VERGE_FOR_BARN,
-    Vergetype.VERGE_FOR_FORELDRELØST_BARN,
-    Vergetype.VERGE_FOR_VOKSEN,
-    Vergetype.ADVOKAT,
-    Vergetype.ANNEN_FULLMEKTIG,
-];
