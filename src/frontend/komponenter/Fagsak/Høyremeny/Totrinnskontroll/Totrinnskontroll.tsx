@@ -96,7 +96,9 @@ const Totrinnskontroll: React.FC = () => {
                                     ) : (
                                         <HorisontalRadioGroup
                                             id={`stegetGodkjent_${totrinnSteg.index}`}
-                                            legend={behandlingssteg[totrinnSteg.behandlingssteg]}
+                                            legend={`Vurder steget ${
+                                                behandlingssteg[totrinnSteg.behandlingssteg]
+                                            }`}
                                             hideLegend
                                             value={totrinnSteg.godkjent}
                                             onChange={(val: TotrinnGodkjenningOption) =>
