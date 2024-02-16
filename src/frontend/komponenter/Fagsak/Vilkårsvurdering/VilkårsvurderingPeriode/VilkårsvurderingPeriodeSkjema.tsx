@@ -349,17 +349,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     id="valgtVilkarResultatType"
                                     readOnly={erLesevisning}
                                     legend={'Er vilkårene for tilbakekreving oppfylt?'}
-                                    value={
-                                        !erLesevisning
-                                            ? skjema.felter.vilkårsresultatvurdering.verdi
-                                            : periode.vilkårsvurderingsresultatInfo
-                                                    ?.vilkårsvurderingsresultat
-                                              ? vilkårsresultater[
-                                                    periode.vilkårsvurderingsresultatInfo
-                                                        ?.vilkårsvurderingsresultat
-                                                ]
-                                              : ''
-                                    }
+                                    value={skjema.felter.vilkårsresultatvurdering.verdi}
                                     error={
                                         ugyldigVilkårsresultatValgt
                                             ? skjema.felter.vilkårsresultatvurdering.feilmelding?.toString()
