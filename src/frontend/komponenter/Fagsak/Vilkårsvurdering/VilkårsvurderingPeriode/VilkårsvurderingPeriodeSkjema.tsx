@@ -4,9 +4,17 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyShort, Detail, Heading, HelpText, Radio, Select, Textarea } from '@navikt/ds-react';
+import {
+    BodyShort,
+    Detail,
+    Heading,
+    HelpText,
+    Radio,
+    RadioGroup,
+    Select,
+    Textarea,
+} from '@navikt/ds-react';
 import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
-import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -337,9 +345,9 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     }
                                 />
                                 <Spacer20 />
-                                <FamilieRadioGruppe
+                                <RadioGroup
                                     id="valgtVilkarResultatType"
-                                    erLesevisning={erLesevisning}
+                                    readOnly={erLesevisning}
                                     legend={'Er vilkårene for tilbakekreving oppfylt?'}
                                     value={
                                         !erLesevisning
@@ -372,7 +380,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                             {lagLabeltekster(fagsak, type)}
                                         </StyledVilkårsresultatRadio>
                                     ))}
-                                </FamilieRadioGruppe>
+                                </RadioGroup>
                             </Column>
                         )}
                     </Row>

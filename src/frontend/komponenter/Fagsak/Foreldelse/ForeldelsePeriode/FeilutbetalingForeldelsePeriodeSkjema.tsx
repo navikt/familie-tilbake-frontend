@@ -5,9 +5,8 @@ import { styled } from 'styled-components';
 import { Column, Row } from 'nav-frontend-grid';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
-import { BodyLong, Heading, Link, Radio, ReadMore, Textarea } from '@navikt/ds-react';
+import { BodyLong, Heading, Link, Radio, RadioGroup, ReadMore, Textarea } from '@navikt/ds-react';
 import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
-import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -170,9 +169,9 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
             <Spacer20 />
             <Row>
                 <Column md="5">
-                    <FamilieRadioGruppe
+                    <RadioGroup
                         id="foreldet"
-                        erLesevisning={erLesevisning}
+                        readOnly={erLesevisning}
                         legend="Vurder om perioden er foreldet"
                         value={
                             !erLesevisning
@@ -195,7 +194,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                 {foreldelsevurderinger[type]}
                             </Radio>
                         ))}
-                    </FamilieRadioGruppe>
+                    </RadioGroup>
                 </Column>
                 <Column md="5">
                     {erMedTilleggsfrist && (
