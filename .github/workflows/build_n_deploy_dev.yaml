@@ -22,7 +22,7 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
       - uses: ./.github/yarn-cache
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@3d58c274f17dffee475a5520cbe67f0a882c4dbb
+        uses: docker/login-action@83a00bc1ab5ded6580f31df1c49e6aaa932d840d
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
