@@ -4,9 +4,9 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyShort, Detail, Heading, HelpText, Radio, Textarea } from '@navikt/ds-react';
+import { BodyShort, Detail, Heading, HelpText, Radio, Select, Textarea } from '@navikt/ds-react';
 import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
-import { FamilieRadioGruppe, FamilieSelect } from '@navikt/familie-form-elements';
+import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -267,11 +267,11 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     <>
                         <Row>
                             <Column md="3">
-                                <FamilieSelect
+                                <Select
                                     name="perioderForKopi"
                                     onChange={event => onKopierPeriode(event)}
                                     label={<Detail>Kopier vilkårsvurdering fra</Detail>}
-                                    erLesevisning={erLesevisning}
+                                    readOnly={erLesevisning}
                                     size="small"
                                 >
                                     <option value="-">-</option>
@@ -285,7 +285,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                             )} - ${formatterDatostring(per.periode.tom)}`}
                                         </option>
                                     ))}
-                                </FamilieSelect>
+                                </Select>
                             </Column>
                         </Row>
                         <Spacer20 />
