@@ -6,7 +6,7 @@ import { BodyShort, Radio, TextField } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';
+import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import {
     JaNeiOption,
     jaNeiOptions,
@@ -33,9 +33,9 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
         harVurderBeløpIBehold && skjema.felter.erBeløpetIBehold.verdi === OptionJA;
     return (
         <>
-            <HorisontalFamilieRadioGruppe
+            <HorisontalRadioGroup
                 id="erBelopetIBehold"
-                erLesevisning={erLesevisning}
+                readOnly={erLesevisning}
                 legend={'Er beløpet i behold?'}
                 value={
                     !erLesevisning
@@ -58,7 +58,7 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                         {opt.label}
                     </Radio>
                 ))}
-            </HorisontalFamilieRadioGruppe>
+            </HorisontalRadioGroup>
             <ArrowBoxContainer>
                 {harVurderBeløpIBehold && harBeløpetIBehold && (
                     <ArrowBox alignOffset={23}>

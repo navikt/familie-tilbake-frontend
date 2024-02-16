@@ -8,7 +8,7 @@ import { RessursStatus } from '@navikt/familie-typer';
 import { behandlingssteg } from '../../../../typer/behandling';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
-import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';
+import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
@@ -74,9 +74,9 @@ const Totrinnskontroll: React.FC = () => {
                         return (
                             <React.Fragment key={totrinnSteg.behandlingssteg}>
                                 <div>
-                                    <HorisontalFamilieRadioGruppe
+                                    <HorisontalRadioGroup
                                         id={`stegetGodkjent_${totrinnSteg.index}`}
-                                        erLesevisning={erLesevisning}
+                                        readOnly={erLesevisning}
                                         legend={
                                             <Link
                                                 href="#"
@@ -114,7 +114,7 @@ const Totrinnskontroll: React.FC = () => {
                                                 {opt.label}
                                             </Radio>
                                         ))}
-                                    </HorisontalFamilieRadioGruppe>
+                                    </HorisontalRadioGroup>
                                     {vurdertIkkeGodkjent && (
                                         <>
                                             <ArrowBox alignOffset={erLesevisning ? 5 : 125}>

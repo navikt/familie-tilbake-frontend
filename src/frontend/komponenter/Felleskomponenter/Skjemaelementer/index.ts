@@ -1,13 +1,13 @@
 import { styled } from 'styled-components';
 
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
-import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
+import { RadioGroup } from '@navikt/ds-react';
 
 export * from './FixedDatovelger';
 export * from './FTDatovelger';
 export * from './LabelMedSpråk';
 
-export const HorisontalFamilieRadioGruppe = styled(FamilieRadioGruppe)<{ marginbottom?: string }>`
+export const HorisontalRadioGroup = styled(RadioGroup)<{ marginbottom?: string }>`
     margin-bottom: ${({ marginbottom }) => (marginbottom ? marginbottom : '12px')};
 
     .navds-radio {

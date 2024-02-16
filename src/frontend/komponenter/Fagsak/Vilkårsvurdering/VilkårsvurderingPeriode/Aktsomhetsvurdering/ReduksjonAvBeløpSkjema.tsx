@@ -10,7 +10,7 @@ import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
+import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
 import {
     ANDELER,
@@ -68,10 +68,10 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
 
     return (
         <>
-            <HorisontalFamilieRadioGruppe
+            <HorisontalRadioGroup
                 id="harGrunnerTilReduksjon"
                 legend={'Skal særlige grunner gi reduksjon av beløpet?'}
-                erLesevisning={erLesevisning}
+                readOnly={erLesevisning}
                 value={
                     !erLesevisning
                         ? skjema.felter.harGrunnerTilReduksjon.verdi
@@ -106,7 +106,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                         {opt.label}
                     </Radio>
                 ))}
-            </HorisontalFamilieRadioGruppe>
+            </HorisontalRadioGroup>
             {skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA && (
                 <ArrowBox alignOffset={erLesevisning ? 5 : 20}>
                     <Row>
@@ -228,10 +228,10 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                             )}
                         </Column>
                         {erGrovtUaktsomhet && (
-                            <HorisontalFamilieRadioGruppe
+                            <HorisontalRadioGroup
                                 id="skalDetTilleggesRenter"
                                 legend={'Skal det tillegges renter?'}
-                                erLesevisning={erLesevisning || !kanIlleggeRenter}
+                                readOnly={erLesevisning || !kanIlleggeRenter}
                                 value={
                                     !erLesevisning && kanIlleggeRenter
                                         ? skjema.felter.grovtUaktsomIlleggeRenter.verdi
@@ -259,7 +259,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                         {opt.label}
                                     </Radio>
                                 ))}
-                            </HorisontalFamilieRadioGruppe>
+                            </HorisontalRadioGroup>
                         )}
                     </Row>
                 </ArrowBox>

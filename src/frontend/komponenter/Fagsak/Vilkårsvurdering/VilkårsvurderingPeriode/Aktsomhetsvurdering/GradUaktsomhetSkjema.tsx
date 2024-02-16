@@ -5,7 +5,7 @@ import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
+import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import {
     JaNeiOption,
     jaNeiOptions,
@@ -38,10 +38,10 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
             {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.SIMPEL_UAKTSOMHET &&
                 erTotalbeløpUnder4Rettsgebyr && (
                     <>
-                        <HorisontalFamilieRadioGruppe
+                        <HorisontalRadioGroup
                             id="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
                             legend="Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?"
-                            erLesevisning={erLesevisning}
+                            readOnly={erLesevisning}
                             value={
                                 !erLesevisning
                                     ? skjema.felter.tilbakekrevSmåbeløp.verdi
@@ -68,7 +68,7 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                     {opt.label}
                                 </Radio>
                             ))}
-                        </HorisontalFamilieRadioGruppe>
+                        </HorisontalRadioGroup>
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA && (
                             <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
                         )}

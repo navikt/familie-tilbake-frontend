@@ -10,7 +10,7 @@ import {
     forstodBurdeForståttAktsomheter,
     Vilkårsresultat,
 } from '../../../../../kodeverk';
-import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
+import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import {
     OptionNEI,
     VilkårsvurderingSkjemaDefinisjon,
@@ -33,9 +33,9 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
 
     return (
         <>
-            <HorisontalFamilieRadioGruppe
+            <HorisontalRadioGroup
                 id="handletUaktsomhetGrad"
-                erLesevisning={erLesevisning}
+                readOnly={erLesevisning}
                 legend={
                     erForstodBurdeForstått
                         ? 'I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?'
@@ -76,7 +76,7 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                             : aktsomheter[type]}
                     </Radio>
                 ))}
-            </HorisontalFamilieRadioGruppe>
+            </HorisontalRadioGroup>
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&
                 (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.FORSETT ? (
                     <GradForsettSkjema skjema={skjema} erLesevisning={erLesevisning} />

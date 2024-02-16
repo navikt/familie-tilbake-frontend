@@ -9,7 +9,7 @@ import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
+import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
 import {
     JaNeiOption,
@@ -53,9 +53,9 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                             )}
                         </Column>
                         <Column md="6">
-                            <HorisontalFamilieRadioGruppe
+                            <HorisontalRadioGroup
                                 id="skalDetTilleggesRenter"
-                                erLesevisning={erLesevisning || !kanIlleggeRenter}
+                                readOnly={erLesevisning || !kanIlleggeRenter}
                                 legend={'Skal det tillegges renter?'}
                                 value={
                                     !erLesevisning && kanIlleggeRenter
@@ -83,7 +83,7 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                         {opt.label}
                                     </Radio>
                                 ))}
-                            </HorisontalFamilieRadioGruppe>
+                            </HorisontalRadioGroup>
                         </Column>
                     </Row>
                 </>
