@@ -294,7 +294,7 @@ describe('Tester: VergeContainer', () => {
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, queryByText } = render(
+        const { getByText, getByRole, queryByText, getByLabelText } = render(
             <VergeProvider behandling={behandling} fagsak={fagsak}>
                 <VergeContainer />
             </VergeProvider>
@@ -312,8 +312,15 @@ describe('Tester: VergeContainer', () => {
         ).toBeEnabled();
 
         expect(getByText('Verge for barn under 18 år')).toBeTruthy();
-        expect(getByText('Verge Vergesen')).toBeTruthy();
-        expect(getByText('27106903129')).toBeTruthy();
+        expect(getByLabelText('Navn', { selector: 'input', exact: false })).toHaveValue(
+            'Verge Vergesen'
+        );
+        expect(
+            getByLabelText('Begrunn endringene', { selector: 'textarea', exact: false })
+        ).toHaveValue('');
+        expect(getByLabelText('Fødselsnummer', { selector: 'input', exact: false })).toHaveValue(
+            '27106903129'
+        );
         expect(queryByText('Organisasjonsnummer')).toBeFalsy();
     });
 });
