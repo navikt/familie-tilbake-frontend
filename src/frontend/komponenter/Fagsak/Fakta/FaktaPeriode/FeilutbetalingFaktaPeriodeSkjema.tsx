@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import classNames from 'classnames';
 
-import { BodyShort, Table } from '@navikt/ds-react';
-import { FamilieSelect } from '@navikt/familie-form-elements';
+import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 
 import {
     hendelsetyper,
@@ -15,6 +14,12 @@ import {
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
 import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
+import { styled } from 'styled-components';
+import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
+
+const StyledVStack = styled(VStack)`
+    margin-top: ${ASpacing1};
+`;
 
 interface IProps {
     periode: FaktaPeriodeSkjemaData;
@@ -61,61 +66,58 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                 )} - ${formatterDatostring(periode.periode.tom)}`}</BodyShort>
             </Table.DataCell>
             <Table.DataCell>
-                <FamilieSelect
-                    id={`perioder.${index}.årsak`}
-                    data-testid={`perioder.${index}.årsak`}
-                    label={<span className="sr-only">Årsak</span>}
-                    onChange={event => onChangeÅrsak(event)}
-                    value={periode.hendelsestype || '-'}
-                    erLesevisning={erLesevisning}
-                    lesevisningVerdi={
-                        periode.hendelsestype ? hendelsetyper[periode.hendelsestype] : ''
-                    }
-                    error={
-                        visFeilmeldinger &&
-                        feilmeldinger?.find(
-                            meld => meld.periode === periode.index && meld.gjelderHendelsetype
-                        )?.melding
-                    }
-                    size={erLesevisning ? 'medium' : 'small'}
-                >
-                    <option>-</option>
-                    {hendelseTyper?.map(type => (
-                        <option key={type} value={type}>
-                            {hendelsetyper[type]}
-                        </option>
-                    ))}
-                </FamilieSelect>
-                {hendelseUnderTyper && hendelseUnderTyper.length > 0 && (
-                    <FamilieSelect
-                        id={`perioder.${index}.underårsak`}
-                        data-testid={`perioder.${index}.underårsak`}
-                        label={<span className="sr-only">Underårsak</span>}
-                        onChange={event => onChangeUnderÅrsak(event)}
-                        value={periode.hendelsesundertype || '-'}
-                        erLesevisning={erLesevisning}
-                        lesevisningVerdi={
-                            periode.hendelsesundertype
-                                ? hendelseundertyper[periode.hendelsesundertype]
-                                : ''
-                        }
+                <StyledVStack gap="1">
+                    <Select
+                        id={`perioder.${index}.årsak`}
+                        data-testid={`perioder.${index}.årsak`}
+                        label={'Årsak'}
+                        hideLabel
+                        onChange={event => onChangeÅrsak(event)}
+                        value={periode.hendelsestype || '-'}
+                        readOnly={erLesevisning}
                         error={
                             visFeilmeldinger &&
                             feilmeldinger?.find(
-                                meld =>
-                                    meld.periode === periode.index && meld.gjelderHendelseundertype
+                                meld => meld.periode === periode.index && meld.gjelderHendelsetype
                             )?.melding
                         }
-                        size={erLesevisning ? 'medium' : 'small'}
+                        size={'small'}
                     >
                         <option>-</option>
-                        {hendelseUnderTyper.map(type => (
+                        {hendelseTyper?.map(type => (
                             <option key={type} value={type}>
-                                {hendelseundertyper[type]}
+                                {hendelsetyper[type]}
                             </option>
                         ))}
-                    </FamilieSelect>
-                )}
+                    </Select>
+                    {hendelseUnderTyper && hendelseUnderTyper.length > 0 && (
+                        <Select
+                            id={`perioder.${index}.underårsak`}
+                            data-testid={`perioder.${index}.underårsak`}
+                            label={'Underårsak'}
+                            hideLabel
+                            onChange={event => onChangeUnderÅrsak(event)}
+                            value={periode.hendelsesundertype || '-'}
+                            readOnly={erLesevisning}
+                            error={
+                                visFeilmeldinger &&
+                                feilmeldinger?.find(
+                                    meld =>
+                                        meld.periode === periode.index &&
+                                        meld.gjelderHendelseundertype
+                                )?.melding
+                            }
+                            size={'small'}
+                        >
+                            <option>-</option>
+                            {hendelseUnderTyper.map(type => (
+                                <option key={type} value={type}>
+                                    {hendelseundertyper[type]}
+                                </option>
+                            ))}
+                        </Select>
+                    )}
+                </StyledVStack>
             </Table.DataCell>
             <Table.DataCell align="right" className={classNames('redText')}>
                 <BodyShort size="small">{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</BodyShort>
