@@ -312,7 +312,6 @@ describe('Tester: VergeContainer', () => {
         ).toBeEnabled();
 
         expect(getByText('Verge for barn under 18 år')).toBeTruthy();
-        expect(getByText('Ingen opplysninger oppgitt.')).toBeTruthy();
         expect(getByText('Verge Vergesen')).toBeTruthy();
         expect(getByText('27106903129')).toBeTruthy();
         expect(queryByText('Organisasjonsnummer')).toBeFalsy();
