@@ -4,8 +4,7 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyShort, Label, Radio, TextField } from '@navikt/ds-react';
-import { FamilieSelect } from '@navikt/familie-form-elements';
+import { BodyShort, Label, Radio, Select, TextField } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
@@ -117,14 +116,14 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                     <Label>Angi andel som skal tilbakekreves</Label>
                                     <FlexRow>
                                         <FlexColumn>
-                                            <FamilieSelect
+                                            <Select
                                                 {...skjema.felter.uaktsomAndelTilbakekreves.hentNavInputProps(
                                                     skjema.visFeilmeldinger
                                                 )}
                                                 label={null}
                                                 id="andelSomTilbakekreves"
                                                 aria-label="Angi andel som skal tilbakekreves"
-                                                erLesevisning={erLesevisning}
+                                                readOnly={erLesevisning}
                                                 onChange={event =>
                                                     skjema.felter.uaktsomAndelTilbakekreves.validerOgSettFelt(
                                                         event.target.value
@@ -141,7 +140,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                         {andel}
                                                     </option>
                                                 ))}
-                                            </FamilieSelect>
+                                            </Select>
                                         </FlexColumn>
                                         <FlexColumn>
                                             <BodyShort as="span" style={{ marginTop: '5px' }}>
