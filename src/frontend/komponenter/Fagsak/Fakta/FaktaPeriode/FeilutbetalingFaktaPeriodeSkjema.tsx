@@ -67,56 +67,68 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
             </Table.DataCell>
             <Table.DataCell>
                 <StyledVStack gap="1">
-                    <Select
-                        id={`perioder.${index}.årsak`}
-                        data-testid={`perioder.${index}.årsak`}
-                        label={'Årsak'}
-                        hideLabel
-                        onChange={event => onChangeÅrsak(event)}
-                        value={periode.hendelsestype || '-'}
-                        readOnly={erLesevisning}
-                        error={
-                            visFeilmeldinger &&
-                            feilmeldinger?.find(
-                                meld => meld.periode === periode.index && meld.gjelderHendelsetype
-                            )?.melding
-                        }
-                        size={'small'}
-                    >
-                        <option>-</option>
-                        {hendelseTyper?.map(type => (
-                            <option key={type} value={type}>
-                                {hendelsetyper[type]}
-                            </option>
-                        ))}
-                    </Select>
-                    {hendelseUnderTyper && hendelseUnderTyper.length > 0 && (
+                    {erLesevisning ? (
+                        <BodyShort size="small">
+                            {periode.hendelsestype && hendelsetyper[periode.hendelsestype]}
+                        </BodyShort>
+                    ) : (
                         <Select
-                            id={`perioder.${index}.underårsak`}
-                            data-testid={`perioder.${index}.underårsak`}
-                            label={'Underårsak'}
+                            id={`perioder.${index}.årsak`}
+                            data-testid={`perioder.${index}.årsak`}
+                            label={'Årsak'}
                             hideLabel
-                            onChange={event => onChangeUnderÅrsak(event)}
-                            value={periode.hendelsesundertype || '-'}
-                            readOnly={erLesevisning}
+                            onChange={event => onChangeÅrsak(event)}
+                            value={periode.hendelsestype || '-'}
                             error={
                                 visFeilmeldinger &&
                                 feilmeldinger?.find(
                                     meld =>
-                                        meld.periode === periode.index &&
-                                        meld.gjelderHendelseundertype
+                                        meld.periode === periode.index && meld.gjelderHendelsetype
                                 )?.melding
                             }
                             size={'small'}
                         >
                             <option>-</option>
-                            {hendelseUnderTyper.map(type => (
+                            {hendelseTyper?.map(type => (
                                 <option key={type} value={type}>
-                                    {hendelseundertyper[type]}
+                                    {hendelsetyper[type]}
                                 </option>
                             ))}
                         </Select>
                     )}
+                    {hendelseUnderTyper &&
+                        hendelseUnderTyper.length > 0 &&
+                        (erLesevisning ? (
+                            <BodyShort size="small">
+                                {periode.hendelsesundertype &&
+                                    hendelseundertyper[periode.hendelsesundertype]}
+                            </BodyShort>
+                        ) : (
+                            <Select
+                                id={`perioder.${index}.underårsak`}
+                                data-testid={`perioder.${index}.underårsak`}
+                                label={'Underårsak'}
+                                hideLabel
+                                onChange={event => onChangeUnderÅrsak(event)}
+                                value={periode.hendelsesundertype || '-'}
+                                error={
+                                    visFeilmeldinger &&
+                                    feilmeldinger?.find(
+                                        meld =>
+                                            meld.periode === periode.index &&
+                                            meld.gjelderHendelseundertype
+                                    )?.melding
+                                }
+                                size={'small'}
+                            >
+                                <option>-</option>
+                                {hendelseUnderTyper.map(type => (
+                                    <option key={type} value={type}>
+                                        {hendelseundertyper[type]}
+                                    </option>
+                                ))}
+                            </Select>
+                        ))}
                 </StyledVStack>
             </Table.DataCell>
             <Table.DataCell align="right" className={classNames('redText')}>
