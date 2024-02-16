@@ -3,7 +3,6 @@ import { styled } from 'styled-components';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
 
-export * from './FamilieTilbakeTextArea';
 export * from './FixedDatovelger';
 export * from './FTDatovelger';
 export * from './LabelMedSpråk';

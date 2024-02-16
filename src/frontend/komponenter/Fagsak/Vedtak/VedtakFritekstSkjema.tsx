@@ -3,11 +3,10 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { PlusCircleIcon } from '@navikt/aksel-icons';
-import { BodyShort, Link } from '@navikt/ds-react';
+import { BodyShort, Link, Textarea } from '@navikt/ds-react';
 
 import { isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
-import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
@@ -78,15 +77,11 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
             {!isTextfieldHidden && (
                 <>
                     <Spacer8 />
-                    <FamilieTilbakeTextArea
+                    <Textarea
                         name={'fritekst'}
                         data-testid={`fritekst-${avsnittIndex}-${underavsnitt.index}`}
                         label={!erLesevisning ? 'Utdypende tekst' : undefined}
-                        erLesevisning={erLesevisning}
-                        tekstLesevisning={underavsnitt.fritekst || 'Fritekst ikke utfylt'}
-                        className={
-                            erLesevisning && !underavsnitt.fritekst ? 'lesevisning_ikke_utfylt' : ''
-                        }
+                        readOnly={erLesevisning}
                         maxLength={maximumLength ? maximumLength : 4000}
                         minLength={3}
                         value={underavsnitt.fritekst ? underavsnitt.fritekst : ''}
