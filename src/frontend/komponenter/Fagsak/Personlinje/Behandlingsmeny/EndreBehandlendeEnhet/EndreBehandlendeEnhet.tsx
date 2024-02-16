@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { ErrorMessage, Modal } from '@navikt/ds-react';
-import { FamilieSelect } from '@navikt/familie-form-elements';
+import { ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
@@ -14,7 +13,6 @@ import {
     FTButton,
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
-import { FamilieTilbakeTextArea } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 
 interface IProps {
@@ -65,13 +63,11 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                     }}
                 >
                     <Modal.Body>
-                        <FamilieSelect
+                        <Select
                             {...skjema.felter.enhet.hentNavInputProps(skjema.visFeilmeldinger)}
-                            erLesevisning={false}
+                            readOnly={false}
                             name="enhet"
                             label={'Velg ny enhet'}
-                            value={skjema.felter.enhet.verdi}
-                            onChange={e => skjema.felter.enhet.validerOgSettFelt(e.target.value)}
                         >
                             <option value={''} disabled={true}>
                                 Velg ny enhet
@@ -81,18 +77,14 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                                     {enhet.enhetNavn}
                                 </option>
                             ))}
-                        </FamilieSelect>
+                        </Select>
                         <Spacer8 />
-                        <FamilieTilbakeTextArea
+                        <Textarea
                             {...skjema.felter.begrunnelse.hentNavInputProps(
                                 skjema.visFeilmeldinger
                             )}
                             label={'Begrunnelse'}
-                            erLesevisning={false}
-                            value={skjema.felter.begrunnelse.verdi}
-                            onChange={e =>
-                                skjema.felter.begrunnelse.validerOgSettFelt(e.target.value)
-                            }
+                            readOnly={false}
                             maxLength={400}
                         />
                         {feilmelding && (

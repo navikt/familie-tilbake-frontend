@@ -2,9 +2,9 @@ import React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Button, Fieldset, Modal, Radio, RadioGroup } from '@navikt/ds-react';
+import { Button, Fieldset, Modal, Radio, RadioGroup, Select } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
+import { FamilieInput } from '@navikt/familie-form-elements';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -35,7 +35,7 @@ const StyledFieldset = styled(Fieldset)`
     }
 `;
 
-const MottakerSelect = styled(FamilieSelect)`
+const MottakerSelect = styled(Select)`
     max-width: 19rem;
 `;
 

@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 import { Column, Row } from 'nav-frontend-grid';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
-import { BodyLong, Heading, Link, Radio, ReadMore } from '@navikt/ds-react';
+import { BodyLong, Heading, Link, Radio, ReadMore, Textarea } from '@navikt/ds-react';
 import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { FamilieRadioGruppe } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
@@ -19,7 +19,7 @@ import { IBehandling } from '../../../../typer/behandling';
 import { datoformatNorsk } from '../../../../utils';
 import { FTButton, Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import { FamilieTilbakeTextArea, FTDatovelger } from '../../../Felleskomponenter/Skjemaelementer';
+import { FTDatovelger } from '../../../Felleskomponenter/Skjemaelementer';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
@@ -153,13 +153,13 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
             <Spacer20 />
             <Row>
                 <Column md="8">
-                    <FamilieTilbakeTextArea
+                    <Textarea
                         {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
                         id={'begrunnelse'}
                         name="begrunnelse"
                         label={'Vurdering'}
                         maxLength={3000}
-                        erLesevisning={erLesevisning}
+                        readOnly={erLesevisning}
                         value={skjema.felter.begrunnelse.verdi}
                         onChange={event =>
                             skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)

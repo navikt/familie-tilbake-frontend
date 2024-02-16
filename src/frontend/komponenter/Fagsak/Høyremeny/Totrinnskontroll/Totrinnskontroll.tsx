@@ -2,16 +2,13 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, Link, Radio } from '@navikt/ds-react';
+import { Alert, Link, Radio, Textarea } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { behandlingssteg } from '../../../../typer/behandling';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
-import {
-    FamilieTilbakeTextArea,
-    HorisontalFamilieRadioGruppe,
-} from '../../../Felleskomponenter/Skjemaelementer';
+import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
@@ -121,10 +118,10 @@ const Totrinnskontroll: React.FC = () => {
                                     {vurdertIkkeGodkjent && (
                                         <>
                                             <ArrowBox alignOffset={erLesevisning ? 5 : 125}>
-                                                <FamilieTilbakeTextArea
+                                                <Textarea
                                                     name={`ikkeGodkjentBegrunnelse_${totrinnSteg.index}`}
                                                     label="Begrunnelse"
-                                                    erLesevisning={erLesevisning}
+                                                    readOnly={erLesevisning}
                                                     value={totrinnSteg.begrunnelse || ''}
                                                     maxLength={2000}
                                                     onChange={event =>

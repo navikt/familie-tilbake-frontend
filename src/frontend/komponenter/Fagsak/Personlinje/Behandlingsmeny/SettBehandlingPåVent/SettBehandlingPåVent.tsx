@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { ErrorMessage, Modal } from '@navikt/ds-react';
-import { FamilieSelect } from '@navikt/familie-form-elements';
+import { ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
@@ -86,12 +85,9 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                             }
                         />
                         <Spacer20 />
-                        <FamilieSelect
-                            {...skjema.felter.årsak.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
+                        <Select
+                            {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
                             label={'Årsak'}
-                            value={skjema.felter.årsak.verdi}
-                            onChange={event => skjema.felter.årsak.onChange(event)}
-                            required={true}
                         >
                             <option value="" disabled>
                                 Velg årsak
@@ -101,7 +97,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                                     {venteårsaker[årsak]}
                                 </option>
                             ))}
-                        </FamilieSelect>
+                        </Select>
                         {feilmelding && feilmelding !== '' && (
                             <>
                                 <Spacer8 />

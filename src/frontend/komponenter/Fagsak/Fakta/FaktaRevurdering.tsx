@@ -32,7 +32,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
             <Spacer20 />
             <RadMedMargin>
                 <Column xs="6">
-                    <DetailBold size="small">Årsak(er) til revurdering</DetailBold>
+                    <DetailBold>Årsak(er) til revurdering</DetailBold>
                     {feilutbetalingFakta.faktainfo?.revurderingsårsak && (
                         <BodyShort size="small">
                             {feilutbetalingFakta.faktainfo.revurderingsårsak}
@@ -40,7 +40,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                     )}
                 </Column>
                 <Column xs="6">
-                    <DetailBold size="small">Dato for revurderingsvedtak</DetailBold>
+                    <DetailBold>Dato for revurderingsvedtak</DetailBold>
                     <BodyShort size="small">
                         {formatterDatostring(feilutbetalingFakta.revurderingsvedtaksdato)}
                     </BodyShort>
@@ -48,7 +48,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
             </RadMedMargin>
             <RadMedMargin>
                 <Column xs="6">
-                    <DetailBold size="small">Resultat</DetailBold>
+                    <DetailBold>Resultat</DetailBold>
                     {feilutbetalingFakta.faktainfo?.revurderingsresultat && (
                         <BodyShort size="small">
                             {feilutbetalingFakta.faktainfo.revurderingsresultat}
@@ -56,7 +56,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                     )}
                 </Column>
                 <Column xs="6">
-                    <DetailBold size="small">Konsekvens</DetailBold>
+                    <DetailBold>Konsekvens</DetailBold>
                     {feilutbetalingFakta.faktainfo?.konsekvensForYtelser && (
                         <BodyShort size="small">
                             {feilutbetalingFakta.faktainfo.konsekvensForYtelser?.join(', ')}
@@ -66,7 +66,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
             </RadMedMargin>
             <Row>
                 <Column xs="6">
-                    <DetailBold size="small">Tilbakekrevingsvalg</DetailBold>
+                    <DetailBold>Tilbakekrevingsvalg</DetailBold>
                     {feilutbetalingFakta.faktainfo?.tilbakekrevingsvalg && (
                         <BodyShort size="small">
                             {tilbakekrevingsvalg[feilutbetalingFakta.faktainfo.tilbakekrevingsvalg]}

@@ -2,9 +2,8 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { BodyLong, Heading, Modal } from '@navikt/ds-react';
+import { BodyLong, Heading, Modal, Select } from '@navikt/ds-react';
 import { ATextDanger, ASpacing8 } from '@navikt/ds-tokens/dist/tokens';
-import { FamilieSelect } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -76,6 +75,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
             header={{
                 heading: 'Behandling satt på vent',
                 size: 'medium',
+                closeButton: false,
             }}
             portal={true}
             width="small"
@@ -113,15 +113,10 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                         erLesesvisning={erVenterPåKravgrunnlag}
                     />
                     <Spacer20 />
-                    <FamilieSelect
+                    <Select
                         {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
                         label={'Årsak'}
-                        value={skjema.felter.årsak.verdi}
-                        onChange={event => skjema.felter.årsak.onChange(event)}
-                        lesevisningVerdi={
-                            skjema.felter.årsak.verdi ? venteårsaker[skjema.felter.årsak.verdi] : ''
-                        }
-                        erLesevisning={erAutomatiskVent}
+                        readOnly={erAutomatiskVent}
                     >
                         <option value="" disabled>
                             Velg årsak
@@ -131,7 +126,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                                 {venteårsaker[årsak]}
                             </option>
                         ))}
-                    </FamilieSelect>
+                    </Select>
                     {feilmelding && feilmelding !== '' && (
                         <FeilContainer>
                             <BodyLong size="small">{feilmelding}</BodyLong>

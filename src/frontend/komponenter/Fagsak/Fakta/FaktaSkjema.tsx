@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyShort, Checkbox, Heading } from '@navikt/ds-react';
+import { BodyShort, Checkbox, Heading, Textarea } from '@navikt/ds-react';
 
 import { Ytelsetype } from '../../../kodeverk';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
@@ -14,7 +14,6 @@ import {
     Spacer20,
     Spacer8,
 } from '../../Felleskomponenter/Flytelementer';
-import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
@@ -65,7 +64,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                     <Spacer20 />
                     <Row>
                         <Column xs="12" md="4">
-                            <DetailBold size="small">Periode med feilutbetaling</DetailBold>
+                            <DetailBold>Periode med feilutbetaling</DetailBold>
                             <BodyShort size="small">
                                 {`${formatterDatostring(
                                     feilutbetalingFakta.totalFeilutbetaltPeriode.fom
@@ -75,7 +74,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             </BodyShort>
                         </Column>
                         <Column xs="12" md="4">
-                            <DetailBold size="small">Feilutbetalt beløp totalt</DetailBold>
+                            <DetailBold>Feilutbetalt beløp totalt</DetailBold>
                             <BodyShort size="small" className={'redText'}>
                                 {`${formatCurrencyNoKr(
                                     feilutbetalingFakta.totaltFeilutbetaltBeløp
@@ -83,7 +82,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             </BodyShort>
                         </Column>
                         <Column xs="12" md="4">
-                            <DetailBold size="small">Tidligere varslet beløp</DetailBold>
+                            <DetailBold>Tidligere varslet beløp</DetailBold>
                             <BodyShort size="small">
                                 {feilutbetalingFakta.varsletBeløp
                                     ? `${formatCurrencyNoKr(feilutbetalingFakta.varsletBeløp)}`
@@ -130,10 +129,10 @@ const FaktaSkjema: React.FC<IProps> = ({
             <Spacer20 />
             <Row>
                 <Column sm="12" md="6">
-                    <FamilieTilbakeTextArea
+                    <Textarea
                         name={'begrunnelse'}
                         label={'Forklar årsaken(e) til feilutbetalingen'}
-                        erLesevisning={erLesevisning}
+                        readOnly={erLesevisning}
                         value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
                         onChange={event => onChangeBegrunnelse(event)}
                         maxLength={3000}

@@ -39,7 +39,7 @@ const ForhåndsvisHenleggelsesBrev: React.FC<IProps> = ({ behandling, skjema, ka
 
     return kanForhåndsvise ? (
         <StyledContainer>
-            <Detail size="small">Informer søker: </Detail>
+            <Detail>Informer søker: </Detail>
             <Link
                 href="#"
                 onMouseDown={e => e.preventDefault()}
