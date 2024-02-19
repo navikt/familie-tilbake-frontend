@@ -41,17 +41,7 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                         ? 'I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?'
                         : 'I hvilken grad har mottaker handlet uaktsomt?'
                 }
-                value={
-                    !erLesevisning
-                        ? skjema.felter.aktsomhetVurdering.verdi
-                        : skjema.felter.aktsomhetVurdering.verdi
-                          ? erForstodBurdeForstått
-                              ? forstodBurdeForståttAktsomheter[
-                                    skjema.felter.aktsomhetVurdering.verdi
-                                ]
-                              : aktsomheter[skjema.felter.aktsomhetVurdering.verdi]
-                          : ''
-                }
+                value={skjema.felter.aktsomhetVurdering.verdi}
                 error={
                     ugyldigAktsomhetvurderingValgt
                         ? skjema.felter.aktsomhetVurdering.feilmelding?.toString()
