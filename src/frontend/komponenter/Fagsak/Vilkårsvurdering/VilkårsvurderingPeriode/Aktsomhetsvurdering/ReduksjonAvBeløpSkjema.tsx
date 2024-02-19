@@ -72,13 +72,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                 id="harGrunnerTilReduksjon"
                 legend={'Skal særlige grunner gi reduksjon av beløpet?'}
                 readOnly={erLesevisning}
-                value={
-                    !erLesevisning
-                        ? skjema.felter.harGrunnerTilReduksjon.verdi
-                        : skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA
-                          ? 'Ja'
-                          : 'Nei'
-                }
+                value={skjema.felter.harGrunnerTilReduksjon.verdi}
                 error={
                     ugyldigHarGrunnertilReduksjonValgt
                         ? skjema.felter.harGrunnerTilReduksjon.feilmelding?.toString()
