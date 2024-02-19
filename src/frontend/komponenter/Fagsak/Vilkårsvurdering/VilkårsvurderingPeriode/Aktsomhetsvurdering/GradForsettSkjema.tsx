@@ -56,8 +56,8 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                 <>
                                     <Label>Skal det tillegges renter?</Label>
                                     <BodyShort>
-                                        {skjema.felter.grovtUaktsomIlleggeRenter.verdi &&
-                                            skjema.felter.grovtUaktsomIlleggeRenter.verdi.label}
+                                        {skjema.felter.forstoIlleggeRenter.verdi &&
+                                            skjema.felter.forstoIlleggeRenter.verdi.label}
                                     </BodyShort>
                                 </>
                             ) : (
