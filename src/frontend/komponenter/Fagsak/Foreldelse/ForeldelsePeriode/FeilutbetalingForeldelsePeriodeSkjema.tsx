@@ -173,13 +173,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                         id="foreldet"
                         readOnly={erLesevisning}
                         legend="Vurder om perioden er foreldet"
-                        value={
-                            !erLesevisning
-                                ? skjema.felter.foreldelsesvurderingstype.verdi
-                                : periode.foreldelsesvurderingstype
-                                  ? foreldelsevurderinger[periode.foreldelsesvurderingstype]
-                                  : ''
-                        }
+                        value={skjema.felter.foreldelsesvurderingstype.verdi}
                         error={
                             ugyldigVurderingValgt
                                 ? skjema.felter.foreldelsesvurderingstype.feilmelding?.toString()
