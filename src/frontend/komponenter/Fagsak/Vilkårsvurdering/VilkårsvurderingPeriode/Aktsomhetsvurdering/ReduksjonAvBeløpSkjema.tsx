@@ -114,9 +114,9 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                 {...skjema.felter.uaktsomAndelTilbakekreves.hentNavInputProps(
                                                     skjema.visFeilmeldinger
                                                 )}
-                                                label={'Velg andel som skal tilbakekreves'}
-                                                hideLabel
+                                                label={null}
                                                 id="andelSomTilbakekreves"
+                                                aria-label="Angi andel som skal tilbakekreves"
                                                 readOnly={erLesevisning}
                                                 onChange={event =>
                                                     skjema.felter.uaktsomAndelTilbakekreves.validerOgSettFelt(
