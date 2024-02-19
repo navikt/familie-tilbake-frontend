@@ -42,13 +42,7 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                             id="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
                             legend="Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?"
                             readOnly={erLesevisning}
-                            value={
-                                !erLesevisning
-                                    ? skjema.felter.tilbakekrevSmåbeløp.verdi
-                                    : skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA
-                                      ? 'Ja'
-                                      : 'Nei'
-                            }
+                            value={skjema.felter.tilbakekrevSmåbeløp.verdi}
                             error={
                                 ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr
                                     ? skjema.felter.tilbakekrevSmåbeløp.feilmelding?.toString()
