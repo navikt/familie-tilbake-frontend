@@ -9,6 +9,23 @@ export enum Datoformat {
     ISO_DAG = 'yyyy-MM-dd',
 }
 
+interface DateTilFormatertStringProps {
+    date?: Date;
+    tilFormat: Datoformat;
+    defaultString?: string;
+}
+
+export const dateTilFormatertString = ({
+    date,
+    tilFormat,
+    defaultString = '',
+}: DateTilFormatertStringProps): string => {
+    return date && isValid(date) ? format(date, tilFormat) : defaultString;
+};
+
+export const dateTilIsoDatoString = (dato?: Date): IsoDatoString =>
+    dateTilFormatertString({ date: dato, tilFormat: Datoformat.ISO_DAG, defaultString: '' });
+
 export const dateTilIsoDatoStringEllerUndefined = (dato?: Date): IsoDatoString | undefined =>
     dato && isValid(dato) ? format(dato, Datoformat.ISO_DAG) : undefined;
 

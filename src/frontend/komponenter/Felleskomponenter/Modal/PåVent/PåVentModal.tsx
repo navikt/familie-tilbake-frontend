@@ -13,10 +13,12 @@ import {
     manuelleVenteÅrsaker,
     venteårsaker,
 } from '../../../../typer/behandling';
-import { dateBeforeToday, datoformatNorsk, finnDateRelativtTilNå } from '../../../../utils';
+import { dateBeforeToday } from '../../../../utils';
 import { FTButton, Spacer20 } from '../../Flytelementer';
-import { FixedDatovelger } from '../../Skjemaelementer';
 import { usePåVentBehandling } from './PåVentContext';
+import Datovelger from '../../Datovelger/Datovelger';
+import { addDays, addMonths } from 'date-fns';
+import { dagensDato } from '../../../../utils/dato';
 
 const FeilContainer = styled.div`
     margin-top: ${ASpacing8};
@@ -25,17 +27,6 @@ const FeilContainer = styled.div`
         color: ${ATextDanger};
     }
 `;
-
-export const minTidsfrist = (): string => {
-    const minDato = new Date();
-    minDato.setDate(minDato.getDate() + 1);
-    return minDato.toISOString();
-};
-
-export const maxTidsfrist = (): string => {
-    const dato = finnDateRelativtTilNå({ months: 3 });
-    return dato.toISOString();
-};
 
 interface IProps {
     behandling: IBehandling;
@@ -98,19 +89,13 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                             </BodyLong>
                         </>
                     )}
-                    <FixedDatovelger
-                        id={'frist'}
-                        label={'Frist'}
-                        onChange={(nyVerdi?: string) =>
-                            skjema.felter.tidsfrist.onChange(nyVerdi ? nyVerdi : '')
-                        }
-                        limitations={{ minDate: minTidsfrist(), maxDate: maxTidsfrist() }}
-                        placeholder={datoformatNorsk.DATO}
-                        value={skjema.felter.tidsfrist.verdi}
-                        feil={
-                            ugyldigDatoValgt ? skjema.felter.tidsfrist.feilmelding?.toString() : ''
-                        }
-                        erLesesvisning={erVenterPåKravgrunnlag}
+                    <Datovelger
+                        felt={skjema.felter.tidsfrist}
+                        label="Frist"
+                        visFeilmeldinger={ugyldigDatoValgt}
+                        readOnly={erVenterPåKravgrunnlag}
+                        minDatoAvgrensning={addDays(dagensDato, 1)}
+                        maksDatoAvgrensning={addMonths(dagensDato, 3)}
                     />
                     <Spacer20 />
                     <Select

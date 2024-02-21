@@ -5,15 +5,9 @@ import { useSkjema, useFelt, type FeltState, feil, ok } from '@navikt/familie-sk
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
-import { isEmpty, validerDato, dateBeforeOrToday } from '../../../../utils';
-
-const validerTidsfrist = (tidsfrist: FeltState<string | ''>): FeltState<string | ''> => {
-    const feilmelding = validerDato(tidsfrist.verdi);
-    if (feilmelding) return feil(tidsfrist, feilmelding);
-    return dateBeforeOrToday(tidsfrist.verdi)
-        ? feil(tidsfrist, 'Fristen må være større enn dagens dato')
-        : ok(tidsfrist);
-};
+import { isEmpty, validerGyldigDato } from '../../../../utils';
+import { IRestSettPåVent } from '../../../../typer/api';
+import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
 
 export const usePåVentBehandling = (
     lukkModal: (suksess: boolean) => void,
@@ -24,18 +18,18 @@ export const usePåVentBehandling = (
 
     const { onSubmit, skjema, nullstillSkjema, kanSendeSkjema } = useSkjema<
         {
-            tidsfrist: string | '';
+            tidsfrist: Date | undefined;
             årsak: Venteårsak | '';
         },
         string
     >({
         felter: {
-            tidsfrist: useFelt<string | ''>({
-                verdi: ventegrunn?.tidsfrist ? ventegrunn.tidsfrist : '',
-                valideringsfunksjon: (felt: FeltState<string | ''>) => {
+            tidsfrist: useFelt<Date | undefined>({
+                verdi: undefined,
+                valideringsfunksjon: (felt: FeltState<Date | undefined>) => {
                     return isEmpty(felt.verdi)
                         ? feil(felt, 'Du må velge en tidsfrist')
-                        : validerTidsfrist(felt);
+                        : validerGyldigDato(felt);
                 },
             }),
             årsak: useFelt<Venteårsak | ''>({
@@ -47,21 +41,32 @@ export const usePåVentBehandling = (
         skjemanavn: 'påventbehandling',
     });
 
+    const [forrigeVentegrunn, settForrigeVentegrunn] = useState<
+        IBehandlingsstegstilstand | undefined
+    >();
+
+    if (ventegrunn !== forrigeVentegrunn) {
+        settForrigeVentegrunn(ventegrunn);
+        nullstillSkjema();
+        skjema.felter.tidsfrist.validerOgSettFelt(
+            ventegrunn?.tidsfrist ? isoStringTilDate(ventegrunn.tidsfrist) : undefined
+        );
+    }
+
     const onBekreft = (behandlingId: string) => {
-        if (kanSendeSkjema()) {
-            onSubmit(
+        if (kanSendeSkjema() && skjema.felter.årsak.verdi && skjema.felter.tidsfrist.verdi) {
+            onSubmit<IRestSettPåVent>(
                 {
                     method: 'PUT',
                     data: {
-                        behandlingId: behandlingId,
                         venteårsak: skjema.felter.årsak.verdi,
-                        tidsfrist: skjema.felter.tidsfrist.verdi,
+                        tidsfrist: dateTilIsoDatoString(skjema.felter.tidsfrist.verdi),
                     },
                     url: `/familie-tilbake/api/behandling/${behandlingId}/vent/v1`,
                 },
                 () => {
                     if (ventegrunn) {
-                        ventegrunn.tidsfrist = skjema.felter.tidsfrist.verdi;
+                        ventegrunn.tidsfrist = dateTilIsoDatoString(skjema.felter.tidsfrist.verdi);
                         ventegrunn.venteårsak = skjema.felter.årsak.verdi as Venteårsak;
                     }
                     lukkModal(true);
