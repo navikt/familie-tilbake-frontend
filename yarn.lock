@@ -1559,6 +1559,11 @@
   resolved "https://npm.pkg.github.com/download/@navikt/ds-icons/2.0.18/61e30253784f897147210bf7bbb58a7f110e9171#61e30253784f897147210bf7bbb58a7f110e9171"
   integrity sha512-qQ66eMzSCw+6I7aQQXsfFnPDi/K2TbYCsm+AC8Qia0iK3Tu+DPvx1Ak/exWZ1TkAg5Ou31XuWdemDuZIoNnVdw==
 
+"@navikt/ds-icons@^1.5.10":
+  version "1.5.10"
+  resolved "https://npm.pkg.github.com/download/@navikt/ds-icons/1.5.10/40c493b2be774d2baada7ea158a88ed7c9bd661e#40c493b2be774d2baada7ea158a88ed7c9bd661e"
+  integrity sha512-0IOEbIo+NjKEUtyRna7KMSIi950qpU73t7sazhlQzvTm2akT24mNkLn+aHpRv7dZ4pwlUPv4d80+IGk2W/pvbw==
+
 "@navikt/ds-icons@^2.0.18":
   version "2.9.8"
   resolved "https://npm.pkg.github.com/download/@navikt/ds-icons/2.9.8/b6f22493a3b836e00762dcc0a4397c64beb634e0#b6f22493a3b836e00762dcc0a4397c64beb634e0"
@@ -4160,6 +4165,11 @@ date-fns@^2.30.0:
   integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
   dependencies:
     "@babel/runtime" "^7.21.0"
+
+dayjs@^1.11.10:
+  version "1.11.10"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.10.tgz#68acea85317a6e164457d6d6947564029a6a16a0"
+  integrity sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==
 
 debug@2.6.9:
   version "2.6.9"
