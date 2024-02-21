@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, Link, Radio, Textarea } from '@navikt/ds-react';
+import { Alert, BodyShort, Label, Link, Radio, Textarea } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { behandlingssteg } from '../../../../typer/behandling';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
-import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';
+import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
@@ -74,47 +74,54 @@ const Totrinnskontroll: React.FC = () => {
                         return (
                             <React.Fragment key={totrinnSteg.behandlingssteg}>
                                 <div>
-                                    <HorisontalFamilieRadioGruppe
-                                        id={`stegetGodkjent_${totrinnSteg.index}`}
-                                        erLesevisning={erLesevisning}
-                                        legend={
-                                            <Link
-                                                href="#"
-                                                onMouseDown={(e: React.MouseEvent) =>
-                                                    e.preventDefault()
-                                                }
-                                                onClick={() => navigerTilSide(side as ISide)}
-                                            >
-                                                {behandlingssteg[totrinnSteg.behandlingssteg]}
-                                            </Link>
-                                        }
-                                        value={
-                                            !erLesevisning
-                                                ? totrinnSteg.godkjent
-                                                : totrinnSteg.godkjent === OptionGodkjent
-                                                  ? 'Godkjent'
-                                                  : totrinnSteg.godkjent === OptionIkkeGodkjent
-                                                    ? 'Vurder på nytt'
-                                                    : 'Ikke vurdert'
-                                        }
-                                        onChange={(val: TotrinnGodkjenningOption) =>
-                                            oppdaterGodkjenning(totrinnSteg.index, val)
-                                        }
-                                        error={
-                                            totrinnSteg.feilmelding ? totrinnSteg.feilmelding : null
-                                        }
-                                    >
-                                        {totrinnGodkjenningOptions.map(opt => (
-                                            <Radio
-                                                key={opt.label}
-                                                name={`stegetGodkjent_${totrinnSteg.index}`}
-                                                data-testid={`stegetGodkjent_${totrinnSteg.index}-${opt.verdi}`}
-                                                value={opt}
-                                            >
-                                                {opt.label}
-                                            </Radio>
-                                        ))}
-                                    </HorisontalFamilieRadioGruppe>
+                                    <Label>
+                                        <Link
+                                            href="#"
+                                            onMouseDown={(e: React.MouseEvent) =>
+                                                e.preventDefault()
+                                            }
+                                            onClick={() => navigerTilSide(side as ISide)}
+                                        >
+                                            {behandlingssteg[totrinnSteg.behandlingssteg]}
+                                        </Link>
+                                    </Label>
+                                    {erLesevisning ? (
+                                        <BodyShort spacing>
+                                            {totrinnSteg.godkjent === OptionGodkjent
+                                                ? 'Godkjent'
+                                                : totrinnSteg.godkjent === OptionIkkeGodkjent
+                                                  ? 'Vurder på nytt'
+                                                  : 'Ikke vurdert'}
+                                        </BodyShort>
+                                    ) : (
+                                        <HorisontalRadioGroup
+                                            id={`stegetGodkjent_${totrinnSteg.index}`}
+                                            legend={`Vurder steget ${
+                                                behandlingssteg[totrinnSteg.behandlingssteg]
+                                            }`}
+                                            hideLegend
+                                            value={totrinnSteg.godkjent}
+                                            onChange={(val: TotrinnGodkjenningOption) =>
+                                                oppdaterGodkjenning(totrinnSteg.index, val)
+                                            }
+                                            error={
+                                                totrinnSteg.feilmelding
+                                                    ? totrinnSteg.feilmelding
+                                                    : null
+                                            }
+                                        >
+                                            {totrinnGodkjenningOptions.map(opt => (
+                                                <Radio
+                                                    key={opt.label}
+                                                    name={`stegetGodkjent_${totrinnSteg.index}`}
+                                                    data-testid={`stegetGodkjent_${totrinnSteg.index}-${opt.verdi}`}
+                                                    value={opt}
+                                                >
+                                                    {opt.label}
+                                                </Radio>
+                                            ))}
+                                        </HorisontalRadioGroup>
+                                    )}
                                     {vurdertIkkeGodkjent && (
                                         <>
                                             <ArrowBox alignOffset={erLesevisning ? 5 : 125}>

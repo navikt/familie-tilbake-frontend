@@ -2,12 +2,11 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { BodyShort, Radio } from '@navikt/ds-react';
-import { FamilieInput } from '@navikt/familie-form-elements';
+import { BodyShort, Radio, TextField } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { HorisontalFamilieRadioGruppe } from '../../../Felleskomponenter/Skjemaelementer';
+import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import {
     JaNeiOption,
     jaNeiOptions,
@@ -34,17 +33,11 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
         harVurderBeløpIBehold && skjema.felter.erBeløpetIBehold.verdi === OptionJA;
     return (
         <>
-            <HorisontalFamilieRadioGruppe
+            <HorisontalRadioGroup
                 id="erBelopetIBehold"
-                erLesevisning={erLesevisning}
+                readOnly={erLesevisning}
                 legend={'Er beløpet i behold?'}
-                value={
-                    !erLesevisning
-                        ? skjema.felter.erBeløpetIBehold.verdi
-                        : skjema.felter.erBeløpetIBehold.verdi === OptionJA
-                          ? 'Ja'
-                          : 'Nei'
-                }
+                value={skjema.felter.erBeløpetIBehold.verdi}
                 error={
                     ugyldigErBeløpetIBeholdValgt
                         ? skjema.felter.erBeløpetIBehold.feilmelding?.toString()
@@ -59,17 +52,17 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                         {opt.label}
                     </Radio>
                 ))}
-            </HorisontalFamilieRadioGruppe>
+            </HorisontalRadioGroup>
             <ArrowBoxContainer>
                 {harVurderBeløpIBehold && harBeløpetIBehold && (
                     <ArrowBox alignOffset={23}>
-                        <FamilieInput
+                        <TextField
                             {...skjema.felter.godTroTilbakekrevesBeløp.hentNavInputProps(
                                 skjema.visFeilmeldinger
                             )}
                             id="tilbakekrevdBelop"
                             label={'Angi beløp som skal tilbakekreves'}
-                            erLesevisning={erLesevisning}
+                            readOnly={erLesevisning}
                             onChange={event =>
                                 skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
                                     event.target.value

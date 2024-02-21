@@ -4,14 +4,20 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyLong, ErrorMessage, Heading, Loader } from '@navikt/ds-react';
-import { FamilieInput, FamilieSelect } from '@navikt/familie-form-elements';
+import {
+    BodyLong,
+    ErrorMessage,
+    Heading,
+    Loader,
+    Select,
+    Textarea,
+    TextField,
+} from '@navikt/ds-react';
 
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Vergetype, vergeTyper, vergetyper } from '../../../kodeverk/verge';
+import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
 import { FTButton, Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
-import { FamilieTilbakeTextArea } from '../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { useVerge } from './VergeContext';
 
@@ -20,8 +26,7 @@ const StyledVerge = styled.div`
 `;
 
 const VergeContainer: React.FC = () => {
-    const { behandling, skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } =
-        useVerge();
+    const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } = useVerge();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
@@ -63,33 +68,27 @@ const VergeContainer: React.FC = () => {
                     <Spacer20 />
                     <Row>
                         <Column sm="12" md="6" lg="3">
-                            <FamilieSelect
+                            <Select
                                 {...skjema.felter.vergetype.hentNavInputProps(
                                     skjema.visFeilmeldinger
                                 )}
                                 id="vergeType"
                                 label={'Vergetype'}
-                                erLesevisning={erLesevisning}
+                                readOnly={erLesevisning}
                                 value={skjema.felter.vergetype.verdi}
-                                lesevisningVerdi={
-                                    behandling.harVerge
-                                        ? // @ts-ignore
-                                          vergetyper[skjema.felter.vergetype.verdi]
-                                        : '-'
-                                }
                                 onChange={event => onChangeVergeType(event)}
                             >
                                 <option disabled={true} value={''}>
                                     Velg vergetype
                                 </option>
-                                {vergeTyper
+                                {Object.values(Vergetype)
                                     .filter(type => type !== Vergetype.UDEFINERT)
                                     .map(opt => (
                                         <option key={opt} value={opt}>
                                             {vergetyper[opt]}
                                         </option>
                                     ))}
-                            </FamilieSelect>
+                            </Select>
                         </Column>
                     </Row>
                     {vergetypeValgt && (
@@ -97,12 +96,12 @@ const VergeContainer: React.FC = () => {
                             <Spacer8 />
                             <Row>
                                 <Column sm="12" md="6" lg="3">
-                                    <FamilieInput
+                                    <TextField
                                         {...skjema.felter.navn.hentNavInputProps(
                                             skjema.visFeilmeldinger
                                         )}
                                         label={'Navn'}
-                                        erLesevisning={erLesevisning}
+                                        readOnly={erLesevisning}
                                         value={skjema.felter.navn.verdi}
                                         onChange={event =>
                                             skjema.felter.navn.validerOgSettFelt(event.target.value)
@@ -111,12 +110,12 @@ const VergeContainer: React.FC = () => {
                                 </Column>
                                 <Column sm="12" md="6" lg="3">
                                     {skjema.felter.vergetype.verdi === Vergetype.ADVOKAT ? (
-                                        <FamilieInput
+                                        <TextField
                                             {...skjema.felter.organisasjonsnummer.hentNavInputProps(
                                                 skjema.visFeilmeldinger
                                             )}
                                             label={'Organisasjonsnummer'}
-                                            erLesevisning={erLesevisning}
+                                            readOnly={erLesevisning}
                                             value={skjema.felter.organisasjonsnummer.verdi}
                                             onChange={event =>
                                                 skjema.felter.organisasjonsnummer.validerOgSettFelt(
@@ -125,12 +124,12 @@ const VergeContainer: React.FC = () => {
                                             }
                                         />
                                     ) : (
-                                        <FamilieInput
+                                        <TextField
                                             {...skjema.felter.fødselsnummer.hentNavInputProps(
                                                 skjema.visFeilmeldinger
                                             )}
                                             label={'Fødselsnummer'}
-                                            erLesevisning={erLesevisning}
+                                            readOnly={erLesevisning}
                                             value={skjema.felter.fødselsnummer.verdi}
                                             onChange={event =>
                                                 skjema.felter.fødselsnummer.validerOgSettFelt(
@@ -146,13 +145,13 @@ const VergeContainer: React.FC = () => {
                     <Spacer20 />
                     <Row>
                         <Column md="12" lg="6">
-                            <FamilieTilbakeTextArea
+                            <Textarea
                                 {...skjema.felter.begrunnelse.hentNavInputProps(
                                     skjema.visFeilmeldinger
                                 )}
                                 label={'Begrunn endringene'}
                                 value={skjema.felter.begrunnelse.verdi}
-                                erLesevisning={erLesevisning}
+                                readOnly={erLesevisning}
                                 onChange={event =>
                                     skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
                                 }

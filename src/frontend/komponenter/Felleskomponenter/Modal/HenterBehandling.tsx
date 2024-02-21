@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { BodyShort, Cell, Grid, Loader, Modal } from '@navikt/ds-react';
+import { BodyShort, HStack, Loader, Modal } from '@navikt/ds-react';
 
 const HenterBehandling: React.FC = () => {
     return (
@@ -11,20 +11,13 @@ const HenterBehandling: React.FC = () => {
             width="small"
         >
             <Modal.Body>
-                <Grid>
-                    <Cell xs={10}>
+                <HStack justify="space-between">
+                    <div>
                         <BodyShort>Henting av behandlingen tar litt tid.</BodyShort>
                         <BodyShort>Vennligst vent!</BodyShort>
-                    </Cell>
-                    <Cell xs={2}>
-                        <Loader
-                            size="xlarge"
-                            title="venter..."
-                            transparent={false}
-                            variant="neutral"
-                        />
-                    </Cell>
-                </Grid>
+                    </div>
+                    <Loader size="large" title="venter..." transparent={false} variant="neutral" />
+                </HStack>
             </Modal.Body>
         </Modal>
     );

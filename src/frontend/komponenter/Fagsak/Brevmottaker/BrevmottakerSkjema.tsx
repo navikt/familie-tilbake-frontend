@@ -2,9 +2,8 @@ import React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Fieldset } from '@navikt/ds-react';
+import { Fieldset, TextField } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { FamilieInput } from '@navikt/familie-form-elements';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 import CountrySelect from '@navikt/landvelger';
 
@@ -44,22 +43,22 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
     return (
         <>
             <StyledFieldset legend="Skjema for manuell registrering av brevmottaker" hideLegend>
-                <FamilieInput
+                <TextField
                     {...skjema.felter.navn.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                     label={'Navn'}
-                    erLesevisning={!!preutfyltNavn}
+                    readOnly={!!preutfyltNavn}
                     onChange={(event): void => {
                         skjema.felter.navn.validerOgSettFelt(event.target.value);
                     }}
                 />
-                <FamilieInput
+                <TextField
                     {...skjema.felter.adresselinje1.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                     label={'Adresselinje 1'}
                     onChange={(event): void => {
                         skjema.felter.adresselinje1.validerOgSettFelt(event.target.value);
                     }}
                 />
-                <FamilieInput
+                <TextField
                     {...skjema.felter.adresselinje2.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                     label={'Adresselinje 2 (valgfri)'}
                     onChange={(event): void => {
@@ -67,7 +66,7 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                     }}
                 />
                 <PostnummerOgStedContainer>
-                    <FamilieInput
+                    <TextField
                         {...skjema.felter.postnummer.hentNavBaseSkjemaProps(
                             skjema.visFeilmeldinger
                         )}
@@ -76,7 +75,7 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                             skjema.felter.postnummer.validerOgSettFelt(event.target.value);
                         }}
                     />
-                    <FamilieInput
+                    <TextField
                         {...skjema.felter.poststed.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                         label={'Poststed'}
                         onChange={(event): void => {

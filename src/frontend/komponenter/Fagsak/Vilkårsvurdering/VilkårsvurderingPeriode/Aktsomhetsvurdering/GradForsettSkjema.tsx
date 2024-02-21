@@ -4,19 +4,14 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyShort, Label, Radio } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { BodyShort, Label } from '@navikt/ds-react';
+import { type ISkjema } from '@navikt/familie-skjema';
 
 import { Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { HorisontalFamilieRadioGruppe } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
-import {
-    JaNeiOption,
-    jaNeiOptions,
-    OptionJA,
-    VilkårsvurderingSkjemaDefinisjon,
-} from '../VilkårsvurderingPeriodeSkjemaContext';
+import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
+import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 
 const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;
@@ -32,10 +27,6 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
 
     const erValgtResultatTypeForstoBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
-
-    const ugyldigIlleggRenterValgt =
-        skjema.visFeilmeldinger &&
-        skjema.felter.forstoIlleggeRenter.valideringsstatus === Valideringsstatus.FEIL;
 
     const forstoBurdeForståttOffset = erValgtResultatTypeForstoBurdeForstått ? 340 : 385;
 
@@ -53,37 +44,12 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                             )}
                         </Column>
                         <Column md="6">
-                            <HorisontalFamilieRadioGruppe
-                                id="skalDetTilleggesRenter"
-                                erLesevisning={erLesevisning || !kanIlleggeRenter}
-                                legend={'Skal det tillegges renter?'}
-                                value={
-                                    !erLesevisning && kanIlleggeRenter
-                                        ? skjema.felter.forstoIlleggeRenter.verdi
-                                        : skjema.felter.forstoIlleggeRenter.verdi === OptionJA
-                                          ? 'Ja'
-                                          : 'Nei'
-                                }
-                                error={
-                                    ugyldigIlleggRenterValgt
-                                        ? skjema.felter.forstoIlleggeRenter.feilmelding?.toString()
-                                        : ''
-                                }
-                                marginbottom="none"
-                                onChange={(val: JaNeiOption) =>
-                                    skjema.felter.forstoIlleggeRenter.validerOgSettFelt(val)
-                                }
-                            >
-                                {jaNeiOptions.map(opt => (
-                                    <Radio
-                                        key={opt.label}
-                                        name="skalDetTilleggesRenter"
-                                        value={opt}
-                                    >
-                                        {opt.label}
-                                    </Radio>
-                                ))}
-                            </HorisontalFamilieRadioGruppe>
+                            <TilleggesRenterRadioGroup
+                                erLesevisning={erLesevisning}
+                                kanIlleggeRenter={kanIlleggeRenter}
+                                felt={skjema.felter.forstoIlleggeRenter}
+                                visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
+                            />
                         </Column>
                     </Row>
                 </>

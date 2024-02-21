@@ -256,7 +256,7 @@ describe('Tester: VergeContainer', () => {
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, queryByText } = render(
+        const { getByText, getByRole, queryByText, getByLabelText } = render(
             <VergeProvider behandling={behandling} fagsak={fagsak}>
                 <VergeContainer />
             </VergeProvider>
@@ -277,8 +277,8 @@ describe('Tester: VergeContainer', () => {
 
         expect(getByText('Advokat/advokatfullmektig')).toBeTruthy();
         expect(getByText('Bruker har engasjert advokat')).toBeTruthy();
-        expect(getByText('Advokat Advokatesen')).toBeTruthy();
-        expect(getByText('DummyOrg')).toBeTruthy();
+        expect(getByLabelText('Navn')).toHaveValue('Advokat Advokatesen');
+        expect(getByLabelText('Organisasjonsnummer')).toHaveValue('DummyOrg');
         expect(queryByText('Fødselsnummer')).toBeFalsy();
     });
 
@@ -294,7 +294,7 @@ describe('Tester: VergeContainer', () => {
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, queryByText } = render(
+        const { getByText, getByRole, queryByText, getByLabelText } = render(
             <VergeProvider behandling={behandling} fagsak={fagsak}>
                 <VergeContainer />
             </VergeProvider>
@@ -312,9 +312,9 @@ describe('Tester: VergeContainer', () => {
         ).toBeEnabled();
 
         expect(getByText('Verge for barn under 18 år')).toBeTruthy();
-        expect(getByText('Ingen opplysninger oppgitt.')).toBeTruthy();
-        expect(getByText('Verge Vergesen')).toBeTruthy();
-        expect(getByText('27106903129')).toBeTruthy();
+        expect(getByLabelText('Navn')).toHaveValue('Verge Vergesen');
+        expect(getByLabelText('Begrunn endringene')).toHaveValue('');
+        expect(getByLabelText('Fødselsnummer')).toHaveValue('27106903129');
         expect(queryByText('Organisasjonsnummer')).toBeFalsy();
     });
 });

@@ -73,11 +73,6 @@ export const behandlingstyper: Record<Behandlingstype, string> = {
     REVURDERING_TILBAKEKREVING: 'Revurdering tilbakekreving',
 };
 
-export const behandlingsTyper = [
-    Behandlingstype.TILBAKEKREVING,
-    Behandlingstype.REVURDERING_TILBAKEKREVING,
-];
-
 export enum Behandlingssteg {
     VARSEL = 'VARSEL',
     GRUNNLAG = 'GRUNNLAG',

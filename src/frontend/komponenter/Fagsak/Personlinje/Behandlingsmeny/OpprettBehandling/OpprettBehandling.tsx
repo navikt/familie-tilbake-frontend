@@ -1,11 +1,9 @@
 import * as React from 'react';
 
-import { ErrorMessage, Modal } from '@navikt/ds-react';
-import { FamilieSelect } from '@navikt/familie-form-elements';
+import { ErrorMessage, Modal, Select } from '@navikt/ds-react';
 
 import {
     Behandlingstype,
-    behandlingsTyper,
     behandlingstyper,
     behandlingårsaker,
     behandlingÅrsaker,
@@ -61,27 +59,23 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                     }}
                 >
                     <Modal.Body>
-                        <FamilieSelect
-                            erLesevisning={true}
+                        <Select
+                            readOnly={true}
                             name={'Behandling'}
                             label={'Type behandling'}
-                            value={skjema.felter.behandlingstype.verdi}
-                            lesevisningVerdi={
-                                behandlingstyper[Behandlingstype.REVURDERING_TILBAKEKREVING]
-                            }
+                            value={Behandlingstype.REVURDERING_TILBAKEKREVING}
                         >
-                            {behandlingsTyper.map(opt => (
+                            {Object.values(Behandlingstype).map(opt => (
                                 <option key={opt} value={opt}>
                                     {behandlingstyper[opt]}
                                 </option>
                             ))}
-                        </FamilieSelect>
+                        </Select>
                         <Spacer20 />
-                        <FamilieSelect
+                        <Select
                             {...skjema.felter.behandlingsårsak.hentNavBaseSkjemaProps(
                                 skjema.visFeilmeldinger
                             )}
-                            erLesevisning={false}
                             name={'Behandling'}
                             label={'Årsak til revuderingen'}
                             value={skjema.felter.behandlingsårsak.verdi}
@@ -95,7 +89,7 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                                     {behandlingårsaker[opt]}
                                 </option>
                             ))}
-                        </FamilieSelect>
+                        </Select>
                         {feilmelding && (
                             <>
                                 <Spacer8 />
