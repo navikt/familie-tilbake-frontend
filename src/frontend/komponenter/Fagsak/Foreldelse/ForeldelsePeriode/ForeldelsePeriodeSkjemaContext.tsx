@@ -8,8 +8,14 @@ import {
 } from '@navikt/familie-skjema';
 
 import { Foreldelsevurdering } from '../../../../kodeverk';
-import { erFeltetEmpty, validerDatoFelt, validerTekstFeltMaksLengde } from '../../../../utils';
+import {
+    erFeltetEmpty,
+    validerDatoFelt,
+    validerGyldigDato,
+    validerTekstFeltMaksLengde,
+} from '../../../../utils';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+import { dateTilIsoDatoStringEllerUndefined } from '../../../../utils/dato';
 
 const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter) => {
     return (
@@ -36,12 +42,12 @@ const useForeldelsePeriodeSkjema = (
         },
     });
 
-    const foreldelsesfrist = useFelt<string | ''>({
-        verdi: '',
+    const foreldelsesfrist = useFelt<Date | undefined>({
+        verdi: undefined,
         avhengigheter: { foreldelsesvurderingstype },
-        valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
+        valideringsfunksjon: (felt: FeltState<Date | undefined>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltForeldelsesfrist(avhengigheter)) return ok(felt);
-            return validerDatoFelt(felt);
+            return validerGyldigDato(felt);
         },
     });
 
@@ -58,7 +64,7 @@ const useForeldelsePeriodeSkjema = (
         {
             begrunnelse: string | '';
             foreldelsesvurderingstype: Foreldelsevurdering | '';
-            foreldelsesfrist: string | '';
+            foreldelsesfrist: Date | undefined;
             oppdagelsesdato: string | '';
         },
         string
@@ -84,7 +90,9 @@ const useForeldelsePeriodeSkjema = (
                 begrunnelse: skjema.felter.begrunnelse.verdi,
                 //@ts-ignore
                 foreldelsesvurderingstype: skjema.felter.foreldelsesvurderingstype.verdi,
-                foreldelsesfrist: skjema.felter.foreldelsesfrist.verdi,
+                foreldelsesfrist: dateTilIsoDatoStringEllerUndefined(
+                    skjema.felter.foreldelsesfrist.verdi
+                ),
                 oppdagelsesdato: skjema.felter.oppdagelsesdato.verdi,
             });
             nullstillSkjema();

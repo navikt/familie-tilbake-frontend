@@ -127,3 +127,6 @@ export const validerDatoFelt = (felt: FeltState<string | ''>) => {
     const feilmelding = validerDato(felt.verdi);
     return !feilmelding ? ok(felt) : feil(felt, feilmelding);
 };
+
+export const validerGyldigDato = (felt: FeltState<Date | undefined>) =>
+    felt.verdi && isValid(felt.verdi) ? ok(felt) : feil(felt, 'Du må velge en gyldig dato');
