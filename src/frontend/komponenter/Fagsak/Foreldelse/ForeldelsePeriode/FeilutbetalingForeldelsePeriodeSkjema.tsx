@@ -15,15 +15,15 @@ import {
     foreldelseVurderingTyper,
 } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
-import { datoformatNorsk } from '../../../../utils';
 import { FTButton, Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import { FTDatovelger } from '../../../Felleskomponenter/Skjemaelementer';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
+import { isoStringTilDate } from '../../../../utils/dato';
+import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
 
 const StyledContainer = styled.div`
     border: 1px solid ${ABorderStrong};
@@ -50,8 +50,12 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
     React.useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');
         skjema.felter.foreldelsesvurderingstype.onChange(periode?.foreldelsesvurderingstype || '');
-        skjema.felter.foreldelsesfrist.onChange(periode?.foreldelsesfrist || '');
-        skjema.felter.oppdagelsesdato.onChange(periode?.oppdagelsesdato || '');
+        skjema.felter.foreldelsesfrist.onChange(
+            periode?.foreldelsesfrist ? isoStringTilDate(periode.foreldelsesfrist) : undefined
+        );
+        skjema.felter.oppdagelsesdato.onChange(
+            periode?.oppdagelsesdato ? isoStringTilDate(periode.oppdagelsesdato) : undefined
+        );
     }, [periode]);
 
     const erForeldet =
@@ -193,53 +197,25 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                 <Column md="5">
                     {erMedTilleggsfrist && (
                         <>
-                            <FTDatovelger
-                                id="oppdagelsesDato"
-                                label={'Dato for når feilutbetaling ble oppdaget'}
-                                description={'Datoen kommer i vedtaksbrevet'}
-                                erLesesvisning={erLesevisning}
-                                onChange={(nyDato?: string) => {
-                                    skjema.felter.oppdagelsesdato.validerOgSettFelt(
-                                        nyDato ? nyDato : ''
-                                    );
-                                }}
-                                value={skjema.felter.oppdagelsesdato.verdi}
-                                limitations={{
-                                    maxDate: new Date().toISOString(),
-                                }}
-                                placeholder={datoformatNorsk.DATO}
-                                feil={
-                                    ugyldigOppdagelsesdatoValgt
-                                        ? skjema.felter.oppdagelsesdato.feilmelding?.toString()
-                                        : ''
-                                }
+                            <Datovelger
+                                felt={skjema.felter.oppdagelsesdato}
+                                label="Dato for når feilutbetaling ble oppdaget"
+                                description="Datoen kommer i vedtaksbrevet"
+                                visFeilmeldinger={ugyldigOppdagelsesdatoValgt}
+                                readOnly={erLesevisning}
+                                kanKunVelgeFortid
                             />
                             <Spacer20 />
                         </>
                     )}
                     {(erForeldet || erMedTilleggsfrist) && (
                         <>
-                            <FTDatovelger
-                                id="foreldelsesfrist"
+                            <Datovelger
+                                felt={skjema.felter.foreldelsesfrist}
                                 label="Foreldelsesfrist"
-                                description={
-                                    !erMedTilleggsfrist
-                                        ? 'Datoen kommer i vedtaksbrevet'
-                                        : undefined
-                                }
-                                erLesesvisning={erLesevisning}
-                                onChange={(nyDato?: string) => {
-                                    skjema.felter.foreldelsesfrist.validerOgSettFelt(
-                                        nyDato ? nyDato : ''
-                                    );
-                                }}
-                                value={skjema.felter.foreldelsesfrist.verdi}
-                                placeholder={datoformatNorsk.DATO}
-                                feil={
-                                    ugyldigForeldelsesfristValgt
-                                        ? skjema.felter.foreldelsesfrist.feilmelding?.toString()
-                                        : ''
-                                }
+                                description={!erMedTilleggsfrist && 'Datoen kommer i vedtaksbrevet'}
+                                visFeilmeldinger={ugyldigForeldelsesfristValgt}
+                                readOnly={erLesevisning}
                             />
                             <Spacer8 />
                             {!erLesevisning && (

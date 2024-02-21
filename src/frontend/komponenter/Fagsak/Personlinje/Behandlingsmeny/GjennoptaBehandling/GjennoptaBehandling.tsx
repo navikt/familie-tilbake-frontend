@@ -16,14 +16,12 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
     const [visModal, settVisModal] = React.useState<boolean>(false);
 
     const { hentBehandlingMedBehandlingId } = useBehandling();
-    const { feilmelding, onOkTaAvVent, nullstillSkjema } = usePåVentBehandling(
-        (suksess: boolean) => {
-            settVisModal(false);
-            if (suksess) {
-                hentBehandlingMedBehandlingId(behandling.behandlingId);
-            }
+    const { feilmelding, onOkTaAvVent } = usePåVentBehandling((suksess: boolean) => {
+        settVisModal(false);
+        if (suksess) {
+            hentBehandlingMedBehandlingId(behandling.behandlingId);
         }
-    );
+    });
 
     return (
         <>
@@ -45,7 +43,6 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                     portal={true}
                     width="small"
                     onClose={() => {
-                        nullstillSkjema();
                         settVisModal(false);
                     }}
                 >

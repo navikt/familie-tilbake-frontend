@@ -6,9 +6,10 @@ import {
     Vilkårsresultat,
 } from '../kodeverk';
 import { Vergetype } from '../kodeverk/verge';
-import { Behandlingresultat, Behandlingssteg } from './behandling';
+import { Behandlingresultat, Behandlingssteg, Venteårsak } from './behandling';
 import { IBrevmottaker } from './Brevmottaker';
 import { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
+import { IsoDatoString } from '../utils/dato';
 
 export interface PeriodeFaktaStegPayload {
     periode: Periode;
@@ -125,4 +126,9 @@ export interface HenleggBehandlingPaylod {
     behandlingsresultatstype: Behandlingresultat;
     begrunnelse: string;
     fritekst: string;
+}
+
+export interface IRestSettPåVent {
+    venteårsak: Venteårsak;
+    tidsfrist: IsoDatoString;
 }

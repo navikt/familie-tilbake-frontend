@@ -8,8 +8,9 @@ import {
 } from '@navikt/familie-skjema';
 
 import { Foreldelsevurdering } from '../../../../kodeverk';
-import { erFeltetEmpty, validerDatoFelt, validerTekstFeltMaksLengde } from '../../../../utils';
+import { erFeltetEmpty, validerGyldigDato, validerTekstFeltMaksLengde } from '../../../../utils';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+import { dateTilIsoDatoStringEllerUndefined } from '../../../../utils/dato';
 
 const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter) => {
     return (
@@ -36,21 +37,21 @@ const useForeldelsePeriodeSkjema = (
         },
     });
 
-    const foreldelsesfrist = useFelt<string | ''>({
-        verdi: '',
+    const foreldelsesfrist = useFelt<Date | undefined>({
+        verdi: undefined,
         avhengigheter: { foreldelsesvurderingstype },
-        valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
+        valideringsfunksjon: (felt: FeltState<Date | undefined>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltForeldelsesfrist(avhengigheter)) return ok(felt);
-            return validerDatoFelt(felt);
+            return validerGyldigDato(felt);
         },
     });
 
-    const oppdagelsesdato = useFelt<string | ''>({
-        verdi: '',
+    const oppdagelsesdato = useFelt<Date | undefined>({
+        verdi: undefined,
         avhengigheter: { foreldelsesvurderingstype },
-        valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
+        valideringsfunksjon: (felt: FeltState<Date | undefined>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltOppdagelsesdato(avhengigheter)) return ok(felt);
-            return validerDatoFelt(felt);
+            return validerGyldigDato(felt);
         },
     });
 
@@ -58,8 +59,8 @@ const useForeldelsePeriodeSkjema = (
         {
             begrunnelse: string | '';
             foreldelsesvurderingstype: Foreldelsevurdering | '';
-            foreldelsesfrist: string | '';
-            oppdagelsesdato: string | '';
+            foreldelsesfrist: Date | undefined;
+            oppdagelsesdato: Date | undefined;
         },
         string
     >({
@@ -82,10 +83,15 @@ const useForeldelsePeriodeSkjema = (
             oppdaterPeriode({
                 ...periode,
                 begrunnelse: skjema.felter.begrunnelse.verdi,
-                //@ts-ignore
-                foreldelsesvurderingstype: skjema.felter.foreldelsesvurderingstype.verdi,
-                foreldelsesfrist: skjema.felter.foreldelsesfrist.verdi,
-                oppdagelsesdato: skjema.felter.oppdagelsesdato.verdi,
+                foreldelsesvurderingstype: skjema.felter.foreldelsesvurderingstype.verdi
+                    ? skjema.felter.foreldelsesvurderingstype.verdi
+                    : undefined,
+                foreldelsesfrist: dateTilIsoDatoStringEllerUndefined(
+                    skjema.felter.foreldelsesfrist.verdi
+                ),
+                oppdagelsesdato: dateTilIsoDatoStringEllerUndefined(
+                    skjema.felter.oppdagelsesdato.verdi
+                ),
             });
             nullstillSkjema();
         }
