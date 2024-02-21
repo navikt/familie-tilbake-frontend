@@ -1,31 +1,16 @@
 import * as React from 'react';
 
-import { styled } from 'styled-components';
-
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-
-import { BodyLong, Heading } from '@navikt/ds-react';
-import { ABorderWarning } from '@navikt/ds-tokens/dist/tokens';
+import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';
 
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
+import { styled } from 'styled-components';
 
-const StyledEkspanderbartpanel = styled(Ekspanderbartpanel)`
-    &.panel {
-        border: 1px solid black;
-        padding: 1px 1px 1px 1px;
-    }
-
-    &.panelMedGulmarkering {
-        border: 1px solid black;
-        border-left-color: ${ABorderWarning};
-        border-left-width: 5px;
-        padding: 1px 1px 1px 1px;
-    }
+const StyledExpansionCard = styled(ExpansionCard)<{ $påkrevdFritekstIkkeOppfylt: boolean }>`
+    margin-bottom: 1rem;
 `;
-
 const skalVisesÅpen = (avsnitt: AvsnittSkjemaData) => {
     if (avsnitt.avsnittstype === Avsnittstype.OPPSUMMERING) {
         return avsnitt.underavsnittsliste.some(
@@ -73,17 +58,16 @@ const AvsnittSkjema: React.FC<IProps> = ({
     }, [avsnitt]);
 
     return (
-        <>
-            <StyledEkspanderbartpanel
-                tittel={avsnitt.overskrift ? avsnitt.overskrift : ''}
-                apen={!erLesevisning && åpen}
-                className={
-                    !erLesevisning && harPåkrevetFritekstMenIkkeUtfylt
-                        ? 'panelMedGulmarkering'
-                        : 'panel'
-                }
-                onClick={() => settÅpen(!åpen)}
-            >
+        <StyledExpansionCard
+            open={!erLesevisning && åpen}
+            onToggle={() => settÅpen(!åpen)}
+            aria-label={avsnitt.overskrift ?? 'ekspanderbart panel'}
+            size="small"
+        >
+            <ExpansionCard.Header>
+                <ExpansionCard.Title size="small">{avsnitt.overskrift ?? ''}</ExpansionCard.Title>
+            </ExpansionCard.Header>
+            <ExpansionCard.Content>
                 {avsnitt.underavsnittsliste.map(underavsnitt => {
                     return (
                         <React.Fragment
@@ -114,9 +98,8 @@ const AvsnittSkjema: React.FC<IProps> = ({
                         </React.Fragment>
                     );
                 })}
-            </StyledEkspanderbartpanel>
-            <Spacer8 />
-        </>
+            </ExpansionCard.Content>
+        </StyledExpansionCard>
     );
 };
 
