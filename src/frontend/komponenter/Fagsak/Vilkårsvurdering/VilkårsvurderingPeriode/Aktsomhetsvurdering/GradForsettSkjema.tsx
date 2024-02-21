@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 import { Column, Row } from 'nav-frontend-grid';
 
 import { BodyShort, Label } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { type ISkjema } from '@navikt/familie-skjema';
 
 import { Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
@@ -28,10 +28,6 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const erValgtResultatTypeForstoBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
 
-    const ugyldigIlleggRenterValgt =
-        skjema.visFeilmeldinger &&
-        skjema.felter.forstoIlleggeRenter.valideringsstatus === Valideringsstatus.FEIL;
-
     const forstoBurdeForståttOffset = erValgtResultatTypeForstoBurdeForstått ? 340 : 385;
 
     return (
@@ -52,7 +48,7 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                 erLesevisning={erLesevisning}
                                 kanIlleggeRenter={kanIlleggeRenter}
                                 skjemafelt={skjema.felter.forstoIlleggeRenter}
-                                ugyldigIlleggRenterValgt={ugyldigIlleggRenterValgt}
+                                visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
                             />
                         </Column>
                     </Row>

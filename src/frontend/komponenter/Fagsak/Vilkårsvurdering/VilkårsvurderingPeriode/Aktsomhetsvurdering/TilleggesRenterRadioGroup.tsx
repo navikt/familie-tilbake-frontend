@@ -3,18 +3,19 @@ import { BodyShort, Label, Radio } from '@navikt/ds-react';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { JaNeiOption, jaNeiOptions } from '../VilkårsvurderingPeriodeSkjemaContext';
 import type { Felt } from '@navikt/familie-skjema';
+import { Valideringsstatus } from '@navikt/familie-skjema';
 
 interface IProps {
     erLesevisning: boolean;
     kanIlleggeRenter: boolean;
     skjemafelt: Felt<JaNeiOption | ''>;
-    ugyldigIlleggRenterValgt: boolean;
+    visFeilmeldingerForSkjema: boolean;
 }
 const TilleggesRenterRadioGroup: React.FC<IProps> = ({
     erLesevisning,
     kanIlleggeRenter,
     skjemafelt,
-    ugyldigIlleggRenterValgt,
+    visFeilmeldingerForSkjema,
 }) => {
     return (
         <>
@@ -28,7 +29,11 @@ const TilleggesRenterRadioGroup: React.FC<IProps> = ({
                     id="skalDetTilleggesRenter"
                     legend={'Skal det tillegges renter?'}
                     value={skjemafelt.verdi}
-                    error={ugyldigIlleggRenterValgt ? skjemafelt.feilmelding?.toString() : ''}
+                    error={
+                        visFeilmeldingerForSkjema &&
+                        skjemafelt.valideringsstatus === Valideringsstatus.FEIL &&
+                        skjemafelt.feilmelding
+                    }
                     marginbottom="none"
                     onChange={(val: JaNeiOption) => skjemafelt.validerOgSettFelt(val)}
                 >

@@ -57,10 +57,6 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
         skjema.visFeilmeldinger &&
         skjema.felter.harGrunnerTilReduksjon.valideringsstatus === Valideringsstatus.FEIL;
 
-    const ugyldigIlleggRenterValgt =
-        skjema.visFeilmeldinger &&
-        skjema.felter.grovtUaktsomIlleggeRenter.valideringsstatus === Valideringsstatus.FEIL;
-
     const beskjedTilbakekreves = harMerEnnEnAktivitet
         ? formatCurrencyNoKr(valgtPeriode?.feilutbetaltBeløp)
         : '100 %';
@@ -227,7 +223,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                 erLesevisning={erLesevisning}
                                 kanIlleggeRenter={kanIlleggeRenter}
                                 skjemafelt={skjema.felter.grovtUaktsomIlleggeRenter}
-                                ugyldigIlleggRenterValgt={ugyldigIlleggRenterValgt}
+                                visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
                             />
                         )}
                     </Row>
