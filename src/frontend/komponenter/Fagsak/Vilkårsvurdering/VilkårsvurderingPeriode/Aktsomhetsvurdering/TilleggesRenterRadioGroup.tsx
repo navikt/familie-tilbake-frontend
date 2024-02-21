@@ -8,13 +8,13 @@ import { Valideringsstatus } from '@navikt/familie-skjema';
 interface IProps {
     erLesevisning: boolean;
     kanIlleggeRenter: boolean;
-    skjemafelt: Felt<JaNeiOption | ''>;
+    felt: Felt<JaNeiOption | ''>;
     visFeilmeldingerForSkjema: boolean;
 }
 const TilleggesRenterRadioGroup: React.FC<IProps> = ({
     erLesevisning,
     kanIlleggeRenter,
-    skjemafelt,
+    felt,
     visFeilmeldingerForSkjema,
 }) => {
     return (
@@ -22,20 +22,20 @@ const TilleggesRenterRadioGroup: React.FC<IProps> = ({
             {erLesevisning || !kanIlleggeRenter ? (
                 <>
                     <Label>Skal det tillegges renter?</Label>
-                    <BodyShort>{skjemafelt.verdi && skjemafelt.verdi.label}</BodyShort>
+                    <BodyShort>{felt.verdi && felt.verdi.label}</BodyShort>
                 </>
             ) : (
                 <HorisontalRadioGroup
                     id="skalDetTilleggesRenter"
                     legend={'Skal det tillegges renter?'}
-                    value={skjemafelt.verdi}
+                    value={felt.verdi}
                     error={
                         visFeilmeldingerForSkjema &&
-                        skjemafelt.valideringsstatus === Valideringsstatus.FEIL &&
-                        skjemafelt.feilmelding
+                        felt.valideringsstatus === Valideringsstatus.FEIL &&
+                        felt.feilmelding
                     }
                     marginbottom="none"
-                    onChange={(val: JaNeiOption) => skjemafelt.validerOgSettFelt(val)}
+                    onChange={(val: JaNeiOption) => felt.validerOgSettFelt(val)}
                 >
                     {jaNeiOptions.map(opt => (
                         <Radio

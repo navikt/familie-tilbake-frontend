@@ -222,7 +222,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                             <TilleggesRenterRadioGroup
                                 erLesevisning={erLesevisning}
                                 kanIlleggeRenter={kanIlleggeRenter}
-                                skjemafelt={skjema.felter.grovtUaktsomIlleggeRenter}
+                                felt={skjema.felter.grovtUaktsomIlleggeRenter}
                                 visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
                             />
                         )}

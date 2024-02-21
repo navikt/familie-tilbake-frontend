@@ -47,7 +47,7 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                             <TilleggesRenterRadioGroup
                                 erLesevisning={erLesevisning}
                                 kanIlleggeRenter={kanIlleggeRenter}
-                                skjemafelt={skjema.felter.forstoIlleggeRenter}
+                                felt={skjema.felter.forstoIlleggeRenter}
                                 visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
                             />
                         </Column>
