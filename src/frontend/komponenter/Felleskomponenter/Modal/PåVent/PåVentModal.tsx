@@ -35,7 +35,7 @@ interface IProps {
 }
 
 const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => {
-    const { skjema, onBekreft, nullstillSkjema, feilmelding } = usePåVentBehandling(
+    const { skjema, onBekreft, tilbakestillFelterTilDefault, feilmelding } = usePåVentBehandling(
         onClose,
         ventegrunn
     );
@@ -135,7 +135,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     variant="tertiary"
                     key={'avbryt'}
                     onClick={() => {
-                        nullstillSkjema();
+                        tilbakestillFelterTilDefault();
                         onClose();
                     }}
                     size="small"

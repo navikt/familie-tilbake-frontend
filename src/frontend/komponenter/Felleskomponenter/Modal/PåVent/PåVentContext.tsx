@@ -47,11 +47,19 @@ export const usePåVentBehandling = (
 
     if (ventegrunn !== forrigeVentegrunn) {
         settForrigeVentegrunn(ventegrunn);
-        nullstillSkjema();
         skjema.felter.tidsfrist.validerOgSettFelt(
             ventegrunn?.tidsfrist ? isoStringTilDate(ventegrunn.tidsfrist) : undefined
         );
     }
+
+    const tilbakestillFelterTilDefault = () => {
+        console.log('nullstiller');
+        console.log(ventegrunn);
+        nullstillSkjema();
+        skjema.felter.tidsfrist.validerOgSettFelt(
+            ventegrunn?.tidsfrist ? isoStringTilDate(ventegrunn.tidsfrist) : undefined
+        );
+    };
 
     const onBekreft = (behandlingId: string) => {
         if (kanSendeSkjema() && skjema.felter.årsak.verdi && skjema.felter.tidsfrist.verdi) {
@@ -108,5 +116,6 @@ export const usePåVentBehandling = (
         nullstillSkjema,
         onBekreft,
         onOkTaAvVent,
+        tilbakestillFelterTilDefault,
     };
 };

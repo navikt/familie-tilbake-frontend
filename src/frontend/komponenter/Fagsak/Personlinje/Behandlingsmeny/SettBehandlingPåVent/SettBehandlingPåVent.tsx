@@ -25,7 +25,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
 
-    const { skjema, onBekreft, nullstillSkjema, feilmelding } = usePåVentBehandling(
+    const { skjema, onBekreft, feilmelding, tilbakestillFelterTilDefault } = usePåVentBehandling(
         (suksess: boolean) => {
             settVisModal(false);
             if (suksess) {
@@ -38,6 +38,11 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
     const ugyldigDatoValgt =
         skjema.visFeilmeldinger &&
         skjema.felter.tidsfrist.valideringsstatus === Valideringsstatus.FEIL;
+
+    const lukkModal = () => {
+        tilbakestillFelterTilDefault();
+        settVisModal(false);
+    };
 
     return (
         <>
@@ -61,9 +66,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                     }}
                     portal={true}
                     width="small"
-                    onClose={() => {
-                        settVisModal(false);
-                    }}
+                    onClose={lukkModal}
                 >
                     <Modal.Body>
                         <Datovelger
@@ -110,10 +113,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                         <FTButton
                             variant="tertiary"
                             key={'avbryt'}
-                            onClick={() => {
-                                nullstillSkjema();
-                                settVisModal(false);
-                            }}
+                            onClick={lukkModal}
                             size="small"
                         >
                             Avbryt
