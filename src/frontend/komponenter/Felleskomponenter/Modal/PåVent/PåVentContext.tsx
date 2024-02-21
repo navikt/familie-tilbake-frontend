@@ -53,8 +53,6 @@ export const usePåVentBehandling = (
     }
 
     const tilbakestillFelterTilDefault = () => {
-        console.log('nullstiller');
-        console.log(ventegrunn);
         nullstillSkjema();
         skjema.felter.tidsfrist.validerOgSettFelt(
             ventegrunn?.tidsfrist ? isoStringTilDate(ventegrunn.tidsfrist) : undefined
