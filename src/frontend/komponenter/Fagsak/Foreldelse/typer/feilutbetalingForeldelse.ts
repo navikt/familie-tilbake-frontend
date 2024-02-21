@@ -6,5 +6,5 @@ export interface ForeldelsePeriodeSkjemeData extends IPeriodeSkjemaData {
     foreldelsesvurderingstype?: Foreldelsevurdering;
     begrunnelse?: string;
     foreldelsesfrist?: IsoDatoString;
-    oppdagelsesdato?: string;
+    oppdagelsesdato?: IsoDatoString;
 }
