@@ -83,8 +83,9 @@ const useForeldelsePeriodeSkjema = (
             oppdaterPeriode({
                 ...periode,
                 begrunnelse: skjema.felter.begrunnelse.verdi,
-                //@ts-ignore
-                foreldelsesvurderingstype: skjema.felter.foreldelsesvurderingstype.verdi,
+                foreldelsesvurderingstype: skjema.felter.foreldelsesvurderingstype.verdi
+                    ? skjema.felter.foreldelsesvurderingstype.verdi
+                    : undefined,
                 foreldelsesfrist: dateTilIsoDatoStringEllerUndefined(
                     skjema.felter.foreldelsesfrist.verdi
                 ),
