@@ -21,6 +21,7 @@ import {
     OptionNEI,
     VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
+import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 
 const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;
@@ -221,44 +222,14 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                 <BodyShort>{beskjedTilbakekreves}</BodyShort>
                             )}
                         </Column>
-                        {erGrovtUaktsomhet &&
-                            (erLesevisning || !kanIlleggeRenter ? (
-                                <>
-                                    <Label>Skal det tillegges renter?</Label>
-                                    <BodyShort>
-                                        {skjema.felter.grovtUaktsomIlleggeRenter.verdi &&
-                                            skjema.felter.grovtUaktsomIlleggeRenter.verdi.label}
-                                    </BodyShort>
-                                </>
-                            ) : (
-                                <HorisontalRadioGroup
-                                    id="skalDetTilleggesRenter"
-                                    legend={'Skal det tillegges renter?'}
-                                    value={skjema.felter.grovtUaktsomIlleggeRenter.verdi}
-                                    error={
-                                        ugyldigIlleggRenterValgt
-                                            ? skjema.felter.grovtUaktsomIlleggeRenter.feilmelding?.toString()
-                                            : ''
-                                    }
-                                    margin-bottom="none"
-                                    onChange={(val: JaNeiOption) =>
-                                        skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(
-                                            val
-                                        )
-                                    }
-                                >
-                                    {jaNeiOptions.map(opt => (
-                                        <Radio
-                                            key={opt.label}
-                                            name="skalDetTilleggesRenter"
-                                            data-testid={`skalDetTilleggesRenter_${opt.label}`}
-                                            value={opt}
-                                        >
-                                            {opt.label}
-                                        </Radio>
-                                    ))}
-                                </HorisontalRadioGroup>
-                            ))}
+                        {erGrovtUaktsomhet && (
+                            <TilleggesRenterRadioGroup
+                                erLesevisning={erLesevisning}
+                                kanIlleggeRenter={kanIlleggeRenter}
+                                skjemafelt={skjema.felter.grovtUaktsomIlleggeRenter}
+                                ugyldigIlleggRenterValgt={ugyldigIlleggRenterValgt}
+                            />
+                        )}
                     </Row>
                 </ArrowBox>
             )}
