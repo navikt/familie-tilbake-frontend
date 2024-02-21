@@ -105,7 +105,8 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
                 name: 'Bekreft',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(1);
 
         await user.type(getByLabelText('Vurdering'), 'begrunnelse');
         await user.type(
@@ -113,7 +114,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
                 selector: 'input',
                 exact: false,
             }),
-            '2020-09-14'
+            '14.09.2020'
         );
 
         await user.click(
@@ -121,6 +122,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
                 name: 'Bekreft',
             })
         );
+        expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
@@ -155,7 +157,8 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
                 name: 'Bekreft',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(3);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(2);
 
         await user.type(getByLabelText('Vurdering'), 'begrunnelse');
         await user.type(
@@ -163,9 +166,9 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
                 selector: 'input',
                 exact: false,
             }),
-            '2020-09-14'
+            '14.09.2020'
         );
-        await user.type(getByLabelText('Dato for når feilutbetaling ble oppdaget'), '2020-06-14');
+        await user.type(getByLabelText('Dato for når feilutbetaling ble oppdaget'), '14.06.2020');
 
         await user.click(
             getByRole('button', {
@@ -173,6 +176,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
     });
 
     test('- åpner vurdert periode med tilleggsfrist ', () => {

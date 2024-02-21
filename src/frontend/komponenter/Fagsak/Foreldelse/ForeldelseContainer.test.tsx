@@ -43,6 +43,8 @@ describe('Tester: ForeldelseContainer', () => {
             },
             foreldelsesvurderingstype: undefined,
             begrunnelse: undefined,
+            foreldelsesfrist: undefined,
+            oppdagelsesdato: undefined,
         },
         {
             feilutbetaltBeløp: 1333,
@@ -52,6 +54,8 @@ describe('Tester: ForeldelseContainer', () => {
             },
             foreldelsesvurderingstype: undefined,
             begrunnelse: undefined,
+            foreldelsesfrist: undefined,
+            oppdagelsesdato: undefined,
         },
     ];
 
@@ -300,7 +304,7 @@ describe('Tester: ForeldelseContainer', () => {
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, queryByText, queryByRole } = render(
+        const { getByText, getByRole, queryByText, queryByRole, getByLabelText } = render(
             <FeilutbetalingForeldelseProvider behandling={behandling} fagsak={fagsak}>
                 <ForeldelseContainer behandling={behandling} />
             </FeilutbetalingForeldelseProvider>
@@ -340,7 +344,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         expect(getByText('Begrunnelse 1')).toBeTruthy();
         expect(getByText('Perioden er foreldet')).toBeTruthy();
-        expect(getByText('01.01.2021')).toBeTruthy();
+        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
 
         await user.click(
             getByRole('button', {
@@ -354,8 +358,10 @@ describe('Tester: ForeldelseContainer', () => {
         expect(
             getByText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
         ).toBeTruthy();
-        expect(getByText('01.01.2021')).toBeTruthy();
-        expect(getByText('24.12.2020')).toBeTruthy();
+        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
+        expect(getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
+            '24.12.2020'
+        );
 
         expect(
             queryByRole('button', {
