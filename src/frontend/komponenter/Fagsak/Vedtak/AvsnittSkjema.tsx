@@ -59,7 +59,7 @@ const AvsnittSkjema: React.FC<IProps> = ({
 
     return (
         <StyledExpansionCard
-            open={!erLesevisning && åpen}
+            open={åpen}
             onToggle={() => settÅpen(!åpen)}
             aria-label={avsnitt.overskrift ?? 'ekspanderbart panel'}
             size="small"

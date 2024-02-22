@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -612,10 +612,19 @@ describe('Tester: VedtakContainer', () => {
         ).toBeFalsy();
 
         await user.click(
-            getByRole('button', {
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                })
+            ).getByRole('button')
+        );
+
+        expect(
+            getByRole('region', {
                 name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
             })
-        );
+        ).toHaveClass('navds-expansioncard--open');
+
         expect(
             getAllByRole('button', {
                 name: 'Legg til utdypende tekst Legg til utdypende tekst',
@@ -700,7 +709,7 @@ describe('Tester: VedtakContainer', () => {
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, getByTestId, queryByRole, queryByTestId } = render(
+        const { getByText, getByRole, getByTestId, queryByRole } = render(
             <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
                 <VedtakContainer behandling={behandling} fagsak={fagsak} />
             </FeilutbetalingVedtakProvider>
@@ -732,19 +741,44 @@ describe('Tester: VedtakContainer', () => {
             getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
         ).toBeTruthy();
 
-        expect(queryByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0')).toBeFalsy();
-        expect(queryByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0')).toBeFalsy();
-
-        await user.click(
-            getByRole('button', {
+        expect(
+            getByRole('region', {
                 name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
             })
-        );
-        await user.click(
-            getByRole('button', {
+        ).not.toHaveClass('navds-expansioncard--open');
+
+        expect(
+            getByRole('region', {
                 name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
             })
+        ).not.toHaveClass('navds-expansioncard--open');
+
+        await user.click(
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+                })
+            ).getByRole('button')
         );
+        await user.click(
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                })
+            ).getByRole('button')
+        );
+
+        expect(
+            getByRole('region', {
+                name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+            })
+        ).toHaveClass('navds-expansioncard--open');
+
+        expect(
+            getByRole('region', {
+                name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+            })
+        ).toHaveClass('navds-expansioncard--open');
 
         expect(getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0')).toHaveValue(
             'Denne friteksten var påkrevet'
@@ -801,7 +835,7 @@ describe('Tester: VedtakContainer', () => {
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, queryByRole, queryByTestId } = render(
+        const { getByText, getByRole, queryByRole } = render(
             <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
                 <VedtakContainer behandling={behandling} fagsak={fagsak} />
             </FeilutbetalingVedtakProvider>
@@ -833,19 +867,57 @@ describe('Tester: VedtakContainer', () => {
             getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
         ).toBeTruthy();
 
-        expect(queryByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0')).toBeFalsy();
-        expect(queryByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0')).toBeFalsy();
-
-        await user.click(
-            getByRole('button', {
+        expect(
+            getByRole('region', {
                 name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
             })
-        );
-        await user.click(
-            getByRole('button', {
+        ).not.toHaveClass('navds-expansioncard--open');
+
+        expect(
+            getByRole('region', {
                 name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
             })
+        ).not.toHaveClass('navds-expansioncard--open');
+
+        await user.click(
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+                })
+            ).getByRole('button')
         );
+
+        expect(
+            getByRole('region', {
+                name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+            })
+        ).toHaveClass('navds-expansioncard--open');
+
+        expect(
+            getByRole('region', {
+                name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+            })
+        ).not.toHaveClass('navds-expansioncard--open');
+
+        await user.click(
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                })
+            ).getByRole('button')
+        );
+
+        expect(
+            getByRole('region', {
+                name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+            })
+        ).toHaveClass('navds-expansioncard--open');
+
+        expect(
+            getByRole('region', {
+                name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+            })
+        ).toHaveClass('navds-expansioncard--open');
 
         expect(getByText('Denne friteksten var påkrevet')).toBeTruthy();
         expect(getByText('Denne friteksten var lagt til ekstra')).toBeTruthy();
