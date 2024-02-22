@@ -9,31 +9,31 @@ import VedtakFritekstSkjema from './VedtakFritekstSkjema';
 import { css, styled } from 'styled-components';
 import { ABorderWarning } from '@navikt/ds-tokens/dist/tokens';
 
-const StyledExpansionCard = styled(ExpansionCard)<{ $påkrevdFritekstIkkeOppfylt: boolean }>`
+const StyledExpansionCard = styled(ExpansionCard)`
     margin-bottom: 1rem;
 `;
 
-const stylingVenstreKantlinje = css`
+const stylingWarningKantlinje = css`
     border-left-color: ${ABorderWarning};
     border-left-width: 5px;
 `;
 
 const StyledExpansionHeader = styled(ExpansionCard.Header)<{
-    $påkrevdFritekstIkkeOppfylt: boolean;
+    $visWarningKantlinje: boolean;
 }>`
     ${props => {
-        if (props.$påkrevdFritekstIkkeOppfylt) {
-            return stylingVenstreKantlinje;
+        if (props.$visWarningKantlinje) {
+            return stylingWarningKantlinje;
         }
     }}
 `;
 
 const StyledExpansionContent = styled(ExpansionCard.Content)<{
-    $påkrevdFritekstIkkeOppfylt: boolean;
+    $visWarningKantlinje: boolean;
 }>`
     ${props => {
-        if (props.$påkrevdFritekstIkkeOppfylt) {
-            return stylingVenstreKantlinje;
+        if (props.$visWarningKantlinje) {
+            return stylingWarningKantlinje;
         }
     }}
 `;
@@ -91,12 +91,12 @@ const AvsnittSkjema: React.FC<IProps> = ({
             size="small"
         >
             <StyledExpansionHeader
-                $påkrevdFritekstIkkeOppfylt={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
+                $visWarningKantlinje={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
             >
                 <ExpansionCard.Title size="small">{avsnitt.overskrift ?? ''}</ExpansionCard.Title>
             </StyledExpansionHeader>
             <StyledExpansionContent
-                $påkrevdFritekstIkkeOppfylt={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
+                $visWarningKantlinje={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
             >
                 {avsnitt.underavsnittsliste.map(underavsnitt => {
                     return (
