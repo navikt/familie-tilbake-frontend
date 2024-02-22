@@ -2,12 +2,11 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Column, Row } from 'nav-frontend-grid';
-
 import {
     BodyLong,
     ErrorMessage,
     Heading,
+    HGrid,
     Loader,
     Select,
     Textarea,
@@ -23,6 +22,10 @@ import { useVerge } from './VergeContext';
 
 const StyledVerge = styled.div`
     padding: 10px;
+`;
+
+const Container = styled.div`
+    max-width: 30rem;
 `;
 
 const VergeContainer: React.FC = () => {
@@ -55,7 +58,7 @@ const VergeContainer: React.FC = () => {
                     />
                 </div>
             ) : (
-                <>
+                <Container>
                     {erAutoutført && (
                         <BodyLong size="small" spacing>
                             Automatisk vurdert. Verge er kopiert fra fagsystemet.
@@ -66,99 +69,83 @@ const VergeContainer: React.FC = () => {
                         infotekst={'Fyll ut og kontroller vergeopplysninger'}
                     />
                     <Spacer20 />
-                    <Row>
-                        <Column sm="12" md="6" lg="3">
-                            <Select
-                                {...skjema.felter.vergetype.hentNavInputProps(
-                                    skjema.visFeilmeldinger
-                                )}
-                                id="vergeType"
-                                label={'Vergetype'}
-                                readOnly={erLesevisning}
-                                value={skjema.felter.vergetype.verdi}
-                                onChange={event => onChangeVergeType(event)}
-                            >
-                                <option disabled={true} value={''}>
-                                    Velg vergetype
+                    <Select
+                        {...skjema.felter.vergetype.hentNavInputProps(skjema.visFeilmeldinger)}
+                        id="vergeType"
+                        label={'Vergetype'}
+                        readOnly={erLesevisning}
+                        value={skjema.felter.vergetype.verdi}
+                        onChange={event => onChangeVergeType(event)}
+                    >
+                        <option disabled={true} value={''}>
+                            Velg vergetype
+                        </option>
+                        {Object.values(Vergetype)
+                            .filter(type => type !== Vergetype.UDEFINERT)
+                            .map(opt => (
+                                <option key={opt} value={opt}>
+                                    {vergetyper[opt]}
                                 </option>
-                                {Object.values(Vergetype)
-                                    .filter(type => type !== Vergetype.UDEFINERT)
-                                    .map(opt => (
-                                        <option key={opt} value={opt}>
-                                            {vergetyper[opt]}
-                                        </option>
-                                    ))}
-                            </Select>
-                        </Column>
-                    </Row>
+                            ))}
+                    </Select>
                     {vergetypeValgt && (
                         <>
                             <Spacer8 />
-                            <Row>
-                                <Column sm="12" md="6" lg="3">
+                            <HGrid columns={{ lg: 2, md: 1 }} gap="4">
+                                <TextField
+                                    {...skjema.felter.navn.hentNavInputProps(
+                                        skjema.visFeilmeldinger
+                                    )}
+                                    label={'Navn'}
+                                    readOnly={erLesevisning}
+                                    value={skjema.felter.navn.verdi}
+                                    onChange={event =>
+                                        skjema.felter.navn.validerOgSettFelt(event.target.value)
+                                    }
+                                />
+                                {skjema.felter.vergetype.verdi === Vergetype.ADVOKAT ? (
                                     <TextField
-                                        {...skjema.felter.navn.hentNavInputProps(
+                                        {...skjema.felter.organisasjonsnummer.hentNavInputProps(
                                             skjema.visFeilmeldinger
                                         )}
-                                        label={'Navn'}
+                                        label={'Organisasjonsnummer'}
                                         readOnly={erLesevisning}
-                                        value={skjema.felter.navn.verdi}
+                                        value={skjema.felter.organisasjonsnummer.verdi}
                                         onChange={event =>
-                                            skjema.felter.navn.validerOgSettFelt(event.target.value)
+                                            skjema.felter.organisasjonsnummer.validerOgSettFelt(
+                                                event.target.value
+                                            )
                                         }
                                     />
-                                </Column>
-                                <Column sm="12" md="6" lg="3">
-                                    {skjema.felter.vergetype.verdi === Vergetype.ADVOKAT ? (
-                                        <TextField
-                                            {...skjema.felter.organisasjonsnummer.hentNavInputProps(
-                                                skjema.visFeilmeldinger
-                                            )}
-                                            label={'Organisasjonsnummer'}
-                                            readOnly={erLesevisning}
-                                            value={skjema.felter.organisasjonsnummer.verdi}
-                                            onChange={event =>
-                                                skjema.felter.organisasjonsnummer.validerOgSettFelt(
-                                                    event.target.value
-                                                )
-                                            }
-                                        />
-                                    ) : (
-                                        <TextField
-                                            {...skjema.felter.fødselsnummer.hentNavInputProps(
-                                                skjema.visFeilmeldinger
-                                            )}
-                                            label={'Fødselsnummer'}
-                                            readOnly={erLesevisning}
-                                            value={skjema.felter.fødselsnummer.verdi}
-                                            onChange={event =>
-                                                skjema.felter.fødselsnummer.validerOgSettFelt(
-                                                    event.target.value
-                                                )
-                                            }
-                                        />
-                                    )}
-                                </Column>
-                            </Row>
+                                ) : (
+                                    <TextField
+                                        {...skjema.felter.fødselsnummer.hentNavInputProps(
+                                            skjema.visFeilmeldinger
+                                        )}
+                                        label={'Fødselsnummer'}
+                                        readOnly={erLesevisning}
+                                        value={skjema.felter.fødselsnummer.verdi}
+                                        onChange={event =>
+                                            skjema.felter.fødselsnummer.validerOgSettFelt(
+                                                event.target.value
+                                            )
+                                        }
+                                    />
+                                )}
+                            </HGrid>
                         </>
                     )}
                     <Spacer20 />
-                    <Row>
-                        <Column md="12" lg="6">
-                            <Textarea
-                                {...skjema.felter.begrunnelse.hentNavInputProps(
-                                    skjema.visFeilmeldinger
-                                )}
-                                label={'Begrunn endringene'}
-                                value={skjema.felter.begrunnelse.verdi}
-                                readOnly={erLesevisning}
-                                onChange={event =>
-                                    skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
-                                }
-                                maxLength={400}
-                            />
-                        </Column>
-                    </Row>
+                    <Textarea
+                        {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
+                        label={'Begrunn endringene'}
+                        value={skjema.felter.begrunnelse.verdi}
+                        readOnly={erLesevisning}
+                        onChange={event =>
+                            skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
+                        }
+                        maxLength={400}
+                    />
                     {feilmelding && (
                         <>
                             <Spacer8 />
@@ -168,22 +155,18 @@ const VergeContainer: React.FC = () => {
                         </>
                     )}
                     <Spacer20 />
-                    <Row>
-                        <Column xs="12" md="6">
-                            <Navigering>
-                                <div>
-                                    <FTButton
-                                        variant="primary"
-                                        onClick={sendInn}
-                                        disabled={erLesevisning && !stegErBehandlet}
-                                    >
-                                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                                    </FTButton>
-                                </div>
-                            </Navigering>
-                        </Column>
-                    </Row>
-                </>
+                    <Navigering>
+                        <div>
+                            <FTButton
+                                variant="primary"
+                                onClick={sendInn}
+                                disabled={erLesevisning && !stegErBehandlet}
+                            >
+                                {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                            </FTButton>
+                        </div>
+                    </Navigering>
+                </Container>
             )}
         </StyledVerge>
     );
