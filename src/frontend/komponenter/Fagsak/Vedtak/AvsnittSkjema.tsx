@@ -1,31 +1,42 @@
 import * as React from 'react';
 
-import { styled } from 'styled-components';
-
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-
-import { BodyLong, Heading } from '@navikt/ds-react';
-import { ABorderWarning } from '@navikt/ds-tokens/dist/tokens';
+import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';
 
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
+import { css, styled } from 'styled-components';
+import { ABorderWarning, ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
 
-const StyledEkspanderbartpanel = styled(Ekspanderbartpanel)`
-    &.panel {
-        border: 1px solid black;
-        padding: 1px 1px 1px 1px;
-    }
-
-    &.panelMedGulmarkering {
-        border: 1px solid black;
-        border-left-color: ${ABorderWarning};
-        border-left-width: 5px;
-        padding: 1px 1px 1px 1px;
-    }
+const StyledExpansionCard = styled(ExpansionCard)`
+    margin-bottom: ${ASpacing2};
 `;
 
+const stylingWarningKantlinje = css`
+    border-left-color: ${ABorderWarning};
+    border-left-width: 5px;
+`;
+
+const StyledExpansionHeader = styled(ExpansionCard.Header)<{
+    $visWarningKantlinje: boolean;
+}>`
+    ${props => {
+        if (props.$visWarningKantlinje) {
+            return stylingWarningKantlinje;
+        }
+    }}
+`;
+
+const StyledExpansionContent = styled(ExpansionCard.Content)<{
+    $visWarningKantlinje: boolean;
+}>`
+    ${props => {
+        if (props.$visWarningKantlinje) {
+            return stylingWarningKantlinje;
+        }
+    }}
+`;
 const skalVisesÅpen = (avsnitt: AvsnittSkjemaData) => {
     if (avsnitt.avsnittstype === Avsnittstype.OPPSUMMERING) {
         return avsnitt.underavsnittsliste.some(
@@ -73,16 +84,19 @@ const AvsnittSkjema: React.FC<IProps> = ({
     }, [avsnitt]);
 
     return (
-        <>
-            <StyledEkspanderbartpanel
-                tittel={avsnitt.overskrift ? avsnitt.overskrift : ''}
-                apen={!erLesevisning && åpen}
-                className={
-                    !erLesevisning && harPåkrevetFritekstMenIkkeUtfylt
-                        ? 'panelMedGulmarkering'
-                        : 'panel'
-                }
-                onClick={() => settÅpen(!åpen)}
+        <StyledExpansionCard
+            open={åpen}
+            onToggle={() => settÅpen(!åpen)}
+            aria-label={avsnitt.overskrift ?? 'ekspanderbart panel'}
+            size="small"
+        >
+            <StyledExpansionHeader
+                $visWarningKantlinje={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
+            >
+                <ExpansionCard.Title size="small">{avsnitt.overskrift ?? ''}</ExpansionCard.Title>
+            </StyledExpansionHeader>
+            <StyledExpansionContent
+                $visWarningKantlinje={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
             >
                 {avsnitt.underavsnittsliste.map(underavsnitt => {
                     return (
@@ -114,9 +128,8 @@ const AvsnittSkjema: React.FC<IProps> = ({
                         </React.Fragment>
                     );
                 })}
-            </StyledEkspanderbartpanel>
-            <Spacer8 />
-        </>
+            </StyledExpansionContent>
+        </StyledExpansionCard>
     );
 };
 

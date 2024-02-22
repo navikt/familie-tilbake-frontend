@@ -53,6 +53,6 @@ describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
             })
         ).toBeTruthy();
         expect(getByLabelText('Angi t.o.m. måned for første periode')).toBeTruthy();
-        expect(getByLabelText('Angi t.o.m. måned for første periode')).toHaveValue('30.04.2021');
+        expect(getByLabelText('Angi t.o.m. måned for første periode')).toHaveValue('april 2021');
     });
 });

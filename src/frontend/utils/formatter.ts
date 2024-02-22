@@ -1,31 +1,14 @@
 import type { IPerson } from '../typer/person';
-import { iDag, kalenderDato, kalenderDatoTilDate, kalenderDiff } from './kalender';
-
-export enum datoformat {
-    MÅNED = 'MM.YY',
-    DATO = 'DD.MM.YYYY',
-    DATO_FORKORTTET = 'DD.MM.YY',
-    DATO_FORLENGET = 'LL',
-    DATO_FORLENGET_MED_TID = 'LLL',
-    ISO_MÅNED = 'YYYY-MM',
-    ISO_DAG = 'YYYY-MM-DD',
-    DATO_TID = 'DD.MM.YY HH:mm',
-    DATO_TID_SEKUNDER = 'DD.MM.YY HH:mm:ss',
-    TID = 'HH:mm',
-    MÅNED_ÅR_NAVN = 'MMMM YYYY',
-    MÅNED_ÅR_KORTNAVN = 'MMM YYYY',
-    MÅNED_NAVN = 'MMM',
-}
+import { differenceInMilliseconds } from 'date-fns';
+import { dagensDato, isoStringTilDate } from './dato';
 
 export const millisekunderIEttÅr = 3.15576e10;
 
 export const hentAlder = (fødselsdato: string): number => {
     return fødselsdato !== ''
         ? Math.floor(
-              kalenderDiff(
-                  kalenderDatoTilDate(iDag()),
-                  kalenderDatoTilDate(kalenderDato(fødselsdato))
-              ) / millisekunderIEttÅr
+              differenceInMilliseconds(dagensDato, isoStringTilDate(fødselsdato)) /
+                  millisekunderIEttÅr
           )
         : 0;
 };

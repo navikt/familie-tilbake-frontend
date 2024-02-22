@@ -2,14 +2,15 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { BodyShort, Label, Modal } from '@navikt/ds-react';
+import { BodyShort, Label, Modal, MonthPicker, useMonthpicker } from '@navikt/ds-react';
 import { ABorderStrong, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { type Periode as TidslinjePeriode, Tidslinje } from '@navikt/familie-tidslinje';
 
 import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 import { formatterDatostring } from '../../../../utils';
 import { FTButton } from '../../Flytelementer';
-import { FixedDatovelger } from '../../Skjemaelementer';
+import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
+import { endOfMonth } from 'date-fns';
 
 const TidslinjeContainer = styled.div`
     border: 1px solid ${ABorderStrong};
@@ -43,6 +44,13 @@ export const DelOppPeriode: React.FC<IProps> = ({
     onSubmit,
     feilmelding,
 }) => {
+    const { monthpickerProps, inputProps } = useMonthpicker({
+        fromDate: isoStringTilDate(periode.periode.fom),
+        toDate: isoStringTilDate(periode.periode.tom),
+        defaultSelected: isoStringTilDate(splittDato),
+        onMonthChange: (dato?: Date) =>
+            onChangeDato(dato ? dateTilIsoDatoString(endOfMonth(dato)) : undefined),
+    });
     return (
         <>
             {visModal && (
@@ -68,17 +76,13 @@ export const DelOppPeriode: React.FC<IProps> = ({
                         <TidslinjeContainer>
                             <Tidslinje kompakt rader={tidslinjeRader} />
                         </TidslinjeContainer>
-                        <FixedDatovelger
-                            id={'splittDato'}
-                            value={splittDato}
-                            label={'Angi t.o.m. måned for første periode'}
-                            limitations={{
-                                minDate: periode.periode.fom,
-                                maxDate: periode.periode.tom,
-                            }}
-                            onChange={(nyVerdi?: string) => onChangeDato(nyVerdi)}
-                            feil={feilmelding}
-                        />
+                        <MonthPicker {...monthpickerProps} dropdownCaption>
+                            <MonthPicker.Input
+                                {...inputProps}
+                                label="Angi t.o.m. måned for første periode"
+                                error={feilmelding}
+                            />
+                        </MonthPicker>
                     </Modal.Body>
                     <Modal.Footer>
                         <FTButton
