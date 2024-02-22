@@ -6,10 +6,36 @@ import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
+import { ABorderWarning } from '@navikt/ds-tokens/dist/tokens';
 
 const StyledExpansionCard = styled(ExpansionCard)<{ $påkrevdFritekstIkkeOppfylt: boolean }>`
     margin-bottom: 1rem;
+`;
+
+const stylingVenstreKantlinje = css`
+    border-left-color: ${ABorderWarning};
+    border-left-width: 5px;
+`;
+
+const StyledExpansionHeader = styled(ExpansionCard.Header)<{
+    $påkrevdFritekstIkkeOppfylt: boolean;
+}>`
+    ${props => {
+        if (props.$påkrevdFritekstIkkeOppfylt) {
+            return stylingVenstreKantlinje;
+        }
+    }}
+`;
+
+const StyledExpansionContent = styled(ExpansionCard.Content)<{
+    $påkrevdFritekstIkkeOppfylt: boolean;
+}>`
+    ${props => {
+        if (props.$påkrevdFritekstIkkeOppfylt) {
+            return stylingVenstreKantlinje;
+        }
+    }}
 `;
 const skalVisesÅpen = (avsnitt: AvsnittSkjemaData) => {
     if (avsnitt.avsnittstype === Avsnittstype.OPPSUMMERING) {
@@ -64,10 +90,14 @@ const AvsnittSkjema: React.FC<IProps> = ({
             aria-label={avsnitt.overskrift ?? 'ekspanderbart panel'}
             size="small"
         >
-            <ExpansionCard.Header>
+            <StyledExpansionHeader
+                $påkrevdFritekstIkkeOppfylt={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
+            >
                 <ExpansionCard.Title size="small">{avsnitt.overskrift ?? ''}</ExpansionCard.Title>
-            </ExpansionCard.Header>
-            <ExpansionCard.Content>
+            </StyledExpansionHeader>
+            <StyledExpansionContent
+                $påkrevdFritekstIkkeOppfylt={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
+            >
                 {avsnitt.underavsnittsliste.map(underavsnitt => {
                     return (
                         <React.Fragment
@@ -98,7 +128,7 @@ const AvsnittSkjema: React.FC<IProps> = ({
                         </React.Fragment>
                     );
                 })}
-            </ExpansionCard.Content>
+            </StyledExpansionContent>
         </StyledExpansionCard>
     );
 };
