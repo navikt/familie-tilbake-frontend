@@ -19,7 +19,7 @@ interface IProps {
 
 const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
     return feilutbetalingFakta ? (
-        <>
+        <VStack>
             <Heading level="2" size="small">
                 Revurdering
             </Heading>
@@ -66,7 +66,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                     </BodyShort>
                 )}
             </VStack>
-        </>
+        </VStack>
     ) : null;
 };
 
