@@ -7,10 +7,10 @@ import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
 import { css, styled } from 'styled-components';
-import { ABorderWarning } from '@navikt/ds-tokens/dist/tokens';
+import { ABorderWarning, ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
 
 const StyledExpansionCard = styled(ExpansionCard)`
-    margin-bottom: 1rem;
+    margin-bottom: ${ASpacing2};
 `;
 
 const stylingWarningKantlinje = css`
