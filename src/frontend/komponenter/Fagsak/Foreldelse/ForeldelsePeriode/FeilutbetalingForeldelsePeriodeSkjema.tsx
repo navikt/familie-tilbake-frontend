@@ -1,12 +1,20 @@
 import * as React from 'react';
 
-import { styled } from 'styled-components';
-
 import { Column, Row } from 'nav-frontend-grid';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
-import { BodyLong, Heading, Link, Radio, RadioGroup, ReadMore, Textarea } from '@navikt/ds-react';
-import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import {
+    BodyLong,
+    Box,
+    Heading,
+    HStack,
+    Link,
+    Radio,
+    RadioGroup,
+    ReadMore,
+    Textarea,
+    VStack,
+} from '@navikt/ds-react';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -24,10 +32,15 @@ import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
 import { isoStringTilDate } from '../../../../utils/dato';
 import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
+import { styled } from 'styled-components';
 
-const StyledContainer = styled.div`
-    border: 1px solid ${ABorderStrong};
-    padding: ${ASpacing3};
+const StyledVStack = styled(VStack)`
+    max-width: 30rem;
+    width: 100%;
+`;
+
+const StyledBox = styled(Box)`
+    min-width: 38rem;
 `;
 
 interface IProps {
@@ -121,38 +134,33 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
     };
 
     return (
-        <StyledContainer>
-            <Row>
-                <Column lg="4" md="7" sm="12">
-                    <Heading size="small" level="2">
-                        Detaljer for valgt periode
-                    </Heading>
-                </Column>
-                <Column lg="2" md="2" sm="6">
-                    {!erLesevisning && (
-                        <SplittPeriode
-                            behandling={behandling}
-                            periode={periode}
-                            onBekreft={onSplitPeriode}
-                        />
-                    )}
-                </Column>
-                <Column lg="6" md="3" sm="6">
-                    <PeriodeController
-                        nestePeriode={() => nestePeriode(periode)}
-                        forrigePeriode={() => forrigePeriode(periode)}
-                    />
-                </Column>
-            </Row>
-            <Row>
-                <Column lg="6" md="9" sm="12">
+        <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
+            <HStack justify="space-between">
+                <StyledVStack>
+                    <HStack justify="space-between" align="center">
+                        <Heading size="small" level="2">
+                            Detaljer for valgt periode
+                        </Heading>
+
+                        {!erLesevisning && (
+                            <SplittPeriode
+                                behandling={behandling}
+                                periode={periode}
+                                onBekreft={onSplitPeriode}
+                            />
+                        )}
+                    </HStack>
                     <PeriodeOppsummering
                         fom={periode.periode.fom}
                         tom={periode.periode.tom}
                         beløp={periode.feilutbetaltBeløp}
                     />
-                </Column>
-            </Row>
+                </StyledVStack>
+                <PeriodeController
+                    nestePeriode={() => nestePeriode(periode)}
+                    forrigePeriode={() => forrigePeriode(periode)}
+                />
+            </HStack>
             <Spacer20 />
             <Row>
                 <Column md="8">
@@ -248,7 +256,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                     </Row>
                 </>
             )}
-        </StyledContainer>
+        </StyledBox>
     );
 };
 
