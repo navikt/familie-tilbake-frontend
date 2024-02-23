@@ -56,7 +56,7 @@
         "import/default": "error",
         "import/export": "error",
         "import/order": [
-            "error",
+            "off",
             {
                 "alphabetize": {
                     "order": "asc",
