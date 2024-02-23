@@ -39,7 +39,8 @@ const prodConfig = mergeWithRules({
             release: {
                 name: process.env.SENTRY_RELEASE,
                 uploadLegacySourcemaps: {
-                    paths: ['frontend_production'],
+                    paths: ['./frontend_production'],
+                    ignore: ['./node_modules'],
                     urlPrefix: `~/assets`,
                 },
             },
