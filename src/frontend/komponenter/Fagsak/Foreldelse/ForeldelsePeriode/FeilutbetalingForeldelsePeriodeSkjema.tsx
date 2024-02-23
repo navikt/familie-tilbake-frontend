@@ -22,7 +22,7 @@ import {
     foreldelseVurderingTyper,
 } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
-import { FTButton, Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
@@ -39,7 +39,7 @@ const StyledVStack = styled(VStack)<{ $maxWidth: string }>`
 `;
 
 const StyledBox = styled(Box)`
-    min-width: 38rem;
+    min-width: 20rem;
 `;
 
 interface IProps {
@@ -134,115 +134,114 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
 
     return (
         <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
-            <HStack justify="space-between">
-                <StyledVStack $maxWidth={'30rem'}>
-                    <HStack justify="space-between" align="center">
-                        <Heading size="small" level="2">
-                            Detaljer for valgt periode
-                        </Heading>
+            <HGrid columns={'1fr 4rem'}>
+                <VStack gap="5">
+                    <StyledVStack $maxWidth={'30rem'} gap="1">
+                        <HStack justify="space-between" align="center">
+                            <Heading size="small" level="2">
+                                Detaljer for valgt periode
+                            </Heading>
+
+                            {!erLesevisning && (
+                                <SplittPeriode
+                                    behandling={behandling}
+                                    periode={periode}
+                                    onBekreft={onSplitPeriode}
+                                />
+                            )}
+                        </HStack>
+                        <PeriodeOppsummering
+                            fom={periode.periode.fom}
+                            tom={periode.periode.tom}
+                            beløp={periode.feilutbetaltBeløp}
+                        />
+                    </StyledVStack>
+                    <StyledVStack $maxWidth={'50rem'} gap="4">
+                        <Textarea
+                            {...skjema.felter.begrunnelse.hentNavInputProps(
+                                skjema.visFeilmeldinger
+                            )}
+                            id={'begrunnelse'}
+                            name="begrunnelse"
+                            label={'Vurdering'}
+                            maxLength={3000}
+                            readOnly={erLesevisning}
+                            value={skjema.felter.begrunnelse.verdi}
+                            onChange={event =>
+                                skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
+                            }
+                        />
+                        <HGrid columns={2} gap="8">
+                            <RadioGroup
+                                id="foreldet"
+                                readOnly={erLesevisning}
+                                legend="Vurder om perioden er foreldet"
+                                value={skjema.felter.foreldelsesvurderingstype.verdi}
+                                error={
+                                    ugyldigVurderingValgt
+                                        ? skjema.felter.foreldelsesvurderingstype.feilmelding?.toString()
+                                        : ''
+                                }
+                                onChange={(val: Foreldelsevurdering) =>
+                                    skjema.felter.foreldelsesvurderingstype.validerOgSettFelt(val)
+                                }
+                            >
+                                {foreldelseVurderingTyper.map(type => (
+                                    <Radio key={type} name="foreldet" value={type}>
+                                        {foreldelsevurderinger[type]}
+                                    </Radio>
+                                ))}
+                            </RadioGroup>
+                            <VStack gap="5">
+                                {erMedTilleggsfrist && (
+                                    <Datovelger
+                                        felt={skjema.felter.oppdagelsesdato}
+                                        label="Dato for når feilutbetaling ble oppdaget"
+                                        description="Datoen kommer i vedtaksbrevet"
+                                        visFeilmeldinger={ugyldigOppdagelsesdatoValgt}
+                                        readOnly={erLesevisning}
+                                        kanKunVelgeFortid
+                                    />
+                                )}
+                                {(erForeldet || erMedTilleggsfrist) && (
+                                    <VStack gap="2">
+                                        <Datovelger
+                                            felt={skjema.felter.foreldelsesfrist}
+                                            label="Foreldelsesfrist"
+                                            description={
+                                                !erMedTilleggsfrist &&
+                                                'Datoen kommer i vedtaksbrevet'
+                                            }
+                                            visFeilmeldinger={ugyldigForeldelsesfristValgt}
+                                            readOnly={erLesevisning}
+                                        />
+                                        {!erLesevisning && (
+                                            <ReadMore header="Hvordan sette foreldelsesfrist">
+                                                {lagForeldelsesfristHjelpetekst()}
+                                            </ReadMore>
+                                        )}
+                                    </VStack>
+                                )}
+                            </VStack>
+                        </HGrid>
 
                         {!erLesevisning && (
-                            <SplittPeriode
-                                behandling={behandling}
-                                periode={periode}
-                                onBekreft={onSplitPeriode}
-                            />
+                            <Navigering>
+                                <FTButton variant="primary" onClick={() => onBekreft(periode)}>
+                                    Bekreft
+                                </FTButton>
+                                <FTButton variant="secondary" onClick={lukkValgtPeriode}>
+                                    Lukk
+                                </FTButton>
+                            </Navigering>
                         )}
-                    </HStack>
-                    <PeriodeOppsummering
-                        fom={periode.periode.fom}
-                        tom={periode.periode.tom}
-                        beløp={periode.feilutbetaltBeløp}
-                    />
-                </StyledVStack>
+                    </StyledVStack>
+                </VStack>
                 <PeriodeController
                     nestePeriode={() => nestePeriode(periode)}
                     forrigePeriode={() => forrigePeriode(periode)}
                 />
-            </HStack>
-            <Spacer20 />
-            <StyledVStack $maxWidth={'50rem'}>
-                <Textarea
-                    {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
-                    id={'begrunnelse'}
-                    name="begrunnelse"
-                    label={'Vurdering'}
-                    maxLength={3000}
-                    readOnly={erLesevisning}
-                    value={skjema.felter.begrunnelse.verdi}
-                    onChange={event =>
-                        skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
-                    }
-                />
-                <HGrid columns={2} gap="8">
-                    <RadioGroup
-                        id="foreldet"
-                        readOnly={erLesevisning}
-                        legend="Vurder om perioden er foreldet"
-                        value={skjema.felter.foreldelsesvurderingstype.verdi}
-                        error={
-                            ugyldigVurderingValgt
-                                ? skjema.felter.foreldelsesvurderingstype.feilmelding?.toString()
-                                : ''
-                        }
-                        onChange={(val: Foreldelsevurdering) =>
-                            skjema.felter.foreldelsesvurderingstype.validerOgSettFelt(val)
-                        }
-                    >
-                        {foreldelseVurderingTyper.map(type => (
-                            <Radio key={type} name="foreldet" value={type}>
-                                {foreldelsevurderinger[type]}
-                            </Radio>
-                        ))}
-                    </RadioGroup>
-                    <VStack>
-                        {erMedTilleggsfrist && (
-                            <>
-                                <Datovelger
-                                    felt={skjema.felter.oppdagelsesdato}
-                                    label="Dato for når feilutbetaling ble oppdaget"
-                                    description="Datoen kommer i vedtaksbrevet"
-                                    visFeilmeldinger={ugyldigOppdagelsesdatoValgt}
-                                    readOnly={erLesevisning}
-                                    kanKunVelgeFortid
-                                />
-                                <Spacer20 />
-                            </>
-                        )}
-                        {(erForeldet || erMedTilleggsfrist) && (
-                            <>
-                                <Datovelger
-                                    felt={skjema.felter.foreldelsesfrist}
-                                    label="Foreldelsesfrist"
-                                    description={
-                                        !erMedTilleggsfrist && 'Datoen kommer i vedtaksbrevet'
-                                    }
-                                    visFeilmeldinger={ugyldigForeldelsesfristValgt}
-                                    readOnly={erLesevisning}
-                                />
-                                <Spacer8 />
-                                {!erLesevisning && (
-                                    <ReadMore header="Hvordan sette foreldelsesfrist">
-                                        {lagForeldelsesfristHjelpetekst()}
-                                    </ReadMore>
-                                )}
-                            </>
-                        )}
-                    </VStack>
-                </HGrid>
-
-                <Spacer20 />
-                {!erLesevisning && (
-                    <Navigering>
-                        <FTButton variant="primary" onClick={() => onBekreft(periode)}>
-                            Bekreft
-                        </FTButton>
-                        <FTButton variant="secondary" onClick={lukkValgtPeriode}>
-                            Lukk
-                        </FTButton>
-                    </Navigering>
-                )}
-            </StyledVStack>
+            </HGrid>
         </StyledBox>
     );
 };
