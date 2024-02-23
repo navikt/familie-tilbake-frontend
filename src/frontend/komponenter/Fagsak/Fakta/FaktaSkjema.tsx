@@ -5,13 +5,7 @@ import { BodyShort, Checkbox, Heading, HGrid, Textarea, VStack } from '@navikt/d
 import { Ytelsetype } from '../../../kodeverk';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
-import {
-    DetailBold,
-    FTButton,
-    Navigering,
-    Spacer20,
-    Spacer8,
-} from '../../Felleskomponenter/Flytelementer';
+import { DetailBold, FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
@@ -50,13 +44,12 @@ const FaktaSkjema: React.FC<IProps> = ({
 
     return (
         <HGrid columns={2} gap="10">
-            <VStack>
+            <VStack gap="5">
                 <Heading level="2" size="small">
                     Feilutbetaling
                 </Heading>
-                <Spacer20 />
-                <HGrid columns={3}>
-                    <VStack>
+                <HGrid columns={3} gap="1">
+                    <div>
                         <DetailBold>Periode med feilutbetaling</DetailBold>
                         <BodyShort size="small">
                             {`${formatterDatostring(
@@ -65,25 +58,24 @@ const FaktaSkjema: React.FC<IProps> = ({
                                 feilutbetalingFakta.totalFeilutbetaltPeriode.tom
                             )}`}
                         </BodyShort>
-                    </VStack>
-                    <VStack>
+                    </div>
+                    <div>
                         <DetailBold>Feilutbetalt beløp totalt</DetailBold>
                         <BodyShort size="small" className={'redText'}>
                             {`${formatCurrencyNoKr(feilutbetalingFakta.totaltFeilutbetaltBeløp)}`}
                         </BodyShort>
-                    </VStack>
-                    <VStack>
+                    </div>
+                    <div>
                         <DetailBold>Tidligere varslet beløp</DetailBold>
                         <BodyShort size="small">
                             {feilutbetalingFakta.varsletBeløp
                                 ? `${formatCurrencyNoKr(feilutbetalingFakta.varsletBeløp)}`
                                 : ''}
                         </BodyShort>
-                    </VStack>
+                    </div>
                 </HGrid>
-                <Spacer20 />
-                {!erLesevisning && (
-                    <>
+                <VStack gap="2">
+                    {!erLesevisning && (
                         <Checkbox
                             size="small"
                             disabled={erLesevisning}
@@ -92,19 +84,15 @@ const FaktaSkjema: React.FC<IProps> = ({
                         >
                             Behandle alle perioder samlet
                         </Checkbox>
-                        <Spacer8 />
-                    </>
-                )}
-                {skjemaData.perioder && (
-                    <FeilutbetalingFaktaPerioder
-                        ytelse={ytelse}
-                        erLesevisning={erLesevisning}
-                        perioder={skjemaData.perioder}
-                    />
-                )}
-
-                <Spacer20 />
-
+                    )}
+                    {skjemaData.perioder && (
+                        <FeilutbetalingFaktaPerioder
+                            ytelse={ytelse}
+                            erLesevisning={erLesevisning}
+                            perioder={skjemaData.perioder}
+                        />
+                    )}
+                </VStack>
                 <Textarea
                     name={'begrunnelse'}
                     label={'Forklar årsaken(e) til feilutbetalingen'}
@@ -119,25 +107,19 @@ const FaktaSkjema: React.FC<IProps> = ({
                     }
                 />
 
-                <Spacer20 />
-
                 <Navigering>
-                    <div>
-                        <FTButton
-                            variant="primary"
-                            onClick={sendInnSkjema}
-                            loading={senderInn}
-                            disabled={erLesevisning && !stegErBehandlet}
-                        >
-                            {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                        </FTButton>
-                    </div>
+                    <FTButton
+                        variant="primary"
+                        onClick={sendInnSkjema}
+                        loading={senderInn}
+                        disabled={erLesevisning && !stegErBehandlet}
+                    >
+                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                    </FTButton>
                     {behandling.harVerge && (
-                        <div>
-                            <FTButton variant="secondary" onClick={gåTilForrige}>
-                                Forrige
-                            </FTButton>
-                        </div>
+                        <FTButton variant="secondary" onClick={gåTilForrige}>
+                            Forrige
+                        </FTButton>
                     )}
                 </Navigering>
             </VStack>
