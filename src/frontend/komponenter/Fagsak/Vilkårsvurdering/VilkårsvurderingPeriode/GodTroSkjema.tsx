@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { BodyShort, Radio, TextField } from '@navikt/ds-react';
+import { BodyShort, Radio, TextField, VStack } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
@@ -32,7 +32,7 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const harBeløpetIBehold =
         harVurderBeløpIBehold && skjema.felter.erBeløpetIBehold.verdi === OptionJA;
     return (
-        <>
+        <VStack gap="1">
             <HorisontalRadioGroup
                 id="erBelopetIBehold"
                 readOnly={erLesevisning}
@@ -79,7 +79,7 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                     </ArrowBox>
                 )}
             </ArrowBoxContainer>
-        </>
+        </VStack>
     );
 };
 
