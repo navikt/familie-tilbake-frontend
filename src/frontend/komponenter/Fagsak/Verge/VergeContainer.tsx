@@ -11,12 +11,13 @@ import {
     Select,
     Textarea,
     TextField,
+    VStack,
 } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
-import { FTButton, Navigering, Spacer20, Spacer8 } from '../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { useVerge } from './VergeContext';
 
@@ -24,7 +25,7 @@ const StyledVerge = styled.div`
     padding: 10px;
 `;
 
-const Container = styled.div`
+const StyledVStack = styled(VStack)`
     max-width: 30rem;
 `;
 
@@ -58,9 +59,9 @@ const VergeContainer: React.FC = () => {
                     />
                 </div>
             ) : (
-                <Container>
+                <StyledVStack gap="5">
                     {erAutoutført && (
-                        <BodyLong size="small" spacing>
+                        <BodyLong size="small">
                             Automatisk vurdert. Verge er kopiert fra fagsystemet.
                         </BodyLong>
                     )}
@@ -68,7 +69,6 @@ const VergeContainer: React.FC = () => {
                         behandletSteg={stegErBehandlet}
                         infotekst={'Fyll ut og kontroller vergeopplysninger'}
                     />
-                    <Spacer20 />
                     <Select
                         {...skjema.felter.vergetype.hentNavInputProps(skjema.visFeilmeldinger)}
                         id="vergeType"
@@ -89,53 +89,47 @@ const VergeContainer: React.FC = () => {
                             ))}
                     </Select>
                     {vergetypeValgt && (
-                        <>
-                            <Spacer8 />
-                            <HGrid columns={{ lg: 2, md: 1 }} gap="4">
+                        <HGrid columns={{ lg: 2, md: 1 }} gap="4">
+                            <TextField
+                                {...skjema.felter.navn.hentNavInputProps(skjema.visFeilmeldinger)}
+                                label={'Navn'}
+                                readOnly={erLesevisning}
+                                value={skjema.felter.navn.verdi}
+                                onChange={event =>
+                                    skjema.felter.navn.validerOgSettFelt(event.target.value)
+                                }
+                            />
+                            {skjema.felter.vergetype.verdi === Vergetype.ADVOKAT ? (
                                 <TextField
-                                    {...skjema.felter.navn.hentNavInputProps(
+                                    {...skjema.felter.organisasjonsnummer.hentNavInputProps(
                                         skjema.visFeilmeldinger
                                     )}
-                                    label={'Navn'}
+                                    label={'Organisasjonsnummer'}
                                     readOnly={erLesevisning}
-                                    value={skjema.felter.navn.verdi}
+                                    value={skjema.felter.organisasjonsnummer.verdi}
                                     onChange={event =>
-                                        skjema.felter.navn.validerOgSettFelt(event.target.value)
+                                        skjema.felter.organisasjonsnummer.validerOgSettFelt(
+                                            event.target.value
+                                        )
                                     }
                                 />
-                                {skjema.felter.vergetype.verdi === Vergetype.ADVOKAT ? (
-                                    <TextField
-                                        {...skjema.felter.organisasjonsnummer.hentNavInputProps(
-                                            skjema.visFeilmeldinger
-                                        )}
-                                        label={'Organisasjonsnummer'}
-                                        readOnly={erLesevisning}
-                                        value={skjema.felter.organisasjonsnummer.verdi}
-                                        onChange={event =>
-                                            skjema.felter.organisasjonsnummer.validerOgSettFelt(
-                                                event.target.value
-                                            )
-                                        }
-                                    />
-                                ) : (
-                                    <TextField
-                                        {...skjema.felter.fødselsnummer.hentNavInputProps(
-                                            skjema.visFeilmeldinger
-                                        )}
-                                        label={'Fødselsnummer'}
-                                        readOnly={erLesevisning}
-                                        value={skjema.felter.fødselsnummer.verdi}
-                                        onChange={event =>
-                                            skjema.felter.fødselsnummer.validerOgSettFelt(
-                                                event.target.value
-                                            )
-                                        }
-                                    />
-                                )}
-                            </HGrid>
-                        </>
+                            ) : (
+                                <TextField
+                                    {...skjema.felter.fødselsnummer.hentNavInputProps(
+                                        skjema.visFeilmeldinger
+                                    )}
+                                    label={'Fødselsnummer'}
+                                    readOnly={erLesevisning}
+                                    value={skjema.felter.fødselsnummer.verdi}
+                                    onChange={event =>
+                                        skjema.felter.fødselsnummer.validerOgSettFelt(
+                                            event.target.value
+                                        )
+                                    }
+                                />
+                            )}
+                        </HGrid>
                     )}
-                    <Spacer20 />
                     <Textarea
                         {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
                         label={'Begrunn endringene'}
@@ -146,27 +140,17 @@ const VergeContainer: React.FC = () => {
                         }
                         maxLength={400}
                     />
-                    {feilmelding && (
-                        <>
-                            <Spacer8 />
-                            <div className="skjemaelement__feilmelding">
-                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                            </div>
-                        </>
-                    )}
-                    <Spacer20 />
+                    {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
                     <Navigering>
-                        <div>
-                            <FTButton
-                                variant="primary"
-                                onClick={sendInn}
-                                disabled={erLesevisning && !stegErBehandlet}
-                            >
-                                {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                            </FTButton>
-                        </div>
+                        <FTButton
+                            variant="primary"
+                            onClick={sendInn}
+                            disabled={erLesevisning && !stegErBehandlet}
+                        >
+                            {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                        </FTButton>
                     </Navigering>
-                </Container>
+                </StyledVStack>
             )}
         </StyledVerge>
     );
