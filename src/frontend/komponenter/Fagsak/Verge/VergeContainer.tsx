@@ -89,7 +89,7 @@ const VergeContainer: React.FC = () => {
                             ))}
                     </Select>
                     {vergetypeValgt && (
-                        <HGrid columns={{ lg: 2, md: 1 }} gap="4">
+                        <HGrid columns={{ lg: 2, md: 1 }} gap="4" align="start">
                             <TextField
                                 {...skjema.felter.navn.hentNavInputProps(skjema.visFeilmeldinger)}
                                 label={'Navn'}
