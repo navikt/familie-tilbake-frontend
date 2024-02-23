@@ -22,6 +22,8 @@ const StyledVStack = styled(VStack)`
     padding: ${ASpacing3} ${ASpacing5};
     top: 0;
     margin-top: ${ASpacing3};
+    max-width: 30rem;
+    width: 100%;
 `;
 
 const RadTotaltFeilutbetalt = styled(HGrid)`

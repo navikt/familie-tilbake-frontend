@@ -59,11 +59,6 @@ const StyledStack = styled(Stack)`
     width: 100%;
 `;
 
-const DivMedMaksbredde = styled.div<{ $maksbredde: string }>`
-    max-width: ${props => props.$maksbredde};
-    width: 100%;
-`;
-
 const StyledSelect = styled(Select)`
     width: 15rem;
 `;
@@ -270,14 +265,12 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                 />
             </HGrid>
             <VStack gap="4">
-                <DivMedMaksbredde $maksbredde={'30rem'}>
-                    <PeriodeOppsummering
-                        fom={periode.periode.fom}
-                        tom={periode.periode.tom}
-                        beløp={periode.feilutbetaltBeløp}
-                        hendelsetype={periode.hendelsestype}
-                    />
-                </DivMedMaksbredde>
+                <PeriodeOppsummering
+                    fom={periode.periode.fom}
+                    tom={periode.periode.tom}
+                    beløp={periode.feilutbetaltBeløp}
+                    hendelsetype={periode.hendelsestype}
+                />
                 <TilbakekrevingAktivitetTabell ytelser={periode.aktiviteter} />
                 {!erLesevisning &&
                     !periode.foreldet &&

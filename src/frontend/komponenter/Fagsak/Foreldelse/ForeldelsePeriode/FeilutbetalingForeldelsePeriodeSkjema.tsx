@@ -31,24 +31,15 @@ import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
 import { isoStringTilDate } from '../../../../utils/dato';
 import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
-import { css, styled } from 'styled-components';
+import { styled } from 'styled-components';
 
 const StyledVStack = styled(VStack)`
     max-width: 50rem;
     width: 100%;
 `;
-
-const stylingBredde30rem = css`
+const StyledStack = styled(Stack)`
     max-width: 30rem;
     width: 100%;
-`;
-
-const StyledStack = styled(Stack)`
-    ${stylingBredde30rem}
-`;
-
-const DivMedMaksbredde = styled.div`
-    ${stylingBredde30rem}
 `;
 
 const StyledBox = styled(Box)`
@@ -171,13 +162,11 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                 />
             </HGrid>
             <StyledVStack gap="4">
-                <DivMedMaksbredde>
-                    <PeriodeOppsummering
-                        fom={periode.periode.fom}
-                        tom={periode.periode.tom}
-                        beløp={periode.feilutbetaltBeløp}
-                    />
-                </DivMedMaksbredde>
+                <PeriodeOppsummering
+                    fom={periode.periode.fom}
+                    tom={periode.periode.tom}
+                    beløp={periode.feilutbetaltBeløp}
+                />
                 <Textarea
                     {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
                     id={'begrunnelse'}
