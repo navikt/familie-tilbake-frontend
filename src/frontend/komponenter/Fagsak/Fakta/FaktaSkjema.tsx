@@ -78,7 +78,6 @@ const FaktaSkjema: React.FC<IProps> = ({
                     {!erLesevisning && (
                         <Checkbox
                             size="small"
-                            disabled={erLesevisning}
                             checked={behandlePerioderSamlet === true}
                             onChange={() => settBehandlePerioderSamlet(!behandlePerioderSamlet)}
                         >
