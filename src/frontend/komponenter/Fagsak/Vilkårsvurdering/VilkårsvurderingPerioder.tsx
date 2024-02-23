@@ -3,21 +3,14 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { styled } from 'styled-components';
 
-import { Column, Row } from 'nav-frontend-grid';
-
-import { BodyShort } from '@navikt/ds-react';
+import { BodyShort, VStack } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import { type Periode } from '@navikt/familie-tidslinje';
 
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import {
-    FTAlertStripe,
-    FTButton,
-    Navigering,
-    Spacer20,
-} from '../../Felleskomponenter/Flytelementer';
+import { FTAlertStripe, FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
@@ -135,65 +128,43 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
     };
 
     return perioder && tidslinjeRader ? (
-        <>
+        <VStack gap="5">
             {valideringsfeil && (
-                <>
-                    <FTAlertStripe variant="error" fullWidth>
-                        <ValideringsFeilmelding>{valideringsFeilmelding}</ValideringsFeilmelding>
-                    </FTAlertStripe>
-                    <Spacer20 />
-                </>
+                <FTAlertStripe variant="error" fullWidth>
+                    <ValideringsFeilmelding>{valideringsFeilmelding}</ValideringsFeilmelding>
+                </FTAlertStripe>
             )}
-            <Row>
-                <Column xs="12">
-                    <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
-                </Column>
-            </Row>
+            <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
             {valgtPeriode && (
-                <>
-                    <Spacer20 />
-                    <Row>
-                        <Column xs="12">
-                            <VilkårsvurderingPeriodeSkjema
-                                behandling={behandling}
-                                periode={valgtPeriode}
-                                behandletPerioder={behandletPerioder}
-                                erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
-                                erLesevisning={erLesevisning}
-                                fagsak={fagsak}
-                            />
-                        </Column>
-                    </Row>
-                </>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    periode={valgtPeriode}
+                    behandletPerioder={behandletPerioder}
+                    erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
+                    erLesevisning={erLesevisning}
+                    fagsak={fagsak}
+                />
             )}
-            <Row>
-                <Column md="12">
-                    <Navigering>
-                        <div>
-                            {erAutoutført || (stegErBehandlet && erLesevisning) ? (
-                                <FTButton variant="primary" onClick={gåTilNeste}>
-                                    Neste
-                                </FTButton>
-                            ) : (
-                                <FTButton
-                                    variant="primary"
-                                    onClick={sendInnSkjema}
-                                    loading={senderInn}
-                                    disabled={disableBekreft}
-                                >
-                                    {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                                </FTButton>
-                            )}
-                        </div>
-                        <div>
-                            <FTButton variant="secondary" onClick={gåTilForrige}>
-                                Forrige
-                            </FTButton>
-                        </div>
-                    </Navigering>
-                </Column>
-            </Row>
-        </>
+            <Navigering>
+                {erAutoutført || (stegErBehandlet && erLesevisning) ? (
+                    <FTButton variant="primary" onClick={gåTilNeste}>
+                        Neste
+                    </FTButton>
+                ) : (
+                    <FTButton
+                        variant="primary"
+                        onClick={sendInnSkjema}
+                        loading={senderInn}
+                        disabled={disableBekreft}
+                    >
+                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                    </FTButton>
+                )}
+                <FTButton variant="secondary" onClick={gåTilForrige}>
+                    Forrige
+                </FTButton>
+            </Navigering>
+        </VStack>
     ) : null;
 };
 
