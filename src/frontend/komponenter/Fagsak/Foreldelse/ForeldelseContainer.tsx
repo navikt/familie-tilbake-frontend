@@ -12,17 +12,18 @@ import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelem
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { useFeilutbetalingForeldelse } from './FeilutbetalingForeldelseContext';
 import FeilutbetalingForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
+import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 
 export const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });
 };
 
 const StyledForeldelse = styled.div`
-    padding: 10px;
+    padding: ${ASpacing3};
 `;
 
 const StyledAutomatiskForeldelse = styled.div`
-    padding: 10px;
+    padding: ${ASpacing3};
     min-width: 15rem;
     max-width: 30rem;
 `;

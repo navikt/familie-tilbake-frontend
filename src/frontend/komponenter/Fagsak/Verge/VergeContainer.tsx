@@ -20,9 +20,10 @@ import { hentFrontendFeilmelding } from '../../../utils';
 import { FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { useVerge } from './VergeContext';
+import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 
 const StyledVerge = styled.div`
-    padding: 10px;
+    padding: ${ASpacing3};
 `;
 
 const StyledVStack = styled(VStack)`
