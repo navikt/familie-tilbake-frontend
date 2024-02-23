@@ -17,39 +17,35 @@ const TilleggesRenterRadioGroup: React.FC<IProps> = ({
     felt,
     visFeilmeldingerForSkjema,
 }) => {
-    return (
-        <>
-            {erLesevisning || !kanIlleggeRenter ? (
-                <>
-                    <Label>Skal det tillegges renter?</Label>
-                    <BodyShort>{felt.verdi && felt.verdi.label}</BodyShort>
-                </>
-            ) : (
-                <HorisontalRadioGroup
-                    id="skalDetTilleggesRenter"
-                    legend={'Skal det tillegges renter?'}
-                    value={felt.verdi}
-                    error={
-                        visFeilmeldingerForSkjema &&
-                        felt.valideringsstatus === Valideringsstatus.FEIL &&
-                        felt.feilmelding
-                    }
-                    marginbottom="none"
-                    onChange={(val: JaNeiOption) => felt.validerOgSettFelt(val)}
+    return erLesevisning || !kanIlleggeRenter ? (
+        <div>
+            <Label>Skal det tillegges renter?</Label>
+            <BodyShort>{felt.verdi && felt.verdi.label}</BodyShort>
+        </div>
+    ) : (
+        <HorisontalRadioGroup
+            id="skalDetTilleggesRenter"
+            legend={'Skal det tillegges renter?'}
+            value={felt.verdi}
+            error={
+                visFeilmeldingerForSkjema &&
+                felt.valideringsstatus === Valideringsstatus.FEIL &&
+                felt.feilmelding
+            }
+            marginbottom="none"
+            onChange={(val: JaNeiOption) => felt.validerOgSettFelt(val)}
+        >
+            {jaNeiOptions.map(opt => (
+                <Radio
+                    key={opt.label}
+                    name="skalDetTilleggesRenter"
+                    value={opt}
+                    data-testid={`skalDetTilleggesRenter_${opt.label}`}
                 >
-                    {jaNeiOptions.map(opt => (
-                        <Radio
-                            key={opt.label}
-                            name="skalDetTilleggesRenter"
-                            value={opt}
-                            data-testid={`skalDetTilleggesRenter_${opt.label}`}
-                        >
-                            {opt.label}
-                        </Radio>
-                    ))}
-                </HorisontalRadioGroup>
-            )}
-        </>
+                    {opt.label}
+                </Radio>
+            ))}
+        </HorisontalRadioGroup>
     );
 };
 
