@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { showReportDialog } from '@sentry/browser';
-import { captureException, configureScope, withScope } from '@sentry/core';
+import { getCurrentScope, showReportDialog } from '@sentry/browser';
+import { captureException, withScope } from '@sentry/core';
 
 import { Label } from '@navikt/ds-react';
 import { type ISaksbehandler } from '@navikt/familie-typer';
@@ -33,17 +33,14 @@ class ErrorBoundary extends React.Component<IProps, IState> {
         console.log(error, info);
 
         if (process.env.NODE_ENV !== 'development') {
-            configureScope(scope => {
-                scope.setUser({
-                    username: this.props.autentisertSaksbehandler
-                        ? this.props.autentisertSaksbehandler.displayName
-                        : 'Ukjent bruker',
-                    email: this.props.autentisertSaksbehandler
-                        ? this.props.autentisertSaksbehandler.email
-                        : 'Ukjent email',
-                });
+            getCurrentScope().setUser({
+                username: this.props.autentisertSaksbehandler
+                    ? this.props.autentisertSaksbehandler.displayName
+                    : 'Ukjent bruker',
+                email: this.props.autentisertSaksbehandler
+                    ? this.props.autentisertSaksbehandler.email
+                    : 'Ukjent email',
             });
-
             withScope(scope => {
                 Object.keys(info).forEach(key => {
                     scope.setExtra(key, info[key]);
