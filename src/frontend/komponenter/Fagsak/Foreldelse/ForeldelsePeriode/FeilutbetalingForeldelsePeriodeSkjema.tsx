@@ -175,7 +175,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                 skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
                             }
                         />
-                        <HGrid columns={2} gap="8">
+                        <HGrid columns={{ md: 1, lg: 2 }} gap="8">
                             <RadioGroup
                                 id="foreldet"
                                 readOnly={erLesevisning}
