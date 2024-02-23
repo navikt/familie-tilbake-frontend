@@ -22,13 +22,6 @@ const Container: React.FC = () => {
                     <Toasts />
                     <main>
                         <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
-                        <button
-                            onClick={() => {
-                                throw new Error('Sentry testerror');
-                            }}
-                        >
-                            Error-knapp for test av Sentry oppsett
-                        </button>
                         <FagsakProvider>
                             <BehandlingProvider>
                                 <Routes>
