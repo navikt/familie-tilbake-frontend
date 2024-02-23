@@ -2,8 +2,6 @@ import * as React from 'react';
 
 import classNames from 'classnames';
 
-import { Column, Row } from 'nav-frontend-grid';
-
 import { type Periode } from '@navikt/familie-tidslinje';
 
 import { Foreldelsevurdering } from '../../../../kodeverk';
@@ -100,53 +98,39 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
 
     return perioder && tidslinjeRader ? (
         <>
-            <Row>
-                <Column xs="12">
-                    <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
-                </Column>
-            </Row>
+            <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
+
             {!!valgtPeriode && (
                 <>
                     <Spacer20 />
-                    <Row>
-                        <Column xs="12">
-                            <FeilutbetalingForeldelsePeriodeSkjema
-                                behandling={behandling}
-                                periode={valgtPeriode}
-                                erLesevisning={erLesevisning}
-                            />
-                        </Column>
-                    </Row>
+
+                    <FeilutbetalingForeldelsePeriodeSkjema
+                        behandling={behandling}
+                        periode={valgtPeriode}
+                        erLesevisning={erLesevisning}
+                    />
                 </>
             )}
             <Spacer20 />
-            <Row>
-                <Column md="12">
-                    <Navigering>
-                        <div>
-                            {erAutoutført || (stegErBehandlet && erLesevisning) ? (
-                                <FTButton variant="primary" onClick={gåTilNeste}>
-                                    Neste
-                                </FTButton>
-                            ) : (
-                                <FTButton
-                                    variant="primary"
-                                    onClick={sendInnSkjema}
-                                    loading={senderInn}
-                                    disabled={disableBekreft}
-                                >
-                                    {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                                </FTButton>
-                            )}
-                        </div>
-                        <div>
-                            <FTButton variant="secondary" onClick={gåTilForrige}>
-                                Forrige
-                            </FTButton>
-                        </div>
-                    </Navigering>
-                </Column>
-            </Row>
+            <Navigering>
+                {erAutoutført || (stegErBehandlet && erLesevisning) ? (
+                    <FTButton variant="primary" onClick={gåTilNeste}>
+                        Neste
+                    </FTButton>
+                ) : (
+                    <FTButton
+                        variant="primary"
+                        onClick={sendInnSkjema}
+                        loading={senderInn}
+                        disabled={disableBekreft}
+                    >
+                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                    </FTButton>
+                )}
+                <FTButton variant="secondary" onClick={gåTilForrige}>
+                    Forrige
+                </FTButton>
+            </Navigering>
         </>
     ) : null;
 };
