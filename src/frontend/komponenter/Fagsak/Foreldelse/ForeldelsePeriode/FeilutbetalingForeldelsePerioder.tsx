@@ -7,11 +7,12 @@ import { type Periode } from '@navikt/familie-tidslinje';
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
-import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering } from '../../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
+import { VStack } from '@navikt/ds-react';
 
 const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean) => {
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
@@ -97,21 +98,16 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
     };
 
     return perioder && tidslinjeRader ? (
-        <>
+        <VStack gap="5">
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
 
             {!!valgtPeriode && (
-                <>
-                    <Spacer20 />
-
-                    <FeilutbetalingForeldelsePeriodeSkjema
-                        behandling={behandling}
-                        periode={valgtPeriode}
-                        erLesevisning={erLesevisning}
-                    />
-                </>
+                <FeilutbetalingForeldelsePeriodeSkjema
+                    behandling={behandling}
+                    periode={valgtPeriode}
+                    erLesevisning={erLesevisning}
+                />
             )}
-            <Spacer20 />
             <Navigering>
                 {erAutoutført || (stegErBehandlet && erLesevisning) ? (
                     <FTButton variant="primary" onClick={gåTilNeste}>
@@ -131,7 +127,7 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
                     Forrige
                 </FTButton>
             </Navigering>
-        </>
+        </VStack>
     ) : null;
 };
 
