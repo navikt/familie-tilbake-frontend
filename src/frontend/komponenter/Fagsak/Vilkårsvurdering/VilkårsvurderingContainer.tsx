@@ -20,9 +20,10 @@ import {
     useFeilutbetalingVilkårsvurdering,
 } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
+import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 
 const StyledVilkårsvurdering = styled.div`
-    padding: 10px;
+    padding: ${ASpacing3};
 `;
 
 const HenterContainer = styled(StyledVilkårsvurdering)`

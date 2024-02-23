@@ -1,19 +1,10 @@
 import * as React from 'react';
 
-import { styled } from 'styled-components';
-
-import { Column, Row } from 'nav-frontend-grid';
-
-import { BodyShort, Heading } from '@navikt/ds-react';
-import { ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
+import { BodyShort, Heading, HGrid, VStack } from '@navikt/ds-react';
 
 import { IFeilutbetalingFakta, tilbakekrevingsvalg } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring } from '../../../utils';
-import { DetailBold, Spacer20 } from '../../Felleskomponenter/Flytelementer';
-
-export const RadMedMargin = styled(Row)`
-    margin-bottom: ${ASpacing4};
-`;
+import { DetailBold } from '../../Felleskomponenter/Flytelementer';
 
 interface IProps {
     feilutbetalingFakta: IFeilutbetalingFakta;
@@ -21,60 +12,55 @@ interface IProps {
 
 const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
     return feilutbetalingFakta ? (
-        <>
-            <Row>
-                <Column xs="12">
-                    <Heading level="2" size="small">
-                        Revurdering
-                    </Heading>
-                </Column>
-            </Row>
-            <Spacer20 />
-            <RadMedMargin>
-                <Column xs="6">
-                    <DetailBold>Årsak(er) til revurdering</DetailBold>
-                    {feilutbetalingFakta.faktainfo?.revurderingsårsak && (
+        <VStack gap="5">
+            <Heading level="2" size="small">
+                Revurdering
+            </Heading>
+            <VStack gap="4">
+                <HGrid columns={2}>
+                    <div>
+                        <DetailBold>Årsak(er) til revurdering</DetailBold>
+                        {feilutbetalingFakta.faktainfo?.revurderingsårsak && (
+                            <BodyShort size="small">
+                                {feilutbetalingFakta.faktainfo.revurderingsårsak}
+                            </BodyShort>
+                        )}
+                    </div>
+                    <div>
+                        <DetailBold>Dato for revurderingsvedtak</DetailBold>
                         <BodyShort size="small">
-                            {feilutbetalingFakta.faktainfo.revurderingsårsak}
+                            {formatterDatostring(feilutbetalingFakta.revurderingsvedtaksdato)}
                         </BodyShort>
-                    )}
-                </Column>
-                <Column xs="6">
-                    <DetailBold>Dato for revurderingsvedtak</DetailBold>
-                    <BodyShort size="small">
-                        {formatterDatostring(feilutbetalingFakta.revurderingsvedtaksdato)}
-                    </BodyShort>
-                </Column>
-            </RadMedMargin>
-            <RadMedMargin>
-                <Column xs="6">
-                    <DetailBold>Resultat</DetailBold>
-                    {feilutbetalingFakta.faktainfo?.revurderingsresultat && (
-                        <BodyShort size="small">
-                            {feilutbetalingFakta.faktainfo.revurderingsresultat}
-                        </BodyShort>
-                    )}
-                </Column>
-                <Column xs="6">
-                    <DetailBold>Konsekvens</DetailBold>
-                    {feilutbetalingFakta.faktainfo?.konsekvensForYtelser && (
-                        <BodyShort size="small">
-                            {feilutbetalingFakta.faktainfo.konsekvensForYtelser?.join(', ')}
-                        </BodyShort>
-                    )}
-                </Column>
-            </RadMedMargin>
-            <Row>
-                <Column xs="6">
+                    </div>
+                </HGrid>
+                <HGrid columns={2}>
+                    <div>
+                        <DetailBold>Resultat</DetailBold>
+                        {feilutbetalingFakta.faktainfo?.revurderingsresultat && (
+                            <BodyShort size="small">
+                                {feilutbetalingFakta.faktainfo.revurderingsresultat}
+                            </BodyShort>
+                        )}
+                    </div>
+                    <div>
+                        <DetailBold>Konsekvens</DetailBold>
+                        {feilutbetalingFakta.faktainfo?.konsekvensForYtelser && (
+                            <BodyShort size="small">
+                                {feilutbetalingFakta.faktainfo.konsekvensForYtelser?.join(', ')}
+                            </BodyShort>
+                        )}
+                    </div>
+                </HGrid>
+                <div>
                     <DetailBold>Tilbakekrevingsvalg</DetailBold>
                     {feilutbetalingFakta.faktainfo?.tilbakekrevingsvalg && (
                         <BodyShort size="small">
                             {tilbakekrevingsvalg[feilutbetalingFakta.faktainfo.tilbakekrevingsvalg]}
                         </BodyShort>
                     )}
-                </Column>
-            </Row>
-        </>
+                </div>
+            </VStack>
+        </VStack>
     ) : null;
 };
 

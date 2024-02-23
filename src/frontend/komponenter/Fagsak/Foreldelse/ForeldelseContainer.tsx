@@ -2,8 +2,6 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Column, Row } from 'nav-frontend-grid';
-
 import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -14,13 +12,20 @@ import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelem
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { useFeilutbetalingForeldelse } from './FeilutbetalingForeldelseContext';
 import FeilutbetalingForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
+import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 
 export const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });
 };
 
 const StyledForeldelse = styled.div`
-    padding: 10px;
+    padding: ${ASpacing3};
+`;
+
+const StyledAutomatiskForeldelse = styled.div`
+    padding: ${ASpacing3};
+    min-width: 15rem;
+    max-width: 30rem;
 `;
 
 const HenterContainer = styled(StyledForeldelse)`
@@ -45,7 +50,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
 
     if (erAutoutført) {
         return (
-            <StyledForeldelse>
+            <StyledAutomatiskForeldelse>
                 <Heading spacing size="small" level="2">
                     Foreldelse
                 </Heading>
@@ -55,23 +60,15 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                 <BodyLong size="small" spacing>
                     Automatisk vurdert
                 </BodyLong>
-                <Row>
-                    <Column xs="10" md="4">
-                        <Navigering>
-                            <div>
-                                <FTButton variant="primary" onClick={gåTilNeste}>
-                                    Neste
-                                </FTButton>
-                            </div>
-                            <div>
-                                <FTButton variant="secondary" onClick={gåTilForrige}>
-                                    Forrige
-                                </FTButton>
-                            </div>
-                        </Navigering>
-                    </Column>
-                </Row>
-            </StyledForeldelse>
+                <Navigering>
+                    <FTButton variant="primary" onClick={gåTilNeste}>
+                        Neste
+                    </FTButton>
+                    <FTButton variant="secondary" onClick={gåTilForrige}>
+                        Forrige
+                    </FTButton>
+                </Navigering>
+            </StyledAutomatiskForeldelse>
         );
     }
 
@@ -92,17 +89,13 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                             <Spacer20 />
                         </>
                     )}
-                    <Row>
-                        <Column xs="12">
-                            {skjemaData.length > 0 && (
-                                <FeilutbetalingForeldelsePerioder
-                                    behandling={behandling}
-                                    perioder={skjemaData}
-                                    erLesevisning={erLesevisning}
-                                />
-                            )}
-                        </Column>
-                    </Row>
+                    {skjemaData.length > 0 && (
+                        <FeilutbetalingForeldelsePerioder
+                            behandling={behandling}
+                            perioder={skjemaData}
+                            erLesevisning={erLesevisning}
+                        />
+                    )}
                 </StyledForeldelse>
             );
         case RessursStatus.HENTER:

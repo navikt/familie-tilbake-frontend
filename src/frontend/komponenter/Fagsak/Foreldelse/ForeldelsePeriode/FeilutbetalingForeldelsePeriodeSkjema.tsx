@@ -1,12 +1,19 @@
 import * as React from 'react';
 
-import { styled } from 'styled-components';
-
-import { Column, Row } from 'nav-frontend-grid';
-
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
-import { BodyLong, Heading, Link, Radio, RadioGroup, ReadMore, Textarea } from '@navikt/ds-react';
-import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import {
+    BodyLong,
+    Box,
+    Heading,
+    HGrid,
+    Link,
+    Radio,
+    RadioGroup,
+    ReadMore,
+    Stack,
+    Textarea,
+    VStack,
+} from '@navikt/ds-react';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -15,7 +22,7 @@ import {
     foreldelseVurderingTyper,
 } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
-import { FTButton, Navigering, Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
@@ -24,10 +31,28 @@ import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
 import { isoStringTilDate } from '../../../../utils/dato';
 import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
+import { css, styled } from 'styled-components';
 
-const StyledContainer = styled.div`
-    border: 1px solid ${ABorderStrong};
-    padding: ${ASpacing3};
+const StyledVStack = styled(VStack)`
+    max-width: 50rem;
+    width: 100%;
+`;
+
+const stylingBredde30rem = css`
+    max-width: 30rem;
+    width: 100%;
+`;
+
+const StyledStack = styled(Stack)`
+    ${stylingBredde30rem}
+`;
+
+const DivMedMaksbredde = styled.div`
+    ${stylingBredde30rem}
+`;
+
+const StyledBox = styled(Box)`
+    min-width: 20rem;
 `;
 
 interface IProps {
@@ -121,14 +146,17 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
     };
 
     return (
-        <StyledContainer>
-            <Row>
-                <Column lg="4" md="7" sm="12">
+        <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
+            <HGrid columns={'1fr 4rem'}>
+                <StyledStack
+                    justify="space-between"
+                    align={{ md: 'start', lg: 'center' }}
+                    direction={{ md: 'column', lg: 'row' }}
+                >
                     <Heading size="small" level="2">
                         Detaljer for valgt periode
                     </Heading>
-                </Column>
-                <Column lg="2" md="2" sm="6">
+
                     {!erLesevisning && (
                         <SplittPeriode
                             behandling={behandling}
@@ -136,43 +164,33 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                             onBekreft={onSplitPeriode}
                         />
                     )}
-                </Column>
-                <Column lg="6" md="3" sm="6">
-                    <PeriodeController
-                        nestePeriode={() => nestePeriode(periode)}
-                        forrigePeriode={() => forrigePeriode(periode)}
-                    />
-                </Column>
-            </Row>
-            <Row>
-                <Column lg="6" md="9" sm="12">
+                </StyledStack>
+                <PeriodeController
+                    nestePeriode={() => nestePeriode(periode)}
+                    forrigePeriode={() => forrigePeriode(periode)}
+                />
+            </HGrid>
+            <StyledVStack gap="4">
+                <DivMedMaksbredde>
                     <PeriodeOppsummering
                         fom={periode.periode.fom}
                         tom={periode.periode.tom}
                         beløp={periode.feilutbetaltBeløp}
                     />
-                </Column>
-            </Row>
-            <Spacer20 />
-            <Row>
-                <Column md="8">
-                    <Textarea
-                        {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
-                        id={'begrunnelse'}
-                        name="begrunnelse"
-                        label={'Vurdering'}
-                        maxLength={3000}
-                        readOnly={erLesevisning}
-                        value={skjema.felter.begrunnelse.verdi}
-                        onChange={event =>
-                            skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
-                        }
-                    />
-                </Column>
-            </Row>
-            <Spacer20 />
-            <Row>
-                <Column md="5">
+                </DivMedMaksbredde>
+                <Textarea
+                    {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
+                    id={'begrunnelse'}
+                    name="begrunnelse"
+                    label={'Vurdering'}
+                    maxLength={3000}
+                    readOnly={erLesevisning}
+                    value={skjema.felter.begrunnelse.verdi}
+                    onChange={event =>
+                        skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
+                    }
+                />
+                <HGrid columns={{ md: 1, lg: 2 }} gap="4">
                     <RadioGroup
                         id="foreldet"
                         readOnly={erLesevisning}
@@ -193,10 +211,8 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                             </Radio>
                         ))}
                     </RadioGroup>
-                </Column>
-                <Column md="5">
-                    {erMedTilleggsfrist && (
-                        <>
+                    <VStack gap="5">
+                        {erMedTilleggsfrist && (
                             <Datovelger
                                 felt={skjema.felter.oppdagelsesdato}
                                 label="Dato for når feilutbetaling ble oppdaget"
@@ -205,50 +221,40 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                 readOnly={erLesevisning}
                                 kanKunVelgeFortid
                             />
-                            <Spacer20 />
-                        </>
-                    )}
-                    {(erForeldet || erMedTilleggsfrist) && (
-                        <>
-                            <Datovelger
-                                felt={skjema.felter.foreldelsesfrist}
-                                label="Foreldelsesfrist"
-                                description={!erMedTilleggsfrist && 'Datoen kommer i vedtaksbrevet'}
-                                visFeilmeldinger={ugyldigForeldelsesfristValgt}
-                                readOnly={erLesevisning}
-                            />
-                            <Spacer8 />
-                            {!erLesevisning && (
-                                <ReadMore header="Hvordan sette foreldelsesfrist">
-                                    {lagForeldelsesfristHjelpetekst()}
-                                </ReadMore>
-                            )}
-                        </>
-                    )}
-                </Column>
-            </Row>
-            <Spacer20 />
-            {!erLesevisning && (
-                <>
-                    <Row>
-                        <Column md="8">
-                            <Navigering>
-                                <div>
-                                    <FTButton variant="primary" onClick={() => onBekreft(periode)}>
-                                        Bekreft
-                                    </FTButton>
-                                </div>
-                                <div>
-                                    <FTButton variant="secondary" onClick={lukkValgtPeriode}>
-                                        Lukk
-                                    </FTButton>
-                                </div>
-                            </Navigering>
-                        </Column>
-                    </Row>
-                </>
-            )}
-        </StyledContainer>
+                        )}
+                        {(erForeldet || erMedTilleggsfrist) && (
+                            <VStack gap="2">
+                                <Datovelger
+                                    felt={skjema.felter.foreldelsesfrist}
+                                    label="Foreldelsesfrist"
+                                    description={
+                                        !erMedTilleggsfrist && 'Datoen kommer i vedtaksbrevet'
+                                    }
+                                    visFeilmeldinger={ugyldigForeldelsesfristValgt}
+                                    readOnly={erLesevisning}
+                                />
+                                {!erLesevisning && (
+                                    <ReadMore header="Hvordan sette foreldelsesfrist">
+                                        {lagForeldelsesfristHjelpetekst()}
+                                    </ReadMore>
+                                )}
+                            </VStack>
+                        )}
+                    </VStack>
+                </HGrid>
+
+                {!erLesevisning && (
+                    <Navigering>
+                        <FTButton variant="primary" onClick={() => onBekreft(periode)}>
+                            Bekreft
+                        </FTButton>
+                        <FTButton variant="secondary" onClick={lukkValgtPeriode}>
+                            Lukk
+                        </FTButton>
+                    </Navigering>
+                )}
+            </StyledVStack>
+        </StyledBox>
     );
 };
 

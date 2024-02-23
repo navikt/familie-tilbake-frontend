@@ -3,9 +3,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { styled } from 'styled-components';
 
-import { Column, Row } from 'nav-frontend-grid';
-
-import { BodyShort, Label } from '@navikt/ds-react';
+import { BodyShort, HGrid, Label } from '@navikt/ds-react';
 import {
     AFontWeightBold,
     AOrange100,
@@ -26,7 +24,7 @@ const StyledContainer = styled.div`
     margin-top: ${ASpacing3};
 `;
 
-const SumRad = styled(Row)`
+const RadTotaltFeilutbetalt = styled(HGrid)`
     margin-top: ${ASpacing5};
 
     .redNumber {
@@ -46,29 +44,19 @@ interface IProps {
 const PeriodeOppsummering: React.FC<IProps> = ({ fom, tom, beløp, hendelsetype }) => {
     return (
         <StyledContainer>
-            <Row>
-                <Column xs="7">
-                    <Label size="small">{`${formatterDatostring(fom)} - ${formatterDatostring(
-                        tom
-                    )}`}</Label>
-                </Column>
-                <Column xs="5">
-                    <BodyShort size="small">{hentPeriodelengde(fom, tom)}</BodyShort>
-                </Column>
-            </Row>
-            <SumRad>
-                <Column xs="7">
-                    <BodyShort size="small">
-                        Feilutbetaling:
-                        <span className={classNames('redNumber')}>{formatCurrencyNoKr(beløp)}</span>
-                    </BodyShort>
-                </Column>
-                <Column xs="5">
-                    {hendelsetype && (
-                        <BodyShort size="small">{hendelsetyper[hendelsetype]}</BodyShort>
-                    )}
-                </Column>
-            </SumRad>
+            <HGrid columns={2} gap="4">
+                <Label size="small">{`${formatterDatostring(fom)} - ${formatterDatostring(
+                    tom
+                )}`}</Label>
+                <BodyShort size="small">{hentPeriodelengde(fom, tom)}</BodyShort>
+            </HGrid>
+            <RadTotaltFeilutbetalt columns={2} gap="4">
+                <BodyShort size="small">
+                    Feilutbetaling:
+                    <span className={classNames('redNumber')}>{formatCurrencyNoKr(beløp)}</span>
+                </BodyShort>
+                {hendelsetype && <BodyShort size="small">{hendelsetyper[hendelsetype]}</BodyShort>}
+            </RadTotaltFeilutbetalt>
         </StyledContainer>
     );
 };

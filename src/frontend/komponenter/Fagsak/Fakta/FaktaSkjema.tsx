@@ -1,19 +1,11 @@
 import * as React from 'react';
 
-import { Column, Row } from 'nav-frontend-grid';
-
-import { BodyShort, Checkbox, Heading, Textarea } from '@navikt/ds-react';
+import { BodyShort, Checkbox, Heading, HGrid, Textarea, VStack } from '@navikt/ds-react';
 
 import { Ytelsetype } from '../../../kodeverk';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
-import {
-    DetailBold,
-    FTButton,
-    Navigering,
-    Spacer20,
-    Spacer8,
-} from '../../Felleskomponenter/Flytelementer';
+import { DetailBold, FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
@@ -51,124 +43,88 @@ const FaktaSkjema: React.FC<IProps> = ({
     };
 
     return (
-        <>
-            <Row>
-                <Column sm="12" md="6">
-                    <Row>
-                        <Column xs="12">
-                            <Heading level="2" size="small">
-                                Feilutbetaling
-                            </Heading>
-                        </Column>
-                    </Row>
-                    <Spacer20 />
-                    <Row>
-                        <Column xs="12" md="4">
-                            <DetailBold>Periode med feilutbetaling</DetailBold>
-                            <BodyShort size="small">
-                                {`${formatterDatostring(
-                                    feilutbetalingFakta.totalFeilutbetaltPeriode.fom
-                                )} - ${formatterDatostring(
-                                    feilutbetalingFakta.totalFeilutbetaltPeriode.tom
-                                )}`}
-                            </BodyShort>
-                        </Column>
-                        <Column xs="12" md="4">
-                            <DetailBold>Feilutbetalt beløp totalt</DetailBold>
-                            <BodyShort size="small" className={'redText'}>
-                                {`${formatCurrencyNoKr(
-                                    feilutbetalingFakta.totaltFeilutbetaltBeløp
-                                )}`}
-                            </BodyShort>
-                        </Column>
-                        <Column xs="12" md="4">
-                            <DetailBold>Tidligere varslet beløp</DetailBold>
-                            <BodyShort size="small">
-                                {feilutbetalingFakta.varsletBeløp
-                                    ? `${formatCurrencyNoKr(feilutbetalingFakta.varsletBeløp)}`
-                                    : ''}
-                            </BodyShort>
-                        </Column>
-                    </Row>
-                    <Spacer20 />
+        <HGrid columns={2} gap="10">
+            <VStack gap="5">
+                <Heading level="2" size="small">
+                    Feilutbetaling
+                </Heading>
+                <HGrid columns={3} gap="1">
+                    <div>
+                        <DetailBold>Periode med feilutbetaling</DetailBold>
+                        <BodyShort size="small">
+                            {`${formatterDatostring(
+                                feilutbetalingFakta.totalFeilutbetaltPeriode.fom
+                            )} - ${formatterDatostring(
+                                feilutbetalingFakta.totalFeilutbetaltPeriode.tom
+                            )}`}
+                        </BodyShort>
+                    </div>
+                    <div>
+                        <DetailBold>Feilutbetalt beløp totalt</DetailBold>
+                        <BodyShort size="small" className={'redText'}>
+                            {`${formatCurrencyNoKr(feilutbetalingFakta.totaltFeilutbetaltBeløp)}`}
+                        </BodyShort>
+                    </div>
+                    <div>
+                        <DetailBold>Tidligere varslet beløp</DetailBold>
+                        <BodyShort size="small">
+                            {feilutbetalingFakta.varsletBeløp
+                                ? `${formatCurrencyNoKr(feilutbetalingFakta.varsletBeløp)}`
+                                : ''}
+                        </BodyShort>
+                    </div>
+                </HGrid>
+                <VStack gap="2">
                     {!erLesevisning && (
-                        <>
-                            <Row>
-                                <Column xs="11">
-                                    <Checkbox
-                                        size="small"
-                                        disabled={erLesevisning}
-                                        checked={behandlePerioderSamlet === true}
-                                        onChange={() =>
-                                            settBehandlePerioderSamlet(!behandlePerioderSamlet)
-                                        }
-                                    >
-                                        Behandle alle perioder samlet
-                                    </Checkbox>
-                                </Column>
-                            </Row>
-                            <Spacer8 />
-                        </>
+                        <Checkbox
+                            size="small"
+                            checked={behandlePerioderSamlet === true}
+                            onChange={() => settBehandlePerioderSamlet(!behandlePerioderSamlet)}
+                        >
+                            Behandle alle perioder samlet
+                        </Checkbox>
                     )}
-                    <Row>
-                        <Column xs="11">
-                            {skjemaData.perioder && (
-                                <FeilutbetalingFaktaPerioder
-                                    ytelse={ytelse}
-                                    erLesevisning={erLesevisning}
-                                    perioder={skjemaData.perioder}
-                                />
-                            )}
-                        </Column>
-                    </Row>
-                </Column>
-                <Column sm="12" md="6">
-                    <FaktaRevurdering feilutbetalingFakta={feilutbetalingFakta} />
-                </Column>
-            </Row>
-            <Spacer20 />
-            <Row>
-                <Column sm="12" md="6">
-                    <Textarea
-                        name={'begrunnelse'}
-                        label={'Forklar årsaken(e) til feilutbetalingen'}
-                        readOnly={erLesevisning}
-                        value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
-                        onChange={event => onChangeBegrunnelse(event)}
-                        maxLength={3000}
-                        className={erLesevisning ? 'lesevisning' : ''}
-                        error={
-                            visFeilmeldinger &&
-                            feilmeldinger?.find(meld => meld.gjelderBegrunnelse)?.melding
-                        }
-                    />
-                </Column>
-            </Row>
-            <Spacer20 />
-            <Row>
-                <Column xs="12" md="6">
-                    <Navigering>
-                        <div>
-                            <FTButton
-                                variant="primary"
-                                onClick={sendInnSkjema}
-                                loading={senderInn}
-                                disabled={erLesevisning && !stegErBehandlet}
-                            >
-                                {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                            </FTButton>
-                        </div>
-                        {behandling.harVerge && (
-                            <div>
-                                <FTButton variant="secondary" onClick={gåTilForrige}>
-                                    Forrige
-                                </FTButton>
-                            </div>
-                        )}
-                    </Navigering>
-                </Column>
-            </Row>
-        </>
+                    {skjemaData.perioder && (
+                        <FeilutbetalingFaktaPerioder
+                            ytelse={ytelse}
+                            erLesevisning={erLesevisning}
+                            perioder={skjemaData.perioder}
+                        />
+                    )}
+                </VStack>
+                <Textarea
+                    name={'begrunnelse'}
+                    label={'Forklar årsaken(e) til feilutbetalingen'}
+                    readOnly={erLesevisning}
+                    value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
+                    onChange={event => onChangeBegrunnelse(event)}
+                    maxLength={3000}
+                    className={erLesevisning ? 'lesevisning' : ''}
+                    error={
+                        visFeilmeldinger &&
+                        feilmeldinger?.find(meld => meld.gjelderBegrunnelse)?.melding
+                    }
+                />
+
+                <Navigering>
+                    <FTButton
+                        variant="primary"
+                        onClick={sendInnSkjema}
+                        loading={senderInn}
+                        disabled={erLesevisning && !stegErBehandlet}
+                    >
+                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                    </FTButton>
+                    {behandling.harVerge && (
+                        <FTButton variant="secondary" onClick={gåTilForrige}>
+                            Forrige
+                        </FTButton>
+                    )}
+                </Navigering>
+            </VStack>
+
+            <FaktaRevurdering feilutbetalingFakta={feilutbetalingFakta} />
+        </HGrid>
     );
 };
 

@@ -2,18 +2,17 @@ import * as React from 'react';
 
 import classNames from 'classnames';
 
-import { Column, Row } from 'nav-frontend-grid';
-
+import { VStack } from '@navikt/ds-react';
 import { type Periode } from '@navikt/familie-tidslinje';
 
+import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
-import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering } from '../../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
-import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
 
 const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean) => {
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
@@ -99,55 +98,36 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
     };
 
     return perioder && tidslinjeRader ? (
-        <>
-            <Row>
-                <Column xs="12">
-                    <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
-                </Column>
-            </Row>
+        <VStack gap="5">
+            <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
+
             {!!valgtPeriode && (
-                <>
-                    <Spacer20 />
-                    <Row>
-                        <Column xs="12">
-                            <FeilutbetalingForeldelsePeriodeSkjema
-                                behandling={behandling}
-                                periode={valgtPeriode}
-                                erLesevisning={erLesevisning}
-                            />
-                        </Column>
-                    </Row>
-                </>
+                <FeilutbetalingForeldelsePeriodeSkjema
+                    behandling={behandling}
+                    periode={valgtPeriode}
+                    erLesevisning={erLesevisning}
+                />
             )}
-            <Spacer20 />
-            <Row>
-                <Column md="12">
-                    <Navigering>
-                        <div>
-                            {erAutoutført || (stegErBehandlet && erLesevisning) ? (
-                                <FTButton variant="primary" onClick={gåTilNeste}>
-                                    Neste
-                                </FTButton>
-                            ) : (
-                                <FTButton
-                                    variant="primary"
-                                    onClick={sendInnSkjema}
-                                    loading={senderInn}
-                                    disabled={disableBekreft}
-                                >
-                                    {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                                </FTButton>
-                            )}
-                        </div>
-                        <div>
-                            <FTButton variant="secondary" onClick={gåTilForrige}>
-                                Forrige
-                            </FTButton>
-                        </div>
-                    </Navigering>
-                </Column>
-            </Row>
-        </>
+            <Navigering>
+                {erAutoutført || (stegErBehandlet && erLesevisning) ? (
+                    <FTButton variant="primary" onClick={gåTilNeste}>
+                        Neste
+                    </FTButton>
+                ) : (
+                    <FTButton
+                        variant="primary"
+                        onClick={sendInnSkjema}
+                        loading={senderInn}
+                        disabled={disableBekreft}
+                    >
+                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                    </FTButton>
+                )}
+                <FTButton variant="secondary" onClick={gåTilForrige}>
+                    Forrige
+                </FTButton>
+            </Navigering>
+        </VStack>
     ) : null;
 };
 
