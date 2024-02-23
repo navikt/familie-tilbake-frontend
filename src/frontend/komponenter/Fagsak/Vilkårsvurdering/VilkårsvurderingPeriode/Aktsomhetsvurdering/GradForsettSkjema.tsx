@@ -53,9 +53,7 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                         <Label>Andel som skal tilbakekreves</Label>
                         <BodyShort>100 %</BodyShort>
                         {kanIlleggeRenter && (
-                            <>
-                                <BodyShort size="small">Det legges til 10 % renter</BodyShort>
-                            </>
+                            <BodyShort size="small">Det legges til 10 % renter</BodyShort>
                         )}
                     </div>
                     {!kanIlleggeRenter && (
