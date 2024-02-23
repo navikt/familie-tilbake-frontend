@@ -2,9 +2,16 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Column, Row } from 'nav-frontend-grid';
-
-import { BodyShort, Label, Radio, Select, TextField, VStack } from '@navikt/ds-react';
+import {
+    BodyShort,
+    HGrid,
+    HStack,
+    Label,
+    Radio,
+    Select,
+    TextField,
+    VStack,
+} from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
@@ -25,18 +32,6 @@ import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 
 const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;
-`;
-
-const FlexRow = styled.div`
-    display: flex;
-    flex: 0 0 100%;
-    flex-flow: row nowrap;
-    align-items: center;
-`;
-
-const FlexColumn = styled.div`
-    flex: 0 1 auto;
-    padding-right: 8px;
 `;
 
 interface IProps {
@@ -100,113 +95,95 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
             </HorisontalRadioGroup>
             {skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA && (
                 <ArrowBox alignOffset={erLesevisning ? 5 : 20}>
-                    <Row>
-                        <Column md={!erGrovtUaktsomhet ? '12' : '6'}>
-                            {!harMerEnnEnAktivitet && !erEgendefinert && (
-                                <>
-                                    <Label>Angi andel som skal tilbakekreves</Label>
-                                    <FlexRow>
-                                        <FlexColumn>
-                                            <Select
-                                                {...skjema.felter.uaktsomAndelTilbakekreves.hentNavInputProps(
-                                                    skjema.visFeilmeldinger
-                                                )}
-                                                label={null}
-                                                id="andelSomTilbakekreves"
-                                                aria-label="Angi andel som skal tilbakekreves"
-                                                readOnly={erLesevisning}
-                                                onChange={event =>
-                                                    skjema.felter.uaktsomAndelTilbakekreves.validerOgSettFelt(
-                                                        event.target.value
-                                                    )
-                                                }
-                                                value={
-                                                    skjema.felter.uaktsomAndelTilbakekreves.verdi
-                                                }
-                                                style={{ width: '100px' }}
-                                            >
-                                                <option>-</option>
-                                                {ANDELER.map(andel => (
-                                                    <option key={andel} value={andel}>
-                                                        {andel}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                        </FlexColumn>
-                                        <FlexColumn>
-                                            <BodyShort as="span" style={{ marginTop: '5px' }}>
-                                                %
-                                            </BodyShort>
-                                        </FlexColumn>
-                                    </FlexRow>
-                                </>
-                            )}
-                            {!harMerEnnEnAktivitet && erEgendefinert && (
-                                <>
-                                    <Label>Angi andel som skal tilbakekreves</Label>
-                                    <FlexRow>
-                                        <FlexColumn>
-                                            <TextField
-                                                {...skjema.felter.uaktsomAndelTilbakekrevesManuelt.hentNavInputProps(
-                                                    skjema.visFeilmeldinger
-                                                )}
-                                                label={null}
-                                                id="andelSomTilbakekrevesManuell"
-                                                aria-label="Angi andel som skal tilbakekreves - fritekst"
-                                                readOnly={erLesevisning}
-                                                onChange={event =>
-                                                    skjema.felter.uaktsomAndelTilbakekrevesManuelt.validerOgSettFelt(
-                                                        event.target.value
-                                                    )
-                                                }
-                                                value={
-                                                    skjema.felter.uaktsomAndelTilbakekrevesManuelt
-                                                        .verdi
-                                                }
-                                                data-testid="andelSomTilbakekrevesManuell"
-                                                style={{ width: '100px' }}
-                                            />
-                                        </FlexColumn>
-                                        <FlexColumn
-                                            className="percentage"
-                                            style={{ paddingTop: '5px' }}
-                                        >
-                                            %
-                                        </FlexColumn>
-                                    </FlexRow>
-                                </>
-                            )}
-                            {harMerEnnEnAktivitet && (
-                                <TextField
-                                    {...skjema.felter.uaktsomTilbakekrevesBeløp.hentNavInputProps(
-                                        skjema.visFeilmeldinger
-                                    )}
-                                    id="belopSomSkalTilbakekreves"
-                                    label={'Angi beløp som skal tilbakekreves'}
-                                    readOnly={erLesevisning}
-                                    value={skjema.felter.uaktsomTilbakekrevesBeløp.verdi}
-                                    onChange={event =>
-                                        skjema.felter.uaktsomTilbakekrevesBeløp.validerOgSettFelt(
-                                            event.target.value
-                                        )
-                                    }
-                                    style={{ width: '100px' }}
-                                />
-                            )}
-                        </Column>
+                    <HGrid columns={2}>
+                        {!harMerEnnEnAktivitet && !erEgendefinert && (
+                            <VStack gap="2">
+                                <Label>Angi andel som skal tilbakekreves</Label>
+                                <HStack align="center" gap="1">
+                                    <Select
+                                        {...skjema.felter.uaktsomAndelTilbakekreves.hentNavInputProps(
+                                            skjema.visFeilmeldinger
+                                        )}
+                                        label={null}
+                                        hideLabel
+                                        id="andelSomTilbakekreves"
+                                        aria-label="Angi andel som skal tilbakekreves"
+                                        readOnly={erLesevisning}
+                                        onChange={event =>
+                                            skjema.felter.uaktsomAndelTilbakekreves.validerOgSettFelt(
+                                                event.target.value
+                                            )
+                                        }
+                                        value={skjema.felter.uaktsomAndelTilbakekreves.verdi}
+                                        style={{ width: '100px' }}
+                                    >
+                                        <option>-</option>
+                                        {ANDELER.map(andel => (
+                                            <option key={andel} value={andel}>
+                                                {andel}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                    %
+                                </HStack>
+                            </VStack>
+                        )}
+                        {!harMerEnnEnAktivitet && erEgendefinert && (
+                            <VStack gap="2">
+                                <Label>Angi andel som skal tilbakekreves</Label>
+                                <HStack align="center" gap="1">
+                                    <TextField
+                                        {...skjema.felter.uaktsomAndelTilbakekrevesManuelt.hentNavInputProps(
+                                            skjema.visFeilmeldinger
+                                        )}
+                                        label={null}
+                                        hideLabel
+                                        id="andelSomTilbakekrevesManuell"
+                                        aria-label="Angi andel som skal tilbakekreves - fritekst"
+                                        readOnly={erLesevisning}
+                                        onChange={event =>
+                                            skjema.felter.uaktsomAndelTilbakekrevesManuelt.validerOgSettFelt(
+                                                event.target.value
+                                            )
+                                        }
+                                        value={skjema.felter.uaktsomAndelTilbakekrevesManuelt.verdi}
+                                        data-testid="andelSomTilbakekrevesManuell"
+                                        style={{ width: '100px' }}
+                                    />
+                                    %
+                                </HStack>
+                            </VStack>
+                        )}
+                        {harMerEnnEnAktivitet && (
+                            <TextField
+                                {...skjema.felter.uaktsomTilbakekrevesBeløp.hentNavInputProps(
+                                    skjema.visFeilmeldinger
+                                )}
+                                id="belopSomSkalTilbakekreves"
+                                label={'Angi beløp som skal tilbakekreves'}
+                                readOnly={erLesevisning}
+                                value={skjema.felter.uaktsomTilbakekrevesBeløp.verdi}
+                                onChange={event =>
+                                    skjema.felter.uaktsomTilbakekrevesBeløp.validerOgSettFelt(
+                                        event.target.value
+                                    )
+                                }
+                                style={{ width: '100px' }}
+                            />
+                        )}
                         {erGrovtUaktsomhet && (
-                            <Column md="6">
+                            <div>
                                 <Label>Skal det tillegges renter?</Label>
                                 <StyledNormaltekst>Nei</StyledNormaltekst>
-                            </Column>
+                            </div>
                         )}
-                    </Row>
+                    </HGrid>
                 </ArrowBox>
             )}
             {skjema.felter.harGrunnerTilReduksjon.verdi === OptionNEI && (
                 <ArrowBox alignOffset={erLesevisning ? 5 : 80}>
-                    <Row>
-                        <Column md={!erGrovtUaktsomhet ? '12' : '6'}>
+                    <HGrid columns={2}>
+                        <div>
                             <Label spacing={harMerEnnEnAktivitet}>
                                 {harMerEnnEnAktivitet
                                     ? 'Beløp som skal tilbakekreves'
@@ -217,7 +194,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                             ) : (
                                 <BodyShort>{beskjedTilbakekreves}</BodyShort>
                             )}
-                        </Column>
+                        </div>
                         {erGrovtUaktsomhet && (
                             <TilleggesRenterRadioGroup
                                 erLesevisning={erLesevisning}
@@ -226,7 +203,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                 visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
                             />
                         )}
-                    </Row>
+                    </HGrid>
                 </ArrowBox>
             )}
         </VStack>
