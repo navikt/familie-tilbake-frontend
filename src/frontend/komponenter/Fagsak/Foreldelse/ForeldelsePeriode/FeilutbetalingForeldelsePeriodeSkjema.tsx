@@ -6,11 +6,11 @@ import {
     Box,
     Heading,
     HGrid,
-    HStack,
     Link,
     Radio,
     RadioGroup,
     ReadMore,
+    Stack,
     Textarea,
     VStack,
 } from '@navikt/ds-react';
@@ -137,7 +137,11 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
             <HGrid columns={'1fr 4rem'}>
                 <VStack gap="5">
                     <StyledVStack $maxWidth={'30rem'} gap="1">
-                        <HStack justify="space-between" align="center">
+                        <Stack
+                            justify="space-between"
+                            align={{ md: 'start', lg: 'center' }}
+                            direction={{ md: 'column', lg: 'row' }}
+                        >
                             <Heading size="small" level="2">
                                 Detaljer for valgt periode
                             </Heading>
@@ -149,7 +153,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                     onBekreft={onSplitPeriode}
                                 />
                             )}
-                        </HStack>
+                        </Stack>
                         <PeriodeOppsummering
                             fom={periode.periode.fom}
                             tom={periode.periode.tom}
