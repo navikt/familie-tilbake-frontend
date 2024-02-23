@@ -18,9 +18,7 @@ import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../.
 
 const StyledVStack = styled(VStack)`
     background-color: ${AOrange100};
-    height: auto;
     padding: ${ASpacing3} ${ASpacing5};
-    top: 0;
     margin-top: ${ASpacing3};
     max-width: 30rem;
     width: 100%;
