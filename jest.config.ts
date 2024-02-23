@@ -13,8 +13,6 @@ const config: Config.InitialOptions = {
     moduleNameMapper: {
         '.+\\.(css|less)$': 'identity-obj-proxy',
         '.+\\.(svg)$': '<rootDir>/src/mockFile.js',
-        'nav-(.*)-style': '<rootDir>/src/mockFile.js',
-        'nav-frontend-core': '<rootDir>/src/mockFile.js',
     },
     transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@navikt*|uuid|nanoid)/)'],
     transform: {
