@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 
 import { Column, Row } from 'nav-frontend-grid';
 
-import { BodyShort, Label, Radio, Select, TextField } from '@navikt/ds-react';
+import { BodyShort, Label, Radio, Select, TextField, VStack } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
@@ -64,7 +64,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
     const erGrovtUaktsomhet = skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET;
 
     return (
-        <>
+        <VStack gap="1">
             <HorisontalRadioGroup
                 id="harGrunnerTilReduksjon"
                 legend={'Skal særlige grunner gi reduksjon av beløpet?'}
@@ -229,7 +229,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                     </Row>
                 </ArrowBox>
             )}
-        </>
+        </VStack>
     );
 };
 
