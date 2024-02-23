@@ -415,18 +415,16 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     </HGrid>
                 )}
             </VStack>
-            {!erLesevisning && (
-                <Navigering>
-                    {!periode.foreldet && (
-                        <FTButton variant="primary" onClick={() => onBekreft(periode)}>
-                            Bekreft
-                        </FTButton>
-                    )}
-                    <FTButton variant="secondary" onClick={lukkValgtPeriode}>
-                        Lukk
+            <Navigering>
+                {!periode.foreldet && !erLesevisning && (
+                    <FTButton variant="primary" onClick={() => onBekreft(periode)}>
+                        Bekreft
                     </FTButton>
-                </Navigering>
-            )}
+                )}
+                <FTButton variant="secondary" onClick={lukkValgtPeriode}>
+                    Lukk
+                </FTButton>
+            </Navigering>
         </StyledBox>
     ) : null;
 };
