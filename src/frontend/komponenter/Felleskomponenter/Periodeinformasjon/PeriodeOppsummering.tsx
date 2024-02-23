@@ -1,17 +1,9 @@
 import * as React from 'react';
 
-import classNames from 'classnames';
 import { styled } from 'styled-components';
 
-import { BodyShort, HGrid, Label, VStack } from '@navikt/ds-react';
-import {
-    AFontWeightBold,
-    AOrange100,
-    ATextDanger,
-    ASpacing2,
-    ASpacing3,
-    ASpacing5,
-} from '@navikt/ds-tokens/dist/tokens';
+import { BodyShort, HGrid, HStack, Label, VStack } from '@navikt/ds-react';
+import { AOrange100, ATextDanger, ASpacing3, ASpacing5 } from '@navikt/ds-tokens/dist/tokens';
 
 import { HendelseType, hendelsetyper } from '../../../kodeverk';
 import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
@@ -24,12 +16,8 @@ const StyledVStack = styled(VStack)`
     width: 100%;
 `;
 
-const RadTotaltFeilutbetalt = styled(HGrid)`
-    .redNumber {
-        color: ${ATextDanger};
-        font-weight: ${AFontWeightBold};
-        margin-left: ${ASpacing2};
-    }
+const BodyShortDanger = styled(BodyShort)`
+    color: ${ATextDanger};
 `;
 
 interface IProps {
@@ -48,13 +36,15 @@ const PeriodeOppsummering: React.FC<IProps> = ({ fom, tom, beløp, hendelsetype 
                 )}`}</Label>
                 <BodyShort size="small">{hentPeriodelengde(fom, tom)}</BodyShort>
             </HGrid>
-            <RadTotaltFeilutbetalt columns={{ md: 1, lg: '5fr 3fr' }} gap="4">
-                <BodyShort size="small">
-                    Feilutbetaling:
-                    <span className={classNames('redNumber')}>{formatCurrencyNoKr(beløp)}</span>
-                </BodyShort>
+            <HGrid columns={{ md: 1, lg: '5fr 3fr' }} gap="4">
+                <HStack gap="2">
+                    <BodyShort size="small">Feilutbetaling:</BodyShort>
+                    <BodyShortDanger weight="semibold" size="small">
+                        {formatCurrencyNoKr(beløp)}
+                    </BodyShortDanger>
+                </HStack>
                 {hendelsetype && <BodyShort size="small">{hendelsetyper[hendelsetype]}</BodyShort>}
-            </RadTotaltFeilutbetalt>
+            </HGrid>
         </StyledVStack>
     );
 };
