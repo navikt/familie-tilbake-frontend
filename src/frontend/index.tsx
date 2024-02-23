@@ -1,8 +1,7 @@
 import React from 'react';
 
 import axe from '@axe-core/react';
-import { init } from '@sentry/browser';
-import { Integrations } from '@sentry/tracing';
+import * as Sentry from '@sentry/browser';
 import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 
@@ -12,10 +11,10 @@ import App from './komponenter/App';
 const environment = window.location.hostname;
 
 if (process.env.NODE_ENV !== 'development') {
-    init({
+    Sentry.init({
         dsn: 'https://e88ebf3bc63346d6a4c2baba674afed3@sentry.gc.nav.no/83',
         environment,
-        integrations: [new Integrations.BrowserTracing()],
+        integrations: [Sentry.browserTracingIntegration()],
         tracesSampleRate: 0.2,
     });
 }
