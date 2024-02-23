@@ -8,7 +8,7 @@ import { YtelseInfo } from '../../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr } from '../../../../utils';
 
 const StyledPeriodeTable = styled(Table)`
-    width: 30rem;
+    max-width: 30rem;
 `;
 
 interface IProps {
