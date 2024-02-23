@@ -368,62 +368,57 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                 ))}
                             </RadioGroup>
                         </VStack>
-                        <VStack gap="5">
-                            {vilkårsresultatVurderingGjort && (
-                                <>
-                                    {erGodTro ? (
-                                        <Heading size="small" level="2">
-                                            Beløpet mottatt i god tro
-                                        </Heading>
-                                    ) : (
-                                        <Heading size="small" level="2">
-                                            Aktsomhet
-                                        </Heading>
+                        {vilkårsresultatVurderingGjort && (
+                            <VStack gap="5">
+                                {erGodTro ? (
+                                    <Heading size="small" level="2">
+                                        Beløpet mottatt i god tro
+                                    </Heading>
+                                ) : (
+                                    <Heading size="small" level="2">
+                                        Aktsomhet
+                                    </Heading>
+                                )}
+                                <Textarea
+                                    {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(
+                                        skjema.visFeilmeldinger
                                     )}
-                                    <Textarea
-                                        {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(
-                                            skjema.visFeilmeldinger
-                                        )}
-                                        name="vurderingBegrunnelse"
-                                        label={
-                                            erGodTro
-                                                ? 'Vurder om beløpet er i behold'
-                                                : erForstodBurdeForstått
-                                                  ? 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-                                                  : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
-                                        }
-                                        placeholder={
-                                            erGodTro
-                                                ? 'Begrunn hvorfor beløpet er i behold / er ikke i behold'
-                                                : ''
-                                        }
-                                        readOnly={erLesevisning}
-                                        value={
-                                            skjema.felter.aktsomhetBegrunnelse
-                                                ? skjema.felter.aktsomhetBegrunnelse.verdi
-                                                : ''
-                                        }
-                                        onChange={event =>
-                                            skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(
-                                                event.target.value
-                                            )
-                                        }
-                                        maxLength={3000}
+                                    name="vurderingBegrunnelse"
+                                    label={
+                                        erGodTro
+                                            ? 'Vurder om beløpet er i behold'
+                                            : erForstodBurdeForstått
+                                              ? 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+                                              : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
+                                    }
+                                    placeholder={
+                                        erGodTro
+                                            ? 'Begrunn hvorfor beløpet er i behold / er ikke i behold'
+                                            : ''
+                                    }
+                                    readOnly={erLesevisning}
+                                    value={
+                                        skjema.felter.aktsomhetBegrunnelse
+                                            ? skjema.felter.aktsomhetBegrunnelse.verdi
+                                            : ''
+                                    }
+                                    onChange={event =>
+                                        skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(
+                                            event.target.value
+                                        )
+                                    }
+                                    maxLength={3000}
+                                />
+                                {erGodTro ? (
+                                    <GodTroSkjema skjema={skjema} erLesevisning={erLesevisning} />
+                                ) : (
+                                    <AktsomhetsvurderingSkjema
+                                        skjema={skjema}
+                                        erLesevisning={erLesevisning}
                                     />
-                                    {erGodTro ? (
-                                        <GodTroSkjema
-                                            skjema={skjema}
-                                            erLesevisning={erLesevisning}
-                                        />
-                                    ) : (
-                                        <AktsomhetsvurderingSkjema
-                                            skjema={skjema}
-                                            erLesevisning={erLesevisning}
-                                        />
-                                    )}
-                                </>
-                            )}
-                        </VStack>
+                                )}
+                            </VStack>
+                        )}
                     </HGrid>
                 )}
             </VStack>
