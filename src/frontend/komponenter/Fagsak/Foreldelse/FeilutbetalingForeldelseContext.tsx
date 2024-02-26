@@ -11,6 +11,7 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { ForeldelsePeriodeSkjemeData } from './typer/feilutbetalingForeldelse';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
@@ -20,7 +21,6 @@ import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import { ForeldelsePeriodeSkjemeData } from './typer/feilutbetalingForeldelse';
 
 interface IProps {
     behandling: IBehandling;

@@ -3,6 +3,8 @@ import * as React from 'react';
 import { Radio, VStack } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
+import GradForsettSkjema from './GradForsettSkjema';
+import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
 import {
     Aktsomhet,
     aktsomheter,
@@ -15,8 +17,6 @@ import {
     OptionNEI,
     VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
-import GradForsettSkjema from './GradForsettSkjema';
-import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
 
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;

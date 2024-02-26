@@ -11,6 +11,7 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useDokumentApi } from '../../../api/dokument';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -26,7 +27,6 @@ import { IFagsak } from '../../../typer/fagsak';
 import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
 import { isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
 const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[] => {
     // @ts-ignore - klager på periode men er trygt p.g.s. filtreringen

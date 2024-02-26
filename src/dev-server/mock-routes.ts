@@ -4,24 +4,6 @@ import { Request, Response, Router } from 'express';
 
 import { byggFeiletRessurs, byggSuksessRessurs, RessursStatus } from '@navikt/familie-typer';
 
-import {
-    Aktsomhet,
-    Foreldelsevurdering,
-    HendelseType,
-    HendelseUndertype,
-    SærligeGrunner,
-    Vilkårsresultat,
-} from '../frontend/kodeverk';
-import {
-    FaktaPeriode,
-    ForeldelsePeriode,
-    IFeilutbetalingFakta,
-    IFeilutbetalingForeldelse,
-    IFeilutbetalingVilkårsvurdering,
-    Periode,
-    VilkårsresultatInfo,
-    VilkårsvurderingPeriode,
-} from '../frontend/typer/feilutbetalingtyper';
 import { fagsak_ba2, ba_behandling_4, ba_behandling_5 } from './mock/ba2/BA_fagsak_2';
 import {
     fagsak_ba3,
@@ -70,6 +52,24 @@ import {
     feilutbetalingVilkårsvurdering_ubehandlet_3,
     feilutbetalingVilkårsvurdering_ubehandlet_4,
 } from './mock/vilkårsvurdering/feilutbetalingVilkårsvurdering_ubehandlet';
+import {
+    Aktsomhet,
+    Foreldelsevurdering,
+    HendelseType,
+    HendelseUndertype,
+    SærligeGrunner,
+    Vilkårsresultat,
+} from '../frontend/kodeverk';
+import {
+    FaktaPeriode,
+    ForeldelsePeriode,
+    IFeilutbetalingFakta,
+    IFeilutbetalingForeldelse,
+    IFeilutbetalingVilkårsvurdering,
+    Periode,
+    VilkårsresultatInfo,
+    VilkårsvurderingPeriode,
+} from '../frontend/typer/feilutbetalingtyper';
 
 const behandleFaktaPerioder = (
     perioder: FaktaPeriode[],

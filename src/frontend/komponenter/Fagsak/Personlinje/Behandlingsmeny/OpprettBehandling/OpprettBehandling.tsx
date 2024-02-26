@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { ErrorMessage, Modal, Select } from '@navikt/ds-react';
 
+import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';
 import {
     Behandlingstype,
     behandlingstyper,
@@ -17,7 +18,6 @@ import {
     Spacer20,
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
-import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';
 
 interface IProps {
     behandling: IBehandling;

@@ -3,8 +3,14 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { Alert, BodyLong, Heading, Loader, VStack } from '@navikt/ds-react';
+import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import {
+    erTotalbeløpUnder4Rettsgebyr,
+    useFeilutbetalingVilkårsvurdering,
+} from './FeilutbetalingVilkårsvurderingContext';
+import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
 import {
     Ytelsetype,
@@ -15,12 +21,6 @@ import {
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import {
-    erTotalbeløpUnder4Rettsgebyr,
-    useFeilutbetalingVilkårsvurdering,
-} from './FeilutbetalingVilkårsvurderingContext';
-import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
-import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 
 const StyledVilkårsvurdering = styled.div`
     padding: ${ASpacing3};

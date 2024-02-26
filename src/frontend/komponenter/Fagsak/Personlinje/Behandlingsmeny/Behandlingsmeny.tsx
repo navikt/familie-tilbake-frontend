@@ -7,20 +7,20 @@ import { Button, Popover } from '@navikt/ds-react';
 import { AFontSizeXlarge, AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
-import { useBehandling } from '../../../../context/BehandlingContext';
-import { Fagsystem } from '../../../../kodeverk';
-import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
 import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
+import HentOppdatertKravgrunnlag from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
 import LeggTilFjernBrevmottakere from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
 import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
 import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
-import { useApp } from '../../../../context/AppContext';
-import HentOppdatertKravgrunnlag from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
 import SettBehandlingTilbakeTilFakta from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
+import { useApp } from '../../../../context/AppContext';
+import { useBehandling } from '../../../../context/BehandlingContext';
+import { Fagsystem } from '../../../../kodeverk';
+import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
+import { IFagsak } from '../../../../typer/fagsak';
 
 const StyledList = styled.ul`
     list-style-type: none;

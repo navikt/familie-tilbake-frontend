@@ -1,10 +1,14 @@
 import * as React from 'react';
 
+import { addDays, addMonths } from 'date-fns';
+
 import { ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling, manuelleVenteÅrsaker, venteårsaker } from '../../../../../typer/behandling';
+import { dagensDato } from '../../../../../utils/dato';
+import Datovelger from '../../../../Felleskomponenter/Datovelger/Datovelger';
 import {
     BehandlingsMenyButton,
     FTButton,
@@ -12,9 +16,6 @@ import {
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
-import { addDays, addMonths } from 'date-fns';
-import { dagensDato } from '../../../../../utils/dato';
-import Datovelger from '../../../../Felleskomponenter/Datovelger/Datovelger';
 
 interface IProps {
     behandling: IBehandling;

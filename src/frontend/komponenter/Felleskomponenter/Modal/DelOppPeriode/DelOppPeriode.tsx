@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { endOfMonth } from 'date-fns';
 import { styled } from 'styled-components';
 
 import { BodyShort, Label, Modal, MonthPicker, useMonthpicker } from '@navikt/ds-react';
@@ -8,9 +9,8 @@ import { type Periode as TidslinjePeriode, Tidslinje } from '@navikt/familie-tid
 
 import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 import { formatterDatostring } from '../../../../utils';
-import { FTButton } from '../../Flytelementer';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
-import { endOfMonth } from 'date-fns';
+import { FTButton } from '../../Flytelementer';
 
 const TidslinjeContainer = styled.div`
     border: 1px solid ${ABorderStrong};

@@ -6,6 +6,8 @@ import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
 import { AGray400, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 
+import HentDokument from './HentDokument';
+import { useHistorikk } from './HistorikkContext';
 import { Behandlingssteg } from '../../../../typer/behandling';
 import {
     Aktør,
@@ -17,8 +19,6 @@ import {
 import { formatterDatoOgTidstring } from '../../../../utils';
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
 import { finnSideForSteg } from '../../../Felleskomponenter/Venstremeny/sider';
-import HentDokument from './HentDokument';
-import { useHistorikk } from './HistorikkContext';
 
 const Innslag = styled.div`
     display: flex;

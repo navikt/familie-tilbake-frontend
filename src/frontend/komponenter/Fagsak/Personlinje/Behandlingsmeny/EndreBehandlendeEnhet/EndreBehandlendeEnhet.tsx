@@ -3,6 +3,7 @@ import * as React from 'react';
 import { ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Ytelsetype } from '../../../../../kodeverk';
 import { IBehandling } from '../../../../../typer/behandling';
@@ -13,7 +14,6 @@ import {
     FTButton,
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
-import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 
 interface IProps {
     ytelse: Ytelsetype;

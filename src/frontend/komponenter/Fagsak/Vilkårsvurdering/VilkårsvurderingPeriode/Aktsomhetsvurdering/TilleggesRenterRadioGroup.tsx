@@ -1,9 +1,11 @@
 import * as React from 'react';
+
 import { BodyShort, Label, Radio } from '@navikt/ds-react';
-import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
-import { JaNeiOption, jaNeiOptions } from '../VilkårsvurderingPeriodeSkjemaContext';
 import type { Felt } from '@navikt/familie-skjema';
 import { Valideringsstatus } from '@navikt/familie-skjema';
+
+import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
+import { JaNeiOption, jaNeiOptions } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 interface IProps {
     erLesevisning: boolean;

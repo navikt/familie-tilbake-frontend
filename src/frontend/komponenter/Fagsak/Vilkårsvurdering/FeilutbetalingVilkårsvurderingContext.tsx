@@ -12,6 +12,7 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
@@ -29,7 +30,6 @@ import {
 } from '../../../typer/feilutbetalingtyper';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 
 const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData) => {
     return (

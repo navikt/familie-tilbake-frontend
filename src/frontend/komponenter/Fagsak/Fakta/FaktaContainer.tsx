@@ -6,12 +6,12 @@ import { Alert, BodyLong, Heading, Loader } from '@navikt/ds-react';
 import { AFontWeightBold, ATextDanger, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import FaktaSkjema from './FaktaSkjema';
+import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Ytelsetype } from '../../../kodeverk';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import FaktaSkjema from './FaktaSkjema';
-import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 
 const StyledFeilutbetalingFakta = styled.div`
     padding: ${ASpacing3};

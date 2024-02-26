@@ -6,9 +6,9 @@ import { Detail } from '@navikt/ds-react';
 import { AGray400, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { type IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
+import Dokumentvisning from './Dokumentvisning';
 import { formatterDatoOgTid, hentDatoRegistrertSendt } from '../../../../utils';
 import { DokumentIkon } from '../../../Felleskomponenter/Ikoner';
-import Dokumentvisning from './Dokumentvisning';
 
 const Journalpost = styled.div`
     display: flex;

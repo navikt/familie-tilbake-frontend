@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
 import Dokumentlisting from './Dokumentlisting/Dokumentlisting';
 import { DokumentlistingProvider } from './Dokumentlisting/DokumentlistingContext';
 import Historikk from './Historikk/Historikk';
@@ -10,6 +8,8 @@ import SendMelding from './SendMelding/SendMelding';
 import { SendMeldingProvider } from './SendMelding/SendMeldingContext';
 import Totrinnskontroll from './Totrinnskontroll/Totrinnskontroll';
 import { TotrinnskontrollProvider } from './Totrinnskontroll/TotrinnskontrollContext';
+import { IBehandling } from '../../../typer/behandling';
+import { IFagsak } from '../../../typer/fagsak';
 
 export enum Menysider {
     TOTRINN = `TOTRINN`,

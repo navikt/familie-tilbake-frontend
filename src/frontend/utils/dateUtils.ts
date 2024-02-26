@@ -11,8 +11,8 @@ import {
 
 import { type IJournalpostRelevantDato, JournalpostDatotype } from '@navikt/familie-typer';
 
-import { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
 import { isEmpty } from './validering';
+import { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
 
 const datoformat: Intl.DateTimeFormatOptions = {
     day: '2-digit',

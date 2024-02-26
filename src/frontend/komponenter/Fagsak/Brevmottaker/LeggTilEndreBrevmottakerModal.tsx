@@ -6,6 +6,8 @@ import { Button, Fieldset, Modal, Radio, RadioGroup, Select, TextField } from '@
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { useBrevmottaker } from './BrevmottakerContext';
+import BrevmottakerSkjema from './BrevmottakerSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import {
     AdresseKilde,
@@ -14,8 +16,6 @@ import {
     mottakerTypeVisningsnavn,
 } from '../../../typer/Brevmottaker';
 import { hentFrontendFeilmelding } from '../../../utils';
-import { useBrevmottaker } from './BrevmottakerContext';
-import BrevmottakerSkjema from './BrevmottakerSkjema';
 
 const FlexContainer = styled.div`
     display: flex;

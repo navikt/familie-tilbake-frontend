@@ -7,8 +7,8 @@ import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 import CountrySelect from '@navikt/landvelger';
 
-import { MottakerType } from '../../../typer/Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
+import { MottakerType } from '../../../typer/Brevmottaker';
 
 const PostnummerOgStedContainer = styled.div`
     display: grid;

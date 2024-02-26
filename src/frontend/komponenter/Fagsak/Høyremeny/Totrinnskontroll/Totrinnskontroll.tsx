@@ -5,12 +5,6 @@ import { styled } from 'styled-components';
 import { Alert, BodyShort, Label, Link, Radio, Textarea } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
-import { behandlingssteg } from '../../../../typer/behandling';
-import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
-import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
-import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {
     OptionGodkjent,
@@ -18,6 +12,12 @@ import {
     TotrinnGodkjenningOption,
     totrinnGodkjenningOptions,
 } from './typer/totrinnSkjemaTyper';
+import { behandlingssteg } from '../../../../typer/behandling';
+import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
+import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
+import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 
 const StyledContainer = styled.div`
     margin-top: 10px;

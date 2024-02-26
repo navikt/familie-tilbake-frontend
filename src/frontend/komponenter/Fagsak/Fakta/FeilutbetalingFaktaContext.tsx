@@ -11,6 +11,7 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/feilutbetalingFakta';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { HendelseType, HendelseUndertype } from '../../../kodeverk';
@@ -25,7 +26,6 @@ import {
     validerTekstMaksLengde,
 } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/feilutbetalingFakta';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 

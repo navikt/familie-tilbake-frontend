@@ -1,13 +1,14 @@
 import * as React from 'react';
 
-import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';
+import { css, styled } from 'styled-components';
 
-import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
-import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
+import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';
+import { ABorderWarning, ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
+
 import { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
-import { css, styled } from 'styled-components';
-import { ABorderWarning, ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
+import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
+import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 
 const StyledExpansionCard = styled(ExpansionCard)`
     margin-bottom: ${ASpacing2};

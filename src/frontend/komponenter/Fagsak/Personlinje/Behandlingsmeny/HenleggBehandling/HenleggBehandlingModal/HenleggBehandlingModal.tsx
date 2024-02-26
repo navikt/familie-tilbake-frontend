@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+import { Modal, Select, Textarea } from '@navikt/ds-react';
+
+import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
 import {
     Behandlingresultat,
     behandlingsresultater,
@@ -7,10 +10,8 @@ import {
 } from '../../../../../../typer/behandling';
 import { IFagsak, målform } from '../../../../../../typer/fagsak';
 import { FTButton, Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
-import { Modal, Select, Textarea } from '@navikt/ds-react';
 import { LabelMedSpråk } from '../../../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
-import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
 
 interface IProps {
     behandling: IBehandling;

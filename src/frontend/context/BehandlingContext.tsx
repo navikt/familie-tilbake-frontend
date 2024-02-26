@@ -12,6 +12,7 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { useFagsak } from './FagsakContext';
 import {
     Behandlingssteg,
     Behandlingsstegstatus,
@@ -20,7 +21,6 @@ import {
     IBehandlingsstegstilstand,
 } from '../typer/behandling';
 import { IFagsak } from '../typer/fagsak';
-import { useFagsak } from './FagsakContext';
 
 const erStegUtført = (status: Behandlingsstegstatus) => {
     return status === Behandlingsstegstatus.UTFØRT || status === Behandlingsstegstatus.AUTOUTFØRT;

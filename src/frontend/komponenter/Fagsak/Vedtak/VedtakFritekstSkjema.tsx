@@ -5,10 +5,10 @@ import { styled } from 'styled-components';
 import { PlusCircleIcon } from '@navikt/aksel-icons';
 import { BodyShort, Link, Textarea } from '@navikt/ds-react';
 
-import { isEmpty, validerTekstMaksLengde } from '../../../utils';
-import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
+import { isEmpty, validerTekstMaksLengde } from '../../../utils';
+import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 
 const StyledUndertekst = styled(BodyShort)`
     display: inline-block;

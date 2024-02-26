@@ -4,8 +4,8 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-import config from '../../src/webpack/webpack.dev';
 import { setupRouter } from './mock-routes';
+import config from '../../src/webpack/webpack.dev';
 
 const port = 8008;
 
