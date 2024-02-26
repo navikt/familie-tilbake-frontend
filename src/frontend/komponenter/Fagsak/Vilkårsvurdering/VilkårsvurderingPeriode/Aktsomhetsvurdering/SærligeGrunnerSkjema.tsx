@@ -1,12 +1,9 @@
 import * as React from 'react';
 
-import { Column, Row } from 'nav-frontend-grid';
-
-import { Checkbox, CheckboxGroup, Textarea } from '@navikt/ds-react';
+import { Checkbox, CheckboxGroup, Detail, Textarea, VStack } from '@navikt/ds-react';
 import { type ISkjema } from '@navikt/familie-skjema';
 
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
-import { DetailBold, Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
 import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 
@@ -31,8 +28,8 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     };
 
     return (
-        <div>
-            <DetailBold spacing>Særlige grunner 4. ledd</DetailBold>
+        <VStack gap="5">
+            <Detail weight="semibold">Særlige grunner 4. ledd</Detail>
             <Textarea
                 {...skjema.felter.særligeGrunnerBegrunnelse.hentNavInputProps(
                     skjema.visFeilmeldinger
@@ -49,47 +46,44 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                     'Begrunn om det foreligger/ ikke foreligger særlige grunner for reduksjon av beløpet som kreves tilbake. Kryss av hvilke særlige grunner som er vektlagt for resultatet'
                 }
             />
-            <Spacer20 />
-            <CheckboxGroup
-                {...skjema.felter.særligeGrunner.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                legend={`Særlige grunner som er vektlagt (4.ledd)`}
-                onChange={(val: SærligeGrunner[]) => onChanngeSærligeGrunner2(val)}
-                value={skjema.felter.særligeGrunner.verdi}
-                readOnly={erLesevisning}
-            >
-                {særligeGrunnerTyper.map((type: SærligeGrunner) => (
-                    <Checkbox key={type} value={type}>
-                        {særligegrunner[type]}
-                    </Checkbox>
-                ))}
-            </CheckboxGroup>
-            {skjema.felter.særligeGrunner.verdi.includes(SærligeGrunner.ANNET) && (
-                <Row>
-                    <Column md="1" />
-                    <Column md="10">
-                        <Textarea
-                            {...skjema.felter.særligeGrunnerAnnetBegrunnelse.hentNavInputProps(
-                                skjema.visFeilmeldinger
-                            )}
-                            label={null}
-                            name="annetBegrunnelse"
-                            aria-label="Begrunnelse: Annet"
-                            maxLength={3000}
-                            readOnly={erLesevisning}
-                            value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
-                            onChange={event =>
-                                skjema.felter.særligeGrunnerAnnetBegrunnelse.validerOgSettFelt(
-                                    event.target.value
-                                )
-                            }
-                            data-testid={'annetBegrunnelse'}
-                        />
-                    </Column>
-                </Row>
-            )}
-            <Spacer20 />
+            <VStack gap="1">
+                <CheckboxGroup
+                    {...skjema.felter.særligeGrunner.hentNavBaseSkjemaProps(
+                        skjema.visFeilmeldinger
+                    )}
+                    legend={`Særlige grunner som er vektlagt (4.ledd)`}
+                    onChange={(val: SærligeGrunner[]) => onChanngeSærligeGrunner2(val)}
+                    value={skjema.felter.særligeGrunner.verdi}
+                    readOnly={erLesevisning}
+                >
+                    {særligeGrunnerTyper.map((type: SærligeGrunner) => (
+                        <Checkbox key={type} value={type}>
+                            {særligegrunner[type]}
+                        </Checkbox>
+                    ))}
+                </CheckboxGroup>
+                {skjema.felter.særligeGrunner.verdi.includes(SærligeGrunner.ANNET) && (
+                    <Textarea
+                        {...skjema.felter.særligeGrunnerAnnetBegrunnelse.hentNavInputProps(
+                            skjema.visFeilmeldinger
+                        )}
+                        label={null}
+                        name="annetBegrunnelse"
+                        aria-label="Begrunnelse: Annet"
+                        maxLength={3000}
+                        readOnly={erLesevisning}
+                        value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
+                        onChange={event =>
+                            skjema.felter.særligeGrunnerAnnetBegrunnelse.validerOgSettFelt(
+                                event.target.value
+                            )
+                        }
+                        data-testid={'annetBegrunnelse'}
+                    />
+                )}
+            </VStack>
             <ReduksjonAvBeløpSkjema skjema={skjema} erLesevisning={erLesevisning} />
-        </div>
+        </VStack>
     );
 };
 

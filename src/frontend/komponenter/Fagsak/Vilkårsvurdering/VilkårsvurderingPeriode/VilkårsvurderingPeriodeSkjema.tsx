@@ -2,19 +2,20 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Column, Row } from 'nav-frontend-grid';
-
 import {
     BodyShort,
+    Box,
     Detail,
     Heading,
     HelpText,
+    HGrid,
     Radio,
     RadioGroup,
     Select,
+    Stack,
     Textarea,
+    VStack,
 } from '@navikt/ds-react';
-import { ABorderStrong, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -31,7 +32,7 @@ import {
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatostring, isEmpty } from '../../../../utils';
-import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
@@ -49,9 +50,17 @@ import {
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 
-const StyledContainer = styled.div`
-    border: 1px solid ${ABorderStrong};
-    padding: ${ASpacing3};
+const StyledBox = styled(Box)`
+    min-width: 20rem;
+`;
+
+const StyledStack = styled(Stack)`
+    max-width: 30rem;
+    width: 100%;
+`;
+
+const StyledSelect = styled(Select)`
+    width: 15rem;
 `;
 
 const StyledVilkårsresultatRadio = styled(Radio)`
@@ -232,14 +241,16 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.FEIL;
 
     return periode ? (
-        <StyledContainer>
-            <Row>
-                <Column lg="4" md="7" sm="12">
+        <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
+            <HGrid columns={'1fr 4rem'}>
+                <StyledStack
+                    justify="space-between"
+                    align={{ md: 'start', lg: 'center' }}
+                    direction={{ md: 'column', lg: 'row' }}
+                >
                     <Heading size="small" level="2">
                         Detaljer for valgt periode
                     </Heading>
-                </Column>
-                <Column lg="2" md="2" sm="6">
                     {!erLesevisning && !periode.foreldet && (
                         <SplittPeriode
                             behandling={behandling}
@@ -247,223 +258,174 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                             onBekreft={onSplitPeriode}
                         />
                     )}
-                </Column>
-                <Column lg="6" md="3" sm="6">
-                    <PeriodeController
-                        nestePeriode={() => nestePeriode(periode)}
-                        forrigePeriode={() => forrigePeriode(periode)}
-                    />
-                </Column>
-            </Row>
-            <Row>
-                <Column lg="6" md="9" sm="12">
-                    <PeriodeOppsummering
-                        fom={periode.periode.fom}
-                        tom={periode.periode.tom}
-                        beløp={periode.feilutbetaltBeløp}
-                        hendelsetype={periode.hendelsestype}
-                    />
-                </Column>
-            </Row>
-            <Spacer20 />
-            <TilbakekrevingAktivitetTabell ytelser={periode.aktiviteter} />
-            <Spacer20 />
-            {!erLesevisning &&
-                !periode.foreldet &&
-                behandletPerioder &&
-                behandletPerioder.length > 0 && (
-                    <>
-                        <Row>
-                            <Column md="3">
-                                <Select
-                                    name="perioderForKopi"
-                                    onChange={event => onKopierPeriode(event)}
-                                    label={<Detail>Kopier vilkårsvurdering fra</Detail>}
-                                    readOnly={erLesevisning}
-                                    size="small"
+                </StyledStack>
+                <PeriodeController
+                    nestePeriode={() => nestePeriode(periode)}
+                    forrigePeriode={() => forrigePeriode(periode)}
+                />
+            </HGrid>
+            <VStack gap="4">
+                <PeriodeOppsummering
+                    fom={periode.periode.fom}
+                    tom={periode.periode.tom}
+                    beløp={periode.feilutbetaltBeløp}
+                    hendelsetype={periode.hendelsestype}
+                />
+                <TilbakekrevingAktivitetTabell ytelser={periode.aktiviteter} />
+                {!erLesevisning &&
+                    !periode.foreldet &&
+                    behandletPerioder &&
+                    behandletPerioder.length > 0 && (
+                        <StyledSelect
+                            name="perioderForKopi"
+                            onChange={event => onKopierPeriode(event)}
+                            label={<Detail>Kopier vilkårsvurdering fra</Detail>}
+                            readOnly={erLesevisning}
+                            size="small"
+                        >
+                            <option value="-">-</option>
+                            {behandletPerioder.map(per => (
+                                <option
+                                    key={`${per.periode.fom}_${per.periode.tom}`}
+                                    value={per.index}
                                 >
-                                    <option value="-">-</option>
-                                    {behandletPerioder.map(per => (
-                                        <option
-                                            key={`${per.periode.fom}_${per.periode.tom}`}
-                                            value={per.index}
-                                        >
-                                            {`${formatterDatostring(
-                                                per.periode.fom
-                                            )} - ${formatterDatostring(per.periode.tom)}`}
-                                        </option>
-                                    ))}
-                                </Select>
-                            </Column>
-                        </Row>
-                        <Spacer20 />
-                    </>
+                                    {`${formatterDatostring(
+                                        per.periode.fom
+                                    )} - ${formatterDatostring(per.periode.tom)}`}
+                                </option>
+                            ))}
+                        </StyledSelect>
+                    )}
+                {periode.foreldet && (
+                    <HGrid columns={{ lg: 2, md: 1 }} gap="5">
+                        <div>
+                            <Heading size="xsmall" level="2" spacing>
+                                Varsel
+                            </Heading>
+                            <BodyShort>{periode.begrunnelse ? periode.begrunnelse : ''}</BodyShort>
+                        </div>
+                        <div>
+                            <Heading size="xsmall" level="2" spacing>
+                                Vurder om perioden er foreldet
+                            </Heading>
+                            <BodyShort size="small">Perioden er foreldet</BodyShort>
+                        </div>
+                    </HGrid>
                 )}
-            <Row>
-                <Column md={periode.foreldet ? '12' : '6'}>
-                    <Row>
-                        {periode.foreldet ? (
-                            <Column md="12">
-                                <Row>
-                                    <Column md="6">
-                                        <Heading size="xsmall" level="2" spacing>
-                                            Varsel
-                                        </Heading>
-                                        <BodyShort>
-                                            {periode.begrunnelse ? periode.begrunnelse : ''}
-                                        </BodyShort>
-                                    </Column>
-                                    <Column md="6">
-                                        <Heading size="xsmall" level="2" spacing>
-                                            Vurder om perioden er foreldet
-                                        </Heading>
-                                        <BodyShort size="small">Perioden er foreldet</BodyShort>
-                                    </Column>
-                                </Row>
-                            </Column>
-                        ) : (
-                            <Column md="10">
-                                <Heading size="small" level="2" spacing>
-                                    Vilkårene for tilbakekreving
-                                </Heading>
+                {!periode.foreldet && (
+                    <HGrid columns={{ lg: 2, md: 1 }} gap="8">
+                        <VStack gap="5">
+                            <Heading size="small" level="2">
+                                Vilkårene for tilbakekreving
+                            </Heading>
+                            <Textarea
+                                {...skjema.felter.vilkårsresultatBegrunnelse.hentNavInputProps(
+                                    skjema.visFeilmeldinger
+                                )}
+                                name="vilkårsresultatBegrunnelse"
+                                label={'Vilkårene for tilbakekreving'}
+                                placeholder={
+                                    'Hvilke hendelser har ført til feilutbetalingen og vurder valg av hjemmel'
+                                }
+                                maxLength={3000}
+                                readOnly={erLesevisning}
+                                value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
+                                onChange={event =>
+                                    skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
+                                        event.target.value
+                                    )
+                                }
+                            />
+                            <RadioGroup
+                                id="valgtVilkarResultatType"
+                                readOnly={erLesevisning}
+                                legend={'Er vilkårene for tilbakekreving oppfylt?'}
+                                value={skjema.felter.vilkårsresultatvurdering.verdi}
+                                error={
+                                    ugyldigVilkårsresultatValgt
+                                        ? skjema.felter.vilkårsresultatvurdering.feilmelding?.toString()
+                                        : ''
+                                }
+                                onChange={(val: Vilkårsresultat) =>
+                                    skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(val)
+                                }
+                            >
+                                {vilkårsresultatTyper.map(type => (
+                                    <StyledVilkårsresultatRadio
+                                        key={type}
+                                        name="valgtVilkarResultatType"
+                                        value={type}
+                                    >
+                                        {lagLabeltekster(fagsak, type)}
+                                    </StyledVilkårsresultatRadio>
+                                ))}
+                            </RadioGroup>
+                        </VStack>
+                        {vilkårsresultatVurderingGjort && (
+                            <VStack gap="5">
+                                {erGodTro ? (
+                                    <Heading size="small" level="2">
+                                        Beløpet mottatt i god tro
+                                    </Heading>
+                                ) : (
+                                    <Heading size="small" level="2">
+                                        Aktsomhet
+                                    </Heading>
+                                )}
                                 <Textarea
-                                    {...skjema.felter.vilkårsresultatBegrunnelse.hentNavInputProps(
+                                    {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(
                                         skjema.visFeilmeldinger
                                     )}
-                                    name="vilkårsresultatBegrunnelse"
-                                    label={'Vilkårene for tilbakekreving'}
-                                    placeholder={
-                                        'Hvilke hendelser har ført til feilutbetalingen og vurder valg av hjemmel'
+                                    name="vurderingBegrunnelse"
+                                    label={
+                                        erGodTro
+                                            ? 'Vurder om beløpet er i behold'
+                                            : erForstodBurdeForstått
+                                              ? 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+                                              : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
                                     }
-                                    maxLength={3000}
+                                    placeholder={
+                                        erGodTro
+                                            ? 'Begrunn hvorfor beløpet er i behold / er ikke i behold'
+                                            : ''
+                                    }
                                     readOnly={erLesevisning}
-                                    value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
+                                    value={
+                                        skjema.felter.aktsomhetBegrunnelse
+                                            ? skjema.felter.aktsomhetBegrunnelse.verdi
+                                            : ''
+                                    }
                                     onChange={event =>
-                                        skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
+                                        skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(
                                             event.target.value
                                         )
                                     }
+                                    maxLength={3000}
                                 />
-                                <Spacer20 />
-                                <RadioGroup
-                                    id="valgtVilkarResultatType"
-                                    readOnly={erLesevisning}
-                                    legend={'Er vilkårene for tilbakekreving oppfylt?'}
-                                    value={skjema.felter.vilkårsresultatvurdering.verdi}
-                                    error={
-                                        ugyldigVilkårsresultatValgt
-                                            ? skjema.felter.vilkårsresultatvurdering.feilmelding?.toString()
-                                            : ''
-                                    }
-                                    onChange={(val: Vilkårsresultat) =>
-                                        skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(
-                                            val
-                                        )
-                                    }
-                                >
-                                    {vilkårsresultatTyper.map(type => (
-                                        <StyledVilkårsresultatRadio
-                                            key={type}
-                                            name="valgtVilkarResultatType"
-                                            value={type}
-                                        >
-                                            {lagLabeltekster(fagsak, type)}
-                                        </StyledVilkårsresultatRadio>
-                                    ))}
-                                </RadioGroup>
-                            </Column>
-                        )}
-                    </Row>
-                </Column>
-                <Column xs="12" md="6">
-                    <Row>
-                        <Column md="11">
-                            {vilkårsresultatVurderingGjort && (
-                                <>
-                                    {erGodTro ? (
-                                        <Heading size="small" level="2" spacing>
-                                            Beløpet mottatt i god tro
-                                        </Heading>
-                                    ) : (
-                                        <Heading size="small" level="2" spacing>
-                                            Aktsomhet
-                                        </Heading>
-                                    )}
-                                    <Textarea
-                                        {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(
-                                            skjema.visFeilmeldinger
-                                        )}
-                                        name="vurderingBegrunnelse"
-                                        label={
-                                            erGodTro
-                                                ? 'Vurder om beløpet er i behold'
-                                                : erForstodBurdeForstått
-                                                  ? 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-                                                  : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
-                                        }
-                                        placeholder={
-                                            erGodTro
-                                                ? 'Begrunn hvorfor beløpet er i behold / er ikke i behold'
-                                                : ''
-                                        }
-                                        readOnly={erLesevisning}
-                                        value={
-                                            skjema.felter.aktsomhetBegrunnelse
-                                                ? skjema.felter.aktsomhetBegrunnelse.verdi
-                                                : ''
-                                        }
-                                        onChange={event =>
-                                            skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(
-                                                event.target.value
-                                            )
-                                        }
-                                        maxLength={3000}
+                                {erGodTro ? (
+                                    <GodTroSkjema skjema={skjema} erLesevisning={erLesevisning} />
+                                ) : (
+                                    <AktsomhetsvurderingSkjema
+                                        skjema={skjema}
+                                        erLesevisning={erLesevisning}
                                     />
-                                    <Spacer20 />
-                                    {erGodTro ? (
-                                        <GodTroSkjema
-                                            skjema={skjema}
-                                            erLesevisning={erLesevisning}
-                                        />
-                                    ) : (
-                                        <AktsomhetsvurderingSkjema
-                                            skjema={skjema}
-                                            erLesevisning={erLesevisning}
-                                        />
-                                    )}
-                                </>
-                            )}
-                        </Column>
-                    </Row>
-                </Column>
-            </Row>
-            <Spacer20 />
-            {!erLesevisning && (
-                <>
-                    <Row>
-                        <Column xs="12" md="11">
-                            <Navigering>
-                                <div>
-                                    {!periode.foreldet && (
-                                        <FTButton
-                                            variant="primary"
-                                            onClick={() => onBekreft(periode)}
-                                        >
-                                            Bekreft
-                                        </FTButton>
-                                    )}
-                                </div>
-                                <div>
-                                    <FTButton variant="secondary" onClick={lukkValgtPeriode}>
-                                        Lukk
-                                    </FTButton>
-                                </div>
-                            </Navigering>
-                        </Column>
-                    </Row>
-                </>
-            )}
-        </StyledContainer>
+                                )}
+                            </VStack>
+                        )}
+                    </HGrid>
+                )}
+            </VStack>
+            <Navigering>
+                {!periode.foreldet && !erLesevisning && (
+                    <FTButton variant="primary" onClick={() => onBekreft(periode)}>
+                        Bekreft
+                    </FTButton>
+                )}
+                <FTButton variant="secondary" onClick={lukkValgtPeriode}>
+                    Lukk
+                </FTButton>
+            </Navigering>
+        </StyledBox>
     ) : null;
 };
 

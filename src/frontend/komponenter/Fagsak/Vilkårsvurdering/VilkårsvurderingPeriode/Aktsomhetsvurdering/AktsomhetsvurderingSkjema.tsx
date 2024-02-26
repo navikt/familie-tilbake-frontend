@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Radio } from '@navikt/ds-react';
+import { Radio, VStack } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import {
@@ -32,7 +32,7 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
         skjema.felter.aktsomhetVurdering.valideringsstatus === Valideringsstatus.FEIL;
 
     return (
-        <>
+        <VStack gap="1">
             <HorisontalRadioGroup
                 id="handletUaktsomhetGrad"
                 readOnly={erLesevisning}
@@ -73,7 +73,7 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                 ) : (
                     <GradUaktsomhetSkjema skjema={skjema} erLesevisning={erLesevisning} />
                 ))}
-        </>
+        </VStack>
     );
 };
 

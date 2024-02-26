@@ -1,37 +1,23 @@
 import * as React from 'react';
 
-import classNames from 'classnames';
 import { styled } from 'styled-components';
 
-import { BodyShort, HGrid, Label } from '@navikt/ds-react';
-import {
-    AFontWeightBold,
-    AOrange100,
-    ATextDanger,
-    ASpacing2,
-    ASpacing3,
-    ASpacing5,
-} from '@navikt/ds-tokens/dist/tokens';
+import { BodyShort, HGrid, HStack, Label, VStack } from '@navikt/ds-react';
+import { AOrange100, ATextDanger, ASpacing3, ASpacing5 } from '@navikt/ds-tokens/dist/tokens';
 
 import { HendelseType, hendelsetyper } from '../../../kodeverk';
 import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
 
-const StyledContainer = styled.div`
+const StyledVStack = styled(VStack)`
     background-color: ${AOrange100};
-    height: auto;
     padding: ${ASpacing3} ${ASpacing5};
-    top: 0;
     margin-top: ${ASpacing3};
+    max-width: 30rem;
+    width: 100%;
 `;
 
-const RadTotaltFeilutbetalt = styled(HGrid)`
-    margin-top: ${ASpacing5};
-
-    .redNumber {
-        color: ${ATextDanger};
-        font-weight: ${AFontWeightBold};
-        margin-left: ${ASpacing2};
-    }
+const BodyShortDanger = styled(BodyShort)`
+    color: ${ATextDanger};
 `;
 
 interface IProps {
@@ -43,21 +29,23 @@ interface IProps {
 
 const PeriodeOppsummering: React.FC<IProps> = ({ fom, tom, beløp, hendelsetype }) => {
     return (
-        <StyledContainer>
-            <HGrid columns={2} gap="4">
+        <StyledVStack gap="5">
+            <HGrid columns={{ md: 1, lg: '5fr 3fr' }} gap="4">
                 <Label size="small">{`${formatterDatostring(fom)} - ${formatterDatostring(
                     tom
                 )}`}</Label>
                 <BodyShort size="small">{hentPeriodelengde(fom, tom)}</BodyShort>
             </HGrid>
-            <RadTotaltFeilutbetalt columns={2} gap="4">
-                <BodyShort size="small">
-                    Feilutbetaling:
-                    <span className={classNames('redNumber')}>{formatCurrencyNoKr(beløp)}</span>
-                </BodyShort>
+            <HGrid columns={{ md: 1, lg: '5fr 3fr' }} gap="4">
+                <HStack gap="2">
+                    <BodyShort size="small">Feilutbetaling:</BodyShort>
+                    <BodyShortDanger weight="semibold" size="small">
+                        {formatCurrencyNoKr(beløp)}
+                    </BodyShortDanger>
+                </HStack>
                 {hendelsetype && <BodyShort size="small">{hendelsetyper[hendelsetype]}</BodyShort>}
-            </RadTotaltFeilutbetalt>
-        </StyledContainer>
+            </HGrid>
+        </StyledVStack>
     );
 };
 

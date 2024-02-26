@@ -2,9 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Column, Row } from 'nav-frontend-grid';
-
-import { Alert, BodyLong, Heading, Loader } from '@navikt/ds-react';
+import { Alert, BodyLong, Heading, Loader, VStack } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -16,7 +14,6 @@ import {
 } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import {
     erTotalbeløpUnder4Rettsgebyr,
@@ -63,35 +60,28 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
                     <Heading level="2" size="small" spacing>
                         Tilbakekreving
                     </Heading>
-                    {erAutoutført && (
-                        <>
-                            <BodyLong size="small" spacing>
+                    <VStack gap="5">
+                        {erAutoutført && (
+                            <BodyLong size="small">
                                 Automatisk vurdert. Alle perioder er foreldet.
                             </BodyLong>
-                        </>
-                    )}
-                    {!erAutoutført && (!erLesevisning || stegErBehandlet) && (
-                        <>
+                        )}
+                        {!erAutoutført && (!erLesevisning || stegErBehandlet) && (
                             <Steginformasjon
                                 behandletSteg={stegErBehandlet}
                                 infotekst={stegInfotekst}
                             />
-                            <Spacer20 />
-                        </>
-                    )}
-                    <Row>
-                        <Column xs="12">
-                            {skjemaData && skjemaData.length > 0 && (
-                                <VilkårsvurderingPerioder
-                                    behandling={behandling}
-                                    perioder={skjemaData}
-                                    erTotalbeløpUnder4Rettsgebyr={totalbeløpErUnder4Rettsgebyr}
-                                    erLesevisning={erLesevisning}
-                                    fagsak={fagsak}
-                                />
-                            )}
-                        </Column>
-                    </Row>
+                        )}
+                        {skjemaData && skjemaData.length > 0 && (
+                            <VilkårsvurderingPerioder
+                                behandling={behandling}
+                                perioder={skjemaData}
+                                erTotalbeløpUnder4Rettsgebyr={totalbeløpErUnder4Rettsgebyr}
+                                erLesevisning={erLesevisning}
+                                fagsak={fagsak}
+                            />
+                        )}
+                    </VStack>
                 </StyledVilkårsvurdering>
             );
         }

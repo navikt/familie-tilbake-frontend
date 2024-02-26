@@ -2,9 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Column, Row } from 'nav-frontend-grid';
-
-import { BodyShort, Label } from '@navikt/ds-react';
+import { BodyShort, HGrid, Label } from '@navikt/ds-react';
 import { type ISkjema } from '@navikt/familie-skjema';
 
 import { Vilkårsresultat } from '../../../../../kodeverk';
@@ -33,44 +31,38 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     return (
         <ArrowBox alignOffset={erLesevisning ? 5 : forstoBurdeForståttOffset}>
             {erValgtResultatTypeForstoBurdeForstått ? (
-                <>
-                    <Row>
-                        <Column md="6">
-                            <Label>Andel som skal tilbakekreves</Label>
-                            {kanIlleggeRenter ? (
-                                <StyledNormaltekst>100 %</StyledNormaltekst>
-                            ) : (
-                                <BodyShort>100 %</BodyShort>
-                            )}
-                        </Column>
-                        <Column md="6">
-                            <TilleggesRenterRadioGroup
-                                erLesevisning={erLesevisning}
-                                kanIlleggeRenter={kanIlleggeRenter}
-                                felt={skjema.felter.forstoIlleggeRenter}
-                                visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
-                            />
-                        </Column>
-                    </Row>
-                </>
+                <HGrid columns={2} gap="4">
+                    <div>
+                        <Label>Andel som skal tilbakekreves</Label>
+                        {kanIlleggeRenter ? (
+                            <StyledNormaltekst>100 %</StyledNormaltekst>
+                        ) : (
+                            <BodyShort>100 %</BodyShort>
+                        )}
+                    </div>
+                    <TilleggesRenterRadioGroup
+                        erLesevisning={erLesevisning}
+                        kanIlleggeRenter={kanIlleggeRenter}
+                        felt={skjema.felter.forstoIlleggeRenter}
+                        visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
+                    />
+                </HGrid>
             ) : (
-                <Row>
-                    <Column md={kanIlleggeRenter ? '12' : '6'}>
+                <HGrid columns={2} gap="4">
+                    <div>
                         <Label>Andel som skal tilbakekreves</Label>
                         <BodyShort>100 %</BodyShort>
                         {kanIlleggeRenter && (
-                            <>
-                                <BodyShort size="small">Det legges til 10 % renter</BodyShort>
-                            </>
+                            <BodyShort size="small">Det legges til 10 % renter</BodyShort>
                         )}
-                    </Column>
+                    </div>
                     {!kanIlleggeRenter && (
-                        <Column md="6">
+                        <div>
                             <Label>Skal det tillegges renter?</Label>
                             <BodyShort>Nei</BodyShort>
-                        </Column>
+                        </div>
                     )}
-                </Row>
+                </HGrid>
             )}
         </ArrowBox>
     );

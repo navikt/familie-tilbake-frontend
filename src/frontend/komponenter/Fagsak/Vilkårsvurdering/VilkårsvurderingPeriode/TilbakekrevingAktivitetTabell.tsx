@@ -8,12 +8,7 @@ import { YtelseInfo } from '../../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr } from '../../../../utils';
 
 const StyledPeriodeTable = styled(Table)`
-    width: 400px;
-
-    th,
-    td {
-        padding: 10px 5px;
-    }
+    max-width: 30rem;
 `;
 
 interface IProps {
@@ -31,14 +26,14 @@ const TilbakekrevingAktivitetTabell: React.FC<IProps> = ({ ytelser }) => {
                     </Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
-            <tbody>
+            <Table.Body>
                 {ytelser.map(y => (
                     <Table.Row key={y.aktivitet}>
                         <Table.DataCell>{y.aktivitet}</Table.DataCell>
                         <Table.DataCell align="right">{formatCurrencyNoKr(y.beløp)}</Table.DataCell>
                     </Table.Row>
                 ))}
-            </tbody>
+            </Table.Body>
         </StyledPeriodeTable>
     ) : null;
 };
