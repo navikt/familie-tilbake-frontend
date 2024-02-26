@@ -9,8 +9,8 @@ import {
 
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { erFeltetEmpty, validerGyldigDato, validerTekstFeltMaksLengde } from '../../../../utils';
-import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 import { dateTilIsoDatoStringEllerUndefined } from '../../../../utils/dato';
+import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
 const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter) => {
     return (

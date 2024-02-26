@@ -1,11 +1,13 @@
 import * as React from 'react';
 
+import { addDays, addMonths } from 'date-fns';
 import { styled } from 'styled-components';
 
 import { BodyLong, Heading, Modal, Select } from '@navikt/ds-react';
 import { ATextDanger, ASpacing8 } from '@navikt/ds-tokens/dist/tokens';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
+import { usePåVentBehandling } from './PåVentContext';
 import {
     Behandlingssteg,
     IBehandling,
@@ -14,11 +16,9 @@ import {
     venteårsaker,
 } from '../../../../typer/behandling';
 import { dateBeforeToday } from '../../../../utils';
-import { FTButton, Spacer20 } from '../../Flytelementer';
-import { usePåVentBehandling } from './PåVentContext';
-import Datovelger from '../../Datovelger/Datovelger';
-import { addDays, addMonths } from 'date-fns';
 import { dagensDato } from '../../../../utils/dato';
+import Datovelger from '../../Datovelger/Datovelger';
+import { FTButton, Spacer20 } from '../../Flytelementer';
 
 const FeilContainer = styled.div`
     margin-top: ${ASpacing8};

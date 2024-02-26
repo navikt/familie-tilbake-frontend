@@ -6,6 +6,8 @@ import { mock } from 'jest-mock-extended';
 
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
+import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Aktsomhet, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
@@ -15,8 +17,6 @@ import {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
-import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
-import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 
 jest.setTimeout(25000);
 

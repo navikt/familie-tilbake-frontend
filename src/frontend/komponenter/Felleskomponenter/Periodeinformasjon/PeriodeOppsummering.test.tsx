@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { render } from '@testing-library/react';
 
-import { HendelseType } from '../../../kodeverk';
 import PeriodeOppsummering from './PeriodeOppsummering';
+import { HendelseType } from '../../../kodeverk';
 
 describe('Tester: PeriodeOppsummering', () => {
     test('- uten hendelsetype', () => {

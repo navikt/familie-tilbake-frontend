@@ -3,9 +3,9 @@ import * as React from 'react';
 import { Checkbox, CheckboxGroup, Detail, Textarea, VStack } from '@navikt/ds-react';
 import { type ISkjema } from '@navikt/familie-skjema';
 
+import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
-import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;

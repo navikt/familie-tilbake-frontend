@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { styled } from 'styled-components';
+
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import {
     BodyLong,
@@ -16,22 +18,21 @@ import {
 } from '@navikt/ds-react';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
+import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
+import SplittPeriode from './SplittPeriode/SplittPeriode';
 import {
     Foreldelsevurdering,
     foreldelsevurderinger,
     foreldelseVurderingTyper,
 } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
+import { isoStringTilDate } from '../../../../utils/dato';
+import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
 import { FTButton, Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
-import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
-import SplittPeriode from './SplittPeriode/SplittPeriode';
-import { isoStringTilDate } from '../../../../utils/dato';
-import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
-import { styled } from 'styled-components';
 
 const StyledVStack = styled(VStack)`
     max-width: 50rem;

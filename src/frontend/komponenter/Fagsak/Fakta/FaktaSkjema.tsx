@@ -2,14 +2,14 @@ import * as React from 'react';
 
 import { BodyShort, Checkbox, Heading, HGrid, Textarea, VStack } from '@navikt/ds-react';
 
-import { Ytelsetype } from '../../../kodeverk';
-import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
-import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
-import { DetailBold, FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 import { FaktaSkjemaData } from './typer/feilutbetalingFakta';
+import { Ytelsetype } from '../../../kodeverk';
+import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
+import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
+import { DetailBold, FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
 
 interface IProps {
     ytelse: Ytelsetype;

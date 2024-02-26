@@ -5,14 +5,14 @@ import { styled } from 'styled-components';
 import { BodyShort, Radio, TextField, VStack } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
-import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import {
     JaNeiOption,
     jaNeiOptions,
     OptionJA,
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
+import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
+import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 
 const ArrowBoxContainer = styled.div`
     width: 300px;

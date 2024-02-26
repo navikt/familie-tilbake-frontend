@@ -5,11 +5,11 @@ import { styled } from 'styled-components';
 import { BodyShort, HGrid, Label } from '@navikt/ds-react';
 import { type ISkjema } from '@navikt/familie-skjema';
 
+import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 import { Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
-import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 
 const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;

@@ -5,11 +5,11 @@ import { styled } from 'styled-components';
 import { PlusCircleIcon } from '@navikt/aksel-icons';
 import { Button, Heading } from '@navikt/ds-react';
 
-import { useBehandling } from '../../../context/BehandlingContext';
-import { MottakerType } from '../../../typer/Brevmottaker';
 import Brevmottaker from './Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
 import { LeggTilEndreBrevmottakerModal } from './LeggTilEndreBrevmottakerModal';
+import { useBehandling } from '../../../context/BehandlingContext';
+import { MottakerType } from '../../../typer/Brevmottaker';
 
 const StyledBrevmottaker = styled.div`
     padding: 2.5rem;

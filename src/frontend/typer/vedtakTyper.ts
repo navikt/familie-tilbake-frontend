@@ -1,5 +1,5 @@
-import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../kodeverk/';
 import { FeilutbetalingPeriode } from './feilutbetalingtyper';
+import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../kodeverk/';
 
 export type BeregningsresultatPeriode = {
     vurdering: Vurdering;

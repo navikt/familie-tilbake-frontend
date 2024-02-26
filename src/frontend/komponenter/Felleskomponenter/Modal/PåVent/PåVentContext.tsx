@@ -4,9 +4,9 @@ import { useHttp } from '@navikt/familie-http';
 import { useSkjema, useFelt, type FeltState, feil, ok } from '@navikt/familie-skjema';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import { IRestSettPåVent } from '../../../../typer/api';
 import { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
 import { isEmpty, validerGyldigDato } from '../../../../utils';
-import { IRestSettPåVent } from '../../../../typer/api';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
 
 export const usePåVentBehandling = (

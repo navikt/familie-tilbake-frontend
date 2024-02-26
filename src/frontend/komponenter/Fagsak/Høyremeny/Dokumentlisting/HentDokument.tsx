@@ -12,9 +12,9 @@ import {
     RessursStatus,
 } from '@navikt/familie-typer';
 
+import { useDokumentlisting } from './DokumentlistingContext';
 import { base64ToArrayBuffer } from '../../../../utils';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
-import { useDokumentlisting } from './DokumentlistingContext';
 
 interface IProps {
     journalpost: IJournalpost;

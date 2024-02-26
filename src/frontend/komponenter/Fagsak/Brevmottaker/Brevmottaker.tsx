@@ -7,9 +7,9 @@ import { Button, Heading } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import CountryData from '@navikt/land-verktoy';
 
+import { useBrevmottaker } from './BrevmottakerContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IBrevmottaker, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
-import { useBrevmottaker } from './BrevmottakerContext';
 
 const FlexDiv = styled.div`
     display: flex;

@@ -18,6 +18,18 @@ import {
 } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
+import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
+import GodTroSkjema from './GodTroSkjema';
+import SplittPeriode from './SplittPeriode/SplittPeriode';
+import TilbakekrevingAktivitetTabell from './TilbakekrevingAktivitetTabell';
+import {
+    ANDELER,
+    EGENDEFINERT,
+    finnJaNeiOption,
+    OptionNEI,
+    useVilkårsvurderingPeriodeSkjema,
+    VilkårsvurderingSkjemaDefinisjon,
+} from './VilkårsvurderingPeriodeSkjemaContext';
 import {
     Aktsomhet,
     SærligeGrunner,
@@ -37,18 +49,6 @@ import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/P
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
-import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
-import GodTroSkjema from './GodTroSkjema';
-import SplittPeriode from './SplittPeriode/SplittPeriode';
-import TilbakekrevingAktivitetTabell from './TilbakekrevingAktivitetTabell';
-import {
-    ANDELER,
-    EGENDEFINERT,
-    finnJaNeiOption,
-    OptionNEI,
-    useVilkårsvurderingPeriodeSkjema,
-    VilkårsvurderingSkjemaDefinisjon,
-} from './VilkårsvurderingPeriodeSkjemaContext';
 
 const StyledBox = styled(Box)`
     min-width: 20rem;

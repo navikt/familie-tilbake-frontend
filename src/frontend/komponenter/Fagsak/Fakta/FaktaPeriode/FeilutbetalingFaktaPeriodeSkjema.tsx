@@ -1,8 +1,10 @@
 import * as React from 'react';
 
 import classNames from 'classnames';
+import { styled } from 'styled-components';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
+import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
 
 import {
     hendelsetyper,
@@ -14,8 +16,6 @@ import {
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
 import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
-import { styled } from 'styled-components';
-import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
 
 const StyledVStack = styled(VStack)`
     margin-top: ${ASpacing1};

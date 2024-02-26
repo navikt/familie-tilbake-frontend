@@ -13,11 +13,11 @@ import {
 import { Button, Tabs } from '@navikt/ds-react';
 import { AFontSizeMedium, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
 
+import Behandlingskort from './Behandlingskort/Behandlingskort';
+import Menykontainer, { Menysider } from './Menykontainer';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import Behandlingskort from './Behandlingskort/Behandlingskort';
-import Menykontainer, { Menysider } from './Menykontainer';
 
 const StyledContainer = styled.div<{ $værtPåFatteVedtakSteget: boolean }>`
     width: ${({ $værtPåFatteVedtakSteget }) => ($værtPåFatteVedtakSteget ? '28rem' : '22rem')};

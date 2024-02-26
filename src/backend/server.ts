@@ -13,7 +13,6 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import backend, { IApp, ensureAuthenticated, envVar } from '@navikt/familie-backend';
 import { logInfo } from '@navikt/familie-logging';
 
-import config from '../../src/webpack/webpack.dev';
 import { oboHistorikkConfig, oboTilbakeConfig, sessionConfig } from './config';
 import { prometheusTellere } from './metrikker';
 import {
@@ -25,6 +24,7 @@ import {
     doRedirectProxy,
 } from './proxy';
 import setupRouter from './router';
+import config from '../../src/webpack/webpack.dev';
 
 const port = 8000;
 

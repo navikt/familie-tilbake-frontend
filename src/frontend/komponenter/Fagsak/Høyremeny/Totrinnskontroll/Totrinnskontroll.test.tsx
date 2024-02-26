@@ -6,13 +6,13 @@ import { mock } from 'jest-mock-extended';
 
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import Totrinnskontroll from './Totrinnskontroll';
+import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
 import { useBehandlingApi } from '../../../../api/behandling';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { Behandlingssteg, IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
-import Totrinnskontroll from './Totrinnskontroll';
-import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
 
 jest.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: jest.fn(),

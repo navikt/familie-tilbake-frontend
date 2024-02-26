@@ -13,14 +13,14 @@ import {
     TextField,
     VStack,
 } from '@navikt/ds-react';
+import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 
+import { useVerge } from './VergeContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
 import { FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import { useVerge } from './VergeContext';
-import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 
 const StyledVerge = styled.div`
     padding: ${ASpacing3};

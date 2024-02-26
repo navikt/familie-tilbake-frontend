@@ -6,6 +6,7 @@ import { mock } from 'jest-mock-extended';
 
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import HenleggBehandlingModal from './HenleggBehandlingModal';
 import { useBehandlingApi } from '../../../../../../api/behandling';
 import { useBehandling } from '../../../../../../context/BehandlingContext';
 import {
@@ -14,7 +15,6 @@ import {
     IBehandling,
 } from '../../../../../../typer/behandling';
 import { IFagsak, Målform } from '../../../../../../typer/fagsak';
-import HenleggBehandlingModal from './HenleggBehandlingModal';
 
 jest.mock('@navikt/familie-http', () => {
     return {

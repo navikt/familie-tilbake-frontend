@@ -6,6 +6,11 @@ import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing1, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
+import { BrevmottakereAlert } from './BrevmottakereAlert';
+import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
+import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
+import VedtakPerioder from './VedtakPerioder';
+import VedtakSkjema from './VedtakSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { vedtaksresultater } from '../../../kodeverk';
 import {
@@ -17,11 +22,6 @@ import {
 import { IFagsak } from '../../../typer/fagsak';
 import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import { BrevmottakereAlert } from './BrevmottakereAlert';
-import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
-import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
-import VedtakPerioder from './VedtakPerioder';
-import VedtakSkjema from './VedtakSkjema';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};

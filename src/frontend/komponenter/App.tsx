@@ -3,10 +3,10 @@ import * as React from 'react';
 import '@navikt/ds-css';
 import { type ISaksbehandler } from '@navikt/familie-typer';
 
-import { hentInnloggetBruker } from '../api/saksbehandler';
-import { AppProvider } from '../context/AppContext';
 import Container from './Container';
 import ErrorBoundary from './Felleskomponenter/ErrorBoundary/ErrorBoundary';
+import { hentInnloggetBruker } from '../api/saksbehandler';
+import { AppProvider } from '../context/AppContext';
 
 const App: React.FC = () => {
     const [autentisertSaksbehandler, settAutentisertSaksbehandler] = React.useState<

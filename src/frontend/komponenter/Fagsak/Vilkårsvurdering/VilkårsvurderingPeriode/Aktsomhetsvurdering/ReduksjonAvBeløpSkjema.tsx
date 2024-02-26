@@ -14,6 +14,7 @@ import {
 } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
+import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
@@ -28,7 +29,6 @@ import {
     OptionNEI,
     VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
-import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 
 const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;
