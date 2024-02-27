@@ -13,27 +13,29 @@ updates:
     open-pull-requests-limit: 15
     registries: "*"
     ignore:
-      - dependency-name: "snyk" # kommer så ofte. oppdateres med yarn outdated og yarn upgrade
-      - dependency-name: "@navikt/ds-css" # ds-pakkene må følge versjonen i familie-felles-frontend
-      - dependency-name: "@navikt/ds-css-internal"
-      - dependency-name: "@navikt/ds-icons"
-      - dependency-name: "@navikt/ds-react"
-      - dependency-name: "@navikt/ds-react-internal"
-      - dependency-name: "@navikt/ds-tokens"
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
     groups:
-      minor-and-patch-dependencies:
+      sentry:
         patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-      major-dependencies:
+          - "@sentry/core"
+          - "@sentry/browser"
+      typescript-eslint:
         patterns:
-          - "*"
-        update-types:
-          - "major"
+          - "@typescript-eslint/eslint-plugin"
+          - "@typescript-eslint/parser"
+      react:
+        patterns:
+          - "react"
+          - "@types/react"
+          - "react-dom"
+          - "@types/react-dom"
+      aksel:
+        patterns:
+          - "@navikt/aksel-icons"
+          - "@navikt/ds-*"
+        exclude-patterns:
+          - "@navikt/ds-icons"
   - package-ecosystem: "docker"
     directory: "/" # Location of package manifests
     schedule:
