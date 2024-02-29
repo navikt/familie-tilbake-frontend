@@ -74,6 +74,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
     return (
         <>
             <ToggleVisningHøyremeny
+                forwardedAs={Button}
                 variant="secondary"
                 onMouseDown={(e: React.MouseEvent) => e.preventDefault()}
                 onClick={() => {

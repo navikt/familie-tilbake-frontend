@@ -5,7 +5,6 @@ import { BodyShort, HStack, Loader, Modal } from '@navikt/ds-react';
 const HenterBehandling: React.FC = () => {
     return (
         <Modal
-            open
             header={{ heading: 'Henter behandling', size: 'medium', closeButton: false }}
             portal={true}
             width="small"
