@@ -55,13 +55,13 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     test('- god tro - beløp ikke i behold', async () => {
         const user = userEvent.setup();
         const {
-            getAllByRole,
             getByLabelText,
             getByRole,
             getByText,
             queryAllByText,
             queryByLabelText,
             queryByText,
+            getAllByText,
         } = render(
             <VilkårsvurderingPeriodeSkjema
                 behandling={behandling}
@@ -103,20 +103,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Beløpet mottatt i god tro')).toBeFalsy();
         expect(queryByLabelText('Vurder om beløpet er i behold')).toBeFalsy();
         expect(
-            getByRole('tooltip', {
-                name: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
-            })
+            getByText('Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 1. punkt')
         ).toBeTruthy();
         expect(
-            getAllByRole('tooltip', {
-                name: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-            })
+            getAllByText('Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt')
         ).toHaveLength(2);
-        expect(
-            getByRole('tooltip', {
-                name: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd',
-            })
-        ).toBeTruthy();
+        expect(getByText('Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd')).toBeTruthy();
 
         await user.click(
             getByRole('button', {
