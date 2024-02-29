@@ -62,7 +62,6 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
 
     return (
         <Modal
-            open
             header={{
                 heading: 'Behandling satt på vent',
                 size: 'medium',
