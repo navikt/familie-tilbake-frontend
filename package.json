@@ -71,8 +71,8 @@
   },
   "devDependencies": {
     "@axe-core/react": "^4.7.3",
-    "@babel/core": "^7.23.3",
-    "@babel/preset-env": "^7.23.3",
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@jest/types": "^29.6.0",

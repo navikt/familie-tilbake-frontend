@@ -20,6 +20,9 @@ updates:
         patterns:
           - "@typescript-eslint/eslint-plugin"
           - "@typescript-eslint/parser"
+      babel:
+        patterns:
+          - "@babel/*"
       react:
         patterns:
           - "react"
