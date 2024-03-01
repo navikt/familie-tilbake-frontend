@@ -110,47 +110,61 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         ).toHaveLength(2);
         expect(getByText('Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
-                selector: 'input',
-                exact: false,
-            })
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+                    selector: 'input',
+                    exact: false,
+                })
+            )
         );
 
         expect(queryByText('Beløpet mottatt i god tro')).toBeTruthy();
         expect(queryByLabelText('Vurder om beløpet er i behold')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryByText('Ingen tilbakekreving')).toBeFalsy();
 
-        await user.type(getByLabelText('Vurder om beløpet er i behold'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Nei', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.type(getByLabelText('Vurder om beløpet er i behold'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Nei', {
+                    selector: 'input',
+                })
+            )
         );
 
         expect(queryByText('Ingen tilbakekreving')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -180,37 +194,49 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Beløpet mottatt i god tro')).toBeFalsy();
         expect(queryByLabelText('Vurder om beløpet er i behold')).toBeFalsy();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
-                selector: 'input',
-                exact: false,
-            })
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+                    selector: 'input',
+                    exact: false,
+                })
+            )
         );
 
-        await user.type(getByLabelText('Vurder om beløpet er i behold'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Ja', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.type(getByLabelText('Vurder om beløpet er i behold'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Ja', {
+                    selector: 'input',
+                })
+            )
         );
 
         expect(queryByText('Ingen tilbakekreving')).toBeFalsy();
         expect(queryByLabelText('Angi beløp som skal tilbakekreves')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.type(getByLabelText('Angi beløp som skal tilbakekreves'), '2000');
+        await waitFor(() => user.type(getByLabelText('Angi beløp som skal tilbakekreves'), '2000'));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -246,14 +272,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeFalsy();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText(
+                    'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
             )
         );
 
@@ -267,23 +297,29 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.type(
-            getByLabelText(
-                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-            ),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText(
+                    'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+                ),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Forsto', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Forsto', {
+                    selector: 'input',
+                })
+            )
         );
 
         expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
@@ -291,10 +327,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Skal det tillegges renter?')).toBeTruthy();
         expect(getByText('Nei')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -331,14 +369,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeFalsy();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText(
+                    'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
             )
         );
 
@@ -350,16 +392,20 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeFalsy();
         expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeFalsy();
 
-        await user.type(
-            getByLabelText(
-                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-            ),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText(
+                    'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+                ),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Må ha forstått', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Må ha forstått', {
+                    selector: 'input',
+                })
+            )
         );
 
         expect(queryByText('Særlige grunner 4. ledd')).toBeTruthy();
@@ -369,10 +415,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeTruthy();
         expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
@@ -384,24 +432,32 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeFalsy();
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+                    selector: 'input',
+                })
+            )
         );
-        await user.click(
-            getByLabelText('Annet', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Annet', {
+                    selector: 'input',
+                })
+            )
         );
-        await user.click(
-            getByRole('radio', {
-                name: 'Nei',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('radio', {
+                    name: 'Nei',
+                })
+            )
         );
 
         expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
@@ -409,26 +465,32 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Skal det tillegges renter?')).toBeTruthy();
         expect(getByLabelText('Nei')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
 
-        await user.type(
-            getByRole('textbox', {
-                name: 'Begrunnelse: Annet',
-            }),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByRole('textbox', {
+                    name: 'Begrunnelse: Annet',
+                }),
+                'begrunnelse'
+            )
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -449,34 +511,44 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
             )
         );
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Forsett', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Forsett', {
+                    selector: 'input',
+                })
+            )
         );
 
         expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
@@ -484,10 +556,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Skal det tillegges renter?')).toBeTruthy();
         expect(queryByText('Det legges til 10 % renter')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -509,63 +583,81 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
             )
         );
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
         expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Grov uaktsomhet', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Grov uaktsomhet', {
+                    selector: 'input',
+                })
+            )
         );
 
         expect(queryByText('Særlige grunner 4. ledd')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+                    selector: 'input',
+                })
+            )
         );
-        await user.click(
-            getByRole('radio', {
-                name: 'Nei',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('radio', {
+                    name: 'Nei',
+                })
+            )
         );
 
         expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
         expect(getByText('Skal det tillegges renter?')).toBeTruthy();
         expect(queryByTestId('skalDetTilleggesRenter_Nei')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
@@ -598,14 +690,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeFalsy();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
             )
         );
 
@@ -618,14 +714,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeFalsy();
         expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeFalsy();
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Grov uaktsomhet', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Grov uaktsomhet', {
+                    selector: 'input',
+                })
+            )
         );
 
         expect(queryByText('Særlige grunner 4. ledd')).toBeTruthy();
@@ -635,27 +735,35 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeTruthy();
         expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+                    selector: 'input',
+                })
+            )
         );
-        await user.click(
-            getByRole('radio', {
-                name: 'Ja',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('radio', {
+                    name: 'Ja',
+                })
+            )
         );
 
         expect(getByText('Angi andel som skal tilbakekreves')).toBeTruthy();
@@ -667,25 +775,31 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
 
-        await user.selectOptions(
-            getByRole('combobox', {
-                name: 'Angi andel som skal tilbakekreves',
-            }),
-            '30'
+        await waitFor(() =>
+            user.selectOptions(
+                getByRole('combobox', {
+                    name: 'Angi andel som skal tilbakekreves',
+                }),
+                '30'
+            )
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -707,42 +821,56 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
             )
         );
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Grov uaktsomhet', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Grov uaktsomhet', {
+                    selector: 'input',
+                })
+            )
         );
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+                    selector: 'input',
+                })
+            )
         );
-        await user.click(
-            getByRole('radio', {
-                name: 'Ja',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('radio', {
+                    name: 'Ja',
+                })
+            )
         );
 
         expect(
@@ -751,10 +879,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
@@ -764,31 +894,39 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeFalsy();
 
-        await user.selectOptions(
-            getByRole('combobox', {
-                name: 'Angi andel som skal tilbakekreves',
-            }),
-            'Egendefinert'
+        await waitFor(() =>
+            user.selectOptions(
+                getByRole('combobox', {
+                    name: 'Angi andel som skal tilbakekreves',
+                }),
+                'Egendefinert'
+            )
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.type(
-            getByRole('textbox', {
-                name: 'Angi andel som skal tilbakekreves - fritekst',
-            }),
-            '22'
+        await waitFor(() =>
+            user.type(
+                getByRole('textbox', {
+                    name: 'Angi andel som skal tilbakekreves - fritekst',
+                }),
+                '22'
+            )
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -817,14 +955,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
             )
         );
 
@@ -834,14 +976,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         ).toBeFalsy();
         expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Simpel uaktsomhet', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Simpel uaktsomhet', {
+                    selector: 'input',
+                })
+            )
         );
 
         expect(
@@ -849,17 +995,21 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         ).toBeTruthy();
         expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.click(
-            getByRole('radio', {
-                name: 'Ja',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('radio', {
+                    name: 'Ja',
+                })
+            )
         );
         expect(queryByText('Særlige grunner 4. ledd')).toBeTruthy();
         expect(
@@ -868,24 +1018,30 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeTruthy();
         expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+                    selector: 'input',
+                })
+            )
         );
-        await user.click(getByTestId('harGrunnerTilReduksjon_Ja'));
+        await waitFor(() => user.click(getByTestId('harGrunnerTilReduksjon_Ja')));
 
         expect(queryByText('Skal det tillegges renter?')).toBeFalsy();
         expect(
@@ -894,25 +1050,31 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
 
-        await user.selectOptions(
-            getByRole('combobox', {
-                name: 'Angi andel som skal tilbakekreves',
-            }),
-            '30'
+        await waitFor(() =>
+            user.selectOptions(
+                getByRole('combobox', {
+                    name: 'Angi andel som skal tilbakekreves',
+                }),
+                '30'
+            )
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -934,25 +1096,33 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
             )
         );
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Simpel uaktsomhet', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Simpel uaktsomhet', {
+                    selector: 'input',
+                })
+            )
         );
 
         expect(
@@ -960,49 +1130,61 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         ).toBeTruthy();
         expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.click(
-            getByRole('radio', {
-                name: 'Ja',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('radio', {
+                    name: 'Ja',
+                })
+            )
         );
 
         expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeFalsy();
         expect(queryByText('Særlige grunner 4. ledd')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+                    selector: 'input',
+                })
+            )
         );
-        await user.click(getByTestId('harGrunnerTilReduksjon_Nei'));
+        await waitFor(() => user.click(getByTestId('harGrunnerTilReduksjon_Nei')));
 
         expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
         expect(getByText('100 %')).toBeTruthy();
         expect(queryByText('Skal det tillegges renter?')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -1023,25 +1205,33 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
-        await user.click(
-            getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
+        await waitFor(() =>
+            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse')
+        );
+        await waitFor(() =>
+            user.click(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
             )
         );
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
+        await waitFor(() =>
+            user.type(
+                getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
+                'begrunnelse'
+            )
         );
-        await user.click(
-            getByLabelText('Simpel uaktsomhet', {
-                selector: 'input',
-            })
+        await waitFor(() =>
+            user.click(
+                getByLabelText('Simpel uaktsomhet', {
+                    selector: 'input',
+                })
+            )
         );
 
         expect(
@@ -1049,25 +1239,31 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         ).toBeTruthy();
         expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.click(
-            getByRole('radio', {
-                name: 'Nei',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('radio', {
+                    name: 'Nei',
+                })
+            )
         );
 
         expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await waitFor(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
