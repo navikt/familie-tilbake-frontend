@@ -70,7 +70,6 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.0",
-    "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.5.1",
     "@types/case-sensitive-paths-webpack-plugin": "^2.1.6",
     "@types/classnames": "^2.3.1",
