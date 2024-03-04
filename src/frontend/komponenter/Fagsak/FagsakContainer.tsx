@@ -97,7 +97,9 @@ const FagsakContainer: React.FC = () => {
                             </FagsakContainerContent>
                         </>
                     ) : (
-                        <div />
+                        <Alert variant="info">
+                            Data om behandlingen er innhentet, men saken er på vent.
+                        </Alert>
                     );
                 case RessursStatus.IKKE_TILGANG:
                     return (
@@ -110,7 +112,7 @@ const FagsakContainer: React.FC = () => {
                 case RessursStatus.FUNKSJONELL_FEIL:
                     return <Alert children={behandling.frontendFeilmelding} variant="error" />;
                 default:
-                    return <div />;
+                    return <Alert variant="warning">Venter på data om behandlingen</Alert>;
             }
         }
         case RessursStatus.IKKE_TILGANG:
@@ -121,7 +123,7 @@ const FagsakContainer: React.FC = () => {
         case RessursStatus.FUNKSJONELL_FEIL:
             return <Alert children={fagsak.frontendFeilmelding} variant="error" />;
         default:
-            return <div />;
+            return <Alert variant="warning">Venter på data om fagsaken</Alert>;
     }
 };
 
