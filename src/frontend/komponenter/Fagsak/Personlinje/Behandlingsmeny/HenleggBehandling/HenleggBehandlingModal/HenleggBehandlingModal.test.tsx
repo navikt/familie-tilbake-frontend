@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -75,26 +75,32 @@ describe('Tester: HenleggBehandlingModal', () => {
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Henlegg behandling',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Henlegg behandling',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.selectOptions(
-            getByLabelText('Velg årsak'),
-            Behandlingresultat.HENLAGT_FEILOPPRETTET
+        await act(() =>
+            user.selectOptions(
+                getByLabelText('Velg årsak'),
+                Behandlingresultat.HENLAGT_FEILOPPRETTET
+            )
         );
-        await user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
+        await act(() => user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet'));
 
         expect(getByText('Informer søker:')).toBeTruthy();
         expect(getByText('Forhåndsvis brev')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Henlegg behandling',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Henlegg behandling',
+                })
+            )
         );
     });
 
@@ -123,26 +129,32 @@ describe('Tester: HenleggBehandlingModal', () => {
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Henlegg behandling',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Henlegg behandling',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.selectOptions(
-            getByLabelText('Velg årsak'),
-            Behandlingresultat.HENLAGT_FEILOPPRETTET
+        await act(() =>
+            user.selectOptions(
+                getByLabelText('Velg årsak'),
+                Behandlingresultat.HENLAGT_FEILOPPRETTET
+            )
         );
-        await user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
+        await act(() => user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet'));
 
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Henlegg behandling',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Henlegg behandling',
+                })
+            )
         );
     });
 
@@ -175,41 +187,51 @@ describe('Tester: HenleggBehandlingModal', () => {
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Henlegg behandling',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Henlegg behandling',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.selectOptions(
-            getByLabelText('Velg årsak'),
-            Behandlingresultat.HENLAGT_FEILOPPRETTET_MED_BREV
+        await act(() =>
+            user.selectOptions(
+                getByLabelText('Velg årsak'),
+                Behandlingresultat.HENLAGT_FEILOPPRETTET_MED_BREV
+            )
         );
-        await user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
+        await act(() => user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet'));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Henlegg behandling',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Henlegg behandling',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        await user.type(
-            getByRole('textbox', { name: 'Fritekst til brev' }),
-            'Revurdering er feilopprettet'
+        await act(() =>
+            user.type(
+                getByRole('textbox', { name: 'Fritekst til brev' }),
+                'Revurdering er feilopprettet'
+            )
         );
 
         expect(getByText('Informer søker:')).toBeTruthy();
         expect(getByText('Forhåndsvis brev')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Henlegg behandling',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Henlegg behandling',
+                })
+            )
         );
     });
 
@@ -243,27 +265,33 @@ describe('Tester: HenleggBehandlingModal', () => {
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Henlegg behandling',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Henlegg behandling',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.selectOptions(
-            getByLabelText('Velg årsak'),
-            Behandlingresultat.HENLAGT_FEILOPPRETTET_UTEN_BREV
+        await act(() =>
+            user.selectOptions(
+                getByLabelText('Velg årsak'),
+                Behandlingresultat.HENLAGT_FEILOPPRETTET_UTEN_BREV
+            )
         );
-        await user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
+        await act(() => user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet'));
 
         expect(queryByText('Informer søker:')).toBeFalsy();
         expect(queryByText('Forhåndsvis brev')).toBeFalsy();
         expect(queryByRole('textbox', { name: 'Fritekst til brev' })).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Henlegg behandling',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Henlegg behandling',
+                })
+            )
         );
     });
 });

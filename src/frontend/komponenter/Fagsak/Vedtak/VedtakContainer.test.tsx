@@ -226,11 +226,13 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeTruthy();
 
-        await user.type(
-            getByRole('textbox', {
-                name: `Utdypende tekst`,
-            }),
-            'Fritekst påkrevet'
+        await act(() =>
+            user.type(
+                getByRole('textbox', {
+                    name: `Utdypende tekst`,
+                }),
+                'Fritekst påkrevet'
+            )
         );
 
         expect(
@@ -247,10 +249,12 @@ describe('Tester: VedtakContainer', () => {
             ).toBeEnabled();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Til godkjenning',
+                })
+            )
         );
     });
 
@@ -353,13 +357,11 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toHaveLength(2);
 
-        await user.type(
-            getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
-            'Fritekst påkrevet'
+        await act(() =>
+            user.type(getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'), 'Fritekst påkrevet')
         );
-        await user.type(
-            getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
-            'Fritekst påkrevet'
+        await act(() =>
+            user.type(getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'), 'Fritekst påkrevet')
         );
 
         expect(
@@ -376,10 +378,12 @@ describe('Tester: VedtakContainer', () => {
             ).toBeEnabled();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Til godkjenning',
+                })
+            )
         );
     });
 
