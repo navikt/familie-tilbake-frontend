@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -141,7 +141,7 @@ describe('Tester: FaktaContainer', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(getAllByRole('combobox')).toHaveLength(3);
 
-        await waitFor(() =>
+        await act(() =>
             user.click(
                 getByRole('button', {
                     name: 'Bekreft og fortsett',
@@ -150,20 +150,20 @@ describe('Tester: FaktaContainer', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
 
-        await waitFor(() =>
+        await act(() =>
             user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BOSATT_I_RIKET)
         );
-        await waitFor(() =>
+        await act(() =>
             user.selectOptions(getByTestId('perioder.1.årsak'), HendelseType.BOR_MED_SØKER)
         );
-        await waitFor(() =>
+        await act(() =>
             user.selectOptions(getByTestId('perioder.2.årsak'), HendelseType.BOSATT_I_RIKET)
         );
-        await waitFor(() => user.type(getByRole('textbox'), 'Begrunnelse'));
+        await act(() => user.type(getByRole('textbox'), 'Begrunnelse'));
 
         expect(getAllByRole('combobox')).toHaveLength(6);
 
-        await waitFor(() =>
+        await act(() =>
             user.click(
                 getByRole('button', {
                     name: 'Bekreft og fortsett',
@@ -172,26 +172,26 @@ describe('Tester: FaktaContainer', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(3);
 
-        await waitFor(() =>
+        await act(() =>
             user.selectOptions(
                 getByTestId('perioder.0.underårsak'),
                 HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
             )
         );
-        await waitFor(() =>
+        await act(() =>
             user.selectOptions(
                 getByTestId('perioder.1.underårsak'),
                 HendelseUndertype.BOR_IKKE_MED_BARN
             )
         );
-        await waitFor(() =>
+        await act(() =>
             user.selectOptions(
                 getByTestId('perioder.2.underårsak'),
                 HendelseUndertype.BRUKER_FLYTTET_FRA_NORGE
             )
         );
 
-        await waitFor(() =>
+        await act(() =>
             user.click(
                 getByRole('button', {
                     name: 'Bekreft og fortsett',
@@ -227,7 +227,7 @@ describe('Tester: FaktaContainer', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(getAllByRole('combobox')).toHaveLength(3);
 
-        await waitFor(() =>
+        await act(() =>
             user.click(
                 getByRole('button', {
                     name: 'Bekreft og fortsett',
@@ -236,7 +236,7 @@ describe('Tester: FaktaContainer', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
 
-        await waitFor(() =>
+        await act(() =>
             user.click(
                 getByRole('checkbox', {
                     name: 'Behandle alle perioder samlet',
@@ -244,10 +244,10 @@ describe('Tester: FaktaContainer', () => {
             )
         );
 
-        await waitFor(() =>
+        await act(() =>
             user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BOSATT_I_RIKET)
         );
-        await waitFor(() =>
+        await act(() =>
             user.type(getByLabelText('Forklar årsaken(e) til feilutbetalingen'), 'Begrunnelse')
         );
 
@@ -262,14 +262,14 @@ describe('Tester: FaktaContainer', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(3);
 
-        await waitFor(() =>
+        await act(() =>
             user.selectOptions(
                 getByTestId('perioder.0.underårsak'),
                 HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
             )
         );
 
-        await waitFor(() =>
+        await act(() =>
             user.click(
                 getByRole('button', {
                     name: 'Bekreft og fortsett',
