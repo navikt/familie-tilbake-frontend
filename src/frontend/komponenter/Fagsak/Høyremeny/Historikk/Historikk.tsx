@@ -40,7 +40,7 @@ const Historikk: React.FC = () => {
         case RessursStatus.FUNKSJONELL_FEIL:
             return <Alert children={historikkInnslag.frontendFeilmelding} variant="error" />;
         default:
-            return <div />;
+            return <Alert variant="warning">Kunne ikke hente data om historikk</Alert>;
     }
 };
 
