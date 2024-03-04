@@ -106,7 +106,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
                 />
             );
         default:
-            return <div />;
+            return <Alert variant="warning">Kunne ikke hente data om vilkårsvurdering</Alert>;
     }
 };
 

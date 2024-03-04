@@ -116,7 +116,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                 <Alert variant="error" children={feilutbetalingForeldelse.frontendFeilmelding} />
             );
         default:
-            return <div />;
+            return <Alert variant="warning">Kunne ikke hente data om foreldelse</Alert>;
     }
 };
 

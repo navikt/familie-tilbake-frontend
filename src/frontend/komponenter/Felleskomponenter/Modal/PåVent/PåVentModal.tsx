@@ -60,8 +60,15 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
         ventegrunn.venteårsak === skjema.felter.årsak.verdi &&
         ventegrunn.tidsfrist === skjema.felter.tidsfrist.verdi;
 
+    const lukkModal = () => {
+        tilbakestillFelterTilDefault();
+        onClose();
+    };
+
     return (
         <Modal
+            open
+            onClose={lukkModal}
             header={{
                 heading: 'Behandling satt på vent',
                 size: 'medium',
@@ -130,15 +137,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                 >
                     Oppdater
                 </FTButton>
-                <FTButton
-                    variant="tertiary"
-                    key={'avbryt'}
-                    onClick={() => {
-                        tilbakestillFelterTilDefault();
-                        onClose();
-                    }}
-                    size="small"
-                >
+                <FTButton variant="tertiary" key={'avbryt'} onClick={lukkModal} size="small">
                     Lukk
                 </FTButton>
             </Modal.Footer>
