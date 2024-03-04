@@ -253,7 +253,7 @@ describe('Tester: FaktaContainer', () => {
 
         expect(getAllByRole('combobox')).toHaveLength(6);
 
-        await waitFor(() =>
+        await act(() =>
             user.click(
                 getByRole('button', {
                     name: 'Bekreft og fortsett',
