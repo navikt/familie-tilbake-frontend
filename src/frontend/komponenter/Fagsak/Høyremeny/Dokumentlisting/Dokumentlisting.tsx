@@ -44,7 +44,7 @@ const Dokumentlisting: React.FC = () => {
         case RessursStatus.FUNKSJONELL_FEIL:
             return <Alert children={journalposter.frontendFeilmelding} variant="error" />;
         default:
-            return <div />;
+            return <Alert variant="warning">Kunne ikke hente data om dokumenter</Alert>;
     }
 };
 

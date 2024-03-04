@@ -79,7 +79,7 @@ const Dokument: React.FC<{ pdfdata: Ressurs<string> }> = ({ pdfdata }) => {
                 />
             );
         default:
-            return null;
+            <Alert variant="warning">Kunne ikke hente dokument</Alert>;
     }
 };
 
