@@ -20,9 +20,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: npm
+          cache: yarn
           registry-url: "https://npm.pkg.github.com"
-      - uses: ./.github/yarn-cache
       - name: Login to GitHub Container Registry
         uses: docker/login-action@3d58c274f17dffee475a5520cbe67f0a882c4dbb
         with:
