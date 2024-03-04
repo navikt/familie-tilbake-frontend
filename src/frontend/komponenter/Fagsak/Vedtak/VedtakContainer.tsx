@@ -206,12 +206,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
             />
         );
     } else {
-        return (
-            <Alert variant="warning">
-                Kunne ikke hente data om vedtaksbrev. Venter på beregningsresultat og
-                vedtaksbrevavsnitt.
-            </Alert>
-        );
+        return <Alert variant="warning">Kunne ikke hente data om vedtaksbrev</Alert>;
     }
 };
 

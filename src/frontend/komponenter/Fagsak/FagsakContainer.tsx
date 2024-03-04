@@ -82,24 +82,25 @@ const FagsakContainer: React.FC = () => {
         case RessursStatus.SUKSESS: {
             switch (behandling?.status) {
                 case RessursStatus.SUKSESS:
-                    return !visVenteModal ? (
-                        <>
-                            <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
+                    return (
+                        !visVenteModal && (
+                            <>
+                                <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
-                            {ventegrunn && (
-                                <FTAlertStripe children={venteBeskjed(ventegrunn)} variant="info" />
-                            )}
-                            <FagsakContainerContent className={ventegrunn ? 'venter' : ''}>
-                                <BehandlingContainer
-                                    fagsak={fagsak.data}
-                                    behandling={behandling.data}
-                                />
-                            </FagsakContainerContent>
-                        </>
-                    ) : (
-                        <Alert variant="info">
-                            Data om behandlingen er innhentet, men saken er på vent.
-                        </Alert>
+                                {ventegrunn && (
+                                    <FTAlertStripe
+                                        children={venteBeskjed(ventegrunn)}
+                                        variant="info"
+                                    />
+                                )}
+                                <FagsakContainerContent className={ventegrunn ? 'venter' : ''}>
+                                    <BehandlingContainer
+                                        fagsak={fagsak.data}
+                                        behandling={behandling.data}
+                                    />
+                                </FagsakContainerContent>
+                            </>
+                        )
                     );
                 case RessursStatus.IKKE_TILGANG:
                     return (
@@ -112,7 +113,7 @@ const FagsakContainer: React.FC = () => {
                 case RessursStatus.FUNKSJONELL_FEIL:
                     return <Alert children={behandling.frontendFeilmelding} variant="error" />;
                 default:
-                    return <Alert variant="warning">Venter på data om behandlingen</Alert>;
+                    return <Alert variant="info">Venter på data om behandlingen</Alert>;
             }
         }
         case RessursStatus.IKKE_TILGANG:
@@ -123,7 +124,7 @@ const FagsakContainer: React.FC = () => {
         case RessursStatus.FUNKSJONELL_FEIL:
             return <Alert children={fagsak.frontendFeilmelding} variant="error" />;
         default:
-            return <Alert variant="warning">Venter på data om fagsaken</Alert>;
+            return <Alert variant="info">Venter på data om fagsaken</Alert>;
     }
 };
 
