@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render, waitFor, within } from '@testing-library/react';
+import { act, render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -477,13 +477,11 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toHaveLength(2);
 
-        await user.type(
-            getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
-            'Fritekst påkrevet'
+        await act(() =>
+            user.type(getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'), 'Fritekst påkrevet')
         );
-        await user.type(
-            getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
-            'Fritekst påkrevet'
+        await act(() =>
+            user.type(getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'), 'Fritekst påkrevet')
         );
 
         expect(
@@ -500,10 +498,12 @@ describe('Tester: VedtakContainer', () => {
             ).toBeEnabled();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Til godkjenning',
+                })
+            )
         );
     });
 
@@ -611,12 +611,14 @@ describe('Tester: VedtakContainer', () => {
             })
         ).toBeFalsy();
 
-        await user.click(
-            within(
-                getByRole('region', {
-                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
-                })
-            ).getByRole('button')
+        await act(() =>
+            user.click(
+                within(
+                    getByRole('region', {
+                        name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                    })
+                ).getByRole('button')
+            )
         );
 
         expect(
@@ -630,15 +632,15 @@ describe('Tester: VedtakContainer', () => {
                 name: 'Legg til utdypende tekst Legg til utdypende tekst',
             })
         ).toHaveLength(2);
-        await user.click(getByTestId('legg-til-fritekst-idx_avsnitt_2-idx_underavsnitt_0'));
-
-        await user.type(
-            getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
-            'Fritekst påkrevet'
+        await act(() =>
+            user.click(getByTestId('legg-til-fritekst-idx_avsnitt_2-idx_underavsnitt_0'))
         );
-        await user.type(
-            getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
-            'Fritekst ekstra'
+
+        await act(() =>
+            user.type(getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'), 'Fritekst påkrevet')
+        );
+        await act(() =>
+            user.type(getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'), 'Fritekst ekstra')
         );
 
         expect(
@@ -655,10 +657,12 @@ describe('Tester: VedtakContainer', () => {
             ).toBeEnabled();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'Til godkjenning',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Til godkjenning',
+                })
+            )
         );
     });
 
@@ -753,19 +757,23 @@ describe('Tester: VedtakContainer', () => {
             })
         ).not.toHaveClass('navds-expansioncard--open');
 
-        await user.click(
-            within(
-                getByRole('region', {
-                    name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
-                })
-            ).getByRole('button')
+        await act(() =>
+            user.click(
+                within(
+                    getByRole('region', {
+                        name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+                    })
+                ).getByRole('button')
+            )
         );
-        await user.click(
-            within(
-                getByRole('region', {
-                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
-                })
-            ).getByRole('button')
+        await act(() =>
+            user.click(
+                within(
+                    getByRole('region', {
+                        name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                    })
+                ).getByRole('button')
+            )
         );
 
         expect(
@@ -879,12 +887,14 @@ describe('Tester: VedtakContainer', () => {
             })
         ).not.toHaveClass('navds-expansioncard--open');
 
-        await user.click(
-            within(
-                getByRole('region', {
-                    name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
-                })
-            ).getByRole('button')
+        await act(() =>
+            user.click(
+                within(
+                    getByRole('region', {
+                        name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+                    })
+                ).getByRole('button')
+            )
         );
 
         expect(
@@ -899,12 +909,14 @@ describe('Tester: VedtakContainer', () => {
             })
         ).not.toHaveClass('navds-expansioncard--open');
 
-        await user.click(
-            within(
-                getByRole('region', {
-                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
-                })
-            ).getByRole('button')
+        await act(() =>
+            user.click(
+                within(
+                    getByRole('region', {
+                        name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                    })
+                ).getByRole('button')
+            )
         );
 
         expect(
