@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -104,9 +104,9 @@ describe('Tester: Totrinnskontroll', () => {
             ).toBeDisabled();
         });
 
-        await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
+        await act(() => user.click(getByTestId('stegetGodkjent_idx_steg_0-true')));
+        await act(() => user.click(getByTestId('stegetGodkjent_idx_steg_1-true')));
+        await act(() => user.click(getByTestId('stegetGodkjent_idx_steg_2-true')));
 
         await waitFor(async () => {
             expect(
@@ -116,10 +116,12 @@ describe('Tester: Totrinnskontroll', () => {
             ).toBeEnabled();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'Godkjenn vedtaket',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Godkjenn vedtaket',
+                })
+            )
         );
     });
 
@@ -183,10 +185,10 @@ describe('Tester: Totrinnskontroll', () => {
             ).toBeDisabled();
         });
 
-        await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_3-false'));
+        await act(() => user.click(getByTestId('stegetGodkjent_idx_steg_0-true')));
+        await act(() => user.click(getByTestId('stegetGodkjent_idx_steg_1-true')));
+        await act(() => user.click(getByTestId('stegetGodkjent_idx_steg_2-true')));
+        await act(() => user.click(getByTestId('stegetGodkjent_idx_steg_3-false')));
 
         expect(
             getByRole('button', {
@@ -194,11 +196,13 @@ describe('Tester: Totrinnskontroll', () => {
             })
         ).toBeDisabled();
 
-        await user.type(
-            getByRole('textbox', {
-                name: 'Begrunnelse',
-            }),
-            'Vurder på nytt!!!!'
+        await act(() =>
+            user.type(
+                getByRole('textbox', {
+                    name: 'Begrunnelse',
+                }),
+                'Vurder på nytt!!!!'
+            )
         );
 
         await waitFor(async () => {
@@ -209,10 +213,12 @@ describe('Tester: Totrinnskontroll', () => {
             ).toBeEnabled();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Send til saksbehandler',
+                })
+            )
         );
     });
 

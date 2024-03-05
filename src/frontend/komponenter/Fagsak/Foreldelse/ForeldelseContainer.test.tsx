@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -125,20 +125,24 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toBeDisabled();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.type(getByLabelText('Vurdering'), 'Begrunnelse 1');
-        await user.click(getByLabelText('Perioden er ikke foreldet'));
+        await act(() => user.type(getByLabelText('Vurdering'), 'Begrunnelse 1'));
+        await act(() => user.click(getByLabelText('Perioden er ikke foreldet')));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
 
@@ -152,20 +156,24 @@ describe('Tester: ForeldelseContainer', () => {
         expect(getByText('2 måneder')).toBeTruthy();
         expect(getByText('1 333')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.type(getByLabelText('Vurdering'), 'Begrunnelse 2');
-        await user.click(getByLabelText('Perioden er ikke foreldet'));
+        await act(() => user.type(getByLabelText('Vurdering'), 'Begrunnelse 2'));
+        await act(() => user.click(getByLabelText('Perioden er ikke foreldet')));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
 
@@ -177,10 +185,12 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toBeEnabled();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
     });
 
@@ -223,10 +233,12 @@ describe('Tester: ForeldelseContainer', () => {
             ).toBeEnabled();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'suksess fra 01.01.2020 til og med 31.03.2020',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                })
+            )
         );
 
         expect(
@@ -247,10 +259,12 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toHaveValue('01.01.2021');
 
-        await user.click(
-            getByRole('button', {
-                name: 'suksess fra 01.05.2020 til og med 30.06.2020',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                })
+            )
         );
 
         expect(getByText('01.05.2020 - 30.06.2020')).toBeTruthy();
@@ -269,10 +283,12 @@ describe('Tester: ForeldelseContainer', () => {
             '24.12.2020'
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Lukk',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Lukk',
+                })
+            )
         );
 
         expect(
@@ -321,10 +337,12 @@ describe('Tester: ForeldelseContainer', () => {
             ).toBeEnabled();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'suksess fra 01.01.2020 til og med 31.03.2020',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                })
+            )
         );
 
         expect(
@@ -346,10 +364,12 @@ describe('Tester: ForeldelseContainer', () => {
         expect(getByText('Perioden er foreldet')).toBeTruthy();
         expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
 
-        await user.click(
-            getByRole('button', {
-                name: 'suksess fra 01.05.2020 til og med 30.06.2020',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                })
+            )
         );
 
         expect(getByText('01.05.2020 - 30.06.2020')).toBeTruthy();

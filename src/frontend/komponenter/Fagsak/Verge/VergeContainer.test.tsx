@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -82,32 +82,38 @@ describe('Tester: VergeContainer', () => {
             expect(getByText('Verge')).toBeTruthy();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.selectOptions(getByLabelText('Vergetype'), Vergetype.ADVOKAT);
+        await act(() => user.selectOptions(getByLabelText('Vergetype'), Vergetype.ADVOKAT));
 
-        await user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat');
+        await act(() => user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat'));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.type(getByLabelText('Navn'), 'Advokat Advokatesen');
-        await user.type(getByLabelText('Organisasjonsnummer'), 'DummyOrg');
+        await act(() => user.type(getByLabelText('Navn'), 'Advokat Advokatesen'));
+        await act(() => user.type(getByLabelText('Organisasjonsnummer'), 'DummyOrg'));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -130,41 +136,49 @@ describe('Tester: VergeContainer', () => {
             expect(getByText('Verge')).toBeTruthy();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.selectOptions(getByLabelText('Vergetype'), Vergetype.VERGE_FOR_BARN);
-        await user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat');
+        await act(() => user.selectOptions(getByLabelText('Vergetype'), Vergetype.VERGE_FOR_BARN));
+        await act(() => user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat'));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.type(getByLabelText('Navn'), 'Verge Vergesen');
-        await user.type(getByLabelText('Fødselsnummer'), '12sdf678901');
+        await act(() => user.type(getByLabelText('Navn'), 'Verge Vergesen'));
+        await act(() => user.type(getByLabelText('Fødselsnummer'), '12sdf678901'));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryByText('Du må skrive minst 3 tegn')).toBeFalsy();
         expect(queryByText('Ugyldig fødselsnummer')).toBeTruthy();
 
-        await user.clear(getByLabelText('Fødselsnummer'));
-        await user.type(getByLabelText('Fødselsnummer'), '27106903129');
+        await act(() => user.clear(getByLabelText('Fødselsnummer')));
+        await act(() => user.type(getByLabelText('Fødselsnummer'), '27106903129'));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(queryByText('Ugyldig fødselsnummer')).toBeFalsy();

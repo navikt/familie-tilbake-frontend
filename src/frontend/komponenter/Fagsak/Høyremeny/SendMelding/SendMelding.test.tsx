@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -80,7 +80,7 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeFalsy();
 
-        await user.selectOptions(getByLabelText('Mal'), DokumentMal.VARSEL);
+        await act(() => user.selectOptions(getByLabelText('Mal'), DokumentMal.VARSEL));
 
         expect(
             getByRole('button', {
@@ -89,7 +89,9 @@ describe('Tester: SendMelding', () => {
         ).toBeDisabled();
 
         expect(getByText('Bokmål')).toBeTruthy();
-        await user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
+        await act(() =>
+            user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev')
+        );
 
         expect(
             getByRole('button', {
@@ -103,10 +105,12 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Send brev',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Send brev',
+                })
+            )
         );
     });
 
@@ -153,10 +157,12 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeDisabled();
 
-        await user.selectOptions(getByLabelText('Mal'), DokumentMal.KORRIGERT_VARSEL);
+        await act(() => user.selectOptions(getByLabelText('Mal'), DokumentMal.KORRIGERT_VARSEL));
 
         expect(getByText('Nynorsk')).toBeTruthy();
-        await user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
+        await act(() =>
+            user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev')
+        );
 
         expect(
             getByRole('button', {
@@ -164,10 +170,12 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Send brev',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Send brev',
+                })
+            )
         );
     });
 
@@ -211,10 +219,16 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeDisabled();
 
-        await user.selectOptions(getByLabelText('Mal'), DokumentMal.INNHENT_DOKUMENTASJON);
-        await user.type(
-            getByRole('textbox', { name: 'Liste over dokumenter (skriv ett dokument pr. linje)' }),
-            'Liste over dokument'
+        await act(() =>
+            user.selectOptions(getByLabelText('Mal'), DokumentMal.INNHENT_DOKUMENTASJON)
+        );
+        await act(() =>
+            user.type(
+                getByRole('textbox', {
+                    name: 'Liste over dokumenter (skriv ett dokument pr. linje)',
+                }),
+                'Liste over dokument'
+            )
         );
 
         expect(
@@ -223,10 +237,12 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Send brev',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Send brev',
+                })
+            )
         );
     });
 
