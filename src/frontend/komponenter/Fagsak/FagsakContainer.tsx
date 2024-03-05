@@ -68,39 +68,32 @@ const FagsakContainer: React.FC = () => {
         return <HenterBehandling />;
     }
 
-    if (visVenteModal && ventegrunn && behandling?.status === RessursStatus.SUKSESS) {
-        return (
-            <PåVentModal
-                behandling={behandling.data}
-                ventegrunn={ventegrunn}
-                onClose={lukkVenteModal}
-            />
-        );
-    }
-
     switch (fagsak?.status) {
         case RessursStatus.SUKSESS: {
             switch (behandling?.status) {
                 case RessursStatus.SUKSESS:
                     return (
-                        !visVenteModal && (
-                            <>
-                                <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
+                        <>
+                            <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
-                                {ventegrunn && (
-                                    <FTAlertStripe
-                                        children={venteBeskjed(ventegrunn)}
-                                        variant="info"
-                                    />
-                                )}
-                                <FagsakContainerContent className={ventegrunn ? 'venter' : ''}>
-                                    <BehandlingContainer
-                                        fagsak={fagsak.data}
-                                        behandling={behandling.data}
-                                    />
-                                </FagsakContainerContent>
-                            </>
-                        )
+                            {ventegrunn && (
+                                <FTAlertStripe children={venteBeskjed(ventegrunn)} variant="info" />
+                            )}
+                            {visVenteModal && ventegrunn && (
+                                <PåVentModal
+                                    behandling={behandling.data}
+                                    ventegrunn={ventegrunn}
+                                    onClose={lukkVenteModal}
+                                />
+                            )}
+
+                            <FagsakContainerContent className={ventegrunn ? 'venter' : ''}>
+                                <BehandlingContainer
+                                    fagsak={fagsak.data}
+                                    behandling={behandling.data}
+                                />
+                            </FagsakContainerContent>
+                        </>
                     );
                 case RessursStatus.IKKE_TILGANG:
                     return (

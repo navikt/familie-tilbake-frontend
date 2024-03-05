@@ -1,24 +1,34 @@
 import * as React from 'react';
 
-import { BodyShort, HStack, Loader, Modal } from '@navikt/ds-react';
+import styled from 'styled-components';
+
+import { BodyShort, Box, HStack, Heading, Loader, VStack } from '@navikt/ds-react';
+
+const BoxMedMargin = styled(Box)`
+    margin-top: 2rem;
+`;
 
 const HenterBehandling: React.FC = () => {
     return (
-        <Modal
-            header={{ heading: 'Henter behandling', size: 'medium', closeButton: false }}
-            portal={true}
-            width="small"
-        >
-            <Modal.Body>
-                <HStack justify="space-between">
-                    <div>
-                        <BodyShort>Henting av behandlingen tar litt tid.</BodyShort>
-                        <BodyShort>Vennligst vent!</BodyShort>
-                    </div>
+        <VStack justify="center" align="center">
+            <BoxMedMargin
+                background="surface-subtle"
+                padding="8"
+                borderRadius="large"
+                borderColor="border-default"
+            >
+                <Heading level="1" size="medium" spacing>
+                    Henter behandling
+                </Heading>
+
+                <BodyShort>Henting av behandlingen tar litt tid.</BodyShort>
+                <BodyShort spacing>Vennligst vent!</BodyShort>
+
+                <HStack justify="center">
                     <Loader size="large" title="venter..." transparent={false} variant="neutral" />
                 </HStack>
-            </Modal.Body>
-        </Modal>
+            </BoxMedMargin>
+        </VStack>
     );
 };
 
