@@ -150,15 +150,11 @@ describe('Tester: FaktaContainer', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
 
-        await act(() =>
-            user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BOSATT_I_RIKET)
-        );
-        await act(() =>
-            user.selectOptions(getByTestId('perioder.1.årsak'), HendelseType.BOR_MED_SØKER)
-        );
-        await act(() =>
-            user.selectOptions(getByTestId('perioder.2.årsak'), HendelseType.BOSATT_I_RIKET)
-        );
+        act(() => {
+            user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BOSATT_I_RIKET);
+            user.selectOptions(getByTestId('perioder.1.årsak'), HendelseType.BOR_MED_SØKER);
+            user.selectOptions(getByTestId('perioder.2.årsak'), HendelseType.BOSATT_I_RIKET);
+        });
         await act(() => user.type(getByRole('textbox'), 'Begrunnelse'));
 
         expect(getAllByRole('combobox')).toHaveLength(6);
@@ -172,24 +168,20 @@ describe('Tester: FaktaContainer', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(3);
 
-        await act(() =>
+        act(() => {
             user.selectOptions(
                 getByTestId('perioder.0.underårsak'),
                 HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
-            )
-        );
-        await act(() =>
+            );
             user.selectOptions(
                 getByTestId('perioder.1.underårsak'),
                 HendelseUndertype.BOR_IKKE_MED_BARN
-            )
-        );
-        await act(() =>
+            );
             user.selectOptions(
                 getByTestId('perioder.2.underårsak'),
                 HendelseUndertype.BRUKER_FLYTTET_FRA_NORGE
-            )
-        );
+            );
+        });
 
         await act(() =>
             user.click(
