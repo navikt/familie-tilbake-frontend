@@ -17,14 +17,13 @@ const HenterBehandling: React.FC = () => {
                 borderRadius="large"
                 borderColor="border-default"
             >
-                <Heading level="1" size="medium">
+                <Heading level="1" size="medium" spacing>
                     Henter behandling
                 </Heading>
 
-                <div>
-                    <BodyShort>Henting av behandlingen tar litt tid.</BodyShort>
-                    <BodyShort>Vennligst vent!</BodyShort>
-                </div>
+                <BodyShort>Henting av behandlingen tar litt tid.</BodyShort>
+                <BodyShort spacing>Vennligst vent!</BodyShort>
+
                 <HStack justify="center">
                     <Loader size="large" title="venter..." transparent={false} variant="neutral" />
                 </HStack>
