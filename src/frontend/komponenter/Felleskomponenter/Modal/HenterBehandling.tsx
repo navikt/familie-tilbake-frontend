@@ -1,24 +1,37 @@
 import * as React from 'react';
 
-import { BodyShort, HStack, Loader, Modal } from '@navikt/ds-react';
+import { BodyShort, Box, HStack, Heading, Loader, VStack } from '@navikt/ds-react';
 
 const HenterBehandling: React.FC = () => {
     return (
-        <Modal
-            header={{ heading: 'Henter behandling', size: 'medium', closeButton: false }}
-            portal={true}
-            width="small"
-        >
-            <Modal.Body>
-                <HStack justify="space-between">
+        <>
+            <VStack justify="center" align="center">
+                <Box
+                    background="surface-subtle"
+                    padding="8"
+                    borderRadius="large"
+                    borderColor="border-default"
+                    style={{ marginTop: '2rem' }}
+                >
+                    <Heading level="1" size="medium">
+                        Henter behandling
+                    </Heading>
+
                     <div>
                         <BodyShort>Henting av behandlingen tar litt tid.</BodyShort>
                         <BodyShort>Vennligst vent!</BodyShort>
                     </div>
-                    <Loader size="large" title="venter..." transparent={false} variant="neutral" />
-                </HStack>
-            </Modal.Body>
-        </Modal>
+                    <HStack justify="center">
+                        <Loader
+                            size="large"
+                            title="venter..."
+                            transparent={false}
+                            variant="neutral"
+                        />
+                    </HStack>
+                </Box>
+            </VStack>
+        </>
     );
 };
 
