@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -50,30 +50,36 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByLabelText('Foreldelsesfrist')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.click(getByLabelText('Perioden er ikke foreldet'));
+        await act(() => user.click(getByLabelText('Perioden er ikke foreldet')));
 
         expect(queryByLabelText('Foreldelsesfrist')).toBeFalsy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.type(getByLabelText('Vurdering'), 'begrunnelse');
+        await act(() => user.type(getByLabelText('Vurdering'), 'begrunnelse'));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -91,7 +97,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByLabelText('Foreldelsesfrist')).toBeFalsy();
 
-        await user.click(getByLabelText('Perioden er foreldet'));
+        await act(() => user.click(getByLabelText('Perioden er foreldet')));
 
         expect(
             queryByLabelText('Foreldelsesfrist', {
@@ -100,27 +106,33 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
             })
         ).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(1);
 
-        await user.type(getByLabelText('Vurdering'), 'begrunnelse');
-        await user.type(
-            getByLabelText('Foreldelsesfrist', {
-                selector: 'input',
-                exact: false,
-            }),
-            '14.09.2020'
+        await act(() => user.type(getByLabelText('Vurdering'), 'begrunnelse'));
+        await act(() =>
+            user.type(
+                getByLabelText('Foreldelsesfrist', {
+                    selector: 'input',
+                    exact: false,
+                }),
+                '14.09.2020'
+            )
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -140,8 +152,10 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         expect(queryByLabelText('Foreldelsesfrist')).toBeFalsy();
         expect(queryByLabelText('Dato for når feilutbetaling ble oppdaget')).toBeFalsy();
 
-        await user.click(
-            getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
+        await act(() =>
+            user.click(
+                getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
+            )
         );
 
         expect(
@@ -152,28 +166,36 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
         ).toBeTruthy();
         expect(queryByLabelText('Dato for når feilutbetaling ble oppdaget')).toBeTruthy();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(2);
 
-        await user.type(getByLabelText('Vurdering'), 'begrunnelse');
-        await user.type(
-            getByLabelText('Foreldelsesfrist', {
-                selector: 'input',
-                exact: false,
-            }),
-            '14.09.2020'
+        await act(() => user.type(getByLabelText('Vurdering'), 'begrunnelse'));
+        await act(() =>
+            user.type(
+                getByLabelText('Foreldelsesfrist', {
+                    selector: 'input',
+                    exact: false,
+                }),
+                '14.09.2020'
+            )
         );
-        await user.type(getByLabelText('Dato for når feilutbetaling ble oppdaget'), '14.06.2020');
+        await act(() =>
+            user.type(getByLabelText('Dato for når feilutbetaling ble oppdaget'), '14.06.2020')
+        );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);

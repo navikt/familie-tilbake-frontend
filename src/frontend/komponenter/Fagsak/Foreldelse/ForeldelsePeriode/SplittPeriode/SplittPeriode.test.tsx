@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -40,7 +40,7 @@ describe('Tester: SplittPeriode - Foreldelse', () => {
         expect(queryAllByText('Del opp perioden')).toHaveLength(1);
         expect(queryByText('01.01.2021 - 30.04.2021')).toBeFalsy();
 
-        await user.click(getByAltText('Del opp perioden'));
+        await act(() => user.click(getByAltText('Del opp perioden')));
 
         expect(queryAllByText('Del opp perioden')).toHaveLength(2);
         expect(queryByText('01.01.2021 - 30.04.2021')).toBeTruthy();

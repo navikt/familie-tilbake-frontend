@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -141,44 +141,54 @@ describe('Tester: FaktaContainer', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(getAllByRole('combobox')).toHaveLength(3);
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
 
-        await user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BOSATT_I_RIKET);
-        await user.selectOptions(getByTestId('perioder.1.årsak'), HendelseType.BOR_MED_SØKER);
-        await user.selectOptions(getByTestId('perioder.2.årsak'), HendelseType.BOSATT_I_RIKET);
-        await user.type(getByRole('textbox'), 'Begrunnelse');
+        act(() => {
+            user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BOSATT_I_RIKET);
+            user.selectOptions(getByTestId('perioder.1.årsak'), HendelseType.BOR_MED_SØKER);
+            user.selectOptions(getByTestId('perioder.2.årsak'), HendelseType.BOSATT_I_RIKET);
+        });
+        await act(() => user.type(getByRole('textbox'), 'Begrunnelse'));
 
         expect(getAllByRole('combobox')).toHaveLength(6);
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(3);
 
-        await user.selectOptions(
-            getByTestId('perioder.0.underårsak'),
-            HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
-        );
-        await user.selectOptions(
-            getByTestId('perioder.1.underårsak'),
-            HendelseUndertype.BOR_IKKE_MED_BARN
-        );
-        await user.selectOptions(
-            getByTestId('perioder.2.underårsak'),
-            HendelseUndertype.BRUKER_FLYTTET_FRA_NORGE
-        );
+        act(() => {
+            user.selectOptions(
+                getByTestId('perioder.0.underårsak'),
+                HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
+            );
+            user.selectOptions(
+                getByTestId('perioder.1.underårsak'),
+                HendelseUndertype.BOR_IKKE_MED_BARN
+            );
+            user.selectOptions(
+                getByTestId('perioder.2.underårsak'),
+                HendelseUndertype.BRUKER_FLYTTET_FRA_NORGE
+            );
+        });
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -209,40 +219,54 @@ describe('Tester: FaktaContainer', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(getAllByRole('combobox')).toHaveLength(3);
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
 
-        await user.click(
-            getByRole('checkbox', {
-                name: 'Behandle alle perioder samlet',
-            })
+        await act(() =>
+            user.click(
+                getByRole('checkbox', {
+                    name: 'Behandle alle perioder samlet',
+                })
+            )
         );
 
-        await user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BOSATT_I_RIKET);
-        await user.type(getByLabelText('Forklar årsaken(e) til feilutbetalingen'), 'Begrunnelse');
+        await act(() =>
+            user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BOSATT_I_RIKET)
+        );
+        await act(() =>
+            user.type(getByLabelText('Forklar årsaken(e) til feilutbetalingen'), 'Begrunnelse')
+        );
 
         expect(getAllByRole('combobox')).toHaveLength(6);
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(3);
 
-        await user.selectOptions(
-            getByTestId('perioder.0.underårsak'),
-            HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
+        await act(() =>
+            user.selectOptions(
+                getByTestId('perioder.0.underårsak'),
+                HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
+            )
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft og fortsett',
-            })
+        await act(() =>
+            user.click(
+                getByRole('button', {
+                    name: 'Bekreft og fortsett',
+                })
+            )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
