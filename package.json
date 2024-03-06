@@ -15,7 +15,7 @@
     "test": "jest",
     "lint": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint './src/**/*.{js,jsx,ts,tsx}' --fix",
-    "prepare": "yarn husky install"
+    "prepare": "husky"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,css}": [
@@ -100,7 +100,7 @@
     "express-static-gzip": "^2.1.7",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.6.0",
-    "husky": "^8.0.3",
+    "husky": "^9.0.11",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.6.0",
     "jest-environment-jsdom": "^29.7.0",
