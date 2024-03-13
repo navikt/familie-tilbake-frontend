@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE: ghcr.io/navikt/familie-tilbake-frontend:${{ github.sha }}
   VERSION: familie-tilbake-frontend:${{ github.sha }}
 
 jobs:
@@ -12,7 +11,10 @@ jobs:
     name: Build and push Docker container
     runs-on: ubuntu-latest
     permissions:
-      packages: write
+      contents: read
+      id-token: write
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -20,34 +22,40 @@ jobs:
           node-version: '18'
           cache: yarn
           registry-url: "https://npm.pkg.github.com"
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@3d58c274f17dffee475a5520cbe67f0a882c4dbb
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and publish Docker image
+      - name: Yarn install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+        run: yarn --prefer-offline --frozen-lockfile
+
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE: ${{ github.sha }}
         run: |
-          yarn
           yarn build
           yarn test
-          docker build . -t ${IMAGE}
-          docker push ${IMAGE}
-  deploy:
-    if: github.event.pull_request.draft == false && github.actor != 'dependabot[bot]'
-    name: Deploy to NAIS / GCP
+
+      - name: Push docker image to GAR
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: teamfamilie
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} # Provided as Organization Secret
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} # Provided as Organization Variable
+
+  deployDev:
+    name: Deploy to gcp-dev
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy til dev-gcp
+      - name: Deploy til dev-gcp team namespace
         uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: build_n_deploy/naiserator/naiserator_dev_gcp.yaml
-          VAR: VERSION=${{ env.VERSION }}
+          VAR: image=${{ needs.build.outputs.image }},VERSION=${{ env.VERSION }}
