@@ -59,7 +59,7 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
-          RESOURCE: build_n_deploy/naiserator/gcp-dev.yaml
+          RESOURCE: build_n_deploy/naiserator/naiserator_dev_gcp.yaml
           VAR: image=${{ needs.build.outputs.image }},VERSION=${{ env.VERSION }}
 
   deployProd:
