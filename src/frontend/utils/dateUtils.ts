@@ -4,9 +4,9 @@ import {
     add,
     differenceInMonths,
     isBefore,
-    endOfMonth,
     endOfDay,
     differenceInMilliseconds,
+    Duration,
 } from 'date-fns';
 
 import { type IJournalpostRelevantDato, JournalpostDatotype } from '@navikt/familie-typer';
@@ -69,6 +69,7 @@ export const finnDatoRelativtTilNå = (config: Duration): string => {
     return formatterDato(aDate);
 };
 
+// TODO
 const formatterPeriodelengde = (years?: number, months?: number): string => {
     if (years === undefined && months === undefined) {
         return 'Antall år og måneder -';
@@ -109,16 +110,6 @@ const datoBeforeOrEqual = (latest: Date, dato: string): boolean =>
 
 export const dateBeforeToday = (dato: string): boolean => datoBeforeOrEqual(yesterday(), dato);
 export const dateBeforeOrToday = (dato: string): boolean => datoBeforeOrEqual(new Date(), dato);
-
-const getEndOfMonth = (dato: string): Date => {
-    return endOfMonth(parseISO(dato));
-};
-
-export const getEndOfMonthISODateStr = (dato?: string): string | null => {
-    if (!dato || isEmpty(dato)) return null;
-    const endOfMonth = getEndOfMonth(dato);
-    return endOfMonth.toISOString().substring(0, 10);
-};
 
 export const flyttDatoISODateStr = (dato: string, config: Duration): string => {
     const aDate = endOfDay(parseISO(dato));

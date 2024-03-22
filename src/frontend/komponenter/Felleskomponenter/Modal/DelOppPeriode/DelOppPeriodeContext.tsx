@@ -5,7 +5,7 @@ import { type Periode as TidslinjePeriode } from '@navikt/familie-tidslinje';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { IBeregnSplittetPeriodeRespons, Periode } from '../../../../typer/feilutbetalingtyper';
-import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
+import { validerDato } from '../../../../utils';
 
 export const useDelOppPeriode = (tom: string, behandlingId: string) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
@@ -20,7 +20,7 @@ export const useDelOppPeriode = (tom: string, behandlingId: string) => {
             settFeilmelding(feilmelding);
         } else {
             settFeilmelding(undefined);
-            const månedsslutt = getEndOfMonthISODateStr(nyVerdi);
+            const månedsslutt = nyVerdi;
             if (nyVerdi && månedsslutt) {
                 splittPeriode(månedsslutt);
                 settSplittDato(månedsslutt);

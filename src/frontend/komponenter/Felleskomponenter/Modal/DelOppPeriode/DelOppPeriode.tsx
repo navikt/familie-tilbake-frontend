@@ -1,9 +1,8 @@
 import * as React from 'react';
 
-import { endOfMonth } from 'date-fns';
 import { styled } from 'styled-components';
 
-import { BodyShort, Label, Modal, MonthPicker, useMonthpicker } from '@navikt/ds-react';
+import { BodyShort, DatePicker, Label, Modal, useDatepicker } from '@navikt/ds-react';
 import { ABorderStrong, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { type Periode as TidslinjePeriode, Tidslinje } from '@navikt/familie-tidslinje';
 
@@ -44,12 +43,11 @@ export const DelOppPeriode: React.FC<IProps> = ({
     onSubmit,
     feilmelding,
 }) => {
-    const { monthpickerProps, inputProps } = useMonthpicker({
+    const { datepickerProps, inputProps } = useDatepicker({
         fromDate: isoStringTilDate(periode.periode.fom),
         toDate: isoStringTilDate(periode.periode.tom),
         defaultSelected: isoStringTilDate(splittDato),
-        onMonthChange: (dato?: Date) =>
-            onChangeDato(dato ? dateTilIsoDatoString(endOfMonth(dato)) : undefined),
+        onDateChange: (dato?: Date) => onChangeDato(dato ? dateTilIsoDatoString(dato) : undefined),
     });
     return (
         <>
@@ -76,13 +74,13 @@ export const DelOppPeriode: React.FC<IProps> = ({
                         <TidslinjeContainer>
                             <Tidslinje kompakt rader={tidslinjeRader} />
                         </TidslinjeContainer>
-                        <MonthPicker {...monthpickerProps} dropdownCaption>
-                            <MonthPicker.Input
+                        <DatePicker {...datepickerProps} dropdownCaption>
+                            <DatePicker.Input
                                 {...inputProps}
                                 label="Angi t.o.m. måned for første periode"
                                 error={feilmelding}
                             />
-                        </MonthPicker>
+                        </DatePicker>
                     </Modal.Body>
                     <Modal.Footer>
                         <FTButton
