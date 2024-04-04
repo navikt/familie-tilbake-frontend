@@ -89,7 +89,7 @@
     "babel-jest": "^29.7.0",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "compression-webpack-plugin": "^11.1.0",
-    "css-loader": "^6.10.0",
+    "css-loader": "^6.11.0",
     "css-minimizer-webpack-plugin": "^6.0.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
