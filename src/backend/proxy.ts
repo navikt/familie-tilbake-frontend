@@ -46,32 +46,22 @@ export const doRedirectProxy = () => {
 
 // eslint-disable-next-line
 export const doHistorikkApiProxy: any = () => {
-    return createProxyMiddleware('/familie-historikk/api', {
+    return createProxyMiddleware({
         changeOrigin: true,
-        logLevel: 'info',
-        onProxyReq: restream,
-        pathRewrite: (path: string, _req: Request) => {
-            const newPath = path.replace('/familie-historikk/api', '');
-            return `/api${newPath}`;
-        },
+        on: { proxyReq: restream },
         secure: true,
         target: `${historikkUrl}`,
-        logProvider: () => stdoutLogger,
+        logger: stdoutLogger,
     });
 };
 
 // eslint-disable-next-line
 export const doHistorikkStreamProxy: any = () => {
-    return createProxyMiddleware('/familie-historikk/stream', {
+    return createProxyMiddleware({
         changeOrigin: true,
-        logLevel: 'info',
-        pathRewrite: (path: string, _req: Request) => {
-            const newPath = path.replace('/familie-historikk/stream', '');
-            return `/api${newPath}`;
-        },
         secure: true,
         target: `${historikkUrl}`,
-        logProvider: () => stdoutLogger,
+        logger: stdoutLogger,
     });
 };
 
