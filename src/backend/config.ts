@@ -7,7 +7,7 @@ const Environment = () => {
         return {
             buildPath: 'frontend_development',
             namespace: 'local',
-            proxyUrl: 'http://localhost:8030',
+            proxyUrl: 'http://localhost:8030/api',
             historikkUrl: 'http://localhost:8050',
             baSakUrl: 'http://localhost:8001',
             efSakUrl: 'http://localhost:8002/ekstern',
@@ -17,7 +17,7 @@ const Environment = () => {
         return {
             buildPath: 'frontend_production',
             namespace: 'e2e',
-            proxyUrl: 'http://familie-tilbake:8030',
+            proxyUrl: 'http://familie-tilbake:8030/api',
             historikkUrl: 'http://familie-historikk:8050',
             baSakUrl: 'http://familie-ba-sak-frontend:8000',
             efSakUrl: 'http://familie-ef-sak-frontend:8000/ekstern',
@@ -27,7 +27,7 @@ const Environment = () => {
         return {
             buildPath: 'frontend_production',
             namespace: 'preprod',
-            proxyUrl: 'http://familie-tilbake',
+            proxyUrl: 'http://familie-tilbake/api',
             historikkUrl: 'http://familie-historikk',
             baSakUrl: 'https://barnetrygd.intern.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.intern.dev.nav.no/ekstern',
@@ -38,7 +38,7 @@ const Environment = () => {
     return {
         buildPath: 'frontend_production',
         namespace: 'production',
-        proxyUrl: 'http://familie-tilbake',
+        proxyUrl: 'http://familie-tilbake/api',
         historikkUrl: 'http://familie-historikk',
         baSakUrl: 'https://barnetrygd.intern.nav.no',
         efSakUrl: 'https://ensligmorellerfar.intern.nav.no/ekstern',

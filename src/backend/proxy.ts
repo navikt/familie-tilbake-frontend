@@ -20,17 +20,12 @@ const restream = (proxyReq: ClientRequest, req: IncomingMessage, _res: OutgoingM
 
 // eslint-disable-next-line
 export const doProxy: any = () => {
-    return createProxyMiddleware('/familie-tilbake/api', {
+    return createProxyMiddleware({
         changeOrigin: true,
-        logLevel: 'info',
-        onProxyReq: restream,
-        pathRewrite: (path: string, _req: Request) => {
-            const newPath = path.replace('/familie-tilbake/api', '');
-            return `/api${newPath}`;
-        },
+        on: { proxyReq: restream },
         secure: true,
         target: `${proxyUrl}`,
-        logProvider: () => stdoutLogger,
+        logger: stdoutLogger,
     });
 };
 
