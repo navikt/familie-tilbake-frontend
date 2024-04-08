@@ -24,7 +24,7 @@ import {
     doRedirectProxy,
 } from './proxy';
 import setupRouter from './router';
-import config from '../../src/webpack/webpack.dev';
+import config from '../webpack/webpack.dev';
 
 const port = 8000;
 
