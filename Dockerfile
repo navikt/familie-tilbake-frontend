@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/nodejs20:nonroot
+FROM gcr.io/distroless/nodejs20-debian12:nonroot
 
 COPY assets ./assets
 COPY node_dist ./node_dist
