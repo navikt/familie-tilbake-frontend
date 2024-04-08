@@ -1,9 +1,7 @@
-FROM navikt/node-express:18
-USER root
-RUN apk --no-cache add curl # trengs curl?
-USER apprunner
+FROM gcr.io/distroless/nodejs:18
 
-ADD ./ /var/server/
+COPY ./ ./
 
 EXPOSE 8000
-CMD ["yarn", "start"]
+ENV NODE_ENV=production
+CMD [ "--loader", "ts-node/esm", "--es-module-specifier-resolution=node", "node_dist/backend/server.js" ]
