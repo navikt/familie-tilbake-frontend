@@ -10,4 +10,4 @@ COPY package.json .
 
 EXPOSE 8000
 ENV NODE_ENV=production
-CMD [ "--loader=ts-node/esm", "--es-module-specifier-resolution=node", "node_dist/backend/server.js" ]
+CMD [ "--import=./node_dist/backend/register.js", "--es-module-specifier-resolution=node", "node_dist/backend/server.js" ]
