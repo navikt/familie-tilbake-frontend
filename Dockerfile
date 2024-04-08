@@ -1,9 +1,13 @@
-FROM navikt/node-express:18
-USER root
-RUN apk --no-cache add curl # trengs curl?
-USER apprunner
+FROM gcr.io/distroless/nodejs20-debian12
 
-ADD ./ /var/server/
+COPY assets ./assets
+COPY node_dist ./node_dist
+COPY frontend_production ./frontend_production
+
+# Må kopiere package.json og node_modules for at backend skal fungere. Backend henter avhengigheter runtime fra node_modules, og package.json trengs for at 'import' statements skal fungere.
+COPY node_modules ./node_modules
+COPY package.json .
 
 EXPOSE 8000
-CMD ["yarn", "start"]
+ENV NODE_ENV=production
+CMD [ "--import=./node_dist/backend/register.js", "--es-module-specifier-resolution=node", "node_dist/backend/server.js" ]
