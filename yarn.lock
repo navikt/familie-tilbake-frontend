@@ -1140,14 +1140,7 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
-  version "7.23.4"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.4.tgz#36fa1d2b36db873d25ec631dcc4923fdc1cf2e2e"
-  integrity sha512-2Yv65nlWnWlSpe3fXEyX5i7fx5kIKo4Qbcj+hMO0odwaneFjfXw5fdum+4yL20O0QiaHpia0cYQ9xpNMqrBwHg==
-  dependencies:
-    regenerator-runtime "^0.14.0"
-
-"@babel/runtime@^7.23.2":
+"@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.23.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.24.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.24.0.tgz#584c450063ffda59697021430cb47101b085951e"
   integrity sha512-Chk32uHMg6TnQdvw2e9IlqPpFX/6NLuK0Ys2PqLb7/gL5uFn9mXvK715FGLlOLQrcO4qIkNHkvPGktzzXexsFw==
@@ -2247,21 +2240,7 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@testing-library/dom@^9.0.0":
-  version "9.3.3"
-  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-9.3.3.tgz#108c23a5b0ef51121c26ae92eb3179416b0434f5"
-  integrity sha512-fB0R+fa3AUqbLHWyxXa2kGVtf1Fe1ZZFr0Zp6AIbIAzXb2mKbEXl+PCQNUOaq5lbTab5tfctfXRNsWXxa2f7Aw==
-  dependencies:
-    "@babel/code-frame" "^7.10.4"
-    "@babel/runtime" "^7.12.5"
-    "@types/aria-query" "^5.0.1"
-    aria-query "5.1.3"
-    chalk "^4.1.0"
-    dom-accessibility-api "^0.5.9"
-    lz-string "^1.5.0"
-    pretty-format "^27.0.2"
-
-"@testing-library/dom@^9.3.4":
+"@testing-library/dom@^9.0.0", "@testing-library/dom@^9.3.4":
   version "9.3.4"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-9.3.4.tgz#50696ec28376926fec0a1bf87d9dbac5e27f60ce"
   integrity sha512-FlS4ZWlp97iiNWig0Muq8p+3rVDjRiYE+YKGbAqXOu9nwJFFOdL00kFpz42M+4huzYi86vAK1sOOfyOG45muIQ==
@@ -2289,10 +2268,10 @@
     lodash "^4.17.15"
     redent "^3.0.0"
 
-"@testing-library/react@^14.2.1":
-  version "14.2.1"
-  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-14.2.1.tgz#bf69aa3f71c36133349976a4a2da3687561d8310"
-  integrity sha512-sGdjws32ai5TLerhvzThYFbpnF9XtL65Cjf+gB0Dhr29BGqK+mAeN7SURSdu+eqgET4ANcWoC7FQpkaiGvBr+A==
+"@testing-library/react@^14.3.0":
+  version "14.3.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-14.3.0.tgz#8183eb5a5f465b5b8cc495fcbd9bad0a16b8dd3b"
+  integrity sha512-AYJGvNFMbCa5vt1UtDCa/dcaABrXq8gph6VN+cffIx0UeA0qiGqS+sT60+sb+Gjc8tGXdECWYQgaF0khf8b+Lg==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@testing-library/dom" "^9.0.0"
