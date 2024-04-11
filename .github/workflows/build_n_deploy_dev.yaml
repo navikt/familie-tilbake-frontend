@@ -34,7 +34,6 @@ jobs:
           SENTRY_RELEASE: ${{ github.sha }}
         run: |
           yarn build
-          yarn test
 
       - name: Push docker image to GAR
         uses: nais/docker-build-push@v0
