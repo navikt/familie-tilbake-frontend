@@ -37,13 +37,14 @@ interface IProps {
 
 const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
+
+    const lukkModalOgHentBehandling = () => {
+        onClose();
+        hentBehandlingMedBehandlingId(behandling.behandlingId);
+    };
+
     const { skjema, onBekreft, onOkTaAvVent, tilbakestillFelterTilDefault, feilmelding } =
-        usePåVentBehandling((suksess: boolean) => {
-            onClose();
-            if (suksess) {
-                hentBehandlingMedBehandlingId(behandling.behandlingId);
-            }
-        }, ventegrunn);
+        usePåVentBehandling(lukkModalOgHentBehandling, ventegrunn);
 
     const erVenterPåKravgrunnlag = ventegrunn.behandlingssteg === Behandlingssteg.GRUNNLAG;
     const erAutomatiskVent =

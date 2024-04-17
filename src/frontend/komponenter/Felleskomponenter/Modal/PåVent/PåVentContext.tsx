@@ -10,7 +10,7 @@ import { isEmpty, validerGyldigDato } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
 
 export const usePåVentBehandling = (
-    lukkModal: (suksess: boolean) => void,
+    lukkModal: () => void,
     ventegrunn?: IBehandlingsstegstilstand | undefined
 ) => {
     const [feilmelding, settFeilmelding] = useState<string>();
@@ -75,7 +75,7 @@ export const usePåVentBehandling = (
                         ventegrunn.tidsfrist = dateTilIsoDatoString(skjema.felter.tidsfrist.verdi);
                         ventegrunn.venteårsak = skjema.felter.årsak.verdi as Venteårsak;
                     }
-                    lukkModal(true);
+                    lukkModal();
                 },
                 (response: Ressurs<string>) => {
                     if (
@@ -95,7 +95,7 @@ export const usePåVentBehandling = (
             url: `/familie-tilbake/api/behandling/${behandlingId}/gjenoppta/v1`,
         }).then((response: Ressurs<string>) => {
             if (response.status === RessursStatus.SUKSESS) {
-                lukkModal(true);
+                lukkModal();
             } else {
                 console.log('Gjennopta behandling feilet!');
                 if (
