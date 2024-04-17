@@ -19,7 +19,6 @@ import {
     attachToken,
     doHistorikkApiProxy,
     doHistorikkStreamProxy,
-    doPdfProxy,
     doProxy,
     doRedirectProxy,
 } from './proxy';
@@ -62,13 +61,6 @@ backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }
         ensureAuthenticated(azureAuthClient, true),
         attachToken(azureAuthClient, oboHistorikkConfig),
         doHistorikkApiProxy()
-    );
-
-    app.use(
-        '/familie-tilbake/api/pdf',
-        ensureAuthenticated(azureAuthClient, true),
-        attachToken(azureAuthClient, oboTilbakeConfig),
-        doPdfProxy()
     );
 
     app.use(
