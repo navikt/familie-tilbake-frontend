@@ -110,6 +110,8 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                 const førsteUbehandletPeriode = skjemaPerioder.find(per => !erBehandlet(per));
                 if (førsteUbehandletPeriode) {
                     settValgtPeriode(førsteUbehandletPeriode);
+                } else if (skjemaPerioder.length > 0) {
+                    settValgtPeriode(skjemaPerioder[0]);
                 }
             }
         }, [feilutbetalingVilkårsvurdering]);

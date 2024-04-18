@@ -77,6 +77,8 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                 );
                 if (førsteUbehandletPeriode) {
                     settValgtPeriode(førsteUbehandletPeriode);
+                } else if (skjemaPerioder.length > 0) {
+                    settValgtPeriode(skjemaPerioder[0]);
                 }
             }
         }, [feilutbetalingForeldelse]);
