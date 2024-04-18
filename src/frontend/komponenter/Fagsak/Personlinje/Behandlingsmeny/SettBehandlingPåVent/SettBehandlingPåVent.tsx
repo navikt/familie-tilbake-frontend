@@ -26,13 +26,13 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
 
+    const lukkModalOgHentBehandling = () => {
+        settVisModal(false);
+        hentBehandlingMedBehandlingId(behandling.behandlingId);
+    };
+
     const { skjema, onBekreft, feilmelding, tilbakestillFelterTilDefault } = usePåVentBehandling(
-        (suksess: boolean) => {
-            settVisModal(false);
-            if (suksess) {
-                hentBehandlingMedBehandlingId(behandling.behandlingId);
-            }
-        },
+        lukkModalOgHentBehandling,
         undefined
     );
 

@@ -14,14 +14,14 @@ interface IProps {
 
 const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick }) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
-
     const { hentBehandlingMedBehandlingId } = useBehandling();
-    const { feilmelding, onOkTaAvVent } = usePåVentBehandling((suksess: boolean) => {
+
+    const lukkModalOgHentBehandling = () => {
         settVisModal(false);
-        if (suksess) {
-            hentBehandlingMedBehandlingId(behandling.behandlingId);
-        }
-    });
+        hentBehandlingMedBehandlingId(behandling.behandlingId);
+    };
+
+    const { feilmelding, onOkTaAvVent } = usePåVentBehandling(lukkModalOgHentBehandling);
 
     return (
         <>
