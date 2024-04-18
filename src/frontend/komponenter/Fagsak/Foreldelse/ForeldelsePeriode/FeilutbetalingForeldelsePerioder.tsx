@@ -69,8 +69,8 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
         settValgtPeriode,
         stegErBehandlet,
         erAutoutført,
-        gåTilForrige,
-        gåTilNeste,
+        gåTilForrigeSteg,
+        gåTilNesteSteg,
         allePerioderBehandlet,
         sendInnSkjema,
         senderInn,
@@ -110,7 +110,7 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
             )}
             <Navigering>
                 {erAutoutført || (stegErBehandlet && erLesevisning) ? (
-                    <FTButton variant="primary" onClick={gåTilNeste}>
+                    <FTButton variant="primary" onClick={gåTilNesteSteg}>
                         Neste
                     </FTButton>
                 ) : (
@@ -123,7 +123,7 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
                         {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
                     </FTButton>
                 )}
-                <FTButton variant="secondary" onClick={gåTilForrige}>
+                <FTButton variant="secondary" onClick={gåTilForrigeSteg}>
                     Forrige
                 </FTButton>
             </Navigering>

@@ -42,6 +42,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         const { gjerFeilutbetalingForeldelseKall, sendInnFeilutbetalingForeldelse } =
             useBehandlingApi();
         const navigate = useNavigate();
+        const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
         React.useEffect(() => {
             if (visVenteModal === false) {
@@ -108,16 +109,12 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                 });
         };
 
-        const gåTilNeste = () => {
-            navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VILKÅRSVURDERING.href}`
-            );
+        const gåTilNesteSteg = () => {
+            navigate(`${behandlingUrl}/${sider.VILKÅRSVURDERING.href}`);
         };
 
-        const gåTilForrige = () => {
-            navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FAKTA.href}`
-            );
+        const gåTilForrigeSteg = () => {
+            navigate(`${behandlingUrl}/${sider.FAKTA.href}`);
         };
 
         const oppdaterPeriode = (periode: ForeldelsePeriodeSkjemeData) => {
@@ -179,7 +176,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
 
         const sendInnSkjema = () => {
             if (stegErBehandlet && !harEndretOpplysninger()) {
-                gåTilNeste();
+                gåTilNesteSteg();
             } else {
                 settSenderInn(true);
                 const payload: ForeldelseStegPayload = {
@@ -210,10 +207,6 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
             }
         };
 
-        const lukkValgtPeriode = () => {
-            settValgtPeriode(undefined);
-        };
-
         return {
             feilutbetalingForeldelse,
             erAutoutført,
@@ -223,12 +216,11 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
             valgtPeriode,
             settValgtPeriode,
             allePerioderBehandlet,
-            gåTilNeste,
-            gåTilForrige,
+            gåTilNesteSteg,
+            gåTilForrigeSteg,
             senderInn,
             sendInnSkjema,
             onSplitPeriode,
-            lukkValgtPeriode,
             nestePeriode,
             forrigePeriode,
         };
