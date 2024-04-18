@@ -24,7 +24,7 @@ import { Behandlingstatus, IBehandling } from '../../typer/behandling';
 import { IFagsak } from '../../typer/fagsak';
 import {
     erØnsketSideTilgjengelig,
-    finnSideAktivtSteg,
+    utledBehandlingSide,
 } from '../Felleskomponenter/Venstremeny/sider';
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 
@@ -58,31 +58,26 @@ interface IProps {
 }
 
 const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
+    const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
     const navigate = useNavigate();
     const location = useLocation();
-    const ønsketSide = location.pathname.split('/')[7];
 
-    const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
+    const ønsketSide = location.pathname.split('/')[7];
+    const erØnsketSideLovlig = ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling);
+    const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
     React.useEffect(() => {
         if (visVenteModal === false) {
-            const ønsketSideLovlig = ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling);
-            if (!ønsketSideLovlig && aktivtSteg) {
-                const aktivSide = finnSideAktivtSteg(aktivtSteg);
+            if (!erØnsketSideLovlig && aktivtSteg) {
+                const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
                 if (aktivSide) {
-                    navigate(
-                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${aktivSide?.href}`
-                    );
+                    navigate(`${behandlingUrl}/${aktivSide?.href}`);
                 }
-            } else if (!ønsketSideLovlig) {
+            } else if (!erØnsketSideLovlig) {
                 if (behandling.status === Behandlingstatus.AVSLUTTET) {
-                    navigate(
-                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/vedtak`
-                    );
+                    navigate(`${behandlingUrl}/vedtak`);
                 } else {
-                    navigate(
-                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                    );
+                    navigate(`${behandlingUrl}`);
                 }
             }
         }
