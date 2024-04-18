@@ -8,6 +8,7 @@ import { ATextDanger, ASpacing8 } from '@navikt/ds-tokens/dist/tokens';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { usePåVentBehandling } from './PåVentContext';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import {
     Behandlingssteg,
     IBehandling,
@@ -35,10 +36,15 @@ interface IProps {
 }
 
 const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => {
-    const { skjema, onBekreft, tilbakestillFelterTilDefault, feilmelding } = usePåVentBehandling(
-        onClose,
-        ventegrunn
-    );
+    const { hentBehandlingMedBehandlingId } = useBehandling();
+
+    const lukkModalOgHentBehandling = () => {
+        onClose();
+        hentBehandlingMedBehandlingId(behandling.behandlingId);
+    };
+
+    const { skjema, onBekreft, onOkTaAvVent, tilbakestillFelterTilDefault, feilmelding } =
+        usePåVentBehandling(lukkModalOgHentBehandling, ventegrunn);
 
     const erVenterPåKravgrunnlag = ventegrunn.behandlingssteg === Behandlingssteg.GRUNNLAG;
     const erAutomatiskVent =
@@ -60,6 +66,8 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
         ventegrunn.venteårsak === skjema.felter.årsak.verdi &&
         ventegrunn.tidsfrist === skjema.felter.tidsfrist.verdi;
 
+    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.GRUNNLAG;
+
     const lukkModal = () => {
         tilbakestillFelterTilDefault();
         onClose();
@@ -72,7 +80,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
             header={{
                 heading: 'Behandling satt på vent',
                 size: 'medium',
-                closeButton: false,
+                closeButton: true,
             }}
             portal={true}
             width="small"
@@ -135,10 +143,16 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     disabled={uendret}
                     size="small"
                 >
-                    Oppdater
+                    Oppdater frist og årsak
                 </FTButton>
-                <FTButton variant="tertiary" key={'avbryt'} onClick={lukkModal} size="small">
-                    Lukk
+                <FTButton
+                    variant="tertiary"
+                    key={'avbryt'}
+                    onClick={() => onOkTaAvVent(behandling.behandlingId)}
+                    size="small"
+                    disabled={!behandling.kanEndres || venterPåKravgrunnlag}
+                >
+                    Ta av vent
                 </FTButton>
             </Modal.Footer>
         </Modal>
