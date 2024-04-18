@@ -93,16 +93,16 @@ export const visSide = (side: ISide, åpenBehandling: IBehandling) => {
     return true;
 };
 
-export const finnSideAktivtSteg = (aktivtSteg: IBehandlingsstegstilstand): ISide | undefined => {
-    if (
-        aktivtSteg.behandlingssteg === Behandlingssteg.AVSLUTTET ||
-        aktivtSteg.behandlingssteg === Behandlingssteg.FATTE_VEDTAK ||
-        aktivtSteg.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK
-    ) {
-        return sider.VEDTAK;
+export const utledBehandlingSide = (steg: Behandlingssteg): ISide | undefined => {
+    switch (steg) {
+        case Behandlingssteg.FATTE_VEDTAK:
+            return sider.FAKTA;
+        case Behandlingssteg.AVSLUTTET:
+        case Behandlingssteg.IVERKSETT_VEDTAK:
+            return sider.VEDTAK;
+        default:
+            return finnSideForSteg(steg);
     }
-
-    return finnSideForSteg(aktivtSteg.behandlingssteg);
 };
 
 export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBehandling): boolean => {
