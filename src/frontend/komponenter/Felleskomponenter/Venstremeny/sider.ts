@@ -94,9 +94,10 @@ export const visSide = (side: ISide, åpenBehandling: IBehandling) => {
 };
 
 export const finnSideAktivtSteg = (aktivtSteg: IBehandlingsstegstilstand): ISide | undefined => {
-    if (
+    if (aktivtSteg.behandlingssteg === Behandlingssteg.FATTE_VEDTAK) {
+        return sider.FAKTA;
+    } else if (
         aktivtSteg.behandlingssteg === Behandlingssteg.AVSLUTTET ||
-        aktivtSteg.behandlingssteg === Behandlingssteg.FATTE_VEDTAK ||
         aktivtSteg.behandlingssteg === Behandlingssteg.IVERKSETT_VEDTAK
     ) {
         return sider.VEDTAK;
