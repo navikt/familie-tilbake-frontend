@@ -447,7 +447,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Tilbakekreving')).toBeTruthy();
-            expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
+            expect(queryByText('Detaljer for valgt periode')).toBeTruthy();
+            expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
             expect(
                 getByRole('button', {
                     name: 'suksess fra 01.01.2020 til og med 31.03.2020',
@@ -471,11 +472,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             })
         ).toBeDisabled();
 
-        expect(
-            getByText('01.01.2020 - 31.03.2020', {
-                selector: 'label',
-            })
-        ).toBeTruthy();
+        expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
 
         expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Begrunnelse vilkår 1');
         expect(
@@ -584,7 +581,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Tilbakekreving')).toBeTruthy();
-            expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
+            expect(queryByText('Detaljer for valgt periode')).toBeTruthy();
+            expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
             expect(
                 getByRole('button', {
                     name: 'suksess fra 01.01.2020 til og med 31.03.2020',
@@ -608,11 +606,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             })
         ).toBeEnabled();
 
-        expect(
-            getByText('01.01.2020 - 31.03.2020', {
-                selector: 'label',
-            })
-        ).toBeTruthy();
+        expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
 
         expect(getByText('Begrunnelse vilkår 1')).toBeTruthy();
         expect(

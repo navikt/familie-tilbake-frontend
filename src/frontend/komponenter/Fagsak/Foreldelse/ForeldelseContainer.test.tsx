@@ -224,13 +224,14 @@ describe('Tester: ForeldelseContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Foreldelse')).toBeTruthy();
-            expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
+            expect(queryByText('Detaljer for valgt periode')).toBeTruthy();
+            expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
 
             expect(
                 getByRole('button', {
                     name: 'Neste',
                 })
-            ).toBeEnabled();
+            ).toBeDisabled();
         });
 
         await act(() =>
@@ -328,7 +329,8 @@ describe('Tester: ForeldelseContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Foreldelse')).toBeTruthy();
-            expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
+            expect(queryByText('Detaljer for valgt periode')).toBeTruthy();
+            expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
 
             expect(
                 getByRole('button', {
