@@ -16,11 +16,29 @@ import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
 import { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../../typer/api';
-import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
+import { Behandlingssteg, Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+
+const utledValgtPeriode = (
+    skjemaPerioder: ForeldelsePeriodeSkjemeData[],
+    behandlingStatus: Behandlingstatus
+) => {
+    const førsteUbehandletPeriode = skjemaPerioder.find(
+        periode => !periode.foreldelsesvurderingstype
+    );
+    const skalViseÅpentVurderingspanel =
+        skjemaPerioder.length > 0 && behandlingStatus === Behandlingstatus.FATTER_VEDTAK;
+
+    if (førsteUbehandletPeriode) {
+        return førsteUbehandletPeriode;
+    } else if (skalViseÅpentVurderingspanel) {
+        return skjemaPerioder[0];
+    }
+    return undefined;
+};
 
 interface IProps {
     behandling: IBehandling;
@@ -71,15 +89,12 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                     };
                     return skjemaPeriode;
                 });
+                const valgtForeldelsePeriode = utledValgtPeriode(skjemaPerioder, behandling.status);
+
                 settSkjemaData(skjemaPerioder);
 
-                const førsteUbehandletPeriode = skjemaPerioder.find(
-                    per => !per.foreldelsesvurderingstype
-                );
-                if (førsteUbehandletPeriode) {
-                    settValgtPeriode(førsteUbehandletPeriode);
-                } else if (skjemaPerioder.length > 0) {
-                    settValgtPeriode(skjemaPerioder[0]);
+                if (valgtForeldelsePeriode) {
+                    settValgtPeriode(valgtForeldelsePeriode);
                 }
             }
         }, [feilutbetalingForeldelse]);

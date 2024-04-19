@@ -20,7 +20,7 @@ import {
     PeriodeVilkårsvurderingStegPayload,
     VilkårdsvurderingStegPayload,
 } from '../../../typer/api';
-import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
+import { Behandlingssteg, Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import {
     Aktsomhetsvurdering,
@@ -37,6 +37,22 @@ const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData) => {
         (!!periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat &&
             !!periode.begrunnelse)
     );
+};
+
+const utledValgtPeriode = (
+    skjemaPerioder: VilkårsvurderingPeriodeSkjemaData[],
+    behandlingStatus: Behandlingstatus
+): VilkårsvurderingPeriodeSkjemaData | undefined => {
+    const førsteUbehandledePeriode = skjemaPerioder.find(periode => !erBehandlet(periode));
+    const skalViseÅpentVurderingspanel =
+        skjemaPerioder.length > 0 && behandlingStatus === Behandlingstatus.FATTER_VEDTAK;
+
+    if (førsteUbehandledePeriode) {
+        return førsteUbehandledePeriode;
+    } else if (skalViseÅpentVurderingspanel) {
+        return skjemaPerioder[0];
+    }
+    return undefined;
 };
 
 const kalkulerTotalBeløp = (perioder: VilkårsvurderingPeriode[]) => {
@@ -106,13 +122,12 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                     };
                     return skjemaPeriode;
                 });
+                const valgtVilkårsperiode = utledValgtPeriode(skjemaPerioder, behandling.status);
+
                 settSkjemaData(skjemaPerioder);
 
-                const førsteUbehandletPeriode = skjemaPerioder.find(per => !erBehandlet(per));
-                if (førsteUbehandletPeriode) {
-                    settValgtPeriode(førsteUbehandletPeriode);
-                } else if (skjemaPerioder.length > 0) {
-                    settValgtPeriode(skjemaPerioder[0]);
+                if (valgtVilkårsperiode) {
+                    settValgtPeriode(valgtVilkårsperiode);
                 }
             }
         }, [feilutbetalingVilkårsvurdering]);
