@@ -45,7 +45,9 @@ const utledValgtPeriode = (
 ): VilkårsvurderingPeriodeSkjemaData | undefined => {
     const førsteUbehandledePeriode = skjemaPerioder.find(periode => !erBehandlet(periode));
     const skalViseÅpentVurderingspanel =
-        skjemaPerioder.length > 0 && behandlingStatus === Behandlingstatus.FATTER_VEDTAK;
+        skjemaPerioder.length > 0 &&
+        (behandlingStatus === Behandlingstatus.FATTER_VEDTAK ||
+            behandlingStatus === Behandlingstatus.AVSLUTTET);
 
     if (førsteUbehandledePeriode) {
         return førsteUbehandledePeriode;
