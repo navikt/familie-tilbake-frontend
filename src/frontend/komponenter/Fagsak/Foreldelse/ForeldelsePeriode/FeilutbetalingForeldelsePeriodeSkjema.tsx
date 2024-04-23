@@ -58,7 +58,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
     periode,
     erLesevisning,
 }) => {
-    const { oppdaterPeriode, onSplitPeriode, lukkValgtPeriode, nestePeriode, forrigePeriode } =
+    const { oppdaterPeriode, onSplitPeriode, nestePeriode, forrigePeriode, settValgtPeriode } =
         useFeilutbetalingForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
@@ -238,7 +238,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                         <FTButton variant="primary" onClick={() => onBekreft(periode)}>
                             Bekreft
                         </FTButton>
-                        <FTButton variant="secondary" onClick={lukkValgtPeriode}>
+                        <FTButton variant="secondary" onClick={() => settValgtPeriode(undefined)}>
                             Lukk
                         </FTButton>
                     </Navigering>

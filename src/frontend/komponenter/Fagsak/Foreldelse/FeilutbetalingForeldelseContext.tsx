@@ -16,11 +16,31 @@ import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
 import { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../../typer/api';
-import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
+import { Behandlingssteg, Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+
+const utledValgtPeriode = (
+    skjemaPerioder: ForeldelsePeriodeSkjemeData[],
+    behandlingStatus: Behandlingstatus
+) => {
+    const førsteUbehandletPeriode = skjemaPerioder.find(
+        periode => !periode.foreldelsesvurderingstype
+    );
+    const skalViseÅpentVurderingspanel =
+        skjemaPerioder.length > 0 &&
+        (behandlingStatus === Behandlingstatus.FATTER_VEDTAK ||
+            behandlingStatus === Behandlingstatus.AVSLUTTET);
+
+    if (førsteUbehandletPeriode) {
+        return førsteUbehandletPeriode;
+    } else if (skalViseÅpentVurderingspanel) {
+        return skjemaPerioder[0];
+    }
+    return undefined;
+};
 
 interface IProps {
     behandling: IBehandling;
@@ -42,6 +62,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         const { gjerFeilutbetalingForeldelseKall, sendInnFeilutbetalingForeldelse } =
             useBehandlingApi();
         const navigate = useNavigate();
+        const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
         React.useEffect(() => {
             if (visVenteModal === false) {
@@ -70,13 +91,12 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                     };
                     return skjemaPeriode;
                 });
+                const valgtForeldelsePeriode = utledValgtPeriode(skjemaPerioder, behandling.status);
+
                 settSkjemaData(skjemaPerioder);
 
-                const førsteUbehandletPeriode = skjemaPerioder.find(
-                    per => !per.foreldelsesvurderingstype
-                );
-                if (førsteUbehandletPeriode) {
-                    settValgtPeriode(førsteUbehandletPeriode);
+                if (valgtForeldelsePeriode) {
+                    settValgtPeriode(valgtForeldelsePeriode);
                 }
             }
         }, [feilutbetalingForeldelse]);
@@ -106,16 +126,12 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                 });
         };
 
-        const gåTilNeste = () => {
-            navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VILKÅRSVURDERING.href}`
-            );
+        const gåTilNesteSteg = () => {
+            navigate(`${behandlingUrl}/${sider.VILKÅRSVURDERING.href}`);
         };
 
-        const gåTilForrige = () => {
-            navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FAKTA.href}`
-            );
+        const gåTilForrigeSteg = () => {
+            navigate(`${behandlingUrl}/${sider.FAKTA.href}`);
         };
 
         const oppdaterPeriode = (periode: ForeldelsePeriodeSkjemeData) => {
@@ -177,7 +193,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
 
         const sendInnSkjema = () => {
             if (stegErBehandlet && !harEndretOpplysninger()) {
-                gåTilNeste();
+                gåTilNesteSteg();
             } else {
                 settSenderInn(true);
                 const payload: ForeldelseStegPayload = {
@@ -208,10 +224,6 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
             }
         };
 
-        const lukkValgtPeriode = () => {
-            settValgtPeriode(undefined);
-        };
-
         return {
             feilutbetalingForeldelse,
             erAutoutført,
@@ -221,12 +233,11 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
             valgtPeriode,
             settValgtPeriode,
             allePerioderBehandlet,
-            gåTilNeste,
-            gåTilForrige,
+            gåTilNesteSteg,
+            gåTilForrigeSteg,
             senderInn,
             sendInnSkjema,
             onSplitPeriode,
-            lukkValgtPeriode,
             nestePeriode,
             forrigePeriode,
         };

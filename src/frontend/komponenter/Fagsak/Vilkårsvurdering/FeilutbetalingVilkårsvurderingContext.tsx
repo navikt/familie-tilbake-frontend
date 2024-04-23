@@ -20,7 +20,7 @@ import {
     PeriodeVilkårsvurderingStegPayload,
     VilkårdsvurderingStegPayload,
 } from '../../../typer/api';
-import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
+import { Behandlingssteg, Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import {
     Aktsomhetsvurdering,
@@ -37,6 +37,24 @@ const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData) => {
         (!!periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat &&
             !!periode.begrunnelse)
     );
+};
+
+const utledValgtPeriode = (
+    skjemaPerioder: VilkårsvurderingPeriodeSkjemaData[],
+    behandlingStatus: Behandlingstatus
+): VilkårsvurderingPeriodeSkjemaData | undefined => {
+    const førsteUbehandledePeriode = skjemaPerioder.find(periode => !erBehandlet(periode));
+    const skalViseÅpentVurderingspanel =
+        skjemaPerioder.length > 0 &&
+        (behandlingStatus === Behandlingstatus.FATTER_VEDTAK ||
+            behandlingStatus === Behandlingstatus.AVSLUTTET);
+
+    if (førsteUbehandledePeriode) {
+        return førsteUbehandledePeriode;
+    } else if (skalViseÅpentVurderingspanel) {
+        return skjemaPerioder[0];
+    }
+    return undefined;
 };
 
 const kalkulerTotalBeløp = (perioder: VilkårsvurderingPeriode[]) => {
@@ -84,6 +102,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         const kanIleggeRenter = ![Ytelsetype.BARNETRYGD, Ytelsetype.KONTANTSTØTTE].includes(
             fagsak.ytelsestype
         );
+        const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
         React.useEffect(() => {
             if (visVenteModal === false) {
@@ -105,11 +124,12 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                     };
                     return skjemaPeriode;
                 });
+                const valgtVilkårsperiode = utledValgtPeriode(skjemaPerioder, behandling.status);
+
                 settSkjemaData(skjemaPerioder);
 
-                const førsteUbehandletPeriode = skjemaPerioder.find(per => !erBehandlet(per));
-                if (førsteUbehandletPeriode) {
-                    settValgtPeriode(førsteUbehandletPeriode);
+                if (valgtVilkårsperiode) {
+                    settValgtPeriode(valgtVilkårsperiode);
                 }
             }
         }, [feilutbetalingVilkårsvurdering]);
@@ -141,16 +161,12 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                 });
         };
 
-        const gåTilNeste = () => {
-            navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VEDTAK.href}`
-            );
+        const gåTilNesteSteg = () => {
+            navigate(`${behandlingUrl}/${sider.VEDTAK.href}`);
         };
 
-        const gåTilForrige = () => {
-            navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FORELDELSE.href}`
-            );
+        const gåTilForrigeSteg = () => {
+            navigate(`${behandlingUrl}/${sider.FORELDELSE.href}`);
         };
 
         const oppdaterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -256,7 +272,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             if (validerPerioder()) {
                 const ikkeForeldetPerioder = skjemaData.filter(per => !per.foreldet);
                 if (stegErBehandlet && !harEndretOpplysninger(ikkeForeldetPerioder)) {
-                    gåTilNeste();
+                    gåTilNesteSteg();
                 } else {
                     settSenderInn(true);
                     const payload: VilkårdsvurderingStegPayload = {
@@ -286,11 +302,6 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             }
         };
 
-        const lukkValgtPeriode = () => {
-            settSenderInn(false);
-            settValgtPeriode(undefined);
-        };
-
         return {
             feilutbetalingVilkårsvurdering,
             stegErBehandlet,
@@ -302,14 +313,13 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             settValgtPeriode,
             behandletPerioder,
             allePerioderBehandlet,
-            gåTilNeste,
-            gåTilForrige,
+            gåTilNesteSteg,
+            gåTilForrigeSteg,
             senderInn,
             valideringsfeil,
             valideringsFeilmelding,
             sendInnSkjema,
             onSplitPeriode,
-            lukkValgtPeriode,
             nestePeriode,
             forrigePeriode,
         };

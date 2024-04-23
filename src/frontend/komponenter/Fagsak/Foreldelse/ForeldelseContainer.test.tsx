@@ -11,7 +11,7 @@ import ForeldelseContainer from './ForeldelseContainer';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
-import { IBehandling } from '../../../typer/behandling';
+import { Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { ForeldelsePeriode, IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
 
@@ -317,19 +317,58 @@ describe('Tester: ForeldelseContainer', () => {
                 },
             ],
         });
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ status: Behandlingstatus.FATTER_VEDTAK });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, queryByText, queryByRole, getByLabelText } = render(
+        const { getByText, getByRole, getByLabelText } = render(
             <FeilutbetalingForeldelseProvider behandling={behandling} fagsak={fagsak}>
                 <ForeldelseContainer behandling={behandling} />
             </FeilutbetalingForeldelseProvider>
         );
 
         await waitFor(async () => {
-            expect(getByText('Foreldelse')).toBeTruthy();
-            expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
+            // Tittel skal alltid være synlig
+            expect(getByText('Foreldelse', { selector: 'h2' })).toBeTruthy();
 
+            // Første periode sitt endringspanel skal være åpnet by default i lesevisning, sjekker at riktige verdier er satt
+            expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeTruthy();
+            expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
+            expect(getByText('Begrunnelse 1')).toBeTruthy();
+            expect(
+                getByLabelText('Perioden er foreldet', {
+                    selector: 'input',
+                    exact: false,
+                })
+            ).toBeChecked();
+            expect(
+                getByLabelText(
+                    'Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
+            ).not.toBeChecked();
+            expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
+
+            // Alle tidslinje knappene skal alltid være synlige
+            expect(
+                getByRole('button', {
+                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                })
+            ).toBeTruthy();
+            expect(
+                getByRole('button', {
+                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                })
+            ).toBeTruthy();
+
+            // Knapper for navigering mellom faner skal alltid være synlige og enabled
+            expect(
+                getByRole('button', {
+                    name: 'Forrige',
+                })
+            ).toBeEnabled();
             expect(
                 getByRole('button', {
                     name: 'Neste',
@@ -340,55 +379,53 @@ describe('Tester: ForeldelseContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
-                })
-            )
-        );
-
-        expect(
-            queryByRole('button', {
-                name: 'Bekreft',
-            })
-        ).toBeFalsy();
-
-        expect(
-            getByRole('button', {
-                name: 'Neste',
-            })
-        ).toBeEnabled();
-
-        expect(queryByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeTruthy();
-
-        expect(getByText('Begrunnelse 1')).toBeTruthy();
-        expect(getByText('Perioden er foreldet')).toBeTruthy();
-        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
-
-        await act(() =>
-            user.click(
-                getByRole('button', {
                     name: 'suksess fra 01.05.2020 til og med 30.06.2020',
                 })
             )
         );
 
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeTruthy();
+        // Tittel skal alltid være synlig
+        expect(getByText('Foreldelse', { selector: 'h2' })).toBeTruthy();
 
+        // Andre periode sitt endringspanel skal nå være åpnet, sjekker at riktige verdier er satt
+        expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeTruthy();
+        expect(getByText('01.05.2020 - 30.06.2020', { selector: 'label' })).toBeTruthy();
         expect(getByText('Begrunnelse 2')).toBeTruthy();
         expect(
-            getByText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
-        ).toBeTruthy();
-        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
+            getByLabelText('Perioden er foreldet', {
+                selector: 'input',
+                exact: false,
+            })
+        ).not.toBeChecked();
+        expect(
+            getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes', {
+                selector: 'input',
+                exact: false,
+            })
+        ).toBeChecked();
         expect(getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
             '24.12.2020'
         );
+        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
 
+        // Alle tidslinje knappene skal alltid være synlige
         expect(
-            queryByRole('button', {
-                name: 'Lukk',
+            getByRole('button', {
+                name: 'suksess fra 01.01.2020 til og med 31.03.2020',
             })
-        ).toBeFalsy();
+        ).toBeTruthy();
+        expect(
+            getByRole('button', {
+                name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+            })
+        ).toBeTruthy();
 
+        // Knapper for navigering mellom faner skal alltid være synlige og enabled
+        expect(
+            getByRole('button', {
+                name: 'Forrige',
+            })
+        ).toBeEnabled();
         expect(
             getByRole('button', {
                 name: 'Neste',

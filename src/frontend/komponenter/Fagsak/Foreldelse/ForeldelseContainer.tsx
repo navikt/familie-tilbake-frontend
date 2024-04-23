@@ -42,8 +42,8 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
         skjemaData,
         stegErBehandlet,
         erAutoutført,
-        gåTilNeste,
-        gåTilForrige,
+        gåTilNesteSteg,
+        gåTilForrigeSteg,
     } = useFeilutbetalingForeldelse();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
@@ -61,10 +61,10 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                     Automatisk vurdert
                 </BodyLong>
                 <Navigering>
-                    <FTButton variant="primary" onClick={gåTilNeste}>
+                    <FTButton variant="primary" onClick={gåTilNesteSteg}>
                         Neste
                     </FTButton>
-                    <FTButton variant="secondary" onClick={gåTilForrige}>
+                    <FTButton variant="secondary" onClick={gåTilForrigeSteg}>
                         Forrige
                     </FTButton>
                 </Navigering>

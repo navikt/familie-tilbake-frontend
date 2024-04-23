@@ -204,9 +204,9 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         kanIlleggeRenter,
         oppdaterPeriode,
         onSplitPeriode,
-        lukkValgtPeriode,
         nestePeriode,
         forrigePeriode,
+        settValgtPeriode,
     } = useFeilutbetalingVilkårsvurdering();
     const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -421,7 +421,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                         Bekreft
                     </FTButton>
                 )}
-                <FTButton variant="secondary" onClick={lukkValgtPeriode}>
+                <FTButton variant="secondary" onClick={() => settValgtPeriode(undefined)}>
                     Lukk
                 </FTButton>
             </Navigering>
