@@ -11,7 +11,7 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import backend, { IApp, ensureAuthenticated, envVar } from '@navikt/familie-backend';
-import { logInfo } from '@navikt/familie-logging';
+import { logInfo, stdoutLogger } from '@navikt/familie-logging';
 
 import { oboHistorikkConfig, oboTilbakeConfig, sessionConfig } from './config';
 import { prometheusTellere } from './metrikker';
@@ -63,10 +63,29 @@ backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }
         doHistorikkApiProxy()
     );
 
+    const logRequest = (_: Request, _res: Response, next: NextFunction) => {
+        console.log('Logger request!!!');
+        stdoutLogger.info('Logger request');
+        return next();
+    };
+
     app.use(
         '/familie-tilbake/api',
+        logRequest,
         ensureAuthenticated(azureAuthClient, true),
+        logRequest,
         attachToken(azureAuthClient, oboTilbakeConfig),
+        logRequest,
+        doProxy()
+    );
+
+    app.use(
+        '/familie-tullball/api',
+        logRequest,
+        ensureAuthenticated(azureAuthClient, true),
+        logRequest,
+        attachToken(azureAuthClient, oboTilbakeConfig),
+        logRequest,
         doProxy()
     );
 
