@@ -1,6 +1,6 @@
 // Konfigurer appen før backend prøver å sette opp konfigurasjon
 
-import { ISessionKonfigurasjon, IApi } from '@navikt/familie-backend';
+import { ISessionKonfigurasjon, IApi, appConfig } from '@navikt/familie-backend';
 
 const Environment = () => {
     if (process.env.ENV === 'local') {
@@ -71,12 +71,8 @@ export const sessionConfig: ISessionKonfigurasjon = {
     sessionMaxAgeSekunder: 12 * 60 * 60,
 };
 
-if (!process.env.FAMILIE_TILBAKE_CLIENT_ID) {
-    throw new Error('Konfig mot familie-tilbake er ikke konfigurert');
-}
-
-if (!process.env.CLIENT_ID) {
-    throw new Error('Konfig mot familie-tilbake er ikke konfigurert');
+if (!process.env.TILBAKE_SCOPE) {
+    throw new Error('Scope mot familie-tilbake er ikke konfigurert');
 }
 
 if (!process.env.FAMILIE_HISTORIKK_CLIENT_ID) {
@@ -84,9 +80,8 @@ if (!process.env.FAMILIE_HISTORIKK_CLIENT_ID) {
 }
 
 export const oboTilbakeConfig: IApi = {
-    // clientId: process.env.FAMILIE_TILBAKE_CLIENT_ID,
-    clientId: process.env.CLIENT_ID,
-    scopes: ['api://dev-gcp.teamfamilie.familie-tilbake/.default'],
+    clientId: appConfig.clientId,
+    scopes: [process.env.TILBAKE_SCOPE],
 };
 
 export const oboHistorikkConfig: IApi = {
