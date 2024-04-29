@@ -1,6 +1,6 @@
 // Konfigurer appen før backend prøver å sette opp konfigurasjon
 
-import { ISessionKonfigurasjon, IApi } from '@navikt/familie-backend';
+import { ISessionKonfigurasjon, IApi, appConfig } from '@navikt/familie-backend';
 
 const Environment = () => {
     if (process.env.ENV === 'local') {
@@ -33,6 +33,16 @@ const Environment = () => {
             efSakUrl: 'https://ensligmorellerfar.intern.dev.nav.no/ekstern',
             ksSakUrl: 'https://kontantstotte.intern.dev.nav.no',
         };
+    } else if (process.env.ENV === 'lokalt-mot-preprod') {
+        return {
+            buildPath: 'frontend_development',
+            namespace: 'local',
+            proxyUrl: 'https://familie-tilbake.intern.dev.nav.no/api',
+            historikkUrl: 'https://familie-historikk.intern.dev.nav.no/api',
+            baSakUrl: 'https://barnetrygd.intern.dev.nav.no',
+            efSakUrl: 'https://ensligmorellerfar.intern.dev.nav.no/ekstern',
+            ksSakUrl: 'https://kontantstotte.intern.dev.nav.no',
+        };
     }
 
     return {
@@ -53,12 +63,16 @@ export const sessionConfig: ISessionKonfigurasjon = {
     redisFullUrl: process.env.REDIS_URI_SESSIONS,
     redisBrukernavn: process.env.REDIS_USERNAME_SESSIONS,
     redisPassord: process.env.REDIS_PASSWORD_SESSIONS,
-    secureCookie: !(process.env.ENV === 'local' || process.env.ENV === 'e2e'),
+    secureCookie: !(
+        process.env.ENV === 'local' ||
+        process.env.ENV === 'e2e' ||
+        process.env.ENV === 'lokalt-mot-preprod'
+    ),
     sessionMaxAgeSekunder: 12 * 60 * 60,
 };
 
-if (!process.env.FAMILIE_TILBAKE_CLIENT_ID) {
-    throw new Error('Konfig mot familie-tilbake er ikke konfigurert');
+if (!process.env.TILBAKE_SCOPE) {
+    throw new Error('Scope mot familie-tilbake er ikke konfigurert');
 }
 
 if (!process.env.FAMILIE_HISTORIKK_CLIENT_ID) {
@@ -66,8 +80,8 @@ if (!process.env.FAMILIE_HISTORIKK_CLIENT_ID) {
 }
 
 export const oboTilbakeConfig: IApi = {
-    clientId: process.env.FAMILIE_TILBAKE_CLIENT_ID,
-    scopes: [],
+    clientId: appConfig.clientId,
+    scopes: [process.env.TILBAKE_SCOPE],
 };
 
 export const oboHistorikkConfig: IApi = {
