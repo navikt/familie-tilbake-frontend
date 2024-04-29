@@ -42,7 +42,7 @@ TILBAKE_SCOPE=api://dev-gcp.teamfamilie.familie-tilbake-lokal/.default
 
 # Lokalt mot preprod
 #ENV=lokalt-mot-preprod
-#FAMILIE_HISTORIKK_CLIENT_ID=api://dev-gcp.teamfamilie.familie-historikk/.default
+#FAMILIE_HISTORIKK_CLIENT_ID=dev-gcp.teamfamilie.familie-historikk
 #TILBAKE_SCOPE=api://dev-gcp.teamfamilie.familie-tilbake/.default
 
 APP_VERSION=0.0.1
