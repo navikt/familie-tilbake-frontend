@@ -34,14 +34,15 @@ SESSION_SECRET='$SESSION_SECRET'
 
 CLIENT_ID='$TILBAKE_FRONTEND_CLIENT_ID'
 CLIENT_SECRET='$TILBAKE_FRONTEND_CLIENT_SECRET'
-FAMILIE_HISTORIKK_CLIENT_ID=$HISTORIKK_CLIENT_ID
 
 # Lokalt
 ENV=local
+FAMILIE_HISTORIKK_CLIENT_ID=$HISTORIKK_CLIENT_ID
 TILBAKE_SCOPE=api://dev-gcp.teamfamilie.familie-tilbake-lokal/.default
 
 # Lokalt mot preprod
 #ENV=lokalt-mot-preprod
+#FAMILIE_HISTORIKK_CLIENT_ID=api://dev-gcp.teamfamilie.familie-historikk/.default
 #TILBAKE_SCOPE=api://dev-gcp.teamfamilie.familie-tilbake/.default
 
 APP_VERSION=0.0.1
