@@ -57,8 +57,8 @@ spec:
       value: {{ VERSION }}
     - name: TILBAKE_SCOPE
       value: api://dev-gcp.teamfamilie.familie-tilbake/.default
-    - name: FAMILIE_HISTORIKK_CLIENT_ID
-      value: dev-gcp.teamfamilie.familie-historikk
+    - name: HISTORIKK_SCOPE
+      value: api://dev-gcp.teamfamilie.familie-historikk/.default
   envFrom:
     - secret: familie-tilbake-frontend
   resources:

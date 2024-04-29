@@ -75,8 +75,8 @@ if (!process.env.TILBAKE_SCOPE) {
     throw new Error('Scope mot familie-tilbake er ikke konfigurert');
 }
 
-if (!process.env.FAMILIE_HISTORIKK_CLIENT_ID) {
-    throw new Error('Konfig mot familie-historikk er ikke konfigurert');
+if (!process.env.HISTORIKK_SCOPE) {
+    throw new Error('Scope mot familie-historikk er ikke konfigurert');
 }
 
 export const oboTilbakeConfig: IApi = {
@@ -85,8 +85,8 @@ export const oboTilbakeConfig: IApi = {
 };
 
 export const oboHistorikkConfig: IApi = {
-    clientId: process.env.FAMILIE_HISTORIKK_CLIENT_ID,
-    scopes: [],
+    clientId: appConfig.clientId,
+    scopes: [process.env.HISTORIKK_SCOPE],
 };
 
 export const buildPath = env.buildPath;
