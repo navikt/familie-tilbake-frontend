@@ -8,7 +8,6 @@ const Environment = () => {
             buildPath: 'frontend_development',
             namespace: 'local',
             proxyUrl: 'http://localhost:8030/api',
-            historikkUrl: 'http://localhost:8050/api',
             baSakUrl: 'http://localhost:8001',
             efSakUrl: 'http://localhost:8002/ekstern',
             ksSakUrl: 'http://localhost:8003',
@@ -18,7 +17,6 @@ const Environment = () => {
             buildPath: 'frontend_production',
             namespace: 'e2e',
             proxyUrl: 'http://familie-tilbake:8030/api',
-            historikkUrl: 'http://familie-historikk:8050/api',
             baSakUrl: 'http://familie-ba-sak-frontend:8000',
             efSakUrl: 'http://familie-ef-sak-frontend:8000/ekstern',
             ksSakUrl: 'http://familie-ks-sak-frontend:8000',
@@ -28,7 +26,6 @@ const Environment = () => {
             buildPath: 'frontend_production',
             namespace: 'preprod',
             proxyUrl: 'http://familie-tilbake/api',
-            historikkUrl: 'http://familie-historikk/api',
             baSakUrl: 'https://barnetrygd.intern.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.intern.dev.nav.no/ekstern',
             ksSakUrl: 'https://kontantstotte.intern.dev.nav.no',
@@ -39,7 +36,6 @@ const Environment = () => {
         buildPath: 'frontend_production',
         namespace: 'production',
         proxyUrl: 'http://familie-tilbake/api',
-        historikkUrl: 'http://familie-historikk/api',
         baSakUrl: 'https://barnetrygd.intern.nav.no',
         efSakUrl: 'https://ensligmorellerfar.intern.nav.no/ekstern',
         ksSakUrl: 'https://kontantstotte.intern.nav.no',
@@ -61,23 +57,13 @@ if (!process.env.FAMILIE_TILBAKE_CLIENT_ID) {
     throw new Error('Konfig mot familie-tilbake er ikke konfigurert');
 }
 
-if (!process.env.FAMILIE_HISTORIKK_CLIENT_ID) {
-    throw new Error('Konfig mot familie-historikk er ikke konfigurert');
-}
-
 export const oboTilbakeConfig: IApi = {
     clientId: process.env.FAMILIE_TILBAKE_CLIENT_ID,
     scopes: [],
 };
 
-export const oboHistorikkConfig: IApi = {
-    clientId: process.env.FAMILIE_HISTORIKK_CLIENT_ID,
-    scopes: [],
-};
-
 export const buildPath = env.buildPath;
 export const proxyUrl = env.proxyUrl;
-export const historikkUrl = env.historikkUrl;
 export const namespace = env.namespace;
 
 export const redirectRecords: Record<string, string> = {

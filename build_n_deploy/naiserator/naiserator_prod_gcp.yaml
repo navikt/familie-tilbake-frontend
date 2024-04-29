@@ -45,7 +45,6 @@ spec:
     outbound:
       rules:
         - application: familie-tilbake
-        - application: familie-historikk
   env:
     - name: ENV
       value: production
@@ -53,8 +52,6 @@ spec:
       value: {{ VERSION }}
     - name: FAMILIE_TILBAKE_CLIENT_ID
       value: prod-gcp.teamfamilie.familie-tilbake
-    - name: FAMILIE_HISTORIKK_CLIENT_ID
-      value: prod-gcp.teamfamilie.familie-historikk
   envFrom:
     - secret: familie-tilbake-frontend
   resources:
