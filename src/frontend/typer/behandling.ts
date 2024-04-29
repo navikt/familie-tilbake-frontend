@@ -173,4 +173,5 @@ export interface IBehandling {
     behandlingsårsakstype?: Behandlingårsak;
     støtterManuelleBrevmottakere?: boolean;
     manuelleBrevmottakere: ManuellBrevmottakerResponseDto[];
+    begrunnelseForTilbakekreving?: string;
 }
