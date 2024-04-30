@@ -6,14 +6,12 @@ function get_secrets() {
 }
 
 TILBAKE_FRONTEND_LOKAL_SECRETS=$(get_secrets azuread-familie-tilbake-frontend-lokal)
-TILBAKE_LOKAL_SECRETS=$(get_secrets azuread-familie-tilbake-lokal)
-HISTIRIKK_LOKAL_SECRETS=$(get_secrets azuread-familie-historikk-lokal)
+HISTORIKK_LOKAL_SECRETS=$(get_secrets azuread-familie-historikk-lokal)
 
 TILBAKE_FRONTEND_CLIENT_ID=$(echo "$TILBAKE_FRONTEND_LOKAL_SECRETS" | jq -r '.AZURE_APP_CLIENT_ID')
 TILBAKE_FRONTEND_CLIENT_SECRET=$(echo "$TILBAKE_FRONTEND_LOKAL_SECRETS" | jq -r '.AZURE_APP_CLIENT_SECRET')
 
-TILBAKE_CLIENT_ID=$(echo "$TILBAKE_LOKAL_SECRETS" | jq -r '.AZURE_APP_CLIENT_ID')
-HISTIRIKK_CLIENT_ID=$(echo "$HISTIRIKK_LOKAL_SECRETS" | jq -r '.AZURE_APP_CLIENT_ID')
+HISTORIKK_CLIENT_ID=$(echo "$HISTORIKK_LOKAL_SECRETS" | jq -r '.AZURE_APP_CLIENT_ID')
 
 # Generate random 32 character strings for the cookie and session keys
 COOKIE_KEY1=$(openssl rand -hex 16)
@@ -36,9 +34,16 @@ SESSION_SECRET='$SESSION_SECRET'
 
 CLIENT_ID='$TILBAKE_FRONTEND_CLIENT_ID'
 CLIENT_SECRET='$TILBAKE_FRONTEND_CLIENT_SECRET'
-FAMILIE_TILBAKE_CLIENT_ID=$TILBAKE_CLIENT_ID
-FAMILIE_HISTORIKK_CLIENT_ID=$HISTIRIKK_CLIENT_ID
 
+# Lokalt
 ENV=local
+FAMILIE_HISTORIKK_CLIENT_ID=$HISTORIKK_CLIENT_ID
+TILBAKE_SCOPE=api://dev-gcp.teamfamilie.familie-tilbake-lokal/.default
+
+# Lokalt mot preprod
+#ENV=lokalt-mot-preprod
+#FAMILIE_HISTORIKK_CLIENT_ID=dev-gcp.teamfamilie.familie-historikk
+#TILBAKE_SCOPE=api://dev-gcp.teamfamilie.familie-tilbake/.default
+
 APP_VERSION=0.0.1
 EOF

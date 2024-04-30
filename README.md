@@ -1,5 +1,4 @@
 # familie-tilbake-frontend
-====================
 
 Saksbehandlerapplikasjon for tilbakekreving av ytelsene barnetrygd, konstantstøtte og støtte til enslig forsørgere
 
@@ -13,7 +12,8 @@ Appen krever at applikasjonene [familie-tilbake](https://github.com/navikt/famil
 For å generere testdata må du kjøre `familie-tilbake`, `familie-historikk` og kjøre en test i [familie-tilbake-e2e](https://github.com/navikt/familie-tilbake-e2e)
 
 ## Miljøvariabler
-Miljøvariabler kan genereres ved å kjøre `sh hent-og-lagre-miljøvariabler.sh` (Krever at du er pålogget Naicdevice og er logget inn på google (`gcloud auth login`) )
+
+Miljøvariabler kan genereres ved å kjøre `sh hent-og-lagre-miljøvariabler.sh` (Krever at du er pålogget Naicdevice og er logget inn på google `gcloud auth login`)
 
 ### For Windows-brukere
 
@@ -30,10 +30,14 @@ Fra og med Windows 10 følge det med eget Subsystem for Linux i Windows.
 
 Anbefaler også å laste ned Visual Studio Code fra Microsoft store for å kunne åpne og redigere filene i Linux uten å gå via terminalen. Det gjør det også betydelig lettere å legge til .env fila.
 
----
-# Henvendelser
+## Henvendelser
+
 Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub.
 
 ## For NAV-ansatte
 
 Interne henvendelser kan sendes via Slack i kanalen #team-familie-tilbakekreving eller kanalen #team-familie.
+
+## Kode generert av GitHub Copilot
+
+Dette repoet bruker GitHub Copilot til å generere kode.
