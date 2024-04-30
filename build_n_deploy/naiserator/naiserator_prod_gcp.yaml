@@ -51,8 +51,8 @@ spec:
       value: production
     - name: APP_VERSION
       value: {{ VERSION }}
-    - name: FAMILIE_TILBAKE_CLIENT_ID
-      value: prod-gcp.teamfamilie.familie-tilbake
+    - name: TILBAKE_SCOPE
+      value: api://prod-gcp.teamfamilie.familie-tilbake/.default
     - name: FAMILIE_HISTORIKK_CLIENT_ID
       value: prod-gcp.teamfamilie.familie-historikk
   envFrom:

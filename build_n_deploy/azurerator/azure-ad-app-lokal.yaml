@@ -1,4 +1,14 @@
----
+#######
+# Denne er brukt til å gjøre det mulig å bruke tokens lokalt
+#
+# secret kan hentes fra cluster med "kubectl -n teamfamilie get secret azuread-familie-tilbake-frontend-lokal -o json | jq '.data | map_values(@base64d)'"
+#
+# Kjøres en gang eller ved endringer med
+# kubectl apply -f build_n_deploy/azurerator/azure-ad-app-lokal.yaml
+#
+# Se hva som ligger deployet:
+# kubectl apply view-last-applied AzureAdApplication familie-tilbake-frontend-lokal
+###
 apiVersion: nais.io/v1
 kind: AzureAdApplication
 metadata:
@@ -7,7 +17,7 @@ metadata:
   labels:
     team: teamfamilie
 spec:
-  logoutUrl: "https://familie-tilbake-frontend.intern.dev.nav.no"
+  logoutUrl: "http://localhost:8000"
   tenant: trygdeetaten.no
   claims:
     groups:
@@ -19,8 +29,5 @@ spec:
       - id: 19dcbfde-4cdb-4c64-a1ea-ac9802b03339 # 0000-GA-Enslig-Forsorger-Veileder
       - id: c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b # forvalterrolle 
   replyUrls:
-    - url: "http://familie-tilbake-frontend.intern.dev.nav.no/auth/openid/callback"
     - url: "http://localhost:8000/auth/openid/callback"
   secretName: azuread-familie-tilbake-frontend-lokal
-
-# secret kan hentes fra cluster med "kubectl -n teamfamilie get secret azuread-familie-tilbake-frontend-lokal -o json | jq '.data | map_values(@base64d)'"

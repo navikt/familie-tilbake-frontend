@@ -108,7 +108,9 @@ describe('Tester: FaktaContainer', () => {
     test('- vis og fyll ut skjema', async () => {
         const user = userEvent.setup();
         setupMock(false, false, feilutbetalingFakta);
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({
+            begrunnelseForTilbakekreving: 'Begrunnelse for tilbakekreving',
+        });
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
@@ -155,7 +157,14 @@ describe('Tester: FaktaContainer', () => {
             user.selectOptions(getByTestId('perioder.1.årsak'), HendelseType.BOR_MED_SØKER);
             user.selectOptions(getByTestId('perioder.2.årsak'), HendelseType.BOSATT_I_RIKET);
         });
-        await act(() => user.type(getByRole('textbox'), 'Begrunnelse'));
+        await act(() =>
+            user.type(
+                getByRole('textbox', { name: 'Forklar årsaken(e) til feilutbetalingen' }),
+                'Begrunnelse'
+            )
+        );
+
+        expect(getAllByRole('textbox')).toHaveLength(2);
 
         expect(getAllByRole('combobox')).toHaveLength(6);
 

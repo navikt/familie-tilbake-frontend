@@ -92,6 +92,15 @@ const FaktaSkjema: React.FC<IProps> = ({
                         />
                     )}
                 </VStack>
+                {behandling.begrunnelseForTilbakekreving && (
+                    <Textarea
+                        name={'begrunnelse for tilbakekreving'}
+                        label={'Begrunnelse for tilbakekreving fra fagsystem'}
+                        readOnly={true}
+                        value={behandling.begrunnelseForTilbakekreving}
+                        className={'lesevisning'}
+                    />
+                )}
                 <Textarea
                     name={'begrunnelse'}
                     label={'Forklar årsaken(e) til feilutbetalingen'}
@@ -105,7 +114,6 @@ const FaktaSkjema: React.FC<IProps> = ({
                         feilmeldinger?.find(meld => meld.gjelderBegrunnelse)?.melding
                     }
                 />
-
                 <Navigering>
                     <FTButton
                         variant="primary"
