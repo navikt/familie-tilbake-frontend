@@ -108,9 +108,7 @@ describe('Tester: FaktaContainer', () => {
     test('- vis og fyll ut skjema', async () => {
         const user = userEvent.setup();
         setupMock(false, false, feilutbetalingFakta);
-        const behandling = mock<IBehandling>({
-            begrunnelseForTilbakekreving: 'Begrunnelse for tilbakekreving',
-        });
+        const behandling = mock<IBehandling>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
@@ -164,7 +162,7 @@ describe('Tester: FaktaContainer', () => {
             )
         );
 
-        expect(getAllByRole('textbox')).toHaveLength(2);
+        expect(getAllByRole('textbox')).toHaveLength(1);
 
         expect(getAllByRole('combobox')).toHaveLength(6);
 
