@@ -62,8 +62,11 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             erBehandlingReturnertFraBeslutter,
             hentBehandlingMedBehandlingId,
         } = useBehandling();
-        const { gjerTotrinnkontrollKall, sendInnFatteVedtak } = useBehandlingApi();
+        const { gjerTotrinnkontrollKall, sendInnFatteVedtak, kallAngreSendTilBeslutter } =
+            useBehandlingApi();
         const navigate = useNavigate();
+        const [feilmelding, settFeilmelding] = useState<string>('');
+        const [laster, settLaster] = useState(false);
 
         useEffect(() => {
             if (visVenteModal === false) {
@@ -183,6 +186,31 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             return !harFeil;
         };
 
+        const angreSendTilBeslutter = () => {
+            if (laster) {
+                return;
+            }
+            settLaster(true);
+            settFeilmelding('');
+            kallAngreSendTilBeslutter(behandling.behandlingId)
+                .then((res: Ressurs<string>) => {
+                    if (res.status === RessursStatus.SUKSESS) {
+                        hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                    } else if (
+                        res.status === RessursStatus.FEILET ||
+                        res.status === RessursStatus.FUNKSJONELL_FEIL ||
+                        res.status === RessursStatus.IKKE_TILGANG
+                    ) {
+                        settFeilmelding(res.frontendFeilmelding);
+                    } else {
+                        settFeilmelding('Ukjent feil ved angre send til beslutter');
+                    }
+                })
+                .finally(() => {
+                    settLaster(false);
+                });
+        };
+
         const sendInnSkjema = () => {
             if (validerToTrinn()) {
                 settSenderInn(false);
@@ -243,6 +271,8 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             senderInn,
             nonUsedKey,
             fatteVedtakRespons,
+            angreSendTilBeslutter,
+            feilmelding,
         };
     }
 );

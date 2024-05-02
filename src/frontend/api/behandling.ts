@@ -176,6 +176,13 @@ const useBehandlingApi = () => {
         });
     };
 
+    const kallAngreSendTilBeslutter = (behandlingId: string) => {
+        return request<void, string>({
+            method: 'PUT',
+            url: `/familie-tilbake/api/behandling/${behandlingId}/angre-send-til-beslutter`,
+        });
+    };
+
     return {
         gjerFeilutbetalingFaktaKall,
         sendInnFeilutbetalingFakta,
@@ -193,6 +200,7 @@ const useBehandlingApi = () => {
         henleggBehandling,
         fjernManuellBrevmottaker,
         hentManuelleBrevmottakere,
+        kallAngreSendTilBeslutter,
     };
 };
 
