@@ -23,7 +23,7 @@ import { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer
 import { behandlingssteg, Behandlingssteg, IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
-import { validerTekstMaksLengde } from '../../../../utils';
+import { hentFrontendFeilmelding, validerTekstMaksLengde } from '../../../../utils';
 import { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 
 const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
@@ -196,14 +196,11 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 .then((res: Ressurs<string>) => {
                     if (res.status === RessursStatus.SUKSESS) {
                         hentBehandlingMedBehandlingId(behandling.behandlingId, true);
-                    } else if (
-                        res.status === RessursStatus.FEILET ||
-                        res.status === RessursStatus.FUNKSJONELL_FEIL ||
-                        res.status === RessursStatus.IKKE_TILGANG
-                    ) {
-                        settFeilmelding(res.frontendFeilmelding);
                     } else {
-                        settFeilmelding('Ukjent feil ved angre send til beslutter');
+                        settFeilmelding(
+                            hentFrontendFeilmelding(res) ??
+                                'Ukjent feil ved angre send til beslutter'
+                        );
                     }
                 })
                 .finally(() => {
