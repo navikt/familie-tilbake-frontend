@@ -37,11 +37,6 @@ const FaktaSkjema: React.FC<IProps> = ({
         gåTilForrige,
     } = useFeilutbetalingFakta();
 
-    const onChangeBegrunnelse = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const nyVerdi = e.target.value;
-        oppdaterBegrunnelse(nyVerdi);
-    };
-
     return (
         <HGrid columns={2} gap="10">
             <VStack gap="5">
@@ -92,21 +87,12 @@ const FaktaSkjema: React.FC<IProps> = ({
                         />
                     )}
                 </VStack>
-                {behandling.begrunnelseForTilbakekreving && (
-                    <Textarea
-                        name={'begrunnelse for tilbakekreving'}
-                        label={'Begrunnelse for tilbakekreving fra fagsystem'}
-                        readOnly={true}
-                        value={behandling.begrunnelseForTilbakekreving}
-                        className={'lesevisning'}
-                    />
-                )}
                 <Textarea
                     name={'begrunnelse'}
                     label={'Forklar årsaken(e) til feilutbetalingen'}
                     readOnly={erLesevisning}
                     value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
-                    onChange={event => onChangeBegrunnelse(event)}
+                    onChange={e => oppdaterBegrunnelse(e.target.value)}
                     maxLength={3000}
                     className={erLesevisning ? 'lesevisning' : ''}
                     error={
