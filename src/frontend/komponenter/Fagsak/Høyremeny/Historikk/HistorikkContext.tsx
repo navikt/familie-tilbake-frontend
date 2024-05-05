@@ -35,7 +35,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
             settHistorikkInnslag(byggHenterRessurs());
             request<void, IHistorikkInnslag[]>({
                 method: 'GET',
-                url: `/familie-tilbake/api/behandlinger/${behandling.eksternBrukId}/historikk`,
+                url: `/familie-tilbake/api/behandlinger/${behandling.behandlingId}/historikk`,
             })
                 .then((hentetHistorikk: Ressurs<IHistorikkInnslag[]>) => {
                     settHistorikkInnslag(hentetHistorikk);
