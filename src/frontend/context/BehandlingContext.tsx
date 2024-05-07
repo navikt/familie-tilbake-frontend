@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
-import { useNavigate } from 'react-router-dom';
 
 import { useHttp } from '@navikt/familie-http';
 import {
@@ -35,9 +34,37 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [harKravgrunnlag, settHarKravgrunnlag] = useState<boolean>();
     const [behandlingILesemodus, settBehandlingILesemodus] = useState<boolean>();
     const [åpenHøyremeny, settÅpenHøyremeny] = useState(true);
+    const [ikkePersisterteKomponenter, settIkkePersisterteKomponenter] = useState<Set<string>>(
+        new Set()
+    );
+    const [harUlagredeData, settHarUlagredeData] = useState<boolean>(
+        ikkePersisterteKomponenter.size > 0
+    );
     const { fagsak } = useFagsak();
     const { request } = useHttp();
-    const navigate = useNavigate();
+
+    useEffect(
+        () => settHarUlagredeData(ikkePersisterteKomponenter.size > 0),
+        [ikkePersisterteKomponenter]
+    );
+
+    const settIkkePersistertKomponent = (komponentId: string) => {
+        if (ikkePersisterteKomponenter.has(komponentId)) return;
+
+        settIkkePersisterteKomponenter(new Set(ikkePersisterteKomponenter).add(komponentId));
+    };
+
+    const nullstillIkkePersistertKomponent = (komponentId: string) => {
+        const kopi = new Set(ikkePersisterteKomponenter);
+        kopi.delete(komponentId);
+        settIkkePersisterteKomponenter(kopi);
+    };
+
+    const nullstillIkkePersisterteKomponenter = () => {
+        if (ikkePersisterteKomponenter.size > 0) {
+            settIkkePersisterteKomponenter(new Set());
+        }
+    };
 
     const hentBehandlingMedEksternBrukId = (fagsak: IFagsak, behandlingId: string): void => {
         const fagsakBehandling = fagsak.behandlinger.find(
@@ -50,11 +77,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         }
     };
 
-    const hentBehandlingMedBehandlingId = (
-        behandlingId: string,
-        henterEtterStatusendring?: boolean | false,
-        ønsketPathEtterHenting?: string | undefined
-    ): void => {
+    const hentBehandlingMedBehandlingId = (behandlingId: string): void => {
         settBehandling(byggHenterRessurs());
         settAktivtSteg(undefined);
         settHarKravgrunnlag(undefined);
@@ -105,14 +128,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                             settVentegrunn(funnetAktivtsteg);
                             settVisVenteModal(true);
                         }
-                    }
-                    if (henterEtterStatusendring) {
-                        navigate(
-                            // @ts-ignore - fagsak er hentet på dette tidspunktet
-                            `/fagsystem/${fagsak?.data?.fagsystem}/fagsak/${fagsak?.data?.eksternFagsakId}/behandling/${hentetBehandling.data.eksternBrukId}`
-                        );
-                    } else if (ønsketPathEtterHenting !== undefined) {
-                        navigate(ønsketPathEtterHenting);
                     }
                 }
                 settBehandling(hentetBehandling);
@@ -194,6 +209,10 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         settÅpenHøyremeny,
         visBrevmottakerModal,
         settVisBrevmottakerModal,
+        harUlagredeData,
+        settIkkePersistertKomponent,
+        nullstillIkkePersistertKomponent,
+        nullstillIkkePersisterteKomponenter,
     };
 });
 
