@@ -10,7 +10,7 @@ import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkår
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Aktsomhet, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
+import { Aktsomhet, Fagsystem, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import {
@@ -34,6 +34,13 @@ jest.mock('../../../context/BehandlingContext', () => ({
 
 jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
+}));
+
+const mockedNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => mockedNavigate,
 }));
 
 describe('Tester: VilkårsvurderingContainer', () => {
@@ -307,9 +314,10 @@ describe('Tester: VilkårsvurderingContainer', () => {
     test('- vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
         const user = userEvent.setup();
         setupMock(false, false, false, feilutbetalingVilkårsvurdering);
-        const behandling = mock<IBehandling>();
 
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<IFagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
+        const behandling = mock<IBehandling>({ eksternBrukId: '1' });
+
         fagsak.ytelsestype = Ytelsetype.BARNETILSYN;
 
         const { getByText, getByRole, getByLabelText, queryAllByText } = render(
@@ -400,6 +408,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 })
             )
         );
+
+        expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1');
     });
 
     test('- vis utfylt - forstod/burde forstått - forsto', async () => {
