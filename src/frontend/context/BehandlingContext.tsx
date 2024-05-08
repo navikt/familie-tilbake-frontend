@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
@@ -37,21 +37,14 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [ikkePersisterteKomponenter, settIkkePersisterteKomponenter] = useState<Set<string>>(
         new Set()
     );
-    const [harUlagredeData, settHarUlagredeData] = useState<boolean>(
-        ikkePersisterteKomponenter.size > 0
-    );
     const { fagsak } = useFagsak();
     const { request } = useHttp();
 
-    useEffect(
-        () => settHarUlagredeData(ikkePersisterteKomponenter.size > 0),
-        [ikkePersisterteKomponenter]
-    );
-
     const settIkkePersistertKomponent = (komponentId: string) => {
         if (ikkePersisterteKomponenter.has(komponentId)) return;
-
+        console.log('setter ikke persistert komponent:', komponentId);
         settIkkePersisterteKomponenter(new Set(ikkePersisterteKomponenter).add(komponentId));
+        console.log('setter ikke persistert komponent:', komponentId, ' ferdig');
     };
 
     const nullstillIkkePersistertKomponent = (komponentId: string) => {
@@ -61,9 +54,11 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     };
 
     const nullstillIkkePersisterteKomponenter = () => {
+        console.log('nullstiller ikke persistert komponent');
         if (ikkePersisterteKomponenter.size > 0) {
             settIkkePersisterteKomponenter(new Set());
         }
+        console.log('nullstiller ikke persistert komponent ferdig');
     };
 
     const hentBehandlingMedEksternBrukId = (fagsak: IFagsak, behandlingId: string): void => {
@@ -209,7 +204,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         settÅpenHøyremeny,
         visBrevmottakerModal,
         settVisBrevmottakerModal,
-        harUlagredeData,
+        ikkePersisterteKomponenter,
         settIkkePersistertKomponent,
         nullstillIkkePersistertKomponent,
         nullstillIkkePersisterteKomponenter,
