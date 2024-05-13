@@ -12,7 +12,6 @@ import { Behandlingssteg } from '../../../../typer/behandling';
 import {
     Aktør,
     aktører,
-    applikasjoner,
     Historikkinnslagstype,
     IHistorikkInnslag,
 } from '../../../../typer/historikk';
@@ -120,7 +119,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
                 <Detail>
                     {`${formatterDatoOgTidstring(innslag.opprettetTid)} | `}
                     {innslag.aktør === Aktør.VEDTAKSLØSNING
-                        ? applikasjoner[innslag.applikasjon]
+                        ? 'System'
                         : `${innslag.aktørIdent.toLocaleLowerCase()} (${aktører[
                               innslag.aktør
                           ].toLocaleLowerCase()})`}

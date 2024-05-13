@@ -13,15 +13,9 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import backend, { IApp, ensureAuthenticated, envVar } from '@navikt/familie-backend';
 import { logInfo } from '@navikt/familie-logging';
 
-import { oboHistorikkConfig, oboTilbakeConfig, sessionConfig } from './config';
+import { oboTilbakeConfig, sessionConfig } from './config';
 import { prometheusTellere } from './metrikker';
-import {
-    attachToken,
-    doHistorikkApiProxy,
-    doHistorikkStreamProxy,
-    doProxy,
-    doRedirectProxy,
-} from './proxy';
+import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
 import config from '../webpack/webpack.dev';
 
@@ -49,19 +43,6 @@ backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }
         req.headers['nav-consumer-id'] = 'familie-tilbake-frontend';
         next();
     });
-
-    app.use(
-        '/familie-historikk/stream',
-        ensureAuthenticated(azureAuthClient, true),
-        attachToken(azureAuthClient, oboHistorikkConfig),
-        doHistorikkStreamProxy()
-    );
-    app.use(
-        '/familie-historikk/api',
-        ensureAuthenticated(azureAuthClient, true),
-        attachToken(azureAuthClient, oboHistorikkConfig),
-        doHistorikkApiProxy()
-    );
 
     app.use(
         '/familie-tilbake/api',

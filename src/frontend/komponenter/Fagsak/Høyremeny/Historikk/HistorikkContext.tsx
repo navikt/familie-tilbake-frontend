@@ -13,8 +13,6 @@ import { IHistorikkInnslag } from '../../../../typer/historikk';
 import { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 import { Menysider } from '../Menykontainer';
 
-const APPLIKASJON = 'FAMILIE_TILBAKE';
-
 interface IProps {
     behandling: IBehandling;
     fagsak: IFagsak;
@@ -30,23 +28,6 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
         useEffect(() => {
             if (valgtMenyside === Menysider.HISTORIKK) {
                 hentHistorikkinnslag();
-
-                // const eventSource = new EventSource(
-                //     `/familie-historikk/stream/historikk/stream/applikasjon/${APPLIKASJON}/behandling/${behandling.eksternBrukId}`,
-                //     { withCredentials: true }
-                // );
-                // eventSource.onmessage = e => {
-                //     const newFluxData = fluxData;
-                //     const newData: IHistorikkInnslag = JSON.parse(e.data);
-                //     console.log('ny flux ', newData);
-                //     newFluxData.unshift(newData);
-                //     settFluxData(newFluxData);
-                //     settNonUsedKey(Date.now().toString());
-                // };
-
-                // return () => {
-                //     eventSource.close();
-                // };
             }
         }, [behandling, valgtMenyside]);
 
@@ -54,7 +35,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
             settHistorikkInnslag(byggHenterRessurs());
             request<void, IHistorikkInnslag[]>({
                 method: 'GET',
-                url: `/familie-historikk/api/historikk/applikasjon/${APPLIKASJON}/behandling/${behandling.eksternBrukId}`,
+                url: `/familie-tilbake/api/behandlinger/${behandling.behandlingId}/historikk`,
             })
                 .then((hentetHistorikk: Ressurs<IHistorikkInnslag[]>) => {
                     settHistorikkInnslag(hentetHistorikk);
