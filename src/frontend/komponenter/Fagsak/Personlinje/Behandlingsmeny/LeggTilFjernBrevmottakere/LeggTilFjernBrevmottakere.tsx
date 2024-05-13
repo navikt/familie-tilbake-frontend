@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { ErrorMessage, Modal } from '@navikt/ds-react';
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
@@ -35,6 +37,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
         useBehandling();
     const { request } = useHttp();
     const { settToast } = useApp();
+    const navigate = useNavigate();
 
     const kanFjerneManuelleBrevmottakere =
         behandling.manuelleBrevmottakere.length ||
@@ -53,9 +56,8 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
             settSenderInn(false);
             if (respons.status === RessursStatus.SUKSESS) {
                 settVisBrevmottakerModal(true);
-                hentBehandlingMedBehandlingId(
-                    behandling.behandlingId,
-                    false,
+                hentBehandlingMedBehandlingId(behandling.behandlingId);
+                navigate(
                     `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`
                 );
             } else if (
@@ -77,7 +79,10 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
             settSenderInn(false);
             if (respons.status === RessursStatus.SUKSESS) {
                 settVisFjernModal(false);
-                hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                hentBehandlingMedBehandlingId(behandling.behandlingId);
+                navigate(
+                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                );
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||

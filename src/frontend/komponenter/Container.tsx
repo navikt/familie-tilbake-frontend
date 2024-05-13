@@ -1,12 +1,19 @@
 import * as React from 'react';
 
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {
+    createBrowserRouter,
+    createRoutesFromElements,
+    RouterProvider,
+    Outlet,
+    Route,
+} from 'react-router-dom';
 
 import FagsakContainer from './Fagsak/FagsakContainer';
 import Dashboard from './Felleskomponenter/Dashboard';
 import Feilmelding from './Felleskomponenter/Feilmelding';
 import FTHeader from './Felleskomponenter/FTHeader/FTHeader';
 import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
+import UlagretDataModal from './Felleskomponenter/Modal/UlagretDataModal';
 import Toasts from './Felleskomponenter/Toast/Toasts';
 import { useApp } from '../context/AppContext';
 import { BehandlingProvider } from '../context/BehandlingContext';
@@ -16,7 +23,7 @@ const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
 
     return (
-        <Router>
+        <>
             {autentisert ? (
                 <>
                     <Toasts />
@@ -24,14 +31,7 @@ const Container: React.FC = () => {
                         <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
                         <FagsakProvider>
                             <BehandlingProvider>
-                                <Routes>
-                                    <Route
-                                        path="/fagsystem/:fagsystem/fagsak/:fagsakId/*"
-                                        element={<FagsakContainer />}
-                                    />
-                                    <Route path="/" element={<Dashboard />} />
-                                    <Route path="/*" element={<Feilmelding />} />
-                                </Routes>
+                                <AppRoutes />
                             </BehandlingProvider>
                         </FagsakProvider>
                     </main>
@@ -39,8 +39,32 @@ const Container: React.FC = () => {
             ) : (
                 <UgyldigSesjon />
             )}
-        </Router>
+        </>
     );
 };
+
+const AppRoutes = () => {
+    const router = createBrowserRouter(
+        createRoutesFromElements(
+            <Route path="/" element={<UlagretDataModalContainer />}>
+                <Route
+                    path="/fagsystem/:fagsystem/fagsak/:fagsakId/*"
+                    element={<FagsakContainer />}
+                />
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/*" element={<Feilmelding />} />
+            </Route>
+        )
+    );
+
+    return <RouterProvider router={router} />;
+};
+
+const UlagretDataModalContainer = () => (
+    <>
+        <Outlet />
+        <UlagretDataModal />
+    </>
+);
 
 export default Container;

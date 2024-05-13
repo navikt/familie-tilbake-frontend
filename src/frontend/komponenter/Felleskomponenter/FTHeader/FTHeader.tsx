@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { Link } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 import { Dropdown, InternalHeader } from '@navikt/ds-react';
@@ -23,7 +22,7 @@ const StyledTitle = styled(InternalHeader.Title)`
     border: none;
 `;
 
-const StyledLink = styled(Link)`
+const StyledLink = styled.a`
     color: ${ATextOnInverted};
     text-decoration: none;
 `;
@@ -36,7 +35,7 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
     return (
         <StyledHeader>
             <StyledTitle as="h1">
-                <StyledLink to="/">NAV Familie - Tilbakekreving</StyledLink>
+                <StyledLink href="/">NAV Familie - Tilbakekreving</StyledLink>
             </StyledTitle>
             <Dropdown>
                 <InternalHeader.UserButton

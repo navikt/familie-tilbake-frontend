@@ -10,7 +10,7 @@ import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
 import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { DokumentMal } from '../../../../kodeverk';
+import { DokumentMal, Fagsystem } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak, Målform } from '../../../../typer/fagsak';
 
@@ -28,6 +28,13 @@ jest.mock('../../../../context/BehandlingContext', () => ({
 
 jest.mock('../../../../api/dokument', () => ({
     useDokumentApi: jest.fn(),
+}));
+
+const mockedNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => mockedNavigate,
 }));
 
 describe('Tester: SendMelding', () => {
@@ -51,13 +58,16 @@ describe('Tester: SendMelding', () => {
         const behandling = mock<IBehandling>({
             varselSendt: false,
             manuelleBrevmottakere: [],
+            eksternBrukId: '1',
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NB,
+            fagsystem: Fagsystem.EF,
+            eksternFagsakId: '1',
         });
 
         const { getByText, getByLabelText, getByRole, queryByRole, queryByText } = render(
-            <SendMeldingProvider behandling={behandling}>
+            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
                 <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );
@@ -112,6 +122,7 @@ describe('Tester: SendMelding', () => {
                 })
             )
         );
+        expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1/verge');
     });
 
     test('- fyller ut skjema og sender korrigert varsel', async () => {
@@ -134,13 +145,16 @@ describe('Tester: SendMelding', () => {
         const behandling = mock<IBehandling>({
             varselSendt: true,
             manuelleBrevmottakere: [],
+            eksternBrukId: '1',
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NN,
+            fagsystem: Fagsystem.EF,
+            eksternFagsakId: '1',
         });
 
         const { getByText, getByLabelText, getByRole, queryByText } = render(
-            <SendMeldingProvider behandling={behandling}>
+            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
                 <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );
@@ -177,6 +191,7 @@ describe('Tester: SendMelding', () => {
                 })
             )
         );
+        expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1/verge');
     });
 
     test('- fyller ut skjema og sender innhent dokumentasjon', async () => {
@@ -199,13 +214,16 @@ describe('Tester: SendMelding', () => {
         const behandling = mock<IBehandling>({
             varselSendt: true,
             manuelleBrevmottakere: [],
+            eksternBrukId: '1',
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NB,
+            fagsystem: Fagsystem.EF,
+            eksternFagsakId: '1',
         });
 
         const { getByText, getByLabelText, getByRole } = render(
-            <SendMeldingProvider behandling={behandling}>
+            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
                 <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );
@@ -244,6 +262,7 @@ describe('Tester: SendMelding', () => {
                 })
             )
         );
+        expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1/verge');
     });
 
     test('- lesevisning - venter på svar på manuelt brev', async () => {
@@ -268,10 +287,12 @@ describe('Tester: SendMelding', () => {
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NB,
+            fagsystem: Fagsystem.EF,
+            eksternFagsakId: '1',
         });
 
         const { getByText, getByRole, queryByLabelText } = render(
-            <SendMeldingProvider behandling={behandling}>
+            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
                 <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );

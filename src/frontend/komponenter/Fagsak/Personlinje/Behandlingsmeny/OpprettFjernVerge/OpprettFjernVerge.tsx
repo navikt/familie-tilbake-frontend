@@ -1,24 +1,29 @@
 import * as React from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { ErrorMessage, Modal } from '@navikt/ds-react';
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Behandlingssteg, IBehandling } from '../../../../../typer/behandling';
+import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
 
 interface IProps {
     behandling: IBehandling;
+    fagsak: IFagsak;
     onListElementClick: () => void;
 }
 
-const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick }) => {
+const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElementClick }) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string>();
     const { hentBehandlingMedBehandlingId, aktivtSteg, behandlingILesemodus } = useBehandling();
     const { request } = useHttp();
+    const navigate = useNavigate();
 
     const kanFjerneVerge =
         behandling.harVerge || aktivtSteg?.behandlingssteg === Behandlingssteg.VERGE;
@@ -31,7 +36,10 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
             if (respons.status === RessursStatus.SUKSESS) {
                 settSenderInn(false);
                 settVisModal(false);
-                hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                hentBehandlingMedBehandlingId(behandling.behandlingId);
+                navigate(
+                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                );
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||
@@ -50,7 +58,10 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, onListElementClick })
             if (respons.status === RessursStatus.SUKSESS) {
                 settSenderInn(false);
                 settVisModal(false);
-                hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                hentBehandlingMedBehandlingId(behandling.behandlingId);
+                navigate(
+                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                );
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||
