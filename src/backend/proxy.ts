@@ -6,7 +6,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import { Client, getOnBehalfOfAccessToken, IApi } from '@navikt/familie-backend';
 import { stdoutLogger } from '@navikt/familie-logging';
 
-import { proxyUrl, historikkUrl, redirectRecords } from './config';
+import { proxyUrl, redirectRecords } from './config';
 
 const restream = (proxyReq: ClientRequest, req: IncomingMessage, _res: OutgoingMessage): void => {
     const requestBody = (req as Request).body;
@@ -42,27 +42,6 @@ export const doRedirectProxy = () => {
             res.sendStatus(404);
         }
     };
-};
-
-// eslint-disable-next-line
-export const doHistorikkApiProxy: any = () => {
-    return createProxyMiddleware({
-        changeOrigin: true,
-        on: { proxyReq: restream },
-        secure: true,
-        target: `${historikkUrl}`,
-        logger: stdoutLogger,
-    });
-};
-
-// eslint-disable-next-line
-export const doHistorikkStreamProxy: any = () => {
-    return createProxyMiddleware({
-        changeOrigin: true,
-        secure: true,
-        target: `${historikkUrl}`,
-        logger: stdoutLogger,
-    });
 };
 
 export const attachToken = (authClient: Client, oboConfig: IApi) => {
