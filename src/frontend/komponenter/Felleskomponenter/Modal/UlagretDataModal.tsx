@@ -6,10 +6,10 @@ import { ModalWrapper } from './ModalWrapper';
 import { useBehandling } from '../../../context/BehandlingContext';
 
 const UlagretDataModal: FC = () => {
-    const { nullstillIkkePersisterteKomponenter, ulagretData } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter, harUlagredeData } = useBehandling();
 
     return (
-        <ReactRouterPrompt when={ulagretData}>
+        <ReactRouterPrompt when={harUlagredeData}>
             {({ isActive, onConfirm, onCancel }) => (
                 <ModalWrapper
                     tittel={

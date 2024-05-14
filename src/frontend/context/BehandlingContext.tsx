@@ -37,12 +37,14 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [ikkePersisterteKomponenter, settIkkePersisterteKomponenter] = useState<Set<string>>(
         new Set()
     );
-    const [ulagretData, settUlagretData] = useState<boolean>(ikkePersisterteKomponenter.size > 0);
+    const [harUlagredeData, settHarUlagredeData] = useState<boolean>(
+        ikkePersisterteKomponenter.size > 0
+    );
     const { fagsak } = useFagsak();
     const { request } = useHttp();
 
     useEffect(
-        () => settUlagretData(ikkePersisterteKomponenter.size > 0),
+        () => settHarUlagredeData(ikkePersisterteKomponenter.size > 0),
         [ikkePersisterteKomponenter]
     );
 
@@ -203,7 +205,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         harKravgrunnlag,
         lagLenkeTilRevurdering,
         åpenHøyremeny,
-        ulagretData,
+        harUlagredeData,
         settÅpenHøyremeny,
         visBrevmottakerModal,
         settVisBrevmottakerModal,

@@ -12,14 +12,14 @@ import { useBehandling } from '../context/BehandlingContext';
  */
 export const useRedirectEtterLagring = () => {
     const navigate = useNavigate();
-    const { ulagretData } = useBehandling();
+    const { harUlagredeData } = useBehandling();
     const [url, settUrl] = useState<string>();
 
     useEffect(() => {
-        if (url && !ulagretData) {
+        if (url && !harUlagredeData) {
             navigate(url);
         }
-    }, [url, ulagretData, navigate]);
+    }, [url, harUlagredeData, navigate]);
 
     return {
         utførRedirect: (url: string) => {
