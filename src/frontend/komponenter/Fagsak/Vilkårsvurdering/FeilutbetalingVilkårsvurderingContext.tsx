@@ -272,18 +272,14 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         };
 
         const sendInnSkjema = () => {
-            console.log('starter sender inn skjema');
             settValideringsFeilmelding(undefined);
             settValideringsfeil(false);
             if (validerPerioder()) {
-                console.log('validering av sender inn skjema ok');
                 nullstillIkkePersisterteKomponenter();
                 const ikkeForeldetPerioder = skjemaData.filter(per => !per.foreldet);
                 if (stegErBehandlet && !harEndretOpplysninger(ikkeForeldetPerioder)) {
-                    console.log('steg er behandlet og har ikke endret opplysninger');
                     gåTilNesteSteg();
                 } else {
-                    console.log('har endret opplysninger, prøver å sende inn');
                     settSenderInn(true);
                     const payload: VilkårdsvurderingStegPayload = {
                         '@type': 'VILKÅRSVURDERING',

@@ -14,6 +14,7 @@ import {
 import { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/feilutbetalingFakta';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
@@ -44,8 +45,14 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const [visFeilmeldinger, settVisFeilmeldinger] = useState<boolean>(false);
         const [senderInn, settSenderInn] = useState<boolean>(false);
         const [feilmeldinger, settFeilmeldinger] = useState<Feilmelding[]>();
-        const { erStegBehandlet, visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
+        const {
+            erStegBehandlet,
+            visVenteModal,
+            settIkkePersistertKomponent,
+            nullstillIkkePersisterteKomponenter,
+        } = useBehandling();
         const { gjerFeilutbetalingFaktaKall, sendInnFeilutbetalingFakta } = useBehandlingApi();
+        const { utførRedirect } = useRedirectEtterLagring();
         const navigate = useNavigate();
 
         useEffect(() => {
@@ -93,40 +100,19 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 });
         };
 
-        const oppdaterBegrunnelse = (nyVerdi: string) => {
-            settSkjemaData({
-                begrunnelse: nyVerdi,
-                perioder: skjemaData.perioder,
+        const oppdaterBegrunnelse = (nyBegrunnelse: string) => {
+            settSkjemaData(prevState => {
+                return { ...prevState, begrunnelse: nyBegrunnelse };
             });
         };
 
         const oppdaterÅrsakPåPeriode = (periode: FaktaPeriodeSkjemaData, nyÅrsak: HendelseType) => {
             if (behandlePerioderSamlet) {
-                const nyePerioder: FaktaPeriodeSkjemaData[] = [];
-                for (const per of skjemaData.perioder) {
-                    nyePerioder.push({
-                        ...per,
-                        hendelsestype: nyÅrsak,
-                        hendelsesundertype: undefined,
-                    });
-                }
-                settSkjemaData({
-                    perioder: nyePerioder,
-                    begrunnelse: skjemaData.begrunnelse,
-                });
+                oppdaterÅrsaker(nyÅrsak);
             } else {
-                const perioder = skjemaData.perioder;
-                const index = perioder.findIndex(bfp => bfp.index === periode.index);
-                perioder.splice(index, 1, {
-                    ...periode,
-                    hendelsestype: nyÅrsak,
-                    hendelsesundertype: undefined,
-                });
-                settSkjemaData({
-                    perioder: perioder,
-                    begrunnelse: skjemaData.begrunnelse,
-                });
+                oppdaterÅrsak(periode, nyÅrsak);
             }
+            settIkkePersistertKomponent('fakta');
         };
 
         const oppdaterUnderårsakPåPeriode = (
@@ -134,33 +120,64 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             nyUnderårsak: HendelseUndertype
         ) => {
             if (behandlePerioderSamlet) {
-                const nyePerioder: FaktaPeriodeSkjemaData[] = [];
-                for (const per of skjemaData.perioder) {
-                    if (per.hendelsestype === periode.hendelsestype) {
-                        nyePerioder.push({
-                            ...per,
-                            hendelsesundertype: nyUnderårsak,
-                        });
-                    } else {
-                        nyePerioder.push(per);
-                    }
-                }
-                settSkjemaData({
-                    perioder: nyePerioder,
-                    begrunnelse: skjemaData.begrunnelse,
-                });
+                oppdaterUnderårsaker(periode, nyUnderårsak);
             } else {
-                const perioder = skjemaData.perioder;
-                const index = perioder.findIndex(bfp => bfp.index === periode.index);
-                perioder.splice(index, 1, {
-                    ...periode,
-                    hendelsesundertype: nyUnderårsak,
-                });
-                settSkjemaData({
-                    perioder: perioder,
-                    begrunnelse: skjemaData.begrunnelse,
-                });
+                oppdaterUnderårsak(periode, nyUnderårsak);
             }
+            settIkkePersistertKomponent('fakta');
+        };
+
+        const oppdaterÅrsaker = (nyÅrsak: HendelseType) => {
+            const nyePerioder = skjemaData.perioder.map(periode => {
+                return { ...periode, hendelsestype: nyÅrsak, hendelsesundertype: undefined };
+            });
+
+            settSkjemaData((prevState: FaktaSkjemaData) => {
+                return { ...prevState, perioder: nyePerioder };
+            });
+        };
+
+        const oppdaterÅrsak = (periode: FaktaPeriodeSkjemaData, nyÅrsak: HendelseType) => {
+            const gammelPeriodeIndex = skjemaData.perioder.findIndex(
+                gammelPeriode => gammelPeriode.index === periode.index
+            );
+            const nyPeriode = { ...periode, hendelsestype: nyÅrsak, hendelsesundertype: undefined };
+            const nyePerioder = skjemaData.perioder.toSpliced(gammelPeriodeIndex, 1, nyPeriode);
+
+            settSkjemaData((prevState: FaktaSkjemaData) => {
+                return { ...prevState, perioder: nyePerioder };
+            });
+        };
+
+        const oppdaterUnderårsaker = (
+            periode: FaktaPeriodeSkjemaData,
+            nyUnderårsak: HendelseUndertype
+        ) => {
+            const nyePerioder = skjemaData.perioder.map(gammelPeriode => {
+                if (gammelPeriode.hendelsestype === periode.hendelsestype) {
+                    return { ...gammelPeriode, hendelsesundertype: nyUnderårsak };
+                }
+                return gammelPeriode;
+            });
+
+            settSkjemaData((prevState: FaktaSkjemaData) => {
+                return { ...prevState, perioder: nyePerioder };
+            });
+        };
+
+        const oppdaterUnderårsak = (
+            periode: FaktaPeriodeSkjemaData,
+            nyUnderårsak: HendelseUndertype
+        ) => {
+            const gammelPeriodeIndex = skjemaData.perioder.findIndex(
+                gammelPeriode => gammelPeriode.index === periode.index
+            );
+            const nyPeriode = { ...periode, hendelsesundertype: nyUnderårsak };
+            const nyePerioder = skjemaData.perioder.toSpliced(gammelPeriodeIndex, 1, nyPeriode);
+
+            settSkjemaData((prevState: FaktaSkjemaData) => {
+                return { ...prevState, perioder: nyePerioder };
+            });
         };
 
         const validerForInnsending = (): Feilmelding[] => {
@@ -212,7 +229,8 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const sendInnSkjema = () => {
             if (stegErBehandlet && !harEndretOpplysninger()) {
-                navigate(
+                nullstillIkkePersisterteKomponenter();
+                utførRedirect(
                     `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FORELDELSE.href}`
                 );
             } else {
@@ -223,6 +241,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 } else {
                     settVisFeilmeldinger(false);
                     settSenderInn(true);
+                    nullstillIkkePersisterteKomponenter();
                     const payload: FaktaStegPayload = {
                         '@type': 'FAKTA',
                         //@ts-ignore
@@ -241,7 +260,6 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                         (respons: Ressurs<string>) => {
                             settSenderInn(false);
                             if (respons.status === RessursStatus.SUKSESS) {
-                                hentBehandlingMedBehandlingId(behandling.behandlingId);
                                 navigate(
                                     `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                                 );
