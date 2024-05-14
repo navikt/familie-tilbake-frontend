@@ -207,7 +207,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         settÅpenHøyremeny,
         visBrevmottakerModal,
         settVisBrevmottakerModal,
-        ikkePersisterteKomponenter,
         settIkkePersistertKomponent,
         nullstillIkkePersistertKomponent,
         nullstillIkkePersisterteKomponenter,
