@@ -103,6 +103,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
             visVenteModal: false,
             behandlingILesemodus: lesevisning,
             hentBehandlingMedBehandlingId: jest.fn(),
+            settIkkePersistertKomponent: jest.fn(),
+            nullstillIkkePersisterteKomponenter: jest.fn(),
         }));
     };
 

@@ -34,6 +34,8 @@ jest.mock('react-router-dom', () => ({
     useNavigate: () => mockedNavigate,
 }));
 
+const mockedSettIkkePersistertKomponent = jest.fn();
+
 describe('Tester: FaktaContainer', () => {
     const perioder: FaktaPeriode[] = [
         {
@@ -111,6 +113,8 @@ describe('Tester: FaktaContainer', () => {
             visVenteModal: false,
             behandlingILesemodus: lesemodus,
             hentBehandlingMedBehandlingId: jest.fn(),
+            settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
+            nullstillIkkePersisterteKomponenter: jest.fn(),
         }));
     };
 
@@ -208,6 +212,7 @@ describe('Tester: FaktaContainer', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1');
+        expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('fakta');
     });
 
     test('- vis og fyll ut skjema - behandle perioder samlet', async () => {
@@ -287,6 +292,7 @@ describe('Tester: FaktaContainer', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1');
+        expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('fakta');
     });
 
     test('- vis utfylt skjema - Barnetrygd', async () => {
