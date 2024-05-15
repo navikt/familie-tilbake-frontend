@@ -89,8 +89,6 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
 }) => {
-    const [tidslinjeRader, settTidslinjeRader] = React.useState<Periode[][]>();
-    const [disableBekreft, settDisableBekreft] = React.useState<boolean>(true);
     const {
         valgtPeriode,
         settValgtPeriode,
@@ -106,17 +104,17 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         valideringsFeilmelding,
     } = useFeilutbetalingVilkårsvurdering();
 
-    React.useEffect(() => {
-        settTidslinjeRader(genererRader(perioder, valgtPeriode, erTotalbeløpUnder4Rettsgebyr));
-    }, [perioder, valgtPeriode]);
+    const tidslinjeRader = genererRader(perioder, valgtPeriode, erTotalbeløpUnder4Rettsgebyr);
 
-    React.useEffect(() => {
-        if (!valgtPeriode) {
-            settDisableBekreft(!allePerioderBehandlet || !behandling.kanEndres || erLesevisning);
-        } else {
-            settDisableBekreft(true);
-        }
-    }, [valgtPeriode, allePerioderBehandlet]);
+    const erHovedKnappDisabled =
+        valgtPeriode !== undefined ||
+        erLesevisning ||
+        !allePerioderBehandlet ||
+        !behandling.kanEndres;
+
+    // React.useEffect(() => {
+    //     settValgtPeriode(perioder[0]);
+    // }, []);
 
     const onSelectPeriode = (periode: Periode) => {
         const periodeFom = periode.fom.toISOString().substring(0, 10);
@@ -124,6 +122,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         const vilkårsvurderingPeriode = perioder.find(
             per => per.periode.fom === periodeFom && per.periode.tom === periodeTom
         );
+        console.log('select periode');
         settValgtPeriode(vilkårsvurderingPeriode);
     };
 
@@ -155,7 +154,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                         variant="primary"
                         onClick={sendInnSkjema}
                         loading={senderInn}
-                        disabled={disableBekreft}
+                        disabled={erHovedKnappDisabled}
                     >
                         {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
                     </FTButton>

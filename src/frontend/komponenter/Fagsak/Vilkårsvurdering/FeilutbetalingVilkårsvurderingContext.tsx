@@ -129,10 +129,10 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                     };
                     return skjemaPeriode;
                 });
-                const valgtVilkårsperiode = utledValgtPeriode(skjemaPerioder, behandling.status);
 
                 settSkjemaData(skjemaPerioder);
 
+                const valgtVilkårsperiode = utledValgtPeriode(skjemaPerioder, behandling.status);
                 if (valgtVilkårsperiode) {
                     settValgtPeriode(valgtVilkårsperiode);
                 }
