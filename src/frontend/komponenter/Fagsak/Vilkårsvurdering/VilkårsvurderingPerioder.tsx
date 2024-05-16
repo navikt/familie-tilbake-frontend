@@ -112,10 +112,6 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         !allePerioderBehandlet ||
         !behandling.kanEndres;
 
-    // React.useEffect(() => {
-    //     settValgtPeriode(perioder[0]);
-    // }, []);
-
     const onSelectPeriode = (periode: Periode) => {
         const periodeFom = periode.fom.toISOString().substring(0, 10);
         const periodeTom = periode.tom.toISOString().substring(0, 10);
