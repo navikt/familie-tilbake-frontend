@@ -36,10 +36,11 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
             if (respons.status === RessursStatus.SUKSESS) {
                 settSenderInn(false);
                 settVisModal(false);
-                hentBehandlingMedBehandlingId(behandling.behandlingId);
-                navigate(
-                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                );
+                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                    navigate(
+                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                    );
+                });
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||
@@ -58,10 +59,11 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
             if (respons.status === RessursStatus.SUKSESS) {
                 settSenderInn(false);
                 settVisModal(false);
-                hentBehandlingMedBehandlingId(behandling.behandlingId);
-                navigate(
-                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                );
+                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                    navigate(
+                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                    );
+                });
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||
