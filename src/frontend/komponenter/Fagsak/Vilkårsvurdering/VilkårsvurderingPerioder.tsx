@@ -122,7 +122,6 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         const vilkårsvurderingPeriode = perioder.find(
             per => per.periode.fom === periodeFom && per.periode.tom === periodeTom
         );
-        console.log('select periode');
         settValgtPeriode(vilkårsvurderingPeriode);
     };
 
