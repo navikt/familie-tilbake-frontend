@@ -31,7 +31,7 @@
     "@navikt/familie-backend": "^10.0.15",
     "@navikt/familie-logging": "^7.0.0",
     "@navikt/familie-skjema": "^8.0.8",
-    "@navikt/familie-tidslinje": "10.0.1-alpha.50+5ed6882",
+    "@navikt/familie-tidslinje": "10.0.1",
     "@navikt/familie-typer": "^8.0.2",
     "@navikt/familie-visittkort": "^15.0.0",
     "@navikt/flagg-ikoner": "^3.2.7",
