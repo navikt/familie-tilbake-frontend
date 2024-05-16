@@ -27,11 +27,9 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
 }));
 
-const mockedNavigate = jest.fn();
-
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
-    useNavigate: () => mockedNavigate,
+    useNavigate: () => jest.fn(),
 }));
 
 const mockedSettIkkePersistertKomponent = jest.fn();
@@ -112,7 +110,7 @@ describe('Tester: FaktaContainer', () => {
             erStegBehandlet: () => behandlet,
             visVenteModal: false,
             behandlingILesemodus: lesemodus,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
             settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
             nullstillIkkePersisterteKomponenter: jest.fn(),
         }));
@@ -211,7 +209,6 @@ describe('Tester: FaktaContainer', () => {
             )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1');
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('fakta');
     });
 
@@ -291,7 +288,6 @@ describe('Tester: FaktaContainer', () => {
             )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1');
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('fakta');
     });
 

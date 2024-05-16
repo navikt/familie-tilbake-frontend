@@ -38,10 +38,11 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
                     alertType: AlertType.INFO,
                     tekst: 'Flyttet behandling tilbake til fakta',
                 });
-                hentBehandlingMedBehandlingId(behandling.behandlingId);
-                navigate(
-                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                );
+                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                    navigate(
+                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                    );
+                });
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||

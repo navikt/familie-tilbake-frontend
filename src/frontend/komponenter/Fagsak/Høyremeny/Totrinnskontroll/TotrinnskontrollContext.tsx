@@ -205,10 +205,11 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                     .then((respons: Ressurs<string>) => {
                         settSenderInn(false);
                         if (respons.status === RessursStatus.SUKSESS) {
-                            hentBehandlingMedBehandlingId(behandling.behandlingId);
-                            navigate(
-                                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
-                            );
+                            hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                                navigate(
+                                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
+                                );
+                            });
                         } else if (
                             respons.status === RessursStatus.FEILET ||
                             respons.status === RessursStatus.FUNKSJONELL_FEIL

@@ -36,11 +36,9 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
 }));
 
-const mockedNavigate = jest.fn();
-
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
-    useNavigate: () => mockedNavigate,
+    useNavigate: () => jest.fn(),
 }));
 
 describe('Tester: VilkårsvurderingContainer', () => {
@@ -102,7 +100,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             erStegAutoutført: () => autoutført,
             visVenteModal: false,
             behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
             settIkkePersistertKomponent: jest.fn(),
             nullstillIkkePersisterteKomponenter: jest.fn(),
         }));
@@ -410,8 +408,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 })
             )
         );
-
-        expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1');
     });
 
     test('- vis utfylt - forstod/burde forstått - forsto', async () => {

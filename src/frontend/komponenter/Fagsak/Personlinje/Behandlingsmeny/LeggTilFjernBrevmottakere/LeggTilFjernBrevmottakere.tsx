@@ -56,10 +56,11 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
             settSenderInn(false);
             if (respons.status === RessursStatus.SUKSESS) {
                 settVisBrevmottakerModal(true);
-                hentBehandlingMedBehandlingId(behandling.behandlingId);
-                navigate(
-                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`
-                );
+                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                    navigate(
+                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`
+                    );
+                });
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||
@@ -79,10 +80,11 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
             settSenderInn(false);
             if (respons.status === RessursStatus.SUKSESS) {
                 settVisFjernModal(false);
-                hentBehandlingMedBehandlingId(behandling.behandlingId);
-                navigate(
-                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                );
+                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                    navigate(
+                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                    );
+                });
             } else if (
                 respons.status === RessursStatus.FEILET ||
                 respons.status === RessursStatus.FUNKSJONELL_FEIL ||

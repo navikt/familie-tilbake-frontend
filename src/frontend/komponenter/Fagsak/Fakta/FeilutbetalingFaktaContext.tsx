@@ -50,6 +50,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             visVenteModal,
             settIkkePersistertKomponent,
             nullstillIkkePersisterteKomponenter,
+            hentBehandlingMedBehandlingId,
         } = useBehandling();
         const { gjerFeilutbetalingFaktaKall, sendInnFeilutbetalingFakta } = useBehandlingApi();
         const { utførRedirect } = useRedirectEtterLagring();
@@ -260,9 +261,11 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                         (respons: Ressurs<string>) => {
                             settSenderInn(false);
                             if (respons.status === RessursStatus.SUKSESS) {
-                                navigate(
-                                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                                );
+                                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                                    navigate(
+                                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                                    );
+                                });
                             }
                         }
                     );

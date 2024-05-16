@@ -76,14 +76,14 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         }
     };
 
-    const hentBehandlingMedBehandlingId = (behandlingId: string): void => {
+    const hentBehandlingMedBehandlingId = (behandlingId: string): Promise<void> => {
         settBehandling(byggHenterRessurs());
         settAktivtSteg(undefined);
         settHarKravgrunnlag(undefined);
         settBehandlingILesemodus(undefined);
         settVentegrunn(undefined);
         settVisVenteModal(false);
-        request<void, IBehandling>({
+        return request<void, IBehandling>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/v1/${behandlingId}`,
         })
