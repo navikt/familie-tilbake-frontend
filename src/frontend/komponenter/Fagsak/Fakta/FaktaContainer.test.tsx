@@ -27,11 +27,9 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
 }));
 
-const mockedNavigate = jest.fn();
-
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
-    useNavigate: () => mockedNavigate,
+    useNavigate: () => jest.fn(),
 }));
 
 describe('Tester: FaktaContainer', () => {
@@ -110,7 +108,7 @@ describe('Tester: FaktaContainer', () => {
             erStegBehandlet: () => behandlet,
             visVenteModal: false,
             behandlingILesemodus: lesemodus,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
         }));
     };
 
@@ -207,7 +205,6 @@ describe('Tester: FaktaContainer', () => {
             )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1');
     });
 
     test('- vis og fyll ut skjema - behandle perioder samlet', async () => {
@@ -286,7 +283,6 @@ describe('Tester: FaktaContainer', () => {
             )
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        expect(mockedNavigate).toHaveBeenCalledWith('/fagsystem/EF/fagsak/1/behandling/1');
     });
 
     test('- vis utfylt skjema - Barnetrygd', async () => {

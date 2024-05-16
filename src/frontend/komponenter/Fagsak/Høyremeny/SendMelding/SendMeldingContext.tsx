@@ -106,10 +106,11 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fa
                 settSenderInn(false);
                 if (respons.status === RessursStatus.SUKSESS) {
                     nullstillSkjema();
-                    hentBehandlingMedBehandlingId(behandling.behandlingId);
-                    navigate(
-                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
-                    );
+                    hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                        navigate(
+                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
+                        );
+                    });
                 }
             });
         } else {
