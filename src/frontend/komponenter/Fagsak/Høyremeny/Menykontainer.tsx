@@ -40,7 +40,7 @@ const Menykontainer: React.FC<IProps> = ({ valgtMenyside, fagsak, behandling }) 
             );
         case Menysider.SEND_BREV:
             return (
-                <SendMeldingProvider behandling={behandling}>
+                <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
                     <SendMelding fagsak={fagsak} behandling={behandling} />
                 </SendMeldingProvider>
             );

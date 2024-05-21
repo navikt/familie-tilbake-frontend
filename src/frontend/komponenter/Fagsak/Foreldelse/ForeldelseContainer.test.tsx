@@ -10,7 +10,7 @@ import { FeilutbetalingForeldelseProvider } from './FeilutbetalingForeldelseCont
 import ForeldelseContainer from './ForeldelseContainer';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Foreldelsevurdering } from '../../../kodeverk';
+import { Fagsystem, Foreldelsevurdering } from '../../../kodeverk';
 import { Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { ForeldelsePeriode, IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
@@ -31,6 +31,11 @@ jest.mock('../../../context/BehandlingContext', () => ({
 
 jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
+}));
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => jest.fn(),
 }));
 
 describe('Tester: ForeldelseContainer', () => {
@@ -94,15 +99,15 @@ describe('Tester: ForeldelseContainer', () => {
             erStegAutoutført: () => autoutført,
             visVenteModal: false,
             behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
         }));
     };
 
     test('- vis og fyll ut perioder og send inn', async () => {
         const user = userEvent.setup();
         setupMock(false, false, false, feilutbetalingForeldelse);
-        const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<IFagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
+        const behandling = mock<IBehandling>({ eksternBrukId: '1' });
 
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } = render(
             <FeilutbetalingForeldelseProvider behandling={behandling} fagsak={fagsak}>

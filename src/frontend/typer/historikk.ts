@@ -16,17 +16,8 @@ export enum Historikkinnslagstype {
     BREV = 'BREV',
 }
 
-export enum Applikasjon {
-    FAMILIE_TILBAKE = 'FAMILIE_TILBAKE',
-}
-
-export const applikasjoner: Record<Applikasjon, string> = {
-    FAMILIE_TILBAKE: 'familie-tilbake',
-};
-
 export interface IHistorikkInnslag {
     behandlingId?: string;
-    applikasjon: Applikasjon;
     aktør: Aktør;
     aktørIdent: string;
     tittel: string;

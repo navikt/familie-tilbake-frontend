@@ -106,12 +106,14 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                             <li>
                                                 <HentOppdatertKravgrunnlag
                                                     behandling={behandling.data}
+                                                    fagsak={fagsak}
                                                     onListElementClick={() => settVisMeny(false)}
                                                 />
                                             </li>
                                             <li>
                                                 <SettBehandlingTilbakeTilFakta
                                                     behandling={behandling.data}
+                                                    fagsak={fagsak}
                                                     onListElementClick={() => settVisMeny(false)}
                                                 />
                                             </li>
@@ -154,6 +156,7 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                         <li>
                                             <OpprettFjernVerge
                                                 behandling={behandling.data}
+                                                fagsak={fagsak}
                                                 onListElementClick={() => settVisMeny(false)}
                                             />
                                         </li>

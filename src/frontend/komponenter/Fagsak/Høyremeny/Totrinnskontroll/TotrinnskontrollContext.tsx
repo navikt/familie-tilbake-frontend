@@ -24,7 +24,7 @@ import { behandlingssteg, Behandlingssteg, IBehandling } from '../../../../typer
 import { IFagsak } from '../../../../typer/fagsak';
 import { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
 import { hentFrontendFeilmelding, validerTekstMaksLengde } from '../../../../utils';
-import { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
+import { ISide, sider } from '../../../Felleskomponenter/Venstremeny/sider';
 
 const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
     const option = totrinnGodkjenningOptions.find(opt => opt.verdi === verdi);
@@ -230,7 +230,11 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                     .then((respons: Ressurs<string>) => {
                         settSenderInn(false);
                         if (respons.status === RessursStatus.SUKSESS) {
-                            hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                            hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                                navigate(
+                                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
+                                );
+                            });
                         } else if (
                             respons.status === RessursStatus.FEILET ||
                             respons.status === RessursStatus.FUNKSJONELL_FEIL

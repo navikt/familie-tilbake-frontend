@@ -10,7 +10,7 @@ import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
 import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { DokumentMal } from '../../../../kodeverk';
+import { DokumentMal, Fagsystem } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak, Målform } from '../../../../typer/fagsak';
 
@@ -30,6 +30,11 @@ jest.mock('../../../../api/dokument', () => ({
     useDokumentApi: jest.fn(),
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => jest.fn(),
+}));
+
 describe('Tester: SendMelding', () => {
     test('- fyller ut skjema og sender varsel', async () => {
         const user = userEvent.setup();
@@ -46,18 +51,21 @@ describe('Tester: SendMelding', () => {
         // @ts-ignore
         useBehandling.mockImplementation(() => ({
             behandlingILesemodus: false,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
         }));
         const behandling = mock<IBehandling>({
             varselSendt: false,
             manuelleBrevmottakere: [],
+            eksternBrukId: '1',
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NB,
+            fagsystem: Fagsystem.EF,
+            eksternFagsakId: '1',
         });
 
         const { getByText, getByLabelText, getByRole, queryByRole, queryByText } = render(
-            <SendMeldingProvider behandling={behandling}>
+            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
                 <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );
@@ -129,18 +137,21 @@ describe('Tester: SendMelding', () => {
         // @ts-ignore
         useBehandling.mockImplementation(() => ({
             behandlingILesemodus: false,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
         }));
         const behandling = mock<IBehandling>({
             varselSendt: true,
             manuelleBrevmottakere: [],
+            eksternBrukId: '1',
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NN,
+            fagsystem: Fagsystem.EF,
+            eksternFagsakId: '1',
         });
 
         const { getByText, getByLabelText, getByRole, queryByText } = render(
-            <SendMeldingProvider behandling={behandling}>
+            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
                 <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );
@@ -194,18 +205,21 @@ describe('Tester: SendMelding', () => {
         // @ts-ignore
         useBehandling.mockImplementation(() => ({
             behandlingILesemodus: false,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
         }));
         const behandling = mock<IBehandling>({
             varselSendt: true,
             manuelleBrevmottakere: [],
+            eksternBrukId: '1',
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NB,
+            fagsystem: Fagsystem.EF,
+            eksternFagsakId: '1',
         });
 
         const { getByText, getByLabelText, getByRole } = render(
-            <SendMeldingProvider behandling={behandling}>
+            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
                 <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );
@@ -260,7 +274,7 @@ describe('Tester: SendMelding', () => {
         // @ts-ignore
         useBehandling.mockImplementation(() => ({
             behandlingILesemodus: true,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
         }));
         const behandling = mock<IBehandling>({
             varselSendt: false,
@@ -268,10 +282,12 @@ describe('Tester: SendMelding', () => {
         });
         const fagsak = mock<IFagsak>({
             språkkode: Målform.NB,
+            fagsystem: Fagsystem.EF,
+            eksternFagsakId: '1',
         });
 
         const { getByText, getByRole, queryByLabelText } = render(
-            <SendMeldingProvider behandling={behandling}>
+            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
                 <SendMelding fagsak={fagsak} behandling={behandling} />
             </SendMeldingProvider>
         );

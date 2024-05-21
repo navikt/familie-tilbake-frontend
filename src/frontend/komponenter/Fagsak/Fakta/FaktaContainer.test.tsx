@@ -10,7 +10,7 @@ import FaktaContainer from './FaktaContainer';
 import { FeilutbetalingFaktaProvider } from './FeilutbetalingFaktaContext';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { HendelseType, HendelseUndertype, Ytelsetype } from '../../../kodeverk';
+import { Fagsystem, HendelseType, HendelseUndertype, Ytelsetype } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import {
@@ -25,6 +25,11 @@ jest.mock('../../../context/BehandlingContext', () => ({
 
 jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
+}));
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => jest.fn(),
 }));
 
 describe('Tester: FaktaContainer', () => {
@@ -76,6 +81,8 @@ describe('Tester: FaktaContainer', () => {
     };
     const fagsak = mock<IFagsak>({
         institusjon: undefined,
+        fagsystem: Fagsystem.EF,
+        eksternFagsakId: '1',
     });
 
     const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: IFeilutbetalingFakta) => {
@@ -101,14 +108,14 @@ describe('Tester: FaktaContainer', () => {
             erStegBehandlet: () => behandlet,
             visVenteModal: false,
             behandlingILesemodus: lesemodus,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
         }));
     };
 
     test('- vis og fyll ut skjema', async () => {
         const user = userEvent.setup();
         setupMock(false, false, feilutbetalingFakta);
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ eksternBrukId: '1' });
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
@@ -203,7 +210,7 @@ describe('Tester: FaktaContainer', () => {
     test('- vis og fyll ut skjema - behandle perioder samlet', async () => {
         const user = userEvent.setup();
         setupMock(false, false, feilutbetalingFakta);
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ eksternBrukId: '1' });
 
         const { getByText, getByLabelText, getByRole, getAllByRole, getByTestId, queryAllByText } =
             render(

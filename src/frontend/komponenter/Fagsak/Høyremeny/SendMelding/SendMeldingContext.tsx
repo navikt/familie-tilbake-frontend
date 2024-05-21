@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import createUseContext from 'constate';
+import { useNavigate } from 'react-router-dom';
 
 import {
     type Avhengigheter,
@@ -17,7 +18,9 @@ import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal } from '../../../../kodeverk';
 import { BrevPayload } from '../../../../typer/api';
 import { IBehandling } from '../../../../typer/behandling';
+import { IFagsak } from '../../../../typer/fagsak';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../utils';
+import { sider } from '../../../Felleskomponenter/Venstremeny/sider';
 
 interface Mottaker {
     verdi: string;
@@ -42,12 +45,14 @@ const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter) =>
 
 interface IProps {
     behandling: IBehandling;
+    fagsak: IFagsak;
 }
 
-const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: IProps) => {
+const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fagsak }: IProps) => {
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
     const { bestillBrev } = useDokumentApi();
+    const navigate = useNavigate();
 
     const maler = [
         behandling.varselSendt ? DokumentMal.KORRIGERT_VARSEL : DokumentMal.VARSEL,
@@ -101,7 +106,11 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: 
                 settSenderInn(false);
                 if (respons.status === RessursStatus.SUKSESS) {
                     nullstillSkjema();
-                    hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                    hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                        navigate(
+                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
+                        );
+                    });
                 }
             });
         } else {

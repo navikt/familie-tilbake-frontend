@@ -264,7 +264,11 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                     .then((respons: Ressurs<string>) => {
                         settSenderInn(false);
                         if (respons.status === RessursStatus.SUKSESS) {
-                            hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                            hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                                navigate(
+                                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                                );
+                            });
                         } else if (
                             respons.status === RessursStatus.FEILET ||
                             respons.status === RessursStatus.FUNKSJONELL_FEIL
@@ -290,7 +294,11 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                     .then((respons: Ressurs<string>) => {
                         settSenderInn(false);
                         if (respons.status === RessursStatus.SUKSESS) {
-                            hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                            hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                                navigate(
+                                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                                );
+                            });
                         } else if (
                             respons.status === RessursStatus.FEILET ||
                             respons.status === RessursStatus.FUNKSJONELL_FEIL
