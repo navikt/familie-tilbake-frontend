@@ -12,7 +12,7 @@ export const redirectHvisInternUrlIPreprod = () => {
     return async (req: Request, res: Response, next: NextFunction) => {
         if (
             process.env.ENV === 'preprod' &&
-            req.headers.host === 'familie-tilbake-frontend.ansatt.dev.nav.no'
+            req.headers.host === 'familie-tilbake-frontend.intern.dev.nav.no'
         ) {
             res.redirect(`https://familie-tilbake-frontend.ansatt.dev.nav.no${req.url}`);
         } else {
