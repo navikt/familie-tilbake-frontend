@@ -15,6 +15,7 @@ import {
 import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import {
     PeriodeVilkårsvurderingStegPayload,
@@ -103,6 +104,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         } = useBehandling();
         const { gjerFeilutbetalingVilkårsvurderingKall, sendInnFeilutbetalingVilkårsvurdering } =
             useBehandlingApi();
+        const { utførRedirect } = useRedirectEtterLagring();
         const navigate = useNavigate();
         const kanIleggeRenter = ![Ytelsetype.BARNETRYGD, Ytelsetype.KONTANTSTØTTE].includes(
             fagsak.ytelsestype
@@ -278,7 +280,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                 nullstillIkkePersisterteKomponenter();
                 const ikkeForeldetPerioder = skjemaData.filter(per => !per.foreldet);
                 if (stegErBehandlet && !harEndretOpplysninger(ikkeForeldetPerioder)) {
-                    gåTilNesteSteg();
+                    utførRedirect(`${behandlingUrl}/${sider.VEDTAK.href}`);
                 } else {
                     settSenderInn(true);
                     const payload: VilkårdsvurderingStegPayload = {
