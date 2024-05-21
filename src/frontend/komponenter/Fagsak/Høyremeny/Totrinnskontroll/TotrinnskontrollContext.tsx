@@ -195,7 +195,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             kallAngreSendTilBeslutter(behandling.behandlingId)
                 .then((res: Ressurs<string>) => {
                     if (res.status === RessursStatus.SUKSESS) {
-                        hentBehandlingMedBehandlingId(behandling.behandlingId, true);
+                        hentBehandlingMedBehandlingId(behandling.behandlingId);
                     } else {
                         settFeilmelding(
                             hentFrontendFeilmelding(res) ??
