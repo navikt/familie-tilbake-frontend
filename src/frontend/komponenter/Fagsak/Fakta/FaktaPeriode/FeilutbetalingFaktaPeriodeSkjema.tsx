@@ -6,6 +6,7 @@ import { styled } from 'styled-components';
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
 
+import { useBehandling } from '../../../../context/BehandlingContext';
 import {
     hendelsetyper,
     HendelseType,
@@ -35,8 +36,9 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     erLesevisning,
 }) => {
     const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<Array<HendelseUndertype>>();
-    const { oppdaterÅrsakPåPeriode, oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger } =
+    const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
         useFeilutbetalingFakta();
+    const { settIkkePersistertKomponent } = useBehandling();
 
     React.useEffect(() => {
         if (periode.hendelsestype) {
@@ -50,11 +52,13 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const årsak = HendelseType[e.target.value as keyof typeof HendelseType];
         settHendelseUnderTyper(hentHendelseUndertyper(årsak));
+        settIkkePersistertKomponent('fakta');
         oppdaterÅrsakPåPeriode(periode, årsak);
     };
 
     const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const underÅrsak = HendelseUndertype[e.target.value as keyof typeof HendelseUndertype];
+        settIkkePersistertKomponent('fakta');
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);
     };
 

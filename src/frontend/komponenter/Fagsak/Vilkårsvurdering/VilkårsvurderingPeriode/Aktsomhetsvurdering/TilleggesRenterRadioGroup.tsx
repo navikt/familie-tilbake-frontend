@@ -4,6 +4,7 @@ import { BodyShort, Label, Radio } from '@navikt/ds-react';
 import type { Felt } from '@navikt/familie-skjema';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { JaNeiOption, jaNeiOptions } from '../VilkårsvurderingPeriodeSkjemaContext';
 
@@ -19,6 +20,8 @@ const TilleggesRenterRadioGroup: React.FC<IProps> = ({
     felt,
     visFeilmeldingerForSkjema,
 }) => {
+    const { settIkkePersistertKomponent } = useBehandling();
+
     return erLesevisning || !kanIlleggeRenter ? (
         <div>
             <Label>Skal det tillegges renter?</Label>
@@ -35,7 +38,10 @@ const TilleggesRenterRadioGroup: React.FC<IProps> = ({
                 felt.feilmelding
             }
             marginbottom="none"
-            onChange={(val: JaNeiOption) => felt.validerOgSettFelt(val)}
+            onChange={(val: JaNeiOption) => {
+                felt.validerOgSettFelt(val);
+                settIkkePersistertKomponent(`vilkårsvurdering`);
+            }}
         >
             {jaNeiOptions.map(opt => (
                 <Radio

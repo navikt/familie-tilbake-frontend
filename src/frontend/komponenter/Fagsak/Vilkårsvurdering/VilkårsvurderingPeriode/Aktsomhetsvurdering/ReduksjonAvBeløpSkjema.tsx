@@ -15,6 +15,7 @@ import {
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
@@ -40,6 +41,7 @@ interface IProps {
 }
 
 const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+    const { settIkkePersistertKomponent } = useBehandling();
     const { valgtPeriode, kanIlleggeRenter } = useFeilutbetalingVilkårsvurdering();
     const harMerEnnEnAktivitet = skjema.felter.harMerEnnEnAktivitet.verdi === true;
     const erEgendefinert =
@@ -79,6 +81,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                     if (skalPreutfylleUtenRenter) {
                         skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(OptionNEI);
                     }
+                    settIkkePersistertKomponent('vilkårsvurdering');
                     return skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(val);
                 }}
             >
@@ -109,11 +112,12 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                         id="andelSomTilbakekreves"
                                         aria-label="Angi andel som skal tilbakekreves"
                                         readOnly={erLesevisning}
-                                        onChange={event =>
+                                        onChange={event => {
                                             skjema.felter.uaktsomAndelTilbakekreves.validerOgSettFelt(
                                                 event.target.value
-                                            )
-                                        }
+                                            );
+                                            settIkkePersistertKomponent('vilkårsvurdering');
+                                        }}
                                         value={skjema.felter.uaktsomAndelTilbakekreves.verdi}
                                         style={{ width: '100px' }}
                                     >
@@ -141,11 +145,12 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                         id="andelSomTilbakekrevesManuell"
                                         aria-label="Angi andel som skal tilbakekreves - fritekst"
                                         readOnly={erLesevisning}
-                                        onChange={event =>
+                                        onChange={event => {
                                             skjema.felter.uaktsomAndelTilbakekrevesManuelt.validerOgSettFelt(
                                                 event.target.value
-                                            )
-                                        }
+                                            );
+                                            settIkkePersistertKomponent('vilkårsvurdering');
+                                        }}
                                         value={skjema.felter.uaktsomAndelTilbakekrevesManuelt.verdi}
                                         data-testid="andelSomTilbakekrevesManuell"
                                         style={{ width: '100px' }}
@@ -163,11 +168,12 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                 label={'Angi beløp som skal tilbakekreves'}
                                 readOnly={erLesevisning}
                                 value={skjema.felter.uaktsomTilbakekrevesBeløp.verdi}
-                                onChange={event =>
+                                onChange={event => {
                                     skjema.felter.uaktsomTilbakekrevesBeløp.validerOgSettFelt(
                                         event.target.value
-                                    )
-                                }
+                                    );
+                                    settIkkePersistertKomponent('vilkårsvurdering');
+                                }}
                                 style={{ width: '100px' }}
                             />
                         )}

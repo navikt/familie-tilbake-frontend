@@ -4,6 +4,7 @@ import { Radio } from '@navikt/ds-react';
 import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
@@ -21,6 +22,7 @@ interface IProps {
 }
 
 const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+    const { settIkkePersistertKomponent } = useBehandling();
     const erValgtResultatTypeForstoBurdeForstaatt =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
@@ -48,9 +50,10 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                     ? skjema.felter.tilbakekrevSmåbeløp.feilmelding?.toString()
                                     : ''
                             }
-                            onChange={(val: JaNeiOption) =>
-                                skjema.felter.tilbakekrevSmåbeløp.validerOgSettFelt(val)
-                            }
+                            onChange={(val: JaNeiOption) => {
+                                skjema.felter.tilbakekrevSmåbeløp.validerOgSettFelt(val);
+                                settIkkePersistertKomponent(`vilkårsvurdering`);
+                            }}
                         >
                             {jaNeiOptions.map(opt => (
                                 <Radio
