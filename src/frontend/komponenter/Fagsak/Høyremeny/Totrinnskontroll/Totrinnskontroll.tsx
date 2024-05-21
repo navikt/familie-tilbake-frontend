@@ -32,7 +32,6 @@ const Totrinnskontroll: React.FC = () => {
     const {
         totrinnkontroll,
         skjemaData,
-        fatteVedtakILåsemodus,
         nonUsedKey,
         oppdaterGodkjenning,
         oppdaterBegrunnelse,
@@ -45,8 +44,8 @@ const Totrinnskontroll: React.FC = () => {
         fatteVedtakRespons,
         angreSendTilBeslutter,
         feilmelding,
+        erLesevisning,
     } = useTotrinnskontroll();
-    const erLesevisning = fatteVedtakILåsemodus;
 
     const { aktivtSteg } = useBehandling();
 
@@ -68,7 +67,7 @@ const Totrinnskontroll: React.FC = () => {
                                 <Spacer20 />
                             </>
                         )}
-                    {!fatteVedtakILåsemodus && (
+                    {!erLesevisning && (
                         <>
                             <Steginformasjon
                                 behandletSteg={stegErBehandlet}
@@ -77,18 +76,19 @@ const Totrinnskontroll: React.FC = () => {
                             <Spacer20 />
                         </>
                     )}
-                    {aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK && (
-                        <AngreSendTilBeslutterContainer>
-                            <Button
-                                size="small"
-                                variant={'secondary'}
-                                onClick={angreSendTilBeslutter}
-                            >
-                                Angre sendt til beslutter
-                            </Button>
-                            {feilmelding && <Alert variant={'error'}>{feilmelding}</Alert>}
-                        </AngreSendTilBeslutterContainer>
-                    )}
+                    {aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
+                        erLesevisning && (
+                            <AngreSendTilBeslutterContainer>
+                                <Button
+                                    size="small"
+                                    variant={'secondary'}
+                                    onClick={angreSendTilBeslutter}
+                                >
+                                    Angre sendt til beslutter
+                                </Button>
+                                {feilmelding && <Alert variant={'error'}>{feilmelding}</Alert>}
+                            </AngreSendTilBeslutterContainer>
+                        )}
                     {skjemaData.map(totrinnSteg => {
                         const side = finnSideForSteg(totrinnSteg.behandlingssteg);
                         const vurdertIkkeGodkjent = totrinnSteg.godkjent === OptionIkkeGodkjent;

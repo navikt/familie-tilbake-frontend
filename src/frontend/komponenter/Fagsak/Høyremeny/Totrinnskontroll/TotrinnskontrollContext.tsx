@@ -49,7 +49,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
     ({ fagsak, behandling }: IProps) => {
         const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<ITotrinnkontroll>>();
         const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
-        const [fatteVedtakILåsemodus, settFatteVedtakILåsemodus] = useState<boolean>(false);
+        const [erLesevisning, settErLesevisning] = useState<boolean>(false);
         const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
         const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
         const [senderInn, settSenderInn] = useState<boolean>(false);
@@ -71,9 +71,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
         useEffect(() => {
             if (visVenteModal === false) {
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.FATTE_VEDTAK));
-                settFatteVedtakILåsemodus(
-                    !behandling.kanEndres || erBehandlingReturnertFraBeslutter()
-                );
+                settErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
                 hentTotrinnkontroll();
             }
         }, [behandling]);
@@ -260,7 +258,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
         return {
             stegErBehandlet,
-            fatteVedtakILåsemodus,
             navigerTilSide,
             totrinnkontroll,
             skjemaData,
@@ -274,6 +271,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             fatteVedtakRespons,
             angreSendTilBeslutter,
             feilmelding,
+            erLesevisning,
         };
     }
 );
