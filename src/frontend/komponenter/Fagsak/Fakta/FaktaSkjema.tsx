@@ -6,6 +6,7 @@ import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerio
 import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 import { FaktaSkjemaData } from './typer/feilutbetalingFakta';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { Ytelsetype } from '../../../kodeverk';
 import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
@@ -36,6 +37,7 @@ const FaktaSkjema: React.FC<IProps> = ({
         senderInn,
         gåTilForrige,
     } = useFeilutbetalingFakta();
+    const { settIkkePersistertKomponent } = useBehandling();
 
     return (
         <HGrid columns={2} gap="10">
@@ -92,7 +94,10 @@ const FaktaSkjema: React.FC<IProps> = ({
                     label={'Forklar årsaken(e) til feilutbetalingen'}
                     readOnly={erLesevisning}
                     value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
-                    onChange={e => oppdaterBegrunnelse(e.target.value)}
+                    onChange={e => {
+                        settIkkePersistertKomponent('fakta');
+                        oppdaterBegrunnelse(e.target.value);
+                    }}
                     maxLength={3000}
                     className={erLesevisning ? 'lesevisning' : ''}
                     error={
