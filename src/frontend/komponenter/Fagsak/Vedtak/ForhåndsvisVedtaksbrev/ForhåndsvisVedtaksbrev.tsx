@@ -4,11 +4,7 @@ import { useForhåndsvisVedtaksbrev } from './useForhåndsvisVedtaksbrev';
 import { FTButton } from '../../../Felleskomponenter/Flytelementer';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
-interface IProps {
-    test?: boolean;
-}
-
-const ForhåndsvisVedtaksbrev: React.FC<IProps> = () => {
+const ForhåndsvisVedtaksbrev: React.FC = () => {
     const {
         hentetForhåndsvisning,
         hentVedtaksbrev,

@@ -94,7 +94,11 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
         const [nonUsedKey, settNonUsedKey] = React.useState<string>(Date.now().toString());
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
         const [foreslåVedtakRespons, settForeslåVedtakRespons] = React.useState<Ressurs<string>>();
-        const { visVenteModal, hentBehandlingMedBehandlingId } = useBehandling();
+        const {
+            visVenteModal,
+            hentBehandlingMedBehandlingId,
+            nullstillIkkePersisterteKomponenter,
+        } = useBehandling();
         const { gjerVedtaksbrevteksterKall, gjerBeregningsresultatKall, sendInnForeslåVedtak } =
             useBehandlingApi();
         const { lagreUtkastVedtaksbrev } = useDokumentApi();
@@ -256,6 +260,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             if (!harPåkrevetFritekstMenIkkeUtfylt && validerAlleAvsnittOk(true)) {
                 settSenderInn(true);
                 settForeslåVedtakRespons(undefined);
+                nullstillIkkePersisterteKomponenter();
                 const payload: ForeslåVedtakStegPayload = {
                     '@type': 'FORESLÅ_VEDTAK',
                     fritekstavsnitt: lagFritekstavsnitt(),
@@ -290,6 +295,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             if (validerAlleAvsnittOk(false)) {
                 settSenderInn(true);
                 settForeslåVedtakRespons(undefined);
+                nullstillIkkePersisterteKomponenter();
                 lagreUtkastVedtaksbrev(behandling.behandlingId, lagFritekstavsnitt())
                     .then((respons: Ressurs<string>) => {
                         settSenderInn(false);

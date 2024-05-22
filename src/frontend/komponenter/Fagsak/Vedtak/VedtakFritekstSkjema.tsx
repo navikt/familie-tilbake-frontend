@@ -7,6 +7,7 @@ import { BodyShort, Link, Textarea } from '@navikt/ds-react';
 
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { harVerdi, isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 
@@ -27,12 +28,14 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
     maximumLength,
     erLesevisning,
 }) => {
-    const [fritekstfeltErSynlig, settFritekstfeltErSynlig] = React.useState<boolean>();
     const { oppdaterUnderavsnitt } = useFeilutbetalingVedtak();
+    const { settIkkePersistertKomponent } = useBehandling();
+    const { fritekst, fritekstPåkrevet, index, harFeil, feilmelding } = underavsnitt;
+    const [fritekstfeltErSynlig, settFritekstfeltErSynlig] = React.useState<boolean>();
 
     React.useEffect(() => {
-        settFritekstfeltErSynlig(harVerdi(underavsnitt.fritekst) || underavsnitt.fritekstPåkrevet);
-    }, [underavsnitt]);
+        settFritekstfeltErSynlig(harVerdi(fritekst) || fritekstPåkrevet);
+    }, [fritekst, fritekstPåkrevet]);
 
     const lenkeKnappErSynlig = !fritekstfeltErSynlig && !erLesevisning;
 
@@ -40,9 +43,10 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
         const maxLength = maximumLength ? maximumLength : 4000;
         const nyVerdi = e.target.value;
         const feilmelding =
-            isEmpty(nyVerdi) && !underavsnitt.fritekstPåkrevet
+            isEmpty(nyVerdi) && !fritekstPåkrevet
                 ? undefined
                 : validerTekstMaksLengde(maxLength)(nyVerdi);
+        settIkkePersistertKomponent('vedtak');
         oppdaterUnderavsnitt(avsnittIndex, {
             ...underavsnitt,
             fritekst: nyVerdi,
@@ -58,7 +62,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                     <Spacer8 />
                     <Link
                         role="button"
-                        data-testid={`legg-til-fritekst-${avsnittIndex}-${underavsnitt.index}`}
+                        data-testid={`legg-til-fritekst-${avsnittIndex}-${index}`}
                         onClick={e => {
                             e.preventDefault();
                             settFritekstfeltErSynlig(true);
@@ -81,14 +85,14 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                     <Spacer8 />
                     <Textarea
                         name={'fritekst'}
-                        data-testid={`fritekst-${avsnittIndex}-${underavsnitt.index}`}
+                        data-testid={`fritekst-${avsnittIndex}-${index}`}
                         label={!erLesevisning ? 'Utdypende tekst' : undefined}
                         readOnly={erLesevisning}
                         maxLength={maximumLength ? maximumLength : 4000}
                         minLength={3}
-                        value={underavsnitt.fritekst ? underavsnitt.fritekst : ''}
+                        value={fritekst ? fritekst : ''}
                         onChange={event => onChange(event)}
-                        error={underavsnitt.harFeil ? underavsnitt.feilmelding : null}
+                        error={harFeil ? feilmelding : null}
                     />
                     <Spacer8 />
                 </>

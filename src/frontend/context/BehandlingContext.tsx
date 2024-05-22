@@ -53,12 +53,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         settIkkePersisterteKomponenter(new Set(ikkePersisterteKomponenter).add(komponentId));
     };
 
-    const nullstillIkkePersistertKomponent = (komponentId: string) => {
-        const kopi = new Set(ikkePersisterteKomponenter);
-        kopi.delete(komponentId);
-        settIkkePersisterteKomponenter(kopi);
-    };
-
     const nullstillIkkePersisterteKomponenter = () => {
         if (ikkePersisterteKomponenter.size > 0) {
             settIkkePersisterteKomponenter(new Set());
@@ -210,7 +204,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         visBrevmottakerModal,
         settVisBrevmottakerModal,
         settIkkePersistertKomponent,
-        nullstillIkkePersistertKomponent,
         nullstillIkkePersisterteKomponenter,
     };
 });
