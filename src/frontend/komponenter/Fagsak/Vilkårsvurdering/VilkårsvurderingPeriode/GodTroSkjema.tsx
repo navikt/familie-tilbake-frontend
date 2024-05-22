@@ -11,6 +11,7 @@ import {
     OptionJA,
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 
@@ -24,6 +25,8 @@ interface IProps {
 }
 
 const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+    const { settIkkePersistertKomponent } = useBehandling();
+
     const ugyldigErBeløpetIBeholdValgt =
         skjema.visFeilmeldinger &&
         skjema.felter.erBeløpetIBehold.valideringsstatus === Valideringsstatus.FEIL;
@@ -43,9 +46,10 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                         ? skjema.felter.erBeløpetIBehold.feilmelding?.toString()
                         : ''
                 }
-                onChange={(val: JaNeiOption) =>
-                    skjema.felter.erBeløpetIBehold.validerOgSettFelt(val)
-                }
+                onChange={(val: JaNeiOption) => {
+                    skjema.felter.erBeløpetIBehold.validerOgSettFelt(val);
+                    settIkkePersistertKomponent(`vilkårsvurdering`);
+                }}
             >
                 {jaNeiOptions.map(opt => (
                     <Radio key={opt.label} name="erBelopetIBehold" value={opt}>
@@ -63,11 +67,12 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                             id="tilbakekrevdBelop"
                             label={'Angi beløp som skal tilbakekreves'}
                             readOnly={erLesevisning}
-                            onChange={event =>
+                            onChange={event => {
                                 skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
                                     event.target.value
-                                )
-                            }
+                                );
+                                settIkkePersistertKomponent(`vilkårsvurdering`);
+                            }}
                             value={skjema.felter.godTroTilbakekrevesBeløp.verdi}
                             style={{ width: '6rem' }}
                         />

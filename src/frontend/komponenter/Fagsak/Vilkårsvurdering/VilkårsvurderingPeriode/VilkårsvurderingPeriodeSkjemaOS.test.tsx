@@ -36,6 +36,14 @@ jest.mock('../FeilutbetalingVilkårsvurderingContext', () => {
     };
 });
 
+jest.mock('../../../../context/BehandlingContext', () => {
+    return {
+        useBehandling: () => ({
+            settIkkePersistertKomponent: jest.fn(),
+        }),
+    };
+});
+
 describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     const behandling = mock<IBehandling>();
     const fagsak = mock<IFagsak>({

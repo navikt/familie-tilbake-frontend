@@ -50,7 +50,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
 
     const settIkkePersistertKomponent = (komponentId: string) => {
         if (ikkePersisterteKomponenter.has(komponentId)) return;
-
         settIkkePersisterteKomponenter(new Set(ikkePersisterteKomponenter).add(komponentId));
     };
 
@@ -206,10 +205,10 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         harKravgrunnlag,
         lagLenkeTilRevurdering,
         åpenHøyremeny,
+        harUlagredeData,
         settÅpenHøyremeny,
         visBrevmottakerModal,
         settVisBrevmottakerModal,
-        harUlagredeData,
         settIkkePersistertKomponent,
         nullstillIkkePersistertKomponent,
         nullstillIkkePersisterteKomponenter,

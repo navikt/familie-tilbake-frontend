@@ -4,6 +4,7 @@ import { Checkbox, CheckboxGroup, Detail, Textarea, VStack } from '@navikt/ds-re
 import { type ISkjema } from '@navikt/familie-skjema';
 
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
@@ -13,6 +14,7 @@ interface IProps {
 }
 
 const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+    const { settIkkePersistertKomponent } = useBehandling();
     const [nonUsedKey, settNonUsedKey] = React.useState<string>(Date.now().toString());
 
     React.useEffect(() => {
@@ -24,6 +26,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
         if (val.indexOf(SærligeGrunner.ANNET) > -1) {
             skjema.felter.særligeGrunnerAnnetBegrunnelse.nullstill();
         }
+        settIkkePersistertKomponent(`vilkårsvurdering`);
         settNonUsedKey(Date.now().toString());
     };
 
@@ -39,9 +42,10 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                 maxLength={3000}
                 readOnly={erLesevisning}
                 value={skjema.felter.særligeGrunnerBegrunnelse.verdi}
-                onChange={event =>
-                    skjema.felter.særligeGrunnerBegrunnelse.validerOgSettFelt(event.target.value)
-                }
+                onChange={event => {
+                    skjema.felter.særligeGrunnerBegrunnelse.validerOgSettFelt(event.target.value);
+                    settIkkePersistertKomponent(`vilkårsvurdering`);
+                }}
                 placeholder={
                     'Begrunn om det foreligger/ ikke foreligger særlige grunner for reduksjon av beløpet som kreves tilbake. Kryss av hvilke særlige grunner som er vektlagt for resultatet'
                 }
@@ -73,11 +77,12 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                         maxLength={3000}
                         readOnly={erLesevisning}
                         value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
-                        onChange={event =>
+                        onChange={event => {
                             skjema.felter.særligeGrunnerAnnetBegrunnelse.validerOgSettFelt(
                                 event.target.value
-                            )
-                        }
+                            );
+                            settIkkePersistertKomponent(`vilkårsvurdering`);
+                        }}
                         data-testid={'annetBegrunnelse'}
                     />
                 )}

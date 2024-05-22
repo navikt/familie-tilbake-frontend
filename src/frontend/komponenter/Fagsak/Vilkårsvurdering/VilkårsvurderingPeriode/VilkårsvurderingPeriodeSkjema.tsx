@@ -30,6 +30,7 @@ import {
     useVilkårsvurderingPeriodeSkjema,
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import {
     Aktsomhet,
     SærligeGrunner,
@@ -213,6 +214,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
+    const { settIkkePersistertKomponent } = useBehandling();
 
     React.useEffect(() => {
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
@@ -224,6 +226,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         const valgtPeriodeIndex = event.target.value;
         if (valgtPeriodeIndex !== '-') {
             const per = behandletPerioder.find(per => per.index === valgtPeriodeIndex);
+            settIkkePersistertKomponent('vilkårsvurdering');
             if (per) {
                 settSkjemadataFraPeriode(skjema, per, kanIlleggeRenter);
                 event.target.value = '-';
@@ -330,11 +333,12 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                 maxLength={3000}
                                 readOnly={erLesevisning}
                                 value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
-                                onChange={event =>
+                                onChange={event => {
                                     skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
                                         event.target.value
-                                    )
-                                }
+                                    );
+                                    settIkkePersistertKomponent('vilkårsvurdering');
+                                }}
                             />
                             <RadioGroup
                                 id="valgtVilkarResultatType"
@@ -346,9 +350,10 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         ? skjema.felter.vilkårsresultatvurdering.feilmelding?.toString()
                                         : ''
                                 }
-                                onChange={(val: Vilkårsresultat) =>
-                                    skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(val)
-                                }
+                                onChange={(val: Vilkårsresultat) => {
+                                    skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(val);
+                                    settIkkePersistertKomponent('vilkårsvurdering');
+                                }}
                             >
                                 {vilkårsresultatTyper.map(type => (
                                     <StyledVilkårsresultatRadio
@@ -395,11 +400,12 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                             ? skjema.felter.aktsomhetBegrunnelse.verdi
                                             : ''
                                     }
-                                    onChange={event =>
+                                    onChange={event => {
                                         skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(
                                             event.target.value
-                                        )
-                                    }
+                                        );
+                                        settIkkePersistertKomponent('vilkårsvurdering');
+                                    }}
                                     maxLength={3000}
                                 />
                                 {erGodTro ? (

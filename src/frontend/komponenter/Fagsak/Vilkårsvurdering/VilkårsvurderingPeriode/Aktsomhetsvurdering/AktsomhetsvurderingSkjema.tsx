@@ -5,6 +5,7 @@ import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import GradForsettSkjema from './GradForsettSkjema';
 import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import {
     Aktsomhet,
     aktsomheter,
@@ -24,6 +25,7 @@ interface IProps {
 }
 
 const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+    const { settIkkePersistertKomponent } = useBehandling();
     const erForstodBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
 
@@ -56,6 +58,7 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                     if (skalPreutfylleUtenRenter) {
                         skjema.felter.forstoIlleggeRenter.validerOgSettFelt(OptionNEI);
                     }
+                    settIkkePersistertKomponent(`vilkårsvurdering`);
                     return skjema.felter.aktsomhetVurdering.validerOgSettFelt(val);
                 }}
             >

@@ -15,6 +15,7 @@ import {
 import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import {
     PeriodeVilkårsvurderingStegPayload,
@@ -94,10 +95,16 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
         const [valideringsfeil, settValideringsfeil] = React.useState<boolean>(false);
         const [valideringsFeilmelding, settValideringsFeilmelding] = React.useState<string>();
-        const { erStegBehandlet, erStegAutoutført, visVenteModal, hentBehandlingMedBehandlingId } =
-            useBehandling();
+        const {
+            erStegBehandlet,
+            erStegAutoutført,
+            visVenteModal,
+            hentBehandlingMedBehandlingId,
+            nullstillIkkePersisterteKomponenter,
+        } = useBehandling();
         const { gjerFeilutbetalingVilkårsvurderingKall, sendInnFeilutbetalingVilkårsvurdering } =
             useBehandlingApi();
+        const { utførRedirect } = useRedirectEtterLagring();
         const navigate = useNavigate();
         const kanIleggeRenter = ![Ytelsetype.BARNETRYGD, Ytelsetype.KONTANTSTØTTE].includes(
             fagsak.ytelsestype
@@ -124,10 +131,10 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                     };
                     return skjemaPeriode;
                 });
-                const valgtVilkårsperiode = utledValgtPeriode(skjemaPerioder, behandling.status);
 
                 settSkjemaData(skjemaPerioder);
 
+                const valgtVilkårsperiode = utledValgtPeriode(skjemaPerioder, behandling.status);
                 if (valgtVilkårsperiode) {
                     settValgtPeriode(valgtVilkårsperiode);
                 }
@@ -270,9 +277,10 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             settValideringsFeilmelding(undefined);
             settValideringsfeil(false);
             if (validerPerioder()) {
+                nullstillIkkePersisterteKomponenter();
                 const ikkeForeldetPerioder = skjemaData.filter(per => !per.foreldet);
                 if (stegErBehandlet && !harEndretOpplysninger(ikkeForeldetPerioder)) {
-                    gåTilNesteSteg();
+                    utførRedirect(`${behandlingUrl}/${sider.VEDTAK.href}`);
                 } else {
                     settSenderInn(true);
                     const payload: VilkårdsvurderingStegPayload = {
