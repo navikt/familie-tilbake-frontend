@@ -7,7 +7,7 @@ import { BodyShort, Link, Textarea } from '@navikt/ds-react';
 
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
-import { isEmpty, validerTekstMaksLengde } from '../../../utils';
+import { harVerdi, isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 
 const StyledUndertekst = styled(BodyShort)`
@@ -27,12 +27,14 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
     maximumLength,
     erLesevisning,
 }) => {
-    const [isTextfieldHidden, hideTextField] = React.useState<boolean>();
+    const [fritekstfeltErSynlig, settFritekstfeltErSynlig] = React.useState<boolean>();
     const { oppdaterUnderavsnitt } = useFeilutbetalingVedtak();
 
     React.useEffect(() => {
-        hideTextField(!underavsnitt.fritekst && !underavsnitt.fritekstPåkrevet);
+        settFritekstfeltErSynlig(harVerdi(underavsnitt.fritekst) || underavsnitt.fritekstPåkrevet);
     }, [underavsnitt]);
+
+    const lenkeKnappErSynlig = !fritekstfeltErSynlig && !erLesevisning;
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const maxLength = maximumLength ? maximumLength : 4000;
@@ -51,7 +53,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
 
     return (
         <>
-            {isTextfieldHidden && !erLesevisning && (
+            {lenkeKnappErSynlig && (
                 <>
                     <Spacer8 />
                     <Link
@@ -59,12 +61,12 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                         data-testid={`legg-til-fritekst-${avsnittIndex}-${underavsnitt.index}`}
                         onClick={e => {
                             e.preventDefault();
-                            hideTextField(false);
+                            settFritekstfeltErSynlig(true);
                         }}
                         onKeyUp={e => {
                             const key = e.code || e.keyCode;
                             if (key === 'Space' || key === 'Enter' || key === 32 || key === 13) {
-                                hideTextField(false);
+                                settFritekstfeltErSynlig(true);
                             }
                         }}
                         href="#"
@@ -74,7 +76,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                     </Link>
                 </>
             )}
-            {!isTextfieldHidden && (
+            {fritekstfeltErSynlig && (
                 <>
                     <Spacer8 />
                     <Textarea

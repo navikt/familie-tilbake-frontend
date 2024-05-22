@@ -78,7 +78,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
 
     React.useEffect(() => {
-        // console.log('bør no trigge re-rendring');
+        // Skal trigge re-rendring
     }, [nonUsedKey]);
 
     if (!behandling) return null;

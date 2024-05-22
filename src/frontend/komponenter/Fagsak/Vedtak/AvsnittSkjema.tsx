@@ -76,18 +76,18 @@ const AvsnittSkjema: React.FC<IProps> = ({
     erLesevisning,
     erRevurderingBortfaltBeløp,
 }) => {
-    const [åpen, settÅpen] = React.useState<boolean>(false);
+    const [erEkspandert, settErEkspandert] = React.useState<boolean>(false);
 
     const harPåkrevetFritekstMenIkkeUtfylt = skalVisesÅpen(avsnitt);
 
     React.useEffect(() => {
-        settÅpen(åpen || harPåkrevetFritekstMenIkkeUtfylt);
+        settErEkspandert(erEkspandert || harPåkrevetFritekstMenIkkeUtfylt);
     }, [avsnitt]);
 
     return (
         <StyledExpansionCard
-            open={åpen}
-            onToggle={() => settÅpen(!åpen)}
+            open={erEkspandert}
+            onToggle={() => settErEkspandert(prevState => !prevState)}
             aria-label={avsnitt.overskrift ?? 'ekspanderbart panel'}
             size="small"
         >
