@@ -23,7 +23,7 @@ import { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer
 import { behandlingssteg, Behandlingssteg, IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
-import { validerTekstMaksLengde } from '../../../../utils';
+import { hentFrontendFeilmelding, validerTekstMaksLengde } from '../../../../utils';
 import { ISide, sider } from '../../../Felleskomponenter/Venstremeny/sider';
 
 const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
@@ -49,7 +49,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
     ({ fagsak, behandling }: IProps) => {
         const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<ITotrinnkontroll>>();
         const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
-        const [fatteVedtakILåsemodus, settFatteVedtakILåsemodus] = useState<boolean>(false);
+        const [erLesevisning, settErLesevisning] = useState<boolean>(false);
         const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
         const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
         const [senderInn, settSenderInn] = useState<boolean>(false);
@@ -62,15 +62,16 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             erBehandlingReturnertFraBeslutter,
             hentBehandlingMedBehandlingId,
         } = useBehandling();
-        const { gjerTotrinnkontrollKall, sendInnFatteVedtak } = useBehandlingApi();
+        const { gjerTotrinnkontrollKall, sendInnFatteVedtak, kallAngreSendTilBeslutter } =
+            useBehandlingApi();
         const navigate = useNavigate();
+        const [feilmelding, settFeilmelding] = useState<string>('');
+        const [laster, settLaster] = useState(false);
 
         useEffect(() => {
             if (visVenteModal === false) {
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.FATTE_VEDTAK));
-                settFatteVedtakILåsemodus(
-                    !behandling.kanEndres || erBehandlingReturnertFraBeslutter()
-                );
+                settErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
                 hentTotrinnkontroll();
             }
         }, [behandling]);
@@ -183,6 +184,28 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             return !harFeil;
         };
 
+        const angreSendTilBeslutter = () => {
+            if (laster) {
+                return;
+            }
+            settLaster(true);
+            settFeilmelding('');
+            kallAngreSendTilBeslutter(behandling.behandlingId)
+                .then((res: Ressurs<string>) => {
+                    if (res.status === RessursStatus.SUKSESS) {
+                        hentBehandlingMedBehandlingId(behandling.behandlingId);
+                    } else {
+                        settFeilmelding(
+                            hentFrontendFeilmelding(res) ??
+                                'Ukjent feil ved angre send til beslutter'
+                        );
+                    }
+                })
+                .finally(() => {
+                    settLaster(false);
+                });
+        };
+
         const sendInnSkjema = () => {
             if (validerToTrinn()) {
                 settSenderInn(false);
@@ -235,7 +258,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
         return {
             stegErBehandlet,
-            fatteVedtakILåsemodus,
             navigerTilSide,
             totrinnkontroll,
             skjemaData,
@@ -247,6 +269,9 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             senderInn,
             nonUsedKey,
             fatteVedtakRespons,
+            angreSendTilBeslutter,
+            feilmelding,
+            erLesevisning,
         };
     }
 );

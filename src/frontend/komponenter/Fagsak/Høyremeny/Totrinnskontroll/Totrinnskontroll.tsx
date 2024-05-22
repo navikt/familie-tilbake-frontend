@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyShort, Label, Link, Radio, Textarea } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Label, Link, Radio, Textarea } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
@@ -12,7 +12,8 @@ import {
     TotrinnGodkjenningOption,
     totrinnGodkjenningOptions,
 } from './typer/totrinnSkjemaTyper';
-import { behandlingssteg } from '../../../../typer/behandling';
+import { useBehandling } from '../../../../context/BehandlingContext';
+import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
@@ -23,11 +24,14 @@ const StyledContainer = styled.div`
     margin-top: 10px;
 `;
 
+const AngreSendTilBeslutterContainer = styled.div`
+    margin: 1rem 0;
+`;
+
 const Totrinnskontroll: React.FC = () => {
     const {
         totrinnkontroll,
         skjemaData,
-        fatteVedtakILåsemodus,
         nonUsedKey,
         oppdaterGodkjenning,
         oppdaterBegrunnelse,
@@ -38,8 +42,12 @@ const Totrinnskontroll: React.FC = () => {
         sendTilSaksbehandler,
         senderInn,
         fatteVedtakRespons,
+        angreSendTilBeslutter,
+        feilmelding,
+        erLesevisning,
     } = useTotrinnskontroll();
-    const erLesevisning = fatteVedtakILåsemodus;
+
+    const { aktivtSteg } = useBehandling();
 
     React.useEffect(() => {
         // console.log('bør no trigge re-rendring');
@@ -59,7 +67,7 @@ const Totrinnskontroll: React.FC = () => {
                                 <Spacer20 />
                             </>
                         )}
-                    {!fatteVedtakILåsemodus && (
+                    {!erLesevisning && (
                         <>
                             <Steginformasjon
                                 behandletSteg={stegErBehandlet}
@@ -68,6 +76,19 @@ const Totrinnskontroll: React.FC = () => {
                             <Spacer20 />
                         </>
                     )}
+                    {aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
+                        erLesevisning && (
+                            <AngreSendTilBeslutterContainer>
+                                <Button
+                                    size="small"
+                                    variant={'secondary'}
+                                    onClick={angreSendTilBeslutter}
+                                >
+                                    Angre sendt til beslutter
+                                </Button>
+                                {feilmelding && <Alert variant={'error'}>{feilmelding}</Alert>}
+                            </AngreSendTilBeslutterContainer>
+                        )}
                     {skjemaData.map(totrinnSteg => {
                         const side = finnSideForSteg(totrinnSteg.behandlingssteg);
                         const vurdertIkkeGodkjent = totrinnSteg.godkjent === OptionIkkeGodkjent;
