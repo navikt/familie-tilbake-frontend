@@ -46,7 +46,7 @@ describe('Tester: HenleggBehandlingModal', () => {
         }));
         // @ts-ignore
         useBehandling.mockImplementation(() => ({
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
         }));
     });
 
