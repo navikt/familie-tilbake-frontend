@@ -36,7 +36,7 @@ const Environment = () => {
             namespace: 'local',
             proxyUrl: 'https://familie-tilbake.intern.dev.nav.no/api',
             baSakUrl: 'https://barnetrygd.intern.dev.nav.no',
-            efSakUrl: 'https://ensligmorellerfar.intern.dev.nav.no/ekstern',
+            efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
             ksSakUrl: 'https://kontantstotte.intern.dev.nav.no',
         };
     }
