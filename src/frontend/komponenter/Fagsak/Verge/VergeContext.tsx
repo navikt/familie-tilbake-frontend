@@ -16,6 +16,7 @@ import { byggFeiletRessurs, type Ressurs, RessursStatus } from '@navikt/familie-
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Vergetype } from '../../../kodeverk/verge';
 import { VergeDto, VergeStegPayload } from '../../../typer/api';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
@@ -47,7 +48,13 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [vergeRespons, settVergeRepons] = React.useState<Ressurs<string>>();
     const { gjerVergeKall, sendInnVerge } = useBehandlingApi();
-    const { erStegBehandlet, erStegAutoutført, hentBehandlingMedBehandlingId } = useBehandling();
+    const {
+        erStegBehandlet,
+        erStegAutoutført,
+        hentBehandlingMedBehandlingId,
+        nullstillIkkePersisterteKomponenter,
+    } = useBehandling();
+    const { utførRedirect } = useRedirectEtterLagring();
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -161,7 +168,8 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
 
     const sendInn = () => {
         if (stegErBehandlet && !harEndretOpplysninger()) {
-            navigate(
+            nullstillIkkePersisterteKomponenter();
+            utførRedirect(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FAKTA.href}`
             );
         } else if (kanSendeSkjema()) {
@@ -188,6 +196,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
                 .then((respons: Ressurs<string>) => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.SUKSESS) {
+                        nullstillIkkePersisterteKomponenter();
                         hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                             navigate(
                                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`

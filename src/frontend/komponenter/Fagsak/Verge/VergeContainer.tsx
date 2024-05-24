@@ -32,12 +32,13 @@ const StyledVStack = styled(VStack)`
 
 const VergeContainer: React.FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } = useVerge();
-    const { behandlingILesemodus } = useBehandling();
+    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const nyVergetype = Vergetype[e.target.value as keyof typeof Vergetype];
         skjema.felter.vergetype.validerOgSettFelt(nyVergetype);
+        settIkkePersistertKomponent('verge');
     };
 
     const vergetypeValgt = !!skjema.felter.vergetype.verdi;
@@ -96,9 +97,10 @@ const VergeContainer: React.FC = () => {
                                 label={'Navn'}
                                 readOnly={erLesevisning}
                                 value={skjema.felter.navn.verdi}
-                                onChange={event =>
-                                    skjema.felter.navn.validerOgSettFelt(event.target.value)
-                                }
+                                onChange={event => {
+                                    skjema.felter.navn.validerOgSettFelt(event.target.value);
+                                    settIkkePersistertKomponent('verge');
+                                }}
                             />
                             {skjema.felter.vergetype.verdi === Vergetype.ADVOKAT ? (
                                 <TextField
@@ -108,11 +110,12 @@ const VergeContainer: React.FC = () => {
                                     label={'Organisasjonsnummer'}
                                     readOnly={erLesevisning}
                                     value={skjema.felter.organisasjonsnummer.verdi}
-                                    onChange={event =>
+                                    onChange={event => {
                                         skjema.felter.organisasjonsnummer.validerOgSettFelt(
                                             event.target.value
-                                        )
-                                    }
+                                        );
+                                        settIkkePersistertKomponent('verge');
+                                    }}
                                 />
                             ) : (
                                 <TextField
@@ -122,11 +125,12 @@ const VergeContainer: React.FC = () => {
                                     label={'Fødselsnummer'}
                                     readOnly={erLesevisning}
                                     value={skjema.felter.fødselsnummer.verdi}
-                                    onChange={event =>
+                                    onChange={event => {
                                         skjema.felter.fødselsnummer.validerOgSettFelt(
                                             event.target.value
-                                        )
-                                    }
+                                        );
+                                        settIkkePersistertKomponent('verge');
+                                    }}
                                 />
                             )}
                         </HGrid>
@@ -136,9 +140,10 @@ const VergeContainer: React.FC = () => {
                         label={'Begrunn endringene'}
                         value={skjema.felter.begrunnelse.verdi}
                         readOnly={erLesevisning}
-                        onChange={event =>
-                            skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
-                        }
+                        onChange={event => {
+                            skjema.felter.begrunnelse.validerOgSettFelt(event.target.value);
+                            settIkkePersistertKomponent('verge');
+                        }}
                         maxLength={400}
                     />
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
