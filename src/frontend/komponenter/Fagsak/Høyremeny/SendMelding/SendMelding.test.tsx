@@ -52,6 +52,8 @@ describe('Tester: SendMelding', () => {
         useBehandling.mockImplementation(() => ({
             behandlingILesemodus: false,
             hentBehandlingMedBehandlingId: () => Promise.resolve(),
+            settIkkePersistertKomponent: jest.fn(),
+            nullstillIkkePersisterteKomponenter: jest.fn(),
         }));
         const behandling = mock<IBehandling>({
             varselSendt: false,

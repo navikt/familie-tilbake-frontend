@@ -52,6 +52,8 @@ describe('Tester: Totrinnskontroll', () => {
             visVenteModal: false,
             erBehandlingReturnertFraBeslutter: () => returnertFraBeslutter,
             hentBehandlingMedBehandlingId: () => Promise.resolve(),
+            settIkkePersistertKomponent: jest.fn(),
+            nullstillIkkePersisterteKomponenter: jest.fn(),
         }));
     };
 
