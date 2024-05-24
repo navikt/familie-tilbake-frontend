@@ -20,6 +20,7 @@ import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import {
     Foreldelsevurdering,
     foreldelsevurderinger,
@@ -63,6 +64,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
     );
+    const { settIkkePersistertKomponent } = useBehandling();
 
     React.useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');
@@ -176,9 +178,10 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                     maxLength={3000}
                     readOnly={erLesevisning}
                     value={skjema.felter.begrunnelse.verdi}
-                    onChange={event =>
-                        skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
-                    }
+                    onChange={event => {
+                        skjema.felter.begrunnelse.validerOgSettFelt(event.target.value);
+                        settIkkePersistertKomponent('foreldelse');
+                    }}
                 />
                 <HGrid columns={{ md: 1, lg: 2 }} gap="4">
                     <RadioGroup
@@ -191,9 +194,10 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                 ? skjema.felter.foreldelsesvurderingstype.feilmelding?.toString()
                                 : ''
                         }
-                        onChange={(val: Foreldelsevurdering) =>
-                            skjema.felter.foreldelsesvurderingstype.validerOgSettFelt(val)
-                        }
+                        onChange={(val: Foreldelsevurdering) => {
+                            skjema.felter.foreldelsesvurderingstype.validerOgSettFelt(val);
+                            settIkkePersistertKomponent('foreldelse');
+                        }}
                     >
                         {foreldelseVurderingTyper.map(type => (
                             <Radio key={type} name="foreldet" value={type}>
@@ -210,6 +214,9 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                 visFeilmeldinger={ugyldigOppdagelsesdatoValgt}
                                 readOnly={erLesevisning}
                                 kanKunVelgeFortid
+                                settIkkePersistertKomponent={() =>
+                                    settIkkePersistertKomponent('foreldelse')
+                                }
                             />
                         )}
                         {(erForeldet || erMedTilleggsfrist) && (
@@ -222,6 +229,9 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                                     }
                                     visFeilmeldinger={ugyldigForeldelsesfristValgt}
                                     readOnly={erLesevisning}
+                                    settIkkePersistertKomponent={() =>
+                                        settIkkePersistertKomponent('foreldelse')
+                                    }
                                 />
                                 {!erLesevisning && (
                                     <ReadMore header="Hvordan sette foreldelsesfrist">

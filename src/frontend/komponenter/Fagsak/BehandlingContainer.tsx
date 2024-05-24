@@ -70,6 +70,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
         if (visVenteModal === false) {
             if (!erØnsketSideLovlig && aktivtSteg) {
                 const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
+                console.log('utledet side', aktivSide);
                 if (aktivSide) {
                     navigate(`${behandlingUrl}/${aktivSide?.href}`);
                 }

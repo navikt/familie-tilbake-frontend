@@ -14,6 +14,7 @@ import {
 import { ForeldelsePeriodeSkjemeData } from './typer/feilutbetalingForeldelse';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Foreldelsevurdering } from '../../../kodeverk';
 import { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../../typer/api';
 import { Behandlingssteg, Behandlingstatus, IBehandling } from '../../../typer/behandling';
@@ -57,8 +58,14 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         const [valgtPeriode, settValgtPeriode] = React.useState<ForeldelsePeriodeSkjemeData>();
         const [allePerioderBehandlet, settAllePerioderBehandlet] = React.useState<boolean>(false);
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
-        const { erStegBehandlet, erStegAutoutført, visVenteModal, hentBehandlingMedBehandlingId } =
-            useBehandling();
+        const {
+            erStegBehandlet,
+            erStegAutoutført,
+            visVenteModal,
+            hentBehandlingMedBehandlingId,
+            nullstillIkkePersisterteKomponenter,
+        } = useBehandling();
+        const { utførRedirect } = useRedirectEtterLagring();
         const { gjerFeilutbetalingForeldelseKall, sendInnFeilutbetalingForeldelse } =
             useBehandlingApi();
         const navigate = useNavigate();
@@ -192,8 +199,9 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         };
 
         const sendInnSkjema = () => {
+            nullstillIkkePersisterteKomponenter();
             if (stegErBehandlet && !harEndretOpplysninger()) {
-                gåTilNesteSteg();
+                utførRedirect(`${behandlingUrl}/${sider.VILKÅRSVURDERING.href}`);
             } else {
                 settSenderInn(true);
                 const payload: ForeldelseStegPayload = {

@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import { useNavigate } from 'react-router-dom';
-
 import { ErrorMessage, Modal } from '@navikt/ds-react';
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { Behandlingssteg, IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
@@ -21,14 +20,20 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string>();
-    const { hentBehandlingMedBehandlingId, aktivtSteg, behandlingILesemodus } = useBehandling();
+    const {
+        hentBehandlingMedBehandlingId,
+        aktivtSteg,
+        behandlingILesemodus,
+        nullstillIkkePersisterteKomponenter,
+    } = useBehandling();
     const { request } = useHttp();
-    const navigate = useNavigate();
+    const { utførRedirect } = useRedirectEtterLagring();
 
     const kanFjerneVerge =
         behandling.harVerge || aktivtSteg?.behandlingssteg === Behandlingssteg.VERGE;
 
     const opprettVerge = () => {
+        nullstillIkkePersisterteKomponenter();
         request<void, string>({
             method: 'POST',
             url: `/familie-tilbake/api/behandling/v1/${behandling.behandlingId}/verge`,
@@ -37,7 +42,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
                 settSenderInn(false);
                 settVisModal(false);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                    navigate(
+                    utførRedirect(
                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                     );
                 });
@@ -52,6 +57,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
     };
 
     const fjernVerge = () => {
+        nullstillIkkePersisterteKomponenter();
         request<void, string>({
             method: 'PUT',
             url: `/familie-tilbake/api/behandling/v1/${behandling.behandlingId}/verge`,
@@ -60,7 +66,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
                 settSenderInn(false);
                 settVisModal(false);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                    navigate(
+                    utførRedirect(
                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                     );
                 });

@@ -9,6 +9,7 @@ import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import {
     Behandlingssteg,
     Behandlingsstegstatus,
@@ -33,8 +34,13 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
     const [visFjernModal, settVisFjernModal] = React.useState<boolean>(false);
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string>();
-    const { hentBehandlingMedBehandlingId, behandlingILesemodus, settVisBrevmottakerModal } =
-        useBehandling();
+    const {
+        hentBehandlingMedBehandlingId,
+        behandlingILesemodus,
+        settVisBrevmottakerModal,
+        nullstillIkkePersisterteKomponenter,
+    } = useBehandling();
+    const { utførRedirect } = useRedirectEtterLagring();
     const { request } = useHttp();
     const { settToast } = useApp();
     const navigate = useNavigate();
@@ -48,6 +54,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
         );
 
     const opprettBrevmottakerSteg = () => {
+        nullstillIkkePersisterteKomponenter();
         settSenderInn(true);
         request<void, string>({
             method: 'POST',
@@ -72,6 +79,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
     };
 
     const fjernBrevmottakerSteg = () => {
+        nullstillIkkePersisterteKomponenter();
         settSenderInn(true);
         request<void, string>({
             method: 'PUT',
@@ -81,7 +89,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
             if (respons.status === RessursStatus.SUKSESS) {
                 settVisFjernModal(false);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                    navigate(
+                    utførRedirect(
                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                     );
                 });

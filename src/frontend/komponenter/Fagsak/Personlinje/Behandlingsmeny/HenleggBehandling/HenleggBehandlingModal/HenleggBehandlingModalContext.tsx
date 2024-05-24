@@ -39,6 +39,7 @@ interface IProps {
 export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps) => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
     const { henleggBehandling } = useBehandlingApi();
+    const { nullstillIkkePersisterteKomponenter } = useBehandling();
 
     const årsakkode = useFelt<Behandlingresultat | ''>({
         verdi: '',
@@ -81,6 +82,7 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
     const onBekreft = () => {
         validerAlleSynligeFelter();
         if (kanSendeSkjema()) {
+            nullstillIkkePersisterteKomponenter();
             const payload: HenleggBehandlingPaylod = {
                 //@ts-ignore
                 behandlingsresultatstype: skjema.felter.årsakkode.verdi,

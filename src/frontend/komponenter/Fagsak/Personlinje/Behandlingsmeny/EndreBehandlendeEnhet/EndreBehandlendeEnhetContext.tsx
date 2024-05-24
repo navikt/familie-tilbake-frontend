@@ -5,7 +5,7 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../utils';
 
 const useEndreBehandlendeEnhet = (behandlingId: string, lukkModal: (_vis: boolean) => void) => {
-    const { hentBehandlingMedBehandlingId } = useBehandling();
+    const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
 
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
         {
@@ -33,6 +33,7 @@ const useEndreBehandlendeEnhet = (behandlingId: string, lukkModal: (_vis: boolea
 
     const sendInn = () => {
         if (kanSendeSkjema()) {
+            nullstillIkkePersisterteKomponenter();
             onSubmit(
                 {
                     method: 'PUT',

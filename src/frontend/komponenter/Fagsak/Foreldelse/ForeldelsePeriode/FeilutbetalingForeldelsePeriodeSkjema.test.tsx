@@ -26,6 +26,15 @@ jest.mock('../FeilutbetalingForeldelseContext', () => {
     };
 });
 
+jest.mock('../../../../context/BehandlingContext', () => {
+    return {
+        useBehandling: () => ({
+            settIkkePersistertKomponent: jest.fn(),
+            nullstillIkkePersistertKomponent: jest.fn(),
+        }),
+    };
+});
+
 describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
     const behandling = mock<IBehandling>();
     const periode: ForeldelsePeriodeSkjemeData = {

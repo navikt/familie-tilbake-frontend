@@ -31,6 +31,11 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => jest.fn(),
+}));
+
 describe('Tester: VergeContainer', () => {
     const setupMock = (
         behandlet: boolean,
@@ -60,7 +65,9 @@ describe('Tester: VergeContainer', () => {
             erStegBehandlet: () => behandlet,
             erStegAutoutført: () => autoutført,
             behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
+            settIkkePersistertKomponent: jest.fn(),
+            nullstillIkkePersisterteKomponenter: jest.fn(),
         }));
     };
 

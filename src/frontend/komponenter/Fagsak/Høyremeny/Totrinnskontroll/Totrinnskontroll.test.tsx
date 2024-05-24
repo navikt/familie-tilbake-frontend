@@ -22,6 +22,11 @@ jest.mock('../../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => jest.fn(),
+}));
+
 describe('Tester: Totrinnskontroll', () => {
     const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: ITotrinnkontroll) => {
         // @ts-ignore
@@ -46,7 +51,9 @@ describe('Tester: Totrinnskontroll', () => {
             erStegBehandlet: () => false,
             visVenteModal: false,
             erBehandlingReturnertFraBeslutter: () => returnertFraBeslutter,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
+            settIkkePersistertKomponent: jest.fn(),
+            nullstillIkkePersisterteKomponenter: jest.fn(),
         }));
     };
 

@@ -35,6 +35,13 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => jest.fn(),
+}));
+
+const mockedSettIkkePersistertKomponent = jest.fn();
+
 describe('Tester: VedtakContainer', () => {
     const perioder: BeregningsresultatPeriode[] = [
         {
@@ -121,7 +128,9 @@ describe('Tester: VedtakContainer', () => {
         useBehandling.mockImplementation(() => ({
             visVenteModal: false,
             behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: jest.fn(),
+            hentBehandlingMedBehandlingId: () => Promise.resolve(),
+            settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
+            nullstillIkkePersisterteKomponenter: jest.fn(),
         }));
     };
 
@@ -509,6 +518,7 @@ describe('Tester: VedtakContainer', () => {
                 })
             )
         );
+        expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('vedtak');
     });
 
     test('- vis og fyll ut - 1 fritekst påkrevet - fyller ut 1 ekstra fritekst - revurdering NFP', async () => {
@@ -668,6 +678,7 @@ describe('Tester: VedtakContainer', () => {
                 })
             )
         );
+        expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('vedtak');
     });
 
     test('- vis utfylt - 1 fritekst påkrevet - 1 ekstra fritekst', async () => {
