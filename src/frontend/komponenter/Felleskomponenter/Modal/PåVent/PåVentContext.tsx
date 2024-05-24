@@ -4,6 +4,7 @@ import { useHttp } from '@navikt/familie-http';
 import { useSkjema, useFelt, type FeltState, feil, ok } from '@navikt/familie-skjema';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { IRestSettPåVent } from '../../../../typer/api';
 import { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
 import { isEmpty, validerGyldigDato } from '../../../../utils';
@@ -15,6 +16,7 @@ export const usePåVentBehandling = (
 ) => {
     const [feilmelding, settFeilmelding] = useState<string>();
     const { request } = useHttp();
+    const { nullstillIkkePersisterteKomponenter } = useBehandling();
 
     const { onSubmit, skjema, nullstillSkjema, kanSendeSkjema } = useSkjema<
         {
@@ -61,6 +63,7 @@ export const usePåVentBehandling = (
 
     const onBekreft = (behandlingId: string) => {
         if (kanSendeSkjema() && skjema.felter.årsak.verdi && skjema.felter.tidsfrist.verdi) {
+            nullstillIkkePersisterteKomponenter();
             onSubmit<IRestSettPåVent>(
                 {
                     method: 'PUT',
@@ -90,6 +93,7 @@ export const usePåVentBehandling = (
     };
 
     const onOkTaAvVent = (behandlingId: string) => {
+        nullstillIkkePersisterteKomponenter();
         request<void, string>({
             method: 'PUT',
             url: `/familie-tilbake/api/behandling/${behandlingId}/gjenoppta/v1`,
@@ -97,7 +101,6 @@ export const usePåVentBehandling = (
             if (response.status === RessursStatus.SUKSESS) {
                 lukkModal();
             } else {
-                console.log('Gjennopta behandling feilet!');
                 if (
                     response.status === RessursStatus.FEILET ||
                     response.status === RessursStatus.FUNKSJONELL_FEIL

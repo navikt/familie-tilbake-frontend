@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import { useNavigate } from 'react-router-dom';
-
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
@@ -25,10 +24,11 @@ const HentOppdatertKravgrunnlag: React.FC<IProps> = ({
 }) => {
     const { request } = useHttp();
     const { settToast } = useApp();
-    const { hentBehandlingMedBehandlingId } = useBehandling();
-    const navigate = useNavigate();
+    const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
+    const { utførRedirect } = useRedirectEtterLagring();
 
     const hentKorrigertKravgrunnlag = () => {
+        nullstillIkkePersisterteKomponenter();
         request<void, string>({
             method: 'PUT',
             url: `/familie-tilbake/api/forvaltning/behandling/${behandling.behandlingId}/kravgrunnlag/v1`,
@@ -39,7 +39,7 @@ const HentOppdatertKravgrunnlag: React.FC<IProps> = ({
                     tekst: 'Hentet korrigert kravgrunnlag',
                 });
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                    navigate(
+                    utførRedirect(
                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                     );
                 });

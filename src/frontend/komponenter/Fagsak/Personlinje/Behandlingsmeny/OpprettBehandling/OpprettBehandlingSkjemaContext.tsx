@@ -1,6 +1,8 @@
 import { useFelt, useSkjema } from '@navikt/familie-skjema';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { Behandlingstype, Behandlingårsak } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
 import { erFeltetEmpty } from '../../../../../utils';
@@ -10,6 +12,8 @@ const useOpprettBehandlingSkjema = (
     behandlingId: string,
     lukkModal: (_vis: boolean) => void
 ) => {
+    const { nullstillIkkePersisterteKomponenter } = useBehandling();
+    const { utførRedirect } = useRedirectEtterLagring();
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
         {
             behandlingstype: Behandlingstype;
@@ -32,6 +36,7 @@ const useOpprettBehandlingSkjema = (
 
     const sendInn = () => {
         if (kanSendeSkjema()) {
+            nullstillIkkePersisterteKomponenter();
             onSubmit(
                 {
                     method: 'POST',
@@ -45,7 +50,9 @@ const useOpprettBehandlingSkjema = (
                 (response: Ressurs<string>) => {
                     if (response.status === RessursStatus.SUKSESS) {
                         lukkModal(false);
-                        window.location.href = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${response.data}`;
+                        utførRedirect(
+                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${response.data}`
+                        );
                     }
                 }
             );

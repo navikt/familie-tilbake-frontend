@@ -161,6 +161,13 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                             />
                                         </li>
                                     )}
+                                    <li>
+                                        <OpprettFjernVerge
+                                            behandling={behandling.data}
+                                            fagsak={fagsak}
+                                            onListElementClick={() => settVisMeny(false)}
+                                        />
+                                    </li>
                                 </>
                             )}
                     </StyledList>
