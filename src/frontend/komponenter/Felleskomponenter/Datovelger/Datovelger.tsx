@@ -18,6 +18,7 @@ interface IProps {
     kanKunVelgeFortid?: boolean;
     kanKunVelgeFremtid?: boolean;
     readOnly?: boolean;
+    settIkkePersistertKomponent?: () => void;
 }
 
 export enum Feilmelding {
@@ -40,6 +41,7 @@ const Datovelger = ({
     kanKunVelgeFortid = false,
     kanKunVelgeFremtid = false,
     readOnly = false,
+    settIkkePersistertKomponent,
 }: IProps) => {
     const [error, setError] = useState<Feilmelding | undefined>(undefined);
 
@@ -65,6 +67,9 @@ const Datovelger = ({
         defaultSelected: felt.verdi,
         onDateChange: (dato?: Date) => {
             felt.validerOgSettFelt(dato);
+            if (settIkkePersistertKomponent) {
+                settIkkePersistertKomponent();
+            }
         },
         fromDate: hentFromDate(),
         toDate: hentToDate(),
