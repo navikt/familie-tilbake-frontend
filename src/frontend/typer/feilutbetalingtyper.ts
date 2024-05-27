@@ -47,6 +47,7 @@ export interface IFeilutbetalingFakta {
     };
     revurderingsvedtaksdato: string;
     begrunnelse?: string;
+    kravgrunnlagReferanse?: string;
 }
 
 export type ForeldelsePeriode = {

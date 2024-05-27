@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { BodyShort, Checkbox, Heading, HGrid, Textarea, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Checkbox, Heading, HGrid, Textarea, VStack } from '@navikt/ds-react';
 
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
@@ -39,12 +39,25 @@ const FaktaSkjema: React.FC<IProps> = ({
     } = useFeilutbetalingFakta();
     const { settIkkePersistertKomponent } = useBehandling();
 
+    const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
+        behandling.fagsystemsbehandlingId !== feilutbetalingFakta.kravgrunnlagReferanse;
+
     return (
         <HGrid columns={2} gap="10">
             <VStack gap="5">
                 <Heading level="2" size="small">
                     Feilutbetaling
                 </Heading>
+                {erKravgrunnlagKnyttetTilEnEnEldreRevurdering && (
+                    <div>
+                        <Alert variant={'warning'} size={'small'}>
+                            Kravgrunnlaget refererer ikke til den nyeste revurderingen i
+                            vedtaksløsningen.
+                            <br />
+                            Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
+                        </Alert>
+                    </div>
+                )}
                 <HGrid columns={3} gap="1">
                     <div>
                         <DetailBold>Periode med feilutbetaling</DetailBold>
