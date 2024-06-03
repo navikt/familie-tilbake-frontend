@@ -63,6 +63,12 @@ export const behandlingsresultater: Record<Behandlingresultat, string> = {
     IKKE_FASTSATT: 'Ikke fastsatt',
 };
 
+export enum Saksbehandlingstype {
+    ORDINÆR = 'ORDINÆR',
+    AUTOMATISK_IKKE_INNKREVING_LAVT_BELØP = 'AUTOMATISK_IKKE_INNKREVING_LAVT_BELØP',
+    AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR = 'AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR',
+}
+
 export enum Behandlingstype {
     TILBAKEKREVING = 'TILBAKEKREVING',
     REVURDERING_TILBAKEKREVING = 'REVURDERING_TILBAKEKREVING',
@@ -174,4 +180,5 @@ export interface IBehandling {
     støtterManuelleBrevmottakere?: boolean;
     manuelleBrevmottakere: ManuellBrevmottakerResponseDto[];
     begrunnelseForTilbakekreving?: string;
+    saksbehandlingstype: Saksbehandlingstype;
 }

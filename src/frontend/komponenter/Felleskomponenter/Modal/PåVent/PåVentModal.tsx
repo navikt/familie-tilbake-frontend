@@ -3,8 +3,8 @@ import * as React from 'react';
 import { addDays, addMonths } from 'date-fns';
 import { styled } from 'styled-components';
 
-import { BodyLong, Heading, Modal, Select } from '@navikt/ds-react';
-import { ATextDanger, ASpacing8 } from '@navikt/ds-tokens/dist/tokens';
+import { Alert, BodyLong, Heading, Modal, Select } from '@navikt/ds-react';
+import { ASpacing8, ATextDanger } from '@navikt/ds-tokens/dist/tokens';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { usePåVentBehandling } from './PåVentContext';
@@ -14,12 +14,17 @@ import {
     IBehandling,
     IBehandlingsstegstilstand,
     manuelleVenteÅrsaker,
+    Saksbehandlingstype,
     venteårsaker,
 } from '../../../../typer/behandling';
 import { dateBeforeToday } from '../../../../utils';
 import { dagensDato } from '../../../../utils/dato';
 import Datovelger from '../../Datovelger/Datovelger';
 import { FTButton, Spacer20 } from '../../Flytelementer';
+
+export const StyledAlert = styled(Alert)`
+    margin-bottom: 1.5rem;
+`;
 
 const FeilContainer = styled.div`
     margin-top: ${ASpacing8};
@@ -68,10 +73,18 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
 
     const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.GRUNNLAG;
 
+    const vilBliAutomatiskBehandletUnder4rettsgebyr =
+        venterPåKravgrunnlag &&
+        behandling.saksbehandlingstype ===
+            Saksbehandlingstype.AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR;
+
     const lukkModal = () => {
         tilbakestillFelterTilDefault();
         onClose();
     };
+
+    const automatiskUnder4rettsgebyrBehandletTekst =
+        'Denne behandlingen vil bli automatisk utført dersom mottatt kravgrunnlag er under 4 rettsgebyr.';
 
     return (
         <Modal
@@ -87,6 +100,15 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
         >
             <Modal.Body>
                 <>
+                    {vilBliAutomatiskBehandletUnder4rettsgebyr && (
+                        <>
+                            <StyledAlert
+                                children={automatiskUnder4rettsgebyrBehandletTekst}
+                                variant="info"
+                            />
+                        </>
+                    )}
+
                     {erFristenUtløpt && (
                         <>
                             <Heading level="3" size="xsmall" spacing>
