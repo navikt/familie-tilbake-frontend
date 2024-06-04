@@ -26,18 +26,18 @@ const Environment = () => {
             buildPath: 'frontend_production',
             namespace: 'preprod',
             proxyUrl: 'http://familie-tilbake/api',
-            baSakUrl: 'https://barnetrygd.intern.dev.nav.no',
-            efSakUrl: 'https://ensligmorellerfar.intern.dev.nav.no/ekstern',
-            ksSakUrl: 'https://kontantstotte.intern.dev.nav.no',
+            baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
+            efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
+            ksSakUrl: 'https://kontantstotte.ansatt.dev.nav.no',
         };
     } else if (process.env.ENV === 'lokalt-mot-preprod') {
         return {
             buildPath: 'frontend_development',
             namespace: 'local',
             proxyUrl: 'https://familie-tilbake.intern.dev.nav.no/api',
-            baSakUrl: 'https://barnetrygd.intern.dev.nav.no',
+            baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
-            ksSakUrl: 'https://kontantstotte.intern.dev.nav.no',
+            ksSakUrl: 'https://kontantstotte.ansatt.dev.nav.no',
         };
     }
 
