@@ -51,8 +51,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                 {erKravgrunnlagKnyttetTilEnEnEldreRevurdering && (
                     <div>
                         <Alert variant={'warning'} size={'small'}>
-                            Kravgrunnlaget refererer ikke til den nyeste revurderingen i
-                            vedtaksløsningen.
+                            Det finnes flere revurderinger knyttet til denne tilbakekrevingen.
                             <br />
                             Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
                         </Alert>
