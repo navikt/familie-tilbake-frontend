@@ -18,6 +18,7 @@ import Toasts from './Felleskomponenter/Toast/Toasts';
 import { useApp } from '../context/AppContext';
 import { BehandlingProvider } from '../context/BehandlingContext';
 import { FagsakProvider } from '../context/FagsakContext';
+import { TogglesProvider } from '../context/TogglesContext';
 
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
@@ -29,11 +30,13 @@ const Container: React.FC = () => {
                     <Toasts />
                     <main>
                         <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
-                        <FagsakProvider>
-                            <BehandlingProvider>
-                                <AppRoutes />
-                            </BehandlingProvider>
-                        </FagsakProvider>
+                        <TogglesProvider>
+                            <FagsakProvider>
+                                <BehandlingProvider>
+                                    <AppRoutes />
+                                </BehandlingProvider>
+                            </FagsakProvider>
+                        </TogglesProvider>
                     </main>
                 </>
             ) : (

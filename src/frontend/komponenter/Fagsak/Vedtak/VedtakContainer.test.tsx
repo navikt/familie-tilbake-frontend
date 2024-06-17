@@ -13,6 +13,7 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
 import { Behandlingstype, Behandlingårsak, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
+import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import {
     BeregningsresultatPeriode,
     IBeregningsresultat,
@@ -72,6 +73,7 @@ describe('Tester: VedtakContainer', () => {
     const beregningsresultat: IBeregningsresultat = {
         beregningsresultatsperioder: perioder,
         vedtaksresultat: Vedtaksresultat.DELVIS_TILBAKEBETALING,
+        vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.NEI },
     };
     const avsnitt: VedtaksbrevAvsnitt[] = [
         {

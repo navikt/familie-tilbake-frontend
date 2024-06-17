@@ -1,15 +1,27 @@
 import * as React from 'react';
 
-import { Alert, BodyShort, Checkbox, Heading, HGrid, Textarea, VStack } from '@navikt/ds-react';
+import {
+    Alert,
+    BodyShort,
+    Checkbox,
+    Heading,
+    HGrid,
+    Radio,
+    RadioGroup,
+    Textarea,
+    VStack,
+} from '@navikt/ds-react';
 
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 import { FaktaSkjemaData } from './typer/feilutbetalingFakta';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { ToggleName } from '../../../context/toggles';
+import { useToggles } from '../../../context/TogglesContext';
 import { Ytelsetype } from '../../../kodeverk';
-import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
-import { formatterDatostring, formatCurrencyNoKr } from '../../../utils';
+import { HarBrukerUttaltSegValg, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
+import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { DetailBold, FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
 
 interface IProps {
@@ -29,6 +41,8 @@ const FaktaSkjema: React.FC<IProps> = ({
         behandling,
         stegErBehandlet,
         oppdaterBegrunnelse,
+        oppdaterBeskrivelseBrukerHarUttaltSeg,
+        oppdaterBrukerHarUttaltSeg,
         behandlePerioderSamlet,
         settBehandlePerioderSamlet,
         sendInnSkjema,
@@ -38,7 +52,7 @@ const FaktaSkjema: React.FC<IProps> = ({
         gåTilForrige,
     } = useFeilutbetalingFakta();
     const { settIkkePersistertKomponent } = useBehandling();
-
+    const { toggles } = useToggles();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== feilutbetalingFakta.kravgrunnlagReferanse;
 
@@ -117,6 +131,68 @@ const FaktaSkjema: React.FC<IProps> = ({
                         feilmeldinger?.find(meld => meld.gjelderBegrunnelse)?.melding
                     }
                 />
+                {toggles[ToggleName.vurderBrukersUttalelse] && (
+                    <VStack gap="2">
+                        <RadioGroup
+                            id="brukerHarUttaltSeg"
+                            readOnly={erLesevisning}
+                            legend="Har bruker uttalt seg?"
+                            value={skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg}
+                            error={
+                                visFeilmeldinger &&
+                                feilmeldinger?.find(meld => meld.gjelderBrukerHarUttaltSeg)?.melding
+                            }
+                            onChange={(val: HarBrukerUttaltSegValg) => {
+                                settIkkePersistertKomponent('fakta');
+                                oppdaterBrukerHarUttaltSeg(val);
+                            }}
+                        >
+                            <Radio
+                                key={HarBrukerUttaltSegValg.JA}
+                                name="brukerHarUttaltSeg"
+                                value={HarBrukerUttaltSegValg.JA}
+                                data-testid={`brukerHarUttaltSeg.ja`}
+                            >
+                                Ja
+                            </Radio>
+                            <Radio
+                                key={HarBrukerUttaltSegValg.NEI}
+                                name="brukerHarUttaltSeg"
+                                value={HarBrukerUttaltSegValg.NEI}
+                                data-testid={`brukerHarUttaltSeg.nei`}
+                            >
+                                Nei
+                            </Radio>
+                        </RadioGroup>
+                        {skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg ===
+                            HarBrukerUttaltSegValg.JA && (
+                            <Textarea
+                                name={'beskrivelseBrukersUttalelse'}
+                                label={
+                                    'Beskriv når og hvor bruker har uttalt seg. Gi også en kort oppsummering av uttalelsen'
+                                }
+                                readOnly={erLesevisning}
+                                value={
+                                    skjemaData.vurderingAvBrukersUttalelse?.beskrivelse
+                                        ? skjemaData.vurderingAvBrukersUttalelse?.beskrivelse
+                                        : ''
+                                }
+                                onChange={e => {
+                                    settIkkePersistertKomponent('fakta');
+                                    oppdaterBeskrivelseBrukerHarUttaltSeg(e.target.value);
+                                }}
+                                maxLength={3000}
+                                className={erLesevisning ? 'lesevisning' : ''}
+                                error={
+                                    visFeilmeldinger &&
+                                    feilmeldinger?.find(
+                                        meld => meld.gjelderBeskrivelseBrukerHarUttaltSeg
+                                    )?.melding
+                                }
+                            />
+                        )}
+                    </VStack>
+                )}
                 <Navigering>
                     <FTButton
                         variant="primary"

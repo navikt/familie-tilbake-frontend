@@ -48,6 +48,18 @@ export interface IFeilutbetalingFakta {
     revurderingsvedtaksdato: string;
     begrunnelse?: string;
     kravgrunnlagReferanse?: string;
+    vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelse;
+}
+
+export interface VurderingAvBrukersUttalelse {
+    harBrukerUttaltSeg: HarBrukerUttaltSegValg;
+    beskrivelse?: string;
+}
+
+export enum HarBrukerUttaltSegValg {
+    JA = 'JA',
+    NEI = 'NEI',
+    IKKE_VURDERT = 'IKKE_VURDERT',
 }
 
 export type ForeldelsePeriode = {
