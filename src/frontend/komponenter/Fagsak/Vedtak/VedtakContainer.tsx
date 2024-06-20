@@ -20,6 +20,7 @@ import {
     IBehandling,
 } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
+import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
@@ -124,7 +125,8 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         <Spacer20 />
                     </>
                 )}
-                {behandling.manuelleBrevmottakere.length && (
+
+                {behandling.manuelleBrevmottakere.length > 0 && (
                     <>
                         <BrevmottakereAlert
                             brevmottakere={behandling.manuelleBrevmottakere.map(
@@ -147,6 +149,10 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                     avsnitter={skjemaData}
                     erLesevisning={erLesevisning}
                     erRevurderingBortfaltBeløp={erRevurderingBortfaltBeløp}
+                    harBrukerUttaltSeg={
+                        beregningsresultat.data.vurderingAvBrukersUttalelse.harBrukerUttaltSeg ===
+                        HarBrukerUttaltSegValg.JA
+                    }
                 />
                 <Spacer20 />
                 {foreslåVedtakRespons &&

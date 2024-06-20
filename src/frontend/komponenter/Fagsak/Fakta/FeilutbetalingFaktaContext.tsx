@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
@@ -14,16 +14,22 @@ import {
 import { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/feilutbetalingFakta';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { ToggleName } from '../../../context/toggles';
+import { useToggles } from '../../../context/TogglesContext';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
 import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import {
-    sorterFeilutbetaltePerioder,
-    definerteFeilmeldinger,
+    HarBrukerUttaltSegValg,
+    IFeilutbetalingFakta,
+    VurderingAvBrukersUttalelse,
+} from '../../../typer/feilutbetalingtyper';
+import {
     DEFINERT_FEILMELDING,
+    definerteFeilmeldinger,
+    sorterFeilutbetaltePerioder,
     validerTekstMaksLengde,
 } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
@@ -37,9 +43,15 @@ interface IProps {
 
 const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
     ({ behandling, fagsak }: IProps) => {
+        const { toggles } = useToggles();
         const [feilutbetalingFakta, settFeilutbetalingFakta] =
             useState<Ressurs<IFeilutbetalingFakta>>();
-        const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({ perioder: [] });
+        const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({
+            perioder: [],
+            vurderingAvBrukersUttalelse: {
+                harBrukerUttaltSeg: HarBrukerUttaltSegValg.IKKE_VURDERT,
+            },
+        });
         const [behandlePerioderSamlet, settBehandlePerioderSamlet] = useState<boolean>(false);
         const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
         const [visFeilmeldinger, settVisFeilmeldinger] = useState<boolean>(false);
@@ -81,6 +93,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 settSkjemaData({
                     begrunnelse: data.begrunnelse || undefined,
                     perioder: behandletPerioder,
+                    vurderingAvBrukersUttalelse: data.vurderingAvBrukersUttalelse,
                 });
             }
         }, [feilutbetalingFakta]);
@@ -104,6 +117,32 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const oppdaterBegrunnelse = (nyBegrunnelse: string) => {
             settSkjemaData(prevState => {
                 return { ...prevState, begrunnelse: nyBegrunnelse };
+            });
+        };
+
+        const oppdaterBrukerHarUttaltSeg = (harBrukerUttaltSeg: HarBrukerUttaltSegValg) => {
+            settSkjemaData(prevState => {
+                return {
+                    ...prevState,
+                    vurderingAvBrukersUttalelse: {
+                        ...prevState.vurderingAvBrukersUttalelse,
+                        harBrukerUttaltSeg: harBrukerUttaltSeg,
+                    },
+                };
+            });
+        };
+
+        const oppdaterBeskrivelseBrukerHarUttaltSeg = (begrunnelse: string) => {
+            settSkjemaData(prevState => {
+                return {
+                    ...prevState,
+                    vurderingAvBrukersUttalelse: {
+                        harBrukerUttaltSeg:
+                            prevState.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg ||
+                            HarBrukerUttaltSegValg.IKKE_VURDERT,
+                        beskrivelse: begrunnelse,
+                    },
+                };
             });
         };
 
@@ -183,12 +222,38 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const validerForInnsending = (): Feilmelding[] => {
             const feilmeldinger: Feilmelding[] = [];
+            const vurderingAvBrukersUttalelse = skjemaData.vurderingAvBrukersUttalelse;
+
             //@ts-ignore
             const feilmelding = _validerTekst3000(skjemaData.begrunnelse);
             if (feilmelding) {
                 feilmeldinger.push({
                     gjelderBegrunnelse: true,
                     melding: feilmelding,
+                });
+            }
+            if (vurderingAvBrukersUttalelse?.harBrukerUttaltSeg === HarBrukerUttaltSegValg.JA) {
+                const feilmeldingBeskrivelseBrukerHarUttaltSeg = _validerTekst3000(
+                    // @ts-ignore
+                    vurderingAvBrukersUttalelse?.beskrivelse
+                );
+                if (feilmeldingBeskrivelseBrukerHarUttaltSeg) {
+                    feilmeldinger.push({
+                        gjelderBeskrivelseBrukerHarUttaltSeg: true,
+                        gjelderBegrunnelse: false,
+                        melding: feilmeldingBeskrivelseBrukerHarUttaltSeg,
+                    });
+                }
+            }
+            if (
+                vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !== HarBrukerUttaltSegValg.NEI &&
+                vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !== HarBrukerUttaltSegValg.JA &&
+                toggles[ToggleName.vurderBrukersUttalelse]
+            ) {
+                feilmeldinger.push({
+                    gjelderBegrunnelse: false,
+                    gjelderBrukerHarUttaltSeg: true,
+                    melding: definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT],
                 });
             }
             for (const periode of skjemaData.perioder) {
@@ -211,6 +276,8 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             if (feilutbetalingFakta?.status === RessursStatus.SUKSESS) {
                 const hentetData = feilutbetalingFakta.data;
                 return (
+                    hentetData.vurderingAvBrukersUttalelse !==
+                        skjemaData.vurderingAvBrukersUttalelse ||
                     hentetData.begrunnelse !== skjemaData.begrunnelse ||
                     feilutbetalingFakta.data.feilutbetaltePerioder.some(fuPF => {
                         const periode = skjemaData.perioder.find(
@@ -226,6 +293,20 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 );
             }
             return false;
+        };
+
+        const gyldigVurderingAvBrukersUttalelse = (
+            vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelse
+        ): VurderingAvBrukersUttalelse => {
+            switch (vurderingAvBrukersUttalelse.harBrukerUttaltSeg) {
+                case HarBrukerUttaltSegValg.JA:
+                    return vurderingAvBrukersUttalelse;
+                case HarBrukerUttaltSegValg.IKKE_VURDERT:
+                case HarBrukerUttaltSegValg.NEI:
+                    return {
+                        harBrukerUttaltSeg: vurderingAvBrukersUttalelse.harBrukerUttaltSeg,
+                    };
+            }
         };
 
         const sendInnSkjema = () => {
@@ -247,6 +328,9 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                         '@type': 'FAKTA',
                         //@ts-ignore
                         begrunnelse: skjemaData.begrunnelse,
+                        vurderingAvBrukersUttalelse: gyldigVurderingAvBrukersUttalelse(
+                            skjemaData.vurderingAvBrukersUttalelse
+                        ),
                         feilutbetaltePerioder: skjemaData.perioder.map<PeriodeFaktaStegPayload>(
                             per => ({
                                 periode: per.periode,
@@ -285,6 +369,8 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             feilutbetalingFakta,
             skjemaData,
             oppdaterBegrunnelse,
+            oppdaterBrukerHarUttaltSeg,
+            oppdaterBeskrivelseBrukerHarUttaltSeg,
             oppdaterÅrsakPåPeriode,
             oppdaterUnderårsakPåPeriode,
             hentFeilutbetalingFakta,
