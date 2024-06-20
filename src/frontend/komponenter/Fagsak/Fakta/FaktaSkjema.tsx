@@ -136,7 +136,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                         <RadioGroup
                             id="brukerHarUttaltSeg"
                             readOnly={erLesevisning}
-                            legend="Har bruker uttalt seg?"
+                            legend="Har bruker uttalt seg om feilutbetalingen?"
                             value={skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg}
                             error={
                                 visFeilmeldinger &&
