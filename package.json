@@ -25,9 +25,9 @@
   "dependencies": {
     "@navikt/aksel-icons": "^6.1.0",
     "@navikt/ds-css": "^6.1.0",
+    "@navikt/ds-icons": "^1.5.10",
     "@navikt/ds-react": "^6.1.0",
     "@navikt/ds-tokens": "^6.1.0",
-    "@navikt/ds-icons": "^1.5.10",
     "@navikt/familie-backend": "^10.0.15",
     "@navikt/familie-logging": "^7.0.0",
     "@navikt/familie-skjema": "^8.0.8",
