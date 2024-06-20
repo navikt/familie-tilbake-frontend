@@ -10,17 +10,24 @@ import FaktaContainer from './FaktaContainer';
 import { FeilutbetalingFaktaProvider } from './FeilutbetalingFaktaContext';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { ToggleName } from '../../../context/toggles';
+import { useToggles } from '../../../context/TogglesContext';
 import { Fagsystem, HendelseType, HendelseUndertype, Ytelsetype } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import {
     FaktaPeriode,
+    HarBrukerUttaltSegValg,
     IFeilutbetalingFakta,
     Tilbakekrevingsvalg,
 } from '../../../typer/feilutbetalingtyper';
 
 jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: jest.fn(),
+}));
+
+jest.mock('../../../context/TogglesContext', () => ({
+    useToggles: jest.fn(),
 }));
 
 jest.mock('../../../api/behandling', () => ({
@@ -80,6 +87,9 @@ describe('Tester: FaktaContainer', () => {
             konsekvensForYtelser: ['Reduksjon av ytelsen', 'Feilutbetaling'],
         },
         begrunnelse: undefined,
+        vurderingAvBrukersUttalelse: {
+            harBrukerUttaltSeg: HarBrukerUttaltSegValg.IKKE_VURDERT,
+        },
     };
     const fagsak = mock<IFagsak>({
         institusjon: undefined,
@@ -113,6 +123,11 @@ describe('Tester: FaktaContainer', () => {
             hentBehandlingMedBehandlingId: () => Promise.resolve(),
             settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
             nullstillIkkePersisterteKomponenter: jest.fn(),
+        }));
+        // @ts-ignore
+        useToggles.mockImplementation(() => ({
+            toggles: { [ToggleName.vurderBrukersUttalelse]: true },
+            feilmelding: '',
         }));
     };
 
@@ -151,6 +166,8 @@ describe('Tester: FaktaContainer', () => {
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(getAllByRole('combobox')).toHaveLength(3);
+
+        await act(() => user.click(getByTestId('brukerHarUttaltSeg.nei')));
 
         await act(() =>
             user.click(
@@ -245,7 +262,7 @@ describe('Tester: FaktaContainer', () => {
                 })
             )
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(5);
 
         await act(() =>
             user.click(
@@ -271,12 +288,21 @@ describe('Tester: FaktaContainer', () => {
                 })
             )
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(3);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
 
         await act(() =>
             user.selectOptions(
                 getByTestId('perioder.0.underårsak'),
                 HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
+            )
+        );
+        await act(() => user.click(getByTestId('brukerHarUttaltSeg.ja')));
+        await act(() =>
+            user.type(
+                getByLabelText(
+                    'Beskriv når og hvor bruker har uttalt seg. Gi også en kort oppsummering av uttalelsen'
+                ),
+                'Begrunnelse'
             )
         );
 
