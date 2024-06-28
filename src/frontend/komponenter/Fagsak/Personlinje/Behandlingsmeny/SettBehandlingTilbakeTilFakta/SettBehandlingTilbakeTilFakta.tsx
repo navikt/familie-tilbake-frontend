@@ -64,7 +64,7 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
                     settBehandlingTilbakeTilFakta();
                     onListElementClick();
                 }}
-                disabled={!behandling.kanEndres}
+                disabled={!behandling.kanSetteTilbakeTilFakta}
             >
                 {'Sett behanling tilbake til fakta'}
             </BehandlingsMenyButton>
