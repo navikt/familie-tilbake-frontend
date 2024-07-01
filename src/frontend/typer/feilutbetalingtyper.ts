@@ -124,6 +124,7 @@ export type VilkårsvurderingPeriode = {
 export interface IFeilutbetalingVilkårsvurdering {
     perioder: VilkårsvurderingPeriode[];
     rettsgebyr: number;
+    opprettetTid?: string;
 }
 
 export interface IBeregnSplittetPeriodeRespons {
