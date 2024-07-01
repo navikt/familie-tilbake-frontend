@@ -163,6 +163,14 @@ const FaktaSkjema: React.FC<IProps> = ({
                             >
                                 Nei
                             </Radio>
+                            <Radio
+                                key={HarBrukerUttaltSegValg.IKKE_AKTUELT}
+                                name="brukerHarUttaltSeg"
+                                value={HarBrukerUttaltSegValg.IKKE_AKTUELT}
+                                data-testid={`brukerHarUttaltSeg.ikke-aktuelt`}
+                            >
+                                Ikke aktuelt
+                            </Radio>
                         </RadioGroup>
                         {skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg ===
                             HarBrukerUttaltSegValg.JA && (
