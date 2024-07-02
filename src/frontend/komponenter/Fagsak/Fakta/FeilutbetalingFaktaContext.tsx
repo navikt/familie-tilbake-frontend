@@ -248,6 +248,8 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             if (
                 vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !== HarBrukerUttaltSegValg.NEI &&
                 vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !== HarBrukerUttaltSegValg.JA &&
+                vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !==
+                    HarBrukerUttaltSegValg.IKKE_AKTUELT &&
                 toggles[ToggleName.vurderBrukersUttalelse]
             ) {
                 feilmeldinger.push({
@@ -303,6 +305,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                     return vurderingAvBrukersUttalelse;
                 case HarBrukerUttaltSegValg.IKKE_VURDERT:
                 case HarBrukerUttaltSegValg.NEI:
+                case HarBrukerUttaltSegValg.IKKE_AKTUELT:
                     return {
                         harBrukerUttaltSeg: vurderingAvBrukersUttalelse.harBrukerUttaltSeg,
                     };
