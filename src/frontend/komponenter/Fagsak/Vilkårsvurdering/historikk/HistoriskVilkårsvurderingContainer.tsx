@@ -12,11 +12,11 @@ import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatoOgTidstring } from '../../../../utils';
 
-const StyledVilkårsvurdering = styled.div`
+const Container = styled.div`
     padding: ${ASpacing3};
 `;
 
-const HenterContainer = styled(StyledVilkårsvurdering)`
+const MidtstiltContainer = styled(Container)`
     text-align: center;
 `;
 
@@ -35,7 +35,7 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
     switch (feilutbetalingInaktiveVilkårsvurderinger?.status) {
         case RessursStatus.SUKSESS: {
             return (
-                <StyledVilkårsvurdering>
+                <Container>
                     <VStack gap="5">
                         <Heading level="2" size="small">
                             Tidligere vilkårsvurderinger på denne behandlingen
@@ -68,12 +68,12 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
                             <HistoriskVilkårsvurderingVisning perioder={skjemaData} />
                         )}
                     </VStack>
-                </StyledVilkårsvurdering>
+                </Container>
             );
         }
         case RessursStatus.HENTER:
             return (
-                <HenterContainer>
+                <MidtstiltContainer>
                     <BodyLong spacing>Henting av feilutbetalingen tar litt tid.</BodyLong>
                     <Loader
                         size="2xlarge"
@@ -81,7 +81,7 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
                         transparent={false}
                         variant="neutral"
                     />
-                </HenterContainer>
+                </MidtstiltContainer>
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
