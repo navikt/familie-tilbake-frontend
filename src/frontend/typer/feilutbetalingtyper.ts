@@ -59,6 +59,7 @@ export interface VurderingAvBrukersUttalelse {
 export enum HarBrukerUttaltSegValg {
     JA = 'JA',
     NEI = 'NEI',
+    IKKE_AKTUELT = 'IKKE_AKTUELT',
     IKKE_VURDERT = 'IKKE_VURDERT',
 }
 
