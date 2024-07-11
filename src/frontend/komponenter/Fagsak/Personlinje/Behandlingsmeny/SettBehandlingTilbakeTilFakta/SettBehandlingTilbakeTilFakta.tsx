@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { useState } from 'react';
 
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import SettBehandlingTilbakeTilFaktaModal from './SettBehandlingTilbakeTilFaktaModal';
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
@@ -26,8 +28,13 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
     const { settToast } = useApp();
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
-
+    const [visSettBehandlingTilbakeTilFaktaModal, settVisSettBehandlingTilbakeTilFaktaModel] =
+        useState<boolean>(false);
+    const lukkSettBehandlingTilbakeTilFaktaModal = () => {
+        settVisSettBehandlingTilbakeTilFaktaModel(false);
+    };
     const settBehandlingTilbakeTilFakta = () => {
+        lukkSettBehandlingTilbakeTilFaktaModal();
         nullstillIkkePersisterteKomponenter();
         request<void, string>({
             method: 'PUT',
@@ -61,13 +68,19 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
             <BehandlingsMenyButton
                 variant="tertiary"
                 onClick={() => {
-                    settBehandlingTilbakeTilFakta();
+                    settVisSettBehandlingTilbakeTilFaktaModel(true);
                     onListElementClick();
                 }}
                 disabled={!behandling.kanSetteTilbakeTilFakta}
             >
                 {'Sett behandling tilbake til fakta'}
             </BehandlingsMenyButton>
+
+            <SettBehandlingTilbakeTilFaktaModal
+                isOpen={visSettBehandlingTilbakeTilFaktaModal}
+                onConfirm={settBehandlingTilbakeTilFakta}
+                onCancel={lukkSettBehandlingTilbakeTilFaktaModal}
+            />
         </>
     );
 };
