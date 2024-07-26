@@ -22,7 +22,7 @@ import { dagensDato } from '../../../../utils/dato';
 import Datovelger from '../../Datovelger/Datovelger';
 import { FTButton, Spacer20 } from '../../Flytelementer';
 
-export const StyledAlert = styled(Alert)`
+const StyledAlert = styled(Alert)`
     margin-bottom: 1.5rem;
 `;
 

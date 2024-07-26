@@ -14,7 +14,7 @@ import { finnDatoRelativtTilNå } from '../../../utils';
 import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
-export const getDate = (): string => {
+const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });
 };
 

@@ -3,9 +3,9 @@ import { differenceInMilliseconds } from 'date-fns';
 import { dagensDato, isoStringTilDate } from './dato';
 import type { IPerson } from '../typer/person';
 
-export const millisekunderIEttÅr = 3.15576e10;
+const millisekunderIEttÅr = 3.15576e10;
 
-export const hentAlder = (fødselsdato: string): number => {
+const hentAlder = (fødselsdato: string): number => {
     return fødselsdato !== ''
         ? Math.floor(
               differenceInMilliseconds(dagensDato, isoStringTilDate(fødselsdato)) /
@@ -14,14 +14,14 @@ export const hentAlder = (fødselsdato: string): number => {
         : 0;
 };
 
-export const kunSiffer = (value: string) => /^\d+$/.test(value);
+const kunSiffer = (value: string) => /^\d+$/.test(value);
 
 const erPersonId = (personIdent: string) => {
     const id = personIdent.split(' ').join('');
     return /^[+-]?\d+(\.\d+)?$/.test(id) && id.length === 11;
 };
 
-export const erOrgNr = (orgNr: string) => {
+const erOrgNr = (orgNr: string) => {
     // Sjekker kun etter ni siffer, validerer ikke kontrollsifferet (det 9. sifferet)
     return kunSiffer(orgNr) && orgNr.length === 9;
 };
@@ -38,7 +38,7 @@ export const formaterIdent = (personIdent: string, ukjentTekst = 'Ukjent id') =>
           : ukjentTekst;
 };
 
-export const formaterNavnAlderOgIdent = (person: {
+const formaterNavnAlderOgIdent = (person: {
     personIdent: string;
     navn: string;
     fødselsdato: string;
