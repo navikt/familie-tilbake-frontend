@@ -17,7 +17,7 @@ export interface IInstitusjon {
     navn: string;
 }
 
-export interface IFagsakBehandling {
+interface IFagsakBehandling {
     behandlingId: string;
     eksternBrukId: string;
     type: Behandlingstype;

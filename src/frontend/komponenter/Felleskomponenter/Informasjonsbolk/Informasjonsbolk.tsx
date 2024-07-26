@@ -14,7 +14,7 @@ const StyledContainer = styled.div`
     }
 `;
 
-export interface IInformasjon {
+interface IInformasjon {
     label: string;
     tekst: string;
     tekstTitle?: string;

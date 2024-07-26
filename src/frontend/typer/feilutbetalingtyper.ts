@@ -97,7 +97,7 @@ export type Aktsomhetsvurdering = {
     beløpTilbakekreves?: number;
 };
 
-export type VilkårsresultatInfo = {
+type VilkårsresultatInfo = {
     vilkårsvurderingsresultat?: Vilkårsresultat;
     godTro?: GodTro;
     aktsomhet?: Aktsomhetsvurdering;
