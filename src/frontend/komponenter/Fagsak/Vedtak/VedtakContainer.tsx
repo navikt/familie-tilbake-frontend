@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Detail, Heading, Loader } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing1, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -21,7 +21,7 @@ import {
 } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
-import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
 const StyledVedtak = styled.div`
@@ -139,7 +139,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         <Spacer20 />
                     </>
                 )}
-                <DetailBold size="small">Resultat</DetailBold>
+                <Detail weight="semibold">Resultat</Detail>
                 <BodyLong size="small" spacing>
                     {vedtaksresultater[beregningsresultat.data.vedtaksresultat]}
                 </BodyLong>
