@@ -147,7 +147,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                     altText={'Del opp perioden'}
                     aria-label="Del opp perioden"
                 />
-                <InlineUndertekst>Del opp perioden haha</InlineUndertekst>
+                <InlineUndertekst>Del opp perioden</InlineUndertekst>
             </Link>
             {visModal && (
                 <DelOppPeriode
