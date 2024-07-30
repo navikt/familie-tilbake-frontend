@@ -15,7 +15,7 @@ import {
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
@@ -181,23 +181,19 @@ const Totrinnskontroll: React.FC = () => {
                                     loading={senderInn}
                                     disabled={senderInn || disableBekreft || sendTilSaksbehandler}
                                 >
-                                    Godkjenn
-                                    <br />
-                                    vedtaket
+                                    Godkjenn vedtaket
                                 </Button>
                             </div>
                             <div>
-                                <FTButton
+                                <Button
                                     size="small"
                                     variant="primary"
                                     onClick={sendInnSkjema}
                                     loading={senderInn}
                                     disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
                                 >
-                                    Send til
-                                    <br />
-                                    saksbehandler
-                                </FTButton>
+                                    Send til saksbehandler
+                                </Button>
                             </div>
                         </Navigering>
                     )}

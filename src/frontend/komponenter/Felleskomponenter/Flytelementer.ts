@@ -7,7 +7,6 @@ import {
     ASpacing2,
     ASpacing4,
     ASpacing5,
-    ASpacing8,
 } from '@navikt/ds-tokens/dist/tokens';
 
 export const Spacer20 = styled.div`
@@ -29,11 +28,6 @@ export const FTAlertStripe = styled(Alert)`
     .navds-alert__wrapper {
         max-width: fit-content;
     }
-`;
-
-export const FTButton = styled(Button)`
-    padding-right: ${ASpacing8};
-    padding-left: ${ASpacing8};
 `;
 
 export const BehandlingsMenyButton = styled(Button)`
