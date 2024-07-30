@@ -2,8 +2,17 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, BodyShort, Button, Detail, Heading, Loader } from '@navikt/ds-react';
-import { AFontWeightBold, ASpacing1, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import {
+    Alert,
+    BodyLong,
+    BodyShort,
+    Button,
+    Detail,
+    Heading,
+    HStack,
+    Loader,
+} from '@navikt/ds-react';
+import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { BrevmottakereAlert } from './BrevmottakereAlert';
@@ -43,12 +52,6 @@ const StyledAlert = styled(Alert)`
 
 const VarselbrevInfo = styled(BodyShort)`
     font-weight: ${AFontWeightBold};
-`;
-
-const KnappeDiv = styled.div`
-    & button {
-        margin: 0 ${ASpacing1};
-    }
 `;
 
 interface IProps {
@@ -163,19 +166,17 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         </StyledAlert>
                     )}
                 <StyledNavigering>
-                    <div>
-                        {!erLesevisning && (
-                            <Button
-                                variant="primary"
-                                onClick={sendInnSkjema}
-                                loading={senderInn}
-                                disabled={senderInn || disableBekreft || harValideringsFeil}
-                            >
-                                Til godkjenning
-                            </Button>
-                        )}
-                    </div>
-                    <KnappeDiv>
+                    {!erLesevisning && (
+                        <Button
+                            variant="primary"
+                            onClick={sendInnSkjema}
+                            loading={senderInn}
+                            disabled={senderInn || disableBekreft || harValideringsFeil}
+                        >
+                            Til godkjenning
+                        </Button>
+                    )}
+                    <HStack gap="1">
                         {kanViseForhåndsvisning && <ForhåndsvisVedtaksbrev />}
                         {!erLesevisning && !erRevurderingKlageKA && (
                             <Button
@@ -187,12 +188,10 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                                 Lagre utkast
                             </Button>
                         )}
-                    </KnappeDiv>
-                    <div>
-                        <Button variant="secondary" onClick={gåTilForrige}>
-                            Forrige
-                        </Button>
-                    </div>
+                    </HStack>
+                    <Button variant="secondary" onClick={gåTilForrige}>
+                        Forrige
+                    </Button>
                 </StyledNavigering>
             </StyledVedtak>
         );

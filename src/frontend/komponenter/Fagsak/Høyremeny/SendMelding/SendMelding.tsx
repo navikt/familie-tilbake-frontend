@@ -98,22 +98,16 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
             )}
             <Spacer20 />
             <Navigering>
-                <div>
-                    <Button
-                        size="small"
-                        variant="primary"
-                        onClick={() => sendBrev()}
-                        loading={senderInn}
-                        disabled={!kanSende}
-                    >
-                        Send brev
-                    </Button>
-                </div>
-                {kanSende && (
-                    <div>
-                        <ForhåndsvisBrev />
-                    </div>
-                )}
+                <Button
+                    size="small"
+                    variant="primary"
+                    onClick={() => sendBrev()}
+                    loading={senderInn}
+                    disabled={!kanSende}
+                >
+                    Send brev
+                </Button>
+                {kanSende && <ForhåndsvisBrev />}
             </Navigering>
         </div>
     );
