@@ -174,7 +174,7 @@ const Totrinnskontroll: React.FC = () => {
                     {!erLesevisning && (
                         <Navigering>
                             <div>
-                                <FTButton
+                                <Button
                                     size="small"
                                     variant="primary"
                                     onClick={sendInnSkjema}
@@ -184,7 +184,7 @@ const Totrinnskontroll: React.FC = () => {
                                     Godkjenn
                                     <br />
                                     vedtaket
-                                </FTButton>
+                                </Button>
                             </div>
                             <div>
                                 <FTButton

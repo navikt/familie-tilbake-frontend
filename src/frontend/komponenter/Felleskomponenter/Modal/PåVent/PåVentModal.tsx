@@ -3,7 +3,7 @@ import * as React from 'react';
 import { addDays, addMonths } from 'date-fns';
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, Heading, Modal, Select } from '@navikt/ds-react';
+import { Alert, BodyLong, Button, Heading, Modal, Select } from '@navikt/ds-react';
 import { ASpacing8, ATextDanger } from '@navikt/ds-tokens/dist/tokens';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
@@ -20,7 +20,7 @@ import {
 import { dateBeforeToday } from '../../../../utils';
 import { dagensDato } from '../../../../utils/dato';
 import Datovelger from '../../Datovelger/Datovelger';
-import { FTButton, Spacer20 } from '../../Flytelementer';
+import { Spacer20 } from '../../Flytelementer';
 
 const StyledAlert = styled(Alert)`
     margin-bottom: 1.5rem;
@@ -156,7 +156,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                 </>
             </Modal.Body>
             <Modal.Footer>
-                <FTButton
+                <Button
                     variant="primary"
                     key={'bekreft'}
                     onClick={() => {
@@ -166,8 +166,8 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     size="small"
                 >
                     Oppdater frist og årsak
-                </FTButton>
-                <FTButton
+                </Button>
+                <Button
                     variant="tertiary"
                     key={'avbryt'}
                     onClick={() => onOkTaAvVent(behandling.behandlingId)}
@@ -175,7 +175,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     disabled={!behandling.kanEndres || venterPåKravgrunnlag}
                 >
                     Ta av vent
-                </FTButton>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

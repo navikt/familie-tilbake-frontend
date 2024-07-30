@@ -6,6 +6,7 @@ import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import {
     BodyLong,
     Box,
+    Button,
     Heading,
     HGrid,
     Link,
@@ -29,7 +30,7 @@ import {
 import { IBehandling } from '../../../../typer/behandling';
 import { isoStringTilDate } from '../../../../utils/dato';
 import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
-import { FTButton, Navigering } from '../../../Felleskomponenter/Flytelementer';
+import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
@@ -245,12 +246,12 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
 
                 {!erLesevisning && (
                     <Navigering>
-                        <FTButton variant="primary" onClick={() => onBekreft(periode)}>
+                        <Button variant="primary" onClick={() => onBekreft(periode)}>
                             Bekreft
-                        </FTButton>
-                        <FTButton variant="secondary" onClick={() => settValgtPeriode(undefined)}>
+                        </Button>
+                        <Button variant="secondary" onClick={() => settValgtPeriode(undefined)}>
                             Lukk
-                        </FTButton>
+                        </Button>
                     </Navigering>
                 )}
             </StyledVStack>

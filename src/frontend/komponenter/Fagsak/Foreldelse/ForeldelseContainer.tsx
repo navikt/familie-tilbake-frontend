@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, Heading, Loader } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -11,7 +11,7 @@ import FeilutbetalingForeldelsePerioder from './ForeldelsePeriode/Feilutbetaling
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IBehandling } from '../../../typer/behandling';
 import { finnDatoRelativtTilNå } from '../../../utils';
-import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 const getDate = (): string => {
@@ -61,12 +61,12 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                     Automatisk vurdert
                 </BodyLong>
                 <Navigering>
-                    <FTButton variant="primary" onClick={gåTilNesteSteg}>
+                    <Button variant="primary" onClick={gåTilNesteSteg}>
                         Neste
-                    </FTButton>
-                    <FTButton variant="secondary" onClick={gåTilForrigeSteg}>
+                    </Button>
+                    <Button variant="secondary" onClick={gåTilForrigeSteg}>
                         Forrige
-                    </FTButton>
+                    </Button>
                 </Navigering>
             </StyledAutomatiskForeldelse>
         );

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { addDays, addMonths } from 'date-fns';
 
-import { ErrorMessage, Modal, Select } from '@navikt/ds-react';
+import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
@@ -11,7 +11,6 @@ import { dagensDato } from '../../../../../utils/dato';
 import Datovelger from '../../../../Felleskomponenter/Datovelger/Datovelger';
 import {
     BehandlingsMenyButton,
-    FTButton,
     Spacer20,
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
@@ -101,7 +100,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                         )}
                     </Modal.Body>
                     <Modal.Footer>
-                        <FTButton
+                        <Button
                             variant="primary"
                             key={'bekreft'}
                             onClick={() => {
@@ -110,15 +109,10 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                             size="small"
                         >
                             Bekreft
-                        </FTButton>
-                        <FTButton
-                            variant="tertiary"
-                            key={'avbryt'}
-                            onClick={lukkModal}
-                            size="small"
-                        >
+                        </Button>
+                        <Button variant="tertiary" key={'avbryt'} onClick={lukkModal} size="small">
                             Avbryt
-                        </FTButton>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             )}

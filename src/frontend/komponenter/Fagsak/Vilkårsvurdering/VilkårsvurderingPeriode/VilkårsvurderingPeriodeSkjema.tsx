@@ -5,6 +5,7 @@ import { styled } from 'styled-components';
 import {
     BodyShort,
     Box,
+    Button,
     Detail,
     Heading,
     HelpText,
@@ -45,7 +46,7 @@ import {
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatostring, isEmpty } from '../../../../utils';
-import { FTButton, Navigering } from '../../../Felleskomponenter/Flytelementer';
+import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
@@ -423,13 +424,13 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             </VStack>
             <Navigering>
                 {!periode.foreldet && !erLesevisning && (
-                    <FTButton variant="primary" onClick={() => onBekreft(periode)}>
+                    <Button variant="primary" onClick={() => onBekreft(periode)}>
                         Bekreft
-                    </FTButton>
+                    </Button>
                 )}
-                <FTButton variant="secondary" onClick={() => settValgtPeriode(undefined)}>
+                <Button variant="secondary" onClick={() => settValgtPeriode(undefined)}>
                     Lukk
-                </FTButton>
+                </Button>
             </Navigering>
         </StyledBox>
     ) : null;

@@ -3,6 +3,7 @@ import * as React from 'react';
 import {
     Alert,
     BodyShort,
+    Button,
     Checkbox,
     Detail,
     Heading,
@@ -23,7 +24,7 @@ import { useToggles } from '../../../context/TogglesContext';
 import { Ytelsetype } from '../../../kodeverk';
 import { HarBrukerUttaltSegValg, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
-import { FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
+import { Navigering } from '../../Felleskomponenter/Flytelementer';
 
 interface IProps {
     ytelse: Ytelsetype;
@@ -203,18 +204,18 @@ const FaktaSkjema: React.FC<IProps> = ({
                     </VStack>
                 )}
                 <Navigering>
-                    <FTButton
+                    <Button
                         variant="primary"
                         onClick={sendInnSkjema}
                         loading={senderInn}
                         disabled={erLesevisning && !stegErBehandlet}
                     >
                         {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                    </FTButton>
+                    </Button>
                     {behandling.harVerge && (
-                        <FTButton variant="secondary" onClick={gåTilForrige}>
+                        <Button variant="secondary" onClick={gåTilForrige}>
                             Forrige
-                        </FTButton>
+                        </Button>
                     )}
                 </Navigering>
             </VStack>

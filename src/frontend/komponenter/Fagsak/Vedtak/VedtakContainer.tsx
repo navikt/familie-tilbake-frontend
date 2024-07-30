@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, BodyShort, Detail, Heading, Loader } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, Detail, Heading, Loader } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing1, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -21,7 +21,7 @@ import {
 } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
-import { FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
 const StyledVedtak = styled.div`
@@ -165,33 +165,33 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                 <StyledNavigering>
                     <div>
                         {!erLesevisning && (
-                            <FTButton
+                            <Button
                                 variant="primary"
                                 onClick={sendInnSkjema}
                                 loading={senderInn}
                                 disabled={senderInn || disableBekreft || harValideringsFeil}
                             >
                                 Til godkjenning
-                            </FTButton>
+                            </Button>
                         )}
                     </div>
                     <KnappeDiv>
                         {kanViseForhåndsvisning && <ForhåndsvisVedtaksbrev />}
                         {!erLesevisning && !erRevurderingKlageKA && (
-                            <FTButton
+                            <Button
                                 variant="tertiary"
                                 onClick={lagreUtkast}
                                 loading={senderInn}
                                 disabled={senderInn}
                             >
                                 Lagre utkast
-                            </FTButton>
+                            </Button>
                         )}
                     </KnappeDiv>
                     <div>
-                        <FTButton variant="secondary" onClick={gåTilForrige}>
+                        <Button variant="secondary" onClick={gåTilForrige}>
                             Forrige
-                        </FTButton>
+                        </Button>
                     </div>
                 </StyledNavigering>
             </StyledVedtak>

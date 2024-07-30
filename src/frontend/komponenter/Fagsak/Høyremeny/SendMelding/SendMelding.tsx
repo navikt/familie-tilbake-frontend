@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { BodyShort, Heading, Select, Textarea } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, Select, Textarea } from '@navikt/ds-react';
 
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
@@ -8,7 +8,7 @@ import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak, målform } from '../../../../typer/fagsak';
-import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
 
@@ -99,7 +99,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
             <Spacer20 />
             <Navigering>
                 <div>
-                    <FTButton
+                    <Button
                         size="small"
                         variant="primary"
                         onClick={() => sendBrev()}
@@ -107,7 +107,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
                         disabled={!kanSende}
                     >
                         Send brev
-                    </FTButton>
+                    </Button>
                 </div>
                 {kanSende && (
                     <div>

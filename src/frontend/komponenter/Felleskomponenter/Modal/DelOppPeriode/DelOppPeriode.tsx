@@ -3,14 +3,13 @@ import * as React from 'react';
 import { endOfMonth } from 'date-fns';
 import { styled } from 'styled-components';
 
-import { BodyShort, Label, Modal, MonthPicker, useMonthpicker } from '@navikt/ds-react';
+import { BodyShort, Button, Label, Modal, MonthPicker, useMonthpicker } from '@navikt/ds-react';
 import { ABorderStrong, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { type Periode as TidslinjePeriode, Tidslinje } from '@navikt/familie-tidslinje';
 
 import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 import { formatterDatostring } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
-import { FTButton } from '../../Flytelementer';
 
 const TidslinjeContainer = styled.div`
     border: 1px solid ${ABorderStrong};
@@ -85,7 +84,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
                         </MonthPicker>
                     </Modal.Body>
                     <Modal.Footer>
-                        <FTButton
+                        <Button
                             variant="primary"
                             key={'bekreft'}
                             onClick={onSubmit}
@@ -93,8 +92,8 @@ export const DelOppPeriode: React.FC<IProps> = ({
                             size="small"
                         >
                             Bekreft
-                        </FTButton>
-                        <FTButton
+                        </Button>
+                        <Button
                             variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
@@ -103,7 +102,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
                             size="small"
                         >
                             Lukk
-                        </FTButton>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             )}

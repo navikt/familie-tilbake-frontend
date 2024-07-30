@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 
 import {
     BodyLong,
+    Button,
     ErrorMessage,
     Heading,
     HGrid,
@@ -19,7 +20,7 @@ import { useVerge } from './VergeContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
-import { FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
+import { Navigering } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 const StyledVerge = styled.div`
@@ -148,13 +149,13 @@ const VergeContainer: React.FC = () => {
                     />
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
                     <Navigering>
-                        <FTButton
+                        <Button
                             variant="primary"
                             onClick={sendInn}
                             disabled={erLesevisning && !stegErBehandlet}
                         >
                             {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                        </FTButton>
+                        </Button>
                     </Navigering>
                 </StyledVStack>
             )}
