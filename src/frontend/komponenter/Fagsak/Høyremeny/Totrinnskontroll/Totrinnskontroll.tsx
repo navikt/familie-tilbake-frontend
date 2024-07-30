@@ -173,28 +173,24 @@ const Totrinnskontroll: React.FC = () => {
                     })}
                     {!erLesevisning && (
                         <Navigering>
-                            <div>
-                                <Button
-                                    size="small"
-                                    variant="primary"
-                                    onClick={sendInnSkjema}
-                                    loading={senderInn}
-                                    disabled={senderInn || disableBekreft || sendTilSaksbehandler}
-                                >
-                                    Godkjenn vedtaket
-                                </Button>
-                            </div>
-                            <div>
-                                <Button
-                                    size="small"
-                                    variant="primary"
-                                    onClick={sendInnSkjema}
-                                    loading={senderInn}
-                                    disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
-                                >
-                                    Send til saksbehandler
-                                </Button>
-                            </div>
+                            <Button
+                                size="small"
+                                variant="primary"
+                                onClick={sendInnSkjema}
+                                loading={senderInn}
+                                disabled={senderInn || disableBekreft || sendTilSaksbehandler}
+                            >
+                                Godkjenn vedtaket
+                            </Button>
+                            <Button
+                                size="small"
+                                variant="primary"
+                                onClick={sendInnSkjema}
+                                loading={senderInn}
+                                disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
+                            >
+                                Send til saksbehandler
+                            </Button>
                         </Navigering>
                     )}
                 </StyledContainer>
