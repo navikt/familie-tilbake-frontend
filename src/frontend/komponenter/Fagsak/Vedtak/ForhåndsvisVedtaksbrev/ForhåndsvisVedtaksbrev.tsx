@@ -1,7 +1,8 @@
 import * as React from 'react';
 
+import { Button } from '@navikt/ds-react';
+
 import { useForhåndsvisVedtaksbrev } from './useForhåndsvisVedtaksbrev';
-import { FTButton } from '../../../Felleskomponenter/Flytelementer';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 const ForhåndsvisVedtaksbrev: React.FC = () => {
@@ -21,9 +22,9 @@ const ForhåndsvisVedtaksbrev: React.FC = () => {
 
     return (
         <>
-            <FTButton variant="tertiary" onClick={() => kanViseForhåndsvisning()}>
+            <Button variant="tertiary" onClick={() => kanViseForhåndsvisning()}>
                 Forhåndsvis vedtaksbrev
-            </FTButton>
+            </Button>
             {visModal && (
                 <PdfVisningModal
                     åpen={visModal}

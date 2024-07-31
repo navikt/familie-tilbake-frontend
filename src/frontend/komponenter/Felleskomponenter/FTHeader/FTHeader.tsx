@@ -27,7 +27,7 @@ const StyledLink = styled.a`
     text-decoration: none;
 `;
 
-export interface IHeaderProps {
+interface IHeaderProps {
     innloggetSaksbehandler?: ISaksbehandler;
 }
 

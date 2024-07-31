@@ -15,7 +15,7 @@ import {
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { FTButton, Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
@@ -173,32 +173,24 @@ const Totrinnskontroll: React.FC = () => {
                     })}
                     {!erLesevisning && (
                         <Navigering>
-                            <div>
-                                <FTButton
-                                    size="small"
-                                    variant="primary"
-                                    onClick={sendInnSkjema}
-                                    loading={senderInn}
-                                    disabled={senderInn || disableBekreft || sendTilSaksbehandler}
-                                >
-                                    Godkjenn
-                                    <br />
-                                    vedtaket
-                                </FTButton>
-                            </div>
-                            <div>
-                                <FTButton
-                                    size="small"
-                                    variant="primary"
-                                    onClick={sendInnSkjema}
-                                    loading={senderInn}
-                                    disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
-                                >
-                                    Send til
-                                    <br />
-                                    saksbehandler
-                                </FTButton>
-                            </div>
+                            <Button
+                                size="small"
+                                variant="primary"
+                                onClick={sendInnSkjema}
+                                loading={senderInn}
+                                disabled={senderInn || disableBekreft || sendTilSaksbehandler}
+                            >
+                                Godkjenn vedtaket
+                            </Button>
+                            <Button
+                                size="small"
+                                variant="primary"
+                                onClick={sendInnSkjema}
+                                loading={senderInn}
+                                disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
+                            >
+                                Send til saksbehandler
+                            </Button>
                         </Navigering>
                     )}
                 </StyledContainer>

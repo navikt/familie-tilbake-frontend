@@ -27,7 +27,7 @@ export const isEmpty = (text?: string | number | boolean | Date | null) =>
 
 type ValideringsResultat = string | null | undefined;
 
-export const hasValidText = (text: string): ValideringsResultat => {
+const hasValidText = (text: string): ValideringsResultat => {
     if (!textRegex.test(text)) {
         const illegalChars = text.replace(textGyldigRegex, '');
         return invalidTextMessage(illegalChars.replace(/[\t]/g, 'Tabulatortegn'));
@@ -83,7 +83,7 @@ export const validerTekstMaksLengde = (maxLengde: number) => (verdi: string) => 
     return _validerTekst(_validerMaxLength(maxLengde), _minLength3, verdi);
 };
 
-export const validerTekst = (verdi: string): ValideringsResultat => {
+const validerTekst = (verdi: string): ValideringsResultat => {
     return _validerTekst(_maxLength1500, _minLength3, verdi);
 };
 

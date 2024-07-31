@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
+import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
@@ -9,11 +9,7 @@ import { Ytelsetype } from '../../../../../kodeverk';
 import { IBehandling } from '../../../../../typer/behandling';
 import { finnMuligeEnheter, IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
-import {
-    BehandlingsMenyButton,
-    FTButton,
-    Spacer8,
-} from '../../../../Felleskomponenter/Flytelementer';
+import { BehandlingsMenyButton, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 
 interface IProps {
     ytelse: Ytelsetype;
@@ -97,7 +93,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                         )}
                     </Modal.Body>
                     <Modal.Footer>
-                        <FTButton
+                        <Button
                             variant="primary"
                             disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
                             key={'bekreft'}
@@ -105,8 +101,8 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                             size="small"
                         >
                             Bekreft
-                        </FTButton>
-                        <FTButton
+                        </Button>
+                        <Button
                             variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
@@ -115,7 +111,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                             size="small"
                         >
                             Avbryt
-                        </FTButton>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             )}

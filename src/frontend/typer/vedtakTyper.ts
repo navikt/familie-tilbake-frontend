@@ -15,7 +15,7 @@ export interface IBeregningsresultat {
     vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelse;
 }
 
-export type VedtaksbrevUnderavsnitt = {
+type VedtaksbrevUnderavsnitt = {
     underavsnittstype?: Underavsnittstype;
     brødtekst?: string;
     fritekst?: string;

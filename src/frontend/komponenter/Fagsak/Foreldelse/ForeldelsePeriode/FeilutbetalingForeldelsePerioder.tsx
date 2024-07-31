@@ -2,14 +2,14 @@ import * as React from 'react';
 
 import classNames from 'classnames';
 
-import { VStack } from '@navikt/ds-react';
+import { Button, VStack } from '@navikt/ds-react';
 import { type Periode } from '@navikt/familie-tidslinje';
 
 import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
-import { FTButton, Navigering } from '../../../Felleskomponenter/Flytelementer';
+import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
@@ -110,22 +110,22 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
             )}
             <Navigering>
                 {erAutoutført || (stegErBehandlet && erLesevisning) ? (
-                    <FTButton variant="primary" onClick={gåTilNesteSteg}>
+                    <Button variant="primary" onClick={gåTilNesteSteg}>
                         Neste
-                    </FTButton>
+                    </Button>
                 ) : (
-                    <FTButton
+                    <Button
                         variant="primary"
                         onClick={sendInnSkjema}
                         loading={senderInn}
                         disabled={disableBekreft}
                     >
                         {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                    </FTButton>
+                    </Button>
                 )}
-                <FTButton variant="secondary" onClick={gåTilForrigeSteg}>
+                <Button variant="secondary" onClick={gåTilForrigeSteg}>
                     Forrige
-                </FTButton>
+                </Button>
             </Navigering>
         </VStack>
     ) : null;

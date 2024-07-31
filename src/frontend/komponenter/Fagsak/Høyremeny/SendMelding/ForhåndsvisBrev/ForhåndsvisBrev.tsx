@@ -1,7 +1,8 @@
 import * as React from 'react';
 
+import { Button } from '@navikt/ds-react';
+
 import { useForhåndsvisBrev } from './useForhåndsvisBrev';
-import { FTButton } from '../../../../Felleskomponenter/Flytelementer';
 import PdfVisningModal from '../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { useSendMelding } from '../SendMeldingContext';
 
@@ -27,7 +28,7 @@ const ForhåndsvisBrev: React.FC<IProps> = () => {
 
     return (
         <>
-            <FTButton
+            <Button
                 size="small"
                 variant="tertiary"
                 onClick={() => {
@@ -37,7 +38,7 @@ const ForhåndsvisBrev: React.FC<IProps> = () => {
                 }}
             >
                 Forhåndsvis
-            </FTButton>
+            </Button>
             {visModal && (
                 <PdfVisningModal
                     åpen={visModal}

@@ -1,10 +1,9 @@
 import * as React from 'react';
 
-import { BodyShort, Heading, HGrid, VStack } from '@navikt/ds-react';
+import { BodyShort, Detail, Heading, HGrid, VStack } from '@navikt/ds-react';
 
 import { IFeilutbetalingFakta, tilbakekrevingsvalg } from '../../../typer/feilutbetalingtyper';
 import { formatterDatostring } from '../../../utils';
-import { DetailBold } from '../../Felleskomponenter/Flytelementer';
 
 interface IProps {
     feilutbetalingFakta: IFeilutbetalingFakta;
@@ -19,7 +18,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
             <VStack gap="4">
                 <HGrid columns={2}>
                     <div>
-                        <DetailBold>Årsak(er) til revurdering</DetailBold>
+                        <Detail weight="semibold">Årsak(er) til revurdering</Detail>
                         {feilutbetalingFakta.faktainfo?.revurderingsårsak && (
                             <BodyShort size="small">
                                 {feilutbetalingFakta.faktainfo.revurderingsårsak}
@@ -27,7 +26,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                         )}
                     </div>
                     <div>
-                        <DetailBold>Dato for revurderingsvedtak</DetailBold>
+                        <Detail weight="semibold">Dato for revurderingsvedtak</Detail>
                         <BodyShort size="small">
                             {formatterDatostring(feilutbetalingFakta.revurderingsvedtaksdato)}
                         </BodyShort>
@@ -35,7 +34,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                 </HGrid>
                 <HGrid columns={2}>
                     <div>
-                        <DetailBold>Resultat</DetailBold>
+                        <Detail weight="semibold">Resultat</Detail>
                         {feilutbetalingFakta.faktainfo?.revurderingsresultat && (
                             <BodyShort size="small">
                                 {feilutbetalingFakta.faktainfo.revurderingsresultat}
@@ -43,7 +42,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                         )}
                     </div>
                     <div>
-                        <DetailBold>Konsekvens</DetailBold>
+                        <Detail weight="semibold">Konsekvens</Detail>
                         {feilutbetalingFakta.faktainfo?.konsekvensForYtelser && (
                             <BodyShort size="small">
                                 {feilutbetalingFakta.faktainfo.konsekvensForYtelser?.join(', ')}
@@ -52,7 +51,7 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                     </div>
                 </HGrid>
                 <div>
-                    <DetailBold>Tilbakekrevingsvalg</DetailBold>
+                    <Detail weight="semibold">Tilbakekrevingsvalg</Detail>
                     {feilutbetalingFakta.faktainfo?.tilbakekrevingsvalg && (
                         <BodyShort size="small">
                             {tilbakekrevingsvalg[feilutbetalingFakta.faktainfo.tilbakekrevingsvalg]}

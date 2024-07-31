@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ErrorMessage, Modal, Select } from '@navikt/ds-react';
+import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 
 import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';
 import {
@@ -14,7 +14,6 @@ import { IFagsak } from '../../../../../typer/fagsak';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
 import {
     BehandlingsMenyButton,
-    FTButton,
     Spacer20,
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
@@ -100,7 +99,7 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                         )}
                     </Modal.Body>
                     <Modal.Footer>
-                        <FTButton
+                        <Button
                             variant="primary"
                             key={'bekreft'}
                             onClick={() => {
@@ -109,8 +108,8 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                             size="small"
                         >
                             Ok
-                        </FTButton>
-                        <FTButton
+                        </Button>
+                        <Button
                             variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
@@ -120,7 +119,7 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                             size="small"
                         >
                             Avbryt
-                        </FTButton>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             )}
