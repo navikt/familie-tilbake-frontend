@@ -110,15 +110,15 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                                     onListElementClick={() => settVisMeny(false)}
                                                 />
                                             </li>
-                                            <li>
-                                                <SettBehandlingTilbakeTilFakta
-                                                    behandling={behandling.data}
-                                                    fagsak={fagsak}
-                                                    onListElementClick={() => settVisMeny(false)}
-                                                />
-                                            </li>
                                         </>
                                     )}
+                                    <li>
+                                        <SettBehandlingTilbakeTilFakta
+                                            behandling={behandling.data}
+                                            fagsak={fagsak}
+                                            onListElementClick={() => settVisMeny(false)}
+                                        />
+                                    </li>
                                     {!venterPåKravgrunnlag &&
                                         (behandling.data.erBehandlingPåVent || ventegrunn ? (
                                             <li>
