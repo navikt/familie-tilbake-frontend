@@ -73,6 +73,15 @@ const useBehandlingApi = () => {
         });
     };
 
+    const gjerFeilutbetalingInaktiveVilkårsvurderingerKall = (
+        behandlingId: string
+    ): Promise<Ressurs<IFeilutbetalingVilkårsvurdering[]>> => {
+        return request<void, IFeilutbetalingVilkårsvurdering[]>({
+            method: 'GET',
+            url: `${behandlingerApiPrefix}/${behandlingId}/vilkarsvurdering/inaktiv`,
+        });
+    };
+
     const sendInnFeilutbetalingVilkårsvurdering = (
         behandlingId: string,
         payload: VilkårdsvurderingStegPayload
@@ -201,6 +210,7 @@ const useBehandlingApi = () => {
         fjernManuellBrevmottaker,
         hentManuelleBrevmottakere,
         kallAngreSendTilBeslutter,
+        gjerFeilutbetalingInaktiveVilkårsvurderingerKall,
     };
 };
 

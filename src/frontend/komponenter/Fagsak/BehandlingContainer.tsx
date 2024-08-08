@@ -18,6 +18,8 @@ import VedtakContainer from './Vedtak/VedtakContainer';
 import VergeContainer from './Verge/VergeContainer';
 import { VergeProvider } from './Verge/VergeContext';
 import { FeilutbetalingVilkårsvurderingProvider } from './Vilkårsvurdering/FeilutbetalingVilkårsvurderingContext';
+import HistoriskVilkårsvurderingContainer from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContainer';
+import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
 import { useBehandling } from '../../context/BehandlingContext';
 import { Behandlingstatus, IBehandling } from '../../typer/behandling';
@@ -141,6 +143,17 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                                     fagsak={fagsak}
                                 />
                             </FeilutbetalingVilkårsvurderingProvider>
+                        }
+                    />
+                    <Route
+                        path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
+                        element={
+                            <HistoriskVilkårsvurderingProvider behandling={behandling}>
+                                <HistoriskVilkårsvurderingContainer
+                                    behandling={behandling}
+                                    fagsak={fagsak}
+                                />
+                            </HistoriskVilkårsvurderingProvider>
                         }
                     />
 
