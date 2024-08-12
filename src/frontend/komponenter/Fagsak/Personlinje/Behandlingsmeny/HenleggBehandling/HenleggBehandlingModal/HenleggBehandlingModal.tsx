@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Modal, Select, Textarea } from '@navikt/ds-react';
+import { Button, Modal, Select, Textarea } from '@navikt/ds-react';
 
 import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
 import {
@@ -9,7 +9,7 @@ import {
     IBehandling,
 } from '../../../../../../typer/behandling';
 import { IFagsak, målform } from '../../../../../../typer/fagsak';
-import { FTButton, Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
+import { Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
 import { LabelMedSpråk } from '../../../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 
@@ -115,7 +115,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                             skjema={skjema}
                             kanForhåndsvise={kanForhåndsvise}
                         />
-                        <FTButton
+                        <Button
                             variant="primary"
                             key={'bekreft'}
                             onClick={() => {
@@ -124,8 +124,8 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                             size="small"
                         >
                             Henlegg behandling
-                        </FTButton>
-                        <FTButton
+                        </Button>
+                        <Button
                             variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
@@ -135,7 +135,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                             size="small"
                         >
                             Avbryt
-                        </FTButton>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             )}

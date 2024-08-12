@@ -3,7 +3,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { styled } from 'styled-components';
 
-import { BodyShort, VStack } from '@navikt/ds-react';
+import { BodyShort, Button, VStack } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import { type Periode } from '@navikt/familie-tidslinje';
 
@@ -13,7 +13,7 @@ import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/Vilkårsv
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
-import { FTAlertStripe, FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
+import { FTAlertStripe, Navigering } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 
 const ValideringsFeilmelding = styled(BodyShort)`
@@ -141,22 +141,22 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
             )}
             <Navigering>
                 {erAutoutført || (stegErBehandlet && erLesevisning) ? (
-                    <FTButton variant="primary" onClick={gåTilNesteSteg}>
+                    <Button variant="primary" onClick={gåTilNesteSteg}>
                         Neste
-                    </FTButton>
+                    </Button>
                 ) : (
-                    <FTButton
+                    <Button
                         variant="primary"
                         onClick={sendInnSkjema}
                         loading={senderInn}
                         disabled={erHovedKnappDisabled}
                     >
                         {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                    </FTButton>
+                    </Button>
                 )}
-                <FTButton variant="secondary" onClick={gåTilForrigeSteg}>
+                <Button variant="secondary" onClick={gåTilForrigeSteg}>
                     Forrige
-                </FTButton>
+                </Button>
             </Navigering>
         </VStack>
     ) : null;

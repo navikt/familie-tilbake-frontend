@@ -17,8 +17,3 @@ export interface IArbeidsfordelingsenhet {
     enhetId: string;
     enhetNavn: string;
 }
-
-export interface IRestEndreBehandlendeEnhet {
-    enhetId: string;
-    begrunnelse: string;
-}

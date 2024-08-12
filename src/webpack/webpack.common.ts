@@ -9,7 +9,7 @@ import webpack from 'webpack';
 const commonConfig: webpack.Configuration = {
     entry: ['./src/frontend/index.tsx'],
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.less'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
         fallback: { crypto: false },
     },
     plugins: [
@@ -43,7 +43,7 @@ const commonConfig: webpack.Configuration = {
                 },
             },
             {
-                test: /\.(less|css)$/,
+                test: /\.(css)$/,
                 use: [
                     { loader: 'style-loader' },
                     {
@@ -52,7 +52,6 @@ const commonConfig: webpack.Configuration = {
                             modules: 'icss',
                         },
                     },
-                    { loader: 'less-loader' },
                 ],
             },
         ],

@@ -109,7 +109,7 @@ export interface VergeDto {
     navn: string;
 }
 
-export interface VergePayload {
+interface VergePayload {
     type: Vergetype;
     ident?: string;
     orgNr?: string;

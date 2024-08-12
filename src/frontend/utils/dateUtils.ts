@@ -1,12 +1,13 @@
 import {
-    parseISO,
-    differenceInCalendarYears,
     add,
-    differenceInMonths,
-    isBefore,
-    endOfMonth,
-    endOfDay,
+    differenceInCalendarYears,
     differenceInMilliseconds,
+    differenceInMonths,
+    Duration,
+    endOfDay,
+    endOfMonth,
+    isBefore,
+    parseISO,
 } from 'date-fns';
 
 import { type IJournalpostRelevantDato, JournalpostDatotype } from '@navikt/familie-typer';
@@ -25,11 +26,7 @@ const tidformat: Intl.DateTimeFormatOptions = {
     minute: '2-digit',
 };
 
-export enum datoformatNorsk {
-    DATO = 'ddmmåå',
-}
-
-export const formatterDato = (dato: Date) => dato.toLocaleDateString('no-NO', datoformat);
+const formatterDato = (dato: Date) => dato.toLocaleDateString('no-NO', datoformat);
 
 export const formatterDatoOgTid = (dato: Date) =>
     `${dato.toLocaleDateString('no-NO', {
@@ -58,10 +55,9 @@ export const hentAlder = (fødselsdato: string) => {
     return differenceInCalendarYears(now, dato);
 };
 
-export const finnDateRelativtTilNå = (config: Duration): Date => {
+const finnDateRelativtTilNå = (config: Duration): Date => {
     const now = new Date();
-    const aDate = add(now, config);
-    return aDate;
+    return add(now, config);
 };
 
 export const finnDatoRelativtTilNå = (config: Duration): string => {
@@ -108,7 +104,6 @@ const datoBeforeOrEqual = (latest: Date, dato: string): boolean =>
     isEmpty(dato) || dateBeforeOrEqual(parseISO(dato), latest);
 
 export const dateBeforeToday = (dato: string): boolean => datoBeforeOrEqual(yesterday(), dato);
-export const dateBeforeOrToday = (dato: string): boolean => datoBeforeOrEqual(new Date(), dato);
 
 const getEndOfMonth = (dato: string): Date => {
     return endOfMonth(parseISO(dato));

@@ -11,7 +11,7 @@ import type { IInstitusjon } from '../../../typer/fagsak';
 import type { IPerson } from '../../../typer/person';
 import BrevmottakerListe from '../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 
-export const StyledAlert = styled(Alert)`
+const StyledAlert = styled(Alert)`
     margin-bottom: 1.5rem;
 `;
 

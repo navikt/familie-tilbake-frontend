@@ -21,7 +21,7 @@ interface IProps {
     settIkkePersistertKomponent?: () => void;
 }
 
-export enum Feilmelding {
+enum Feilmelding {
     UGYLDIG_DATO = 'UGYLDIG_DATO',
     FØR_MIN_DATO = 'FØR_MIN_DATO',
     ETTER_MAKS_DATO = 'ETTER_MAKS_DATO',
