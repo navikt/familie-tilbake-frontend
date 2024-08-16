@@ -2,8 +2,17 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, BodyShort, Heading, Loader } from '@navikt/ds-react';
-import { AFontWeightBold, ASpacing1, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import {
+    Alert,
+    BodyLong,
+    BodyShort,
+    Button,
+    Detail,
+    Heading,
+    HStack,
+    Loader,
+} from '@navikt/ds-react';
+import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { BrevmottakereAlert } from './BrevmottakereAlert';
@@ -21,7 +30,7 @@ import {
 } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
-import { DetailBold, FTButton, Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
 const StyledVedtak = styled.div`
@@ -43,12 +52,6 @@ const StyledAlert = styled(Alert)`
 
 const VarselbrevInfo = styled(BodyShort)`
     font-weight: ${AFontWeightBold};
-`;
-
-const KnappeDiv = styled.div`
-    & button {
-        margin: 0 ${ASpacing1};
-    }
 `;
 
 interface IProps {
@@ -139,7 +142,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         <Spacer20 />
                     </>
                 )}
-                <DetailBold size="small">Resultat</DetailBold>
+                <Detail weight="semibold">Resultat</Detail>
                 <BodyLong size="small" spacing>
                     {vedtaksresultater[beregningsresultat.data.vedtaksresultat]}
                 </BodyLong>
@@ -163,36 +166,32 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         </StyledAlert>
                     )}
                 <StyledNavigering>
-                    <div>
-                        {!erLesevisning && (
-                            <FTButton
-                                variant="primary"
-                                onClick={sendInnSkjema}
-                                loading={senderInn}
-                                disabled={senderInn || disableBekreft || harValideringsFeil}
-                            >
-                                Til godkjenning
-                            </FTButton>
-                        )}
-                    </div>
-                    <KnappeDiv>
+                    {!erLesevisning && (
+                        <Button
+                            variant="primary"
+                            onClick={sendInnSkjema}
+                            loading={senderInn}
+                            disabled={senderInn || disableBekreft || harValideringsFeil}
+                        >
+                            Til godkjenning
+                        </Button>
+                    )}
+                    <HStack gap="1">
                         {kanViseForhåndsvisning && <ForhåndsvisVedtaksbrev />}
                         {!erLesevisning && !erRevurderingKlageKA && (
-                            <FTButton
+                            <Button
                                 variant="tertiary"
                                 onClick={lagreUtkast}
                                 loading={senderInn}
                                 disabled={senderInn}
                             >
                                 Lagre utkast
-                            </FTButton>
+                            </Button>
                         )}
-                    </KnappeDiv>
-                    <div>
-                        <FTButton variant="secondary" onClick={gåTilForrige}>
-                            Forrige
-                        </FTButton>
-                    </div>
+                    </HStack>
+                    <Button variant="secondary" onClick={gåTilForrige}>
+                        Forrige
+                    </Button>
                 </StyledNavigering>
             </StyledVedtak>
         );

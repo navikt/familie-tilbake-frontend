@@ -1,6 +1,6 @@
 import { Behandlingssteg } from './behandling';
 
-export type TotrinnsStegInfo = {
+type TotrinnsStegInfo = {
     behandlingssteg: Behandlingssteg;
     godkjent?: boolean;
     begrunnelse?: string;

@@ -107,15 +107,6 @@ export const behandlingssteg: Record<Behandlingssteg, string> = {
     AVSLUTTET: 'Avsluttet',
 };
 
-export const SaksbehandlerBehandlingssteg = [
-    Behandlingssteg.VERGE,
-    Behandlingssteg.FAKTA,
-    Behandlingssteg.FORELDELSE,
-    Behandlingssteg.VILKÅRSVURDERING,
-    Behandlingssteg.FORESLÅ_VEDTAK,
-    Behandlingssteg.FATTE_VEDTAK,
-];
-
 export enum Behandlingsstegstatus {
     STARTET = 'STARTET',
     VENTER = 'VENTER',

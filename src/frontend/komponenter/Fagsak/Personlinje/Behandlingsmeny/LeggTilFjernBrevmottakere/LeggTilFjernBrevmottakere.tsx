@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { ErrorMessage, Modal } from '@navikt/ds-react';
+import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
@@ -16,7 +16,7 @@ import {
     IBehandling,
 } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
-import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
+import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
 import { sider } from '../../../../Felleskomponenter/Venstremeny/sider';
 
@@ -156,7 +156,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                         )}
                     </Modal.Body>
                     <Modal.Footer>
-                        <FTButton
+                        <Button
                             variant="primary"
                             key={'bekreft'}
                             disabled={senderInn}
@@ -165,8 +165,8 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                             size="small"
                         >
                             Ja, fjern
-                        </FTButton>
-                        <FTButton
+                        </Button>
+                        <Button
                             variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
@@ -175,7 +175,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                             size="small"
                         >
                             Nei, behold
-                        </FTButton>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             )}

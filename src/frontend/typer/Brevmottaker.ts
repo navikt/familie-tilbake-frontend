@@ -8,7 +8,7 @@ export enum MottakerType {
     BRUKER = 'BRUKER',
 }
 
-export interface ManuellAdresseInfo {
+interface ManuellAdresseInfo {
     adresselinje1: string;
     adresselinje2?: string;
     postnummer: string;

@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { ErrorMessage, Modal } from '@navikt/ds-react';
+import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling } from '../../../../../typer/behandling';
-import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
+import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 
 interface IProps {
@@ -54,15 +54,15 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                         )}
                     </Modal.Body>
                     <Modal.Footer>
-                        <FTButton
+                        <Button
                             variant="primary"
                             key={'bekreft'}
                             onClick={() => onOkTaAvVent(behandling.behandlingId)}
                             size="small"
                         >
                             Ok
-                        </FTButton>
-                        <FTButton
+                        </Button>
+                        <Button
                             variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
@@ -71,7 +71,7 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                             size="small"
                         >
                             Avbryt
-                        </FTButton>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             )}

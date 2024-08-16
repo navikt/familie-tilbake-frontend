@@ -7,7 +7,7 @@ import {
 } from '../../../../typer/feilutbetalingtyper';
 import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 
-export interface VilkårsresultatInfoSkjemaData {
+interface VilkårsresultatInfoSkjemaData {
     vilkårsvurderingsresultat?: Vilkårsresultat;
     godTro?: GodTro;
     aktsomhet?: Aktsomhetsvurdering;

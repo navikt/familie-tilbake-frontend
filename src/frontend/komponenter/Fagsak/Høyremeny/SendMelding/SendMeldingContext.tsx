@@ -27,7 +27,7 @@ interface Mottaker {
     label: string;
 }
 
-export const Mottakere: Mottaker[] = [
+const Mottakere: Mottaker[] = [
     {
         verdi: 'BRUKER',
         label: 'Søker',

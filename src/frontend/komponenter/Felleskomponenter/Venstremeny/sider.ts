@@ -11,7 +11,7 @@ export interface ISide {
     steg: Behandlingssteg;
 }
 
-export enum SideId {
+enum SideId {
     FAKTA = 'FAKTA',
     FORELDELSE = 'FORELDELSE',
     VILKÅRSVURDERING = 'VILKÅRSVURDERING',

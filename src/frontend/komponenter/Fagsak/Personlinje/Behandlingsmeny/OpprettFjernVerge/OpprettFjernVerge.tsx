@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ErrorMessage, Modal } from '@navikt/ds-react';
+import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
@@ -8,7 +8,7 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { Behandlingssteg, IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
-import { BehandlingsMenyButton, FTButton } from '../../../../Felleskomponenter/Flytelementer';
+import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 
 interface IProps {
     behandling: IBehandling;
@@ -125,7 +125,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
                         )}
                     </Modal.Body>
                     <Modal.Footer>
-                        <FTButton
+                        <Button
                             variant="primary"
                             key={'bekreft'}
                             disabled={senderInn}
@@ -134,8 +134,8 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
                             size="small"
                         >
                             Ok
-                        </FTButton>
-                        <FTButton
+                        </Button>
+                        <Button
                             variant="tertiary"
                             key={'avbryt'}
                             onClick={() => {
@@ -144,7 +144,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
                             size="small"
                         >
                             Avbryt
-                        </FTButton>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             )}

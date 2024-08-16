@@ -1,13 +1,12 @@
 import { styled } from 'styled-components';
 
-import { Alert, Button, Detail } from '@navikt/ds-react';
+import { Alert, Button } from '@navikt/ds-react';
 import {
     AFontWeightBold,
     ASurfaceActionSubtleHover,
     ASpacing2,
     ASpacing4,
     ASpacing5,
-    ASpacing8,
 } from '@navikt/ds-tokens/dist/tokens';
 
 export const Spacer20 = styled.div`
@@ -31,19 +30,14 @@ export const FTAlertStripe = styled(Alert)`
     }
 `;
 
-export const FTButton = styled(Button)`
-    padding-right: ${ASpacing8};
-    padding-left: ${ASpacing8};
-`;
-
 export const BehandlingsMenyButton = styled(Button)`
-    margin: 0.1rem 0rem;
+    margin: 0.1rem 0;
     width: 100%;
 
     span {
         width: 100%;
         text-align: left;
-        padding: 0rem ${ASpacing2};
+        padding: 0 ${ASpacing2};
     }
 
     & .navds-body-short {
@@ -53,8 +47,4 @@ export const BehandlingsMenyButton = styled(Button)`
     &:disabled:hover {
         background-color: ${ASurfaceActionSubtleHover};
     }
-`;
-
-export const DetailBold = styled(Detail)`
-    font-weight: ${AFontWeightBold};
 `;

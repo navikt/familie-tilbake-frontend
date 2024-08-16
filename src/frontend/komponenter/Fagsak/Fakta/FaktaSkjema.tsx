@@ -3,7 +3,9 @@ import * as React from 'react';
 import {
     Alert,
     BodyShort,
+    Button,
     Checkbox,
+    Detail,
     Heading,
     HGrid,
     Radio,
@@ -22,7 +24,7 @@ import { useToggles } from '../../../context/TogglesContext';
 import { Ytelsetype } from '../../../kodeverk';
 import { HarBrukerUttaltSegValg, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
-import { DetailBold, FTButton, Navigering } from '../../Felleskomponenter/Flytelementer';
+import { Navigering } from '../../Felleskomponenter/Flytelementer';
 
 interface IProps {
     ytelse: Ytelsetype;
@@ -73,7 +75,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                 )}
                 <HGrid columns={3} gap="1">
                     <div>
-                        <DetailBold>Periode med feilutbetaling</DetailBold>
+                        <Detail weight="semibold">Periode med feilutbetaling</Detail>
                         <BodyShort size="small">
                             {`${formatterDatostring(
                                 feilutbetalingFakta.totalFeilutbetaltPeriode.fom
@@ -83,13 +85,13 @@ const FaktaSkjema: React.FC<IProps> = ({
                         </BodyShort>
                     </div>
                     <div>
-                        <DetailBold>Feilutbetalt beløp totalt</DetailBold>
+                        <Detail weight="semibold">Feilutbetalt beløp totalt</Detail>
                         <BodyShort size="small" className={'redText'}>
                             {`${formatCurrencyNoKr(feilutbetalingFakta.totaltFeilutbetaltBeløp)}`}
                         </BodyShort>
                     </div>
                     <div>
-                        <DetailBold>Tidligere varslet beløp</DetailBold>
+                        <Detail weight="semibold">Tidligere varslet beløp</Detail>
                         <BodyShort size="small">
                             {feilutbetalingFakta.varsletBeløp
                                 ? `${formatCurrencyNoKr(feilutbetalingFakta.varsletBeløp)}`
@@ -202,18 +204,18 @@ const FaktaSkjema: React.FC<IProps> = ({
                     </VStack>
                 )}
                 <Navigering>
-                    <FTButton
+                    <Button
                         variant="primary"
                         onClick={sendInnSkjema}
                         loading={senderInn}
                         disabled={erLesevisning && !stegErBehandlet}
                     >
                         {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
-                    </FTButton>
+                    </Button>
                     {behandling.harVerge && (
-                        <FTButton variant="secondary" onClick={gåTilForrige}>
+                        <Button variant="secondary" onClick={gåTilForrige}>
                             Forrige
-                        </FTButton>
+                        </Button>
                     )}
                 </Navigering>
             </VStack>
