@@ -104,8 +104,11 @@ export const utledBehandlingSide = (steg: Behandlingssteg): ISide | undefined =>
             return finnSideForSteg(steg);
     }
 };
-
+const erHistoriskSide = (side: string) => side === 'inaktiv-vilkaarsvurdering';
 export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBehandling): boolean => {
+    if (erHistoriskSide(ønsketSide)) {
+        return true;
+    }
     const funnetØnsketSide = Object.entries(sider).find(([_, side]) => side.href === ønsketSide);
 
     if (funnetØnsketSide && behandling.behandlingsstegsinfo) {
