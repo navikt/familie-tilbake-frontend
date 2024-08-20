@@ -7,11 +7,11 @@ import { Alert, BodyLong, Heading, Loader, Select, VStack } from '@navikt/ds-rea
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
-import { useHistoriskVilkårsvurdering } from './HistoriskVilkårsvurderingContext';
-import HistoriskVilkårsvurderingVisning from './HistoriskVilkårsvurderingVisning';
-import { IBehandling } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
-import { formatterDatoOgTidstring } from '../../../../utils';
+import { useHistoriskFakta } from './HistoriskFaktaContext';
+import HistoriskFaktaVisning from './HistoriskFaktaVisning';
+import { IBehandling } from '../../../../../typer/behandling';
+import { IFagsak } from '../../../../../typer/fagsak';
+import { formatterDatoOgTidstring } from '../../../../../utils';
 
 const Container = styled.div`
     padding: ${ASpacing3};
@@ -26,35 +26,31 @@ interface IProps {
     behandling: IBehandling;
 }
 
-const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
-    const {
-        feilutbetalingInaktiveVilkårsvurderinger,
-        skjemaData,
-        settFeilutbetalingInaktivVilkårsvurdering,
-    } = useHistoriskVilkårsvurdering();
+const HistoriskFaktaContainer: React.FC<IProps> = () => {
+    const { feilutbetalingInaktiveFakta, skjemaData, fakta, settFeilutbetalingInaktivFakta } =
+        useHistoriskFakta();
 
-    switch (feilutbetalingInaktiveVilkårsvurderinger?.status) {
+    switch (feilutbetalingInaktiveFakta?.status) {
         case RessursStatus.SUKSESS: {
             return (
                 <Container>
                     <VStack gap="5">
                         <Alert variant={'info'}>
                             <Heading level="2" size="small">
-                                Tidligere vilkårsvurderinger på denne behandlingen
+                                Tidligere fakta på denne behandlingen
                             </Heading>
                         </Alert>
                         <Select
                             onChange={e => {
-                                const valgtVurdering =
-                                    feilutbetalingInaktiveVilkårsvurderinger.data.find(
-                                        vurdering => vurdering.opprettetTid === e.target.value
-                                    );
-                                settFeilutbetalingInaktivVilkårsvurdering(valgtVurdering);
+                                const valgtVurdering = feilutbetalingInaktiveFakta.data.find(
+                                    fakta => fakta.opprettetTid === e.target.value
+                                );
+                                settFeilutbetalingInaktivFakta(valgtVurdering);
                             }}
                             label={'Velg versjon'}
                         >
                             <option>Velg</option>
-                            {feilutbetalingInaktiveVilkårsvurderinger.data
+                            {feilutbetalingInaktiveFakta.data
                                 .sort((a, b) => {
                                     return a.opprettetTid && b.opprettetTid
                                         ? parseISO(b.opprettetTid).getTime() -
@@ -72,8 +68,8 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
                                     );
                                 })}
                         </Select>
-                        {skjemaData && skjemaData.length > 0 && (
-                            <HistoriskVilkårsvurderingVisning perioder={skjemaData} />
+                        {skjemaData && fakta && (
+                            <HistoriskFaktaVisning skjemaData={skjemaData} fakta={fakta} />
                         )}
                     </VStack>
                 </Container>
@@ -94,12 +90,9 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
             return (
-                <Alert
-                    children={feilutbetalingInaktiveVilkårsvurderinger.frontendFeilmelding}
-                    variant="error"
-                />
+                <Alert children={feilutbetalingInaktiveFakta.frontendFeilmelding} variant="error" />
             );
     }
 };
 
-export default HistoriskVilkårsvurderingContainer;
+export default HistoriskFaktaContainer;

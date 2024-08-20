@@ -11,6 +11,7 @@ import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
 import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
 import HentOppdatertKravgrunnlag from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
+import HistoriskeVurderinger from './HistoriskeVurderinger/HistoriskeVurderinger';
 import LeggTilFjernBrevmottakere from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
 import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
 import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
@@ -163,6 +164,13 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                     )}
                                     <li>
                                         <OpprettFjernVerge
+                                            behandling={behandling.data}
+                                            fagsak={fagsak}
+                                            onListElementClick={() => settVisMeny(false)}
+                                        />
+                                    </li>
+                                    <li>
+                                        <HistoriskeVurderinger
                                             behandling={behandling.data}
                                             fagsak={fagsak}
                                             onListElementClick={() => settVisMeny(false)}

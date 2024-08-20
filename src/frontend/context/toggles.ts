@@ -9,5 +9,6 @@ export enum ToggleName {
 
     // Release-toggles
     vurderBrukersUttalelse = 'familie-tilbake.bruker.har.uttalt.seg',
+    seHistoriskeVurderinger = 'familie-tilbake.se.historiske.vurderinger',
     // Midlertidige toggles - kan fjernes etterhvert
 }
