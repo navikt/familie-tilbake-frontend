@@ -28,10 +28,10 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
     const { settToast } = useApp();
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
-    const [visSettBehandlingTilbakeTilFaktaModal, settVisSettBehandlingTilbakeTilFaktaModel] =
+    const [visSettBehandlingTilbakeTilFaktaModal, settVisSettBehandlingTilbakeTilFaktaModal] =
         useState<boolean>(false);
     const lukkSettBehandlingTilbakeTilFaktaModal = () => {
-        settVisSettBehandlingTilbakeTilFaktaModel(false);
+        settVisSettBehandlingTilbakeTilFaktaModal(false);
     };
     const settBehandlingTilbakeTilFakta = () => {
         lukkSettBehandlingTilbakeTilFaktaModal();
@@ -68,7 +68,7 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
             <BehandlingsMenyButton
                 variant="tertiary"
                 onClick={() => {
-                    settVisSettBehandlingTilbakeTilFaktaModel(true);
+                    settVisSettBehandlingTilbakeTilFaktaModal(true);
                     onListElementClick();
                 }}
                 disabled={!behandling.kanSetteTilbakeTilFakta}
