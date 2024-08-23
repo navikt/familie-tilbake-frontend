@@ -38,7 +38,7 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
         nullstillIkkePersisterteKomponenter();
         request<void, string>({
             method: 'PUT',
-            url: `/familie-tilbake/api/forvaltning/behandling/${behandling.behandlingId}/flytt-behandling/v1`,
+            url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/flytt-behandling-til-fakta`,
         }).then((respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.SUKSESS) {
                 settToast(ToastTyper.FLYTT_BEHANDLING_TIL_FAKTA, {
