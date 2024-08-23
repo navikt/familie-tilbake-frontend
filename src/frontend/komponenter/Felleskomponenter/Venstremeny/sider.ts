@@ -104,17 +104,17 @@ export const utledBehandlingSide = (steg: Behandlingssteg): ISide | undefined =>
             return finnSideForSteg(steg);
     }
 };
+
+const historiskeSider = [
+    'inaktiv-vilkaarsvurdering',
+    'inaktiv-fakta',
+    'inaktiv-foreldelse',
+    'inaktiv-vedtak',
+    'inaktiv',
+];
+
 const erHistoriskSide = (side: string) => {
-    switch (side) {
-        case 'inaktiv-vilkaarsvurdering':
-        case 'inaktiv-fakta':
-        case 'inaktiv-foreldelse':
-        case 'inaktiv-vedtak':
-        case 'inaktiv':
-            return true;
-        default:
-            return false;
-    }
+    return historiskeSider.includes(side);
 };
 export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBehandling): boolean => {
     if (erHistoriskSide(ønsketSide)) {

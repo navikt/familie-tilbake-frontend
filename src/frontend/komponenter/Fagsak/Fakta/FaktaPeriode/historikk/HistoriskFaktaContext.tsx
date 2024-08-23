@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
@@ -22,12 +22,12 @@ interface IProps {
 
 const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandling }: IProps) => {
     const [feilutbetalingInaktiveFakta, settFeilutbetalingInaktiveFakta] =
-        React.useState<Ressurs<IFeilutbetalingFakta[]>>(byggTomRessurs);
+        useState<Ressurs<IFeilutbetalingFakta[]>>(byggTomRessurs);
 
-    const [skjemaData, settSkjemaData] = React.useState<FaktaSkjemaData>();
-    const [fakta, settFakta] = React.useState<IFeilutbetalingFakta>();
+    const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>();
+    const [fakta, settFakta] = useState<IFeilutbetalingFakta>();
 
-    React.useEffect(() => {
+    useEffect(() => {
         hentFeilutbetalingFakta();
     }, [behandling]);
 
@@ -65,8 +65,7 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandli
             .then((respons: Ressurs<IFeilutbetalingFakta[]>) => {
                 settFeilutbetalingInaktiveFakta(respons);
             })
-            .catch((error: AxiosError) => {
-                console.log('Error ved henting av fakta: ', error);
+            .catch((_error: AxiosError) => {
                 settFeilutbetalingInaktiveFakta(
                     byggFeiletRessurs(
                         'Ukjent feil ved henting av inaktive fakta-perioder for behandling'
