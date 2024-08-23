@@ -126,7 +126,7 @@ describe('Tester: FaktaContainer', () => {
         }));
         // @ts-ignore
         useToggles.mockImplementation(() => ({
-            toggles: { [ToggleName.vurderBrukersUttalelse]: true },
+            toggles: { [ToggleName.dummy]: true },
             feilmelding: '',
         }));
     };

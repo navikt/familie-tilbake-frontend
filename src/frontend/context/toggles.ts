@@ -8,6 +8,6 @@ export enum ToggleName {
     // Miljø-toggles - la stå
 
     // Release-toggles
-    vurderBrukersUttalelse = 'familie-tilbake.bruker.har.uttalt.seg',
+    dummy = 'familie-tilbake.dummy',
     // Midlertidige toggles - kan fjernes etterhvert
 }

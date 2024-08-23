@@ -19,8 +19,6 @@ import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 import { FaktaSkjemaData } from './typer/feilutbetalingFakta';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { ToggleName } from '../../../context/toggles';
-import { useToggles } from '../../../context/TogglesContext';
 import { Ytelsetype } from '../../../kodeverk';
 import { HarBrukerUttaltSegValg, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
@@ -54,7 +52,6 @@ const FaktaSkjema: React.FC<IProps> = ({
         gåTilForrige,
     } = useFeilutbetalingFakta();
     const { settIkkePersistertKomponent } = useBehandling();
-    const { toggles } = useToggles();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== feilutbetalingFakta.kravgrunnlagReferanse;
 
@@ -133,76 +130,74 @@ const FaktaSkjema: React.FC<IProps> = ({
                         feilmeldinger?.find(meld => meld.gjelderBegrunnelse)?.melding
                     }
                 />
-                {toggles[ToggleName.vurderBrukersUttalelse] && (
-                    <VStack gap="2">
-                        <RadioGroup
-                            id="brukerHarUttaltSeg"
+                <VStack gap="2">
+                    <RadioGroup
+                        id="brukerHarUttaltSeg"
+                        readOnly={erLesevisning}
+                        legend="Har bruker uttalt seg om feilutbetalingen?"
+                        value={skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg}
+                        error={
+                            visFeilmeldinger &&
+                            feilmeldinger?.find(meld => meld.gjelderBrukerHarUttaltSeg)?.melding
+                        }
+                        onChange={(val: HarBrukerUttaltSegValg) => {
+                            settIkkePersistertKomponent('fakta');
+                            oppdaterBrukerHarUttaltSeg(val);
+                        }}
+                    >
+                        <Radio
+                            key={HarBrukerUttaltSegValg.JA}
+                            name="brukerHarUttaltSeg"
+                            value={HarBrukerUttaltSegValg.JA}
+                            data-testid={`brukerHarUttaltSeg.ja`}
+                        >
+                            Ja
+                        </Radio>
+                        <Radio
+                            key={HarBrukerUttaltSegValg.NEI}
+                            name="brukerHarUttaltSeg"
+                            value={HarBrukerUttaltSegValg.NEI}
+                            data-testid={`brukerHarUttaltSeg.nei`}
+                        >
+                            Nei
+                        </Radio>
+                        <Radio
+                            key={HarBrukerUttaltSegValg.IKKE_AKTUELT}
+                            name="brukerHarUttaltSeg"
+                            value={HarBrukerUttaltSegValg.IKKE_AKTUELT}
+                            data-testid={`brukerHarUttaltSeg.ikke-aktuelt`}
+                        >
+                            Ikke aktuelt
+                        </Radio>
+                    </RadioGroup>
+                    {skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg ===
+                        HarBrukerUttaltSegValg.JA && (
+                        <Textarea
+                            name={'beskrivelseBrukersUttalelse'}
+                            label={
+                                'Beskriv når og hvor bruker har uttalt seg. Gi også en kort oppsummering av uttalelsen'
+                            }
                             readOnly={erLesevisning}
-                            legend="Har bruker uttalt seg om feilutbetalingen?"
-                            value={skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg}
+                            value={
+                                skjemaData.vurderingAvBrukersUttalelse?.beskrivelse
+                                    ? skjemaData.vurderingAvBrukersUttalelse?.beskrivelse
+                                    : ''
+                            }
+                            onChange={e => {
+                                settIkkePersistertKomponent('fakta');
+                                oppdaterBeskrivelseBrukerHarUttaltSeg(e.target.value);
+                            }}
+                            maxLength={3000}
+                            className={erLesevisning ? 'lesevisning' : ''}
                             error={
                                 visFeilmeldinger &&
-                                feilmeldinger?.find(meld => meld.gjelderBrukerHarUttaltSeg)?.melding
+                                feilmeldinger?.find(
+                                    meld => meld.gjelderBeskrivelseBrukerHarUttaltSeg
+                                )?.melding
                             }
-                            onChange={(val: HarBrukerUttaltSegValg) => {
-                                settIkkePersistertKomponent('fakta');
-                                oppdaterBrukerHarUttaltSeg(val);
-                            }}
-                        >
-                            <Radio
-                                key={HarBrukerUttaltSegValg.JA}
-                                name="brukerHarUttaltSeg"
-                                value={HarBrukerUttaltSegValg.JA}
-                                data-testid={`brukerHarUttaltSeg.ja`}
-                            >
-                                Ja
-                            </Radio>
-                            <Radio
-                                key={HarBrukerUttaltSegValg.NEI}
-                                name="brukerHarUttaltSeg"
-                                value={HarBrukerUttaltSegValg.NEI}
-                                data-testid={`brukerHarUttaltSeg.nei`}
-                            >
-                                Nei
-                            </Radio>
-                            <Radio
-                                key={HarBrukerUttaltSegValg.IKKE_AKTUELT}
-                                name="brukerHarUttaltSeg"
-                                value={HarBrukerUttaltSegValg.IKKE_AKTUELT}
-                                data-testid={`brukerHarUttaltSeg.ikke-aktuelt`}
-                            >
-                                Ikke aktuelt
-                            </Radio>
-                        </RadioGroup>
-                        {skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg ===
-                            HarBrukerUttaltSegValg.JA && (
-                            <Textarea
-                                name={'beskrivelseBrukersUttalelse'}
-                                label={
-                                    'Beskriv når og hvor bruker har uttalt seg. Gi også en kort oppsummering av uttalelsen'
-                                }
-                                readOnly={erLesevisning}
-                                value={
-                                    skjemaData.vurderingAvBrukersUttalelse?.beskrivelse
-                                        ? skjemaData.vurderingAvBrukersUttalelse?.beskrivelse
-                                        : ''
-                                }
-                                onChange={e => {
-                                    settIkkePersistertKomponent('fakta');
-                                    oppdaterBeskrivelseBrukerHarUttaltSeg(e.target.value);
-                                }}
-                                maxLength={3000}
-                                className={erLesevisning ? 'lesevisning' : ''}
-                                error={
-                                    visFeilmeldinger &&
-                                    feilmeldinger?.find(
-                                        meld => meld.gjelderBeskrivelseBrukerHarUttaltSeg
-                                    )?.melding
-                                }
-                            />
-                        )}
-                    </VStack>
-                )}
+                        />
+                    )}
+                </VStack>
                 <Navigering>
                     <Button
                         variant="primary"

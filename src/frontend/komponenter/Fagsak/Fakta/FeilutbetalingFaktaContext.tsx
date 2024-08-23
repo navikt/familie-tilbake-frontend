@@ -14,8 +14,6 @@ import {
 import { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/feilutbetalingFakta';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { ToggleName } from '../../../context/toggles';
-import { useToggles } from '../../../context/TogglesContext';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
@@ -43,7 +41,6 @@ interface IProps {
 
 const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
     ({ behandling, fagsak }: IProps) => {
-        const { toggles } = useToggles();
         const [feilutbetalingFakta, settFeilutbetalingFakta] =
             useState<Ressurs<IFeilutbetalingFakta>>();
         const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({
@@ -249,8 +246,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !== HarBrukerUttaltSegValg.NEI &&
                 vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !== HarBrukerUttaltSegValg.JA &&
                 vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !==
-                    HarBrukerUttaltSegValg.IKKE_AKTUELT &&
-                toggles[ToggleName.vurderBrukersUttalelse]
+                    HarBrukerUttaltSegValg.IKKE_AKTUELT
             ) {
                 feilmeldinger.push({
                     gjelderBegrunnelse: false,
