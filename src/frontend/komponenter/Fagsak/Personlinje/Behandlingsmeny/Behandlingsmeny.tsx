@@ -67,9 +67,10 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                 size="small"
                 variant="secondary"
                 onClick={() => settVisMeny(!visMeny)}
+                icon={<ChevronDownIcon fontSize={'1.375rem'} />}
+                iconPosition={'right'}
             >
                 Behandlingsmeny
-                <ChevronDownIcon fontSize={'1.375rem'} />
             </StyledButton>
 
             {buttonRef && (
