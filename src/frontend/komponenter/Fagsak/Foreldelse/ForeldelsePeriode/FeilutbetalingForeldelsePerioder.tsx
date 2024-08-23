@@ -86,6 +86,7 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
         } else {
             settDisableBekreft(true);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [valgtPeriode, allePerioderBehandlet]);
 
     const onSelectPeriode = (periode: Periode): void => {

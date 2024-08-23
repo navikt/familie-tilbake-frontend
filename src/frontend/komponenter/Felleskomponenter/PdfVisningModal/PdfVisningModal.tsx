@@ -56,7 +56,9 @@ const Dokument: React.FC<{ pdfdata: Ressurs<string> }> = ({ pdfdata }) => {
         case RessursStatus.HENTER:
             return (
                 <div className={'pdfvisning-modal__spinner'}>
-                    <Heading spacing size="small" level="2" children={'Innhenter dokument'} />
+                    <Heading spacing size="small" level="2">
+                        Innhenter dokument
+                    </Heading>
                     <Loader
                         size="2xlarge"
                         title="venter..."
@@ -72,14 +74,12 @@ const Dokument: React.FC<{ pdfdata: Ressurs<string> }> = ({ pdfdata }) => {
         case RessursStatus.FUNKSJONELL_FEIL:
         case RessursStatus.IKKE_TILGANG:
             return (
-                <Alert
-                    variant="error"
-                    className={'pdfvisning-modal__document--feil'}
-                    children={pdfdata.frontendFeilmelding}
-                />
+                <Alert variant="error" className={'pdfvisning-modal__document--feil'}>
+                    {pdfdata.frontendFeilmelding}
+                </Alert>
             );
         default:
-            <Alert variant="warning">Kunne ikke hente dokument</Alert>;
+            return <Alert variant="warning">Kunne ikke hente dokument</Alert>;
     }
 };
 

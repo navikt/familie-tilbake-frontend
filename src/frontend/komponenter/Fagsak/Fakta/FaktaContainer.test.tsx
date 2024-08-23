@@ -98,7 +98,7 @@ describe('Tester: FaktaContainer', () => {
     });
 
     const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: IFeilutbetalingFakta) => {
-        // @ts-ignore
+        // @ts-expect-error mocking
         useBehandlingApi.mockImplementation(() => ({
             gjerFeilutbetalingFaktaKall: () => {
                 const ressurs = mock<Ressurs<IFeilutbetalingFakta>>({
@@ -115,7 +115,7 @@ describe('Tester: FaktaContainer', () => {
                 return Promise.resolve(ressurs);
             },
         }));
-        // @ts-ignore
+        // @ts-expect-error mocking
         useBehandling.mockImplementation(() => ({
             erStegBehandlet: () => behandlet,
             visVenteModal: false,
@@ -124,7 +124,7 @@ describe('Tester: FaktaContainer', () => {
             settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
             nullstillIkkePersisterteKomponenter: jest.fn(),
         }));
-        // @ts-ignore
+        // @ts-expect-error mocking
         useToggles.mockImplementation(() => ({
             toggles: { [ToggleName.vurderBrukersUttalelse]: true },
             feilmelding: '',

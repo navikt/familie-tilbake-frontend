@@ -29,6 +29,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
             if (valgtMenyside === Menysider.HISTORIKK) {
                 hentHistorikkinnslag();
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling, valgtMenyside]);
 
         const hentHistorikkinnslag = (): void => {

@@ -84,7 +84,7 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
         if (kanSendeSkjema()) {
             nullstillIkkePersisterteKomponenter();
             const payload: HenleggBehandlingPaylod = {
-                //@ts-ignore
+                //@ts-expect-error har verdi her
                 behandlingsresultatstype: skjema.felter.årsakkode.verdi,
                 begrunnelse: skjema.felter.begrunnelse.verdi,
                 fritekst: skjema.felter.fritekst.verdi,

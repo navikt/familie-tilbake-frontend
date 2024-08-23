@@ -75,7 +75,7 @@ describe('Tester: ForeldelseContainer', () => {
         foreldelse?: IFeilutbetalingForeldelse
     ) => {
         if (foreldelse) {
-            // @ts-ignore
+            // @ts-expect-error mock
             useBehandlingApi.mockImplementation(() => ({
                 gjerFeilutbetalingForeldelseKall: () => {
                     const ressurs = mock<Ressurs<IFeilutbetalingForeldelse>>({
@@ -93,7 +93,7 @@ describe('Tester: ForeldelseContainer', () => {
                 },
             }));
         }
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandling.mockImplementation(() => ({
             erStegBehandlet: () => behandlet,
             erStegAutoutført: () => autoutført,

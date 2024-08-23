@@ -18,6 +18,7 @@ const ForhåndsvisVedtaksbrev: React.FC = () => {
         if (visModal) {
             hentVedtaksbrev();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [visModal]);
 
     return (

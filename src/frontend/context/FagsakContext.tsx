@@ -27,6 +27,7 @@ const [FagsakProvider, useFagsak] = createUseContext(() => {
             .then((hentetFagsak: Ressurs<IFagsak>) => {
                 settFagsak(hentetFagsak);
             })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .catch((_error: AxiosError) => {
                 settFagsak(byggFeiletRessurs('Ukjent feil ved henting av fagsak'));
             });

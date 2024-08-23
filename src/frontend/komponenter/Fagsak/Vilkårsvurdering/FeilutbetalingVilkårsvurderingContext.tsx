@@ -118,6 +118,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                 hentFeilutbetalingVilkårsvurdering();
                 settKanIlleggeRenter(kanIleggeRenter);
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling, visVenteModal]);
 
         React.useEffect(() => {
@@ -139,6 +140,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                     settValgtPeriode(valgtVilkårsperiode);
                 }
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [feilutbetalingVilkårsvurdering]);
 
         React.useEffect(() => {
@@ -150,6 +152,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                 settAllePerioderBehandlet(!nokonUbehandlet);
                 settBehandletPerioder(behandletPerioder);
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [valgtPeriode]);
 
         const hentFeilutbetalingVilkårsvurdering = (): void => {

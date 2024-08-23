@@ -73,6 +73,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.FAKTA));
                 hentFeilutbetalingFakta();
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling, visVenteModal]);
 
         useEffect(() => {
@@ -224,7 +225,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             const feilmeldinger: Feilmelding[] = [];
             const vurderingAvBrukersUttalelse = skjemaData.vurderingAvBrukersUttalelse;
 
-            //@ts-ignore
+            //@ts-expect-error støtter egentlig undefined
             const feilmelding = _validerTekst3000(skjemaData.begrunnelse);
             if (feilmelding) {
                 feilmeldinger.push({
@@ -234,7 +235,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             }
             if (vurderingAvBrukersUttalelse?.harBrukerUttaltSeg === HarBrukerUttaltSegValg.JA) {
                 const feilmeldingBeskrivelseBrukerHarUttaltSeg = _validerTekst3000(
-                    // @ts-ignore
+                    //@ts-expect-error støtter egentlig undefined
                     vurderingAvBrukersUttalelse?.beskrivelse
                 );
                 if (feilmeldingBeskrivelseBrukerHarUttaltSeg) {
@@ -329,7 +330,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                     nullstillIkkePersisterteKomponenter();
                     const payload: FaktaStegPayload = {
                         '@type': 'FAKTA',
-                        //@ts-ignore
+                        //@ts-expect-error er satt her
                         begrunnelse: skjemaData.begrunnelse,
                         vurderingAvBrukersUttalelse: gyldigVurderingAvBrukersUttalelse(
                             skjemaData.vurderingAvBrukersUttalelse
@@ -337,9 +338,9 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                         feilutbetaltePerioder: skjemaData.perioder.map<PeriodeFaktaStegPayload>(
                             per => ({
                                 periode: per.periode,
-                                //@ts-ignore
+                                //@ts-expect-error er satt her
                                 hendelsestype: per.hendelsestype,
-                                //@ts-ignore
+                                //@ts-expect-error er satt her
                                 hendelsesundertype: per.hendelsesundertype,
                             })
                         ),

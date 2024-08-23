@@ -112,9 +112,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
-            return (
-                <Alert variant="error" children={feilutbetalingForeldelse.frontendFeilmelding} />
-            );
+            return <Alert variant="error">{feilutbetalingForeldelse.frontendFeilmelding}</Alert>;
         default:
             return <Alert variant="warning">Kunne ikke hente data om foreldelse</Alert>;
     }

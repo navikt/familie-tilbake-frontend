@@ -8,6 +8,7 @@ import { stdoutLogger } from '@navikt/familie-logging';
 
 import { proxyUrl, redirectRecords } from './config';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const restream = (proxyReq: ClientRequest, req: IncomingMessage, _res: OutgoingMessage): void => {
     const requestBody = (req as Request).body;
     if (requestBody) {

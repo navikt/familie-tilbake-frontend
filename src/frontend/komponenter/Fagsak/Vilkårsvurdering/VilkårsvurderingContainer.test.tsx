@@ -76,7 +76,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         vilkårsvurdering?: IFeilutbetalingVilkårsvurdering
     ) => {
         if (vilkårsvurdering) {
-            // @ts-ignore
+            // @ts-expect-error mock
             useBehandlingApi.mockImplementation(() => ({
                 gjerFeilutbetalingVilkårsvurderingKall: () => {
                     const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
@@ -94,7 +94,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 },
             }));
         }
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandling.mockImplementation(() => ({
             erStegBehandlet: () => behandlet,
             erStegAutoutført: () => autoutført,

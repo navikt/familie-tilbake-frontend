@@ -33,6 +33,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
 
         React.useEffect(() => {
             hentFeilutbetalingVilkårsvurdering();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling]);
 
         const settFeilutbetalingInaktivVilkårsvurdering = (

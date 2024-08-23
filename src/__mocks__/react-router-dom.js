@@ -7,5 +7,3 @@ module.exports = {
     useLocation: jest.fn(),
     useNavigate: jest.fn(),
 };
-
-/* eslint-disable */

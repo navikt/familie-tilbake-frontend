@@ -82,6 +82,7 @@ const AvsnittSkjema: React.FC<IProps> = ({
 
     React.useEffect(() => {
         settErEkspandert(erEkspandert || harPåkrevetFritekstMenIkkeUtfylt);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [avsnitt]);
 
     return (

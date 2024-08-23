@@ -7,7 +7,6 @@ import { createRoot } from 'react-dom/client';
 
 import App from './komponenter/App';
 
-// eslint-disable-next-line
 const environment = window.location.hostname;
 
 if (process.env.NODE_ENV !== 'development') {
@@ -24,6 +23,5 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const container = document.getElementById('app');
-// eslint-disable-next-line
 const root = createRoot(container!);
 root.render(<App />);

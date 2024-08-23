@@ -35,6 +35,7 @@ const ForhåndsvisHenleggelsesBrev: React.FC<IProps> = ({ behandling, skjema, ka
         if (visModal) {
             hentBrev(behandling);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [visModal]);
 
     return kanForhåndsvise ? (

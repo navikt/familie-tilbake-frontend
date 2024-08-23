@@ -47,6 +47,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
             // når det er lesevisning og perioden ikke er behandlet
             settHendelseUnderTyper([]);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [periode]);
 
     const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {

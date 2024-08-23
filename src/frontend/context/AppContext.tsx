@@ -98,7 +98,7 @@ const AuthOgHttpProvider: React.FC<IProps> = ({ children }) => {
 const AppProvider: React.FC<AppProps & IProps> = ({ autentisertSaksbehandler, children }) => {
     return (
         <AuthProvider autentisertSaksbehandler={autentisertSaksbehandler}>
-            <AuthOgHttpProvider children={children} />
+            <AuthOgHttpProvider>{children}</AuthOgHttpProvider>
         </AuthProvider>
     );
 };

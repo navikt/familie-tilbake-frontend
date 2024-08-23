@@ -43,7 +43,7 @@ describe('Tester: VergeContainer', () => {
         autoutført: boolean,
         verge?: VergeDto
     ) => {
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandlingApi.mockImplementation(() => ({
             gjerVergeKall: () => {
                 const ressurs = mock<Ressurs<VergeDto>>({
@@ -60,7 +60,7 @@ describe('Tester: VergeContainer', () => {
                 return Promise.resolve(ressurs);
             },
         }));
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandling.mockImplementation(() => ({
             erStegBehandlet: () => behandlet,
             erStegAutoutført: () => autoutført,

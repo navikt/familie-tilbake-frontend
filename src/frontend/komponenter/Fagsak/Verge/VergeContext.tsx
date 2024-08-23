@@ -64,6 +64,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
             settHenterData(true);
             hentVerge();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
 
     const hentVerge = () => {
@@ -174,7 +175,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
             );
         } else if (kanSendeSkjema()) {
             settSenderInn(true);
-            // @ts-ignore
+            // @ts-expect-error har verdi her
             const vergetype: Vergetype = skjema.felter.vergetype.verdi;
             const payload: VergeStegPayload = {
                 '@type': 'VERGE',

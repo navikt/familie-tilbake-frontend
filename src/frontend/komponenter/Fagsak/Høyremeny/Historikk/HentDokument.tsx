@@ -50,6 +50,7 @@ const HentDokument: React.FC<IProps> = ({ innslag, onClose }) => {
                 );
             }
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling, innslag]);
 
     const nullstillHentetDokument = () => {

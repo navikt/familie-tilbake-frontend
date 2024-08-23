@@ -9,6 +9,7 @@ const behandendeEnheter: IArbeidsfordelingsenhet[] = [
     { enhetId: '4817', enhetNavn: 'NAV Familie- og pensjonsytelser Steinkjer' },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const finnMuligeEnheter = (_ytelse: Ytelsetype): IArbeidsfordelingsenhet[] => {
     return behandendeEnheter;
 };

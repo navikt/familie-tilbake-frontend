@@ -3,7 +3,6 @@ import path from 'path';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-// eslint-disable-next-line
 import webpack from 'webpack';
 
 const commonConfig: webpack.Configuration = {
@@ -21,6 +20,7 @@ const commonConfig: webpack.Configuration = {
         }),
         new CaseSensitivePathsPlugin(),
         new ESLintPlugin({
+            configType: 'flat',
             extensions: [`ts`, `tsx`],
             exclude: [`/node_modules/`],
         }),

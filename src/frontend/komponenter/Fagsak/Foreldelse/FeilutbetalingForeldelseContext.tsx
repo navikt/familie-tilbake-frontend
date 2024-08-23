@@ -80,6 +80,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                     hentFeilutbetalingForeldelse();
                 }
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling, visVenteModal]);
 
         React.useEffect(() => {
@@ -106,6 +107,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                     settValgtPeriode(valgtForeldelsePeriode);
                 }
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [feilutbetalingForeldelse]);
 
         React.useEffect(() => {
@@ -115,6 +117,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                 );
                 settAllePerioderBehandlet(!nokonUbehandlet);
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [valgtPeriode]);
 
         const hentFeilutbetalingForeldelse = (): void => {

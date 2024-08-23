@@ -73,7 +73,7 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
-            return <Alert children={feilutbetalingFakta.frontendFeilmelding} variant="error" />;
+            return <Alert variant="error">{feilutbetalingFakta.frontendFeilmelding}</Alert>;
         default:
             return <Alert variant="warning">Kunne ikke hente data om feilutbetalingen</Alert>;
     }

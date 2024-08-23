@@ -37,9 +37,8 @@ const hasValidText = (text: string): ValideringsResultat => {
 
 const _validerMaxLength =
     (length: number) =>
-    // eslint-disable-next-line
     (text: string | undefined): ValideringsResultat => {
-        // @ts-ignore
+        // @ts-expect-error nullsjekker først
         return isEmpty(text) || text.toString().trim().length <= length
             ? null
             : `Du kan skrive maksimalt ${length} tegn`;
@@ -47,15 +46,14 @@ const _validerMaxLength =
 
 const _validerMinLength =
     (length: number) =>
-    // eslint-disable-next-line
     (text: string | undefined): ValideringsResultat => {
-        // @ts-ignore
+        // @ts-expect-error nullsjekker først
         return isEmpty(text) || text.toString().trim().length >= length
             ? null
             : `Du må skrive minst ${length} tegn`;
     };
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const erFeltetEmpty = (felt: FeltState<any>) => {
     return !isEmpty(felt.verdi)
         ? ok(felt)

@@ -28,6 +28,7 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
             if (valgtMenyside === Menysider.DOKUMENTER) {
                 hentDokumentlisting();
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling, valgtMenyside]);
 
         const hentDokumentlisting = (): void => {

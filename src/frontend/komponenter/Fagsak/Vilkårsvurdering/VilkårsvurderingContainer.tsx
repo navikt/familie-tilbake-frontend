@@ -100,10 +100,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
             return (
-                <Alert
-                    children={feilutbetalingVilkårsvurdering.frontendFeilmelding}
-                    variant="error"
-                />
+                <Alert variant="error">{feilutbetalingVilkårsvurdering.frontendFeilmelding}</Alert>
             );
         default:
             return <Alert variant="warning">Kunne ikke hente data om vilkårsvurdering</Alert>;

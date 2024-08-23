@@ -147,6 +147,6 @@ export const hentDatoRegistrertSendt = (
         relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DATO_JOURNALFOERT) ||
         relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DATO_DOKUMENT);
 
-    // @ts-ignore
+    // @ts-expect-error Får alltid en av disse datoene
     return parseISO(datoRegistrert.dato);
 };

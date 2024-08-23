@@ -56,7 +56,7 @@ const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
                     informasjon={[
                         {
                             label: 'Behandlingsårsak',
-                            // @ts-ignore
+                            // @ts-expect-error har verdi her
                             tekst: behandlingårsaker[behandling.behandlingsårsakstype],
                         },
                     ]}

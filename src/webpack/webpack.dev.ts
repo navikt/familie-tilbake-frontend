@@ -1,7 +1,6 @@
 import path from 'path';
 
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
-// eslint-disable-next-line
 import webpack from 'webpack';
 import { mergeWithRules } from 'webpack-merge';
 

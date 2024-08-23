@@ -52,12 +52,14 @@ const FagsakContainer: React.FC = () => {
         if (!!fagsystem && !!fagsakId) {
             hentFagsak(fagsystem, fagsakId);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsystem, fagsakId]);
 
     React.useEffect(() => {
         if (fagsak?.status === RessursStatus.SUKSESS && behandlingId) {
             hentBehandlingMedEksternBrukId(fagsak.data, behandlingId);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsak, behandlingId]);
 
     const lukkVenteModal = () => {
@@ -77,7 +79,9 @@ const FagsakContainer: React.FC = () => {
                             <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
                             {ventegrunn && (
-                                <FTAlertStripe children={venteBeskjed(ventegrunn)} variant="info" />
+                                <FTAlertStripe variant="info">
+                                    {venteBeskjed(ventegrunn)}
+                                </FTAlertStripe>
                             )}
                             {visVenteModal && ventegrunn && (
                                 <PåVentModal
@@ -97,25 +101,22 @@ const FagsakContainer: React.FC = () => {
                     );
                 case RessursStatus.IKKE_TILGANG:
                     return (
-                        <Alert
-                            children={`Du har ikke tilgang til å se denne behandlingen.`}
-                            variant="warning"
-                        />
+                        <Alert variant="warning">
+                            Du har ikke tilgang til å se denne behandlingen.
+                        </Alert>
                     );
                 case RessursStatus.FEILET:
                 case RessursStatus.FUNKSJONELL_FEIL:
-                    return <Alert children={behandling.frontendFeilmelding} variant="error" />;
+                    return <Alert variant="error">{behandling.frontendFeilmelding}</Alert>;
                 default:
                     return <Alert variant="info">Venter på data om behandlingen</Alert>;
             }
         }
         case RessursStatus.IKKE_TILGANG:
-            return (
-                <Alert children={`Du har ikke tilgang til å se denne saken.`} variant="warning" />
-            );
+            return <Alert variant="warning">Du har ikke tilgang til å se denne saken.</Alert>;
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
-            return <Alert children={fagsak.frontendFeilmelding} variant="error" />;
+            return <Alert variant="error">{fagsak.frontendFeilmelding}</Alert>;
         default:
             return <Alert variant="info">Venter på data om fagsaken</Alert>;
     }

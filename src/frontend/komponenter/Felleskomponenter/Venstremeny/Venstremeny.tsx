@@ -72,6 +72,7 @@ const Venstremeny: React.FunctionComponent<IProps> = ({ fagsak }) => {
         <StyledNav>
             {behandling?.status === RessursStatus.SUKSESS
                 ? Object.entries(sider)
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
                       .filter(([_, side]) => visSide(side, behandling.data))
                       .map(([sideId, side], index: number) => {
                           const tilPath = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.data.eksternBrukId}/${side.href}`;

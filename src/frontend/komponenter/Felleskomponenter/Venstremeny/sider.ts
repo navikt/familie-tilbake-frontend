@@ -109,6 +109,7 @@ export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBeha
     if (erHistoriskSide(ønsketSide)) {
         return true;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const funnetØnsketSide = Object.entries(sider).find(([_, side]) => side.href === ønsketSide);
 
     if (funnetØnsketSide && behandling.behandlingsstegsinfo) {
@@ -122,6 +123,7 @@ export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBeha
 };
 
 export const finnSideForSteg = (steg: Behandlingssteg): ISide | undefined => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const sideForSteg = Object.entries(sider).find(([_, side]) => side.steg === steg);
     return sideForSteg ? sideForSteg[1] : undefined;
 };
