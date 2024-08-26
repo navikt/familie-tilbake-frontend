@@ -8,7 +8,8 @@ export enum ToggleName {
     // Miljø-toggles - la stå
 
     // Release-toggles
-    vurderBrukersUttalelse = 'familie-tilbake.bruker.har.uttalt.seg',
+    seHistoriskeVurderinger = 'familie-tilbake.se-historiske-vurderinger',
+    dummy = 'familie-tilbake.dummy',
     saksbehanderKanResettebehandling = 'familie-tilbake-frontend.saksbehandler.kan.resette.behandling',
     // Midlertidige toggles - kan fjernes etterhvert
 }

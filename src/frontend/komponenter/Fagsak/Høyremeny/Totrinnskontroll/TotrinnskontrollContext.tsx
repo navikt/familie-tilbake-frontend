@@ -117,8 +117,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 .then((hentetTotrinnkontroll: Ressurs<ITotrinnkontroll>) => {
                     settTotrinnkontroll(hentetTotrinnkontroll);
                 })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved henting av steg for totrinngskontroll: ', error);
+                .catch((_error: AxiosError) => {
                     settTotrinnkontroll(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av to-trinnskontroll for behandling'
@@ -240,8 +239,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                             settFatteVedtakRespons(respons);
                         }
                     })
-                    .catch((error: AxiosError) => {
-                        console.log('Error ved sending av oppdaterte foreldelse: ', error);
+                    .catch((_error: AxiosError) => {
                         settSenderInn(false);
                         settFatteVedtakRespons(
                             byggFeiletRessurs('Ukjent feil ved sending av vedtak')

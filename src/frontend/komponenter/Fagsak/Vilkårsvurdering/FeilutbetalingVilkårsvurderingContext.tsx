@@ -158,8 +158,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                 .then((hentetVilkårsvurdering: Ressurs<IFeilutbetalingVilkårsvurdering>) => {
                     settFeilutbetalingVilkårsvurdering(hentetVilkårsvurdering);
                 })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved henting av vilkårsvurdering: ', error);
+                .catch((_error: AxiosError) => {
                     settFeilutbetalingVilkårsvurdering(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av vilkårsvurdering-perioder for behandling'
