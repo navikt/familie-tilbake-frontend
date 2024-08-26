@@ -90,6 +90,7 @@ describe('Tester: FaktaContainer', () => {
         vurderingAvBrukersUttalelse: {
             harBrukerUttaltSeg: HarBrukerUttaltSegValg.IKKE_VURDERT,
         },
+        opprettetTid: '2020-01-01',
     };
     const fagsak = mock<IFagsak>({
         institusjon: undefined,

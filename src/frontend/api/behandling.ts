@@ -33,6 +33,15 @@ const useBehandlingApi = () => {
         });
     };
 
+    const gjerFeilutbetalingInaktiveFaktaKall = (
+        behandlingId: string
+    ): Promise<Ressurs<IFeilutbetalingFakta[]>> => {
+        return request<void, IFeilutbetalingFakta[]>({
+            method: 'GET',
+            url: `${behandlingerApiPrefix}/${behandlingId}/fakta/inaktiv`,
+        });
+    };
+
     const sendInnFeilutbetalingFakta = (
         behandlingId: string,
         payload: FaktaStegPayload
@@ -194,6 +203,7 @@ const useBehandlingApi = () => {
 
     return {
         gjerFeilutbetalingFaktaKall,
+        gjerFeilutbetalingInaktiveFaktaKall,
         sendInnFeilutbetalingFakta,
         gjerFeilutbetalingForeldelseKall,
         sendInnFeilutbetalingForeldelse,

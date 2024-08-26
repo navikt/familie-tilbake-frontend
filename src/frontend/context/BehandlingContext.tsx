@@ -125,8 +125,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                 }
                 settBehandling(hentetBehandling);
             })
-            .catch((error: AxiosError) => {
-                console.log('Error: ', error);
+            .catch((_error: AxiosError) => {
                 settBehandling(byggFeiletRessurs('Ukjent feil ved henting av behandling'));
             });
     };

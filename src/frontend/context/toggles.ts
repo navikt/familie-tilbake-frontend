@@ -8,6 +8,7 @@ export enum ToggleName {
     // Miljø-toggles - la stå
 
     // Release-toggles
+    seHistoriskeVurderinger = 'familie-tilbake.se-historiske-vurderinger',
     dummy = 'familie-tilbake.dummy',
     // Midlertidige toggles - kan fjernes etterhvert
 }

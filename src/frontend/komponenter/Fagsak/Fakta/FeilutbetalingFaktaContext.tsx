@@ -101,8 +101,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 .then((hentetFakta: Ressurs<IFeilutbetalingFakta>) => {
                     settFeilutbetalingFakta(hentetFakta);
                 })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved henting av fakta: ', error);
+                .catch((_error: AxiosError) => {
                     settFeilutbetalingFakta(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av fakta-perioder for behandling'
