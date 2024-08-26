@@ -42,7 +42,7 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
 
         const resettUrl = toggles[ToggleName.saksbehanderKanResettebehandling]
             ? `/familie-tilbake/api/behandling/${behandling.behandlingId}/flytt-behandling-til-fakta`
-            : `/familie-tilbake/api/behandling/${behandling.behandlingId}/flytt-behandling-til-fakta`;
+            : `/familie-tilbake/api/forvaltning/behandling/${behandling.behandlingId}/flytt-behandling/v1`;
 
         request<void, string>({
             method: 'PUT',
