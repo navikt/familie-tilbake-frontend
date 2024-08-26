@@ -7,6 +7,8 @@ import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 import SettBehandlingTilbakeTilFaktaModal from './SettBehandlingTilbakeTilFaktaModal';
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { ToggleName } from '../../../../../context/toggles';
+import { useToggles } from '../../../../../context/TogglesContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
@@ -33,12 +35,18 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
     const lukkSettBehandlingTilbakeTilFaktaModal = () => {
         settVisSettBehandlingTilbakeTilFaktaModal(false);
     };
+    const { toggles } = useToggles();
     const settBehandlingTilbakeTilFakta = () => {
         lukkSettBehandlingTilbakeTilFaktaModal();
         nullstillIkkePersisterteKomponenter();
+
+        const resettUrl = toggles[ToggleName.saksbehanderKanResettebehandling]
+            ? `/familie-tilbake/api/behandling/${behandling.behandlingId}/flytt-behandling-til-fakta`
+            : `/familie-tilbake/api/behandling/${behandling.behandlingId}/flytt-behandling-til-fakta`;
+
         request<void, string>({
             method: 'PUT',
-            url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/flytt-behandling-til-fakta`,
+            url: resettUrl,
         }).then((respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.SUKSESS) {
                 settToast(ToastTyper.FLYTT_BEHANDLING_TIL_FAKTA, {
