@@ -19,6 +19,8 @@ import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent
 import SettBehandlingTilbakeTilFakta from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
 import { useApp } from '../../../../context/AppContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { ToggleName } from '../../../../context/toggles';
+import { useToggles } from '../../../../context/TogglesContext';
 import { Fagsystem } from '../../../../kodeverk';
 import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
@@ -39,7 +41,6 @@ const StyledButton = styled(Button)`
 interface IProps {
     fagsak: IFagsak;
 }
-
 const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
     const [visMeny, settVisMeny] = React.useState<boolean>(false);
@@ -58,6 +59,7 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
     const vedtakFattetEllerFattes =
         erStegBehandlet(Behandlingssteg.FATTE_VEDTAK) ||
         aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK;
+    const { toggles } = useToggles();
 
     return (
         <>
@@ -112,14 +114,17 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                                     onListElementClick={() => settVisMeny(false)}
                                                 />
                                             </li>
-                                            <li>
-                                                <SettBehandlingTilbakeTilFakta
-                                                    behandling={behandling.data}
-                                                    fagsak={fagsak}
-                                                    onListElementClick={() => settVisMeny(false)}
-                                                />
-                                            </li>
                                         </>
+                                    )}
+                                    {(toggles[ToggleName.saksbehanderKanResettebehandling] ||
+                                        erForvalter) && (
+                                        <li>
+                                            <SettBehandlingTilbakeTilFakta
+                                                behandling={behandling.data}
+                                                fagsak={fagsak}
+                                                onListElementClick={() => settVisMeny(false)}
+                                            />
+                                        </li>
                                     )}
                                     {!venterPåKravgrunnlag &&
                                         (behandling.data.erBehandlingPåVent || ventegrunn ? (

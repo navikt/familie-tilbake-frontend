@@ -1,10 +1,14 @@
 import * as React from 'react';
+import { useState } from 'react';
 
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
+import SettBehandlingTilbakeTilFaktaModal from './SettBehandlingTilbakeTilFaktaModal';
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { ToggleName } from '../../../../../context/toggles';
+import { useToggles } from '../../../../../context/TogglesContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
@@ -26,12 +30,23 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
     const { settToast } = useApp();
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
-
+    const [visSettBehandlingTilbakeTilFaktaModal, settVisSettBehandlingTilbakeTilFaktaModal] =
+        useState<boolean>(false);
+    const lukkSettBehandlingTilbakeTilFaktaModal = () => {
+        settVisSettBehandlingTilbakeTilFaktaModal(false);
+    };
+    const { toggles } = useToggles();
     const settBehandlingTilbakeTilFakta = () => {
+        lukkSettBehandlingTilbakeTilFaktaModal();
         nullstillIkkePersisterteKomponenter();
+
+        const resettUrl = toggles[ToggleName.saksbehanderKanResettebehandling]
+            ? `/familie-tilbake/api/behandling/${behandling.behandlingId}/flytt-behandling-til-fakta`
+            : `/familie-tilbake/api/forvaltning/behandling/${behandling.behandlingId}/flytt-behandling/v1`;
+
         request<void, string>({
             method: 'PUT',
-            url: `/familie-tilbake/api/forvaltning/behandling/${behandling.behandlingId}/flytt-behandling/v1`,
+            url: resettUrl,
         }).then((respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.SUKSESS) {
                 settToast(ToastTyper.FLYTT_BEHANDLING_TIL_FAKTA, {
@@ -61,13 +76,19 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
             <BehandlingsMenyButton
                 variant="tertiary"
                 onClick={() => {
-                    settBehandlingTilbakeTilFakta();
+                    settVisSettBehandlingTilbakeTilFaktaModal(true);
                     onListElementClick();
                 }}
-                disabled={!behandling.kanEndres}
+                disabled={!behandling.kanSetteTilbakeTilFakta}
             >
-                {'Sett behanling tilbake til fakta'}
+                {'Sett behandling tilbake til fakta'}
             </BehandlingsMenyButton>
+
+            <SettBehandlingTilbakeTilFaktaModal
+                isOpen={visSettBehandlingTilbakeTilFaktaModal}
+                onConfirm={settBehandlingTilbakeTilFakta}
+                onCancel={lukkSettBehandlingTilbakeTilFaktaModal}
+            />
         </>
     );
 };

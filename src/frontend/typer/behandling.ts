@@ -161,6 +161,7 @@ export interface IBehandling {
     erBehandlingHenlagt?: boolean;
     erBehandlingPåVent?: boolean;
     kanEndres: boolean;
+    kanSetteTilbakeTilFakta: boolean;
     harVerge: boolean;
     kanHenleggeBehandling: boolean;
     kanRevurderingOpprettes: boolean;
