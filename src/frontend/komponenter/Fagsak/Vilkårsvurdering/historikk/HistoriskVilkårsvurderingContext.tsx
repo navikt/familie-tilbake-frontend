@@ -62,8 +62,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
                 .then((respons: Ressurs<IFeilutbetalingVilkårsvurdering[]>) => {
                     settFeilutbetalingInaktiveVilkårsvurderinger(respons);
                 })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved henting av vilkårsvurdering: ', error);
+                .catch((_error: AxiosError) => {
                     settFeilutbetalingInaktiveVilkårsvurderinger(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av vilkårsvurdering-perioder for behandling'

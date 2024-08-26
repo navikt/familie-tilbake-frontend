@@ -153,8 +153,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 .then((hentetVedtaksbrevavsnitt: Ressurs<VedtaksbrevAvsnitt[]>) => {
                     settFeilutbetalingVedtaksbrevavsnitt(hentetVedtaksbrevavsnitt);
                 })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved henting av vilkårsvurdering: ', error);
+                .catch((_error: AxiosError) => {
                     settFeilutbetalingVedtaksbrevavsnitt(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av vilkårsvurdering-perioder for behandling'
@@ -169,8 +168,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 .then((hentetBeregningsresultat: Ressurs<IBeregningsresultat>) => {
                     settBeregningsresultat(hentetBeregningsresultat);
                 })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved henting av beregningsresultat: ', error);
+                .catch((_error: AxiosError) => {
                     settBeregningsresultat(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av beregningsresultat for behandling'
@@ -282,8 +280,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                             settForeslåVedtakRespons(respons);
                         }
                     })
-                    .catch((error: AxiosError) => {
-                        console.log('Error ved sending av foreslå vedtak: ', error);
+                    .catch((_error: AxiosError) => {
                         settSenderInn(false);
                         settForeslåVedtakRespons(
                             byggFeiletRessurs('Ukjent feil ved sending av vedtak')
@@ -313,8 +310,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                             settForeslåVedtakRespons(respons);
                         }
                     })
-                    .catch((error: AxiosError) => {
-                        console.log('Error ved mellomlagring av vedtak: ', error);
+                    .catch((_error: AxiosError) => {
                         settSenderInn(false);
                         settForeslåVedtakRespons(
                             byggFeiletRessurs('Ukjent feil ved mellomlagring av vedtak')

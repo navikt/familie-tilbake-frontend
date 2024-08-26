@@ -207,8 +207,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
                         settVergeRepons(respons);
                     }
                 })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved sending av verge: ', error);
+                .catch((_error: AxiosError) => {
                     settSenderInn(false);
                     settVergeRepons(byggFeiletRessurs('Ukjent feil ved sending av verge'));
                 });

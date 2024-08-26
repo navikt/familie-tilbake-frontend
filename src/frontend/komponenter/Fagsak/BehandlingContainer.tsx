@@ -9,9 +9,12 @@ import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import BrevmottakerContainer from './Brevmottaker/BrevmottakerContainer';
 import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
 import FaktaContainer from './Fakta/FaktaContainer';
+import HistoriskFaktaContainer from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContainer';
+import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
 import { FeilutbetalingFaktaProvider } from './Fakta/FeilutbetalingFaktaContext';
 import { FeilutbetalingForeldelseProvider } from './Foreldelse/FeilutbetalingForeldelseContext';
 import ForeldelseContainer from './Foreldelse/ForeldelseContainer';
+import HistoriskeVurderingermeny from './HistoriskeVurderingermeny/HistoriskeVurderingermeny';
 import Høyremeny from './Høyremeny/Høyremeny';
 import { FeilutbetalingVedtakProvider } from './Vedtak/FeilutbetalingVedtakContext';
 import VedtakContainer from './Vedtak/VedtakContainer';
@@ -121,6 +124,14 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         }
                     />
                     <Route
+                        path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
+                        element={
+                            <HistoriskFaktaProvider behandling={behandling}>
+                                <HistoriskFaktaContainer behandling={behandling} fagsak={fagsak} />
+                            </HistoriskFaktaProvider>
+                        }
+                    />
+                    <Route
                         path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
                         element={
                             <FeilutbetalingForeldelseProvider
@@ -155,6 +166,12 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                                     fagsak={fagsak}
                                 />
                             </HistoriskVilkårsvurderingProvider>
+                        }
+                    />
+                    <Route
+                        path={BEHANDLING_KONTEKST_PATH + '/inaktiv'}
+                        element={
+                            <HistoriskeVurderingermeny behandling={behandling} fagsak={fagsak} />
                         }
                     />
 

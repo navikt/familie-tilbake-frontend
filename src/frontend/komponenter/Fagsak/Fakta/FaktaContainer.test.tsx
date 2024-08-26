@@ -90,6 +90,7 @@ describe('Tester: FaktaContainer', () => {
         vurderingAvBrukersUttalelse: {
             harBrukerUttaltSeg: HarBrukerUttaltSegValg.IKKE_VURDERT,
         },
+        opprettetTid: '2020-01-01',
     };
     const fagsak = mock<IFagsak>({
         institusjon: undefined,
@@ -126,7 +127,7 @@ describe('Tester: FaktaContainer', () => {
         }));
         // @ts-expect-error mocking
         useToggles.mockImplementation(() => ({
-            toggles: { [ToggleName.vurderBrukersUttalelse]: true },
+            toggles: { [ToggleName.dummy]: true },
             feilmelding: '',
         }));
     };

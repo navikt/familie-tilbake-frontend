@@ -40,8 +40,7 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
                 .then((hentetDokumenter: Ressurs<IJournalpost[]>) => {
                     settJournalposter(hentetDokumenter);
                 })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved henting av dokumentlisting: ', error);
+                .catch((_error: AxiosError) => {
                     settJournalposter(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av dokumentlisting for behandling'

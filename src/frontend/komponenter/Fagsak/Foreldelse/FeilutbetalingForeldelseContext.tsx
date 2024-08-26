@@ -126,8 +126,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                 .then((hentetForeldelse: Ressurs<IFeilutbetalingForeldelse>) => {
                     settFeilutbetalingForeldelse(hentetForeldelse);
                 })
-                .catch((error: AxiosError) => {
-                    console.log('Error ved henting av foreldelse: ', error);
+                .catch((_error: AxiosError) => {
                     settFeilutbetalingForeldelse(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av foreldelse-perioder for behandling'

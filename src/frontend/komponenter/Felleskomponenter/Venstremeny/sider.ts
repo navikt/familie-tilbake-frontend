@@ -104,7 +104,18 @@ export const utledBehandlingSide = (steg: Behandlingssteg): ISide | undefined =>
             return finnSideForSteg(steg);
     }
 };
-const erHistoriskSide = (side: string) => side === 'inaktiv-vilkaarsvurdering';
+
+const historiskeSider = [
+    'inaktiv-vilkaarsvurdering',
+    'inaktiv-fakta',
+    'inaktiv-foreldelse',
+    'inaktiv-vedtak',
+    'inaktiv',
+];
+
+const erHistoriskSide = (side: string) => {
+    return historiskeSider.includes(side);
+};
 export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBehandling): boolean => {
     if (erHistoriskSide(ønsketSide)) {
         return true;

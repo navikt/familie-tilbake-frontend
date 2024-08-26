@@ -49,6 +49,7 @@ export interface IFeilutbetalingFakta {
     begrunnelse?: string;
     kravgrunnlagReferanse?: string;
     vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelse;
+    opprettetTid: string;
 }
 
 export interface VurderingAvBrukersUttalelse {
@@ -62,6 +63,13 @@ export enum HarBrukerUttaltSegValg {
     IKKE_AKTUELT = 'IKKE_AKTUELT',
     IKKE_VURDERT = 'IKKE_VURDERT',
 }
+
+export const harBrukerUttaltSegValgTilTekst: Record<HarBrukerUttaltSegValg, string> = {
+    JA: 'Ja',
+    NEI: 'Nei',
+    IKKE_AKTUELT: 'Ikke aktuelt',
+    IKKE_VURDERT: 'Ikke vurdert',
+};
 
 export type ForeldelsePeriode = {
     foreldelsesvurderingstype?: Foreldelsevurdering;
