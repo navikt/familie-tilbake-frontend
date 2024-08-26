@@ -40,6 +40,7 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
                 .then((hentetDokumenter: Ressurs<IJournalpost[]>) => {
                     settJournalposter(hentetDokumenter);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settJournalposter(
                         byggFeiletRessurs(

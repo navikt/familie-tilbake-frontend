@@ -207,6 +207,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
                         settVergeRepons(respons);
                     }
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settSenderInn(false);
                     settVergeRepons(byggFeiletRessurs('Ukjent feil ved sending av verge'));

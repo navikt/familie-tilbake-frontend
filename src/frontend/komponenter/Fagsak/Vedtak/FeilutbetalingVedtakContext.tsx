@@ -153,6 +153,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 .then((hentetVedtaksbrevavsnitt: Ressurs<VedtaksbrevAvsnitt[]>) => {
                     settFeilutbetalingVedtaksbrevavsnitt(hentetVedtaksbrevavsnitt);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settFeilutbetalingVedtaksbrevavsnitt(
                         byggFeiletRessurs(
@@ -168,6 +169,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 .then((hentetBeregningsresultat: Ressurs<IBeregningsresultat>) => {
                     settBeregningsresultat(hentetBeregningsresultat);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settBeregningsresultat(
                         byggFeiletRessurs(
@@ -280,6 +282,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                             settForeslåVedtakRespons(respons);
                         }
                     })
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .catch((_error: AxiosError) => {
                         settSenderInn(false);
                         settForeslåVedtakRespons(
@@ -310,6 +313,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                             settForeslåVedtakRespons(respons);
                         }
                     })
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .catch((_error: AxiosError) => {
                         settSenderInn(false);
                         settForeslåVedtakRespons(

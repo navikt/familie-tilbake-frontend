@@ -118,6 +118,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 .then((hentetTotrinnkontroll: Ressurs<ITotrinnkontroll>) => {
                     settTotrinnkontroll(hentetTotrinnkontroll);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settTotrinnkontroll(
                         byggFeiletRessurs(
@@ -240,6 +241,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                             settFatteVedtakRespons(respons);
                         }
                     })
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .catch((_error: AxiosError) => {
                         settSenderInn(false);
                         settFatteVedtakRespons(

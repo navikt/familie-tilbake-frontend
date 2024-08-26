@@ -29,6 +29,7 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandli
 
     useEffect(() => {
         hentFeilutbetalingFakta();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
 
     const settFeilutbetalingInaktivFakta = (feilutbetalingInaktivFakta?: IFeilutbetalingFakta) => {
@@ -65,6 +66,7 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandli
             .then((respons: Ressurs<IFeilutbetalingFakta[]>) => {
                 settFeilutbetalingInaktiveFakta(respons);
             })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .catch((_error: AxiosError) => {
                 settFeilutbetalingInaktiveFakta(
                     byggFeiletRessurs(

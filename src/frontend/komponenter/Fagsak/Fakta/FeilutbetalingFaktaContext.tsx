@@ -102,6 +102,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 .then((hentetFakta: Ressurs<IFeilutbetalingFakta>) => {
                     settFeilutbetalingFakta(hentetFakta);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settFeilutbetalingFakta(
                         byggFeiletRessurs(

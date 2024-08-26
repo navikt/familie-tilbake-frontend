@@ -64,9 +64,7 @@ const HistoriskFaktaContainer: React.FC<IProps> = () => {
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
-            return (
-                <Alert children={feilutbetalingInaktiveFakta.frontendFeilmelding} variant="error" />
-            );
+            return <Alert variant="error">{feilutbetalingInaktiveFakta.frontendFeilmelding}</Alert>;
     }
 };
 

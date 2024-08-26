@@ -126,6 +126,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                 .then((hentetForeldelse: Ressurs<IFeilutbetalingForeldelse>) => {
                     settFeilutbetalingForeldelse(hentetForeldelse);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settFeilutbetalingForeldelse(
                         byggFeiletRessurs(

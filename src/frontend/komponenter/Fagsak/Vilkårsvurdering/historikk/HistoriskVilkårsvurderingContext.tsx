@@ -62,6 +62,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
                 .then((respons: Ressurs<IFeilutbetalingVilkårsvurdering[]>) => {
                     settFeilutbetalingInaktiveVilkårsvurderinger(respons);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settFeilutbetalingInaktiveVilkårsvurderinger(
                         byggFeiletRessurs(

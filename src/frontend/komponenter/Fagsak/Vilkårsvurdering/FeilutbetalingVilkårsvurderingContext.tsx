@@ -161,6 +161,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                 .then((hentetVilkårsvurdering: Ressurs<IFeilutbetalingVilkårsvurdering>) => {
                     settFeilutbetalingVilkårsvurdering(hentetVilkårsvurdering);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settFeilutbetalingVilkårsvurdering(
                         byggFeiletRessurs(
