@@ -10,5 +10,6 @@ export enum ToggleName {
     // Release-toggles
     seHistoriskeVurderinger = 'familie-tilbake.se-historiske-vurderinger',
     dummy = 'familie-tilbake.dummy',
+    saksbehanderKanResettebehandling = 'familie-tilbake-frontend.saksbehandler.kan.resette.behandling',
     // Midlertidige toggles - kan fjernes etterhvert
 }
