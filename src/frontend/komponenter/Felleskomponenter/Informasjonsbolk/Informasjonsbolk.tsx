@@ -33,12 +33,9 @@ const Informasjonsbolk: React.FC<IProps> = ({ informasjon }) => {
                         <BodyShort size="small">{info.label}</BodyShort>
                     </div>
                     <div>
-                        <Heading
-                            size="xsmall"
-                            level="3"
-                            title={info.tekstTitle}
-                            children={info.tekst}
-                        />
+                        <Heading size="xsmall" level="3" title={info.tekstTitle}>
+                            {info.tekst}
+                        </Heading>
                     </div>
                 </div>
             ))}

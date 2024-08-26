@@ -29,7 +29,7 @@ jest.mock('react-router-dom', () => ({
 
 describe('Tester: Totrinnskontroll', () => {
     const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: ITotrinnkontroll) => {
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandlingApi.mockImplementation(() => ({
             gjerTotrinnkontrollKall: () => {
                 const ressurs = mock<Ressurs<ITotrinnkontroll>>({
@@ -46,7 +46,7 @@ describe('Tester: Totrinnskontroll', () => {
                 return Promise.resolve(ressurs);
             },
         }));
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandling.mockImplementation(() => ({
             erStegBehandlet: () => false,
             visVenteModal: false,

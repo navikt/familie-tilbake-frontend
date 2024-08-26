@@ -213,6 +213,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             } else if (!Object.keys(brevmottakere).includes(defaultMottaker)) {
                 leggTilEllerOppdaterBrevmottaker(defaultMottaker, bruker);
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [brevmottakere]);
 
         React.useEffect(() => {
@@ -235,6 +236,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                     );
                 }
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [brevmottakerIdTilEndring]);
 
         const leggTilEllerOppdaterBrevmottaker = (id: string, brevmottaker: IBrevmottaker) => {

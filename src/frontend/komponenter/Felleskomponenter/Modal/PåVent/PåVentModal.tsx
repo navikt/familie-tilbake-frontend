@@ -102,10 +102,9 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                 <>
                     {vilBliAutomatiskBehandletUnder4rettsgebyr && (
                         <>
-                            <StyledAlert
-                                children={automatiskUnder4rettsgebyrBehandletTekst}
-                                variant="info"
-                            />
+                            <StyledAlert variant="info">
+                                {automatiskUnder4rettsgebyrBehandletTekst}
+                            </StyledAlert>
                         </>
                     )}
 

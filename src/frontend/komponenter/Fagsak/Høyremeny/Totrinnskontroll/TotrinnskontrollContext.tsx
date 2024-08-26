@@ -74,6 +74,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 settErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
                 hentTotrinnkontroll();
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling]);
 
         useEffect(() => {
@@ -117,6 +118,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 .then((hentetTotrinnkontroll: Ressurs<ITotrinnkontroll>) => {
                     settTotrinnkontroll(hentetTotrinnkontroll);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settTotrinnkontroll(
                         byggFeiletRessurs(
@@ -166,7 +168,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                     feilmelding = `${behandlingssteg[totrinn.behandlingssteg]} må vurderes`;
                 }
                 if (totrinn.godkjent === OptionIkkeGodkjent) {
-                    // @ts-ignore
+                    // @ts-expect-error har verdi her
                     begrunnelseFeilmelding = validerTekst2000(totrinn.begrunnelse);
                 }
 
@@ -211,12 +213,12 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
                 const payload: FatteVedtakStegPayload = {
                     '@type': 'FATTE_VEDTAK',
-                    // @ts-ignore
+                    // @ts-expect-error har verdi her
                     totrinnsvurderinger: skjemaData.map<TotrinnsStegVurdering>(ttSteg => {
                         const ikkkGodkjent = ttSteg.godkjent === OptionIkkeGodkjent;
                         return {
                             behandlingssteg: ttSteg.behandlingssteg,
-                            // @ts-ignore
+                            // @ts-expect-error har verdi her
                             godkjent: ttSteg.godkjent?.verdi,
                             begrunnelse: ikkkGodkjent ? ttSteg.begrunnelse : null,
                         };
@@ -239,6 +241,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                             settFatteVedtakRespons(respons);
                         }
                     })
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .catch((_error: AxiosError) => {
                         settSenderInn(false);
                         settFatteVedtakRespons(

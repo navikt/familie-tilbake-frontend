@@ -40,7 +40,9 @@ const BrevmottakerContainer: React.FC = () => {
         <div>
             {visBrevmottakerModal && <LeggTilEndreBrevmottakerModal />}
             <StyledBrevmottaker>
-                <Heading size={'large'} level={'1'} children={'Brevmottaker(e)'} />
+                <Heading size={'large'} level={'1'}>
+                    Brevmottaker(e)
+                </Heading>
                 <FlexDiv>
                     {Object.keys(brevmottakere)
                         .sort((a, b) => brevmottakere[a].type.localeCompare(brevmottakere[b].type))

@@ -33,6 +33,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
 
     React.useEffect(() => {
         skjema.felter.behandlingstype.onChange(behandling.type);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
 
     const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>) => {

@@ -61,6 +61,7 @@ const HistoriskFaktaVisning: React.FC<IProps> = ({ skjemaData, fakta }) => {
                             {skjemaData.perioder.map((periode, i) => {
                                 return (
                                     <FeilutbetalingFaktaPeriode
+                                        key={i}
                                         periode={periode}
                                         hendelseTyper={[]}
                                         erLesevisning={true}

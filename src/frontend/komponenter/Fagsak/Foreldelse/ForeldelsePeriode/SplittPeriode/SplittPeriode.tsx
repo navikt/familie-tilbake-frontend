@@ -60,6 +60,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
         const perRad: TidslinjePeriode = konverterPeriode(periode);
         settTidslinjeRader([[perRad]]);
         settSplittDato(periode.periode.tom);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [periode]);
 
     const onChangeDato = (nyVerdi?: string) => {
@@ -134,7 +135,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
             <Link
                 href="#"
                 role="button"
-                onClick={_event => {
+                onClick={() => {
                     settVisModal(true);
                 }}
                 onKeyUp={e => {

@@ -71,7 +71,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
     };
 
     const tilpassTekst = () => {
-        // @ts-ignore
+        // @ts-expect-error har verdi her
         const indexÅrsakMedBegrunnelse = innslag.tekst.indexOf(', Begrunnelse:');
         if (indexÅrsakMedBegrunnelse > -1) {
             const årsak = innslag.tekst?.substring(0, indexÅrsakMedBegrunnelse);

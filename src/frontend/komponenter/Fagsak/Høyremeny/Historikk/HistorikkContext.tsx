@@ -29,6 +29,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
             if (valgtMenyside === Menysider.HISTORIKK) {
                 hentHistorikkinnslag();
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling, valgtMenyside]);
 
         const hentHistorikkinnslag = (): void => {
@@ -40,6 +41,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
                 .then((hentetHistorikk: Ressurs<IHistorikkInnslag[]>) => {
                     settHistorikkInnslag(hentetHistorikk);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settHistorikkInnslag(
                         byggFeiletRessurs('Ukjent feil ved henting av logg for behandling')

@@ -119,6 +119,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
             });
             settFeilmelding('');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [feilmelding]);
 
     return (

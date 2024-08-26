@@ -76,6 +76,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
         skjema.felter.oppdagelsesdato.onChange(
             periode?.oppdagelsesdato ? isoStringTilDate(periode.oppdagelsesdato) : undefined
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [periode]);
 
     const erForeldet =

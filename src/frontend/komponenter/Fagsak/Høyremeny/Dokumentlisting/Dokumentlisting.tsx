@@ -17,7 +17,7 @@ const Dokumentlisting: React.FC = () => {
     const { journalposter } = useDokumentlisting();
 
     switch (journalposter?.status) {
-        case RessursStatus.SUKSESS:
+        case RessursStatus.SUKSESS: {
             const poster = journalposter.data;
             poster.sort((a, b) => {
                 return (
@@ -33,6 +33,7 @@ const Dokumentlisting: React.FC = () => {
                     {poster.length === 0 && <div>Ingen dokumenter på saken.</div>}
                 </StyledContainer>
             );
+        }
         case RessursStatus.HENTER:
             return (
                 <div>
@@ -42,7 +43,7 @@ const Dokumentlisting: React.FC = () => {
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
-            return <Alert children={journalposter.frontendFeilmelding} variant="error" />;
+            return <Alert variant="error">{journalposter.frontendFeilmelding}</Alert>;
         default:
             return <Alert variant="warning">Kunne ikke hente data om dokumenter</Alert>;
     }

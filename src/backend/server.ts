@@ -5,7 +5,6 @@ import path from 'path';
 import { json, urlencoded, NextFunction, Request, Response } from 'express';
 import expressStaticGzip from 'express-static-gzip';
 import { v4 as uuidv4 } from 'uuid';
-// eslint-disable-next-line
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
@@ -32,7 +31,6 @@ backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }
         });
 
         app.use(middleware);
-        // @ts-ignore
         app.use(webpackHotMiddleware(compiler));
     } else {
         app.use('/assets', expressStaticGzip(path.join(process.cwd(), 'frontend_production'), {}));

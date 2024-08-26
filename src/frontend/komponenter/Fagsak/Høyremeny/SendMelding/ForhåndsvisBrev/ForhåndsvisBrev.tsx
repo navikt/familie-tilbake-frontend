@@ -24,6 +24,7 @@ const ForhåndsvisBrev: React.FC<IProps> = () => {
         if (visModal) {
             hentBrev();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [visModal]);
 
     return (

@@ -23,7 +23,9 @@ interface IProps {
 
 const Steginformasjon: React.FC<IProps> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
-        <StyledAlert variant="info" size={'small'} children={infotekst} />
+        <StyledAlert variant="info" size={'small'}>
+            {infotekst}
+        </StyledAlert>
     ) : (
         <StyledDiv>
             <Label size="small">Behandlet:</Label> <BodyShort size="small">{infotekst}</BodyShort>

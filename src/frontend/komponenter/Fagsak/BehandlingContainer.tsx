@@ -87,6 +87,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                 }
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [visVenteModal, aktivtSteg, ønsketSide]);
 
     return behandling.erBehandlingHenlagt ? (

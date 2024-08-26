@@ -31,6 +31,7 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLes
 
     React.useEffect(() => {
         settHendelseTyper(hentHendelseTyper(ytelse, !!fagsak.institusjon));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ytelse]);
 
     return (

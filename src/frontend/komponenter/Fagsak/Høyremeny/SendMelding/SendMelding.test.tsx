@@ -38,7 +38,7 @@ jest.mock('react-router-dom', () => ({
 describe('Tester: SendMelding', () => {
     test('- fyller ut skjema og sender varsel', async () => {
         const user = userEvent.setup();
-        // @ts-ignore
+        // @ts-expect-error mock
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
                 const ressurs = mock<Ressurs<string>>({
@@ -48,7 +48,7 @@ describe('Tester: SendMelding', () => {
                 return Promise.resolve(ressurs);
             },
         }));
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandling.mockImplementation(() => ({
             behandlingILesemodus: false,
             hentBehandlingMedBehandlingId: () => Promise.resolve(),
@@ -126,7 +126,7 @@ describe('Tester: SendMelding', () => {
 
     test('- fyller ut skjema og sender korrigert varsel', async () => {
         const user = userEvent.setup();
-        // @ts-ignore
+        // @ts-expect-error mock
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
                 const ressurs = mock<Ressurs<string>>({
@@ -136,7 +136,7 @@ describe('Tester: SendMelding', () => {
                 return Promise.resolve(ressurs);
             },
         }));
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandling.mockImplementation(() => ({
             behandlingILesemodus: false,
             hentBehandlingMedBehandlingId: () => Promise.resolve(),
@@ -194,7 +194,7 @@ describe('Tester: SendMelding', () => {
 
     test('- fyller ut skjema og sender innhent dokumentasjon', async () => {
         const user = userEvent.setup();
-        // @ts-ignore
+        // @ts-expect-error mock
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
                 const ressurs = mock<Ressurs<string>>({
@@ -204,7 +204,7 @@ describe('Tester: SendMelding', () => {
                 return Promise.resolve(ressurs);
             },
         }));
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandling.mockImplementation(() => ({
             behandlingILesemodus: false,
             hentBehandlingMedBehandlingId: () => Promise.resolve(),
@@ -263,7 +263,7 @@ describe('Tester: SendMelding', () => {
     });
 
     test('- lesevisning - venter på svar på manuelt brev', async () => {
-        // @ts-ignore
+        // @ts-expect-error mock
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
                 const ressurs = mock<Ressurs<string>>({
@@ -273,7 +273,7 @@ describe('Tester: SendMelding', () => {
                 return Promise.resolve(ressurs);
             },
         }));
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandling.mockImplementation(() => ({
             behandlingILesemodus: true,
             hentBehandlingMedBehandlingId: () => Promise.resolve(),

@@ -29,7 +29,7 @@ import { isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
 const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[] => {
-    // @ts-ignore - klager på periode men er trygt p.g.s. filtreringen
+    // @ts-expect-error - klager på periode men er trygt p.g.s. filtreringen
     const perioderMedTekst: PeriodeMedTekst[] = skjemaData
         .filter(avs => avs.avsnittstype === Avsnittstype.PERIODE)
         .map(avs => {
@@ -109,6 +109,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 hentBeregningsresultat();
                 hentVedtaksbrevtekster();
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling, visVenteModal]);
 
         React.useEffect(() => {
@@ -152,6 +153,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 .then((hentetVedtaksbrevavsnitt: Ressurs<VedtaksbrevAvsnitt[]>) => {
                     settFeilutbetalingVedtaksbrevavsnitt(hentetVedtaksbrevavsnitt);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settFeilutbetalingVedtaksbrevavsnitt(
                         byggFeiletRessurs(
@@ -167,6 +169,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 .then((hentetBeregningsresultat: Ressurs<IBeregningsresultat>) => {
                     settBeregningsresultat(hentetBeregningsresultat);
                 })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
                     settBeregningsresultat(
                         byggFeiletRessurs(
@@ -279,6 +282,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                             settForeslåVedtakRespons(respons);
                         }
                     })
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .catch((_error: AxiosError) => {
                         settSenderInn(false);
                         settForeslåVedtakRespons(
@@ -309,6 +313,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                             settForeslåVedtakRespons(respons);
                         }
                     })
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .catch((_error: AxiosError) => {
                         settSenderInn(false);
                         settForeslåVedtakRespons(

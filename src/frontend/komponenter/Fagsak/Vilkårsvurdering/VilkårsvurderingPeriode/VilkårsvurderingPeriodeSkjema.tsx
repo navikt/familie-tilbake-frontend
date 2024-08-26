@@ -175,12 +175,9 @@ const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.Rea
     return (
         <div style={{ display: 'inline-flex' }}>
             {vilkårsresultater[resultat]}
-            <HelpText
-                placement="right"
-                aria-label={hjelpetekster[resultat]}
-                role="tooltip"
-                children={hjelpetekster[resultat]}
-            />
+            <HelpText placement="right" aria-label={hjelpetekster[resultat]} role="tooltip">
+                {hjelpetekster[resultat]}
+            </HelpText>
         </div>
     );
 };
@@ -221,6 +218,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
         settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [periode]);
 
     const onKopierPeriode = (event: React.ChangeEvent<HTMLSelectElement>) => {

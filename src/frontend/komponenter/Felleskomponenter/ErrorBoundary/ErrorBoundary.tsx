@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types,@typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
 import * as React from 'react';
 
 import { getCurrentScope, showReportDialog } from '@sentry/browser';
@@ -23,12 +24,10 @@ class ErrorBoundary extends React.Component<IProps, IState> {
         this.state = { hasError: false };
     }
 
-    // eslint-disable-next-line
     static getDerivedStateFromError(_error: any) {
         return { hasError: true };
     }
 
-    // eslint-disable-next-line
     componentDidCatch(error: any, info: any) {
         console.log(error, info);
 

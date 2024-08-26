@@ -72,10 +72,9 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
             return (
-                <Alert
-                    children={feilutbetalingInaktiveVilkårsvurderinger.frontendFeilmelding}
-                    variant="error"
-                />
+                <Alert variant="error">
+                    {feilutbetalingInaktiveVilkårsvurderinger.frontendFeilmelding}
+                </Alert>
             );
     }
 };

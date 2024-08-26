@@ -57,6 +57,7 @@ export const useForhåndsvisHenleggelsesbrev = ({ skjema }: IProps) => {
                     );
                 }
             })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .catch((_error: AxiosError) => {
                 settHentetForhåndsvisning(
                     byggFeiletRessurs('Ukjent feil, kunne ikke generere forhåndsvisning.')

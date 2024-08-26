@@ -17,7 +17,7 @@ const Historikk: React.FC = () => {
     const { historikkInnslag } = useHistorikk();
 
     switch (historikkInnslag?.status) {
-        case RessursStatus.SUKSESS:
+        case RessursStatus.SUKSESS: {
             const innslag = historikkInnslag.data;
             innslag.sort(
                 (a, b) => parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime()
@@ -29,6 +29,7 @@ const Historikk: React.FC = () => {
                     ))}
                 </StyledContainer>
             );
+        }
         case RessursStatus.HENTER:
             return (
                 <div>
@@ -38,7 +39,7 @@ const Historikk: React.FC = () => {
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
-            return <Alert children={historikkInnslag.frontendFeilmelding} variant="error" />;
+            return <Alert variant="error">{historikkInnslag.frontendFeilmelding}</Alert>;
         default:
             return <Alert variant="warning">Kunne ikke hente data om historikk</Alert>;
     }

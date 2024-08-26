@@ -102,7 +102,7 @@ describe('Tester: VedtakContainer', () => {
         avsnitt: VedtaksbrevAvsnitt[],
         resultat: IBeregningsresultat
     ) => {
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandlingApi.mockImplementation(() => ({
             gjerVedtaksbrevteksterKall: () => {
                 const ressurs = mock<Ressurs<VedtaksbrevAvsnitt[]>>({
@@ -126,7 +126,7 @@ describe('Tester: VedtakContainer', () => {
                 return Promise.resolve(ressurs);
             },
         }));
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandling.mockImplementation(() => ({
             visVenteModal: false,
             behandlingILesemodus: lesevisning,

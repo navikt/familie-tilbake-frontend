@@ -117,14 +117,11 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                 </Heading>
                 {erRevurderingKlageKA && (
                     <>
-                        <StyledAlert
-                            variant="info"
-                            children={
-                                <VarselbrevInfo>
-                                    Vedtaksbrev sendes ikke ut fra denne behandlingen.
-                                </VarselbrevInfo>
-                            }
-                        />
+                        <StyledAlert variant="info">
+                            <VarselbrevInfo>
+                                Vedtaksbrev sendes ikke ut fra denne behandlingen.
+                            </VarselbrevInfo>
+                        </StyledAlert>
                         <Spacer20 />
                     </>
                 )}
@@ -199,16 +196,13 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         beregningsresultat?.status === RessursStatus.FEILET ||
         beregningsresultat?.status === RessursStatus.FUNKSJONELL_FEIL
     ) {
-        return <Alert children={beregningsresultat.frontendFeilmelding} variant="error" />;
+        return <Alert variant="error">{beregningsresultat.frontendFeilmelding}</Alert>;
     } else if (
         feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.FEILET ||
         feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.FUNKSJONELL_FEIL
     ) {
         return (
-            <Alert
-                children={feilutbetalingVedtaksbrevavsnitt.frontendFeilmelding}
-                variant="error"
-            />
+            <Alert variant="error">{feilutbetalingVedtaksbrevavsnitt.frontendFeilmelding}</Alert>
         );
     } else {
         return <Alert variant="warning">Kunne ikke hente data om vedtaksbrev</Alert>;

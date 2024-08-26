@@ -34,7 +34,7 @@ jest.mock('../../../../../../api/behandling', () => ({
 
 describe('Tester: HenleggBehandlingModal', () => {
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandlingApi.mockImplementation(() => ({
             henleggBehandling: () => {
                 const ressurs = mock<Ressurs<string>>({
@@ -44,7 +44,7 @@ describe('Tester: HenleggBehandlingModal', () => {
                 return Promise.resolve(ressurs);
             },
         }));
-        // @ts-ignore
+        // @ts-expect-error mock
         useBehandling.mockImplementation(() => ({
             hentBehandlingMedBehandlingId: () => Promise.resolve(),
             settIkkePersistertKomponent: jest.fn(),
