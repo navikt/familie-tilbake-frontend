@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, BodyShort, Button, Heading, Loader } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, Heading } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -13,6 +13,7 @@ import { IBehandling } from '../../../typer/behandling';
 import { finnDatoRelativtTilNå } from '../../../utils';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import HenterData from '../../Felleskomponenter/HenterData/HenterData';
 
 const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });
@@ -26,10 +27,6 @@ const StyledAutomatiskForeldelse = styled.div`
     padding: ${ASpacing3};
     min-width: 15rem;
     max-width: 30rem;
-`;
-
-const HenterContainer = styled(StyledForeldelse)`
-    text-align: center;
 `;
 
 interface IProps {
@@ -99,17 +96,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                 </StyledForeldelse>
             );
         case RessursStatus.HENTER:
-            return (
-                <HenterContainer>
-                    <BodyLong>Henting av feilutbetalingen tar litt tid.</BodyLong>
-                    <Loader
-                        size="2xlarge"
-                        title="henter..."
-                        transparent={false}
-                        variant="neutral"
-                    />
-                </HenterContainer>
-            );
+            return <HenterData beskrivelse="Henting av feilutbetalingen tar litt tid." />;
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
             return <Alert variant="error">{feilutbetalingForeldelse.frontendFeilmelding}</Alert>;

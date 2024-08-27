@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, Heading, Loader, VStack } from '@navikt/ds-react';
+import { Alert, BodyLong, Heading, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -21,13 +21,10 @@ import {
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import HenterData from '../../Felleskomponenter/HenterData/HenterData';
 
 const StyledVilkårsvurdering = styled.div`
     padding: ${ASpacing3};
-`;
-
-const HenterContainer = styled(StyledVilkårsvurdering)`
-    text-align: center;
 `;
 
 interface IProps {
@@ -86,17 +83,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
             );
         }
         case RessursStatus.HENTER:
-            return (
-                <HenterContainer>
-                    <BodyLong spacing>Henting av feilutbetalingen tar litt tid.</BodyLong>
-                    <Loader
-                        size="2xlarge"
-                        title="henter..."
-                        transparent={false}
-                        variant="neutral"
-                    />
-                </HenterContainer>
-            );
+            return <HenterData beskrivelse="Henting av feilutbetalingen tar litt tid." />;
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
             return (

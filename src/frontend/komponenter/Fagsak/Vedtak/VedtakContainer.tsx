@@ -2,16 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import {
-    Alert,
-    BodyLong,
-    BodyShort,
-    Button,
-    Detail,
-    Heading,
-    HStack,
-    Loader,
-} from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -32,13 +23,10 @@ import { IFagsak } from '../../../typer/fagsak';
 import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import HenterData from '../../Felleskomponenter/HenterData/HenterData';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};
-`;
-
-const HenterContainer = styled(StyledVedtak)`
-    text-align: center;
 `;
 
 const StyledNavigering = styled(Navigering)`
@@ -100,12 +88,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         beregningsresultat?.status === RessursStatus.HENTER ||
         feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.HENTER
     ) {
-        return (
-            <HenterContainer>
-                <BodyLong>Henting av feilutbetalingen tar litt tid.</BodyLong>
-                <Loader size="2xlarge" title="henter..." transparent={false} variant="neutral" />
-            </HenterContainer>
-        );
+        return <HenterData beskrivelse="Henting av feilutbetalingen tar litt tid." />;
     } else if (
         beregningsresultat?.status === RessursStatus.SUKSESS &&
         feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.SUKSESS

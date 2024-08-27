@@ -2,12 +2,13 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, Loader } from '@navikt/ds-react';
+import { Alert } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useDokumentlisting } from './DokumentlistingContext';
 import JournalpostVisning from './Journalpostvisning';
 import { hentDatoRegistrertSendt } from '../../../../utils';
+import HenterData from '../../../Felleskomponenter/HenterData/HenterData';
 
 const StyledContainer = styled.div`
     margin-top: 10px;
@@ -36,10 +37,7 @@ const Dokumentlisting: React.FC = () => {
         }
         case RessursStatus.HENTER:
             return (
-                <div>
-                    <BodyLong>Henting av dokumenter tar litt tid.</BodyLong>
-                    <Loader size="large" title="henter..." transparent={false} variant="neutral" />
-                </div>
+                <HenterData størrelse={'large'} beskrivelse="Henting av dokumenter tar litt tid." />
             );
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:

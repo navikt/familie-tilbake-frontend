@@ -3,11 +3,12 @@ import * as React from 'react';
 import { parseISO } from 'date-fns';
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, Loader } from '@navikt/ds-react';
+import { Alert } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import { useHistorikk } from './HistorikkContext';
 import HistorikkInnslag from './HistorikkInnslag';
+import HenterData from '../../../Felleskomponenter/HenterData/HenterData';
 
 const StyledContainer = styled.div`
     margin-top: 10px;
@@ -31,12 +32,7 @@ const Historikk: React.FC = () => {
             );
         }
         case RessursStatus.HENTER:
-            return (
-                <div>
-                    <BodyLong>Henting av logg tar litt tid.</BodyLong>
-                    <Loader size="large" title="henter..." transparent={false} variant="neutral" />
-                </div>
-            );
+            return <HenterData størrelse={'large'} beskrivelse="Henter historikk" />;
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
             return <Alert variant="error">{historikkInnslag.frontendFeilmelding}</Alert>;

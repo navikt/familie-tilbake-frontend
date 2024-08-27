@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, Heading, Loader, VStack } from '@navikt/ds-react';
+import { Alert, Heading, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -11,13 +11,10 @@ import HistoriskFaktaVisning from './HistoriskFaktaVisning';
 import VelgHistoriskFaktaVurdering from './VelgHistoriskFaktaVurdering';
 import { IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
+import HenterData from '../../../../Felleskomponenter/HenterData/HenterData';
 
 const Container = styled.div`
     padding: ${ASpacing3};
-`;
-
-const MidtstiltContainer = styled(Container)`
-    text-align: center;
 `;
 
 interface IProps {
@@ -51,17 +48,7 @@ const HistoriskFaktaContainer: React.FC<IProps> = () => {
             );
         }
         case RessursStatus.HENTER:
-            return (
-                <MidtstiltContainer>
-                    <BodyLong spacing>Henting av feilutbetalingen tar litt tid.</BodyLong>
-                    <Loader
-                        size="2xlarge"
-                        title="henter..."
-                        transparent={false}
-                        variant="neutral"
-                    />
-                </MidtstiltContainer>
-            );
+            return <HenterData beskrivelse="Henting av feilutbetalingen tar litt tid." />;
         case RessursStatus.FEILET:
         case RessursStatus.FUNKSJONELL_FEIL:
             return <Alert variant="error">{feilutbetalingInaktiveFakta.frontendFeilmelding}</Alert>;
