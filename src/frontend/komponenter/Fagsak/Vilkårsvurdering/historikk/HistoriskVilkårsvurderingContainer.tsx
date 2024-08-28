@@ -11,7 +11,7 @@ import HistoriskVilkårsvurderingVisning from './HistoriskVilkårsvurderingVisni
 import VelgHistoriskVilkårsvurdering from './VelgHistoriskVilkårsvurdering';
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
-import HenterData from '../../../Felleskomponenter/HenterData/HenterData';
+import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const Container = styled.div`
     padding: ${ASpacing3};
@@ -29,40 +29,31 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
         settFeilutbetalingInaktivVilkårsvurdering,
     } = useHistoriskVilkårsvurdering();
 
-    switch (feilutbetalingInaktiveVilkårsvurderinger?.status) {
-        case RessursStatus.SUKSESS: {
-            return (
-                <Container>
-                    <VStack gap="5">
-                        <Alert variant={'info'}>
-                            <Heading level="2" size="small">
-                                Tidligere vilkårsvurderinger på denne behandlingen
-                            </Heading>
-                        </Alert>
-                        <VelgHistoriskVilkårsvurdering
-                            feilutbetalingInaktiveVilkårsvurderinger={
-                                feilutbetalingInaktiveVilkårsvurderinger.data
-                            }
-                            settFeilutbetalingInaktivVilkårsvurdering={
-                                settFeilutbetalingInaktivVilkårsvurdering
-                            }
-                        />
-                        {skjemaData && skjemaData.length > 0 && (
-                            <HistoriskVilkårsvurderingVisning perioder={skjemaData} />
-                        )}
-                    </VStack>
-                </Container>
-            );
-        }
-        case RessursStatus.HENTER:
-            return <HenterData beskrivelse="Henting av feilutbetalingen tar litt tid." />;
-        case RessursStatus.FEILET:
-        case RessursStatus.FUNKSJONELL_FEIL:
-            return (
-                <Alert variant="error">
-                    {feilutbetalingInaktiveVilkårsvurderinger.frontendFeilmelding}
-                </Alert>
-            );
+    if (feilutbetalingInaktiveVilkårsvurderinger?.status === RessursStatus.SUKSESS) {
+        return (
+            <Container>
+                <VStack gap="5">
+                    <Alert variant={'info'}>
+                        <Heading level="2" size="small">
+                            Tidligere vilkårsvurderinger på denne behandlingen
+                        </Heading>
+                    </Alert>
+                    <VelgHistoriskVilkårsvurdering
+                        feilutbetalingInaktiveVilkårsvurderinger={
+                            feilutbetalingInaktiveVilkårsvurderinger.data
+                        }
+                        settFeilutbetalingInaktivVilkårsvurdering={
+                            settFeilutbetalingInaktivVilkårsvurdering
+                        }
+                    />
+                    {skjemaData && skjemaData.length > 0 && (
+                        <HistoriskVilkårsvurderingVisning perioder={skjemaData} />
+                    )}
+                </VStack>
+            </Container>
+        );
+    } else {
+        return <DataLastIkkeSuksess ressurser={[feilutbetalingInaktiveVilkårsvurderinger]} />;
     }
 };
 

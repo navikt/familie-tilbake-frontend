@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, BodyShort, Button, Heading } from '@navikt/ds-react';
+import { BodyLong, BodyShort, Button, Heading } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -13,7 +13,7 @@ import { IBehandling } from '../../../typer/behandling';
 import { finnDatoRelativtTilNå } from '../../../utils';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import HenterData from '../../Felleskomponenter/HenterData/HenterData';
+import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });
@@ -69,39 +69,33 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
         );
     }
 
-    switch (feilutbetalingForeldelse?.status) {
-        case RessursStatus.SUKSESS:
-            return (
-                <StyledForeldelse>
-                    <Heading spacing size="small" level="2">
-                        Foreldelse
-                    </Heading>
-                    {(!erLesevisning || stegErBehandlet) && (
-                        <>
-                            <Steginformasjon
-                                behandletSteg={stegErBehandlet}
-                                infotekst={`Perioden før ${getDate()} kan være foreldet. Del opp perioden ved behov og
+    if (feilutbetalingForeldelse?.status === RessursStatus.SUKSESS) {
+        return (
+            <StyledForeldelse>
+                <Heading spacing size="small" level="2">
+                    Foreldelse
+                </Heading>
+                {(!erLesevisning || stegErBehandlet) && (
+                    <>
+                        <Steginformasjon
+                            behandletSteg={stegErBehandlet}
+                            infotekst={`Perioden før ${getDate()} kan være foreldet. Del opp perioden ved behov og
                                 fastsett foreldelse`}
-                            />
-                            <Spacer20 />
-                        </>
-                    )}
-                    {skjemaData.length > 0 && (
-                        <FeilutbetalingForeldelsePerioder
-                            behandling={behandling}
-                            perioder={skjemaData}
-                            erLesevisning={erLesevisning}
                         />
-                    )}
-                </StyledForeldelse>
-            );
-        case RessursStatus.HENTER:
-            return <HenterData beskrivelse="Henting av feilutbetalingen tar litt tid." />;
-        case RessursStatus.FEILET:
-        case RessursStatus.FUNKSJONELL_FEIL:
-            return <Alert variant="error">{feilutbetalingForeldelse.frontendFeilmelding}</Alert>;
-        default:
-            return <Alert variant="warning">Kunne ikke hente data om foreldelse</Alert>;
+                        <Spacer20 />
+                    </>
+                )}
+                {skjemaData.length > 0 && (
+                    <FeilutbetalingForeldelsePerioder
+                        behandling={behandling}
+                        perioder={skjemaData}
+                        erLesevisning={erLesevisning}
+                    />
+                )}
+            </StyledForeldelse>
+        );
+    } else {
+        return <DataLastIkkeSuksess ressurser={[feilutbetalingForeldelse]} />;
     }
 };
 

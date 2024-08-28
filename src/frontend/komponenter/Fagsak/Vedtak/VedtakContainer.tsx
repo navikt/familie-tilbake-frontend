@@ -23,7 +23,7 @@ import { IFagsak } from '../../../typer/fagsak';
 import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import HenterData from '../../Felleskomponenter/HenterData/HenterData';
+import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};
@@ -85,11 +85,6 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         !erRevurderingKlageKA;
 
     if (
-        beregningsresultat?.status === RessursStatus.HENTER ||
-        feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.HENTER
-    ) {
-        return <HenterData beskrivelse="Henting av feilutbetalingen tar litt tid." />;
-    } else if (
         beregningsresultat?.status === RessursStatus.SUKSESS &&
         feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.SUKSESS
     ) {
@@ -175,20 +170,12 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                 </StyledNavigering>
             </StyledVedtak>
         );
-    } else if (
-        beregningsresultat?.status === RessursStatus.FEILET ||
-        beregningsresultat?.status === RessursStatus.FUNKSJONELL_FEIL
-    ) {
-        return <Alert variant="error">{beregningsresultat.frontendFeilmelding}</Alert>;
-    } else if (
-        feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.FEILET ||
-        feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.FUNKSJONELL_FEIL
-    ) {
-        return (
-            <Alert variant="error">{feilutbetalingVedtaksbrevavsnitt.frontendFeilmelding}</Alert>
-        );
     } else {
-        return <Alert variant="warning">Kunne ikke hente data om vedtaksbrev</Alert>;
+        return (
+            <DataLastIkkeSuksess
+                ressurser={[beregningsresultat, feilutbetalingVedtaksbrevavsnitt]}
+            />
+        );
     }
 };
 

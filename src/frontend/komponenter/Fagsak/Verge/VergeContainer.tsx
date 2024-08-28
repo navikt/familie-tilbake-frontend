@@ -21,7 +21,7 @@ import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import HenterData from '../../Felleskomponenter/HenterData/HenterData';
+import HenterData from '../../Felleskomponenter/Datalast/HenterData';
 
 const StyledVerge = styled.div`
     padding: ${ASpacing3};
