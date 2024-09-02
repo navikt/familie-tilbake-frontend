@@ -154,6 +154,7 @@ export interface IBehandling {
     eksternBrukId: string;
     opprettetDato: string;
     avsluttetDato?: string;
+    ansvarligSaksbehandler?: string;
     enhetskode?: string;
     resultatstype?: Behandlingresultat;
     status: Behandlingstatus;
