@@ -8,6 +8,7 @@ import { useToggles } from '../../../../../context/TogglesContext';
 import { IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
+import { useApp } from '../../../../../context/AppContext';
 interface IProps {
     behandling: IBehandling;
     fagsak: IFagsak;
@@ -16,12 +17,17 @@ interface IProps {
 
 const HistoriskeVurderinger: React.FC<IProps> = ({ behandling, fagsak, onListElementClick }) => {
     const { behandlingILesemodus } = useBehandling();
+    const { innloggetSaksbehandler } = useApp();
     const navigate = useNavigate();
     const { toggles } = useToggles();
+    const harTilgang =
+        behandling.kanEndres &&
+        !behandlingILesemodus &&
+        innloggetSaksbehandler &&
+        behandling.ansvarligSaksbehandler === innloggetSaksbehandler.navIdent;
     return (
         toggles[ToggleName.seHistoriskeVurderinger] &&
-        behandling.kanEndres &&
-        !behandlingILesemodus && (
+        harTilgang && (
             <>
                 <BehandlingsMenyButton
                     variant="tertiary"
