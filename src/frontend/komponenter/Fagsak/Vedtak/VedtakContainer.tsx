@@ -2,16 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import {
-    Alert,
-    BodyLong,
-    BodyShort,
-    Button,
-    Detail,
-    Heading,
-    HStack,
-    Loader,
-} from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -32,13 +23,10 @@ import { IFagsak } from '../../../typer/fagsak';
 import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};
-`;
-
-const HenterContainer = styled(StyledVedtak)`
-    text-align: center;
 `;
 
 const StyledNavigering = styled(Navigering)`
@@ -97,16 +85,6 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         !erRevurderingKlageKA;
 
     if (
-        beregningsresultat?.status === RessursStatus.HENTER ||
-        feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.HENTER
-    ) {
-        return (
-            <HenterContainer>
-                <BodyLong>Henting av feilutbetalingen tar litt tid.</BodyLong>
-                <Loader size="2xlarge" title="henter..." transparent={false} variant="neutral" />
-            </HenterContainer>
-        );
-    } else if (
         beregningsresultat?.status === RessursStatus.SUKSESS &&
         feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.SUKSESS
     ) {
@@ -192,20 +170,12 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                 </StyledNavigering>
             </StyledVedtak>
         );
-    } else if (
-        beregningsresultat?.status === RessursStatus.FEILET ||
-        beregningsresultat?.status === RessursStatus.FUNKSJONELL_FEIL
-    ) {
-        return <Alert variant="error">{beregningsresultat.frontendFeilmelding}</Alert>;
-    } else if (
-        feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.FEILET ||
-        feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.FUNKSJONELL_FEIL
-    ) {
-        return (
-            <Alert variant="error">{feilutbetalingVedtaksbrevavsnitt.frontendFeilmelding}</Alert>
-        );
     } else {
-        return <Alert variant="warning">Kunne ikke hente data om vedtaksbrev</Alert>;
+        return (
+            <DataLastIkkeSuksess
+                ressurser={[beregningsresultat, feilutbetalingVedtaksbrevavsnitt]}
+            />
+        );
     }
 };
 

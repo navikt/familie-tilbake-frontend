@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Alert, BodyLong, BodyShort, Button, Heading, Loader } from '@navikt/ds-react';
+import { BodyLong, BodyShort, Button, Heading } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
 
@@ -13,6 +13,7 @@ import { IBehandling } from '../../../typer/behandling';
 import { finnDatoRelativtTilNå } from '../../../utils';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });
@@ -26,10 +27,6 @@ const StyledAutomatiskForeldelse = styled.div`
     padding: ${ASpacing3};
     min-width: 15rem;
     max-width: 30rem;
-`;
-
-const HenterContainer = styled(StyledForeldelse)`
-    text-align: center;
 `;
 
 interface IProps {
@@ -72,49 +69,33 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
         );
     }
 
-    switch (feilutbetalingForeldelse?.status) {
-        case RessursStatus.SUKSESS:
-            return (
-                <StyledForeldelse>
-                    <Heading spacing size="small" level="2">
-                        Foreldelse
-                    </Heading>
-                    {(!erLesevisning || stegErBehandlet) && (
-                        <>
-                            <Steginformasjon
-                                behandletSteg={stegErBehandlet}
-                                infotekst={`Perioden før ${getDate()} kan være foreldet. Del opp perioden ved behov og
+    if (feilutbetalingForeldelse?.status === RessursStatus.SUKSESS) {
+        return (
+            <StyledForeldelse>
+                <Heading spacing size="small" level="2">
+                    Foreldelse
+                </Heading>
+                {(!erLesevisning || stegErBehandlet) && (
+                    <>
+                        <Steginformasjon
+                            behandletSteg={stegErBehandlet}
+                            infotekst={`Perioden før ${getDate()} kan være foreldet. Del opp perioden ved behov og
                                 fastsett foreldelse`}
-                            />
-                            <Spacer20 />
-                        </>
-                    )}
-                    {skjemaData.length > 0 && (
-                        <FeilutbetalingForeldelsePerioder
-                            behandling={behandling}
-                            perioder={skjemaData}
-                            erLesevisning={erLesevisning}
                         />
-                    )}
-                </StyledForeldelse>
-            );
-        case RessursStatus.HENTER:
-            return (
-                <HenterContainer>
-                    <BodyLong>Henting av feilutbetalingen tar litt tid.</BodyLong>
-                    <Loader
-                        size="2xlarge"
-                        title="henter..."
-                        transparent={false}
-                        variant="neutral"
+                        <Spacer20 />
+                    </>
+                )}
+                {skjemaData.length > 0 && (
+                    <FeilutbetalingForeldelsePerioder
+                        behandling={behandling}
+                        perioder={skjemaData}
+                        erLesevisning={erLesevisning}
                     />
-                </HenterContainer>
-            );
-        case RessursStatus.FEILET:
-        case RessursStatus.FUNKSJONELL_FEIL:
-            return <Alert variant="error">{feilutbetalingForeldelse.frontendFeilmelding}</Alert>;
-        default:
-            return <Alert variant="warning">Kunne ikke hente data om foreldelse</Alert>;
+                )}
+            </StyledForeldelse>
+        );
+    } else {
+        return <DataLastIkkeSuksess ressurser={[feilutbetalingForeldelse]} />;
     }
 };
 

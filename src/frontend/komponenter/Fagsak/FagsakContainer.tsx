@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 
-import { Alert } from '@navikt/ds-react';
 import { RessursStatus } from '@navikt/familie-typer';
 
 import BehandlingContainer from './BehandlingContainer';
@@ -16,6 +15,7 @@ import { formatterDatostring } from '../../utils';
 import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
 import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
+import DataLastIkkeSuksess from '../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const FagsakContainerContent = styled.div`
     display: flex;
@@ -70,55 +70,29 @@ const FagsakContainer: React.FC = () => {
         return <HenterBehandling />;
     }
 
-    switch (fagsak?.status) {
-        case RessursStatus.SUKSESS: {
-            switch (behandling?.status) {
-                case RessursStatus.SUKSESS:
-                    return (
-                        <>
-                            <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
+    if (fagsak?.status === RessursStatus.SUKSESS && behandling?.status === RessursStatus.SUKSESS) {
+        return (
+            <>
+                <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
 
-                            {ventegrunn && (
-                                <FTAlertStripe variant="info">
-                                    {venteBeskjed(ventegrunn)}
-                                </FTAlertStripe>
-                            )}
-                            {visVenteModal && ventegrunn && (
-                                <PåVentModal
-                                    behandling={behandling.data}
-                                    ventegrunn={ventegrunn}
-                                    onClose={lukkVenteModal}
-                                />
-                            )}
+                {ventegrunn && (
+                    <FTAlertStripe variant="info">{venteBeskjed(ventegrunn)}</FTAlertStripe>
+                )}
+                {visVenteModal && ventegrunn && (
+                    <PåVentModal
+                        behandling={behandling.data}
+                        ventegrunn={ventegrunn}
+                        onClose={lukkVenteModal}
+                    />
+                )}
 
-                            <FagsakContainerContent className={ventegrunn ? 'venter' : ''}>
-                                <BehandlingContainer
-                                    fagsak={fagsak.data}
-                                    behandling={behandling.data}
-                                />
-                            </FagsakContainerContent>
-                        </>
-                    );
-                case RessursStatus.IKKE_TILGANG:
-                    return (
-                        <Alert variant="warning">
-                            Du har ikke tilgang til å se denne behandlingen.
-                        </Alert>
-                    );
-                case RessursStatus.FEILET:
-                case RessursStatus.FUNKSJONELL_FEIL:
-                    return <Alert variant="error">{behandling.frontendFeilmelding}</Alert>;
-                default:
-                    return <Alert variant="info">Venter på data om behandlingen</Alert>;
-            }
-        }
-        case RessursStatus.IKKE_TILGANG:
-            return <Alert variant="warning">Du har ikke tilgang til å se denne saken.</Alert>;
-        case RessursStatus.FEILET:
-        case RessursStatus.FUNKSJONELL_FEIL:
-            return <Alert variant="error">{fagsak.frontendFeilmelding}</Alert>;
-        default:
-            return <Alert variant="info">Venter på data om fagsaken</Alert>;
+                <FagsakContainerContent className={ventegrunn ? 'venter' : ''}>
+                    <BehandlingContainer fagsak={fagsak.data} behandling={behandling.data} />
+                </FagsakContainerContent>
+            </>
+        );
+    } else {
+        return <DataLastIkkeSuksess ressurser={[behandling, fagsak]} />;
     }
 };
 

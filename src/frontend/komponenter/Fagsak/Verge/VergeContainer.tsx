@@ -8,7 +8,6 @@ import {
     ErrorMessage,
     Heading,
     HGrid,
-    Loader,
     Select,
     Textarea,
     TextField,
@@ -22,6 +21,7 @@ import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import HenterData from '../../Felleskomponenter/Datalast/HenterData';
 
 const StyledVerge = styled.div`
     padding: ${ASpacing3};
@@ -52,15 +52,7 @@ const VergeContainer: React.FC = () => {
                 Verge
             </Heading>
             {henterData ? (
-                <div>
-                    <BodyLong>Henting av vergeinformasjon tar litt tid.</BodyLong>
-                    <Loader
-                        size="2xlarge"
-                        title="henter..."
-                        transparent={false}
-                        variant="neutral"
-                    />
-                </div>
+                <HenterData beskrivelse="Henting av vergeinformasjon tar litt tid." />
             ) : (
                 <StyledVStack gap="5">
                     {erAutoutført && (
