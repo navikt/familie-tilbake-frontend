@@ -17,14 +17,16 @@ import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 import DataLastIkkeSuksess from '../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
+const HØYDE_HEADER = 48;
+const HØYDE_PERSONLINJE = 48;
+const HØYDE_FTALERTSTRIPE = 62;
+
 const FagsakContainerContent = styled.div`
     display: flex;
-    height: calc(100vh - ${98}px); // Magisk tall som er høyden på Header pluss Personlinje
+    height: calc(100vh - ${HØYDE_HEADER + HØYDE_PERSONLINJE}px);
 
     &.venter {
-        height: calc(
-            100vh - ${160}px
-        ); // Magisk tall som er høyden på Header + Personlinje + FTAlertStripe
+        height: calc(100vh - ${HØYDE_HEADER + HØYDE_PERSONLINJE + HØYDE_FTALERTSTRIPE}px);
     }
 `;
 
