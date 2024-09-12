@@ -19,7 +19,7 @@ import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 import { FaktaSkjemaData } from './typer/feilutbetalingFakta';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Ytelsetype } from '../../../kodeverk';
+import { HendelseType, Ytelsetype } from '../../../kodeverk';
 import { HarBrukerUttaltSegValg, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
@@ -105,6 +105,12 @@ const FaktaSkjema: React.FC<IProps> = ({
                         >
                             Behandle alle perioder samlet
                         </Checkbox>
+                    )}
+                    {skjemaData.perioder.some(p => p.hendelsestype === HendelseType.INNTEKT) && (
+                        <Alert variant={'warning'} size={'small'}>
+                            Husk å kontrollere faktisk inntekt den siste måneden i
+                            feilutbetalingsperioden
+                        </Alert>
                     )}
                     {skjemaData.perioder && (
                         <FeilutbetalingFaktaPerioder
