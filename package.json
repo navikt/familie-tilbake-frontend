@@ -29,6 +29,7 @@
     "@navikt/ds-react": "^6.1.0",
     "@navikt/ds-tokens": "^6.1.0",
     "@navikt/familie-backend": "^10.0.15",
+    "@navikt/familie-header": "^14.0.7",
     "@navikt/familie-logging": "^7.0.0",
     "@navikt/familie-skjema": "^8.0.8",
     "@navikt/familie-tidslinje": "10.0.1",

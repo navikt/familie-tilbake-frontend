@@ -19,10 +19,12 @@ import DataLastIkkeSuksess from '../Felleskomponenter/Datalast/DataLastIkkeSukse
 
 const FagsakContainerContent = styled.div`
     display: flex;
-    height: calc(100vh - 7rem);
+    height: calc(100vh - ${98}px); // Magisk tall som er høyden på Header pluss Personlinje
 
     &.venter {
-        height: calc(100vh - 10.9rem);
+        height: calc(
+            100vh - ${160}px
+        ); // Magisk tall som er høyden på Header + Personlinje + FTAlertStripe
     }
 `;
 
