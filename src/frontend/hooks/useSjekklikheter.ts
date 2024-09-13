@@ -3,28 +3,27 @@ import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 const useSjekkLikhetPerioder = (behandlingId: string) => {
-    const [result, setResult] = useState<Ressurs<boolean>>({ status: RessursStatus.IKKE_HENTET });
+    const [erPerioderLike, settErPerioderLike] = useState<boolean>(false);
     const { request } = useHttp();
 
     const hentSjekkLikhetPerioder = useCallback(() => {
-        setResult({ status: RessursStatus.HENTER });
-
         request<void, boolean>({
             method: 'GET',
             url: `/familie-tilbake/api/dokument/sjekk-likhet-perioder/${behandlingId}`,
         })
             .then((response: Ressurs<boolean>) => {
-                setResult(response);
+                if (response.status === RessursStatus.SUKSESS) {
+                    settErPerioderLike(response.data);
+                } else {
+                    settErPerioderLike(false);
+                }
             })
-            .catch((error: Error) => {
-                setResult({
-                    status: RessursStatus.FEILET,
-                    frontendFeilmelding: error.message,
-                });
+            .catch(() => {
+                settErPerioderLike(false);
             });
     }, [behandlingId, request]);
 
-    return { result, hentSjekkLikhetPerioder };
+    return { erPerioderLike, hentSjekkLikhetPerioder };
 };
 
 export default useSjekkLikhetPerioder;
