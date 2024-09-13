@@ -34,6 +34,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [harKravgrunnlag, settHarKravgrunnlag] = useState<boolean>();
     const [behandlingILesemodus, settBehandlingILesemodus] = useState<boolean>();
     const [åpenHøyremeny, settÅpenHøyremeny] = useState(true);
+    const [behandlingId, settBehandlingId] = useState('');
     const [ikkePersisterteKomponenter, settIkkePersisterteKomponenter] = useState<Set<string>>(
         new Set()
     );
@@ -47,6 +48,12 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         () => settHarUlagredeData(ikkePersisterteKomponenter.size > 0),
         [ikkePersisterteKomponenter]
     );
+
+    useEffect(() => {
+        if (behandling?.status === RessursStatus.SUKSESS) {
+            settBehandlingId(behandling.data.behandlingId);
+        }
+    }, [behandling]);
 
     const settIkkePersistertKomponent = (komponentId: string) => {
         if (ikkePersisterteKomponenter.has(komponentId)) return;
@@ -210,6 +217,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         settVisBrevmottakerModal,
         settIkkePersistertKomponent,
         nullstillIkkePersisterteKomponenter,
+        behandlingId,
     };
 });
 
