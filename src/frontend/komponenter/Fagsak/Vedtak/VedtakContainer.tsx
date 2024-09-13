@@ -62,7 +62,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         foreslåVedtakRespons,
         lagreUtkast,
     } = useFeilutbetalingVedtak();
-    const { behandlingILesemodus, aktivtSteg, behandlingId } = useBehandling();
+    const { behandlingILesemodus, aktivtSteg } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA =
         behandling.behandlingsårsakstype === Behandlingårsak.REVURDERING_KLAGE_KA;
@@ -71,7 +71,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
 
-    const { hentSjekkLikhetPerioder } = useSjekkLikhetPerioder(behandlingId);
+    const { hentSjekkLikhetPerioder } = useSjekkLikhetPerioder(behandling.behandlingId);
 
     useEffect(() => {
         hentSjekkLikhetPerioder();
