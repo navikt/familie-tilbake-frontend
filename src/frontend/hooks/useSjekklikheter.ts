@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
-const useSjekkLikhetPerioder = (behandlingId: string) => {
+export const useSjekkLikhetPerioder = (behandlingId: string) => {
     const [erPerioderLike, settErPerioderLike] = useState<boolean>(false);
     const { request } = useHttp();
 
@@ -25,5 +25,3 @@ const useSjekkLikhetPerioder = (behandlingId: string) => {
 
     return { erPerioderLike, hentSjekkLikhetPerioder };
 };
-
-export default useSjekkLikhetPerioder;

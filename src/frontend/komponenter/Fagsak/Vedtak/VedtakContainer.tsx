@@ -24,8 +24,9 @@ import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import useSjekkLikhetPerioder from '../../../hooks/useSjekklikheter';
+
 import { useEffect } from 'react';
+import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};
