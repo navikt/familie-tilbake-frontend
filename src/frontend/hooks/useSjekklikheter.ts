@@ -9,7 +9,7 @@ export const useSjekkLikhetPerioder = (behandlingId: string) => {
     const hentSjekkLikhetPerioder = useCallback(() => {
         request<void, boolean>({
             method: 'GET',
-            url: `/familie-tilbake/api/dokument/sjekk-likhet-perioder/${behandlingId}`,
+            url: `/familie-tilbake/api/perioder/sjekk-likhet/${behandlingId}`,
         })
             .then((response: Ressurs<boolean>) => {
                 if (response.status === RessursStatus.SUKSESS) {

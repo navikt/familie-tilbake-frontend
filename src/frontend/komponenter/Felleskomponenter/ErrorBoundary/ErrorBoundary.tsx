@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types,@typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
 import * as React from 'react';
 
 import { getCurrentScope, showReportDialog } from '@sentry/browser';
