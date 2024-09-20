@@ -25,6 +25,9 @@ import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
+import { useEffect } from 'react';
+import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
+
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};
 `;
@@ -68,6 +71,12 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
+
+    const { hentSjekkLikhetPerioder } = useSjekkLikhetPerioder(behandling.behandlingId);
+
+    useEffect(() => {
+        hentSjekkLikhetPerioder();
+    }, [hentSjekkLikhetPerioder]);
 
     React.useEffect(() => {
         // Skal trigge re-rendring
