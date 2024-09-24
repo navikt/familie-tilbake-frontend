@@ -26,6 +26,7 @@ import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 import { useEffect } from 'react';
+import { useSlaaSammenPerioder } from '../../../hooks/useSlåSammenPerioder';
 import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
 
 const StyledVedtak = styled.div`
@@ -72,7 +73,13 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
 
-    const { hentSjekkLikhetPerioder } = useSjekkLikhetPerioder(behandling.behandlingId);
+    const { hentSjekkLikhetPerioder, erPerioderLike } = useSjekkLikhetPerioder(
+        behandling.behandlingId
+    );
+    const { slaaSammenPerioder, feilmelding } = useSlaaSammenPerioder(
+        behandling.behandlingId,
+        true
+    );
 
     useEffect(() => {
         hentSjekkLikhetPerioder();
@@ -172,6 +179,17 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                                 Lagre utkast
                             </Button>
                         )}
+                        {!erLesevisning && erPerioderLike && (
+                            <Button
+                                variant="tertiary"
+                                onClick={slaaSammenPerioder}
+                                loading={senderInn}
+                                disabled={senderInn}
+                            >
+                                Sammenslå perioder
+                            </Button>
+                        )}
+                        {feilmelding && <p>Feil</p>}
                     </HStack>
                     <Button variant="secondary" onClick={gåTilForrige}>
                         Forrige
