@@ -9,7 +9,7 @@ export const useSlaaSammenPerioder = (behandlingId: string, skalSammenslaa: bool
     const slaaSammenPerioder = () => {
         request<void, boolean>({
             method: 'POST',
-            url: `/familie-tilbake/api/perioder/slaa-sammen-perioder/${behandlingId}?skalSammenslaaPerioder=${skalSammenslaa}`,
+            url: `/familie-tilbake/api/perioder/slaa-sammen-perioder/${behandlingId}?skalSammenslaa=${skalSammenslaa}`,
         }).then((response: Ressurs<boolean>) => {
             if (response.status === RessursStatus.SUKSESS) {
                 return response.data;
