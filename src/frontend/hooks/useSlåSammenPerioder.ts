@@ -23,5 +23,5 @@ export const useSlaaSammenPerioder = (behandlingId: string, skalSammenslaa: bool
         });
     };
 
-    return { slaaSammenPerioder, feilmelding };
+    return { slåSammenPerioder: slaaSammenPerioder, feilmelding };
 };

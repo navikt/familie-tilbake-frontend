@@ -25,7 +25,7 @@ import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSlaaSammenPerioder } from '../../../hooks/useSlåSammenPerioder';
 import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
 
@@ -72,14 +72,19 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
-
+    const [skalSlåSammenPerioder, settSkalSlåSammenPerioder] = useState(false);
     const { hentSjekkLikhetPerioder, erPerioderLike } = useSjekkLikhetPerioder(
         behandling.behandlingId
     );
-    const { slaaSammenPerioder, feilmelding } = useSlaaSammenPerioder(
+    const { slåSammenPerioder, feilmelding } = useSlaaSammenPerioder(
         behandling.behandlingId,
-        true
+        skalSlåSammenPerioder
     );
+
+    const handleSlåSammenPerioder = () => {
+        settSkalSlåSammenPerioder(!skalSlåSammenPerioder);
+        slåSammenPerioder();
+    };
 
     useEffect(() => {
         hentSjekkLikhetPerioder();
@@ -182,11 +187,13 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         {!erLesevisning && erPerioderLike && (
                             <Button
                                 variant="tertiary"
-                                onClick={slaaSammenPerioder}
+                                onClick={handleSlåSammenPerioder}
                                 loading={senderInn}
                                 disabled={senderInn}
                             >
-                                Sammenslå perioder
+                                {skalSlåSammenPerioder
+                                    ? 'Sammenslå perioder'
+                                    : 'Angre sammenslåing'}
                             </Button>
                         )}
                         {feilmelding && <p>Feil</p>}
