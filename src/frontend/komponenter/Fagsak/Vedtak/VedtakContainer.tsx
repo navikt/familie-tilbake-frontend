@@ -1,11 +1,9 @@
 import * as React from 'react';
-
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
-
 import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
@@ -24,8 +22,6 @@ import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-
-import { useEffect, useState } from 'react';
 import { useSlaaSammenPerioder } from '../../../hooks/useSlåSammenPerioder';
 import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
 
@@ -72,25 +68,44 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
-    const [skalSlåSammenPerioder, settSkalSlåSammenPerioder] = useState(false);
     const { hentSjekkLikhetPerioder, erPerioderLike } = useSjekkLikhetPerioder(
         behandling.behandlingId
     );
+    const [skalSammenslåTekster, settSkalSammenslåTekster] = useState<boolean>(false);
+
     const { slåSammenPerioder, feilmelding } = useSlaaSammenPerioder(
         behandling.behandlingId,
-        skalSlåSammenPerioder
+        !skalSammenslåTekster && erPerioderLike
     );
 
-    const handleSlåSammenPerioder = () => {
-        settSkalSlåSammenPerioder(!skalSlåSammenPerioder);
-        slåSammenPerioder();
+    const handleSlåSammenPerioder = async () => {
+        console.log('handleSlåSammenPerioder');
+        await slåSammenPerioder();
+        settSkalSammenslåTekster(!skalSammenslåTekster);
     };
 
     useEffect(() => {
-        hentSjekkLikhetPerioder();
+        const fetch = async () => {
+            await hentSjekkLikhetPerioder();
+            console.log('Henter hentSjekkLikhetPerioder');
+        };
+
+        fetch();
     }, [hentSjekkLikhetPerioder]);
 
-    React.useEffect(() => {
+    useEffect(() => {
+        const fetch = async () => {
+            if (!erPerioderLike) {
+                console.log('Setter settSkalSammenslåTekster(false)', erPerioderLike);
+                settSkalSammenslåTekster(false);
+                await slåSammenPerioder();
+            }
+        };
+
+        fetch();
+    }, [erPerioderLike, slåSammenPerioder]);
+
+    useEffect(() => {
         // Skal trigge re-rendring
     }, [nonUsedKey]);
 
@@ -185,18 +200,14 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                             </Button>
                         )}
                         {!erLesevisning && erPerioderLike && (
-                            <Button
-                                variant="tertiary"
-                                onClick={handleSlåSammenPerioder}
-                                loading={senderInn}
-                                disabled={senderInn}
-                            >
-                                {skalSlåSammenPerioder
+                            <Button variant="tertiary" onClick={handleSlåSammenPerioder}>
+                                {!skalSammenslåTekster && erPerioderLike
                                     ? 'Sammenslå perioder'
                                     : 'Angre sammenslåing'}
                             </Button>
                         )}
-                        {feilmelding && <p>Feil</p>}
+
+                        {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
                     </HStack>
                     <Button variant="secondary" onClick={gåTilForrige}>
                         Forrige

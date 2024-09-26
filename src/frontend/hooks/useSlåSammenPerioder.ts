@@ -6,22 +6,22 @@ export const useSlaaSammenPerioder = (behandlingId: string, skalSammenslaa: bool
     const { request } = useHttp();
     const [feilmelding, settFeilmelding] = useState<string>();
 
-    const slaaSammenPerioder = () => {
-        request<void, boolean>({
+    const slåSammenPerioder = async () => {
+        const response: Ressurs<boolean> = await request<void, boolean>({
             method: 'POST',
             url: `/familie-tilbake/api/perioder/slaa-sammen-perioder/${behandlingId}?skalSammenslaa=${skalSammenslaa}`,
-        }).then((response: Ressurs<boolean>) => {
-            if (response.status === RessursStatus.SUKSESS) {
-                return response.data;
-            } else if (
-                response.status === RessursStatus.FEILET ||
-                response.status === RessursStatus.FUNKSJONELL_FEIL ||
-                response.status === RessursStatus.IKKE_TILGANG
-            ) {
-                settFeilmelding(response.frontendFeilmelding);
-            }
         });
+
+        if (response.status === RessursStatus.SUKSESS) {
+            return response.data;
+        } else if (
+            response.status === RessursStatus.FEILET ||
+            response.status === RessursStatus.FUNKSJONELL_FEIL ||
+            response.status === RessursStatus.IKKE_TILGANG
+        ) {
+            settFeilmelding(response.frontendFeilmelding);
+        }
     };
 
-    return { slåSammenPerioder: slaaSammenPerioder, feilmelding };
+    return { slåSammenPerioder, feilmelding };
 };
