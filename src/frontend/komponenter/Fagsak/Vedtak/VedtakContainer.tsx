@@ -22,7 +22,7 @@ import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import { useSlaaSammenPerioder } from '../../../hooks/useSlåSammenPerioder';
+import { useSlåSammenPerioder } from '../../../hooks/useSlåSammenPerioder';
 import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
 
 const StyledVedtak = styled.div`
@@ -71,9 +71,9 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const { hentSjekkLikhetPerioder, erPerioderLike } = useSjekkLikhetPerioder(
         behandling.behandlingId
     );
-    const [skalSammenslåTekster, settSkalSammenslåTekster] = useState<boolean>(false);
+    const [skalSammenslåTekster, settSkalSammenslåTekster] = useState<boolean>(true);
 
-    const { slåSammenPerioder, feilmelding } = useSlaaSammenPerioder(
+    const { slåSammenPerioder, feilmelding } = useSlåSammenPerioder(
         behandling.behandlingId,
         !skalSammenslåTekster && erPerioderLike
     );
@@ -167,6 +167,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         beregningsresultat.data.vurderingAvBrukersUttalelse.harBrukerUttaltSeg ===
                         HarBrukerUttaltSegValg.JA
                     }
+                    erLikePerioder={erPerioderLike}
                 />
                 <Spacer20 />
                 {foreslåVedtakRespons &&

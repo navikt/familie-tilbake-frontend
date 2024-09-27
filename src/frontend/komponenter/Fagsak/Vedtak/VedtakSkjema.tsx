@@ -19,6 +19,7 @@ interface IProps {
     erLesevisning: boolean;
     erRevurderingBortfaltBeløp: boolean;
     harBrukerUttaltSeg: boolean;
+    erLikePerioder: boolean;
 }
 
 const VedtakSkjema: React.FC<IProps> = ({
@@ -26,7 +27,11 @@ const VedtakSkjema: React.FC<IProps> = ({
     erLesevisning,
     erRevurderingBortfaltBeløp,
     harBrukerUttaltSeg,
+    // erLikePerioder,
 }) => {
+    React.useEffect(() => {
+        console.log('avsnitter', avsnitter);
+    }, [avsnitter]);
     return (
         <StyledSkjema>
             <Heading size="small" level="2" spacing>

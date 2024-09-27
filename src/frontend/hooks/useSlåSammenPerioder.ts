@@ -2,7 +2,7 @@ import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 import { useState } from 'react';
 
-export const useSlaaSammenPerioder = (behandlingId: string, skalSammenslaa: boolean) => {
+export const useSlåSammenPerioder = (behandlingId: string, skalSammenslaa: boolean) => {
     const { request } = useHttp();
     const [feilmelding, settFeilmelding] = useState<string>();
 
