@@ -353,6 +353,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             foreslåVedtakRespons,
             validerAlleAvsnittOk,
             lagreUtkast,
+            hentVedtaksbrevtekster,
         };
     }
 );

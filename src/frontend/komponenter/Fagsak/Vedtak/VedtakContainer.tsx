@@ -23,6 +23,7 @@ import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { useSlåSammenPerioder } from '../../../hooks/useSlåSammenPerioder';
+import { useErPerioderSlåttSammen } from '../../../hooks/useErPerioderSlåttSammen';
 import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
 
 const StyledVedtak = styled.div`
@@ -59,6 +60,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         sendInnSkjema,
         foreslåVedtakRespons,
         lagreUtkast,
+        hentVedtaksbrevtekster,
     } = useFeilutbetalingVedtak();
     const { behandlingILesemodus, aktivtSteg } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -68,20 +70,25 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
-    const { hentSjekkLikhetPerioder, erPerioderLike } = useSjekkLikhetPerioder(
+
+    const { erPerioderLike, hentSjekkLikhetPerioder } = useSjekkLikhetPerioder(
         behandling.behandlingId
     );
-    const [skalSammenslåTekster, settSkalSammenslåTekster] = useState<boolean>(true);
+    const [skalSammenslåTekster, settSkalSammenslåTekster] = useState<boolean>(erPerioderLike);
+    const { erPerioderSlåttSammen, hentErPerioderSlåttSammen } = useErPerioderSlåttSammen(
+        behandling.behandlingId
+    );
 
     const { slåSammenPerioder, feilmelding } = useSlåSammenPerioder(
         behandling.behandlingId,
-        !skalSammenslåTekster && erPerioderLike
+        !erPerioderSlåttSammen
     );
 
     const handleSlåSammenPerioder = async () => {
         console.log('handleSlåSammenPerioder');
         await slåSammenPerioder();
         settSkalSammenslåTekster(!skalSammenslåTekster);
+        hentVedtaksbrevtekster();
     };
 
     useEffect(() => {
@@ -89,21 +96,15 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
             await hentSjekkLikhetPerioder();
             console.log('Henter hentSjekkLikhetPerioder');
         };
-
         fetch();
     }, [hentSjekkLikhetPerioder]);
 
     useEffect(() => {
         const fetch = async () => {
-            if (!erPerioderLike) {
-                console.log('Setter settSkalSammenslåTekster(false)', erPerioderLike);
-                settSkalSammenslåTekster(false);
-                await slåSammenPerioder();
-            }
+            await hentErPerioderSlåttSammen();
         };
-
         fetch();
-    }, [erPerioderLike, slåSammenPerioder]);
+    }, [hentErPerioderSlåttSammen]);
 
     useEffect(() => {
         // Skal trigge re-rendring
@@ -167,7 +168,6 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         beregningsresultat.data.vurderingAvBrukersUttalelse.harBrukerUttaltSeg ===
                         HarBrukerUttaltSegValg.JA
                     }
-                    erLikePerioder={erPerioderLike}
                 />
                 <Spacer20 />
                 {foreslåVedtakRespons &&
@@ -202,7 +202,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         )}
                         {!erLesevisning && erPerioderLike && (
                             <Button variant="tertiary" onClick={handleSlåSammenPerioder}>
-                                {!skalSammenslåTekster && erPerioderLike
+                                {!erPerioderSlåttSammen
                                     ? 'Sammenslå perioder'
                                     : 'Angre sammenslåing'}
                             </Button>
