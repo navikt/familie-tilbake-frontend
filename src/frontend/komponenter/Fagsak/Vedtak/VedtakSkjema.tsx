@@ -27,9 +27,6 @@ const VedtakSkjema: React.FC<IProps> = ({
     erRevurderingBortfaltBeløp,
     harBrukerUttaltSeg,
 }) => {
-    React.useEffect(() => {
-        console.log('avsnitter', avsnitter);
-    }, [avsnitter]);
     return (
         <StyledSkjema>
             <Heading size="small" level="2" spacing>

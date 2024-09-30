@@ -74,52 +74,47 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const { erPerioderLike, hentSjekkLikhetPerioder } = useSjekkLikhetPerioder(
         behandling.behandlingId
     );
-    const [skalSammenslåTekster, settSkalSammenslåTekster] = useState<boolean>(erPerioderLike);
     const { erPerioderSlåttSammen, hentErPerioderSlåttSammen } = useErPerioderSlåttSammen(
         behandling.behandlingId
     );
-
     const { slåSammenPerioder, feilmelding } = useSlåSammenPerioder(
         behandling.behandlingId,
         !erPerioderSlåttSammen
     );
+    const [skalSammenslåTekster, settSkalSammenslåTekster] = useState<boolean>(erPerioderLike);
 
     const handleSlåSammenPerioder = async () => {
-        console.log('handleSlåSammenPerioder');
         await slåSammenPerioder();
-        settSkalSammenslåTekster(!skalSammenslåTekster);
+        await hentSjekkLikhetPerioder();
+        await hentErPerioderSlåttSammen();
         hentVedtaksbrevtekster();
+        settSkalSammenslåTekster(!skalSammenslåTekster);
     };
 
     useEffect(() => {
         const fetch = async () => {
             await hentSjekkLikhetPerioder();
-            console.log('Henter hentSjekkLikhetPerioder');
-        };
-        fetch();
-    }, [hentSjekkLikhetPerioder]);
-
-    useEffect(() => {
-        const fetch = async () => {
             await hentErPerioderSlåttSammen();
         };
         fetch();
-    }, [hentErPerioderSlåttSammen]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         // Skal trigge re-rendring
     }, [nonUsedKey]);
 
-    if (!behandling) return null;
-
     const harValideringsFeil = skjemaData.some(avs =>
         avs.underavsnittsliste.some(uavs => uavs.harFeil)
     );
+
     const kanViseForhåndsvisning =
         (!erLesevisning ||
             (behandling.kanEndres &&
                 aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK)) &&
         !erRevurderingKlageKA;
+
+    if (!behandling) return null;
 
     if (
         beregningsresultat?.status === RessursStatus.SUKSESS &&
@@ -202,9 +197,9 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         )}
                         {!erLesevisning && erPerioderLike && (
                             <Button variant="tertiary" onClick={handleSlåSammenPerioder}>
-                                {!erPerioderSlåttSammen
-                                    ? 'Sammenslå perioder'
-                                    : 'Angre sammenslåing'}
+                                {erPerioderSlåttSammen
+                                    ? 'Angre sammenslåing'
+                                    : 'Sammenslå perioder'}
                             </Button>
                         )}
 

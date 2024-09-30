@@ -1,13 +1,13 @@
 import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export const useErPerioderSlåttSammen = (behandlingId: string) => {
     const { request } = useHttp();
     const [feilmelding, settFeilmelding] = useState<string>();
     const [erPerioderSlåttSammen, settErPerioderSlåttSammen] = useState<boolean>(false);
 
-    const hentErPerioderSlåttSammen = async () => {
+    const hentErPerioderSlåttSammen = useCallback(async () => {
         const response: Ressurs<boolean> = await request<void, boolean>({
             method: 'GET',
             url: `/familie-tilbake/api/perioder/erPerioderSlaattSammen/${behandlingId}`,
@@ -22,7 +22,7 @@ export const useErPerioderSlåttSammen = (behandlingId: string) => {
         ) {
             settFeilmelding(response.frontendFeilmelding);
         }
-    };
+    }, [behandlingId, request]);
 
     return { erPerioderSlåttSammen, hentErPerioderSlåttSammen, feilmelding };
 };
