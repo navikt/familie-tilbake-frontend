@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { styled } from 'styled-components';
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -81,14 +80,12 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         behandling.behandlingId,
         !erPerioderSlåttSammen
     );
-    const [skalSammenslåTekster, settSkalSammenslåTekster] = useState<boolean>(erPerioderLike);
 
     const handleSlåSammenPerioder = async () => {
         await slåSammenPerioder();
         await hentSjekkLikhetPerioder();
         await hentErPerioderSlåttSammen();
         hentVedtaksbrevtekster();
-        settSkalSammenslåTekster(!skalSammenslåTekster);
     };
 
     useEffect(() => {
