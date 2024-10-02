@@ -5,7 +5,7 @@ import { css, styled } from 'styled-components';
 import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';
 import { ABorderWarning, ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
 
-import { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
+import { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
@@ -18,7 +18,6 @@ const stylingWarningKantlinje = css`
     border-left-color: ${ABorderWarning};
     border-left-width: 5px;
 `;
-
 const StyledExpansionHeader = styled(ExpansionCard.Header)<{
     $visWarningKantlinje: boolean;
 }>`
@@ -85,6 +84,33 @@ const AvsnittSkjema: React.FC<IProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [avsnitt]);
 
+    function finnBulletpointsFraListe(
+        underavsnittsliste: UnderavsnittSkjemaData[]
+    ): UnderavsnittSkjemaData[] {
+        const bulletpoints: UnderavsnittSkjemaData[] = [];
+        let erBulletpoints = false;
+
+        for (const underavsnitt of underavsnittsliste) {
+            if (erBulletpoints) {
+                bulletpoints.push(underavsnitt);
+            }
+            if (underavsnitt.brødtekst?.startsWith('*-')) {
+                erBulletpoints = true;
+            }
+            if (underavsnitt.brødtekst?.endsWith('-*')) {
+                erBulletpoints = false;
+                break;
+            }
+        }
+
+        return bulletpoints;
+    }
+
+    const bulletpoints = finnBulletpointsFraListe(avsnitt.underavsnittsliste);
+    const underavsnittUtenBulletpoints = avsnitt.underavsnittsliste
+        .filter(ul => !bulletpoints?.includes(ul))
+        .filter(ul => !ul.brødtekst?.includes('*-'));
+
     return (
         <StyledExpansionCard
             open={erEkspandert}
@@ -100,7 +126,18 @@ const AvsnittSkjema: React.FC<IProps> = ({
             <StyledExpansionContent
                 $visWarningKantlinje={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
             >
-                {avsnitt.underavsnittsliste.map(underavsnitt => {
+                {bulletpoints.length > 0 && (
+                    <ul>
+                        {bulletpoints.map(bulletpoint => {
+                            return (
+                                <li key={bulletpoint.index}>
+                                    {bulletpoint?.brødtekst?.replace('-*', '')}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                )}
+                {underavsnittUtenBulletpoints.map(underavsnitt => {
                     return (
                         <React.Fragment
                             key={
