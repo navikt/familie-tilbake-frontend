@@ -84,9 +84,9 @@ const AvsnittSkjema: React.FC<IProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [avsnitt]);
 
-    function finnBulletpointsFraListe(
+    const finnBulletpointsFraListe = (
         underavsnittsliste: UnderavsnittSkjemaData[]
-    ): UnderavsnittSkjemaData[] {
+    ): UnderavsnittSkjemaData[] => {
         const bulletpoints: UnderavsnittSkjemaData[] = [];
         let erBulletpoints = false;
 
@@ -104,7 +104,7 @@ const AvsnittSkjema: React.FC<IProps> = ({
         }
 
         return bulletpoints;
-    }
+    };
 
     const bulletpoints = finnBulletpointsFraListe(avsnitt.underavsnittsliste);
     const underavsnittUtenBulletpoints = avsnitt.underavsnittsliste
