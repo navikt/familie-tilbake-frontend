@@ -21,8 +21,9 @@ import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import { useSlåSammenPerioder } from '../../../hooks/useSlåSammenPerioder';
 import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
+import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
+import { useAngreSammenslåingPerioder } from '../../../hooks/useAngreSammenslåingPerioder';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};
@@ -72,23 +73,26 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const { erPerioderLike, hentSjekkLikhetPerioder } = useSjekkLikhetPerioder(
         behandling.behandlingId
     );
-    const [erPerioderSlåttSammen, settErPerioderSlåttSammen] = useState<boolean>(false);
+    const { angreSammenslåingAvPerioder } = useAngreSammenslåingPerioder(behandling.behandlingId);
+    const [erPerioderSammenslått, settErPerioderSammenslått] = useState<boolean>(false);
 
-    const { slåSammenPerioder, feilmelding } = useSlåSammenPerioder(behandling.behandlingId);
+    const { sammenslåPerioder, feilmelding } = useSammenslåPerioder(behandling.behandlingId);
 
-    const handleSlåSammenPerioder = async () => {
-        const nyVerdi = !erPerioderSlåttSammen;
-        settErPerioderSlåttSammen(nyVerdi);
-        await slåSammenPerioder(nyVerdi);
+    const handleKnappTrykk = async () => {
+        const oppdaterErPerioderSammenslått = !erPerioderSammenslått;
+        settErPerioderSammenslått(oppdaterErPerioderSammenslått);
+        if (!oppdaterErPerioderSammenslått) {
+            await angreSammenslåingAvPerioder();
+        } else {
+            await sammenslåPerioder();
+        }
         hentVedtaksbrevtekster();
     };
 
     useEffect(() => {
         const fetch = async () => {
             const likhetResult = await hentSjekkLikhetPerioder();
-            settErPerioderSlåttSammen(likhetResult);
-            // await slåSammenPerioder(likhetResult);
-            // hentVedtaksbrevtekster();
+            settErPerioderSammenslått(likhetResult);
         };
         fetch();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,6 +101,8 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     useEffect(() => {
         // Skal trigge re-rendring
     }, [nonUsedKey]);
+
+    if (!behandling) return null;
 
     const harValideringsFeil = skjemaData.some(avs =>
         avs.underavsnittsliste.some(uavs => uavs.harFeil)
@@ -107,8 +113,6 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
             (behandling.kanEndres &&
                 aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK)) &&
         !erRevurderingKlageKA;
-
-    if (!behandling) return null;
 
     if (
         beregningsresultat?.status === RessursStatus.SUKSESS &&
@@ -190,8 +194,8 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                             </Button>
                         )}
                         {!erLesevisning && erPerioderLike && (
-                            <Button variant="tertiary" onClick={handleSlåSammenPerioder}>
-                                {erPerioderSlåttSammen
+                            <Button variant="tertiary" onClick={handleKnappTrykk}>
+                                {erPerioderSammenslått
                                     ? 'Angre sammenslåing'
                                     : 'Sammenslå perioder'}
                             </Button>

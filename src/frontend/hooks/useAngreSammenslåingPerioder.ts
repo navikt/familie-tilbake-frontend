@@ -2,14 +2,14 @@ import { useHttp } from '@navikt/familie-http';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 import { useState } from 'react';
 
-export const useSlåSammenPerioder = (behandlingId: string) => {
+export const useAngreSammenslåingPerioder = (behandlingId: string) => {
     const { request } = useHttp();
     const [feilmelding, settFeilmelding] = useState<string>();
 
-    const slåSammenPerioder = async (skalSammenslaa: boolean) => {
-        const response: Ressurs<boolean> = await request<void, boolean>({
+    const angreSammenslåingAvPerioder = async () => {
+        const response: Ressurs<string> = await request<void, string>({
             method: 'POST',
-            url: `/familie-tilbake/api/perioder/slaa-sammen-perioder/${behandlingId}?skalSammenslaa=${skalSammenslaa}`,
+            url: `/familie-tilbake/api/perioder/angre-sammenslaing/${behandlingId}`,
         });
 
         if (response.status === RessursStatus.SUKSESS) {
@@ -24,5 +24,5 @@ export const useSlåSammenPerioder = (behandlingId: string) => {
         }
     };
 
-    return { slåSammenPerioder, feilmelding };
+    return { angreSammenslåingAvPerioder, feilmelding };
 };
