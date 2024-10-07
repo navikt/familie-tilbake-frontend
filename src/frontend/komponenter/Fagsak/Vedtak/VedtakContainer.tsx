@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -22,7 +22,6 @@ import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { useSlåSammenPerioder } from '../../../hooks/useSlåSammenPerioder';
-import { useErPerioderSlåttSammen } from '../../../hooks/useErPerioderSlåttSammen';
 import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
 
 const StyledVedtak = styled.div`
@@ -73,25 +72,23 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const { erPerioderLike, hentSjekkLikhetPerioder } = useSjekkLikhetPerioder(
         behandling.behandlingId
     );
-    const { erPerioderSlåttSammen, hentErPerioderSlåttSammen } = useErPerioderSlåttSammen(
-        behandling.behandlingId
-    );
-    const { slåSammenPerioder, feilmelding } = useSlåSammenPerioder(
-        behandling.behandlingId,
-        !erPerioderSlåttSammen
-    );
+    const [erPerioderSlåttSammen, settErPerioderSlåttSammen] = useState<boolean>(false);
+
+    const { slåSammenPerioder, feilmelding } = useSlåSammenPerioder(behandling.behandlingId);
 
     const handleSlåSammenPerioder = async () => {
-        await slåSammenPerioder();
-        await hentSjekkLikhetPerioder();
-        await hentErPerioderSlåttSammen();
+        const nyVerdi = !erPerioderSlåttSammen;
+        settErPerioderSlåttSammen(nyVerdi);
+        await slåSammenPerioder(nyVerdi);
         hentVedtaksbrevtekster();
     };
 
     useEffect(() => {
         const fetch = async () => {
-            await hentSjekkLikhetPerioder();
-            await hentErPerioderSlåttSammen();
+            const likhetResult = await hentSjekkLikhetPerioder();
+            settErPerioderSlåttSammen(likhetResult);
+            // await slåSammenPerioder(likhetResult);
+            // hentVedtaksbrevtekster();
         };
         fetch();
         // eslint-disable-next-line react-hooks/exhaustive-deps
