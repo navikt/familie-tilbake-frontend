@@ -21,9 +21,7 @@ import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
-import { useAngreSammenslåingPerioder } from '../../../hooks/useAngreSammenslåingPerioder';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};
@@ -69,14 +67,16 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
-
-    const { erPerioderLike, hentSjekkLikhetPerioder } = useSjekkLikhetPerioder(
-        behandling.behandlingId
-    );
-    const { angreSammenslåingAvPerioder } = useAngreSammenslåingPerioder(behandling.behandlingId);
     const [erPerioderSammenslått, settErPerioderSammenslått] = useState<boolean>(false);
 
-    const { sammenslåPerioder, feilmelding } = useSammenslåPerioder(behandling.behandlingId);
+    const {
+        sammenslåPerioder,
+        angreSammenslåingAvPerioder,
+        hentErPerioderLike,
+        erPerioderLike,
+        laster,
+        feilmelding,
+    } = useSammenslåPerioder(behandling.behandlingId);
 
     const handleKnappTrykk = async () => {
         const oppdaterErPerioderSammenslått = !erPerioderSammenslått;
@@ -91,7 +91,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
 
     useEffect(() => {
         const fetch = async () => {
-            const likhetResult = await hentSjekkLikhetPerioder();
+            const likhetResult = await hentErPerioderLike();
             settErPerioderSammenslått(likhetResult);
         };
         fetch();
@@ -194,7 +194,12 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                             </Button>
                         )}
                         {!erLesevisning && erPerioderLike && (
-                            <Button variant="tertiary" onClick={handleKnappTrykk}>
+                            <Button
+                                variant="tertiary"
+                                onClick={handleKnappTrykk}
+                                loading={laster}
+                                disabled={laster}
+                            >
                                 {erPerioderSammenslått
                                     ? 'Angre sammenslåing'
                                     : 'Sammenslå perioder'}
