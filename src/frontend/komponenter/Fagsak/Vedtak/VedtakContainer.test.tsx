@@ -19,7 +19,7 @@ import {
     IBeregningsresultat,
     VedtaksbrevAvsnitt,
 } from '../../../typer/vedtakTyper';
-import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
+import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 
 jest.mock('@navikt/familie-http', () => {
     return {
@@ -42,8 +42,8 @@ jest.mock('react-router-dom', () => ({
     useNavigate: () => jest.fn(),
 }));
 
-jest.mock('../../../hooks/useSjekklikheter', () => ({
-    useSjekkLikhetPerioder: jest.fn(),
+jest.mock('../../../hooks/useSammenslåPerioder', () => ({
+    useSammenslåPerioder: jest.fn(),
 }));
 
 const mockedSettIkkePersistertKomponent = jest.fn();
@@ -133,8 +133,8 @@ describe('Tester: VedtakContainer', () => {
         }));
 
         // @ts-expect-error mock
-        useSjekkLikhetPerioder.mockImplementation(() => ({
-            hentSjekkLikhetPerioder: () => Promise.resolve(),
+        useSammenslåPerioder.mockImplementation(() => ({
+            hentErPerioderLike: () => Promise.resolve(),
             erPerioderLike: false,
         }));
 
