@@ -72,6 +72,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const {
         sammenslåPerioder,
         angreSammenslåingAvPerioder,
+        hentErPerioderSammenslått,
         hentErPerioderLike,
         erPerioderLike,
         laster,
@@ -91,8 +92,10 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
 
     useEffect(() => {
         const fetch = async () => {
-            const likhetResult = await hentErPerioderLike();
-            settErPerioderSammenslått(likhetResult);
+            await hentErPerioderLike();
+
+            const sammenslåttResponse = await hentErPerioderSammenslått();
+            settErPerioderSammenslått(!!sammenslåttResponse);
         };
         fetch();
         // eslint-disable-next-line react-hooks/exhaustive-deps

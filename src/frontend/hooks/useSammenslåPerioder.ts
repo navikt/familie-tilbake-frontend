@@ -65,8 +65,22 @@ export const useSammenslåPerioder = (behandlingId: string) => {
         }
     };
 
+    const hentErPerioderSammenslått = useCallback(async (): Promise<boolean> => {
+        const response: Ressurs<boolean> = await request<void, boolean>({
+            method: 'GET',
+            url: `/familie-tilbake/api/perioder/hent-sammenslatt/${behandlingId}`,
+        });
+
+        if (response.status === RessursStatus.SUKSESS) {
+            return response.data;
+        } else {
+            return false;
+        }
+    }, [behandlingId, request]);
+
     return {
         hentErPerioderLike,
+        hentErPerioderSammenslått,
         sammenslåPerioder,
         angreSammenslåingAvPerioder,
         erPerioderLike,
