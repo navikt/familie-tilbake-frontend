@@ -1,11 +1,8 @@
-import * as React from 'react';
-
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
-
 import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
@@ -24,9 +21,7 @@ import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-
-import { useEffect } from 'react';
-import { useSjekkLikhetPerioder } from '../../../hooks/useSjekklikheter';
+import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};
@@ -62,6 +57,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         sendInnSkjema,
         foreslåVedtakRespons,
         lagreUtkast,
+        hentVedtaksbrevtekster,
     } = useFeilutbetalingVedtak();
     const { behandlingILesemodus, aktivtSteg } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -71,14 +67,41 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
         behandling.behandlingsårsakstype ===
             Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
+    const [erPerioderSammenslått, settErPerioderSammenslått] = useState<boolean>(false);
 
-    const { hentSjekkLikhetPerioder } = useSjekkLikhetPerioder(behandling.behandlingId);
+    const {
+        sammenslåPerioder,
+        angreSammenslåingAvPerioder,
+        hentErPerioderSammenslått,
+        hentErPerioderLike,
+        erPerioderLike,
+        laster,
+        feilmelding,
+    } = useSammenslåPerioder(behandling.behandlingId);
+
+    const handleKnappTrykk = async () => {
+        const oppdaterErPerioderSammenslått = !erPerioderSammenslått;
+        settErPerioderSammenslått(oppdaterErPerioderSammenslått);
+        if (!oppdaterErPerioderSammenslått) {
+            await angreSammenslåingAvPerioder();
+        } else {
+            await sammenslåPerioder();
+        }
+        hentVedtaksbrevtekster();
+    };
 
     useEffect(() => {
-        hentSjekkLikhetPerioder();
-    }, [hentSjekkLikhetPerioder]);
+        const fetch = async () => {
+            await hentErPerioderLike();
 
-    React.useEffect(() => {
+            const sammenslåttResponse = await hentErPerioderSammenslått();
+            settErPerioderSammenslått(!!sammenslåttResponse);
+        };
+        fetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
         // Skal trigge re-rendring
     }, [nonUsedKey]);
 
@@ -87,6 +110,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const harValideringsFeil = skjemaData.some(avs =>
         avs.underavsnittsliste.some(uavs => uavs.harFeil)
     );
+
     const kanViseForhåndsvisning =
         (!erLesevisning ||
             (behandling.kanEndres &&
@@ -172,6 +196,20 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                                 Lagre utkast
                             </Button>
                         )}
+                        {!erLesevisning && erPerioderLike && (
+                            <Button
+                                variant="tertiary"
+                                onClick={handleKnappTrykk}
+                                loading={laster}
+                                disabled={laster}
+                            >
+                                {erPerioderSammenslått
+                                    ? 'Angre sammenslåing'
+                                    : 'Sammenslå perioder'}
+                            </Button>
+                        )}
+
+                        {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
                     </HStack>
                     <Button variant="secondary" onClick={gåTilForrige}>
                         Forrige
