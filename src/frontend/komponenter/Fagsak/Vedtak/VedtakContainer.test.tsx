@@ -135,6 +135,7 @@ describe('Tester: VedtakContainer', () => {
         // @ts-expect-error mock
         useSammenslåPerioder.mockImplementation(() => ({
             hentErPerioderLike: () => Promise.resolve(),
+            hentErPerioderSammenslått: () => Promise.resolve(),
             erPerioderLike: false,
         }));
 
