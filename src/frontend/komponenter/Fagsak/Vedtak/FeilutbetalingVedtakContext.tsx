@@ -31,7 +31,11 @@ import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[] => {
     // @ts-expect-error - klager på periode men er trygt p.g.s. filtreringen
     const perioderMedTekst: PeriodeMedTekst[] = skjemaData
-        .filter(avs => avs.avsnittstype === Avsnittstype.PERIODE)
+        .filter(
+            avs =>
+                avs.avsnittstype === Avsnittstype.PERIODE ||
+                avs.avsnittstype === Avsnittstype.SAMMENSLÅTT_PERIODE
+        )
         .map(avs => {
             const fakta = avs.underavsnittsliste.find(
                 uavs => uavs.underavsnittstype === Underavsnittstype.FAKTA && uavs.fritekstTillatt
@@ -353,6 +357,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             foreslåVedtakRespons,
             validerAlleAvsnittOk,
             lagreUtkast,
+            hentVedtaksbrevtekster,
         };
     }
 );

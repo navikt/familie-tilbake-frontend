@@ -16,7 +16,7 @@ import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
 
 import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
+import { Aktsomhet } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
@@ -59,7 +59,9 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
         : '100 %';
 
     const erGrovtUaktsomhet = skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET;
-
+    const skalTilleggesRenterVerdi =
+        skjema.felter.grovtUaktsomIlleggeRenter.verdi &&
+        skjema.felter.grovtUaktsomIlleggeRenter.verdi.label;
     return (
         <VStack gap="1">
             <HorisontalRadioGroup
@@ -73,14 +75,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                         : ''
                 }
                 onChange={(val: JaNeiOption) => {
-                    const skalPreutfylleUtenRenter =
-                        val === OptionNEI &&
-                        skjema.felter.grovtUaktsomIlleggeRenter.verdi === '' &&
-                        skjema.felter.vilkårsresultatvurdering.verdi ===
-                            Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
-                    if (skalPreutfylleUtenRenter) {
-                        skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(OptionNEI);
-                    }
+                    skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(OptionNEI);
                     settIkkePersistertKomponent('vilkårsvurdering');
                     return skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(val);
                 }}
@@ -180,7 +175,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                         {erGrovtUaktsomhet && (
                             <div>
                                 <Label>Skal det tillegges renter?</Label>
-                                <StyledNormaltekst>Nei</StyledNormaltekst>
+                                <StyledNormaltekst>{skalTilleggesRenterVerdi}</StyledNormaltekst>
                             </div>
                         )}
                     </HGrid>
