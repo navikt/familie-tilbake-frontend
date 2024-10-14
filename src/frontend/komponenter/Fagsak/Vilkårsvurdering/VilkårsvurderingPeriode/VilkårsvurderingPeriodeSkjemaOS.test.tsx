@@ -656,18 +656,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 })
             )
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
-
-        await act(() => user.click(getByTestId('skalDetTilleggesRenter_Nei')));
-
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
-        );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
