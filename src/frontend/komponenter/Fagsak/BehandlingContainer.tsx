@@ -28,6 +28,7 @@ import { useBehandling } from '../../context/BehandlingContext';
 import { Behandlingstatus, IBehandling } from '../../typer/behandling';
 import { IFagsak } from '../../typer/fagsak';
 import {
+    erHistoriskSide,
     erØnsketSideTilgjengelig,
     utledBehandlingSide,
 } from '../Felleskomponenter/Venstremeny/sider';
@@ -68,6 +69,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
     const location = useLocation();
 
     const ønsketSide = location.pathname.split('/')[7];
+    const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
     const erØnsketSideLovlig = ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling);
     const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
@@ -107,6 +109,34 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                 <Høyremeny fagsak={fagsak} behandling={behandling} />
             </StyledHøyremenyContainer>
         </>
+    ) : erHistoriskeVerdier ? (
+        <>
+            <StyledMainContainer id={'fagsak-main'}>
+                <HistoriskeVurderingermeny behandling={behandling} fagsak={fagsak} />
+                <Routes>
+                    <Route
+                        path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
+                        element={
+                            <HistoriskFaktaProvider behandling={behandling}>
+                                <HistoriskFaktaContainer behandling={behandling} fagsak={fagsak} />
+                            </HistoriskFaktaProvider>
+                        }
+                    />
+                    <Route
+                        path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
+                        element={
+                            <HistoriskVilkårsvurderingProvider behandling={behandling}>
+                                <HistoriskVilkårsvurderingContainer
+                                    behandling={behandling}
+                                    fagsak={fagsak}
+                                />
+                            </HistoriskVilkårsvurderingProvider>
+                        }
+                    />
+                    <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
+                </Routes>
+            </StyledMainContainer>
+        </>
     ) : harKravgrunnlag ? (
         <>
             <StyledVenstremenyContainer>
@@ -120,14 +150,6 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
                                 <FaktaContainer ytelse={fagsak.ytelsestype} />
                             </FeilutbetalingFaktaProvider>
-                        }
-                    />
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
-                        element={
-                            <HistoriskFaktaProvider behandling={behandling}>
-                                <HistoriskFaktaContainer behandling={behandling} fagsak={fagsak} />
-                            </HistoriskFaktaProvider>
                         }
                     />
                     <Route
@@ -156,24 +178,6 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                             </FeilutbetalingVilkårsvurderingProvider>
                         }
                     />
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
-                        element={
-                            <HistoriskVilkårsvurderingProvider behandling={behandling}>
-                                <HistoriskVilkårsvurderingContainer
-                                    behandling={behandling}
-                                    fagsak={fagsak}
-                                />
-                            </HistoriskVilkårsvurderingProvider>
-                        }
-                    />
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/inaktiv'}
-                        element={
-                            <HistoriskeVurderingermeny behandling={behandling} fagsak={fagsak} />
-                        }
-                    />
-
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                         element={
