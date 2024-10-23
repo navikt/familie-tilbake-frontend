@@ -11,6 +11,7 @@ import {
 } from '../../../../kodeverk';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 import TilbakekrevingAktivitetTabell from '../VilkårsvurderingPeriode/TilbakekrevingAktivitetTabell';
+import { formatCurrencyNoKr, formatterDatostring } from '../../../../utils';
 
 interface IProps {
     perioder: VilkårsvurderingPeriodeSkjemaData[];
@@ -40,11 +41,17 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
                         <HGrid columns={{ lg: 2, md: 1 }} gap="8">
                             <VStack gap="4">
                                 <Box>
-                                    <LabelVerdiVisning label={'Fra'} verdi={skjema.periode.fom} />
-                                    <LabelVerdiVisning label={'Til'} verdi={skjema.periode.tom} />
+                                    <LabelVerdiVisning
+                                        label={'Fra'}
+                                        verdi={formatterDatostring(skjema.periode.fom)}
+                                    />
+                                    <LabelVerdiVisning
+                                        label={'Til'}
+                                        verdi={formatterDatostring(skjema.periode.tom)}
+                                    />
                                     <LabelVerdiVisning
                                         label={'Feilutbetalt beløp'}
-                                        verdi={skjema.feilutbetaltBeløp}
+                                        verdi={formatCurrencyNoKr(skjema.feilutbetaltBeløp)}
                                     />
                                     <TilbakekrevingAktivitetTabell ytelser={skjema.aktiviteter} />
                                 </Box>
@@ -95,7 +102,9 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
                                                 label={'Tilbakekrevd beløp'}
                                                 verdi={
                                                     godTro.beløpErIBehold
-                                                        ? godTro.beløpTilbakekreves
+                                                        ? formatCurrencyNoKr(
+                                                              godTro.beløpTilbakekreves
+                                                          )
                                                         : 'Ingen tilbakekreving'
                                                 }
                                             />
@@ -157,7 +166,9 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
                                             {aktsomhet.beløpTilbakekreves && (
                                                 <LabelVerdiVisning
                                                     label={'Beløp tilbakekreves'}
-                                                    verdi={aktsomhet.beløpTilbakekreves}
+                                                    verdi={formatCurrencyNoKr(
+                                                        aktsomhet.beløpTilbakekreves
+                                                    )}
                                                 />
                                             )}
                                             {aktsomhet.tilbakekrevSmåbeløp === false && (

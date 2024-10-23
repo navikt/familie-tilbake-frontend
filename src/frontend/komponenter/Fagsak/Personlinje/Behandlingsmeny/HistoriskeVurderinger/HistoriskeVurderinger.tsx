@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { useNavigate } from 'react-router-dom';
-
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { ToggleName } from '../../../../../context/toggles';
 import { useToggles } from '../../../../../context/TogglesContext';
@@ -18,7 +16,6 @@ interface IProps {
 const HistoriskeVurderinger: React.FC<IProps> = ({ behandling, fagsak, onListElementClick }) => {
     const { behandlingILesemodus } = useBehandling();
     const { innloggetSaksbehandler } = useApp();
-    const navigate = useNavigate();
     const { toggles } = useToggles();
     const harTilgang =
         behandling.kanEndres &&
@@ -33,7 +30,7 @@ const HistoriskeVurderinger: React.FC<IProps> = ({ behandling, fagsak, onListEle
                     variant="tertiary"
                     onClick={() => {
                         onListElementClick();
-                        navigate(
+                        window.open(
                             `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/inaktiv`
                         );
                     }}

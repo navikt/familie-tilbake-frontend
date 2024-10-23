@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Buldings3Icon, ExternalLinkIcon } from '@navikt/aksel-icons';
+import { Buldings3Icon, ExternalLinkIcon, LeaveIcon } from '@navikt/aksel-icons';
 import { Link, Tag } from '@navikt/ds-react';
 import { AGray900, ATextOnInverted, ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
@@ -14,6 +14,8 @@ import { useFagsak } from '../../../context/FagsakContext';
 import { IFagsak } from '../../../typer/fagsak';
 import { IPerson } from '../../../typer/person';
 import { formatterDatostring, hentAlder } from '../../../utils';
+import { useLocation } from 'react-router-dom';
+import { erHistoriskSide } from '../../Felleskomponenter/Venstremeny/sider';
 
 const PlaceholderDiv = styled.div`
     flex: 1;
@@ -49,6 +51,10 @@ interface IProps {
 
 const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
     const { behandling, lagLenkeTilRevurdering } = useBehandling();
+    const location = useLocation();
+    const behandlingsPath = location.pathname.split('/').at(-1);
+    const erHistoriskVisning = behandlingsPath && erHistoriskSide(behandlingsPath);
+    console.log(behandlingsPath);
     const { lagSaksoversiktUrl } = useFagsak();
     return (
         <Visittkort
@@ -75,17 +81,25 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
             )}
             <PlaceholderDiv />
 
-            {behandling?.status === RessursStatus.SUKSESS && (
+            {behandling?.status === RessursStatus.SUKSESS && !erHistoriskVisning && (
                 <Link href={lagLenkeTilRevurdering()} target="_blank">
                     Gå til revurderingen
                     <ExternalLinkIcon aria-label="Gå til revurderingen" fontSize={'1.375rem'} />
                 </Link>
             )}
 
-            <Link href={lagSaksoversiktUrl()} target="_blank">
-                Gå til saksoversikt
-                <ExternalLinkIcon aria-label="Gå til saksoversikt" fontSize={'1.375rem'} />
-            </Link>
+            {!erHistoriskVisning && (
+                <Link href={lagSaksoversiktUrl()} target="_blank">
+                    Gå til saksoversikt
+                    <ExternalLinkIcon aria-label="Gå til saksoversikt" fontSize={'1.375rem'} />
+                </Link>
+            )}
+            {erHistoriskVisning && (
+                <Link href={`${location.pathname.replace(behandlingsPath, '')}`}>
+                    Gå til behandling
+                    <LeaveIcon title={'Tilbake til behandlingen'} fontSize={'1.375rem'} />
+                </Link>
+            )}
 
             <Behandlingsmeny fagsak={fagsak} />
         </Visittkort>
