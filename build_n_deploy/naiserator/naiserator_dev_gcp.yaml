@@ -17,6 +17,10 @@ spec:
   readiness:
     path: /isReady
     initialDelay: 5
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: nodejs
   prometheus:
     enabled: true
     path: /metrics
