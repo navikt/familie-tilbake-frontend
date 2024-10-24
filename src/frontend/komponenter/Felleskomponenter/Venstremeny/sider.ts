@@ -113,7 +113,7 @@ const historiskeSider = [
     'inaktiv',
 ];
 
-const erHistoriskSide = (side: string) => {
+export const erHistoriskSide = (side: string) => {
     return historiskeSider.includes(side);
 };
 export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBehandling): boolean => {
