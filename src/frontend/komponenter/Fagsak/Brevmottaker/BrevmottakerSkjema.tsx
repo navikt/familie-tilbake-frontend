@@ -2,7 +2,7 @@ import React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Fieldset, TextField } from '@navikt/ds-react';
+import { Alert, Fieldset, TextField } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { Valideringsstatus } from '@navikt/familie-skjema';
 import CountrySelect from '@navikt/landvelger';
@@ -51,38 +51,6 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                         skjema.felter.navn.validerOgSettFelt(event.target.value);
                     }}
                 />
-                <TextField
-                    {...skjema.felter.adresselinje1.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                    label={'Adresselinje 1'}
-                    onChange={(event): void => {
-                        skjema.felter.adresselinje1.validerOgSettFelt(event.target.value);
-                    }}
-                />
-                <TextField
-                    {...skjema.felter.adresselinje2.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                    label={'Adresselinje 2 (valgfri)'}
-                    onChange={(event): void => {
-                        skjema.felter.adresselinje2.validerOgSettFelt(event.target.value);
-                    }}
-                />
-                <PostnummerOgStedContainer>
-                    <TextField
-                        {...skjema.felter.postnummer.hentNavBaseSkjemaProps(
-                            skjema.visFeilmeldinger
-                        )}
-                        label={'Postnummer'}
-                        onChange={(event): void => {
-                            skjema.felter.postnummer.validerOgSettFelt(event.target.value);
-                        }}
-                    />
-                    <TextField
-                        {...skjema.felter.poststed.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                        label={'Poststed'}
-                        onChange={(event): void => {
-                            skjema.felter.poststed.validerOgSettFelt(event.target.value);
-                        }}
-                    />
-                </PostnummerOgStedContainer>
                 <CountrySelect
                     id={'country-select-brevmottaker'}
                     label={'Land'}
@@ -103,6 +71,56 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                             : ''
                     }
                 />
+                {skjema.felter.land.verdi && (
+                    <>
+                        <TextField
+                            {...skjema.felter.adresselinje1.hentNavBaseSkjemaProps(
+                                skjema.visFeilmeldinger
+                            )}
+                            label={'Adresselinje 1'}
+                            onChange={(event): void => {
+                                skjema.felter.adresselinje1.validerOgSettFelt(event.target.value);
+                            }}
+                        />
+                        <TextField
+                            {...skjema.felter.adresselinje2.hentNavBaseSkjemaProps(
+                                skjema.visFeilmeldinger
+                            )}
+                            label={'Adresselinje 2 (valgfri)'}
+                            onChange={(event): void => {
+                                skjema.felter.adresselinje2.validerOgSettFelt(event.target.value);
+                            }}
+                        />
+                        {skjema.felter.land.verdi !== 'NO' && (
+                            <Alert variant="info">
+                                Ved utenlandsk adresse skal postnummer og poststed legges i
+                                adresselinjene.
+                            </Alert>
+                        )}
+                        <PostnummerOgStedContainer>
+                            <TextField
+                                {...skjema.felter.postnummer.hentNavBaseSkjemaProps(
+                                    skjema.visFeilmeldinger
+                                )}
+                                disabled={skjema.felter.land.verdi !== 'NO'}
+                                label={'Postnummer'}
+                                onChange={(event): void => {
+                                    skjema.felter.postnummer.validerOgSettFelt(event.target.value);
+                                }}
+                            />
+                            <TextField
+                                {...skjema.felter.poststed.hentNavBaseSkjemaProps(
+                                    skjema.visFeilmeldinger
+                                )}
+                                disabled={skjema.felter.land.verdi !== 'NO'}
+                                label={'Poststed'}
+                                onChange={(event): void => {
+                                    skjema.felter.poststed.validerOgSettFelt(event.target.value);
+                                }}
+                            />
+                        </PostnummerOgStedContainer>
+                    </>
+                )}
             </StyledFieldset>
         </>
     );
