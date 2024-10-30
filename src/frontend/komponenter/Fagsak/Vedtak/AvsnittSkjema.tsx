@@ -44,7 +44,10 @@ const skalVisesÅpen = (avsnitt: AvsnittSkjemaData) => {
                 underavsnitt.fritekstPåkrevet && (!underavsnitt.fritekst || underavsnitt.harFeil)
         );
     }
-    if (avsnitt.avsnittstype === Avsnittstype.PERIODE) {
+    if (
+        avsnitt.avsnittstype === Avsnittstype.PERIODE ||
+        avsnitt.avsnittstype === Avsnittstype.SAMMENSLÅTT_PERIODE
+    ) {
         return avsnitt.underavsnittsliste
             .filter(
                 underavsnitt =>
