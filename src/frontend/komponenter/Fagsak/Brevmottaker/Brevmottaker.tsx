@@ -114,9 +114,9 @@ const Brevmottaker: React.FC<IProps> = ({
                         <dt>Adresselinje 2</dt>
                         <dd>{brevmottaker.manuellAdresseInfo?.adresselinje2 || '-'}</dd>
                         <dt>Postnummer</dt>
-                        <dd>{brevmottaker.manuellAdresseInfo?.postnummer}</dd>
+                        <dd>{brevmottaker.manuellAdresseInfo?.postnummer || '-'}</dd>
                         <dt>Poststed</dt>
-                        <dd>{brevmottaker.manuellAdresseInfo?.poststed}</dd>
+                        <dd>{brevmottaker.manuellAdresseInfo?.poststed || '-'}</dd>
                         <dt>Land</dt>
                         <dd>{land.label}</dd>
                     </>
