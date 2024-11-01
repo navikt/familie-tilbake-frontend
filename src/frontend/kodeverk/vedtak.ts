@@ -29,6 +29,7 @@ export const vurderinger: Record<Vurdering, string> = {
 export enum Avsnittstype {
     OPPSUMMERING = 'OPPSUMMERING',
     PERIODE = 'PERIODE',
+    SAMMENSLÅTT_PERIODE = 'SAMMENSLÅTT_PERIODE',
     TILLEGGSINFORMASJON = 'TILLEGGSINFORMASJON',
 }
 
