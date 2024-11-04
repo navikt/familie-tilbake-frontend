@@ -4,7 +4,15 @@ import { useState } from 'react';
 import createUseContext from 'constate';
 import { useNavigate } from 'react-router-dom';
 
-import { feil, type FeltState, type ISkjema, ok, useFelt, useSkjema } from '@navikt/familie-skjema';
+import {
+    Avhengigheter,
+    feil,
+    type FeltState,
+    type ISkjema,
+    ok,
+    useFelt,
+    useSkjema,
+} from '@navikt/familie-skjema';
 import { byggHenterRessurs, type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../api/behandling';
@@ -273,6 +281,55 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                 ),
         });
 
+        const land = useFelt<string>({
+            verdi: '',
+            avhengigheter: { adresseKilde, mottaker },
+            valideringsfunksjon: (felt, avhengigheter) => {
+                return (
+                    feilNårUtenlandskAdresseHarNorgeSomLand(avhengigheter?.mottaker.verdi, felt) ||
+                    validerPåkrevdFeltForManuellRegistrering(felt, avhengigheter?.adresseKilde, 2)
+                );
+            },
+        });
+
+        const postnummer = useFelt<string>({
+            verdi: '',
+            avhengigheter: { adresseKilde, land },
+            valideringsfunksjon: (felt, avhengigheter) => {
+                if (avhengigheter?.land.verdi !== 'NO' && felt.verdi === '') {
+                    return ok(felt);
+                } else {
+                    return validerPåkrevdFeltForManuellRegistrering(
+                        felt,
+                        avhengigheter?.adresseKilde,
+                        10
+                    );
+                }
+            },
+            skalFeltetVises: (avhengigheter: Avhengigheter) => {
+                return avhengigheter?.land.verdi === 'NO';
+            },
+        });
+
+        const poststed = useFelt<string>({
+            verdi: '',
+            avhengigheter: { adresseKilde, land },
+            valideringsfunksjon: (felt, avhengigheter) => {
+                if (avhengigheter?.land.verdi !== 'NO' && felt.verdi === '') {
+                    return ok(felt);
+                } else {
+                    return validerPåkrevdFeltForManuellRegistrering(
+                        felt,
+                        avhengigheter?.adresseKilde,
+                        50
+                    );
+                }
+            },
+            skalFeltetVises: (avhengigheter: Avhengigheter) => {
+                return avhengigheter?.land.verdi === 'NO';
+            },
+        });
+
         const {
             skjema,
             kanSendeSkjema,
@@ -319,6 +376,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                             'Navn på person eller organisasjon er påkrevd'
                         ),
                 }),
+                land,
                 adresselinje1: useFelt<string>({
                     verdi: '',
                     avhengigheter: { adresseKilde },
@@ -333,46 +391,20 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                     verdi: '',
                     valideringsfunksjon: felt => feilNårFeltetOverskriderMakslengde(felt, 80),
                 }),
-                postnummer: useFelt<string>({
-                    verdi: '',
-                    avhengigheter: { adresseKilde },
-                    valideringsfunksjon: (felt, avhengigheter) =>
-                        validerPåkrevdFeltForManuellRegistrering(
-                            felt,
-                            avhengigheter?.adresseKilde,
-                            10
-                        ),
-                }),
-                poststed: useFelt<string>({
-                    verdi: '',
-                    avhengigheter: { adresseKilde },
-                    valideringsfunksjon: (felt, avhengigheter) =>
-                        validerPåkrevdFeltForManuellRegistrering(
-                            felt,
-                            avhengigheter?.adresseKilde,
-                            50
-                        ),
-                }),
-                land: useFelt<string>({
-                    verdi: '',
-                    avhengigheter: { adresseKilde, mottaker },
-                    valideringsfunksjon: (felt, avhengigheter) => {
-                        return (
-                            feilNårUtenlandskAdresseHarNorgeSomLand(
-                                avhengigheter?.mottaker.verdi,
-                                felt
-                            ) ||
-                            validerPåkrevdFeltForManuellRegistrering(
-                                felt,
-                                avhengigheter?.adresseKilde,
-                                2
-                            )
-                        );
-                    },
-                }),
+                postnummer,
+                poststed,
             },
             skjemanavn: 'Legg til eller endre brevmottaker',
         });
+
+        // Postnummer og poststed disables og skal sendes med som tom streng når landet ikke er Norge
+        if (land.verdi !== 'NO' && postnummer.verdi !== '') {
+            postnummer.nullstill();
+        }
+
+        if (land.verdi !== 'NO' && poststed.verdi !== '') {
+            poststed.nullstill();
+        }
 
         const lagreBrevmottakerOgOppdaterState = (mottakerId?: string, lukkModal?: () => void) => {
             if (kanSendeSkjema()) {
