@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 
 import App from './komponenter/App';
+import { initGrafanaFaro } from './utils/grafanaFaro';
 
 const environment = window.location.hostname;
 
@@ -21,6 +22,8 @@ if (process.env.NODE_ENV !== 'development') {
 if (process.env.NODE_ENV !== 'production') {
     axe(React, ReactDOM, 1000, {});
 }
+
+initGrafanaFaro();
 
 const container = document.getElementById('app');
 const root = createRoot(container!);
