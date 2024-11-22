@@ -19,7 +19,11 @@ import { DokumentMal } from '../../../../kodeverk';
 import { BrevPayload } from '../../../../typer/api';
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
-import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../utils';
+import {
+    erFeltetEmpty,
+    hentFrontendFeilmelding,
+    validerTekstFeltMaksLengde,
+} from '../../../../utils';
 import { sider } from '../../../Felleskomponenter/Venstremeny/sider';
 
 interface Mottaker {
@@ -50,6 +54,7 @@ interface IProps {
 
 const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fagsak }: IProps) => {
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
+    const [feilmelding, settFeilmelding] = React.useState<string | undefined>();
     const { hentBehandlingMedBehandlingId } = useBehandling();
     const { bestillBrev } = useDokumentApi();
     const navigate = useNavigate();
@@ -104,6 +109,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fa
             settSenderInn(true);
             bestillBrev(hentBrevdata()).then((respons: Ressurs<void>) => {
                 settSenderInn(false);
+                settFeilmelding(undefined);
                 if (respons.status === RessursStatus.SUKSESS) {
                     nullstillSkjema();
                     hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
@@ -111,6 +117,8 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fa
                             `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
                         );
                     });
+                } else {
+                    settFeilmelding(hentFrontendFeilmelding(respons));
                 }
             });
         } else {
@@ -126,6 +134,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fa
         kanSendeSkjema,
         senderInn,
         sendBrev,
+        feilmelding,
     };
 });
 

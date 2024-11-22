@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { BodyShort, Button, Heading, Select, Textarea } from '@navikt/ds-react';
+import { BodyShort, Button, Fieldset, Heading, Select, Textarea } from '@navikt/ds-react';
 
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
@@ -24,7 +24,7 @@ interface IProps {
 }
 
 const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
-    const { maler, skjema, senderInn, sendBrev } = useSendMelding();
+    const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
@@ -36,7 +36,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
     const kanSende = skjema.felter.maltype.verdi !== '' && skjema.felter.fritekst.verdi !== '';
 
     return (
-        <div>
+        <Fieldset error={feilmelding} legend={'Send brev'} hideLegend>
             {behandling.manuelleBrevmottakere.length ? (
                 <>
                     <Heading size="xsmall" spacing>
@@ -109,7 +109,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
                 </Button>
                 {kanSende && <ForhåndsvisBrev />}
             </Navigering>
-        </div>
+        </Fieldset>
     );
 };
 
