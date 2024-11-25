@@ -29,7 +29,7 @@
     "@navikt/ds-icons": "^3.4.3",
     "@navikt/ds-react": "^7.5.3",
     "@navikt/ds-tokens": "^7.5.3",
-    "@navikt/familie-backend": "10.1.0",
+    "@navikt/familie-backend": "10.1.1",
     "@navikt/familie-header": "^14.1.1",
     "@navikt/familie-logging": "^7.0.0",
     "@navikt/familie-skjema": "^8.2.16",
