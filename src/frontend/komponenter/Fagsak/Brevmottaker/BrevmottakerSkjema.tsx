@@ -57,8 +57,8 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                     flags
                     excludeList={
                         skjema.felter.mottaker.verdi === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
-                            ? ['NO']
-                            : undefined
+                            ? ['NO', 'XU']
+                            : ['XU']
                     }
                     values={skjema.felter.land.verdi}
                     onOptionSelected={(land: { alpha2: string }) => {
