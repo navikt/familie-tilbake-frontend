@@ -57,6 +57,7 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
                     utførRedirect(
                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                     );
+                    window.location.reload(); // Quick fix for å kunne trykke neste etter at en behandling har blitt tilbakestilt til fakta
                 });
             } else if (
                 respons.status === RessursStatus.FEILET ||
