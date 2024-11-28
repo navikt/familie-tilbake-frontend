@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Buldings3Icon, ExternalLinkIcon, LeaveIcon } from '@navikt/aksel-icons';
+import { Buildings3Icon, ExternalLinkIcon, LeaveIcon } from '@navikt/aksel-icons';
 import { Link, Tag } from '@navikt/ds-react';
 import { AGray900, ATextOnInverted, ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { RessursStatus } from '@navikt/familie-typer';
@@ -71,7 +71,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
             )}
             {fagsak.institusjon && (
                 <InstitusjonsTag variant="info" size="small">
-                    <Buldings3Icon fontSize={'1.25rem'} />
+                    <Buildings3Icon fontSize={'1.25rem'} />
                     <MaksLengdeInstitusjonNavn title={fagsak.institusjon.navn}>
                         {fagsak.institusjon.navn}
                     </MaksLengdeInstitusjonNavn>
