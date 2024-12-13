@@ -23,12 +23,17 @@ interface IProps {
     ytelse: Ytelsetype;
     perioder: FaktaPeriodeSkjemaData[];
     erLesevisning: boolean;
+    onChangePerioder: () => void;
 }
 
-const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLesevisning }) => {
+const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({
+    ytelse,
+    perioder,
+    erLesevisning,
+    onChangePerioder,
+}) => {
     const [hendelseTyper, settHendelseTyper] = React.useState<HendelseType[]>();
     const { fagsak } = useFeilutbetalingFakta();
-
     React.useEffect(() => {
         settHendelseTyper(hentHendelseTyper(ytelse, !!fagsak.institusjon));
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,6 +59,7 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLes
                             key={`formIndex${periode.index + 1}`}
                             index={periode.index}
                             erLesevisning={erLesevisning}
+                            onChangePerioder={onChangePerioder}
                         />
                     );
                 })}

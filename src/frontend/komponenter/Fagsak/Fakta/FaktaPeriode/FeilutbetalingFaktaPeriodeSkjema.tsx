@@ -27,6 +27,7 @@ interface IProps {
     hendelseTyper: HendelseType[] | undefined;
     index: number;
     erLesevisning: boolean;
+    onChangePerioder: () => void;
 }
 
 const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
@@ -34,6 +35,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     hendelseTyper,
     index,
     erLesevisning,
+    onChangePerioder,
 }) => {
     const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<Array<HendelseUndertype>>();
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
@@ -55,12 +57,16 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
         settHendelseUnderTyper(hentHendelseUndertyper(årsak));
         settIkkePersistertKomponent('fakta');
         oppdaterÅrsakPåPeriode(periode, årsak);
+        onChangePerioder();
+        console.log('===>>> OnChange Årsak: ', periode, årsak);
     };
 
     const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const underÅrsak = HendelseUndertype[e.target.value as keyof typeof HendelseUndertype];
         settIkkePersistertKomponent('fakta');
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);
+        onChangePerioder();
+        console.log('===>>> OnChange UnderÅrsak: ', periode, underÅrsak);
     };
 
     return (

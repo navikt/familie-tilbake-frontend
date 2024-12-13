@@ -23,6 +23,7 @@ import { HendelseType, Ytelsetype } from '../../../kodeverk';
 import { HarBrukerUttaltSegValg, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
+import { useState } from 'react';
 
 interface IProps {
     ytelse: Ytelsetype;
@@ -54,6 +55,7 @@ const FaktaSkjema: React.FC<IProps> = ({
     const { settIkkePersistertKomponent } = useBehandling();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== feilutbetalingFakta.kravgrunnlagReferanse;
+    const [sideErEndret, setSideErEndret] = useState(false);
 
     return (
         <HGrid columns={2} gap="10">
@@ -101,7 +103,10 @@ const FaktaSkjema: React.FC<IProps> = ({
                         <Checkbox
                             size="small"
                             checked={behandlePerioderSamlet === true}
-                            onChange={() => settBehandlePerioderSamlet(!behandlePerioderSamlet)}
+                            onChange={() => {
+                                settBehandlePerioderSamlet(!behandlePerioderSamlet);
+                                setSideErEndret(true);
+                            }}
                         >
                             Behandle alle perioder samlet
                         </Checkbox>
@@ -117,6 +122,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             ytelse={ytelse}
                             erLesevisning={erLesevisning}
                             perioder={skjemaData.perioder}
+                            onChangePerioder={() => setSideErEndret(true)}
                         />
                     )}
                 </VStack>
@@ -128,6 +134,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                     onChange={e => {
                         settIkkePersistertKomponent('fakta');
                         oppdaterBegrunnelse(e.target.value);
+                        setSideErEndret(true);
                     }}
                     maxLength={3000}
                     className={erLesevisning ? 'lesevisning' : ''}
@@ -149,6 +156,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                         onChange={(val: HarBrukerUttaltSegValg) => {
                             settIkkePersistertKomponent('fakta');
                             oppdaterBrukerHarUttaltSeg(val);
+                            setSideErEndret(true);
                         }}
                     >
                         <Radio
@@ -192,6 +200,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             onChange={e => {
                                 settIkkePersistertKomponent('fakta');
                                 oppdaterBeskrivelseBrukerHarUttaltSeg(e.target.value);
+                                setSideErEndret(true);
                             }}
                             maxLength={3000}
                             className={erLesevisning ? 'lesevisning' : ''}
@@ -211,7 +220,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                         loading={senderInn}
                         disabled={erLesevisning && !stegErBehandlet}
                     >
-                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                        {!stegErBehandlet || sideErEndret ? 'Bekreft og fortsett' : 'Neste'}
                     </Button>
                     {behandling.harVerge && (
                         <Button variant="secondary" onClick={gåTilForrige}>
