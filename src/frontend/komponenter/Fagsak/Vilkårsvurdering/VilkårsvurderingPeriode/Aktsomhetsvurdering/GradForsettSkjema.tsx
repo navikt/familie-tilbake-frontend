@@ -18,9 +18,10 @@ const StyledNormaltekst = styled(BodyShort)`
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
+    endreSide: (val: boolean) => void;
 }
 
-const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreSide }) => {
     const { kanIlleggeRenter } = useFeilutbetalingVilkårsvurdering();
 
     const erValgtResultatTypeForstoBurdeForstått =
@@ -45,6 +46,7 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                         kanIlleggeRenter={kanIlleggeRenter}
                         felt={skjema.felter.forstoIlleggeRenter}
                         visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
+                        endreSide={endreSide}
                     />
                 </HGrid>
             ) : (

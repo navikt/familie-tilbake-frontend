@@ -58,7 +58,6 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
         settIkkePersistertKomponent('fakta');
         oppdaterÅrsakPåPeriode(periode, årsak);
         onChangePerioder();
-        console.log('===>>> OnChange Årsak: ', periode, årsak);
     };
 
     const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -66,7 +65,6 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
         settIkkePersistertKomponent('fakta');
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);
         onChangePerioder();
-        console.log('===>>> OnChange UnderÅrsak: ', periode, underÅrsak);
     };
 
     return (

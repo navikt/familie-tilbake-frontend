@@ -51,6 +51,7 @@ import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/P
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+//import { useState } from 'react';
 
 const StyledBox = styled(Box)`
     min-width: 20rem;
@@ -189,6 +190,7 @@ interface IProps {
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
+    behandlingEndret: (b: boolean) => void;
 }
 
 const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
@@ -198,6 +200,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
     fagsak,
+    behandlingEndret,
 }) => {
     const {
         kanIlleggeRenter,
@@ -206,10 +209,13 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         nestePeriode,
         forrigePeriode,
         settValgtPeriode,
+        erBehandlingEndret,
+        settErBehandlingEndret,
     } = useFeilutbetalingVilkårsvurdering();
     const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
+            behandlingEndret(true);
         }
     );
     const { settIkkePersistertKomponent } = useBehandling();
@@ -218,6 +224,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
         settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
+        settErBehandlingEndret(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [periode]);
 
@@ -337,6 +344,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                         event.target.value
                                     );
                                     settIkkePersistertKomponent('vilkårsvurdering');
+                                    settErBehandlingEndret(true);
                                 }}
                             />
                             <RadioGroup
@@ -352,6 +360,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                 onChange={(val: Vilkårsresultat) => {
                                     skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(val);
                                     settIkkePersistertKomponent('vilkårsvurdering');
+                                    settErBehandlingEndret(true);
                                 }}
                             >
                                 {vilkårsresultatTyper.map(type => (
@@ -404,15 +413,21 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                             event.target.value
                                         );
                                         settIkkePersistertKomponent('vilkårsvurdering');
+                                        settErBehandlingEndret(true);
                                     }}
                                     maxLength={3000}
                                 />
                                 {erGodTro ? (
-                                    <GodTroSkjema skjema={skjema} erLesevisning={erLesevisning} />
+                                    <GodTroSkjema
+                                        skjema={skjema}
+                                        erLesevisning={erLesevisning}
+                                        endreSide={settErBehandlingEndret}
+                                    />
                                 ) : (
                                     <AktsomhetsvurderingSkjema
                                         skjema={skjema}
                                         erLesevisning={erLesevisning}
+                                        endreSide={settErBehandlingEndret}
                                     />
                                 )}
                             </VStack>
@@ -422,7 +437,11 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             </VStack>
             <Navigering>
                 {!periode.foreldet && !erLesevisning && (
-                    <Button variant="primary" onClick={() => onBekreft(periode)}>
+                    <Button
+                        variant="primary"
+                        onClick={() => onBekreft(periode)}
+                        disabled={!erBehandlingEndret}
+                    >
                         Bekreft
                     </Button>
                 )}

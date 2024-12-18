@@ -84,6 +84,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             []
         );
         const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
+        const [erBehandlingEndret, settErBehandlingEndret] = React.useState<boolean>(false);
         const [erAutoutført, settErAutoutført] = React.useState<boolean>();
         const [valgtPeriode, settValgtPeriode] =
             React.useState<VilkårsvurderingPeriodeSkjemaData>();
@@ -320,6 +321,8 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         return {
             feilutbetalingVilkårsvurdering,
             stegErBehandlet,
+            erBehandlingEndret,
+            settErBehandlingEndret,
             erAutoutført,
             kanIlleggeRenter,
             skjemaData,

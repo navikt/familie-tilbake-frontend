@@ -38,9 +38,10 @@ const StyledNormaltekst = styled(BodyShort)`
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
+    endreSide: (val: boolean) => void;
 }
 
-const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreSide }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const { valgtPeriode, kanIlleggeRenter } = useFeilutbetalingVilkårsvurdering();
     const harMerEnnEnAktivitet = skjema.felter.harMerEnnEnAktivitet.verdi === true;
@@ -77,6 +78,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                 onChange={(val: JaNeiOption) => {
                     skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(OptionNEI);
                     settIkkePersistertKomponent('vilkårsvurdering');
+                    endreSide(true);
                     return skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(val);
                 }}
             >
@@ -112,6 +114,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                 event.target.value
                                             );
                                             settIkkePersistertKomponent('vilkårsvurdering');
+                                            endreSide(true);
                                         }}
                                         value={skjema.felter.uaktsomAndelTilbakekreves.verdi}
                                         style={{ width: '100px' }}
@@ -145,6 +148,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                                 event.target.value
                                             );
                                             settIkkePersistertKomponent('vilkårsvurdering');
+                                            endreSide(true);
                                         }}
                                         value={skjema.felter.uaktsomAndelTilbakekrevesManuelt.verdi}
                                         data-testid="andelSomTilbakekrevesManuell"
@@ -168,6 +172,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                         event.target.value
                                     );
                                     settIkkePersistertKomponent('vilkårsvurdering');
+                                    endreSide(true);
                                 }}
                                 style={{ width: '100px' }}
                             />
@@ -202,6 +207,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                 kanIlleggeRenter={kanIlleggeRenter}
                                 felt={skjema.felter.grovtUaktsomIlleggeRenter}
                                 visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
+                                endreSide={endreSide}
                             />
                         )}
                     </HGrid>
