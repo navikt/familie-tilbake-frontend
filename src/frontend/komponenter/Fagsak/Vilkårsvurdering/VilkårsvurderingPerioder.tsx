@@ -105,6 +105,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
     } = useFeilutbetalingVilkårsvurdering();
 
     const tidslinjeRader = genererRader(perioder, valgtPeriode, erTotalbeløpUnder4Rettsgebyr);
+    const [erBehandlingEndret, settErBehandlingEndret] = React.useState<boolean>(false);
 
     const erHovedKnappDisabled =
         valgtPeriode !== undefined ||
@@ -137,6 +138,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                     erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
                     erLesevisning={erLesevisning}
                     fagsak={fagsak}
+                    behandlingEndret={settErBehandlingEndret}
                 />
             )}
             <Navigering>
@@ -151,7 +153,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                         loading={senderInn}
                         disabled={erHovedKnappDisabled}
                     >
-                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                        {stegErBehandlet && erBehandlingEndret ? 'Bekreft og fortsett' : 'Neste'}
                     </Button>
                 )}
                 <Button variant="secondary" onClick={gåTilForrigeSteg}>

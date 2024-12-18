@@ -55,12 +55,14 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
         settHendelseUnderTyper(hentHendelseUndertyper(årsak));
         settIkkePersistertKomponent('fakta');
         oppdaterÅrsakPåPeriode(periode, årsak);
+        onChangePerioder();
     };
 
     const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const underÅrsak = HendelseUndertype[e.target.value as keyof typeof HendelseUndertype];
         settIkkePersistertKomponent('fakta');
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);
+        onChangePerioder();
     };
 
     return (

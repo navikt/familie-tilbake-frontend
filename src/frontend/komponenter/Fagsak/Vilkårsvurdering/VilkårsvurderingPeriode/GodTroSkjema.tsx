@@ -22,9 +22,10 @@ const ArrowBoxContainer = styled.div`
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
+    endreSide: (val: boolean) => void;
 }
 
-const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreSide }) => {
     const { settIkkePersistertKomponent } = useBehandling();
 
     const ugyldigErBeløpetIBeholdValgt =
@@ -49,6 +50,7 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                 onChange={(val: JaNeiOption) => {
                     skjema.felter.erBeløpetIBehold.validerOgSettFelt(val);
                     settIkkePersistertKomponent(`vilkårsvurdering`);
+                    endreSide(true);
                 }}
             >
                 {jaNeiOptions.map(opt => (
@@ -72,6 +74,7 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                     event.target.value
                                 );
                                 settIkkePersistertKomponent(`vilkårsvurdering`);
+                                endreSide(true);
                             }}
                             value={skjema.felter.godTroTilbakekrevesBeløp.verdi}
                             style={{ width: '6rem' }}
