@@ -37,7 +37,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         useFeilutbetalingVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
-
+    console.log('VilkårsvurderingContaine...');
     const stegInfotekst = {
         [Ytelsetype.BARNETRYGD]: vilkårsvurderingStegInfotekstBarnetrygd,
         [Ytelsetype.KONTANTSTØTTE]: vilkårsvurderingStegInfotekstKontantstøtte,

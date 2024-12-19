@@ -153,7 +153,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                         loading={senderInn}
                         disabled={erHovedKnappDisabled}
                     >
-                        {stegErBehandlet && erBehandlingEndret ? 'Bekreft og fortsett' : 'Neste'}
+                        {erBehandlingEndret ? 'Bekreft og fortsett' : 'Neste'}
                     </Button>
                 )}
                 <Button variant="secondary" onClick={gåTilForrigeSteg}>

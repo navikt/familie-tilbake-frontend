@@ -238,6 +238,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                 event.target.value = '-';
             }
         }
+        settErBehandlingEndret(true);
     };
 
     const vilkårsresultatVurderingGjort = skjema.felter.vilkårsresultatvurdering.verdi !== '';

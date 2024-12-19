@@ -137,19 +137,11 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft og fortsett',
+                name: 'Bekreft',
             })
         ).toBeDisabled();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
-        );
-
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
 
         await act(() =>
             user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse vilkårene 1')
@@ -192,6 +184,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
         ).toBeTruthy();
         expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
+
         await act(() =>
             user.click(
                 getByRole('button', {
@@ -199,6 +197,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 })
             )
         );
+
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await act(() =>
@@ -331,6 +330,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
             expect(getByText('01.01.2020 - 31.03.2020')).toBeTruthy();
         });
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse1'));
         await act(() =>
             user.click(
@@ -349,6 +354,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
             )
         );
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
+
         await act(() =>
             user.click(
                 getByRole('button', {
@@ -356,9 +367,16 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 })
             )
         );
+
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
 
         expect(getByText('01.05.2020 - 30.06.2020')).toBeTruthy();
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
 
         await act(() =>
             user.selectOptions(
@@ -386,6 +404,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
         ).toBeChecked();
 
         expect(getByText('Ingen tilbakekreving')).toBeTruthy();
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         await act(() =>
             user.click(

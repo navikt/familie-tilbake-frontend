@@ -32,6 +32,8 @@ jest.mock('../FeilutbetalingVilkårsvurderingContext', () => {
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),
             lukkValgtPeriode: jest.fn(),
+            erBehandlingEndret: false,
+            settErBehandlingEndret: jest.fn(),
         }),
     };
 });
