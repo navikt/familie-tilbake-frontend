@@ -7631,11 +7631,6 @@ react-router-dom@^6.28.0:
     "@remix-run/router" "1.21.0"
     react-router "6.28.0"
 
-react-router-prompt@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/react-router-prompt/-/react-router-prompt-0.7.1.tgz#1e5326d221824d092f47876147704de2447d5001"
-  integrity sha512-U8G2gPMDkS6fdmcHebhkgKv9v/oxsErQFVQYuQ/DXKD/CUSxvXPQpikE//Ij+vZdXleOJwW3RJIkoa2ctVqnuw==
-
 react-router@6.28.0:
   version "6.28.0"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.28.0.tgz#29247c86d7ba901d7e5a13aa79a96723c3e59d0d"
