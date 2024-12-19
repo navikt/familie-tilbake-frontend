@@ -98,6 +98,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 ]}
                 erTotalbeløpUnder4Rettsgebyr={false}
                 erLesevisning={false}
+                behandlingEndret={jest.fn()}
             />
         );
 
@@ -186,6 +187,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 behandletPerioder={[]}
                 erTotalbeløpUnder4Rettsgebyr={false}
                 erLesevisning={false}
+                behandlingEndret={jest.fn()}
             />
         );
 
@@ -254,6 +256,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 behandletPerioder={[]}
                 erTotalbeløpUnder4Rettsgebyr={false}
                 erLesevisning={false}
+                behandlingEndret={jest.fn()}
             />
         );
 
@@ -354,6 +357,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 behandletPerioder={[]}
                 erTotalbeløpUnder4Rettsgebyr={false}
                 erLesevisning={false}
+                behandlingEndret={jest.fn()}
             />
         );
 
@@ -506,6 +510,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 behandletPerioder={[]}
                 erTotalbeløpUnder4Rettsgebyr={false}
                 erLesevisning={false}
+                behandlingEndret={jest.fn()}
             />
         );
 
@@ -576,6 +581,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
+                    behandlingEndret={jest.fn()}
                 />
             );
 
@@ -678,6 +684,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 behandletPerioder={[]}
                 erTotalbeløpUnder4Rettsgebyr={false}
                 erLesevisning={false}
+                behandlingEndret={jest.fn()}
             />
         );
 
@@ -809,6 +816,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
+                    behandlingEndret={jest.fn()}
                 />
             );
 
@@ -941,6 +949,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 behandletPerioder={[]}
                 erTotalbeløpUnder4Rettsgebyr={true}
                 erLesevisning={false}
+                behandlingEndret={jest.fn()}
             />
         );
 
@@ -1080,6 +1089,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
+                    behandlingEndret={jest.fn()}
                 />
             );
 
@@ -1187,6 +1197,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 behandletPerioder={[]}
                 erTotalbeløpUnder4Rettsgebyr={true}
                 erLesevisning={false}
+                behandlingEndret={jest.fn()}
             />
         );
 
@@ -1274,6 +1285,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 behandletPerioder={[]}
                 erTotalbeløpUnder4Rettsgebyr={true}
                 erLesevisning={false}
+                behandlingEndret={jest.fn()}
             />
         );
         await waitFor(async () => {
@@ -1322,6 +1334,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 behandletPerioder={[]}
                 erTotalbeløpUnder4Rettsgebyr={true}
                 erLesevisning={false}
+                behandlingEndret={jest.fn()}
             />
         );
         await waitFor(async () => {
