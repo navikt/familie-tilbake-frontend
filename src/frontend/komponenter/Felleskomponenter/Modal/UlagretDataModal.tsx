@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 
 import { ModalWrapper } from './ModalWrapper';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -6,14 +6,14 @@ import { BlockerFunction, useBeforeUnload, useBlocker } from 'react-router-dom';
 
 const UlagretDataModal: FC = () => {
     const { nullstillIkkePersisterteKomponenter, harUlagredeData } = useBehandling();
-    const skalBlokkere = React.useCallback<BlockerFunction>(
+    const skalBlokkere = useCallback<BlockerFunction>(
         ({ currentLocation, nextLocation }) =>
             harUlagredeData && currentLocation.pathname !== nextLocation.pathname,
         [harUlagredeData]
     );
     const blocker = useBlocker(skalBlokkere);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (blocker.state === 'blocked' && harUlagredeData === false) {
             blocker.reset();
         }
