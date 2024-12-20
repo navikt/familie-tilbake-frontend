@@ -209,9 +209,9 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         nestePeriode,
         forrigePeriode,
         settValgtPeriode,
-        erBehandlingEndret,
-        settErBehandlingEndret,
     } = useFeilutbetalingVilkårsvurdering();
+
+    const [erBehandlingEndret, settErBehandlingEndret] = React.useState<boolean>(false);
     const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
@@ -224,7 +224,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
         settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
-        settErBehandlingEndret(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [periode]);
 

@@ -32,6 +32,8 @@ jest.mock('../FeilutbetalingVilkårsvurderingContext', () => {
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),
             lukkValgtPeriode: jest.fn(),
+            erBehandlingEndret: false,
+            settErBehandlingEndret: jest.fn(),
         }),
     };
 });
@@ -115,15 +117,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getAllByText('Folketrygdloven § 22-15, 1. ledd, 2. punkt')).toHaveLength(2);
         expect(getByText('Folketrygdloven § 22-15, 1. ledd')).toBeTruthy();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
-        );
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
 
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -134,6 +138,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 })
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Beløpet mottatt i god tro')).toBeTruthy();
         expect(queryByLabelText('Vurder om beløpet er i behold')).toBeTruthy();
@@ -196,6 +206,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Beløpet mottatt i god tro')).toBeFalsy();
         expect(queryByLabelText('Vurder om beløpet er i behold')).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
@@ -214,6 +236,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 })
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Ingen tilbakekreving')).toBeFalsy();
         expect(queryByLabelText('Angi beløp som skal tilbakekreves')).toBeTruthy();
@@ -271,6 +299,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
@@ -283,6 +323,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 )
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
         expect(
@@ -372,6 +418,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
@@ -384,6 +441,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 )
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
         expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
@@ -517,6 +580,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
@@ -555,6 +629,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
+
         expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
         expect(getByText('100 %')).toBeTruthy();
         expect(queryByText('Skal det tillegges renter?')).toBeFalsy();
@@ -588,6 +668,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
@@ -601,6 +692,11 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
         expect(queryByText('Aktsomhet')).toBeTruthy();
         expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
 
@@ -692,6 +788,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Aktsomhet')).toBeFalsy();
         expect(queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')).toBeFalsy();
         expect(queryByText('I hvilken grad har mottaker handlet uaktsomt?')).toBeFalsy();
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -705,6 +812,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 )
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
 
@@ -822,6 +935,16 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -835,6 +958,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 )
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
 
@@ -956,6 +1085,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
@@ -968,6 +1109,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 )
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
         expect(
@@ -1096,6 +1243,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
@@ -1122,6 +1281,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 })
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
@@ -1204,6 +1369,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
@@ -1230,6 +1407,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 })
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')

@@ -119,6 +119,28 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         ).toHaveLength(2);
         expect(getByText('Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd')).toBeTruthy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+
+        await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
+
         await act(() =>
             user.click(
                 getByRole('button', {
@@ -127,9 +149,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
                 getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {

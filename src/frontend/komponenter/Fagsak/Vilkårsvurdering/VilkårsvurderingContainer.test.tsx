@@ -168,6 +168,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(getByText('Aktsomhet')).toBeTruthy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
+
         await act(() =>
             user.click(
                 getByRole('button', {
