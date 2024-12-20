@@ -51,7 +51,6 @@ import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/P
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
-//import { useState } from 'react';
 
 const StyledBox = styled(Box)`
     min-width: 20rem;

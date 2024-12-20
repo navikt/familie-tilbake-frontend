@@ -121,7 +121,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             ytelse={ytelse}
                             erLesevisning={erLesevisning}
                             perioder={skjemaData.perioder}
-                            settErBehandlingEndret={() => settErBehandlingEndret(true)}
+                            settErBehandlingEndret={() => settErBehandlingEndret}
                         />
                     )}
                 </VStack>

@@ -27,7 +27,7 @@ interface IProps {
     hendelseTyper: HendelseType[] | undefined;
     index: number;
     erLesevisning: boolean;
-    settErBehandlingEndret: () => void;
+    settErBehandlingEndret: (val: boolean) => void;
 }
 
 const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
@@ -57,14 +57,14 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
         settHendelseUnderTyper(hentHendelseUndertyper(årsak));
         settIkkePersistertKomponent('fakta');
         oppdaterÅrsakPåPeriode(periode, årsak);
-        settErBehandlingEndret();
+        settErBehandlingEndret(true);
     };
 
     const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const underÅrsak = HendelseUndertype[e.target.value as keyof typeof HendelseUndertype];
         settIkkePersistertKomponent('fakta');
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);
-        settErBehandlingEndret();
+        settErBehandlingEndret(true);
     };
 
     return (

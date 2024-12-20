@@ -23,7 +23,7 @@ interface IProps {
     ytelse: Ytelsetype;
     perioder: FaktaPeriodeSkjemaData[];
     erLesevisning: boolean;
-    settErBehandlingEndret: () => void;
+    settErBehandlingEndret: (val: boolean) => void;
 }
 
 const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({
