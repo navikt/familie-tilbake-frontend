@@ -1,40 +1,65 @@
-import React, { FC } from 'react';
-
-import ReactRouterPrompt from 'react-router-prompt';
+import React, { FC, useCallback, useEffect } from 'react';
 
 import { ModalWrapper } from './ModalWrapper';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { BlockerFunction, useBeforeUnload, useBlocker } from 'react-router-dom';
 
 const UlagretDataModal: FC = () => {
     const { nullstillIkkePersisterteKomponenter, harUlagredeData } = useBehandling();
+    const skalBlokkere = useCallback<BlockerFunction>(
+        ({ currentLocation, nextLocation }) =>
+            harUlagredeData && currentLocation.pathname !== nextLocation.pathname,
+        [harUlagredeData]
+    );
+    const blocker = useBlocker(skalBlokkere);
 
+    useEffect(() => {
+        if (blocker.state === 'blocked' && harUlagredeData === false) {
+            blocker.reset();
+        }
+    }, [blocker, harUlagredeData]);
+
+    const onAvbryt = () => blocker.state === 'blocked' && blocker.reset();
+    const onForlatSiden = () => blocker.state === 'blocked' && blocker.proceed();
+
+    /**
+     * Denne trengs for å fange opp når noen refresher siden eller prøver å gå ut av selve siden.
+     * Da kommer nettleserens innebygde prompt opp
+     */
+    useBeforeUnload(
+        useCallback(
+            event => {
+                if (harUlagredeData) {
+                    event.preventDefault();
+                }
+            },
+            [harUlagredeData]
+        ),
+        { capture: true }
+    );
     return (
-        harUlagredeData && (
-            <ReactRouterPrompt when={harUlagredeData}>
-                {({ isActive, onConfirm, onCancel }) => (
-                    <ModalWrapper
-                        tittel={
-                            'Du har ikke lagret dine siste endringer og vil miste disse om du forlater siden'
-                        }
-                        visModal={isActive}
-                        onClose={onCancel}
-                        aksjonsknapper={{
-                            hovedKnapp: {
-                                onClick: onCancel,
-                                tekst: 'Gå tilbake for å lagre',
-                            },
-                            lukkKnapp: {
-                                onClick: () => {
-                                    onConfirm();
-                                    setTimeout(nullstillIkkePersisterteKomponenter, 10);
-                                },
-                                tekst: 'Forlat siden',
-                            },
-                            marginTop: 4,
-                        }}
-                    />
-                )}
-            </ReactRouterPrompt>
+        blocker.state === 'blocked' && (
+            <ModalWrapper
+                tittel={
+                    'Du har ikke lagret dine siste endringer og vil miste disse om du forlater siden'
+                }
+                visModal={true}
+                onClose={onAvbryt}
+                aksjonsknapper={{
+                    hovedKnapp: {
+                        onClick: onAvbryt,
+                        tekst: 'Gå tilbake for å lagre',
+                    },
+                    lukkKnapp: {
+                        onClick: () => {
+                            onForlatSiden();
+                            setTimeout(nullstillIkkePersisterteKomponenter, 10);
+                        },
+                        tekst: 'Forlat siden',
+                    },
+                    marginTop: 4,
+                }}
+            />
         )
     );
 };
