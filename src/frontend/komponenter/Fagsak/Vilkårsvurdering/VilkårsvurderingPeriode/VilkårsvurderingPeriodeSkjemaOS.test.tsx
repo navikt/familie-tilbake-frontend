@@ -15,6 +15,7 @@ import {
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import { BehandlingProvider } from '../../../../context/BehandlingContext';
 
 jest.setTimeout(10000);
 
@@ -34,14 +35,6 @@ jest.mock('../FeilutbetalingVilkårsvurderingContext', () => {
             lukkValgtPeriode: jest.fn(),
             erBehandlingEndret: false,
             settErBehandlingEndret: jest.fn(),
-        }),
-    };
-});
-
-jest.mock('../../../../context/BehandlingContext', () => {
-    return {
-        useBehandling: () => ({
-            settIkkePersistertKomponent: jest.fn(),
         }),
     };
 });
@@ -73,35 +66,37 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={{
-                    aktiviteter: [
-                        {
-                            aktivitet: 'Aktivitet 1',
-                            beløp: 1333,
-                        },
-                        {
-                            aktivitet: 'Aktivitet 2',
-                            beløp: 1000,
-                        },
-                    ],
-                    ...periode,
-                }}
-                behandletPerioder={[
-                    mock<VilkårsvurderingPeriodeSkjemaData>({
-                        index: 'i1',
-                        periode: {
-                            fom: '2020-10-01',
-                            tom: '2020-11-30',
-                        },
-                    }),
-                ]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-                behandlingEndret={jest.fn()}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={{
+                        aktiviteter: [
+                            {
+                                aktivitet: 'Aktivitet 1',
+                                beløp: 1333,
+                            },
+                            {
+                                aktivitet: 'Aktivitet 2',
+                                beløp: 1000,
+                            },
+                        ],
+                        ...periode,
+                    }}
+                    behandletPerioder={[
+                        mock<VilkårsvurderingPeriodeSkjemaData>({
+                            index: 'i1',
+                            periode: {
+                                fom: '2020-10-01',
+                                tom: '2020-11-30',
+                            },
+                        }),
+                    ]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                    behandlingEndret={jest.fn()}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -190,15 +185,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-                behandlingEndret={jest.fn()}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                    behandlingEndret={jest.fn()}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -277,15 +274,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-                behandlingEndret={jest.fn()}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                    behandlingEndret={jest.fn()}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -396,15 +395,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByRole,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-                behandlingEndret={jest.fn()}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                    behandlingEndret={jest.fn()}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -566,15 +567,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     test('- feilaktig - forsto', async () => {
         const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-                behandlingEndret={jest.fn()}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                    behandlingEndret={jest.fn()}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -654,15 +657,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         const user = userEvent.setup();
         const { getByLabelText, getByRole, getByTestId, getByText, queryAllByText, queryByText } =
             render(
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                    behandlingEndret={jest.fn()}
-                />
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={behandling}
+                        fagsak={fagsak}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                        behandlingEndret={jest.fn()}
+                    />
+                </BehandlingProvider>
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -773,15 +778,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-                behandlingEndret={jest.fn()}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                    behandlingEndret={jest.fn()}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -922,15 +929,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole, queryByText } =
             render(
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                    behandlingEndret={jest.fn()}
-                />
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={behandling}
+                        fagsak={fagsak}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                        behandlingEndret={jest.fn()}
+                    />
+                </BehandlingProvider>
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -1071,15 +1080,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={true}
-                erLesevisning={false}
-                behandlingEndret={jest.fn()}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={true}
+                    erLesevisning={false}
+                    behandlingEndret={jest.fn()}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -1229,15 +1240,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, getByTestId, queryAllByText, queryByText } =
             render(
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={true}
-                    erLesevisning={false}
-                    behandlingEndret={jest.fn()}
-                />
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={behandling}
+                        fagsak={fagsak}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={true}
+                        erLesevisning={false}
+                        behandlingEndret={jest.fn()}
+                    />
+                </BehandlingProvider>
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -1355,15 +1368,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     test('- mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ikke tilbakekreves', async () => {
         const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={true}
-                erLesevisning={false}
-                behandlingEndret={jest.fn()}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={true}
+                    erLesevisning={false}
+                    behandlingEndret={jest.fn()}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -1450,26 +1465,28 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
     test('- åpner vurdert periode - god tro - beløp i behold', async () => {
         const { getByLabelText, getByText } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={{
-                    ...periode,
-                    begrunnelse: 'Gitt i god tro',
-                    vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat: Vilkårsresultat.GOD_TRO,
-                        godTro: {
-                            begrunnelse: 'Deler av beløpet er i behold',
-                            beløpErIBehold: true,
-                            beløpTilbakekreves: 699,
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={{
+                        ...periode,
+                        begrunnelse: 'Gitt i god tro',
+                        vilkårsvurderingsresultatInfo: {
+                            vilkårsvurderingsresultat: Vilkårsresultat.GOD_TRO,
+                            godTro: {
+                                begrunnelse: 'Deler av beløpet er i behold',
+                                beløpErIBehold: true,
+                                beløpTilbakekreves: 699,
+                            },
                         },
-                    },
-                }}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={true}
-                erLesevisning={false}
-                behandlingEndret={jest.fn()}
-            />
+                    }}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={true}
+                    erLesevisning={false}
+                    behandlingEndret={jest.fn()}
+                />
+            </BehandlingProvider>
         );
         await waitFor(async () => {
             expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -1487,38 +1504,40 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
     test('- åpner vurdert periode - mangelfulle - simpel uaktsomhet - under 4 rettsgebyr', async () => {
         const { getByLabelText, getByTestId, getByText } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={{
-                    ...periode,
-                    begrunnelse: 'Gitt mangelfulle opplysninger',
-                    vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat:
-                            Vilkårsresultat.MANGELFULLE_OPPLYSNINGER_FRA_BRUKER,
-                        aktsomhet: {
-                            begrunnelse: 'Vurdert aktsomhet til simpel',
-                            aktsomhet: Aktsomhet.SIMPEL_UAKTSOMHET,
-                            tilbakekrevSmåbeløp: true,
-                            særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
-                            særligeGrunner: [
-                                { særligGrunn: SærligeGrunner.GRAD_AV_UAKTSOMHET },
-                                { særligGrunn: SærligeGrunner.STØRRELSE_BELØP },
-                                {
-                                    særligGrunn: SærligeGrunner.ANNET,
-                                    begrunnelse: 'Dette er en annen begrunnelse',
-                                },
-                            ],
-                            særligeGrunnerTilReduksjon: true,
-                            andelTilbakekreves: 33,
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={{
+                        ...periode,
+                        begrunnelse: 'Gitt mangelfulle opplysninger',
+                        vilkårsvurderingsresultatInfo: {
+                            vilkårsvurderingsresultat:
+                                Vilkårsresultat.MANGELFULLE_OPPLYSNINGER_FRA_BRUKER,
+                            aktsomhet: {
+                                begrunnelse: 'Vurdert aktsomhet til simpel',
+                                aktsomhet: Aktsomhet.SIMPEL_UAKTSOMHET,
+                                tilbakekrevSmåbeløp: true,
+                                særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
+                                særligeGrunner: [
+                                    { særligGrunn: SærligeGrunner.GRAD_AV_UAKTSOMHET },
+                                    { særligGrunn: SærligeGrunner.STØRRELSE_BELØP },
+                                    {
+                                        særligGrunn: SærligeGrunner.ANNET,
+                                        begrunnelse: 'Dette er en annen begrunnelse',
+                                    },
+                                ],
+                                særligeGrunnerTilReduksjon: true,
+                                andelTilbakekreves: 33,
+                            },
                         },
-                    },
-                }}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={true}
-                erLesevisning={false}
-                behandlingEndret={jest.fn()}
-            />
+                    }}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={true}
+                    erLesevisning={false}
+                    behandlingEndret={jest.fn()}
+                />
+            </BehandlingProvider>
         );
         await waitFor(async () => {
             expect(getByText('Detaljer for valgt periode')).toBeTruthy();
