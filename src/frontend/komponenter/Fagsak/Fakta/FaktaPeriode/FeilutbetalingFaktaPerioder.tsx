@@ -23,15 +23,9 @@ interface IProps {
     ytelse: Ytelsetype;
     perioder: FaktaPeriodeSkjemaData[];
     erLesevisning: boolean;
-    settErBehandlingEndret: (val: boolean) => void;
 }
 
-const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({
-    ytelse,
-    perioder,
-    erLesevisning,
-    settErBehandlingEndret,
-}) => {
+const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLesevisning }) => {
     const [hendelseTyper, settHendelseTyper] = React.useState<HendelseType[]>();
     const { fagsak } = useFeilutbetalingFakta();
 
@@ -60,7 +54,6 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({
                             key={`formIndex${periode.index + 1}`}
                             index={periode.index}
                             erLesevisning={erLesevisning}
-                            settErBehandlingEndret={settErBehandlingEndret}
                         />
                     );
                 })}

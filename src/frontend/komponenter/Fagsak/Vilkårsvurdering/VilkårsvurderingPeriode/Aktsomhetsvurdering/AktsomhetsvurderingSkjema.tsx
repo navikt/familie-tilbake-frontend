@@ -22,10 +22,9 @@ import {
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-    endreSide: (val: boolean) => void;
 }
 
-const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreSide }) => {
+const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const erForstodBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
@@ -60,7 +59,6 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning, en
                         skjema.felter.forstoIlleggeRenter.validerOgSettFelt(OptionNEI);
                     }
                     settIkkePersistertKomponent(`vilkårsvurdering`);
-                    endreSide(true);
                     return skjema.felter.aktsomhetVurdering.validerOgSettFelt(val);
                 }}
             >
@@ -74,17 +72,9 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning, en
             </HorisontalRadioGroup>
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&
                 (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.FORSETT ? (
-                    <GradForsettSkjema
-                        skjema={skjema}
-                        erLesevisning={erLesevisning}
-                        endreSide={endreSide}
-                    />
+                    <GradForsettSkjema skjema={skjema} erLesevisning={erLesevisning} />
                 ) : (
-                    <GradUaktsomhetSkjema
-                        skjema={skjema}
-                        erLesevisning={erLesevisning}
-                        endreSide={endreSide}
-                    />
+                    <GradUaktsomhetSkjema skjema={skjema} erLesevisning={erLesevisning} />
                 ))}
         </VStack>
     );

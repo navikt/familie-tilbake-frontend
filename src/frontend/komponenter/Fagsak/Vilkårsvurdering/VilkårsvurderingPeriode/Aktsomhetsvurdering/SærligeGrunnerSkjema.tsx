@@ -11,10 +11,9 @@ import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSk
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-    endreSide: (val: boolean) => void;
 }
 
-const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreSide }) => {
+const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const [nonUsedKey, settNonUsedKey] = React.useState<string>(Date.now().toString());
 
@@ -29,7 +28,6 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreS
         }
         settIkkePersistertKomponent(`vilkårsvurdering`);
         settNonUsedKey(Date.now().toString());
-        endreSide(true);
     };
 
     return (
@@ -47,7 +45,6 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreS
                 onChange={event => {
                     skjema.felter.særligeGrunnerBegrunnelse.validerOgSettFelt(event.target.value);
                     settIkkePersistertKomponent(`vilkårsvurdering`);
-                    endreSide(true);
                 }}
                 placeholder={
                     'Begrunn om det foreligger/ ikke foreligger særlige grunner for reduksjon av beløpet som kreves tilbake. Kryss av hvilke særlige grunner som er vektlagt for resultatet'
@@ -85,17 +82,12 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreS
                                 event.target.value
                             );
                             settIkkePersistertKomponent(`vilkårsvurdering`);
-                            endreSide(true);
                         }}
                         data-testid={'annetBegrunnelse'}
                     />
                 )}
             </VStack>
-            <ReduksjonAvBeløpSkjema
-                skjema={skjema}
-                erLesevisning={erLesevisning}
-                endreSide={endreSide}
-            />
+            <ReduksjonAvBeløpSkjema skjema={skjema} erLesevisning={erLesevisning} />
         </VStack>
     );
 };

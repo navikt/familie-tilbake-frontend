@@ -19,10 +19,9 @@ import {
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-    endreSide: (val: boolean) => void;
 }
 
-const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreSide }) => {
+const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const erValgtResultatTypeForstoBurdeForstaatt =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
@@ -68,11 +67,7 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreSi
                             ))}
                         </HorisontalRadioGroup>
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA && (
-                            <SærligeGrunnerSkjema
-                                skjema={skjema}
-                                erLesevisning={erLesevisning}
-                                endreSide={endreSide}
-                            />
+                            <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
                         )}
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI && (
                             <ArrowBox alignOffset={80}>
@@ -83,11 +78,7 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning, endreSi
                 )}
             {(skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.SIMPEL_UAKTSOMHET ||
                 !erTotalbeløpUnder4Rettsgebyr) && (
-                <SærligeGrunnerSkjema
-                    skjema={skjema}
-                    erLesevisning={erLesevisning}
-                    endreSide={endreSide}
-                />
+                <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
             )}
         </ArrowBox>
     );

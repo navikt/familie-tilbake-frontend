@@ -13,14 +13,12 @@ interface IProps {
     kanIlleggeRenter: boolean;
     felt: Felt<JaNeiOption | ''>;
     visFeilmeldingerForSkjema: boolean;
-    endreSide: (val: boolean) => void;
 }
 const TilleggesRenterRadioGroup: React.FC<IProps> = ({
     erLesevisning,
     kanIlleggeRenter,
     felt,
     visFeilmeldingerForSkjema,
-    endreSide,
 }) => {
     const { settIkkePersistertKomponent } = useBehandling();
 
@@ -43,7 +41,6 @@ const TilleggesRenterRadioGroup: React.FC<IProps> = ({
             onChange={(val: JaNeiOption) => {
                 felt.validerOgSettFelt(val);
                 settIkkePersistertKomponent(`vilkårsvurdering`);
-                endreSide(true);
             }}
         >
             {jaNeiOptions.map(opt => (
