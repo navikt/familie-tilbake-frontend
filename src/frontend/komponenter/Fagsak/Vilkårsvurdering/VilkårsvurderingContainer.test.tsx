@@ -9,7 +9,7 @@ import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { useBehandlingApi } from '../../../api/behandling';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { BehandlingProvider } from '../../../context/BehandlingContext';
 import { Aktsomhet, Fagsystem, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
@@ -17,19 +17,12 @@ import {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
+import { useHttp } from '@navikt/familie-http';
 
 jest.setTimeout(25000);
 
-jest.mock('@navikt/familie-http', () => {
-    return {
-        useHttp: () => ({
-            request: () => jest.fn(),
-        }),
-    };
-});
-
-jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: jest.fn(),
+jest.mock('@navikt/familie-http', () => ({
+    useHttp: jest.fn(),
 }));
 
 jest.mock('../../../api/behandling', () => ({
@@ -69,12 +62,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         rettsgebyr: 1199,
     };
 
-    const setupMock = (
-        behandlet: boolean,
-        lesevisning: boolean,
-        autoutført: boolean,
-        vilkårsvurdering?: IFeilutbetalingVilkårsvurdering
-    ) => {
+    const setupUseBehandlingApiMock = (vilkårsvurdering?: IFeilutbetalingVilkårsvurdering) => {
         if (vilkårsvurdering) {
             // @ts-expect-error mock
             useBehandlingApi.mockImplementation(() => ({
@@ -94,30 +82,35 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 },
             }));
         }
+    };
+
+    const setupHttpMock = () => {
         // @ts-expect-error mock
-        useBehandling.mockImplementation(() => ({
-            erStegBehandlet: () => behandlet,
-            erStegAutoutført: () => autoutført,
-            visVenteModal: false,
-            behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: () => Promise.resolve(),
-            settIkkePersistertKomponent: jest.fn(),
-            nullstillIkkePersisterteKomponenter: jest.fn(),
+        useHttp.mockImplementation(() => ({
+            request: () => {
+                return Promise.resolve({
+                    status: RessursStatus.SUKSESS,
+                    data: mock<IBehandling>({ eksternBrukId: '1' }),
+                });
+            },
         }));
     };
 
     test('- totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
         const user = userEvent.setup();
-        setupMock(false, false, false, feilutbetalingVilkårsvurdering);
+        setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
+        setupHttpMock();
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>();
         fagsak.ytelsestype = Ytelsetype.BARNETILSYN;
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
             render(
-                <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                    <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-                </FeilutbetalingVilkårsvurderingProvider>
+                <BehandlingProvider>
+                    <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                        <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
+                    </FeilutbetalingVilkårsvurderingProvider>
+                </BehandlingProvider>
             );
 
         await waitFor(async () => {
@@ -326,7 +319,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
     test('- vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
         const user = userEvent.setup();
-        setupMock(false, false, false, feilutbetalingVilkårsvurdering);
+        setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
+        setupHttpMock();
 
         const fagsak = mock<IFagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
         const behandling = mock<IBehandling>({ eksternBrukId: '1' });
@@ -334,9 +328,11 @@ describe('Tester: VilkårsvurderingContainer', () => {
         fagsak.ytelsestype = Ytelsetype.BARNETILSYN;
 
         const { getByText, getByRole, getByLabelText, queryAllByText } = render(
-            <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-            </FeilutbetalingVilkårsvurderingProvider>
+            <BehandlingProvider>
+                <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                    <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
+                </FeilutbetalingVilkårsvurderingProvider>
+            </BehandlingProvider>
         );
 
         await waitFor(async () => {
@@ -425,7 +421,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
     test('- vis utfylt - forstod/burde forstått - forsto', async () => {
         const user = userEvent.setup();
-        setupMock(true, false, false, {
+        setupUseBehandlingApiMock({
             perioder: [
                 {
                     ...perioder[0],
@@ -461,9 +457,11 @@ describe('Tester: VilkårsvurderingContainer', () => {
         });
 
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } = render(
-            <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-            </FeilutbetalingVilkårsvurderingProvider>
+            <BehandlingProvider>
+                <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                    <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
+                </FeilutbetalingVilkårsvurderingProvider>
+            </BehandlingProvider>
         );
 
         await waitFor(async () => {
@@ -558,7 +556,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
     test('- vis utfylt - forstod/burde forstått - forsto - lesevisning', async () => {
         const user = userEvent.setup();
-        setupMock(true, true, false, {
+        setupUseBehandlingApiMock({
             perioder: [
                 {
                     ...perioder[0],
@@ -588,15 +586,18 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
+        setupHttpMock();
         const behandling = mock<IBehandling>({ status: Behandlingstatus.FATTER_VEDTAK });
         const fagsak = mock<IFagsak>({
             ytelsestype: Ytelsetype.BARNETRYGD,
         });
 
         const { getByText, getByRole, getByLabelText } = render(
-            <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-            </FeilutbetalingVilkårsvurderingProvider>
+            <BehandlingProvider>
+                <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                    <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
+                </FeilutbetalingVilkårsvurderingProvider>
+            </BehandlingProvider>
         );
 
         await waitFor(async () => {
@@ -647,17 +648,19 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 })
             ).toBeTruthy();
 
-            // Knapper for navigering mellom faner skal alltid være synlige og enabled
+            // Knapp for navigering tilbake mellom faner skal alltid være synlig enabled
             expect(
                 getByRole('button', {
                     name: 'Forrige',
                 })
             ).toBeEnabled();
+
+            // Knapp for navigering til neste fane skal være synlig men disabled når vilkårspanel er åpent
             expect(
                 getByRole('button', {
                     name: 'Neste',
                 })
-            ).toBeEnabled();
+            ).toBeDisabled();
         });
 
         await act(() =>
@@ -717,38 +720,37 @@ describe('Tester: VilkårsvurderingContainer', () => {
             })
         ).toBeTruthy();
 
-        // Knapper for navigering mellom faner skal alltid være synlige og enabled
+        // Knapp for navigering tilbake mellom faner skal alltid være synlig enabled
         expect(
             getByRole('button', {
                 name: 'Forrige',
             })
         ).toBeEnabled();
+
+        // Knapp for navigering til neste fane skal være synlig men disabled når vilkårspanel er åpent
         expect(
             getByRole('button', {
                 name: 'Neste',
             })
-        ).toBeEnabled();
-    });
+        ).toBeDisabled();
 
-    test('- vis autoutført', async () => {
-        setupMock(false, false, true);
-
-        const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
-        fagsak.ytelsestype = Ytelsetype.BARNETILSYN;
-
-        const { getByText, getByRole } = render(
-            <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-            </FeilutbetalingVilkårsvurderingProvider>
+        await act(() =>
+            // Bruker klikker på lukk knapp
+            user.click(
+                getByRole('button', {
+                    name: 'Lukk',
+                })
+            )
         );
 
-        await waitFor(async () => {
-            expect(getByText('Tilbakekreving')).toBeTruthy();
-        });
+        // Knapp for navigering tilbake mellom faner skal alltid være synlig enabled
+        expect(
+            getByRole('button', {
+                name: 'Forrige',
+            })
+        ).toBeEnabled();
 
-        expect(getByText('Automatisk vurdert. Alle perioder er foreldet.')).toBeTruthy();
-
+        // Knapp for navigering til neste fane skal nå være synlig og enabled
         expect(
             getByRole('button', {
                 name: 'Neste',
