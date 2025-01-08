@@ -189,7 +189,6 @@ interface IProps {
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
-    behandlingEndret: (b: boolean) => void;
 }
 
 const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
@@ -199,7 +198,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
     fagsak,
-    behandlingEndret,
 }) => {
     const {
         kanIlleggeRenter,
@@ -213,7 +211,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
-            behandlingEndret(true);
         }
     );
     const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();

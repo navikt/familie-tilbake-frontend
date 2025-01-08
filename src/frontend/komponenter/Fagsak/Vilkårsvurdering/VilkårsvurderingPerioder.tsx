@@ -15,6 +15,7 @@ import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { FTAlertStripe, Navigering } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
+import { useBehandling } from '../../../context/BehandlingContext';
 
 const ValideringsFeilmelding = styled(BodyShort)`
     font-weight: ${AFontWeightBold};
@@ -105,7 +106,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
     } = useFeilutbetalingVilkårsvurdering();
 
     const tidslinjeRader = genererRader(perioder, valgtPeriode, erTotalbeløpUnder4Rettsgebyr);
-    const [erBehandlingEndret, settErBehandlingEndret] = React.useState<boolean>(false);
+    const { harUlagredeData } = useBehandling();
 
     const erHovedKnappDisabled =
         valgtPeriode !== undefined ||
@@ -138,7 +139,6 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                     erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
                     erLesevisning={erLesevisning}
                     fagsak={fagsak}
-                    behandlingEndret={settErBehandlingEndret}
                 />
             )}
             <Navigering>
@@ -153,7 +153,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                         loading={senderInn}
                         disabled={erHovedKnappDisabled}
                     >
-                        {erBehandlingEndret ? 'Bekreft og fortsett' : 'Neste'}
+                        {harUlagredeData ? 'Bekreft og fortsett' : 'Neste'}
                     </Button>
                 )}
                 <Button variant="secondary" onClick={gåTilForrigeSteg}>

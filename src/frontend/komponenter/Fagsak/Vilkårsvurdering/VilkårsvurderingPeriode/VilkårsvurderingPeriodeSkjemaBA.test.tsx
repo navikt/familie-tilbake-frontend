@@ -100,7 +100,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     ]}
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
-                    behandlingEndret={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -216,7 +215,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
-                    behandlingEndret={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -287,7 +285,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
-                    behandlingEndret={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -385,7 +382,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
-                    behandlingEndret={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -536,7 +532,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
-                    behandlingEndret={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -609,7 +604,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                         behandletPerioder={[]}
                         erTotalbeløpUnder4Rettsgebyr={false}
                         erLesevisning={false}
-                        behandlingEndret={jest.fn()}
                     />
                 </BehandlingProvider>
             );
@@ -713,7 +707,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
-                    behandlingEndret={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -849,7 +842,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                         behandletPerioder={[]}
                         erTotalbeløpUnder4Rettsgebyr={false}
                         erLesevisning={false}
-                        behandlingEndret={jest.fn()}
                     />
                 </BehandlingProvider>
             );
@@ -984,7 +976,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
-                    behandlingEndret={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -1126,7 +1117,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                         behandletPerioder={[]}
                         erTotalbeløpUnder4Rettsgebyr={true}
                         erLesevisning={false}
-                        behandlingEndret={jest.fn()}
                     />
                 </BehandlingProvider>
             );
@@ -1236,7 +1226,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
-                    behandlingEndret={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -1326,7 +1315,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
-                    behandlingEndret={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -1377,7 +1365,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
-                    behandlingEndret={jest.fn()}
                 />
             </BehandlingProvider>
         );
