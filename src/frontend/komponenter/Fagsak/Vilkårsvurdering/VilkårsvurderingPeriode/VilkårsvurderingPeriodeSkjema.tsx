@@ -207,12 +207,13 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         forrigePeriode,
         settValgtPeriode,
     } = useFeilutbetalingVilkårsvurdering();
+
     const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
 
     React.useEffect(() => {
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
@@ -422,7 +423,11 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             </VStack>
             <Navigering>
                 {!periode.foreldet && !erLesevisning && (
-                    <Button variant="primary" onClick={() => onBekreft(periode)}>
+                    <Button
+                        variant="primary"
+                        onClick={() => onBekreft(periode)}
+                        disabled={!harUlagredeData}
+                    >
                         Bekreft
                     </Button>
                 )}

@@ -51,7 +51,7 @@ const FaktaSkjema: React.FC<IProps> = ({
         senderInn,
         gåTilForrige,
     } = useFeilutbetalingFakta();
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== feilutbetalingFakta.kravgrunnlagReferanse;
 
@@ -101,7 +101,10 @@ const FaktaSkjema: React.FC<IProps> = ({
                         <Checkbox
                             size="small"
                             checked={behandlePerioderSamlet === true}
-                            onChange={() => settBehandlePerioderSamlet(!behandlePerioderSamlet)}
+                            onChange={() => {
+                                settIkkePersistertKomponent('fakta');
+                                settBehandlePerioderSamlet(!behandlePerioderSamlet);
+                            }}
                         >
                             Behandle alle perioder samlet
                         </Checkbox>
@@ -211,7 +214,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                         loading={senderInn}
                         disabled={erLesevisning && !stegErBehandlet}
                     >
-                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                        {!stegErBehandlet || harUlagredeData ? 'Bekreft og fortsett' : 'Neste'}
                     </Button>
                     {behandling.harVerge && (
                         <Button variant="secondary" onClick={gåTilForrige}>

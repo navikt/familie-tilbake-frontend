@@ -15,6 +15,7 @@ import {
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import { BehandlingProvider } from '../../../../context/BehandlingContext';
 
 jest.setTimeout(10000);
 
@@ -32,14 +33,6 @@ jest.mock('../FeilutbetalingVilkårsvurderingContext', () => {
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),
             lukkValgtPeriode: jest.fn(),
-        }),
-    };
-});
-
-jest.mock('../../../../context/BehandlingContext', () => {
-    return {
-        useBehandling: () => ({
-            settIkkePersistertKomponent: jest.fn(),
         }),
     };
 });
@@ -71,34 +64,36 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={{
-                    aktiviteter: [
-                        {
-                            aktivitet: 'Aktivitet 1',
-                            beløp: 1333,
-                        },
-                        {
-                            aktivitet: 'Aktivitet 2',
-                            beløp: 1000,
-                        },
-                    ],
-                    ...periode,
-                }}
-                behandletPerioder={[
-                    mock<VilkårsvurderingPeriodeSkjemaData>({
-                        index: 'i1',
-                        periode: {
-                            fom: '2020-10-01',
-                            tom: '2020-11-30',
-                        },
-                    }),
-                ]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={{
+                        aktiviteter: [
+                            {
+                                aktivitet: 'Aktivitet 1',
+                                beløp: 1333,
+                            },
+                            {
+                                aktivitet: 'Aktivitet 2',
+                                beløp: 1000,
+                            },
+                        ],
+                        ...periode,
+                    }}
+                    behandletPerioder={[
+                        mock<VilkårsvurderingPeriodeSkjemaData>({
+                            index: 'i1',
+                            periode: {
+                                fom: '2020-10-01',
+                                tom: '2020-11-30',
+                            },
+                        }),
+                    ]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -114,15 +109,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getAllByText('Folketrygdloven § 22-15, 1. ledd, 2. punkt')).toHaveLength(2);
         expect(getByText('Folketrygdloven § 22-15, 1. ledd')).toBeTruthy();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
-        );
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
 
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -133,6 +130,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 })
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Beløpet mottatt i god tro')).toBeTruthy();
         expect(queryByLabelText('Vurder om beløpet er i behold')).toBeTruthy();
@@ -179,20 +182,34 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Kopier vilkårsvurdering fra')).toBeFalsy();
         expect(queryByText('Beløpet mottatt i god tro')).toBeFalsy();
         expect(queryByLabelText('Vurder om beløpet er i behold')).toBeFalsy();
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -212,6 +229,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 })
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Ingen tilbakekreving')).toBeFalsy();
         expect(queryByLabelText('Angi beløp som skal tilbakekreves')).toBeTruthy();
@@ -247,14 +270,16 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -268,6 +293,18 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
@@ -280,6 +317,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 )
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
         expect(
@@ -347,14 +390,16 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByRole,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -368,6 +413,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
         ).toBeFalsy();
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
+
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
             user.click(
@@ -380,6 +436,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 )
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
         expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
@@ -499,18 +561,31 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     test('- feilaktig - forsto', async () => {
         const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -550,6 +625,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
+
         expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
         expect(getByText('100 %')).toBeTruthy();
         expect(queryByText('Skal det tillegges renter?')).toBeFalsy();
@@ -569,18 +650,31 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         const user = userEvent.setup();
         const { getByLabelText, getByRole, getByTestId, getByText, queryAllByText, queryByText } =
             render(
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                />
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={behandling}
+                        fagsak={fagsak}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                    />
+                </BehandlingProvider>
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -595,6 +689,11 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
         expect(queryByText('Aktsomhet')).toBeTruthy();
         expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
 
@@ -671,20 +770,33 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={false}
-                erLesevisning={false}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
         expect(queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')).toBeFalsy();
         expect(queryByText('I hvilken grad har mottaker handlet uaktsomt?')).toBeFalsy();
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -698,6 +810,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 )
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
 
@@ -802,18 +920,30 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole, queryByText } =
             render(
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                />
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={behandling}
+                        fagsak={fagsak}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                    />
+                </BehandlingProvider>
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -827,6 +957,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 )
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
 
@@ -934,18 +1070,32 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={true}
-                erLesevisning={false}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={true}
+                    erLesevisning={false}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -959,6 +1109,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 )
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(queryByText('Aktsomhet')).toBeTruthy();
         expect(
@@ -1073,18 +1229,32 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, getByTestId, queryAllByText, queryByText } =
             render(
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={true}
-                    erLesevisning={false}
-                />
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={behandling}
+                        fagsak={fagsak}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={true}
+                        erLesevisning={false}
+                    />
+                </BehandlingProvider>
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -1112,6 +1282,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 })
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
@@ -1180,18 +1356,32 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     test('- mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ikke tilbakekreves', async () => {
         const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={periode}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={true}
-                erLesevisning={false}
-            />
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={true}
+                    erLesevisning={false}
+                />
+            </BehandlingProvider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
         expect(queryByText('Aktsomhet')).toBeFalsy();
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeDisabled();
+
+        expect(
+            getByRole('button', {
+                name: 'Lukk',
+            })
+        ).toBeEnabled();
 
         await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse'));
         await act(() =>
@@ -1219,6 +1409,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 })
             )
         );
+
+        expect(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
+        ).toBeEnabled();
 
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
@@ -1256,25 +1452,27 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
     test('- åpner vurdert periode - god tro - beløp i behold', async () => {
         const { getByLabelText, getByText } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={{
-                    ...periode,
-                    begrunnelse: 'Gitt i god tro',
-                    vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat: Vilkårsresultat.GOD_TRO,
-                        godTro: {
-                            begrunnelse: 'Deler av beløpet er i behold',
-                            beløpErIBehold: true,
-                            beløpTilbakekreves: 699,
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={{
+                        ...periode,
+                        begrunnelse: 'Gitt i god tro',
+                        vilkårsvurderingsresultatInfo: {
+                            vilkårsvurderingsresultat: Vilkårsresultat.GOD_TRO,
+                            godTro: {
+                                begrunnelse: 'Deler av beløpet er i behold',
+                                beløpErIBehold: true,
+                                beløpTilbakekreves: 699,
+                            },
                         },
-                    },
-                }}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={true}
-                erLesevisning={false}
-            />
+                    }}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={true}
+                    erLesevisning={false}
+                />
+            </BehandlingProvider>
         );
         await waitFor(async () => {
             expect(getByText('Detaljer for valgt periode')).toBeTruthy();
@@ -1292,37 +1490,39 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
     test('- åpner vurdert periode - mangelfulle - simpel uaktsomhet - under 4 rettsgebyr', async () => {
         const { getByLabelText, getByTestId, getByText } = render(
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                periode={{
-                    ...periode,
-                    begrunnelse: 'Gitt mangelfulle opplysninger',
-                    vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat:
-                            Vilkårsresultat.MANGELFULLE_OPPLYSNINGER_FRA_BRUKER,
-                        aktsomhet: {
-                            begrunnelse: 'Vurdert aktsomhet til simpel',
-                            aktsomhet: Aktsomhet.SIMPEL_UAKTSOMHET,
-                            tilbakekrevSmåbeløp: true,
-                            særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
-                            særligeGrunner: [
-                                { særligGrunn: SærligeGrunner.GRAD_AV_UAKTSOMHET },
-                                { særligGrunn: SærligeGrunner.STØRRELSE_BELØP },
-                                {
-                                    særligGrunn: SærligeGrunner.ANNET,
-                                    begrunnelse: 'Dette er en annen begrunnelse',
-                                },
-                            ],
-                            særligeGrunnerTilReduksjon: true,
-                            andelTilbakekreves: 33,
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={{
+                        ...periode,
+                        begrunnelse: 'Gitt mangelfulle opplysninger',
+                        vilkårsvurderingsresultatInfo: {
+                            vilkårsvurderingsresultat:
+                                Vilkårsresultat.MANGELFULLE_OPPLYSNINGER_FRA_BRUKER,
+                            aktsomhet: {
+                                begrunnelse: 'Vurdert aktsomhet til simpel',
+                                aktsomhet: Aktsomhet.SIMPEL_UAKTSOMHET,
+                                tilbakekrevSmåbeløp: true,
+                                særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
+                                særligeGrunner: [
+                                    { særligGrunn: SærligeGrunner.GRAD_AV_UAKTSOMHET },
+                                    { særligGrunn: SærligeGrunner.STØRRELSE_BELØP },
+                                    {
+                                        særligGrunn: SærligeGrunner.ANNET,
+                                        begrunnelse: 'Dette er en annen begrunnelse',
+                                    },
+                                ],
+                                særligeGrunnerTilReduksjon: true,
+                                andelTilbakekreves: 33,
+                            },
                         },
-                    },
-                }}
-                behandletPerioder={[]}
-                erTotalbeløpUnder4Rettsgebyr={true}
-                erLesevisning={false}
-            />
+                    }}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={true}
+                    erLesevisning={false}
+                />
+            </BehandlingProvider>
         );
         await waitFor(async () => {
             expect(getByText('Detaljer for valgt periode')).toBeTruthy();
