@@ -1,10 +1,10 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: familie-tilbake-frontend
-  namespace: teamfamilie
+  name: tilbakekreving-frontend
+  namespace: tilbake
   labels:
-    team: teamfamilie
+    team: tilbake
 spec:
   image: {{ image }}
   replicas:
@@ -25,8 +25,8 @@ spec:
     enabled: true
     path: /metrics
   ingresses:
-    - https://familie-tilbake-frontend.intern.dev.nav.no
-    - https://familie-tilbake-frontend.ansatt.dev.nav.no
+    - https://tilbakekreving-frontend.intern.dev.nav.no
+    - https://tilbakekreving-frontend.ansatt.dev.nav.no
   vault:
     enabled: false
   azure:
@@ -43,7 +43,7 @@ spec:
       enabled: true
       tenant: trygdeetaten.no
       replyURLs:
-        - "https://familie-tilbake-frontend.ansatt.dev.nav.no/auth/openid/callback"
+        - "https://tilbakekreving-frontend.ansatt.dev.nav.no/auth/openid/callback"
   webproxy: true
   accessPolicy:
     inbound:
@@ -60,9 +60,9 @@ spec:
     - name: APP_VERSION
       value: {{ VERSION }}
     - name: TILBAKE_SCOPE
-      value: api://dev-gcp.teamfamilie.familie-tilbake/.default
+      value: api://dev-gcp.tilbake.tilbakekreving-backend/.default
   envFrom:
-    - secret: familie-tilbake-frontend
+    - secret: tilbakekreving-frontend
   resources:
     limits:
       memory: 1024Mi
