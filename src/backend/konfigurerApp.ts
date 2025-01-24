@@ -25,8 +25,8 @@ const konfigurerAzure = () => {
             process.env.GRAPH_API = 'http://familie-mock-server:1337/graph/me';
             break;
         case 'preprod':
-            process.env.AAD_LOGOUT_REDIRECT_URL = `https://login.microsoftonline.com/navq.onmicrosoft.com/oauth2/logout?post_logout_redirect_uri=https:\\\\tilbakekreving-frontend.ansatt.dev.nav.no`;
-            process.env.AAD_REDIRECT_URL = `https://tilbakekreving-frontend.ansatt.dev.nav.no${callbackPath}`;
+            process.env.AAD_LOGOUT_REDIRECT_URL = `https://login.microsoftonline.com/navq.onmicrosoft.com/oauth2/logout?post_logout_redirect_uri=https:\\\\tilbakekreving.ansatt.dev.nav.no`;
+            process.env.AAD_REDIRECT_URL = `https://tilbakekreving.ansatt.dev.nav.no${callbackPath}`;
             process.env.GRAPH_API = 'https://graph.microsoft.com/v1.0/me';
             settAzureAdPropsFraEnv();
             break;
