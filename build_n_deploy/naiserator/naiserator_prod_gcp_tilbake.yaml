@@ -1,10 +1,10 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: familie-tilbake-frontend
-  namespace: teamfamilie
+  name: tilbakekreving-frontend
+  namespace: tilbake
   labels:
-    team: teamfamilie
+    team: tilbake
 spec:
   image: {{ image }}
   replicas:
@@ -48,18 +48,18 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: familie-tilbake
+        - application: tilbakekreving-backend
   env:
     - name: ENV
       value: production
     - name: APP_VERSION
       value: {{ VERSION }}
     - name: TILBAKE_SCOPE
-      value: api://prod-gcp.teamfamilie.familie-tilbake/.default
+      value: api://prod-gcp.tilbake.tilbakekreving-backend/.default
     - name: TILBAKEKREVING_SVC_URL
       value: http://familie-tilbake/api
   envFrom:
-    - secret: familie-tilbake-frontend
+    - secret: tilbakekreving-frontend
   resources:
     limits:
       memory: 1024Mi
