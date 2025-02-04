@@ -44,7 +44,7 @@ const Environment = () => {
     return {
         buildPath: 'frontend_production',
         namespace: 'production',
-        proxyUrl: 'http://tilbakekreving-backend/api',
+        proxyUrl: process.env.TILBAKEKREVING_SVC_URL ?? 'http://tilbakekreving-backend/api',
         baSakUrl: 'https://barnetrygd.intern.nav.no',
         efSakUrl: 'https://ensligmorellerfar.intern.nav.no/ekstern',
         ksSakUrl: 'https://kontantstotte.intern.nav.no',
