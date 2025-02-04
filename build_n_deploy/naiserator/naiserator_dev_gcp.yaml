@@ -53,7 +53,7 @@ spec:
           cluster: prod-fss
     outbound:
       rules:
-        - application: tilbakekreving
+        - application: tilbakekreving-backend
   env:
     - name: ENV
       value: preprod
