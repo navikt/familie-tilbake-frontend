@@ -25,7 +25,7 @@ spec:
     enabled: true
     path: /metrics
   ingresses:
-    - https://familietilbakekreving.intern.nav.no
+    - https://tilbakekreving.intern.nav.no
   vault:
     enabled: false
   azure:
