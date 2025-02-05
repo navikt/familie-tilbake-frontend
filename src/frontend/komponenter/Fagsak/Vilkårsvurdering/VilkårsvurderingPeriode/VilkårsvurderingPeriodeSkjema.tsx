@@ -303,16 +303,11 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     <HGrid columns={{ lg: 2, md: 1 }} gap="5">
                         <div>
                             <Heading size="xsmall" level="2" spacing>
-                                Varsel
-                            </Heading>
-                            <BodyShort>{periode.begrunnelse ? periode.begrunnelse : ''}</BodyShort>
-                        </div>
-                        <div>
-                            <Heading size="xsmall" level="2" spacing>
-                                Vurder om perioden er foreldet
+                                Foreldelse
                             </Heading>
                             <BodyShort size="small">Perioden er foreldet</BodyShort>
                         </div>
+                        <div></div>
                     </HGrid>
                 )}
                 {!periode.foreldet && (

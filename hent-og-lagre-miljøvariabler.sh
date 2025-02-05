@@ -35,11 +35,11 @@ FAMILIE_TILBAKE_CLIENT_ID=$TILBAKE_CLIENT_ID
 
 # Lokalt
 ENV=local
-TILBAKE_SCOPE=api://dev-gcp.teamfamilie.familie-tilbake-lokal/.default
+TILBAKE_SCOPE=api://dev-gcp.tilbake.tilbakekreving-backend-lokal/.default
 
 # Lokalt mot preprod
 #ENV=lokalt-mot-preprod
-#TILBAKE_SCOPE=api://dev-gcp.teamfamilie.familie-tilbake/.default
+#TILBAKE_SCOPE=api://dev-gcp.tilbake.tilbakekreving-backend/.default
 
 APP_VERSION=0.0.1
 EOF
