@@ -55,9 +55,9 @@ const env = Environment();
 export const sessionConfig: ISessionKonfigurasjon = {
     cookieSecret: [`${process.env.COOKIE_KEY1}`, `${process.env.COOKIE_KEY2}`],
     navn: 'tilbakekreving-backend-v1',
-    valkeyFullUrl: process.env.VALKEY_URI_SESSIONS,
-    valkeyBrukernavn: process.env.VALKEY_USERNAME_SESSIONS,
-    valkeyPassord: process.env.VALKEY_PASSWORD_SESSIONS,
+    redisFullUrl: process.env.REDIS_URI_SESSIONS,
+    redisBrukernavn: process.env.REDIS_USERNAME_SESSIONS,
+    redisPassord: process.env.REDIS_PASSWORD_SESSIONS,
     secureCookie: !(
         process.env.ENV === 'local' ||
         process.env.ENV === 'e2e' ||
