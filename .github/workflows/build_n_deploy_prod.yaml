@@ -78,18 +78,18 @@ jobs:
           RESOURCE: build_n_deploy/naiserator/naiserator_prod_gcp.yaml
           VAR: image=${{ needs.build.outputs.image }},VERSION=${{ env.VERSION }}
 
-#  deployProd:
-#    name: Deploy to gcp-prod
-#    needs: build
-#    runs-on: ubuntu-latest
-#    permissions:
-#      contents: read
-#      id-token: write
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Deploy til prod-gcp team namespace
-#        uses: nais/deploy/actions/deploy@v2
-#        env:
-#          CLUSTER: prod-gcp
-#          RESOURCE: build_n_deploy/naiserator/naiserator_prod_gcp_tilbake.yaml
-#          VAR: image=${{ needs.build.outputs.image }},VERSION=${{ env.VERSION }}
+  deployProdTilbake:
+    name: Deploy to gcp-prod
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy til prod-gcp team namespace
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: prod-gcp
+          RESOURCE: build_n_deploy/naiserator/naiserator_prod_gcp_tilbake.yaml
+          VAR: image=${{ needs.build.outputs.image }},VERSION=${{ env.VERSION }}
