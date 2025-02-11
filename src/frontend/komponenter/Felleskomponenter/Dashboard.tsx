@@ -11,7 +11,7 @@ const StyledContainer = styled.div`
 const Dashboard: React.FC = () => (
     <StyledContainer>
         <Heading level="1" size="xlarge" spacing>
-            NAV Familie - Tilbakekreving
+            Nav - Tilbakekreving
         </Heading>
         <BodyLong size="small">
             Velkommen til saksbehandlingsløsningen for tilbakekreving av ytelsene Barnetrygd,

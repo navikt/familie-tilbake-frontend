@@ -2,7 +2,7 @@
   "name": "familie-tilbake-frontend",
   "version": "0.0.1",
   "main": "node_dist/server.js",
-  "author": "NAV - teamfamilie",
+  "author": "Nav - tilbake",
   "license": "MIT",
   "type": "module",
   "scripts": {
