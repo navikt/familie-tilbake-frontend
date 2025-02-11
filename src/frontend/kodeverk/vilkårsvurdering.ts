@@ -90,7 +90,7 @@ export enum SærligeGrunner {
 
 export const særligegrunner: Record<SærligeGrunner, string> = {
     GRAD_AV_UAKTSOMHET: 'Graden av uaktsomhet hos den kravet retter seg mot',
-    HELT_ELLER_DELVIS_NAVS_FEIL: 'Om feilen helt eller delvis kan tilskrives NAV',
+    HELT_ELLER_DELVIS_NAVS_FEIL: 'Om feilen helt eller delvis kan tilskrives Nav',
     STØRRELSE_BELØP: 'Størrelsen på feilutbetalt beløp',
     TID_FRA_UTBETALING: 'Hvor lang tid siden utbetalingen fant sted',
     ANNET: 'Annet',
