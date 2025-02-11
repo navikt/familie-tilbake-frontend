@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import { styled } from 'styled-components';
 
 import { BodyShort, Button, VStack } from '@navikt/ds-react';
@@ -38,14 +38,14 @@ const finnClassNamePeriode = (
             erTotalbeløpUnder4Rettsgebyr &&
             !periode.vilkårsvurderingsresultatInfo.aktsomhet.tilbakekrevSmåbeløp)
     ) {
-        return classNames('avvist', aktivPeriodeCss);
+        return clsx('avvist', aktivPeriodeCss);
     } else if (
         !!periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat &&
         !!periode.begrunnelse
     ) {
-        return classNames('behandlet', aktivPeriodeCss);
+        return clsx('behandlet', aktivPeriodeCss);
     }
-    return classNames('ubehandlet', aktivPeriodeCss);
+    return clsx('ubehandlet', aktivPeriodeCss);
 };
 
 const genererRader = (

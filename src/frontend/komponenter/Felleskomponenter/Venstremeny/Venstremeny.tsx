@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import { styled } from 'styled-components';
 
 import {
@@ -83,7 +83,7 @@ const Venstremeny: React.FunctionComponent<IProps> = ({ fagsak }) => {
                                       active={aktiv}
                                       id={sideId}
                                       to={tilPath}
-                                      className={classNames(aktiv && 'hover-effekt')}
+                                      className={clsx(aktiv && 'hover-effekt')}
                                   >
                                       {`${index + 1}. ${side.navn}`}
                                   </StyledLink>

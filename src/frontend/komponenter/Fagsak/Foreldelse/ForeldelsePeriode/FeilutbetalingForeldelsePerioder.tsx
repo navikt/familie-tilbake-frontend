@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 
 import { Button, VStack } from '@navikt/ds-react';
 import { type Periode } from '@navikt/familie-tidslinje';
@@ -18,14 +18,14 @@ const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean)
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
     switch (periode.foreldelsesvurderingstype) {
         case Foreldelsevurdering.FORELDET:
-            return classNames('avvist', aktivPeriodeCss);
+            return clsx('avvist', aktivPeriodeCss);
         case Foreldelsevurdering.TILLEGGSFRIST:
         case Foreldelsevurdering.IKKE_FORELDET:
-            return classNames('behandlet', aktivPeriodeCss);
+            return clsx('behandlet', aktivPeriodeCss);
         case Foreldelsevurdering.IKKE_VURDERT:
         case Foreldelsevurdering.UDEFINERT:
         default:
-            return classNames('ubehandlet', aktivPeriodeCss);
+            return clsx('ubehandlet', aktivPeriodeCss);
     }
 };
 

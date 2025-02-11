@@ -1,6 +1,6 @@
 import React, { ReactChild } from 'react';
 
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import { Link as NavLink, useLocation } from 'react-router-dom';
 
 interface Props {
@@ -22,7 +22,7 @@ const Link: React.FC<Props> = ({ active = true, id, to, children, className }) =
             id={id}
             to={to}
             onClick={onClick}
-            className={classNames(
+            className={clsx(
                 className,
                 `${location.pathname}${location.hash}` === to ? 'active' : ''
             )}
@@ -30,7 +30,7 @@ const Link: React.FC<Props> = ({ active = true, id, to, children, className }) =
             {children}
         </NavLink>
     ) : (
-        <span className={classNames('inactive', className)}>{children}</span>
+        <span className={clsx('inactive', className)}>{children}</span>
     );
 };
 
