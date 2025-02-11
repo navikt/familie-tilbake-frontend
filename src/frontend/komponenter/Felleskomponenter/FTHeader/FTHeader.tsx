@@ -11,7 +11,7 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
     return (
         <Header
             tittelHref={'/'}
-            tittel="NAV Familie - Tilbakekreving"
+            tittel="Nav - Tilbakekreving"
             brukerinfo={{
                 navn: innloggetSaksbehandler?.displayName || 'Ukjent',
             }}
