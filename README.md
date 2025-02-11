@@ -24,7 +24,7 @@ Miljøvariabler kan genereres ved å kjøre `sh hent-og-lagre-miljøvariabler.sh
 Ønsker du å kjøre mot backend i preprod gjøres det med dette i .env fila.
 ```
 ENV=lokalt-mot-preprod
-TILBAKE_SCOPE=api://dev-gcp.teamfamilie.familie-tilbake/.default
+TILBAKE_SCOPE=api://dev-gcp.tilbake.familie-tilbake/.default
 ```
 
 ### For Windows-brukere

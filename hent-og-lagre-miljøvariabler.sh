@@ -2,10 +2,10 @@ kubectl config use-context dev-gcp
 
 function get_secrets() {
   local repo=$1
-  kubectl -n teamfamilie get secret ${repo} -o json | jq '.data | map_values(@base64d)'
+  kubectl -n tilbake get secret ${repo} -o json | jq '.data | map_values(@base64d)'
 }
 
-TILBAKE_FRONTEND_LOKAL_SECRETS=$(get_secrets azuread-familie-tilbake-frontend-lokal)
+TILBAKE_FRONTEND_LOKAL_SECRETS=$(get_secrets azuread-tilbakekreving-frontend-lokal)
 
 TILBAKE_FRONTEND_CLIENT_ID=$(echo "$TILBAKE_FRONTEND_LOKAL_SECRETS" | jq -r '.AZURE_APP_CLIENT_ID')
 TILBAKE_FRONTEND_CLIENT_SECRET=$(echo "$TILBAKE_FRONTEND_LOKAL_SECRETS" | jq -r '.AZURE_APP_CLIENT_SECRET')
