@@ -75,3 +75,8 @@ spec:
       access: readwrite
     - instance: lookup
       access: read
+  valkey:
+    - instance: sessions
+      access: readwrite
+    - instance: lookup
+      access: read
