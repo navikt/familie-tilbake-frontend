@@ -12,10 +12,10 @@
 apiVersion: nais.io/v1
 kind: AzureAdApplication
 metadata:
-  name: familie-tilbake-frontend-lokal
-  namespace: teamfamilie
+  name: tilbakekreving-frontend-lokal
+  namespace: tilbake
   labels:
-    team: teamfamilie
+    team: tilbake
 spec:
   logoutUrl: "http://localhost:8000"
   tenant: trygdeetaten.no
@@ -30,4 +30,4 @@ spec:
       - id: c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b # forvalterrolle 
   replyUrls:
     - url: "http://localhost:8000/auth/openid/callback"
-  secretName: azuread-familie-tilbake-frontend-lokal
+  secretName: azuread-tilbakekreving-frontend-lokal
