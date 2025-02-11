@@ -40,7 +40,7 @@ Anbefaler også å laste ned Visual Studio Code fra Microsoft store for å kunne
 
 Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub.
 
-## For NAV-ansatte
+## For Nav-ansatte
 
 Interne henvendelser kan sendes via Slack i kanalen #team-familie-tilbakekreving eller kanalen #team-familie.
 
