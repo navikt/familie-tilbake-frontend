@@ -3,6 +3,8 @@
 
 [![Build&deploy to dev and prod](https://github.com/navikt/familie-tilbake-frontend/actions/workflows/build_n_deploy_prod.yaml/badge.svg)](https://github.com/navikt/familie-tilbake-frontend/actions/workflows/build_n_deploy_prod.yaml)
 
+[![Build PR](https://github.com/navikt/familie-tilbake-frontend/actions/workflows/build.yaml/badge.svg)](https://github.com/navikt/familie-tilbake-frontend/actions/workflows/build.yaml)
+
 
 Saksbehandlerapplikasjon for tilbakekreving av ytelsene barnetrygd, konstantstøtte og støtte til enslig forsørgere
 
