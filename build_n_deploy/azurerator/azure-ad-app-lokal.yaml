@@ -31,4 +31,3 @@ spec:
   replyUrls:
     - url: "http://localhost:8000/auth/openid/callback"
   secretName: azuread-tilbakekreving-frontend-lokal
-  
