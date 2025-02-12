@@ -1540,15 +1540,6 @@
     prom-client "^15.1.2"
     redis "^4.7.0"
 
-"@navikt/familie-header@^14.1.2":
-  version "14.1.2"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-header/14.1.2/302e632d754f6cc95a1c5b7fe32ba867d24be620#302e632d754f6cc95a1c5b7fe32ba867d24be620"
-  integrity sha512-XPimudNa+1fDR0+GyZbqRJnU9rjAwqPblvFOpw+x3ZN9wstnlqjMKKX+01pYFnoStciJDYnJdYAu/SCXCEAGtg==
-  dependencies:
-    "@navikt/familie-ikoner" "^9.0.2"
-    "@navikt/familie-typer" "^8.0.2"
-    "@navikt/fnrvalidator" "^2.1.0"
-
 "@navikt/familie-http@^7.0.20":
   version "7.0.20"
   resolved "https://npm.pkg.github.com/download/@navikt/familie-http/7.0.20/8fbfb7e1f33ccbcd8d9c3f339f92be2bba51bba9#8fbfb7e1f33ccbcd8d9c3f339f92be2bba51bba9"
@@ -1612,11 +1603,6 @@
   dependencies:
     svg-country-flags "^1.2.10"
     uuid "^9.0.0"
-
-"@navikt/fnrvalidator@^2.1.0":
-  version "2.1.2"
-  resolved "https://npm.pkg.github.com/download/@navikt/fnrvalidator/2.1.2/a13f1f064fdb91ffaf9bf8bc28c82a1816fe095f#a13f1f064fdb91ffaf9bf8bc28c82a1816fe095f"
-  integrity sha512-F30tphpTnEmDXPEiqjBB+V7AYNq42WJEsSW1vIoxK75bYF9dmyCg0AsNKgmxBes+svwyd7sa8lblELywuGrTxw==
 
 "@navikt/hoykontrast@^4.0.1":
   version "4.0.1"
