@@ -16,7 +16,7 @@ const StyledLink = styled(Link)`
 const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
     return (
         <InternalHeader>
-            <StyledLink href="/" className="">
+            <StyledLink href="/">
                 <InternalHeader.Title>Nav - Tilbakekreving</InternalHeader.Title>
             </StyledLink>
 
