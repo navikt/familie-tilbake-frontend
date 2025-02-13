@@ -18,17 +18,19 @@ import {
     ABorderStrong,
     ASpacing5,
 } from '@navikt/ds-tokens/dist/tokens';
-import { type Periode, Tidslinje } from '@navikt/familie-tidslinje';
+import { Timeline, TimelinePeriodProps } from '@navikt/ds-react';
+import { format } from 'date-fns';
 
 const TidslinjeContainer = styled.div`
     border: 1px solid ${ABorderStrong};
     margin-bottom: ${ASpacing5};
+    padding: 12px 16px;
 
     .etiketter div:last-child {
         max-width: max-content;
     }
 
-    & div.tidslinje .behandlet {
+    & .navds-timeline__period--success {
         background-color: ${AGreen200};
         border-color: ${AGreen400};
 
@@ -38,7 +40,7 @@ const TidslinjeContainer = styled.div`
         }
     }
 
-    & div.tidslinje .avvist {
+    & .navds-timeline__period--error {
         background-color: ${ARed300};
         border-color: ${ARed500};
 
@@ -48,7 +50,7 @@ const TidslinjeContainer = styled.div`
         }
     }
 
-    & div.tidslinje .ubehandlet {
+    & .navds-timeline__period--warning {
         background-color: ${AOrange200};
         border-color: ${AOrange400};
 
@@ -60,14 +62,33 @@ const TidslinjeContainer = styled.div`
 `;
 
 interface IProps {
-    rader: Periode[][];
-    onSelectPeriode: (periode: Periode) => void;
+    rader: TimelinePeriodProps[][];
+    onSelectPeriode: (periode: TimelinePeriodProps) => void;
 }
 
 const TilbakeTidslinje: React.FC<IProps> = ({ rader, onSelectPeriode }) => {
     return (
         <TidslinjeContainer>
-            <Tidslinje kompakt rader={rader} onSelectPeriode={onSelectPeriode} />
+            <Timeline>
+                {rader.map((rad, index) => (
+                    <Timeline.Row label={''} key={index}>
+                        {rad.map(periode => (
+                            <Timeline.Period
+                                key={periode.id}
+                                start={periode.start}
+                                end={periode.end}
+                                status={periode.status}
+                                isActive={periode.isActive}
+                                className={periode.className}
+                                onClick={() => onSelectPeriode(periode)}
+                            >
+                                Periode fra {format(new Date(periode.start), 'dd-MM-yyyy')} til{' '}
+                                {format(new Date(periode.end), 'dd-MM-yyyy')}
+                            </Timeline.Period>
+                        ))}
+                    </Timeline.Row>
+                ))}
+            </Timeline>
         </TidslinjeContainer>
     );
 };
