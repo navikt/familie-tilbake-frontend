@@ -6,6 +6,7 @@ import {
     Duration,
     endOfDay,
     endOfMonth,
+    format,
     isBefore,
     parseISO,
 } from 'date-fns';
@@ -149,4 +150,8 @@ export const hentDatoRegistrertSendt = (
 
     // @ts-expect-error Får alltid en av disse datoene
     return parseISO(datoRegistrert.dato);
+};
+
+export const formatterDatoDDMMYYYY = (dato: Date) => {
+    return format(new Date(dato), 'dd.MM.yyyy');
 };

@@ -1,16 +1,16 @@
 import * as React from 'react';
 
 import { useHttp } from '@navikt/familie-http';
-import { type Periode as TidslinjePeriode } from '@navikt/familie-tidslinje';
 import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { IBeregnSplittetPeriodeRespons, Periode } from '../../../../typer/feilutbetalingtyper';
 import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
+import { TimelinePeriodProps } from '@navikt/ds-react';
 
 export const useDelOppPeriode = (tom: string, behandlingId: string) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const [splittDato, settSplittDato] = React.useState<string>(tom);
-    const [tidslinjeRader, settTidslinjeRader] = React.useState<TidslinjePeriode[][]>();
+    const [tidslinjeRader, settTidslinjeRader] = React.useState<TimelinePeriodProps[][]>();
     const [feilmelding, settFeilmelding] = React.useState<string>();
     const { request } = useHttp();
 
