@@ -243,7 +243,7 @@ describe('Tester: ForeldelseContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
                 })
             )
         );
@@ -269,7 +269,7 @@ describe('Tester: ForeldelseContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             )
         );
@@ -361,12 +361,12 @@ describe('Tester: ForeldelseContainer', () => {
             // Alle tidslinje knappene skal alltid være synlige
             expect(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
                 })
             ).toBeTruthy();
             expect(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             ).toBeTruthy();
 
@@ -386,7 +386,7 @@ describe('Tester: ForeldelseContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             )
         );
@@ -418,12 +418,12 @@ describe('Tester: ForeldelseContainer', () => {
         // Alle tidslinje knappene skal alltid være synlige
         expect(
             getByRole('button', {
-                name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                name: 'Suksess fra 01.01.2020 til 31.03.2020',
             })
         ).toBeTruthy();
         expect(
             getByRole('button', {
-                name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeTruthy();
 
