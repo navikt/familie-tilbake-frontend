@@ -469,7 +469,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
             expect(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
                 })
             ).toBeTruthy();
         });
@@ -477,7 +477,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
                 })
             )
         );
@@ -515,7 +515,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             )
         );
@@ -639,12 +639,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
             // Alle tidslinje knappene skal alltid være synlige
             expect(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
                 })
             ).toBeTruthy();
             expect(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             ).toBeTruthy();
 
@@ -667,7 +667,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             // Bruker klikker seg videre til den andre perioden
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             )
         );
@@ -711,12 +711,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
         // Alle tidslinje knappene skal alltid være synlige
         expect(
             getByRole('button', {
-                name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeTruthy();
         expect(
             getByRole('button', {
-                name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeTruthy();
 
