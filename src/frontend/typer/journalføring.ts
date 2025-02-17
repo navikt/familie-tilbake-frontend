@@ -24,7 +24,7 @@ export interface AvsenderMottaker {
     type: AvsenderMottakerIdType;
 }
 
-export declare enum AvsenderMottakerIdType {
+export enum AvsenderMottakerIdType {
     FNR = 'FNR',
     HPRNR = 'HPRNR',
     ORGNR = 'ORGNR',
@@ -32,13 +32,13 @@ export declare enum AvsenderMottakerIdType {
     UTL_ORG = 'UTL_ORG',
 }
 
-export declare enum Journalposttype {
+export enum Journalposttype {
     I = 'I',
     U = 'U',
     N = 'N',
 }
 
-export declare enum Journalstatus {
+export enum Journalstatus {
     MOTTATT = 'MOTTATT',
     JOURNALFOERT = 'JOURNALFOERT',
     FERDIGSTILT = 'FERDIGSTILT',
@@ -84,7 +84,7 @@ export type Utsendingsinfo = {
     digitalpostSendt?: DigitalpostSendt;
 };
 
-export declare enum Dokumentstatus {
+export enum Dokumentstatus {
     FERDIGSTILT = 'FERDIGSTILT',
     AVBRUTT = 'AVBRUTT',
     UNDER_REDIGERING = 'UNDER_REDIGERING',
@@ -100,7 +100,7 @@ export interface ILogiskVedlegg {
     tittel: string;
 }
 
-export declare enum JournalpostDatotype {
+export enum JournalpostDatotype {
     DATO_SENDT_PRINT = 'DATO_SENDT_PRINT',
     DATO_EKSPEDERT = 'DATO_EKSPEDERT',
     DATO_JOURNALFOERT = 'DATO_JOURNALFOERT',
