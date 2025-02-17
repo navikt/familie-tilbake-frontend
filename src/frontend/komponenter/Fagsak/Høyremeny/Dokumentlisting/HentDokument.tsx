@@ -6,14 +6,13 @@ import {
     byggFeiletRessurs,
     byggHenterRessurs,
     byggTomRessurs,
-    type IDokumentInfo,
-    type IJournalpost,
 } from '@navikt/familie-typer';
 
 import { useDokumentlisting } from './DokumentlistingContext';
 import { base64ToArrayBuffer } from '../../../../utils';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
+import { IDokumentInfo, IJournalpost } from '../../../../typer/journalføring';
 
 interface IProps {
     journalpost: IJournalpost;

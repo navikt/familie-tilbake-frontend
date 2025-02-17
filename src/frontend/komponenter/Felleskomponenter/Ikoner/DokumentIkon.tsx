@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons';
-import { Journalposttype } from '@navikt/familie-typer';
 
 import { TidslinjeIkonbakgrunn } from './ikonelementer';
+import { Journalposttype } from '../../../typer/journalføring';
 
 interface IProps {
     type: Journalposttype;

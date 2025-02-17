@@ -4,11 +4,12 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
 import { useHttp } from '@navikt/familie-http';
-import { byggFeiletRessurs, byggHenterRessurs, type IJournalpost } from '@navikt/familie-typer';
+import { byggFeiletRessurs, byggHenterRessurs } from '@navikt/familie-typer';
 
 import { IBehandling } from '../../../../typer/behandling';
 import { Menysider } from '../Menykontainer';
-import { Ressurs } from '../../../../typer/ressurs';
+import type { Ressurs } from '../../../../typer/ressurs';
+import { IJournalpost } from '../../../../typer/journalføring';
 
 interface IProps {
     behandling: IBehandling;
