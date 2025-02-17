@@ -1,18 +1,19 @@
 import * as React from 'react';
 
 import { useHttp } from '@navikt/familie-http';
-import {
-    byggDataRessurs,
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    byggTomRessurs,
-} from '@navikt/familie-typer';
 
 import { useHistorikk } from './HistorikkContext';
 import { IHistorikkInnslag } from '../../../../typer/historikk';
 import { base64ToArrayBuffer } from '../../../../utils';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
-import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
+import {
+    byggDataRessurs,
+    byggFeiletRessurs,
+    byggHenterRessurs,
+    byggTomRessurs,
+    type Ressurs,
+    RessursStatus,
+} from '../../../../typer/ressurs';
 
 interface IProps {
     innslag: IHistorikkInnslag;

@@ -4,8 +4,6 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 import { useNavigate } from 'react-router-dom';
 
-import { byggFeiletRessurs, byggHenterRessurs } from '@navikt/familie-typer';
-
 import {
     OptionIkkeGodkjent,
     TotrinnGodkjenningOption,
@@ -20,7 +18,12 @@ import { IFagsak } from '../../../../typer/fagsak';
 import { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
 import { hentFrontendFeilmelding, validerTekstMaksLengde } from '../../../../utils';
 import { ISide, sider } from '../../../Felleskomponenter/Venstremeny/sider';
-import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
+import {
+    byggFeiletRessurs,
+    byggHenterRessurs,
+    type Ressurs,
+    RessursStatus,
+} from '../../../../typer/ressurs';
 
 const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
     const option = totrinnGodkjenningOptions.find(opt => opt.verdi === verdi);

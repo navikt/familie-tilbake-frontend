@@ -4,8 +4,6 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 import { useNavigate } from 'react-router-dom';
 
-import { byggFeiletRessurs, byggHenterRessurs } from '@navikt/familie-typer';
-
 import { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/feilutbetalingFakta';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -26,7 +24,12 @@ import {
     validerTekstMaksLengde,
 } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import {
+    byggFeiletRessurs,
+    byggHenterRessurs,
+    type Ressurs,
+    RessursStatus,
+} from '../../../typer/ressurs';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 

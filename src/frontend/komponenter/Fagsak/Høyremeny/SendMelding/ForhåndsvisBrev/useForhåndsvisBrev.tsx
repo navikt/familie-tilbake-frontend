@@ -1,16 +1,16 @@
 import * as React from 'react';
 
+import { useDokumentApi } from '../../../../../api/dokument';
+import { base64ToArrayBuffer } from '../../../../../utils';
+import { useSendMelding } from '../SendMeldingContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
     byggHenterRessurs,
     byggTomRessurs,
-} from '@navikt/familie-typer';
-
-import { useDokumentApi } from '../../../../../api/dokument';
-import { base64ToArrayBuffer } from '../../../../../utils';
-import { useSendMelding } from '../SendMeldingContext';
-import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
+    type Ressurs,
+    RessursStatus,
+} from '../../../../../typer/ressurs';
 
 const useForhåndsvisBrev = () => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =

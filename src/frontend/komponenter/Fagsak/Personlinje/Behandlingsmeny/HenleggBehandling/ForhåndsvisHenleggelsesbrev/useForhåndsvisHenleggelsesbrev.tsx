@@ -3,18 +3,19 @@ import * as React from 'react';
 import { AxiosError } from 'axios';
 
 import { type ISkjema } from '@navikt/familie-skjema';
-import {
-    byggDataRessurs,
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    byggTomRessurs,
-} from '@navikt/familie-typer';
 
 import { useDokumentApi } from '../../../../../../api/dokument';
 import { IBehandling } from '../../../../../../typer/behandling';
 import { base64ToArrayBuffer } from '../../../../../../utils';
 import { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
-import { type Ressurs, RessursStatus } from '../../../../../../typer/ressurs';
+import {
+    byggDataRessurs,
+    byggFeiletRessurs,
+    byggHenterRessurs,
+    byggTomRessurs,
+    type Ressurs,
+    RessursStatus,
+} from '../../../../../../typer/ressurs';
 
 interface IProps {
     skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;

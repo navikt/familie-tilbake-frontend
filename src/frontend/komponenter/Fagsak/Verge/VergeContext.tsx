@@ -12,7 +12,6 @@ import {
     useSkjema,
     Valideringsstatus,
 } from '@navikt/familie-skjema';
-import { byggFeiletRessurs } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -28,7 +27,7 @@ import {
     validerTekstFeltMaksLengde,
 } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import { byggFeiletRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 const erVergetypeOppfylt = (avhengigheter?: Avhengigheter) =>
     avhengigheter?.vergetype.valideringsstatus === Valideringsstatus.OK;

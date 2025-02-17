@@ -38,3 +38,51 @@ export type Ressurs<T> =
           frontendFeilmelding: string;
           status: RessursStatus.FUNKSJONELL_FEIL;
       };
+
+export const byggTomRessurs = <T>(): Ressurs<T> => {
+    return {
+        status: RessursStatus.IKKE_HENTET,
+    };
+};
+
+export const byggDataRessurs = <T>(data: T): Ressurs<T> => {
+    return {
+        status: RessursStatus.SUKSESS,
+        data,
+    };
+};
+
+export const byggHenterRessurs = <T>(): Ressurs<T> => {
+    return {
+        status: RessursStatus.HENTER,
+    };
+};
+
+export const byggFeiletRessurs = <T>(frontendFeilmelding: string): Ressurs<T> => {
+    return {
+        frontendFeilmelding,
+        status: RessursStatus.FEILET,
+    };
+};
+
+export const byggFunksjonellFeilRessurs = <T>(frontendFeilmelding: string): Ressurs<T> => {
+    return {
+        frontendFeilmelding,
+        status: RessursStatus.FUNKSJONELL_FEIL,
+    };
+};
+
+export const byggSuksessRessurs = <T>(data: T): Ressurs<T> => {
+    return {
+        data,
+        status: RessursStatus.SUKSESS,
+    };
+};
+
+export const hentDataFraRessurs = <T>(ressurs: Ressurs<T>): T | undefined => {
+    return ressurs.status === RessursStatus.SUKSESS ? ressurs.data : undefined;
+};
+
+export const hentDataFraRessursMedFallback = <T>(ressurs: Ressurs<T>, fallbackData: T): T => {
+    return ressurs.status === RessursStatus.SUKSESS ? ressurs.data : fallbackData;
+};
