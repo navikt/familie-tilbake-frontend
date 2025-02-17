@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { type ISaksbehandler } from '@navikt/familie-typer';
 import { Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
 import { LeaveIcon } from '@navikt/aksel-icons';
+import { ISaksbehandler } from '../../../typer/saksbehandler';
 
 interface IHeaderProps {
     innloggetSaksbehandler?: ISaksbehandler;
