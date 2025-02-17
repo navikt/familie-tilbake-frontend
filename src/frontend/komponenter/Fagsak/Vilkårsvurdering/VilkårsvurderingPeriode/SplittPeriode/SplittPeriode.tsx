@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { Detail, Link } from '@navikt/ds-react';
-import { type Periode as TidslinjePeriode } from '@navikt/familie-tidslinje';
+import { Detail, Link, TimelinePeriodProps } from '@navikt/ds-react';
 
 import splitPeriodImageUrl from '../../../../../images/splitt.svg';
 import splitPeriodImageHoverUrl from '../../../../../images/splitt_hover.svg';
@@ -22,11 +21,11 @@ const StyledContainer = styled.div`
     text-align: right;
 `;
 
-const konverterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): TidslinjePeriode => {
+const konverterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): TimelinePeriodProps => {
     return {
-        tom: new Date(periode.periode.tom),
-        fom: new Date(periode.periode.fom),
-        status: 'suksess',
+        end: new Date(periode.periode.tom),
+        start: new Date(periode.periode.fom),
+        status: 'success',
         id: periode.index,
     };
 };
@@ -57,7 +56,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
     } = useDelOppPeriode(periode.periode.tom, behandling.behandlingId);
 
     React.useEffect(() => {
-        const perRad: TidslinjePeriode = konverterPeriode(periode);
+        const perRad: TimelinePeriodProps = konverterPeriode(periode);
         settTidslinjeRader([[perRad]]);
         settSplittDato(periode.periode.tom);
         // eslint-disable-next-line react-hooks/exhaustive-deps
