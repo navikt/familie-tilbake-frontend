@@ -72,7 +72,7 @@ const TilbakeTidslinje: React.FC<IProps> = ({ rader, onSelectPeriode }) => {
         <TidslinjeContainer>
             <Timeline>
                 {rader.map(rad => (
-                    <Timeline.Row label={''} key={uuidv4()}>
+                    <Timeline.Row label="" key={uuidv4()}>
                         {rad.map(periode => (
                             <Timeline.Period
                                 key={periode.id}

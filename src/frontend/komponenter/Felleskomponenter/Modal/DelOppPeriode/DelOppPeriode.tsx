@@ -94,7 +94,6 @@ export const DelOppPeriode: React.FC<IProps> = ({
                                                 status={periode.status}
                                                 isActive={periode.isActive}
                                                 className={periode.className}
-                                                onClick={() => console.log(periode)}
                                             >
                                                 Periode fra {formatterDatoDDMMYYYY(periode.start)}{' '}
                                                 til {formatterDatoDDMMYYYY(periode.end)}
