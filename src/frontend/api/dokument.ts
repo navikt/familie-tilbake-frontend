@@ -1,5 +1,4 @@
 import { useHttp } from '@navikt/familie-http';
-import { type Ressurs } from '@navikt/familie-typer';
 
 import {
     BrevPayload,
@@ -7,6 +6,7 @@ import {
     ForhåndsvisVedtaksbrev,
     Fritekstavsnitt,
 } from '../typer/api';
+import type { Ressurs } from '../typer/ressurs';
 
 const useDokumentApi = () => {
     const dokumentApiPrefix = '/familie-tilbake/api/dokument';

@@ -4,8 +4,6 @@ import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
-
 import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { useBehandlingApi } from '../../../api/behandling';
@@ -18,6 +16,7 @@ import {
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
 import { useHttp } from '@navikt/familie-http';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(25000);
 

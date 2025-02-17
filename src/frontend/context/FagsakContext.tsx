@@ -4,15 +4,11 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
 import { useHttp } from '@navikt/familie-http';
-import {
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    type Ressurs,
-    RessursStatus,
-} from '@navikt/familie-typer';
+import { byggFeiletRessurs, byggHenterRessurs } from '@navikt/familie-typer';
 
 import { Fagsystem } from '../kodeverk';
 import { IFagsak } from '../typer/fagsak';
+import { type Ressurs, RessursStatus } from '../typer/ressurs';
 
 const [FagsakProvider, useFagsak] = createUseContext(() => {
     const [fagsak, settFagsak] = React.useState<Ressurs<IFagsak>>();

@@ -5,7 +5,6 @@ import { styled } from 'styled-components';
 import { Buildings3Icon, ExternalLinkIcon, LeaveIcon } from '@navikt/aksel-icons';
 import { Link, Tag } from '@navikt/ds-react';
 import { AGray900, ATextOnInverted, ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { RessursStatus } from '@navikt/familie-typer';
 
 import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -16,6 +15,7 @@ import { formatterDatostring, hentAlder } from '../../../utils';
 import { useLocation } from 'react-router-dom';
 import { erHistoriskSide } from '../../Felleskomponenter/Venstremeny/sider';
 import Visittkort from './Visittkort';
+import { RessursStatus } from '../../../typer/ressurs';
 
 const PlaceholderDiv = styled.div`
     flex: 1;

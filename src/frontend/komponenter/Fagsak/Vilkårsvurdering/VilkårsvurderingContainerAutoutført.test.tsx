@@ -14,7 +14,7 @@ import {
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
 import { useBehandlingApi } from '../../../api/behandling';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(25000);
 

@@ -4,7 +4,6 @@ import { styled } from 'styled-components';
 
 import { BodyLong, BodyShort, Button, Heading } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
-import { RessursStatus } from '@navikt/familie-typer';
 
 import { useFeilutbetalingForeldelse } from './FeilutbetalingForeldelseContext';
 import FeilutbetalingForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
@@ -14,6 +13,7 @@ import { finnDatoRelativtTilNå } from '../../../utils';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '../../../typer/ressurs';
 
 const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });

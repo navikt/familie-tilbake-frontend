@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 
 import { Modal, Loader, Heading, Alert } from '@navikt/ds-react';
 import { ASpacing1, ASpacing3, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 const StyledModal = styled(Modal)`
     width: 90%;

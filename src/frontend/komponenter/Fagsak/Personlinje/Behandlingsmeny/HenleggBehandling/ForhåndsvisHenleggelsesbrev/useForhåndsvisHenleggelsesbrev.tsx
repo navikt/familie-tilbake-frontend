@@ -8,14 +8,13 @@ import {
     byggFeiletRessurs,
     byggHenterRessurs,
     byggTomRessurs,
-    type Ressurs,
-    RessursStatus,
 } from '@navikt/familie-typer';
 
 import { useDokumentApi } from '../../../../../../api/dokument';
 import { IBehandling } from '../../../../../../typer/behandling';
 import { base64ToArrayBuffer } from '../../../../../../utils';
 import { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
+import { type Ressurs, RessursStatus } from '../../../../../../typer/ressurs';
 
 interface IProps {
     skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;

@@ -5,13 +5,12 @@ import {
     byggFeiletRessurs,
     byggHenterRessurs,
     byggTomRessurs,
-    type Ressurs,
-    RessursStatus,
 } from '@navikt/familie-typer';
 
 import { useDokumentApi } from '../../../../api/dokument';
 import { base64ToArrayBuffer } from '../../../../utils';
 import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
+import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 
 const useForhåndsvisVedtaksbrev = () => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =

@@ -5,12 +5,7 @@ import createUseContext from 'constate';
 import deepEqual from 'deep-equal';
 import { useNavigate } from 'react-router-dom';
 
-import {
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    type Ressurs,
-    RessursStatus,
-} from '@navikt/familie-typer';
+import { byggFeiletRessurs, byggHenterRessurs } from '@navikt/familie-typer';
 
 import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 import { useBehandlingApi } from '../../../api/behandling';
@@ -31,6 +26,7 @@ import {
 } from '../../../typer/feilutbetalingtyper';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData) => {
     return (

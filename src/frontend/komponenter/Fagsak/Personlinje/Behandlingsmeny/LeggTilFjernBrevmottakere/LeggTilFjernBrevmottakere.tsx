@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import { useHttp } from '@navikt/familie-http';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
@@ -19,6 +18,7 @@ import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
 import { sider } from '../../../../Felleskomponenter/Venstremeny/sider';
+import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 
 interface IProps {
     behandling: IBehandling;

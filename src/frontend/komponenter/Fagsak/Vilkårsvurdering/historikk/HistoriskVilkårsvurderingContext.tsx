@@ -3,18 +3,14 @@ import * as React from 'react';
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
-import {
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    byggTomRessurs,
-    type Ressurs,
-} from '@navikt/familie-typer';
+import { byggFeiletRessurs, byggHenterRessurs, byggTomRessurs } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../../api/behandling';
 import { IBehandling } from '../../../../typer/behandling';
 import { IFeilutbetalingVilkårsvurdering } from '../../../../typer/feilutbetalingtyper';
 import { sorterFeilutbetaltePerioder } from '../../../../utils';
 import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import type { Ressurs } from '../../../../typer/ressurs';
 
 interface IProps {
     behandling: IBehandling;

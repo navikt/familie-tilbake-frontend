@@ -4,12 +4,7 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 import { useNavigate } from 'react-router-dom';
 
-import {
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    type Ressurs,
-    RessursStatus,
-} from '@navikt/familie-typer';
+import { byggFeiletRessurs, byggHenterRessurs } from '@navikt/familie-typer';
 
 import { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import { useBehandlingApi } from '../../../api/behandling';
@@ -27,6 +22,7 @@ import { IFagsak } from '../../../typer/fagsak';
 import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
 import { isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[] => {
     // @ts-expect-error - klager på periode men er trygt p.g.s. filtreringen
