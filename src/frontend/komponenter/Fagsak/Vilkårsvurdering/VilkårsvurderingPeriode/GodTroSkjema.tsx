@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { BodyShort, Radio, TextField, VStack } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
 
 import {
     JaNeiOption,

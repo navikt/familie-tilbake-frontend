@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Checkbox, CheckboxGroup, Detail, Textarea, VStack } from '@navikt/ds-react';
-import { type ISkjema } from '@navikt/familie-skjema';
+import { type ISkjema } from '../../../../../hooks/skjema';
 
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';

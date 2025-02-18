@@ -17,7 +17,7 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
 
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import GodTroSkjema from './GodTroSkjema';

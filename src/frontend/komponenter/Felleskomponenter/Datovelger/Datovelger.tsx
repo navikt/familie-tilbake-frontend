@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { addDays, format, startOfDay, subDays } from 'date-fns';
 
 import { DatePicker, useDatepicker } from '@navikt/ds-react';
-import type { Felt } from '@navikt/familie-skjema';
+import type { Felt } from '../../../hooks/skjema';
 
 import { dagensDato, Datoformat } from '../../../utils/dato';
 
