@@ -10,7 +10,7 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import backend, { IApp, ensureAuthenticated, envVar } from '@navikt/familie-backend';
-import { logInfo } from '@navikt/familie-logging';
+import { logInfo } from './logging/logging';
 
 import { oboTilbakeConfig, sessionConfig } from './config';
 import { prometheusTellere } from './metrikker';

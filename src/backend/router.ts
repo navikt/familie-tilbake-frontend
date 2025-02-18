@@ -3,7 +3,7 @@ import path from 'path';
 import { Response, Request, Router, NextFunction } from 'express';
 
 import { Client, ensureAuthenticated, envVar, logRequest } from '@navikt/familie-backend';
-import { LOG_LEVEL } from '@navikt/familie-logging';
+import { LOG_LEVEL } from './logging/logging';
 
 import { buildPath } from './config';
 import { prometheusTellere } from './metrikker';

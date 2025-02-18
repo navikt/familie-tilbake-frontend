@@ -1549,7 +1549,7 @@
     "@sentry/core" "^8.50.0"
     constate "^3.3.2"
 
-"@navikt/familie-logging@^7.0.0", "@navikt/familie-logging@^7.0.2":
+"@navikt/familie-logging@^7.0.2":
   version "7.0.3"
   resolved "https://npm.pkg.github.com/download/@navikt/familie-logging/7.0.3/64e03ec40585d30ab00c193d373f69dfa855def8#64e03ec40585d30ab00c193d373f69dfa855def8"
   integrity sha512-rhAz7p+9kRqvTJLFmFTSGfs80w+vsEwdZMhWXKeKlaegetHB3RHQMYqkxJRNKUUzZh2tzlWlHug3Du2Ue8pyMw==
