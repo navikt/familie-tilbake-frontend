@@ -1540,13 +1540,13 @@
     prom-client "^15.1.2"
     redis "^4.7.0"
 
-"@navikt/familie-http@^7.0.20":
-  version "7.0.20"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-http/7.0.20/8fbfb7e1f33ccbcd8d9c3f339f92be2bba51bba9#8fbfb7e1f33ccbcd8d9c3f339f92be2bba51bba9"
-  integrity sha512-CyFab3NkhAqVOftGdoC/7280zFCNAtbKiWREht56Ac7lW5F96sQU5gltGKxVfbEDlWhQjsfwivlAlYuDKcsxQg==
+"@navikt/familie-http@^7.0.24":
+  version "7.0.24"
+  resolved "https://npm.pkg.github.com/download/@navikt/familie-http/7.0.24/6fcefd23cce8155558468be68a9d3873eb4ab203#6fcefd23cce8155558468be68a9d3873eb4ab203"
+  integrity sha512-iT/T7wm5bQV8Y3w2OsaN7kxRVHGySEMUlCGcgCMrodgssASYNdt7I7O0he+N4tntplxqx6ruWvzPMu31dxuJxg==
   dependencies:
     "@navikt/familie-typer" "^8.0.2"
-    "@sentry/core" "^8.40.0"
+    "@sentry/core" "^8.50.0"
     constate "^3.3.2"
 
 "@navikt/familie-logging@^7.0.0", "@navikt/familie-logging@^7.0.2":
@@ -1555,17 +1555,6 @@
   integrity sha512-rhAz7p+9kRqvTJLFmFTSGfs80w+vsEwdZMhWXKeKlaegetHB3RHQMYqkxJRNKUUzZh2tzlWlHug3Du2Ue8pyMw==
   dependencies:
     winston "^3.17.0"
-
-"@navikt/familie-skjema@^8.2.17":
-  version "8.2.17"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-skjema/8.2.17/524387458c349f96a8236a6bd918c658b141dd4e#524387458c349f96a8236a6bd918c658b141dd4e"
-  integrity sha512-ilkf9GGDaVDfWCe+DO0qiRv9GFBEI/NpSj3xIo9/DkohtSBqPaMqFZTiPZ7aGWOqqVaOF5wydkVdFU0C5mzRLw==
-  dependencies:
-    "@navikt/familie-http" "^7.0.20"
-    "@navikt/familie-typer" "^8.0.2"
-    "@types/deep-equal" "^1.0.4"
-    deep-equal "^2.2.3"
-    hashids "^2.3.0"
 
 "@navikt/familie-typer@^8.0.2":
   version "8.0.2"
@@ -1957,12 +1946,17 @@
     "@sentry/cli-win32-i686" "2.36.6"
     "@sentry/cli-win32-x64" "2.36.6"
 
-"@sentry/core@8.40.0", "@sentry/core@^8.40.0":
+"@sentry/core@8.40.0":
   version "8.40.0"
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.40.0.tgz#cb5c02d12e29070bf88692c64cfd7db7700be4ea"
   integrity sha512-u/U2CJpG/+SmTR2bPM4ZZoPYTJAOUuxzj/0IURnvI0v9+rNu939J/fzrO9huA5IJVxS5TiYykhQm7o6I3Zuo3Q==
   dependencies:
     "@sentry/types" "8.40.0"
+
+"@sentry/core@^8.50.0":
+  version "8.55.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.55.0.tgz#4964920229fcf649237ef13b1533dfc4b9f6b22e"
+  integrity sha512-6g7jpbefjHYs821Z+EBJ8r4Z7LT5h80YSWRJaylGS4nW5W5Z2KXzpdnyFarv37O7QjauzVC2E+PABmpkw5/JGA==
 
 "@sentry/types@8.40.0":
   version "8.40.0"
