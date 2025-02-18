@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Detail, Link } from '@navikt/ds-react';
-import { type ISkjema } from '@navikt/familie-skjema';
+import { type ISkjema } from '../../../../../../hooks/skjema';
 
 import { useForhåndsvisHenleggelsesbrev } from './useForhåndsvisHenleggelsesbrev';
 import { IBehandling } from '../../../../../../typer/behandling';

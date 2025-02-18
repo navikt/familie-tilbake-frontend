@@ -1,4 +1,4 @@
-import { type FeltState, useFelt, useSkjema } from '@navikt/familie-skjema';
+import { type FeltState, useFelt, useSkjema } from '../../../../../hooks/skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../utils';

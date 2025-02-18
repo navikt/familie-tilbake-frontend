@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useHttp } from '@navikt/familie-http';
-import { useSkjema, useFelt, type FeltState, feil, ok } from '@navikt/familie-skjema';
+import { useSkjema, useFelt, type FeltState, feil, ok } from '../../../../hooks/skjema';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { IRestSettPåVent } from '../../../../typer/api';

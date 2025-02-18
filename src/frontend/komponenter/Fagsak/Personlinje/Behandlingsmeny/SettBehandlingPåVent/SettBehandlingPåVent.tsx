@@ -3,7 +3,7 @@ import * as React from 'react';
 import { addDays, addMonths } from 'date-fns';
 
 import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
-import { Valideringsstatus } from '@navikt/familie-skjema';
+import { Valideringsstatus } from '../../../../../hooks/skjema/typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { IBehandling, manuelleVenteÅrsaker, venteårsaker } from '../../../../../typer/behandling';

@@ -10,7 +10,7 @@ import {
     useFelt,
     useSkjema,
     Valideringsstatus,
-} from '@navikt/familie-skjema';
+} from '../../../../hooks/skjema';
 
 import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';

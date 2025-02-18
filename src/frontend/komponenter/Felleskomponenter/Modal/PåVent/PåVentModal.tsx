@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 
 import { Alert, BodyLong, Button, Heading, Modal, Select } from '@navikt/ds-react';
 import { ASpacing8, ATextDanger } from '@navikt/ds-tokens/dist/tokens';
-import { Valideringsstatus } from '@navikt/familie-skjema';
+import { Valideringsstatus } from '../../../../hooks/skjema';
 
 import { usePåVentBehandling } from './PåVentContext';
 import { useBehandling } from '../../../../context/BehandlingContext';

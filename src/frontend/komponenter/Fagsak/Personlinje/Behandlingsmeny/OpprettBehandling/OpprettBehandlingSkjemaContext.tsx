@@ -1,4 +1,4 @@
-import { useFelt, useSkjema } from '@navikt/familie-skjema';
+import { useFelt, useSkjema } from '../../../../../hooks/skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';

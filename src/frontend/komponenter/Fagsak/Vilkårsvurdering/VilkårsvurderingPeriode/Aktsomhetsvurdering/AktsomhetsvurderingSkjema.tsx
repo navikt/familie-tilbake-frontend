@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Radio, VStack } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
 
 import GradForsettSkjema from './GradForsettSkjema';
 import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';

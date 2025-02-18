@@ -6,7 +6,7 @@ import {
     useFelt,
     useSkjema,
     Valideringsstatus,
-} from '@navikt/familie-skjema';
+} from '../../../../hooks/skjema';
 
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import {

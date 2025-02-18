@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { BodyShort, HGrid, Label } from '@navikt/ds-react';
-import { type ISkjema } from '@navikt/familie-skjema';
+import { type ISkjema } from '../../../../../hooks/skjema';
 
 import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 import { Vilkårsresultat } from '../../../../../kodeverk';

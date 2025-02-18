@@ -5,7 +5,7 @@ import {
     useFelt,
     useSkjema,
     Valideringsstatus,
-} from '@navikt/familie-skjema';
+} from '../../../../hooks/skjema';
 
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { erFeltetEmpty, validerGyldigDato, validerTekstFeltMaksLengde } from '../../../../utils';
