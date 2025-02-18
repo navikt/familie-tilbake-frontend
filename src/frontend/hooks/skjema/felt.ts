@@ -1,4 +1,4 @@
-import { genererId, isChangeEvent } from './utils';
+import { isChangeEvent } from './utils';
 import deepEqual from 'deep-equal';
 
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
@@ -13,6 +13,7 @@ import {
     Avhengigheter,
     Valideringsstatus,
 } from './typer';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Konfigurasjon for å opprette et felt.
@@ -40,7 +41,7 @@ export const useFelt = <Verdi = string>({
     verdi,
     nullstillVedAvhengighetEndring = true,
 }: FeltConfig<Verdi>): Felt<Verdi> => {
-    const [id] = useState(feltId ? feltId : genererId());
+    const [id] = useState(feltId ? feltId : uuidv4());
     const initialFeltState = {
         feilmelding: '',
         valider: valideringsfunksjon,
