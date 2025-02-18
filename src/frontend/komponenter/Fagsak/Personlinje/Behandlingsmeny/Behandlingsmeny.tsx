@@ -5,7 +5,6 @@ import { styled } from 'styled-components';
 import { ChevronDownIcon } from '@navikt/aksel-icons';
 import { Button, Popover } from '@navikt/ds-react';
 import { AFontSizeXlarge, AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
-import { RessursStatus } from '@navikt/familie-typer';
 
 import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
@@ -24,6 +23,7 @@ import { useToggles } from '../../../../context/TogglesContext';
 import { Fagsystem } from '../../../../kodeverk';
 import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
+import { RessursStatus } from '../../../../typer/ressurs';
 
 const StyledList = styled.ul`
     list-style-type: none;

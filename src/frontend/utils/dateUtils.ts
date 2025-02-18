@@ -11,10 +11,9 @@ import {
     parseISO,
 } from 'date-fns';
 
-import { type IJournalpostRelevantDato, JournalpostDatotype } from '@navikt/familie-typer';
-
 import { isEmpty } from './validering';
 import { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
+import { IJournalpostRelevantDato, JournalpostDatotype } from '../typer/journalføring';
 
 const datoformat: Intl.DateTimeFormatOptions = {
     day: '2-digit',

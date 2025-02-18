@@ -2,13 +2,12 @@ import * as React from 'react';
 
 import { styled } from 'styled-components';
 
-import { RessursStatus } from '@navikt/familie-typer';
-
 import { useDokumentlisting } from './DokumentlistingContext';
 import JournalpostVisning from './Journalpostvisning';
 import { hentDatoRegistrertSendt } from '../../../../utils';
 import HenterData from '../../../Felleskomponenter/Datalast/HenterData';
 import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '../../../../typer/ressurs';
 
 const StyledContainer = styled.div`
     margin-top: 10px;

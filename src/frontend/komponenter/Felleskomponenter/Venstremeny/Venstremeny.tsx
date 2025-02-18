@@ -12,12 +12,12 @@ import {
     ASpacing2,
     ASpacing8,
 } from '@navikt/ds-tokens/dist/tokens';
-import { RessursStatus } from '@navikt/familie-typer';
 
 import Link from './Link';
 import { erSidenAktiv, sider, visSide } from './sider';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { IFagsak } from '../../../typer/fagsak';
+import { RessursStatus } from '../../../typer/ressurs';
 
 const StyledNav = styled.nav`
     display: flex;

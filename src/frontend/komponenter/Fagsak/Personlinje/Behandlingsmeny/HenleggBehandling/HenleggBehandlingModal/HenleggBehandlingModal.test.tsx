@@ -4,8 +4,6 @@ import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
-
 import HenleggBehandlingModal from './HenleggBehandlingModal';
 import { useBehandlingApi } from '../../../../../../api/behandling';
 import { useBehandling } from '../../../../../../context/BehandlingContext';
@@ -15,6 +13,7 @@ import {
     IBehandling,
 } from '../../../../../../typer/behandling';
 import { IFagsak, Målform } from '../../../../../../typer/fagsak';
+import { type Ressurs, RessursStatus } from '../../../../../../typer/ressurs';
 
 jest.mock('@navikt/familie-http', () => {
     return {

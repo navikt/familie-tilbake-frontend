@@ -4,7 +4,6 @@ import { styled } from 'styled-components';
 
 import { Alert, Heading, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
-import { RessursStatus } from '@navikt/familie-typer';
 
 import { useHistoriskVilkårsvurdering } from './HistoriskVilkårsvurderingContext';
 import HistoriskVilkårsvurderingVisning from './HistoriskVilkårsvurderingVisning';
@@ -12,6 +11,7 @@ import VelgHistoriskVilkårsvurdering from './VelgHistoriskVilkårsvurdering';
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '../../../../typer/ressurs';
 
 const Container = styled.div`
     padding: ${ASpacing3};

@@ -1,6 +1,11 @@
 import * as React from 'react';
 
 import { useHttp } from '@navikt/familie-http';
+
+import { useHistorikk } from './HistorikkContext';
+import { IHistorikkInnslag } from '../../../../typer/historikk';
+import { base64ToArrayBuffer } from '../../../../utils';
+import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -8,12 +13,7 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '@navikt/familie-typer';
-
-import { useHistorikk } from './HistorikkContext';
-import { IHistorikkInnslag } from '../../../../typer/historikk';
-import { base64ToArrayBuffer } from '../../../../utils';
-import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
+} from '../../../../typer/ressurs';
 
 interface IProps {
     innslag: IHistorikkInnslag;

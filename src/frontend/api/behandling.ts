@@ -1,5 +1,4 @@
 import { useHttp } from '@navikt/familie-http';
-import { type Ressurs } from '@navikt/familie-typer';
 
 import {
     FaktaStegPayload,
@@ -19,6 +18,7 @@ import {
 } from '../typer/feilutbetalingtyper';
 import { ITotrinnkontroll } from '../typer/totrinnTyper';
 import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyper';
+import type { Ressurs } from '../typer/ressurs';
 
 const useBehandlingApi = () => {
     const behandlingerApiPrefix = '/familie-tilbake/api/behandling';

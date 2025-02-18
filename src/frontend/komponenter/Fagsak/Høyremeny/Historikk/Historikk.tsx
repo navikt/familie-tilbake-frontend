@@ -3,11 +3,10 @@ import * as React from 'react';
 import { parseISO } from 'date-fns';
 import { styled } from 'styled-components';
 
-import { RessursStatus } from '@navikt/familie-typer';
-
 import { useHistorikk } from './HistorikkContext';
 import HistorikkInnslag from './HistorikkInnslag';
 import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '../../../../typer/ressurs';
 
 const StyledContainer = styled.div`
     margin-top: 10px;

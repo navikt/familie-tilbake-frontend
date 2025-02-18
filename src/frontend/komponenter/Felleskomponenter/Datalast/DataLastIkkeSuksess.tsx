@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Alert } from '@navikt/ds-react';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
 import HenterData from './HenterData';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 interface IProps {
     ressurser: (Ressurs<unknown> | undefined)[];

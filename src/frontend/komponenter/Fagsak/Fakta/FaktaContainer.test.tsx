@@ -4,8 +4,6 @@ import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
-
 import FaktaContainer from './FaktaContainer';
 import { FeilutbetalingFaktaProvider } from './FeilutbetalingFaktaContext';
 import { useBehandlingApi } from '../../../api/behandling';
@@ -21,6 +19,7 @@ import {
     IFeilutbetalingFakta,
     Tilbakekrevingsvalg,
 } from '../../../typer/feilutbetalingtyper';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: jest.fn(),

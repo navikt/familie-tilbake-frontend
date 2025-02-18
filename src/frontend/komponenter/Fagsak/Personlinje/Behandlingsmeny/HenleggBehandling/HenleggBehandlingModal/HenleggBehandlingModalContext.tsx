@@ -6,7 +6,6 @@ import {
     useSkjema,
     Valideringsstatus,
 } from '@navikt/familie-skjema';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandlingApi } from '../../../../../../api/behandling';
 import { useBehandling } from '../../../../../../context/BehandlingContext';
@@ -17,6 +16,7 @@ import {
     IBehandling,
 } from '../../../../../../typer/behandling';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../../utils';
+import { type Ressurs, RessursStatus } from '../../../../../../typer/ressurs';
 
 const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter) =>
     avhengigheter?.behandlingstype.valideringsstatus === Valideringsstatus.OK &&

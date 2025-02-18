@@ -2,13 +2,13 @@ import { useState } from 'react';
 
 import { useHttp } from '@navikt/familie-http';
 import { useSkjema, useFelt, type FeltState, feil, ok } from '@navikt/familie-skjema';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { IRestSettPåVent } from '../../../../typer/api';
 import { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
 import { isEmpty, validerGyldigDato } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
+import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 
 export const usePåVentBehandling = (
     lukkModal: () => void,

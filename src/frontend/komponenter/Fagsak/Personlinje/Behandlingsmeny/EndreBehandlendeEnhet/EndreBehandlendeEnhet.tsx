@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
-import { RessursStatus } from '@navikt/familie-typer';
 
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
@@ -10,6 +9,7 @@ import { IBehandling } from '../../../../../typer/behandling';
 import { finnMuligeEnheter, IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
 import { BehandlingsMenyButton, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
+import { RessursStatus } from '../../../../../typer/ressurs';
 
 interface IProps {
     ytelse: Ytelsetype;

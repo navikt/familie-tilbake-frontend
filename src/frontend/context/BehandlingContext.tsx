@@ -4,12 +4,6 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
 import { useHttp } from '@navikt/familie-http';
-import {
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    type Ressurs,
-    RessursStatus,
-} from '@navikt/familie-typer';
 
 import { useFagsak } from './FagsakContext';
 import {
@@ -20,6 +14,12 @@ import {
     IBehandlingsstegstilstand,
 } from '../typer/behandling';
 import { IFagsak } from '../typer/fagsak';
+import {
+    byggFeiletRessurs,
+    byggHenterRessurs,
+    type Ressurs,
+    RessursStatus,
+} from '../typer/ressurs';
 
 const erStegUtført = (status: Behandlingsstegstatus) => {
     return status === Behandlingsstegstatus.UTFØRT || status === Behandlingsstegstatus.AUTOUTFØRT;

@@ -1,11 +1,11 @@
 import * as React from 'react';
 
 import { useHttp } from '@navikt/familie-http';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { IBeregnSplittetPeriodeRespons, Periode } from '../../../../typer/feilutbetalingtyper';
 import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
 import { TimelinePeriodProps } from '@navikt/ds-react';
+import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 
 export const useDelOppPeriode = (tom: string, behandlingId: string) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);

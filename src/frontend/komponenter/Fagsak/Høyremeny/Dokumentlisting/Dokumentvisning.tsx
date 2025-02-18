@@ -4,9 +4,9 @@ import { styled } from 'styled-components';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Link } from '@navikt/ds-react';
-import { type IDokumentInfo, type IJournalpost, Journalposttype } from '@navikt/familie-typer';
 
 import HentDokument from './HentDokument';
+import { IDokumentInfo, IJournalpost, Journalposttype } from '../../../../typer/journalføring';
 
 const Dokument = styled.span`
     display: block;
