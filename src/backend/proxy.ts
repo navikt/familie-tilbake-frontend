@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { Client, getOnBehalfOfAccessToken, IApi } from '@navikt/familie-backend';
-import { stdoutLogger } from '@navikt/familie-logging';
+import { stdoutLogger } from './logging/logging';
 
 import { proxyUrl, redirectRecords } from './config';
 
