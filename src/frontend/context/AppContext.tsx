@@ -3,11 +3,10 @@ import { useState } from 'react';
 
 import createUseContext from 'constate';
 
-import { HttpProvider, useHttp } from '../../backend/http/HttpProvider';
-
 import type { IToast, ToastTyper } from '../komponenter/Felleskomponenter/Toast/typer';
 import type { Ressurs } from '../typer/ressurs';
 import { ISaksbehandler } from '../typer/saksbehandler';
+import { HttpProvider, useHttp } from '../api/http/HttpProvider';
 
 interface IInfo {
     appImage: string;

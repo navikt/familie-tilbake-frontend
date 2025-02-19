@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { useHttp } from '../../../../../backend/http/HttpProvider';
-
 import { useHistorikk } from './HistorikkContext';
 import { IHistorikkInnslag } from '../../../../typer/historikk';
 import { base64ToArrayBuffer } from '../../../../utils';
@@ -14,6 +12,7 @@ import {
     type Ressurs,
     RessursStatus,
 } from '../../../../typer/ressurs';
+import { useHttp } from '../../../../api/http/HttpProvider';
 
 interface IProps {
     innslag: IHistorikkInnslag;

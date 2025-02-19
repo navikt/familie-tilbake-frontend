@@ -15,12 +15,12 @@ import {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
-import { useHttp } from '../../../../backend/http/HttpProvider';
+import { useHttp } from '../../../api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(25000);
 
-jest.mock('../../../../backend/http/HttpProvider', () => ({
+jest.mock('../../../api/http/HttpProvider', () => ({
     useHttp: jest.fn(),
 }));
 

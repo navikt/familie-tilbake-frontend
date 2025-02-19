@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useHttp } from '../../../../../backend/http/HttpProvider';
+import { useHttp } from '../../../../api/http/HttpProvider';
 
 import { IBeregnSplittetPeriodeRespons, Periode } from '../../../../typer/feilutbetalingtyper';
 import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';

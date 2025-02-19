@@ -13,7 +13,7 @@ import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak, Målform } from '../../../../typer/fagsak';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 
-jest.mock('../../../../../backend/http/HttpProvider', () => {
+jest.mock('../../../../api/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),

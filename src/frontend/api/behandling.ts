@@ -1,5 +1,3 @@
-import { useHttp } from '../../backend/http/HttpProvider';
-
 import {
     FaktaStegPayload,
     FatteVedtakStegPayload,
@@ -19,6 +17,7 @@ import {
 import { ITotrinnkontroll } from '../typer/totrinnTyper';
 import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyper';
 import type { Ressurs } from '../typer/ressurs';
+import { useHttp } from './http/HttpProvider';
 
 const useBehandlingApi = () => {
     const behandlingerApiPrefix = '/familie-tilbake/api/behandling';

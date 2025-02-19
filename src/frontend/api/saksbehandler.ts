@@ -1,4 +1,4 @@
-import { preferredAxios } from '../../backend/http/axios';
+import { preferredAxios } from './http/axios';
 import { ISaksbehandler } from '../typer/saksbehandler';
 
 export const hentInnloggetBruker = async (): Promise<ISaksbehandler> => {

@@ -16,7 +16,7 @@ import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(10000);
 
-jest.mock('../../../../backend/http/HttpProvider', () => {
+jest.mock('../../../api/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),

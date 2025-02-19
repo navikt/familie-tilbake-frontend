@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
-import { useHttp } from '../../backend/http/HttpProvider';
-
 import { useFagsak } from './FagsakContext';
 import {
     Behandlingssteg,
@@ -20,6 +18,7 @@ import {
     type Ressurs,
     RessursStatus,
 } from '../typer/ressurs';
+import { useHttp } from '../api/http/HttpProvider';
 
 const erStegUtført = (status: Behandlingsstegstatus) => {
     return status === Behandlingsstegstatus.UTFØRT || status === Behandlingsstegstatus.AUTOUTFØRT;

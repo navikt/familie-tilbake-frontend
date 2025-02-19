@@ -19,7 +19,7 @@ import { BehandlingProvider } from '../../../../context/BehandlingContext';
 
 jest.setTimeout(10000);
 
-jest.mock('../../../../../../backend/http/HttpProvider', () => {
+jest.mock('../../../../api/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),

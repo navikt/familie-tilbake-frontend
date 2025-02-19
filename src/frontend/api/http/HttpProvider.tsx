@@ -3,8 +3,8 @@ import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import constate from 'constate';
 
 import { preferredAxios, håndterApiRespons } from './axios';
-import { ApiRessurs, Ressurs } from '../../frontend/typer/ressurs';
-import { ISaksbehandler } from '../../frontend/typer/saksbehandler';
+import { ApiRessurs, Ressurs } from '../../typer/ressurs';
+import { ISaksbehandler } from '../../typer/saksbehandler';
 
 export type FamilieRequestConfig<SkjemaData> = AxiosRequestConfig & {
     data?: SkjemaData;

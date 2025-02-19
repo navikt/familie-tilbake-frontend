@@ -4,12 +4,11 @@ import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { HttpProvider } from '../../../../../../backend/http/HttpProvider';
-
 import SplittPeriode from './SplittPeriode';
 import { HendelseType } from '../../../../../kodeverk';
 import { IBehandling } from '../../../../../typer/behandling';
 import { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
+import { HttpProvider } from '../../../../../api/http/HttpProvider';
 
 describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
     test('Tester åpning av modal', async () => {
