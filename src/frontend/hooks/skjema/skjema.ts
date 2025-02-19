@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { FamilieRequestConfig, useHttp } from '@navikt/familie-http';
 import {
     FeiloppsummeringFeil,
     Felt,
@@ -16,6 +15,7 @@ import {
     type Ressurs,
     RessursStatus,
 } from '../../typer/ressurs';
+import { FamilieRequestConfig, useHttp } from '../../api/http/HttpProvider';
 
 export const useSkjema = <Felter, SkjemaRespons>({
     felter,

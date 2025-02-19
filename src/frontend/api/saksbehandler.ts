@@ -1,4 +1,4 @@
-import { preferredAxios } from '@navikt/familie-http';
+import { preferredAxios } from './http/axios';
 import { ISaksbehandler } from '../typer/saksbehandler';
 
 export const hentInnloggetBruker = async (): Promise<ISaksbehandler> => {

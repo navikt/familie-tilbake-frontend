@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { useHttp } from '@navikt/familie-http';
-
 import { useDokumentlisting } from './DokumentlistingContext';
 import { base64ToArrayBuffer } from '../../../../utils';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
@@ -14,6 +12,7 @@ import {
     RessursStatus,
 } from '../../../../typer/ressurs';
 import { IDokumentInfo, IJournalpost } from '../../../../typer/journalføring';
+import { useHttp } from '../../../../api/http/HttpProvider';
 
 interface IProps {
     journalpost: IJournalpost;

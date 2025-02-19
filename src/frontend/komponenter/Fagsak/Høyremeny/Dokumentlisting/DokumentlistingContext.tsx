@@ -3,12 +3,11 @@ import { useState, useEffect } from 'react';
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
-import { useHttp } from '@navikt/familie-http';
-
 import { IBehandling } from '../../../../typer/behandling';
 import { Menysider } from '../Menykontainer';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
 import { IJournalpost } from '../../../../typer/journalføring';
+import { useHttp } from '../../../../api/http/HttpProvider';
 
 interface IProps {
     behandling: IBehandling;

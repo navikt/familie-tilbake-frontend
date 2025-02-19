@@ -15,7 +15,7 @@ import {
 import { IFagsak, Målform } from '../../../../../../typer/fagsak';
 import { type Ressurs, RessursStatus } from '../../../../../../typer/ressurs';
 
-jest.mock('@navikt/familie-http', () => {
+jest.mock('../../../../../../api/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),

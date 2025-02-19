@@ -2,11 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 
 import createUseContext from 'constate';
 
-import { useHttp } from '@navikt/familie-http';
-
 import { Toggles } from './toggles';
 import { hentFrontendFeilmelding } from '../utils';
 import { type Ressurs, RessursStatus } from '../typer/ressurs';
+import { useHttp } from '../api/http/HttpProvider';
 
 const [TogglesProvider, useToggles] = createUseContext(() => {
     const [toggles, settToggles] = useState<Toggles>({});

@@ -4,11 +4,10 @@ import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { HttpProvider } from '@navikt/familie-http';
-
 import SplittPeriode from './SplittPeriode';
 import { IBehandling } from '../../../../../typer/behandling';
 import { ForeldelsePeriodeSkjemeData } from '../../typer/feilutbetalingForeldelse';
+import { HttpProvider } from '../../../../../api/http/HttpProvider';
 
 describe('Tester: SplittPeriode - Foreldelse', () => {
     test('Tester åpning av modal', async () => {

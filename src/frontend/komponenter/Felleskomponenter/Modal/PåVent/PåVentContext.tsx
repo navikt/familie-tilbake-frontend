@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../../../api/http/HttpProvider';
 import { useSkjema, useFelt, type FeltState, feil, ok } from '../../../../hooks/skjema';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
