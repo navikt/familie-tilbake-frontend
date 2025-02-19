@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../../../../../backend/http/HttpProvider';
 
 import SettBehandlingTilbakeTilFaktaModal from './SettBehandlingTilbakeTilFaktaModal';
 import { useApp } from '../../../../../context/AppContext';

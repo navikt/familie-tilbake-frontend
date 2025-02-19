@@ -4,7 +4,7 @@ import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { HttpProvider } from '@navikt/familie-http';
+import { HttpProvider } from '../../../../../../backend/http/HttpProvider';
 
 import SplittPeriode from './SplittPeriode';
 import { IBehandling } from '../../../../../typer/behandling';

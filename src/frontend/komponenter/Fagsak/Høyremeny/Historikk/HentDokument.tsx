@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../../../../backend/http/HttpProvider';
 
 import { useHistorikk } from './HistorikkContext';
 import { IHistorikkInnslag } from '../../../../typer/historikk';

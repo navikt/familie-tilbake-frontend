@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import createUseContext from 'constate';
 
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../backend/http/HttpProvider';
 
 import { Toggles } from './toggles';
 import { hentFrontendFeilmelding } from '../utils';

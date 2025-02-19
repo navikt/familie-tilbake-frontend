@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../../../../../backend/http/HttpProvider';
 
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';

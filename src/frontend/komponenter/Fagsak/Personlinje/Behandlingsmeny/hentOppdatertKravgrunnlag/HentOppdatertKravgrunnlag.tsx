@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../../../../../backend/http/HttpProvider';
 
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';

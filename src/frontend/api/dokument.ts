@@ -1,4 +1,4 @@
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../backend/http/HttpProvider';
 
 import {
     BrevPayload,

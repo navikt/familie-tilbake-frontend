@@ -18,7 +18,7 @@ import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(25000);
 
-jest.mock('@navikt/familie-http', () => ({
+jest.mock('../../../../backend/http/HttpProvider', () => ({
     useHttp: jest.fn(),
 }));
 
@@ -26,7 +26,7 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
 }));
 
-jest.mock('@navikt/familie-http', () => {
+jest.mock('../../../../backend/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),

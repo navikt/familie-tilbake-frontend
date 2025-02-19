@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../../../../backend/http/HttpProvider';
 
 import { IBehandling } from '../../../../typer/behandling';
 import { Menysider } from '../Menykontainer';

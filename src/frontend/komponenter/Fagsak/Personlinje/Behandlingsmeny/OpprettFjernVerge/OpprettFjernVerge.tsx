@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../../../../../backend/http/HttpProvider';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';

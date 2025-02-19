@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { FamilieRequestConfig, useHttp } from '@navikt/familie-http';
+import { FamilieRequestConfig, useHttp } from '../../../backend/http/HttpProvider';
 import {
     FeiloppsummeringFeil,
     Felt,

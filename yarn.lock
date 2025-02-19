@@ -1540,26 +1540,12 @@
     prom-client "^15.1.2"
     redis "^4.7.0"
 
-"@navikt/familie-http@^7.0.24":
-  version "7.0.24"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-http/7.0.24/6fcefd23cce8155558468be68a9d3873eb4ab203#6fcefd23cce8155558468be68a9d3873eb4ab203"
-  integrity sha512-iT/T7wm5bQV8Y3w2OsaN7kxRVHGySEMUlCGcgCMrodgssASYNdt7I7O0he+N4tntplxqx6ruWvzPMu31dxuJxg==
-  dependencies:
-    "@navikt/familie-typer" "^8.0.2"
-    "@sentry/core" "^8.50.0"
-    constate "^3.3.2"
-
 "@navikt/familie-logging@^7.0.0", "@navikt/familie-logging@^7.0.2":
   version "7.0.3"
   resolved "https://npm.pkg.github.com/download/@navikt/familie-logging/7.0.3/64e03ec40585d30ab00c193d373f69dfa855def8#64e03ec40585d30ab00c193d373f69dfa855def8"
   integrity sha512-rhAz7p+9kRqvTJLFmFTSGfs80w+vsEwdZMhWXKeKlaegetHB3RHQMYqkxJRNKUUzZh2tzlWlHug3Du2Ue8pyMw==
   dependencies:
     winston "^3.17.0"
-
-"@navikt/familie-typer@^8.0.2":
-  version "8.0.2"
-  resolved "https://npm.pkg.github.com/download/@navikt/familie-typer/8.0.2/21bcc780c35b6a8699d1c52b54e61d83580736f7#21bcc780c35b6a8699d1c52b54e61d83580736f7"
-  integrity sha512-pKSpCzryJE6eiN/Ssox1oLLKPW5ezsT+/gTHbhgxOtM/frFSZLguSjwhgiDp2kovckJ84nxhnQurK6igw8GEHw==
 
 "@navikt/flagg-ikoner@^4.0.0":
   version "4.0.0"
@@ -1953,10 +1939,10 @@
   dependencies:
     "@sentry/types" "8.40.0"
 
-"@sentry/core@^8.50.0":
-  version "8.55.0"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.55.0.tgz#4964920229fcf649237ef13b1533dfc4b9f6b22e"
-  integrity sha512-6g7jpbefjHYs821Z+EBJ8r4Z7LT5h80YSWRJaylGS4nW5W5Z2KXzpdnyFarv37O7QjauzVC2E+PABmpkw5/JGA==
+"@sentry/core@^9.1.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-9.1.0.tgz#db7438d144b7ea405260c33082971eedab48d7f3"
+  integrity sha512-djWEzSBpMgqdF3GQuxO+kXCUX+Mgq42G4Uah/HSUBvPDHKipMmyWlutGRoFyVPPOnCDgpHu3wCt83wbpEyVmDw==
 
 "@sentry/types@8.40.0":
   version "8.40.0"

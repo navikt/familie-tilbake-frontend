@@ -1,6 +1,6 @@
 import { ChangeEvent, Dispatch, ReactNode, SetStateAction } from 'react';
 
-import { FamilieRequestConfig } from '@navikt/familie-http';
+import { FamilieRequestConfig } from '../../../backend/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '../../typer/ressurs';
 
 export interface FeltState<Verdi> {

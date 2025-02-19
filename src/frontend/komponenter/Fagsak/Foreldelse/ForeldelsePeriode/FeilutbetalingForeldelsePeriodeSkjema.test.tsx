@@ -9,7 +9,7 @@ import { Foreldelsevurdering } from '../../../../kodeverk';
 import { IBehandling } from '../../../../typer/behandling';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
-jest.mock('@navikt/familie-http', () => {
+jest.mock('../../../../../backend/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),

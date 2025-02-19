@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../backend/http/HttpProvider';
 
 import { useFagsak } from './FagsakContext';
 import {

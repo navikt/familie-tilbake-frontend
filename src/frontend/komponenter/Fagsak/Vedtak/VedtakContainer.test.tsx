@@ -20,7 +20,7 @@ import {
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
-jest.mock('@navikt/familie-http', () => {
+jest.mock('../../../../backend/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),
