@@ -43,7 +43,7 @@ spec:
           - id: 3d718ae5-f25e-47a4-b4b3-084a97604c1d # forvalterrolle 
       enabled: true
       replyURLs:
-        - "https://familietilbakekreving.intern.nav.no/auth/openid/callback"
+        - "https://tilbakekreving.intern.nav.no/auth/openid/callback"
   webproxy: true
   accessPolicy:
     outbound:
@@ -58,6 +58,8 @@ spec:
       value: api://prod-gcp.tilbake.tilbakekreving-backend/.default
     - name: TILBAKEKREVING_SVC_URL
       value: http://familie-tilbake/api
+    - name: TILBAKEKREVING_BASE_DOMAIN
+      value: tilbakekreving.intern.nav.no
   envFrom:
     - secret: tilbakekreving-frontend
   resources:
