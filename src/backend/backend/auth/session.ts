@@ -3,10 +3,11 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { PassportStatic } from 'passport';
 import redis from 'redis';
-import { RedisStore } from 'connect-redis';
-
 import { appConfig } from '../config';
+
 import { ISessionKonfigurasjon } from '../typer';
+
+import { RedisStore } from 'connect-redis';
 import {
     hentErforbindelsenTilRedisTilgjengelig,
     settErforbindelsenTilRedisTilgjengelig,

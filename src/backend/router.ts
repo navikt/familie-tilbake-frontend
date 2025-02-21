@@ -3,7 +3,7 @@ import path from 'path';
 import { Response, Request, Router, NextFunction } from 'express';
 
 import { LOG_LEVEL } from './logging/logging';
-import * as client from 'openid-client';
+import { Client } from 'openid-client';
 import { buildPath } from './config';
 import { prometheusTellere } from './metrikker';
 import { envVar } from './logging/utils';
@@ -23,7 +23,7 @@ export const redirectHvisInternUrlIPreprod = () => {
     };
 };
 
-export default (authClient: client.Configuration, router: Router) => {
+export default (authClient: Client, router: Router) => {
     router.get('/version', (_: Request, res: Response) => {
         res.status(200)
             .send({ status: 'SUKSESS', data: envVar('APP_VERSION') })

@@ -1,4 +1,4 @@
-import { Express, Router } from 'express';
+import express, { Express, Request, Response, Router } from 'express';
 import { Counter, Registry } from 'prom-client';
 import { Client } from 'openid-client';
 import { logError } from '../logging/logging';
@@ -6,7 +6,18 @@ import { ISessionKonfigurasjon } from './typer';
 import { hentErforbindelsenTilRedisTilgjengelig } from './utils';
 import passport from 'passport';
 import { konfigurerMetrikker } from './metrikker';
+import headers from './headers';
+import konfigurerPassport from './auth/azure/passport';
+import konfigurerSession from './auth/session';
+import konfigurerRouter from './router';
 
+export * from './auth/authenticate';
+export * from './auth/tokenUtils';
+export * from './config';
+export * from './typer';
+export * from './utils';
+export * from 'openid-client';
+export { Counter } from 'prom-client';
 export interface IApp {
     app: Express;
     azureAuthClient: Client;
@@ -55,6 +66,3 @@ export default async (
             process.exit(1);
         });
 };
-function express() {
-    throw new Error('Function not implemented.');
-}

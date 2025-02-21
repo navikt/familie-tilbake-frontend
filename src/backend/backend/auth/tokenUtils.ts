@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import * as client from 'openid-client';
+import { Client, TokenSet } from 'openid-client';
 import { LOG_LEVEL, logError, logInfo } from '../../logging/logging';
 import { logRequest } from '../utils';
 import { IApi } from '../typer';
@@ -24,7 +24,7 @@ const loggOgReturnerOmTokenErGyldig = (req: Request, key: string, validAccessTok
 };
 
 export interface UtledAccessTokenProps {
-    authClient: client.Configuration;
+    authClient: Client;
     req: Request;
     api: IApi;
     promise: {

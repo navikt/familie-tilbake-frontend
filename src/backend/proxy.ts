@@ -2,7 +2,7 @@ import { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
 
 import { NextFunction, Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import * as client from 'openid-client';
+import { Client } from 'openid-client';
 
 import { stdoutLogger } from './logging/logging';
 
@@ -47,7 +47,7 @@ export const doRedirectProxy = () => {
     };
 };
 
-export const attachToken = (authClient: client.Configuration, oboConfig: IApi) => {
+export const attachToken = (authClient: Client, oboConfig: IApi) => {
     return async (req: Request, _res: Response, next: NextFunction) => {
         getOnBehalfOfAccessToken(authClient, req, oboConfig).then((accessToken: string) => {
             req.headers.Authorization = `Bearer ${accessToken}`;
