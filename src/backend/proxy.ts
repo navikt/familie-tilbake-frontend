@@ -2,11 +2,13 @@ import { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
 
 import { NextFunction, Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import * as client from 'openid-client';
 
-import { Client, getOnBehalfOfAccessToken, IApi } from '@navikt/familie-backend';
 import { stdoutLogger } from './logging/logging';
 
 import { proxyUrl, redirectRecords } from './config';
+import { IApi } from './backend/typer';
+import { getOnBehalfOfAccessToken } from './backend/auth/tokenUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const restream = (proxyReq: ClientRequest, req: IncomingMessage, _res: OutgoingMessage): void => {
@@ -45,7 +47,7 @@ export const doRedirectProxy = () => {
     };
 };
 
-export const attachToken = (authClient: Client, oboConfig: IApi) => {
+export const attachToken = (authClient: client.Configuration, oboConfig: IApi) => {
     return async (req: Request, _res: Response, next: NextFunction) => {
         getOnBehalfOfAccessToken(authClient, req, oboConfig).then((accessToken: string) => {
             req.headers.Authorization = `Bearer ${accessToken}`;

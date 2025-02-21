@@ -4,7 +4,7 @@
         "outDir": "node_dist",
         "rootDir": "./src",
         "resolveJsonModule": true,
-        "types": ["express-session"],
+        "types": ["express-session", "passport"],
     },
     "include": ["./src/backend", "./src/dev-server", "./src/webpack"],
     "exclude": ["./src/frontend"],

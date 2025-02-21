@@ -2,11 +2,13 @@ import path from 'path';
 
 import { Response, Request, Router, NextFunction } from 'express';
 
-import { Client, ensureAuthenticated, envVar, logRequest } from '@navikt/familie-backend';
 import { LOG_LEVEL } from './logging/logging';
-
+import * as client from 'openid-client';
 import { buildPath } from './config';
 import { prometheusTellere } from './metrikker';
+import { envVar } from './logging/utils';
+import { logRequest } from './backend/utils';
+import { ensureAuthenticated } from './backend/auth/authenticate';
 
 export const redirectHvisInternUrlIPreprod = () => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -21,7 +23,7 @@ export const redirectHvisInternUrlIPreprod = () => {
     };
 };
 
-export default (authClient: Client, router: Router) => {
+export default (authClient: client.Configuration, router: Router) => {
     router.get('/version', (_: Request, res: Response) => {
         res.status(200)
             .send({ status: 'SUKSESS', data: envVar('APP_VERSION') })
