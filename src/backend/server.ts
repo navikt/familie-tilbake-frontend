@@ -1,3 +1,4 @@
+import './konfigurerApp';
 import path from 'path';
 import { json, urlencoded, NextFunction, Request, Response } from 'express';
 import expressStaticGzip from 'express-static-gzip';
