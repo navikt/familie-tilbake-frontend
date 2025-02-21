@@ -58,6 +58,8 @@ spec:
       value: api://prod-gcp.teamfamilie.familie-tilbake/.default
     - name: TILBAKEKREVING_SVC_URL
       value: http://familie-tilbake/api
+    - name: TILBAKEKREVING_BASE_DOMAIN
+      value: familietilbakekreving.intern.nav.no
   envFrom:
     - secret: familie-tilbake-frontend
   resources:
