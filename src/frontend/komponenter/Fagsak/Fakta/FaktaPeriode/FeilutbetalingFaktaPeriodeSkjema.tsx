@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { clsx } from 'clsx';
 import { styled } from 'styled-components';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
@@ -136,7 +135,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                         ))}
                 </StyledVStack>
             </Table.DataCell>
-            <Table.DataCell align="right" className={clsx('redText')}>
+            <Table.DataCell align="right" className="redText">
                 <BodyShort size="small">{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</BodyShort>
             </Table.DataCell>
         </Table.Row>

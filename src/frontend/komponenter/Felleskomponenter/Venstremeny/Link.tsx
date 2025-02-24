@@ -22,10 +22,7 @@ const Link: React.FC<Props> = ({ active = true, id, to, children, className }) =
             id={id}
             to={to}
             onClick={onClick}
-            className={clsx(
-                className,
-                `${location.pathname}${location.hash}` === to ? 'active' : ''
-            )}
+            className={clsx(className, `${location.pathname}${location.hash}` === to && 'active')}
         >
             {children}
         </NavLink>
