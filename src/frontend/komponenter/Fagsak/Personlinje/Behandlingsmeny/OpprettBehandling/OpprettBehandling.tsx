@@ -1,6 +1,8 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../../typer/behandling';
+import type { IFagsak } from '../../../../../typer/fagsak';
 
 import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
+import * as React from 'react';
 
 import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';
 import {
@@ -8,9 +10,7 @@ import {
     behandlingstyper,
     behandlingårsaker,
     behandlingÅrsaker,
-    IBehandling,
 } from '../../../../../typer/behandling';
-import { IFagsak } from '../../../../../typer/fagsak';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
 import {
     BehandlingsMenyButton,

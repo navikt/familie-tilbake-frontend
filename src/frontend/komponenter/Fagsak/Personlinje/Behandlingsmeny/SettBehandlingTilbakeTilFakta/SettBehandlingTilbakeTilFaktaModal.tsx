@@ -1,6 +1,5 @@
-import React from 'react';
-
 import { BodyShort, Button, Modal } from '@navikt/ds-react';
+import React from 'react';
 
 interface Props {
     isOpen: boolean;

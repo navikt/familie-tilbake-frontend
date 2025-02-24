@@ -1,20 +1,18 @@
-import * as React from 'react';
+import type {
+    JaNeiOption,
+    VilkårsvurderingSkjemaDefinisjon,
+} from '../VilkårsvurderingPeriodeSkjemaContext';
 
 import { Radio } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
+import * as React from 'react';
 
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
-import {
-    JaNeiOption,
-    jaNeiOptions,
-    OptionJA,
-    OptionNEI,
-    VilkårsvurderingSkjemaDefinisjon,
-} from '../VilkårsvurderingPeriodeSkjemaContext';
+import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;

@@ -1,11 +1,11 @@
-import { HendelseType, Vilkårsresultat } from '../../../../kodeverk';
-import {
+import type { HendelseType, Vilkårsresultat } from '../../../../kodeverk';
+import type {
     Aktsomhetsvurdering,
     GodTro,
     ReduserteBeløpInfo,
     YtelseInfo,
 } from '../../../../typer/feilutbetalingtyper';
-import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
+import type { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 
 interface VilkårsresultatInfoSkjemaData {
     vilkårsvurderingsresultat?: Vilkårsresultat;

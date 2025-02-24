@@ -1,7 +1,4 @@
-import * as React from 'react';
-
-import classNames from 'classnames';
-import { styled } from 'styled-components';
+import type { IFagsak } from '../../../typer/fagsak';
 
 import {
     AGray300,
@@ -12,11 +9,13 @@ import {
     ASpacing2,
     ASpacing8,
 } from '@navikt/ds-tokens/dist/tokens';
+import classNames from 'classnames';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import Link from './Link';
 import { erSidenAktiv, sider, visSide } from './sider';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { IFagsak } from '../../../typer/fagsak';
 import { RessursStatus } from '../../../typer/ressurs';
 
 const StyledNav = styled.nav`

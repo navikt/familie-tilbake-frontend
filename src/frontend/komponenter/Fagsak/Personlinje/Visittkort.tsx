@@ -1,8 +1,10 @@
+import type { IPerson } from '../../../typer/person';
+
 import { CopyButton, HStack, Label } from '@navikt/ds-react';
-import { IPerson } from '../../../typer/person';
-import styled from 'styled-components';
 import { ABorderStrong, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
+import styled from 'styled-components';
+
 import { FamilieIkonVelger } from './PersonIkon/FamilieIkonVelger';
 
 interface IVisittkortProps {

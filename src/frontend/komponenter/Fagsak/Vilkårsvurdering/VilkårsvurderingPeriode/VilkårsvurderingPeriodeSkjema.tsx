@@ -1,6 +1,7 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
 import {
     BodyShort,
@@ -17,7 +18,8 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import GodTroSkjema from './GodTroSkjema';
@@ -29,9 +31,9 @@ import {
     finnJaNeiOption,
     OptionNEI,
     useVilkårsvurderingPeriodeSkjema,
-    VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
 import {
     Aktsomhet,
     SærligeGrunner,
@@ -43,14 +45,11 @@ import {
     vilkårsresultatTyper,
     Ytelsetype,
 } from '../../../../kodeverk';
-import { IBehandling } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
-import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
 const StyledBox = styled(Box)`
     min-width: 20rem;

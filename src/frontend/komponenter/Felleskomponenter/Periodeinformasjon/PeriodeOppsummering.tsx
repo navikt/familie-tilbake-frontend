@@ -1,11 +1,11 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { HendelseType } from '../../../kodeverk';
 
 import { BodyShort, HGrid, HStack, Label, VStack } from '@navikt/ds-react';
 import { AOrange100, ATextDanger, ASpacing3, ASpacing5 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
-import { HendelseType, hendelsetyper } from '../../../kodeverk';
+import { hendelsetyper } from '../../../kodeverk';
 import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
 
 const StyledVStack = styled(VStack)`

@@ -1,4 +1,4 @@
-import { Periode } from './feilutbetalingtyper';
+import type { Periode } from './feilutbetalingtyper';
 
 export interface IPeriodeSkjemaData {
     index: string;

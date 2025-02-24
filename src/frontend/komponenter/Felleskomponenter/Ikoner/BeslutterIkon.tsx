@@ -1,6 +1,5 @@
-import * as React from 'react';
-
 import { PersonGavelFillIcon } from '@navikt/aksel-icons';
+import * as React from 'react';
 
 import { TidslinjeIkonbakgrunn } from './ikonelementer';
 

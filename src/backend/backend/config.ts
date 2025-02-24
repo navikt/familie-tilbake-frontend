@@ -1,5 +1,6 @@
+import type { IAppConfig } from './typer';
+
 import { envVar } from '../logging/utils';
-import { IAppConfig } from './typer';
 
 export const appConfig: IAppConfig = {
     clientId: envVar('CLIENT_ID'),

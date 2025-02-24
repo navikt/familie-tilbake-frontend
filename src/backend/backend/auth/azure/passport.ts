@@ -1,7 +1,7 @@
-import { Client, UserinfoResponse } from 'openid-client';
+import type { Client, UserinfoResponse } from 'openid-client';
 
-import { logInfo } from '../../../logging/logging';
 import azure from './azure';
+import { logInfo } from '../../../logging/logging';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async (passport: any): Promise<Client> => {

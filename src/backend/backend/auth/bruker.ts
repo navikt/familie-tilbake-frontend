@@ -1,6 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
-import { Client, TokenSet } from 'openid-client';
+import type { NextFunction, Request, Response } from 'express';
+import type { Client } from 'openid-client';
+
 import fetch from 'node-fetch';
+import { TokenSet } from 'openid-client';
+
 import { logRequest } from '../utils';
 import { getOnBehalfOfAccessToken, getTokenSetsFromSession, tokenSetSelfId } from './tokenUtils';
 import { LOG_LEVEL } from '../../logging/logging';

@@ -1,8 +1,6 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
-
 import { Alert, BodyShort, Label } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 const StyledDiv = styled.div`
     p {

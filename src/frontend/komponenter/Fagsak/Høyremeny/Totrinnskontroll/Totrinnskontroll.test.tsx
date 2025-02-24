@@ -1,16 +1,17 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
+import type { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
 
 import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
+import * as React from 'react';
 
 import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
 import { useBehandlingApi } from '../../../../api/behandling';
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { Behandlingssteg, IBehandling } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
-import { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
+import { Behandlingssteg } from '../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 
 jest.mock('../../../../context/BehandlingContext', () => ({

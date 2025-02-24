@@ -1,10 +1,10 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IFagsak } from '../../../../typer/fagsak';
 
 import { ChevronDownIcon } from '@navikt/aksel-icons';
 import { Button, Popover } from '@navikt/ds-react';
 import { AFontSizeXlarge, AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
@@ -22,7 +22,6 @@ import { ToggleName } from '../../../../context/toggles';
 import { useToggles } from '../../../../context/TogglesContext';
 import { Fagsystem } from '../../../../kodeverk';
 import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
 import { RessursStatus } from '../../../../typer/ressurs';
 
 const StyledList = styled.ul`

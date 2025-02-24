@@ -1,12 +1,12 @@
-import * as React from 'react';
-
-import { addDays, addMonths } from 'date-fns';
+import type { IBehandling } from '../../../../../typer/behandling';
 
 import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
-import { Valideringsstatus } from '../../../../../hooks/skjema/typer';
+import { addDays, addMonths } from 'date-fns';
+import * as React from 'react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { IBehandling, manuelleVenteÅrsaker, venteårsaker } from '../../../../../typer/behandling';
+import { Valideringsstatus } from '../../../../../hooks/skjema/typer';
+import { manuelleVenteÅrsaker, venteårsaker } from '../../../../../typer/behandling';
 import { dagensDato } from '../../../../../utils/dato';
 import Datovelger from '../../../../Felleskomponenter/Datovelger/Datovelger';
 import {

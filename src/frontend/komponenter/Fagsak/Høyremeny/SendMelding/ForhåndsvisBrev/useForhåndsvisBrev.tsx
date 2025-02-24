@@ -1,8 +1,6 @@
 import * as React from 'react';
 
 import { useDokumentApi } from '../../../../../api/dokument';
-import { base64ToArrayBuffer } from '../../../../../utils';
-import { useSendMelding } from '../SendMeldingContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -11,6 +9,8 @@ import {
     type Ressurs,
     RessursStatus,
 } from '../../../../../typer/ressurs';
+import { base64ToArrayBuffer } from '../../../../../utils';
+import { useSendMelding } from '../SendMeldingContext';
 
 const useForhåndsvisBrev = () => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =

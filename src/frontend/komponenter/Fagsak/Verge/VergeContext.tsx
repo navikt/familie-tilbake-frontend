@@ -1,9 +1,14 @@
-import * as React from 'react';
+import type { VergeDto, VergeStegPayload } from '../../../typer/api';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+import type { AxiosError } from 'axios';
 
-import { AxiosError } from 'axios';
 import createUseContext from 'constate';
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useBehandlingApi } from '../../../api/behandling';
+import { useBehandling } from '../../../context/BehandlingContext';
 import {
     type Avhengigheter,
     type FeltState,
@@ -12,14 +17,10 @@ import {
     useSkjema,
     Valideringsstatus,
 } from '../../../hooks/skjema';
-
-import { useBehandlingApi } from '../../../api/behandling';
-import { useBehandling } from '../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Vergetype } from '../../../kodeverk/verge';
-import { VergeDto, VergeStegPayload } from '../../../typer/api';
-import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
+import { Behandlingssteg } from '../../../typer/behandling';
+import { byggFeiletRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
 import {
     erFeltetEmpty,
     validerFødselsnummerFelt,
@@ -27,7 +28,6 @@ import {
     validerTekstFeltMaksLengde,
 } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import { byggFeiletRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 const erVergetypeOppfylt = (avhengigheter?: Avhengigheter) =>
     avhengigheter?.vergetype.valideringsstatus === Valideringsstatus.OK;

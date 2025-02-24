@@ -1,22 +1,33 @@
-import { useEffect, useState } from 'react';
-
-import { AxiosError } from 'axios';
-import createUseContext from 'constate';
-import { useNavigate } from 'react-router-dom';
-
-import { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/feilutbetalingFakta';
-import { useBehandlingApi } from '../../../api/behandling';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
-import { HendelseType, HendelseUndertype } from '../../../kodeverk';
-import { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
-import { Behandlingssteg, IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
-import {
-    HarBrukerUttaltSegValg,
+import type {
+    FaktaPeriodeSkjemaData,
+    FaktaSkjemaData,
+    Feilmelding,
+} from './typer/feilutbetalingFakta';
+import type { HendelseType, HendelseUndertype } from '../../../kodeverk';
+import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+import type {
     IFeilutbetalingFakta,
     VurderingAvBrukersUttalelse,
 } from '../../../typer/feilutbetalingtyper';
+import type { AxiosError } from 'axios';
+
+import createUseContext from 'constate';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useBehandlingApi } from '../../../api/behandling';
+import { useBehandling } from '../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
+import { Behandlingssteg } from '../../../typer/behandling';
+import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
+import {
+    byggFeiletRessurs,
+    byggHenterRessurs,
+    type Ressurs,
+    RessursStatus,
+} from '../../../typer/ressurs';
 import {
     DEFINERT_FEILMELDING,
     definerteFeilmeldinger,
@@ -24,12 +35,6 @@ import {
     validerTekstMaksLengde,
 } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import {
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    type Ressurs,
-    RessursStatus,
-} from '../../../typer/ressurs';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 

@@ -1,10 +1,11 @@
-import {
+import type {
     BrevPayload,
     ForhåndsvisHenleggelsesbrevPayload,
     ForhåndsvisVedtaksbrev,
     Fritekstavsnitt,
 } from '../typer/api';
 import type { Ressurs } from '../typer/ressurs';
+
 import { useHttp } from './http/HttpProvider';
 
 const useDokumentApi = () => {

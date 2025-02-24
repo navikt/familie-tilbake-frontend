@@ -1,6 +1,5 @@
-import * as React from 'react';
-
 import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons';
+import * as React from 'react';
 
 import { TidslinjeIkonbakgrunn } from './ikonelementer';
 import { Journalposttype } from '../../../typer/journalføring';

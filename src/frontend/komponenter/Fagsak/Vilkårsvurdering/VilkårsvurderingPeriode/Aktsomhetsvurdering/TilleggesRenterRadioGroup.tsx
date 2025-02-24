@@ -1,12 +1,13 @@
-import * as React from 'react';
+import type { Felt } from '../../../../../hooks/skjema';
+import type { JaNeiOption } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 import { BodyShort, Label, Radio } from '@navikt/ds-react';
-import type { Felt } from '../../../../../hooks/skjema';
-import { Valideringsstatus } from '../../../../../hooks/skjema';
+import * as React from 'react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { Valideringsstatus } from '../../../../../hooks/skjema';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
-import { JaNeiOption, jaNeiOptions } from '../VilkårsvurderingPeriodeSkjemaContext';
+import { jaNeiOptions } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 interface IProps {
     erLesevisning: boolean;

@@ -1,8 +1,8 @@
-import React, { ReactNode } from 'react';
-
-import { styled } from 'styled-components';
+import type { ReactNode } from 'react';
 
 import { ABorderStrong, ABgDefault, ASpacing3, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
+import React from 'react';
+import { styled } from 'styled-components';
 
 const borderRadius = 4;
 

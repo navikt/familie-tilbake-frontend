@@ -1,6 +1,7 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type {
+    JaNeiOption,
+    VilkårsvurderingSkjemaDefinisjon,
+} from '../VilkårsvurderingPeriodeSkjemaContext';
 
 import {
     BodyShort,
@@ -12,10 +13,12 @@ import {
     TextField,
     VStack,
 } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
@@ -24,11 +27,9 @@ import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårs
 import {
     ANDELER,
     EGENDEFINERT,
-    JaNeiOption,
     jaNeiOptions,
     OptionJA,
     OptionNEI,
-    VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 const StyledNormaltekst = styled(BodyShort)`

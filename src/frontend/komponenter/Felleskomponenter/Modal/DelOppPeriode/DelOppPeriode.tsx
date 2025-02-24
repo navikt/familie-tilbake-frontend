@@ -1,8 +1,5 @@
-import * as React from 'react';
-
-import { endOfMonth } from 'date-fns';
-import { styled } from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
+import type { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
+import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import {
     BodyShort,
@@ -11,12 +8,14 @@ import {
     Modal,
     MonthPicker,
     Timeline,
-    TimelinePeriodProps,
     useMonthpicker,
 } from '@navikt/ds-react';
 import { ABorderStrong, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
+import { endOfMonth } from 'date-fns';
+import * as React from 'react';
+import { styled } from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
-import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 import { formatterDatoDDMMYYYY, formatterDatostring } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
 

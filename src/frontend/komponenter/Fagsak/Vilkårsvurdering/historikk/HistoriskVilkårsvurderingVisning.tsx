@@ -1,6 +1,7 @@
-import * as React from 'react';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
 import { BodyShort, Box, Heading, HGrid, List, VStack } from '@navikt/ds-react';
+import * as React from 'react';
 
 import {
     aktsomheter,
@@ -9,9 +10,8 @@ import {
     Vilkårsresultat,
     vilkårsresultater,
 } from '../../../../kodeverk';
-import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
-import TilbakekrevingAktivitetTabell from '../VilkårsvurderingPeriode/TilbakekrevingAktivitetTabell';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../../utils';
+import TilbakekrevingAktivitetTabell from '../VilkårsvurderingPeriode/TilbakekrevingAktivitetTabell';
 
 interface IProps {
     perioder: VilkårsvurderingPeriodeSkjemaData[];

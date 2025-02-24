@@ -1,9 +1,8 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
-
 import { Modal, Loader, Heading, Alert } from '@navikt/ds-react';
 import { ASpacing1, ASpacing3, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
+
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 const StyledModal = styled(Modal)`

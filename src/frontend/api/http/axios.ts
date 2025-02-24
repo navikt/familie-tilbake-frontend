@@ -1,8 +1,11 @@
-import * as Sentry from '@sentry/core';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import type { ApiRessurs, Ressurs } from '../../typer/ressurs';
+import type { ISaksbehandler } from '../../typer/saksbehandler';
+import type { AxiosError, AxiosResponse } from 'axios';
 
-import { ISaksbehandler } from '../../typer/saksbehandler';
-import { ApiRessurs, Ressurs, RessursStatus } from '../../typer/ressurs';
+import * as Sentry from '@sentry/core';
+import axios from 'axios';
+
+import { RessursStatus } from '../../typer/ressurs';
 
 axios.defaults.baseURL = window.location.origin;
 export const preferredAxios = axios;

@@ -1,10 +1,9 @@
-import * as React from 'react';
-
-import { parseISO } from 'date-fns';
+import type { IFeilutbetalingVilkårsvurdering } from '../../../../typer/feilutbetalingtyper';
 
 import { Select } from '@navikt/ds-react';
+import { parseISO } from 'date-fns';
+import * as React from 'react';
 
-import { IFeilutbetalingVilkårsvurdering } from '../../../../typer/feilutbetalingtyper';
 import { formatterDatoOgTidstring } from '../../../../utils';
 
 interface IProps {

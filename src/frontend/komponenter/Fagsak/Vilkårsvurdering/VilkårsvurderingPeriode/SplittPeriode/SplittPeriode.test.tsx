@@ -1,14 +1,14 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../../typer/behandling';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
 
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
+import * as React from 'react';
 
 import SplittPeriode from './SplittPeriode';
-import { HendelseType } from '../../../../../kodeverk';
-import { IBehandling } from '../../../../../typer/behandling';
-import { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
+import { HendelseType } from '../../../../../kodeverk';
 
 describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
     test('Tester åpning av modal', async () => {

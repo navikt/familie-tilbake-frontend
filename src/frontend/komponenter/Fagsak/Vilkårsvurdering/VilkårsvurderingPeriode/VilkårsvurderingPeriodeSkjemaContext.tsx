@@ -1,3 +1,10 @@
+import type {
+    Aktsomhetsvurdering,
+    GodTro,
+    SærligeGrunnerDto,
+} from '../../../../typer/feilutbetalingtyper';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+
 import {
     type Avhengigheter,
     feil,
@@ -7,20 +14,13 @@ import {
     useSkjema,
     Valideringsstatus,
 } from '../../../../hooks/skjema';
-
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
-import {
-    Aktsomhetsvurdering,
-    GodTro,
-    SærligeGrunnerDto,
-} from '../../../../typer/feilutbetalingtyper';
 import {
     parseStringToNumber,
     erFeltetEmpty,
     validerNummerFelt,
     validerTekstFeltMaksLengde,
 } from '../../../../utils';
-import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
 export const EGENDEFINERT = 'Egendefinert';
 export const ANDELER = ['30', '50', '70', EGENDEFINERT];

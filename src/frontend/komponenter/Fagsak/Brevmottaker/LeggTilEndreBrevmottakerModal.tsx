@@ -1,9 +1,7 @@
-import React from 'react';
-
-import { styled } from 'styled-components';
-
 import { Button, Fieldset, Modal, Radio, RadioGroup, Select, TextField } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
+import React from 'react';
+import { styled } from 'styled-components';
 
 import { useBrevmottaker } from './BrevmottakerContext';
 import BrevmottakerSkjema from './BrevmottakerSkjema';
@@ -14,8 +12,8 @@ import {
     MottakerType,
     mottakerTypeVisningsnavn,
 } from '../../../typer/Brevmottaker';
-import { hentFrontendFeilmelding } from '../../../utils';
 import { RessursStatus } from '../../../typer/ressurs';
+import { hentFrontendFeilmelding } from '../../../utils';
 
 const FlexContainer = styled.div`
     display: flex;

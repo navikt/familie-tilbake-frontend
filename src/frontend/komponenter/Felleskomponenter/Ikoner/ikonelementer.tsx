@@ -1,6 +1,5 @@
-import { styled } from 'styled-components';
-
 import { AGray300 } from '@navikt/ds-tokens/dist/tokens';
+import { styled } from 'styled-components';
 
 export const TidslinjeIkonbakgrunn = styled.div`
     display: inline-block;

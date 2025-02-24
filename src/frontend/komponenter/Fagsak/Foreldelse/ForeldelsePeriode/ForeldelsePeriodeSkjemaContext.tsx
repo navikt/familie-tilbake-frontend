@@ -1,3 +1,5 @@
+import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+
 import {
     type Avhengigheter,
     type FeltState,
@@ -6,11 +8,9 @@ import {
     useSkjema,
     Valideringsstatus,
 } from '../../../../hooks/skjema';
-
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { erFeltetEmpty, validerGyldigDato, validerTekstFeltMaksLengde } from '../../../../utils';
 import { dateTilIsoDatoStringEllerUndefined } from '../../../../utils/dato';
-import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
 const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter) => {
     return (

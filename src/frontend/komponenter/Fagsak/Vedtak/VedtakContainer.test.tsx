@@ -1,23 +1,24 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+import type {
+    BeregningsresultatPeriode,
+    IBeregningsresultat,
+    VedtaksbrevAvsnitt,
+} from '../../../typer/vedtakTyper';
 
 import { act, render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
+import * as React from 'react';
 
 import { FeilutbetalingVedtakProvider } from './FeilutbetalingVedtakContext';
 import VedtakContainer from './VedtakContainer';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
-import { Behandlingstype, Behandlingårsak, IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
-import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
-import {
-    BeregningsresultatPeriode,
-    IBeregningsresultat,
-    VedtaksbrevAvsnitt,
-} from '../../../typer/vedtakTyper';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
+import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
+import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
+import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.mock('../../../api/http/HttpProvider', () => {

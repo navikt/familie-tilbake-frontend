@@ -1,15 +1,16 @@
-import * as React from 'react';
+import type { Ytelsetype } from '../../../../../kodeverk';
+import type { IBehandling } from '../../../../../typer/behandling';
+import type { IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
+import * as React from 'react';
 
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { Ytelsetype } from '../../../../../kodeverk';
-import { IBehandling } from '../../../../../typer/behandling';
-import { finnMuligeEnheter, IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
+import { finnMuligeEnheter } from '../../../../../typer/enhet';
+import { RessursStatus } from '../../../../../typer/ressurs';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
 import { BehandlingsMenyButton, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
-import { RessursStatus } from '../../../../../typer/ressurs';
 
 interface IProps {
     ytelse: Ytelsetype;

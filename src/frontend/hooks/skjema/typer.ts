@@ -1,7 +1,8 @@
-import { ChangeEvent, Dispatch, ReactNode, SetStateAction } from 'react';
+import type { FamilieRequestConfig } from '../../api/http/HttpProvider';
+import type { RessursStatus } from '../../typer/ressurs';
+import type { ChangeEvent, Dispatch, ReactNode, SetStateAction } from 'react';
 
-import { type Ressurs, RessursStatus } from '../../typer/ressurs';
-import { FamilieRequestConfig } from '../../api/http/HttpProvider';
+import { type Ressurs } from '../../typer/ressurs';
 
 export interface FeltState<Verdi> {
     feilmelding: ReactNode;

@@ -1,14 +1,12 @@
-import * as React from 'react';
+import type { IFeilutbetalingFakta } from '../../../../../typer/feilutbetalingtyper';
+import type { FaktaSkjemaData } from '../../typer/feilutbetalingFakta';
 
 import { BodyShort, HGrid, HStack, Table, VStack } from '@navikt/ds-react';
+import * as React from 'react';
 
-import {
-    harBrukerUttaltSegValgTilTekst,
-    IFeilutbetalingFakta,
-} from '../../../../../typer/feilutbetalingtyper';
+import { harBrukerUttaltSegValgTilTekst } from '../../../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../../../utils';
 import FaktaRevurdering from '../../FaktaRevurdering';
-import { FaktaSkjemaData } from '../../typer/feilutbetalingFakta';
 import FeilutbetalingFaktaPeriode from '../FeilutbetalingFaktaPeriodeSkjema';
 
 interface IProps {

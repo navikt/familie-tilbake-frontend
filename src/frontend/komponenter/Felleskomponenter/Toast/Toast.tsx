@@ -1,10 +1,9 @@
-import React, { useEffect, useRef } from 'react';
-
-import { styled } from 'styled-components';
+import type { IToast } from './typer';
 
 import { Alert } from '@navikt/ds-react';
+import React, { useEffect, useRef } from 'react';
+import { styled } from 'styled-components';
 
-import type { IToast } from './typer';
 import { useApp } from '../../../context/AppContext';
 
 const Container = styled.div`

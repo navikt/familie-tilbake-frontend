@@ -1,9 +1,10 @@
-import reactHooks from 'eslint-plugin-react-hooks';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import react from 'eslint-plugin-react';
+import * as importPlugin from 'eslint-plugin-import';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
     eslint.configs.recommended,
@@ -13,13 +14,38 @@ export default tseslint.config(
     eslintPluginPrettierRecommended,
     {
         languageOptions: {
-            parserOptions: { ecmaFeatures: { jsx: true } },
+            parserOptions: {
+                ecmaFeatures: { jsx: true },
+            },
         },
     },
     {
-        plugins: { 'react-hooks': reactHooks },
+        plugins: { 'react-hooks': reactHooks, import: importPlugin },
         rules: {
             ...reactHooks.configs.recommended.rules,
+            '@typescript-eslint/consistent-type-imports': [
+                'error',
+                {
+                    prefer: 'type-imports',
+                    disallowTypeAnnotations: true,
+                },
+            ],
+            'import/order': [
+                'error',
+                {
+                    groups: [
+                        ['type'],
+                        ['builtin', 'external'],
+                        ['internal'],
+                        ['parent', 'sibling', 'index'],
+                    ],
+                    'newlines-between': 'always',
+                    alphabetize: {
+                        order: 'asc',
+                        caseInsensitive: true,
+                    },
+                },
+            ],
             'react/no-unescaped-entities': 'off',
             '@typescript-eslint/no-unused-expressions': 'off',
             'react/jsx-curly-brace-presence': [

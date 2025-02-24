@@ -1,4 +1,4 @@
-import { Express } from 'express';
+import type { Express } from 'express';
 
 const styleSource = 'https://fonts.googleapis.com';
 const fontSource = 'https://fonts.gstatic.com';

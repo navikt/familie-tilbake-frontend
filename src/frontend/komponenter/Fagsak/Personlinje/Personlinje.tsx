@@ -1,21 +1,20 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IFagsak } from '../../../typer/fagsak';
+import type { IPerson } from '../../../typer/person';
 
 import { Buildings3Icon, ExternalLinkIcon, LeaveIcon } from '@navikt/aksel-icons';
 import { Link, Tag } from '@navikt/ds-react';
 import { AGray900, ATextOnInverted, ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { useLocation } from 'react-router-dom';
+import { styled } from 'styled-components';
 
 import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
+import Visittkort from './Visittkort';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
-import { IFagsak } from '../../../typer/fagsak';
-import { IPerson } from '../../../typer/person';
-import { formatterDatostring, hentAlder } from '../../../utils';
-import { useLocation } from 'react-router-dom';
-import { erHistoriskSide } from '../../Felleskomponenter/Venstremeny/sider';
-import Visittkort from './Visittkort';
 import { RessursStatus } from '../../../typer/ressurs';
+import { formatterDatostring, hentAlder } from '../../../utils';
+import { erHistoriskSide } from '../../Felleskomponenter/Venstremeny/sider';
 
 const PlaceholderDiv = styled.div`
     flex: 1;

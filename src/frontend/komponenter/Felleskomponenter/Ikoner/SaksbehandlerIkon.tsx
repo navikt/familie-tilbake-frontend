@@ -1,6 +1,5 @@
-import * as React from 'react';
-
 import { PersonPencilFillIcon } from '@navikt/aksel-icons';
+import * as React from 'react';
 
 import { TidslinjeIkonbakgrunn } from './ikonelementer';
 

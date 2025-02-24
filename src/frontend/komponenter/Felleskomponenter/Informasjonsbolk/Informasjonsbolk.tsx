@@ -1,8 +1,6 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
-
 import { BodyShort, Heading } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 const StyledContainer = styled.div`
     max-width: 30rem;

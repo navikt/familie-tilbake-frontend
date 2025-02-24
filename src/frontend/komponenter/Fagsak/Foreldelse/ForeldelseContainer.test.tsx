@@ -1,17 +1,21 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+import type {
+    ForeldelsePeriode,
+    IFeilutbetalingForeldelse,
+} from '../../../typer/feilutbetalingtyper';
 
 import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
+import * as React from 'react';
 
 import { FeilutbetalingForeldelseProvider } from './FeilutbetalingForeldelseContext';
 import ForeldelseContainer from './ForeldelseContainer';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Fagsystem, Foreldelsevurdering } from '../../../kodeverk';
-import { Behandlingstatus, IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
-import { ForeldelsePeriode, IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
+import { Behandlingstatus } from '../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(10000);

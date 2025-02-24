@@ -1,11 +1,13 @@
+import type { IPerson } from '../../../../typer/person';
+
 import * as React from 'react';
 
 import { GuttIkon } from './GuttIkon';
+import { JenteIkon } from './JenteIkon';
 import { KvinneIkon } from './KvinneIkon';
 import { MannIkon } from './MannIkon';
 import { NøytralPersonIkon } from './NøytralPersonIkon';
-import { JenteIkon } from './JenteIkon';
-import { IPerson, Kjønn } from '../../../../typer/person';
+import { Kjønn } from '../../../../typer/person';
 
 export interface IProps {
     alder: number;

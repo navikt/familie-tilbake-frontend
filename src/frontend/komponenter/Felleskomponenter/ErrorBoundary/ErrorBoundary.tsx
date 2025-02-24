@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
-import * as React from 'react';
+import type { ISaksbehandler } from '../../../typer/saksbehandler';
 
+import { Label } from '@navikt/ds-react';
 import { getCurrentScope, showReportDialog } from '@sentry/browser';
 import { captureException, withScope } from '@sentry/core';
-import { Label } from '@navikt/ds-react';
+import * as React from 'react';
 
 import { apiLoggFeil } from '../../../api/axios';
-import { ISaksbehandler } from '../../../typer/saksbehandler';
 
 interface IProps {
     autentisertSaksbehandler?: ISaksbehandler;

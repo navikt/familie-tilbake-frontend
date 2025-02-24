@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
+import type { IHistorikkInnslag } from '../../../../typer/historikk';
+import type { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
+import type { AxiosError } from 'axios';
 
-import { AxiosError } from 'axios';
 import createUseContext from 'constate';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { IBehandling } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
-import { IHistorikkInnslag } from '../../../../typer/historikk';
-import { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
-import { Menysider } from '../Menykontainer';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
 import { useHttp } from '../../../../api/http/HttpProvider';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
+import { Menysider } from '../Menykontainer';
 
 interface IProps {
     behandling: IBehandling;

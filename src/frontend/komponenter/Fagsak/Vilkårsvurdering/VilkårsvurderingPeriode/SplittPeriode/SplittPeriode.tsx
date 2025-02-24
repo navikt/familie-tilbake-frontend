@@ -1,17 +1,20 @@
+import type { IBehandling } from '../../../../../typer/behandling';
+import type {
+    IBeregnSplittetPeriodeRespons,
+    Periode,
+} from '../../../../../typer/feilutbetalingtyper';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
+import type { TimelinePeriodProps } from '@navikt/ds-react';
+
+import { Detail, Link } from '@navikt/ds-react';
 import * as React from 'react';
-
 import { styled } from 'styled-components';
-
-import { Detail, Link, TimelinePeriodProps } from '@navikt/ds-react';
 
 import splitPeriodImageUrl from '../../../../../images/splitt.svg';
 import splitPeriodImageHoverUrl from '../../../../../images/splitt_hover.svg';
-import { IBehandling } from '../../../../../typer/behandling';
-import { IBeregnSplittetPeriodeRespons, Periode } from '../../../../../typer/feilutbetalingtyper';
 import { flyttDatoISODateStr } from '../../../../../utils';
 import Image from '../../../../Felleskomponenter/Image/Image';
 import { DelOppPeriode, useDelOppPeriode } from '../../../../Felleskomponenter/Modal/DelOppPeriode';
-import { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
 
 const InlineUndertekst = styled(Detail)`
     margin-left: 0.1rem;

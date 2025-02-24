@@ -1,13 +1,13 @@
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IJournalpost } from '../../../../typer/journalføring';
+import type { AxiosError } from 'axios';
+
+import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
 
-import { AxiosError } from 'axios';
-import createUseContext from 'constate';
-
-import { IBehandling } from '../../../../typer/behandling';
-import { Menysider } from '../Menykontainer';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
-import { IJournalpost } from '../../../../typer/journalføring';
 import { useHttp } from '../../../../api/http/HttpProvider';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
+import { Menysider } from '../Menykontainer';
 
 interface IProps {
     behandling: IBehandling;

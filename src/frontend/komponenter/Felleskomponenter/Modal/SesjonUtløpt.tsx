@@ -1,6 +1,5 @@
-import React from 'react';
-
 import { BodyShort, Modal } from '@navikt/ds-react';
+import React from 'react';
 
 const UgyldigSesjon: React.FC = () => {
     return (

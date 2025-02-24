@@ -1,10 +1,10 @@
-import * as React from 'react';
-
-import classNames from 'classnames';
-import { styled } from 'styled-components';
+import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
+import classNames from 'classnames';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import {
@@ -16,7 +16,6 @@ import {
 } from '../../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
-import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 const StyledVStack = styled(VStack)`
     margin-top: ${ASpacing1};

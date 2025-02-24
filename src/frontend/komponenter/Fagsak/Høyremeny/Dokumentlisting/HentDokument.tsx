@@ -1,8 +1,9 @@
+import type { IDokumentInfo, IJournalpost } from '../../../../typer/journalføring';
+
 import * as React from 'react';
 
 import { useDokumentlisting } from './DokumentlistingContext';
-import { base64ToArrayBuffer } from '../../../../utils';
-import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
+import { useHttp } from '../../../../api/http/HttpProvider';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -11,8 +12,8 @@ import {
     type Ressurs,
     RessursStatus,
 } from '../../../../typer/ressurs';
-import { IDokumentInfo, IJournalpost } from '../../../../typer/journalføring';
-import { useHttp } from '../../../../api/http/HttpProvider';
+import { base64ToArrayBuffer } from '../../../../utils';
+import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 interface IProps {
     journalpost: IJournalpost;

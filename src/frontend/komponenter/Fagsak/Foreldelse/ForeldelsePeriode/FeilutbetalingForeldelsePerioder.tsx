@@ -1,17 +1,17 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
+import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+import type { TimelinePeriodProps } from '@navikt/ds-react';
 
+import { Button, VStack } from '@navikt/ds-react';
 import classNames from 'classnames';
-
-import { Button, TimelinePeriodProps, VStack } from '@navikt/ds-react';
+import * as React from 'react';
 
 import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
-import { IBehandling } from '../../../../typer/behandling';
-import { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
-import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
 const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean) => {
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';

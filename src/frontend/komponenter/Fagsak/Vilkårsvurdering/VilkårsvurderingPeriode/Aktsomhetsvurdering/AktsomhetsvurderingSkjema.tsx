@@ -1,11 +1,12 @@
-import * as React from 'react';
+import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 import { Radio, VStack } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
+import * as React from 'react';
 
 import GradForsettSkjema from './GradForsettSkjema';
 import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import {
     Aktsomhet,
     aktsomheter,
@@ -14,10 +15,7 @@ import {
     Vilkårsresultat,
 } from '../../../../../kodeverk';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
-import {
-    OptionNEI,
-    VilkårsvurderingSkjemaDefinisjon,
-} from '../VilkårsvurderingPeriodeSkjemaContext';
+import { OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;

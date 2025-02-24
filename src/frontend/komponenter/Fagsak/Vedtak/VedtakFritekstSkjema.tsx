@@ -1,12 +1,11 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
 import { PlusCircleIcon } from '@navikt/aksel-icons';
 import { BodyShort, Link, Textarea } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
-import { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { harVerdi, isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';

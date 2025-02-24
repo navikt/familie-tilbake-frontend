@@ -1,3 +1,6 @@
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+
 import * as React from 'react';
 
 import Dokumentlisting from './Dokumentlisting/Dokumentlisting';
@@ -8,8 +11,6 @@ import SendMelding from './SendMelding/SendMelding';
 import { SendMeldingProvider } from './SendMelding/SendMeldingContext';
 import Totrinnskontroll from './Totrinnskontroll/Totrinnskontroll';
 import { TotrinnskontrollProvider } from './Totrinnskontroll/TotrinnskontrollContext';
-import { IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
 
 export enum Menysider {
     TOTRINN = `TOTRINN`,

@@ -1,7 +1,8 @@
+import type { IPerson } from '../typer/person';
+
 import { differenceInMilliseconds } from 'date-fns';
 
 import { dagensDato, isoStringTilDate } from './dato';
-import type { IPerson } from '../typer/person';
 
 const millisekunderIEttÅr = 3.15576e10;
 

@@ -1,12 +1,12 @@
-import * as React from 'react';
+import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 import { Checkbox, CheckboxGroup, Detail, Textarea, VStack } from '@navikt/ds-react';
-import { type ISkjema } from '../../../../../hooks/skjema';
+import * as React from 'react';
 
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { type ISkjema } from '../../../../../hooks/skjema';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
-import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 interface IProps {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;

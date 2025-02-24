@@ -1,8 +1,11 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+import type { FaktaPeriode, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 
 import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
+import * as React from 'react';
 
 import FaktaContainer from './FaktaContainer';
 import { FeilutbetalingFaktaProvider } from './FeilutbetalingFaktaContext';
@@ -11,14 +14,7 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { ToggleName } from '../../../context/toggles';
 import { useToggles } from '../../../context/TogglesContext';
 import { Fagsystem, HendelseType, HendelseUndertype, Ytelsetype } from '../../../kodeverk';
-import { IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
-import {
-    FaktaPeriode,
-    HarBrukerUttaltSegValg,
-    IFeilutbetalingFakta,
-    Tilbakekrevingsvalg,
-} from '../../../typer/feilutbetalingtyper';
+import { HarBrukerUttaltSegValg, Tilbakekrevingsvalg } from '../../../typer/feilutbetalingtyper';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.mock('../../../context/BehandlingContext', () => ({

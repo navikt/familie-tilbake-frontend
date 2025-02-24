@@ -1,35 +1,36 @@
-import * as React from 'react';
-
-import { AxiosError } from 'axios';
-import createUseContext from 'constate';
-import deepEqual from 'deep-equal';
-import { useNavigate } from 'react-router-dom';
-
-import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
-import { useBehandlingApi } from '../../../api/behandling';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
-import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
-import {
+import type { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
+import type {
     PeriodeVilkårsvurderingStegPayload,
     VilkårdsvurderingStegPayload,
 } from '../../../typer/api';
-import { Behandlingssteg, Behandlingstatus, IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
-import {
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+import type {
     Aktsomhetsvurdering,
     GodTro,
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
-import { sorterFeilutbetaltePerioder } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import type { AxiosError } from 'axios';
+
+import createUseContext from 'constate';
+import deepEqual from 'deep-equal';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useBehandlingApi } from '../../../api/behandling';
+import { useBehandling } from '../../../context/BehandlingContext';
+import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
+import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
+import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
     type Ressurs,
     RessursStatus,
 } from '../../../typer/ressurs';
+import { sorterFeilutbetaltePerioder } from '../../../utils';
+import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
 const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData) => {
     return (

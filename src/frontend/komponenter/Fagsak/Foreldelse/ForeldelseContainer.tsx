@@ -1,19 +1,18 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IBehandling } from '../../../typer/behandling';
 
 import { BodyLong, BodyShort, Button, Heading } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { useFeilutbetalingForeldelse } from './FeilutbetalingForeldelseContext';
 import FeilutbetalingForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { IBehandling } from '../../../typer/behandling';
+import { RessursStatus } from '../../../typer/ressurs';
 import { finnDatoRelativtTilNå } from '../../../utils';
+import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import { RessursStatus } from '../../../typer/ressurs';
 
 const getDate = (): string => {
     return finnDatoRelativtTilNå({ months: -30 });

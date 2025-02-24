@@ -1,14 +1,13 @@
-import * as React from 'react';
-
-import { useNavigate } from 'react-router-dom';
-import { styled } from 'styled-components';
+import type { IBrevmottaker } from '../../../typer/Brevmottaker';
+import type { IInstitusjon } from '../../../typer/fagsak';
+import type { IPerson } from '../../../typer/person';
 
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Alert, Button } from '@navikt/ds-react';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { styled } from 'styled-components';
 
-import { IBrevmottaker } from '../../../typer/Brevmottaker';
-import type { IInstitusjon } from '../../../typer/fagsak';
-import type { IPerson } from '../../../typer/person';
 import BrevmottakerListe from '../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 
 const StyledAlert = styled(Alert)`

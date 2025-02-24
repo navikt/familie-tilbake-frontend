@@ -1,6 +1,5 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import {
@@ -17,24 +16,24 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { Valideringsstatus } from '../../../../hooks/skjema/typer';
 import {
     Foreldelsevurdering,
     foreldelsevurderinger,
     foreldelseVurderingTyper,
 } from '../../../../kodeverk';
-import { IBehandling } from '../../../../typer/behandling';
 import { isoStringTilDate } from '../../../../utils/dato';
 import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
-import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
-import { Valideringsstatus } from '../../../../hooks/skjema/typer';
 
 const StyledVStack = styled(VStack)`
     max-width: 50rem;

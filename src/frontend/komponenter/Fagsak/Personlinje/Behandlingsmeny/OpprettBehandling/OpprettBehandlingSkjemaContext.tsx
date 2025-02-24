@@ -1,11 +1,12 @@
-import { useFelt, useSkjema } from '../../../../../hooks/skjema';
+import type { Behandlingårsak } from '../../../../../typer/behandling';
+import type { IFagsak } from '../../../../../typer/fagsak';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useFelt, useSkjema } from '../../../../../hooks/skjema';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
-import { Behandlingstype, Behandlingårsak } from '../../../../../typer/behandling';
-import { IFagsak } from '../../../../../typer/fagsak';
-import { erFeltetEmpty } from '../../../../../utils';
+import { Behandlingstype } from '../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
+import { erFeltetEmpty } from '../../../../../utils';
 
 const useOpprettBehandlingSkjema = (
     fagsak: IFagsak,

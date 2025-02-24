@@ -1,8 +1,6 @@
-import * as React from 'react';
+import type { TimelinePeriodProps } from '@navikt/ds-react';
 
-import { styled } from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
-
+import { Timeline } from '@navikt/ds-react';
 import {
     AGreen200,
     AGreen300,
@@ -19,8 +17,10 @@ import {
     ABorderStrong,
     ASpacing5,
 } from '@navikt/ds-tokens/dist/tokens';
-import { Timeline, TimelinePeriodProps } from '@navikt/ds-react';
 import { format } from 'date-fns';
+import * as React from 'react';
+import { styled } from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
 const TidslinjeContainer = styled.div`
     border: 1px solid ${ABorderStrong};

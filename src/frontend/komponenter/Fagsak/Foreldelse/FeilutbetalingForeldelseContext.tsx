@@ -1,26 +1,27 @@
-import * as React from 'react';
+import type { ForeldelsePeriodeSkjemeData } from './typer/feilutbetalingForeldelse';
+import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../../typer/api';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+import type { IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
+import type { AxiosError } from 'axios';
 
-import { AxiosError } from 'axios';
 import createUseContext from 'constate';
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ForeldelsePeriodeSkjemeData } from './typer/feilutbetalingForeldelse';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Foreldelsevurdering } from '../../../kodeverk';
-import { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../../typer/api';
-import { Behandlingssteg, Behandlingstatus, IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
-import { IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
-import { sorterFeilutbetaltePerioder } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
     type Ressurs,
     RessursStatus,
 } from '../../../typer/ressurs';
+import { sorterFeilutbetaltePerioder } from '../../../utils';
+import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
 const utledValgtPeriode = (
     skjemaPerioder: ForeldelsePeriodeSkjemeData[],

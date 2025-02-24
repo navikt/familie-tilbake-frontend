@@ -1,18 +1,17 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { Ytelsetype } from '../../../kodeverk';
 
 import { Heading } from '@navikt/ds-react';
 import { AFontWeightBold, ATextDanger, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import FaktaSkjema from './FaktaSkjema';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Ytelsetype } from '../../../kodeverk';
+import { RessursStatus } from '../../../typer/ressurs';
+import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import { RessursStatus } from '../../../typer/ressurs';
 
 const StyledFeilutbetalingFakta = styled.div`
     padding: ${ASpacing3};

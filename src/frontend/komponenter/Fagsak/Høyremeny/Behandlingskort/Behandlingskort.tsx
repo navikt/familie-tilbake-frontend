@@ -1,19 +1,18 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
 
 import { BodyShort, Heading } from '@navikt/ds-react';
 import { AGray100, AGray400, ASpacing2, ASpacing8 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { ytelsetype } from '../../../../kodeverk';
 import {
-    IBehandling,
     behandlingsstatuser,
     behandlingsresultater,
     Behandlingstype,
     behandlingårsaker,
 } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatostring } from '../../../../utils';
 import Informasjonsbolk from '../../../Felleskomponenter/Informasjonsbolk/Informasjonsbolk';
 

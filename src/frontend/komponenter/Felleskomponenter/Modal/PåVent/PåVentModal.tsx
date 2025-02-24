@@ -1,18 +1,16 @@
-import * as React from 'react';
-
-import { addDays, addMonths } from 'date-fns';
-import { styled } from 'styled-components';
+import type { IBehandling, IBehandlingsstegstilstand } from '../../../../typer/behandling';
 
 import { Alert, BodyLong, Button, Heading, Modal, Select } from '@navikt/ds-react';
 import { ASpacing8, ATextDanger } from '@navikt/ds-tokens/dist/tokens';
-import { Valideringsstatus } from '../../../../hooks/skjema';
+import { addDays, addMonths } from 'date-fns';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { usePåVentBehandling } from './PåVentContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { Valideringsstatus } from '../../../../hooks/skjema';
 import {
     Behandlingssteg,
-    IBehandling,
-    IBehandlingsstegstilstand,
     manuelleVenteÅrsaker,
     Saksbehandlingstype,
     venteårsaker,

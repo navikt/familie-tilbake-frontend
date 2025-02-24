@@ -1,20 +1,15 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IHistorikkInnslag } from '../../../../typer/historikk';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
 import { AGray400, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import HentDokument from './HentDokument';
 import { useHistorikk } from './HistorikkContext';
 import { Behandlingssteg } from '../../../../typer/behandling';
-import {
-    Aktør,
-    aktører,
-    Historikkinnslagstype,
-    IHistorikkInnslag,
-} from '../../../../typer/historikk';
+import { Aktør, aktører, Historikkinnslagstype } from '../../../../typer/historikk';
 import { formatterDatoOgTidstring } from '../../../../utils';
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
 import { finnSideForSteg } from '../../../Felleskomponenter/Venstremeny/sider';

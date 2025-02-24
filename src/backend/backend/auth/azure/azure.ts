@@ -1,17 +1,11 @@
-import {
-    Client,
-    ClientMetadata,
-    custom,
-    Issuer,
-    Strategy,
-    StrategyOptions,
-    TokenSet,
-} from 'openid-client';
-import { appConfig } from '../../config';
+import type { Client, ClientMetadata, StrategyOptions, TokenSet } from 'openid-client';
 
-import { appendDefaultScope, tokenSetSelfId } from '../tokenUtils';
+import { custom, Issuer, Strategy } from 'openid-client';
+
 import { logDebug, logInfo } from '../../../logging/logging';
+import { appConfig } from '../../config';
 import httpProxy from '../proxy/http-proxy';
+import { appendDefaultScope, tokenSetSelfId } from '../tokenUtils';
 
 const metadata: ClientMetadata = {
     client_id: appConfig.clientId,

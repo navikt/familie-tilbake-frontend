@@ -1,9 +1,9 @@
+import type { IHistorikkInnslag } from '../../../../typer/historikk';
+
 import * as React from 'react';
 
 import { useHistorikk } from './HistorikkContext';
-import { IHistorikkInnslag } from '../../../../typer/historikk';
-import { base64ToArrayBuffer } from '../../../../utils';
-import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
+import { useHttp } from '../../../../api/http/HttpProvider';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -12,7 +12,8 @@ import {
     type Ressurs,
     RessursStatus,
 } from '../../../../typer/ressurs';
-import { useHttp } from '../../../../api/http/HttpProvider';
+import { base64ToArrayBuffer } from '../../../../utils';
+import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 interface IProps {
     innslag: IHistorikkInnslag;

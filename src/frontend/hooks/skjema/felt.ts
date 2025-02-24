@@ -1,19 +1,19 @@
-import { isChangeEvent } from './utils';
-import deepEqual from 'deep-equal';
-
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
-
-import {
-    defaultValidator,
+import type {
     Felt,
     FeltState,
     NavBaseSkjemaProps,
     NavInputProps,
     ValiderFelt,
     Avhengigheter,
-    Valideringsstatus,
 } from './typer';
+import type { ChangeEvent } from 'react';
+
+import deepEqual from 'deep-equal';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+
+import { defaultValidator, Valideringsstatus } from './typer';
+import { isChangeEvent } from './utils';
 
 /**
  * Konfigurasjon for å opprette et felt.

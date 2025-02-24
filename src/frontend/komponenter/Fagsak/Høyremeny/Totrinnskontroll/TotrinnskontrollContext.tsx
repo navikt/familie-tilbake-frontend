@@ -1,29 +1,27 @@
-import { useState, useEffect } from 'react';
+import type { TotrinnGodkjenningOption, TotrinnStegSkjemaData } from './typer/totrinnSkjemaTyper';
+import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer/api';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
+import type { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
+import type { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
+import type { AxiosError } from 'axios';
 
-import { AxiosError } from 'axios';
 import createUseContext from 'constate';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import {
-    OptionIkkeGodkjent,
-    TotrinnGodkjenningOption,
-    totrinnGodkjenningOptions,
-    TotrinnStegSkjemaData,
-} from './typer/totrinnSkjemaTyper';
+import { OptionIkkeGodkjent, totrinnGodkjenningOptions } from './typer/totrinnSkjemaTyper';
 import { useBehandlingApi } from '../../../../api/behandling';
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer/api';
-import { behandlingssteg, Behandlingssteg, IBehandling } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
-import { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
-import { hentFrontendFeilmelding, validerTekstMaksLengde } from '../../../../utils';
-import { ISide, sider } from '../../../Felleskomponenter/Venstremeny/sider';
+import { behandlingssteg, Behandlingssteg } from '../../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
     type Ressurs,
     RessursStatus,
 } from '../../../../typer/ressurs';
+import { hentFrontendFeilmelding, validerTekstMaksLengde } from '../../../../utils';
+import { sider } from '../../../Felleskomponenter/Venstremeny/sider';
 
 const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
     const option = totrinnGodkjenningOptions.find(opt => opt.verdi === verdi);

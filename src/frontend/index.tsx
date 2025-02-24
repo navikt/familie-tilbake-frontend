@@ -1,7 +1,6 @@
-import React from 'react';
-
 import axe from '@axe-core/react';
 import * as Sentry from '@sentry/browser';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 

@@ -1,18 +1,18 @@
-import { Express } from 'express';
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
-import { PassportStatic } from 'passport';
-import redis from 'redis';
-import { appConfig } from '../config';
-
-import { ISessionKonfigurasjon } from '../typer';
+import type { ISessionKonfigurasjon } from '../typer';
+import type { Express } from 'express';
+import type { PassportStatic } from 'passport';
 
 import { RedisStore } from 'connect-redis';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import redis from 'redis';
+
+import { logError, logInfo, logSecure } from '../../logging/logging';
+import { appConfig } from '../config';
 import {
     hentErforbindelsenTilRedisTilgjengelig,
     settErforbindelsenTilRedisTilgjengelig,
 } from '../utils';
-import { logError, logInfo, logSecure } from '../../logging/logging';
 
 const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     const pingHvertFjerdeMinutt = 1000 * 60 * 4; // Connection blir ugyldig etter fem minutter, pinger derfor hvert fjerde minutt

@@ -1,14 +1,12 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../../../typer/behandling';
+import type { IFagsak } from '../../../../../../typer/fagsak';
 
 import { Button, Modal, Select, Textarea } from '@navikt/ds-react';
+import * as React from 'react';
 
 import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
-import {
-    Behandlingresultat,
-    behandlingsresultater,
-    IBehandling,
-} from '../../../../../../typer/behandling';
-import { IFagsak, målform } from '../../../../../../typer/fagsak';
+import { Behandlingresultat, behandlingsresultater } from '../../../../../../typer/behandling';
+import { målform } from '../../../../../../typer/fagsak';
 import { Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
 import { LabelMedSpråk } from '../../../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';

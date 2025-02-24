@@ -1,9 +1,9 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../../typer/behandling';
 
 import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
+import * as React from 'react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { IBehandling } from '../../../../../typer/behandling';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 

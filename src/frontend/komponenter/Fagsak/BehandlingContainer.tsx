@@ -1,10 +1,11 @@
-import * as React from 'react';
-
-import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
-import { styled } from 'styled-components';
+import type { IBehandling } from '../../typer/behandling';
+import type { IFagsak } from '../../typer/fagsak';
 
 import { BodyShort } from '@navikt/ds-react';
 import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { styled } from 'styled-components';
 
 import BrevmottakerContainer from './Brevmottaker/BrevmottakerContainer';
 import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
@@ -25,8 +26,7 @@ import HistoriskVilkårsvurderingContainer from './Vilkårsvurdering/historikk/H
 import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import VilkårsvurderingContainer from './Vilkårsvurdering/VilkårsvurderingContainer';
 import { useBehandling } from '../../context/BehandlingContext';
-import { Behandlingstatus, IBehandling } from '../../typer/behandling';
-import { IFagsak } from '../../typer/fagsak';
+import { Behandlingstatus } from '../../typer/behandling';
 import {
     erHistoriskSide,
     erØnsketSideTilgjengelig,

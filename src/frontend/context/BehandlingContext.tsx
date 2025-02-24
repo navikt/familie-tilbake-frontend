@@ -1,24 +1,19 @@
+import type { IBehandling, IBehandlingsstegstilstand } from '../typer/behandling';
+import type { IFagsak } from '../typer/fagsak';
+import type { AxiosError } from 'axios';
+
+import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
 
-import { AxiosError } from 'axios';
-import createUseContext from 'constate';
-
 import { useFagsak } from './FagsakContext';
-import {
-    Behandlingssteg,
-    Behandlingsstegstatus,
-    Behandlingstatus,
-    IBehandling,
-    IBehandlingsstegstilstand,
-} from '../typer/behandling';
-import { IFagsak } from '../typer/fagsak';
+import { useHttp } from '../api/http/HttpProvider';
+import { Behandlingssteg, Behandlingsstegstatus, Behandlingstatus } from '../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
     type Ressurs,
     RessursStatus,
 } from '../typer/ressurs';
-import { useHttp } from '../api/http/HttpProvider';
 
 const erStegUtført = (status: Behandlingsstegstatus) => {
     return status === Behandlingsstegstatus.UTFØRT || status === Behandlingsstegstatus.AUTOUTFØRT;

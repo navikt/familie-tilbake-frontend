@@ -1,4 +1,6 @@
-import * as React from 'react';
+import type { FaktaSkjemaData } from './typer/feilutbetalingFakta';
+import type { Ytelsetype } from '../../../kodeverk';
+import type { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 
 import {
     Alert,
@@ -13,14 +15,14 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
+import * as React from 'react';
 
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
-import { FaktaSkjemaData } from './typer/feilutbetalingFakta';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { HendelseType, Ytelsetype } from '../../../kodeverk';
-import { HarBrukerUttaltSegValg, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
+import { HendelseType } from '../../../kodeverk';
+import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
 

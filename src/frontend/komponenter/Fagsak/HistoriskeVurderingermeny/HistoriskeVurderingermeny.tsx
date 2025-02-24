@@ -1,11 +1,9 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
 
 import { BodyLong, Heading, HStack, Link } from '@navikt/ds-react';
-
-import { IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 const Container = styled.div`
     margin: 2rem;

@@ -1,8 +1,6 @@
 import * as React from 'react';
 
 import { useDokumentApi } from '../../../../api/dokument';
-import { base64ToArrayBuffer } from '../../../../utils';
-import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -11,6 +9,8 @@ import {
     type Ressurs,
     RessursStatus,
 } from '../../../../typer/ressurs';
+import { base64ToArrayBuffer } from '../../../../utils';
+import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
 
 const useForhåndsvisVedtaksbrev = () => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =

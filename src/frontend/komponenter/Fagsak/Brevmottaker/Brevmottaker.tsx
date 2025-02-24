@@ -1,15 +1,15 @@
-import React from 'react';
-
-import { styled } from 'styled-components';
+import type { IBrevmottaker } from '../../../typer/Brevmottaker';
 
 import { PencilIcon, TrashIcon } from '@navikt/aksel-icons';
 import { Button, Heading } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import CountryData from '@navikt/land-verktoy';
+import React from 'react';
+import { styled } from 'styled-components';
 
 import { useBrevmottaker } from './BrevmottakerContext';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { IBrevmottaker, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 
 const FlexDiv = styled.div`
     display: flex;

@@ -1,12 +1,13 @@
+import type { IBehandling } from '../../../../../typer/behandling';
+import type { IFagsak } from '../../../../../typer/fagsak';
+
 import * as React from 'react';
 
+import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { ToggleName } from '../../../../../context/toggles';
 import { useToggles } from '../../../../../context/TogglesContext';
-import { IBehandling } from '../../../../../typer/behandling';
-import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
-import { useApp } from '../../../../../context/AppContext';
 interface IProps {
     behandling: IBehandling;
     fagsak: IFagsak;

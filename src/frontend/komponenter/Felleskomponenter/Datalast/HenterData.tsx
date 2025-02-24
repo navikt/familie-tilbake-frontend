@@ -1,7 +1,7 @@
-import { styled } from 'styled-components';
+import { BodyLong, Loader } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
-import { BodyLong, Loader } from '@navikt/ds-react';
+import { styled } from 'styled-components';
 
 const HenterDataContainer = styled.div`
     padding: ${ASpacing3};

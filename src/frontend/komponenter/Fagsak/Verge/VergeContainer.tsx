@@ -1,7 +1,3 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
-
 import {
     BodyLong,
     Button,
@@ -14,14 +10,16 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { useVerge } from './VergeContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
+import HenterData from '../../Felleskomponenter/Datalast/HenterData';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import HenterData from '../../Felleskomponenter/Datalast/HenterData';
 
 const StyledVerge = styled.div`
     padding: ${ASpacing3};

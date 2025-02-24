@@ -1,19 +1,19 @@
-import * as React from 'react';
-
-import { render, waitFor } from '@testing-library/react';
-import { mock } from 'jest-mock-extended';
-
-import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
-import VilkårsvurderingContainer from './VilkårsvurderingContainer';
-import { HendelseType, Ytelsetype } from '../../../kodeverk';
-import { IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
-import { useBehandling } from '../../../context/BehandlingContext';
-import {
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+import type {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
+
+import { render, waitFor } from '@testing-library/react';
+import { mock } from 'jest-mock-extended';
+import * as React from 'react';
+
+import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
+import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { useBehandlingApi } from '../../../api/behandling';
+import { useBehandling } from '../../../context/BehandlingContext';
+import { HendelseType, Ytelsetype } from '../../../kodeverk';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(25000);
