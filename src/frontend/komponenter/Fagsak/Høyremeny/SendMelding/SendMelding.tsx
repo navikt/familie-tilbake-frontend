@@ -36,7 +36,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
     const kanSende = skjema.felter.maltype.verdi !== '' && skjema.felter.fritekst.verdi !== '';
 
     return (
-        <Fieldset error={feilmelding} legend={'Send brev'} hideLegend>
+        <Fieldset error={feilmelding} legend="Send brev" hideLegend>
             {behandling.manuelleBrevmottakere.length ? (
                 <>
                     <Heading size="xsmall" spacing>
@@ -61,12 +61,12 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
             <Select
                 {...skjema.felter.maltype.hentNavInputProps(skjema.visFeilmeldinger)}
                 id="dokumentMal"
-                label={'Mal'}
+                label="Mal"
                 readOnly={erLesevisning}
                 value={skjema.felter.maltype.verdi}
                 onChange={event => onChangeMal(event)}
             >
-                <option disabled={true} value={''}>
+                <option disabled={true} value="">
                     Velg brev
                 </option>
                 {maler.map(mal => (

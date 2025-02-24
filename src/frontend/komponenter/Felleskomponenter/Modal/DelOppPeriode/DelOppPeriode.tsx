@@ -114,7 +114,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
                     <Modal.Footer>
                         <Button
                             variant="primary"
-                            key={'bekreft'}
+                            key="bekreft"
                             onClick={onSubmit}
                             disabled={senderInn}
                             size="small"
@@ -123,7 +123,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
                         </Button>
                         <Button
                             variant="tertiary"
-                            key={'avbryt'}
+                            key="avbryt"
                             onClick={() => {
                                 settVisModal(false);
                             }}

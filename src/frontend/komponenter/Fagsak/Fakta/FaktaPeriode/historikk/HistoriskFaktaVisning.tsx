@@ -19,7 +19,7 @@ interface IProps {
 const HistoriskFaktaVisning: React.FC<IProps> = ({ skjemaData, fakta }) => {
     return (
         <HGrid columns={2} gap="10">
-            <VStack gap={'6'}>
+            <VStack gap="6">
                 <HStack gap="5">
                     <div>
                         <BodyShort size="small" weight="semibold">
@@ -51,11 +51,9 @@ const HistoriskFaktaVisning: React.FC<IProps> = ({ skjemaData, fakta }) => {
                 <VStack gap="1">
                     <Table>
                         <Table.Header>
-                            <Table.HeaderCell textSize={'small'}>Periode</Table.HeaderCell>
-                            <Table.HeaderCell textSize={'small'}>Hendelse</Table.HeaderCell>
-                            <Table.HeaderCell textSize={'small'}>
-                                Feilutbetalt beløp
-                            </Table.HeaderCell>
+                            <Table.HeaderCell textSize="small">Periode</Table.HeaderCell>
+                            <Table.HeaderCell textSize="small">Hendelse</Table.HeaderCell>
+                            <Table.HeaderCell textSize="small">Feilutbetalt beløp</Table.HeaderCell>
                         </Table.Header>
                         <Table.Body>
                             {skjemaData.perioder.map((periode, i) => {
@@ -73,10 +71,10 @@ const HistoriskFaktaVisning: React.FC<IProps> = ({ skjemaData, fakta }) => {
                     </Table>
                 </VStack>
                 <VStack gap="1">
-                    <BodyShort weight="semibold" size={'small'}>
+                    <BodyShort weight="semibold" size="small">
                         Har bruker uttalt seg om feilutbetalingen?
                     </BodyShort>
-                    <BodyShort size={'small'}>
+                    <BodyShort size="small">
                         {
                             harBrukerUttaltSegValgTilTekst[
                                 skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg
@@ -84,7 +82,7 @@ const HistoriskFaktaVisning: React.FC<IProps> = ({ skjemaData, fakta }) => {
                         }
                     </BodyShort>
                     {skjemaData.vurderingAvBrukersUttalelse?.beskrivelse && (
-                        <BodyShort size={'small'}>
+                        <BodyShort size="small">
                             {skjemaData.vurderingAvBrukersUttalelse?.beskrivelse}
                         </BodyShort>
                     )}

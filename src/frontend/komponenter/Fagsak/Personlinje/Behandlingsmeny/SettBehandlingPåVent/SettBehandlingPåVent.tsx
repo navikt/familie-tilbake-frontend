@@ -79,7 +79,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                         <Spacer20 />
                         <Select
                             {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
-                            label={'Årsak'}
+                            label="Årsak"
                         >
                             <option value="" disabled>
                                 Velg årsak
@@ -102,7 +102,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                     <Modal.Footer>
                         <Button
                             variant="primary"
-                            key={'bekreft'}
+                            key="bekreft"
                             onClick={() => {
                                 onBekreft(behandling.behandlingId);
                             }}
@@ -110,7 +110,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
                         >
                             Bekreft
                         </Button>
-                        <Button variant="tertiary" key={'avbryt'} onClick={lukkModal} size="small">
+                        <Button variant="tertiary" key="avbryt" onClick={lukkModal} size="small">
                             Avbryt
                         </Button>
                     </Modal.Footer>

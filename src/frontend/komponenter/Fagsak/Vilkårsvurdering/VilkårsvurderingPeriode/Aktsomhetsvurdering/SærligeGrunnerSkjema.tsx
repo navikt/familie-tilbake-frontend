@@ -38,7 +38,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                     skjema.visFeilmeldinger
                 )}
                 name="sarligGrunnerBegrunnelse"
-                label={'Vurder særlige grunner du har vektlagt for resultatet'}
+                label="Vurder særlige grunner du har vektlagt for resultatet"
                 maxLength={3000}
                 readOnly={erLesevisning}
                 value={skjema.felter.særligeGrunnerBegrunnelse.verdi}
@@ -46,16 +46,14 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                     skjema.felter.særligeGrunnerBegrunnelse.validerOgSettFelt(event.target.value);
                     settIkkePersistertKomponent(`vilkårsvurdering`);
                 }}
-                placeholder={
-                    'Begrunn om det foreligger/ ikke foreligger særlige grunner for reduksjon av beløpet som kreves tilbake. Kryss av hvilke særlige grunner som er vektlagt for resultatet'
-                }
+                placeholder="Begrunn om det foreligger/ ikke foreligger særlige grunner for reduksjon av beløpet som kreves tilbake. Kryss av hvilke særlige grunner som er vektlagt for resultatet"
             />
             <VStack gap="1">
                 <CheckboxGroup
                     {...skjema.felter.særligeGrunner.hentNavBaseSkjemaProps(
                         skjema.visFeilmeldinger
                     )}
-                    legend={`Særlige grunner som er vektlagt (4.ledd)`}
+                    legend="Særlige grunner som er vektlagt (4.ledd)"
                     onChange={(val: SærligeGrunner[]) => onChanngeSærligeGrunner2(val)}
                     value={skjema.felter.særligeGrunner.verdi}
                     readOnly={erLesevisning}
@@ -83,7 +81,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                             );
                             settIkkePersistertKomponent(`vilkårsvurdering`);
                         }}
-                        data-testid={'annetBegrunnelse'}
+                        data-testid="annetBegrunnelse"
                     />
                 )}
             </VStack>

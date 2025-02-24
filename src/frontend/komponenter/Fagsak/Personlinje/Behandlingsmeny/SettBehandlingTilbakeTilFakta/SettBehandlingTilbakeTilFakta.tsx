@@ -81,7 +81,7 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
                 }}
                 disabled={!behandling.kanSetteTilbakeTilFakta}
             >
-                {'Sett behandling tilbake til fakta'}
+                Sett behandling tilbake til fakta
             </BehandlingsMenyButton>
 
             <SettBehandlingTilbakeTilFaktaModal

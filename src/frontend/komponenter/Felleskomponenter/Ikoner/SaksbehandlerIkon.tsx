@@ -7,7 +7,7 @@ import { TidslinjeIkonbakgrunn } from './ikonelementer';
 const SaksbehandlerIkon: React.FC = () => {
     return (
         <TidslinjeIkonbakgrunn>
-            <PersonPencilFillIcon fontSize={'1.2rem'} aria-label="Saksbehandler" />
+            <PersonPencilFillIcon fontSize="1.2rem" aria-label="Saksbehandler" />
         </TidslinjeIkonbakgrunn>
     );
 };

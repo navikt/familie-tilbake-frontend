@@ -135,7 +135,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                     <Spacer20 />
                     <Select
                         {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
-                        label={'Årsak'}
+                        label="Årsak"
                         readOnly={erAutomatiskVent}
                     >
                         <option value="" disabled>
@@ -157,7 +157,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
             <Modal.Footer>
                 <Button
                     variant="primary"
-                    key={'bekreft'}
+                    key="bekreft"
                     onClick={() => {
                         onBekreft(behandling.behandlingId);
                     }}
@@ -168,7 +168,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
                 </Button>
                 <Button
                     variant="tertiary"
-                    key={'avbryt'}
+                    key="avbryt"
                     onClick={() => onOkTaAvVent(behandling.behandlingId)}
                     size="small"
                     disabled={!behandling.kanEndres || venterPåKravgrunnlag}

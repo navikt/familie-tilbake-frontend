@@ -32,7 +32,7 @@ const Historikk: React.FC = () => {
             <DataLastIkkeSuksess
                 ressurser={[historikkInnslag]}
                 henteBeskrivelse="Henter historikk"
-                spinnerStørrelse={'large'}
+                spinnerStørrelse="large"
             />
         );
     }

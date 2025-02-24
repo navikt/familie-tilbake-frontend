@@ -117,7 +117,7 @@ const Datovelger = ({
                 {...inputProps}
                 label={label}
                 description={description}
-                placeholder={'DD.MM.ÅÅÅÅ'}
+                placeholder="DD.MM.ÅÅÅÅ"
                 readOnly={readOnly}
                 error={
                     error && visFeilmeldinger

@@ -70,7 +70,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
             )}
             {fagsak.institusjon && (
                 <InstitusjonsTag variant="info" size="small">
-                    <Buildings3Icon fontSize={'1.25rem'} />
+                    <Buildings3Icon fontSize="1.25rem" />
                     <MaksLengdeInstitusjonNavn title={fagsak.institusjon.navn}>
                         {fagsak.institusjon.navn}
                     </MaksLengdeInstitusjonNavn>
@@ -82,19 +82,19 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
             {behandling?.status === RessursStatus.SUKSESS && !erHistoriskVisning && (
                 <Link href={lagLenkeTilRevurdering()} target="_blank">
                     Gå til revurderingen
-                    <ExternalLinkIcon aria-label="Gå til revurderingen" fontSize={'1.375rem'} />
+                    <ExternalLinkIcon aria-label="Gå til revurderingen" fontSize="1.375rem" />
                 </Link>
             )}
             {!erHistoriskVisning && (
                 <Link href={lagSaksoversiktUrl()} target="_blank">
                     Gå til saksoversikt
-                    <ExternalLinkIcon aria-label="Gå til saksoversikt" fontSize={'1.375rem'} />
+                    <ExternalLinkIcon aria-label="Gå til saksoversikt" fontSize="1.375rem" />
                 </Link>
             )}
             {erHistoriskVisning && (
                 <Link href={`${location.pathname.replace(behandlingsPath, '')}`}>
                     Gå til behandling
-                    <LeaveIcon title={'Tilbake til behandlingen'} fontSize={'1.375rem'} />
+                    <LeaveIcon title="Tilbake til behandlingen" fontSize="1.375rem" />
                 </Link>
             )}
             <Behandlingsmeny fagsak={fagsak} />

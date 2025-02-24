@@ -33,7 +33,7 @@ const VedtakSkjema: React.FC<IProps> = ({
                 Vedtaksbrev
             </Heading>
             {harBrukerUttaltSeg && !erLesevisning && (
-                <StyledAlert variant={'warning'}>Husk å vurdere uttalelse fra bruker</StyledAlert>
+                <StyledAlert variant="warning">Husk å vurdere uttalelse fra bruker</StyledAlert>
             )}
             {avsnitter.map(avsnitt => {
                 return (

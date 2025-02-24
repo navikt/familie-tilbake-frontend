@@ -127,7 +127,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
                     <Modal.Footer>
                         <Button
                             variant="primary"
-                            key={'bekreft'}
+                            key="bekreft"
                             disabled={senderInn}
                             loading={senderInn}
                             onClick={() => opprettEllerFjern()}
@@ -137,7 +137,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
                         </Button>
                         <Button
                             variant="tertiary"
-                            key={'avbryt'}
+                            key="avbryt"
                             onClick={() => {
                                 settVisModal(false);
                             }}

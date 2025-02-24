@@ -36,7 +36,7 @@ const Dokumentlisting: React.FC = () => {
         }
         case RessursStatus.HENTER:
             return (
-                <HenterData størrelse={'large'} beskrivelse="Henting av dokumenter tar litt tid." />
+                <HenterData størrelse="large" beskrivelse="Henting av dokumenter tar litt tid." />
             );
         default:
             return <DataLastIkkeSuksess ressurser={[journalposter]} />;

@@ -65,7 +65,7 @@ const HentOppdatertKravgrunnlag: React.FC<IProps> = ({
                 }}
                 disabled={!behandling.kanEndres}
             >
-                {'Hent korrigert kravgrunnlag'}
+                Hent korrigert kravgrunnlag
             </BehandlingsMenyButton>
         </>
     );

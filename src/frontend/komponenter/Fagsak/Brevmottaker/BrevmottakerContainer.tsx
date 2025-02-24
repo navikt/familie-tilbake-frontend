@@ -40,7 +40,7 @@ const BrevmottakerContainer: React.FC = () => {
         <div>
             {visBrevmottakerModal && <LeggTilEndreBrevmottakerModal />}
             <StyledBrevmottaker>
-                <Heading size={'large'} level={'1'}>
+                <Heading size="large" level="1">
                     Brevmottaker(e)
                 </Heading>
                 <FlexDiv>

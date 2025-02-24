@@ -30,7 +30,7 @@ const HistoriskFaktaContainer: React.FC<IProps> = () => {
         return (
             <Container>
                 <VStack gap="5">
-                    <Alert variant={'info'}>
+                    <Alert variant="info">
                         <Heading level="2" size="small">
                             Tidligere fakta på denne behandlingen
                         </Heading>

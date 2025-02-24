@@ -56,7 +56,7 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                     <Modal.Footer>
                         <Button
                             variant="primary"
-                            key={'bekreft'}
+                            key="bekreft"
                             onClick={() => onOkTaAvVent(behandling.behandlingId)}
                             size="small"
                         >
@@ -64,7 +64,7 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
                         </Button>
                         <Button
                             variant="tertiary"
-                            key={'avbryt'}
+                            key="avbryt"
                             onClick={() => {
                                 settVisModal(false);
                             }}

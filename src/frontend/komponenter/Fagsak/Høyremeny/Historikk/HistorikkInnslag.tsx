@@ -92,7 +92,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
         return (
             <span>
                 <Link
-                    href={'#'}
+                    href="#"
                     onClick={(e: React.MouseEvent) => {
                         e.preventDefault();
                         settVisDokument(true);

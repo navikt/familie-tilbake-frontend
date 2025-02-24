@@ -17,11 +17,11 @@ const HistoriskeVurderingermeny: React.FC<{ fagsak: IFagsak; behandling: IBehand
     const basePath = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
     return (
         <Container>
-            <Heading size={'small'}>Historiske verdier</Heading>
+            <Heading size="small">Historiske verdier</Heading>
             <BodyLong>
                 Her kan du se tidligere lagrede verdier på stegene Fakta og Vilkårsvurdering.
             </BodyLong>
-            <HStack gap={'4'}>
+            <HStack gap="4">
                 <Link href={`${basePath}/inaktiv-fakta`}>Fakta</Link>
                 <Link href={`${basePath}/inaktiv-vilkaarsvurdering`}>Vilkårsvurdering</Link>
             </HStack>

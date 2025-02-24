@@ -71,7 +71,7 @@ const Totrinnskontroll: React.FC = () => {
                         <>
                             <Steginformasjon
                                 behandletSteg={stegErBehandlet}
-                                infotekst={'Kontroller endrede opplysninger og faglige vurderinger'}
+                                infotekst="Kontroller endrede opplysninger og faglige vurderinger"
                             />
                             <Spacer20 />
                         </>
@@ -81,12 +81,12 @@ const Totrinnskontroll: React.FC = () => {
                             <AngreSendTilBeslutterContainer>
                                 <Button
                                     size="small"
-                                    variant={'secondary'}
+                                    variant="secondary"
                                     onClick={angreSendTilBeslutter}
                                 >
                                     Angre sendt til beslutter
                                 </Button>
-                                {feilmelding && <Alert variant={'error'}>{feilmelding}</Alert>}
+                                {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
                             </AngreSendTilBeslutterContainer>
                         )}
                     {skjemaData.map(totrinnSteg => {

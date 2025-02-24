@@ -159,7 +159,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                     <Modal.Footer>
                         <Button
                             variant="primary"
-                            key={'bekreft'}
+                            key="bekreft"
                             disabled={senderInn}
                             loading={senderInn}
                             onClick={() => fjernBrevmottakerSteg()}
@@ -169,7 +169,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                         </Button>
                         <Button
                             variant="tertiary"
-                            key={'avbryt'}
+                            key="avbryt"
                             onClick={() => {
                                 settVisFjernModal(false);
                             }}

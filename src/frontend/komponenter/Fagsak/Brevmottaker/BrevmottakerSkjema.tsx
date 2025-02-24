@@ -45,15 +45,15 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
             <StyledFieldset legend="Skjema for manuell registrering av brevmottaker" hideLegend>
                 <TextField
                     {...skjema.felter.navn.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
-                    label={'Navn'}
+                    label="Navn"
                     readOnly={!!preutfyltNavn}
                     onChange={(event): void => {
                         skjema.felter.navn.validerOgSettFelt(event.target.value);
                     }}
                 />
                 <CountrySelect
-                    id={'country-select-brevmottaker'}
-                    label={'Land'}
+                    id="country-select-brevmottaker"
+                    label="Land"
                     flags
                     excludeList={
                         skjema.felter.mottaker.verdi === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
@@ -77,7 +77,7 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                             {...skjema.felter.adresselinje1.hentNavBaseSkjemaProps(
                                 skjema.visFeilmeldinger
                             )}
-                            label={'Adresselinje 1'}
+                            label="Adresselinje 1"
                             onChange={(event): void => {
                                 skjema.felter.adresselinje1.validerOgSettFelt(event.target.value);
                             }}
@@ -86,7 +86,7 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                             {...skjema.felter.adresselinje2.hentNavBaseSkjemaProps(
                                 skjema.visFeilmeldinger
                             )}
-                            label={'Adresselinje 2 (valgfri)'}
+                            label="Adresselinje 2 (valgfri)"
                             onChange={(event): void => {
                                 skjema.felter.adresselinje2.validerOgSettFelt(event.target.value);
                             }}
@@ -103,7 +103,7 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                                     skjema.visFeilmeldinger
                                 )}
                                 disabled={skjema.felter.land.verdi !== 'NO'}
-                                label={'Postnummer'}
+                                label="Postnummer"
                                 onChange={(event): void => {
                                     skjema.felter.postnummer.validerOgSettFelt(event.target.value);
                                 }}
@@ -113,7 +113,7 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                                     skjema.visFeilmeldinger
                                 )}
                                 disabled={skjema.felter.land.verdi !== 'NO'}
-                                label={'Poststed'}
+                                label="Poststed"
                                 onChange={(event): void => {
                                     skjema.felter.poststed.validerOgSettFelt(event.target.value);
                                 }}

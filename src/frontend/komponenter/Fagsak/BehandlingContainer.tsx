@@ -93,7 +93,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
 
     return behandling.erBehandlingHenlagt ? (
         <>
-            <StyledMainContainer id={'fagsak-main'}>
+            <StyledMainContainer id="fagsak-main">
                 <HenlagtContainer>
                     <BodyShort size="small">Behandlingen er henlagt</BodyShort>
                 </HenlagtContainer>
@@ -104,14 +104,14 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
         </>
     ) : !harKravgrunnlag ? (
         <>
-            <StyledMainContainer id={'fagsak-main'} />
+            <StyledMainContainer id="fagsak-main" />
             <StyledHøyremenyContainer>
                 <Høyremeny fagsak={fagsak} behandling={behandling} />
             </StyledHøyremenyContainer>
         </>
     ) : erHistoriskeVerdier ? (
         <>
-            <StyledMainContainer id={'fagsak-main'}>
+            <StyledMainContainer id="fagsak-main">
                 <HistoriskeVurderingermeny behandling={behandling} fagsak={fagsak} />
                 <Routes>
                     <Route
@@ -142,7 +142,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
             <StyledVenstremenyContainer>
                 <Venstremeny fagsak={fagsak} />
             </StyledVenstremenyContainer>
-            <StyledMainContainer id={'fagsak-main'}>
+            <StyledMainContainer id="fagsak-main">
                 <Routes>
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/fakta'}

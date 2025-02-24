@@ -66,7 +66,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
         <VStack gap="1">
             <HorisontalRadioGroup
                 id="harGrunnerTilReduksjon"
-                legend={'Skal særlige grunner gi reduksjon av beløpet?'}
+                legend="Skal særlige grunner gi reduksjon av beløpet?"
                 readOnly={erLesevisning}
                 value={skjema.felter.harGrunnerTilReduksjon.verdi}
                 error={
@@ -160,7 +160,7 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
                                     skjema.visFeilmeldinger
                                 )}
                                 id="belopSomSkalTilbakekreves"
-                                label={'Angi beløp som skal tilbakekreves'}
+                                label="Angi beløp som skal tilbakekreves"
                                 readOnly={erLesevisning}
                                 value={skjema.felter.uaktsomTilbakekrevesBeløp.verdi}
                                 onChange={event => {

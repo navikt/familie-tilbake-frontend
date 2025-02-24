@@ -29,14 +29,14 @@ const Visittkort = ({ navn, alder, kjønn, ident, children }: IVisittkortProps) 
             <HStack align="center" gap="4">
                 <FamilieIkonVelger alder={alder} kjønn={kjønn} width={24} height={24} />
 
-                <Label size={'small'}>
+                <Label size="small">
                     {navn} ({alder} år)
                 </Label>
 
                 <div>|</div>
                 <HStack align="center" gap="1">
                     {ident}
-                    <CopyButton copyText={ident.replace(' ', '')} size={'small'} />
+                    <CopyButton copyText={ident.replace(' ', '')} size="small" />
                 </HStack>
             </HStack>
             <GrådigChildrenContainer align="center" gap="4">

@@ -40,9 +40,7 @@ const UlagretDataModal: FC = () => {
     return (
         blocker.state === 'blocked' && (
             <ModalWrapper
-                tittel={
-                    'Du har ikke lagret dine siste endringer og vil miste disse om du forlater siden'
-                }
+                tittel="Du har ikke lagret dine siste endringer og vil miste disse om du forlater siden"
                 visModal={true}
                 onClose={onAvbryt}
                 aksjonsknapper={{

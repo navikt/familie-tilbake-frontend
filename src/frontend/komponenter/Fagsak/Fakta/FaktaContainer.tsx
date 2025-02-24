@@ -42,7 +42,7 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
                     <>
                         <Steginformasjon
                             behandletSteg={stegErBehandlet}
-                            infotekst={'Kontroller at korrekt hendelse er satt'}
+                            infotekst="Kontroller at korrekt hendelse er satt"
                         />
                         <Spacer20 />
                     </>

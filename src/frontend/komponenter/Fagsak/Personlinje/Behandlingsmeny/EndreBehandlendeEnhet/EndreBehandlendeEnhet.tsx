@@ -63,9 +63,9 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                             {...skjema.felter.enhet.hentNavInputProps(skjema.visFeilmeldinger)}
                             readOnly={false}
                             name="enhet"
-                            label={'Velg ny enhet'}
+                            label="Velg ny enhet"
                         >
-                            <option value={''} disabled={true}>
+                            <option value="" disabled={true}>
                                 Velg ny enhet
                             </option>
                             {behandendeEnheter.map(enhet => (
@@ -79,7 +79,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                             {...skjema.felter.begrunnelse.hentNavInputProps(
                                 skjema.visFeilmeldinger
                             )}
-                            label={'Begrunnelse'}
+                            label="Begrunnelse"
                             readOnly={false}
                             maxLength={400}
                         />
@@ -96,7 +96,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                         <Button
                             variant="primary"
                             disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
-                            key={'bekreft'}
+                            key="bekreft"
                             onClick={() => sendInn()}
                             size="small"
                         >
@@ -104,7 +104,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                         </Button>
                         <Button
                             variant="tertiary"
-                            key={'avbryt'}
+                            key="avbryt"
                             onClick={() => {
                                 settVisModal(false);
                             }}

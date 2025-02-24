@@ -143,7 +143,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
 
     return (
         <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
-            <HGrid columns={'1fr 4rem'}>
+            <HGrid columns="1fr 4rem">
                 <StyledStack
                     justify="space-between"
                     align={{ md: 'start', lg: 'center' }}
@@ -174,9 +174,9 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                 />
                 <Textarea
                     {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
-                    id={'begrunnelse'}
+                    id="begrunnelse"
                     name="begrunnelse"
-                    label={'Vurdering'}
+                    label="Vurdering"
                     maxLength={3000}
                     readOnly={erLesevisning}
                     value={skjema.felter.begrunnelse.verdi}

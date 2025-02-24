@@ -144,7 +144,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                 <Image
                     src={splitPeriodImageUrl}
                     srcHover={splitPeriodImageHoverUrl}
-                    altText={'Del opp perioden'}
+                    altText="Del opp perioden"
                     aria-label="Del opp perioden"
                 />
                 <InlineUndertekst>Del opp perioden</InlineUndertekst>

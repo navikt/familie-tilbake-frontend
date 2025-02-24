@@ -30,7 +30,7 @@ const TilleggesRenterRadioGroup: React.FC<IProps> = ({
     ) : (
         <HorisontalRadioGroup
             id="skalDetTilleggesRenter"
-            legend={'Skal det tillegges renter?'}
+            legend="Skal det tillegges renter?"
             value={felt.verdi}
             error={
                 visFeilmeldingerForSkjema &&

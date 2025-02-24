@@ -24,7 +24,7 @@ const VelgHistoriskFaktaVurdering: React.FC<IProps> = ({
                 );
                 settFeilutbetalingInaktivFakta(valgtVurdering);
             }}
-            label={'Velg versjon'}
+            label="Velg versjon"
         >
             <option>Velg</option>
             {feilutbetalingInaktiveFakta

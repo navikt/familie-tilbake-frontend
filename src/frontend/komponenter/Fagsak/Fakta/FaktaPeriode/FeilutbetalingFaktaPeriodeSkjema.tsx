@@ -80,7 +80,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                         <Select
                             id={`perioder.${index}.årsak`}
                             data-testid={`perioder.${index}.årsak`}
-                            label={'Årsak'}
+                            label="Årsak"
                             hideLabel
                             onChange={event => onChangeÅrsak(event)}
                             value={periode.hendelsestype || '-'}
@@ -91,7 +91,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                                         meld.periode === periode.index && meld.gjelderHendelsetype
                                 )?.melding
                             }
-                            size={'small'}
+                            size="small"
                         >
                             <option>-</option>
                             {hendelseTyper?.map(type => (
@@ -112,7 +112,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                             <Select
                                 id={`perioder.${index}.underårsak`}
                                 data-testid={`perioder.${index}.underårsak`}
-                                label={'Underårsak'}
+                                label="Underårsak"
                                 hideLabel
                                 onChange={event => onChangeUnderÅrsak(event)}
                                 value={periode.hendelsesundertype || '-'}
@@ -124,7 +124,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                                             meld.gjelderHendelseundertype
                                     )?.melding
                                 }
-                                size={'small'}
+                                size="small"
                             >
                                 <option>-</option>
                                 {hendelseUnderTyper.map(type => (

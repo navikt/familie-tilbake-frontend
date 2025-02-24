@@ -62,17 +62,17 @@ const VergeContainer: React.FC = () => {
                     )}
                     <Steginformasjon
                         behandletSteg={stegErBehandlet}
-                        infotekst={'Fyll ut og kontroller vergeopplysninger'}
+                        infotekst="Fyll ut og kontroller vergeopplysninger"
                     />
                     <Select
                         {...skjema.felter.vergetype.hentNavInputProps(skjema.visFeilmeldinger)}
                         id="vergeType"
-                        label={'Vergetype'}
+                        label="Vergetype"
                         readOnly={erLesevisning}
                         value={skjema.felter.vergetype.verdi}
                         onChange={event => onChangeVergeType(event)}
                     >
-                        <option disabled={true} value={''}>
+                        <option disabled={true} value="">
                             Velg vergetype
                         </option>
                         {Object.values(Vergetype)
@@ -87,7 +87,7 @@ const VergeContainer: React.FC = () => {
                         <HGrid columns={{ lg: 2, md: 1 }} gap="4" align="start">
                             <TextField
                                 {...skjema.felter.navn.hentNavInputProps(skjema.visFeilmeldinger)}
-                                label={'Navn'}
+                                label="Navn"
                                 readOnly={erLesevisning}
                                 value={skjema.felter.navn.verdi}
                                 onChange={event => {
@@ -100,7 +100,7 @@ const VergeContainer: React.FC = () => {
                                     {...skjema.felter.organisasjonsnummer.hentNavInputProps(
                                         skjema.visFeilmeldinger
                                     )}
-                                    label={'Organisasjonsnummer'}
+                                    label="Organisasjonsnummer"
                                     readOnly={erLesevisning}
                                     value={skjema.felter.organisasjonsnummer.verdi}
                                     onChange={event => {
@@ -115,7 +115,7 @@ const VergeContainer: React.FC = () => {
                                     {...skjema.felter.fødselsnummer.hentNavInputProps(
                                         skjema.visFeilmeldinger
                                     )}
-                                    label={'Fødselsnummer'}
+                                    label="Fødselsnummer"
                                     readOnly={erLesevisning}
                                     value={skjema.felter.fødselsnummer.verdi}
                                     onChange={event => {
@@ -130,7 +130,7 @@ const VergeContainer: React.FC = () => {
                     )}
                     <Textarea
                         {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
-                        label={'Begrunn endringene'}
+                        label="Begrunn endringene"
                         value={skjema.felter.begrunnelse.verdi}
                         readOnly={erLesevisning}
                         onChange={event => {

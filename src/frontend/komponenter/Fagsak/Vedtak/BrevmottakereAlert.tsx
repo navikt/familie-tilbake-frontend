@@ -41,10 +41,10 @@ export const BrevmottakereAlert: React.FC<Props> = ({
                         bruker={bruker}
                     />
                     <Button
-                        variant={'tertiary'}
+                        variant="tertiary"
                         onClick={() => navigate(linkTilBrevmottakerSteg)}
                         icon={<MagnifyingGlassIcon />}
-                        size={'xsmall'}
+                        size="xsmall"
                     >
                         Se detaljer
                     </Button>

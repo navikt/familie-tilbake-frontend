@@ -84,7 +84,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
                 <>
                     <Spacer8 />
                     <Textarea
-                        name={'fritekst'}
+                        name="fritekst"
                         data-testid={`fritekst-${avsnittIndex}-${index}`}
                         label={!erLesevisning ? 'Utdypende tekst' : undefined}
                         readOnly={erLesevisning}

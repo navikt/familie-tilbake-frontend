@@ -33,7 +33,7 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
         return (
             <Container>
                 <VStack gap="5">
-                    <Alert variant={'info'}>
+                    <Alert variant="info">
                         <Heading level="2" size="small">
                             Tidligere vilkårsvurderinger på denne behandlingen
                         </Heading>
