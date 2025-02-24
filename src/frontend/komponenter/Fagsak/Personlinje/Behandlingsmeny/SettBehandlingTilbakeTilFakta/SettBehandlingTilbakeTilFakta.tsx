@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { useHttp } from '@navikt/familie-http';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
-
 import SettBehandlingTilbakeTilFaktaModal from './SettBehandlingTilbakeTilFaktaModal';
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
@@ -14,6 +11,8 @@ import { IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
+import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
+import { useHttp } from '../../../../../api/http/HttpProvider';
 
 interface IProps {
     behandling: IBehandling;

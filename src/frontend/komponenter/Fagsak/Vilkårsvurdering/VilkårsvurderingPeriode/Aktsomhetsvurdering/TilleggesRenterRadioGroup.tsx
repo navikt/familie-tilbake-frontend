@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import { BodyShort, Label, Radio } from '@navikt/ds-react';
-import type { Felt } from '@navikt/familie-skjema';
-import { Valideringsstatus } from '@navikt/familie-skjema';
+import type { Felt } from '../../../../../hooks/skjema';
+import { Valideringsstatus } from '../../../../../hooks/skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';

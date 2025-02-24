@@ -8,10 +8,10 @@
         "types": ["@testing-library/jest-dom"]
     },
     "exclude": [
-        "../../node_modules",
+        "../../node_modules"
     ],
     "lib": [
         "es2015",
         "esnext"
-      ]
+    ]
 }

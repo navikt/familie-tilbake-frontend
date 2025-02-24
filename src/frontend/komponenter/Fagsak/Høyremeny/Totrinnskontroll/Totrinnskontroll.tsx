@@ -3,7 +3,6 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { Alert, BodyShort, Button, Label, Link, Radio, Textarea } from '@navikt/ds-react';
-import { RessursStatus } from '@navikt/familie-typer';
 
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {
@@ -19,6 +18,7 @@ import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
+import { RessursStatus } from '../../../../typer/ressurs';
 
 const StyledContainer = styled.div`
     margin-top: 10px;

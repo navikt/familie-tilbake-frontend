@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { Header } from '@navikt/familie-header';
-import { type ISaksbehandler } from '@navikt/familie-typer';
+import { Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
+import { LeaveIcon } from '@navikt/aksel-icons';
+import { ISaksbehandler } from '../../../typer/saksbehandler';
 
 interface IHeaderProps {
     innloggetSaksbehandler?: ISaksbehandler;
@@ -9,15 +10,28 @@ interface IHeaderProps {
 
 const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
     return (
-        <Header
-            tittelHref={'/'}
-            tittel="Nav - Tilbakekreving"
-            brukerinfo={{
-                navn: innloggetSaksbehandler?.displayName || 'Ukjent',
-            }}
-            brukerPopoverItems={[{ name: 'Logg ut', href: `${window.origin}/auth/logout` }]}
-            eksterneLenker={[]}
-        />
+        <InternalHeader>
+            <InternalHeader.Title href="/">Nav - Tilbakekreving</InternalHeader.Title>
+
+            <Spacer />
+
+            <Dropdown>
+                <InternalHeader.UserButton
+                    as={Dropdown.Toggle}
+                    name={innloggetSaksbehandler?.displayName || 'Ukjent'}
+                    description={innloggetSaksbehandler?.enhet || 'Ukjent enhet'}
+                />
+                <Dropdown.Menu>
+                    <Dropdown.Menu.List>
+                        <Dropdown.Menu.List.Item as="a" href={`${window.origin}/auth/logout`}>
+                            Logg ut
+                            <Spacer />
+                            <LeaveIcon aria-hidden fontSize="1.5rem" />
+                        </Dropdown.Menu.List.Item>
+                    </Dropdown.Menu.List>
+                </Dropdown.Menu>
+            </Dropdown>
+        </InternalHeader>
     );
 };
 

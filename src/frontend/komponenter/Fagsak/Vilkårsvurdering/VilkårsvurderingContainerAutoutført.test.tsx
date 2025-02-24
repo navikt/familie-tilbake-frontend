@@ -14,11 +14,11 @@ import {
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
 import { useBehandlingApi } from '../../../api/behandling';
-import { Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(25000);
 
-jest.mock('@navikt/familie-http', () => ({
+jest.mock('../../../api/http/HttpProvider', () => ({
     useHttp: jest.fn(),
 }));
 
@@ -26,7 +26,7 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: jest.fn(),
 }));
 
-jest.mock('@navikt/familie-http', () => {
+jest.mock('../../../api/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),

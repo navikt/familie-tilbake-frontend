@@ -4,8 +4,6 @@ import { act, render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
-
 import { FeilutbetalingVedtakProvider } from './FeilutbetalingVedtakContext';
 import VedtakContainer from './VedtakContainer';
 import { useBehandlingApi } from '../../../api/behandling';
@@ -20,8 +18,9 @@ import {
     VedtaksbrevAvsnitt,
 } from '../../../typer/vedtakTyper';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
-jest.mock('@navikt/familie-http', () => {
+jest.mock('../../../api/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),

@@ -1,8 +1,8 @@
-import { type FeltState, useFelt, useSkjema } from '@navikt/familie-skjema';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { type FeltState, useFelt, useSkjema } from '../../../../../hooks/skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../utils';
+import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 
 const useEndreBehandlendeEnhet = (behandlingId: string, lukkModal: (_vis: boolean) => void) => {
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();

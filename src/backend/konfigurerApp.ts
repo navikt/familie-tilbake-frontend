@@ -31,8 +31,8 @@ const konfigurerAzure = () => {
             settAzureAdPropsFraEnv();
             break;
         case 'production':
-            process.env.AAD_LOGOUT_REDIRECT_URL = `https://login.microsoftonline.com/navno.onmicrosoft.com/oauth2/logout?post_logout_redirect_uri=https:\\\\familietilbakekreving.intern.nav.no`;
-            process.env.AAD_REDIRECT_URL = `https://familietilbakekreving.intern.nav.no${callbackPath}`;
+            process.env.AAD_LOGOUT_REDIRECT_URL = `https://login.microsoftonline.com/navno.onmicrosoft.com/oauth2/logout?post_logout_redirect_uri=https:\\\\${process.env.TILBAKEKREVING_BASE_DOMAIN}`;
+            process.env.AAD_REDIRECT_URL = `https://${process.env.TILBAKEKREVING_BASE_DOMAIN}${callbackPath}`;
             process.env.GRAPH_API = 'https://graph.microsoft.com/v1.0/me';
             settAzureAdPropsFraEnv();
             break;

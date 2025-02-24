@@ -4,7 +4,6 @@ import { styled } from 'styled-components';
 
 import { Heading } from '@navikt/ds-react';
 import { AFontWeightBold, ATextDanger, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
-import { RessursStatus } from '@navikt/familie-typer';
 
 import FaktaSkjema from './FaktaSkjema';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
@@ -13,6 +12,7 @@ import { Ytelsetype } from '../../../kodeverk';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '../../../typer/ressurs';
 
 const StyledFeilutbetalingFakta = styled.div`
     padding: ${ASpacing3};

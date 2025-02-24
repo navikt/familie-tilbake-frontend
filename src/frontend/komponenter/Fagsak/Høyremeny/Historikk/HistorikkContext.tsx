@@ -4,14 +4,13 @@ import { AxiosError } from 'axios';
 import createUseContext from 'constate';
 import { useNavigate } from 'react-router-dom';
 
-import { useHttp } from '@navikt/familie-http';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '@navikt/familie-typer';
-
 import { IBehandling } from '../../../../typer/behandling';
 import { IFagsak } from '../../../../typer/fagsak';
 import { IHistorikkInnslag } from '../../../../typer/historikk';
 import { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 import { Menysider } from '../Menykontainer';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
+import { useHttp } from '../../../../api/http/HttpProvider';
 
 interface IProps {
     behandling: IBehandling;

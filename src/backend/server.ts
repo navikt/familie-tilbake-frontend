@@ -1,7 +1,5 @@
 import './konfigurerApp';
-
 import path from 'path';
-
 import { json, urlencoded, NextFunction, Request, Response } from 'express';
 import expressStaticGzip from 'express-static-gzip';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,14 +7,15 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-import backend, { IApp, ensureAuthenticated, envVar } from '@navikt/familie-backend';
-import { logInfo } from '@navikt/familie-logging';
-
+import { logInfo } from './logging/logging';
 import { oboTilbakeConfig, sessionConfig } from './config';
 import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
 import config from '../webpack/webpack.dev';
+import { envVar } from './logging/utils';
+import { ensureAuthenticated } from './backend/auth/authenticate';
+import backend, { IApp } from './backend';
 
 const port = 8000;
 

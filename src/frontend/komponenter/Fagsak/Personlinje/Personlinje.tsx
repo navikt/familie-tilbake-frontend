@@ -5,8 +5,6 @@ import { styled } from 'styled-components';
 import { Buildings3Icon, ExternalLinkIcon, LeaveIcon } from '@navikt/aksel-icons';
 import { Link, Tag } from '@navikt/ds-react';
 import { AGray900, ATextOnInverted, ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { RessursStatus } from '@navikt/familie-typer';
-import { Visittkort } from '@navikt/familie-visittkort';
 
 import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -16,6 +14,8 @@ import { IPerson } from '../../../typer/person';
 import { formatterDatostring, hentAlder } from '../../../utils';
 import { useLocation } from 'react-router-dom';
 import { erHistoriskSide } from '../../Felleskomponenter/Venstremeny/sider';
+import Visittkort from './Visittkort';
+import { RessursStatus } from '../../../typer/ressurs';
 
 const PlaceholderDiv = styled.div`
     flex: 1;
@@ -62,7 +62,6 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
             ident={bruker.personIdent}
             kjønn={bruker.kjønn}
             alder={hentAlder(bruker.fødselsdato)}
-            padding
         >
             {bruker.dødsdato && (
                 <DødsfallTag variant="info" size="small">
@@ -80,14 +79,12 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                 </InstitusjonsTag>
             )}
             <PlaceholderDiv />
-
             {behandling?.status === RessursStatus.SUKSESS && !erHistoriskVisning && (
                 <Link href={lagLenkeTilRevurdering()} target="_blank">
                     Gå til revurderingen
                     <ExternalLinkIcon aria-label="Gå til revurderingen" fontSize={'1.375rem'} />
                 </Link>
             )}
-
             {!erHistoriskVisning && (
                 <Link href={lagSaksoversiktUrl()} target="_blank">
                     Gå til saksoversikt
@@ -100,7 +97,6 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                     <LeaveIcon title={'Tilbake til behandlingen'} fontSize={'1.375rem'} />
                 </Link>
             )}
-
             <Behandlingsmeny fagsak={fagsak} />
         </Visittkort>
     );

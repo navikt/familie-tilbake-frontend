@@ -1,6 +1,6 @@
-import { useHttp } from '@navikt/familie-http';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 import { useCallback, useState } from 'react';
+import { type Ressurs, RessursStatus } from '../typer/ressurs';
+import { useHttp } from '../api/http/HttpProvider';
 
 export const useSammenslåPerioder = (behandlingId: string) => {
     const { request } = useHttp();

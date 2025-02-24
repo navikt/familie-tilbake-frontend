@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Radio } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '@navikt/familie-skjema';
+import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
 
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';

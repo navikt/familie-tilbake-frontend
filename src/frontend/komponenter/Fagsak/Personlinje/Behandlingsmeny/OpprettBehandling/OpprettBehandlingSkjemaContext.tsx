@@ -1,11 +1,11 @@
-import { useFelt, useSkjema } from '@navikt/familie-skjema';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
+import { useFelt, useSkjema } from '../../../../../hooks/skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { Behandlingstype, Behandlingårsak } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
 import { erFeltetEmpty } from '../../../../../utils';
+import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 
 const useOpprettBehandlingSkjema = (
     fagsak: IFagsak,

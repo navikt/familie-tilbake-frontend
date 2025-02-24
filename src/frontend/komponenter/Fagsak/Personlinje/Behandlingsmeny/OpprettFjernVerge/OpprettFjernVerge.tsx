@@ -1,14 +1,14 @@
 import * as React from 'react';
 
 import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
-import { useHttp } from '@navikt/familie-http';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { Behandlingssteg, IBehandling } from '../../../../../typer/behandling';
 import { IFagsak } from '../../../../../typer/fagsak';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
+import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
+import { useHttp } from '../../../../../api/http/HttpProvider';
 
 interface IProps {
     behandling: IBehandling;

@@ -2,18 +2,28 @@ import * as React from 'react';
 
 import { endOfMonth } from 'date-fns';
 import { styled } from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
-import { BodyShort, Button, Label, Modal, MonthPicker, useMonthpicker } from '@navikt/ds-react';
+import {
+    BodyShort,
+    Button,
+    Label,
+    Modal,
+    MonthPicker,
+    Timeline,
+    TimelinePeriodProps,
+    useMonthpicker,
+} from '@navikt/ds-react';
 import { ABorderStrong, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { type Periode as TidslinjePeriode, Tidslinje } from '@navikt/familie-tidslinje';
 
 import { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
-import { formatterDatostring } from '../../../../utils';
+import { formatterDatoDDMMYYYY, formatterDatostring } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
 
 const TidslinjeContainer = styled.div`
     border: 1px solid ${ABorderStrong};
     margin-bottom: ${ASpacing6};
+    padding: 12px 16px;
 
     .etiketter div:last-child {
         max-width: max-content;
@@ -22,7 +32,7 @@ const TidslinjeContainer = styled.div`
 
 interface IProps {
     periode: IPeriodeSkjemaData;
-    tidslinjeRader: TidslinjePeriode[][];
+    tidslinjeRader: TimelinePeriodProps[][];
     splittDato: string;
     visModal: boolean;
     senderInn: boolean;
@@ -73,7 +83,25 @@ export const DelOppPeriode: React.FC<IProps> = ({
                             )}`}
                         </BodyShort>
                         <TidslinjeContainer>
-                            <Tidslinje kompakt rader={tidslinjeRader} />
+                            <Timeline>
+                                {tidslinjeRader.map(rad => (
+                                    <Timeline.Row label="" key={uuidv4()}>
+                                        {rad.map(periode => (
+                                            <Timeline.Period
+                                                key={periode.id}
+                                                start={periode.start}
+                                                end={periode.end}
+                                                status={periode.status}
+                                                isActive={periode.isActive}
+                                                className={periode.className}
+                                            >
+                                                Periode fra {formatterDatoDDMMYYYY(periode.start)}{' '}
+                                                til {formatterDatoDDMMYYYY(periode.end)}
+                                            </Timeline.Period>
+                                        ))}
+                                    </Timeline.Row>
+                                ))}
+                            </Timeline>
                         </TidslinjeContainer>
                         <MonthPicker {...monthpickerProps} dropdownCaption>
                             <MonthPicker.Input

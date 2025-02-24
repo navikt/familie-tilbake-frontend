@@ -4,8 +4,6 @@ import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
-
 import { FeilutbetalingForeldelseProvider } from './FeilutbetalingForeldelseContext';
 import ForeldelseContainer from './ForeldelseContainer';
 import { useBehandlingApi } from '../../../api/behandling';
@@ -14,10 +12,11 @@ import { Fagsystem, Foreldelsevurdering } from '../../../kodeverk';
 import { Behandlingstatus, IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
 import { ForeldelsePeriode, IFeilutbetalingForeldelse } from '../../../typer/feilutbetalingtyper';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(10000);
 
-jest.mock('@navikt/familie-http', () => {
+jest.mock('../../../api/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),
@@ -243,7 +242,7 @@ describe('Tester: ForeldelseContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
                 })
             )
         );
@@ -269,7 +268,7 @@ describe('Tester: ForeldelseContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             )
         );
@@ -361,12 +360,12 @@ describe('Tester: ForeldelseContainer', () => {
             // Alle tidslinje knappene skal alltid være synlige
             expect(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
                 })
             ).toBeTruthy();
             expect(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             ).toBeTruthy();
 
@@ -386,7 +385,7 @@ describe('Tester: ForeldelseContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             )
         );
@@ -418,12 +417,12 @@ describe('Tester: ForeldelseContainer', () => {
         // Alle tidslinje knappene skal alltid være synlige
         expect(
             getByRole('button', {
-                name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                name: 'Suksess fra 01.01.2020 til 31.03.2020',
             })
         ).toBeTruthy();
         expect(
             getByRole('button', {
-                name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeTruthy();
 

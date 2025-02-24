@@ -4,11 +4,11 @@ import { styled } from 'styled-components';
 
 import { Alert, Fieldset, TextField } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { Valideringsstatus } from '@navikt/familie-skjema';
 import CountrySelect from '@navikt/landvelger';
 
 import { useBrevmottaker } from './BrevmottakerContext';
 import { MottakerType } from '../../../typer/Brevmottaker';
+import { Valideringsstatus } from '../../../hooks/skjema/typer';
 
 const PostnummerOgStedContainer = styled.div`
     display: grid;

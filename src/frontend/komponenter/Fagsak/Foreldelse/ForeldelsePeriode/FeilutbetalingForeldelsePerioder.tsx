@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { clsx } from 'clsx';
 
-import { Button, VStack } from '@navikt/ds-react';
-import { type Periode } from '@navikt/familie-tidslinje';
+import { Button, TimelinePeriodProps, VStack } from '@navikt/ds-react';
 
 import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
@@ -32,18 +31,18 @@ const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean)
 const genererRader = (
     perioder: ForeldelsePeriode[],
     valgtPeriode: ForeldelsePeriode | undefined
-): Periode[][] => {
+): TimelinePeriodProps[][] => {
     return [
-        perioder.map((periode, index): Periode => {
+        perioder.map((periode, index): TimelinePeriodProps => {
             const erAktivPeriode =
                 !!valgtPeriode &&
                 periode.periode.fom === valgtPeriode.periode.fom &&
                 periode.periode.tom === valgtPeriode.periode.tom;
             return {
-                tom: new Date(periode.periode.tom),
-                fom: new Date(periode.periode.fom),
-                status: 'suksess',
-                active: erAktivPeriode,
+                end: new Date(periode.periode.tom),
+                start: new Date(periode.periode.fom),
+                status: 'success',
+                isActive: erAktivPeriode,
                 id: `index_${index}`,
                 className: finnClassNamePeriode(periode, erAktivPeriode),
             };
@@ -62,7 +61,7 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
     perioder,
     erLesevisning,
 }) => {
-    const [tidslinjeRader, settTidslinjeRader] = React.useState<Periode[][]>();
+    const [tidslinjeRader, settTidslinjeRader] = React.useState<TimelinePeriodProps[][]>();
     const [disableBekreft, settDisableBekreft] = React.useState<boolean>(true);
     const {
         valgtPeriode,
@@ -89,9 +88,9 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [valgtPeriode, allePerioderBehandlet]);
 
-    const onSelectPeriode = (periode: Periode): void => {
-        const periodeFom = periode.fom.toISOString().substring(0, 10);
-        const periodeTom = periode.tom.toISOString().substring(0, 10);
+    const onSelectPeriode = (periode: TimelinePeriodProps): void => {
+        const periodeFom = periode.start.toISOString().substring(0, 10);
+        const periodeTom = periode.end.toISOString().substring(0, 10);
         const foreldelsePeriode = perioder.find(
             per => per.periode.fom === periodeFom && per.periode.tom === periodeTom
         );

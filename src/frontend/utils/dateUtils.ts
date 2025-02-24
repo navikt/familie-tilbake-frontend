@@ -6,14 +6,14 @@ import {
     Duration,
     endOfDay,
     endOfMonth,
+    format,
     isBefore,
     parseISO,
 } from 'date-fns';
 
-import { type IJournalpostRelevantDato, JournalpostDatotype } from '@navikt/familie-typer';
-
 import { isEmpty } from './validering';
 import { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
+import { IJournalpostRelevantDato, JournalpostDatotype } from '../typer/journalføring';
 
 const datoformat: Intl.DateTimeFormatOptions = {
     day: '2-digit',
@@ -149,4 +149,8 @@ export const hentDatoRegistrertSendt = (
 
     // @ts-expect-error Får alltid en av disse datoene
     return parseISO(datoRegistrert.dato);
+};
+
+export const formatterDatoDDMMYYYY = (dato: Date) => {
+    return format(new Date(dato), 'dd.MM.yyyy');
 };

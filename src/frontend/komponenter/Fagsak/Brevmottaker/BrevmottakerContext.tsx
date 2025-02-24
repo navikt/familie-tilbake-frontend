@@ -12,8 +12,7 @@ import {
     ok,
     useFelt,
     useSkjema,
-} from '@navikt/familie-skjema';
-import { byggHenterRessurs, type Ressurs, RessursStatus } from '@navikt/familie-typer';
+} from '../../../hooks/skjema';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -28,6 +27,7 @@ import {
 import { IFagsak } from '../../../typer/fagsak';
 import { isNumeric } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { byggHenterRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 const feilNårFeltetErTomt = (felt: FeltState<string>, feilmelding?: string) => {
     return felt.verdi === '' ? feil(felt, feilmelding || 'Feltet er påkrevd') : undefined;

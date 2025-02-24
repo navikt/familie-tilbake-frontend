@@ -4,8 +4,6 @@ import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
-
 import VergeContainer from './VergeContainer';
 import { VergeProvider } from './VergeContext';
 import { useBehandlingApi } from '../../../api/behandling';
@@ -14,8 +12,9 @@ import { Vergetype } from '../../../kodeverk/verge';
 import { VergeDto } from '../../../typer/api';
 import { IBehandling } from '../../../typer/behandling';
 import { IFagsak } from '../../../typer/fagsak';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
-jest.mock('@navikt/familie-http', () => {
+jest.mock('../../../api/http/HttpProvider', () => {
     return {
         useHttp: () => ({
             request: () => jest.fn(),

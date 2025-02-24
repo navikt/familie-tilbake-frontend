@@ -10,8 +10,7 @@ import {
     useFelt,
     useSkjema,
     Valideringsstatus,
-} from '@navikt/familie-skjema';
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
+} from '../../../../hooks/skjema';
 
 import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';
@@ -25,6 +24,7 @@ import {
     validerTekstFeltMaksLengde,
 } from '../../../../utils';
 import { sider } from '../../../Felleskomponenter/Venstremeny/sider';
+import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 
 interface Mottaker {
     verdi: string;

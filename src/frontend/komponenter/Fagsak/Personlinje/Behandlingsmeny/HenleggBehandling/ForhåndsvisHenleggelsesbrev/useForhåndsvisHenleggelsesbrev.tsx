@@ -2,7 +2,12 @@ import * as React from 'react';
 
 import { AxiosError } from 'axios';
 
-import { type ISkjema } from '@navikt/familie-skjema';
+import { type ISkjema } from '../../../../../../hooks/skjema';
+
+import { useDokumentApi } from '../../../../../../api/dokument';
+import { IBehandling } from '../../../../../../typer/behandling';
+import { base64ToArrayBuffer } from '../../../../../../utils';
+import { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -10,12 +15,7 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '@navikt/familie-typer';
-
-import { useDokumentApi } from '../../../../../../api/dokument';
-import { IBehandling } from '../../../../../../typer/behandling';
-import { base64ToArrayBuffer } from '../../../../../../utils';
-import { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
+} from '../../../../../../typer/ressurs';
 
 interface IProps {
     skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;

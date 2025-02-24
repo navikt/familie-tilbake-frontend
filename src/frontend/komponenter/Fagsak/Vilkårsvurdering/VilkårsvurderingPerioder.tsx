@@ -3,9 +3,8 @@ import * as React from 'react';
 import { clsx } from 'clsx';
 import { styled } from 'styled-components';
 
-import { BodyShort, Button, VStack } from '@navikt/ds-react';
+import { BodyShort, Button, TimelinePeriodProps, VStack } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
-import { type Periode } from '@navikt/familie-tidslinje';
 
 import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
@@ -52,18 +51,18 @@ const genererRader = (
     perioder: VilkårsvurderingPeriodeSkjemaData[],
     valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined,
     erTotalbeløpUnder4Rettsgebyr: boolean
-): Periode[][] => {
+): TimelinePeriodProps[][] => {
     return [
-        perioder.map((periode, index): Periode => {
+        perioder.map((periode, index): TimelinePeriodProps => {
             const erAktivPeriode =
                 !!valgtPeriode &&
                 periode.periode.fom === valgtPeriode.periode.fom &&
                 periode.periode.tom === valgtPeriode.periode.tom;
             return {
-                tom: new Date(periode.periode.tom),
-                fom: new Date(periode.periode.fom),
-                status: 'suksess',
-                active: erAktivPeriode,
+                end: new Date(periode.periode.tom),
+                start: new Date(periode.periode.fom),
+                status: 'success',
+                isActive: erAktivPeriode,
                 id: `index_${index}`,
                 className: finnClassNamePeriode(
                     periode,
@@ -114,9 +113,9 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         !allePerioderBehandlet ||
         !behandling.kanEndres;
 
-    const onSelectPeriode = (periode: Periode) => {
-        const periodeFom = periode.fom.toISOString().substring(0, 10);
-        const periodeTom = periode.tom.toISOString().substring(0, 10);
+    const onSelectPeriode = (periode: TimelinePeriodProps) => {
+        const periodeFom = periode.start.toISOString().substring(0, 10);
+        const periodeTom = periode.end.toISOString().substring(0, 10);
         const vilkårsvurderingPeriode = perioder.find(
             per => per.periode.fom === periodeFom && per.periode.tom === periodeTom
         );

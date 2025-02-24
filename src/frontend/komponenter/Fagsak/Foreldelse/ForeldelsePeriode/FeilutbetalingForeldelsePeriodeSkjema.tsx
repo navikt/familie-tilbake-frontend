@@ -17,7 +17,6 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
-import { Valideringsstatus } from '@navikt/familie-skjema';
 
 import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
@@ -35,6 +34,7 @@ import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/P
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+import { Valideringsstatus } from '../../../../hooks/skjema/typer';
 
 const StyledVStack = styled(VStack)`
     max-width: 50rem;

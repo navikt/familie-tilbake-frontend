@@ -3,8 +3,6 @@ import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 
-import { RessursStatus } from '@navikt/familie-typer';
-
 import BehandlingContainer from './BehandlingContainer';
 import Personlinje from './Personlinje/Personlinje';
 import { useBehandling } from '../../context/BehandlingContext';
@@ -16,6 +14,7 @@ import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
 import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 import DataLastIkkeSuksess from '../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '../../typer/ressurs';
 
 const HØYDE_HEADER = 48;
 const HØYDE_PERSONLINJE = 48;

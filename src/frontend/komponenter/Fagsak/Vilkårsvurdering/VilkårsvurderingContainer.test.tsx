@@ -4,8 +4,6 @@ import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
-import { type Ressurs, RessursStatus } from '@navikt/familie-typer';
-
 import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { useBehandlingApi } from '../../../api/behandling';
@@ -17,11 +15,12 @@ import {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
-import { useHttp } from '@navikt/familie-http';
+import { useHttp } from '../../../api/http/HttpProvider';
+import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(25000);
 
-jest.mock('@navikt/familie-http', () => ({
+jest.mock('../../../api/http/HttpProvider', () => ({
     useHttp: jest.fn(),
 }));
 
@@ -469,7 +468,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
             expect(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
                 })
             ).toBeTruthy();
         });
@@ -477,7 +476,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
                 })
             )
         );
@@ -515,7 +514,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             )
         );
@@ -639,12 +638,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
             // Alle tidslinje knappene skal alltid være synlige
             expect(
                 getByRole('button', {
-                    name: 'suksess fra 01.01.2020 til og med 31.03.2020',
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
                 })
             ).toBeTruthy();
             expect(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             ).toBeTruthy();
 
@@ -667,7 +666,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             // Bruker klikker seg videre til den andre perioden
             user.click(
                 getByRole('button', {
-                    name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
                 })
             )
         );
@@ -711,12 +710,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
         // Alle tidslinje knappene skal alltid være synlige
         expect(
             getByRole('button', {
-                name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeTruthy();
         expect(
             getByRole('button', {
-                name: 'suksess fra 01.05.2020 til og med 30.06.2020',
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeTruthy();
 

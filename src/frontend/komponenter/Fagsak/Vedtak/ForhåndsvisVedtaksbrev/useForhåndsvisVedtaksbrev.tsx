@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+import { useDokumentApi } from '../../../../api/dokument';
+import { base64ToArrayBuffer } from '../../../../utils';
+import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -7,11 +10,7 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '@navikt/familie-typer';
-
-import { useDokumentApi } from '../../../../api/dokument';
-import { base64ToArrayBuffer } from '../../../../utils';
-import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
+} from '../../../../typer/ressurs';
 
 const useForhåndsvisVedtaksbrev = () => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
