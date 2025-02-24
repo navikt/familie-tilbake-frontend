@@ -46,7 +46,6 @@
     "constate": "^3.3.2",
     "cookie-parser": "^1.4.7",
     "date-fns": "^4.1.0",
-    "dayjs": "^1.11.13",
     "deep-equal": "^2.2.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
