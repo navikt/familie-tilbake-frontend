@@ -191,7 +191,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
     );
 };
 
-const LabelVerdiVisning: React.FC<{ label: string; verdi: string | number | undefined }> = ({
+const LabelVerdiVisning: React.FC<{ label: string; verdi: number | string | undefined }> = ({
     label,
     verdi,
 }) => {
