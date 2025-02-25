@@ -34,7 +34,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     index,
     erLesevisning,
 }) => {
-    const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<Array<HendelseUndertype>>();
+    const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<HendelseUndertype[]>();
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
         useFeilutbetalingFakta();
     const { settIkkePersistertKomponent } = useBehandling();

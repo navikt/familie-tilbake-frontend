@@ -55,6 +55,8 @@ export default tseslint.config(
                     children: 'never',
                 },
             ],
+            '@typescript-eslint/adjacent-overload-signatures': 'warn',
+            '@typescript-eslint/array-type': 'warn',
         },
         settings: {
             react: {
