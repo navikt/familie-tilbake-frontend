@@ -7,7 +7,7 @@ import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 interface IProps {
     ressurser: (Ressurs<unknown> | undefined)[];
     henteBeskrivelse?: string;
-    spinnerStørrelse?: 'large' | '2xlarge';
+    spinnerStørrelse?: '2xlarge' | 'large';
 }
 
 const DataLastIkkeSuksess: React.FC<IProps> = ({

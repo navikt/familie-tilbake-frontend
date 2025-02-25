@@ -17,18 +17,8 @@ export type ApiRessurs<T> = {
 
 export type Ressurs<T> =
     | {
-          status: RessursStatus.IkkeHentet;
-      }
-    | {
-          status: RessursStatus.Henter;
-      }
-    | {
           data: T;
           status: RessursStatus.Suksess;
-      }
-    | {
-          frontendFeilmelding: string;
-          status: RessursStatus.IkkeTilgang;
       }
     | {
           frontendFeilmelding: string;
@@ -37,6 +27,16 @@ export type Ressurs<T> =
     | {
           frontendFeilmelding: string;
           status: RessursStatus.FunksjonellFeil;
+      }
+    | {
+          frontendFeilmelding: string;
+          status: RessursStatus.IkkeTilgang;
+      }
+    | {
+          status: RessursStatus.Henter;
+      }
+    | {
+          status: RessursStatus.IkkeHentet;
       };
 
 export const byggTomRessurs = <T>(): Ressurs<T> => {

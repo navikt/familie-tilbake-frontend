@@ -206,8 +206,10 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
         const sendInnSkjema = () => {
             if (validerToTrinn()) {
-                settSenderInn(false);
-
+                if (senderInn) {
+                    return;
+                }
+                settSenderInn(true);
                 const payload: FatteVedtakStegPayload = {
                     '@type': 'FATTE_VEDTAK',
                     // @ts-expect-error har verdi her
@@ -224,7 +226,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
                 sendInnFatteVedtak(behandling.behandlingId, payload)
                     .then((respons: Ressurs<string>) => {
-                        settSenderInn(false);
                         if (respons.status === RessursStatus.Suksess) {
                             hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                                 navigate(
@@ -240,10 +241,12 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                     })
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .catch((_error: AxiosError) => {
-                        settSenderInn(false);
                         settFatteVedtakRespons(
                             byggFeiletRessurs('Ukjent feil ved sending av vedtak')
                         );
+                    })
+                    .finally(() => {
+                        settSenderInn(false);
                     });
             }
         };

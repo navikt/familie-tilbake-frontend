@@ -110,7 +110,7 @@ export enum JournalpostDatotype {
 }
 
 type VarselSendt = {
-    type: 'SMS' | 'EPOST';
+    type: 'EPOST' | 'SMS';
     varslingstidspunkt?: string;
 };
 

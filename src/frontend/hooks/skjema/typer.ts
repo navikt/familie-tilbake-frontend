@@ -13,10 +13,10 @@ export interface FeltState<Verdi> {
 
 export type FeltOnChange<Verdi> = (
     verdi:
-        | Verdi
         | ChangeEvent<HTMLInputElement>
-        | ChangeEvent<HTMLTextAreaElement>
         | ChangeEvent<HTMLSelectElement>
+        | ChangeEvent<HTMLTextAreaElement>
+        | Verdi
 ) => void;
 
 export interface Felt<Verdi> {
@@ -104,14 +104,8 @@ export interface UseSkjemaVerdi<Felter, SkjemaRespons> {
     settSubmitRessurs: Dispatch<
         SetStateAction<
             | {
-                  status: RessursStatus.IkkeHentet;
-              }
-            | {
-                  status: RessursStatus.Henter;
-              }
-            | {
-                  frontendFeilmelding: string;
-                  status: RessursStatus.IkkeTilgang;
+                  data: SkjemaRespons;
+                  status: RessursStatus.Suksess;
               }
             | {
                   frontendFeilmelding: string;
@@ -122,8 +116,14 @@ export interface UseSkjemaVerdi<Felter, SkjemaRespons> {
                   status: RessursStatus.FunksjonellFeil;
               }
             | {
-                  data: SkjemaRespons;
-                  status: RessursStatus.Suksess;
+                  frontendFeilmelding: string;
+                  status: RessursStatus.IkkeTilgang;
+              }
+            | {
+                  status: RessursStatus.Henter;
+              }
+            | {
+                  status: RessursStatus.IkkeHentet;
               }
         >
     >;

@@ -32,7 +32,7 @@ export interface UtledAccessTokenProps {
     api: IApi;
     promise: {
         resolve: (value: string) => void;
-        reject: (reason: string | Error) => void;
+        reject: (reason: Error | string) => void;
     };
 }
 

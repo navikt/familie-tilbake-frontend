@@ -109,7 +109,7 @@ export const useFelt = <Verdi = string>({
 
     const onChange = useCallback(
         // tslint:disable-next-line:no-shadowed-variable
-        (verdi: Verdi | ChangeEvent) => {
+        (verdi: ChangeEvent | Verdi) => {
             const normalisertVerdi = isChangeEvent(verdi) ? verdi.target.value : verdi;
 
             validerOgSettFelt(normalisertVerdi as Verdi);
