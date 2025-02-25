@@ -14,7 +14,7 @@ import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/Brev
 import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
 
 const tekstfeltLabel = (mal: DokumentMal) => {
-    return mal === DokumentMal.INNHENT_DOKUMENTASJON
+    return mal === DokumentMal.InnhentDokumentasjon
         ? 'Liste over dokumenter (skriv ett dokument pr. linje)'
         : 'Fritekst';
 };
@@ -30,7 +30,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeMal = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const nyMal = DokumentMal[e.target.value as keyof typeof DokumentMal];
+        const nyMal = e.target.value as DokumentMal;
         skjema.felter.maltype.validerOgSettFelt(nyMal);
     };
 

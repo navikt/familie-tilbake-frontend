@@ -43,7 +43,7 @@ const useEndreBehandlendeEnhet = (behandlingId: string, lukkModal: (_vis: boolea
                     url: `/familie-tilbake/api/behandling/${behandlingId}/bytt-enhet/v1`,
                 },
                 (response: Ressurs<string>) => {
-                    if (response.status === RessursStatus.SUKSESS) {
+                    if (response.status === RessursStatus.Suksess) {
                         lukkModal(true);
                         hentBehandlingMedBehandlingId(behandlingId);
                     }

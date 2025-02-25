@@ -60,11 +60,11 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const { behandlingILesemodus, aktivtSteg } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA =
-        behandling.behandlingsårsakstype === Behandlingårsak.REVURDERING_KLAGE_KA;
+        behandling.behandlingsårsakstype === Behandlingårsak.RevurderingKlageKa;
     const erRevurderingBortfaltBeløp =
-        behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
+        behandling.type === Behandlingstype.RevurderingTilbakekreving &&
         behandling.behandlingsårsakstype ===
-            Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
+            Behandlingårsak.RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt;
     const [erPerioderSammenslått, settErPerioderSammenslått] = useState<boolean>(false);
 
     const {
@@ -112,12 +112,12 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     const kanViseForhåndsvisning =
         (!erLesevisning ||
             (behandling.kanEndres &&
-                aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK)) &&
+                aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak)) &&
         !erRevurderingKlageKA;
 
     if (
-        beregningsresultat?.status === RessursStatus.SUKSESS &&
-        feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.SUKSESS
+        beregningsresultat?.status === RessursStatus.Suksess &&
+        feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.Suksess
     ) {
         return (
             <StyledVedtak>
@@ -160,13 +160,13 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                     erRevurderingBortfaltBeløp={erRevurderingBortfaltBeløp}
                     harBrukerUttaltSeg={
                         beregningsresultat.data.vurderingAvBrukersUttalelse.harBrukerUttaltSeg ===
-                        HarBrukerUttaltSegValg.JA
+                        HarBrukerUttaltSegValg.Ja
                     }
                 />
                 <Spacer20 />
                 {foreslåVedtakRespons &&
-                    (foreslåVedtakRespons.status === RessursStatus.FEILET ||
-                        foreslåVedtakRespons.status === RessursStatus.FUNKSJONELL_FEIL) && (
+                    (foreslåVedtakRespons.status === RessursStatus.Feilet ||
+                        foreslåVedtakRespons.status === RessursStatus.FunksjonellFeil) && (
                         <StyledAlert variant="error">
                             {foreslåVedtakRespons.frontendFeilmelding}
                         </StyledAlert>

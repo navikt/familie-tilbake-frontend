@@ -78,12 +78,12 @@ describe('Tester: FaktaContainer', () => {
         faktainfo: {
             revurderingsårsak: 'Nye opplysninger',
             revurderingsresultat: 'Opphør av ytelsen',
-            tilbakekrevingsvalg: Tilbakekrevingsvalg.OPPRETT_TILBAKEKREVING_MED_VARSEL,
+            tilbakekrevingsvalg: Tilbakekrevingsvalg.OpprettTilbakekrevingMedVarsel,
             konsekvensForYtelser: ['Reduksjon av ytelsen', 'Feilutbetaling'],
         },
         begrunnelse: undefined,
         vurderingAvBrukersUttalelse: {
-            harBrukerUttaltSeg: HarBrukerUttaltSegValg.IKKE_VURDERT,
+            harBrukerUttaltSeg: HarBrukerUttaltSegValg.IkkeVurdert,
         },
         opprettetTid: '2020-01-01',
     };
@@ -98,14 +98,14 @@ describe('Tester: FaktaContainer', () => {
         useBehandlingApi.mockImplementation(() => ({
             gjerFeilutbetalingFaktaKall: () => {
                 const ressurs = mock<Ressurs<IFeilutbetalingFakta>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: fakta,
                 });
                 return Promise.resolve(ressurs);
             },
             sendInnFeilutbetalingFakta: () => {
                 const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: 'suksess',
                 });
                 return Promise.resolve(ressurs);
@@ -122,7 +122,7 @@ describe('Tester: FaktaContainer', () => {
         }));
         // @ts-expect-error mocking
         useToggles.mockImplementation(() => ({
-            toggles: { [ToggleName.dummy]: true },
+            toggles: { [ToggleName.Dummy]: true },
             feilmelding: '',
         }));
     };
@@ -134,7 +134,7 @@ describe('Tester: FaktaContainer', () => {
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                <FaktaContainer ytelse={Ytelsetype.BARNETRYGD} />
+                <FaktaContainer ytelse={Ytelsetype.Barnetrygd} />
             </FeilutbetalingFaktaProvider>
         );
 
@@ -175,9 +175,9 @@ describe('Tester: FaktaContainer', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
 
         act(() => {
-            user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BOSATT_I_RIKET);
-            user.selectOptions(getByTestId('perioder.1.årsak'), HendelseType.BOR_MED_SØKER);
-            user.selectOptions(getByTestId('perioder.2.årsak'), HendelseType.BOSATT_I_RIKET);
+            user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BosattIRiket);
+            user.selectOptions(getByTestId('perioder.1.årsak'), HendelseType.BorMedSøker);
+            user.selectOptions(getByTestId('perioder.2.årsak'), HendelseType.BosattIRiket);
         });
         await act(() =>
             user.type(
@@ -202,15 +202,15 @@ describe('Tester: FaktaContainer', () => {
         act(() => {
             user.selectOptions(
                 getByTestId('perioder.0.underårsak'),
-                HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
+                HendelseUndertype.BrukerBorIkkeINorge
             );
             user.selectOptions(
                 getByTestId('perioder.1.underårsak'),
-                HendelseUndertype.BOR_IKKE_MED_BARN
+                HendelseUndertype.BorIkkeMedBarn
             );
             user.selectOptions(
                 getByTestId('perioder.2.underårsak'),
-                HendelseUndertype.BRUKER_FLYTTET_FRA_NORGE
+                HendelseUndertype.BrukerFlyttetFraNorge
             );
         });
 
@@ -233,7 +233,7 @@ describe('Tester: FaktaContainer', () => {
         const { getByText, getByLabelText, getByRole, getAllByRole, getByTestId, queryAllByText } =
             render(
                 <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                    <FaktaContainer ytelse={Ytelsetype.BARNETRYGD} />
+                    <FaktaContainer ytelse={Ytelsetype.Barnetrygd} />
                 </FeilutbetalingFaktaProvider>
             );
 
@@ -269,7 +269,7 @@ describe('Tester: FaktaContainer', () => {
         );
 
         await act(() =>
-            user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BOSATT_I_RIKET)
+            user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BosattIRiket)
         );
         await act(() =>
             user.type(getByLabelText('Forklar årsaken(e) til feilutbetalingen'), 'Begrunnelse')
@@ -289,7 +289,7 @@ describe('Tester: FaktaContainer', () => {
         await act(() =>
             user.selectOptions(
                 getByTestId('perioder.0.underårsak'),
-                HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
+                HendelseUndertype.BrukerBorIkkeINorge
             )
         );
         await act(() => user.click(getByTestId('brukerHarUttaltSeg.ja')));
@@ -319,18 +319,18 @@ describe('Tester: FaktaContainer', () => {
             feilutbetaltePerioder: [
                 {
                     ...perioder[0],
-                    hendelsestype: HendelseType.BOSATT_I_RIKET,
-                    hendelsesundertype: HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE,
+                    hendelsestype: HendelseType.BosattIRiket,
+                    hendelsesundertype: HendelseUndertype.BrukerBorIkkeINorge,
                 },
                 {
                     ...perioder[1],
-                    hendelsestype: HendelseType.ANNET,
-                    hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
+                    hendelsestype: HendelseType.Annet,
+                    hendelsesundertype: HendelseUndertype.AnnetFritekst,
                 },
                 {
                     ...perioder[2],
-                    hendelsestype: HendelseType.BARNS_ALDER,
-                    hendelsesundertype: HendelseUndertype.BARN_OVER_6_ÅR,
+                    hendelsestype: HendelseType.BarnsAlder,
+                    hendelsesundertype: HendelseUndertype.BarnOver6År,
                 },
             ],
             begrunnelse: 'Dette er en test-begrunnelse',
@@ -339,7 +339,7 @@ describe('Tester: FaktaContainer', () => {
 
         const { getByText, getByLabelText, getByTestId, getByRole } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                <FaktaContainer ytelse={Ytelsetype.BARNETRYGD} />
+                <FaktaContainer ytelse={Ytelsetype.Barnetrygd} />
             </FeilutbetalingFaktaProvider>
         );
 
@@ -349,17 +349,17 @@ describe('Tester: FaktaContainer', () => {
             expect(getByText('01.01.2020 - 31.03.2020')).toBeTruthy();
         });
 
-        expect(getByTestId('perioder.0.årsak')).toHaveValue(HendelseType.BOSATT_I_RIKET);
-        expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.ANNET);
-        expect(getByTestId('perioder.2.årsak')).toHaveValue(HendelseType.BARNS_ALDER);
+        expect(getByTestId('perioder.0.årsak')).toHaveValue(HendelseType.BosattIRiket);
+        expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.Annet);
+        expect(getByTestId('perioder.2.årsak')).toHaveValue(HendelseType.BarnsAlder);
 
         await waitFor(async () => {
             expect(getByTestId('perioder.0.underårsak')).toHaveValue(
-                HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE
+                HendelseUndertype.BrukerBorIkkeINorge
             );
         });
-        expect(getByTestId('perioder.1.underårsak')).toHaveValue(HendelseUndertype.ANNET_FRITEKST);
-        expect(getByTestId('perioder.2.underårsak')).toHaveValue(HendelseUndertype.BARN_OVER_6_ÅR);
+        expect(getByTestId('perioder.1.underårsak')).toHaveValue(HendelseUndertype.AnnetFritekst);
+        expect(getByTestId('perioder.2.underårsak')).toHaveValue(HendelseUndertype.BarnOver6År);
 
         expect(getByLabelText('Forklar årsaken(e) til feilutbetalingen')).toHaveValue(
             'Dette er en test-begrunnelse'
@@ -378,18 +378,18 @@ describe('Tester: FaktaContainer', () => {
             feilutbetaltePerioder: [
                 {
                     ...perioder[0],
-                    hendelsestype: HendelseType.ENSLIG_FORSØRGER,
-                    hendelsesundertype: HendelseUndertype.UGIFT,
+                    hendelsestype: HendelseType.EnsligForsørger,
+                    hendelsesundertype: HendelseUndertype.Ugift,
                 },
                 {
                     ...perioder[1],
-                    hendelsestype: HendelseType.ANNET,
-                    hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
+                    hendelsestype: HendelseType.Annet,
+                    hendelsesundertype: HendelseUndertype.AnnetFritekst,
                 },
                 {
                     ...perioder[2],
-                    hendelsestype: HendelseType.YRKESRETTET_AKTIVITET,
-                    hendelsesundertype: HendelseUndertype.ARBEID,
+                    hendelsestype: HendelseType.YrkesrettetAktivitet,
+                    hendelsesundertype: HendelseUndertype.Arbeid,
                 },
             ],
             begrunnelse: 'Dette er en test-begrunnelse',
@@ -398,7 +398,7 @@ describe('Tester: FaktaContainer', () => {
 
         const { getByText, getByLabelText, getByTestId, getByRole } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                <FaktaContainer ytelse={Ytelsetype.OVERGANGSSTØNAD} />
+                <FaktaContainer ytelse={Ytelsetype.Overganggstønad} />
             </FeilutbetalingFaktaProvider>
         );
 
@@ -408,15 +408,15 @@ describe('Tester: FaktaContainer', () => {
             expect(getByText('01.01.2020 - 31.03.2020')).toBeTruthy();
         });
 
-        expect(getByTestId('perioder.0.årsak')).toHaveValue(HendelseType.ENSLIG_FORSØRGER);
-        expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.ANNET);
-        expect(getByTestId('perioder.2.årsak')).toHaveValue(HendelseType.YRKESRETTET_AKTIVITET);
+        expect(getByTestId('perioder.0.årsak')).toHaveValue(HendelseType.EnsligForsørger);
+        expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.Annet);
+        expect(getByTestId('perioder.2.årsak')).toHaveValue(HendelseType.YrkesrettetAktivitet);
 
         await waitFor(async () => {
-            expect(getByTestId('perioder.0.underårsak')).toHaveValue(HendelseUndertype.UGIFT);
+            expect(getByTestId('perioder.0.underårsak')).toHaveValue(HendelseUndertype.Ugift);
         });
-        expect(getByTestId('perioder.1.underårsak')).toHaveValue(HendelseUndertype.ANNET_FRITEKST);
-        expect(getByTestId('perioder.2.underårsak')).toHaveValue(HendelseUndertype.ARBEID);
+        expect(getByTestId('perioder.1.underårsak')).toHaveValue(HendelseUndertype.AnnetFritekst);
+        expect(getByTestId('perioder.2.underårsak')).toHaveValue(HendelseUndertype.Arbeid);
 
         expect(getByLabelText('Forklar årsaken(e) til feilutbetalingen')).toHaveValue(
             'Dette er en test-begrunnelse'
@@ -435,18 +435,18 @@ describe('Tester: FaktaContainer', () => {
             feilutbetaltePerioder: [
                 {
                     ...perioder[0],
-                    hendelsestype: HendelseType.BOSATT_I_RIKET,
-                    hendelsesundertype: HendelseUndertype.BRUKER_BOR_IKKE_I_NORGE,
+                    hendelsestype: HendelseType.BosattIRiket,
+                    hendelsesundertype: HendelseUndertype.BrukerBorIkkeINorge,
                 },
                 {
                     ...perioder[1],
-                    hendelsestype: HendelseType.ANNET,
-                    hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
+                    hendelsestype: HendelseType.Annet,
+                    hendelsesundertype: HendelseUndertype.AnnetFritekst,
                 },
                 {
                     ...perioder[2],
-                    hendelsestype: HendelseType.BARNS_ALDER,
-                    hendelsesundertype: HendelseUndertype.BARN_OVER_6_ÅR,
+                    hendelsestype: HendelseType.BarnsAlder,
+                    hendelsesundertype: HendelseUndertype.BarnOver6År,
                 },
             ],
             begrunnelse: 'Dette er en test-begrunnelse',
@@ -455,7 +455,7 @@ describe('Tester: FaktaContainer', () => {
 
         const { getByText, getByRole } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                <FaktaContainer ytelse={Ytelsetype.BARNETRYGD} />
+                <FaktaContainer ytelse={Ytelsetype.Barnetrygd} />
             </FeilutbetalingFaktaProvider>
         );
 
@@ -487,18 +487,18 @@ describe('Tester: FaktaContainer', () => {
             feilutbetaltePerioder: [
                 {
                     ...perioder[0],
-                    hendelsestype: HendelseType.ENSLIG_FORSØRGER,
-                    hendelsesundertype: HendelseUndertype.UGIFT,
+                    hendelsestype: HendelseType.EnsligForsørger,
+                    hendelsesundertype: HendelseUndertype.Ugift,
                 },
                 {
                     ...perioder[1],
-                    hendelsestype: HendelseType.ANNET,
-                    hendelsesundertype: HendelseUndertype.ANNET_FRITEKST,
+                    hendelsestype: HendelseType.Annet,
+                    hendelsesundertype: HendelseUndertype.AnnetFritekst,
                 },
                 {
                     ...perioder[2],
-                    hendelsestype: HendelseType.YRKESRETTET_AKTIVITET,
-                    hendelsesundertype: HendelseUndertype.ARBEID,
+                    hendelsestype: HendelseType.YrkesrettetAktivitet,
+                    hendelsesundertype: HendelseUndertype.Arbeid,
                 },
             ],
             begrunnelse: 'Dette er en test-begrunnelse',
@@ -507,7 +507,7 @@ describe('Tester: FaktaContainer', () => {
 
         const { getByText, getByRole } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                <FaktaContainer ytelse={Ytelsetype.OVERGANGSSTØNAD} />
+                <FaktaContainer ytelse={Ytelsetype.Overganggstønad} />
             </FeilutbetalingFaktaProvider>
         );
 

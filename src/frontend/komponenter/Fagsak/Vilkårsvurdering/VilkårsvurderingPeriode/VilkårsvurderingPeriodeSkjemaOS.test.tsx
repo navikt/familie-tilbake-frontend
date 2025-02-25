@@ -40,12 +40,12 @@ jest.mock('../FeilutbetalingVilkårsvurderingContext', () => {
 describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     const behandling = mock<IBehandling>();
     const fagsak = mock<IFagsak>({
-        ytelsestype: Ytelsetype.OVERGANGSSTØNAD,
+        ytelsestype: Ytelsetype.Overganggstønad,
     });
     const periode: VilkårsvurderingPeriodeSkjemaData = {
         index: 'i2',
         feilutbetaltBeløp: 2333,
-        hendelsestype: HendelseType.ANNET,
+        hendelsestype: HendelseType.Annet,
         foreldet: false,
         periode: {
             fom: '2021-01-01',
@@ -1460,7 +1460,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                         ...periode,
                         begrunnelse: 'Gitt i god tro',
                         vilkårsvurderingsresultatInfo: {
-                            vilkårsvurderingsresultat: Vilkårsresultat.GOD_TRO,
+                            vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
                             godTro: {
                                 begrunnelse: 'Deler av beløpet er i behold',
                                 beløpErIBehold: true,
@@ -1499,17 +1499,17 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                         begrunnelse: 'Gitt mangelfulle opplysninger',
                         vilkårsvurderingsresultatInfo: {
                             vilkårsvurderingsresultat:
-                                Vilkårsresultat.MANGELFULLE_OPPLYSNINGER_FRA_BRUKER,
+                                Vilkårsresultat.MangelfulleOpplysningerFraBruker,
                             aktsomhet: {
                                 begrunnelse: 'Vurdert aktsomhet til simpel',
-                                aktsomhet: Aktsomhet.SIMPEL_UAKTSOMHET,
+                                aktsomhet: Aktsomhet.SimpelUaktsomhet,
                                 tilbakekrevSmåbeløp: true,
                                 særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
                                 særligeGrunner: [
-                                    { særligGrunn: SærligeGrunner.GRAD_AV_UAKTSOMHET },
-                                    { særligGrunn: SærligeGrunner.STØRRELSE_BELØP },
+                                    { særligGrunn: SærligeGrunner.GradAvUaktsomhet },
+                                    { særligGrunn: SærligeGrunner.StørrelseBeløp },
                                     {
-                                        særligGrunn: SærligeGrunner.ANNET,
+                                        særligGrunn: SærligeGrunner.Annet,
                                         begrunnelse: 'Dette er en annen begrunnelse',
                                     },
                                 ],

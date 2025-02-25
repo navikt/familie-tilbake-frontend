@@ -213,7 +213,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
     test('- åpner vurdert periode med tilleggsfrist ', () => {
         const vurdertPeriode: ForeldelsePeriodeSkjemeData = {
             ...periode,
-            foreldelsesvurderingstype: Foreldelsevurdering.TILLEGGSFRIST,
+            foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
             begrunnelse: 'Vurdert',
             foreldelsesfrist: '2019-12-04',
             oppdagelsesdato: '2019-09-18',

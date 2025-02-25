@@ -29,12 +29,12 @@ const BrevmottakerListe: React.FC<IProps> = ({
 }) => {
     const skalViseInstitusjon = !!institusjon;
     const harUtenlandskAdresse = brevmottakere.some(
-        mottaker => mottaker.type === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
+        mottaker => mottaker.type === MottakerType.BrukerMedUtenlandskAdresse
     );
-    const harFullmektig = brevmottakere.some(mottaker => mottaker.type === MottakerType.FULLMEKTIG);
-    const harVerge = brevmottakere.some(mottaker => mottaker.type === MottakerType.VERGE);
+    const harFullmektig = brevmottakere.some(mottaker => mottaker.type === MottakerType.Fullmektig);
+    const harVerge = brevmottakere.some(mottaker => mottaker.type === MottakerType.Verge);
     const harManuellDødsboadresse = brevmottakere.some(
-        mottaker => mottaker.type === MottakerType.DØDSBO
+        mottaker => mottaker.type === MottakerType.Dødsbo
     );
 
     const skalViseSøker =
@@ -52,9 +52,7 @@ const BrevmottakerListe: React.FC<IProps> = ({
             )}
             {harUtenlandskAdresse &&
                 brevmottakere
-                    .filter(
-                        mottaker => mottaker.type === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
-                    )
+                    .filter(mottaker => mottaker.type === MottakerType.BrukerMedUtenlandskAdresse)
                     .map((mottaker, index) => (
                         <li key={`utenlandsk-adresse-${index}`}>
                             {mottaker.navn} | Utenlandsk adresse
@@ -62,19 +60,19 @@ const BrevmottakerListe: React.FC<IProps> = ({
                     ))}
             {harManuellDødsboadresse &&
                 brevmottakere
-                    .filter(mottaker => mottaker.type === MottakerType.DØDSBO)
+                    .filter(mottaker => mottaker.type === MottakerType.Dødsbo)
                     .map((mottaker, index) => (
                         <li key={`doedsbo-${index}`}>{mottaker.navn} | Dødsbo</li>
                     ))}
             {harFullmektig &&
                 brevmottakere
-                    .filter(mottaker => mottaker.type === MottakerType.FULLMEKTIG)
+                    .filter(mottaker => mottaker.type === MottakerType.Fullmektig)
                     .map((mottaker, index) => (
                         <li key={`fullmektig-${index}`}>{mottaker.navn} | Fullmektig</li>
                     ))}
             {harVerge &&
                 brevmottakere
-                    .filter(mottaker => mottaker.type === MottakerType.VERGE)
+                    .filter(mottaker => mottaker.type === MottakerType.Verge)
                     .map((mottaker, index) => (
                         <li key={`verge-${index}`}>{mottaker.navn} | Verge</li>
                     ))}

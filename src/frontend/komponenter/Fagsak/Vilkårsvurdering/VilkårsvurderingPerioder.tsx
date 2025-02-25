@@ -30,10 +30,10 @@ const finnClassNamePeriode = (
         periode.foreldet ||
         (!!periode.vilkårsvurderingsresultatInfo &&
             periode.vilkårsvurderingsresultatInfo.vilkårsvurderingsresultat ===
-                Vilkårsresultat.GOD_TRO &&
+                Vilkårsresultat.GodTro &&
             !periode.vilkårsvurderingsresultatInfo.godTro?.beløpErIBehold) ||
         (periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet ===
-            Aktsomhet.SIMPEL_UAKTSOMHET &&
+            Aktsomhet.SimpelUaktsomhet &&
             erTotalbeløpUnder4Rettsgebyr &&
             !periode.vilkårsvurderingsresultatInfo.aktsomhet.tilbakekrevSmåbeløp)
     ) {

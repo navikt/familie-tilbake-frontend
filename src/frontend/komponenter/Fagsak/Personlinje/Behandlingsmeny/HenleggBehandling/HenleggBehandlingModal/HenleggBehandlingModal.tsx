@@ -1,11 +1,12 @@
 import type { IBehandling } from '../../../../../../typer/behandling';
+import type { Behandlingresultat } from '../../../../../../typer/behandling';
 import type { IFagsak } from '../../../../../../typer/fagsak';
 
 import { Button, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
-import { Behandlingresultat, behandlingsresultater } from '../../../../../../typer/behandling';
+import { behandlingsresultater } from '../../../../../../typer/behandling';
 import { målform } from '../../../../../../typer/fagsak';
 import { Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
 import { LabelMedSpråk } from '../../../../../Felleskomponenter/Skjemaelementer';
@@ -35,7 +36,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
     }, [behandling]);
 
     const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const årsak = Behandlingresultat[e.target.value as keyof typeof Behandlingresultat];
+        const årsak = e.target.value as Behandlingresultat;
         skjema.felter.årsakkode.validerOgSettFelt(årsak);
     };
 

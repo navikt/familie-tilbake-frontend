@@ -38,14 +38,14 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
     const stegInfotekst = {
-        [Ytelsetype.BARNETRYGD]: vilkårsvurderingStegInfotekstBarnetrygd,
-        [Ytelsetype.KONTANTSTØTTE]: vilkårsvurderingStegInfotekstKontantstøtte,
-        [Ytelsetype.BARNETILSYN]: vilkårsvurderingStegInfotekst,
-        [Ytelsetype.OVERGANGSSTØNAD]: vilkårsvurderingStegInfotekst,
-        [Ytelsetype.SKOLEPENGER]: vilkårsvurderingStegInfotekst,
+        [Ytelsetype.Barnetrygd]: vilkårsvurderingStegInfotekstBarnetrygd,
+        [Ytelsetype.Kontantstøtte]: vilkårsvurderingStegInfotekstKontantstøtte,
+        [Ytelsetype.Barnetilsyn]: vilkårsvurderingStegInfotekst,
+        [Ytelsetype.Overganggstønad]: vilkårsvurderingStegInfotekst,
+        [Ytelsetype.Skolepenger]: vilkårsvurderingStegInfotekst,
     }[fagsak.ytelsestype];
 
-    if (feilutbetalingVilkårsvurdering?.status === RessursStatus.SUKSESS) {
+    if (feilutbetalingVilkårsvurdering?.status === RessursStatus.Suksess) {
         const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(
             feilutbetalingVilkårsvurdering.data
         );

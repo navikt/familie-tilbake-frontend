@@ -6,7 +6,7 @@ import { TokenSet } from 'openid-client';
 
 import { logRequest } from '../utils';
 import { getOnBehalfOfAccessToken, getTokenSetsFromSession, tokenSetSelfId } from './tokenUtils';
-import { LOG_LEVEL } from '../../logging/logging';
+import { LogLevel } from '../../logging/logging';
 import { envVar } from '../../logging/utils';
 
 // Hent brukerprofil fra sesjon
@@ -21,7 +21,7 @@ export const hentBrukerprofil = () => {
 };
 
 const håndterGenerellFeil = (next: NextFunction, req: Request, err: Error) => {
-    logRequest(req, `Noe gikk galt: ${err?.message}.`, LOG_LEVEL.ERROR);
+    logRequest(req, `Noe gikk galt: ${err?.message}.`, LogLevel.Error);
     next();
 };
 
@@ -29,7 +29,7 @@ const håndterBrukerdataFeil = (req: Request, err: Error) => {
     logRequest(
         req,
         `Feilet mot ms graph: ${err.message}. Kan ikke fortsette uten brukerdata.`,
-        LOG_LEVEL.ERROR
+        LogLevel.Error
     );
     throw new Error('Kunne ikke hente dine brukeropplysninger. Vennligst logg ut og inn på nytt');
 };
@@ -47,7 +47,7 @@ const fetchFraMs = (accessToken: string) => {
 };
 const hentBrukerData = (accessToken: string, req: Request) => {
     return fetchFraMs(accessToken).catch((e: Error) => {
-        logRequest(req, `Kunne ikke hente brukerdata - prøver på nytt: ${e}`, LOG_LEVEL.WARNING);
+        logRequest(req, `Kunne ikke hente brukerdata - prøver på nytt: ${e}`, LogLevel.Warning);
         return fetchFraMs(accessToken).catch((err: Error) => håndterBrukerdataFeil(req, err));
     });
 };
@@ -98,7 +98,7 @@ const setBrukerprofilPåSesjon = (authClient: Client, req: Request, next: NextFu
                         logRequest(
                             req,
                             `Feilet ved lagring av bruker på session: ${error}`,
-                            LOG_LEVEL.ERROR
+                            LogLevel.Error
                         );
                     } else {
                         return next();

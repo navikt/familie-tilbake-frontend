@@ -45,7 +45,7 @@ export const useFelt = <Verdi = string>({
     const initialFeltState = {
         feilmelding: '',
         valider: valideringsfunksjon,
-        valideringsstatus: Valideringsstatus.IKKE_VALIDERT,
+        valideringsstatus: Valideringsstatus.IkkeValidert,
         verdi,
     };
 
@@ -95,7 +95,7 @@ export const useFelt = <Verdi = string>({
         if (skalFeltetVises) {
             if (
                 nullstillVedAvhengighetEndring &&
-                feltState.valideringsstatus !== Valideringsstatus.IKKE_VALIDERT
+                feltState.valideringsstatus !== Valideringsstatus.IkkeValidert
             ) {
                 nullstill();
             }

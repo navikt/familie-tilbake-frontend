@@ -46,14 +46,14 @@ describe('Tester: VergeContainer', () => {
         useBehandlingApi.mockImplementation(() => ({
             gjerVergeKall: () => {
                 const ressurs = mock<Ressurs<VergeDto>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: verge,
                 });
                 return Promise.resolve(ressurs);
             },
             sendInnVerge: () => {
                 const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: 'suksess',
                 });
                 return Promise.resolve(ressurs);
@@ -98,7 +98,7 @@ describe('Tester: VergeContainer', () => {
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await act(() => user.selectOptions(getByLabelText('Vergetype'), Vergetype.ADVOKAT));
+        await act(() => user.selectOptions(getByLabelText('Vergetype'), Vergetype.Advokat));
 
         await act(() => user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat'));
 
@@ -151,7 +151,7 @@ describe('Tester: VergeContainer', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await act(() => user.selectOptions(getByLabelText('Vergetype'), Vergetype.VERGE_FOR_BARN));
+        await act(() => user.selectOptions(getByLabelText('Vergetype'), Vergetype.VergeForBarn));
         await act(() => user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat'));
 
         await act(() =>
@@ -192,7 +192,7 @@ describe('Tester: VergeContainer', () => {
 
     test('- vis utfylt - advokat - autoutført', async () => {
         setupMock(true, false, true, {
-            type: Vergetype.ADVOKAT,
+            type: Vergetype.Advokat,
             navn: 'Advokat Advokatesen',
             orgNr: 'DummyOrg',
             begrunnelse: '',
@@ -219,7 +219,7 @@ describe('Tester: VergeContainer', () => {
             })
         ).toBeEnabled();
 
-        expect(getByLabelText('Vergetype')).toHaveValue(Vergetype.ADVOKAT);
+        expect(getByLabelText('Vergetype')).toHaveValue(Vergetype.Advokat);
         expect(getByLabelText('Begrunn endringene')).toHaveValue('');
         expect(getByLabelText('Navn')).toHaveValue('Advokat Advokatesen');
         expect(getByLabelText('Organisasjonsnummer')).toHaveValue('DummyOrg');
@@ -228,7 +228,7 @@ describe('Tester: VergeContainer', () => {
 
     test('- vis utfylt - verge barn', async () => {
         setupMock(true, false, false, {
-            type: Vergetype.VERGE_FOR_BARN,
+            type: Vergetype.VergeForBarn,
             navn: 'Verge Vergesen',
             ident: '27106903129',
             begrunnelse: 'Verge er opprettet',
@@ -257,7 +257,7 @@ describe('Tester: VergeContainer', () => {
             ).toBeEnabled();
         });
 
-        expect(getByLabelText('Vergetype')).toHaveValue(Vergetype.VERGE_FOR_BARN);
+        expect(getByLabelText('Vergetype')).toHaveValue(Vergetype.VergeForBarn);
         expect(getByLabelText('Begrunn endringene')).toHaveValue('Verge er opprettet');
         expect(getByLabelText('Navn')).toHaveValue('Verge Vergesen');
         expect(getByLabelText('Fødselsnummer')).toHaveValue('27106903129');
@@ -266,7 +266,7 @@ describe('Tester: VergeContainer', () => {
 
     test('- vis utfylt - advokat - lesevisning', async () => {
         setupMock(true, true, false, {
-            type: Vergetype.ADVOKAT,
+            type: Vergetype.Advokat,
             navn: 'Advokat Advokatesen',
             orgNr: 'DummyOrg',
             begrunnelse: 'Bruker har engasjert advokat',
@@ -304,7 +304,7 @@ describe('Tester: VergeContainer', () => {
 
     test('- vis utfylt - verge barn - autoutført - lesevisning', async () => {
         setupMock(true, true, true, {
-            type: Vergetype.VERGE_FOR_BARN,
+            type: Vergetype.VergeForBarn,
             navn: 'Verge Vergesen',
             ident: '27106903129',
             begrunnelse: '',

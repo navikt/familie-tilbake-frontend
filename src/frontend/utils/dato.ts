@@ -5,8 +5,8 @@ export type IsoDatoString = string; // Format YYYY-MM-DD (ISO)
 export const dagensDato = startOfToday();
 
 export enum Datoformat {
-    DATO = 'dd.MM.yyyy',
-    ISO_DAG = 'yyyy-MM-dd',
+    Dato = 'dd.MM.yyyy',
+    IsoDag = 'yyyy-MM-dd',
 }
 
 interface DateTilFormatertStringProps {
@@ -24,10 +24,10 @@ export const dateTilFormatertString = ({
 };
 
 export const dateTilIsoDatoString = (dato?: Date): IsoDatoString =>
-    dateTilFormatertString({ date: dato, tilFormat: Datoformat.ISO_DAG, defaultString: '' });
+    dateTilFormatertString({ date: dato, tilFormat: Datoformat.IsoDag, defaultString: '' });
 
 export const dateTilIsoDatoStringEllerUndefined = (dato?: Date): IsoDatoString | undefined =>
-    dato && isValid(dato) ? format(dato, Datoformat.ISO_DAG) : undefined;
+    dato && isValid(dato) ? format(dato, Datoformat.IsoDag) : undefined;
 
 export const isoStringTilDate = (isoDatoString: IsoDatoString): Date => {
     const dato = parseISO(isoDatoString);

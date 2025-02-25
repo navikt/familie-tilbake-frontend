@@ -46,6 +46,21 @@ export default tseslint.config(
                     },
                 },
             ],
+            '@typescript-eslint/naming-convention': [
+                'warn',
+                {
+                    selector: 'interface',
+                    format: ['PascalCase'],
+                },
+                {
+                    selector: 'enum',
+                    format: ['PascalCase'],
+                },
+                {
+                    selector: 'enumMember',
+                    format: ['PascalCase'],
+                },
+            ],
             'react/no-unescaped-entities': 'off',
             '@typescript-eslint/no-unused-expressions': 'off',
             'react/jsx-curly-brace-presence': [

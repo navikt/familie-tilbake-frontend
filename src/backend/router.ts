@@ -6,7 +6,7 @@ import path from 'path';
 import { ensureAuthenticated } from './backend/auth/authenticate';
 import { logRequest } from './backend/utils';
 import { buildPath } from './config';
-import { LOG_LEVEL } from './logging/logging';
+import { LogLevel } from './logging/logging';
 import { envVar } from './logging/utils';
 import { prometheusTellere } from './metrikker';
 
@@ -37,7 +37,7 @@ export default (authClient: Client, router: Router) => {
 
     // Feilhåndtering
     router.post('/logg-feil', (req: Request, res: Response) => {
-        logRequest(req, req.body.melding, LOG_LEVEL.ERROR);
+        logRequest(req, req.body.melding, LogLevel.Error);
         res.status(200).send();
     });
 

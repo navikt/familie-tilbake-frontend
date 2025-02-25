@@ -54,10 +54,10 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
         : 'c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b';
     const erForvalter = innloggetSaksbehandler?.groups?.some(group => group === forvalterGruppe);
 
-    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.GRUNNLAG;
+    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.Grunnlag;
     const vedtakFattetEllerFattes =
-        erStegBehandlet(Behandlingssteg.FATTE_VEDTAK) ||
-        aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK;
+        erStegBehandlet(Behandlingssteg.FatteVedtak) ||
+        aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak;
     const { toggles } = useToggles();
 
     return (
@@ -83,7 +83,7 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                     onClose={() => settVisMeny(false)}
                 >
                     <StyledList role="menu" aria-labelledby="behandlingsmeny-arialabel-knapp">
-                        {behandling?.status === RessursStatus.SUKSESS && (
+                        {behandling?.status === RessursStatus.Suksess && (
                             <li>
                                 <OpprettBehandling
                                     behandling={behandling.data}
@@ -92,8 +92,8 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                 />
                             </li>
                         )}
-                        {behandling?.status === RessursStatus.SUKSESS &&
-                            behandling.data.status !== Behandlingstatus.AVSLUTTET &&
+                        {behandling?.status === RessursStatus.Suksess &&
+                            behandling.data.status !== Behandlingstatus.Avsluttet &&
                             !vedtakFattetEllerFattes &&
                             behandling.data.kanEndres && (
                                 <>
@@ -115,7 +115,7 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                             </li>
                                         </>
                                     )}
-                                    {(toggles[ToggleName.saksbehanderKanResettebehandling] ||
+                                    {(toggles[ToggleName.SaksbehanderKanResettebehandling] ||
                                         erForvalter) && (
                                         <li>
                                             <SettBehandlingTilbakeTilFakta

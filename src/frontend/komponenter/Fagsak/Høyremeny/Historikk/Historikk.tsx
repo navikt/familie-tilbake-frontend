@@ -14,7 +14,7 @@ const StyledContainer = styled.div`
 const Historikk: React.FC = () => {
     const { historikkInnslag } = useHistorikk();
 
-    if (historikkInnslag?.status === RessursStatus.SUKSESS) {
+    if (historikkInnslag?.status === RessursStatus.Suksess) {
         const innslag = historikkInnslag.data;
         innslag.sort(
             (a, b) => parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime()

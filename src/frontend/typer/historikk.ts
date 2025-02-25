@@ -1,19 +1,19 @@
 export enum Aktør {
-    SAKSBEHANDLER = 'SAKSBEHANDLER',
-    BESLUTTER = 'BESLUTTER',
-    VEDTAKSLØSNING = 'VEDTAKSLØSNING',
+    Saksbehandler = 'SAKSBEHANDLER',
+    Beslutter = 'BESLUTTER',
+    Vedtaksløsning = 'VEDTAKSLØSNING',
 }
 
 export const aktører: Record<Aktør, string> = {
-    SAKSBEHANDLER: 'Saksbehandler',
-    BESLUTTER: 'Beslutter',
-    VEDTAKSLØSNING: 'Vedtaksløsningen',
+    [Aktør.Saksbehandler]: 'Saksbehandler',
+    [Aktør.Beslutter]: 'Beslutter',
+    [Aktør.Vedtaksløsning]: 'Vedtaksløsningen',
 };
 
 export enum Historikkinnslagstype {
-    HENDELSE = 'HENDELSE',
-    SKJERMLENKE = 'SKJERMLENKE',
-    BREV = 'BREV',
+    Hendelse = 'HENDELSE',
+    Skjermlenke = 'SKJERMLENKE',
+    Brev = 'BREV',
 }
 
 export interface IHistorikkInnslag {

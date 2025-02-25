@@ -35,7 +35,7 @@ const TilleggesRenterRadioGroup: React.FC<IProps> = ({
             value={felt.verdi}
             error={
                 visFeilmeldingerForSkjema &&
-                felt.valideringsstatus === Valideringsstatus.FEIL &&
+                felt.valideringsstatus === Valideringsstatus.Feil &&
                 felt.feilmelding
             }
             marginbottom="none"

@@ -1,43 +1,46 @@
 export enum Vilkårsresultat {
-    FORSTO_BURDE_FORSTÅTT = 'FORSTO_BURDE_FORSTÅTT',
-    FEIL_OPPLYSNINGER_FRA_BRUKER = 'FEIL_OPPLYSNINGER_FRA_BRUKER',
-    MANGELFULLE_OPPLYSNINGER_FRA_BRUKER = 'MANGELFULLE_OPPLYSNINGER_FRA_BRUKER',
-    GOD_TRO = 'GOD_TRO',
+    ForstoBurdeForstått = 'FORSTO_BURDE_FORSTÅTT',
+    FeilOpplysningerFraBruker = 'FEIL_OPPLYSNINGER_FRA_BRUKER',
+    MangelfulleOpplysningerFraBruker = 'MANGELFULLE_OPPLYSNINGER_FRA_BRUKER',
+    GodTro = 'GOD_TRO',
 }
 
 export const vilkårsresultater: Record<Vilkårsresultat, string> = {
-    FORSTO_BURDE_FORSTÅTT:
+    [Vilkårsresultat.ForstoBurdeForstått]:
         'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
-    FEIL_OPPLYSNINGER_FRA_BRUKER:
+    [Vilkårsresultat.FeilOpplysningerFraBruker]:
         'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-    MANGELFULLE_OPPLYSNINGER_FRA_BRUKER:
+    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
         'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
-    GOD_TRO: 'Nei, mottaker har mottatt beløpet i god tro',
+    [Vilkårsresultat.GodTro]: 'Nei, mottaker har mottatt beløpet i god tro',
 };
 
 export const vilkårsresultatHjelpetekster: Record<Vilkårsresultat, string> = {
-    FORSTO_BURDE_FORSTÅTT: 'Folketrygdloven § 22-15, 1. ledd, 1. punkt',
-    FEIL_OPPLYSNINGER_FRA_BRUKER: 'Folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    MANGELFULLE_OPPLYSNINGER_FRA_BRUKER: 'Folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    GOD_TRO: 'Folketrygdloven § 22-15, 1. ledd',
+    [Vilkårsresultat.ForstoBurdeForstått]: 'Folketrygdloven § 22-15, 1. ledd, 1. punkt',
+    [Vilkårsresultat.FeilOpplysningerFraBruker]: 'Folketrygdloven § 22-15, 1. ledd, 2. punkt',
+    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
+        'Folketrygdloven § 22-15, 1. ledd, 2. punkt',
+    [Vilkårsresultat.GodTro]: 'Folketrygdloven § 22-15, 1. ledd',
 };
 
 export const vilkårsresultatHjelpeteksterBarnetrygd: Record<Vilkårsresultat, string> = {
-    FORSTO_BURDE_FORSTÅTT: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
-    FEIL_OPPLYSNINGER_FRA_BRUKER:
+    [Vilkårsresultat.ForstoBurdeForstått]:
+        'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
+    [Vilkårsresultat.FeilOpplysningerFraBruker]:
         'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    MANGELFULLE_OPPLYSNINGER_FRA_BRUKER:
+    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
         'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    GOD_TRO: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd',
+    [Vilkårsresultat.GodTro]: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd',
 };
 
 export const vilkårsresultatHjelpeteksterKontantstøtte: Record<Vilkårsresultat, string> = {
-    FORSTO_BURDE_FORSTÅTT: 'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
-    FEIL_OPPLYSNINGER_FRA_BRUKER:
+    [Vilkårsresultat.ForstoBurdeForstått]:
+        'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
+    [Vilkårsresultat.FeilOpplysningerFraBruker]:
         'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    MANGELFULLE_OPPLYSNINGER_FRA_BRUKER:
+    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
         'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    GOD_TRO: 'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd',
+    [Vilkårsresultat.GodTro]: 'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd',
 };
 
 export const vilkårsvurderingStegInfotekst =
@@ -50,56 +53,56 @@ export const vilkårsvurderingStegInfotekstKontantstøtte =
     'Fastsett tilbakekreving etter kontantstøtteloven § 11 og folketrygdloven § 22-15. Del opp perioden ved behov for ulik vurdering.';
 
 export const vilkårsresultatTyper = [
-    Vilkårsresultat.FORSTO_BURDE_FORSTÅTT,
-    Vilkårsresultat.FEIL_OPPLYSNINGER_FRA_BRUKER,
-    Vilkårsresultat.MANGELFULLE_OPPLYSNINGER_FRA_BRUKER,
-    Vilkårsresultat.GOD_TRO,
+    Vilkårsresultat.ForstoBurdeForstått,
+    Vilkårsresultat.FeilOpplysningerFraBruker,
+    Vilkårsresultat.MangelfulleOpplysningerFraBruker,
+    Vilkårsresultat.GodTro,
 ];
 
 export enum Aktsomhet {
-    FORSETT = 'FORSETT',
-    GROV_UAKTSOMHET = 'GROV_UAKTSOMHET',
-    SIMPEL_UAKTSOMHET = 'SIMPEL_UAKTSOMHET',
+    Forsett = 'FORSETT',
+    GrovUaktsomhet = 'GROV_UAKTSOMHET',
+    SimpelUaktsomhet = 'SIMPEL_UAKTSOMHET',
 }
 
 export const aktsomheter: Record<Aktsomhet, string> = {
-    FORSETT: 'Forsett',
-    GROV_UAKTSOMHET: 'Grov uaktsomhet',
-    SIMPEL_UAKTSOMHET: 'Simpel uaktsomhet',
+    [Aktsomhet.Forsett]: 'Forsett',
+    [Aktsomhet.GrovUaktsomhet]: 'Grov uaktsomhet',
+    [Aktsomhet.SimpelUaktsomhet]: 'Simpel uaktsomhet',
 };
 
 export const forstodBurdeForståttAktsomheter: Record<Aktsomhet, string> = {
-    FORSETT: 'Forsto',
-    GROV_UAKTSOMHET: 'Må ha forstått',
-    SIMPEL_UAKTSOMHET: 'Burde ha forstått',
+    [Aktsomhet.Forsett]: 'Forsto',
+    [Aktsomhet.GrovUaktsomhet]: 'Må ha forstått',
+    [Aktsomhet.SimpelUaktsomhet]: 'Burde ha forstått',
 };
 
 export const aktsomhetTyper = [
-    Aktsomhet.SIMPEL_UAKTSOMHET,
-    Aktsomhet.GROV_UAKTSOMHET,
-    Aktsomhet.FORSETT,
+    Aktsomhet.SimpelUaktsomhet,
+    Aktsomhet.GrovUaktsomhet,
+    Aktsomhet.Forsett,
 ];
 
 export enum SærligeGrunner {
-    GRAD_AV_UAKTSOMHET = 'GRAD_AV_UAKTSOMHET',
-    HELT_ELLER_DELVIS_NAVS_FEIL = 'HELT_ELLER_DELVIS_NAVS_FEIL',
-    STØRRELSE_BELØP = 'STØRRELSE_BELØP',
-    TID_FRA_UTBETALING = 'TID_FRA_UTBETALING',
-    ANNET = 'ANNET',
+    GradAvUaktsomhet = 'GRAD_AV_UAKTSOMHET',
+    HeltEllerDelvisNavsFeil = 'HELT_ELLER_DELVIS_NAVS_FEIL',
+    StørrelseBeløp = 'STØRRELSE_BELØP',
+    TidFraUtbetaling = 'TID_FRA_UTBETALING',
+    Annet = 'ANNET',
 }
 
 export const særligegrunner: Record<SærligeGrunner, string> = {
-    GRAD_AV_UAKTSOMHET: 'Graden av uaktsomhet hos den kravet retter seg mot',
-    HELT_ELLER_DELVIS_NAVS_FEIL: 'Om feilen helt eller delvis kan tilskrives Nav',
-    STØRRELSE_BELØP: 'Størrelsen på feilutbetalt beløp',
-    TID_FRA_UTBETALING: 'Hvor lang tid siden utbetalingen fant sted',
-    ANNET: 'Annet',
+    [SærligeGrunner.GradAvUaktsomhet]: 'Graden av uaktsomhet hos den kravet retter seg mot',
+    [SærligeGrunner.HeltEllerDelvisNavsFeil]: 'Om feilen helt eller delvis kan tilskrives Nav',
+    [SærligeGrunner.StørrelseBeløp]: 'Størrelsen på feilutbetalt beløp',
+    [SærligeGrunner.TidFraUtbetaling]: 'Hvor lang tid siden utbetalingen fant sted',
+    [SærligeGrunner.Annet]: 'Annet',
 };
 
 export const særligeGrunnerTyper = [
-    SærligeGrunner.GRAD_AV_UAKTSOMHET,
-    SærligeGrunner.HELT_ELLER_DELVIS_NAVS_FEIL,
-    SærligeGrunner.STØRRELSE_BELØP,
-    SærligeGrunner.TID_FRA_UTBETALING,
-    SærligeGrunner.ANNET,
+    SærligeGrunner.GradAvUaktsomhet,
+    SærligeGrunner.HeltEllerDelvisNavsFeil,
+    SærligeGrunner.StørrelseBeløp,
+    SærligeGrunner.TidFraUtbetaling,
+    SærligeGrunner.Annet,
 ];

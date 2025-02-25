@@ -32,8 +32,8 @@ const utledValgtPeriode = (
     );
     const skalViseÅpentVurderingspanel =
         skjemaPerioder.length > 0 &&
-        (behandlingStatus === Behandlingstatus.FATTER_VEDTAK ||
-            behandlingStatus === Behandlingstatus.AVSLUTTET);
+        (behandlingStatus === Behandlingstatus.FatterVedtak ||
+            behandlingStatus === Behandlingstatus.Avsluttet);
 
     if (førsteUbehandletPeriode) {
         return førsteUbehandletPeriode;
@@ -73,8 +73,8 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
 
         React.useEffect(() => {
             if (visVenteModal === false) {
-                settStegErBehandlet(erStegBehandlet(Behandlingssteg.FORELDELSE));
-                const autoutført = erStegAutoutført(Behandlingssteg.FORELDELSE);
+                settStegErBehandlet(erStegBehandlet(Behandlingssteg.Foreldelse));
+                const autoutført = erStegAutoutført(Behandlingssteg.Foreldelse);
                 settErAutoutført(autoutført);
                 if (!autoutført) {
                     hentFeilutbetalingForeldelse();
@@ -84,7 +84,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         }, [behandling, visVenteModal]);
 
         React.useEffect(() => {
-            if (feilutbetalingForeldelse?.status === RessursStatus.SUKSESS) {
+            if (feilutbetalingForeldelse?.status === RessursStatus.Suksess) {
                 const foreldetPerioder = feilutbetalingForeldelse.data.foreldetPerioder;
                 const sortertePerioder = sorterFeilutbetaltePerioder(foreldetPerioder);
                 const skjemaPerioder = sortertePerioder.map((fuFP, index) => {
@@ -181,7 +181,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         };
 
         const harEndretOpplysninger = () => {
-            if (feilutbetalingForeldelse?.status === RessursStatus.SUKSESS) {
+            if (feilutbetalingForeldelse?.status === RessursStatus.Suksess) {
                 const hentetPerioder = feilutbetalingForeldelse.data.foreldetPerioder;
                 return skjemaData.some(skjemaPeriode => {
                     if (skjemaPeriode.erSplittet) return true;
@@ -211,9 +211,9 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                     '@type': 'FORELDELSE',
                     foreldetPerioder: skjemaData.map<PeriodeForeldelseStegPayload>(per => {
                         const erForeldelse =
-                            per.foreldelsesvurderingstype === Foreldelsevurdering.FORELDET;
+                            per.foreldelsesvurderingstype === Foreldelsevurdering.Foreldet;
                         const erTilleggsfrist =
-                            per.foreldelsesvurderingstype === Foreldelsevurdering.TILLEGGSFRIST;
+                            per.foreldelsesvurderingstype === Foreldelsevurdering.Tilleggsfrist;
                         return {
                             periode: per.periode,
                             begrunnelse: per.begrunnelse,
@@ -227,7 +227,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                 sendInnFeilutbetalingForeldelse(behandling.behandlingId, payload).then(
                     (respons: Ressurs<string>) => {
                         settSenderInn(false);
-                        if (respons.status === RessursStatus.SUKSESS) {
+                        if (respons.status === RessursStatus.Suksess) {
                             hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                                 navigate(
                                     `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`

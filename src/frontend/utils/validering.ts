@@ -8,12 +8,12 @@ const textRegex =
 const textGyldigRegex =
     /[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'‐—–\-/\n%§!?#@_()+:;,="&\n]*/g;
 
-export enum DEFINERT_FEILMELDING {
-    OBLIGATORISK_FELT = 'OBLIGATORISK_FELT',
+export enum DefinertFeilmelding {
+    ObligatoriskFelt = 'OBLIGATORISK_FELT',
 }
 
-export const definerteFeilmeldinger: Record<DEFINERT_FEILMELDING, string> = {
-    OBLIGATORISK_FELT: 'Feltet må fylles ut',
+export const definerteFeilmeldinger: Record<DefinertFeilmelding, string> = {
+    [DefinertFeilmelding.ObligatoriskFelt]: 'Feltet må fylles ut',
 };
 
 const invalidTextMessage = (text: string): string => `Feltet inneholder ugyldige tegn: ${text}`;
@@ -56,7 +56,7 @@ const _validerMinLength =
 export const erFeltetEmpty = (felt: FeltState<any>) => {
     return !isEmpty(felt.verdi)
         ? ok(felt)
-        : feil(felt, definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT]);
+        : feil(felt, definerteFeilmeldinger[DefinertFeilmelding.ObligatoriskFelt]);
 };
 
 const _minLength3 = _validerMinLength(3);
@@ -68,7 +68,7 @@ const _validerTekst = (
     verdi: string
 ) => {
     if (isEmpty(verdi)) {
-        return definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT];
+        return definerteFeilmeldinger[DefinertFeilmelding.ObligatoriskFelt];
     }
     let feilmelding = hasValidText(verdi);
     feilmelding = feilmelding || maxLength(verdi);
@@ -100,7 +100,7 @@ export const validerNummerFelt = (
     minVerdi?: number
 ) => {
     if (isEmpty(felt.verdi))
-        return feil(felt, definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT]);
+        return feil(felt, definerteFeilmeldinger[DefinertFeilmelding.ObligatoriskFelt]);
     if (!isNumeric(felt.verdi)) return feil(felt, invalidValueMessage(felt.verdi));
     if (maxVerdi && maxVerdi < Number(Math.round(parseFloat(felt.verdi))))
         return feil(felt, invalidMaxValue(maxVerdi));
@@ -114,7 +114,7 @@ export const validerNummerFelt = (
 
 export const validerDato = (dato?: string): ValideringsResultat => {
     if (!dato || isEmpty(dato)) {
-        return definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT];
+        return definerteFeilmeldinger[DefinertFeilmelding.ObligatoriskFelt];
     }
     const lestDato = parseISO(dato);
     return isValid(lestDato) ? undefined : 'Ugyldig dato';

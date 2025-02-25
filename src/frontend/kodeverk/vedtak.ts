@@ -1,42 +1,42 @@
 export enum Vedtaksresultat {
-    FULL_TILBAKEBETALING = 'FULL_TILBAKEBETALING',
-    DELVIS_TILBAKEBETALING = 'DELVIS_TILBAKEBETALING',
-    INGEN_TILBAKEBETALING = 'INGEN_TILBAKEBETALING',
+    FullTilbakebetaling = 'FULL_TILBAKEBETALING',
+    DelvisTilbakebetaling = 'DELVIS_TILBAKEBETALING',
+    IngenTilbakebetaling = 'INGEN_TILBAKEBETALING',
 }
 
 export const vedtaksresultater: Record<Vedtaksresultat, string> = {
-    FULL_TILBAKEBETALING: 'Full tilbakebetaling',
-    DELVIS_TILBAKEBETALING: 'Delvis tilbakebetaling',
-    INGEN_TILBAKEBETALING: 'Ingen tilbakebetaling',
+    [Vedtaksresultat.FullTilbakebetaling]: 'Full tilbakebetaling',
+    [Vedtaksresultat.DelvisTilbakebetaling]: 'Delvis tilbakebetaling',
+    [Vedtaksresultat.IngenTilbakebetaling]: 'Ingen tilbakebetaling',
 };
 
 export enum Vurdering {
-    FORSETT = 'FORSETT',
-    GROV_UAKTSOMHET = 'GROV_UAKTSOMHET',
-    SIMPEL_UAKTSOMHET = 'SIMPEL_UAKTSOMHET',
-    GOD_TRO = 'GOD_TRO',
-    FORELDET = 'FORELDET',
+    Forsett = 'FORSETT',
+    GrovUaktsomhet = 'GROV_UAKTSOMHET',
+    SimpelUaktsomhet = 'SIMPEL_UAKTSOMHET',
+    GodTro = 'GOD_TRO',
+    Foreldet = 'FORELDET',
 }
 
 export const vurderinger: Record<Vurdering, string> = {
-    FORSETT: 'Forsett',
-    GROV_UAKTSOMHET: 'Grov uaktsomhet',
-    SIMPEL_UAKTSOMHET: 'Simpel uaktsomhet',
-    GOD_TRO: 'Handlet i god tro',
-    FORELDET: 'Foreldet',
+    [Vurdering.Forsett]: 'Forsett',
+    [Vurdering.GrovUaktsomhet]: 'Grov uaktsomhet',
+    [Vurdering.SimpelUaktsomhet]: 'Simpel uaktsomhet',
+    [Vurdering.GodTro]: 'Handlet i god tro',
+    [Vurdering.Foreldet]: 'Foreldet',
 };
 
 export enum Avsnittstype {
-    OPPSUMMERING = 'OPPSUMMERING',
-    PERIODE = 'PERIODE',
-    SAMMENSLÅTT_PERIODE = 'SAMMENSLÅTT_PERIODE',
-    TILLEGGSINFORMASJON = 'TILLEGGSINFORMASJON',
+    Oppsummering = 'OPPSUMMERING',
+    Periode = 'PERIODE',
+    SammenslåttPeriode = 'SAMMENSLÅTT_PERIODE',
+    Tilleggsinformasjon = 'TILLEGGSINFORMASJON',
 }
 
 export enum Underavsnittstype {
-    FAKTA = 'FAKTA',
-    FORELDELSE = 'FORELDELSE',
-    VILKÅR = 'VILKÅR',
-    SÆRLIGEGRUNNER = 'SÆRLIGEGRUNNER',
-    SÆRLIGEGRUNNER_ANNET = 'SÆRLIGEGRUNNER_ANNET',
+    Fakta = 'FAKTA',
+    Foreldelse = 'FORELDELSE',
+    Vilkår = 'VILKÅR',
+    Særligegrunner = 'SÆRLIGEGRUNNER',
+    SærligegrunnerAnnet = 'SÆRLIGEGRUNNER_ANNET',
 }

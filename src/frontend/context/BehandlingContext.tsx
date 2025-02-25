@@ -16,7 +16,7 @@ import {
 } from '../typer/ressurs';
 
 const erStegUtført = (status: Behandlingsstegstatus) => {
-    return status === Behandlingsstegstatus.UTFØRT || status === Behandlingsstegstatus.AUTOUTFØRT;
+    return status === Behandlingsstegstatus.Utført || status === Behandlingsstegstatus.Autoutført;
 };
 
 const [BehandlingProvider, useBehandling] = createUseContext(() => {
@@ -77,44 +77,43 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
                 url: `/familie-tilbake/api/behandling/v1/${behandlingId}`,
             })
                 .then((hentetBehandling: Ressurs<IBehandling>) => {
-                    if (hentetBehandling.status === RessursStatus.SUKSESS) {
+                    if (hentetBehandling.status === RessursStatus.Suksess) {
                         const erILeseModus =
-                            hentetBehandling.data.status === Behandlingstatus.AVSLUTTET ||
+                            hentetBehandling.data.status === Behandlingstatus.Avsluttet ||
                             hentetBehandling.data.erBehandlingPåVent ||
                             hentetBehandling.data.kanEndres === false ||
                             hentetBehandling.data.behandlingsstegsinfo.some(
                                 stegInfo =>
-                                    stegInfo.behandlingssteg === Behandlingssteg.AVSLUTTET ||
-                                    (stegInfo.behandlingssteg ===
-                                        Behandlingssteg.IVERKSETT_VEDTAK &&
+                                    stegInfo.behandlingssteg === Behandlingssteg.Avsluttet ||
+                                    (stegInfo.behandlingssteg === Behandlingssteg.IverksettVedtak &&
                                         stegInfo.behandlingsstegstatus !==
-                                            Behandlingsstegstatus.TILBAKEFØRT) ||
-                                    (stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
+                                            Behandlingsstegstatus.Tilbakeført) ||
+                                    (stegInfo.behandlingssteg === Behandlingssteg.FatteVedtak &&
                                         stegInfo.behandlingsstegstatus ===
-                                            Behandlingsstegstatus.KLAR)
+                                            Behandlingsstegstatus.Klar)
                             );
                         settBehandlingILesemodus(erILeseModus);
 
                         const harFåttKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo.some(
-                            stegInfo => stegInfo.behandlingssteg === Behandlingssteg.FAKTA
+                            stegInfo => stegInfo.behandlingssteg === Behandlingssteg.Fakta
                         );
                         settHarKravgrunnlag(harFåttKravgrunnlag);
 
                         const funnetAktivtsteg =
-                            hentetBehandling.data.status === Behandlingstatus.AVSLUTTET
+                            hentetBehandling.data.status === Behandlingstatus.Avsluttet
                                 ? null
                                 : hentetBehandling.data.behandlingsstegsinfo.find(
                                       stegInfo =>
                                           stegInfo.behandlingsstegstatus ===
-                                              Behandlingsstegstatus.KLAR ||
+                                              Behandlingsstegstatus.Klar ||
                                           stegInfo.behandlingsstegstatus ===
-                                              Behandlingsstegstatus.VENTER
+                                              Behandlingsstegstatus.Venter
                                   );
                         if (funnetAktivtsteg) {
                             settAktivtSteg(funnetAktivtsteg);
                             if (
                                 funnetAktivtsteg.behandlingsstegstatus ===
-                                Behandlingsstegstatus.VENTER
+                                Behandlingsstegstatus.Venter
                             ) {
                                 settVentegrunn(funnetAktivtsteg);
                                 settVisVenteModal(true);
@@ -131,7 +130,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     };
 
     const erStegBehandlet = (steg: Behandlingssteg): boolean => {
-        if (behandling?.status === RessursStatus.SUKSESS) {
+        if (behandling?.status === RessursStatus.Suksess) {
             return behandling.data.behandlingsstegsinfo.some(
                 stegInfo =>
                     stegInfo.behandlingssteg === steg &&
@@ -142,25 +141,25 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     };
 
     const erBehandlingReturnertFraBeslutter = (): boolean => {
-        if (behandling?.status === RessursStatus.SUKSESS) {
+        if (behandling?.status === RessursStatus.Suksess) {
             return behandling.data.behandlingsstegsinfo.some(
                 stegInfo =>
-                    stegInfo.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
-                    (stegInfo.behandlingsstegstatus === Behandlingsstegstatus.AVBRUTT ||
-                        stegInfo.behandlingsstegstatus === Behandlingsstegstatus.TILBAKEFØRT)
+                    stegInfo.behandlingssteg === Behandlingssteg.FatteVedtak &&
+                    (stegInfo.behandlingsstegstatus === Behandlingsstegstatus.Avbrutt ||
+                        stegInfo.behandlingsstegstatus === Behandlingsstegstatus.Tilbakeført)
             );
         }
         return false;
     };
 
     const erStegAutoutført = (steg: Behandlingssteg): boolean => {
-        if (behandling?.status === RessursStatus.SUKSESS) {
+        if (behandling?.status === RessursStatus.Suksess) {
             const behandlingSteg = behandling.data.behandlingsstegsinfo?.find(
                 stegInfo => stegInfo.behandlingssteg === steg
             );
             return (
                 !!behandlingSteg &&
-                behandlingSteg.behandlingsstegstatus === Behandlingsstegstatus.AUTOUTFØRT
+                behandlingSteg.behandlingsstegstatus === Behandlingsstegstatus.Autoutført
             );
         }
         return false;
@@ -168,16 +167,16 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
 
     const harVærtPåFatteVedtakSteget = () => {
         return (
-            behandling?.status === RessursStatus.SUKSESS &&
+            behandling?.status === RessursStatus.Suksess &&
             behandling.data.behandlingsstegsinfo.some(
-                bsi => bsi.behandlingssteg === Behandlingssteg.FATTE_VEDTAK
+                bsi => bsi.behandlingssteg === Behandlingssteg.FatteVedtak
             )
         );
     };
 
     const lagLenkeTilRevurdering = () => {
-        return fagsak?.status === RessursStatus.SUKSESS &&
-            behandling?.status === RessursStatus.SUKSESS
+        return fagsak?.status === RessursStatus.Suksess &&
+            behandling?.status === RessursStatus.Suksess
             ? `/redirect/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/${behandling.data.fagsystemsbehandlingId}`
             : '#';
     };

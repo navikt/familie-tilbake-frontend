@@ -82,14 +82,14 @@ describe('Tester: ForeldelseContainer', () => {
             useBehandlingApi.mockImplementation(() => ({
                 gjerFeilutbetalingForeldelseKall: () => {
                     const ressurs = mock<Ressurs<IFeilutbetalingForeldelse>>({
-                        status: RessursStatus.SUKSESS,
+                        status: RessursStatus.Suksess,
                         data: foreldelse,
                     });
                     return Promise.resolve(ressurs);
                 },
                 sendInnFeilutbetalingForeldelse: () => {
                     const ressurs = mock<Ressurs<string>>({
-                        status: RessursStatus.SUKSESS,
+                        status: RessursStatus.Suksess,
                         data: 'suksess',
                     });
                     return Promise.resolve(ressurs);
@@ -211,13 +211,13 @@ describe('Tester: ForeldelseContainer', () => {
                 {
                     ...perioder[0],
                     begrunnelse: 'Begrunnelse 1',
-                    foreldelsesvurderingstype: Foreldelsevurdering.FORELDET,
+                    foreldelsesvurderingstype: Foreldelsevurdering.Foreldet,
                     foreldelsesfrist: '2021-01-01',
                 },
                 {
                     ...perioder[1],
                     begrunnelse: 'Begrunnelse 2',
-                    foreldelsesvurderingstype: Foreldelsevurdering.TILLEGGSFRIST,
+                    foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
                     foreldelsesfrist: '2021-01-01',
                     oppdagelsesdato: '2020-12-24',
                 },
@@ -315,19 +315,19 @@ describe('Tester: ForeldelseContainer', () => {
                 {
                     ...perioder[0],
                     begrunnelse: 'Begrunnelse 1',
-                    foreldelsesvurderingstype: Foreldelsevurdering.FORELDET,
+                    foreldelsesvurderingstype: Foreldelsevurdering.Foreldet,
                     foreldelsesfrist: '2021-01-01',
                 },
                 {
                     ...perioder[1],
                     begrunnelse: 'Begrunnelse 2',
-                    foreldelsesvurderingstype: Foreldelsevurdering.TILLEGGSFRIST,
+                    foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
                     foreldelsesfrist: '2021-01-01',
                     oppdagelsesdato: '2020-12-24',
                 },
             ],
         });
-        const behandling = mock<IBehandling>({ status: Behandlingstatus.FATTER_VEDTAK });
+        const behandling = mock<IBehandling>({ status: Behandlingstatus.FatterVedtak });
         const fagsak = mock<IFagsak>();
 
         const { getByText, getByRole, getByLabelText } = render(

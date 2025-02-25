@@ -54,7 +54,7 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                     label="Land"
                     flags
                     excludeList={
-                        skjema.felter.mottaker.verdi === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
+                        skjema.felter.mottaker.verdi === MottakerType.BrukerMedUtenlandskAdresse
                             ? ['NO', 'XU']
                             : ['XU']
                     }
@@ -64,7 +64,7 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                     }}
                     error={
                         skjema.visFeilmeldinger &&
-                        skjema.felter.land.valideringsstatus === Valideringsstatus.FEIL
+                        skjema.felter.land.valideringsstatus === Valideringsstatus.Feil
                             ? skjema.felter.land.feilmelding?.toString()
                             : ''
                     }

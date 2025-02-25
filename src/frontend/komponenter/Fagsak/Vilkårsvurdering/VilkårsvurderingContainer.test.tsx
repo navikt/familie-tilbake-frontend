@@ -42,7 +42,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 fom: '2020-01-01',
                 tom: '2020-03-31',
             },
-            hendelsestype: HendelseType.BOSATT_I_RIKET,
+            hendelsestype: HendelseType.BosattIRiket,
             foreldet: false,
             begrunnelse: undefined,
         },
@@ -52,7 +52,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 fom: '2020-05-01',
                 tom: '2020-06-30',
             },
-            hendelsestype: HendelseType.BOR_MED_SØKER,
+            hendelsestype: HendelseType.BorMedSøker,
             foreldet: false,
             begrunnelse: undefined,
         },
@@ -68,14 +68,14 @@ describe('Tester: VilkårsvurderingContainer', () => {
             useBehandlingApi.mockImplementation(() => ({
                 gjerFeilutbetalingVilkårsvurderingKall: () => {
                     const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
-                        status: RessursStatus.SUKSESS,
+                        status: RessursStatus.Suksess,
                         data: vilkårsvurdering,
                     });
                     return Promise.resolve(ressurs);
                 },
                 sendInnFeilutbetalingVilkårsvurdering: () => {
                     const ressurs = mock<Ressurs<string>>({
-                        status: RessursStatus.SUKSESS,
+                        status: RessursStatus.Suksess,
                         data: 'suksess',
                     });
                     return Promise.resolve(ressurs);
@@ -89,7 +89,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         useHttp.mockImplementation(() => ({
             request: () => {
                 return Promise.resolve({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: mock<IBehandling>({ eksternBrukId: '1' }),
                 });
             },
@@ -102,7 +102,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         setupHttpMock();
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>();
-        fagsak.ytelsestype = Ytelsetype.BARNETILSYN;
+        fagsak.ytelsestype = Ytelsetype.Barnetilsyn;
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
             render(
@@ -325,7 +325,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         const fagsak = mock<IFagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
         const behandling = mock<IBehandling>({ eksternBrukId: '1' });
 
-        fagsak.ytelsestype = Ytelsetype.BARNETILSYN;
+        fagsak.ytelsestype = Ytelsetype.Barnetilsyn;
 
         const { getByText, getByRole, getByLabelText, queryAllByText } = render(
             <BehandlingProvider>
@@ -427,10 +427,10 @@ describe('Tester: VilkårsvurderingContainer', () => {
                     ...perioder[0],
                     begrunnelse: 'Begrunnelse vilkår 1',
                     vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat: Vilkårsresultat.FORSTO_BURDE_FORSTÅTT,
+                        vilkårsvurderingsresultat: Vilkårsresultat.ForstoBurdeForstått,
                         aktsomhet: {
                             begrunnelse: 'Begrunnelse aktsomhet 1',
-                            aktsomhet: Aktsomhet.FORSETT,
+                            aktsomhet: Aktsomhet.Forsett,
                             særligeGrunner: [],
                         },
                         godTro: undefined,
@@ -440,7 +440,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                     ...perioder[1],
                     begrunnelse: 'Begrunnelse vilkår 2',
                     vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat: Vilkårsresultat.GOD_TRO,
+                        vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
                         aktsomhet: undefined,
                         godTro: {
                             begrunnelse: 'Begrunnelse god tro 2',
@@ -453,7 +453,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         });
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>({
-            ytelsestype: Ytelsetype.BARNETRYGD,
+            ytelsestype: Ytelsetype.Barnetrygd,
         });
 
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } = render(
@@ -562,10 +562,10 @@ describe('Tester: VilkårsvurderingContainer', () => {
                     ...perioder[0],
                     begrunnelse: 'Begrunnelse vilkår 1',
                     vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat: Vilkårsresultat.FORSTO_BURDE_FORSTÅTT,
+                        vilkårsvurderingsresultat: Vilkårsresultat.ForstoBurdeForstått,
                         aktsomhet: {
                             begrunnelse: 'Begrunnelse aktsomhet 1',
-                            aktsomhet: Aktsomhet.FORSETT,
+                            aktsomhet: Aktsomhet.Forsett,
                             særligeGrunner: [],
                         },
                         godTro: undefined,
@@ -575,7 +575,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                     ...perioder[1],
                     begrunnelse: 'Begrunnelse vilkår 2',
                     vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat: Vilkårsresultat.GOD_TRO,
+                        vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
                         aktsomhet: undefined,
                         godTro: {
                             begrunnelse: 'Begrunnelse god tro 2',
@@ -587,9 +587,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
             rettsgebyr: 1199,
         });
         setupHttpMock();
-        const behandling = mock<IBehandling>({ status: Behandlingstatus.FATTER_VEDTAK });
+        const behandling = mock<IBehandling>({ status: Behandlingstatus.FatterVedtak });
         const fagsak = mock<IFagsak>({
-            ytelsestype: Ytelsetype.BARNETRYGD,
+            ytelsestype: Ytelsetype.Barnetrygd,
         });
 
         const { getByText, getByRole, getByLabelText } = render(

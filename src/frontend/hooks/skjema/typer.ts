@@ -58,10 +58,10 @@ export interface FeiloppsummeringFeil {
 }
 
 export enum Valideringsstatus {
-    FEIL = 'FEIL',
-    ADVARSEL = 'ADVARSEL',
-    OK = 'OK',
-    IKKE_VALIDERT = 'IKKE_VALIDERT',
+    Feil = 'FEIL',
+    Advarsel = 'ADVARSEL',
+    Ok = 'OK',
+    IkkeValidert = 'IKKE_VALIDERT',
 }
 
 // eslint-disable-next-line
@@ -78,7 +78,7 @@ export type ValiderOgSettFelt<Verdi> = (
 
 export const defaultValidator = <Verdi>(felt: FeltState<Verdi>) => ({
     ...felt,
-    valideringsstatus: Valideringsstatus.OK,
+    valideringsstatus: Valideringsstatus.Ok,
 });
 
 export type FieldDictionary<Record> = {
@@ -104,26 +104,26 @@ export interface UseSkjemaVerdi<Felter, SkjemaRespons> {
     settSubmitRessurs: Dispatch<
         SetStateAction<
             | {
-                  status: RessursStatus.IKKE_HENTET;
+                  status: RessursStatus.IkkeHentet;
               }
             | {
-                  status: RessursStatus.HENTER;
-              }
-            | {
-                  frontendFeilmelding: string;
-                  status: RessursStatus.IKKE_TILGANG;
+                  status: RessursStatus.Henter;
               }
             | {
                   frontendFeilmelding: string;
-                  status: RessursStatus.FEILET;
+                  status: RessursStatus.IkkeTilgang;
               }
             | {
                   frontendFeilmelding: string;
-                  status: RessursStatus.FUNKSJONELL_FEIL;
+                  status: RessursStatus.Feilet;
+              }
+            | {
+                  frontendFeilmelding: string;
+                  status: RessursStatus.FunksjonellFeil;
               }
             | {
                   data: SkjemaRespons;
-                  status: RessursStatus.SUKSESS;
+                  status: RessursStatus.Suksess;
               }
         >
     >;

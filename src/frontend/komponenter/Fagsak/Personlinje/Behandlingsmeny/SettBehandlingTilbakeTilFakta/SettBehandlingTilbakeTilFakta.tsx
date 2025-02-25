@@ -40,7 +40,7 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
         lukkSettBehandlingTilbakeTilFaktaModal();
         nullstillIkkePersisterteKomponenter();
 
-        const resettUrl = toggles[ToggleName.saksbehanderKanResettebehandling]
+        const resettUrl = toggles[ToggleName.SaksbehanderKanResettebehandling]
             ? `/familie-tilbake/api/behandling/${behandling.behandlingId}/flytt-behandling-til-fakta`
             : `/familie-tilbake/api/forvaltning/behandling/${behandling.behandlingId}/flytt-behandling/v1`;
 
@@ -48,9 +48,9 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
             method: 'PUT',
             url: resettUrl,
         }).then((respons: Ressurs<string>) => {
-            if (respons.status === RessursStatus.SUKSESS) {
-                settToast(ToastTyper.FLYTT_BEHANDLING_TIL_FAKTA, {
-                    alertType: AlertType.INFO,
+            if (respons.status === RessursStatus.Suksess) {
+                settToast(ToastTyper.FlyttBehandlingTilFakta, {
+                    alertType: AlertType.Info,
                     tekst: 'Flyttet behandling tilbake til fakta',
                 });
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
@@ -60,12 +60,12 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
                     window.location.reload(); // Quick fix for å kunne trykke neste etter at en behandling har blitt tilbakestilt til fakta
                 });
             } else if (
-                respons.status === RessursStatus.FEILET ||
-                respons.status === RessursStatus.FUNKSJONELL_FEIL ||
-                respons.status === RessursStatus.IKKE_TILGANG
+                respons.status === RessursStatus.Feilet ||
+                respons.status === RessursStatus.FunksjonellFeil ||
+                respons.status === RessursStatus.IkkeTilgang
             ) {
-                settToast(ToastTyper.FLYTT_BEHANDLING_TIL_FAKTA, {
-                    alertType: AlertType.WARNING,
+                settToast(ToastTyper.FlyttBehandlingTilFakta, {
+                    alertType: AlertType.Warning,
                     tekst: 'Flytting av behandling tilbake til fakta feilet',
                 });
             }

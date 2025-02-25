@@ -16,7 +16,7 @@ const Dokumentlisting: React.FC = () => {
     const { journalposter } = useDokumentlisting();
 
     switch (journalposter?.status) {
-        case RessursStatus.SUKSESS: {
+        case RessursStatus.Suksess: {
             const poster = journalposter.data;
             poster.sort((a, b) => {
                 return (
@@ -33,7 +33,7 @@ const Dokumentlisting: React.FC = () => {
                 </StyledContainer>
             );
         }
-        case RessursStatus.HENTER:
+        case RessursStatus.Henter:
             return (
                 <HenterData størrelse="large" beskrivelse="Henting av dokumenter tar litt tid." />
             );

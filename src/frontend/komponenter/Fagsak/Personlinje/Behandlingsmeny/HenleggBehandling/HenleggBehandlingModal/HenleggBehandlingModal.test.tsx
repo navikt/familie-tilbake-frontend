@@ -35,7 +35,7 @@ describe('Tester: HenleggBehandlingModal', () => {
         useBehandlingApi.mockImplementation(() => ({
             henleggBehandling: () => {
                 const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: 'suksess',
                 });
                 return Promise.resolve(ressurs);
@@ -52,7 +52,7 @@ describe('Tester: HenleggBehandlingModal', () => {
     test('- henlegger behandling med varsel sendt', async () => {
         const user = userEvent.setup();
         const behandling = mock<IBehandling>({
-            type: Behandlingstype.TILBAKEKREVING,
+            type: Behandlingstype.Tilbakekreving,
             varselSendt: true,
         });
         const fagsak = mock<IFagsak>({});
@@ -63,7 +63,7 @@ describe('Tester: HenleggBehandlingModal', () => {
                 fagsak={fagsak}
                 visModal={true}
                 settVisModal={() => jest.fn()}
-                årsaker={[Behandlingresultat.HENLAGT_FEILOPPRETTET]}
+                årsaker={[Behandlingresultat.HenlagtFeilopprettet]}
             />
         );
 
@@ -86,7 +86,7 @@ describe('Tester: HenleggBehandlingModal', () => {
         await act(() =>
             user.selectOptions(
                 getByLabelText('Velg årsak'),
-                Behandlingresultat.HENLAGT_FEILOPPRETTET
+                Behandlingresultat.HenlagtFeilopprettet
             )
         );
         await act(() => user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet'));
@@ -106,7 +106,7 @@ describe('Tester: HenleggBehandlingModal', () => {
     test('- henlegger behandling med varsel ikke sendt', async () => {
         const user = userEvent.setup();
         const behandling = mock<IBehandling>({
-            type: Behandlingstype.TILBAKEKREVING,
+            type: Behandlingstype.Tilbakekreving,
             varselSendt: false,
         });
         const fagsak = mock<IFagsak>({});
@@ -117,7 +117,7 @@ describe('Tester: HenleggBehandlingModal', () => {
                 fagsak={fagsak}
                 visModal={true}
                 settVisModal={() => jest.fn()}
-                årsaker={[Behandlingresultat.HENLAGT_FEILOPPRETTET]}
+                årsaker={[Behandlingresultat.HenlagtFeilopprettet]}
             />
         );
 
@@ -140,7 +140,7 @@ describe('Tester: HenleggBehandlingModal', () => {
         await act(() =>
             user.selectOptions(
                 getByLabelText('Velg årsak'),
-                Behandlingresultat.HENLAGT_FEILOPPRETTET
+                Behandlingresultat.HenlagtFeilopprettet
             )
         );
         await act(() => user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet'));
@@ -160,10 +160,10 @@ describe('Tester: HenleggBehandlingModal', () => {
     test('- henlegger revurdering, med brev', async () => {
         const user = userEvent.setup();
         const behandling = mock<IBehandling>({
-            type: Behandlingstype.REVURDERING_TILBAKEKREVING,
+            type: Behandlingstype.RevurderingTilbakekreving,
         });
         const fagsak = mock<IFagsak>({
-            språkkode: Målform.NB,
+            språkkode: Målform.Nb,
         });
 
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } = render(
@@ -173,8 +173,8 @@ describe('Tester: HenleggBehandlingModal', () => {
                 visModal={true}
                 settVisModal={() => jest.fn()}
                 årsaker={[
-                    Behandlingresultat.HENLAGT_FEILOPPRETTET_MED_BREV,
-                    Behandlingresultat.HENLAGT_FEILOPPRETTET_UTEN_BREV,
+                    Behandlingresultat.HenlagtFeilopprettetMedBrev,
+                    Behandlingresultat.HenlagtFeilopprettetUtenBrev,
                 ]}
             />
         );
@@ -198,7 +198,7 @@ describe('Tester: HenleggBehandlingModal', () => {
         await act(() =>
             user.selectOptions(
                 getByLabelText('Velg årsak'),
-                Behandlingresultat.HENLAGT_FEILOPPRETTET_MED_BREV
+                Behandlingresultat.HenlagtFeilopprettetMedBrev
             )
         );
         await act(() => user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet'));
@@ -237,10 +237,10 @@ describe('Tester: HenleggBehandlingModal', () => {
     test('- henlegger revurdering, uten brev', async () => {
         const user = userEvent.setup();
         const behandling = mock<IBehandling>({
-            type: Behandlingstype.REVURDERING_TILBAKEKREVING,
+            type: Behandlingstype.RevurderingTilbakekreving,
         });
         const fagsak = mock<IFagsak>({
-            språkkode: Målform.NB,
+            språkkode: Målform.Nb,
         });
 
         const { getByText, getByLabelText, getByRole, queryByText, queryByRole, queryAllByText } =
@@ -251,8 +251,8 @@ describe('Tester: HenleggBehandlingModal', () => {
                     visModal={true}
                     settVisModal={() => jest.fn()}
                     årsaker={[
-                        Behandlingresultat.HENLAGT_FEILOPPRETTET_MED_BREV,
-                        Behandlingresultat.HENLAGT_FEILOPPRETTET_UTEN_BREV,
+                        Behandlingresultat.HenlagtFeilopprettetMedBrev,
+                        Behandlingresultat.HenlagtFeilopprettetUtenBrev,
                     ]}
                 />
             );
@@ -276,7 +276,7 @@ describe('Tester: HenleggBehandlingModal', () => {
         await act(() =>
             user.selectOptions(
                 getByLabelText('Velg årsak'),
-                Behandlingresultat.HENLAGT_FEILOPPRETTET_UTEN_BREV
+                Behandlingresultat.HenlagtFeilopprettetUtenBrev
             )
         );
         await act(() => user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet'));

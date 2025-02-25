@@ -29,7 +29,7 @@ import {
     RessursStatus,
 } from '../../../typer/ressurs';
 import {
-    DEFINERT_FEILMELDING,
+    DefinertFeilmelding,
     definerteFeilmeldinger,
     sorterFeilutbetaltePerioder,
     validerTekstMaksLengde,
@@ -50,7 +50,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({
             perioder: [],
             vurderingAvBrukersUttalelse: {
-                harBrukerUttaltSeg: HarBrukerUttaltSegValg.IKKE_VURDERT,
+                harBrukerUttaltSeg: HarBrukerUttaltSegValg.IkkeVurdert,
             },
         });
         const [behandlePerioderSamlet, settBehandlePerioderSamlet] = useState<boolean>(false);
@@ -71,14 +71,14 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         useEffect(() => {
             if (visVenteModal === false) {
-                settStegErBehandlet(erStegBehandlet(Behandlingssteg.FAKTA));
+                settStegErBehandlet(erStegBehandlet(Behandlingssteg.Fakta));
                 hentFeilutbetalingFakta();
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling, visVenteModal]);
 
         useEffect(() => {
-            if (feilutbetalingFakta?.status === RessursStatus.SUKSESS) {
+            if (feilutbetalingFakta?.status === RessursStatus.Suksess) {
                 const data = feilutbetalingFakta.data;
                 const sortertePerioder = sorterFeilutbetaltePerioder(data.feilutbetaltePerioder);
                 const behandletPerioder = sortertePerioder.map((fuFP, index) => {
@@ -141,7 +141,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                     vurderingAvBrukersUttalelse: {
                         harBrukerUttaltSeg:
                             prevState.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg ||
-                            HarBrukerUttaltSegValg.IKKE_VURDERT,
+                            HarBrukerUttaltSegValg.IkkeVurdert,
                         beskrivelse: begrunnelse,
                     },
                 };
@@ -234,7 +234,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                     melding: feilmelding,
                 });
             }
-            if (vurderingAvBrukersUttalelse?.harBrukerUttaltSeg === HarBrukerUttaltSegValg.JA) {
+            if (vurderingAvBrukersUttalelse?.harBrukerUttaltSeg === HarBrukerUttaltSegValg.Ja) {
                 const feilmeldingBeskrivelseBrukerHarUttaltSeg = _validerTekst3000(
                     //@ts-expect-error støtter egentlig undefined
                     vurderingAvBrukersUttalelse?.beskrivelse
@@ -248,15 +248,15 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 }
             }
             if (
-                vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !== HarBrukerUttaltSegValg.NEI &&
-                vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !== HarBrukerUttaltSegValg.JA &&
+                vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !== HarBrukerUttaltSegValg.Nei &&
+                vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !== HarBrukerUttaltSegValg.Ja &&
                 vurderingAvBrukersUttalelse?.harBrukerUttaltSeg !==
-                    HarBrukerUttaltSegValg.IKKE_AKTUELT
+                    HarBrukerUttaltSegValg.IkkeAktuelt
             ) {
                 feilmeldinger.push({
                     gjelderBegrunnelse: false,
                     gjelderBrukerHarUttaltSeg: true,
-                    melding: definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT],
+                    melding: definerteFeilmeldinger[DefinertFeilmelding.ObligatoriskFelt],
                 });
             }
             for (const periode of skjemaData.perioder) {
@@ -268,7 +268,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                         periode: periode.index,
                         gjelderHendelsetype: tomHendelsetype,
                         gjelderHendelseundertype: tomHendelseundertype,
-                        melding: definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT],
+                        melding: definerteFeilmeldinger[DefinertFeilmelding.ObligatoriskFelt],
                     });
                 }
             }
@@ -276,7 +276,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         };
 
         const harEndretOpplysninger = () => {
-            if (feilutbetalingFakta?.status === RessursStatus.SUKSESS) {
+            if (feilutbetalingFakta?.status === RessursStatus.Suksess) {
                 const hentetData = feilutbetalingFakta.data;
                 return (
                     hentetData.vurderingAvBrukersUttalelse !==
@@ -302,11 +302,11 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelse
         ): VurderingAvBrukersUttalelse => {
             switch (vurderingAvBrukersUttalelse.harBrukerUttaltSeg) {
-                case HarBrukerUttaltSegValg.JA:
+                case HarBrukerUttaltSegValg.Ja:
                     return vurderingAvBrukersUttalelse;
-                case HarBrukerUttaltSegValg.IKKE_VURDERT:
-                case HarBrukerUttaltSegValg.NEI:
-                case HarBrukerUttaltSegValg.IKKE_AKTUELT:
+                case HarBrukerUttaltSegValg.IkkeVurdert:
+                case HarBrukerUttaltSegValg.Nei:
+                case HarBrukerUttaltSegValg.IkkeAktuelt:
                     return {
                         harBrukerUttaltSeg: vurderingAvBrukersUttalelse.harBrukerUttaltSeg,
                     };
@@ -348,7 +348,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                     sendInnFeilutbetalingFakta(behandling.behandlingId, payload).then(
                         (respons: Ressurs<string>) => {
                             settSenderInn(false);
-                            if (respons.status === RessursStatus.SUKSESS) {
+                            if (respons.status === RessursStatus.Suksess) {
                                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                                     navigate(
                                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`

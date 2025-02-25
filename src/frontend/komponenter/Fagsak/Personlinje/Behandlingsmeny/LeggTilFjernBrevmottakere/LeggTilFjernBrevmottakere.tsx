@@ -45,8 +45,8 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
         behandling.manuelleBrevmottakere.length ||
         behandling.behandlingsstegsinfo.some(
             steg =>
-                steg.behandlingssteg === Behandlingssteg.BREVMOTTAKER &&
-                steg.behandlingsstegstatus !== Behandlingsstegstatus.TILBAKEFØRT
+                steg.behandlingssteg === Behandlingssteg.Brevmottaker &&
+                steg.behandlingsstegstatus !== Behandlingsstegstatus.Tilbakeført
         );
 
     const opprettBrevmottakerSteg = () => {
@@ -57,7 +57,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandling.behandlingId}/aktiver`,
         }).then((respons: Ressurs<string>) => {
             settSenderInn(false);
-            if (respons.status === RessursStatus.SUKSESS) {
+            if (respons.status === RessursStatus.Suksess) {
                 settVisBrevmottakerModal(true);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                     navigate(
@@ -65,9 +65,9 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                     );
                 });
             } else if (
-                respons.status === RessursStatus.FEILET ||
-                respons.status === RessursStatus.FUNKSJONELL_FEIL ||
-                respons.status === RessursStatus.IKKE_TILGANG
+                respons.status === RessursStatus.Feilet ||
+                respons.status === RessursStatus.FunksjonellFeil ||
+                respons.status === RessursStatus.IkkeTilgang
             ) {
                 settFeilmelding(respons.frontendFeilmelding);
             }
@@ -82,7 +82,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandling.behandlingId}/deaktiver`,
         }).then((respons: Ressurs<string>) => {
             settSenderInn(false);
-            if (respons.status === RessursStatus.SUKSESS) {
+            if (respons.status === RessursStatus.Suksess) {
                 settVisFjernModal(false);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                     utførRedirect(
@@ -90,9 +90,9 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                     );
                 });
             } else if (
-                respons.status === RessursStatus.FEILET ||
-                respons.status === RessursStatus.FUNKSJONELL_FEIL ||
-                respons.status === RessursStatus.IKKE_TILGANG
+                respons.status === RessursStatus.Feilet ||
+                respons.status === RessursStatus.FunksjonellFeil ||
+                respons.status === RessursStatus.IkkeTilgang
             ) {
                 settFeilmelding(respons.frontendFeilmelding);
             }
@@ -109,8 +109,8 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
 
     useEffect(() => {
         if (feilmelding && feilmelding !== '') {
-            settToast(ToastTyper.BREVMOTTAKER_IKKE_TILLAT, {
-                alertType: AlertType.WARNING,
+            settToast(ToastTyper.BrevmottakerIkkeTillat, {
+                alertType: AlertType.Warning,
                 tekst: feilmelding,
             });
             settFeilmelding('');

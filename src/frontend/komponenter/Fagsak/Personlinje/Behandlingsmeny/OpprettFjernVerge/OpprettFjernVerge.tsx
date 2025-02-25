@@ -31,7 +31,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
     const { utførRedirect } = useRedirectEtterLagring();
 
     const kanFjerneVerge =
-        behandling.harVerge || aktivtSteg?.behandlingssteg === Behandlingssteg.VERGE;
+        behandling.harVerge || aktivtSteg?.behandlingssteg === Behandlingssteg.Verge;
 
     const opprettVerge = () => {
         nullstillIkkePersisterteKomponenter();
@@ -39,7 +39,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
             method: 'POST',
             url: `/familie-tilbake/api/behandling/v1/${behandling.behandlingId}/verge`,
         }).then((respons: Ressurs<string>) => {
-            if (respons.status === RessursStatus.SUKSESS) {
+            if (respons.status === RessursStatus.Suksess) {
                 settSenderInn(false);
                 settVisModal(false);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
@@ -48,9 +48,9 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
                     );
                 });
             } else if (
-                respons.status === RessursStatus.FEILET ||
-                respons.status === RessursStatus.FUNKSJONELL_FEIL ||
-                respons.status === RessursStatus.IKKE_TILGANG
+                respons.status === RessursStatus.Feilet ||
+                respons.status === RessursStatus.FunksjonellFeil ||
+                respons.status === RessursStatus.IkkeTilgang
             ) {
                 settFeilmelding(respons.frontendFeilmelding);
             }
@@ -63,7 +63,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
             method: 'PUT',
             url: `/familie-tilbake/api/behandling/v1/${behandling.behandlingId}/verge`,
         }).then((respons: Ressurs<string>) => {
-            if (respons.status === RessursStatus.SUKSESS) {
+            if (respons.status === RessursStatus.Suksess) {
                 settSenderInn(false);
                 settVisModal(false);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
@@ -72,9 +72,9 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
                     );
                 });
             } else if (
-                respons.status === RessursStatus.FEILET ||
-                respons.status === RessursStatus.FUNKSJONELL_FEIL ||
-                respons.status === RessursStatus.IKKE_TILGANG
+                respons.status === RessursStatus.Feilet ||
+                respons.status === RessursStatus.FunksjonellFeil ||
+                respons.status === RessursStatus.IkkeTilgang
             ) {
                 settFeilmelding(respons.frontendFeilmelding);
             }

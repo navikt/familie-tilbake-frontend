@@ -32,41 +32,41 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
     if (!ressurs) {
         return {
             frontendFeilmelding: defaultFeilmelding,
-            status: RessursStatus.FEILET,
+            status: RessursStatus.Feilet,
         };
     }
 
     switch (ressurs.status) {
-        case RessursStatus.SUKSESS:
+        case RessursStatus.Suksess:
             typetRessurs = {
                 data: ressurs.data,
-                status: RessursStatus.SUKSESS,
+                status: RessursStatus.Suksess,
             };
             break;
-        case RessursStatus.IKKE_TILGANG:
+        case RessursStatus.IkkeTilgang:
             typetRessurs = {
                 frontendFeilmelding: ressurs.frontendFeilmelding ?? 'Ikke tilgang',
-                status: RessursStatus.IKKE_TILGANG,
+                status: RessursStatus.IkkeTilgang,
             };
             break;
-        case RessursStatus.FEILET:
+        case RessursStatus.Feilet:
             loggFeilTilSentry && loggFeil(error, innloggetSaksbehandler, ressurs.melding);
             typetRessurs = {
                 frontendFeilmelding: ressurs.frontendFeilmelding ?? defaultFeilmelding,
-                status: RessursStatus.FEILET,
+                status: RessursStatus.Feilet,
             };
             break;
-        case RessursStatus.FUNKSJONELL_FEIL:
+        case RessursStatus.FunksjonellFeil:
             typetRessurs = {
                 frontendFeilmelding:
                     ressurs.frontendFeilmelding ?? 'En funksjonell feil har oppstått!',
-                status: RessursStatus.FUNKSJONELL_FEIL,
+                status: RessursStatus.FunksjonellFeil,
             };
             break;
         default:
             typetRessurs = {
                 frontendFeilmelding: defaultFeilmelding,
-                status: RessursStatus.FEILET,
+                status: RessursStatus.Feilet,
             };
             break;
     }

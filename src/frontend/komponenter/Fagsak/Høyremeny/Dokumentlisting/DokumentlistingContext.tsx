@@ -20,7 +20,7 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
         const { request } = useHttp();
 
         useEffect(() => {
-            if (valgtMenyside === Menysider.DOKUMENTER) {
+            if (valgtMenyside === Menysider.Dokumenter) {
                 hentDokumentlisting();
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps

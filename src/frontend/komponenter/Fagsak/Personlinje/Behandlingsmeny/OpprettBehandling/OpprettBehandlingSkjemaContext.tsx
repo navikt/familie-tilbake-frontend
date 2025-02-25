@@ -24,7 +24,7 @@ const useOpprettBehandlingSkjema = (
     >({
         felter: {
             behandlingstype: useFelt<Behandlingstype>({
-                verdi: Behandlingstype.REVURDERING_TILBAKEKREVING,
+                verdi: Behandlingstype.RevurderingTilbakekreving,
             }),
             behandlingsårsak: useFelt<Behandlingårsak | ''>({
                 feltId: 'behandlingsårsak',
@@ -49,7 +49,7 @@ const useOpprettBehandlingSkjema = (
                     url: '/familie-tilbake/api/behandling/revurdering/v1',
                 },
                 (response: Ressurs<string>) => {
-                    if (response.status === RessursStatus.SUKSESS) {
+                    if (response.status === RessursStatus.Suksess) {
                         lukkModal(false);
                         utførRedirect(
                             `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${response.data}`

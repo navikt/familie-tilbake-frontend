@@ -143,7 +143,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                 {værtPåFatteVedtakSteget && (
                                     <Tabs.Panel value="to-trinn">
                                         <Menykontainer
-                                            valgtMenyside={Menysider.TOTRINN}
+                                            valgtMenyside={Menysider.Totrinn}
                                             behandling={behandling}
                                             fagsak={fagsak}
                                         />
@@ -151,21 +151,21 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                                 )}
                                 <Tabs.Panel value="logg">
                                     <Menykontainer
-                                        valgtMenyside={Menysider.HISTORIKK}
+                                        valgtMenyside={Menysider.Historikk}
                                         behandling={behandling}
                                         fagsak={fagsak}
                                     />
                                 </Tabs.Panel>
                                 <Tabs.Panel value="dokumenter">
                                     <Menykontainer
-                                        valgtMenyside={Menysider.DOKUMENTER}
+                                        valgtMenyside={Menysider.Dokumenter}
                                         behandling={behandling}
                                         fagsak={fagsak}
                                     />
                                 </Tabs.Panel>
                                 <Tabs.Panel value="send-brev">
                                     <Menykontainer
-                                        valgtMenyside={Menysider.SEND_BREV}
+                                        valgtMenyside={Menysider.SendBrev}
                                         behandling={behandling}
                                         fagsak={fagsak}
                                     />

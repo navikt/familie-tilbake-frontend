@@ -44,7 +44,7 @@ type SendMeldingSkjemaDefinisjon = {
 };
 
 const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter) =>
-    avhengigheter?.maltype.valideringsstatus === Valideringsstatus.OK;
+    avhengigheter?.maltype.valideringsstatus === Valideringsstatus.Ok;
 
 interface IProps {
     behandling: IBehandling;
@@ -59,8 +59,8 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fa
     const navigate = useNavigate();
 
     const maler = [
-        behandling.varselSendt ? DokumentMal.KORRIGERT_VARSEL : DokumentMal.VARSEL,
-        DokumentMal.INNHENT_DOKUMENTASJON,
+        behandling.varselSendt ? DokumentMal.KorrigertVarsel : DokumentMal.Varsel,
+        DokumentMal.InnhentDokumentasjon,
     ];
 
     const maltype = useFelt<DokumentMal | ''>({
@@ -109,7 +109,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fa
             bestillBrev(hentBrevdata()).then((respons: Ressurs<void>) => {
                 settSenderInn(false);
                 settFeilmelding(undefined);
-                if (respons.status === RessursStatus.SUKSESS) {
+                if (respons.status === RessursStatus.Suksess) {
                     nullstillSkjema();
                     hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                         navigate(

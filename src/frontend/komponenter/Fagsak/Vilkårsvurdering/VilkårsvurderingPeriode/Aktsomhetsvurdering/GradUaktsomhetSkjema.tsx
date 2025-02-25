@@ -22,20 +22,20 @@ interface IProps {
 const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const erValgtResultatTypeForstoBurdeForstaatt =
-        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
         skjema.visFeilmeldinger &&
-        skjema.felter.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.FEIL;
+        skjema.felter.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.Feil;
     const erTotalbeløpUnder4Rettsgebyr = skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
 
     const grovUaktsomOffset = erValgtResultatTypeForstoBurdeForstaatt ? 193 : 213;
     const offset =
-        skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET
+        skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovUaktsomhet
             ? grovUaktsomOffset
             : 20;
     return (
         <ArrowBox alignOffset={erLesevisning ? 5 : offset} marginTop={erLesevisning ? 15 : 0}>
-            {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.SIMPEL_UAKTSOMHET &&
+            {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.SimpelUaktsomhet &&
                 erTotalbeløpUnder4Rettsgebyr && (
                     <>
                         <HorisontalRadioGroup
@@ -74,7 +74,7 @@ const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                         )}
                     </>
                 )}
-            {(skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.SIMPEL_UAKTSOMHET ||
+            {(skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.SimpelUaktsomhet ||
                 !erTotalbeløpUnder4Rettsgebyr) && (
                 <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
             )}

@@ -23,7 +23,7 @@ const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const { kanIlleggeRenter } = useFeilutbetalingVilkårsvurdering();
 
     const erValgtResultatTypeForstoBurdeForstått =
-        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
 
     const forstoBurdeForståttOffset = erValgtResultatTypeForstoBurdeForstått ? 340 : 385;
 

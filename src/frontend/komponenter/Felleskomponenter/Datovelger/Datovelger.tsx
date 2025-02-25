@@ -21,9 +21,9 @@ interface IProps {
 }
 
 enum Feilmelding {
-    UGYLDIG_DATO = 'UGYLDIG_DATO',
-    FØR_MIN_DATO = 'FØR_MIN_DATO',
-    ETTER_MAKS_DATO = 'ETTER_MAKS_DATO',
+    UgyldigDato = 'UGYLDIG_DATO',
+    FørMinDato = 'FØR_MIN_DATO',
+    EtterMaksDato = 'ETTER_MAKS_DATO',
 }
 
 const tidligsteRelevanteDato = startOfDay(new Date(1900, 0));
@@ -74,11 +74,11 @@ const Datovelger = ({
         toDate: hentToDate(),
         onValidate: val => {
             if (val.isBefore) {
-                nullstillOgSettFeilmelding(Feilmelding.FØR_MIN_DATO);
+                nullstillOgSettFeilmelding(Feilmelding.FørMinDato);
             } else if (val.isAfter) {
-                nullstillOgSettFeilmelding(Feilmelding.ETTER_MAKS_DATO);
+                nullstillOgSettFeilmelding(Feilmelding.EtterMaksDato);
             } else if (!val.isValidDate) {
-                nullstillOgSettFeilmelding(Feilmelding.UGYLDIG_DATO);
+                nullstillOgSettFeilmelding(Feilmelding.UgyldigDato);
             } else {
                 setError(undefined);
             }
@@ -90,7 +90,7 @@ const Datovelger = ({
             return 'Du kan ikke sette en dato som er tilbake i tid';
         }
         const førsteUgyldigeDato = minDatoAvgrensning
-            ? format(subDays(minDatoAvgrensning, 1), Datoformat.DATO)
+            ? format(subDays(minDatoAvgrensning, 1), Datoformat.Dato)
             : '';
         return `Du må velge en dato som er senere enn ${førsteUgyldigeDato}`;
     };
@@ -99,15 +99,15 @@ const Datovelger = ({
             return 'Du kan ikke sette en dato som er frem i tid';
         }
         const førsteUgyldigeDato = maksDatoAvgrensning
-            ? format(addDays(maksDatoAvgrensning, 1), Datoformat.DATO)
+            ? format(addDays(maksDatoAvgrensning, 1), Datoformat.Dato)
             : '';
         return `Du må velge en dato som er tidligere enn ${førsteUgyldigeDato}`;
     };
 
     const feilmeldinger: Record<Feilmelding, string> = {
-        UGYLDIG_DATO: 'Du må velge en gyldig dato',
-        FØR_MIN_DATO: feilmeldingForDatoFørMinDato(),
-        ETTER_MAKS_DATO: feilmeldingForDatoEtterMaksDato(),
+        [Feilmelding.UgyldigDato]: 'Du må velge en gyldig dato',
+        [Feilmelding.FørMinDato]: feilmeldingForDatoFørMinDato(),
+        [Feilmelding.EtterMaksDato]: feilmeldingForDatoEtterMaksDato(),
     };
 
     return (

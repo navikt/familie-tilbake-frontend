@@ -1,11 +1,11 @@
 import type { Vergetype } from '../kodeverk/verge';
 
 export enum MottakerType {
-    BRUKER_MED_UTENLANDSK_ADRESSE = 'BRUKER_MED_UTENLANDSK_ADRESSE',
-    FULLMEKTIG = 'FULLMEKTIG',
-    VERGE = 'VERGE',
-    DØDSBO = 'DØDSBO',
-    BRUKER = 'BRUKER',
+    BrukerMedUtenlandskAdresse = 'BRUKER_MED_UTENLANDSK_ADRESSE',
+    Fullmektig = 'FULLMEKTIG',
+    Verge = 'VERGE',
+    Dødsbo = 'DØDSBO',
+    Bruker = 'BRUKER',
 }
 
 interface ManuellAdresseInfo {
@@ -33,15 +33,15 @@ export const mottakerTypeVisningsnavn: Record<MottakerType, string> = {
 };
 
 export enum AdresseKilde {
-    MANUELL_REGISTRERING = 'MANUELL_REGISTRERING',
-    OPPSLAG_REGISTER = 'OPPSLAG_REGISTER',
-    OPPSLAG_ORGANISASJONSREGISTER = 'OPPSLAG_ORGANISASJONSREGISTER',
-    UDEFINERT = 'UDEFINERT',
+    ManuellRegistrering = 'MANUELL_REGISTRERING',
+    OppslagRegister = 'OPPSLAG_REGISTER',
+    OppslagOrganisasjonsregister = 'OPPSLAG_ORGANISASJONSREGISTER',
+    Udefinert = 'UDEFINERT',
 }
 
 export const adresseKilder: Record<AdresseKilde, string> = {
-    MANUELL_REGISTRERING: 'Manuell registrering',
-    OPPSLAG_REGISTER: 'Oppslag i personregister',
-    OPPSLAG_ORGANISASJONSREGISTER: 'Oppslag i organisasjonsregister',
-    UDEFINERT: 'Udefinert',
+    [AdresseKilde.ManuellRegistrering]: 'Manuell registrering',
+    [AdresseKilde.OppslagRegister]: 'Oppslag i personregister',
+    [AdresseKilde.OppslagOrganisasjonsregister]: 'Oppslag i organisasjonsregister',
+    [AdresseKilde.Udefinert]: 'Udefinert',
 };

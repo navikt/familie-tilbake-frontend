@@ -1,145 +1,145 @@
 import type { ManuellBrevmottakerResponseDto } from './api';
 
 export enum Behandlingårsak {
-    REVURDERING_KLAGE_NFP = 'REVURDERING_KLAGE_NFP',
-    REVURDERING_KLAGE_KA = 'REVURDERING_KLAGE_KA',
-    REVURDERING_OPPLYSNINGER_OM_VILKÅR = 'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
-    REVURDERING_OPPLYSNINGER_OM_FORELDELSE = 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
-    REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT = 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
+    RevurderingKlageNfp = 'REVURDERING_KLAGE_NFP',
+    RevurderingKlageKa = 'REVURDERING_KLAGE_KA',
+    RevurderingOpplysningerOmVilkår = 'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
+    RevurderingOpplysningerOmForeldelse = 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
+    RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt = 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
 }
 
 export const behandlingårsaker: Record<Behandlingårsak, string> = {
-    REVURDERING_KLAGE_NFP: 'Klage tilbakekreving NFP/ NAY omgjør vedtak',
-    REVURDERING_KLAGE_KA: 'Revurdering etter KA-behandlet klage',
-    REVURDERING_OPPLYSNINGER_OM_VILKÅR: 'Nye opplysninger om vilkårsvurdering',
-    REVURDERING_OPPLYSNINGER_OM_FORELDELSE: 'Nye opplysninger om foreldelse',
-    REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT:
+    [Behandlingårsak.RevurderingKlageNfp]: 'Klage tilbakekreving NFP/ NAY omgjør vedtak',
+    [Behandlingårsak.RevurderingKlageKa]: 'Revurdering etter KA-behandlet klage',
+    [Behandlingårsak.RevurderingOpplysningerOmVilkår]: 'Nye opplysninger om vilkårsvurdering',
+    [Behandlingårsak.RevurderingOpplysningerOmForeldelse]: 'Nye opplysninger om foreldelse',
+    [Behandlingårsak.RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt]:
         'Feilutbetalt beløp helt eller delvis bortfalt',
 };
 
 export const behandlingÅrsaker = [
-    Behandlingårsak.REVURDERING_KLAGE_NFP,
-    Behandlingårsak.REVURDERING_KLAGE_KA,
-    Behandlingårsak.REVURDERING_OPPLYSNINGER_OM_VILKÅR,
-    Behandlingårsak.REVURDERING_OPPLYSNINGER_OM_FORELDELSE,
-    Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT,
+    Behandlingårsak.RevurderingKlageNfp,
+    Behandlingårsak.RevurderingKlageKa,
+    Behandlingårsak.RevurderingOpplysningerOmVilkår,
+    Behandlingårsak.RevurderingOpplysningerOmForeldelse,
+    Behandlingårsak.RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt,
 ];
 
 export enum Behandlingstatus {
-    OPPRETTET = 'OPPRETTET',
-    UTREDES = 'UTREDES',
-    FATTER_VEDTAK = 'FATTER_VEDTAK',
-    IVERKSETTER_VEDTAK = 'IVERKSETTER_VEDTAK',
-    AVSLUTTET = 'AVSLUTTET',
+    Opprettet = 'OPPRETTET',
+    Utredes = 'UTREDES',
+    FatterVedtak = 'FATTER_VEDTAK',
+    IverksetterVedtak = 'IVERKSETTER_VEDTAK',
+    Avsluttet = 'AVSLUTTET',
 }
 
 export const behandlingsstatuser: Record<Behandlingstatus, string> = {
-    OPPRETTET: 'Opprettet',
-    UTREDES: 'Utredes',
-    FATTER_VEDTAK: 'Fatter vedtak',
-    IVERKSETTER_VEDTAK: 'Iverksetter vedtak',
-    AVSLUTTET: 'Avsluttet',
+    [Behandlingstatus.Opprettet]: 'Opprettet',
+    [Behandlingstatus.Utredes]: 'Utredes',
+    [Behandlingstatus.FatterVedtak]: 'Fatter vedtak',
+    [Behandlingstatus.IverksetterVedtak]: 'Iverksetter vedtak',
+    [Behandlingstatus.Avsluttet]: 'Avsluttet',
 };
 
 export enum Behandlingresultat {
-    INGEN_TILBAKEBETALING = 'INGEN_TILBAKEBETALING',
-    DELVIS_TILBAKEBETALING = 'DELVIS_TILBAKEBETALING',
-    FULL_TILBAKEBETALING = 'FULL_TILBAKEBETALING',
-    HENLAGT = 'HENLAGT',
-    HENLAGT_FEILOPPRETTET = 'HENLAGT_FEILOPPRETTET',
-    HENLAGT_FEILOPPRETTET_MED_BREV = 'HENLAGT_FEILOPPRETTET_MED_BREV',
-    HENLAGT_FEILOPPRETTET_UTEN_BREV = 'HENLAGT_FEILOPPRETTET_UTEN_BREV',
-    IKKE_FASTSATT = 'IKKE_FASTSATT',
+    IngenTilbakebetaling = 'INGEN_TILBAKEBETALING',
+    DelvisTilbakebetaling = 'DELVIS_TILBAKEBETALING',
+    FullTilbakebetaling = 'FULL_TILBAKEBETALING',
+    Henlagt = 'HENLAGT',
+    HenlagtFeilopprettet = 'HENLAGT_FEILOPPRETTET',
+    HenlagtFeilopprettetMedBrev = 'HENLAGT_FEILOPPRETTET_MED_BREV',
+    HenlagtFeilopprettetUtenBrev = 'HENLAGT_FEILOPPRETTET_UTEN_BREV',
+    IkkeFastsatt = 'IKKE_FASTSATT',
 }
 
 export const behandlingsresultater: Record<Behandlingresultat, string> = {
-    INGEN_TILBAKEBETALING: 'Ingen tilbakekreving',
-    DELVIS_TILBAKEBETALING: 'Delvis tilbakekreving',
-    FULL_TILBAKEBETALING: 'Full tilbakebetaling',
-    HENLAGT: 'Henlagt',
-    HENLAGT_FEILOPPRETTET: 'Henlagt (feilaktig opprettet)',
-    HENLAGT_FEILOPPRETTET_MED_BREV: 'Henlagt (feilaktig opprettet), med brev',
-    HENLAGT_FEILOPPRETTET_UTEN_BREV: 'Henlagt (feilaktig opprettet)',
-    IKKE_FASTSATT: 'Ikke fastsatt',
+    [Behandlingresultat.IngenTilbakebetaling]: 'Ingen tilbakekreving',
+    [Behandlingresultat.DelvisTilbakebetaling]: 'Delvis tilbakekreving',
+    [Behandlingresultat.FullTilbakebetaling]: 'Full tilbakebetaling',
+    [Behandlingresultat.Henlagt]: 'Henlagt',
+    [Behandlingresultat.HenlagtFeilopprettet]: 'Henlagt (feilaktig opprettet)',
+    [Behandlingresultat.HenlagtFeilopprettetMedBrev]: 'Henlagt (feilaktig opprettet), med brev',
+    [Behandlingresultat.HenlagtFeilopprettetUtenBrev]: 'Henlagt (feilaktig opprettet)',
+    [Behandlingresultat.IkkeFastsatt]: 'Ikke fastsatt',
 };
 
 export enum Saksbehandlingstype {
-    ORDINÆR = 'ORDINÆR',
-    AUTOMATISK_IKKE_INNKREVING_LAVT_BELØP = 'AUTOMATISK_IKKE_INNKREVING_LAVT_BELØP',
-    AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR = 'AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR',
+    Ordinær = 'ORDINÆR',
+    AutomatiskIkkeInnkrevingLavtBeløp = 'AUTOMATISK_IKKE_INNKREVING_LAVT_BELØP',
+    AutomatiskIkkeInnkrevingUnder4XRettsgebyr = 'AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR',
 }
 
 export enum Behandlingstype {
-    TILBAKEKREVING = 'TILBAKEKREVING',
-    REVURDERING_TILBAKEKREVING = 'REVURDERING_TILBAKEKREVING',
+    Tilbakekreving = 'TILBAKEKREVING',
+    RevurderingTilbakekreving = 'REVURDERING_TILBAKEKREVING',
 }
 
 export const behandlingstyper: Record<Behandlingstype, string> = {
-    TILBAKEKREVING: 'Tilbakekreving',
-    REVURDERING_TILBAKEKREVING: 'Revurdering tilbakekreving',
+    [Behandlingstype.Tilbakekreving]: 'Tilbakekreving',
+    [Behandlingstype.RevurderingTilbakekreving]: 'Revurdering tilbakekreving',
 };
 
 export enum Behandlingssteg {
-    VARSEL = 'VARSEL',
-    GRUNNLAG = 'GRUNNLAG',
-    VERGE = 'VERGE',
-    BREVMOTTAKER = 'BREVMOTTAKER',
-    FAKTA = 'FAKTA',
-    FORELDELSE = 'FORELDELSE',
-    VILKÅRSVURDERING = 'VILKÅRSVURDERING',
-    FORESLÅ_VEDTAK = 'FORESLÅ_VEDTAK',
-    FATTE_VEDTAK = 'FATTE_VEDTAK',
-    IVERKSETT_VEDTAK = 'IVERKSETT_VEDTAK',
-    AVSLUTTET = 'AVSLUTTET',
+    Varsel = 'VARSEL',
+    Grunnlag = 'GRUNNLAG',
+    Verge = 'VERGE',
+    Brevmottaker = 'BREVMOTTAKER',
+    Fakta = 'FAKTA',
+    Foreldelse = 'FORELDELSE',
+    Vilkårsvurdering = 'VILKÅRSVURDERING',
+    ForeslåVedtak = 'FORESLÅ_VEDTAK',
+    FatteVedtak = 'FATTE_VEDTAK',
+    IverksettVedtak = 'IVERKSETT_VEDTAK',
+    Avsluttet = 'AVSLUTTET',
 }
 
 export const behandlingssteg: Record<Behandlingssteg, string> = {
-    VARSEL: 'Varsel',
-    GRUNNLAG: 'Kravgrunnlag',
-    VERGE: 'Verge',
-    BREVMOTTAKER: 'Brevmottaker',
-    FAKTA: 'Fakta om feilutbetaling',
-    FORELDELSE: 'Foreldelse',
-    VILKÅRSVURDERING: 'Tilbakekreving',
-    FORESLÅ_VEDTAK: 'Vedtak',
-    FATTE_VEDTAK: 'Fatte vedtak',
-    IVERKSETT_VEDTAK: 'Iverksetter vedtak',
-    AVSLUTTET: 'Avsluttet',
+    [Behandlingssteg.Varsel]: 'Varsel',
+    [Behandlingssteg.Grunnlag]: 'Kravgrunnlag',
+    [Behandlingssteg.Verge]: 'Verge',
+    [Behandlingssteg.Brevmottaker]: 'Brevmottaker',
+    [Behandlingssteg.Fakta]: 'Fakta om feilutbetaling',
+    [Behandlingssteg.Foreldelse]: 'Foreldelse',
+    [Behandlingssteg.Vilkårsvurdering]: 'Tilbakekreving',
+    [Behandlingssteg.ForeslåVedtak]: 'Vedtak',
+    [Behandlingssteg.FatteVedtak]: 'Fatte vedtak',
+    [Behandlingssteg.IverksettVedtak]: 'Iverksetter vedtak',
+    [Behandlingssteg.Avsluttet]: 'Avsluttet',
 };
 
 export enum Behandlingsstegstatus {
-    STARTET = 'STARTET',
-    VENTER = 'VENTER',
-    KLAR = 'KLAR',
-    UTFØRT = 'UTFØRT',
-    AUTOUTFØRT = 'AUTOUTFØRT',
-    TILBAKEFØRT = 'TILBAKEFØRT',
-    AVBRUTT = 'AVBRUTT',
+    Startet = 'STARTET',
+    Venter = 'VENTER',
+    Klar = 'KLAR',
+    Utført = 'UTFØRT',
+    Autoutført = 'AUTOUTFØRT',
+    Tilbakeført = 'TILBAKEFØRT',
+    Avbrutt = 'AVBRUTT',
 }
 
 export enum Venteårsak {
-    VENT_PÅ_BRUKERTILBAKEMELDING = 'VENT_PÅ_BRUKERTILBAKEMELDING',
-    VENT_PÅ_TILBAKEKREVINGSGRUNNLAG = 'VENT_PÅ_TILBAKEKREVINGSGRUNNLAG',
-    AVVENTER_DOKUMENTASJON = 'AVVENTER_DOKUMENTASJON',
-    UTVIDET_TILSVAR_FRIST = 'UTVIDET_TILSVAR_FRIST',
-    ENDRE_TILKJENT_YTELSE = 'ENDRE_TILKJENT_YTELSE',
-    VENT_PÅ_MULIG_MOTREGNING = 'VENT_PÅ_MULIG_MOTREGNING',
+    VentPåBrukertilbakemelding = 'VENT_PÅ_BRUKERTILBAKEMELDING',
+    VentPåTilbakekrevingsgrunnlag = 'VENT_PÅ_TILBAKEKREVINGSGRUNNLAG',
+    AvventerDokumentasjon = 'AVVENTER_DOKUMENTASJON',
+    UtvidetTilsvarFrist = 'UTVIDET_TILSVAR_FRIST',
+    EndreTilkjentYtelse = 'ENDRE_TILKJENT_YTELSE',
+    VentPåMuligMotregning = 'VENT_PÅ_MULIG_MOTREGNING',
 }
 
 export const manuelleVenteÅrsaker = [
-    Venteårsak.AVVENTER_DOKUMENTASJON,
-    Venteårsak.UTVIDET_TILSVAR_FRIST,
-    Venteårsak.ENDRE_TILKJENT_YTELSE,
-    Venteårsak.VENT_PÅ_MULIG_MOTREGNING,
+    Venteårsak.AvventerDokumentasjon,
+    Venteårsak.UtvidetTilsvarFrist,
+    Venteårsak.EndreTilkjentYtelse,
+    Venteårsak.VentPåMuligMotregning,
 ];
 
 export const venteårsaker: Record<Venteårsak, string> = {
-    VENT_PÅ_BRUKERTILBAKEMELDING: 'Venter på tilbakemelding fra bruker',
-    VENT_PÅ_TILBAKEKREVINGSGRUNNLAG: 'Venter på tilbakekrevingsgrunnlag fra økonomi',
-    AVVENTER_DOKUMENTASJON: 'Avventer dokumentasjon',
-    UTVIDET_TILSVAR_FRIST: 'Bruker har fått utvidet tilsvarsfrist',
-    ENDRE_TILKJENT_YTELSE: 'Mulig endring i tilkjent ytelse',
-    VENT_PÅ_MULIG_MOTREGNING: 'Mulig motregning med annen ytelse',
+    [Venteårsak.VentPåBrukertilbakemelding]: 'Venter på tilbakemelding fra bruker',
+    [Venteårsak.VentPåTilbakekrevingsgrunnlag]: 'Venter på tilbakekrevingsgrunnlag fra økonomi',
+    [Venteårsak.AvventerDokumentasjon]: 'Avventer dokumentasjon',
+    [Venteårsak.UtvidetTilsvarFrist]: 'Bruker har fått utvidet tilsvarsfrist',
+    [Venteårsak.EndreTilkjentYtelse]: 'Mulig endring i tilkjent ytelse',
+    [Venteårsak.VentPåMuligMotregning]: 'Mulig motregning med annen ytelse',
 };
 
 export interface IBehandlingsstegstilstand {

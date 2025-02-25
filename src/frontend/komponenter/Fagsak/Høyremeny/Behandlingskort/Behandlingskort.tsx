@@ -37,7 +37,7 @@ interface IProps {
 
 const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
     const tittel =
-        behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING
+        behandling.type === Behandlingstype.RevurderingTilbakekreving
             ? 'Revurdering tilbakekreving'
             : 'Tilbakekreving';
     return (
@@ -50,7 +50,7 @@ const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
                 {fagsak.institusjon ? ' - Institusjon' : null}
             </BodyShort>
             <StyledHr />
-            {behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING && (
+            {behandling.type === Behandlingstype.RevurderingTilbakekreving && (
                 <Informasjonsbolk
                     informasjon={[
                         {

@@ -37,21 +37,21 @@ const StyledExpansionContent = styled(ExpansionCard.Content)<{
     }}
 `;
 const skalVisesÅpen = (avsnitt: AvsnittSkjemaData) => {
-    if (avsnitt.avsnittstype === Avsnittstype.OPPSUMMERING) {
+    if (avsnitt.avsnittstype === Avsnittstype.Oppsummering) {
         return avsnitt.underavsnittsliste.some(
             underavsnitt =>
                 underavsnitt.fritekstPåkrevet && (!underavsnitt.fritekst || underavsnitt.harFeil)
         );
     }
     if (
-        avsnitt.avsnittstype === Avsnittstype.PERIODE ||
-        avsnitt.avsnittstype === Avsnittstype.SAMMENSLÅTT_PERIODE
+        avsnitt.avsnittstype === Avsnittstype.Periode ||
+        avsnitt.avsnittstype === Avsnittstype.SammenslåttPeriode
     ) {
         return avsnitt.underavsnittsliste
             .filter(
                 underavsnitt =>
-                    underavsnitt.underavsnittstype === Underavsnittstype.FAKTA ||
-                    underavsnitt.underavsnittstype === Underavsnittstype.SÆRLIGEGRUNNER_ANNET
+                    underavsnitt.underavsnittstype === Underavsnittstype.Fakta ||
+                    underavsnitt.underavsnittstype === Underavsnittstype.SærligegrunnerAnnet
             )
             .some(
                 underavsnitt =>

@@ -33,29 +33,29 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
     const perioderMedTekst: PeriodeMedTekst[] = skjemaData
         .filter(
             avs =>
-                avs.avsnittstype === Avsnittstype.PERIODE ||
-                avs.avsnittstype === Avsnittstype.SAMMENSLÅTT_PERIODE
+                avs.avsnittstype === Avsnittstype.Periode ||
+                avs.avsnittstype === Avsnittstype.SammenslåttPeriode
         )
         .map(avs => {
             const fakta = avs.underavsnittsliste.find(
-                uavs => uavs.underavsnittstype === Underavsnittstype.FAKTA && uavs.fritekstTillatt
+                uavs => uavs.underavsnittstype === Underavsnittstype.Fakta && uavs.fritekstTillatt
             );
             const foreldelse = avs.underavsnittsliste.find(
                 uavs =>
-                    uavs.underavsnittstype === Underavsnittstype.FORELDELSE && uavs.fritekstTillatt
+                    uavs.underavsnittstype === Underavsnittstype.Foreldelse && uavs.fritekstTillatt
             );
             const særligeGrunner = avs.underavsnittsliste.find(
                 uavs =>
-                    uavs.underavsnittstype === Underavsnittstype.SÆRLIGEGRUNNER &&
+                    uavs.underavsnittstype === Underavsnittstype.Særligegrunner &&
                     uavs.fritekstTillatt
             );
             const sæerligeGrunnerAnnet = avs.underavsnittsliste.find(
                 uavs =>
-                    uavs.underavsnittstype === Underavsnittstype.SÆRLIGEGRUNNER_ANNET &&
+                    uavs.underavsnittstype === Underavsnittstype.SærligegrunnerAnnet &&
                     uavs.fritekstTillatt
             );
             const vilkår = avs.underavsnittsliste.find(
-                uavs => uavs.underavsnittstype === Underavsnittstype.VILKÅR && uavs.fritekstTillatt
+                uavs => uavs.underavsnittstype === Underavsnittstype.Vilkår && uavs.fritekstTillatt
             );
 
             return {
@@ -117,7 +117,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
         }, [behandling, visVenteModal]);
 
         React.useEffect(() => {
-            if (feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.SUKSESS) {
+            if (feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.Suksess) {
                 const avsnitter = feilutbetalingVedtaksbrevavsnitt.data;
                 const skjemaAvsnitter = avsnitter.map<AvsnittSkjemaData>((avsnitt, index) => {
                     const skjemaAvsnitt: AvsnittSkjemaData = {
@@ -211,9 +211,9 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
 
         const validerAlleAvsnittOk = (validerPåkrevetFritekst: boolean) => {
             const erRevurderingBortfaltBeløp =
-                behandling.type === Behandlingstype.REVURDERING_TILBAKEKREVING &&
+                behandling.type === Behandlingstype.RevurderingTilbakekreving &&
                 behandling.behandlingsårsakstype ===
-                    Behandlingårsak.REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT;
+                    Behandlingårsak.RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt;
             let harFeil = false;
             skjemaData.map(avs => {
                 const nyeUnderavsnitt = avs.underavsnittsliste.map(uavs => {
@@ -248,7 +248,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
 
         const lagFritekstavsnitt = (): Fritekstavsnitt => {
             const oppsummering = skjemaData.find(
-                avs => avs.avsnittstype === Avsnittstype.OPPSUMMERING
+                avs => avs.avsnittstype === Avsnittstype.Oppsummering
             );
             const oppsummeringTekst = oppsummering?.underavsnittsliste.find(
                 uavs => uavs.fritekstTillatt
@@ -273,15 +273,15 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 sendInnForeslåVedtak(behandling.behandlingId, payload)
                     .then((respons: Ressurs<string>) => {
                         settSenderInn(false);
-                        if (respons.status === RessursStatus.SUKSESS) {
+                        if (respons.status === RessursStatus.Suksess) {
                             hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                                 navigate(
                                     `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                                 );
                             });
                         } else if (
-                            respons.status === RessursStatus.FEILET ||
-                            respons.status === RessursStatus.FUNKSJONELL_FEIL
+                            respons.status === RessursStatus.Feilet ||
+                            respons.status === RessursStatus.FunksjonellFeil
                         ) {
                             settForeslåVedtakRespons(respons);
                         }
@@ -304,15 +304,15 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 lagreUtkastVedtaksbrev(behandling.behandlingId, lagFritekstavsnitt())
                     .then((respons: Ressurs<string>) => {
                         settSenderInn(false);
-                        if (respons.status === RessursStatus.SUKSESS) {
+                        if (respons.status === RessursStatus.Suksess) {
                             hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                                 navigate(
                                     `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                                 );
                             });
                         } else if (
-                            respons.status === RessursStatus.FEILET ||
-                            respons.status === RessursStatus.FUNKSJONELL_FEIL
+                            respons.status === RessursStatus.Feilet ||
+                            respons.status === RessursStatus.FunksjonellFeil
                         ) {
                             settForeslåVedtakRespons(respons);
                         }
@@ -329,7 +329,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
 
         const hentBrevdata = (): ForhåndsvisVedtaksbrev => {
             const oppsummering = skjemaData.find(
-                avs => avs.avsnittstype === Avsnittstype.OPPSUMMERING
+                avs => avs.avsnittstype === Avsnittstype.Oppsummering
             );
             const oppsummeringTekst = oppsummering?.underavsnittsliste.find(
                 uavs => uavs.fritekstTillatt

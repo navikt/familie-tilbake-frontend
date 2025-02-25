@@ -16,13 +16,13 @@ import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext'
 const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean) => {
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
     switch (periode.foreldelsesvurderingstype) {
-        case Foreldelsevurdering.FORELDET:
+        case Foreldelsevurdering.Foreldet:
             return classNames('avvist', aktivPeriodeCss);
-        case Foreldelsevurdering.TILLEGGSFRIST:
-        case Foreldelsevurdering.IKKE_FORELDET:
+        case Foreldelsevurdering.Tilleggsfrist:
+        case Foreldelsevurdering.IkkeForeldet:
             return classNames('behandlet', aktivPeriodeCss);
-        case Foreldelsevurdering.IKKE_VURDERT:
-        case Foreldelsevurdering.UDEFINERT:
+        case Foreldelsevurdering.IkkeVurdert:
+        case Foreldelsevurdering.Udefinert:
         default:
             return classNames('ubehandlet', aktivPeriodeCss);
     }

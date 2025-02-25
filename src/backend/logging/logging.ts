@@ -3,11 +3,11 @@ import winston from 'winston';
 
 import { envVar } from './utils';
 
-export enum LOG_LEVEL {
-    ERROR = 3,
-    WARNING = 2,
-    INFO = 1,
-    DEBUG = 0,
+export enum LogLevel {
+    Error = 3,
+    Warning = 2,
+    Info = 1,
+    Debug = 0,
 }
 
 export type Meta = Record<string, unknown>;

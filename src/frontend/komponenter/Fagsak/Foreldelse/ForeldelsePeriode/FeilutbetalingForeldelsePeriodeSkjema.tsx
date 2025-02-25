@@ -79,24 +79,24 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
     }, [periode]);
 
     const erForeldet =
-        skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.FORELDET;
+        skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Foreldet;
     const erMedTilleggsfrist =
-        skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.TILLEGGSFRIST;
+        skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Tilleggsfrist;
 
     const ugyldigVurderingValgt =
         skjema.visFeilmeldinger &&
-        skjema.felter.foreldelsesvurderingstype.valideringsstatus === Valideringsstatus.FEIL;
+        skjema.felter.foreldelsesvurderingstype.valideringsstatus === Valideringsstatus.Feil;
 
     const ugyldigForeldelsesfristValgt =
         skjema.visFeilmeldinger &&
-        skjema.felter.foreldelsesfrist.valideringsstatus === Valideringsstatus.FEIL;
+        skjema.felter.foreldelsesfrist.valideringsstatus === Valideringsstatus.Feil;
 
     const ugyldigOppdagelsesdatoValgt =
         skjema.visFeilmeldinger &&
-        skjema.felter.oppdagelsesdato.valideringsstatus === Valideringsstatus.FEIL;
+        skjema.felter.oppdagelsesdato.valideringsstatus === Valideringsstatus.Feil;
 
     const lagForeldelsesfristHjelpetekst = () => {
-        if (skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.TILLEGGSFRIST) {
+        if (skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Tilleggsfrist) {
             return (
                 <>
                     <BodyLong size="small" spacing>
@@ -115,7 +115,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                     </BodyLong>
                 </>
             );
-        } else if (skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.FORELDET) {
+        } else if (skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Foreldet) {
             return (
                 <>
                     <BodyLong size="small" spacing>

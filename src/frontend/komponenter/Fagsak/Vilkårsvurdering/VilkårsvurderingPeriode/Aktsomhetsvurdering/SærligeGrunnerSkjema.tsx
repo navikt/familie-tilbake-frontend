@@ -23,7 +23,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
 
     const onChanngeSærligeGrunner2 = (val: SærligeGrunner[]) => {
         skjema.felter.særligeGrunner.validerOgSettFelt(val);
-        if (val.indexOf(SærligeGrunner.ANNET) > -1) {
+        if (val.indexOf(SærligeGrunner.Annet) > -1) {
             skjema.felter.særligeGrunnerAnnetBegrunnelse.nullstill();
         }
         settIkkePersistertKomponent(`vilkårsvurdering`);
@@ -64,7 +64,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                         </Checkbox>
                     ))}
                 </CheckboxGroup>
-                {skjema.felter.særligeGrunner.verdi.includes(SærligeGrunner.ANNET) && (
+                {skjema.felter.særligeGrunner.verdi.includes(SærligeGrunner.Annet) && (
                     <Textarea
                         {...skjema.felter.særligeGrunnerAnnetBegrunnelse.hentNavInputProps(
                             skjema.visFeilmeldinger

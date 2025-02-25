@@ -37,11 +37,11 @@ const MottakerSelect = styled(Select)`
 `;
 
 const erMottakerBruker = (mottakerType: MottakerType | '') =>
-    mottakerType === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
-    mottakerType === MottakerType.DØDSBO;
+    mottakerType === MottakerType.BrukerMedUtenlandskAdresse ||
+    mottakerType === MottakerType.Dødsbo;
 
 const preutfyltNavnFixed = (mottaker: MottakerType | '', land: string, navn: string) => {
-    if (mottaker === MottakerType.DØDSBO) {
+    if (mottaker === MottakerType.Dødsbo) {
         return !land || land === 'NO' ? `${navn} v/dødsbo` : `Estate of ${navn}`;
     }
     return navn;
@@ -69,7 +69,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
 
     const lukkModal = () => {
         settVisBrevmottakerModal(false);
-        settAdresseKilde(AdresseKilde.UDEFINERT);
+        settAdresseKilde(AdresseKilde.Udefinert);
         settBrevmottakerIdTilEndring(undefined);
         nullstillSkjema();
     };
@@ -86,7 +86,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
 
     const skalNullstilleAdresseInputVedNyMottakerType = (nyMottakerType: MottakerType) =>
         erMottakerBruker(nyMottakerType) !== erMottakerBruker(skjema.felter.mottaker.verdi) ||
-        adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER;
+        adresseKilde === AdresseKilde.OppslagOrganisasjonsregister;
 
     return (
         <Modal
@@ -117,8 +117,8 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                     nullstillManuellAdresseInput();
                                     settAdresseKilde(
                                         erMottakerBruker(nyMottakerType)
-                                            ? AdresseKilde.MANUELL_REGISTRERING
-                                            : AdresseKilde.UDEFINERT
+                                            ? AdresseKilde.ManuellRegistrering
+                                            : AdresseKilde.Udefinert
                                     );
                                 }
                                 skjema.felter.mottaker.validerOgSettFelt(nyMottakerType);
@@ -128,7 +128,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                 Velg
                             </option>
                             {Object.values(MottakerType)
-                                .filter(type => type !== MottakerType.BRUKER)
+                                .filter(type => type !== MottakerType.Bruker)
                                 .map(mottaker => (
                                     <option value={mottaker} key={mottaker}>
                                         {mottakerTypeVisningsnavn[mottaker]}
@@ -147,34 +147,34 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                 >
                                     <Radio
                                         id="manuell-registrering"
-                                        value={AdresseKilde.MANUELL_REGISTRERING}
+                                        value={AdresseKilde.ManuellRegistrering}
                                     >
-                                        {adresseKilder[AdresseKilde.MANUELL_REGISTRERING]}
+                                        {adresseKilder[AdresseKilde.ManuellRegistrering]}
                                     </Radio>
                                     <Radio
                                         id="oppslag-i-register"
-                                        value={AdresseKilde.OPPSLAG_REGISTER}
+                                        value={AdresseKilde.OppslagRegister}
                                     >
-                                        {adresseKilder[AdresseKilde.OPPSLAG_REGISTER]}
+                                        {adresseKilder[AdresseKilde.OppslagRegister]}
                                     </Radio>
-                                    {skjema.felter.mottaker.verdi === MottakerType.FULLMEKTIG && (
+                                    {skjema.felter.mottaker.verdi === MottakerType.Fullmektig && (
                                         <Radio
                                             id="oppslag-i-organisasjonsregister"
-                                            value={AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER}
+                                            value={AdresseKilde.OppslagOrganisasjonsregister}
                                         >
                                             {
                                                 adresseKilder[
-                                                    AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
+                                                    AdresseKilde.OppslagOrganisasjonsregister
                                                 ]
                                             }
                                         </Radio>
                                     )}
                                 </RadioGroup>
                             )}
-                        {adresseKilde === AdresseKilde.MANUELL_REGISTRERING && (
+                        {adresseKilde === AdresseKilde.ManuellRegistrering && (
                             <BrevmottakerSkjema preutfyltNavn={preutfyltNavn} />
                         )}
-                        {adresseKilde === AdresseKilde.OPPSLAG_REGISTER && (
+                        {adresseKilde === AdresseKilde.OppslagRegister && (
                             <TextField
                                 {...skjema.felter.fødselsnummer.hentNavBaseSkjemaProps(
                                     skjema.visFeilmeldinger
@@ -187,7 +187,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                 }}
                             />
                         )}
-                        {adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER && (
+                        {adresseKilde === AdresseKilde.OppslagOrganisasjonsregister && (
                             <>
                                 <TextField
                                     {...skjema.felter.organisasjonsnummer.hentNavBaseSkjemaProps(
@@ -218,8 +218,8 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
             <Modal.Footer>
                 <Button
                     variant={valideringErOk() ? 'primary' : 'secondary'}
-                    loading={skjema.submitRessurs.status === RessursStatus.HENTER}
-                    disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
+                    loading={skjema.submitRessurs.status === RessursStatus.Henter}
+                    disabled={skjema.submitRessurs.status === RessursStatus.Henter}
                     onClick={() =>
                         lagreBrevmottakerOgOppdaterState(brevmottakerIdTilEndring, lukkModal)
                     }

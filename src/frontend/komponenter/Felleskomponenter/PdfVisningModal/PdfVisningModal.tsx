@@ -52,7 +52,7 @@ const PdfVisningModal: React.FC<IProps> = ({ onRequestClose, pdfdata, åpen }) =
 
 const Dokument: React.FC<{ pdfdata: Ressurs<string> }> = ({ pdfdata }) => {
     switch (pdfdata.status) {
-        case RessursStatus.HENTER:
+        case RessursStatus.Henter:
             return (
                 <div className="pdfvisning-modal__spinner">
                     <Heading spacing size="small" level="2">
@@ -67,11 +67,11 @@ const Dokument: React.FC<{ pdfdata: Ressurs<string> }> = ({ pdfdata }) => {
                     />
                 </div>
             );
-        case RessursStatus.SUKSESS:
+        case RessursStatus.Suksess:
             return <IframePdfVisning title="Dokument" src={pdfdata.data} />;
-        case RessursStatus.FEILET:
-        case RessursStatus.FUNKSJONELL_FEIL:
-        case RessursStatus.IKKE_TILGANG:
+        case RessursStatus.Feilet:
+        case RessursStatus.FunksjonellFeil:
+        case RessursStatus.IkkeTilgang:
             return (
                 <Alert variant="error" className="pdfvisning-modal__document--feil">
                     {pdfdata.frontendFeilmelding}

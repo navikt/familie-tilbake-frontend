@@ -137,17 +137,17 @@ export const hentDatoRegistrertSendt = (
 ) => {
     let datoRegistrert = relevanteDatoer.find(dato => {
         if (journalposttype === 'I') {
-            return dato.datotype === JournalpostDatotype.DATO_REGISTRERT;
+            return dato.datotype === JournalpostDatotype.DatoRegistrert;
         } else if (journalposttype === 'U') {
-            return dato.datotype === JournalpostDatotype.DATO_EKSPEDERT;
+            return dato.datotype === JournalpostDatotype.DatoEksedert;
         } else {
-            return dato.datotype === JournalpostDatotype.DATO_JOURNALFOERT;
+            return dato.datotype === JournalpostDatotype.DatoJournalfoert;
         }
     });
     datoRegistrert =
         datoRegistrert ||
-        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DATO_JOURNALFOERT) ||
-        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DATO_DOKUMENT);
+        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DatoJournalfoert) ||
+        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DatoDokument);
 
     // @ts-expect-error Får alltid en av disse datoene
     return parseISO(datoRegistrert.dato);

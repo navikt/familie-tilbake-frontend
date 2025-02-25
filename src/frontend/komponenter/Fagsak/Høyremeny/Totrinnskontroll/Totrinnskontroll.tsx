@@ -54,12 +54,12 @@ const Totrinnskontroll: React.FC = () => {
     }, [nonUsedKey]);
 
     switch (totrinnkontroll?.status) {
-        case RessursStatus.SUKSESS:
+        case RessursStatus.Suksess:
             return (
                 <StyledContainer>
                     {fatteVedtakRespons &&
-                        (fatteVedtakRespons.status === RessursStatus.FEILET ||
-                            fatteVedtakRespons.status === RessursStatus.FUNKSJONELL_FEIL) && (
+                        (fatteVedtakRespons.status === RessursStatus.Feilet ||
+                            fatteVedtakRespons.status === RessursStatus.FunksjonellFeil) && (
                             <>
                                 <Alert variant="error">
                                     {fatteVedtakRespons.frontendFeilmelding}
@@ -76,7 +76,7 @@ const Totrinnskontroll: React.FC = () => {
                             <Spacer20 />
                         </>
                     )}
-                    {aktivtSteg?.behandlingssteg === Behandlingssteg.FATTE_VEDTAK &&
+                    {aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak &&
                         erLesevisning && (
                             <AngreSendTilBeslutterContainer>
                                 <Button

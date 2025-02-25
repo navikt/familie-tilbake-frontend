@@ -25,7 +25,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
         const { request } = useHttp();
 
         useEffect(() => {
-            if (valgtMenyside === Menysider.HISTORIKK) {
+            if (valgtMenyside === Menysider.Historikk) {
                 hentHistorikkinnslag();
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps

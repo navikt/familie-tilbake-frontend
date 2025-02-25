@@ -56,7 +56,7 @@ describe('Tester: VedtakContainer', () => {
                 fom: '2020-01-01',
                 tom: '2020-03-31',
             },
-            vurdering: Vurdering.FORSETT,
+            vurdering: Vurdering.Forsett,
             andelAvBeløp: 90,
             renteprosent: 0,
             tilbakekrevingsbeløp: 1222,
@@ -68,7 +68,7 @@ describe('Tester: VedtakContainer', () => {
                 fom: '2020-05-01',
                 tom: '2020-06-30',
             },
-            vurdering: Vurdering.SIMPEL_UAKTSOMHET,
+            vurdering: Vurdering.SimpelUaktsomhet,
             andelAvBeløp: 91,
             renteprosent: 0,
             tilbakekrevingsbeløp: 1223,
@@ -77,24 +77,24 @@ describe('Tester: VedtakContainer', () => {
     ];
     const beregningsresultat: IBeregningsresultat = {
         beregningsresultatsperioder: perioder,
-        vedtaksresultat: Vedtaksresultat.DELVIS_TILBAKEBETALING,
-        vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.NEI },
+        vedtaksresultat: Vedtaksresultat.DelvisTilbakebetaling,
+        vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.Nei },
     };
     const avsnitt: VedtaksbrevAvsnitt[] = [
         {
-            avsnittstype: Avsnittstype.OPPSUMMERING,
+            avsnittstype: Avsnittstype.Oppsummering,
             overskrift: 'Du må betale tilbake barnetrygden',
             underavsnittsliste: [],
         },
         {
-            avsnittstype: Avsnittstype.PERIODE,
+            avsnittstype: Avsnittstype.Periode,
             overskrift: 'Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020',
             underavsnittsliste: [],
             fom: '2020-01-01',
             tom: '2020-03-31',
         },
         {
-            avsnittstype: Avsnittstype.PERIODE,
+            avsnittstype: Avsnittstype.Periode,
             overskrift: 'Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020',
             underavsnittsliste: [],
             fom: '2020-05-01',
@@ -111,21 +111,21 @@ describe('Tester: VedtakContainer', () => {
         useBehandlingApi.mockImplementation(() => ({
             gjerVedtaksbrevteksterKall: () => {
                 const ressurs = mock<Ressurs<VedtaksbrevAvsnitt[]>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: avsnitt,
                 });
                 return Promise.resolve(ressurs);
             },
             gjerBeregningsresultatKall: () => {
                 const ressurs = mock<Ressurs<IBeregningsresultat>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: resultat,
                 });
                 return Promise.resolve(ressurs);
             },
             sendInnForeslåVedtak: () => {
                 const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: 'suksess',
                 });
                 return Promise.resolve(ressurs);
@@ -168,7 +168,7 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[1],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
                             fritekstTillatt: true,
                             fritekstPåkrevet: true,
@@ -179,7 +179,7 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[2],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
                             fritekstTillatt: true,
                             fritekstPåkrevet: false,
@@ -301,7 +301,7 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[1],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
                             fritekstTillatt: true,
                             fritekstPåkrevet: true,
@@ -312,13 +312,13 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[2],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
                             fritekstTillatt: true,
                             fritekstPåkrevet: true,
                         },
                         {
-                            underavsnittstype: Underavsnittstype.VILKÅR,
+                            underavsnittstype: Underavsnittstype.Vilkår,
                             overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
                             brødtekst: 'Dette er en tekst!',
                             fritekstTillatt: false,
@@ -330,8 +330,8 @@ describe('Tester: VedtakContainer', () => {
             beregningsresultat
         );
         const behandling = mock<IBehandling>({
-            type: Behandlingstype.REVURDERING_TILBAKEKREVING,
-            behandlingsårsakstype: Behandlingårsak.REVURDERING_OPPLYSNINGER_OM_VILKÅR,
+            type: Behandlingstype.RevurderingTilbakekreving,
+            behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
             manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>();
@@ -430,7 +430,7 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[1],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
                             fritekstTillatt: true,
                             fritekstPåkrevet: true,
@@ -441,13 +441,13 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[2],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
                             fritekstTillatt: true,
                             fritekstPåkrevet: true,
                         },
                         {
-                            underavsnittstype: Underavsnittstype.VILKÅR,
+                            underavsnittstype: Underavsnittstype.Vilkår,
                             overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
                             brødtekst: 'Dette er en tekst!',
                             fritekstTillatt: false,
@@ -459,8 +459,8 @@ describe('Tester: VedtakContainer', () => {
             beregningsresultat
         );
         const behandling = mock<IBehandling>({
-            type: Behandlingstype.REVURDERING_TILBAKEKREVING,
-            behandlingsårsakstype: Behandlingårsak.REVURDERING_KLAGE_KA,
+            type: Behandlingstype.RevurderingTilbakekreving,
+            behandlingsårsakstype: Behandlingårsak.RevurderingKlageKa,
             manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>();
@@ -555,7 +555,7 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[1],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
                             fritekstTillatt: true,
                             fritekstPåkrevet: true,
@@ -566,13 +566,13 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[2],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
                             fritekstTillatt: true,
                             fritekstPåkrevet: false,
                         },
                         {
-                            underavsnittstype: Underavsnittstype.VILKÅR,
+                            underavsnittstype: Underavsnittstype.Vilkår,
                             overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
                             brødtekst: 'Dette er en tekst!',
                             fritekstTillatt: true,
@@ -584,8 +584,8 @@ describe('Tester: VedtakContainer', () => {
             beregningsresultat
         );
         const behandling = mock<IBehandling>({
-            type: Behandlingstype.REVURDERING_TILBAKEKREVING,
-            behandlingsårsakstype: Behandlingårsak.REVURDERING_KLAGE_NFP,
+            type: Behandlingstype.RevurderingTilbakekreving,
+            behandlingsårsakstype: Behandlingårsak.RevurderingKlageNfp,
             manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>();
@@ -715,7 +715,7 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[1],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
                             fritekstTillatt: true,
                             fritekstPåkrevet: true,
@@ -727,7 +727,7 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[2],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
                             fritekstTillatt: true,
                             fritekstPåkrevet: false,
@@ -845,7 +845,7 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[1],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
                             fritekstTillatt: true,
                             fritekstPåkrevet: true,
@@ -857,7 +857,7 @@ describe('Tester: VedtakContainer', () => {
                     ...avsnitt[2],
                     underavsnittsliste: [
                         {
-                            underavsnittstype: Underavsnittstype.FAKTA,
+                            underavsnittstype: Underavsnittstype.Fakta,
                             brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
                             fritekstTillatt: true,
                             fritekstPåkrevet: false,

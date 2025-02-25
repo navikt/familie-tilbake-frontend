@@ -1,3 +1,4 @@
+import type { HendelseType, HendelseUndertype } from '../../../../kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
@@ -7,13 +8,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
-import {
-    hendelsetyper,
-    HendelseType,
-    hendelseundertyper,
-    HendelseUndertype,
-    hentHendelseUndertyper,
-} from '../../../../kodeverk';
+import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
 
@@ -50,14 +45,14 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     }, [periode]);
 
     const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const årsak = HendelseType[e.target.value as keyof typeof HendelseType];
+        const årsak = e.target.value as HendelseType;
         settHendelseUnderTyper(hentHendelseUndertyper(årsak));
         settIkkePersistertKomponent('fakta');
         oppdaterÅrsakPåPeriode(periode, årsak);
     };
 
     const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const underÅrsak = HendelseUndertype[e.target.value as keyof typeof HendelseUndertype];
+        const underÅrsak = e.target.value as HendelseUndertype;
         settIkkePersistertKomponent('fakta');
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);
     };

@@ -1,10 +1,10 @@
 export enum RessursStatus {
-    FEILET = 'FEILET',
-    FUNKSJONELL_FEIL = 'FUNKSJONELL_FEIL',
-    HENTER = 'HENTER',
-    IKKE_HENTET = 'IKKE_HENTET',
-    IKKE_TILGANG = 'IKKE_TILGANG',
-    SUKSESS = 'SUKSESS',
+    Feilet = 'FEILET',
+    FunksjonellFeil = 'FUNKSJONELL_FEIL',
+    Henter = 'HENTER',
+    IkkeHentet = 'IKKE_HENTET',
+    IkkeTilgang = 'IKKE_TILGANG',
+    Suksess = 'SUKSESS',
 }
 
 export type ApiRessurs<T> = {
@@ -17,72 +17,72 @@ export type ApiRessurs<T> = {
 
 export type Ressurs<T> =
     | {
-          status: RessursStatus.IKKE_HENTET;
+          status: RessursStatus.IkkeHentet;
       }
     | {
-          status: RessursStatus.HENTER;
+          status: RessursStatus.Henter;
       }
     | {
           data: T;
-          status: RessursStatus.SUKSESS;
+          status: RessursStatus.Suksess;
       }
     | {
           frontendFeilmelding: string;
-          status: RessursStatus.IKKE_TILGANG;
+          status: RessursStatus.IkkeTilgang;
       }
     | {
           frontendFeilmelding: string;
-          status: RessursStatus.FEILET;
+          status: RessursStatus.Feilet;
       }
     | {
           frontendFeilmelding: string;
-          status: RessursStatus.FUNKSJONELL_FEIL;
+          status: RessursStatus.FunksjonellFeil;
       };
 
 export const byggTomRessurs = <T>(): Ressurs<T> => {
     return {
-        status: RessursStatus.IKKE_HENTET,
+        status: RessursStatus.IkkeHentet,
     };
 };
 
 export const byggDataRessurs = <T>(data: T): Ressurs<T> => {
     return {
-        status: RessursStatus.SUKSESS,
+        status: RessursStatus.Suksess,
         data,
     };
 };
 
 export const byggHenterRessurs = <T>(): Ressurs<T> => {
     return {
-        status: RessursStatus.HENTER,
+        status: RessursStatus.Henter,
     };
 };
 
 export const byggFeiletRessurs = <T>(frontendFeilmelding: string): Ressurs<T> => {
     return {
         frontendFeilmelding,
-        status: RessursStatus.FEILET,
+        status: RessursStatus.Feilet,
     };
 };
 
 export const byggFunksjonellFeilRessurs = <T>(frontendFeilmelding: string): Ressurs<T> => {
     return {
         frontendFeilmelding,
-        status: RessursStatus.FUNKSJONELL_FEIL,
+        status: RessursStatus.FunksjonellFeil,
     };
 };
 
 export const byggSuksessRessurs = <T>(data: T): Ressurs<T> => {
     return {
         data,
-        status: RessursStatus.SUKSESS,
+        status: RessursStatus.Suksess,
     };
 };
 
 export const hentDataFraRessurs = <T>(ressurs: Ressurs<T>): T | undefined => {
-    return ressurs.status === RessursStatus.SUKSESS ? ressurs.data : undefined;
+    return ressurs.status === RessursStatus.Suksess ? ressurs.data : undefined;
 };
 
 export const hentDataFraRessursMedFallback = <T>(ressurs: Ressurs<T>, fallbackData: T): T => {
-    return ressurs.status === RessursStatus.SUKSESS ? ressurs.data : fallbackData;
+    return ressurs.status === RessursStatus.Suksess ? ressurs.data : fallbackData;
 };

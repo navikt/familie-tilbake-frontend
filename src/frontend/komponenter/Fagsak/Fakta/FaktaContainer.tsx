@@ -31,7 +31,7 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
-    if (feilutbetalingFakta?.status === RessursStatus.SUKSESS) {
+    if (feilutbetalingFakta?.status === RessursStatus.Suksess) {
         return (
             <StyledFeilutbetalingFakta>
                 <Heading level="2" size="small" spacing>
