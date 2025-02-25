@@ -58,6 +58,9 @@ export default tseslint.config(
             '@typescript-eslint/adjacent-overload-signatures': 'warn',
             '@typescript-eslint/array-type': 'warn',
             '@typescript-eslint/no-confusing-non-null-assertion': 'error',
+            '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
+            '@typescript-eslint/no-non-null-assertion': 'error',
+            '@typescript-eslint/no-explicit-any': 'warn',
         },
         settings: {
             react: {

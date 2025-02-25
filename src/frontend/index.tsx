@@ -25,5 +25,9 @@ if (process.env.NODE_ENV !== 'production') {
 initGrafanaFaro();
 
 const container = document.getElementById('app');
-const root = createRoot(container!);
-root.render(<App />);
+if (container) {
+    const root = createRoot(container);
+    root.render(<App />);
+} else {
+    console.error('Fant ikke app containeren');
+}
