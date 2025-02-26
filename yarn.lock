@@ -1772,6 +1772,17 @@
   resolved "https://npm.pkg.github.com/download/@navikt/ds-tokens/7.14.2/53d678e7e12650c8d1aad8b06a329697680e6c1f#53d678e7e12650c8d1aad8b06a329697680e6c1f"
   integrity sha512-F7V1aeSB3r+rEf0xAWWfy82e3PY07PGibV1D9xnHq2gJ0Y2YI9Gnrm9llJ9wicD11Jz5zJx4PuBiJ0LvLhF0Vg==
 
+"@navikt/flagg-ikoner@^9.0.7":
+  version "9.0.7"
+  resolved "https://npm.pkg.github.com/download/@navikt/flagg-ikoner/9.0.7/9917e56d627f221c440fae249b73d2ddaa975215#9917e56d627f221c440fae249b73d2ddaa975215"
+  integrity sha512-h/Nvv89lN7CQXz1Baq1C84ps27NxZ/EuawDijFU+Mcvsz84MNRYd/lnlyen5ddmSeLV0cBvLU3mS8V15G1JzVg==
+  dependencies:
+    "@vitejs/plugin-react" "^4.3.4"
+    svg-country-flags "^1.2.10"
+    uuid "^9.0.0"
+    vite "^6.0.11"
+    vite-tsconfig-paths "^5.1.4"
+
 "@navikt/land-verktoy@^9.0.8":
   version "9.0.8"
   resolved "https://npm.pkg.github.com/download/@navikt/land-verktoy/9.0.8/2d91362c6899ea7a40cbc787ac964a39c14d5d98#2d91362c6899ea7a40cbc787ac964a39c14d5d98"
@@ -8855,6 +8866,11 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
+svg-country-flags@^1.2.10:
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/svg-country-flags/-/svg-country-flags-1.2.10.tgz#b1b94e9f08f065d7b3d0ff9ab359898edd4dd3b0"
+  integrity sha512-xrqwo0TYf/h2cfPvGpjdSuSguUbri4vNNizBnwzoZnX0xGo3O5nGJMlbYEp7NOYcnPGBm6LE2axqDWSB847bLw==
+
 svgo@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/svgo/-/svgo-3.2.0.tgz#7a5dff2938d8c6096e00295c2390e8e652fa805d"
@@ -9332,7 +9348,7 @@ vite@^5.4.14:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vite@^6.0.9:
+vite@^6.0.11, vite@^6.0.9:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/vite/-/vite-6.2.0.tgz#9dcb543380dab18d8384eb840a76bf30d78633f0"
   integrity sha512-7dPxoo+WsT/64rDcwoOjk76XHj+TqNTIvHKcuMQ1k4/SeHDaQt5GFAeLYzrimZrMpn/O6DtdI03WUjdxuPM0oQ==
