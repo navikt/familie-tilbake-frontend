@@ -15,7 +15,7 @@ export const useSammenslåPerioder = (behandlingId: string) => {
             url: `/familie-tilbake/api/perioder/sjekk-likhet/${behandlingId}`,
         });
 
-        if (response.status === RessursStatus.SUKSESS) {
+        if (response.status === RessursStatus.Suksess) {
             settErPerioderLike(response.data);
             return response.data;
         } else {
@@ -31,13 +31,13 @@ export const useSammenslåPerioder = (behandlingId: string) => {
             url: `/familie-tilbake/api/perioder/sammensla/${behandlingId}`,
         });
 
-        if (response.status === RessursStatus.SUKSESS) {
+        if (response.status === RessursStatus.Suksess) {
             settLaster(false);
             return response.data;
         } else if (
-            response.status === RessursStatus.FEILET ||
-            response.status === RessursStatus.FUNKSJONELL_FEIL ||
-            response.status === RessursStatus.IKKE_TILGANG
+            response.status === RessursStatus.Feilet ||
+            response.status === RessursStatus.FunksjonellFeil ||
+            response.status === RessursStatus.IkkeTilgang
         ) {
             settFeilmelding(response.frontendFeilmelding);
             settLaster(false);
@@ -52,13 +52,13 @@ export const useSammenslåPerioder = (behandlingId: string) => {
             url: `/familie-tilbake/api/perioder/angre-sammenslaing/${behandlingId}`,
         });
 
-        if (response.status === RessursStatus.SUKSESS) {
+        if (response.status === RessursStatus.Suksess) {
             settLaster(false);
             return response.data;
         } else if (
-            response.status === RessursStatus.FEILET ||
-            response.status === RessursStatus.FUNKSJONELL_FEIL ||
-            response.status === RessursStatus.IKKE_TILGANG
+            response.status === RessursStatus.Feilet ||
+            response.status === RessursStatus.FunksjonellFeil ||
+            response.status === RessursStatus.IkkeTilgang
         ) {
             settFeilmelding(response.frontendFeilmelding);
             settLaster(false);
@@ -72,7 +72,7 @@ export const useSammenslåPerioder = (behandlingId: string) => {
             url: `/familie-tilbake/api/perioder/hent-sammenslatt/${behandlingId}`,
         });
 
-        if (response.status === RessursStatus.SUKSESS) {
+        if (response.status === RessursStatus.Suksess) {
             return response.data;
         } else {
             return false;

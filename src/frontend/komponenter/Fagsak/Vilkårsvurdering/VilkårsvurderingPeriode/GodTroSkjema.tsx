@@ -27,7 +27,7 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
 
     const ugyldigErBeløpetIBeholdValgt =
         skjema.visFeilmeldinger &&
-        skjema.felter.erBeløpetIBehold.valideringsstatus === Valideringsstatus.FEIL;
+        skjema.felter.erBeløpetIBehold.valideringsstatus === Valideringsstatus.Feil;
 
     const harVurderBeløpIBehold = skjema.felter.erBeløpetIBehold.verdi !== '';
     const harBeløpetIBehold =

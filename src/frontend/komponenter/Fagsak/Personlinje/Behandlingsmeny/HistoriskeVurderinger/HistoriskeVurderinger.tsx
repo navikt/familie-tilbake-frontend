@@ -24,7 +24,7 @@ const HistoriskeVurderinger: React.FC<IProps> = ({ behandling, fagsak, onListEle
         innloggetSaksbehandler &&
         behandling.ansvarligSaksbehandler === innloggetSaksbehandler.navIdent;
     return (
-        toggles[ToggleName.seHistoriskeVurderinger] &&
+        toggles[ToggleName.SeHistoriskeVurderinger] &&
         harTilgang && (
             <>
                 <BehandlingsMenyButton

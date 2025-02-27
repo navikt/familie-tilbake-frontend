@@ -7,7 +7,7 @@ export const ok = <T>(felt: FeltState<T>): FeltState<T> => {
     return {
         ...felt,
         feilmelding: '',
-        valideringsstatus: Valideringsstatus.OK,
+        valideringsstatus: Valideringsstatus.Ok,
     };
 };
 
@@ -15,6 +15,6 @@ export const feil = <T>(felt: FeltState<T>, feilmelding: ReactNode): FeltState<T
     return {
         ...felt,
         feilmelding,
-        valideringsstatus: Valideringsstatus.FEIL,
+        valideringsstatus: Valideringsstatus.Feil,
     };
 };

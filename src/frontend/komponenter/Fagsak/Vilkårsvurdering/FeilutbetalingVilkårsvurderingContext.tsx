@@ -47,8 +47,8 @@ const utledValgtPeriode = (
     const førsteUbehandledePeriode = skjemaPerioder.find(periode => !erBehandlet(periode));
     const skalViseÅpentVurderingspanel =
         skjemaPerioder.length > 0 &&
-        (behandlingStatus === Behandlingstatus.FATTER_VEDTAK ||
-            behandlingStatus === Behandlingstatus.AVSLUTTET);
+        (behandlingStatus === Behandlingstatus.FatterVedtak ||
+            behandlingStatus === Behandlingstatus.Avsluttet);
 
     if (førsteUbehandledePeriode) {
         return førsteUbehandledePeriode;
@@ -106,15 +106,15 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             useBehandlingApi();
         const { utførRedirect } = useRedirectEtterLagring();
         const navigate = useNavigate();
-        const kanIleggeRenter = ![Ytelsetype.BARNETRYGD, Ytelsetype.KONTANTSTØTTE].includes(
+        const kanIleggeRenter = ![Ytelsetype.Barnetrygd, Ytelsetype.Kontantstøtte].includes(
             fagsak.ytelsestype
         );
         const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
         React.useEffect(() => {
             if (visVenteModal === false) {
-                settStegErBehandlet(erStegBehandlet(Behandlingssteg.VILKÅRSVURDERING));
-                settErAutoutført(erStegAutoutført(Behandlingssteg.VILKÅRSVURDERING));
+                settStegErBehandlet(erStegBehandlet(Behandlingssteg.Vilkårsvurdering));
+                settErAutoutført(erStegAutoutført(Behandlingssteg.Vilkårsvurdering));
                 hentFeilutbetalingVilkårsvurdering();
                 settKanIlleggeRenter(kanIleggeRenter);
             }
@@ -122,7 +122,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         }, [behandling, visVenteModal]);
 
         React.useEffect(() => {
-            if (feilutbetalingVilkårsvurdering?.status === RessursStatus.SUKSESS) {
+            if (feilutbetalingVilkårsvurdering?.status === RessursStatus.Suksess) {
                 const perioder = feilutbetalingVilkårsvurdering.data.perioder;
                 const sortertePerioder = sorterFeilutbetaltePerioder(perioder);
                 const skjemaPerioder = sortertePerioder.map((fuFP, index) => {
@@ -214,7 +214,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         };
 
         const validerPerioder = () => {
-            if (feilutbetalingVilkårsvurdering?.status !== RessursStatus.SUKSESS) return false; // Skal ikke være mulig, så return false ok
+            if (feilutbetalingVilkårsvurdering?.status !== RessursStatus.Suksess) return false; // Skal ikke være mulig, så return false ok
 
             if (erTotalbeløpUnder4Rettsgebyr(feilutbetalingVilkårsvurdering.data)) {
                 const filtrertePerioder = skjemaData
@@ -222,12 +222,12 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                     .filter(
                         per =>
                             per.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat !==
-                            Vilkårsresultat.GOD_TRO
+                            Vilkårsresultat.GodTro
                     );
                 const ikkeTilbakekrevSmåbeløpPerioder = filtrertePerioder.filter(
                     per =>
                         per.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet ===
-                            Aktsomhet.SIMPEL_UAKTSOMHET &&
+                            Aktsomhet.SimpelUaktsomhet &&
                         !per.vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
                 );
                 if (
@@ -248,7 +248,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         const harEndretOpplysninger = (
             ikkeforeldetPerioder: VilkårsvurderingPeriodeSkjemaData[]
         ) => {
-            if (feilutbetalingVilkårsvurdering?.status === RessursStatus.SUKSESS) {
+            if (feilutbetalingVilkårsvurdering?.status === RessursStatus.Suksess) {
                 const hentetPerioder = feilutbetalingVilkårsvurdering.data.perioder;
                 return ikkeforeldetPerioder.some(skjemaPeriode => {
                     if (skjemaPeriode.erSplittet) return true;
@@ -304,7 +304,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                     sendInnFeilutbetalingVilkårsvurdering(behandling.behandlingId, payload).then(
                         (respons: Ressurs<string>) => {
                             settSenderInn(false);
-                            if (respons.status === RessursStatus.SUKSESS) {
+                            if (respons.status === RessursStatus.Suksess) {
                                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                                     navigate(
                                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`

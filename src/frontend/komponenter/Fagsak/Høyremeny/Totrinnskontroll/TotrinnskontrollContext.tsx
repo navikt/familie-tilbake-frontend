@@ -31,10 +31,10 @@ const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption
 const validerTekst2000 = validerTekstMaksLengde(2000);
 
 const stegRekkefølge = [
-    Behandlingssteg.FAKTA,
-    Behandlingssteg.FORELDELSE,
-    Behandlingssteg.VILKÅRSVURDERING,
-    Behandlingssteg.FORESLÅ_VEDTAK,
+    Behandlingssteg.Fakta,
+    Behandlingssteg.Foreldelse,
+    Behandlingssteg.Vilkårsvurdering,
+    Behandlingssteg.ForeslåVedtak,
 ];
 
 interface IProps {
@@ -67,7 +67,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
         useEffect(() => {
             if (visVenteModal === false) {
-                settStegErBehandlet(erStegBehandlet(Behandlingssteg.FATTE_VEDTAK));
+                settStegErBehandlet(erStegBehandlet(Behandlingssteg.FatteVedtak));
                 settErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
                 hentTotrinnkontroll();
             }
@@ -75,7 +75,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
         }, [behandling]);
 
         useEffect(() => {
-            if (totrinnkontroll?.status === RessursStatus.SUKSESS) {
+            if (totrinnkontroll?.status === RessursStatus.Suksess) {
                 const totrinn = totrinnkontroll.data.totrinnsstegsinfo;
                 settSkjemaData(
                     stegRekkefølge
@@ -190,7 +190,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             settFeilmelding('');
             kallAngreSendTilBeslutter(behandling.behandlingId)
                 .then((res: Ressurs<string>) => {
-                    if (res.status === RessursStatus.SUKSESS) {
+                    if (res.status === RessursStatus.Suksess) {
                         hentBehandlingMedBehandlingId(behandling.behandlingId);
                     } else {
                         settFeilmelding(
@@ -226,15 +226,15 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
                 sendInnFatteVedtak(behandling.behandlingId, payload)
                     .then((respons: Ressurs<string>) => {
-                        if (respons.status === RessursStatus.SUKSESS) {
+                        if (respons.status === RessursStatus.Suksess) {
                             hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                                 navigate(
                                     `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
                                 );
                             });
                         } else if (
-                            respons.status === RessursStatus.FEILET ||
-                            respons.status === RessursStatus.FUNKSJONELL_FEIL
+                            respons.status === RessursStatus.Feilet ||
+                            respons.status === RessursStatus.FunksjonellFeil
                         ) {
                             settFatteVedtakRespons(respons);
                         }

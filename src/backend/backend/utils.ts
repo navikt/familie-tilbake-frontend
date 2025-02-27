@@ -1,6 +1,6 @@
 import type { Request } from 'express';
 
-import { LOG_LEVEL, logDebug, logError, logInfo, logWarn } from '../logging/logging';
+import { LogLevel, logDebug, logError, logInfo, logWarn } from '../logging/logging';
 
 const prefix = (req: Request) => {
     return `${
@@ -10,7 +10,7 @@ const prefix = (req: Request) => {
     } ${req.method} - ${req.originalUrl}`;
 };
 
-export const logRequest = (req: Request, message: string, level: LOG_LEVEL) => {
+export const logRequest = (req: Request, message: string, level: LogLevel) => {
     const melding = `${prefix(req)}: ${message}`;
     const callId = req.header('nav-call-id');
     const requestId = req.header('x-request-id');
@@ -20,16 +20,16 @@ export const logRequest = (req: Request, message: string, level: LOG_LEVEL) => {
         ...(requestId ? { x_requestId: requestId } : {}),
     };
     switch (level) {
-        case LOG_LEVEL.DEBUG:
+        case LogLevel.Debug:
             logDebug(melding, meta);
             break;
-        case LOG_LEVEL.INFO:
+        case LogLevel.Info:
             logInfo(melding, meta);
             break;
-        case LOG_LEVEL.WARNING:
+        case LogLevel.Warning:
             logWarn(melding, meta);
             break;
-        case LOG_LEVEL.ERROR:
+        case LogLevel.Error:
             logError(melding, undefined, meta);
             break;
         default:

@@ -42,7 +42,7 @@ describe('Tester: SendMelding', () => {
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
                 const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: 'suksess',
                 });
                 return Promise.resolve(ressurs);
@@ -61,7 +61,7 @@ describe('Tester: SendMelding', () => {
             eksternBrukId: '1',
         });
         const fagsak = mock<IFagsak>({
-            språkkode: Målform.NB,
+            språkkode: Målform.Nb,
             fagsystem: Fagsystem.EF,
             eksternFagsakId: '1',
         });
@@ -90,7 +90,7 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeFalsy();
 
-        await act(() => user.selectOptions(getByLabelText('Mal'), DokumentMal.VARSEL));
+        await act(() => user.selectOptions(getByLabelText('Mal'), DokumentMal.Varsel));
 
         expect(
             getByRole('button', {
@@ -130,7 +130,7 @@ describe('Tester: SendMelding', () => {
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
                 const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: 'suksess',
                 });
                 return Promise.resolve(ressurs);
@@ -147,7 +147,7 @@ describe('Tester: SendMelding', () => {
             eksternBrukId: '1',
         });
         const fagsak = mock<IFagsak>({
-            språkkode: Målform.NN,
+            språkkode: Målform.Nn,
             fagsystem: Fagsystem.EF,
             eksternFagsakId: '1',
         });
@@ -170,7 +170,7 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeDisabled();
 
-        await act(() => user.selectOptions(getByLabelText('Mal'), DokumentMal.KORRIGERT_VARSEL));
+        await act(() => user.selectOptions(getByLabelText('Mal'), DokumentMal.KorrigertVarsel));
 
         expect(getByText('Nynorsk')).toBeTruthy();
         await act(() =>
@@ -198,7 +198,7 @@ describe('Tester: SendMelding', () => {
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
                 const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: 'suksess',
                 });
                 return Promise.resolve(ressurs);
@@ -215,7 +215,7 @@ describe('Tester: SendMelding', () => {
             eksternBrukId: '1',
         });
         const fagsak = mock<IFagsak>({
-            språkkode: Målform.NB,
+            språkkode: Målform.Nb,
             fagsystem: Fagsystem.EF,
             eksternFagsakId: '1',
         });
@@ -236,7 +236,7 @@ describe('Tester: SendMelding', () => {
         ).toBeDisabled();
 
         await act(() =>
-            user.selectOptions(getByLabelText('Mal'), DokumentMal.INNHENT_DOKUMENTASJON)
+            user.selectOptions(getByLabelText('Mal'), DokumentMal.InnhentDokumentasjon)
         );
         await act(() =>
             user.type(
@@ -267,7 +267,7 @@ describe('Tester: SendMelding', () => {
         useDokumentApi.mockImplementation(() => ({
             bestillBrev: () => {
                 const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: 'suksess',
                 });
                 return Promise.resolve(ressurs);
@@ -283,7 +283,7 @@ describe('Tester: SendMelding', () => {
             manuelleBrevmottakere: [],
         });
         const fagsak = mock<IFagsak>({
-            språkkode: Målform.NB,
+            språkkode: Målform.Nb,
             fagsystem: Fagsystem.EF,
             eksternFagsakId: '1',
         });

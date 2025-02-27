@@ -8,8 +8,8 @@ export enum ToggleName {
     // Miljø-toggles - la stå
 
     // Release-toggles
-    seHistoriskeVurderinger = 'familie-tilbake.se-historiske-vurderinger',
-    dummy = 'familie-tilbake.dummy',
-    saksbehanderKanResettebehandling = 'familie-tilbake-frontend.saksbehandler.kan.resette.behandling',
+    SeHistoriskeVurderinger = 'familie-tilbake.se-historiske-vurderinger',
+    Dummy = 'familie-tilbake.dummy',
+    SaksbehanderKanResettebehandling = 'familie-tilbake-frontend.saksbehandler.kan.resette.behandling',
     // Midlertidige toggles - kan fjernes etterhvert
 }

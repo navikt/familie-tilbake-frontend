@@ -69,7 +69,7 @@ const Venstremeny: React.FunctionComponent<IProps> = ({ fagsak }) => {
 
     return (
         <StyledNav>
-            {behandling?.status === RessursStatus.SUKSESS
+            {behandling?.status === RessursStatus.Suksess
                 ? Object.entries(sider)
                       // eslint-disable-next-line @typescript-eslint/no-unused-vars
                       .filter(([_, side]) => visSide(side, behandling.data))

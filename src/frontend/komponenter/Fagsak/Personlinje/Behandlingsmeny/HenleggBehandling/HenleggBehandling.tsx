@@ -8,12 +8,12 @@ import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behand
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 
 const getÅrsaker = (behandling: IBehandling) => {
-    if (behandling.type === Behandlingstype.TILBAKEKREVING) {
-        return [Behandlingresultat.HENLAGT_FEILOPPRETTET];
+    if (behandling.type === Behandlingstype.Tilbakekreving) {
+        return [Behandlingresultat.HenlagtFeilopprettet];
     } else {
         return [
-            Behandlingresultat.HENLAGT_FEILOPPRETTET_MED_BREV,
-            Behandlingresultat.HENLAGT_FEILOPPRETTET_UTEN_BREV,
+            Behandlingresultat.HenlagtFeilopprettetMedBrev,
+            Behandlingresultat.HenlagtFeilopprettetUtenBrev,
         ];
     }
 };

@@ -34,15 +34,15 @@ const HentDokument: React.FC<IProps> = ({ journalpost, dokument, onClose }) => {
             method: 'GET',
             url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/journalpost/${journalpost.journalpostId}/dokument/${dokument.dokumentInfoId}`,
         }).then((response: Ressurs<string>) => {
-            if (response.status === RessursStatus.SUKSESS) {
+            if (response.status === RessursStatus.Suksess) {
                 const blob = new Blob([base64ToArrayBuffer(response.data)], {
                     type: 'application/pdf',
                 });
                 settHentetDokument(byggDataRessurs(window.URL.createObjectURL(blob)));
             } else if (
-                response.status === RessursStatus.FEILET ||
-                response.status === RessursStatus.FUNKSJONELL_FEIL ||
-                response.status === RessursStatus.IKKE_TILGANG
+                response.status === RessursStatus.Feilet ||
+                response.status === RessursStatus.FunksjonellFeil ||
+                response.status === RessursStatus.IkkeTilgang
             ) {
                 settHentetDokument(response);
             } else {

@@ -111,7 +111,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             Behandle alle perioder samlet
                         </Checkbox>
                     )}
-                    {skjemaData.perioder.some(p => p.hendelsestype === HendelseType.INNTEKT) && (
+                    {skjemaData.perioder.some(p => p.hendelsestype === HendelseType.Inntekt) && (
                         <Alert variant="warning" size="small">
                             Husk å kontrollere faktisk inntekt den siste måneden i
                             feilutbetalingsperioden
@@ -157,32 +157,32 @@ const FaktaSkjema: React.FC<IProps> = ({
                         }}
                     >
                         <Radio
-                            key={HarBrukerUttaltSegValg.JA}
+                            key={HarBrukerUttaltSegValg.Ja}
                             name="brukerHarUttaltSeg"
-                            value={HarBrukerUttaltSegValg.JA}
+                            value={HarBrukerUttaltSegValg.Ja}
                             data-testid="brukerHarUttaltSeg.ja"
                         >
                             Ja
                         </Radio>
                         <Radio
-                            key={HarBrukerUttaltSegValg.NEI}
+                            key={HarBrukerUttaltSegValg.Nei}
                             name="brukerHarUttaltSeg"
-                            value={HarBrukerUttaltSegValg.NEI}
+                            value={HarBrukerUttaltSegValg.Nei}
                             data-testid="brukerHarUttaltSeg.nei"
                         >
                             Nei
                         </Radio>
                         <Radio
-                            key={HarBrukerUttaltSegValg.IKKE_AKTUELT}
+                            key={HarBrukerUttaltSegValg.IkkeAktuelt}
                             name="brukerHarUttaltSeg"
-                            value={HarBrukerUttaltSegValg.IKKE_AKTUELT}
+                            value={HarBrukerUttaltSegValg.IkkeAktuelt}
                             data-testid="brukerHarUttaltSeg.ikke-aktuelt"
                         >
                             Ikke aktuelt
                         </Radio>
                     </RadioGroup>
                     {skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg ===
-                        HarBrukerUttaltSegValg.JA && (
+                        HarBrukerUttaltSegValg.Ja && (
                         <Textarea
                             name="beskrivelseBrukersUttalelse"
                             label="Beskriv når og hvor bruker har uttalt seg. Gi også en kort oppsummering av uttalelsen"

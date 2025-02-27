@@ -35,7 +35,7 @@ const VergeContainer: React.FC = () => {
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const nyVergetype = Vergetype[e.target.value as keyof typeof Vergetype];
+        const nyVergetype = e.target.value as Vergetype;
         skjema.felter.vergetype.validerOgSettFelt(nyVergetype);
         settIkkePersistertKomponent('verge');
     };
@@ -74,7 +74,7 @@ const VergeContainer: React.FC = () => {
                             Velg vergetype
                         </option>
                         {Object.values(Vergetype)
-                            .filter(type => type !== Vergetype.UDEFINERT)
+                            .filter(type => type !== Vergetype.Udefinert)
                             .map(opt => (
                                 <option key={opt} value={opt}>
                                     {vergetyper[opt]}
@@ -93,7 +93,7 @@ const VergeContainer: React.FC = () => {
                                     settIkkePersistertKomponent('verge');
                                 }}
                             />
-                            {skjema.felter.vergetype.verdi === Vergetype.ADVOKAT ? (
+                            {skjema.felter.vergetype.verdi === Vergetype.Advokat ? (
                                 <TextField
                                     {...skjema.felter.organisasjonsnummer.hentNavInputProps(
                                         skjema.visFeilmeldinger

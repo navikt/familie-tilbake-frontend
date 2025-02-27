@@ -68,7 +68,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
         );
     }
 
-    if (feilutbetalingForeldelse?.status === RessursStatus.SUKSESS) {
+    if (feilutbetalingForeldelse?.status === RessursStatus.Suksess) {
         return (
             <StyledForeldelse>
                 <Heading spacing size="small" level="2">

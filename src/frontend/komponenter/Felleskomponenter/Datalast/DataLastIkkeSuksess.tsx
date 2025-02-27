@@ -17,18 +17,18 @@ const DataLastIkkeSuksess: React.FC<IProps> = ({
 }) => {
     const filtrerteRessurser = ressurser.filter(r => r !== undefined);
     const ingenTilgangRessurs = filtrerteRessurser.find(
-        r => r.status === RessursStatus.IKKE_TILGANG
+        r => r.status === RessursStatus.IkkeTilgang
     );
     if (ingenTilgangRessurs) {
         return <Alert variant="warning">Ingen tilgang</Alert>;
     }
     const feiletRessurs = filtrerteRessurser.find(
-        r => r.status === RessursStatus.FEILET || r.status === RessursStatus.FUNKSJONELL_FEIL
+        r => r.status === RessursStatus.Feilet || r.status === RessursStatus.FunksjonellFeil
     );
     if (feiletRessurs) {
         return <Alert variant="error">{feiletRessurs.frontendFeilmelding}</Alert>;
     }
-    const henterRessurs = filtrerteRessurser.find(r => r.status === RessursStatus.HENTER);
+    const henterRessurs = filtrerteRessurser.find(r => r.status === RessursStatus.Henter);
     if (henterRessurs) {
         return (
             <HenterData

@@ -1,21 +1,22 @@
 export enum Foreldelsevurdering {
-    IKKE_VURDERT = 'IKKE_VURDERT',
-    FORELDET = 'FORELDET',
-    IKKE_FORELDET = 'IKKE_FORELDET',
-    TILLEGGSFRIST = 'TILLEGGSFRIST',
-    UDEFINERT = 'UDEFINERT',
+    IkkeVurdert = 'IKKE_VURDERT',
+    Foreldet = 'FORELDET',
+    IkkeForeldet = 'IKKE_FORELDET',
+    Tilleggsfrist = 'TILLEGGSFRIST',
+    Udefinert = 'UDEFINERT',
 }
 
-export const foreldelsevurderinger = {
-    IKKE_VURDERT: 'Perioden er ikke vurdert',
-    FORELDET: 'Perioden er foreldet',
-    IKKE_FORELDET: 'Perioden er ikke foreldet',
-    TILLEGGSFRIST: 'Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes',
-    UDEFINERT: 'Ikke Definert',
+export const foreldelsevurderinger: Record<Foreldelsevurdering, string> = {
+    [Foreldelsevurdering.IkkeVurdert]: 'Perioden er ikke vurdert',
+    [Foreldelsevurdering.Foreldet]: 'Perioden er foreldet',
+    [Foreldelsevurdering.IkkeForeldet]: 'Perioden er ikke foreldet',
+    [Foreldelsevurdering.Tilleggsfrist]:
+        'Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes',
+    [Foreldelsevurdering.Udefinert]: 'Ikke Definert',
 };
 
-export const foreldelseVurderingTyper = [
-    Foreldelsevurdering.FORELDET,
-    Foreldelsevurdering.IKKE_FORELDET,
-    Foreldelsevurdering.TILLEGGSFRIST,
-];
+export const foreldelseVurderingTyper: readonly Foreldelsevurdering[] = [
+    Foreldelsevurdering.Foreldet,
+    Foreldelsevurdering.IkkeForeldet,
+    Foreldelsevurdering.Tilleggsfrist,
+] as const;

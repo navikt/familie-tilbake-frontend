@@ -70,7 +70,7 @@ const Brevmottaker: React.FC<IProps> = ({
         <StyledDiv>
             <FlexDiv>
                 <Heading size="medium">{mottakerTypeVisningsnavn[brevmottaker.type]}</Heading>
-                {!erLesevisning && brevmottaker.type !== MottakerType.BRUKER && (
+                {!erLesevisning && brevmottaker.type !== MottakerType.Bruker && (
                     <Button
                         variant="tertiary"
                         onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
@@ -122,7 +122,7 @@ const Brevmottaker: React.FC<IProps> = ({
                     </>
                 )}
             </DefinitionList>
-            {!erLesevisning && brevmottaker.type !== MottakerType.BRUKER && (
+            {!erLesevisning && brevmottaker.type !== MottakerType.Bruker && (
                 <Button
                     variant="tertiary"
                     onClick={() => {
@@ -138,7 +138,7 @@ const Brevmottaker: React.FC<IProps> = ({
             )}
 
             {!erLesevisning &&
-                brevmottaker.type === MottakerType.BRUKER &&
+                brevmottaker.type === MottakerType.Bruker &&
                 antallBrevmottakere > 1 && (
                     <EndreBrukerKnapp
                         variant="tertiary"

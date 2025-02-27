@@ -25,7 +25,7 @@ const HistoriskFaktaContainer: React.FC<IProps> = () => {
     const { feilutbetalingInaktiveFakta, skjemaData, fakta, settFeilutbetalingInaktivFakta } =
         useHistoriskFakta();
 
-    if (feilutbetalingInaktiveFakta?.status === RessursStatus.SUKSESS) {
+    if (feilutbetalingInaktiveFakta?.status === RessursStatus.Suksess) {
         return (
             <Container>
                 <VStack gap="5">

@@ -25,11 +25,11 @@ interface IProps {
 const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const erForstodBurdeForstått =
-        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
 
     const ugyldigAktsomhetvurderingValgt =
         skjema.visFeilmeldinger &&
-        skjema.felter.aktsomhetVurdering.valideringsstatus === Valideringsstatus.FEIL;
+        skjema.felter.aktsomhetVurdering.valideringsstatus === Valideringsstatus.Feil;
 
     return (
         <VStack gap="1">
@@ -49,10 +49,10 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                 }
                 onChange={(val: Aktsomhet) => {
                     const skalPreutfylleUtenRenter =
-                        val === Aktsomhet.FORSETT &&
+                        val === Aktsomhet.Forsett &&
                         skjema.felter.forstoIlleggeRenter.verdi === '' &&
                         skjema.felter.vilkårsresultatvurdering.verdi ===
-                            Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+                            Vilkårsresultat.ForstoBurdeForstått;
                     if (skalPreutfylleUtenRenter) {
                         skjema.felter.forstoIlleggeRenter.validerOgSettFelt(OptionNEI);
                     }
@@ -69,7 +69,7 @@ const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) 
                 ))}
             </HorisontalRadioGroup>
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&
-                (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.FORSETT ? (
+                (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsett ? (
                     <GradForsettSkjema skjema={skjema} erLesevisning={erLesevisning} />
                 ) : (
                     <GradUaktsomhetSkjema skjema={skjema} erLesevisning={erLesevisning} />

@@ -49,9 +49,9 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
     const { skjema, onBekreft, onOkTaAvVent, tilbakestillFelterTilDefault, feilmelding } =
         usePåVentBehandling(lukkModalOgHentBehandling, ventegrunn);
 
-    const erVenterPåKravgrunnlag = ventegrunn.behandlingssteg === Behandlingssteg.GRUNNLAG;
+    const erVenterPåKravgrunnlag = ventegrunn.behandlingssteg === Behandlingssteg.Grunnlag;
     const erAutomatiskVent =
-        ventegrunn.behandlingssteg === Behandlingssteg.VARSEL || erVenterPåKravgrunnlag;
+        ventegrunn.behandlingssteg === Behandlingssteg.Varsel || erVenterPåKravgrunnlag;
 
     const muligeÅrsaker =
         ventegrunn.venteårsak && !manuelleVenteÅrsaker.includes(ventegrunn.venteårsak)
@@ -63,18 +63,18 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
 
     const ugyldigDatoValgt =
         skjema.visFeilmeldinger &&
-        skjema.felter.tidsfrist.valideringsstatus === Valideringsstatus.FEIL;
+        skjema.felter.tidsfrist.valideringsstatus === Valideringsstatus.Feil;
 
     const uendret =
         ventegrunn.venteårsak === skjema.felter.årsak.verdi &&
         ventegrunn.tidsfrist === skjema.felter.tidsfrist.verdi;
 
-    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.GRUNNLAG;
+    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.Grunnlag;
 
     const vilBliAutomatiskBehandletUnder4rettsgebyr =
         venterPåKravgrunnlag &&
         behandling.saksbehandlingstype ===
-            Saksbehandlingstype.AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR;
+            Saksbehandlingstype.AutomatiskIkkeInnkrevingUnder4XRettsgebyr;
 
     const lukkModal = () => {
         tilbakestillFelterTilDefault();

@@ -55,7 +55,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 fom: '2020-01-01',
                 tom: '2020-03-31',
             },
-            hendelsestype: HendelseType.BOSATT_I_RIKET,
+            hendelsestype: HendelseType.BosattIRiket,
             foreldet: false,
             begrunnelse: undefined,
         },
@@ -65,7 +65,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 fom: '2020-05-01',
                 tom: '2020-06-30',
             },
-            hendelsestype: HendelseType.BOR_MED_SØKER,
+            hendelsestype: HendelseType.BorMedSøker,
             foreldet: false,
             begrunnelse: undefined,
         },
@@ -85,14 +85,14 @@ describe('Tester: VilkårsvurderingContainer', () => {
             useBehandlingApi.mockImplementation(() => ({
                 gjerFeilutbetalingVilkårsvurderingKall: () => {
                     const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
-                        status: RessursStatus.SUKSESS,
+                        status: RessursStatus.Suksess,
                         data: vilkårsvurdering,
                     });
                     return Promise.resolve(ressurs);
                 },
                 sendInnFeilutbetalingVilkårsvurdering: () => {
                     const ressurs = mock<Ressurs<string>>({
-                        status: RessursStatus.SUKSESS,
+                        status: RessursStatus.Suksess,
                         data: 'suksess',
                     });
                     return Promise.resolve(ressurs);
@@ -114,7 +114,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>();
-        fagsak.ytelsestype = Ytelsetype.BARNETILSYN;
+        fagsak.ytelsestype = Ytelsetype.Barnetilsyn;
 
         const { getByText, getByRole } = render(
             <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>

@@ -39,15 +39,15 @@ export const useForhåndsvisHenleggelsesbrev = ({ skjema }: IProps) => {
         })
             .then((response: Ressurs<string>) => {
                 settVisModal(true);
-                if (response.status === RessursStatus.SUKSESS) {
+                if (response.status === RessursStatus.Suksess) {
                     const blob = new Blob([base64ToArrayBuffer(response.data)], {
                         type: 'application/pdf',
                     });
                     settHentetForhåndsvisning(byggDataRessurs(window.URL.createObjectURL(blob)));
                 } else if (
-                    response.status === RessursStatus.FEILET ||
-                    response.status === RessursStatus.FUNKSJONELL_FEIL ||
-                    response.status === RessursStatus.IKKE_TILGANG
+                    response.status === RessursStatus.Feilet ||
+                    response.status === RessursStatus.FunksjonellFeil ||
+                    response.status === RessursStatus.IkkeTilgang
                 ) {
                     settHentetForhåndsvisning(response);
                 } else {

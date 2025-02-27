@@ -23,7 +23,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
             {perioder.map(skjema => {
                 const erForstodBurdeForstått =
                     skjema.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat ===
-                    Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+                    Vilkårsresultat.ForstoBurdeForstått;
 
                 const aktsomhet = skjema.vilkårsvurderingsresultatInfo?.aktsomhet;
                 const godTro = skjema.vilkårsvurderingsresultatInfo?.godTro;

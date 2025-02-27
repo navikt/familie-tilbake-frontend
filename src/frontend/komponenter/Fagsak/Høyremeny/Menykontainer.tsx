@@ -13,10 +13,10 @@ import Totrinnskontroll from './Totrinnskontroll/Totrinnskontroll';
 import { TotrinnskontrollProvider } from './Totrinnskontroll/TotrinnskontrollContext';
 
 export enum Menysider {
-    TOTRINN = `TOTRINN`,
-    HISTORIKK = 'HISTORIKK',
-    SEND_BREV = 'SEND_BREV',
-    DOKUMENTER = 'DOKUMENTER',
+    Totrinn = `TOTRINN`,
+    Historikk = 'HISTORIKK',
+    SendBrev = 'SEND_BREV',
+    Dokumenter = 'DOKUMENTER',
 }
 
 interface IProps {
@@ -27,25 +27,25 @@ interface IProps {
 
 const Menykontainer: React.FC<IProps> = ({ valgtMenyside, fagsak, behandling }) => {
     switch (valgtMenyside) {
-        case Menysider.TOTRINN:
+        case Menysider.Totrinn:
             return (
                 <TotrinnskontrollProvider fagsak={fagsak} behandling={behandling}>
                     <Totrinnskontroll />
                 </TotrinnskontrollProvider>
             );
-        case Menysider.DOKUMENTER:
+        case Menysider.Dokumenter:
             return (
                 <DokumentlistingProvider behandling={behandling} valgtMenyside={valgtMenyside}>
                     <Dokumentlisting />
                 </DokumentlistingProvider>
             );
-        case Menysider.SEND_BREV:
+        case Menysider.SendBrev:
             return (
                 <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
                     <SendMelding fagsak={fagsak} behandling={behandling} />
                 </SendMeldingProvider>
             );
-        case Menysider.HISTORIKK:
+        case Menysider.Historikk:
         default:
             return (
                 <HistorikkProvider

@@ -1,3 +1,4 @@
+import type { Behandlingssteg } from '../../../../typer/behandling';
 import type { IHistorikkInnslag } from '../../../../typer/historikk';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
@@ -8,7 +9,6 @@ import { styled } from 'styled-components';
 
 import HentDokument from './HentDokument';
 import { useHistorikk } from './HistorikkContext';
-import { Behandlingssteg } from '../../../../typer/behandling';
 import { Aktør, aktører, Historikkinnslagstype } from '../../../../typer/historikk';
 import { formatterDatoOgTidstring } from '../../../../utils';
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
@@ -49,8 +49,8 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
     const [visDokument, settVisDokument] = React.useState<boolean>(false);
 
     const lagTittel = () => {
-        if (innslag.type === Historikkinnslagstype.SKJERMLENKE && innslag.steg) {
-            const steg = Behandlingssteg[innslag.steg as keyof typeof Behandlingssteg];
+        if (innslag.type === Historikkinnslagstype.Skjermlenke && innslag.steg) {
+            const steg = innslag.steg as Behandlingssteg;
             const side = finnSideForSteg(steg);
             return steg && side ? (
                 <Link
@@ -100,20 +100,20 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
         );
     };
 
-    const typeBrev = innslag.type === Historikkinnslagstype.BREV;
+    const typeBrev = innslag.type === Historikkinnslagstype.Brev;
 
     return (
         <Innslag>
             <Tidslinje>
-                {innslag.aktør === Aktør.VEDTAKSLØSNING && <SystemIkon />}
-                {innslag.aktør === Aktør.BESLUTTER && <BeslutterIkon />}
-                {innslag.aktør === Aktør.SAKSBEHANDLER && <SaksbehandlerIkon />}
+                {innslag.aktør === Aktør.Vedtaksløsning && <SystemIkon />}
+                {innslag.aktør === Aktør.Beslutter && <BeslutterIkon />}
+                {innslag.aktør === Aktør.Saksbehandler && <SaksbehandlerIkon />}
             </Tidslinje>
             <Innhold>
                 <Label>{lagTittel()}</Label>
                 <Detail>
                     {`${formatterDatoOgTidstring(innslag.opprettetTid)} | `}
-                    {innslag.aktør === Aktør.VEDTAKSLØSNING
+                    {innslag.aktør === Aktør.Vedtaksløsning
                         ? 'System'
                         : `${innslag.aktørIdent.toLocaleLowerCase()} (${aktører[
                               innslag.aktør

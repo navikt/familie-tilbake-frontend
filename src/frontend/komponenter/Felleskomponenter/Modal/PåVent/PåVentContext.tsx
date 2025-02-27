@@ -82,8 +82,8 @@ export const usePåVentBehandling = (
                 },
                 (response: Ressurs<string>) => {
                     if (
-                        response.status === RessursStatus.FEILET ||
-                        response.status === RessursStatus.FUNKSJONELL_FEIL
+                        response.status === RessursStatus.Feilet ||
+                        response.status === RessursStatus.FunksjonellFeil
                     ) {
                         settFeilmelding(response.frontendFeilmelding);
                     }
@@ -98,12 +98,12 @@ export const usePåVentBehandling = (
             method: 'PUT',
             url: `/familie-tilbake/api/behandling/${behandlingId}/gjenoppta/v1`,
         }).then((response: Ressurs<string>) => {
-            if (response.status === RessursStatus.SUKSESS) {
+            if (response.status === RessursStatus.Suksess) {
                 lukkModal();
             } else {
                 if (
-                    response.status === RessursStatus.FEILET ||
-                    response.status === RessursStatus.FUNKSJONELL_FEIL
+                    response.status === RessursStatus.Feilet ||
+                    response.status === RessursStatus.FunksjonellFeil
                 ) {
                     settFeilmelding(response.frontendFeilmelding);
                 }

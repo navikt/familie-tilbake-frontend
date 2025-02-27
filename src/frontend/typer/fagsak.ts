@@ -3,13 +3,13 @@ import type { IPerson } from './person';
 import type { Fagsystem, Ytelsetype } from '../kodeverk';
 
 export enum Målform {
-    NB = 'NB',
-    NN = 'NN',
+    Nb = 'NB',
+    Nn = 'NN',
 }
 
 export const målform: Record<Målform, string> = {
-    NB: 'Bokmål',
-    NN: 'Nynorsk',
+    [Målform.Nb]: 'Bokmål',
+    [Målform.Nn]: 'Nynorsk',
 };
 
 export interface IInstitusjon {

@@ -4,7 +4,7 @@ import type { Client } from 'openid-client';
 
 import { TokenSet } from 'openid-client';
 
-import { LOG_LEVEL, logError, logInfo } from '../../logging/logging';
+import { LogLevel, logError, logInfo } from '../../logging/logging';
 import { logRequest } from '../utils';
 
 export const tokenSetSelfId = 'self';
@@ -21,7 +21,7 @@ const loggOgReturnerOmTokenErGyldig = (req: Request, key: string, validAccessTok
     logRequest(
         req,
         `Har ${validAccessToken ? 'gyldig' : 'ikke gyldig'} token for key '${key}'`,
-        LOG_LEVEL.INFO
+        LogLevel.Info
     );
     return validAccessToken;
 };

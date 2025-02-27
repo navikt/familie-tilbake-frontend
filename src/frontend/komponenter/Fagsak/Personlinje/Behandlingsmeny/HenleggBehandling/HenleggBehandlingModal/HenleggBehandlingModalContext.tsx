@@ -16,10 +16,10 @@ import { type Ressurs, RessursStatus } from '../../../../../../typer/ressurs';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../../utils';
 
 const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter) =>
-    avhengigheter?.behandlingstype.valideringsstatus === Valideringsstatus.OK &&
-    avhengigheter?.behandlingstype.verdi === Behandlingstype.REVURDERING_TILBAKEKREVING &&
-    avhengigheter?.årsakkode.valideringsstatus === Valideringsstatus.OK &&
-    avhengigheter?.årsakkode.verdi === Behandlingresultat.HENLAGT_FEILOPPRETTET_MED_BREV;
+    avhengigheter?.behandlingstype.valideringsstatus === Valideringsstatus.Ok &&
+    avhengigheter?.behandlingstype.verdi === Behandlingstype.RevurderingTilbakekreving &&
+    avhengigheter?.årsakkode.valideringsstatus === Valideringsstatus.Ok &&
+    avhengigheter?.årsakkode.verdi === Behandlingresultat.HenlagtFeilopprettetMedBrev;
 
 export type HenleggelseSkjemaDefinisjon = {
     årsakkode: Behandlingresultat | '';
@@ -88,7 +88,7 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
             };
             henleggBehandling(behandling.behandlingId, payload).then(
                 (response: Ressurs<string>) => {
-                    if (response.status === RessursStatus.SUKSESS) {
+                    if (response.status === RessursStatus.Suksess) {
                         settVisModal(false);
                         hentBehandlingMedBehandlingId(behandling.behandlingId);
                     }
@@ -97,21 +97,21 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
         }
     };
 
-    const erÅrsakValgt = () => skjema.felter.årsakkode.valideringsstatus === Valideringsstatus.OK;
+    const erÅrsakValgt = () => skjema.felter.årsakkode.valideringsstatus === Valideringsstatus.Ok;
 
     const erVisFritekst = () =>
         erÅrsakValgt() &&
-        skjema.felter.behandlingstype.verdi === Behandlingstype.REVURDERING_TILBAKEKREVING &&
-        skjema.felter.årsakkode.verdi === Behandlingresultat.HENLAGT_FEILOPPRETTET_MED_BREV;
+        skjema.felter.behandlingstype.verdi === Behandlingstype.RevurderingTilbakekreving &&
+        skjema.felter.årsakkode.verdi === Behandlingresultat.HenlagtFeilopprettetMedBrev;
 
     const erKanForhåndsvise = () => {
         switch (skjema.felter.behandlingstype.verdi) {
-            case Behandlingstype.REVURDERING_TILBAKEKREVING:
+            case Behandlingstype.RevurderingTilbakekreving:
                 return (
                     erVisFritekst() &&
-                    skjema.felter.fritekst.valideringsstatus === Valideringsstatus.OK
+                    skjema.felter.fritekst.valideringsstatus === Valideringsstatus.Ok
                 );
-            case Behandlingstype.TILBAKEKREVING:
+            case Behandlingstype.Tilbakekreving:
             default:
                 return behandling.varselSendt && erÅrsakValgt();
         }

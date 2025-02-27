@@ -97,9 +97,9 @@ const settSkjemadataFraPeriode = (
         periode?.vilkårsvurderingsresultatInfo?.godTro?.beløpTilbakekreves?.toString() || ''
     );
     const erForsett =
-        periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.FORSETT;
+        periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.Forsett;
     const erSimpelUaktsomhet =
-        periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.SIMPEL_UAKTSOMHET;
+        periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.SimpelUaktsomhet;
     skjema.felter.aktsomhetVurdering.onChange(
         periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet || ''
     );
@@ -127,7 +127,7 @@ const settSkjemadataFraPeriode = (
     );
     const annetSærligGrunn =
         periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunner?.find(
-            dto => dto.særligGrunn === SærligeGrunner.ANNET
+            dto => dto.særligGrunn === SærligeGrunner.Annet
         );
     skjema.felter.særligeGrunnerAnnetBegrunnelse.onChange(annetSærligGrunn?.begrunnelse || '');
 
@@ -164,11 +164,11 @@ const settSkjemadataFraPeriode = (
 
 const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.ReactNode => {
     const hjelpetekster = {
-        [Ytelsetype.BARNETRYGD]: vilkårsresultatHjelpeteksterBarnetrygd,
-        [Ytelsetype.KONTANTSTØTTE]: vilkårsresultatHjelpeteksterKontantstøtte,
-        [Ytelsetype.BARNETILSYN]: vilkårsresultatHjelpetekster,
-        [Ytelsetype.OVERGANGSSTØNAD]: vilkårsresultatHjelpetekster,
-        [Ytelsetype.SKOLEPENGER]: vilkårsresultatHjelpetekster,
+        [Ytelsetype.Barnetrygd]: vilkårsresultatHjelpeteksterBarnetrygd,
+        [Ytelsetype.Kontantstøtte]: vilkårsresultatHjelpeteksterKontantstøtte,
+        [Ytelsetype.Barnetilsyn]: vilkårsresultatHjelpetekster,
+        [Ytelsetype.Overganggstønad]: vilkårsresultatHjelpetekster,
+        [Ytelsetype.Skolepenger]: vilkårsresultatHjelpetekster,
     }[fagsak.ytelsestype];
 
     return (
@@ -234,13 +234,13 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     };
 
     const vilkårsresultatVurderingGjort = skjema.felter.vilkårsresultatvurdering.verdi !== '';
-    const erGodTro = skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GOD_TRO;
+    const erGodTro = skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GodTro;
     const erForstodBurdeForstått =
-        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
 
     const ugyldigVilkårsresultatValgt =
         skjema.visFeilmeldinger &&
-        skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.FEIL;
+        skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
 
     return periode ? (
         <StyledBox padding="4" borderColor="border-strong" borderWidth="1">

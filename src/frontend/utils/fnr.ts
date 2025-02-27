@@ -1,4 +1,4 @@
-import { definerteFeilmeldinger, DEFINERT_FEILMELDING, isEmpty } from './validering';
+import { definerteFeilmeldinger, DefinertFeilmelding, isEmpty } from './validering';
 import { feil, type FeltState, ok } from '../hooks/skjema';
 
 /**
@@ -37,6 +37,6 @@ const validerFødselsnumer = (fnr: string) => {
 
 export const validerFødselsnummerFelt = (felt: FeltState<string | ''>) => {
     if (isEmpty(felt.verdi))
-        return feil(felt, definerteFeilmeldinger[DEFINERT_FEILMELDING.OBLIGATORISK_FELT]);
+        return feil(felt, definerteFeilmeldinger[DefinertFeilmelding.ObligatoriskFelt]);
     return validerFødselsnumer(felt.verdi) ? ok(felt) : feil(felt, 'Ugyldig fødselsnummer');
 };

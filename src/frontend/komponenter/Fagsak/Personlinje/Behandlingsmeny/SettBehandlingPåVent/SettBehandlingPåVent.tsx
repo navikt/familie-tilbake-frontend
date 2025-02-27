@@ -37,7 +37,7 @@ const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClic
 
     const ugyldigDatoValgt =
         skjema.visFeilmeldinger &&
-        skjema.felter.tidsfrist.valideringsstatus === Valideringsstatus.FEIL;
+        skjema.felter.tidsfrist.valideringsstatus === Valideringsstatus.Feil;
 
     const lukkModal = () => {
         tilbakestillFelterTilDefault();

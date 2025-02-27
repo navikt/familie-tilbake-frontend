@@ -5,7 +5,7 @@ import passport from 'passport';
 
 import { logRequest } from '../utils';
 import { getTokenSetsFromSession, hasValidAccessToken, tokenSetSelfId } from './tokenUtils';
-import { LOG_LEVEL } from '../../logging/logging';
+import { LogLevel } from '../../logging/logging';
 import { appConfig } from '../config';
 export const authenticateAzure = (req: Request, res: Response, next: NextFunction) => {
     const regex: RegExpExecArray | null = /redirectUrl=(.*)/.exec(req.url);
@@ -16,7 +16,7 @@ export const authenticateAzure = (req: Request, res: Response, next: NextFunctio
     logRequest(
         req,
         `authenticateAzure. redirectUrl=${redirectUrl}, successRedirect=${successRedirect}`,
-        LOG_LEVEL.DEBUG
+        LogLevel.Debug
     );
     if (!req.session) {
         throw new Error('Mangler sesjon på kall');
@@ -56,7 +56,7 @@ export const ensureAuthenticated = (authClient: Client, sendUnauthorized: boolea
         logRequest(
             req,
             `ensureAuthenticated. isAuthenticated=${req.isAuthenticated()}, hasValidAccessToken=${validAccessToken}`,
-            LOG_LEVEL.DEBUG
+            LogLevel.Debug
         );
 
         if (req.isAuthenticated()) {
@@ -75,7 +75,7 @@ export const ensureAuthenticated = (authClient: Client, sendUnauthorized: boolea
                         logRequest(
                             req,
                             `Feilet ved refresh av tokenset: ${error.message}`,
-                            LOG_LEVEL.WARNING
+                            LogLevel.Warning
                         );
                         const pathname = req.originalUrl;
                         if (sendUnauthorized) {
@@ -103,12 +103,12 @@ export const logout = (req: Request, res: Response) => {
         throw new Error('Mangler sesjon på kall');
     }
 
-    logRequest(req, `logout.`, LOG_LEVEL.DEBUG);
+    logRequest(req, `logout.`, LogLevel.Debug);
 
     res.redirect(appConfig.logoutRedirectUri);
     req.session.destroy((error: Error) => {
         if (error) {
-            logRequest(req, `error during logout: ${error}`, LOG_LEVEL.ERROR);
+            logRequest(req, `error during logout: ${error}`, LogLevel.Error);
         }
     });
 };

@@ -96,7 +96,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                     <Modal.Footer>
                         <Button
                             variant="primary"
-                            disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
+                            disabled={skjema.submitRessurs.status === RessursStatus.Henter}
                             key="bekreft"
                             onClick={() => sendInn()}
                             size="small"

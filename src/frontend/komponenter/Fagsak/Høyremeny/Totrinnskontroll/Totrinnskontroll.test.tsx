@@ -33,14 +33,14 @@ describe('Tester: Totrinnskontroll', () => {
         useBehandlingApi.mockImplementation(() => ({
             gjerTotrinnkontrollKall: () => {
                 const ressurs = mock<Ressurs<ITotrinnkontroll>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: totrinnkontroll,
                 });
                 return Promise.resolve(ressurs);
             },
             sendInnFatteVedtak: () => {
                 const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.SUKSESS,
+                    status: RessursStatus.Suksess,
                     data: 'suksess',
                 });
                 return Promise.resolve(ressurs);
@@ -62,17 +62,17 @@ describe('Tester: Totrinnskontroll', () => {
         setupMock(false, {
             totrinnsstegsinfo: [
                 {
-                    behandlingssteg: Behandlingssteg.FAKTA,
+                    behandlingssteg: Behandlingssteg.Fakta,
                     godkjent: undefined,
                     begrunnelse: undefined,
                 },
                 {
-                    behandlingssteg: Behandlingssteg.VILKÅRSVURDERING,
+                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
                     godkjent: undefined,
                     begrunnelse: undefined,
                 },
                 {
-                    behandlingssteg: Behandlingssteg.FORESLÅ_VEDTAK,
+                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
                     godkjent: undefined,
                     begrunnelse: undefined,
                 },
@@ -137,22 +137,22 @@ describe('Tester: Totrinnskontroll', () => {
         setupMock(false, {
             totrinnsstegsinfo: [
                 {
-                    behandlingssteg: Behandlingssteg.FAKTA,
+                    behandlingssteg: Behandlingssteg.Fakta,
                     godkjent: undefined,
                     begrunnelse: undefined,
                 },
                 {
-                    behandlingssteg: Behandlingssteg.FORELDELSE,
+                    behandlingssteg: Behandlingssteg.Foreldelse,
                     godkjent: undefined,
                     begrunnelse: undefined,
                 },
                 {
-                    behandlingssteg: Behandlingssteg.VILKÅRSVURDERING,
+                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
                     godkjent: undefined,
                     begrunnelse: undefined,
                 },
                 {
-                    behandlingssteg: Behandlingssteg.FORESLÅ_VEDTAK,
+                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
                     godkjent: undefined,
                     begrunnelse: undefined,
                 },
@@ -233,22 +233,22 @@ describe('Tester: Totrinnskontroll', () => {
         setupMock(true, {
             totrinnsstegsinfo: [
                 {
-                    behandlingssteg: Behandlingssteg.FAKTA,
+                    behandlingssteg: Behandlingssteg.Fakta,
                     godkjent: true,
                     begrunnelse: undefined,
                 },
                 {
-                    behandlingssteg: Behandlingssteg.FORELDELSE,
+                    behandlingssteg: Behandlingssteg.Foreldelse,
                     godkjent: false,
                     begrunnelse: 'Foreldelse må vurderes på nytt',
                 },
                 {
-                    behandlingssteg: Behandlingssteg.VILKÅRSVURDERING,
+                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
                     godkjent: true,
                     begrunnelse: undefined,
                 },
                 {
-                    behandlingssteg: Behandlingssteg.FORESLÅ_VEDTAK,
+                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
                     godkjent: false,
                     begrunnelse: 'Vedtaket må vurderes på nytt',
                 },
@@ -296,22 +296,22 @@ describe('Tester: Totrinnskontroll', () => {
         setupMock(false, {
             totrinnsstegsinfo: [
                 {
-                    behandlingssteg: Behandlingssteg.FAKTA,
+                    behandlingssteg: Behandlingssteg.Fakta,
                     godkjent: true,
                     begrunnelse: undefined,
                 },
                 {
-                    behandlingssteg: Behandlingssteg.FORELDELSE,
+                    behandlingssteg: Behandlingssteg.Foreldelse,
                     godkjent: false,
                     begrunnelse: 'Foreldelse må vurderes på nytt',
                 },
                 {
-                    behandlingssteg: Behandlingssteg.VILKÅRSVURDERING,
+                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
                     godkjent: true,
                     begrunnelse: undefined,
                 },
                 {
-                    behandlingssteg: Behandlingssteg.FORESLÅ_VEDTAK,
+                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
                     godkjent: false,
                     begrunnelse: 'Vedtaket må vurderes på nytt',
                 },

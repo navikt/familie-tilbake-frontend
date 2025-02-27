@@ -30,10 +30,10 @@ import {
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
 const erVergetypeOppfylt = (avhengigheter?: Avhengigheter) =>
-    avhengigheter?.vergetype.valideringsstatus === Valideringsstatus.OK;
+    avhengigheter?.vergetype.valideringsstatus === Valideringsstatus.Ok;
 
 const erAdvokatValgt = (avhengigheter?: Avhengigheter) =>
-    erVergetypeOppfylt(avhengigheter) && avhengigheter?.vergetype.verdi === Vergetype.ADVOKAT;
+    erVergetypeOppfylt(avhengigheter) && avhengigheter?.vergetype.verdi === Vergetype.Advokat;
 
 interface IProps {
     behandling: IBehandling;
@@ -59,8 +59,8 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
 
     React.useEffect(() => {
         if (behandling.harVerge) {
-            settStegErBehandlet(erStegBehandlet(Behandlingssteg.VERGE));
-            settErAutoutført(erStegAutoutført(Behandlingssteg.VERGE));
+            settStegErBehandlet(erStegBehandlet(Behandlingssteg.Verge));
+            settErAutoutført(erStegAutoutført(Behandlingssteg.Verge));
             settHenterData(true);
             hentVerge();
         }
@@ -69,7 +69,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
 
     const hentVerge = () => {
         gjerVergeKall(behandling.behandlingId).then((respons: Ressurs<VergeDto>) => {
-            if (respons.status === RessursStatus.SUKSESS) {
+            if (respons.status === RessursStatus.Suksess) {
                 settHenterData(false);
                 const hentetVerge = respons.data;
                 skjema.felter.vergetype.onChange(hentetVerge.type);
@@ -155,7 +155,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
 
     const harEndretOpplysninger = () => {
         if (verge) {
-            const erAdvokat = verge.type === Vergetype.ADVOKAT;
+            const erAdvokat = verge.type === Vergetype.Advokat;
             return (
                 skjema.felter.vergetype.verdi !== verge.type ||
                 skjema.felter.navn.verdi !== verge.navn ||
@@ -184,11 +184,11 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
                     begrunnelse: skjema.felter.begrunnelse.verdi,
                     navn: skjema.felter.navn.verdi,
                     ident:
-                        vergetype !== Vergetype.ADVOKAT
+                        vergetype !== Vergetype.Advokat
                             ? skjema.felter.fødselsnummer.verdi
                             : undefined,
                     orgNr:
-                        vergetype === Vergetype.ADVOKAT
+                        vergetype === Vergetype.Advokat
                             ? skjema.felter.organisasjonsnummer.verdi
                             : undefined,
                 },
@@ -196,7 +196,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
             sendInnVerge(behandling.behandlingId, payload)
                 .then((respons: Ressurs<string>) => {
                     settSenderInn(false);
-                    if (respons.status === RessursStatus.SUKSESS) {
+                    if (respons.status === RessursStatus.Suksess) {
                         nullstillIkkePersisterteKomponenter();
                         hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                             navigate(

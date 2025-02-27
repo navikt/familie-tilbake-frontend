@@ -1,3 +1,4 @@
+import type { Fagsystem } from '../../kodeverk';
 import type { IBehandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
 
 import * as React from 'react';
@@ -8,7 +9,6 @@ import BehandlingContainer from './BehandlingContainer';
 import Personlinje from './Personlinje/Personlinje';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
-import { Fagsystem } from '../../kodeverk';
 import { venteårsaker } from '../../typer/behandling';
 import { RessursStatus } from '../../typer/ressurs';
 import { formatterDatostring } from '../../utils';
@@ -38,7 +38,7 @@ const venteBeskjed = (ventegrunn: IBehandlingsstegstilstand) => {
 
 const FagsakContainer: React.FC = () => {
     const { fagsystem: fagsystemParam, fagsakId } = useParams();
-    const fagsystem = Fagsystem[fagsystemParam as keyof typeof Fagsystem];
+    const fagsystem = fagsystemParam as Fagsystem;
 
     const location = useLocation();
     const behandlingId = location.pathname.split('/')[6];
@@ -60,7 +60,7 @@ const FagsakContainer: React.FC = () => {
     }, [fagsystem, fagsakId]);
 
     React.useEffect(() => {
-        if (fagsak?.status === RessursStatus.SUKSESS && behandlingId) {
+        if (fagsak?.status === RessursStatus.Suksess && behandlingId) {
             hentBehandlingMedEksternBrukId(fagsak.data, behandlingId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,11 +70,11 @@ const FagsakContainer: React.FC = () => {
         settVisVenteModal(false);
     };
 
-    if (fagsak?.status === RessursStatus.HENTER || behandling?.status === RessursStatus.HENTER) {
+    if (fagsak?.status === RessursStatus.Henter || behandling?.status === RessursStatus.Henter) {
         return <HenterBehandling />;
     }
 
-    if (fagsak?.status === RessursStatus.SUKSESS && behandling?.status === RessursStatus.SUKSESS) {
+    if (fagsak?.status === RessursStatus.Suksess && behandling?.status === RessursStatus.Suksess) {
         return (
             <>
                 <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />

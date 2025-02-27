@@ -45,8 +45,8 @@ const validerPåkrevdFeltForManuellRegistrering = (
     feilmelding?: string
 ) => {
     if (
-        adresseKilde === AdresseKilde.MANUELL_REGISTRERING ||
-        adresseKilde === AdresseKilde.UDEFINERT
+        adresseKilde === AdresseKilde.ManuellRegistrering ||
+        adresseKilde === AdresseKilde.Udefinert
     ) {
         return (
             feilNårFeltetErTomt(felt, feilmelding) ||
@@ -74,14 +74,14 @@ const validerValgtMottakerType = (
             return feil(felt, `${mottakerTypeVisningsnavn[felt.verdi]} er allerede lagt til`);
         }
         if (
-            felt.verdi === MottakerType.DØDSBO ||
-            eksisterendeBrevmottakerType === MottakerType.DØDSBO
+            felt.verdi === MottakerType.Dødsbo ||
+            eksisterendeBrevmottakerType === MottakerType.Dødsbo
         ) {
             return feil(felt, 'Dødsbo kan ikke kombineres med andre brevmottakere');
         }
         if (
-            felt.verdi === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
-            eksisterendeBrevmottakerType === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
+            felt.verdi === MottakerType.BrukerMedUtenlandskAdresse ||
+            eksisterendeBrevmottakerType === MottakerType.BrukerMedUtenlandskAdresse
         ) {
             return ok(felt);
         }
@@ -104,11 +104,11 @@ const opprettManuellBrevmottakerRequest = (
     return {
         type: type,
         navn: skjema.felter.navn.verdi || ' ', // blank input erstattes med navn hentet fra register
-        ...(adresseKilde === AdresseKilde.OPPSLAG_REGISTER
+        ...(adresseKilde === AdresseKilde.OppslagRegister
             ? {
                   personIdent: skjema.felter.fødselsnummer.verdi,
               }
-            : adresseKilde === AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
+            : adresseKilde === AdresseKilde.OppslagOrganisasjonsregister
               ? {
                     organisasjonsnummer: skjema.felter.organisasjonsnummer.verdi,
                 }
@@ -124,8 +124,8 @@ const opprettManuellBrevmottakerRequest = (
                         landkode: skjema.felter.land.verdi,
                     },
                 }),
-        ...((type === MottakerType.VERGE || type === MottakerType.FULLMEKTIG) && {
-            vergetype: Vergetype.UDEFINERT,
+        ...((type === MottakerType.Verge || type === MottakerType.Fullmektig) && {
+            vergetype: Vergetype.Udefinert,
         }),
     };
 };
@@ -154,8 +154,8 @@ const populerSkjema = (
 const skalEkskludereDefaultMottaker = (brevmottakere: IBrevmottaker[]) => {
     return brevmottakere.some(
         brevmottaker =>
-            brevmottaker.type === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE ||
-            brevmottaker.type === MottakerType.DØDSBO
+            brevmottaker.type === MottakerType.BrukerMedUtenlandskAdresse ||
+            brevmottaker.type === MottakerType.Dødsbo
     );
 };
 interface ILeggTilEndreBrevmottakerSkjema {
@@ -178,7 +178,7 @@ interface IProps {
 const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
     ({ behandling, fagsak }: IProps) => {
         const bruker: IBrevmottaker = {
-            type: MottakerType.BRUKER,
+            type: MottakerType.Bruker,
             navn: fagsak.bruker.navn,
             personIdent: fagsak.bruker.personIdent,
         };
@@ -186,7 +186,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         const [brevmottakere, settBrevMottakere] = useState({ [defaultMottaker]: bruker } as {
             [id: string]: IBrevmottaker;
         });
-        const [adresseKilde, settAdresseKilde] = useState<AdresseKilde>(AdresseKilde.UDEFINERT);
+        const [adresseKilde, settAdresseKilde] = useState<AdresseKilde>(AdresseKilde.Udefinert);
         const [brevmottakerIdTilEndring, settBrevmottakerIdTilEndring] = useState<
             string | undefined
         >();
@@ -218,17 +218,17 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                 const erBruker = brevmottakerIdTilEndring === 'bruker';
                 if (erBruker) {
                     skjema.felter.mottaker.validerOgSettFelt(
-                        MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE
+                        MottakerType.BrukerMedUtenlandskAdresse
                     );
-                    settAdresseKilde(AdresseKilde.MANUELL_REGISTRERING);
+                    settAdresseKilde(AdresseKilde.ManuellRegistrering);
                 } else {
                     populerSkjema(skjema, lagretBrevmottaker);
                     settAdresseKilde(
                         lagretBrevmottaker.personIdent
-                            ? AdresseKilde.OPPSLAG_REGISTER
+                            ? AdresseKilde.OppslagRegister
                             : lagretBrevmottaker.organisasjonsnummer
-                              ? AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
-                              : AdresseKilde.MANUELL_REGISTRERING
+                              ? AdresseKilde.OppslagOrganisasjonsregister
+                              : AdresseKilde.ManuellRegistrering
                     );
                 }
             }
@@ -251,7 +251,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             felt: FeltState<string>
         ) => {
             const norgeErUlovligValgt =
-                mottaker === MottakerType.BRUKER_MED_UTENLANDSK_ADRESSE && felt.verdi === 'NO';
+                mottaker === MottakerType.BrukerMedUtenlandskAdresse && felt.verdi === 'NO';
 
             if (norgeErUlovligValgt) {
                 return feil(felt, 'Norge kan ikke være satt for bruker med utenlandsk adresse');
@@ -334,7 +334,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                     verdi: '',
                     avhengigheter: { adresseKilde },
                     valideringsfunksjon: (felt, avhengigheter) => {
-                        if (avhengigheter?.adresseKilde === AdresseKilde.OPPSLAG_REGISTER) {
+                        if (avhengigheter?.adresseKilde === AdresseKilde.OppslagRegister) {
                             return feilNårFeltetErTomt(felt) || feilNårFødselsnummerErUgyldig(felt);
                         }
                         return ok(felt);
@@ -346,7 +346,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                     valideringsfunksjon: (felt, avhengigheter) => {
                         if (
                             avhengigheter?.adresseKilde ===
-                            AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER
+                            AdresseKilde.OppslagOrganisasjonsregister
                         ) {
                             return feilNårFeltetErTomt(felt) || feilNårOrgnummerErUgyldig(felt);
                         }
@@ -413,7 +413,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                         url: `/familie-tilbake/api/brevmottaker/manuell/${behandling.behandlingId}${mottakerIdPostfix}`,
                     },
                     (response: Ressurs<string>) => {
-                        if (response.status === RessursStatus.SUKSESS) {
+                        if (response.status === RessursStatus.Suksess) {
                             hentBehandlingMedBehandlingId(behandling.behandlingId);
                             lukkModal ? lukkModal() : nullstillSkjema();
                         }
@@ -427,7 +427,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         const fjernBrevMottakerOgOppdaterState = (mottakerId: string) => {
             fjernManuellBrevmottaker(behandling.behandlingId, mottakerId).then(
                 (respons: Ressurs<string>) => {
-                    if (respons.status === RessursStatus.SUKSESS) {
+                    if (respons.status === RessursStatus.Suksess) {
                         hentBehandlingMedBehandlingId(behandling.behandlingId);
                     }
                 }

@@ -78,7 +78,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                 </InstitusjonsTag>
             )}
             <PlaceholderDiv />
-            {behandling?.status === RessursStatus.SUKSESS && !erHistoriskVisning && (
+            {behandling?.status === RessursStatus.Suksess && !erHistoriskVisning && (
                 <Link href={lagLenkeTilRevurdering()} target="_blank">
                     Gå til revurderingen
                     <ExternalLinkIcon aria-label="Gå til revurderingen" fontSize="1.375rem" />

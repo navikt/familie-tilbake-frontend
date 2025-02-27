@@ -55,7 +55,7 @@ const BrevmottakerContainer: React.FC = () => {
                                 />
                                 {antallBrevmottakere == 1 &&
                                     !erLesevisning &&
-                                    MottakerType.DØDSBO !== brevmottakere[id].type && (
+                                    MottakerType.Dødsbo !== brevmottakere[id].type && (
                                         <LeggTilKnapp
                                             variant="tertiary"
                                             size="small"

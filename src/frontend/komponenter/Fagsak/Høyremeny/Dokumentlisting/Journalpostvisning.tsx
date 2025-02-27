@@ -1,4 +1,4 @@
-import type { IJournalpost, Journalposttype } from '../../../../typer/journalføring';
+import type { IJournalpost } from '../../../../typer/journalføring';
 
 import { Detail } from '@navikt/ds-react';
 import { AGray400, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
@@ -6,6 +6,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import Dokumentvisning from './Dokumentvisning';
+import { Journalposttype } from '../../../../typer/journalføring';
 import { formatterDatoOgTid, hentDatoRegistrertSendt } from '../../../../utils';
 import { DokumentIkon } from '../../../Felleskomponenter/Ikoner';
 
@@ -32,9 +33,9 @@ const Innhold = styled.div`
 `;
 
 const typer: Record<Journalposttype, string> = {
-    I: 'Innkommende',
-    U: 'Utgående',
-    N: 'Notat',
+    [Journalposttype.I]: 'Innkommende',
+    [Journalposttype.U]: 'Utgående',
+    [Journalposttype.N]: 'Notat',
 };
 
 interface IProps {

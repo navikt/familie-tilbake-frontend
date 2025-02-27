@@ -25,11 +25,11 @@ export interface AvsenderMottaker {
 }
 
 export enum AvsenderMottakerIdType {
-    FNR = 'FNR',
-    HPRNR = 'HPRNR',
-    ORGNR = 'ORGNR',
-    UKJENT = 'UKJENT',
-    UTL_ORG = 'UTL_ORG',
+    Fnr = 'FNR',
+    HprNr = 'HPRNR',
+    OrgNr = 'ORGNR',
+    Ukjent = 'UKJENT',
+    UtlOrg = 'UTL_ORG',
 }
 
 export enum Journalposttype {
@@ -39,18 +39,18 @@ export enum Journalposttype {
 }
 
 export enum Journalstatus {
-    MOTTATT = 'MOTTATT',
-    JOURNALFOERT = 'JOURNALFOERT',
-    FERDIGSTILT = 'FERDIGSTILT',
-    EKSPEDERT = 'EKSPEDERT',
-    UNDER_ARBEID = 'UNDER_ARBEID',
-    FEILREGISTRERT = 'FEILREGISTRERT',
-    UTGAAR = 'UTGAAR',
-    AVBRUTT = 'AVBRUTT',
-    UKJENT_BRUKER = 'UKJENT_BRUKER',
-    RESERVERT = 'RESERVERT',
-    OPPLASTING_DOKUMENT = 'OPPLASTING_DOKUMENT',
-    UKJENT = 'UKJENT',
+    Mottatt = 'MOTTATT',
+    Journalfoert = 'JOURNALFOERT',
+    Ferdigstilt = 'FERDIGSTILT',
+    Ekspedert = 'EKSPEDERT',
+    UnderArbeid = 'UNDER_ARBEID',
+    Feilregistrert = 'FEILREGISTRERT',
+    Utgaar = 'UTGAAR',
+    Avbrutt = 'AVBRUTT',
+    UkjentBruker = 'UKJENT_BRUKER',
+    Reservert = 'RESERVERT',
+    OpplastingDokument = 'OPPLASTING_DOKUMENT',
+    Ukjent = 'UKJENT',
 }
 
 export interface IJournalpostSak {
@@ -85,10 +85,10 @@ export type Utsendingsinfo = {
 };
 
 export enum Dokumentstatus {
-    FERDIGSTILT = 'FERDIGSTILT',
-    AVBRUTT = 'AVBRUTT',
-    UNDER_REDIGERING = 'UNDER_REDIGERING',
-    KASSERT = 'KASSERT',
+    Ferdigstilt = 'FERDIGSTILT',
+    Avbrutt = 'AVBRUTT',
+    UnderRedigering = 'UNDER_REDIGERING',
+    Kassert = 'KASSERT',
 }
 
 export interface IDokumentvariant {
@@ -101,12 +101,12 @@ export interface ILogiskVedlegg {
 }
 
 export enum JournalpostDatotype {
-    DATO_SENDT_PRINT = 'DATO_SENDT_PRINT',
-    DATO_EKSPEDERT = 'DATO_EKSPEDERT',
-    DATO_JOURNALFOERT = 'DATO_JOURNALFOERT',
-    DATO_REGISTRERT = 'DATO_REGISTRERT',
-    DATO_AVS_RETUR = 'DATO_AVS_RETUR',
-    DATO_DOKUMENT = 'DATO_DOKUMENT',
+    DatoSendtPrint = 'DATO_SENDT_PRINT',
+    DatoEksedert = 'DATO_EKSPEDERT',
+    DatoJournalfoert = 'DATO_JOURNALFOERT',
+    DatoRegistrert = 'DATO_REGISTRERT',
+    DatoAvsRetur = 'DATO_AVS_RETUR',
+    DatoDokument = 'DATO_DOKUMENT',
 }
 
 type VarselSendt = {

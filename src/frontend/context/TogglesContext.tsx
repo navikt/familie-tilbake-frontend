@@ -24,7 +24,7 @@ const [TogglesProvider, useToggles] = createUseContext(() => {
         hentToggles()
             .then((resp: Ressurs<Toggles>) => {
                 settFeilmelding('');
-                if (resp.status === RessursStatus.SUKSESS) {
+                if (resp.status === RessursStatus.Suksess) {
                     settToggles(resp.data);
                 } else if (hentFrontendFeilmelding(resp)) {
                     settFeilmelding('Kunne ikke hente toggles');

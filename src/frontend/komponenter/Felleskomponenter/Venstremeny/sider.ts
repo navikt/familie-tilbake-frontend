@@ -9,52 +9,52 @@ export interface ISide {
 }
 
 enum SideId {
-    FAKTA = 'FAKTA',
-    FORELDELSE = 'FORELDELSE',
-    VILKÅRSVURDERING = 'VILKÅRSVURDERING',
-    VERGE = 'VERGE',
-    VEDTAK = 'VEDTAK',
-    BREVMOTTAKER = 'BREVMOTTAKER',
+    Fakta = 'FAKTA',
+    Foreldelse = 'FORELDELSE',
+    Vilkårsvurdering = 'VILKÅRSVURDERING',
+    Verge = 'VERGE',
+    Vedtak = 'VEDTAK',
+    Brevmottaker = 'BREVMOTTAKER',
 }
 
 export const sider: Record<SideId, ISide> = {
-    BREVMOTTAKER: {
+    [SideId.Brevmottaker]: {
         href: 'brevmottakere',
         navn: 'Brevmottaker(e)',
-        steg: Behandlingssteg.BREVMOTTAKER,
+        steg: Behandlingssteg.Brevmottaker,
     },
-    VERGE: {
+    [SideId.Verge]: {
         href: 'verge',
         navn: 'Verge',
-        steg: Behandlingssteg.VERGE,
+        steg: Behandlingssteg.Verge,
     },
-    FAKTA: {
+    [SideId.Fakta]: {
         href: 'fakta',
         navn: 'Fakta',
-        steg: Behandlingssteg.FAKTA,
+        steg: Behandlingssteg.Fakta,
     },
-    FORELDELSE: {
+    [SideId.Foreldelse]: {
         href: 'foreldelse',
         navn: 'Foreldelse',
-        steg: Behandlingssteg.FORELDELSE,
+        steg: Behandlingssteg.Foreldelse,
     },
-    VILKÅRSVURDERING: {
+    [SideId.Vilkårsvurdering]: {
         href: 'vilkaarsvurdering',
         navn: 'Vilkårsvurdering',
-        steg: Behandlingssteg.VILKÅRSVURDERING,
+        steg: Behandlingssteg.Vilkårsvurdering,
     },
-    VEDTAK: {
+    [SideId.Vedtak]: {
         href: 'vedtak',
         navn: 'Vedtak',
-        steg: Behandlingssteg.FORESLÅ_VEDTAK,
+        steg: Behandlingssteg.ForeslåVedtak,
     },
 };
 
 const aktiveBehandlingstegstatuser = [
-    Behandlingsstegstatus.UTFØRT,
-    Behandlingsstegstatus.AUTOUTFØRT,
-    Behandlingsstegstatus.KLAR,
-    Behandlingsstegstatus.VENTER,
+    Behandlingsstegstatus.Utført,
+    Behandlingsstegstatus.Autoutført,
+    Behandlingsstegstatus.Klar,
+    Behandlingsstegstatus.Venter,
 ];
 
 export const erSidenAktiv = (side: ISide, behandling: IBehandling): boolean => {
@@ -79,12 +79,12 @@ const sjekkOmSidenErAktiv = (side: ISide, behandlingsstegsinfo: IBehandlingssteg
 };
 
 export const visSide = (side: ISide, åpenBehandling: IBehandling) => {
-    if (side.steg === Behandlingssteg.BREVMOTTAKER) {
+    if (side.steg === Behandlingssteg.Brevmottaker) {
         return åpenBehandling.behandlingsstegsinfo
             .map(value => value.behandlingssteg)
             .includes(side.steg);
     }
-    if (side.steg === Behandlingssteg.VERGE) {
+    if (side.steg === Behandlingssteg.Verge) {
         return !åpenBehandling.støtterManuelleBrevmottakere;
     }
     return true;
@@ -92,10 +92,10 @@ export const visSide = (side: ISide, åpenBehandling: IBehandling) => {
 
 export const utledBehandlingSide = (steg: Behandlingssteg): ISide | undefined => {
     switch (steg) {
-        case Behandlingssteg.FATTE_VEDTAK:
+        case Behandlingssteg.FatteVedtak:
             return sider.FAKTA;
-        case Behandlingssteg.AVSLUTTET:
-        case Behandlingssteg.IVERKSETT_VEDTAK:
+        case Behandlingssteg.Avsluttet:
+        case Behandlingssteg.IverksettVedtak:
             return sider.VEDTAK;
         default:
             return finnSideForSteg(steg);

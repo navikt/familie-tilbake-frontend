@@ -14,7 +14,7 @@ describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
     test('Tester åpning av modal', async () => {
         const user = userEvent.setup();
         const periode: VilkårsvurderingPeriodeSkjemaData = {
-            hendelsestype: HendelseType.ANNET,
+            hendelsestype: HendelseType.Annet,
             index: 'i1',
             foreldet: false,
             feilutbetaltBeløp: 1333,

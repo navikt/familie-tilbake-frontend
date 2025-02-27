@@ -53,13 +53,13 @@ const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) =>
 
     const ugyldigHarGrunnertilReduksjonValgt =
         skjema.visFeilmeldinger &&
-        skjema.felter.harGrunnerTilReduksjon.valideringsstatus === Valideringsstatus.FEIL;
+        skjema.felter.harGrunnerTilReduksjon.valideringsstatus === Valideringsstatus.Feil;
 
     const beskjedTilbakekreves = harMerEnnEnAktivitet
         ? formatCurrencyNoKr(valgtPeriode?.feilutbetaltBeløp)
         : '100 %';
 
-    const erGrovtUaktsomhet = skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET;
+    const erGrovtUaktsomhet = skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovUaktsomhet;
     const skalTilleggesRenterVerdi =
         skjema.felter.grovtUaktsomIlleggeRenter.verdi &&
         skjema.felter.grovtUaktsomIlleggeRenter.verdi.label;

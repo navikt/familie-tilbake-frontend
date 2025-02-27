@@ -14,16 +14,16 @@ import { dateTilIsoDatoStringEllerUndefined } from '../../../../utils/dato';
 
 const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter) => {
     return (
-        avhengigheter?.foreldelsesvurderingstype.valideringsstatus === Valideringsstatus.OK &&
-        (avhengigheter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.FORELDET ||
-            avhengigheter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.TILLEGGSFRIST)
+        avhengigheter?.foreldelsesvurderingstype.valideringsstatus === Valideringsstatus.Ok &&
+        (avhengigheter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Foreldet ||
+            avhengigheter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Tilleggsfrist)
     );
 };
 
 const avhengigheterOppfyltOppdagelsesdato = (avhengigheter?: Avhengigheter) => {
     return (
-        avhengigheter?.foreldelsesvurderingstype.valideringsstatus === Valideringsstatus.OK &&
-        avhengigheter?.foreldelsesvurderingstype?.verdi === Foreldelsevurdering.TILLEGGSFRIST
+        avhengigheter?.foreldelsesvurderingstype.valideringsstatus === Valideringsstatus.Ok &&
+        avhengigheter?.foreldelsesvurderingstype?.verdi === Foreldelsevurdering.Tilleggsfrist
     );
 };
 

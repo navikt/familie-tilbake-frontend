@@ -62,7 +62,7 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                             readOnly={true}
                             name="Behandling"
                             label="Type behandling"
-                            value={Behandlingstype.REVURDERING_TILBAKEKREVING}
+                            value={Behandlingstype.RevurderingTilbakekreving}
                         >
                             {Object.values(Behandlingstype).map(opt => (
                                 <option key={opt} value={opt}>

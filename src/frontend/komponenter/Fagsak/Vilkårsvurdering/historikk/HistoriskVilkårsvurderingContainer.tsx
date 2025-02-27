@@ -28,7 +28,7 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
         settFeilutbetalingInaktivVilkårsvurdering,
     } = useHistoriskVilkårsvurdering();
 
-    if (feilutbetalingInaktiveVilkårsvurderinger?.status === RessursStatus.SUKSESS) {
+    if (feilutbetalingInaktiveVilkårsvurderinger?.status === RessursStatus.Suksess) {
         return (
             <Container>
                 <VStack gap="5">

@@ -33,9 +33,9 @@ const HentOppdatertKravgrunnlag: React.FC<IProps> = ({
             method: 'PUT',
             url: `/familie-tilbake/api/forvaltning/behandling/${behandling.behandlingId}/kravgrunnlag/v1`,
         }).then((respons: Ressurs<string>) => {
-            if (respons.status === RessursStatus.SUKSESS) {
-                settToast(ToastTyper.KRAVGRUNNLAG_HENTET, {
-                    alertType: AlertType.INFO,
+            if (respons.status === RessursStatus.Suksess) {
+                settToast(ToastTyper.KravgrunnlaHentet, {
+                    alertType: AlertType.Info,
                     tekst: 'Hentet korrigert kravgrunnlag',
                 });
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
@@ -44,12 +44,12 @@ const HentOppdatertKravgrunnlag: React.FC<IProps> = ({
                     );
                 });
             } else if (
-                respons.status === RessursStatus.FEILET ||
-                respons.status === RessursStatus.FUNKSJONELL_FEIL ||
-                respons.status === RessursStatus.IKKE_TILGANG
+                respons.status === RessursStatus.Feilet ||
+                respons.status === RessursStatus.FunksjonellFeil ||
+                respons.status === RessursStatus.IkkeTilgang
             ) {
-                settToast(ToastTyper.KRAVGRUNNLAG_HENTET, {
-                    alertType: AlertType.WARNING,
+                settToast(ToastTyper.KravgrunnlaHentet, {
+                    alertType: AlertType.Warning,
                     tekst: 'Henting av korrigert kravgrunnlag feilet',
                 });
             }

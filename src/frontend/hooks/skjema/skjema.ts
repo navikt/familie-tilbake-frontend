@@ -43,7 +43,7 @@ export const useSkjema = <Felter, SkjemaRespons>({
             ...synligeFelter
                 .filter(
                     (unknownFelt: Felt<unknown>) =>
-                        unknownFelt.valideringsstatus === Valideringsstatus.IKKE_VALIDERT
+                        unknownFelt.valideringsstatus === Valideringsstatus.IkkeValidert
                 )
                 .map((unknownFelt: Felt<unknown>) => {
                     return unknownFelt.validerOgSettFelt(unknownFelt.verdi, {
@@ -52,7 +52,7 @@ export const useSkjema = <Felter, SkjemaRespons>({
                 }),
             ...synligeFelter.filter(
                 (unknownFelt: Felt<unknown>) =>
-                    unknownFelt.valideringsstatus !== Valideringsstatus.IKKE_VALIDERT
+                    unknownFelt.valideringsstatus !== Valideringsstatus.IkkeValidert
             ),
         ];
     };
@@ -61,8 +61,8 @@ export const useSkjema = <Felter, SkjemaRespons>({
         return (
             alleSynligeFelter().filter(felt => {
                 const unknownFelt = felt as Felt<unknown>;
-                return unknownFelt.valideringsstatus !== Valideringsstatus.OK;
-            }).length === 0 && skjema.submitRessurs.status !== RessursStatus.HENTER
+                return unknownFelt.valideringsstatus !== Valideringsstatus.Ok;
+            }).length === 0 && skjema.submitRessurs.status !== RessursStatus.Henter
         );
     };
 
@@ -73,8 +73,8 @@ export const useSkjema = <Felter, SkjemaRespons>({
         return (
             validerteSynligeFelter.filter(felt => {
                 const unknownFelt = felt as Felt<unknown>;
-                return unknownFelt.valideringsstatus !== Valideringsstatus.OK;
-            }).length === 0 && skjema.submitRessurs.status !== RessursStatus.HENTER
+                return unknownFelt.valideringsstatus !== Valideringsstatus.Ok;
+            }).length === 0 && skjema.submitRessurs.status !== RessursStatus.Henter
         );
     };
 
@@ -94,7 +94,7 @@ export const useSkjema = <Felter, SkjemaRespons>({
             request<SkjemaData, SkjemaRespons>(familieAxiosRequestConfig).then(
                 (response: Ressurs<SkjemaRespons>) => {
                     settSubmitRessurs(response);
-                    if (response.status === RessursStatus.SUKSESS) {
+                    if (response.status === RessursStatus.Suksess) {
                         nullstillSkjema();
                         onSuccess(response);
                     } else {
@@ -107,7 +107,7 @@ export const useSkjema = <Felter, SkjemaRespons>({
 
     const hentFeilTilOppsummering = (): FeiloppsummeringFeil[] => {
         return Object.values(alleSynligeFelter())
-            .filter(felt => (felt as Felt<unknown>).valideringsstatus === Valideringsstatus.FEIL)
+            .filter(felt => (felt as Felt<unknown>).valideringsstatus === Valideringsstatus.Feil)
             .map(felt => {
                 const typetFelt = felt as Felt<unknown>;
 

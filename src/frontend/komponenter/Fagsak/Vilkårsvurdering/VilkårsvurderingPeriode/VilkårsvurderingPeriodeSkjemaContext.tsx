@@ -46,63 +46,63 @@ export const finnJaNeiOption = (verdi?: boolean): JaNeiOption | undefined => {
 };
 
 const erVilkårsresultatOppfylt = (resultat: Vilkårsresultat, avhengigheter?: Avhengigheter) =>
-    avhengigheter?.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.OK &&
+    avhengigheter?.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter?.vilkårsresultatvurdering.verdi === resultat;
 
 const avhengigheterOppfyltGodTroFelter = (avhengigheter?: Avhengigheter) =>
-    erVilkårsresultatOppfylt(Vilkårsresultat.GOD_TRO, avhengigheter);
+    erVilkårsresultatOppfylt(Vilkårsresultat.GodTro, avhengigheter);
 
 const avhengigheterOppfyltGodTroTilbakekrevesBeløp = (avhengigheter?: Avhengigheter) =>
     avhengigheterOppfyltGodTroFelter(avhengigheter) &&
-    avhengigheter?.erBeløpetIBehold.valideringsstatus === Valideringsstatus.OK &&
+    avhengigheter?.erBeløpetIBehold.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter.erBeløpetIBehold.verdi === OptionJA;
 
 const avhengigheterOppfyltAktsomhetFelter = (avhengigheter?: Avhengigheter) =>
-    avhengigheter?.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.OK &&
-    avhengigheter?.vilkårsresultatvurdering.verdi !== Vilkårsresultat.GOD_TRO;
+    avhengigheter?.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Ok &&
+    avhengigheter?.vilkårsresultatvurdering.verdi !== Vilkårsresultat.GodTro;
 
 const erAktsomhetsvurderingOppfylt = (aktsomhet: Aktsomhet, avhengigheter?: Avhengigheter) =>
     avhengigheterOppfyltAktsomhetFelter(avhengigheter) &&
-    avhengigheter?.aktsomhetVurdering.valideringsstatus === Valideringsstatus.OK &&
+    avhengigheter?.aktsomhetVurdering.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter?.aktsomhetVurdering.verdi === aktsomhet;
 
 const avhengigheterOppfyltForstoIlleggrenter = (avhengigheter?: Avhengigheter) =>
-    erVilkårsresultatOppfylt(Vilkårsresultat.FORSTO_BURDE_FORSTÅTT, avhengigheter) &&
-    erAktsomhetsvurderingOppfylt(Aktsomhet.FORSETT, avhengigheter);
+    erVilkårsresultatOppfylt(Vilkårsresultat.ForstoBurdeForstått, avhengigheter) &&
+    erAktsomhetsvurderingOppfylt(Aktsomhet.Forsett, avhengigheter);
 
 const erBeløpUnder4RettsgebyrOppfylt = (avhengigheter?: Avhengigheter) =>
     avhengigheter?.totalbeløpUnder4Rettsgebyr.verdi === true;
 
 const avhengigheterOppfyltTilbakekrevesBeløpUnder4Rettsgebyr = (avhengigheter?: Avhengigheter) =>
-    erAktsomhetsvurderingOppfylt(Aktsomhet.SIMPEL_UAKTSOMHET, avhengigheter) &&
+    erAktsomhetsvurderingOppfylt(Aktsomhet.SimpelUaktsomhet, avhengigheter) &&
     erBeløpUnder4RettsgebyrOppfylt(avhengigheter);
 
 const erTilbakekrevBeløpUnder4Rettsgebyr = (avhengigheter?: Avhengigheter) =>
-    avhengigheter?.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.OK &&
+    avhengigheter?.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter?.tilbakekrevSmåbeløp.verdi === OptionJA;
 
 const avhengigheterOppfyltSærligeGrunnerFelter = (avhengigheter?: Avhengigheter) =>
-    (erAktsomhetsvurderingOppfylt(Aktsomhet.SIMPEL_UAKTSOMHET, avhengigheter) &&
+    (erAktsomhetsvurderingOppfylt(Aktsomhet.SimpelUaktsomhet, avhengigheter) &&
         (!erBeløpUnder4RettsgebyrOppfylt(avhengigheter) ||
             erTilbakekrevBeløpUnder4Rettsgebyr(avhengigheter))) ||
-    erAktsomhetsvurderingOppfylt(Aktsomhet.GROV_UAKTSOMHET, avhengigheter);
+    erAktsomhetsvurderingOppfylt(Aktsomhet.GrovUaktsomhet, avhengigheter);
 
 const avhengigheterOppfyltSærligGrunnAnnetBegrunnelse = (avhengigheter?: Avhengigheter) =>
     avhengigheterOppfyltSærligeGrunnerFelter(avhengigheter) &&
     avhengigheter?.særligeGrunner.verdi.length > 0 &&
-    avhengigheter?.særligeGrunner.verdi.includes(SærligeGrunner.ANNET);
+    avhengigheter?.særligeGrunner.verdi.includes(SærligeGrunner.Annet);
 
 const erHarGrunnerTilReduksjonOppfylt = (valg: JaNeiOption, avhengigheter?: Avhengigheter) =>
-    avhengigheter?.harGrunnerTilReduksjon.valideringsstatus === Valideringsstatus.OK &&
+    avhengigheter?.harGrunnerTilReduksjon.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter.harGrunnerTilReduksjon.verdi === valg;
 
 const avhengigheterOppfyltGrovtIlleggRenter = (avhengigheter?: Avhengigheter) =>
-    erAktsomhetsvurderingOppfylt(Aktsomhet.GROV_UAKTSOMHET, avhengigheter) &&
+    erAktsomhetsvurderingOppfylt(Aktsomhet.GrovUaktsomhet, avhengigheter) &&
     erHarGrunnerTilReduksjonOppfylt(OptionNEI, avhengigheter);
 
 const avhengigheterOppfyltGrunnerTilReduksjonFelter = (avhengigheter?: Avhengigheter) =>
-    (erAktsomhetsvurderingOppfylt(Aktsomhet.SIMPEL_UAKTSOMHET, avhengigheter) ||
-        erAktsomhetsvurderingOppfylt(Aktsomhet.GROV_UAKTSOMHET, avhengigheter)) &&
+    (erAktsomhetsvurderingOppfylt(Aktsomhet.SimpelUaktsomhet, avhengigheter) ||
+        erAktsomhetsvurderingOppfylt(Aktsomhet.GrovUaktsomhet, avhengigheter)) &&
     erHarGrunnerTilReduksjonOppfylt(OptionJA, avhengigheter);
 
 const avhengigheterOppfyltIkkeMerEnnAktivitetFelter = (avhengigheter?: Avhengigheter) =>
@@ -134,7 +134,7 @@ const useVilkårsvurderingPeriodeSkjema = (
         verdi: '',
         avhengigheter: { vilkårsresultatvurdering },
         valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
-            if (avhengigheter?.vilkårsresultatvurdering.valideringsstatus !== Valideringsstatus.OK)
+            if (avhengigheter?.vilkårsresultatvurdering.valideringsstatus !== Valideringsstatus.Ok)
                 return ok(felt);
             return validerTekstFeltMaksLengde(3000, felt);
         },
@@ -380,17 +380,17 @@ const useVilkårsvurderingPeriodeSkjema = (
         const erEgendefinert = skjema.felter.uaktsomAndelTilbakekreves.verdi === EGENDEFINERT;
 
         const erForsto =
-            skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.FORSTO_BURDE_FORSTÅTT;
+            skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
         const erForstoForsett =
-            erForsto && skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.FORSETT;
+            erForsto && skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsett;
         const erGrovtUaktsomhet =
-            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GROV_UAKTSOMHET;
+            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovUaktsomhet;
 
         const skalVurderereSmåbeløp =
-            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.SIMPEL_UAKTSOMHET &&
+            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.SimpelUaktsomhet &&
             skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
         const skalIkkeVurdereSærligeGrunner =
-            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.FORSETT ||
+            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsett ||
             (skalVurderereSmåbeløp && skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI);
 
         const harGrunnerTilReduksjon =
@@ -419,7 +419,7 @@ const useVilkårsvurderingPeriodeSkjema = (
                 : skjema.felter.særligeGrunner.verdi.map<SærligeGrunnerDto>(grunn => ({
                       særligGrunn: grunn,
                       begrunnelse:
-                          grunn === SærligeGrunner.ANNET
+                          grunn === SærligeGrunner.Annet
                               ? skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi
                               : undefined,
                   })),
@@ -442,7 +442,7 @@ const useVilkårsvurderingPeriodeSkjema = (
         validerAlleSynligeFelter();
         if (kanSendeSkjema()) {
             const erGodTro =
-                skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GOD_TRO;
+                skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GodTro;
             oppdaterPeriode({
                 ...periode,
                 begrunnelse: skjema.felter.vilkårsresultatBegrunnelse.verdi,

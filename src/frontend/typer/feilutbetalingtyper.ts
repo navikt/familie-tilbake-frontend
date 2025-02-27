@@ -8,15 +8,16 @@ import type {
 } from '../kodeverk';
 
 export enum Tilbakekrevingsvalg {
-    OPPRETT_TILBAKEKREVING_MED_VARSEL = 'OPPRETT_TILBAKEKREVING_MED_VARSEL',
-    OPPRETT_TILBAKEKREVING_UTEN_VARSEL = 'OPPRETT_TILBAKEKREVING_UTEN_VARSEL',
-    IGNORER_TILBAKEKREVING = 'IGNORER_TILBAKEKREVING',
+    OpprettTilbakekrevingMedVarsel = 'OPPRETT_TILBAKEKREVING_MED_VARSEL',
+    OpprettTilbakekrevingUtenVarsel = 'OPPRETT_TILBAKEKREVING_UTEN_VARSEL',
+    IgnorerTilbakekreving = 'IGNORER_TILBAKEKREVING',
 }
 
 export const tilbakekrevingsvalg: Record<Tilbakekrevingsvalg, string> = {
-    OPPRETT_TILBAKEKREVING_MED_VARSEL: 'Opprett tilbakekreving, send varsel',
-    OPPRETT_TILBAKEKREVING_UTEN_VARSEL: 'Opprett tilbakekreving, ikke send varsel',
-    IGNORER_TILBAKEKREVING: 'Avvent tilbakekreving',
+    [Tilbakekrevingsvalg.OpprettTilbakekrevingMedVarsel]: 'Opprett tilbakekreving, send varsel',
+    [Tilbakekrevingsvalg.OpprettTilbakekrevingUtenVarsel]:
+        'Opprett tilbakekreving, ikke send varsel',
+    [Tilbakekrevingsvalg.IgnorerTilbakekreving]: 'Avvent tilbakekreving',
 };
 
 export type Periode = {
@@ -58,17 +59,17 @@ export interface VurderingAvBrukersUttalelse {
 }
 
 export enum HarBrukerUttaltSegValg {
-    JA = 'JA',
-    NEI = 'NEI',
-    IKKE_AKTUELT = 'IKKE_AKTUELT',
-    IKKE_VURDERT = 'IKKE_VURDERT',
+    Ja = 'JA',
+    Nei = 'NEI',
+    IkkeAktuelt = 'IKKE_AKTUELT',
+    IkkeVurdert = 'IKKE_VURDERT',
 }
 
 export const harBrukerUttaltSegValgTilTekst: Record<HarBrukerUttaltSegValg, string> = {
-    JA: 'Ja',
-    NEI: 'Nei',
-    IKKE_AKTUELT: 'Ikke aktuelt',
-    IKKE_VURDERT: 'Ikke vurdert',
+    [HarBrukerUttaltSegValg.Ja]: 'Ja',
+    [HarBrukerUttaltSegValg.Nei]: 'Nei',
+    [HarBrukerUttaltSegValg.IkkeAktuelt]: 'Ikke aktuelt',
+    [HarBrukerUttaltSegValg.IkkeVurdert]: 'Ikke vurdert',
 };
 
 export type ForeldelsePeriode = FeilutbetalingPeriode & {

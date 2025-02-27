@@ -37,7 +37,7 @@ export const useDelOppPeriode = (tom: string, behandlingId: string) => {
             url: `/familie-tilbake/api/behandling/${behandlingId}/beregn/v1`,
             data: payload,
         }).then((response: Ressurs<IBeregnSplittetPeriodeRespons>) => {
-            if (response.status === RessursStatus.SUKSESS) {
+            if (response.status === RessursStatus.Suksess) {
                 behandleRespons(response.data);
                 settVisModal(false);
                 settSplittDato('');

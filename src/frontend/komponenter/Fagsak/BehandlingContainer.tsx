@@ -81,7 +81,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                     navigate(`${behandlingUrl}/${aktivSide?.href}`);
                 }
             } else if (!erØnsketSideLovlig) {
-                if (behandling.status === Behandlingstatus.AVSLUTTET) {
+                if (behandling.status === Behandlingstatus.Avsluttet) {
                     navigate(`${behandlingUrl}/vedtak`);
                 } else {
                     navigate(`${behandlingUrl}`);
