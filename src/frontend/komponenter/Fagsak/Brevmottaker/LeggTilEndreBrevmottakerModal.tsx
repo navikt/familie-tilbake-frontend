@@ -1,9 +1,7 @@
-import React from 'react';
-
-import { styled } from 'styled-components';
-
 import { Button, Fieldset, Modal, Radio, RadioGroup, Select, TextField } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
+import React from 'react';
+import { styled } from 'styled-components';
 
 import { useBrevmottaker } from './BrevmottakerContext';
 import BrevmottakerSkjema from './BrevmottakerSkjema';
@@ -14,8 +12,8 @@ import {
     MottakerType,
     mottakerTypeVisningsnavn,
 } from '../../../typer/Brevmottaker';
-import { hentFrontendFeilmelding } from '../../../utils';
 import { RessursStatus } from '../../../typer/ressurs';
+import { hentFrontendFeilmelding } from '../../../utils';
 
 const FlexContainer = styled.div`
     display: flex;
@@ -126,7 +124,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                 skjema.felter.mottaker.validerOgSettFelt(nyMottakerType);
                             }}
                         >
-                            <option value={''} disabled={true}>
+                            <option value="" disabled={true}>
                                 Velg
                             </option>
                             {Object.values(MottakerType)
@@ -140,7 +138,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                         {skjema.felter.mottaker.verdi &&
                             !erMottakerBruker(skjema.felter.mottaker.verdi) && (
                                 <RadioGroup
-                                    legend={'Adresse'}
+                                    legend="Adresse"
                                     value={adresseKilde}
                                     onChange={(val: AdresseKilde) => {
                                         settAdresseKilde(val);
@@ -148,20 +146,20 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                     }}
                                 >
                                     <Radio
-                                        id={'manuell-registrering'}
+                                        id="manuell-registrering"
                                         value={AdresseKilde.MANUELL_REGISTRERING}
                                     >
                                         {adresseKilder[AdresseKilde.MANUELL_REGISTRERING]}
                                     </Radio>
                                     <Radio
-                                        id={'oppslag-i-register'}
+                                        id="oppslag-i-register"
                                         value={AdresseKilde.OPPSLAG_REGISTER}
                                     >
                                         {adresseKilder[AdresseKilde.OPPSLAG_REGISTER]}
                                     </Radio>
                                     {skjema.felter.mottaker.verdi === MottakerType.FULLMEKTIG && (
                                         <Radio
-                                            id={'oppslag-i-organisasjonsregister'}
+                                            id="oppslag-i-organisasjonsregister"
                                             value={AdresseKilde.OPPSLAG_ORGANISASJONSREGISTER}
                                         >
                                             {
@@ -181,7 +179,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                 {...skjema.felter.fødselsnummer.hentNavBaseSkjemaProps(
                                     skjema.visFeilmeldinger
                                 )}
-                                label={'Fødselsnummer'}
+                                label="Fødselsnummer"
                                 onChange={(event): void => {
                                     skjema.felter.fødselsnummer.validerOgSettFelt(
                                         event.target.value
@@ -195,7 +193,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                     {...skjema.felter.organisasjonsnummer.hentNavBaseSkjemaProps(
                                         skjema.visFeilmeldinger
                                     )}
-                                    label={'Organisasjonsnummer'}
+                                    label="Organisasjonsnummer"
                                     onChange={(event): void => {
                                         skjema.felter.organisasjonsnummer.validerOgSettFelt(
                                             event.target.value
@@ -206,10 +204,8 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
                                     {...skjema.felter.navn.hentNavBaseSkjemaProps(
                                         skjema.visFeilmeldinger
                                     )}
-                                    label={'Kontaktperson i organisasjonen'}
-                                    description={
-                                        'Navnet vises etter organisasjonsnavnet slik “Organisasjon AS v/ Navn Navnesen”'
-                                    }
+                                    label="Kontaktperson i organisasjonen"
+                                    description="Navnet vises etter organisasjonsnavnet slik “Organisasjon AS v/ Navn Navnesen”"
                                     onChange={(event): void => {
                                         skjema.felter.navn.validerOgSettFelt(event.target.value);
                                     }}

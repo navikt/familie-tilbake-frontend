@@ -1,14 +1,13 @@
-import { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
+import type { IApi } from './backend/typer';
+import type { NextFunction, Request, Response } from 'express';
+import type { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
+import type { Client } from 'openid-client';
 
-import { NextFunction, Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { Client } from 'openid-client';
 
-import { stdoutLogger } from './logging/logging';
-
-import { proxyUrl, redirectRecords } from './config';
-import { IApi } from './backend/typer';
 import { getOnBehalfOfAccessToken } from './backend/auth/tokenUtils';
+import { proxyUrl, redirectRecords } from './config';
+import { stdoutLogger } from './logging/logging';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const restream = (proxyReq: ClientRequest, req: IncomingMessage, _res: OutgoingMessage): void => {

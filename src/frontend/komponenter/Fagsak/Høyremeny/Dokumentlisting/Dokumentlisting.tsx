@@ -1,13 +1,12 @@
 import * as React from 'react';
-
 import { styled } from 'styled-components';
 
 import { useDokumentlisting } from './DokumentlistingContext';
 import JournalpostVisning from './Journalpostvisning';
-import { hentDatoRegistrertSendt } from '../../../../utils';
-import HenterData from '../../../Felleskomponenter/Datalast/HenterData';
-import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { RessursStatus } from '../../../../typer/ressurs';
+import { hentDatoRegistrertSendt } from '../../../../utils';
+import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import HenterData from '../../../Felleskomponenter/Datalast/HenterData';
 
 const StyledContainer = styled.div`
     margin-top: 10px;
@@ -36,7 +35,7 @@ const Dokumentlisting: React.FC = () => {
         }
         case RessursStatus.HENTER:
             return (
-                <HenterData størrelse={'large'} beskrivelse="Henting av dokumenter tar litt tid." />
+                <HenterData størrelse="large" beskrivelse="Henting av dokumenter tar litt tid." />
             );
         default:
             return <DataLastIkkeSuksess ressurser={[journalposter]} />;

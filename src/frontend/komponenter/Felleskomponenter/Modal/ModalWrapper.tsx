@@ -1,8 +1,6 @@
-import React from 'react';
-
-import styled from 'styled-components';
-
 import { Button, Modal } from '@navikt/ds-react';
+import React from 'react';
+import styled from 'styled-components';
 
 const ModalContainer = styled(Modal)<{ $maxWidth?: number }>`
     min-width: 30rem;

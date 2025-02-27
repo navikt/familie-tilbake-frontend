@@ -1,9 +1,9 @@
-import path from 'path';
+import type webpack from 'webpack';
 
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import webpack from 'webpack';
+import path from 'path';
 
 const commonConfig: webpack.Configuration = {
     entry: ['./src/frontend/index.tsx'],

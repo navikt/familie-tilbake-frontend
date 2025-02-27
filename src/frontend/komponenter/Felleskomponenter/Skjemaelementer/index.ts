@@ -1,7 +1,6 @@
-import { styled } from 'styled-components';
-
 import { RadioGroup } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import { styled } from 'styled-components';
 
 export * from './LabelMedSpråk';
 

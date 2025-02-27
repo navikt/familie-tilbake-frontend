@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { useState } from 'react';
-
-import { addDays, format, startOfDay, subDays } from 'date-fns';
+import type { Felt } from '../../../hooks/skjema';
 
 import { DatePicker, useDatepicker } from '@navikt/ds-react';
-import type { Felt } from '../../../hooks/skjema';
+import { addDays, format, startOfDay, subDays } from 'date-fns';
+import * as React from 'react';
+import { useState } from 'react';
 
 import { dagensDato, Datoformat } from '../../../utils/dato';
 
@@ -117,7 +116,7 @@ const Datovelger = ({
                 {...inputProps}
                 label={label}
                 description={description}
-                placeholder={'DD.MM.ÅÅÅÅ'}
+                placeholder="DD.MM.ÅÅÅÅ"
                 readOnly={readOnly}
                 error={
                     error && visFeilmeldinger

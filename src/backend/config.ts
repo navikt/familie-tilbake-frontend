@@ -1,7 +1,8 @@
 // Konfigurer appen før backend prøver å sette opp konfigurasjon
 
+import type { IApi, ISessionKonfigurasjon } from './backend/typer';
+
 import { appConfig } from './backend/config';
-import { IApi, ISessionKonfigurasjon } from './backend/typer';
 
 const Environment = () => {
     if (process.env.ENV === 'local') {

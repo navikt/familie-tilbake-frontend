@@ -1,15 +1,14 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IBehandling } from '../../../../../../typer/behandling';
+import type { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Detail, Link } from '@navikt/ds-react';
-import { type ISkjema } from '../../../../../../hooks/skjema';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { useForhåndsvisHenleggelsesbrev } from './useForhåndsvisHenleggelsesbrev';
-import { IBehandling } from '../../../../../../typer/behandling';
+import { type ISkjema } from '../../../../../../hooks/skjema';
 import PdfVisningModal from '../../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
-import { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
 
 const StyledContainer = styled.div`
     margin-top: -5px;

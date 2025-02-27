@@ -1,6 +1,7 @@
-import React, { ReactChild } from 'react';
+import type { ReactChild } from 'react';
 
 import classNames from 'classnames';
+import React from 'react';
 import { Link as NavLink, useLocation } from 'react-router-dom';
 
 interface Props {

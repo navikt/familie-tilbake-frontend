@@ -1,13 +1,13 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { HendelseType, Ytelsetype } from '../../../../kodeverk';
+import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 import { Table } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import FeilutbetalingFaktaPeriode from './FeilutbetalingFaktaPeriodeSkjema';
-import { HendelseType, hentHendelseTyper, Ytelsetype } from '../../../../kodeverk';
+import { hentHendelseTyper } from '../../../../kodeverk';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
-import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 const StyledPeriodeTable = styled(Table)`
     td {

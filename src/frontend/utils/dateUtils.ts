@@ -1,9 +1,12 @@
+import type { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
+import type { IJournalpostRelevantDato } from '../typer/journalføring';
+import type { Duration } from 'date-fns';
+
 import {
     add,
     differenceInCalendarYears,
     differenceInMilliseconds,
     differenceInMonths,
-    Duration,
     endOfDay,
     endOfMonth,
     format,
@@ -12,8 +15,7 @@ import {
 } from 'date-fns';
 
 import { isEmpty } from './validering';
-import { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
-import { IJournalpostRelevantDato, JournalpostDatotype } from '../typer/journalføring';
+import { JournalpostDatotype } from '../typer/journalføring';
 
 const datoformat: Intl.DateTimeFormatOptions = {
     day: '2-digit',

@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import type { Toggles } from './toggles';
 
 import createUseContext from 'constate';
+import { useCallback, useEffect, useState } from 'react';
 
-import { Toggles } from './toggles';
-import { hentFrontendFeilmelding } from '../utils';
-import { type Ressurs, RessursStatus } from '../typer/ressurs';
 import { useHttp } from '../api/http/HttpProvider';
+import { type Ressurs, RessursStatus } from '../typer/ressurs';
+import { hentFrontendFeilmelding } from '../utils';
 
 const [TogglesProvider, useToggles] = createUseContext(() => {
     const [toggles, settToggles] = useState<Toggles>({});

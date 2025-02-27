@@ -1,17 +1,17 @@
+import type { Fagsystem } from '../kodeverk';
+import type { IFagsak } from '../typer/fagsak';
+import type { AxiosError } from 'axios';
+
+import createUseContext from 'constate';
 import * as React from 'react';
 
-import { AxiosError } from 'axios';
-import createUseContext from 'constate';
-
-import { Fagsystem } from '../kodeverk';
-import { IFagsak } from '../typer/fagsak';
+import { useHttp } from '../api/http/HttpProvider';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
     type Ressurs,
     RessursStatus,
 } from '../typer/ressurs';
-import { useHttp } from '../api/http/HttpProvider';
 
 const [FagsakProvider, useFagsak] = createUseContext(() => {
     const [fagsak, settFagsak] = React.useState<Ressurs<IFagsak>>();

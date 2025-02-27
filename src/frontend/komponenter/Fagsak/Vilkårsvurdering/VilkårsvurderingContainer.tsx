@@ -1,9 +1,10 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
 
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import {
     erTotalbeløpUnder4Rettsgebyr,
@@ -17,11 +18,9 @@ import {
     vilkårsvurderingStegInfotekstKontantstøtte,
     vilkårsvurderingStegInfotekstBarnetrygd,
 } from '../../../kodeverk';
-import { IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
-import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { RessursStatus } from '../../../typer/ressurs';
+import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 const StyledVilkårsvurdering = styled.div`
     padding: ${ASpacing3};

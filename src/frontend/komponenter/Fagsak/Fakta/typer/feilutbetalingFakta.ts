@@ -1,5 +1,5 @@
-import { HendelseType, HendelseUndertype } from '../../../../kodeverk';
-import { VurderingAvBrukersUttalelse, Periode } from '../../../../typer/feilutbetalingtyper';
+import type { HendelseType, HendelseUndertype } from '../../../../kodeverk';
+import type { VurderingAvBrukersUttalelse, Periode } from '../../../../typer/feilutbetalingtyper';
 
 export interface FaktaPeriodeSkjemaData {
     index: number;

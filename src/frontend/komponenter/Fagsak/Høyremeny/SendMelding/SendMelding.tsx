@@ -1,13 +1,14 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
 
 import { BodyShort, Button, Fieldset, Heading, Select, Textarea } from '@navikt/ds-react';
+import * as React from 'react';
 
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
-import { IBehandling } from '../../../../typer/behandling';
-import { IFagsak, målform } from '../../../../typer/fagsak';
+import { målform } from '../../../../typer/fagsak';
 import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
@@ -36,7 +37,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
     const kanSende = skjema.felter.maltype.verdi !== '' && skjema.felter.fritekst.verdi !== '';
 
     return (
-        <Fieldset error={feilmelding} legend={'Send brev'} hideLegend>
+        <Fieldset error={feilmelding} legend="Send brev" hideLegend>
             {behandling.manuelleBrevmottakere.length ? (
                 <>
                     <Heading size="xsmall" spacing>
@@ -61,12 +62,12 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
             <Select
                 {...skjema.felter.maltype.hentNavInputProps(skjema.visFeilmeldinger)}
                 id="dokumentMal"
-                label={'Mal'}
+                label="Mal"
                 readOnly={erLesevisning}
                 value={skjema.felter.maltype.verdi}
                 onChange={event => onChangeMal(event)}
             >
-                <option disabled={true} value={''}>
+                <option disabled={true} value="">
                     Velg brev
                 </option>
                 {maler.map(mal => (

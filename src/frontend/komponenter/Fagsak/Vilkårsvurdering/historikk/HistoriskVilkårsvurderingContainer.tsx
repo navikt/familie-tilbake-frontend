@@ -1,17 +1,16 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
 
 import { Alert, Heading, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { useHistoriskVilkårsvurdering } from './HistoriskVilkårsvurderingContext';
 import HistoriskVilkårsvurderingVisning from './HistoriskVilkårsvurderingVisning';
 import VelgHistoriskVilkårsvurdering from './VelgHistoriskVilkårsvurdering';
-import { IBehandling } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
-import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { RessursStatus } from '../../../../typer/ressurs';
+import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const Container = styled.div`
     padding: ${ASpacing3};
@@ -33,7 +32,7 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
         return (
             <Container>
                 <VStack gap="5">
-                    <Alert variant={'info'}>
+                    <Alert variant="info">
                         <Heading level="2" size="small">
                             Tidligere vilkårsvurderinger på denne behandlingen
                         </Heading>

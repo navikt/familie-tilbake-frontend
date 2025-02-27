@@ -1,13 +1,11 @@
+import type { IBehandling } from '../../../../../../typer/behandling';
+import type { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
+import type { AxiosError } from 'axios';
+
 import * as React from 'react';
 
-import { AxiosError } from 'axios';
-
-import { type ISkjema } from '../../../../../../hooks/skjema';
-
 import { useDokumentApi } from '../../../../../../api/dokument';
-import { IBehandling } from '../../../../../../typer/behandling';
-import { base64ToArrayBuffer } from '../../../../../../utils';
-import { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
+import { type ISkjema } from '../../../../../../hooks/skjema';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -16,6 +14,7 @@ import {
     type Ressurs,
     RessursStatus,
 } from '../../../../../../typer/ressurs';
+import { base64ToArrayBuffer } from '../../../../../../utils';
 
 interface IProps {
     skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;

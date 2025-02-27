@@ -1,12 +1,11 @@
-import * as React from 'react';
-
 import { parseISO } from 'date-fns';
+import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { useHistorikk } from './HistorikkContext';
 import HistorikkInnslag from './HistorikkInnslag';
-import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { RessursStatus } from '../../../../typer/ressurs';
+import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const StyledContainer = styled.div`
     margin-top: 10px;
@@ -32,7 +31,7 @@ const Historikk: React.FC = () => {
             <DataLastIkkeSuksess
                 ressurser={[historikkInnslag]}
                 henteBeskrivelse="Henter historikk"
-                spinnerStørrelse={'large'}
+                spinnerStørrelse="large"
             />
         );
     }

@@ -1,8 +1,11 @@
-import { Request } from 'express';
-import { Client, TokenSet } from 'openid-client';
+import type { IApi } from '../typer';
+import type { Request } from 'express';
+import type { Client } from 'openid-client';
+
+import { TokenSet } from 'openid-client';
+
 import { LOG_LEVEL, logError, logInfo } from '../../logging/logging';
 import { logRequest } from '../utils';
-import { IApi } from '../typer';
 
 export const tokenSetSelfId = 'self';
 
@@ -29,7 +32,7 @@ export interface UtledAccessTokenProps {
     api: IApi;
     promise: {
         resolve: (value: string) => void;
-        reject: (reason: string | Error) => void;
+        reject: (reason: Error | string) => void;
     };
 }
 

@@ -1,10 +1,9 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { YtelseInfo } from '../../../../typer/feilutbetalingtyper';
 
 import { Table } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
-import { YtelseInfo } from '../../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr } from '../../../../utils';
 
 const StyledPeriodeTable = styled(Table)`

@@ -1,8 +1,13 @@
-import * as React from 'react';
+import type { BrevPayload } from '../../../../typer/api';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
 
 import createUseContext from 'constate';
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useDokumentApi } from '../../../../api/dokument';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import {
     type Avhengigheter,
     type FeltState,
@@ -11,20 +16,14 @@ import {
     useSkjema,
     Valideringsstatus,
 } from '../../../../hooks/skjema';
-
-import { useDokumentApi } from '../../../../api/dokument';
-import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal } from '../../../../kodeverk';
-import { BrevPayload } from '../../../../typer/api';
-import { IBehandling } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
+import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import {
     erFeltetEmpty,
     hentFrontendFeilmelding,
     validerTekstFeltMaksLengde,
 } from '../../../../utils';
 import { sider } from '../../../Felleskomponenter/Venstremeny/sider';
-import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 
 interface Mottaker {
     verdi: string;

@@ -1,9 +1,7 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
-
 import { PlusCircleIcon } from '@navikt/aksel-icons';
 import { Button, Heading } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import Brevmottaker from './Brevmottaker';
 import { useBrevmottaker } from './BrevmottakerContext';
@@ -40,7 +38,7 @@ const BrevmottakerContainer: React.FC = () => {
         <div>
             {visBrevmottakerModal && <LeggTilEndreBrevmottakerModal />}
             <StyledBrevmottaker>
-                <Heading size={'large'} level={'1'}>
+                <Heading size="large" level="1">
                     Brevmottaker(e)
                 </Heading>
                 <FlexDiv>

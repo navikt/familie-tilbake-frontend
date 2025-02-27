@@ -1,7 +1,3 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
-
 import {
     BodyLong,
     Button,
@@ -14,14 +10,16 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { useVerge } from './VergeContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
+import HenterData from '../../Felleskomponenter/Datalast/HenterData';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import HenterData from '../../Felleskomponenter/Datalast/HenterData';
 
 const StyledVerge = styled.div`
     padding: ${ASpacing3};
@@ -62,17 +60,17 @@ const VergeContainer: React.FC = () => {
                     )}
                     <Steginformasjon
                         behandletSteg={stegErBehandlet}
-                        infotekst={'Fyll ut og kontroller vergeopplysninger'}
+                        infotekst="Fyll ut og kontroller vergeopplysninger"
                     />
                     <Select
                         {...skjema.felter.vergetype.hentNavInputProps(skjema.visFeilmeldinger)}
                         id="vergeType"
-                        label={'Vergetype'}
+                        label="Vergetype"
                         readOnly={erLesevisning}
                         value={skjema.felter.vergetype.verdi}
                         onChange={event => onChangeVergeType(event)}
                     >
-                        <option disabled={true} value={''}>
+                        <option disabled={true} value="">
                             Velg vergetype
                         </option>
                         {Object.values(Vergetype)
@@ -87,7 +85,7 @@ const VergeContainer: React.FC = () => {
                         <HGrid columns={{ lg: 2, md: 1 }} gap="4" align="start">
                             <TextField
                                 {...skjema.felter.navn.hentNavInputProps(skjema.visFeilmeldinger)}
-                                label={'Navn'}
+                                label="Navn"
                                 readOnly={erLesevisning}
                                 value={skjema.felter.navn.verdi}
                                 onChange={event => {
@@ -100,7 +98,7 @@ const VergeContainer: React.FC = () => {
                                     {...skjema.felter.organisasjonsnummer.hentNavInputProps(
                                         skjema.visFeilmeldinger
                                     )}
-                                    label={'Organisasjonsnummer'}
+                                    label="Organisasjonsnummer"
                                     readOnly={erLesevisning}
                                     value={skjema.felter.organisasjonsnummer.verdi}
                                     onChange={event => {
@@ -115,7 +113,7 @@ const VergeContainer: React.FC = () => {
                                     {...skjema.felter.fødselsnummer.hentNavInputProps(
                                         skjema.visFeilmeldinger
                                     )}
-                                    label={'Fødselsnummer'}
+                                    label="Fødselsnummer"
                                     readOnly={erLesevisning}
                                     value={skjema.felter.fødselsnummer.verdi}
                                     onChange={event => {
@@ -130,7 +128,7 @@ const VergeContainer: React.FC = () => {
                     )}
                     <Textarea
                         {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
-                        label={'Begrunn endringene'}
+                        label="Begrunn endringene"
                         value={skjema.felter.begrunnelse.verdi}
                         readOnly={erLesevisning}
                         onChange={event => {

@@ -1,24 +1,24 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
+import type { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
 
 import { Alert, BodyShort, Button, Label, Link, Radio, Textarea } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {
     OptionGodkjent,
     OptionIkkeGodkjent,
-    TotrinnGodkjenningOption,
     totrinnGodkjenningOptions,
 } from './typer/totrinnSkjemaTyper';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
+import { RessursStatus } from '../../../../typer/ressurs';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import { finnSideForSteg, ISide } from '../../../Felleskomponenter/Venstremeny/sider';
-import { RessursStatus } from '../../../../typer/ressurs';
+import { finnSideForSteg } from '../../../Felleskomponenter/Venstremeny/sider';
 
 const StyledContainer = styled.div`
     margin-top: 10px;
@@ -71,7 +71,7 @@ const Totrinnskontroll: React.FC = () => {
                         <>
                             <Steginformasjon
                                 behandletSteg={stegErBehandlet}
-                                infotekst={'Kontroller endrede opplysninger og faglige vurderinger'}
+                                infotekst="Kontroller endrede opplysninger og faglige vurderinger"
                             />
                             <Spacer20 />
                         </>
@@ -81,12 +81,12 @@ const Totrinnskontroll: React.FC = () => {
                             <AngreSendTilBeslutterContainer>
                                 <Button
                                     size="small"
-                                    variant={'secondary'}
+                                    variant="secondary"
                                     onClick={angreSendTilBeslutter}
                                 >
                                     Angre sendt til beslutter
                                 </Button>
-                                {feilmelding && <Alert variant={'error'}>{feilmelding}</Alert>}
+                                {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
                             </AngreSendTilBeslutterContainer>
                         )}
                     {skjemaData.map(totrinnSteg => {

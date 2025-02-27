@@ -1,11 +1,11 @@
-import React from 'react';
-
 import axe from '@axe-core/react';
 import * as Sentry from '@sentry/browser';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 
 import App from './komponenter/App';
+import ErrorBoundary from './komponenter/Felleskomponenter/ErrorBoundary/ErrorBoundary';
 import { initGrafanaFaro } from './utils/grafanaFaro';
 
 const environment = window.location.hostname;
@@ -26,5 +26,13 @@ if (process.env.NODE_ENV !== 'production') {
 initGrafanaFaro();
 
 const container = document.getElementById('app');
-const root = createRoot(container!);
-root.render(<App />);
+
+if (!container) {
+    throw new Error('Fant ikke rot-element: "app"');
+}
+
+createRoot(container).render(
+    <ErrorBoundary>
+        <App />
+    </ErrorBoundary>
+);

@@ -1,10 +1,14 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
 import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
+import * as React from 'react';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
+import { BehandlingProvider } from '../../../../context/BehandlingContext';
 import {
     Aktsomhet,
     HendelseType,
@@ -12,10 +16,6 @@ import {
     Vilkårsresultat,
     Ytelsetype,
 } from '../../../../kodeverk';
-import { IBehandling } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
-import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
-import { BehandlingProvider } from '../../../../context/BehandlingContext';
 
 jest.setTimeout(10000);
 

@@ -1,31 +1,32 @@
-import * as React from 'react';
-
-import { AxiosError } from 'axios';
-import createUseContext from 'constate';
-import { useNavigate } from 'react-router-dom';
-
-import { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
-import { useBehandlingApi } from '../../../api/behandling';
-import { useDokumentApi } from '../../../api/dokument';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
-import {
+import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
+import type {
     ForeslåVedtakStegPayload,
     ForhåndsvisVedtaksbrev,
     Fritekstavsnitt,
     PeriodeMedTekst,
 } from '../../../typer/api';
-import { Behandlingstype, Behandlingårsak, IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
-import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
-import { isEmpty, validerTekstMaksLengde } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+import type { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
+import type { AxiosError } from 'axios';
+
+import createUseContext from 'constate';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useBehandlingApi } from '../../../api/behandling';
+import { useDokumentApi } from '../../../api/dokument';
+import { useBehandling } from '../../../context/BehandlingContext';
+import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
+import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
     type Ressurs,
     RessursStatus,
 } from '../../../typer/ressurs';
+import { isEmpty, validerTekstMaksLengde } from '../../../utils';
+import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
 const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[] => {
     // @ts-expect-error - klager på periode men er trygt p.g.s. filtreringen

@@ -1,5 +1,3 @@
-import { styled } from 'styled-components';
-
 import { Alert, Button } from '@navikt/ds-react';
 import {
     AFontWeightBold,
@@ -8,6 +6,7 @@ import {
     ASpacing4,
     ASpacing5,
 } from '@navikt/ds-tokens/dist/tokens';
+import { styled } from 'styled-components';
 
 export const Spacer20 = styled.div`
     height: ${ASpacing5};

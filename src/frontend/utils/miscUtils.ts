@@ -2,7 +2,7 @@ export const parseStringToNumber = (text: string): number => {
     return Number(Math.round(parseFloat(text)));
 };
 
-export const formatCurrencyNoKr = (value?: string | number): string | undefined => {
+export const formatCurrencyNoKr = (value?: number | string): string | undefined => {
     if (value === null || value === undefined) {
         return undefined;
     }

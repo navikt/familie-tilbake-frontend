@@ -1,8 +1,6 @@
-import * as React from 'react';
-
-import styled from 'styled-components';
-
 import { BodyShort, Box, HStack, Heading, Loader, VStack } from '@navikt/ds-react';
+import * as React from 'react';
+import styled from 'styled-components';
 
 const BoxMedMargin = styled(Box)`
     margin-top: 2rem;

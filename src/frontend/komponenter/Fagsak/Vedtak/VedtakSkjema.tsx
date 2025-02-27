@@ -1,11 +1,10 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
 import { Alert, Heading } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import AvsnittSkjema, { avsnittKey } from './AvsnittSkjema';
-import { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
 const StyledSkjema = styled.div`
     width: 90%;
@@ -33,7 +32,7 @@ const VedtakSkjema: React.FC<IProps> = ({
                 Vedtaksbrev
             </Heading>
             {harBrukerUttaltSeg && !erLesevisning && (
-                <StyledAlert variant={'warning'}>Husk å vurdere uttalelse fra bruker</StyledAlert>
+                <StyledAlert variant="warning">Husk å vurdere uttalelse fra bruker</StyledAlert>
             )}
             {avsnitter.map(avsnitt => {
                 return (

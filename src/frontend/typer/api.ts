@@ -1,15 +1,15 @@
-import { Behandlingresultat, Behandlingssteg, Venteårsak } from './behandling';
-import { IBrevmottaker } from './Brevmottaker';
-import { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
-import {
+import type { Behandlingresultat, Behandlingssteg, Venteårsak } from './behandling';
+import type { IBrevmottaker } from './Brevmottaker';
+import type { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
+import type {
     DokumentMal,
     Foreldelsevurdering,
     HendelseType,
     HendelseUndertype,
     Vilkårsresultat,
 } from '../kodeverk';
-import { Vergetype } from '../kodeverk/verge';
-import { IsoDatoString } from '../utils/dato';
+import type { Vergetype } from '../kodeverk/verge';
+import type { IsoDatoString } from '../utils/dato';
 
 export interface PeriodeFaktaStegPayload {
     periode: Periode;

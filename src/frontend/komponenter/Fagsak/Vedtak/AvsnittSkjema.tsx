@@ -1,11 +1,10 @@
-import * as React from 'react';
-
-import { css, styled } from 'styled-components';
+import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 
 import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';
 import { ABorderWarning, ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { css, styled } from 'styled-components';
 
-import { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
 import VedtakFritekstSkjema from './VedtakFritekstSkjema';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';

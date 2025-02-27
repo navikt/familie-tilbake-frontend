@@ -1,8 +1,6 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
-
 import { Alert, BodyShort, Label } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 const StyledDiv = styled.div`
     p {
@@ -23,7 +21,7 @@ interface IProps {
 
 const Steginformasjon: React.FC<IProps> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
-        <StyledAlert variant="info" size={'small'}>
+        <StyledAlert variant="info" size="small">
             {infotekst}
         </StyledAlert>
     ) : (

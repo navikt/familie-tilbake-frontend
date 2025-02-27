@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
-import { type Ressurs, RessursStatus } from '../typer/ressurs';
+
 import { useHttp } from '../api/http/HttpProvider';
+import { type Ressurs, RessursStatus } from '../typer/ressurs';
 
 export const useSammenslåPerioder = (behandlingId: string) => {
     const { request } = useHttp();

@@ -1,15 +1,18 @@
-import express, { Express, Request, Response, Router } from 'express';
-import { Counter, Registry } from 'prom-client';
-import { Client } from 'openid-client';
-import { logError } from '../logging/logging';
-import { ISessionKonfigurasjon } from './typer';
-import { hentErforbindelsenTilRedisTilgjengelig } from './utils';
+import type { ISessionKonfigurasjon } from './typer';
+import type { Express, Request, Response, Router } from 'express';
+import type { Client } from 'openid-client';
+import type { Counter, Registry } from 'prom-client';
+
+import express from 'express';
 import passport from 'passport';
-import { konfigurerMetrikker } from './metrikker';
-import headers from './headers';
+
 import konfigurerPassport from './auth/azure/passport';
 import konfigurerSession from './auth/session';
+import headers from './headers';
+import { konfigurerMetrikker } from './metrikker';
 import konfigurerRouter from './router';
+import { hentErforbindelsenTilRedisTilgjengelig } from './utils';
+import { logError } from '../logging/logging';
 
 export * from './auth/authenticate';
 export * from './auth/tokenUtils';

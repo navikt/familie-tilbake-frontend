@@ -1,4 +1,4 @@
-import { Behandlingssteg } from './behandling';
+import type { Behandlingssteg } from './behandling';
 
 type TotrinnsStegInfo = {
     behandlingssteg: Behandlingssteg;

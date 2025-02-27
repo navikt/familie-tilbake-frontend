@@ -1,27 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { styled } from 'styled-components';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import React, { useEffect, useState } from 'react';
+import { styled } from 'styled-components';
+
 import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
 import VedtakPerioder from './VedtakPerioder';
 import VedtakSkjema from './VedtakSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
-import {
-    Behandlingssteg,
-    Behandlingstype,
-    Behandlingårsak,
-    IBehandling,
-} from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
+import { Behandlingssteg, Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
+import { RessursStatus } from '../../../typer/ressurs';
+import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
-import { RessursStatus } from '../../../typer/ressurs';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};

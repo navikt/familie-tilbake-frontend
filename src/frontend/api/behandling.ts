@@ -1,4 +1,4 @@
-import {
+import type {
     FaktaStegPayload,
     FatteVedtakStegPayload,
     ForeldelseStegPayload,
@@ -9,14 +9,15 @@ import {
     VergeStegPayload,
     VilkårdsvurderingStegPayload,
 } from '../typer/api';
-import {
+import type {
     IFeilutbetalingFakta,
     IFeilutbetalingForeldelse,
     IFeilutbetalingVilkårsvurdering,
 } from '../typer/feilutbetalingtyper';
-import { ITotrinnkontroll } from '../typer/totrinnTyper';
-import { IBeregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyper';
 import type { Ressurs } from '../typer/ressurs';
+import type { ITotrinnkontroll } from '../typer/totrinnTyper';
+import type { IBeregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyper';
+
 import { useHttp } from './http/HttpProvider';
 
 const useBehandlingApi = () => {

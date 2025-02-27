@@ -1,14 +1,14 @@
+import type { IRestSettPåVent } from '../../../../typer/api';
+import type { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
+
 import { useState } from 'react';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
-import { useSkjema, useFelt, type FeltState, feil, ok } from '../../../../hooks/skjema';
-
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { IRestSettPåVent } from '../../../../typer/api';
-import { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
+import { useSkjema, useFelt, type FeltState, feil, ok } from '../../../../hooks/skjema';
+import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { isEmpty, validerGyldigDato } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
-import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 
 export const usePåVentBehandling = (
     lukkModal: () => void,

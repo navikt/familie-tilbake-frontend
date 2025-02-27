@@ -1,6 +1,7 @@
-import * as React from 'react';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
 import { BodyShort, Box, Heading, HGrid, List, VStack } from '@navikt/ds-react';
+import * as React from 'react';
 
 import {
     aktsomheter,
@@ -9,9 +10,8 @@ import {
     Vilkårsresultat,
     vilkårsresultater,
 } from '../../../../kodeverk';
-import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
-import TilbakekrevingAktivitetTabell from '../VilkårsvurderingPeriode/TilbakekrevingAktivitetTabell';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../../utils';
+import TilbakekrevingAktivitetTabell from '../VilkårsvurderingPeriode/TilbakekrevingAktivitetTabell';
 
 interface IProps {
     perioder: VilkårsvurderingPeriodeSkjemaData[];
@@ -19,7 +19,7 @@ interface IProps {
 
 const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
     return (
-        <VStack gap={'10'}>
+        <VStack gap="10">
             {perioder.map(skjema => {
                 const erForstodBurdeForstått =
                     skjema.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat ===
@@ -32,7 +32,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
                 return (
                     <Box
                         key={skjema.index}
-                        borderColor={'border-default'}
+                        borderColor="border-default"
                         padding="4"
                         borderWidth="1"
                         borderRadius="small"
@@ -42,15 +42,15 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
                             <VStack gap="4">
                                 <Box>
                                     <LabelVerdiVisning
-                                        label={'Fra'}
+                                        label="Fra"
                                         verdi={formatterDatostring(skjema.periode.fom)}
                                     />
                                     <LabelVerdiVisning
-                                        label={'Til'}
+                                        label="Til"
                                         verdi={formatterDatostring(skjema.periode.tom)}
                                     />
                                     <LabelVerdiVisning
-                                        label={'Feilutbetalt beløp'}
+                                        label="Feilutbetalt beløp"
                                         verdi={formatCurrencyNoKr(skjema.feilutbetaltBeløp)}
                                     />
                                     <TilbakekrevingAktivitetTabell ytelser={skjema.aktiviteter} />
@@ -58,11 +58,11 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
 
                                 <VStack>
                                     <LabelVerdiVisning
-                                        label={'Begrunnelse'}
+                                        label="Begrunnelse"
                                         verdi={skjema.begrunnelse}
                                     />
                                     <LabelVerdiVisning
-                                        label={'Vilkår oppfylt'}
+                                        label="Vilkår oppfylt"
                                         verdi={
                                             skjema.vilkårsvurderingsresultatInfo
                                                 ?.vilkårsvurderingsresultat
@@ -95,11 +95,11 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
                                     {godTro && (
                                         <>
                                             <LabelVerdiVisning
-                                                label={'Er beløpet i behold'}
+                                                label="Er beløpet i behold"
                                                 verdi={godTro.beløpErIBehold ? 'Ja' : 'Nei'}
                                             />
                                             <LabelVerdiVisning
-                                                label={'Tilbakekrevd beløp'}
+                                                label="Tilbakekrevd beløp"
                                                 verdi={
                                                     godTro.beløpErIBehold
                                                         ? formatCurrencyNoKr(
@@ -113,7 +113,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
                                     {aktsomhet && (
                                         <>
                                             <LabelVerdiVisning
-                                                label={'Aktsomhetsvalg'}
+                                                label="Aktsomhetsvalg"
                                                 verdi={
                                                     aktsomhet.aktsomhet
                                                         ? erForstodBurdeForstått
@@ -127,7 +127,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
 
                                             {særligeGrunner && særligeGrunner?.length > 0 && (
                                                 <List
-                                                    title={'Særlige grunner'}
+                                                    title="Særlige grunner"
                                                     description={
                                                         aktsomhet.særligeGrunnerBegrunnelse
                                                     }
@@ -146,7 +146,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
                                             )}
 
                                             <LabelVerdiVisning
-                                                label={'Reduksjon'}
+                                                label="Reduksjon"
                                                 verdi={
                                                     aktsomhet.særligeGrunnerTilReduksjon
                                                         ? 'Særlig grunn til reduksjon'
@@ -159,13 +159,13 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
 
                                             {aktsomhet.andelTilbakekreves && (
                                                 <LabelVerdiVisning
-                                                    label={'Andel tilbakekreves'}
+                                                    label="Andel tilbakekreves"
                                                     verdi={`${aktsomhet.andelTilbakekreves}%`}
                                                 />
                                             )}
                                             {aktsomhet.beløpTilbakekreves && (
                                                 <LabelVerdiVisning
-                                                    label={'Beløp tilbakekreves'}
+                                                    label="Beløp tilbakekreves"
                                                     verdi={formatCurrencyNoKr(
                                                         aktsomhet.beløpTilbakekreves
                                                     )}
@@ -191,7 +191,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
     );
 };
 
-const LabelVerdiVisning: React.FC<{ label: string; verdi: string | number | undefined }> = ({
+const LabelVerdiVisning: React.FC<{ label: string; verdi: number | string | undefined }> = ({
     label,
     verdi,
 }) => {

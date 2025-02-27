@@ -11,7 +11,7 @@ export interface ISessionKonfigurasjon {
     navn: string;
     secureCookie: boolean;
     sessionMaxAgeSekunder?: number;
-    cookieSecret: string | string[];
+    cookieSecret: string[] | string;
 }
 
 export interface IAppConfig {

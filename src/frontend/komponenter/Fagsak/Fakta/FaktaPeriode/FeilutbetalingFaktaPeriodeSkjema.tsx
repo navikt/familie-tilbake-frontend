@@ -1,10 +1,10 @@
-import * as React from 'react';
-
-import classNames from 'classnames';
-import { styled } from 'styled-components';
+import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
+import classNames from 'classnames';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import {
@@ -16,7 +16,6 @@ import {
 } from '../../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
-import { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 const StyledVStack = styled(VStack)`
     margin-top: ${ASpacing1};
@@ -35,7 +34,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     index,
     erLesevisning,
 }) => {
-    const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<Array<HendelseUndertype>>();
+    const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<HendelseUndertype[]>();
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
         useFeilutbetalingFakta();
     const { settIkkePersistertKomponent } = useBehandling();
@@ -80,7 +79,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                         <Select
                             id={`perioder.${index}.årsak`}
                             data-testid={`perioder.${index}.årsak`}
-                            label={'Årsak'}
+                            label="Årsak"
                             hideLabel
                             onChange={event => onChangeÅrsak(event)}
                             value={periode.hendelsestype || '-'}
@@ -91,7 +90,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                                         meld.periode === periode.index && meld.gjelderHendelsetype
                                 )?.melding
                             }
-                            size={'small'}
+                            size="small"
                         >
                             <option>-</option>
                             {hendelseTyper?.map(type => (
@@ -112,7 +111,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                             <Select
                                 id={`perioder.${index}.underårsak`}
                                 data-testid={`perioder.${index}.underårsak`}
-                                label={'Underårsak'}
+                                label="Underårsak"
                                 hideLabel
                                 onChange={event => onChangeUnderÅrsak(event)}
                                 value={periode.hendelsesundertype || '-'}
@@ -124,7 +123,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                                             meld.gjelderHendelseundertype
                                     )?.melding
                                 }
-                                size={'small'}
+                                size="small"
                             >
                                 <option>-</option>
                                 {hendelseUnderTyper.map(type => (

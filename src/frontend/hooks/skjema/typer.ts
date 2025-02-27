@@ -1,7 +1,8 @@
-import { ChangeEvent, Dispatch, ReactNode, SetStateAction } from 'react';
+import type { FamilieRequestConfig } from '../../api/http/HttpProvider';
+import type { RessursStatus } from '../../typer/ressurs';
+import type { ChangeEvent, Dispatch, ReactNode, SetStateAction } from 'react';
 
-import { type Ressurs, RessursStatus } from '../../typer/ressurs';
-import { FamilieRequestConfig } from '../../api/http/HttpProvider';
+import { type Ressurs } from '../../typer/ressurs';
 
 export interface FeltState<Verdi> {
     feilmelding: ReactNode;
@@ -12,10 +13,10 @@ export interface FeltState<Verdi> {
 
 export type FeltOnChange<Verdi> = (
     verdi:
-        | Verdi
         | ChangeEvent<HTMLInputElement>
-        | ChangeEvent<HTMLTextAreaElement>
         | ChangeEvent<HTMLSelectElement>
+        | ChangeEvent<HTMLTextAreaElement>
+        | Verdi
 ) => void;
 
 export interface Felt<Verdi> {
@@ -103,14 +104,8 @@ export interface UseSkjemaVerdi<Felter, SkjemaRespons> {
     settSubmitRessurs: Dispatch<
         SetStateAction<
             | {
-                  status: RessursStatus.IKKE_HENTET;
-              }
-            | {
-                  status: RessursStatus.HENTER;
-              }
-            | {
-                  frontendFeilmelding: string;
-                  status: RessursStatus.IKKE_TILGANG;
+                  data: SkjemaRespons;
+                  status: RessursStatus.SUKSESS;
               }
             | {
                   frontendFeilmelding: string;
@@ -121,8 +116,14 @@ export interface UseSkjemaVerdi<Felter, SkjemaRespons> {
                   status: RessursStatus.FUNKSJONELL_FEIL;
               }
             | {
-                  data: SkjemaRespons;
-                  status: RessursStatus.SUKSESS;
+                  frontendFeilmelding: string;
+                  status: RessursStatus.IKKE_TILGANG;
+              }
+            | {
+                  status: RessursStatus.HENTER;
+              }
+            | {
+                  status: RessursStatus.IKKE_HENTET;
               }
         >
     >;

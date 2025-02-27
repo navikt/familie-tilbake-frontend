@@ -1,11 +1,11 @@
+import type { IBeregnSplittetPeriodeRespons, Periode } from '../../../../typer/feilutbetalingtyper';
+import type { TimelinePeriodProps } from '@navikt/ds-react';
+
 import * as React from 'react';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
-
-import { IBeregnSplittetPeriodeRespons, Periode } from '../../../../typer/feilutbetalingtyper';
-import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
-import { TimelinePeriodProps } from '@navikt/ds-react';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
+import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
 
 export const useDelOppPeriode = (tom: string, behandlingId: string) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);

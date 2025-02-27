@@ -1,4 +1,4 @@
-import { Ytelsetype } from '../kodeverk';
+import type { Ytelsetype } from '../kodeverk';
 
 const behandendeEnheter: IArbeidsfordelingsenhet[] = [
     { enhetId: '2103', enhetNavn: 'Nav Vikafossen' },

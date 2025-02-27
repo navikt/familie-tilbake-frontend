@@ -1,13 +1,13 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
+import * as React from 'react';
 
 import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
-import { IBehandling } from '../../../../typer/behandling';
-import { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
 jest.mock('../../../../api/http/HttpProvider', () => {
     return {

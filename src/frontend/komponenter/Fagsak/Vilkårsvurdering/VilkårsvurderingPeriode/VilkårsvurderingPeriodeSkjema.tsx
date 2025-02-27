@@ -1,6 +1,7 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
 import {
     BodyShort,
@@ -17,7 +18,8 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import GodTroSkjema from './GodTroSkjema';
@@ -29,9 +31,9 @@ import {
     finnJaNeiOption,
     OptionNEI,
     useVilkårsvurderingPeriodeSkjema,
-    VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
 import {
     Aktsomhet,
     SærligeGrunner,
@@ -43,14 +45,11 @@ import {
     vilkårsresultatTyper,
     Ytelsetype,
 } from '../../../../kodeverk';
-import { IBehandling } from '../../../../typer/behandling';
-import { IFagsak } from '../../../../typer/fagsak';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
-import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
 const StyledBox = styled(Box)`
     min-width: 20rem;
@@ -245,7 +244,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
 
     return periode ? (
         <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
-            <HGrid columns={'1fr 4rem'}>
+            <HGrid columns="1fr 4rem">
                 <StyledStack
                     justify="space-between"
                     align={{ md: 'start', lg: 'center' }}
@@ -321,10 +320,8 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     skjema.visFeilmeldinger
                                 )}
                                 name="vilkårsresultatBegrunnelse"
-                                label={'Vilkårene for tilbakekreving'}
-                                placeholder={
-                                    'Hvilke hendelser har ført til feilutbetalingen og vurder valg av hjemmel'
-                                }
+                                label="Vilkårene for tilbakekreving"
+                                placeholder="Hvilke hendelser har ført til feilutbetalingen og vurder valg av hjemmel"
                                 maxLength={3000}
                                 readOnly={erLesevisning}
                                 value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
@@ -338,7 +335,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                             <RadioGroup
                                 id="valgtVilkarResultatType"
                                 readOnly={erLesevisning}
-                                legend={'Er vilkårene for tilbakekreving oppfylt?'}
+                                legend="Er vilkårene for tilbakekreving oppfylt?"
                                 value={skjema.felter.vilkårsresultatvurdering.verdi}
                                 error={
                                     ugyldigVilkårsresultatValgt

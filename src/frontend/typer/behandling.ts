@@ -1,4 +1,4 @@
-import { ManuellBrevmottakerResponseDto } from './api';
+import type { ManuellBrevmottakerResponseDto } from './api';
 
 export enum Behandlingårsak {
     REVURDERING_KLAGE_NFP = 'REVURDERING_KLAGE_NFP',

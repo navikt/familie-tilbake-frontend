@@ -1,19 +1,19 @@
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFeilutbetalingVilkårsvurdering } from '../../../../typer/feilutbetalingtyper';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import type { AxiosError } from 'axios';
+
+import createUseContext from 'constate';
 import * as React from 'react';
 
-import { AxiosError } from 'axios';
-import createUseContext from 'constate';
-
 import { useBehandlingApi } from '../../../../api/behandling';
-import { IBehandling } from '../../../../typer/behandling';
-import { IFeilutbetalingVilkårsvurdering } from '../../../../typer/feilutbetalingtyper';
-import { sorterFeilutbetaltePerioder } from '../../../../utils';
-import { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
     byggTomRessurs,
     type Ressurs,
 } from '../../../../typer/ressurs';
+import { sorterFeilutbetaltePerioder } from '../../../../utils';
 
 interface IProps {
     behandling: IBehandling;

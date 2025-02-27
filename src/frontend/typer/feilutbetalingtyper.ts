@@ -1,4 +1,4 @@
-import {
+import type {
     HendelseType,
     HendelseUndertype,
     Foreldelsevurdering,
@@ -29,10 +29,10 @@ export type FeilutbetalingPeriode = {
     feilutbetaltBeløp: number;
 };
 
-export type FaktaPeriode = {
+export type FaktaPeriode = FeilutbetalingPeriode & {
     hendelsestype?: HendelseType;
     hendelsesundertype?: HendelseUndertype;
-} & FeilutbetalingPeriode;
+};
 
 export interface IFeilutbetalingFakta {
     feilutbetaltePerioder: FaktaPeriode[];
@@ -71,12 +71,12 @@ export const harBrukerUttaltSegValgTilTekst: Record<HarBrukerUttaltSegValg, stri
     IKKE_VURDERT: 'Ikke vurdert',
 };
 
-export type ForeldelsePeriode = {
+export type ForeldelsePeriode = FeilutbetalingPeriode & {
     foreldelsesvurderingstype?: Foreldelsevurdering;
     begrunnelse?: string;
     foreldelsesfrist?: string;
     oppdagelsesdato?: string;
-} & FeilutbetalingPeriode;
+};
 
 export interface IFeilutbetalingForeldelse {
     foreldetPerioder: ForeldelsePeriode[];
@@ -121,14 +121,14 @@ export type ReduserteBeløpInfo = {
     beløp: number;
 };
 
-export type VilkårsvurderingPeriode = {
+export type VilkårsvurderingPeriode = FeilutbetalingPeriode & {
     hendelsestype: HendelseType;
     aktiviteter?: YtelseInfo[];
     reduserteBeløper?: ReduserteBeløpInfo[];
     foreldet: boolean;
     begrunnelse?: string;
     vilkårsvurderingsresultatInfo?: VilkårsresultatInfo;
-} & FeilutbetalingPeriode;
+};
 
 export interface IFeilutbetalingVilkårsvurdering {
     perioder: VilkårsvurderingPeriode[];

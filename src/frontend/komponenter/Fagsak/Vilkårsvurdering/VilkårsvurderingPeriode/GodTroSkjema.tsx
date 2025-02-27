@@ -1,17 +1,15 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
-
-import { BodyShort, Radio, TextField, VStack } from '@navikt/ds-react';
-import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
-
-import {
+import type {
     JaNeiOption,
-    jaNeiOptions,
-    OptionJA,
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
+
+import { BodyShort, Radio, TextField, VStack } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
+
+import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 
@@ -39,7 +37,7 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
             <HorisontalRadioGroup
                 id="erBelopetIBehold"
                 readOnly={erLesevisning}
-                legend={'Er beløpet i behold?'}
+                legend="Er beløpet i behold?"
                 value={skjema.felter.erBeløpetIBehold.verdi}
                 error={
                     ugyldigErBeløpetIBeholdValgt
@@ -65,7 +63,7 @@ const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
                                 skjema.visFeilmeldinger
                             )}
                             id="tilbakekrevdBelop"
-                            label={'Angi beløp som skal tilbakekreves'}
+                            label="Angi beløp som skal tilbakekreves"
                             readOnly={erLesevisning}
                             onChange={event => {
                                 skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(

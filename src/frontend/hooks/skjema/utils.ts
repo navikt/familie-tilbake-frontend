@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import type { ChangeEvent } from 'react';
 
 // eslint-disable-next-line
 export function isChangeEvent(value: any): value is ChangeEvent<HTMLInputElement> {

@@ -1,4 +1,5 @@
-import { Request } from 'express';
+import type { Request } from 'express';
+
 import { LOG_LEVEL, logDebug, logError, logInfo, logWarn } from '../logging/logging';
 
 const prefix = (req: Request) => {

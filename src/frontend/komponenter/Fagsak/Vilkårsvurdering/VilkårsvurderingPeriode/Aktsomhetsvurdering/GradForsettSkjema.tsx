@@ -1,15 +1,14 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 import { BodyShort, HGrid, Label } from '@navikt/ds-react';
-import { type ISkjema } from '../../../../../hooks/skjema';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
+import { type ISkjema } from '../../../../../hooks/skjema';
 import { Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
-import { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;

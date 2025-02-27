@@ -1,16 +1,17 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../typer/behandling';
+import type { IFagsak } from '../../../../typer/fagsak';
 
 import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
+import * as React from 'react';
 
 import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
 import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, Fagsystem } from '../../../../kodeverk';
-import { IBehandling } from '../../../../typer/behandling';
-import { IFagsak, Målform } from '../../../../typer/fagsak';
+import { Målform } from '../../../../typer/fagsak';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 
 jest.mock('../../../../api/http/HttpProvider', () => {

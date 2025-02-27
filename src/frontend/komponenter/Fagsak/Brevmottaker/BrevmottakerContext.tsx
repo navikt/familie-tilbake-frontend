@@ -1,33 +1,21 @@
-import * as React from 'react';
-import { useState } from 'react';
+import type { Avhengigheter } from '../../../hooks/skjema';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IBrevmottaker } from '../../../typer/Brevmottaker';
+import type { IFagsak } from '../../../typer/fagsak';
 
 import createUseContext from 'constate';
+import * as React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import {
-    Avhengigheter,
-    feil,
-    type FeltState,
-    type ISkjema,
-    ok,
-    useFelt,
-    useSkjema,
-} from '../../../hooks/skjema';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { feil, type FeltState, type ISkjema, ok, useFelt, useSkjema } from '../../../hooks/skjema';
 import { Vergetype } from '../../../kodeverk/verge';
-import { IBehandling } from '../../../typer/behandling';
-import {
-    AdresseKilde,
-    IBrevmottaker,
-    MottakerType,
-    mottakerTypeVisningsnavn,
-} from '../../../typer/Brevmottaker';
-import { IFagsak } from '../../../typer/fagsak';
+import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import { byggHenterRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
 import { isNumeric } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
-import { byggHenterRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 const feilNårFeltetErTomt = (felt: FeltState<string>, feilmelding?: string) => {
     return felt.verdi === '' ? feil(felt, feilmelding || 'Feltet er påkrevd') : undefined;

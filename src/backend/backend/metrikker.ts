@@ -1,5 +1,7 @@
-import { Express, Request } from 'express';
-import client, { Counter } from 'prom-client';
+import type { Express, Request } from 'express';
+import type { Counter } from 'prom-client';
+
+import client from 'prom-client';
 
 export const konfigurerMetrikker = (
     app: Express,

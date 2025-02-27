@@ -1,4 +1,6 @@
-import * as React from 'react';
+import type { FaktaSkjemaData } from './typer/feilutbetalingFakta';
+import type { Ytelsetype } from '../../../kodeverk';
+import type { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
 
 import {
     Alert,
@@ -13,14 +15,14 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
+import * as React from 'react';
 
 import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
-import { FaktaSkjemaData } from './typer/feilutbetalingFakta';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { HendelseType, Ytelsetype } from '../../../kodeverk';
-import { HarBrukerUttaltSegValg, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
+import { HendelseType } from '../../../kodeverk';
+import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
 
@@ -63,7 +65,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                 </Heading>
                 {erKravgrunnlagKnyttetTilEnEnEldreRevurdering && (
                     <div>
-                        <Alert variant={'warning'} size={'small'}>
+                        <Alert variant="warning" size="small">
                             Det finnes flere revurderinger knyttet til denne tilbakekrevingen.
                             <br />
                             Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
@@ -83,7 +85,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                     </div>
                     <div>
                         <Detail weight="semibold">Feilutbetalt beløp totalt</Detail>
-                        <BodyShort size="small" className={'redText'}>
+                        <BodyShort size="small" className="redText">
                             {`${formatCurrencyNoKr(feilutbetalingFakta.totaltFeilutbetaltBeløp)}`}
                         </BodyShort>
                     </div>
@@ -110,7 +112,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                         </Checkbox>
                     )}
                     {skjemaData.perioder.some(p => p.hendelsestype === HendelseType.INNTEKT) && (
-                        <Alert variant={'warning'} size={'small'}>
+                        <Alert variant="warning" size="small">
                             Husk å kontrollere faktisk inntekt den siste måneden i
                             feilutbetalingsperioden
                         </Alert>
@@ -124,8 +126,8 @@ const FaktaSkjema: React.FC<IProps> = ({
                     )}
                 </VStack>
                 <Textarea
-                    name={'begrunnelse'}
-                    label={'Forklar årsaken(e) til feilutbetalingen'}
+                    name="begrunnelse"
+                    label="Forklar årsaken(e) til feilutbetalingen"
                     readOnly={erLesevisning}
                     value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
                     onChange={e => {
@@ -158,7 +160,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             key={HarBrukerUttaltSegValg.JA}
                             name="brukerHarUttaltSeg"
                             value={HarBrukerUttaltSegValg.JA}
-                            data-testid={`brukerHarUttaltSeg.ja`}
+                            data-testid="brukerHarUttaltSeg.ja"
                         >
                             Ja
                         </Radio>
@@ -166,7 +168,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             key={HarBrukerUttaltSegValg.NEI}
                             name="brukerHarUttaltSeg"
                             value={HarBrukerUttaltSegValg.NEI}
-                            data-testid={`brukerHarUttaltSeg.nei`}
+                            data-testid="brukerHarUttaltSeg.nei"
                         >
                             Nei
                         </Radio>
@@ -174,7 +176,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                             key={HarBrukerUttaltSegValg.IKKE_AKTUELT}
                             name="brukerHarUttaltSeg"
                             value={HarBrukerUttaltSegValg.IKKE_AKTUELT}
-                            data-testid={`brukerHarUttaltSeg.ikke-aktuelt`}
+                            data-testid="brukerHarUttaltSeg.ikke-aktuelt"
                         >
                             Ikke aktuelt
                         </Radio>
@@ -182,10 +184,8 @@ const FaktaSkjema: React.FC<IProps> = ({
                     {skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg ===
                         HarBrukerUttaltSegValg.JA && (
                         <Textarea
-                            name={'beskrivelseBrukersUttalelse'}
-                            label={
-                                'Beskriv når og hvor bruker har uttalt seg. Gi også en kort oppsummering av uttalelsen'
-                            }
+                            name="beskrivelseBrukersUttalelse"
+                            label="Beskriv når og hvor bruker har uttalt seg. Gi også en kort oppsummering av uttalelsen"
                             readOnly={erLesevisning}
                             value={
                                 skjemaData.vurderingAvBrukersUttalelse?.beskrivelse

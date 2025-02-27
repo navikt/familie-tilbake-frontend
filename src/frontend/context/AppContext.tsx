@@ -1,11 +1,11 @@
+import type { IToast, ToastTyper } from '../komponenter/Felleskomponenter/Toast/typer';
+import type { Ressurs } from '../typer/ressurs';
+import type { ISaksbehandler } from '../typer/saksbehandler';
+
+import createUseContext from 'constate';
 import * as React from 'react';
 import { useState } from 'react';
 
-import createUseContext from 'constate';
-
-import type { IToast, ToastTyper } from '../komponenter/Felleskomponenter/Toast/typer';
-import type { Ressurs } from '../typer/ressurs';
-import { ISaksbehandler } from '../typer/saksbehandler';
 import { HttpProvider, useHttp } from '../api/http/HttpProvider';
 
 interface IInfo {

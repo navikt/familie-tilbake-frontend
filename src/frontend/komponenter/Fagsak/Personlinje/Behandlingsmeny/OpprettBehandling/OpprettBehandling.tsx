@@ -1,6 +1,8 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../../typer/behandling';
+import type { IFagsak } from '../../../../../typer/fagsak';
 
 import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
+import * as React from 'react';
 
 import { useOpprettBehandlingSkjema } from './OpprettBehandlingSkjemaContext';
 import {
@@ -8,9 +10,7 @@ import {
     behandlingstyper,
     behandlingårsaker,
     behandlingÅrsaker,
-    IBehandling,
 } from '../../../../../typer/behandling';
-import { IFagsak } from '../../../../../typer/fagsak';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
 import {
     BehandlingsMenyButton,
@@ -60,8 +60,8 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                     <Modal.Body>
                         <Select
                             readOnly={true}
-                            name={'Behandling'}
-                            label={'Type behandling'}
+                            name="Behandling"
+                            label="Type behandling"
                             value={Behandlingstype.REVURDERING_TILBAKEKREVING}
                         >
                             {Object.values(Behandlingstype).map(opt => (
@@ -75,12 +75,12 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                             {...skjema.felter.behandlingsårsak.hentNavBaseSkjemaProps(
                                 skjema.visFeilmeldinger
                             )}
-                            name={'Behandling'}
-                            label={'Årsak til revuderingen'}
+                            name="Behandling"
+                            label="Årsak til revuderingen"
                             value={skjema.felter.behandlingsårsak.verdi}
                             onChange={event => skjema.felter.behandlingsårsak.onChange(event)}
                         >
-                            <option disabled={true} value={''}>
+                            <option disabled={true} value="">
                                 Velg årsak til revurderingen
                             </option>
                             {behandlingÅrsaker.map(opt => (
@@ -101,7 +101,7 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                     <Modal.Footer>
                         <Button
                             variant="primary"
-                            key={'bekreft'}
+                            key="bekreft"
                             onClick={() => {
                                 sendInn();
                             }}
@@ -111,7 +111,7 @@ const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElement
                         </Button>
                         <Button
                             variant="tertiary"
-                            key={'avbryt'}
+                            key="avbryt"
                             onClick={() => {
                                 nullstillSkjema();
                                 settVisModal(false);

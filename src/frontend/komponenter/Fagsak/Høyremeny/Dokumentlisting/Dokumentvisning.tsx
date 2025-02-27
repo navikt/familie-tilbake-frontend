@@ -1,12 +1,12 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
+import type { IDokumentInfo, IJournalpost } from '../../../../typer/journalføring';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Link } from '@navikt/ds-react';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 import HentDokument from './HentDokument';
-import { IDokumentInfo, IJournalpost, Journalposttype } from '../../../../typer/journalføring';
+import { Journalposttype } from '../../../../typer/journalføring';
 
 const Dokument = styled.span`
     display: block;

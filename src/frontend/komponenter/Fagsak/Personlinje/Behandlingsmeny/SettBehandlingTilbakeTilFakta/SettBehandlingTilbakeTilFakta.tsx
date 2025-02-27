@@ -1,18 +1,19 @@
+import type { IBehandling } from '../../../../../typer/behandling';
+import type { IFagsak } from '../../../../../typer/fagsak';
+
 import * as React from 'react';
 import { useState } from 'react';
 
 import SettBehandlingTilbakeTilFaktaModal from './SettBehandlingTilbakeTilFaktaModal';
+import { useHttp } from '../../../../../api/http/HttpProvider';
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { ToggleName } from '../../../../../context/toggles';
 import { useToggles } from '../../../../../context/TogglesContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
-import { IBehandling } from '../../../../../typer/behandling';
-import { IFagsak } from '../../../../../typer/fagsak';
+import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
-import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
-import { useHttp } from '../../../../../api/http/HttpProvider';
 
 interface IProps {
     behandling: IBehandling;
@@ -81,7 +82,7 @@ const SettBehandlingTilbakeTilFakta: React.FC<IProps> = ({
                 }}
                 disabled={!behandling.kanSetteTilbakeTilFakta}
             >
-                {'Sett behandling tilbake til fakta'}
+                Sett behandling tilbake til fakta
             </BehandlingsMenyButton>
 
             <SettBehandlingTilbakeTilFaktaModal

@@ -1,4 +1,4 @@
-import { Behandlingssteg } from '../../../../../typer/behandling';
+import type { Behandlingssteg } from '../../../../../typer/behandling';
 
 export interface TotrinnGodkjenningOption {
     verdi: boolean;

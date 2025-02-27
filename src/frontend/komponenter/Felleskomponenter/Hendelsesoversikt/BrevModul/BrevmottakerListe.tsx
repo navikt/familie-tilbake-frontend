@@ -1,10 +1,11 @@
-import React from 'react';
+import type { IBrevmottaker } from '../../../../typer/Brevmottaker';
+import type { IInstitusjon } from '../../../../typer/fagsak';
+import type { IPerson } from '../../../../typer/person';
 
+import React from 'react';
 import { styled } from 'styled-components';
 
-import { IBrevmottaker, MottakerType } from '../../../../typer/Brevmottaker';
-import { IInstitusjon } from '../../../../typer/fagsak';
-import { IPerson } from '../../../../typer/person';
+import { MottakerType } from '../../../../typer/Brevmottaker';
 import { formaterIdent, lagPersonLabel } from '../../../../utils/formatter';
 
 interface IProps {

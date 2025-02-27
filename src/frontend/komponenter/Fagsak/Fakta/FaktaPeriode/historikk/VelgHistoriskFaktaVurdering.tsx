@@ -1,10 +1,9 @@
-import * as React from 'react';
-
-import { parseISO } from 'date-fns';
+import type { IFeilutbetalingFakta } from '../../../../../typer/feilutbetalingtyper';
 
 import { Select } from '@navikt/ds-react';
+import { parseISO } from 'date-fns';
+import * as React from 'react';
 
-import { IFeilutbetalingFakta } from '../../../../../typer/feilutbetalingtyper';
 import { formatterDatoOgTidstring } from '../../../../../utils';
 
 interface IProps {
@@ -24,7 +23,7 @@ const VelgHistoriskFaktaVurdering: React.FC<IProps> = ({
                 );
                 settFeilutbetalingInaktivFakta(valgtVurdering);
             }}
-            label={'Velg versjon'}
+            label="Velg versjon"
         >
             <option>Velg</option>
             {feilutbetalingInaktiveFakta

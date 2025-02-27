@@ -1,15 +1,15 @@
-import React from 'react';
-
-import { styled } from 'styled-components';
+import type { IBrevmottaker } from '../../../typer/Brevmottaker';
 
 import { PencilIcon, TrashIcon } from '@navikt/aksel-icons';
 import { Button, Heading } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import CountryData from '@navikt/land-verktoy';
+import React from 'react';
+import { styled } from 'styled-components';
 
 import { useBrevmottaker } from './BrevmottakerContext';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { IBrevmottaker, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 
 const FlexDiv = styled.div`
     display: flex;
@@ -72,12 +72,12 @@ const Brevmottaker: React.FC<IProps> = ({
                 <Heading size="medium">{mottakerTypeVisningsnavn[brevmottaker.type]}</Heading>
                 {!erLesevisning && brevmottaker.type !== MottakerType.BRUKER && (
                     <Button
-                        variant={'tertiary'}
+                        variant="tertiary"
                         onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
-                        size={'small'}
+                        size="small"
                         icon={<TrashIcon />}
                     >
-                        {'Fjern'}
+                        Fjern
                     </Button>
                 )}
             </FlexDiv>
@@ -124,16 +124,16 @@ const Brevmottaker: React.FC<IProps> = ({
             </DefinitionList>
             {!erLesevisning && brevmottaker.type !== MottakerType.BRUKER && (
                 <Button
-                    variant={'tertiary'}
+                    variant="tertiary"
                     onClick={() => {
                         settBrevmottakerIdTilEndring(brevmottakerId);
                         settVisBrevmottakerModal(true);
                         validerAlleSynligeFelter();
                     }}
-                    size={'small'}
+                    size="small"
                     icon={<PencilIcon />}
                 >
-                    {'Endre'}
+                    Endre
                 </Button>
             )}
 
@@ -149,7 +149,7 @@ const Brevmottaker: React.FC<IProps> = ({
                             settVisBrevmottakerModal(true);
                         }}
                     >
-                        {'Endre'}
+                        Endre
                     </EndreBrukerKnapp>
                 )}
         </StyledDiv>

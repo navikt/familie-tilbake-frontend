@@ -1,4 +1,4 @@
-import { Vergetype } from '../kodeverk/verge';
+import type { Vergetype } from '../kodeverk/verge';
 
 export enum MottakerType {
     BRUKER_MED_UTENLANDSK_ADRESSE = 'BRUKER_MED_UTENLANDSK_ADRESSE',

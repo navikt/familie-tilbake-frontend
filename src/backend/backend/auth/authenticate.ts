@@ -1,5 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
-import { Client, TokenSet } from 'openid-client';
+import type { NextFunction, Request, Response } from 'express';
+import type { Client, TokenSet } from 'openid-client';
+
 import passport from 'passport';
 
 import { logRequest } from '../utils';

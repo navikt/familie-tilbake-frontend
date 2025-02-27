@@ -1,6 +1,5 @@
-import path from 'path';
-
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import path from 'path';
 import webpack from 'webpack';
 import { mergeWithRules } from 'webpack-merge';
 

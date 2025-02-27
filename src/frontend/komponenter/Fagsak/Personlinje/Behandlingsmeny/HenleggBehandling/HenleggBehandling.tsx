@@ -1,8 +1,10 @@
+import type { IBehandling } from '../../../../../typer/behandling';
+import type { IFagsak } from '../../../../../typer/fagsak';
+
 import * as React from 'react';
 
 import HenleggBehandlingModal from './HenleggBehandlingModal/HenleggBehandlingModal';
-import { Behandlingresultat, Behandlingstype, IBehandling } from '../../../../../typer/behandling';
-import { IFagsak } from '../../../../../typer/fagsak';
+import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 
 const getÅrsaker = (behandling: IBehandling) => {

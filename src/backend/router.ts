@@ -1,14 +1,14 @@
+import type { Response, Request, Router, NextFunction } from 'express';
+import type { Client } from 'openid-client';
+
 import path from 'path';
 
-import { Response, Request, Router, NextFunction } from 'express';
-
-import { LOG_LEVEL } from './logging/logging';
-import { Client } from 'openid-client';
-import { buildPath } from './config';
-import { prometheusTellere } from './metrikker';
-import { envVar } from './logging/utils';
-import { logRequest } from './backend/utils';
 import { ensureAuthenticated } from './backend/auth/authenticate';
+import { logRequest } from './backend/utils';
+import { buildPath } from './config';
+import { LOG_LEVEL } from './logging/logging';
+import { envVar } from './logging/utils';
+import { prometheusTellere } from './metrikker';
 
 export const redirectHvisInternUrlIPreprod = () => {
     return async (req: Request, res: Response, next: NextFunction) => {

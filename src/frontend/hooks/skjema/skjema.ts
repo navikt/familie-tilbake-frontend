@@ -1,21 +1,23 @@
-import { useState } from 'react';
-
-import {
+import type {
     FeiloppsummeringFeil,
     Felt,
     FeltState,
     FieldDictionary,
     ISkjema,
     UseSkjemaVerdi,
-    Valideringsstatus,
 } from './typer';
+import type { FamilieRequestConfig } from '../../api/http/HttpProvider';
+
+import { useState } from 'react';
+
+import { Valideringsstatus } from './typer';
+import { useHttp } from '../../api/http/HttpProvider';
 import {
     byggHenterRessurs,
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
 } from '../../typer/ressurs';
-import { FamilieRequestConfig, useHttp } from '../../api/http/HttpProvider';
 
 export const useSkjema = <Felter, SkjemaRespons>({
     felter,

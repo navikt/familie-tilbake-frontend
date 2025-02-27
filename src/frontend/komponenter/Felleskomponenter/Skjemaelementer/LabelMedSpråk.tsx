@@ -1,9 +1,7 @@
-import * as React from 'react';
-
-import { styled } from 'styled-components';
-
 import { Label, Tag } from '@navikt/ds-react';
 import { ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
+import * as React from 'react';
+import { styled } from 'styled-components';
 
 const LabelFlex = styled.div`
     display: flex;

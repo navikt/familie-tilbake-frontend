@@ -1,21 +1,24 @@
 import './konfigurerApp';
-import path from 'path';
-import { json, urlencoded, NextFunction, Request, Response } from 'express';
+import type { IApp } from './backend';
+import type { NextFunction, Request, Response } from 'express';
+
+import { json, urlencoded } from 'express';
 import expressStaticGzip from 'express-static-gzip';
+import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-import { logInfo } from './logging/logging';
+import backend from './backend';
+import { ensureAuthenticated } from './backend/auth/authenticate';
 import { oboTilbakeConfig, sessionConfig } from './config';
+import { logInfo } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
 import config from '../webpack/webpack.dev';
 import { envVar } from './logging/utils';
-import { ensureAuthenticated } from './backend/auth/authenticate';
-import backend, { IApp } from './backend';
 
 const port = 8000;
 

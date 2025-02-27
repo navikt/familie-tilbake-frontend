@@ -1,12 +1,13 @@
-import * as React from 'react';
 import { Alert } from '@navikt/ds-react';
+import * as React from 'react';
+
 import HenterData from './HenterData';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 interface IProps {
     ressurser: (Ressurs<unknown> | undefined)[];
     henteBeskrivelse?: string;
-    spinnerStørrelse?: 'large' | '2xlarge';
+    spinnerStørrelse?: '2xlarge' | 'large';
 }
 
 const DataLastIkkeSuksess: React.FC<IProps> = ({

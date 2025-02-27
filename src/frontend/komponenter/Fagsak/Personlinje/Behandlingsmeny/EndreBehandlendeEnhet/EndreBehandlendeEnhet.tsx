@@ -1,15 +1,16 @@
-import * as React from 'react';
+import type { Ytelsetype } from '../../../../../kodeverk';
+import type { IBehandling } from '../../../../../typer/behandling';
+import type { IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
+import * as React from 'react';
 
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { Ytelsetype } from '../../../../../kodeverk';
-import { IBehandling } from '../../../../../typer/behandling';
-import { finnMuligeEnheter, IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
+import { finnMuligeEnheter } from '../../../../../typer/enhet';
+import { RessursStatus } from '../../../../../typer/ressurs';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
 import { BehandlingsMenyButton, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
-import { RessursStatus } from '../../../../../typer/ressurs';
 
 interface IProps {
     ytelse: Ytelsetype;
@@ -63,9 +64,9 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                             {...skjema.felter.enhet.hentNavInputProps(skjema.visFeilmeldinger)}
                             readOnly={false}
                             name="enhet"
-                            label={'Velg ny enhet'}
+                            label="Velg ny enhet"
                         >
-                            <option value={''} disabled={true}>
+                            <option value="" disabled={true}>
                                 Velg ny enhet
                             </option>
                             {behandendeEnheter.map(enhet => (
@@ -79,7 +80,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                             {...skjema.felter.begrunnelse.hentNavInputProps(
                                 skjema.visFeilmeldinger
                             )}
-                            label={'Begrunnelse'}
+                            label="Begrunnelse"
                             readOnly={false}
                             maxLength={400}
                         />
@@ -96,7 +97,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                         <Button
                             variant="primary"
                             disabled={skjema.submitRessurs.status === RessursStatus.HENTER}
-                            key={'bekreft'}
+                            key="bekreft"
                             onClick={() => sendInn()}
                             size="small"
                         >
@@ -104,7 +105,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
                         </Button>
                         <Button
                             variant="tertiary"
-                            key={'avbryt'}
+                            key="avbryt"
                             onClick={() => {
                                 settVisModal(false);
                             }}

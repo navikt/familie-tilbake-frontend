@@ -1,20 +1,20 @@
-import * as React from 'react';
+import type { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
+import type { IBehandling } from '../../../typer/behandling';
+import type { IFagsak } from '../../../typer/fagsak';
+import type { TimelinePeriodProps } from '@navikt/ds-react';
 
+import { BodyShort, Button, VStack } from '@navikt/ds-react';
+import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import classNames from 'classnames';
+import * as React from 'react';
 import { styled } from 'styled-components';
 
-import { BodyShort, Button, TimelinePeriodProps, VStack } from '@navikt/ds-react';
-import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
-
 import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
-import { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
-import { IBehandling } from '../../../typer/behandling';
-import { IFagsak } from '../../../typer/fagsak';
 import { FTAlertStripe, Navigering } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
-import { useBehandling } from '../../../context/BehandlingContext';
 
 const ValideringsFeilmelding = styled(BodyShort)`
     font-weight: ${AFontWeightBold};

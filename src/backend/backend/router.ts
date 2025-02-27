@@ -1,6 +1,9 @@
-import express, { NextFunction, Request, Response } from 'express';
-import { Client } from 'openid-client';
-import { Counter } from 'prom-client';
+import type { NextFunction, Request, Response } from 'express';
+import type { Client } from 'openid-client';
+import type { Counter } from 'prom-client';
+
+import express from 'express';
+
 import {
     authenticateAzure,
     authenticateAzureCallback,

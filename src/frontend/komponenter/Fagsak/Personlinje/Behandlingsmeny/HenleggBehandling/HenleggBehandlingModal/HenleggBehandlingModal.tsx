@@ -1,14 +1,12 @@
-import * as React from 'react';
+import type { IBehandling } from '../../../../../../typer/behandling';
+import type { IFagsak } from '../../../../../../typer/fagsak';
 
 import { Button, Modal, Select, Textarea } from '@navikt/ds-react';
+import * as React from 'react';
 
 import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
-import {
-    Behandlingresultat,
-    behandlingsresultater,
-    IBehandling,
-} from '../../../../../../typer/behandling';
-import { IFagsak, målform } from '../../../../../../typer/fagsak';
+import { Behandlingresultat, behandlingsresultater } from '../../../../../../typer/behandling';
+import { målform } from '../../../../../../typer/fagsak';
 import { Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
 import { LabelMedSpråk } from '../../../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
@@ -60,7 +58,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                     <Modal.Body>
                         <Select
                             {...skjema.felter.årsakkode.hentNavInputProps(skjema.visFeilmeldinger)}
-                            label={`Velg årsak`}
+                            label="Velg årsak"
                             onChange={e => onChangeÅrsakskode(e)}
                         >
                             <option value="" disabled={true}>
@@ -81,11 +79,11 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                                     )}
                                     label={
                                         <LabelMedSpråk
-                                            label={`Fritekst til brev`}
+                                            label="Fritekst til brev"
                                             språk={målform[fagsak.språkkode]}
                                         />
                                     }
-                                    aria-label={`Fritekst til brev`}
+                                    aria-label="Fritekst til brev"
                                     value={skjema.felter.fritekst.verdi || ''}
                                     onChange={event =>
                                         skjema.felter.fritekst.validerOgSettFelt(event.target.value)
@@ -100,7 +98,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                             {...skjema.felter.begrunnelse.hentNavInputProps(
                                 skjema.visFeilmeldinger
                             )}
-                            label={`Begrunnelse`}
+                            label="Begrunnelse"
                             value={skjema.felter.begrunnelse.verdi || ''}
                             onChange={event =>
                                 skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
@@ -111,14 +109,14 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                     </Modal.Body>
                     <Modal.Footer>
                         <ForhåndsvisHenleggelsesBrev
-                            key={'forhåndsvis-henleggelsesbrev'}
+                            key="forhåndsvis-henleggelsesbrev"
                             behandling={behandling}
                             skjema={skjema}
                             kanForhåndsvise={kanForhåndsvise}
                         />
                         <Button
                             variant="primary"
-                            key={'bekreft'}
+                            key="bekreft"
                             onClick={() => {
                                 onBekreft();
                             }}
@@ -128,7 +126,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
                         </Button>
                         <Button
                             variant="tertiary"
-                            key={'avbryt'}
+                            key="avbryt"
                             onClick={() => {
                                 nullstillSkjema();
                                 settVisModal(false);

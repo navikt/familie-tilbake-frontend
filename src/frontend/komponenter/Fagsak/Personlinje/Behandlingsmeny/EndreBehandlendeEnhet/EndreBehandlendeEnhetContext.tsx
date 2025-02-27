@@ -1,8 +1,7 @@
-import { type FeltState, useFelt, useSkjema } from '../../../../../hooks/skjema';
-
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../utils';
+import { type FeltState, useFelt, useSkjema } from '../../../../../hooks/skjema';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
+import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../utils';
 
 const useEndreBehandlendeEnhet = (behandlingId: string, lukkModal: (_vis: boolean) => void) => {
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();

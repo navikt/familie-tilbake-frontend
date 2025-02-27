@@ -1,3 +1,8 @@
+import type { HenleggBehandlingPaylod } from '../../../../../../typer/api';
+import type { IBehandling } from '../../../../../../typer/behandling';
+
+import { useBehandlingApi } from '../../../../../../api/behandling';
+import { useBehandling } from '../../../../../../context/BehandlingContext';
 import {
     type Avhengigheter,
     type FeltState,
@@ -6,17 +11,9 @@ import {
     useSkjema,
     Valideringsstatus,
 } from '../../../../../../hooks/skjema';
-
-import { useBehandlingApi } from '../../../../../../api/behandling';
-import { useBehandling } from '../../../../../../context/BehandlingContext';
-import { HenleggBehandlingPaylod } from '../../../../../../typer/api';
-import {
-    Behandlingresultat,
-    Behandlingstype,
-    IBehandling,
-} from '../../../../../../typer/behandling';
-import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../../utils';
+import { Behandlingresultat, Behandlingstype } from '../../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../../typer/ressurs';
+import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../../utils';
 
 const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter) =>
     avhengigheter?.behandlingstype.valideringsstatus === Valideringsstatus.OK &&
