@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 
 import App from './komponenter/App';
+import ErrorBoundary from './komponenter/Felleskomponenter/ErrorBoundary/ErrorBoundary';
 import { initGrafanaFaro } from './utils/grafanaFaro';
 
 const environment = window.location.hostname;
@@ -25,9 +26,13 @@ if (process.env.NODE_ENV !== 'production') {
 initGrafanaFaro();
 
 const container = document.getElementById('app');
-if (container) {
-    const root = createRoot(container);
-    root.render(<App />);
-} else {
-    console.error('Fant ikke app containeren');
+
+if (!container) {
+    throw new Error('Fant ikke rot-element: "app"');
 }
+
+createRoot(container).render(
+    <ErrorBoundary>
+        <App />
+    </ErrorBoundary>
+);
