@@ -1,3 +1,5 @@
+import type { MouseEvent as ReactMouseEvent } from 'react';
+
 import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { Button } from '@navikt/ds-react';
 import * as React from 'react';
@@ -27,7 +29,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
             <NavigeringsKnapp
                 variant="secondary"
                 aria-label="Forrige periode"
-                onClick={(e: MouseEvent) => {
+                onClick={(e: ReactMouseEvent<HTMLButtonElement>) => {
                     e.preventDefault();
                     forrigePeriode();
                 }}
@@ -38,7 +40,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
             <NavigeringsKnapp
                 variant="secondary"
                 aria-label="Neste periode"
-                onClick={(e: MouseEvent) => {
+                onClick={(e: ReactMouseEvent<HTMLButtonElement>) => {
                     e.preventDefault();
                     nestePeriode();
                 }}
