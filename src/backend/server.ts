@@ -6,34 +6,23 @@ import { json, urlencoded } from 'express';
 import expressStaticGzip from 'express-static-gzip';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import webpack from 'webpack';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import backend from './backend';
 import { ensureAuthenticated } from './backend/auth/authenticate';
 import { oboTilbakeConfig, sessionConfig } from './config';
 import { logInfo } from './logging/logging';
+import { envVar } from './logging/utils';
 import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
-import config from '../webpack/webpack.dev';
-import { envVar } from './logging/utils';
 
 const port = 8000;
 
 backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }: IApp) => {
-    let middleware;
-
     if (process.env.NODE_ENV === 'development') {
-        const compiler = webpack(config);
-        middleware = webpackDevMiddleware(compiler, {
-            publicPath: config.output?.publicPath,
-            writeToDisk: true,
-        });
-
-        app.use(middleware);
-        app.use(webpackHotMiddleware(compiler));
+        // In development, the Vite dev server will handle serving the frontend
+        // The frontend will be available at http://localhost:5173
+        logInfo('Running in development mode. Frontend will be served by Vite dev server.');
     } else {
         app.use('/assets', expressStaticGzip(path.join(process.cwd(), 'frontend_production'), {}));
     }

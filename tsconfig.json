@@ -1,12 +1,26 @@
 {
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
-        "outDir": "node_dist",
-        "rootDir": "./src",
+        "target": "ESNext",
+        "useDefineForClassFields": true,
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "allowJs": false,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
         "resolveJsonModule": true,
-        "types": ["express-session", "passport"],
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        }
     },
-    "include": ["./src/backend", "./src/dev-server", "./src/webpack"],
-    "exclude": ["./src/frontend"],
-    "lib": ["es2015"]
+    "include": ["src"],
+    "references": [{ "path": "./tsconfig.node.json" }]
 }
