@@ -1,4 +1,3 @@
-import type { Fagsystem } from '../../kodeverk';
 import type { IBehandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
 
 import * as React from 'react';
@@ -6,6 +5,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 import BehandlingContainer from './BehandlingContainer';
+import { Fagsystem } from '../../kodeverk';
 import Personlinje from './Personlinje/Personlinje';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
@@ -38,7 +38,7 @@ const venteBeskjed = (ventegrunn: IBehandlingsstegstilstand) => {
 
 const FagsakContainer: React.FC = () => {
     const { fagsystem: fagsystemParam, fagsakId } = useParams();
-    const fagsystem = fagsystemParam as Fagsystem;
+    const fagsystem = Fagsystem[fagsystemParam as keyof typeof Fagsystem];
 
     const location = useLocation();
     const behandlingId = location.pathname.split('/')[6];
