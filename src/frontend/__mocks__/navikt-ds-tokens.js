@@ -1,14 +1,65 @@
 // Mock for @navikt/ds-tokens/dist/tokens
-export const ABreakpointXs = '0';
-export const ASpacing1 = '4px';
-export const ASpacing2 = '8px';
-export const ASpacing3 = '16px';
-export const ASpacing4 = '24px';
-export const ASpacing5 = '32px';
-export const ASpacing6 = '40px';
-export const AFontWeightBold = 'bold';
-export const ATextDanger = '#c30000';
-export const ABorderStrong = '2px solid #000';
-export const ABgDefault = '#fff';
-export const AOrange100 = '#ff9100';
-export const ASurfaceActionSubtleHover = '#e7e9e9';
+// eslint-disable-next-line no-undef
+module.exports = {
+    ABreakpointXs: '0',
+    ABreakpointSm: '480px',
+    ABreakpointMd: '768px',
+    ABreakpointLg: '1024px',
+    ABreakpointXl: '1280px',
+    ABreakpoint2xl: '1440px',
+    ASpacing1: '4px',
+    ASpacing2: '8px',
+    ASpacing3: '16px',
+    ASpacing4: '24px',
+    ASpacing5: '32px',
+    ASpacing6: '40px',
+    ASpacing7: '48px',
+    ASpacing8: '56px',
+    ASpacing9: '64px',
+    ASpacing10: '72px',
+    ASpacing11: '80px',
+    ASpacing12: '88px',
+    ASpacing13: '96px',
+    ASpacing14: '104px',
+    ASpacing15: '112px',
+    ASpacing16: '120px',
+    AFontSizeXs: '12px',
+    AFontSizeSm: '14px',
+    AFontSizeBase: '16px',
+    AFontSizeLg: '18px',
+    AFontSizeXl: '20px',
+    AFontSize2xl: '24px',
+    AFontSize3xl: '32px',
+    AFontSize4xl: '40px',
+    AFontSize5xl: '48px',
+    AFontSize6xl: '64px',
+    AFontWeightRegular: '400',
+    AFontWeightMedium: '500',
+    AFontWeightBold: '600',
+    ATextDanger: '#C30000',
+    ABorderStrong: '#0067C5',
+    ABgDefault: '#FFFFFF',
+    AOrange100: '#FFE5C2',
+    ATextDefault: '#262626',
+    ATextSubtle: '#645F5A',
+    ATextPlaceholder: '#645F5A',
+    ATextDisabled: '#C6C2BF',
+    ATextInverted: '#FFFFFF',
+    ATextDangerInverted: '#FFFFFF',
+    ATextDangerOnInverted: '#C30000',
+    ATextDangerOnSubtle: '#C30000',
+    ATextDangerOnAction: '#C30000',
+    ATextDangerOnInfo: '#C30000',
+    ATextDangerOnSuccess: '#C30000',
+    ATextDangerOnWarning: '#C30000',
+    ATextDangerOnError: '#FFFFFF',
+    ATextDangerOnSelected: '#C30000',
+    ATextDangerOnSelectedInverted: '#FFFFFF',
+    ATextDangerOnSelectedSubtle: '#C30000',
+    ATextDangerOnSelectedAction: '#C30000',
+    ATextDangerOnSelectedInfo: '#C30000',
+    ATextDangerOnSelectedSuccess: '#C30000',
+    ATextDangerOnSelectedWarning: '#C30000',
+    ATextDangerOnSelectedError: '#FFFFFF',
+    ASurfaceActionSubtleHover: '#E5F3FF',
+};

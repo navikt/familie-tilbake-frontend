@@ -6,12 +6,28 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     plugins: [react()],
     server: {
-        port: 8000,
+        port: 5173,
         proxy: {
             '/api': {
                 target: process.env.API_URL || 'http://localhost:8080',
                 changeOrigin: true,
                 secure: false,
+            },
+            '/login': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+            },
+            '/auth': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+            },
+            '/user': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+            },
+            '/familie-tilbake': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
             },
         },
     },
@@ -27,6 +43,14 @@ export default defineConfig({
             input: {
                 main: path.resolve(__dirname, 'index.html'),
             },
+            output: {
+                manualChunks: {
+                    'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+                    'navikt-vendor': ['@navikt/ds-react', '@navikt/aksel-icons'],
+                    styled: ['styled-components'],
+                },
+            },
         },
+        chunkSizeWarningLimit: 1000,
     },
 });
