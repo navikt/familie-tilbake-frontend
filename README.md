@@ -10,8 +10,8 @@ Saksbehandlerapplikasjon for tilbakekreving av ytelsene barnetrygd, konstantstø
 
 # Kom i gang med utvikling
 
-* Installere avhengigheter `yarn`
-* Starte dev-server `yarn start:dev`
+* Installere avhengigheter `pnpm`
+* Starte dev-server `pnpm start:dev`
 * Åpne `http://localhost:8000` i nettleseren din
 
 Med default miljøvariabler krever appen at applikasjonen [familie-tilbake](https://github.com/navikt/familie-tilbake) kjører lokalt.

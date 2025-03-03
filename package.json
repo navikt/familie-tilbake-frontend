@@ -8,7 +8,7 @@
   "scripts": {
     "start": "NODE_ENV=production node --loader ts-node/esm --es-module-specifier-resolution=node node_dist/backend/server.js",
     "start:dev": "tsc && NODE_ENV=development node --loader ts-node/esm --es-module-specifier-resolution=node node_dist/backend/server.js",
-    "build": "yarn lint && yarn build:prod",
+    "build": "pnpm lint && pnpm build:prod",
     "build:dev": "tsc & NODE_OPTIONS=\"--loader ts-node/esm --es-module-specifier-resolution=node\" NODE_ENV=development webpack --config ./src/webpack/webpack.dev.ts",
     "build:prod": "tsc & NODE_OPTIONS=\"--loader ts-node/esm --es-module-specifier-resolution=node\" NODE_ENV=production webpack --config ./src/webpack/webpack.prod.ts",
     "test": "jest",
@@ -125,6 +125,5 @@
     "webpack-dev-middleware": "^7.4.2",
     "webpack-hot-middleware": "^2.26.1",
     "webpack-merge": "^6.0.1"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }
