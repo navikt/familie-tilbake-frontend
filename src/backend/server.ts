@@ -1,64 +1,36 @@
 import './konfigurerApp';
-import type { IApp } from './backend';
-import type { NextFunction, Request, Response } from 'express';
 
-import { json, urlencoded } from 'express';
-import expressStaticGzip from 'express-static-gzip';
-import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import webpack from 'webpack';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
+import express from 'express';
+import { createServer as createViteServer } from 'vite';
 
 import backend from './backend';
-import { ensureAuthenticated } from './backend/auth/authenticate';
-import { oboTilbakeConfig, sessionConfig } from './config';
-import { logInfo } from './logging/logging';
+import { sessionConfig } from './config';
 import { prometheusTellere } from './metrikker';
-import { attachToken, doProxy, doRedirectProxy } from './proxy';
-import setupRouter from './router';
-import config from '../webpack/webpack.dev';
-import { envVar } from './logging/utils';
 
-const port = 8000;
+async function createServer() {
+    const app = express();
 
-backend(sessionConfig, prometheusTellere).then(({ app, azureAuthClient, router }: IApp) => {
-    let middleware;
+    // Initialize backend with session and metrics
+    const { router } = await backend(sessionConfig, prometheusTellere);
 
     if (process.env.NODE_ENV === 'development') {
-        const compiler = webpack(config);
-        middleware = webpackDevMiddleware(compiler, {
-            publicPath: config.output?.publicPath,
-            writeToDisk: true,
+        // Create Vite server in middleware mode
+        const vite = await createViteServer({
+            server: { middlewareMode: true },
+            appType: 'spa',
         });
 
-        app.use(middleware);
-        app.use(webpackHotMiddleware(compiler));
-    } else {
-        app.use('/assets', expressStaticGzip(path.join(process.cwd(), 'frontend_production'), {}));
+        // Use vite's connect instance as middleware
+        app.use(vite.middlewares);
     }
 
-    app.use((req: Request, _res: Response, next: NextFunction) => {
-        req.headers['nav-call-id'] = uuidv4();
-        req.headers['nav-consumer-id'] = 'familie-tilbake-frontend';
-        next();
+    // Setup authentication routes
+    app.use('/', router);
+
+    const port = process.env.PORT || 8000;
+    app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
     });
+}
 
-    app.use(
-        '/familie-tilbake/api',
-        ensureAuthenticated(azureAuthClient, true),
-        attachToken(azureAuthClient, oboTilbakeConfig),
-        doProxy()
-    );
-
-    app.use('/redirect', doRedirectProxy());
-
-    // Sett opp express og router etter proxy. Spesielt viktig med tanke på større payloads
-    app.use(json({ limit: '200mb' }));
-    app.use(urlencoded({ limit: '200mb', extended: true }));
-    app.use('/', setupRouter(azureAuthClient, router));
-
-    app.listen(port, '0.0.0.0', () => {
-        logInfo(`Server startet på port ${port}. Build version: ${envVar('APP_VERSION')}.`);
-    });
-});
+createServer();
