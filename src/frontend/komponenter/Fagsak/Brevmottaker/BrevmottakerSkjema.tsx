@@ -1,10 +1,10 @@
 import { Alert, Fieldset, TextField } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import CountrySelect from '@navikt/landvelger';
 import React from 'react';
 import { styled } from 'styled-components';
 
 import { useBrevmottaker } from './BrevmottakerContext';
+import CountrySelect from './CountrySelect';
 import { Valideringsstatus } from '../../../hooks/skjema/typer';
 import { MottakerType } from '../../../typer/Brevmottaker';
 
@@ -52,7 +52,6 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                 <CountrySelect
                     id="country-select-brevmottaker"
                     label="Land"
-                    flags
                     excludeList={
                         skjema.felter.mottaker.verdi === MottakerType.BrukerMedUtenlandskAdresse
                             ? ['NO', 'XU']

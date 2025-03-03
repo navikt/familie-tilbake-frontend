@@ -3,11 +3,11 @@ import type { IBrevmottaker } from '../../../typer/Brevmottaker';
 import { PencilIcon, TrashIcon } from '@navikt/aksel-icons';
 import { Button, Heading } from '@navikt/ds-react';
 import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
-import CountryData from '@navikt/land-verktoy';
 import React from 'react';
 import { styled } from 'styled-components';
 
 import { useBrevmottaker } from './BrevmottakerContext';
+import { countries } from './CountrySelect';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 
@@ -62,7 +62,7 @@ const Brevmottaker: React.FC<IProps> = ({
     } = useBrevmottaker();
     const { settVisBrevmottakerModal } = useBehandling();
     const land = brevmottaker.manuellAdresseInfo
-        ? CountryData.getCountryInstance('nb').findByValue(brevmottaker.manuellAdresseInfo.landkode)
+        ? countries.find(country => country.alpha2 === brevmottaker.manuellAdresseInfo?.landkode)
         : undefined;
     const [organisasjonsnavn, kontaktperson] = brevmottaker.navn.split(' v/ ');
 
@@ -118,7 +118,7 @@ const Brevmottaker: React.FC<IProps> = ({
                         <dt>Poststed</dt>
                         <dd>{brevmottaker.manuellAdresseInfo?.poststed || '-'}</dd>
                         <dt>Land</dt>
-                        <dd>{land.label}</dd>
+                        <dd>{land?.label}</dd>
                     </>
                 )}
             </DefinitionList>
