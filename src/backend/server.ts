@@ -54,7 +54,7 @@ backend(sessionConfig, texasConfig, prometheusTellere).then(
             ensureAuthenticated(azureAuthClient, true),
             attachToken(texasAuthClient, {
                 clientId: appConfig.clientId,
-                scopes: [`${appConfig.clientId}/.default`],
+                scopes: [appConfig.backendApiScope],
             }),
             doProxy()
         );

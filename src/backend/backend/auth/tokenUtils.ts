@@ -54,17 +54,9 @@ export const getOnBehalfOfAccessToken = (
     api: IApi
 ): Promise<string> => {
     return new Promise((resolve, reject) => {
-        if (hasValidAccessToken(req, api.clientId)) {
-            const tokenSets = getTokenSetsFromSession(req);
-            resolve(tokenSets[api.clientId].access_token);
-        } else {
-            if (!req.session) {
-                throw Error('Session på request mangler.');
-            }
-            utledAccessToken({ authClient, req, api, promise: { resolve, reject } }).then(token =>
-                resolve(token)
-            );
-        }
+        utledAccessToken({ authClient, req, api, promise: { resolve, reject } }).then(token =>
+            resolve(token)
+        );
     });
 };
 
