@@ -1,10 +1,10 @@
 import type { IApi } from '../typer';
+import type { TexasClient } from './texas';
 import type { Request } from 'express';
-import type { Client } from 'openid-client';
 
 import { TokenSet } from 'openid-client';
 
-import { LogLevel, logError, logInfo } from '../../logging/logging';
+import { LogLevel } from '../../logging/logging';
 import { logRequest } from '../utils';
 
 export const tokenSetSelfId = 'self';
@@ -27,7 +27,7 @@ const loggOgReturnerOmTokenErGyldig = (req: Request, key: string, validAccessTok
 };
 
 export interface UtledAccessTokenProps {
-    authClient: Client;
+    authClient: TexasClient;
     req: Request;
     api: IApi;
     promise: {
@@ -38,61 +38,20 @@ export interface UtledAccessTokenProps {
 
 export const appendDefaultScope = (scope: string) => `${scope}/.default`;
 
-const formatClientIdScopeForV2Clients = (clientId: string) =>
-    appendDefaultScope(`api://${clientId}`);
+const utledAccessToken = async (props: UtledAccessTokenProps) => {
+    const { authClient, req } = props;
 
-const createOnBehalfOfScope = (api: IApi) => {
-    if (api.scopes && api.scopes.length > 0) {
-        return `${api.scopes.join(' ')}`;
-    } else {
-        return `${formatClientIdScopeForV2Clients(api.clientId)}`;
-    }
-};
-
-const utledAccessToken = (props: UtledAccessTokenProps, retryCount: number) => {
-    const { authClient, req, api, promise } = props;
-    authClient
-        .grant({
-            assertion: req.session.passport.user.tokenSets[tokenSetSelfId].access_token,
-            client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-            grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-            requested_token_use: 'on_behalf_of',
-            scope: createOnBehalfOfScope(api),
-        })
-        .then((tokenSet: TokenSet) => {
-            if (!req.session) {
-                throw Error('Mangler session på request.');
-            }
-
-            req.session.passport.user.tokenSets[api.clientId] = tokenSet;
-
-            if (tokenSet.access_token) {
-                promise.resolve(tokenSet.access_token);
-            } else {
-                promise.reject('Token ikke tilgjengelig');
-            }
-        })
-        .catch((err: Error) => {
-            const message = err.message;
-            if (message.includes('invalid_grant')) {
-                logInfo(`Bruker har ikke tilgang: ${message}`);
-                promise.reject(err);
-            } else if (retryCount > 0) {
-                logInfo(`Kjører retry for uthenting av access token: ${message}`);
-                utledAccessToken(props, retryCount - 1);
-            } else {
-                logError('Feil ved henting av obo token', err);
-                promise.reject(err);
-            }
-        });
+    const response = await authClient.exchangeToken(
+        req.session.passport.user.tokenSets[tokenSetSelfId].access_token
+    );
+    return response.access_token;
 };
 
 export const getOnBehalfOfAccessToken = (
-    authClient: Client,
+    authClient: TexasClient,
     req: Request,
     api: IApi
 ): Promise<string> => {
-    const retryCount = 1;
     return new Promise((resolve, reject) => {
         if (hasValidAccessToken(req, api.clientId)) {
             const tokenSets = getTokenSetsFromSession(req);
@@ -101,7 +60,7 @@ export const getOnBehalfOfAccessToken = (
             if (!req.session) {
                 throw Error('Session på request mangler.');
             }
-            utledAccessToken({ authClient, req, api, promise: { resolve, reject } }, retryCount);
+            utledAccessToken({ authClient, req, api, promise: { resolve, reject } });
         }
     });
 };

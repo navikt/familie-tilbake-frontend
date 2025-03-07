@@ -1,3 +1,4 @@
+import type { TexasClient } from './auth/texas';
 import type { NextFunction, Request, Response } from 'express';
 import type { Client } from 'openid-client';
 import type { Counter } from 'prom-client';
@@ -14,7 +15,11 @@ import { hentBrukerprofil, setBrukerprofilPåSesjonRute } from './auth/bruker';
 
 const router = express.Router();
 
-export default (authClient: Client, prometheusTellere?: { [key: string]: Counter<string> }) => {
+export default (
+    authClient: Client,
+    texasClient: TexasClient,
+    prometheusTellere?: { [key: string]: Counter<string> }
+) => {
     // Authentication
     router.get('/login', (req: Request, res: Response, next: NextFunction) => {
         if (prometheusTellere && prometheusTellere.login_route) {
@@ -30,7 +35,7 @@ export default (authClient: Client, prometheusTellere?: { [key: string]: Counter
     router.get(
         '/user/profile',
         ensureAuthenticated(authClient, true),
-        setBrukerprofilPåSesjonRute(authClient),
+        setBrukerprofilPåSesjonRute(texasClient),
         hentBrukerprofil()
     );
 

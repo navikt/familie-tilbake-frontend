@@ -1,8 +1,9 @@
 // Konfigurer appen før backend prøver å sette opp konfigurasjon
 
-import type { IApi, ISessionKonfigurasjon } from './backend/typer';
+import type { IApi, ISessionKonfigurasjon, TexasConfig } from './backend/typer';
 
 import { appConfig } from './backend/config';
+import { envVar } from './utils';
 
 const Environment = () => {
     if (process.env.ENV === 'local') {
@@ -53,6 +54,12 @@ const Environment = () => {
     };
 };
 const env = Environment();
+
+export const texasConfig: TexasConfig = {
+    tokenEndpoint: envVar('NAIS_TOKEN_ENDPOINT'),
+    tokenExchangeEndpoint: envVar('NAIS_TOKEN_EXCHANGE_ENDPOINT'),
+    tokenIntrospectionEndpoint: envVar('NAIS_TOKEN_INTROSPECTION_ENDPOINT'),
+};
 
 export const sessionConfig: ISessionKonfigurasjon = {
     cookieSecret: [`${process.env.COOKIE_KEY1}`, `${process.env.COOKIE_KEY2}`],

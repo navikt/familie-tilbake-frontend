@@ -1,7 +1,7 @@
 import fs from 'fs';
 import winston from 'winston';
 
-import { envVar } from './utils';
+import { envVar } from '../utils';
 
 export enum LogLevel {
     Error = 3,
