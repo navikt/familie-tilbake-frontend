@@ -14,19 +14,16 @@ type SuccessResponse = {
 
 export class TexasClient {
     private config: TexasConfig;
-    private targetScope: string;
-
-    constructor(config: TexasConfig, targetScope: string) {
+    constructor(config: TexasConfig) {
         this.config = config;
-        this.targetScope = targetScope;
     }
 
-    exchangeToken = async (token: string) => {
+    exchangeToken = async (token: string, targetScope: string) => {
         try {
             const response = await axios.post<SuccessResponse>(this.config.tokenExchangeEndpoint, {
                 method: 'POST',
                 body: {
-                    target: this.targetScope,
+                    target: targetScope,
                     user_token: token,
                     identity_provider: 'azuread',
                 },

@@ -10,9 +10,10 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
+import { appConfig } from './backend';
 import backend from './backend';
 import { ensureAuthenticated } from './backend/auth/authenticate';
-import { oboTilbakeConfig, sessionConfig, texasConfig } from './config';
+import { sessionConfig, texasConfig } from './config';
 import { logInfo } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
@@ -51,7 +52,10 @@ backend(sessionConfig, texasConfig, prometheusTellere).then(
         app.use(
             '/familie-tilbake/api',
             ensureAuthenticated(azureAuthClient, true),
-            attachToken(texasAuthClient, oboTilbakeConfig),
+            attachToken(texasAuthClient, {
+                clientId: appConfig.clientId,
+                scopes: [`${appConfig.clientId}/.default`],
+            }),
             doProxy()
         );
 

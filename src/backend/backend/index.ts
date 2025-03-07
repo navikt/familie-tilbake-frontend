@@ -9,7 +9,6 @@ import passport from 'passport';
 import konfigurerPassport from './auth/azure/passport';
 import konfigurerSession from './auth/session';
 import { TexasClient } from './auth/texas';
-import { appConfig } from './config';
 import headers from './headers';
 import { konfigurerMetrikker } from './metrikker';
 import konfigurerRouter from './router';
@@ -59,7 +58,7 @@ export default async (
     return konfigurerPassport(passport)
         .then((authClient: Client) => {
             azureAuthClient = authClient;
-            const texasClient = new TexasClient(texasConfig, appConfig.backendApiScope);
+            const texasClient = new TexasClient(texasConfig);
             router = konfigurerRouter(azureAuthClient, texasClient, prometheusTellere);
 
             return {

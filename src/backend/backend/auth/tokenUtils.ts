@@ -42,7 +42,8 @@ const utledAccessToken = async (props: UtledAccessTokenProps) => {
     const { authClient, req } = props;
 
     const response = await authClient.exchangeToken(
-        req.session.passport.user.tokenSets[tokenSetSelfId].access_token
+        req.session.passport.user.tokenSets[tokenSetSelfId].access_token,
+        props.api.scopes[0]
     );
     return response.access_token;
 };
