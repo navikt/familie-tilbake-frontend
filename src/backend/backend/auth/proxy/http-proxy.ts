@@ -1,7 +1,7 @@
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 import { logInfo } from '../../../logging/logging';
-import { envVar } from '../../../logging/utils';
+import { envVar } from '../../../utils';
 
 const agent = () => {
     const proxyUri = envVar('HTTP_PROXY', false);

@@ -13,6 +13,11 @@ export interface ISessionKonfigurasjon {
     sessionMaxAgeSekunder?: number;
     cookieSecret: string[] | string;
 }
+export type TexasConfig = {
+    tokenEndpoint: string;
+    tokenExchangeEndpoint: string;
+    tokenIntrospectionEndpoint: string;
+};
 
 export interface IAppConfig {
     discoveryUrl: string;
@@ -21,6 +26,7 @@ export interface IAppConfig {
     redirectUri: string;
     logoutRedirectUri: string;
     sessionSecret: string;
+    backendApiScope: string;
 }
 
 export interface User {

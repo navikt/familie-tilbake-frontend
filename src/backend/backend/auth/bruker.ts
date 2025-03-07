@@ -1,5 +1,5 @@
+import type { TexasClient } from './texas';
 import type { NextFunction, Request, Response } from 'express';
-import type { Client } from 'openid-client';
 
 import fetch from 'node-fetch';
 import { TokenSet } from 'openid-client';
@@ -7,7 +7,7 @@ import { TokenSet } from 'openid-client';
 import { logRequest } from '../utils';
 import { getOnBehalfOfAccessToken, getTokenSetsFromSession, tokenSetSelfId } from './tokenUtils';
 import { LogLevel } from '../../logging/logging';
-import { envVar } from '../../logging/utils';
+import { envVar } from '../../utils';
 
 // Hent brukerprofil fra sesjon
 export const hentBrukerprofil = () => {
@@ -55,13 +55,13 @@ const hentBrukerData = (accessToken: string, req: Request) => {
 /**
  * Funksjon som henter brukerprofil fra graph.
  */
-export const setBrukerprofilPåSesjonRute = (authClient: Client) => {
+export const setBrukerprofilPåSesjonRute = (authClient: TexasClient) => {
     return async (req: Request, _: Response, next: NextFunction) => {
         setBrukerprofilPåSesjon(authClient, req, next);
     };
 };
 
-const setBrukerprofilPåSesjon = (authClient: Client, req: Request, next: NextFunction) => {
+const setBrukerprofilPåSesjon = (authClient: TexasClient, req: Request, next: NextFunction) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((_, _reject) => {
         const api = {

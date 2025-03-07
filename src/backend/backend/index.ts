@@ -1,4 +1,4 @@
-import type { ISessionKonfigurasjon } from './typer';
+import type { ISessionKonfigurasjon, TexasConfig } from './typer';
 import type { Express, Request, Response, Router } from 'express';
 import type { Client } from 'openid-client';
 import type { Counter, Registry } from 'prom-client';
@@ -8,6 +8,7 @@ import passport from 'passport';
 
 import konfigurerPassport from './auth/azure/passport';
 import konfigurerSession from './auth/session';
+import { TexasClient } from './auth/texas';
 import headers from './headers';
 import { konfigurerMetrikker } from './metrikker';
 import konfigurerRouter from './router';
@@ -24,12 +25,14 @@ export { Counter } from 'prom-client';
 export interface IApp {
     app: Express;
     azureAuthClient: Client;
+    texasAuthClient: TexasClient;
     router: Router;
     prometheusRegistry: Registry;
 }
 
 export default async (
     sessionKonfigurasjon: ISessionKonfigurasjon,
+    texasConfig: TexasConfig,
     prometheusTellere?: { [key: string]: Counter<string> }
 ): Promise<IApp> => {
     const app = express();
@@ -55,11 +58,13 @@ export default async (
     return konfigurerPassport(passport)
         .then((authClient: Client) => {
             azureAuthClient = authClient;
-            router = konfigurerRouter(azureAuthClient, prometheusTellere);
+            const texasClient = new TexasClient(texasConfig);
+            router = konfigurerRouter(azureAuthClient, texasClient, prometheusTellere);
 
             return {
                 app,
                 azureAuthClient,
+                texasAuthClient: texasClient,
                 router,
                 prometheusRegistry,
             };
