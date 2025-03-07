@@ -61,7 +61,9 @@ export const getOnBehalfOfAccessToken = (
             if (!req.session) {
                 throw Error('Session på request mangler.');
             }
-            utledAccessToken({ authClient, req, api, promise: { resolve, reject } });
+            utledAccessToken({ authClient, req, api, promise: { resolve, reject } }).then(token =>
+                resolve(token)
+            );
         }
     });
 };
