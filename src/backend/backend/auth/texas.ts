@@ -33,7 +33,12 @@ export class TexasClient {
             return response.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
-            throw Error('Bruker har ikke tilgang til å kalle tjenesten.', error);
+            // TODO: Do something useful 🙂
+            console.log(error);
+            return {
+                access_token: 'invalid',
+                expires_in: 3600,
+            } as SuccessResponse;
         }
     };
 }
