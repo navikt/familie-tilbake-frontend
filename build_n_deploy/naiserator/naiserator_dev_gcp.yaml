@@ -5,6 +5,8 @@ metadata:
   namespace: tilbake
   labels:
     team: tilbake
+  annotations:
+    texas.nais.io/enabled: "true"
 spec:
   image: {{ image }}
   replicas:

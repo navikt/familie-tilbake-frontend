@@ -1,8 +1,8 @@
 // Konfigurer appen før backend prøver å sette opp konfigurasjon
 
-import type { IApi, ISessionKonfigurasjon } from './backend/typer';
+import type { ISessionKonfigurasjon, TexasConfig } from './backend/typer';
 
-import { appConfig } from './backend/config';
+import { envVar } from './utils';
 
 const Environment = () => {
     if (process.env.ENV === 'local') {
@@ -54,6 +54,12 @@ const Environment = () => {
 };
 const env = Environment();
 
+export const texasConfig: TexasConfig = {
+    tokenEndpoint: envVar('NAIS_TOKEN_ENDPOINT'),
+    tokenExchangeEndpoint: envVar('NAIS_TOKEN_EXCHANGE_ENDPOINT'),
+    tokenIntrospectionEndpoint: envVar('NAIS_TOKEN_INTROSPECTION_ENDPOINT'),
+};
+
 export const sessionConfig: ISessionKonfigurasjon = {
     cookieSecret: [`${process.env.COOKIE_KEY1}`, `${process.env.COOKIE_KEY2}`],
     navn: 'tilbakekreving-backend-v1',
@@ -71,11 +77,6 @@ export const sessionConfig: ISessionKonfigurasjon = {
 if (!process.env.TILBAKE_SCOPE) {
     throw new Error('Scope mot tilbakekreving-backend er ikke konfigurert');
 }
-
-export const oboTilbakeConfig: IApi = {
-    clientId: appConfig.clientId,
-    scopes: [process.env.TILBAKE_SCOPE],
-};
 
 export const buildPath = env.buildPath;
 export const proxyUrl = env.proxyUrl;

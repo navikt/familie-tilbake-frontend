@@ -1,7 +1,6 @@
-import type { IApi } from './backend/typer';
+import type { TexasClient } from './backend/auth/texas';
 import type { NextFunction, Request, Response } from 'express';
 import type { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
-import type { Client } from 'openid-client';
 
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
@@ -46,11 +45,10 @@ export const doRedirectProxy = () => {
     };
 };
 
-export const attachToken = (authClient: Client, oboConfig: IApi) => {
+export const attachToken = (texasClient: TexasClient, scope: string) => {
     return async (req: Request, _res: Response, next: NextFunction) => {
-        getOnBehalfOfAccessToken(authClient, req, oboConfig).then((accessToken: string) => {
-            req.headers.Authorization = `Bearer ${accessToken}`;
-            return next();
-        });
+        const accessToken = await getOnBehalfOfAccessToken(texasClient, req, scope);
+        req.headers.Authorization = `Bearer ${accessToken}`;
+        return next();
     };
 };

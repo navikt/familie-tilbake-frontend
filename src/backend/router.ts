@@ -7,8 +7,8 @@ import { ensureAuthenticated } from './backend/auth/authenticate';
 import { logRequest } from './backend/utils';
 import { buildPath } from './config';
 import { LogLevel } from './logging/logging';
-import { envVar } from './logging/utils';
 import { prometheusTellere } from './metrikker';
+import { envVar } from './utils';
 
 export const redirectHvisInternUrlIPreprod = () => {
     return async (req: Request, res: Response, next: NextFunction) => {
