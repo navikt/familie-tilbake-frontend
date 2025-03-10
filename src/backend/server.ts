@@ -52,10 +52,7 @@ backend(sessionConfig, texasConfig, prometheusTellere).then(
         app.use(
             '/familie-tilbake/api',
             ensureAuthenticated(azureAuthClient, true),
-            attachToken(texasAuthClient, {
-                clientId: appConfig.clientId,
-                scopes: [appConfig.backendApiScope],
-            }),
+            attachToken(texasAuthClient, appConfig.backendApiScope),
             doProxy()
         );
 

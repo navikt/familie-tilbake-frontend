@@ -1,4 +1,3 @@
-import type { IApi } from '../typer';
 import type { TexasClient } from './texas';
 import type { Request } from 'express';
 
@@ -26,38 +25,22 @@ const loggOgReturnerOmTokenErGyldig = (req: Request, key: string, validAccessTok
     return validAccessToken;
 };
 
-export interface UtledAccessTokenProps {
-    authClient: TexasClient;
-    req: Request;
-    api: IApi;
-    promise: {
-        resolve: (value: string) => void;
-        reject: (reason: Error | string) => void;
-    };
-}
-
 export const appendDefaultScope = (scope: string) => `${scope}/.default`;
 
-const utledAccessToken = async (props: UtledAccessTokenProps) => {
-    const { authClient, req } = props;
-
-    const response = await authClient.exchangeToken(
+const utledAccessToken = async (texasClient: TexasClient, req: Request, scope: string) => {
+    const response = await texasClient.exchangeToken(
         req.session.passport.user.tokenSets[tokenSetSelfId].access_token,
-        props.api.scopes[0]
+        scope
     );
     return response.access_token;
 };
 
-export const getOnBehalfOfAccessToken = (
-    authClient: TexasClient,
+export const getOnBehalfOfAccessToken = async (
+    texasClient: TexasClient,
     req: Request,
-    api: IApi
+    scope: string
 ): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        utledAccessToken({ authClient, req, api, promise: { resolve, reject } }).then(token =>
-            resolve(token)
-        );
-    });
+    return await utledAccessToken(texasClient, req, scope);
 };
 
 export const hasValidAccessToken = (req: Request, key = tokenSetSelfId) => {

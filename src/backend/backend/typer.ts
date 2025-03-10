@@ -1,8 +1,3 @@
-export interface IApi {
-    clientId: string;
-    scopes: string[];
-}
-
 export interface ISessionKonfigurasjon {
     redisUrl?: string;
     redisFullUrl?: string;
