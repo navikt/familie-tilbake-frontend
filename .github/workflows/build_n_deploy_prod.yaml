@@ -76,5 +76,5 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
-          RESOURCE: build_n_deploy/naiserator/naiserator_prod_gcp_tilbake.yaml
+          RESOURCE: build_n_deploy/naiserator/naiserator_prod_gcp.yaml
           VAR: image=${{ needs.build.outputs.image }},VERSION=${{ env.VERSION }}
