@@ -49,6 +49,7 @@ export class TexasClient {
                     },
                 }
             );
+            stdoutLogger.info('validateLogin. response.data=%s', response.data);
             return response.data.active;
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
