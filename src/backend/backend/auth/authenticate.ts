@@ -1,12 +1,13 @@
+import type { TexasClient } from './texas';
 import type { NextFunction, Request, Response } from 'express';
-import type { Client, TokenSet } from 'openid-client';
 
 import passport from 'passport';
 
 import { logRequest } from '../utils';
-import { getTokenSetsFromSession, hasValidAccessToken, tokenSetSelfId } from './tokenUtils';
+import { tokenSetSelfId } from './tokenUtils';
 import { LogLevel } from '../../logging/logging';
 import { appConfig } from '../config';
+
 export const authenticateAzure = (req: Request, res: Response, next: NextFunction) => {
     const regex: RegExpExecArray | null = /redirectUrl=(.*)/.exec(req.url);
     const redirectUrl = regex ? regex[1] : 'invalid';
@@ -50,9 +51,10 @@ export const authenticateAzureCallback = () => {
     };
 };
 
-export const ensureAuthenticated = (authClient: Client, sendUnauthorized: boolean) => {
+export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: boolean) => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const validAccessToken = hasValidAccessToken(req);
+        const token = req.headers.authorization?.substring(8);
+        const validAccessToken = token && (await texasClient.validateLogin(token));
         logRequest(
             req,
             `ensureAuthenticated. isAuthenticated=${req.isAuthenticated()}, hasValidAccessToken=${validAccessToken}`,
@@ -60,41 +62,21 @@ export const ensureAuthenticated = (authClient: Client, sendUnauthorized: boolea
         );
 
         if (req.isAuthenticated()) {
-            if (!validAccessToken) {
-                const tokenSet: TokenSet = getTokenSetsFromSession(req)[tokenSetSelfId];
-                await authClient
-                    .refresh(tokenSet.refresh_token ?? '')
-                    .then((tokenSet: TokenSet) => {
-                        if (!req.session) {
-                            throw new Error('Mangler sesjon på kall');
-                        }
-
-                        req.session.passport.user.tokenSets[tokenSetSelfId] = tokenSet;
-                    })
-                    .catch((error: Error) => {
-                        logRequest(
-                            req,
-                            `Feilet ved refresh av tokenset: ${error.message}`,
-                            LogLevel.Warning
-                        );
-                        const pathname = req.originalUrl;
-                        if (sendUnauthorized) {
-                            res.status(401).send('Unauthorized');
-                        } else {
-                            res.redirect(`/login?redirectUrl=${pathname}`);
-                        }
-                        return;
-                    });
-            }
-            return next();
-        } else {
-            const pathname = req.originalUrl;
-            if (sendUnauthorized) {
-                res.status(401).send('Unauthorized');
+            if (validAccessToken) {
+                req.session.passport.user.tokenSets[tokenSetSelfId] = {
+                    access_token: token,
+                };
             } else {
-                res.redirect(`/login?redirectUrl=${pathname}`);
+                const pathname = req.originalUrl;
+                if (sendUnauthorized) {
+                    res.status(401).send('Unauthorized');
+                } else {
+                    res.redirect(`/login?redirectUrl=${pathname}`);
+                }
             }
         }
+
+        return next();
     };
 };
 

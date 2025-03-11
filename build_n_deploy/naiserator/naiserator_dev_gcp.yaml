@@ -46,6 +46,8 @@ spec:
       tenant: trygdeetaten.no
       replyURLs:
         - "https://tilbakekreving.ansatt.dev.nav.no/auth/openid/callback"
+    sidecar:
+      enabled: true
   webproxy: true
   accessPolicy:
     inbound:

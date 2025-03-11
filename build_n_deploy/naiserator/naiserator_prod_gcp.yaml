@@ -46,6 +46,8 @@ spec:
       enabled: true
       replyURLs:
         - "https://tilbakekreving.intern.nav.no/auth/openid/callback"
+    sidecar:
+      enabled: true
   webproxy: true
   accessPolicy:
     outbound:

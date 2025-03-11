@@ -2,6 +2,8 @@ import type { TexasConfig } from '../typer';
 
 import axios from 'axios';
 
+import { stdoutLogger } from '../../logging/logging';
+
 type SuccessResponse = {
     access_token: string;
     expires_in: number;
@@ -32,4 +34,44 @@ export class TexasClient {
         );
         return response.data;
     };
+
+    validateLogin = async (token: string) => {
+        try {
+            const response = await axios.post<IntrospectResponse>(
+                this.config.tokenIntrospectionEndpoint,
+                {
+                    identity_provider: 'azuread',
+                    token: token,
+                },
+                {
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                }
+            );
+            return response.data.active;
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    stdoutLogger.error(
+                        'Feil validering av innlogging. Statuskode %s, body %s',
+                        error.response.status,
+                        error.response.data,
+                        error
+                    );
+                    return false;
+                }
+            } else {
+                stdoutLogger.error('Feil ved validering av innlogging', error);
+            }
+
+            throw error;
+        }
+    };
 }
+
+type IntrospectResponse = {
+    active: boolean;
+    error: string | null;
+    [claims: string]: unknown;
+};

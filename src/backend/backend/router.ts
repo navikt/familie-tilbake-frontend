@@ -1,6 +1,5 @@
 import type { TexasClient } from './auth/texas';
 import type { NextFunction, Request, Response } from 'express';
-import type { Client } from 'openid-client';
 import type { Counter } from 'prom-client';
 
 import express from 'express';
@@ -16,7 +15,6 @@ import { hentBrukerprofil, setBrukerprofilPåSesjonRute } from './auth/bruker';
 const router = express.Router();
 
 export default (
-    authClient: Client,
     texasClient: TexasClient,
     prometheusTellere?: { [key: string]: Counter<string> }
 ) => {
@@ -34,7 +32,7 @@ export default (
     // Bruker
     router.get(
         '/user/profile',
-        ensureAuthenticated(authClient, true),
+        ensureAuthenticated(texasClient, true),
         setBrukerprofilPåSesjonRute(texasClient),
         hentBrukerprofil()
     );
