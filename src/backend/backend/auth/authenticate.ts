@@ -63,8 +63,14 @@ export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: 
 
         if (req.isAuthenticated()) {
             if (validAccessToken) {
-                req.session.passport.user.tokenSets[tokenSetSelfId] = {
-                    access_token: token,
+                req.session.passport = {
+                    user: {
+                        tokenSets: {
+                            [tokenSetSelfId]: {
+                                access_token: token,
+                            },
+                        },
+                    },
                 };
             } else {
                 const pathname = req.originalUrl;
