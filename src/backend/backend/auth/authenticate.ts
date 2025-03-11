@@ -5,7 +5,7 @@ import passport from 'passport';
 
 import { logRequest } from '../utils';
 import { tokenSetSelfId } from './tokenUtils';
-import { LogLevel } from '../../logging/logging';
+import { LogLevel, stdoutLogger } from '../../logging/logging';
 import { appConfig } from '../config';
 
 export const authenticateAzure = (req: Request, res: Response, next: NextFunction) => {
@@ -55,6 +55,11 @@ export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: 
     return async (req: Request, res: Response, next: NextFunction) => {
         const token = req.headers.authorization?.substring(8);
         const harToken = token !== undefined && token !== '';
+        if (harToken) {
+            stdoutLogger.info(
+                `Token info "${token.substring(0, token?.lastIndexOf('.'))}[...[${token.substring(token.length - 8)}"`
+            );
+        }
         const validAccessToken = harToken && (await texasClient.validateLogin(token));
         logRequest(
             req,
