@@ -61,26 +61,26 @@ export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: 
             LogLevel.Debug
         );
 
-        if (req.isAuthenticated()) {
-            if (validAccessToken) {
-                req.session.passport = {
-                    user: {
-                        tokenSets: {
-                            [tokenSetSelfId]: {
-                                access_token: token,
-                            },
+        // if (req.isAuthenticated()) {
+        if (validAccessToken) {
+            req.session.passport = {
+                user: {
+                    tokenSets: {
+                        [tokenSetSelfId]: {
+                            access_token: token,
                         },
                     },
-                };
+                },
+            };
+        } else {
+            const pathname = req.originalUrl;
+            if (sendUnauthorized) {
+                res.status(401).send('Unauthorized');
             } else {
-                const pathname = req.originalUrl;
-                if (sendUnauthorized) {
-                    res.status(401).send('Unauthorized');
-                } else {
-                    res.redirect(`/login?redirectUrl=${pathname}`);
-                }
+                res.redirect(`/login?redirectUrl=${pathname}`);
             }
         }
+        // }
 
         return next();
     };
