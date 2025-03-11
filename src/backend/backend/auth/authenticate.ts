@@ -4,8 +4,8 @@ import type { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 
 import { logRequest } from '../utils';
-import { tokenSetSelfId } from './tokenUtils';
-import { LogLevel, stdoutLogger } from '../../logging/logging';
+import { tokenSetSelfId, utledAccessToken } from './tokenUtils';
+import { LogLevel } from '../../logging/logging';
 import { appConfig } from '../config';
 
 export const authenticateAzure = (req: Request, res: Response, next: NextFunction) => {
@@ -53,17 +53,11 @@ export const authenticateAzureCallback = () => {
 
 export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: boolean) => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const token = req.headers.authorization?.substring(7);
-        const harToken = token !== undefined && token !== '';
-        if (harToken) {
-            stdoutLogger.info(
-                `Token info "${token.substring(0, token?.lastIndexOf('.'))}[...[${token.substring(token.length - 8)}"`
-            );
-        }
-        const validAccessToken = harToken && (await texasClient.validateLogin(token));
+        const token = utledAccessToken(req);
+        const validAccessToken = token && (await texasClient.validateLogin(token));
         logRequest(
             req,
-            `ensureAuthenticated. harToken=${harToken}, isAuthenticated=${req.isAuthenticated()}, hasValidAccessToken=${validAccessToken}`,
+            `ensureAuthenticated. isAuthenticated=${req.isAuthenticated()}, hasValidAccessToken=${validAccessToken}`,
             LogLevel.Info
         );
 
@@ -83,7 +77,7 @@ export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: 
             if (sendUnauthorized) {
                 res.status(401).send('Unauthorized');
             } else {
-                res.redirect(`/login?redirectUrl=${pathname}`);
+                res.redirect(`/oauth2/login?redirect=${pathname}`);
             }
         }
         // }

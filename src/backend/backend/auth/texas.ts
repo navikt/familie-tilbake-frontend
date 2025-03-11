@@ -35,6 +35,11 @@ export class TexasClient {
         return response.data;
     };
 
+    hentOnBehalfOfToken = async (token: string, targetScope: string) => {
+        const exchangeResponse = await this.exchangeToken(token, targetScope);
+        return exchangeResponse.access_token;
+    };
+
     validateLogin = async (token: string): Promise<boolean> => {
         try {
             const response = await axios.post<IntrospectResponse>(

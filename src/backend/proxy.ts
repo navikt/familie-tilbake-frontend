@@ -4,7 +4,7 @@ import type { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
 
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { getOnBehalfOfAccessToken } from './backend/auth/tokenUtils';
+import { utledAccessToken } from './backend/auth/tokenUtils';
 import { proxyUrl, redirectRecords } from './config';
 import { stdoutLogger } from './logging/logging';
 
@@ -46,8 +46,13 @@ export const doRedirectProxy = () => {
 };
 
 export const attachToken = (texasClient: TexasClient, scope: string) => {
-    return async (req: Request, _res: Response, next: NextFunction) => {
-        const accessToken = await getOnBehalfOfAccessToken(texasClient, req, scope);
+    return async (req: Request, res: Response, next: NextFunction) => {
+        const requestToken = utledAccessToken(req);
+        if (!requestToken) {
+            res.sendStatus(401);
+            return;
+        }
+        const accessToken = await texasClient.hentOnBehalfOfToken(requestToken, scope);
         req.headers.Authorization = `Bearer ${accessToken}`;
         return next();
     };
