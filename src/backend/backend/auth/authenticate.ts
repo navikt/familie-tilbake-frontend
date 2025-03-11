@@ -54,11 +54,12 @@ export const authenticateAzureCallback = () => {
 export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: boolean) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const token = req.headers.authorization?.substring(8);
-        const validAccessToken = token && (await texasClient.validateLogin(token));
+        const harToken = token !== undefined && token !== '';
+        const validAccessToken = harToken && (await texasClient.validateLogin(token));
         logRequest(
             req,
-            `ensureAuthenticated. isAuthenticated=${req.isAuthenticated()}, hasValidAccessToken=${validAccessToken}`,
-            LogLevel.Debug
+            `ensureAuthenticated. harToken=${harToken}, isAuthenticated=${req.isAuthenticated()}, hasValidAccessToken=${validAccessToken}`,
+            LogLevel.Info
         );
 
         // if (req.isAuthenticated()) {

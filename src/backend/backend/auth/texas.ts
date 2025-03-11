@@ -35,7 +35,7 @@ export class TexasClient {
         return response.data;
     };
 
-    validateLogin = async (token: string) => {
+    validateLogin = async (token: string): Promise<boolean> => {
         try {
             const response = await axios.post<IntrospectResponse>(
                 this.config.tokenIntrospectionEndpoint,
@@ -64,7 +64,6 @@ export class TexasClient {
             } else {
                 stdoutLogger.error('Feil ved validering av innlogging', error);
             }
-
             throw error;
         }
     };
