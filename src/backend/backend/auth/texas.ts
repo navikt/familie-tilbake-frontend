@@ -49,15 +49,13 @@ export class TexasClient {
                     },
                 }
             );
-            stdoutLogger.info('validateLogin. response.data = %s', response.data);
+            stdoutLogger.info(`validateLogin. response.data=${response.data}`);
             return response.data.active;
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
                     stdoutLogger.error(
-                        'Feil validering av innlogging. Statuskode %s, body %s',
-                        error.response.status,
-                        error.response.data,
+                        `Feil validering av innlogging. Statuskode ${error.response.status}, body ${error.response.data}`,
                         error
                     );
                     return false;
