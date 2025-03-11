@@ -53,7 +53,7 @@ export const authenticateAzureCallback = () => {
 
 export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: boolean) => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const token = req.headers.authorization?.substring(8);
+        const token = req.headers.authorization?.substring(7);
         const harToken = token !== undefined && token !== '';
         if (harToken) {
             stdoutLogger.info(
