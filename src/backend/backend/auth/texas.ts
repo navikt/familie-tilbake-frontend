@@ -29,7 +29,7 @@ export class TexasClient {
                 identity_provider: 'azuread',
             },
             {
-                headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                headers: { 'Content-type': 'application/x-www-form-urlencoded' },
             }
         );
         return response.data;
@@ -44,9 +44,7 @@ export class TexasClient {
                     token: token,
                 },
                 {
-                    headers: {
-                        'content-type': 'application/json',
-                    },
+                    headers: { 'Content-type': 'application/json' },
                 }
             );
             stdoutLogger.info(`validateLogin. response.data=${JSON.stringify(response.data)}`);
