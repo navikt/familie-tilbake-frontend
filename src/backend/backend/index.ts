@@ -18,7 +18,8 @@ export * from './typer';
 export * from './utils';
 
 export { Counter } from 'prom-client';
-export interface IApp {
+
+interface IApp {
     app: Express;
     texasClient: TexasClient;
     router: Router;

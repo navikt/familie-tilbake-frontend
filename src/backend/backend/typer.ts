@@ -24,7 +24,7 @@ export interface IAppConfig {
     backendApiScope: string;
 }
 
-export interface User {
+interface User {
     displayName: string;
     email: string;
     enhet: string;
