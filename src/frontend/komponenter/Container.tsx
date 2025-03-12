@@ -57,7 +57,11 @@ const AppRoutes = () => {
             </Route>
         ),
         {
-            future: { v7_relativeSplatPath: true },
+            future: {
+                v7_relativeSplatPath: true,
+                v7_fetcherPersist: true,
+                v7_normalizeFormMethod: true,
+            },
         }
     );
 
