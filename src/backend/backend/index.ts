@@ -3,7 +3,6 @@ import type { Express, Request, Response, Router } from 'express';
 import type { Counter, Registry } from 'prom-client';
 
 import express from 'express';
-import passport from 'passport';
 
 import konfigurerSession from './auth/session';
 import { TexasClient } from './auth/texas';
@@ -46,10 +45,10 @@ export default (
     });
     const prometheusRegistry: Registry = konfigurerMetrikker(app, prometheusTellere);
 
-    konfigurerSession(app, passport, sessionKonfigurasjon);
+    konfigurerSession(app, sessionKonfigurasjon);
 
     const texasClient = new TexasClient(texasConfig);
-    const router = konfigurerRouter(texasClient, prometheusTellere);
+    const router = konfigurerRouter(texasClient);
 
     return {
         app,

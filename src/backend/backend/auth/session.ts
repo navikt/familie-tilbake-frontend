@@ -1,6 +1,5 @@
 import type { ISessionKonfigurasjon } from '../typer';
 import type { Express } from 'express';
-import type { PassportStatic } from 'passport';
 
 import { RedisStore } from 'connect-redis';
 import cookieParser from 'cookie-parser';
@@ -63,11 +62,7 @@ const lagRedisClient = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     }
 };
 
-export default (
-    app: Express,
-    passport: PassportStatic,
-    sessionKonfigurasjon: ISessionKonfigurasjon
-) => {
+export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
     app.use(cookieParser(sessionKonfigurasjon.cookieSecret));
     app.set('trust proxy', 1);
 
@@ -127,7 +122,4 @@ export default (
             })
         );
     }
-
-    app.use(passport.initialize());
-    app.use(passport.session());
 };
