@@ -5,10 +5,9 @@ import path from 'path';
 
 import { ensureAuthenticated } from './backend/auth/authenticate';
 import { logRequest } from './backend/utils';
-import { buildPath } from './config';
+import { appConfig, buildPath } from './config';
 import { LogLevel } from './logging/logging';
 import { prometheusTellere } from './metrikker';
-import { envVar } from './utils';
 
 export const redirectHvisInternUrlIPreprod = () => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -25,9 +24,7 @@ export const redirectHvisInternUrlIPreprod = () => {
 
 export default (texasClient: TexasClient, router: Router) => {
     router.get('/version', (_: Request, res: Response) => {
-        res.status(200)
-            .send({ status: 'SUKSESS', data: envVar('APP_VERSION') })
-            .end();
+        res.status(200).send({ status: 'SUKSESS', data: appConfig.version }).end();
     });
 
     router.get('/error', (_: Request, res: Response) => {

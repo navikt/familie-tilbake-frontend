@@ -6,8 +6,8 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import redis from 'redis';
 
+import { appConfig } from '../../config';
 import { logError, logInfo, logSecure } from '../../logging/logging';
-import { appConfig } from '../config';
 import {
     hentErforbindelsenTilRedisTilgjengelig,
     settErforbindelsenTilRedisTilgjengelig,
