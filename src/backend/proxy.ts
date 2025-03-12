@@ -53,7 +53,7 @@ export const attachToken = (texasClient: TexasClient, scope: string) => {
             return;
         }
         const accessToken = await texasClient.hentOnBehalfOfToken(requestToken, scope);
-        req.headers.Authorization = `Bearer ${accessToken}`;
+        req.headers.authorization = `Bearer ${accessToken}`;
         return next();
     };
 };
