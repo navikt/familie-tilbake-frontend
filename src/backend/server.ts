@@ -24,7 +24,7 @@ import config from '../webpack/webpack.dev';
 const port = 8000;
 
 backend(sessionConfig, texasConfig, prometheusTellere).then(
-    ({ app, azureAuthClient, texasAuthClient, router }: IApp) => {
+    ({ app, texasClient, router }: IApp) => {
         let middleware;
 
         if (process.env.NODE_ENV === 'development') {
@@ -51,8 +51,8 @@ backend(sessionConfig, texasConfig, prometheusTellere).then(
 
         app.use(
             '/familie-tilbake/api',
-            ensureAuthenticated(azureAuthClient, true),
-            attachToken(texasAuthClient, appConfig.backendApiScope),
+            ensureAuthenticated(texasClient, true),
+            attachToken(texasClient, appConfig.backendApiScope),
             doProxy()
         );
 
@@ -61,7 +61,7 @@ backend(sessionConfig, texasConfig, prometheusTellere).then(
         // Sett opp express og router etter proxy. Spesielt viktig med tanke på større payloads
         app.use(json({ limit: '200mb' }));
         app.use(urlencoded({ limit: '200mb', extended: true }));
-        app.use('/', setupRouter(azureAuthClient, router));
+        app.use('/', setupRouter(texasClient, router));
 
         app.listen(port, '0.0.0.0', () => {
             logInfo(`Server startet på port ${port}. Build version: ${envVar('APP_VERSION')}.`);

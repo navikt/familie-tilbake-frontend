@@ -1,5 +1,5 @@
+import type { TexasClient } from './backend/auth/texas';
 import type { Response, Request, Router, NextFunction } from 'express';
-import type { Client } from 'openid-client';
 
 import path from 'path';
 
@@ -23,7 +23,7 @@ export const redirectHvisInternUrlIPreprod = () => {
     };
 };
 
-export default (authClient: Client, router: Router) => {
+export default (texasClient: TexasClient, router: Router) => {
     router.get('/version', (_: Request, res: Response) => {
         res.status(200)
             .send({ status: 'SUKSESS', data: envVar('APP_VERSION') })
@@ -45,7 +45,7 @@ export default (authClient: Client, router: Router) => {
     router.get(
         '*',
         redirectHvisInternUrlIPreprod(),
-        ensureAuthenticated(authClient, false),
+        ensureAuthenticated(texasClient, false),
         (_: Request, res: Response) => {
             prometheusTellere.appLoad.inc();
 
