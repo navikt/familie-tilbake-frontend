@@ -58,7 +58,7 @@ export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: 
         logRequest(
             req,
             `ensureAuthenticated. isAuthenticated=${req.isAuthenticated()}, hasValidAccessToken=${validAccessToken}`,
-            LogLevel.Info
+            LogLevel.Debug
         );
 
         // if (req.isAuthenticated()) {

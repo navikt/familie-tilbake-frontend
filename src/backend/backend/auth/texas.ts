@@ -52,7 +52,6 @@ export class TexasClient {
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
-            stdoutLogger.info(`validateLogin. response.data=${JSON.stringify(response.data)}`);
             return response.data.active;
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
