@@ -56,7 +56,10 @@ const AppRoutes = () => {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/*" element={<Feilmelding />} />
             </Route>
-        )
+        ),
+        {
+            future: { v7_relativeSplatPath: true },
+        }
     );
 
     return <RouterProvider router={router} />;
