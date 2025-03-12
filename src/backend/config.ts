@@ -80,7 +80,6 @@ if (!process.env.TILBAKE_SCOPE) {
 
 export const buildPath = env.buildPath;
 export const proxyUrl = env.proxyUrl;
-export const namespace = env.namespace;
 
 export const redirectRecords: Record<string, string> = {
     '/redirect/fagsystem/BA': env.baSakUrl,
