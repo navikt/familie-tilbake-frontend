@@ -5,21 +5,19 @@ import type { Counter, Registry } from 'prom-client';
 import express from 'express';
 import passport from 'passport';
 
-import konfigurerPassport from './auth/azure/passport';
 import konfigurerSession from './auth/session';
 import { TexasClient } from './auth/texas';
 import headers from './headers';
 import { konfigurerMetrikker } from './metrikker';
 import konfigurerRouter from './router';
 import { hentErforbindelsenTilRedisTilgjengelig } from './utils';
-import { logError } from '../logging/logging';
 
 export * from './auth/authenticate';
 export * from './auth/tokenUtils';
 export * from './config';
 export * from './typer';
 export * from './utils';
-export * from 'openid-client';
+
 export { Counter } from 'prom-client';
 export interface IApp {
     app: Express;
@@ -28,14 +26,12 @@ export interface IApp {
     prometheusRegistry: Registry;
 }
 
-export default async (
+export default (
     sessionKonfigurasjon: ISessionKonfigurasjon,
     texasConfig: TexasConfig,
     prometheusTellere?: { [key: string]: Counter<string> }
-): Promise<IApp> => {
+): IApp => {
     const app = express();
-    let router: Router;
-
     headers.setup(app);
 
     app.get('/isAlive', (_req: Request, res: Response) => {
@@ -52,20 +48,13 @@ export default async (
 
     konfigurerSession(app, passport, sessionKonfigurasjon);
 
-    return konfigurerPassport(passport)
-        .then(() => {
-            const texasClient = new TexasClient(texasConfig);
-            router = konfigurerRouter(texasClient, prometheusTellere);
+    const texasClient = new TexasClient(texasConfig);
+    const router = konfigurerRouter(texasClient, prometheusTellere);
 
-            return {
-                app,
-                texasClient,
-                router,
-                prometheusRegistry,
-            };
-        })
-        .catch((err: Error) => {
-            logError('Feil ved konfigurasjon av azure', err);
-            process.exit(1);
-        });
+    return {
+        app,
+        texasClient,
+        router,
+        prometheusRegistry,
+    };
 };
