@@ -6,9 +6,9 @@ import axios from 'axios';
 
 import { logRequest } from '../utils';
 import { utledAccessToken } from './tokenUtils';
+import { appConfig } from '../../config';
 import { retry } from '../../http';
 import { LogLevel } from '../../logging/logging';
-import { envVar } from '../../utils';
 
 // Hent brukerprofil fra sesjon
 export const hentBrukerprofil = () => {
@@ -24,7 +24,7 @@ export const hentBrukerprofil = () => {
 const fetchUserinfo = async (accessToken: string) => {
     const query = 'onPremisesSamAccountName,displayName,mail,officeLocation,userPrincipalName,id';
 
-    return await axios.get<Userinfo>(`${envVar('GRAPH_API')}?$select=${query}`, {
+    return await axios.get<Userinfo>(`${appConfig.graphApiUrl}?$select=${query}`, {
         headers: {
             Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',

@@ -1,4 +1,3 @@
-import './konfigurerApp';
 import type { NextFunction, Request, Response } from 'express';
 
 import { json, urlencoded } from 'express';
@@ -9,15 +8,13 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-import { appConfig } from './backend';
 import backend from './backend';
 import { ensureAuthenticated } from './backend/auth/authenticate';
-import { sessionConfig, texasConfig } from './config';
+import { appConfig, sessionConfig, texasConfig } from './config';
 import { logInfo } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
-import { envVar } from './utils';
 import config from '../webpack/webpack.dev';
 
 const port = 8000;
@@ -58,5 +55,5 @@ app.use(urlencoded({ limit: '200mb', extended: true }));
 app.use('/', setupRouter(texasClient, router));
 
 app.listen(port, '0.0.0.0', () => {
-    logInfo(`Server startet på port ${port}. Build version: ${envVar('APP_VERSION')}.`);
+    logInfo(`Server startet på port ${port}. Build version: ${appConfig.version}.`);
 });
