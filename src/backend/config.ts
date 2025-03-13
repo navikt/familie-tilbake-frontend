@@ -12,7 +12,6 @@ export const appConfig: IAppConfig = {
     sessionSecret: envVar('SESSION_SECRET'),
     backendApiScope: envVar('TILBAKE_SCOPE'),
     version: envVar('APP_VERSION'),
-    logLevel: envVar('LOG_LEVEL', false, 'info'),
     graphApiUrl: 'https://graph.microsoft.com/v1.0/me',
 };
 

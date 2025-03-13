@@ -18,7 +18,6 @@ export interface IAppConfig {
     sessionSecret: string;
     backendApiScope: string;
     version: string;
-    logLevel: string;
     graphApiUrl: string;
 }
 

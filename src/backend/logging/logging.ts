@@ -1,8 +1,6 @@
 import fs from 'fs';
 import winston from 'winston';
 
-import { appConfig } from '../config';
-
 export enum LogLevel {
     Error = 3,
     Warning = 2,
@@ -17,7 +15,8 @@ const secureLogPath = () =>
 
 export const stdoutLogger = winston.createLogger({
     format: winston.format.json(),
-    level: appConfig.logLevel,
+    // Kan ikke skje via appConfig siden den har en avhengighet til logg
+    level: process.env.LOG_LEVEL ?? 'info',
     transports: [new winston.transports.Console()],
 });
 
