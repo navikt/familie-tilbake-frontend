@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 
 import { Crypto } from '@peculiar/webcrypto';
+import { TextEncoder } from 'util';
 
 global.console = {
     ...console,
@@ -11,6 +12,8 @@ global.console = {
     warn: jest.fn(),
     // error: jest.fn(),
 };
+
+global.TextEncoder = TextEncoder;
 
 const crypto = new Crypto();
 Object.defineProperty(global, 'crypto', {
