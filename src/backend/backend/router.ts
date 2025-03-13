@@ -3,7 +3,7 @@ import type { TexasClient } from './auth/texas';
 import express from 'express';
 
 import { ensureAuthenticated } from './auth/authenticate';
-import { hentBrukerprofil, setBrukerprofilPåSesjonRute } from './auth/bruker';
+import { hentBrukerprofil } from './auth/bruker';
 
 const router = express.Router();
 
@@ -12,8 +12,7 @@ export default (texasClient: TexasClient) => {
     router.get(
         '/user/profile',
         ensureAuthenticated(texasClient, true),
-        setBrukerprofilPåSesjonRute(texasClient),
-        hentBrukerprofil()
+        hentBrukerprofil(texasClient)
     );
 
     return router;
