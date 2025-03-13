@@ -55,19 +55,10 @@ const AppRoutes = () => {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/*" element={<Feilmelding />} />
             </Route>
-        ),
-        {
-            future: {
-                v7_relativeSplatPath: true,
-                v7_fetcherPersist: true,
-                v7_normalizeFormMethod: true,
-                v7_partialHydration: true,
-                v7_skipActionErrorRevalidation: true,
-            },
-        }
+        )
     );
 
-    return <RouterProvider future={{ v7_startTransition: true }} router={router} />;
+    return <RouterProvider router={router} />;
 };
 
 const UlagretDataModalContainer = () => (
