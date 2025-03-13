@@ -6,7 +6,7 @@ import type { IFagsak } from '../../../typer/fagsak';
 import createUseContext from 'constate';
 import * as React from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';

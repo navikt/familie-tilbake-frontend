@@ -16,7 +16,7 @@ import type { AxiosError } from 'axios';
 import createUseContext from 'constate';
 import deepEqual from 'deep-equal';
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';

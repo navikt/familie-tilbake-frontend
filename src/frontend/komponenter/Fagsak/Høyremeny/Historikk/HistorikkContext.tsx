@@ -6,7 +6,7 @@ import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
