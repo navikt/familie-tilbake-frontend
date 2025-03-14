@@ -46,6 +46,8 @@ spec:
       enabled: true
       replyURLs:
         - "https://tilbakekreving.intern.nav.no/auth/openid/callback"
+    sidecar:
+      enabled: true
   webproxy: true
   accessPolicy:
     outbound:
@@ -58,8 +60,6 @@ spec:
       value: {{ VERSION }}
     - name: TILBAKE_SCOPE
       value: api://prod-gcp.tilbake.tilbakekreving-backend/.default
-    - name: TILBAKEKREVING_SVC_URL
-      value: http://tilbakekreving-backend/api
     - name: TILBAKEKREVING_BASE_DOMAIN
       value: tilbakekreving.intern.nav.no
   envFrom:
