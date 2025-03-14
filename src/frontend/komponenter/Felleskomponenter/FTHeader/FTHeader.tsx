@@ -23,7 +23,7 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
                 />
                 <Dropdown.Menu>
                     <Dropdown.Menu.List>
-                        <Dropdown.Menu.List.Item as="a" href={`${window.origin}/auth/logout`}>
+                        <Dropdown.Menu.List.Item as="a" href={`${window.origin}/oauth2/logout`}>
                             Logg ut
                             <Spacer />
                             <LeaveIcon aria-hidden fontSize="1.5rem" />
