@@ -15,23 +15,18 @@ export type TexasConfig = {
 };
 
 export interface IAppConfig {
-    discoveryUrl: string;
-    clientId: string;
-    clientSecret: string;
-    redirectUri: string;
-    logoutRedirectUri: string;
     sessionSecret: string;
     backendApiScope: string;
+    version: string;
+    graphApiUrl: string;
 }
 
-export interface User {
+interface User {
     displayName: string;
     email: string;
     enhet: string;
     identifier: string;
     navIdent: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    groups: any;
 }
 
 declare module 'express-session' {
