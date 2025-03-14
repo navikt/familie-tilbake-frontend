@@ -3,13 +3,12 @@ import type { Userinfo } from '../../typer/entraid';
 import type { NextFunction, Request, Response } from 'express';
 
 import axios from 'axios';
-import { TokenSet } from 'openid-client';
 
 import { logRequest } from '../utils';
-import { getOnBehalfOfAccessToken, getTokenSetsFromSession, tokenSetSelfId } from './tokenUtils';
+import { utledAccessToken } from './tokenUtils';
+import { appConfig } from '../../config';
 import { retry } from '../../http';
 import { LogLevel } from '../../logging/logging';
-import { envVar } from '../../utils';
 
 // Hent brukerprofil fra sesjon
 export const hentBrukerprofil = () => {
@@ -25,7 +24,7 @@ export const hentBrukerprofil = () => {
 const fetchUserinfo = async (accessToken: string) => {
     const query = 'onPremisesSamAccountName,displayName,mail,officeLocation,userPrincipalName,id';
 
-    return await axios.get<Userinfo>(`${envVar('GRAPH_API')}?$select=${query}`, {
+    return await axios.get<Userinfo>(`${appConfig.graphApiUrl}?$select=${query}`, {
         headers: {
             Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
@@ -62,13 +61,13 @@ const setBrukerprofilPåSesjon = async (
     req: Request,
     next: NextFunction
 ) => {
-    if (req.session && req.session.user) {
+    const requestToken = utledAccessToken(req);
+    if (!requestToken) {
         return next();
     }
     try {
-        const accessToken = await getOnBehalfOfAccessToken(
-            texasClient,
-            req,
+        const accessToken = await texasClient.hentOnBehalfOfToken(
+            requestToken,
             'https://graph.microsoft.com/.default'
         );
         const brukerdataResponse = await hentBrukerdata(accessToken, req);
@@ -78,15 +77,12 @@ const setBrukerprofilPåSesjon = async (
             next();
         }
 
-        const tokenSet: TokenSet | undefined = getTokenSetsFromSession(req)[tokenSetSelfId];
-
         req.session.user = {
             displayName: brukerdata.displayName,
             email: brukerdata.userPrincipalName,
             enhet: brukerdata.officeLocation.slice(0, 4),
             identifier: brukerdata.userPrincipalName,
             navIdent: brukerdata.onPremisesSamAccountName,
-            groups: tokenSet ? new TokenSet(tokenSet).claims().groups : [],
         };
 
         req.session.save((error: Error) => {
