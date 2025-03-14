@@ -17,7 +17,7 @@ metadata:
   labels:
     team: tilbake
 spec:
-  logoutUrl: "http://localhost:8000"
+  logoutUrl: "http://localhost:4000"
   tenant: trygdeetaten.no
   claims:
     groups:
@@ -29,5 +29,5 @@ spec:
       - id: 19dcbfde-4cdb-4c64-a1ea-ac9802b03339 # 0000-GA-Enslig-Forsorger-Veileder
       - id: c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b # forvalterrolle 
   replyUrls:
-    - url: "http://localhost:8000/auth/openid/callback"
+    - url: "http://localhost:4000/oauth2/callback"
   secretName: azuread-tilbakekreving-frontend-lokal
