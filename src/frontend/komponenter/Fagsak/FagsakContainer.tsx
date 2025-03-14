@@ -1,7 +1,7 @@
 import type { IBehandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
 
 import * as React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router';
 import { styled } from 'styled-components';
 
 import BehandlingContainer from './BehandlingContainer';

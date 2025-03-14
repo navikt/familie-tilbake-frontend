@@ -5,7 +5,7 @@ import {
     RouterProvider,
     Outlet,
     Route,
-} from 'react-router-dom';
+} from 'react-router';
 
 import FagsakContainer from './Fagsak/FagsakContainer';
 import Dashboard from './Felleskomponenter/Dashboard';
