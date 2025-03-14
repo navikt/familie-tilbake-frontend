@@ -49,10 +49,9 @@ const AppRoutes = () => {
     const router = createBrowserRouter(
         createRoutesFromElements(
             <Route path="/" element={<UlagretDataModalContainer />}>
-                <Route
-                    path="/fagsystem/:fagsystem/fagsak/:fagsakId/*"
-                    element={<FagsakContainer />}
-                />
+                <Route path="/fagsystem/:fagsystem/fagsak/:fagsakId/">
+                    <Route path="*" element={<FagsakContainer />} />
+                </Route>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/*" element={<Feilmelding />} />
             </Route>
