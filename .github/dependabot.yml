@@ -24,18 +24,16 @@ updates:
           - '*'
         update-types:
           - 'major'
-    security-updates-only: false
 
   - package-ecosystem: "docker"
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
       day: "sunday"
-    security-updates-only: false
 
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
-    security-updates-only: false
+
