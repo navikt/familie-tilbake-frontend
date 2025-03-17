@@ -4,7 +4,7 @@ import type { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
 
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { utledAccessToken } from './backend/auth/tokenUtils';
+import { utledAccessToken } from './backend';
 import { proxyUrl, redirectRecords } from './config';
 import { stdoutLogger } from './logging/logging';
 

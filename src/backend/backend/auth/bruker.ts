@@ -1,20 +1,26 @@
+import type { User } from '../typer';
 import type { TexasClient } from './texas';
 import type { Userinfo } from '../../typer/entraid';
-import type { NextFunction, Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import axios from 'axios';
 
-import { logRequest } from '../utils';
-import { utledAccessToken } from './tokenUtils';
 import { appConfig } from '../../config';
 import { retry } from '../../http';
 import { LogLevel } from '../../logging/logging';
+import { logRequest } from '../utils';
+import { utledAccessToken } from './authenticate';
 
-// Hent brukerprofil fra sesjon
-export const hentBrukerprofil = () => {
-    return async (req: Request, res: Response) => {
-        if (!req.session) {
-            throw new Error('Mangler sesjon på kall');
+export const hentBrukerprofil = (texasClient: TexasClient) => {
+    return async (req: Request, res: Response): Promise<void> => {
+        const requestToken = utledAccessToken(req);
+        if (!requestToken) {
+            res.sendStatus(401);
+            return;
+        }
+
+        if (!req.session.user) {
+            req.session.user = await setBrukerprofilPåSesjon(texasClient, req, requestToken);
         }
 
         res.status(200).send(req.session.user);
@@ -47,24 +53,11 @@ const hentBrukerdata = async (accessToken: string, req: Request) => {
     }
 };
 
-/**
- * Funksjon som henter brukerprofil fra graph.
- */
-export const setBrukerprofilPåSesjonRute = (texasClient: TexasClient) => {
-    return async (req: Request, _: Response, next: NextFunction) => {
-        await setBrukerprofilPåSesjon(texasClient, req, next);
-    };
-};
-
 const setBrukerprofilPåSesjon = async (
     texasClient: TexasClient,
     req: Request,
-    next: NextFunction
-) => {
-    const requestToken = utledAccessToken(req);
-    if (!requestToken) {
-        return next();
-    }
+    requestToken: string
+): Promise<User | null> => {
     try {
         const accessToken = await texasClient.hentOnBehalfOfToken(
             requestToken,
@@ -72,32 +65,16 @@ const setBrukerprofilPåSesjon = async (
         );
         const brukerdataResponse = await hentBrukerdata(accessToken, req);
         const brukerdata = brukerdataResponse.data;
-        if (!req.session) {
-            logRequest(req, 'Mangler sesjon på kall', LogLevel.Error);
-            next();
-        }
 
-        req.session.user = {
+        return {
             displayName: brukerdata.displayName,
             email: brukerdata.userPrincipalName,
             enhet: brukerdata.officeLocation.slice(0, 4),
             identifier: brukerdata.userPrincipalName,
             navIdent: brukerdata.onPremisesSamAccountName,
         };
-
-        req.session.save((error: Error) => {
-            if (error) {
-                logRequest(
-                    req,
-                    `Feilet ved lagring av bruker på session: ${error}`,
-                    LogLevel.Error
-                );
-            } else {
-                return next();
-            }
-        });
     } catch (err: unknown) {
         logRequest(req, `Noe gikk galt: ${err}.`, LogLevel.Error);
-        next();
+        throw err;
     }
 };

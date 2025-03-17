@@ -12,7 +12,6 @@ import konfigurerRouter from './router';
 import { hentErforbindelsenTilRedisTilgjengelig } from './utils';
 
 export * from './auth/authenticate';
-export * from './auth/tokenUtils';
 export * from './typer';
 export * from './utils';
 

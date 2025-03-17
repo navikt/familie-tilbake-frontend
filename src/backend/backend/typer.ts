@@ -21,7 +21,7 @@ export interface IAppConfig {
     graphApiUrl: string;
 }
 
-interface User {
+export interface User {
     displayName: string;
     email: string;
     enhet: string;
@@ -31,9 +31,6 @@ interface User {
 
 declare module 'express-session' {
     interface Session {
-        user: User;
-        // eslint-disable-next-line
-        passport: any;
-        redirectUrl: string;
+        user: User | null;
     }
 }
