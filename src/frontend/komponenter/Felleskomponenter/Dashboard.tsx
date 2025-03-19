@@ -12,8 +12,8 @@ const Dashboard: React.FC = () => (
             Nav - Tilbakekreving
         </Heading>
         <BodyLong size="small">
-            Velkommen til saksbehandlingsløsningen for tilbakekreving av ytelsene Barnetrygd,
-            Konstantstøtte og Støtte til enslig forsørger.
+            Velkommen til felles saksbehandlingsløsning for tilbakekreving. Dette gjelder ytelsene
+            barnetrygd, kontantstøtte og enslig forsørger. Flere ytelser vil komme senere.
         </BodyLong>
     </StyledContainer>
 );
