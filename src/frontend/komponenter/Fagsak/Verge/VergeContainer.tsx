@@ -144,7 +144,7 @@ const VergeContainer: React.FC = () => {
                             onClick={sendInn}
                             disabled={erLesevisning && !stegErBehandlet}
                         >
-                            {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                            {stegErBehandlet ? 'Neste' : 'Lagre og fortsett'}
                         </Button>
                     </Navigering>
                 </StyledVStack>

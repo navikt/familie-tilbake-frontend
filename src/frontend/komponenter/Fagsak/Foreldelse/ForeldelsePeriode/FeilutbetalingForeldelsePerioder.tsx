@@ -120,7 +120,7 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
                         loading={senderInn}
                         disabled={disableBekreft}
                     >
-                        {stegErBehandlet ? 'Neste' : 'Bekreft og fortsett'}
+                        {stegErBehandlet ? 'Neste' : 'Lagre og fortsett'}
                     </Button>
                 )}
                 <Button variant="secondary" onClick={gåTilForrigeSteg}>
