@@ -168,7 +168,7 @@ describe('Tester: FaktaContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'Bekreft og fortsett',
+                    name: 'Lagre og fortsett',
                 })
             )
         );
@@ -193,7 +193,7 @@ describe('Tester: FaktaContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'Bekreft og fortsett',
+                    name: 'Lagre og fortsett',
                 })
             )
         );
@@ -217,7 +217,7 @@ describe('Tester: FaktaContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'Bekreft og fortsett',
+                    name: 'Lagre og fortsett',
                 })
             )
         );
@@ -254,7 +254,7 @@ describe('Tester: FaktaContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'Bekreft og fortsett',
+                    name: 'Lagre og fortsett',
                 })
             )
         );
@@ -280,7 +280,7 @@ describe('Tester: FaktaContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'Bekreft og fortsett',
+                    name: 'Lagre og fortsett',
                 })
             )
         );
@@ -305,7 +305,7 @@ describe('Tester: FaktaContainer', () => {
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'Bekreft og fortsett',
+                    name: 'Lagre og fortsett',
                 })
             )
         );
