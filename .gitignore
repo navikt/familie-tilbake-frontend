@@ -6,6 +6,7 @@ node_dist
 .idea
 VERSION
 .env
+.login.env
 secure.log
 ci-tests/reports
 *.iml

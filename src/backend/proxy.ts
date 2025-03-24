@@ -1,11 +1,10 @@
-import type { IApi } from './backend/typer';
+import type { TexasClient } from './backend/auth/texas';
 import type { NextFunction, Request, Response } from 'express';
 import type { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
-import type { Client } from 'openid-client';
 
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { getOnBehalfOfAccessToken } from './backend/auth/tokenUtils';
+import { utledAccessToken } from './backend';
 import { proxyUrl, redirectRecords } from './config';
 import { stdoutLogger } from './logging/logging';
 
@@ -46,11 +45,15 @@ export const doRedirectProxy = () => {
     };
 };
 
-export const attachToken = (authClient: Client, oboConfig: IApi) => {
-    return async (req: Request, _res: Response, next: NextFunction) => {
-        getOnBehalfOfAccessToken(authClient, req, oboConfig).then((accessToken: string) => {
-            req.headers.Authorization = `Bearer ${accessToken}`;
-            return next();
-        });
+export const attachToken = (texasClient: TexasClient, scope: string) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        const requestToken = utledAccessToken(req);
+        if (!requestToken) {
+            res.sendStatus(401);
+            return;
+        }
+        const accessToken = await texasClient.hentOnBehalfOfToken(requestToken, scope);
+        req.headers.authorization = `Bearer ${accessToken}`;
+        return next();
     };
 };

@@ -1,4 +1,4 @@
-import { logError } from './logging';
+import { logError } from './logging/logging';
 
 export const envVar = (navn: string, påkrevd = true, defaultValue?: string): string => {
     const envVariable = process.env[navn];

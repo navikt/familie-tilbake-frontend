@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import type { BlockerFunction } from 'react-router-dom';
+import type { BlockerFunction } from 'react-router';
 
 import React, { useCallback, useEffect } from 'react';
-import { useBeforeUnload, useBlocker } from 'react-router-dom';
+import { useBeforeUnload, useBlocker } from 'react-router';
 
 import { ModalWrapper } from './ModalWrapper';
 import { useBehandling } from '../../../context/BehandlingContext';

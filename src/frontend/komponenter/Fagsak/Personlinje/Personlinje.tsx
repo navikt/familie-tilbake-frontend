@@ -5,7 +5,7 @@ import { Buildings3Icon, ExternalLinkIcon, LeaveIcon } from '@navikt/aksel-icons
 import { Link, Tag } from '@navikt/ds-react';
 import { AGray900, ATextOnInverted, ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
 import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';

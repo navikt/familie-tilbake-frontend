@@ -27,7 +27,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
             <NavigeringsKnapp
                 variant="secondary"
                 aria-label="Forrige periode"
-                onClick={(e: MouseEvent) => {
+                onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     forrigePeriode();
                 }}
@@ -38,7 +38,7 @@ const PeriodeController: React.FC<IProps> = ({ nestePeriode, forrigePeriode }) =
             <NavigeringsKnapp
                 variant="secondary"
                 aria-label="Neste periode"
-                onClick={(e: MouseEvent) => {
+                onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     nestePeriode();
                 }}

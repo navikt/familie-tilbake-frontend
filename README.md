@@ -12,7 +12,8 @@ Saksbehandlerapplikasjon for tilbakekreving av ytelsene barnetrygd, konstantstø
 
 * Installere avhengigheter `pnpm`
 * Starte dev-server `pnpm start:dev`
-* Åpne `http://localhost:8000` i nettleseren din
+* I et annet terminal-vindu: start docker `docker-compose build && docker-compose up`
+* Åpne `http://localhost:4000` i nettleseren din
 
 Med default miljøvariabler krever appen at applikasjonen [familie-tilbake](https://github.com/navikt/familie-tilbake) kjører lokalt.
 For å generere testdata må du kjøre `familie-tilbake` og kjøre en test i [familie-tilbake-e2e](https://github.com/navikt/familie-tilbake-e2e)
