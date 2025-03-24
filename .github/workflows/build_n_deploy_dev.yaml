@@ -31,7 +31,7 @@ jobs:
             - args: [--frozen-lockfile, --prefer-offline]
               env:
                 NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-                
+
       - name: Build and test
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
