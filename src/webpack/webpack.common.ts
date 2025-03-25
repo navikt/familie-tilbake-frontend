@@ -18,7 +18,7 @@ const commonConfig: Configuration = {
             alwaysWriteToDisk: true,
             favicon: path.join(process.cwd(), '/src/frontend/favicon.ico'),
         }),
-        new CaseSensitivePathsPlugin() as WebpackPluginInstance,
+        new CaseSensitivePathsPlugin() as unknown as WebpackPluginInstance,
         new ESLintPlugin({
             extensions: [`ts`, `tsx`],
             exclude: [`/node_modules/`],
