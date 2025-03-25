@@ -17,11 +17,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          scope: '@navikt'
           registry-url: "https://npm.pkg.github.com"
-
-      - name: Setup .npmrc for @navikt
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.READER_TOKEN }}" >> .npmrc
 
       - name: Install dependencies
         uses: pnpm/action-setup@v4

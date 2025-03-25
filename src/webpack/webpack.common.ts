@@ -1,23 +1,9 @@
-import type { Configuration, WebpackPluginInstance } from 'webpack';
+import type { Configuration } from 'webpack';
 
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
-
-const plugins: Configuration['plugins'] = [
-    new HtmlWebpackPlugin({
-        template: path.join(process.cwd(), '/src/frontend/index.html'),
-        inject: 'body',
-        alwaysWriteToDisk: true,
-        favicon: path.join(process.cwd(), '/src/frontend/favicon.ico'),
-    }),
-    new CaseSensitivePathsPlugin() as unknown as WebpackPluginInstance,
-    new ESLintPlugin({
-        extensions: [`ts`, `tsx`],
-        exclude: [`/node_modules/`],
-    }),
-];
 
 const commonConfig: Configuration = {
     entry: ['./src/frontend/index.tsx'],
@@ -25,7 +11,19 @@ const commonConfig: Configuration = {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
         fallback: { crypto: false },
     },
-    plugins: plugins,
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.join(process.cwd(), '/src/frontend/index.html'),
+            inject: 'body',
+            alwaysWriteToDisk: true,
+            favicon: path.join(process.cwd(), '/src/frontend/favicon.ico'),
+        }),
+        new CaseSensitivePathsPlugin(),
+        new ESLintPlugin({
+            extensions: [`ts`, `tsx`],
+            exclude: [`/node_modules/`],
+        }),
+    ],
     module: {
         rules: [
             {
