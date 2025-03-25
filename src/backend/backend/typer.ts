@@ -1,8 +1,8 @@
 export interface ISessionKonfigurasjon {
-    redisUrl?: string;
-    redisFullUrl?: string;
-    redisBrukernavn?: string;
-    redisPassord?: string;
+    valkeyUrl?: string;
+    valkeyFullUrl?: string;
+    valkeyBrukernavn?: string;
+    valkeyPassord?: string;
     navn: string;
     secureCookie: boolean;
     sessionMaxAgeSekunder?: number;
