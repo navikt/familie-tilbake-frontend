@@ -9,7 +9,7 @@ import { TexasClient } from './auth/texas';
 import headers from './headers';
 import { konfigurerMetrikker } from './metrikker';
 import konfigurerRouter from './router';
-import { hentErforbindelsenTilRedisTilgjengelig } from './utils';
+import { hentErforbindelsenTilValkeyTilgjengelig } from './utils';
 
 export * from './auth/authenticate';
 export * from './typer';
@@ -33,7 +33,7 @@ export default (
     headers.setup(app);
 
     app.get('/isAlive', (_req: Request, res: Response) => {
-        if (hentErforbindelsenTilRedisTilgjengelig()) {
+        if (hentErforbindelsenTilValkeyTilgjengelig()) {
             res.status(200).end();
         } else {
             res.status(500).end();
