@@ -32,7 +32,7 @@ jobs:
           run_install: |
             - args: [--frozen-lockfile, --prefer-offline]
 
-      - name: Build and test
+      - name: Build
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE: ${{ github.sha }}
