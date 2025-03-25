@@ -28,6 +28,8 @@ jobs:
 
       - name: Install dependencies
         uses: pnpm/action-setup@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           run_install: |
             - args: [--frozen-lockfile, --prefer-offline]
