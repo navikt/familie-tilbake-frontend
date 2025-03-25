@@ -17,7 +17,7 @@ const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     const pingHvertFjerdeMinutt = 1000 * 60 * 4; // Connection blir ugyldig etter fem minutter, pinger derfor hvert fjerde minutt
     const redisClient = redis.createClient({
         database: 1,
-        url: sessionKonfigurasjon.valkeyUrl,
+        url: sessionKonfigurasjon.valkeyFullUrl,
         username: sessionKonfigurasjon.valkeyBrukernavn,
         password: sessionKonfigurasjon.valkeyPassord,
         socket: {
