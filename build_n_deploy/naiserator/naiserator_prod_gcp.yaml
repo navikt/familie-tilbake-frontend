@@ -71,6 +71,13 @@ spec:
       memory: 512Mi
       cpu: 200m
 
+  redis:
+    - instance: sessions
+      access: readwrite
+    - instance: lookup
+      access: read
   valkey:
     - instance: sessions
       access: readwrite
+    - instance: lookup
+      access: read
