@@ -1590,6 +1590,15 @@
     svg-country-flags "^1.2.10"
     uuid "^9.0.0"
 
+"@navikt/land-verktoy@^9.0.12":
+  version "9.0.12"
+  resolved "https://npm.pkg.github.com/download/@navikt/land-verktoy/9.0.12/a0ab89c37a728783cbb1267191f3103631b71d9d#a0ab89c37a728783cbb1267191f3103631b71d9d"
+  integrity sha512-Cw9CdCxqOC5xe+mZmohT0dorVudTXh/GAcOyduBC/I3PuHlpb4Gk7ZHIl/AC8vArg8Gh++s/fj8ukKddI8ZCMA==
+  dependencies:
+    "@piotrgorecki/i18n-currency-name" "^1.3.0"
+    country-data-list "^1.2.2"
+    i18n-iso-countries "^7.5.0"
+
 "@navikt/landvelger@9.0.7":
   version "9.0.7"
   resolved "https://npm.pkg.github.com/download/@navikt/landvelger/9.0.7/0760620fc9aee090e0ec390971c0c338bb00c390#0760620fc9aee090e0ec390971c0c338bb00c390"
@@ -1713,6 +1722,11 @@
     pvtsutils "^1.3.5"
     tslib "^2.6.2"
     webcrypto-core "^1.8.0"
+
+"@piotrgorecki/i18n-currency-name@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@piotrgorecki/i18n-currency-name/-/i18n-currency-name-1.3.0.tgz#c7d6b9f6df705bf4f2516f1d25c455af14d7c167"
+  integrity sha512-Txbw0UmGgyvkZEFzjycmh7hEwYeRftILvx4G72PrMBHoS18PGnPODWbZvw7bi+KoV+buMezEHy8ezojc0f7YvQ==
 
 "@pkgr/core@^0.1.0":
   version "0.1.2"
@@ -3567,6 +3581,16 @@ cosmiconfig@^7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+countries-list@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/countries-list/-/countries-list-3.1.1.tgz#f3a339a06228ff053c0e8e44f17fa5ad4f3cab58"
+  integrity sha512-nPklKJ5qtmY5MdBKw1NiBAoyx5Sa7p2yPpljZyQ7gyCN1m+eMFs9I6CT37Mxt8zvR5L3VzD3DJBE4WQzX3WF4A==
+
+country-data-list@^1.2.2:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/country-data-list/-/country-data-list-1.4.0.tgz#ece0d5418490e39a167bbbfe0e192c38114e9fa3"
+  integrity sha512-3i1Q1onE9MaqYPdtTUzZRZJY7lBXWpud3eWXrw3ckJyvOzXcsFALiy0Z4Giksy5ECpq9ajYijMPxfRZvVP65UA==
+
 create-jest@^29.7.0:
   version "29.7.0"
   resolved "https://registry.yarnpkg.com/create-jest/-/create-jest-29.7.0.tgz#a355c5b3cb1e1af02ba177fe7afd7feee49a5320"
@@ -3928,6 +3952,11 @@ detect-newline@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
+
+diacritics@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/diacritics/-/diacritics-1.3.0.tgz#3efa87323ebb863e6696cebb0082d48ff3d6f7a1"
+  integrity sha512-wlwEkqcsaxvPJML+rDh/2iS824jbREk6DUMUKkEaSlxdYHeS43cClJtsWglvw2RfeXGm6ohKDqsXteJ5sP5enA==
 
 diff-sequences@^29.6.3:
   version "29.6.3"
@@ -5216,6 +5245,13 @@ hyperdyperid@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/hyperdyperid/-/hyperdyperid-1.2.0.tgz#59668d323ada92228d2a869d3e474d5a33b69e6b"
   integrity sha512-Y93lCzHYgGWdrJ66yIktxiaGULYc6oGiABxhcO5AufBeOyoIdZF7bIfLaOrbM0iGIOXQQgxxRrFEnb+Y6w1n4A==
+
+i18n-iso-countries@^7.5.0:
+  version "7.14.0"
+  resolved "https://registry.yarnpkg.com/i18n-iso-countries/-/i18n-iso-countries-7.14.0.tgz#cd5ae098198bce1cc40cadbf0a37ce6c8e9d0edf"
+  integrity sha512-nXHJZYtNrfsi1UQbyRqm3Gou431elgLjKl//CYlnBGt5aTWdRPH1PiS2T/p/n8Q8LnqYqzQJik3Q7mkwvLokeg==
+  dependencies:
+    diacritics "1.3.0"
 
 iconv-lite@0.4.24:
   version "0.4.24"
