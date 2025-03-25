@@ -4,7 +4,7 @@ import type { IFagsak } from '../../../../../typer/fagsak';
 import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { useHttp } from '../../../../../api/http/HttpProvider';
 import { useApp } from '../../../../../context/AppContext';

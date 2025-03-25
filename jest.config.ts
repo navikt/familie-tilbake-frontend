@@ -12,7 +12,7 @@ const config: Config.InitialOptions = {
     setupFilesAfterEnv: ['<rootDir>/src/jest-setup.ts'],
     moduleNameMapper: {
         '.+\\.(css)$': 'identity-obj-proxy',
-        '.+\\.(svg)$': '<rootDir>/src/mockFile.js',
+        '.+\\.(svg)$': '<rootDir>/src/frontend/__mocks__/fileMock.ts',
     },
     transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@navikt*|uuid|nanoid)/)'],
     transform: {

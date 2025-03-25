@@ -1,5 +1,5 @@
 /* eslint-disable */
-const originalModule = jest.requireActual('react-router-dom');
+const originalModule = jest.requireActual('react-router');
 
 module.exports = {
     __esModule: true,

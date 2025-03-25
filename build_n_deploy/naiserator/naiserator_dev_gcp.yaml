@@ -5,6 +5,8 @@ metadata:
   namespace: tilbake
   labels:
     team: tilbake
+  annotations:
+    texas.nais.io/enabled: "true"
 spec:
   image: {{ image }}
   replicas:
@@ -44,6 +46,8 @@ spec:
       tenant: trygdeetaten.no
       replyURLs:
         - "https://tilbakekreving.ansatt.dev.nav.no/auth/openid/callback"
+    sidecar:
+      enabled: true
   webproxy: true
   accessPolicy:
     inbound:

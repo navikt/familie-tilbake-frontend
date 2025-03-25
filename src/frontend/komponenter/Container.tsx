@@ -5,7 +5,7 @@ import {
     RouterProvider,
     Outlet,
     Route,
-} from 'react-router-dom';
+} from 'react-router';
 
 import FagsakContainer from './Fagsak/FagsakContainer';
 import Dashboard from './Felleskomponenter/Dashboard';
@@ -49,17 +49,25 @@ const AppRoutes = () => {
     const router = createBrowserRouter(
         createRoutesFromElements(
             <Route path="/" element={<UlagretDataModalContainer />}>
-                <Route
-                    path="/fagsystem/:fagsystem/fagsak/:fagsakId/*"
-                    element={<FagsakContainer />}
-                />
+                <Route path="/fagsystem/:fagsystem/fagsak/:fagsakId/">
+                    <Route path="*" element={<FagsakContainer />} />
+                </Route>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/*" element={<Feilmelding />} />
             </Route>
-        )
+        ),
+        {
+            future: {
+                v7_relativeSplatPath: true,
+                v7_fetcherPersist: true,
+                v7_normalizeFormMethod: true,
+                v7_partialHydration: true,
+                v7_skipActionErrorRevalidation: true,
+            },
+        }
     );
 
-    return <RouterProvider router={router} />;
+    return <RouterProvider future={{ v7_startTransition: true }} router={router} />;
 };
 
 const UlagretDataModalContainer = () => (

@@ -5,7 +5,7 @@ import type { IPerson } from '../../../typer/person';
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Alert, Button } from '@navikt/ds-react';
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { styled } from 'styled-components';
 
 import BrevmottakerListe from '../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';

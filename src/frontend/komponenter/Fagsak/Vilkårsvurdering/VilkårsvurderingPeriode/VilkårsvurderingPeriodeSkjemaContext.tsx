@@ -485,4 +485,5 @@ type VilkårsvurderingSkjemaDefinisjon = {
     grovtUaktsomIlleggeRenter: JaNeiOption | '';
 };
 
-export { useVilkårsvurderingPeriodeSkjema, VilkårsvurderingSkjemaDefinisjon };
+export { useVilkårsvurderingPeriodeSkjema };
+export type { VilkårsvurderingSkjemaDefinisjon };

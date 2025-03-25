@@ -8,7 +8,7 @@ import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { OptionIkkeGodkjent, totrinnGodkjenningOptions } from './typer/totrinnSkjemaTyper';
 import { useBehandlingApi } from '../../../../api/behandling';
