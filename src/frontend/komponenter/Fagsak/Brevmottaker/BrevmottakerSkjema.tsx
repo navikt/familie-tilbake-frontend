@@ -1,12 +1,12 @@
 import { Alert, Fieldset, TextField } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import CountrySelect from '@navikt/landvelger';
 import React from 'react';
 import { styled } from 'styled-components';
 
 import { useBrevmottaker } from './BrevmottakerContext';
 import { Valideringsstatus } from '../../../hooks/skjema/typer';
 import { MottakerType } from '../../../typer/Brevmottaker';
+import CountrySelect from '../../Felleskomponenter/CountrySelect/CountrySelect';
 
 const PostnummerOgStedContainer = styled.div`
     display: grid;
