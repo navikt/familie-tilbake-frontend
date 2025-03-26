@@ -5,9 +5,10 @@ node_dist
 .DS_Store
 .idea
 VERSION
-yarn-error.log
 .env
 .login.env
 secure.log
 ci-tests/reports
 *.iml
+.pnpm-store/
+pnpm-debug.log
