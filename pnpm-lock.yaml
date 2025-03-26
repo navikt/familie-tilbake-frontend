@@ -23,12 +23,6 @@ importers:
       '@navikt/ds-tokens':
         specifier: 7.17.3
         version: 7.17.3
-      '@navikt/land-verktoy':
-        specifier: 9.0.9
-        version: 9.0.9(lodash@4.17.21)
-      '@navikt/landvelger':
-        specifier: 9.0.7
-        version: 9.0.7(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/flagg-ikoner@9.0.8(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react-select@5.10.1(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@sentry/browser':
         specifier: 9.5.0
         version: 9.5.0
@@ -62,6 +56,9 @@ importers:
       cookie-parser:
         specifier: 1.4.7
         version: 1.4.7
+      countries-list:
+        specifier: 3.1.1
+        version: 3.1.1
       date-fns:
         specifier: 4.1.0
         version: 4.1.0
@@ -129,9 +126,6 @@ importers:
       '@jest/types':
         specifier: 29.6.3
         version: 29.6.3
-      '@navikt/flagg-ikoner':
-        specifier: 9.0.8
-        version: 9.0.8(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@peculiar/webcrypto':
         specifier: 1.5.0
         version: 1.5.0
@@ -1244,40 +1238,6 @@ packages:
   '@navikt/ds-tokens@7.17.3':
     resolution: {integrity: sha512-Vorx6F4N0mEsnN5Vle8w8Pysk0LinQTlbQfMYKkDaiB33Ec6b0S/NO6eRrA631ATG99FIPJohJKdEGl9H4fEGQ==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.17.3/b7c19ca8a48c08e4b9e23a2b074dbe1e33d6b7a8}
 
-  '@navikt/flagg-ikoner@9.0.8':
-    resolution: {integrity: sha512-nJDbdwq1QaAPPtBJGGEpWMs6KvHHk0Fm63Yu+nBqoL/+lfj0A99Pz8lRFbieUQIFhhycPKwHK5DH/oXTdYSXAA==, tarball: https://npm.pkg.github.com/download/@navikt/flagg-ikoner/9.0.8/98219b05f023ef73aba5b3b40075b9d9f2378594}
-    peerDependencies:
-      '@navikt/ds-css': ^7.x
-      '@navikt/ds-react': ^7.x
-      '@navikt/land-verktoy': ^9.0.3
-      classnames: ^2.3.2
-      lodash: ^4.17.21
-      lodash.throttle: ^4.1.1
-      rc-tooltip: ^5.2.2
-      react: ^18.2.0
-      react-dom: ^18.2.0
-      styled-components: ^5.3.6
-
-  '@navikt/land-verktoy@9.0.9':
-    resolution: {integrity: sha512-HVpV29qKoVSNy9pM1BQcA1/SvVgCrPdrcmQoRKzbVogb6IqnaT3YUrY+744zkRHgLACCaZvBYK23mgY24LLsvw==, tarball: https://npm.pkg.github.com/download/@navikt/land-verktoy/9.0.9/91d439ae2de95893895c8ad3d245ec6d5571a1c3}
-    peerDependencies:
-      lodash: ^4.17.21
-
-  '@navikt/landvelger@9.0.7':
-    resolution: {integrity: sha512-Y3UymYPFx4FdrWFl8qyscQhVwVOQUovQNcYekTVM4ExsYYy/HoddQlvTgOTGb5bsrmHD+gnWUDZlFYzXG+b7ig==, tarball: https://npm.pkg.github.com/download/@navikt/landvelger/9.0.7/0760620fc9aee090e0ec390971c0c338bb00c390}
-    peerDependencies:
-      '@navikt/ds-css': ^7.0.0
-      '@navikt/ds-react': ^7.0.0
-      '@navikt/flagg-ikoner': ^9.0.8
-      '@navikt/land-verktoy': ^9.0.9
-      classnames: ^2.3.2
-      lodash: ^4.17.21
-      lodash.throttle: ^4.1.1
-      react: ^18.2.0
-      react-dom: ^18.2.0
-      react-select: ^5.5.4
-      styled-components: ^5.3.6
-
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -1348,9 +1308,6 @@ packages:
   '@peculiar/webcrypto@1.5.0':
     resolution: {integrity: sha512-BRs5XUAwiyCDQMsVA9IDvDa7UBR9gAvPHgugOeGng3YN6vJ9JYonyDc0lNczErgtCWtucjR5N7VtaonboD/ezg==}
     engines: {node: '>=10.12.0'}
-
-  '@piotrgorecki/i18n-currency-name@1.3.0':
-    resolution: {integrity: sha512-Txbw0UmGgyvkZEFzjycmh7hEwYeRftILvx4G72PrMBHoS18PGnPODWbZvw7bi+KoV+buMezEHy8ezojc0f7YvQ==}
 
   '@pkgr/core@0.1.1':
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
@@ -2399,8 +2356,8 @@ packages:
     resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==}
     engines: {node: '>=10'}
 
-  country-data-list@1.4.0:
-    resolution: {integrity: sha512-3i1Q1onE9MaqYPdtTUzZRZJY7lBXWpud3eWXrw3ckJyvOzXcsFALiy0Z4Giksy5ECpq9ajYijMPxfRZvVP65UA==}
+  countries-list@3.1.1:
+    resolution: {integrity: sha512-nPklKJ5qtmY5MdBKw1NiBAoyx5Sa7p2yPpljZyQ7gyCN1m+eMFs9I6CT37Mxt8zvR5L3VzD3DJBE4WQzX3WF4A==}
 
   create-jest@29.7.0:
     resolution: {integrity: sha512-Adz2bdH0Vq3F53KEMJOoftQFutWCukm6J24wbPWRO4k1kMY7gS7ds/uoJkNuV8wDCtWWnuwGcJwpWcih+zEW1Q==}
@@ -2624,9 +2581,6 @@ packages:
   detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
-
-  diacritics@1.3.0:
-    resolution: {integrity: sha512-wlwEkqcsaxvPJML+rDh/2iS824jbREk6DUMUKkEaSlxdYHeS43cClJtsWglvw2RfeXGm6ohKDqsXteJ5sP5enA==}
 
   diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
@@ -3298,10 +3252,6 @@ packages:
   hyperdyperid@1.2.0:
     resolution: {integrity: sha512-Y93lCzHYgGWdrJ66yIktxiaGULYc6oGiABxhcO5AufBeOyoIdZF7bIfLaOrbM0iGIOXQQgxxRrFEnb+Y6w1n4A==}
     engines: {node: '>=10.18'}
-
-  i18n-iso-countries@7.14.0:
-    resolution: {integrity: sha512-nXHJZYtNrfsi1UQbyRqm3Gou431elgLjKl//CYlnBGt5aTWdRPH1PiS2T/p/n8Q8LnqYqzQJik3Q7mkwvLokeg==}
-    engines: {node: '>= 12'}
 
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -4961,9 +4911,6 @@ packages:
   supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
-
-  svg-country-flags@1.2.10:
-    resolution: {integrity: sha512-xrqwo0TYf/h2cfPvGpjdSuSguUbri4vNNizBnwzoZnX0xGo3O5nGJMlbYEp7NOYcnPGBm6LE2axqDWSB847bLw==}
 
   svgo@3.3.2:
     resolution: {integrity: sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw==}
@@ -6692,42 +6639,6 @@ snapshots:
 
   '@navikt/ds-tokens@7.17.3': {}
 
-  '@navikt/flagg-ikoner@9.0.8(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
-    dependencies:
-      '@navikt/ds-css': 7.17.3
-      '@navikt/ds-react': 7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@navikt/land-verktoy': 9.0.9(lodash@4.17.21)
-      classnames: 2.5.1
-      lodash: 4.17.21
-      lodash.throttle: 4.1.1
-      rc-tooltip: 6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      styled-components: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      svg-country-flags: 1.2.10
-      uuid: 9.0.1
-
-  '@navikt/land-verktoy@9.0.9(lodash@4.17.21)':
-    dependencies:
-      '@piotrgorecki/i18n-currency-name': 1.3.0
-      country-data-list: 1.4.0
-      i18n-iso-countries: 7.14.0
-      lodash: 4.17.21
-
-  '@navikt/landvelger@9.0.7(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/flagg-ikoner@9.0.8(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react-select@5.10.1(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
-    dependencies:
-      '@navikt/ds-css': 7.17.3
-      '@navikt/ds-react': 7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@navikt/flagg-ikoner': 9.0.8(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@navikt/land-verktoy': 9.0.9(lodash@4.17.21)
-      classnames: 2.5.1
-      lodash: 4.17.21
-      lodash.throttle: 4.1.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-select: 5.10.1(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      styled-components: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -6807,8 +6718,6 @@ snapshots:
       pvtsutils: 1.3.6
       tslib: 2.8.1
       webcrypto-core: 1.8.1
-
-  '@piotrgorecki/i18n-currency-name@1.3.0': {}
 
   '@pkgr/core@0.1.1': {}
 
@@ -7987,7 +7896,7 @@ snapshots:
       path-type: 4.0.0
       yaml: 1.10.2
 
-  country-data-list@1.4.0: {}
+  countries-list@3.1.1: {}
 
   create-jest@29.7.0(@types/node@22.13.10)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@22.13.10)(typescript@5.8.2)):
     dependencies:
@@ -8231,8 +8140,6 @@ snapshots:
   destroy@1.2.0: {}
 
   detect-newline@3.1.0: {}
-
-  diacritics@1.3.0: {}
 
   diff-sequences@29.6.3: {}
 
@@ -9089,10 +8996,6 @@ snapshots:
   husky@9.1.7: {}
 
   hyperdyperid@1.2.0: {}
-
-  i18n-iso-countries@7.14.0:
-    dependencies:
-      diacritics: 1.3.0
 
   iconv-lite@0.4.24:
     dependencies:
@@ -11011,8 +10914,6 @@ snapshots:
       has-flag: 4.0.0
 
   supports-preserve-symlinks-flag@1.0.0: {}
-
-  svg-country-flags@1.2.10: {}
 
   svgo@3.3.2:
     dependencies:
