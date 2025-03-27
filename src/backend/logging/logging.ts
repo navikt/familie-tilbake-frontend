@@ -41,7 +41,3 @@ export const logWarn = (message: string, meta: Meta = {}) => {
 export const logError = (message: string, err?: Error, meta: Meta = {}) => {
     stdoutLogger.error(message, { ...meta, ...(err && { message: `: ${err?.message || err}` }) });
 };
-
-export const logSecure = (message: string, meta: Meta = {}) => {
-    secureLogger.info(message, meta);
-};
