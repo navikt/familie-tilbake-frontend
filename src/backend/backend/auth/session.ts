@@ -7,7 +7,7 @@ import session from 'express-session';
 import redis from 'redis';
 
 import { appConfig } from '../../config';
-import { logError, logInfo, logSecure } from '../../logging/logging';
+import { logError, logInfo } from '../../logging/logging';
 import {
     hentErforbindelsenTilValkeyTilgjengelig,
     settErforbindelsenTilValkeyTilgjengelig,
@@ -35,39 +35,12 @@ const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     return redisClient;
 };
 
-const redisClientForStandalone = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
-    const redisClient = redis.createClient({
-        database: 1,
-        socket: {
-            host: sessionKonfigurasjon.valkeyUrl,
-            port: 6379,
-        },
-        password: sessionKonfigurasjon.valkeyPassord,
-    });
-    return redisClient;
-};
-
-const lagRedisClient = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
-    if (sessionKonfigurasjon.valkeyFullUrl) {
-        logInfo('Setter opp redis mot aiven for sesjoner');
-        return redisClientForAiven(sessionKonfigurasjon);
-    } else if (sessionKonfigurasjon.valkeyUrl) {
-        logInfo('Setter opp redis for session');
-        return redisClientForStandalone(sessionKonfigurasjon);
-    } else {
-        logSecure(
-            `Mangler redisUrl eller redisFullUrl i sesjonskonfigurasjonen ${sessionKonfigurasjon}`
-        );
-        throw Error('Kan ikke konfigurerer redis uten sesjonsconfigurasjon');
-    }
-};
-
 export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
     app.use(cookieParser(sessionKonfigurasjon.cookieSecret));
     app.set('trust proxy', 1);
 
-    if (sessionKonfigurasjon.valkeyFullUrl || sessionKonfigurasjon.valkeyUrl) {
-        const redisClient = lagRedisClient(sessionKonfigurasjon);
+    if (sessionKonfigurasjon.valkeyFullUrl) {
+        const redisClient = redisClientForAiven(sessionKonfigurasjon);
 
         /**
          * Logge hendelser i redisclient for å debugge merkelige sockettimeouts

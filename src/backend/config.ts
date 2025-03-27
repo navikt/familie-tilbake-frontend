@@ -61,10 +61,9 @@ export const texasConfig: TexasConfig = {
 export const sessionConfig: ISessionKonfigurasjon = {
     cookieSecret: [`${process.env.COOKIE_KEY1}`, `${process.env.COOKIE_KEY2}`],
     navn: 'tilbakekreving-backend-v1',
-    valkeyFullUrl:
-        process.env.ENV === 'local'
-            ? process.env.VALKEY_URI_SESSIONS
-            : `rediss://${envVar('VALKEY_HOST_SESSIONS')}:${envVar('VALKEY_PORT_SESSIONS')}`,
+    valkeyFullUrl: process.env.VALKEY_HOST_SESSIONS
+        ? `rediss://${process.env.VALKEY_HOST_SESSIONS}:${process.env.VALKEY_PORT_SESSIONS}`
+        : undefined,
     valkeyBrukernavn: process.env.VALKEY_USERNAME_SESSIONS,
     valkeyPassord: process.env.VALKEY_PASSWORD_SESSIONS,
     secureCookie: !(process.env.ENV === 'local' || process.env.ENV === 'lokalt-mot-preprod'),
