@@ -76,7 +76,7 @@ const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
                 <Landvelger
                     id="landvelger-brevmottaker"
                     eksluderLandkoder={eksluderLandKoder}
-                    defaultValue={felter.land.verdi}
+                    valgtLandkode={felter.land.verdi}
                     håndterLandValgt={håndterLandValgt}
                     error={landError}
                 />

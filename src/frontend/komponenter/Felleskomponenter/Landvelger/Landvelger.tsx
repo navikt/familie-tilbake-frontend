@@ -10,7 +10,7 @@ export type Land = {
 
 interface Props {
     id: string;
-    defaultValue: Land['alpha2'];
+    valgtLandkode: Land['alpha2'];
     håndterLandValgt: (land: Land) => void;
     eksluderLandkoder?: string[];
     error?: string;
@@ -19,7 +19,7 @@ interface Props {
 const Landvelger: React.FC<Props> = ({
     id,
     eksluderLandkoder = [],
-    defaultValue,
+    valgtLandkode,
     håndterLandValgt,
     error,
 }) => {
@@ -34,9 +34,9 @@ const Landvelger: React.FC<Props> = ({
     }, [eksluderLandkoder]);
 
     const valgtLand = useMemo(() => {
-        const land = landListe.find(({ alpha2 }) => alpha2 === defaultValue);
+        const land = landListe.find(({ alpha2 }) => alpha2 === valgtLandkode);
         return land?.navn ?? '';
-    }, [landListe, defaultValue]);
+    }, [landListe, valgtLandkode]);
 
     return (
         <UNSAFE_Combobox
