@@ -42,13 +42,15 @@ const Landvelger: React.FC<Props> = ({
         <UNSAFE_Combobox
             id={id}
             label="Land"
-            defaultValue={valgtLand}
+            aria-label="Velg land for brevmottaker"
+            selectedOptions={valgtLand ? [valgtLand] : []}
             options={landListe.map(({ alpha2, navn }) => ({
                 value: alpha2,
                 label: navn,
             }))}
             onToggleSelected={(alpha2: Land['alpha2']) => håndterLandValgt({ alpha2 })}
             error={error}
+            shouldAutocomplete
         />
     );
 };
