@@ -11,7 +11,7 @@ updates:
       interval: daily
       time: '06:00'
       timezone: Europe/Oslo
-    open-pull-requests-limit: 30
+    open-pull-requests-limit: 40
     registries: "*"
     groups:
       navikt-dependencies:
