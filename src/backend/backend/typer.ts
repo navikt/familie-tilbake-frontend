@@ -1,5 +1,4 @@
 export interface ISessionKonfigurasjon {
-    valkeyUrl?: string;
     valkeyFullUrl?: string;
     valkeyBrukernavn?: string;
     valkeyPassord?: string;
