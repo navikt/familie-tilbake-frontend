@@ -8,9 +8,10 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
       time: '06:00'
-      timezone: Europe/Stockholm
+      timezone: Europe/Oslo
     open-pull-requests-limit: 30
     registries: "*"
     versioning-strategy: increase
@@ -41,12 +42,11 @@ updates:
     schedule:
       interval: weekly
       day: sunday
-      timezone: Europe/Stockholm
+      timezone: Europe/Oslo
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
-      timezone: Europe/Stockholm
+      timezone: Europe/Oslo
     open-pull-requests-limit: 10
-
