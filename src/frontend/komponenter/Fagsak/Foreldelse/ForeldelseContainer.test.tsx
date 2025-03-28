@@ -131,7 +131,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft og fortsett',
+                name: 'Lagre og fortsett',
             })
         ).toBeDisabled();
 
@@ -158,7 +158,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft og fortsett',
+                name: 'Lagre og fortsett',
             })
         ).toBeDisabled();
 
@@ -191,14 +191,14 @@ describe('Tester: ForeldelseContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft og fortsett',
+                name: 'Lagre og fortsett',
             })
         ).toBeEnabled();
 
         await act(() =>
             user.click(
                 getByRole('button', {
-                    name: 'Bekreft og fortsett',
+                    name: 'Lagre og fortsett',
                 })
             )
         );

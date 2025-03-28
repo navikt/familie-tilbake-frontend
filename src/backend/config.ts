@@ -61,9 +61,11 @@ export const texasConfig: TexasConfig = {
 export const sessionConfig: ISessionKonfigurasjon = {
     cookieSecret: [`${process.env.COOKIE_KEY1}`, `${process.env.COOKIE_KEY2}`],
     navn: 'tilbakekreving-backend-v1',
-    redisFullUrl: process.env.REDIS_URI_SESSIONS,
-    redisBrukernavn: process.env.REDIS_USERNAME_SESSIONS,
-    redisPassord: process.env.REDIS_PASSWORD_SESSIONS,
+    valkeyFullUrl: process.env.VALKEY_HOST_SESSIONS
+        ? `rediss://${process.env.VALKEY_HOST_SESSIONS}:${process.env.VALKEY_PORT_SESSIONS}`
+        : undefined,
+    valkeyBrukernavn: process.env.VALKEY_USERNAME_SESSIONS,
+    valkeyPassord: process.env.VALKEY_PASSWORD_SESSIONS,
     secureCookie: !(process.env.ENV === 'local' || process.env.ENV === 'lokalt-mot-preprod'),
     sessionMaxAgeSekunder: 12 * 60 * 60,
 };

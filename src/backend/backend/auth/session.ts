@@ -7,23 +7,23 @@ import session from 'express-session';
 import redis from 'redis';
 
 import { appConfig } from '../../config';
-import { logError, logInfo, logSecure } from '../../logging/logging';
+import { logError, logInfo } from '../../logging/logging';
 import {
-    hentErforbindelsenTilRedisTilgjengelig,
-    settErforbindelsenTilRedisTilgjengelig,
+    hentErforbindelsenTilValkeyTilgjengelig,
+    settErforbindelsenTilValkeyTilgjengelig,
 } from '../utils';
 
 const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     const pingHvertFjerdeMinutt = 1000 * 60 * 4; // Connection blir ugyldig etter fem minutter, pinger derfor hvert fjerde minutt
     const redisClient = redis.createClient({
         database: 1,
-        url: sessionKonfigurasjon.redisFullUrl,
-        username: sessionKonfigurasjon.redisBrukernavn,
-        password: sessionKonfigurasjon.redisPassord,
+        url: sessionKonfigurasjon.valkeyFullUrl,
+        username: sessionKonfigurasjon.valkeyBrukernavn,
+        password: sessionKonfigurasjon.valkeyPassord,
         socket: {
             reconnectStrategy: attempts => {
-                if (attempts >= 100 && hentErforbindelsenTilRedisTilgjengelig()) {
-                    settErforbindelsenTilRedisTilgjengelig(false);
+                if (attempts >= 100 && hentErforbindelsenTilValkeyTilgjengelig()) {
+                    settErforbindelsenTilValkeyTilgjengelig(false);
                 }
 
                 // Reconnect after
@@ -35,52 +35,25 @@ const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     return redisClient;
 };
 
-const redisClientForStandalone = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
-    const redisClient = redis.createClient({
-        database: 1,
-        socket: {
-            host: sessionKonfigurasjon.redisUrl,
-            port: 6379,
-        },
-        password: sessionKonfigurasjon.redisPassord,
-    });
-    return redisClient;
-};
-
-const lagRedisClient = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
-    if (sessionKonfigurasjon.redisFullUrl) {
-        logInfo('Setter opp redis mot aiven for sesjoner');
-        return redisClientForAiven(sessionKonfigurasjon);
-    } else if (sessionKonfigurasjon.redisUrl) {
-        logInfo('Setter opp redis for session');
-        return redisClientForStandalone(sessionKonfigurasjon);
-    } else {
-        logSecure(
-            `Mangler redisUrl eller redisFullUrl i sesjonskonfigurasjonen ${sessionKonfigurasjon}`
-        );
-        throw Error('Kan ikke konfigurerer redis uten sesjonsconfigurasjon');
-    }
-};
-
 export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
     app.use(cookieParser(sessionKonfigurasjon.cookieSecret));
     app.set('trust proxy', 1);
 
-    if (sessionKonfigurasjon.redisFullUrl || sessionKonfigurasjon.redisUrl) {
-        const redisClient = lagRedisClient(sessionKonfigurasjon);
+    if (sessionKonfigurasjon.valkeyFullUrl) {
+        const redisClient = redisClientForAiven(sessionKonfigurasjon);
 
         /**
          * Logge hendelser i redisclient for å debugge merkelige sockettimeouts
          */
         redisClient.on('error', err => {
             logError(`Redis Error: ${err}`);
-            settErforbindelsenTilRedisTilgjengelig(false);
+            settErforbindelsenTilValkeyTilgjengelig(false);
         });
         redisClient.on('connect', () => logInfo('Redis connected'));
         redisClient.on('reconnecting', () => logInfo('Redis reconnecting'));
         redisClient.on('ready', () => {
             logInfo('Redis ready!');
-            settErforbindelsenTilRedisTilgjengelig(true);
+            settErforbindelsenTilValkeyTilgjengelig(true);
         });
 
         redisClient.connect().catch(logError);

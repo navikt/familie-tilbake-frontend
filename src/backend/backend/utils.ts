@@ -37,12 +37,12 @@ export const logRequest = (req: Request, message: string, level: LogLevel) => {
     }
 };
 
-let erForbindelsenTilRedisTilgjengelig = true;
+let erForbindelsenTilValkeyTilgjengelig = true;
 
-export const hentErforbindelsenTilRedisTilgjengelig = (): boolean => {
-    return erForbindelsenTilRedisTilgjengelig;
+export const hentErforbindelsenTilValkeyTilgjengelig = (): boolean => {
+    return erForbindelsenTilValkeyTilgjengelig;
 };
 
-export const settErforbindelsenTilRedisTilgjengelig = (verdi: boolean) => {
-    erForbindelsenTilRedisTilgjengelig = verdi;
+export const settErforbindelsenTilValkeyTilgjengelig = (verdi: boolean) => {
+    erForbindelsenTilValkeyTilgjengelig = verdi;
 };

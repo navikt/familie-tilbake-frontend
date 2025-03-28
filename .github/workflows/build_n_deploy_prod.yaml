@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - 'main'
-      - 'nytt-namespace-prod'
 
 env:
   VERSION: familie-tilbake-frontend:${{ github.sha }}
@@ -16,27 +15,33 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      packages: read
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: yarn
+          node-version: '22'
+          scope: '@navikt'
           registry-url: "https://npm.pkg.github.com"
-      - name: Yarn install
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-        run: yarn --prefer-offline --frozen-lockfile
 
-      - name: Build
+      - name: Install dependencies
+        uses: pnpm/action-setup@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          run_install: |
+            - args: [--frozen-lockfile, --prefer-offline]
+
+      - name: Build and test
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE: ${{ github.sha }}
         run: |
-          yarn build
-          yarn test
+          pnpm build
+          pnpm test
 
       - name: Push docker image to GAR
         uses: nais/docker-build-push@v0
@@ -56,6 +61,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+
       - name: Deploy til dev-gcp team namespace
         uses: nais/deploy/actions/deploy@v2
         env:
@@ -72,6 +78,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+
       - name: Deploy til prod-gcp team namespace
         uses: nais/deploy/actions/deploy@v2
         env:
