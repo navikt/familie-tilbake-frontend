@@ -12,23 +12,23 @@ importers:
         specifier: 1.14.1
         version: 1.14.1
       '@navikt/aksel-icons':
-        specifier: 7.17.3
-        version: 7.17.3
+        specifier: 7.17.4
+        version: 7.17.4
       '@navikt/ds-css':
-        specifier: 7.17.3
-        version: 7.17.3
+        specifier: 7.17.4
+        version: 7.17.4
       '@navikt/ds-react':
-        specifier: 7.17.3
-        version: 7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 7.17.4
+        version: 7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@navikt/ds-tokens':
-        specifier: 7.17.3
-        version: 7.17.3
+        specifier: 7.17.4
+        version: 7.17.4
       '@navikt/land-verktoy':
-        specifier: 9.0.9
-        version: 9.0.9(lodash@4.17.21)
+        specifier: 9.0.12
+        version: 9.0.12(lodash@4.17.21)
       '@navikt/landvelger':
-        specifier: 9.0.7
-        version: 9.0.7(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/flagg-ikoner@9.0.8(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react-select@5.10.1(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: 9.0.12
+        version: 9.0.12(@navikt/ds-css@7.17.4)(@navikt/ds-react@7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/flagg-ikoner@9.0.12(@navikt/ds-css@7.17.4)(@navikt/ds-react@7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.12(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@navikt/land-verktoy@9.0.12(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react-select@5.10.1(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@sentry/browser':
         specifier: 9.5.0
         version: 9.5.0
@@ -130,8 +130,8 @@ importers:
         specifier: 29.6.3
         version: 29.6.3
       '@navikt/flagg-ikoner':
-        specifier: 9.0.8
-        version: 9.0.8(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: 9.0.12
+        version: 9.0.12(@navikt/ds-css@7.17.4)(@navikt/ds-react@7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.12(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@peculiar/webcrypto':
         specifier: 1.5.0
         version: 1.5.0
@@ -1209,27 +1209,27 @@ packages:
     peerDependencies:
       tslib: '2'
 
-  '@navikt/aksel-icons@7.17.3':
-    resolution: {integrity: sha512-5sy7S9X9DfFAempBQA123Tr1TLeddywmsmZPoONJN5P2aPolnlM6oZfaLytp1RfHBibkUTpfDvfu6CGjNOC7kw==, tarball: https://npm.pkg.github.com/download/@navikt/aksel-icons/7.17.3/587d82a2e1f22a7adff490b384a2415552363a88}
+  '@navikt/aksel-icons@7.17.4':
+    resolution: {integrity: sha512-RyKgnSO34azlwyC1ujApV3u67r2HfXmQ6e9QcPbrxaQP/E/AAlFWNotmuKT0NL34Mm5nNBfA2dPl8LiBt++hSg==, tarball: https://npm.pkg.github.com/download/@navikt/aksel-icons/7.17.4/294d943be11babbbeab9272c2de5c90a22585862}
 
-  '@navikt/ds-css@7.17.3':
-    resolution: {integrity: sha512-b5JtSxNnXmSSGHP+2VAR2sbmJvAbjh4N3+smdLwTOWVeUs7ACPsSxOMsbDmo7BjUzVHJx8p8XOi3wgAPQvW7Nw==, tarball: https://npm.pkg.github.com/download/@navikt/ds-css/7.17.3/45f7fc1abf532203e58f5a50a399b507530e9882}
+  '@navikt/ds-css@7.17.4':
+    resolution: {integrity: sha512-dMpZzlwuF6iP70YTqViEildO9WrMDr5M9CZKEGaYjyDM5rcp6dHxfBGJfe97DYaIMRNPOlpNkFFnWkIobAx3OA==, tarball: https://npm.pkg.github.com/download/@navikt/ds-css/7.17.4/d34c523229438ee0cc113c83d7ee709a1e26e3f3}
 
-  '@navikt/ds-react@7.17.3':
-    resolution: {integrity: sha512-BRa1C642XM5oox51rw8COzdr0NbkMZfTHt6qfySfi+vcPWFyojcqHJyhJ8bb85YwA+05Cu/oDGHHtTZRTkCT2g==, tarball: https://npm.pkg.github.com/download/@navikt/ds-react/7.17.3/0b9273acb9828ef6e7d78aa9012502bd287aa362}
+  '@navikt/ds-react@7.17.4':
+    resolution: {integrity: sha512-hTzDEH17SgYFYoBWdUl49vEk6SxbqyjdQNjCmp6dhSUgiQp+y21l1SiNnUgy4A9286cfiKbjK9ZHrApqEaIoqQ==, tarball: https://npm.pkg.github.com/download/@navikt/ds-react/7.17.4/ddc3edec65255699b5971d458db624c9ff61bb82}
     peerDependencies:
       '@types/react': '>=17.0.30'
       react: '>=17.0.0 || >19.0.0-rc'
 
-  '@navikt/ds-tokens@7.17.3':
-    resolution: {integrity: sha512-Vorx6F4N0mEsnN5Vle8w8Pysk0LinQTlbQfMYKkDaiB33Ec6b0S/NO6eRrA631ATG99FIPJohJKdEGl9H4fEGQ==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.17.3/b7c19ca8a48c08e4b9e23a2b074dbe1e33d6b7a8}
+  '@navikt/ds-tokens@7.17.4':
+    resolution: {integrity: sha512-0Zo+BseqvDLvdxqWzqjcc+rMnS+mydCWk/j5LXg87mSRnQKQaoEQ8ol8l6FDWC6nAIEsUMNwEhzF2LYvkaux8A==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.17.4/869463e1c2cbe3e084589f5a0a57d1c0ad9bff53}
 
-  '@navikt/flagg-ikoner@9.0.8':
-    resolution: {integrity: sha512-nJDbdwq1QaAPPtBJGGEpWMs6KvHHk0Fm63Yu+nBqoL/+lfj0A99Pz8lRFbieUQIFhhycPKwHK5DH/oXTdYSXAA==, tarball: https://npm.pkg.github.com/download/@navikt/flagg-ikoner/9.0.8/98219b05f023ef73aba5b3b40075b9d9f2378594}
+  '@navikt/flagg-ikoner@9.0.12':
+    resolution: {integrity: sha512-CTcEwSzNM0xIKfxOA7iyWhAP3wYsHpoavo6VJgXsqLQUZB9AmqXdZfz7aJM8v7833xgGsKwNR3s0KjuH4QKJCA==, tarball: https://npm.pkg.github.com/download/@navikt/flagg-ikoner/9.0.12/9b776db3f7fac87887b318c137017eed3c52829f}
     peerDependencies:
       '@navikt/ds-css': ^7.x
       '@navikt/ds-react': ^7.x
-      '@navikt/land-verktoy': ^9.0.3
+      '@navikt/land-verktoy': ^9.x
       classnames: ^2.3.2
       lodash: ^4.17.21
       lodash.throttle: ^4.1.1
@@ -1238,18 +1238,18 @@ packages:
       react-dom: ^18.2.0
       styled-components: ^5.3.6
 
-  '@navikt/land-verktoy@9.0.9':
-    resolution: {integrity: sha512-HVpV29qKoVSNy9pM1BQcA1/SvVgCrPdrcmQoRKzbVogb6IqnaT3YUrY+744zkRHgLACCaZvBYK23mgY24LLsvw==, tarball: https://npm.pkg.github.com/download/@navikt/land-verktoy/9.0.9/91d439ae2de95893895c8ad3d245ec6d5571a1c3}
+  '@navikt/land-verktoy@9.0.12':
+    resolution: {integrity: sha512-Cw9CdCxqOC5xe+mZmohT0dorVudTXh/GAcOyduBC/I3PuHlpb4Gk7ZHIl/AC8vArg8Gh++s/fj8ukKddI8ZCMA==, tarball: https://npm.pkg.github.com/download/@navikt/land-verktoy/9.0.12/a0ab89c37a728783cbb1267191f3103631b71d9d}
     peerDependencies:
       lodash: ^4.17.21
 
-  '@navikt/landvelger@9.0.7':
-    resolution: {integrity: sha512-Y3UymYPFx4FdrWFl8qyscQhVwVOQUovQNcYekTVM4ExsYYy/HoddQlvTgOTGb5bsrmHD+gnWUDZlFYzXG+b7ig==, tarball: https://npm.pkg.github.com/download/@navikt/landvelger/9.0.7/0760620fc9aee090e0ec390971c0c338bb00c390}
+  '@navikt/landvelger@9.0.12':
+    resolution: {integrity: sha512-MeEWD6bg4LjHFlr7mEkD27wPywZ+o6tF3cBJMU6cd1/lfKFk4xJ4hTusg9t/FXpIB8mrrwi8/LbePmG/u9mCzA==, tarball: https://npm.pkg.github.com/download/@navikt/landvelger/9.0.12/7d66d72a186900d7dd6575c172179066320d308d}
     peerDependencies:
-      '@navikt/ds-css': ^7.0.0
-      '@navikt/ds-react': ^7.0.0
-      '@navikt/flagg-ikoner': ^9.0.8
-      '@navikt/land-verktoy': ^9.0.9
+      '@navikt/ds-css': ^7.x
+      '@navikt/ds-react': ^7.x
+      '@navikt/flagg-ikoner': ^9.x
+      '@navikt/land-verktoy': ^9.x
       classnames: ^2.3.2
       lodash: ^4.17.21
       lodash.throttle: ^4.1.1
@@ -6622,16 +6622,16 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@navikt/aksel-icons@7.17.3': {}
+  '@navikt/aksel-icons@7.17.4': {}
 
-  '@navikt/ds-css@7.17.3': {}
+  '@navikt/ds-css@7.17.4': {}
 
-  '@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@navikt/ds-react@7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@floating-ui/react': 0.25.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@floating-ui/react-dom': 2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@navikt/aksel-icons': 7.17.3
-      '@navikt/ds-tokens': 7.17.3
+      '@navikt/aksel-icons': 7.17.4
+      '@navikt/ds-tokens': 7.17.4
       '@types/react': 18.3.18
       clsx: 2.1.1
       date-fns: 4.1.0
@@ -6640,13 +6640,13 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
 
-  '@navikt/ds-tokens@7.17.3': {}
+  '@navikt/ds-tokens@7.17.4': {}
 
-  '@navikt/flagg-ikoner@9.0.8(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@navikt/flagg-ikoner@9.0.12(@navikt/ds-css@7.17.4)(@navikt/ds-react@7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.12(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
-      '@navikt/ds-css': 7.17.3
-      '@navikt/ds-react': 7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@navikt/land-verktoy': 9.0.9(lodash@4.17.21)
+      '@navikt/ds-css': 7.17.4
+      '@navikt/ds-react': 7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@navikt/land-verktoy': 9.0.12(lodash@4.17.21)
       classnames: 2.5.1
       lodash: 4.17.21
       lodash.throttle: 4.1.1
@@ -6657,19 +6657,19 @@ snapshots:
       svg-country-flags: 1.2.10
       uuid: 9.0.1
 
-  '@navikt/land-verktoy@9.0.9(lodash@4.17.21)':
+  '@navikt/land-verktoy@9.0.12(lodash@4.17.21)':
     dependencies:
       '@piotrgorecki/i18n-currency-name': 1.3.0
       country-data-list: 1.4.0
       i18n-iso-countries: 7.14.0
       lodash: 4.17.21
 
-  '@navikt/landvelger@9.0.7(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/flagg-ikoner@9.0.8(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react-select@5.10.1(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@navikt/landvelger@9.0.12(@navikt/ds-css@7.17.4)(@navikt/ds-react@7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/flagg-ikoner@9.0.12(@navikt/ds-css@7.17.4)(@navikt/ds-react@7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.12(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@navikt/land-verktoy@9.0.12(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react-select@5.10.1(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
-      '@navikt/ds-css': 7.17.3
-      '@navikt/ds-react': 7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@navikt/flagg-ikoner': 9.0.8(@navikt/ds-css@7.17.3)(@navikt/ds-react@7.17.3(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.9(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@navikt/land-verktoy': 9.0.9(lodash@4.17.21)
+      '@navikt/ds-css': 7.17.4
+      '@navikt/ds-react': 7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@navikt/flagg-ikoner': 9.0.12(@navikt/ds-css@7.17.4)(@navikt/ds-react@7.17.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@navikt/land-verktoy@9.0.12(lodash@4.17.21))(classnames@2.5.1)(lodash.throttle@4.1.1)(lodash@4.17.21)(rc-tooltip@6.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@navikt/land-verktoy': 9.0.12(lodash@4.17.21)
       classnames: 2.5.1
       lodash: 4.17.21
       lodash.throttle: 4.1.1
