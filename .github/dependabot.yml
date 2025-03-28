@@ -3,34 +3,49 @@ registries:
   npm-github:
     type: npm-registry
     url: https://npm.pkg.github.com
-    token: ${{ secrets.READER_TOKEN }}
+    token: ${{ secrets.GITHUB_TOKEN }}
 updates:
-  - package-ecosystem: "npm"
-    directory: "/" # Location of package manifests
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "daily"
-      time: "06:00"
+      interval: daily
+      day: monday
+      time: '06:00'
+      timezone: Europe/Oslo
     open-pull-requests-limit: 30
     registries: "*"
     groups:
+      navikt-dependencies:
+        patterns:
+          - '@navikt/*'
+      react-dependencies:
+        patterns:
+          - 'react'
+          - 'react-dom'
+          - '@types/react'
+          - '@types/react-dom'
       minor-and-patch-dependencies:
         patterns:
           - '*'
         update-types:
-          - 'minor'
-          - 'patch'
+          - minor
+          - patch
       major-dependencies:
         patterns:
           - '*'
         update-types:
-          - 'major'
-  - package-ecosystem: "docker"
-    directory: "/" # Location of package manifests
+          - major
+
+  - package-ecosystem: docker
+    directory: /
     schedule:
-      interval: "weekly"
-      day: "sunday"
+      interval: weekly
+      day: sunday
+      timezone: Europe/Oslo
+
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: /
     schedule:
       interval: daily
+      timezone: Europe/Oslo
     open-pull-requests-limit: 10
