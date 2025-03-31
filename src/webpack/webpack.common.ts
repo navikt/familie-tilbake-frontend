@@ -1,11 +1,11 @@
-import type webpack from 'webpack';
+import type { Configuration, WebpackPluginInstance } from 'webpack';
 
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 
-const commonConfig: webpack.Configuration = {
+const commonConfig: Configuration = {
     entry: ['./src/frontend/index.tsx'],
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
@@ -18,9 +18,8 @@ const commonConfig: webpack.Configuration = {
             alwaysWriteToDisk: true,
             favicon: path.join(process.cwd(), '/src/frontend/favicon.ico'),
         }),
-        new CaseSensitivePathsPlugin(),
+        new CaseSensitivePathsPlugin() as unknown as WebpackPluginInstance,
         new ESLintPlugin({
-            configType: 'flat',
             extensions: [`ts`, `tsx`],
             exclude: [`/node_modules/`],
         }),

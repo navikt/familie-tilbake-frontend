@@ -1,112 +1,80 @@
-import type { NextFunction, Request, Response } from 'express';
-import type { Client } from 'openid-client';
+import type { User } from '../typer';
+import type { TexasClient } from './texas';
+import type { Userinfo } from '../../typer/entraid';
+import type { Request, Response } from 'express';
 
-import fetch from 'node-fetch';
-import { TokenSet } from 'openid-client';
+import axios from 'axios';
 
-import { logRequest } from '../utils';
-import { getOnBehalfOfAccessToken, getTokenSetsFromSession, tokenSetSelfId } from './tokenUtils';
+import { appConfig } from '../../config';
+import { retry } from '../../http';
 import { LogLevel } from '../../logging/logging';
-import { envVar } from '../../logging/utils';
+import { logRequest } from '../utils';
+import { utledAccessToken } from './authenticate';
 
-// Hent brukerprofil fra sesjon
-export const hentBrukerprofil = () => {
-    return async (req: Request, res: Response) => {
-        if (!req.session) {
-            throw new Error('Mangler sesjon på kall');
+export const hentBrukerprofil = (texasClient: TexasClient) => {
+    return async (req: Request, res: Response): Promise<void> => {
+        const requestToken = utledAccessToken(req);
+        if (!requestToken) {
+            res.sendStatus(401);
+            return;
+        }
+
+        if (!req.session.user) {
+            req.session.user = await setBrukerprofilPåSesjon(texasClient, req, requestToken);
         }
 
         res.status(200).send(req.session.user);
     };
 };
 
-const håndterGenerellFeil = (next: NextFunction, req: Request, err: Error) => {
-    logRequest(req, `Noe gikk galt: ${err?.message}.`, LogLevel.Error);
-    next();
-};
-
-const håndterBrukerdataFeil = (req: Request, err: Error) => {
-    logRequest(
-        req,
-        `Feilet mot ms graph: ${err.message}. Kan ikke fortsette uten brukerdata.`,
-        LogLevel.Error
-    );
-    throw new Error('Kunne ikke hente dine brukeropplysninger. Vennligst logg ut og inn på nytt');
-};
-
-const fetchFraMs = (accessToken: string) => {
+const fetchUserinfo = async (accessToken: string) => {
     const query = 'onPremisesSamAccountName,displayName,mail,officeLocation,userPrincipalName,id';
-    const graphUrl = `${envVar('GRAPH_API')}?$select=${query}`;
 
-    return fetch(graphUrl, {
+    return await axios.get<Userinfo>(`${appConfig.graphApiUrl}?$select=${query}`, {
         headers: {
             Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
         },
     });
 };
-const hentBrukerData = (accessToken: string, req: Request) => {
-    return fetchFraMs(accessToken).catch((e: Error) => {
-        logRequest(req, `Kunne ikke hente brukerdata - prøver på nytt: ${e}`, LogLevel.Warning);
-        return fetchFraMs(accessToken).catch((err: Error) => håndterBrukerdataFeil(req, err));
-    });
+
+const hentBrukerdata = async (accessToken: string, req: Request) => {
+    try {
+        return retry(req, 'hente brukerdata', () => fetchUserinfo(accessToken));
+    } catch (e: unknown) {
+        logRequest(
+            req,
+            `Feilet mot ms graph: ${e}. Kan ikke fortsette uten brukerdata.`,
+            LogLevel.Error
+        );
+        throw new Error(
+            'Kunne ikke hente dine brukeropplysninger. Vennligst logg ut og inn på nytt'
+        );
+    }
 };
 
-/**
- * Funksjon som henter brukerprofil fra graph.
- */
-export const setBrukerprofilPåSesjonRute = (authClient: Client) => {
-    return async (req: Request, _: Response, next: NextFunction) => {
-        setBrukerprofilPåSesjon(authClient, req, next);
-    };
-};
+const setBrukerprofilPåSesjon = async (
+    texasClient: TexasClient,
+    req: Request,
+    requestToken: string
+): Promise<User | null> => {
+    try {
+        const accessToken = await texasClient.hentOnBehalfOfToken(
+            requestToken,
+            'https://graph.microsoft.com/.default'
+        );
+        const brukerdataResponse = await hentBrukerdata(accessToken, req);
+        const brukerdata = brukerdataResponse.data;
 
-const setBrukerprofilPåSesjon = (authClient: Client, req: Request, next: NextFunction) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return new Promise((_, _reject) => {
-        const api = {
-            clientId: 'https://graph.microsoft.com',
-            scopes: ['https://graph.microsoft.com/.default'],
+        return {
+            displayName: brukerdata.displayName,
+            email: brukerdata.userPrincipalName,
+            enhet: brukerdata.officeLocation.slice(0, 4),
+            identifier: brukerdata.userPrincipalName,
+            navIdent: brukerdata.onPremisesSamAccountName,
         };
-
-        if (req.session && req.session.user) {
-            return next();
-        }
-
-        getOnBehalfOfAccessToken(authClient, req, api)
-            .then(accessToken => hentBrukerData(accessToken, req))
-            .then(res => res.json())
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .then((data: any) => {
-                if (!req.session) {
-                    throw new Error('Mangler sesjon på kall');
-                }
-
-                const tokenSet: TokenSet | undefined = getTokenSetsFromSession(req)[tokenSetSelfId];
-
-                req.session.user = {
-                    displayName: data.displayName,
-                    email: data.userPrincipalName,
-                    enhet: data.officeLocation.slice(0, 4),
-                    identifier: data.userPrincipalName,
-                    navIdent: data.onPremisesSamAccountName,
-                    groups: tokenSet ? new TokenSet(tokenSet).claims().groups : [],
-                };
-
-                req.session.save((error: Error) => {
-                    if (error) {
-                        logRequest(
-                            req,
-                            `Feilet ved lagring av bruker på session: ${error}`,
-                            LogLevel.Error
-                        );
-                    } else {
-                        return next();
-                    }
-                });
-            })
-            .catch((err: Error) => {
-                return håndterGenerellFeil(next, req, err);
-            });
-    });
+    } catch (err: unknown) {
+        logRequest(req, `Noe gikk galt: ${err}.`, LogLevel.Error);
+        throw err;
+    }
 };

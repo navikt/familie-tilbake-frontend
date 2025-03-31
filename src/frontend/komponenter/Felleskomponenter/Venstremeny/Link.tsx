@@ -2,7 +2,7 @@ import type { ReactChild } from 'react';
 
 import classNames from 'classnames';
 import React from 'react';
-import { Link as NavLink, useLocation } from 'react-router-dom';
+import { Link as NavLink, useLocation } from 'react-router';
 
 interface Props {
     children: ReactChild;

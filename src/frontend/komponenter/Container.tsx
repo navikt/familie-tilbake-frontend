@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { lazy } from 'react';
-import {
-    createBrowserRouter,
-    createRoutesFromElements,
-    RouterProvider,
-    Route,
-} from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router';
 
 import { useApp } from '../context/AppContext';
 import { BehandlingProvider } from '../context/BehandlingContext';
@@ -56,14 +51,16 @@ const AppRoutes = () => {
     const router = createBrowserRouter(
         createRoutesFromElements(
             <Route path="/" element={<UlagretDataModal />}>
-                <Route
-                    path="/fagsystem/:fagsystem/fagsak/:fagsakId/*"
-                    element={
-                        <Suspense>
-                            <FagsakContainer />
-                        </Suspense>
-                    }
-                />
+                <Route path="/fagsystem/:fagsystem/fagsak/:fagsakId/">
+                    <Route
+                        path="*"
+                        element={
+                            <Suspense>
+                                <FagsakContainer />
+                            </Suspense>
+                        }
+                    />
+                </Route>
                 <Route
                     path="/"
                     element={

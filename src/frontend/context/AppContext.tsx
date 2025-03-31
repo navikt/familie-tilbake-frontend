@@ -11,7 +11,6 @@ import { HttpProvider, useHttp } from '../api/http/HttpProvider';
 interface IInfo {
     appImage: string;
     appName: string;
-    namespace: string;
     clusterName: string;
 }
 

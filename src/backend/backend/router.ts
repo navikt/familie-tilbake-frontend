@@ -1,37 +1,19 @@
-import type { NextFunction, Request, Response } from 'express';
-import type { Client } from 'openid-client';
-import type { Counter } from 'prom-client';
+import type { TexasClient } from './auth/texas';
+import type { Router } from 'express';
 
 import express from 'express';
 
-import {
-    authenticateAzure,
-    authenticateAzureCallback,
-    ensureAuthenticated,
-    logout,
-} from './auth/authenticate';
-import { hentBrukerprofil, setBrukerprofilPåSesjonRute } from './auth/bruker';
+import { ensureAuthenticated } from './auth/authenticate';
+import { hentBrukerprofil } from './auth/bruker';
 
 const router = express.Router();
 
-export default (authClient: Client, prometheusTellere?: { [key: string]: Counter<string> }) => {
-    // Authentication
-    router.get('/login', (req: Request, res: Response, next: NextFunction) => {
-        if (prometheusTellere && prometheusTellere.login_route) {
-            prometheusTellere.login_route.inc();
-        }
-
-        authenticateAzure(req, res, next);
-    });
-    router.use('/auth/openid/callback', authenticateAzureCallback());
-    router.get('/auth/logout', (req: Request, res: Response) => logout(req, res));
-
+export default (texasClient: TexasClient): Router => {
     // Bruker
     router.get(
         '/user/profile',
-        ensureAuthenticated(authClient, true),
-        setBrukerprofilPåSesjonRute(authClient),
-        hentBrukerprofil()
+        ensureAuthenticated(texasClient, true),
+        hentBrukerprofil(texasClient)
     );
 
     return router;

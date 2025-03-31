@@ -214,7 +214,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                         loading={senderInn}
                         disabled={erLesevisning && !stegErBehandlet}
                     >
-                        {!stegErBehandlet || harUlagredeData ? 'Bekreft og fortsett' : 'Neste'}
+                        {!stegErBehandlet || harUlagredeData ? 'Lagre og fortsett' : 'Neste'}
                     </Button>
                     {behandling.harVerge && (
                         <Button variant="secondary" onClick={gåTilForrige}>

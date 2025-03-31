@@ -1,12 +1,14 @@
+import type { Land } from '../../Felleskomponenter/Landvelger/Landvelger';
+
 import { Alert, Fieldset, TextField } from '@navikt/ds-react';
 import { ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import React from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { styled } from 'styled-components';
 
 import { useBrevmottaker } from './BrevmottakerContext';
-import CountrySelect from './CountrySelect';
 import { Valideringsstatus } from '../../../hooks/skjema/typer';
 import { MottakerType } from '../../../typer/Brevmottaker';
+import Landvelger from '../../Felleskomponenter/Landvelger/Landvelger';
 
 const PostnummerOgStedContainer = styled.div`
     display: grid;
@@ -33,89 +35,91 @@ interface IProps {
 
 const BrevmottakerSkjema: React.FC<IProps> = ({ preutfyltNavn }) => {
     const { skjema } = useBrevmottaker();
+    const { felter, visFeilmeldinger } = skjema;
 
-    React.useEffect(() => {
-        preutfyltNavn && skjema.felter.navn.validerOgSettFelt(preutfyltNavn);
+    const eksluderLandKoder = useMemo(() => {
+        if (felter.mottaker.verdi === MottakerType.BrukerMedUtenlandskAdresse) {
+            return ['NO'];
+        }
+        return undefined;
+    }, [felter.mottaker.verdi]);
+
+    const landError = useMemo(() => {
+        if (visFeilmeldinger && felter.land.valideringsstatus === Valideringsstatus.Feil) {
+            return felter.land.feilmelding?.toString();
+        }
+        return undefined;
+    }, [visFeilmeldinger, felter.land.valideringsstatus, felter.land.feilmelding]);
+
+    const håndterLandValgt = useCallback(
+        ({ alpha2 }: Land) => {
+            felter.land.validerOgSettFelt(alpha2);
+        },
+        [felter.land]
+    );
+
+    useEffect(() => {
+        preutfyltNavn && felter.navn.validerOgSettFelt(preutfyltNavn);
     });
 
     return (
         <>
             <StyledFieldset legend="Skjema for manuell registrering av brevmottaker" hideLegend>
                 <TextField
-                    {...skjema.felter.navn.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
+                    {...felter.navn.hentNavBaseSkjemaProps(visFeilmeldinger)}
                     label="Navn"
                     readOnly={!!preutfyltNavn}
                     onChange={(event): void => {
-                        skjema.felter.navn.validerOgSettFelt(event.target.value);
+                        felter.navn.validerOgSettFelt(event.target.value);
                     }}
                 />
-                <CountrySelect
-                    id="country-select-brevmottaker"
-                    label="Land"
-                    excludeList={
-                        skjema.felter.mottaker.verdi === MottakerType.BrukerMedUtenlandskAdresse
-                            ? ['NO', 'XU']
-                            : ['XU']
-                    }
-                    values={skjema.felter.land.verdi}
-                    onOptionSelected={(land: { alpha2: string }) => {
-                        skjema.felter.land.validerOgSettFelt(land.alpha2);
-                    }}
-                    error={
-                        skjema.visFeilmeldinger &&
-                        skjema.felter.land.valideringsstatus === Valideringsstatus.Feil
-                            ? skjema.felter.land.feilmelding?.toString()
-                            : ''
-                    }
+                <Landvelger
+                    id="landvelger-brevmottaker"
+                    eksluderLandkoder={eksluderLandKoder}
+                    valgtLandkode={felter.land.verdi}
+                    håndterLandValgt={håndterLandValgt}
+                    error={landError}
                 />
-                {skjema.felter.land.verdi && (
+                {felter.land.verdi && (
                     <>
                         <TextField
-                            {...skjema.felter.adresselinje1.hentNavBaseSkjemaProps(
-                                skjema.visFeilmeldinger
-                            )}
+                            {...felter.adresselinje1.hentNavBaseSkjemaProps(visFeilmeldinger)}
                             label="Adresselinje 1"
                             onChange={(event): void => {
-                                skjema.felter.adresselinje1.validerOgSettFelt(event.target.value);
+                                felter.adresselinje1.validerOgSettFelt(event.target.value);
                             }}
                         />
                         <TextField
-                            {...skjema.felter.adresselinje2.hentNavBaseSkjemaProps(
-                                skjema.visFeilmeldinger
-                            )}
+                            {...felter.adresselinje2.hentNavBaseSkjemaProps(visFeilmeldinger)}
                             label="Adresselinje 2 (valgfri)"
                             onChange={(event): void => {
-                                skjema.felter.adresselinje2.validerOgSettFelt(event.target.value);
+                                felter.adresselinje2.validerOgSettFelt(event.target.value);
                             }}
                         />
-                        {skjema.felter.land.verdi !== 'NO' && (
+                        {felter.land.verdi !== 'NO' && (
                             <Alert variant="info">
                                 Ved utenlandsk adresse skal postnummer og poststed legges i
                                 adresselinjene.
                             </Alert>
                         )}
-                        <PostnummerOgStedContainer>
-                            <TextField
-                                {...skjema.felter.postnummer.hentNavBaseSkjemaProps(
-                                    skjema.visFeilmeldinger
-                                )}
-                                disabled={skjema.felter.land.verdi !== 'NO'}
-                                label="Postnummer"
-                                onChange={(event): void => {
-                                    skjema.felter.postnummer.validerOgSettFelt(event.target.value);
-                                }}
-                            />
-                            <TextField
-                                {...skjema.felter.poststed.hentNavBaseSkjemaProps(
-                                    skjema.visFeilmeldinger
-                                )}
-                                disabled={skjema.felter.land.verdi !== 'NO'}
-                                label="Poststed"
-                                onChange={(event): void => {
-                                    skjema.felter.poststed.validerOgSettFelt(event.target.value);
-                                }}
-                            />
-                        </PostnummerOgStedContainer>
+                        {felter.land.verdi === 'NO' && (
+                            <PostnummerOgStedContainer>
+                                <TextField
+                                    {...felter.postnummer.hentNavBaseSkjemaProps(visFeilmeldinger)}
+                                    label="Postnummer"
+                                    onChange={(event): void => {
+                                        felter.postnummer.validerOgSettFelt(event.target.value);
+                                    }}
+                                />
+                                <TextField
+                                    {...felter.poststed.hentNavBaseSkjemaProps(visFeilmeldinger)}
+                                    label="Poststed"
+                                    onChange={(event): void => {
+                                        felter.poststed.validerOgSettFelt(event.target.value);
+                                    }}
+                                />
+                            </PostnummerOgStedContainer>
+                        )}
                     </>
                 )}
             </StyledFieldset>

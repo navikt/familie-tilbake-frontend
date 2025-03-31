@@ -7,9 +7,9 @@ import React from 'react';
 import { styled } from 'styled-components';
 
 import { useBrevmottaker } from './BrevmottakerContext';
-import { countries } from './CountrySelect';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import { norskLandnavn } from '../../../utils/land';
 
 const FlexDiv = styled.div`
     display: flex;
@@ -61,8 +61,8 @@ const Brevmottaker: React.FC<IProps> = ({
         validerAlleSynligeFelter,
     } = useBrevmottaker();
     const { settVisBrevmottakerModal } = useBehandling();
-    const land = brevmottaker.manuellAdresseInfo
-        ? countries.find(country => country.alpha2 === brevmottaker.manuellAdresseInfo?.landkode)
+    const landnavn = brevmottaker.manuellAdresseInfo
+        ? norskLandnavn(brevmottaker.manuellAdresseInfo.landkode)
         : undefined;
     const [organisasjonsnavn, kontaktperson] = brevmottaker.navn.split(' v/ ');
 
@@ -118,7 +118,7 @@ const Brevmottaker: React.FC<IProps> = ({
                         <dt>Poststed</dt>
                         <dd>{brevmottaker.manuellAdresseInfo?.poststed || '-'}</dd>
                         <dt>Land</dt>
-                        <dd>{land?.label}</dd>
+                        <dd>{landnavn}</dd>
                     </>
                 )}
             </DefinitionList>
