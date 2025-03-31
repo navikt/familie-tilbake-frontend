@@ -26,9 +26,9 @@ const Landvelger: React.FC<Props> = ({
     const landListe = useMemo(() => {
         return Object.entries(countries)
             .filter(([alpha2]) => !eksluderLandkoder.includes(alpha2))
-            .map(([alpha2, { name: engelskLandNavn }]) => ({
+            .map(([alpha2]) => ({
                 alpha2,
-                navn: norskLandnavn(alpha2) || engelskLandNavn,
+                navn: norskLandnavn(alpha2),
             }))
             .sort((a, b) => a.navn.localeCompare(b.navn, 'nb'));
     }, [eksluderLandkoder]);
