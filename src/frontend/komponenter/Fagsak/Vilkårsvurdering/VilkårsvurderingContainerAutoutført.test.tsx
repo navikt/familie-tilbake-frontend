@@ -128,10 +128,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(getByText('Automatisk vurdert. Alle perioder er foreldet.')).toBeTruthy();
 
-        expect(
-            getByRole('button', {
-                name: 'Neste',
-            })
-        ).toBeEnabled();
+        await waitFor(async () => {
+            expect(
+                getByRole('button', {
+                    name: 'Neste',
+                })
+            ).toBeEnabled();
+        });
     });
 });
