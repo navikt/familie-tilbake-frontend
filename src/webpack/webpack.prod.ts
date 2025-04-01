@@ -1,8 +1,6 @@
 import { sentryWebpackPlugin } from '@sentry/webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
-import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import path from 'path';
-import TerserPlugin from 'terser-webpack-plugin';
 import { mergeWithRules } from 'webpack-merge';
 
 import baseConfig from './webpack.common';
@@ -50,10 +48,6 @@ const prodConfig = mergeWithRules({
     ],
     optimization: {
         minimize: true,
-        minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
-        runtimeChunk: {
-            name: 'runtime',
-        },
         splitChunks: {
             chunks: 'all',
             cacheGroups: {
