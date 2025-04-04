@@ -5,6 +5,7 @@ import { RedisStore } from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import redis from 'redis';
+import csrf from 'tiny-csrf';
 
 import { appConfig } from '../../config';
 import { logError, logInfo } from '../../logging/logging';
@@ -82,6 +83,13 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
                 store,
             })
         );
+        app.use(
+            csrf(
+                Array.isArray(sessionKonfigurasjon.cookieSecret)
+                    ? sessionKonfigurasjon.cookieSecret[0]
+                    : sessionKonfigurasjon.cookieSecret
+            )
+        );
     } else {
         logInfo('Setter opp in-memory db for session');
 
@@ -93,6 +101,13 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
                 saveUninitialized: false,
                 secret: appConfig.sessionSecret,
             })
+        );
+        app.use(
+            csrf(
+                Array.isArray(sessionKonfigurasjon.cookieSecret)
+                    ? sessionKonfigurasjon.cookieSecret[0]
+                    : sessionKonfigurasjon.cookieSecret
+            )
         );
     }
 };
