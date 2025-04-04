@@ -83,6 +83,9 @@ importers:
       styled-components:
         specifier: 6.1.17
         version: 6.1.17(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      tiny-csrf:
+        specifier: 1.1.6
+        version: 1.1.6
       uuid:
         specifier: 11.1.0
         version: 11.1.0
@@ -4947,6 +4950,9 @@ packages:
     engines: {node: '>=10.18'}
     peerDependencies:
       tslib: ^2
+
+  tiny-csrf@1.1.6:
+    resolution: {integrity: sha512-LffNz9iNYYBrjayZZS/WUNsMFxFDcgOmSNLNPG/LGj38U/R41eUo0ugpl5pskltygp+pnce0ISzsJ39yVYcu+w==}
 
   tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
@@ -10928,6 +10934,8 @@ snapshots:
   thingies@1.21.0(tslib@2.8.1):
     dependencies:
       tslib: 2.8.1
+
+  tiny-csrf@1.1.6: {}
 
   tmpl@1.0.5: {}
 
