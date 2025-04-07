@@ -26,7 +26,7 @@ export default (texasClient: TexasClient, router: Router) => {
     });
 
     // APP
-    router.get('*', ensureAuthenticated(texasClient, false), (_: Request, res: Response) => {
+    router.get('/*splat', ensureAuthenticated(texasClient, false), (_: Request, res: Response) => {
         prometheusTellere.appLoad.inc();
 
         res.sendFile('index.html', { root: path.join(process.cwd(), buildPath) });
