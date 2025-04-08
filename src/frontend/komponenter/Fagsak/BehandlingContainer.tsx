@@ -4,6 +4,7 @@ import type { IFagsak } from '../../typer/fagsak';
 import { BodyShort } from '@navikt/ds-react';
 import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
+import { lazy, Suspense } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
@@ -24,23 +25,22 @@ import {
 } from '../Felleskomponenter/Venstremeny/sider';
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 
-// Lazy load components
-const BrevmottakerContainer = React.lazy(() => import('./Brevmottaker/BrevmottakerContainer'));
-const FaktaContainer = React.lazy(() => import('./Fakta/FaktaContainer'));
-const HistoriskFaktaContainer = React.lazy(
+const BrevmottakerContainer = lazy(() => import('./Brevmottaker/BrevmottakerContainer'));
+const FaktaContainer = lazy(() => import('./Fakta/FaktaContainer'));
+const HistoriskFaktaContainer = lazy(
     () => import('./Fakta/FaktaPeriode/historikk/HistoriskFaktaContainer')
 );
-const ForeldelseContainer = React.lazy(() => import('./Foreldelse/ForeldelseContainer'));
-const VedtakContainer = React.lazy(() => import('./Vedtak/VedtakContainer'));
-const VergeContainer = React.lazy(() => import('./Verge/VergeContainer'));
-const VilkårsvurderingContainer = React.lazy(
+const ForeldelseContainer = lazy(() => import('./Foreldelse/ForeldelseContainer'));
+const VedtakContainer = lazy(() => import('./Vedtak/VedtakContainer'));
+const VergeContainer = lazy(() => import('./Verge/VergeContainer'));
+const VilkårsvurderingContainer = lazy(
     () => import('./Vilkårsvurdering/VilkårsvurderingContainer')
 );
-const HistoriskVilkårsvurderingContainer = React.lazy(
+const HistoriskVilkårsvurderingContainer = lazy(
     () => import('./Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContainer')
 );
-const Høyremeny = React.lazy(() => import('./Høyremeny/Høyremeny'));
-const HistoriskeVurderingermeny = React.lazy(
+const Høyremeny = lazy(() => import('./Høyremeny/Høyremeny'));
+const HistoriskeVurderingermeny = lazy(
     () => import('./HistoriskeVurderingermeny/HistoriskeVurderingermeny')
 );
 
@@ -68,9 +68,8 @@ const StyledHøyremenyContainer = styled.div`
     overflow-y: scroll;
 `;
 
-// Loading component
-const Suspense = ({ children }: { children: React.ReactNode }) => (
-    <React.Suspense fallback={<div>Laster...</div>}>{children}</React.Suspense>
+const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => (
+    <Suspense fallback={<div>Laster innhold...</div>}>{children}</Suspense>
 );
 
 interface IProps {
@@ -114,37 +113,37 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                 </HenlagtContainer>
             </StyledMainContainer>
             <StyledHøyremenyContainer>
-                <Suspense>
+                <SuspenseWrapper>
                     <Høyremeny fagsak={fagsak} behandling={behandling} />
-                </Suspense>
+                </SuspenseWrapper>
             </StyledHøyremenyContainer>
         </>
     ) : !harKravgrunnlag ? (
         <>
             <StyledMainContainer id="fagsak-main" />
             <StyledHøyremenyContainer>
-                <Suspense>
+                <SuspenseWrapper>
                     <Høyremeny fagsak={fagsak} behandling={behandling} />
-                </Suspense>
+                </SuspenseWrapper>
             </StyledHøyremenyContainer>
         </>
     ) : erHistoriskeVerdier ? (
         <>
             <StyledMainContainer id="fagsak-main">
-                <Suspense>
+                <SuspenseWrapper>
                     <HistoriskeVurderingermeny behandling={behandling} fagsak={fagsak} />
-                </Suspense>
+                </SuspenseWrapper>
                 <Routes>
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
                         element={
                             <HistoriskFaktaProvider behandling={behandling}>
-                                <Suspense>
+                                <SuspenseWrapper>
                                     <HistoriskFaktaContainer
                                         behandling={behandling}
                                         fagsak={fagsak}
                                     />
-                                </Suspense>
+                                </SuspenseWrapper>
                             </HistoriskFaktaProvider>
                         }
                     />
@@ -152,12 +151,12 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
                         element={
                             <HistoriskVilkårsvurderingProvider behandling={behandling}>
-                                <Suspense>
+                                <SuspenseWrapper>
                                     <HistoriskVilkårsvurderingContainer
                                         behandling={behandling}
                                         fagsak={fagsak}
                                     />
-                                </Suspense>
+                                </SuspenseWrapper>
                             </HistoriskVilkårsvurderingProvider>
                         }
                     />
@@ -176,9 +175,9 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                         element={
                             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                                <Suspense>
+                                <SuspenseWrapper>
                                     <FaktaContainer ytelse={fagsak.ytelsestype} />
-                                </Suspense>
+                                </SuspenseWrapper>
                             </FeilutbetalingFaktaProvider>
                         }
                     />
@@ -189,9 +188,9 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                                 behandling={behandling}
                                 fagsak={fagsak}
                             >
-                                <Suspense>
+                                <SuspenseWrapper>
                                     <ForeldelseContainer behandling={behandling} />
-                                </Suspense>
+                                </SuspenseWrapper>
                             </FeilutbetalingForeldelseProvider>
                         }
                     />
@@ -202,12 +201,12 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                                 behandling={behandling}
                                 fagsak={fagsak}
                             >
-                                <Suspense>
+                                <SuspenseWrapper>
                                     <VilkårsvurderingContainer
                                         behandling={behandling}
                                         fagsak={fagsak}
                                     />
-                                </Suspense>
+                                </SuspenseWrapper>
                             </FeilutbetalingVilkårsvurderingProvider>
                         }
                     />
@@ -215,9 +214,9 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                         element={
                             <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                                <Suspense>
+                                <SuspenseWrapper>
                                     <VedtakContainer behandling={behandling} fagsak={fagsak} />
-                                </Suspense>
+                                </SuspenseWrapper>
                             </FeilutbetalingVedtakProvider>
                         }
                     />
@@ -225,9 +224,9 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         path={BEHANDLING_KONTEKST_PATH + '/verge'}
                         element={
                             <VergeProvider behandling={behandling} fagsak={fagsak}>
-                                <Suspense>
+                                <SuspenseWrapper>
                                     <VergeContainer />
-                                </Suspense>
+                                </SuspenseWrapper>
                             </VergeProvider>
                         }
                     />
@@ -235,18 +234,18 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
                         element={
                             <BrevmottakerProvider behandling={behandling} fagsak={fagsak}>
-                                <Suspense>
+                                <SuspenseWrapper>
                                     <BrevmottakerContainer />
-                                </Suspense>
+                                </SuspenseWrapper>
                             </BrevmottakerProvider>
                         }
                     />
                 </Routes>
             </StyledMainContainer>
             <StyledHøyremenyContainer>
-                <Suspense>
+                <SuspenseWrapper>
                     <Høyremeny fagsak={fagsak} behandling={behandling} />
-                </Suspense>
+                </SuspenseWrapper>
             </StyledHøyremenyContainer>
         </>
     ) : null;

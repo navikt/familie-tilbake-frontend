@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router';
 
 import { useApp } from '../context/AppContext';
@@ -11,18 +11,17 @@ import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
 import UlagretDataModal from './Felleskomponenter/Modal/UlagretDataModal';
 import Toasts from './Felleskomponenter/Toast/Toasts';
 
-// Lazy load main components
 const Dashboard = lazy(() => import('./Felleskomponenter/Dashboard'));
 const FagsakContainer = lazy(() => import('./Fagsak/FagsakContainer'));
 const Feilmelding = lazy(() => import('./Felleskomponenter/Feilmelding'));
 
-// Loading component
-const Suspense = ({ children }: { children: React.ReactNode }) => (
-    <React.Suspense fallback={<div>Laster...</div>}>{children}</React.Suspense>
+const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => (
+    <Suspense fallback={<div>Laster innhold...</div>}>{children}</Suspense>
 );
 
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
+    console.log('autentisert', autentisert);
 
     return (
         <>
@@ -55,26 +54,26 @@ const AppRoutes = () => {
                     <Route
                         path="*"
                         element={
-                            <Suspense>
+                            <SuspenseWrapper>
                                 <FagsakContainer />
-                            </Suspense>
+                            </SuspenseWrapper>
                         }
                     />
                 </Route>
                 <Route
                     path="/"
                     element={
-                        <Suspense>
+                        <SuspenseWrapper>
                             <Dashboard />
-                        </Suspense>
+                        </SuspenseWrapper>
                     }
                 />
                 <Route
                     path="/*"
                     element={
-                        <Suspense>
+                        <SuspenseWrapper>
                             <Feilmelding />
-                        </Suspense>
+                        </SuspenseWrapper>
                     }
                 />
             </Route>

@@ -1,6 +1,7 @@
 import type { ISaksbehandler } from '../typer/saksbehandler';
 
 import * as React from 'react';
+import { Suspense } from 'react';
 
 import '@navikt/ds-css';
 
@@ -23,7 +24,9 @@ const App: React.FC = () => {
     return (
         <ErrorBoundary autentisertSaksbehandler={autentisertSaksbehandler}>
             <AppProvider autentisertSaksbehandler={autentisertSaksbehandler}>
-                <Container />
+                <Suspense fallback={<div>Laster innhold...</div>}>
+                    <Container />
+                </Suspense>
             </AppProvider>
         </ErrorBoundary>
     );
