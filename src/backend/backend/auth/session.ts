@@ -4,6 +4,7 @@ import type { Express } from 'express';
 import { RedisStore } from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import lusca from 'lusca';
 import redis from 'redis';
 
 import { appConfig } from '../../config';
@@ -95,4 +96,6 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
             })
         );
     }
+
+    app.use(lusca.csrf());
 };
