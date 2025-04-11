@@ -71,7 +71,7 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
                     maxAge: sessionKonfigurasjon.sessionMaxAgeSekunder
                         ? sessionKonfigurasjon.sessionMaxAgeSekunder * 1000
                         : undefined,
-                    sameSite: 'lax',
+                    sameSite: 'strict',
                     secure: sessionKonfigurasjon.secureCookie,
                 },
                 unset: 'destroy',
@@ -87,7 +87,7 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
 
         app.use(
             session({
-                cookie: { sameSite: 'lax', secure: sessionKonfigurasjon.secureCookie },
+                cookie: { sameSite: 'strict', secure: sessionKonfigurasjon.secureCookie },
                 name: sessionKonfigurasjon.navn,
                 resave: false,
                 saveUninitialized: false,
