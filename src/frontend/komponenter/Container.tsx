@@ -1,15 +1,7 @@
 import * as React from 'react';
-import {
-    createBrowserRouter,
-    createRoutesFromElements,
-    RouterProvider,
-    Outlet,
-    Route,
-} from 'react-router';
+import { lazy, Suspense } from 'react';
+import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router';
 
-import FagsakContainer from './Fagsak/FagsakContainer';
-import Dashboard from './Felleskomponenter/Dashboard';
-import Feilmelding from './Felleskomponenter/Feilmelding';
 import { useApp } from '../context/AppContext';
 import { BehandlingProvider } from '../context/BehandlingContext';
 import { FagsakProvider } from '../context/FagsakContext';
@@ -19,8 +11,17 @@ import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
 import UlagretDataModal from './Felleskomponenter/Modal/UlagretDataModal';
 import Toasts from './Felleskomponenter/Toast/Toasts';
 
+const Dashboard = lazy(() => import('./Felleskomponenter/Dashboard'));
+const FagsakContainer = lazy(() => import('./Fagsak/FagsakContainer'));
+const Feilmelding = lazy(() => import('./Felleskomponenter/Feilmelding'));
+
+const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => (
+    <Suspense fallback={<div>Laster innhold...</div>}>{children}</Suspense>
+);
+
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
+    console.log('autentisert', autentisert);
 
     return (
         <>
@@ -48,24 +49,38 @@ const Container: React.FC = () => {
 const AppRoutes = () => {
     const router = createBrowserRouter(
         createRoutesFromElements(
-            <Route path="/" element={<UlagretDataModalContainer />}>
+            <Route path="/" element={<UlagretDataModal />}>
                 <Route path="/fagsystem/:fagsystem/fagsak/:fagsakId/">
-                    <Route path="*" element={<FagsakContainer />} />
+                    <Route
+                        path="*"
+                        element={
+                            <SuspenseWrapper>
+                                <FagsakContainer />
+                            </SuspenseWrapper>
+                        }
+                    />
                 </Route>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/*" element={<Feilmelding />} />
+                <Route
+                    path="/"
+                    element={
+                        <SuspenseWrapper>
+                            <Dashboard />
+                        </SuspenseWrapper>
+                    }
+                />
+                <Route
+                    path="/*"
+                    element={
+                        <SuspenseWrapper>
+                            <Feilmelding />
+                        </SuspenseWrapper>
+                    }
+                />
             </Route>
         )
     );
 
     return <RouterProvider router={router} />;
 };
-
-const UlagretDataModalContainer = () => (
-    <>
-        <Outlet />
-        <UlagretDataModal />
-    </>
-);
 
 export default Container;
