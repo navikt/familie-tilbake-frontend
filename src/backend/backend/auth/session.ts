@@ -1,8 +1,9 @@
 import type { ISessionKonfigurasjon } from '../typer';
-import type { Express } from 'express';
+import type { Express, NextFunction, Request, Response } from 'express';
 
 import { RedisStore } from 'connect-redis';
 import cookieParser from 'cookie-parser';
+import crypto from 'crypto';
 import session from 'express-session';
 import redis from 'redis';
 
@@ -34,6 +35,45 @@ const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     });
     return redisClient;
 };
+
+type CsrfTokenData = {
+    token: string;
+    opprettet: number;
+};
+
+const csrfTokens = new Map<string, CsrfTokenData>();
+const MAKS_TOKEN_ALDER = 24 * 60 * 60 * 1000; // 1 dag
+
+const genererCsrfToken = (sessionId: string) => {
+    const token = crypto.randomUUID();
+    csrfTokens.set(sessionId, { token, opprettet: Date.now() });
+    return token;
+};
+
+const verifiserCsrfToken = (sessionId: string, mottattToken: string): boolean => {
+    const tokenData = csrfTokens.get(sessionId);
+    if (!tokenData) return false;
+
+    const tokenAlder = Date.now() - tokenData.opprettet;
+    if (tokenAlder > MAKS_TOKEN_ALDER) {
+        csrfTokens.delete(sessionId);
+        return false;
+    }
+
+    return tokenData.token === mottattToken;
+};
+
+const fjernUtgåtteTokens = () => {
+    for (const [sessionId, tokenData] of csrfTokens.entries()) {
+        const tokenAlder = Date.now() - tokenData.opprettet;
+        if (tokenAlder > MAKS_TOKEN_ALDER) {
+            csrfTokens.delete(sessionId);
+        }
+    }
+};
+
+// Fjern utgåtte tokens hver time
+setInterval(fjernUtgåtteTokens, 60 * 60 * 1000);
 
 export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
     app.use(cookieParser(sessionKonfigurasjon.cookieSecret));
@@ -95,4 +135,41 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
             })
         );
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    app.get('/api/csrf-token', (req: Request, res: Response): any => {
+        const sessionId = req.session.id;
+        if (!sessionId) {
+            return res.status(401).json({ error: 'Ingen aktiv sesjon' });
+        }
+
+        const csrfToken = genererCsrfToken(sessionId);
+        return res.json({ csrfToken });
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    app.use((req: Request, res: Response, next: NextFunction): any => {
+        const ikkeSikreMetoder = ['GET', 'HEAD', 'OPTIONS'];
+        if (ikkeSikreMetoder.includes(req.method)) {
+            return next();
+        }
+
+        const sessionId = req.session.id;
+        const csrfToken = req.headers['x-csrf-token'];
+
+        if (!sessionId) {
+            return res.status(401).json({ error: 'Ingen aktiv sesjon' });
+        }
+
+        if (!csrfToken || typeof csrfToken !== 'string') {
+            return res.status(403).json({ error: 'CSRF-token mangler' });
+        }
+
+        if (!verifiserCsrfToken(sessionId, csrfToken)) {
+            logError(`Ugyldig CSRF-token for sesjon ${sessionId}... IP= ${req.ip}`);
+            return res.status(403).json({ error: 'Ugyldig CSRF-token' });
+        }
+
+        next();
+    });
 };

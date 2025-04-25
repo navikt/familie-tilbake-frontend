@@ -29,6 +29,9 @@ importers:
       '@sentry/core':
         specifier: 9.12.0
         version: 9.12.0
+      '@tanstack/react-query':
+        specifier: 5.74.4
+        version: 5.74.4(react@19.1.0)
       axios:
         specifier: 1.8.4
         version: 1.8.4
@@ -1211,6 +1214,9 @@ packages:
     peerDependencies:
       '@types/react': '>=17.0.30'
       react: '>=17.0.0 || >19.0.0-rc'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@navikt/ds-tokens@7.19.1':
     resolution: {integrity: sha512-b4WAawNjCIpaJ1sv+A4IXQF1YRnIhKviHJKKAn4Uqy1YEAgejS/AP8DQvmvQjCmzXUz3tQuyldH8tnfmETaIsg==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.19.1/a7075f5c3ceed91f57926dbeb04da85f753c6bb0}
@@ -1484,6 +1490,14 @@ packages:
 
   '@sinonjs/fake-timers@10.3.0':
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
+
+  '@tanstack/query-core@5.74.4':
+    resolution: {integrity: sha512-YuG0A0+3i9b2Gfo9fkmNnkUWh5+5cFhWBN0pJAHkHilTx6A0nv8kepkk4T4GRt4e5ahbtFj2eTtkiPcVU1xO4A==}
+
+  '@tanstack/react-query@5.74.4':
+    resolution: {integrity: sha512-mAbxw60d4ffQ4qmRYfkO1xzRBPUEf/72Dgo3qqea0J66nIKuDTLEqQt0ku++SDFlMGMnB6uKDnEG1xD/TDse4Q==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
@@ -6585,11 +6599,12 @@ snapshots:
       '@floating-ui/react-dom': 2.1.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@navikt/aksel-icons': 7.19.1
       '@navikt/ds-tokens': 7.19.1
-      '@types/react': 19.1.0
       clsx: 2.1.1
       date-fns: 4.1.0
       react: 19.1.0
       react-day-picker: 9.6.1(react@19.1.0)
+    optionalDependencies:
+      '@types/react': 19.1.0
     transitivePeerDependencies:
       - react-dom
 
@@ -6866,6 +6881,13 @@ snapshots:
   '@sinonjs/fake-timers@10.3.0':
     dependencies:
       '@sinonjs/commons': 3.0.1
+
+  '@tanstack/query-core@5.74.4': {}
+
+  '@tanstack/react-query@5.74.4(react@19.1.0)':
+    dependencies:
+      '@tanstack/query-core': 5.74.4
+      react: 19.1.0
 
   '@testing-library/dom@10.4.0':
     dependencies:
