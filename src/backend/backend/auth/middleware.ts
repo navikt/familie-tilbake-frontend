@@ -19,22 +19,24 @@ const verifiserCsrfToken = ({ csrfToken }: Session, mottattToken: string): boole
     return csrfToken === mottattToken;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const csrfBeskyttelse = (req: Request, res: Response, next: NextFunction): any => {
+export const csrfBeskyttelse = (req: Request, res: Response, next: NextFunction): void => {
     if (IKKE_SIKRE_METODER.includes(req.method)) {
-        return next();
+        next();
+        return;
     }
 
     const csrfToken = req.headers['x-csrf-token'];
 
     if (!csrfToken || typeof csrfToken !== 'string') {
-        return res.status(403).json({ error: 'CSRF-token mangler' });
+        res.status(403).json({ error: 'CSRF-token mangler' });
+        return;
     }
 
-    if (!verifiserCsrfToken(req.session, csrfToken)) {
+    if (typeof csrfToken === 'string' && !verifiserCsrfToken(req.session, csrfToken)) {
         logError(`Ugyldig CSRF-token for sesjon ${req.sessionID}... IP= ${req.ip}`);
-        return res.status(403).json({ error: 'Ugyldig CSRF-token' });
+        res.status(403).json({ error: 'Ugyldig CSRF-token' });
+        return;
     }
 
-    return next();
+    next();
 };

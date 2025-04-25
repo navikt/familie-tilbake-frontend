@@ -31,8 +31,7 @@ export default (texasClient: TexasClient, router: Router) => {
     router.get(
         '/*splat',
         ensureAuthenticated(texasClient, false),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (req: Request, res: Response): any => {
+        (req: Request, res: Response): void => {
             prometheusTellere.appLoad.inc();
             const csrfToken = genererCsrfToken(req.session);
             let htmlInnhold = '';
@@ -43,14 +42,16 @@ export default (texasClient: TexasClient, router: Router) => {
                 );
             } catch (error) {
                 logError(`Feil ved lesing av index.html: ${error}`);
-                return res.status(500).json({ error: 'Intern serverfeil' });
+                res.status(500).json({ error: 'Feil ved lesing av index.html' });
+                return;
             }
             htmlInnhold = htmlInnhold.replace(
                 'content="{{ csrf_token() }}"',
                 `content="${csrfToken}"`
             );
 
-            return res.send(htmlInnhold);
+            res.send(htmlInnhold);
+            return;
         }
     );
 
