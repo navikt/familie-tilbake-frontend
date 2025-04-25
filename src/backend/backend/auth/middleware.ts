@@ -1,44 +1,22 @@
 import type { Request, Response, NextFunction } from 'express';
+import type { Session } from 'express-session';
 
 import crypto from 'crypto';
 
 import { logError } from '../../logging/logging';
 
-type CsrfTokenData = {
-    token: string;
-    opprettet: number;
-};
-
-const csrfTokens = new Map<string, CsrfTokenData>();
-const MAKS_TOKEN_ALDER = 24 * 60 * 60 * 1000; // 1 dag
 const IKKE_SIKRE_METODER = ['GET', 'HEAD', 'OPTIONS'];
 
-export const genererCsrfToken = (sessionId: string) => {
-    const token = crypto.randomUUID();
-    csrfTokens.set(sessionId, { token, opprettet: Date.now() });
-    return token;
+export const genererCsrfToken = (session: Session) => {
+    session.csrfToken = crypto.randomUUID();
+    return session.csrfToken;
 };
 
-const verifiserCsrfToken = (sessionId: string, mottattToken: string): boolean => {
-    const tokenData = csrfTokens.get(sessionId);
-    if (!tokenData) return false;
-
-    const tokenAlder = Date.now() - tokenData.opprettet;
-    if (tokenAlder > MAKS_TOKEN_ALDER) {
-        csrfTokens.delete(sessionId);
+const verifiserCsrfToken = ({ csrfToken }: Session, mottattToken: string): boolean => {
+    if (!csrfToken) {
         return false;
     }
-
-    return tokenData.token === mottattToken;
-};
-
-export const fjernUtgåtteTokens = () => {
-    for (const [sessionId, tokenData] of csrfTokens.entries()) {
-        const tokenAlder = Date.now() - tokenData.opprettet;
-        if (tokenAlder > MAKS_TOKEN_ALDER) {
-            csrfTokens.delete(sessionId);
-        }
-    }
+    return csrfToken === mottattToken;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,21 +25,16 @@ export const csrfBeskyttelse = (req: Request, res: Response, next: NextFunction)
         return next();
     }
 
-    const sessionId = req.session.id;
     const csrfToken = req.headers['x-csrf-token'];
-
-    if (!sessionId) {
-        return res.status(401).json({ error: 'Ingen aktiv sesjon' });
-    }
 
     if (!csrfToken || typeof csrfToken !== 'string') {
         return res.status(403).json({ error: 'CSRF-token mangler' });
     }
 
-    if (!verifiserCsrfToken(sessionId, csrfToken)) {
-        logError(`Ugyldig CSRF-token for sesjon ${sessionId}... IP= ${req.ip}`);
+    if (!verifiserCsrfToken(req.session, csrfToken)) {
+        logError(`Ugyldig CSRF-token for sesjon ${req.sessionID}... IP= ${req.ip}`);
         return res.status(403).json({ error: 'Ugyldig CSRF-token' });
     }
 
-    next();
+    return next();
 };

@@ -1,12 +1,14 @@
 import type { TexasClient } from './backend/auth/texas';
 import type { Response, Request, Router } from 'express';
 
+import fs from 'fs';
 import path from 'path';
 
 import { ensureAuthenticated } from './backend/auth/authenticate';
+import { genererCsrfToken } from './backend/auth/middleware';
 import { logRequest } from './backend/utils';
 import { appConfig, buildPath } from './config';
-import { LogLevel } from './logging/logging';
+import { logError, LogLevel } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
 export default (texasClient: TexasClient, router: Router) => {
@@ -26,11 +28,31 @@ export default (texasClient: TexasClient, router: Router) => {
     });
 
     // APP
-    router.get('/*splat', ensureAuthenticated(texasClient, false), (_: Request, res: Response) => {
-        prometheusTellere.appLoad.inc();
+    router.get(
+        '/*splat',
+        ensureAuthenticated(texasClient, false),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (req: Request, res: Response): any => {
+            prometheusTellere.appLoad.inc();
+            const csrfToken = genererCsrfToken(req.session);
+            let htmlInnhold = '';
+            try {
+                htmlInnhold = fs.readFileSync(
+                    `${path.join(process.cwd(), buildPath)}/index.html`,
+                    'utf8'
+                );
+            } catch (error) {
+                logError(`Feil ved lesing av index.html: ${error}`);
+                return res.status(500).json({ error: 'Intern serverfeil' });
+            }
+            htmlInnhold = htmlInnhold.replace(
+                'content="{{ csrf_token() }}"',
+                `content="${csrfToken}"`
+            );
 
-        res.sendFile('index.html', { root: path.join(process.cwd(), buildPath) });
-    });
+            return res.send(htmlInnhold);
+        }
+    );
 
     return router;
 };

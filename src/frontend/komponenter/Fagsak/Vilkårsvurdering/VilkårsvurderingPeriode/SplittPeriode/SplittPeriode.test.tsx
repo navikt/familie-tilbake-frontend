@@ -1,7 +1,6 @@
 import type { IBehandling } from '../../../../../typer/behandling';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
@@ -10,27 +9,6 @@ import * as React from 'react';
 import SplittPeriode from './SplittPeriode';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
 import { HendelseType } from '../../../../../kodeverk';
-
-const opprettTestQueryClient = () =>
-    new QueryClient({
-        defaultOptions: {
-            queries: {
-                retry: false,
-                refetchOnWindowFocus: false,
-                staleTime: 0,
-            },
-        },
-    });
-
-const TestWrapper = ({ children }: { children: React.ReactNode }) => {
-    const queryClient = opprettTestQueryClient();
-
-    return (
-        <QueryClientProvider client={queryClient}>
-            <HttpProvider>{children}</HttpProvider>
-        </QueryClientProvider>
-    );
-};
 
 describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
     test('Tester åpning av modal', async () => {
@@ -55,9 +33,9 @@ describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
             queryByAltText,
             queryByText,
         } = render(
-            <TestWrapper>
+            <HttpProvider>
                 <SplittPeriode periode={periode} behandling={behandling} onBekreft={jest.fn()} />
-            </TestWrapper>
+            </HttpProvider>
         );
 
         expect(queryByAltText('Del opp perioden')).toBeTruthy();

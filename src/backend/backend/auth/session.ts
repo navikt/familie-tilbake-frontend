@@ -1,5 +1,5 @@
 import type { ISessionKonfigurasjon } from '../typer';
-import type { Express, Request, Response } from 'express';
+import type { Express } from 'express';
 
 import { RedisStore } from 'connect-redis';
 import cookieParser from 'cookie-parser';
@@ -12,7 +12,6 @@ import {
     hentErforbindelsenTilValkeyTilgjengelig,
     settErforbindelsenTilValkeyTilgjengelig,
 } from '../utils';
-import { csrfBeskyttelse, fjernUtgåtteTokens, genererCsrfToken } from './middleware';
 
 const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     const pingHvertFjerdeMinutt = 1000 * 60 * 4; // Connection blir ugyldig etter fem minutter, pinger derfor hvert fjerde minutt
@@ -35,9 +34,6 @@ const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     });
     return redisClient;
 };
-
-// Fjern utgåtte tokens hver time
-setInterval(fjernUtgåtteTokens, 60 * 60 * 1000);
 
 export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
     app.use(cookieParser(sessionKonfigurasjon.cookieSecret));
@@ -99,17 +95,4 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
             })
         );
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    app.get('/api/csrf-token', (req: Request, res: Response): any => {
-        const sessionId = req.session.id;
-        if (!sessionId) {
-            return res.status(401).json({ error: 'Ingen aktiv sesjon' });
-        }
-
-        const csrfToken = genererCsrfToken(sessionId);
-        return res.json({ csrfToken });
-    });
-
-    app.use(csrfBeskyttelse);
 };

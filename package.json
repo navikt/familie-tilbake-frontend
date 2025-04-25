@@ -30,7 +30,6 @@
     "@navikt/ds-tokens": "7.19.1",
     "@sentry/browser": "9.12.0",
     "@sentry/core": "9.12.0",
-    "@tanstack/react-query": "5.74.4",
     "axios": "1.8.4",
     "classnames": "2.5.1",
     "connect-redis": "8.0.2",
