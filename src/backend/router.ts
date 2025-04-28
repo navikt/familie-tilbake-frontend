@@ -34,24 +34,20 @@ export default (texasClient: TexasClient, router: Router) => {
         (req: Request, res: Response): void => {
             prometheusTellere.appLoad.inc();
             const csrfToken = genererCsrfToken(req.session);
-            let htmlInnhold = '';
             try {
-                htmlInnhold = fs.readFileSync(
+                let htmlInnhold = fs.readFileSync(
                     `${path.join(process.cwd(), buildPath)}/index.html`,
                     'utf8'
                 );
+                htmlInnhold = htmlInnhold.replace(
+                    'content="{{ csrf_token() }}"',
+                    `content="${csrfToken}"`
+                );
+                res.send(htmlInnhold);
             } catch (error) {
                 logError(`Feil ved lesing av index.html: ${error}`);
                 res.status(500).json({ error: 'Feil ved lesing av index.html' });
-                return;
             }
-            htmlInnhold = htmlInnhold.replace(
-                'content="{{ csrf_token() }}"',
-                `content="${csrfToken}"`
-            );
-
-            res.send(htmlInnhold);
-            return;
         }
     );
 
