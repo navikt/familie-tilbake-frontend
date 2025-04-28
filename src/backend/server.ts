@@ -16,6 +16,7 @@ import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
 import config from '../webpack/webpack.dev';
+import { csrfBeskyttelse } from './backend/auth/middleware';
 
 const port = 8000;
 
@@ -42,6 +43,7 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 
 app.use(
     '/familie-tilbake/api',
+    csrfBeskyttelse,
     ensureAuthenticated(texasClient, true),
     attachToken(texasClient, appConfig.backendApiScope),
     doProxy()

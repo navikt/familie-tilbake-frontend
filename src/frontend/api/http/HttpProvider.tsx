@@ -7,12 +7,12 @@ import React from 'react';
 
 import { preferredAxios, håndterApiRespons } from './axios';
 
-export type FamilieRequestConfig<SkjemaData> = AxiosRequestConfig & {
+export interface FamilieRequestConfig<SkjemaData> extends AxiosRequestConfig {
     data?: SkjemaData;
     defaultFeilmelding?: string;
     loggFeilTilSentry?: boolean;
     påvirkerSystemLaster?: boolean;
-};
+}
 
 export type FamilieRequest = <SkjemaData, SkjemaRespons>(
     config: FamilieRequestConfig<SkjemaData>
@@ -23,6 +23,9 @@ interface IProps {
     innloggetSaksbehandler?: ISaksbehandler;
     settAutentisert?: (autentisert: boolean) => void;
 }
+
+const hentCsrfTokenFraMeta = (): string | null =>
+    document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || null;
 
 export const [HttpProvider, useHttp] = constate(
     ({ innloggetSaksbehandler, settAutentisert, fjernRessursSomLasterTimeout = 300 }: IProps) => {
@@ -46,6 +49,18 @@ export const [HttpProvider, useHttp] = constate(
             const ressursId = `${config.method}_${config.url}`;
             config.påvirkerSystemLaster &&
                 settRessurserSomLaster([...ressurserSomLaster, ressursId]);
+
+            // Setter csrf-token i header for request som ikke er GET, HEAD eller OPTIONS
+            const ikkeSikreMetoder = ['GET', 'HEAD', 'OPTIONS'];
+            if (config.method && !ikkeSikreMetoder.includes(config.method)) {
+                const csrfToken = hentCsrfTokenFraMeta();
+                if (csrfToken) {
+                    config.headers = {
+                        ...config.headers,
+                        'x-csrf-token': csrfToken,
+                    };
+                }
+            }
 
             return preferredAxios
                 .request(config)
