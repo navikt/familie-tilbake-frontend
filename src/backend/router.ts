@@ -29,7 +29,7 @@ export default (texasClient: TexasClient, router: Router) => {
 
     // APP
     router.get(
-        '/*splat',
+        '*splat',
         ensureAuthenticated(texasClient, false),
         (req: Request, res: Response): void => {
             prometheusTellere.appLoad.inc();
