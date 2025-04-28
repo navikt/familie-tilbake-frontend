@@ -7,12 +7,12 @@ import React from 'react';
 
 import { preferredAxios, håndterApiRespons } from './axios';
 
-export type FamilieRequestConfig<SkjemaData> = AxiosRequestConfig & {
+export interface FamilieRequestConfig<SkjemaData> extends AxiosRequestConfig {
     data?: SkjemaData;
     defaultFeilmelding?: string;
     loggFeilTilSentry?: boolean;
     påvirkerSystemLaster?: boolean;
-};
+}
 
 export type FamilieRequest = <SkjemaData, SkjemaRespons>(
     config: FamilieRequestConfig<SkjemaData>
