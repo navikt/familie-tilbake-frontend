@@ -41,9 +41,9 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
     next();
 });
 
+app.use(csrfBeskyttelse);
 app.use(
     '/familie-tilbake/api',
-    csrfBeskyttelse,
     ensureAuthenticated(texasClient, true),
     attachToken(texasClient, appConfig.backendApiScope),
     doProxy()
