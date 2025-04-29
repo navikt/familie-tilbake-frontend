@@ -1,6 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'express';
 import expressStaticGzip from 'express-static-gzip';
 import path from 'path';
@@ -17,13 +16,11 @@ import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
 import config from '../webpack/webpack.dev';
-import { csrfBeskyttelse } from './backend/auth/middleware';
 
 const port = 8000;
 
 const { app, texasClient, router } = backend(sessionConfig, texasConfig, prometheusTellere);
 
-app.use(csrfBeskyttelse);
 if (process.env.NODE_ENV === 'development') {
     const compiler = webpack(config);
     const middleware = webpackDevMiddleware(compiler, {
@@ -42,7 +39,6 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
     req.headers['nav-consumer-id'] = 'familie-tilbake-frontend';
     next();
 });
-app.use(cookieParser(sessionConfig.cookieSecret));
 app.use(
     '/familie-tilbake/api',
     ensureAuthenticated(texasClient, true),
