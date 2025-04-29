@@ -5,14 +5,13 @@ import fs from 'fs';
 import path from 'path';
 
 import { ensureAuthenticated } from './backend/auth/authenticate';
-import { csrf, genererCsrfToken } from './backend/auth/middleware';
+import { genererCsrfToken } from './backend/auth/middleware';
 import { logRequest } from './backend/utils';
 import { appConfig, buildPath } from './config';
 import { logError, LogLevel } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
 export default (texasClient: TexasClient, router: Router) => {
-    router.use(csrf);
     router.get('/version', (_: Request, res: Response) => {
         res.status(200).send({ status: 'SUKSESS', data: appConfig.version }).end();
     });
