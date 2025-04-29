@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { ensureAuthenticated } from './backend/auth/authenticate';
-import { genererCsrfToken } from './backend/auth/middleware';
+import { csrfBeskyttelse, genererCsrfToken } from './backend/auth/middleware';
 import { logRequest } from './backend/utils';
 import { appConfig, buildPath } from './config';
 import { logError, LogLevel } from './logging/logging';
@@ -22,7 +22,7 @@ export default (texasClient: TexasClient, router: Router) => {
     });
 
     // Feilhåndtering
-    router.post('/logg-feil', (req: Request, res: Response) => {
+    router.post('/logg-feil', csrfBeskyttelse, (req: Request, res: Response) => {
         logRequest(req, req.body.melding, LogLevel.Error);
         res.status(200).send();
     });
