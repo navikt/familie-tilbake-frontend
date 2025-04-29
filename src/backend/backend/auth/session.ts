@@ -12,7 +12,6 @@ import {
     hentErforbindelsenTilValkeyTilgjengelig,
     settErforbindelsenTilValkeyTilgjengelig,
 } from '../utils';
-import { csrfBeskyttelse } from './middleware';
 
 const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     const pingHvertFjerdeMinutt = 1000 * 60 * 4; // Connection blir ugyldig etter fem minutter, pinger derfor hvert fjerde minutt
@@ -96,5 +95,4 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
             })
         );
     }
-    app.use(csrfBeskyttelse);
 };
