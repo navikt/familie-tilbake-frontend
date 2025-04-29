@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 
+import cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'express';
 import expressStaticGzip from 'express-static-gzip';
 import path from 'path';
@@ -40,10 +41,10 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
     req.headers['nav-consumer-id'] = 'familie-tilbake-frontend';
     next();
 });
-
+app.use(cookieParser(sessionConfig.cookieSecret));
+app.use(csrfBeskyttelse);
 app.use(
     '/familie-tilbake/api',
-    csrfBeskyttelse,
     ensureAuthenticated(texasClient, true),
     attachToken(texasClient, appConfig.backendApiScope),
     doProxy()
