@@ -37,7 +37,6 @@ const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
 };
 
 export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
-    app.use(csrfBeskyttelse);
     app.use(cookieParser(sessionKonfigurasjon.cookieSecret));
     app.set('trust proxy', 1);
 
@@ -97,4 +96,5 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
             })
         );
     }
+    app.use(csrfBeskyttelse);
 };
