@@ -1,12 +1,14 @@
 import type { TexasClient } from './backend/auth/texas';
 import type { Response, Request, Router } from 'express';
 
+import fs from 'fs';
 import path from 'path';
 
 import { ensureAuthenticated } from './backend/auth/authenticate';
+import { genererCsrfToken } from './backend/auth/middleware';
 import { logRequest } from './backend/utils';
 import { appConfig, buildPath } from './config';
-import { LogLevel } from './logging/logging';
+import { logError, LogLevel } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
 export default (texasClient: TexasClient, router: Router) => {
@@ -26,11 +28,28 @@ export default (texasClient: TexasClient, router: Router) => {
     });
 
     // APP
-    router.get('/*splat', ensureAuthenticated(texasClient, false), (_: Request, res: Response) => {
-        prometheusTellere.appLoad.inc();
-
-        res.sendFile('index.html', { root: path.join(process.cwd(), buildPath) });
-    });
+    router.get(
+        '*splat',
+        ensureAuthenticated(texasClient, false),
+        (req: Request, res: Response): void => {
+            prometheusTellere.appLoad.inc();
+            const csrfToken = genererCsrfToken(req.session);
+            try {
+                let htmlInnhold = fs.readFileSync(
+                    `${path.join(process.cwd(), buildPath)}/index.html`,
+                    'utf8'
+                );
+                htmlInnhold = htmlInnhold.replace(
+                    'content="{{ csrf_token() }}"',
+                    `content="${csrfToken}"`
+                );
+                res.send(htmlInnhold);
+            } catch (error) {
+                logError(`Feil ved lesing av index.html: ${error}`);
+                res.status(500).json({ error: 'Feil ved lesing av index.html' });
+            }
+        }
+    );
 
     return router;
 };
