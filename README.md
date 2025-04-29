@@ -10,6 +10,7 @@ Saksbehandlerapplikasjon for tilbakekreving av ytelsene barnetrygd, konstantstø
 
 # Kom i gang med utvikling
 
+* Last ned `pnpm` [her](https://pnpm.io/installation)
 * Installere avhengigheter `pnpm`
 * Starte dev-server `pnpm start:dev`
 * I et annet terminal-vindu: start docker `docker-compose build && docker-compose up`
