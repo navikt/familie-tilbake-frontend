@@ -2,7 +2,6 @@ import type { ISessionKonfigurasjon } from '../typer';
 import type { Express } from 'express';
 
 import { RedisStore } from 'connect-redis';
-import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import redis from 'redis';
 
@@ -36,7 +35,6 @@ const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
 };
 
 export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
-    app.use(cookieParser(sessionKonfigurasjon.cookieSecret));
     app.set('trust proxy', 1);
 
     if (sessionKonfigurasjon.valkeyFullUrl) {
