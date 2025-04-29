@@ -23,6 +23,7 @@ const port = 8000;
 
 const { app, texasClient, router } = backend(sessionConfig, texasConfig, prometheusTellere);
 
+app.use(csrfBeskyttelse);
 if (process.env.NODE_ENV === 'development') {
     const compiler = webpack(config);
     const middleware = webpackDevMiddleware(compiler, {
@@ -42,7 +43,6 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
     next();
 });
 app.use(cookieParser(sessionConfig.cookieSecret));
-app.use(csrfBeskyttelse);
 app.use(
     '/familie-tilbake/api',
     ensureAuthenticated(texasClient, true),
