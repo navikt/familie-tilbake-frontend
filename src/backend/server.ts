@@ -18,10 +18,11 @@ import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
 import config from '../webpack/webpack.dev';
 import { csrfBeskyttelse } from './backend/auth/middleware';
+import konfigurerSession from './backend/auth/session';
 
 const port = 8000;
 
-const { app, texasClient, router } = backend(sessionConfig, texasConfig, prometheusTellere);
+const { app, texasClient, router } = backend(texasConfig, prometheusTellere);
 
 if (process.env.NODE_ENV === 'development') {
     const compiler = webpack(config);
@@ -42,6 +43,7 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
     next();
 });
 app.use(cookieParser(sessionConfig.cookieSecret));
+app.use(konfigurerSession(app, sessionConfig));
 app.use(csrfBeskyttelse);
 app.use(
     '/familie-tilbake/api',
