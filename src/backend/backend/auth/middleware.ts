@@ -19,7 +19,7 @@ const verifiserCsrfToken = ({ csrfToken }: Session, mottattToken: string): boole
     return csrfToken === mottattToken;
 };
 
-export const csurfProtection = (req: Request, res: Response, next: NextFunction): void => {
+export const csrfProtection = (req: Request, res: Response, next: NextFunction): void => {
     if (IKKE_SIKRE_METODER.includes(req.method)) {
         next();
         return;

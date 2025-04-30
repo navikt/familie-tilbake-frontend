@@ -17,7 +17,7 @@ import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
 import config from '../webpack/webpack.dev';
-import { csurfProtection } from './backend/auth/middleware';
+import { csrfProtection } from './backend/auth/middleware';
 import konfigurerSession from './backend/auth/session';
 
 const port = 8000;
@@ -44,7 +44,7 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 });
 app.use(cookieParser(sessionConfig.cookieSecret));
 app.use(konfigurerSession(app, sessionConfig));
-app.use(csurfProtection);
+app.use(csrfProtection);
 app.use(
     '/familie-tilbake/api',
     ensureAuthenticated(texasClient, true),
