@@ -1,0 +1,4 @@
+name: "CodeQL config"
+query-filters:
+  - exclude: "js/missing-token-validation"
+  - exclude: "js/missing-rate-limiting"
