@@ -1,5 +1,5 @@
+name: "CodeQL konfigurasjon"
 query-filters:
   - exclude:
-      id: js/missing-csrf-middleware
-  - exclude:
-      id: js/missing-rate-limiting
+      id: js/missing-token-validation
+      description: "CSRF-beskyttelse er implementert med gir likevel warning. Eksluderer denne fra codeql."

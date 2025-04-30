@@ -1,0 +1,23 @@
+name: "CodeQL Analyse"
+
+on:
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    analyze:
+        name: "CodeQL Analyse"
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            security-events: write
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: github/codeql-action/init@v3
+              with:
+                  languages: typescript
+                  config-file: .github/codeql/codeql-config.yml
+                  
+            - uses: github/codeql-action/analyze@v3
+              
