@@ -1,4 +1,4 @@
-name: "CodeQL Analyse"
+name: "Egen CodeQL Analyse"
 
 on:
     pull_request:
@@ -18,6 +18,10 @@ jobs:
               with:
                   languages: typescript
                   config-file: .github/codeql/codeql-config.yml
-                  
+
+
             - uses: github/codeql-action/analyze@v3
-              
+              with:
+                  output: sarif
+                  category: security
+                  upload: true
