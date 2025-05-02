@@ -1,8 +1,7 @@
 import type { ISessionKonfigurasjon } from '../typer';
-import type { Express } from 'express';
+import type { Express, RequestHandler } from 'express';
 
 import { RedisStore } from 'connect-redis';
-import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import redis from 'redis';
 
@@ -35,8 +34,7 @@ const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
     return redisClient;
 };
 
-export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
-    app.use(cookieParser(sessionKonfigurasjon.cookieSecret));
+export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon): RequestHandler => {
     app.set('trust proxy', 1);
 
     if (sessionKonfigurasjon.valkeyFullUrl) {
@@ -65,34 +63,29 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon) => {
             ttl: sessionKonfigurasjon.sessionMaxAgeSekunder,
         });
 
-        app.use(
-            session({
-                cookie: {
-                    maxAge: sessionKonfigurasjon.sessionMaxAgeSekunder
-                        ? sessionKonfigurasjon.sessionMaxAgeSekunder * 1000
-                        : undefined,
-                    sameSite: 'lax',
-                    secure: sessionKonfigurasjon.secureCookie,
-                },
-                unset: 'destroy',
-                name: sessionKonfigurasjon.navn,
-                resave: false,
-                saveUninitialized: false,
-                secret: appConfig.sessionSecret,
-                store,
-            })
-        );
+        return session({
+            cookie: {
+                maxAge: sessionKonfigurasjon.sessionMaxAgeSekunder
+                    ? sessionKonfigurasjon.sessionMaxAgeSekunder * 1000
+                    : undefined,
+                sameSite: 'strict',
+                secure: sessionKonfigurasjon.secureCookie,
+            },
+            unset: 'destroy',
+            name: sessionKonfigurasjon.navn,
+            resave: false,
+            saveUninitialized: false,
+            secret: appConfig.sessionSecret,
+            store,
+        });
     } else {
         logInfo('Setter opp in-memory db for session');
-
-        app.use(
-            session({
-                cookie: { sameSite: 'lax', secure: sessionKonfigurasjon.secureCookie },
-                name: sessionKonfigurasjon.navn,
-                resave: false,
-                saveUninitialized: false,
-                secret: appConfig.sessionSecret,
-            })
-        );
+        return session({
+            cookie: { sameSite: 'strict', secure: sessionKonfigurasjon.secureCookie },
+            name: sessionKonfigurasjon.navn,
+            resave: false,
+            saveUninitialized: false,
+            secret: appConfig.sessionSecret,
+        });
     }
 };

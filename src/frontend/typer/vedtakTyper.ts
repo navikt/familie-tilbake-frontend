@@ -1,13 +1,13 @@
 import type { FeilutbetalingPeriode, VurderingAvBrukersUttalelse } from './feilutbetalingtyper';
 import type { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../kodeverk/';
 
-export type BeregningsresultatPeriode = FeilutbetalingPeriode & {
+export interface BeregningsresultatPeriode extends FeilutbetalingPeriode {
     vurdering: Vurdering;
     andelAvBeløp?: number;
     renteprosent?: number;
     tilbakekrevingsbeløp: number;
     tilbakekrevesBeløpEtterSkatt: number;
-};
+}
 
 export interface IBeregningsresultat {
     beregningsresultatsperioder: BeregningsresultatPeriode[];

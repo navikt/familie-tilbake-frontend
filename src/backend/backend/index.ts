@@ -1,10 +1,9 @@
-import type { ISessionKonfigurasjon, TexasConfig } from './typer';
+import type { TexasConfig } from './typer';
 import type { Express, Request, Response, Router } from 'express';
 import type { Counter, Registry } from 'prom-client';
 
 import express from 'express';
 
-import konfigurerSession from './auth/session';
 import { TexasClient } from './auth/texas';
 import headers from './headers';
 import { konfigurerMetrikker } from './metrikker';
@@ -25,7 +24,6 @@ interface IApp {
 }
 
 export default (
-    sessionKonfigurasjon: ISessionKonfigurasjon,
     texasConfig: TexasConfig,
     prometheusTellere?: { [key: string]: Counter<string> }
 ): IApp => {
@@ -43,9 +41,6 @@ export default (
         res.status(200).end();
     });
     const prometheusRegistry: Registry = konfigurerMetrikker(app, prometheusTellere);
-
-    konfigurerSession(app, sessionKonfigurasjon);
-
     const texasClient = new TexasClient(texasConfig);
     const router = konfigurerRouter(texasClient);
 
