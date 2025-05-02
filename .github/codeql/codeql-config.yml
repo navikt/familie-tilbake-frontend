@@ -1,6 +1,8 @@
 name: "CodeQL konfigurasjon"
 disable-default-queries: true
-queries: security-extended,security-and-quality
+queries:
+  - security-extended
+  - security-and-quality
 packs:
     # JavaScript/TypeScript queries
     - advanced-security/codeql-javascript
