@@ -1,20 +1,17 @@
 name: "CodeQL konfigurasjon"
-disable-default-queries: true
+disable-default-queries: false  # Changed to false to use built-in queries
 
-packs:
-  javascript: # JavaScript/TypeScript queries
-    - advanced-security/codeql-javascript
-    - advanced-security/codeql-javascript-extensions
-    - codeql/javascript-queries:codeql-suites/javascript-security-extended.qls
-  actions:
-    - codeql/actions-queries:codeql-suites/actions-security-extended.qls
+queries:
+  - uses: security-and-quality
+
+paths:
+  - src
 
 paths-ignore:
-  - 'node_modules'
   - '**/*.test.ts'
   - '**/*.test.tsx'
 
 query-filters:
   - exclude:
       id: js/missing-token-validation
-      description: "CSRF-beskyttelse er implementert med gir likevel warning. Eksluderer denne fra codeql."
+      description: "CSRF-beskyttelse er implementert, men gir likevel warning. Eksluderer denne fra CodeQL."
