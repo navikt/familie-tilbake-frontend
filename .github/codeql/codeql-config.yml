@@ -1,20 +1,18 @@
 name: "CodeQL konfigurasjon"
 disable-default-queries: true
-queries:
-- security-extended
-- security-and-quality
+
 packs:
-# JavaScript/TypeScript queries
-- advanced-security/codeql-javascript
-- advanced-security/codeql-javascript-extensions
-# security-extended
-- codeql/javascript-queries:codeql-suites/javascript-security-extended.qls
+  javascript: # JavaScript/TypeScript queries
+    - advanced-security/codeql-javascript
+    - advanced-security/codeql-javascript-extensions
+    - codeql/javascript-queries:codeql-suites/javascript-security-extended.qls
+
 paths-ignore:
-# JavaScript
-- 'node_modules'
-- '**/*.test.ts'
-- '**/*.test.tsx'
+  - 'node_modules'
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+
 query-filters:
-- exclude:
-    id: js/missing-token-validation
-    description: "CSRF-beskyttelse er implementert med gir likevel warning. Eksluderer denne fra codeql."
+  - exclude:
+      id: js/missing-token-validation
+      description: "CSRF-beskyttelse er implementert med gir likevel warning. Eksluderer denne fra codeql."
