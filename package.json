@@ -46,7 +46,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-router": "7.5.3",
-    "redis": "4.7.0",
+    "redis": "5.0.0",
     "styled-components": "6.1.17",
     "uuid": "11.1.0",
     "winston": "3.17.0"
