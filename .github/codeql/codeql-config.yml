@@ -1,5 +1,5 @@
 name: "CodeQL konfigurasjon"
-disable-default-queries: true
+disable-default-queries: false
 query-filters:
   - exclude:
       id: js/missing-token-validation
