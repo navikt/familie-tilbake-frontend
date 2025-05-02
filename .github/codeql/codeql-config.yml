@@ -6,6 +6,8 @@ packs:
     - advanced-security/codeql-javascript
     - advanced-security/codeql-javascript-extensions
     - codeql/javascript-queries:codeql-suites/javascript-security-extended.qls
+  actions:
+    - codeql/actions-queries:codeql-suites/actions-security-extended.qls
 
 paths-ignore:
   - 'node_modules'
