@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router';
+import {
+    createBrowserRouter,
+    createRoutesFromElements,
+    RouterProvider,
+    Route,
+    Outlet,
+} from 'react-router';
 
 import { useApp } from '../context/AppContext';
 import { BehandlingProvider } from '../context/BehandlingContext';
@@ -14,10 +20,6 @@ import Toasts from './Felleskomponenter/Toast/Toasts';
 const Dashboard = lazy(() => import('./Felleskomponenter/Dashboard'));
 const FagsakContainer = lazy(() => import('./Fagsak/FagsakContainer'));
 const Feilmelding = lazy(() => import('./Felleskomponenter/Feilmelding'));
-
-const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => (
-    <Suspense fallback={<div>Laster innhold...</div>}>{children}</Suspense>
-);
 
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
@@ -49,31 +51,31 @@ const Container: React.FC = () => {
 const AppRoutes = () => {
     const router = createBrowserRouter(
         createRoutesFromElements(
-            <Route path="/" element={<UlagretDataModal />}>
+            <Route path="/" element={<UlagretDataModalContainer />}>
                 <Route path="/fagsystem/:fagsystem/fagsak/:fagsakId/">
                     <Route
                         path="*"
                         element={
-                            <SuspenseWrapper>
+                            <Suspense fallback={<div>Fagsak-container laster...</div>}>
                                 <FagsakContainer />
-                            </SuspenseWrapper>
+                            </Suspense>
                         }
                     />
                 </Route>
                 <Route
                     path="/"
                     element={
-                        <SuspenseWrapper>
+                        <Suspense fallback={<div>Dashboard laster...</div>}>
                             <Dashboard />
-                        </SuspenseWrapper>
+                        </Suspense>
                     }
                 />
                 <Route
                     path="/*"
                     element={
-                        <SuspenseWrapper>
+                        <Suspense fallback={<div>Feilmelding laster...</div>}>
                             <Feilmelding />
-                        </SuspenseWrapper>
+                        </Suspense>
                     }
                 />
             </Route>
@@ -82,5 +84,12 @@ const AppRoutes = () => {
 
     return <RouterProvider router={router} />;
 };
+
+const UlagretDataModalContainer = () => (
+    <>
+        <Outlet />
+        <UlagretDataModal />
+    </>
+);
 
 export default Container;
