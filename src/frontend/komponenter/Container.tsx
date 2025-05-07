@@ -23,7 +23,6 @@ const Feilmelding = lazy(() => import('./Felleskomponenter/Feilmelding'));
 
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
-    console.log('autentisert', autentisert);
 
     return (
         <>
