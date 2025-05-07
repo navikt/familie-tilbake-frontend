@@ -29,7 +29,7 @@ export default (texasClient: TexasClient, router: Router) => {
 
     // APP
     router.get(
-        '*splat',
+        ['/', '/fagsystem/*splat'],
         ensureAuthenticated(texasClient, false),
         (req: Request, res: Response): void => {
             prometheusTellere.appLoad.inc();
@@ -50,6 +50,10 @@ export default (texasClient: TexasClient, router: Router) => {
             }
         }
     );
+
+    router.use((_: Request, res: Response) => {
+        res.status(404).sendFile(`${path.join(process.cwd(), buildPath)}/index.html`);
+    });
 
     return router;
 };
