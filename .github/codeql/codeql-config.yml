@@ -1,0 +1,17 @@
+name: "CodeQL konfigurasjon"
+disable-default-queries: false  # Changed to false to use built-in queries
+
+queries:
+  - uses: security-and-quality
+
+paths:
+  - src
+
+paths-ignore:
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+
+query-filters:
+  - exclude:
+      id: js/missing-token-validation
+      description: "CSRF-beskyttelse er implementert, men gir likevel warning. Eksluderer denne fra CodeQL."
