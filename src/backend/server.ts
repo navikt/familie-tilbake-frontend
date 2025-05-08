@@ -5,35 +5,22 @@ import { json, urlencoded } from 'express';
 import expressStaticGzip from 'express-static-gzip';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import webpack from 'webpack';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import backend from './backend';
 import { ensureAuthenticated } from './backend/auth/authenticate';
+import { csrfBeskyttelse } from './backend/auth/middleware';
+import konfigurerSession from './backend/auth/session';
 import { appConfig, sessionConfig, texasConfig } from './config';
 import { logInfo } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
-import config from '../webpack/webpack.dev';
-import { csrfBeskyttelse } from './backend/auth/middleware';
-import konfigurerSession from './backend/auth/session';
 
 const port = 8000;
 
 const { app, texasClient, router } = backend(texasConfig, prometheusTellere);
 
-if (process.env.NODE_ENV === 'development') {
-    const compiler = webpack(config);
-    const middleware = webpackDevMiddleware(compiler, {
-        publicPath: config.output?.publicPath,
-        writeToDisk: true,
-    });
-
-    app.use(middleware);
-    app.use(webpackHotMiddleware(compiler));
-} else {
+if (process.env.NODE_ENV !== 'development') {
     app.use('/assets', expressStaticGzip(path.join(process.cwd(), 'frontend_production'), {}));
 }
 
