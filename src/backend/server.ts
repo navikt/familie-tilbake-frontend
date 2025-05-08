@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 
+import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import { json, urlencoded } from 'express';
-import expressStaticGzip from 'express-static-gzip';
+import express, { json, urlencoded } from 'express';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -21,7 +21,14 @@ const port = 8000;
 const { app, texasClient, router } = backend(texasConfig, prometheusTellere);
 
 if (process.env.NODE_ENV !== 'development') {
-    app.use('/assets', expressStaticGzip(path.join(process.cwd(), 'frontend_production'), {}));
+    const assetsPath = path.join(process.cwd(), 'frontend_production/assets');
+
+    app.use(compression());
+    app.use(express.static(assetsPath));
+
+    app.get('*', (_req, res) => {
+        res.sendFile(path.join(assetsPath, 'index.html'));
+    });
 }
 
 app.use((req: Request, _res: Response, next: NextFunction) => {

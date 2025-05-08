@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import { dirname } from 'path';
+import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 import compression from 'vite-plugin-compression';
@@ -9,10 +9,11 @@ const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    root: __dirname, // 👈 This tells Vite where the project root is
+    root: __dirname,
     build: {
-        outDir: 'frontend_production',
+        outDir: resolve(__dirname, '../../frontend_production'),
         sourcemap: true,
+        emptyOutDir: true,
     },
     server: {
         proxy: {
