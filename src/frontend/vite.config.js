@@ -21,6 +21,22 @@ export default defineConfig({
                 target: 'http://localhost:4000',
                 changeOrigin: true,
             },
+            '/user/profile': {
+                target: 'http://localhost:4000',
+                changeOrigin: true,
+            },
+            '/version': {
+                target: 'http://localhost:4000',
+                changeOrigin: true,
+            },
+            '/error': {
+                target: 'http://localhost:4000',
+                changeOrigin: true,
+            },
+            '/logg-feil': {
+                target: 'http://localhost:4000',
+                changeOrigin: true,
+            },
         },
     },
     plugins: [react(), compression()],
