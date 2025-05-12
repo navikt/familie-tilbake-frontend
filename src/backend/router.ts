@@ -7,13 +7,17 @@ import path from 'path';
 import { ensureAuthenticated } from './backend/auth/authenticate';
 import { genererCsrfToken } from './backend/auth/middleware';
 import { logRequest } from './backend/utils';
-import { appConfig, buildPath } from './config';
+import { aInntektBaseUrl, appConfig, buildPath, gosysBaseUrl, modiaBaseUrl } from './config';
 import { logError, LogLevel } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
 export default (texasClient: TexasClient, router: Router) => {
     router.get('/version', (_: Request, res: Response) => {
         res.status(200).send({ status: 'SUKSESS', data: appConfig.version }).end();
+    });
+
+    router.get('/system-url', (_: Request, res: Response) => {
+        res.status(200).send({ aInntektBaseUrl, gosysBaseUrl, modiaBaseUrl }).end();
     });
 
     router.get('/error', (_: Request, res: Response) => {
