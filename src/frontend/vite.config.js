@@ -9,15 +9,11 @@ const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    root: `${__dirname}/frontend`,
+    root: __dirname,
     build: {
         outDir: resolve(__dirname, '../../frontend_production'),
         sourcemap: true,
         emptyOutDir: true,
     },
-    server: {
-        middlewareMode: true,
-    },
-    appType: 'spa',
     plugins: [react(), compression()],
 });
