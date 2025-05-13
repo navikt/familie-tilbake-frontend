@@ -9,35 +9,15 @@ const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    root: __dirname,
+    root: `${__dirname}/frontend`,
     build: {
         outDir: resolve(__dirname, '../../frontend_production'),
         sourcemap: true,
         emptyOutDir: true,
     },
     server: {
-        proxy: {
-            '/familie-tilbake/api': {
-                target: 'http://localhost:8000',
-                changeOrigin: true,
-            },
-            '/user/profile': {
-                target: 'http://localhost:8000',
-                changeOrigin: true,
-            },
-            '/version': {
-                target: 'http://localhost:8000',
-                changeOrigin: true,
-            },
-            '/error': {
-                target: 'http://localhost:8000',
-                changeOrigin: true,
-            },
-            '/logg-feil': {
-                target: 'http://localhost:8000',
-                changeOrigin: true,
-            },
-        },
+        middlewareMode: true,
     },
+    appType: 'spa',
     plugins: [react(), compression()],
 });
