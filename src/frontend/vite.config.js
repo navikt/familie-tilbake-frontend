@@ -18,23 +18,23 @@ export default defineConfig({
     server: {
         proxy: {
             '/familie-tilbake/api': {
-                target: 'http://localhost:4000',
+                target: 'http://localhost:8000',
                 changeOrigin: true,
             },
             '/user/profile': {
-                target: 'http://localhost:4000',
+                target: 'http://localhost:8000',
                 changeOrigin: true,
             },
             '/version': {
-                target: 'http://localhost:4000',
+                target: 'http://localhost:8000',
                 changeOrigin: true,
             },
             '/error': {
-                target: 'http://localhost:4000',
+                target: 'http://localhost:8000',
                 changeOrigin: true,
             },
             '/logg-feil': {
-                target: 'http://localhost:4000',
+                target: 'http://localhost:8000',
                 changeOrigin: true,
             },
         },
