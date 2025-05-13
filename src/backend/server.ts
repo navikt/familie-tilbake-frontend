@@ -22,13 +22,10 @@ import setupRouter from './router';
     const { app, texasClient, router } = backend(texasConfig, prometheusTellere);
 
     if (process.env.NODE_ENV === 'production') {
-        app.use('/assets', expressStaticGzip(path.join(process.cwd(), 'frontend_production'), {}));
-        // const assetsPath = path.join(process.cwd(), 'frontend_production/assets');
-        // app.use(compression());
-        // app.use(express.static(assetsPath));
-        // app.get('*', (_req, res) => {
-        //     res.sendFile(path.join(assetsPath, 'index.html'));
-        // });
+        app.use(
+            '/assets',
+            expressStaticGzip(path.join(process.cwd(), 'frontend_production/assets'), {})
+        );
     }
 
     app.use((req: Request, _res: Response, next: NextFunction) => {

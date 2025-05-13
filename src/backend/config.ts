@@ -18,7 +18,7 @@ export const appConfig: IAppConfig = {
 const Environment = () => {
     if (process.env.ENV === 'local') {
         return {
-            buildPath: 'frontend_development',
+            buildPath: 'frontend_production',
             proxyUrl: 'http://localhost:8030/api',
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
@@ -34,7 +34,7 @@ const Environment = () => {
         };
     } else if (process.env.ENV === 'lokalt-mot-preprod') {
         return {
-            buildPath: 'frontend_development',
+            buildPath: 'frontend_production',
             proxyUrl: 'https://tilbakekreving-backend.intern.dev.nav.no/api',
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',

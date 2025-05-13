@@ -55,7 +55,9 @@ export default async (texasClient: TexasClient, router: Router) => {
                     'utf-8'
                 );
 
-                htmlInnhold = !isProd ? await vite.transformIndexHtml(url, htmlInnhold) : '';
+                htmlInnhold = isProd
+                    ? htmlInnhold
+                    : await vite.transformIndexHtml(url, htmlInnhold);
 
                 htmlInnhold = htmlInnhold.replace('content="__CSRF__"', `content="${csrfToken}"`);
 
@@ -93,9 +95,9 @@ export default async (texasClient: TexasClient, router: Router) => {
     //     );
     // }
 
-    // router.use((_: Request, res: Response) => {
-    //     // res.status(404).sendFile(`${path.join(process.cwd(), buildPath)}/index.html`);
-    // });
+    router.use((_: Request, res: Response) => {
+        res.status(404).sendFile(`${path.join(process.cwd(), buildPath)}/index.html`);
+    });
 
     return router;
 };
