@@ -16,10 +16,10 @@ interface IHeaderProps {
 const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
     const query = useQuery({ queryKey: ['system-url'], queryFn: hentSystemUrl });
     const personIdent = usePersonIdentStore(state => state.personIdent);
-    // const aInntektUrl = useMemo(
-    //     () => `${query.data?.aInntekt}/${personIdent}`,
-    //     [personIdent, query.data?.aInntekt]
-    // );
+    const aInntektUrl = useMemo(
+        () => `${query.data?.aInntektBaseUrl}/${personIdent}`,
+        [personIdent, query.data?.aInntektBaseUrl]
+    );
     const gosysUrl = useMemo(
         () =>
             query.data?.gosysBaseUrl && personIdent
@@ -34,7 +34,11 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
                 : undefined,
         [query.data?.modiaBaseUrl, personIdent]
     );
-    const harPersonIdentOgEnGyldigLenke = personIdent && (gosysUrl || modiaUrl);
+    const harPersonIdentOgEnGyldigLenke = useMemo(
+        () => personIdent && (gosysUrl || modiaUrl || aInntektUrl),
+        [personIdent, gosysUrl, modiaUrl, aInntektUrl]
+    );
+
     return (
         <InternalHeader>
             <InternalHeader.Title href="/">Nav - Tilbakekreving</InternalHeader.Title>
@@ -52,13 +56,15 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
                             <Dropdown.Menu.GroupedList.Heading>
                                 Personoversikt
                             </Dropdown.Menu.GroupedList.Heading>
-                            {/* <Dropdown.Menu.GroupedList.Item
-                                as="a"
-                                target="_blank"
-                                href={aInntektUrl}
-                            >
-                                A-inntekt <ExternalLinkIcon aria-hidden />
-                            </Dropdown.Menu.GroupedList.Item> */}
+                            {aInntektUrl && (
+                                <Dropdown.Menu.GroupedList.Item
+                                    as="a"
+                                    target="_blank"
+                                    href={aInntektUrl}
+                                >
+                                    A-inntekt <ExternalLinkIcon aria-hidden />
+                                </Dropdown.Menu.GroupedList.Item>
+                            )}
                             {gosysUrl && (
                                 <Dropdown.Menu.GroupedList.Item
                                     as="a"
