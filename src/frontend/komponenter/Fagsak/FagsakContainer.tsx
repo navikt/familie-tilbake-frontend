@@ -69,6 +69,7 @@ const FagsakContainer: React.FC = () => {
         if (fagsak?.status === RessursStatus.Suksess && fagsak?.data?.bruker.personIdent) {
             setPersonIdent(fagsak.data.bruker.personIdent);
         }
+        return () => setPersonIdent(undefined);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsak, behandlingId]);
 

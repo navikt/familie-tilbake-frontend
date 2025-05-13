@@ -9,34 +9,38 @@ import { useMemo } from 'react';
 import { hentSystemUrl } from '../../../api/systemUrl';
 import { usePersonIdentStore } from '../../../store/personIdent';
 
-interface IHeaderProps {
+interface Props {
     innloggetSaksbehandler?: ISaksbehandler;
 }
 
-const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
+export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
     const query = useQuery({ queryKey: ['system-url'], queryFn: hentSystemUrl });
     const personIdent = usePersonIdentStore(state => state.personIdent);
+
     const aInntektUrl = useMemo(
-        () => `${query.data?.aInntektBaseUrl}/${personIdent}`,
+        () =>
+            query.data?.aInntektBaseUrl && personIdent
+                ? `${query.data?.aInntektBaseUrl}/${personIdent}`
+                : query.data?.aInntektBaseUrl,
         [personIdent, query.data?.aInntektBaseUrl]
     );
     const gosysUrl = useMemo(
         () =>
             query.data?.gosysBaseUrl && personIdent
                 ? `${query.data.gosysBaseUrl}/personoversikt/fnr=${personIdent}`
-                : undefined,
+                : query.data?.gosysBaseUrl,
         [query.data?.gosysBaseUrl, personIdent]
     );
     const modiaUrl = useMemo(
         () =>
             query.data?.modiaBaseUrl && personIdent
                 ? `${query.data.modiaBaseUrl}/person/${personIdent}`
-                : undefined,
+                : query.data?.modiaBaseUrl,
         [query.data?.modiaBaseUrl, personIdent]
     );
-    const harPersonIdentOgEnGyldigLenke = useMemo(
-        () => personIdent && (gosysUrl || modiaUrl || aInntektUrl),
-        [personIdent, gosysUrl, modiaUrl, aInntektUrl]
+    const harGyldigLenke = useMemo(
+        () => !!gosysUrl || !!modiaUrl || !!aInntektUrl,
+        [gosysUrl, modiaUrl, aInntektUrl]
     );
 
     return (
@@ -45,16 +49,18 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
 
             <Spacer />
 
-            <Dropdown defaultOpen>
-                <InternalHeader.Button as={Dropdown.Toggle}>
-                    <MenuGridIcon style={{ fontSize: '1.5rem' }} title="Systemer og oppslagsverk" />
-                </InternalHeader.Button>
-
-                {harPersonIdentOgEnGyldigLenke && (
+            {harGyldigLenke && (
+                <Dropdown>
+                    <InternalHeader.Button as={Dropdown.Toggle}>
+                        <MenuGridIcon
+                            style={{ fontSize: '1.5rem' }}
+                            title="Systemer og oppslagsverk"
+                        />
+                    </InternalHeader.Button>
                     <Dropdown.Menu>
                         <Dropdown.Menu.GroupedList>
                             <Dropdown.Menu.GroupedList.Heading>
-                                Personoversikt
+                                {personIdent ? 'Personoversikt' : 'Systemer og oppslagsverk'}
                             </Dropdown.Menu.GroupedList.Heading>
                             {aInntektUrl && (
                                 <Dropdown.Menu.GroupedList.Item
@@ -85,8 +91,9 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
                             )}
                         </Dropdown.Menu.GroupedList>
                     </Dropdown.Menu>
-                )}
-            </Dropdown>
+                </Dropdown>
+            )}
+
             <Dropdown>
                 <InternalHeader.UserButton
                     as={Dropdown.Toggle}
@@ -106,5 +113,3 @@ const FTHeader: React.FC<IHeaderProps> = ({ innloggetSaksbehandler }) => {
         </InternalHeader>
     );
 };
-
-export default FTHeader;
