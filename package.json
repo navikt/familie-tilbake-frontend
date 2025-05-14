@@ -7,9 +7,7 @@
   "type": "module",
   "scripts": {
     "start": "NODE_ENV=production node --loader ts-node/esm --es-module-specifier-resolution=node node_dist/backend/server.js",
-    "dev:client": "vite --config src/frontend/vite.config.js",
-    "dev:server": "tsc && NODE_ENV=development node --loader ts-node/esm --es-module-specifier-resolution=node node_dist/backend/server.js",
-    "start:dev": "concurrently -k -n client,server -c cyan,green \"pnpm dev:client\" \"pnpm dev:server\"",
+    "start:dev": "tsc && NODE_ENV=development node --loader ts-node/esm --es-module-specifier-resolution=node node_dist/backend/server.js",
     "build": "pnpm lint && pnpm build:prod",
     "build:client": "vite build --config src/frontend/vite.config.js",
     "build:server": "tsc --project tsconfig.json",
@@ -80,7 +78,6 @@
     "@types/uuid": "10.0.0",
     "@vitejs/plugin-react": "4.4.1",
     "babel-jest": "29.7.0",
-    "concurrently": "9.1.2",
     "eslint": "9.26.0",
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-import": "2.31.0",
