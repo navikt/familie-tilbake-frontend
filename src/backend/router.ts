@@ -16,6 +16,26 @@ import { prometheusTellere } from './metrikker';
 let vite: ViteDevServer;
 const isProd = process.env.NODE_ENV === 'production';
 
+let cachedHtmlProd: string | null = null;
+
+async function getHtmlInnhold(url: string, csrfToken: string, isProd: boolean): Promise<string> {
+    if (isProd && cachedHtmlProd) return cachedHtmlProd;
+
+    const filePath = path.join(process.cwd(), isProd ? buildPath : 'src/frontend', 'index.html');
+
+    let html = fs.readFileSync(filePath, 'utf-8');
+
+    if (!isProd) {
+        html = await vite.transformIndexHtml(url, html);
+    }
+
+    html = html.replace('content="__CSRF__"', `content="${csrfToken}"`);
+
+    if (isProd) cachedHtmlProd = html;
+
+    return html;
+}
+
 export default async (texasClient: TexasClient, router: Router) => {
     router.get('/version', (_: Request, res: Response) => {
         res.status(200).send({ status: 'SUKSESS', data: appConfig.version }).end();
@@ -50,17 +70,7 @@ export default async (texasClient: TexasClient, router: Router) => {
             const csrfToken = genererCsrfToken(req.session);
             const url = req.originalUrl;
             try {
-                let htmlInnhold = fs.readFileSync(
-                    path.join(process.cwd(), isProd ? buildPath : 'src/frontend', 'index.html'),
-                    'utf-8'
-                );
-
-                htmlInnhold = isProd
-                    ? htmlInnhold
-                    : await vite.transformIndexHtml(url, htmlInnhold);
-
-                htmlInnhold = htmlInnhold.replace('content="__CSRF__"', `content="${csrfToken}"`);
-
+                const htmlInnhold = await getHtmlInnhold(url, csrfToken, isProd);
                 res.status(200).set({ 'Content-Type': 'text/html' }).end(htmlInnhold);
             } catch (error) {
                 console.log(error);
@@ -69,31 +79,6 @@ export default async (texasClient: TexasClient, router: Router) => {
             }
         }
     );
-
-    // else {
-    //     router.get(
-    //         ['/', '/fagsystem/*splat'],
-    //         ensureAuthenticated(texasClient, false),
-    //         (req: Request, res: Response): void => {
-    //             prometheusTellere.appLoad.inc();
-    //             const csrfToken = genererCsrfToken(req.session);
-    //             try {
-    //                 let htmlInnhold = fs.readFileSync(
-    //                     `${path.join(process.cwd(), buildPath)}/index.html`,
-    //                     'utf8'
-    //                 );
-    //                 htmlInnhold = htmlInnhold.replace(
-    //                     'content="__CSRF__"',
-    //                     `content="${csrfToken}"`
-    //                 );
-    //                 res.send(htmlInnhold);
-    //             } catch (error) {
-    //                 logError(`Feil ved lesing av index.html: ${error}`);
-    //                 res.status(500).json({ error: 'Feil ved lesing av index.html' });
-    //             }
-    //         }
-    //     );
-    // }
 
     router.use((_: Request, res: Response) => {
         res.status(404).sendFile(`${path.join(process.cwd(), buildPath)}/index.html`);
