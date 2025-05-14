@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import react from '@vitejs/plugin-react';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
@@ -8,12 +9,34 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
-export default defineConfig({
-    root: __dirname,
-    build: {
-        outDir: resolve(__dirname, '../../frontend_production'),
-        sourcemap: true,
-        emptyOutDir: true,
-    },
-    plugins: [react(), compression()],
+export default defineConfig(({ process, console }) => {
+    return {
+        root: __dirname,
+        build: {
+            outDir: resolve(__dirname, '../../frontend_production'),
+            sourcemap: true,
+            emptyOutDir: true,
+        },
+        plugins: [
+            react(),
+            compression(),
+            sentryVitePlugin({
+                org: 'nav',
+                project: 'familie-tilbake-frontend',
+                authToken: process.env.SENTRY_AUTH_TOKEN,
+                url: 'https://sentry.gc.nav.no/',
+                release: {
+                    name: process.env.SENTRY_RELEASE,
+                    uploadLegacySourcemaps: {
+                        paths: ['./frontend_production'],
+                        ignore: ['./node_modules'],
+                        urlPrefix: `~/assets`,
+                    },
+                },
+                errorHandler: err => {
+                    console.warn('Sentry CLI Plugin: ' + err.message);
+                },
+            }),
+        ],
+    };
 });
