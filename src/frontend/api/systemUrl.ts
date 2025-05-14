@@ -1,6 +1,6 @@
 import { preferredAxios } from './axios';
 
-export type SystemBaseUrl = {
+type SystemBaseUrl = {
     aInntektBaseUrl: string;
     gosysBaseUrl: string;
     modiaBaseUrl: string;
