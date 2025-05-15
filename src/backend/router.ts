@@ -73,7 +73,6 @@ export default async (texasClient: TexasClient, router: Router) => {
                 const htmlInnhold = await getHtmlInnhold(url, csrfToken, isProd);
                 res.status(200).set({ 'Content-Type': 'text/html' }).end(htmlInnhold);
             } catch (error) {
-                console.log(error);
                 logError(`Feil ved lesing av index.html: ${error}`);
                 res.status(500).json({ error: 'Feil ved lesing av index.html' });
             }
