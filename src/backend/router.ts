@@ -16,6 +16,20 @@ import { prometheusTellere } from './metrikker';
 let vite: ViteDevServer;
 const isProd = process.env.NODE_ENV === 'production';
 
+const getHtmlInnholdProd = () => {
+    return fs.readFileSync(path.join(process.cwd(), buildPath, 'index.html'), 'utf-8');
+};
+
+const getHtmlInnholdDev = async (url: string) => {
+    let htmlInnhold = fs.readFileSync(
+        path.join(process.cwd(), 'src/frontend', 'index.html'),
+        'utf-8'
+    );
+
+    htmlInnhold = await vite.transformIndexHtml(url, htmlInnhold);
+    return htmlInnhold;
+};
+
 export default async (texasClient: TexasClient, router: Router) => {
     router.get('/version', (_: Request, res: Response) => {
         res.status(200).send({ status: 'SUKSESS', data: appConfig.version }).end();
@@ -50,15 +64,7 @@ export default async (texasClient: TexasClient, router: Router) => {
             const csrfToken = genererCsrfToken(req.session);
             const url = req.originalUrl;
             try {
-                let htmlInnhold = fs.readFileSync(
-                    path.join(process.cwd(), isProd ? buildPath : 'src/frontend', 'index.html'),
-                    'utf-8'
-                );
-
-                htmlInnhold = isProd
-                    ? htmlInnhold
-                    : await vite.transformIndexHtml(url, htmlInnhold);
-
+                let htmlInnhold = isProd ? getHtmlInnholdProd() : await getHtmlInnholdDev(url);
                 htmlInnhold = htmlInnhold.replace('content="__CSRF__"', `content="${csrfToken}"`);
 
                 res.status(200).set({ 'Content-Type': 'text/html' }).end(htmlInnhold);
