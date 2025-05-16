@@ -1,6 +1,5 @@
 node_modules
-frontend_production
-frontend_development
+dist
 node_dist
 .DS_Store
 .idea

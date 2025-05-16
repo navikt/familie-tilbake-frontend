@@ -18,7 +18,6 @@ export const appConfig: IAppConfig = {
 const Environment = () => {
     if (process.env.ENV === 'local') {
         return {
-            buildPath: 'frontend_development',
             proxyUrl: 'http://localhost:8030/api',
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
@@ -29,7 +28,6 @@ const Environment = () => {
         };
     } else if (process.env.ENV === 'preprod') {
         return {
-            buildPath: 'frontend_production',
             proxyUrl: 'http://tilbakekreving-backend/api',
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
@@ -40,7 +38,6 @@ const Environment = () => {
         };
     } else if (process.env.ENV === 'lokalt-mot-preprod') {
         return {
-            buildPath: 'frontend_development',
             proxyUrl: 'https://tilbakekreving-backend.intern.dev.nav.no/api',
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
@@ -52,7 +49,6 @@ const Environment = () => {
     }
 
     return {
-        buildPath: 'frontend_production',
         proxyUrl: 'http://tilbakekreving-backend/api',
         baSakUrl: 'https://barnetrygd.intern.nav.no',
         efSakUrl: 'https://ensligmorellerfar.intern.nav.no/ekstern',
@@ -86,7 +82,7 @@ if (!process.env.TILBAKE_SCOPE) {
     throw new Error('Scope mot tilbakekreving-backend er ikke konfigurert');
 }
 
-export const buildPath = env.buildPath;
+export const buildPath = 'dist';
 export const proxyUrl = env.proxyUrl;
 export const aInntektBaseUrl = env.aInntektUrl;
 export const gosysBaseUrl = env.gosysUrl;
