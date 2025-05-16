@@ -9,6 +9,7 @@ import { Fagsystem } from '../../kodeverk';
 import Personlinje from './Personlinje/Personlinje';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
+import { usePersonIdentStore } from '../../store/personIdent';
 import { venteårsaker } from '../../typer/behandling';
 import { RessursStatus } from '../../typer/ressurs';
 import { formatterDatostring } from '../../utils';
@@ -51,6 +52,7 @@ const FagsakContainer: React.FC = () => {
         visVenteModal,
         settVisVenteModal,
     } = useBehandling();
+    const setPersonIdent = usePersonIdentStore(state => state.setPersonIdent);
 
     React.useEffect(() => {
         if (!!fagsystem && !!fagsakId) {
@@ -63,6 +65,11 @@ const FagsakContainer: React.FC = () => {
         if (fagsak?.status === RessursStatus.Suksess && behandlingId) {
             hentBehandlingMedEksternBrukId(fagsak.data, behandlingId);
         }
+
+        if (fagsak?.status === RessursStatus.Suksess && fagsak?.data?.bruker.personIdent) {
+            setPersonIdent(fagsak.data.bruker.personIdent);
+        }
+        return () => setPersonIdent(undefined);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsak, behandlingId]);
 
