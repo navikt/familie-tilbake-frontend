@@ -1,8 +1,10 @@
 import type { TexasClient } from './backend/auth/texas';
 import type { Response, Request, Router } from 'express';
+import type { ViteDevServer } from 'vite';
 
 import fs from 'fs';
 import path from 'path';
+import { createServer as createViteServer } from 'vite';
 
 import { ensureAuthenticated } from './backend/auth/authenticate';
 import { genererCsrfToken } from './backend/auth/middleware';
@@ -11,7 +13,24 @@ import { appConfig, buildPath } from './config';
 import { logError, LogLevel } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
-export default (texasClient: TexasClient, router: Router) => {
+let vite: ViteDevServer;
+const isProd = process.env.NODE_ENV === 'production';
+
+const getHtmlInnholdProd = () => {
+    return fs.readFileSync(path.join(process.cwd(), buildPath, 'index.html'), 'utf-8');
+};
+
+const getHtmlInnholdDev = async (url: string) => {
+    let htmlInnhold = fs.readFileSync(
+        path.join(process.cwd(), 'src/frontend', 'index.html'),
+        'utf-8'
+    );
+
+    htmlInnhold = await vite.transformIndexHtml(url, htmlInnhold);
+    return htmlInnhold;
+};
+
+export default async (texasClient: TexasClient, router: Router) => {
     router.get('/version', (_: Request, res: Response) => {
         res.status(200).send({ status: 'SUKSESS', data: appConfig.version }).end();
     });
@@ -28,22 +47,27 @@ export default (texasClient: TexasClient, router: Router) => {
     });
 
     // APP
+    if (!isProd) {
+        vite = await createViteServer({
+            root: path.join(process.cwd(), 'src/frontend'),
+            server: { middlewareMode: true },
+            appType: 'custom',
+        });
+        router.use(vite.middlewares);
+    }
+
     router.get(
         ['/', '/fagsystem/*splat'],
         ensureAuthenticated(texasClient, false),
-        (req: Request, res: Response): void => {
+        async (req: Request, res: Response): Promise<void> => {
             prometheusTellere.appLoad.inc();
             const csrfToken = genererCsrfToken(req.session);
+            const url = req.originalUrl;
             try {
-                let htmlInnhold = fs.readFileSync(
-                    `${path.join(process.cwd(), buildPath)}/index.html`,
-                    'utf8'
-                );
-                htmlInnhold = htmlInnhold.replace(
-                    'content="{{ csrf_token() }}"',
-                    `content="${csrfToken}"`
-                );
-                res.send(htmlInnhold);
+                let htmlInnhold = isProd ? getHtmlInnholdProd() : await getHtmlInnholdDev(url);
+                htmlInnhold = htmlInnhold.replace('content="__CSRF__"', `content="${csrfToken}"`);
+
+                res.status(200).set({ 'Content-Type': 'text/html' }).end(htmlInnhold);
             } catch (error) {
                 logError(`Feil ved lesing av index.html: ${error}`);
                 res.status(500).json({ error: 'Feil ved lesing av index.html' });

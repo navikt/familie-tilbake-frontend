@@ -1,5 +1,5 @@
 node_modules
-frontend_production
+dist
 frontend_development
 node_dist
 .DS_Store
