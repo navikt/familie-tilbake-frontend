@@ -15,7 +15,7 @@ export default defineConfig(() => {
     return {
         root: __dirname,
         build: {
-            outDir: resolve(__dirname, '../../frontend_production'),
+            outDir: resolve(__dirname, '../../dist'),
             sourcemap: true,
             emptyOutDir: true,
         },
@@ -30,7 +30,7 @@ export default defineConfig(() => {
                 release: {
                     name: process.env.SENTRY_RELEASE,
                     uploadLegacySourcemaps: {
-                        paths: ['./frontend_production'],
+                        paths: ['./dist'],
                         ignore: ['./node_modules'],
                         urlPrefix: `~/assets`,
                     },

@@ -18,7 +18,7 @@ export const appConfig: IAppConfig = {
 const Environment = () => {
     if (process.env.ENV === 'local') {
         return {
-            buildPath: 'frontend_production',
+            buildPath: 'dist',
             proxyUrl: 'http://localhost:8030/api',
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
@@ -26,7 +26,7 @@ const Environment = () => {
         };
     } else if (process.env.ENV === 'preprod') {
         return {
-            buildPath: 'frontend_production',
+            buildPath: 'dist',
             proxyUrl: 'http://tilbakekreving-backend/api',
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
@@ -34,7 +34,7 @@ const Environment = () => {
         };
     } else if (process.env.ENV === 'lokalt-mot-preprod') {
         return {
-            buildPath: 'frontend_production',
+            buildPath: 'dist',
             proxyUrl: 'https://tilbakekreving-backend.intern.dev.nav.no/api',
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
@@ -43,7 +43,7 @@ const Environment = () => {
     }
 
     return {
-        buildPath: 'frontend_production',
+        buildPath: 'dist',
         proxyUrl: 'http://tilbakekreving-backend/api',
         baSakUrl: 'https://barnetrygd.intern.nav.no',
         efSakUrl: 'https://ensligmorellerfar.intern.nav.no/ekstern',
