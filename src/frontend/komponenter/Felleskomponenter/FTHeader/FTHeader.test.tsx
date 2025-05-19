@@ -53,13 +53,6 @@ describe('FTHeader', () => {
     });
 
     test('Viser riktig overskrift når ingen personIdent er satt', async () => {
-        const mockUrls = {
-            aInntektBaseUrl: 'https://arbeid-og-inntekt.dev.adeo.no',
-            gosysBaseUrl: 'https://gosys-q1.dev.intern.nav.no/gosys',
-            modiaBaseUrl: 'https://app-q1.adeo.no/modiapersonoversikt',
-        };
-        (hentSystemUrl as jest.Mock).mockResolvedValue(mockUrls);
-
         renderHeader();
 
         const systemerOgOppslagsverkHeader = screen.getByText('Systemer og oppslagsverk', {
