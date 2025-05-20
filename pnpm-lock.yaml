@@ -12,17 +12,17 @@ importers:
         specifier: 1.18.1
         version: 1.18.1
       '@navikt/aksel-icons':
-        specifier: 7.21.1
-        version: 7.21.1
+        specifier: 7.22.0
+        version: 7.22.0
       '@navikt/ds-css':
-        specifier: 7.21.1
-        version: 7.21.1
+        specifier: 7.22.0
+        version: 7.22.0
       '@navikt/ds-react':
-        specifier: 7.21.1
-        version: 7.21.1(@types/react@19.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 7.22.0
+        version: 7.22.0(@types/react@19.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@navikt/ds-tokens':
-        specifier: 7.21.1
-        version: 7.21.1
+        specifier: 7.22.0
+        version: 7.22.0
       '@sentry/browser':
         specifier: 9.19.0
         version: 9.19.0
@@ -1308,20 +1308,20 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@navikt/aksel-icons@7.21.1':
-    resolution: {integrity: sha512-KjcwxUhJFKlGwnihj0ZdJSIC4ZxFBmGZVKqM8JO6qpNGCaZcsZdYY2GBhY8yX4juDOg8EDFxNH0Y/fi5EQ9S/A==, tarball: https://npm.pkg.github.com/download/@navikt/aksel-icons/7.21.1/545c686cd6c4517cde034e2ea81fb4ee0accc7bd}
+  '@navikt/aksel-icons@7.22.0':
+    resolution: {integrity: sha512-1hCTk4/zKjYD0pfvrHYOqQmP0r+8XyRG8tenSSVAtnOlyEYvWfUdQwczfGv0VbjYp/UPaSQbkWhpj5z48KF3SA==, tarball: https://npm.pkg.github.com/download/@navikt/aksel-icons/7.22.0/8cd947078332dbbc5f48e32d10746fd876acb581}
 
-  '@navikt/ds-css@7.21.1':
-    resolution: {integrity: sha512-WdK//7MheR3uveHGBiJHlkOrYFwjOUU/pzNrT8T9Te1UxUHJJm5f/6foCIMMkvR4WCYCa/cvqusE8ouAS36Kqw==, tarball: https://npm.pkg.github.com/download/@navikt/ds-css/7.21.1/09969c230f742cd8af47f793d638be0000676b3d}
+  '@navikt/ds-css@7.22.0':
+    resolution: {integrity: sha512-DI2/iyY/pZmuYjVi5TuQWvBXRKCph4PPcHzkuUDJb52q8WRcG6x29ZMOe3+ipIOu70m+veXARv2wl5pE0k8HrA==, tarball: https://npm.pkg.github.com/download/@navikt/ds-css/7.22.0/b82a26d41583e5484f0f426a5fdfe2a43de140f9}
 
-  '@navikt/ds-react@7.21.1':
-    resolution: {integrity: sha512-LE15YmXsWraawObDWfhEfi+3waX46s+poulZ/qJjlKPaWCybpPDgfSEh2uuLMqKo+zm6C5xSjDmM/Srq90dzag==, tarball: https://npm.pkg.github.com/download/@navikt/ds-react/7.21.1/7388b4026118d513474af64cf27257a90f481fec}
+  '@navikt/ds-react@7.22.0':
+    resolution: {integrity: sha512-4fhSc5nxRy5ZgL46k1okqgkVwAnglyIiK1ucsPFI3znHCO9zOYyeYmc2HaE/X+fw8XF3AoSksJzISpL0bgVuAQ==, tarball: https://npm.pkg.github.com/download/@navikt/ds-react/7.22.0/cb6df10ed26fd8cb288c302e44e17370e5be90da}
     peerDependencies:
       '@types/react': '>=17.0.30'
       react: '>=17.0.0 || >19.0.0-rc'
 
-  '@navikt/ds-tokens@7.21.1':
-    resolution: {integrity: sha512-QUmQr7yXbN5CBoNBLb+Sp16nZEK8exdJgeOQdtpHq+GwWYlm8dm52W2M+HuG3VvDhr/FkBCkvMRphsJ05nwxEw==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.21.1/ca947d05a69efb44c4b146c8341852352915ec43}
+  '@navikt/ds-tokens@7.22.0':
+    resolution: {integrity: sha512-FiE3bzpKg2U0ESAre5I2WDMFaN/xcpBDyViecjiNZZeJfTqRbSiKQpLADzZlhZj3tbcwz4aughCBVkZScNG0sQ==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.22.0/793c4e3da6051e5e6f3400dac9fbc27caf02864a}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -4486,8 +4486,8 @@ packages:
   tabbable@6.2.0:
     resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
 
-  tapable@2.2.1:
-    resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
+  tapable@2.2.2:
+    resolution: {integrity: sha512-Re10+NauLTMCudc7T5WLFLAwDhQ0JWdrMK+9B2M8zR5hRExKmsRDCBA7/aV/pNJFltmBFO5BAMlQFi/vq3nKOg==}
     engines: {node: '>=6'}
 
   tdigest@0.1.2:
@@ -4797,8 +4797,8 @@ packages:
   walker@1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
 
-  watchpack@2.4.2:
-    resolution: {integrity: sha512-TnbFSbcOCcDgjZ4piURLCbJ3nJhznVh9kw6F6iokjiFPl8ONxe9A6nMDVXDiNbrSfLILs6vB07F7wLBrwPYzJw==}
+  watchpack@2.4.3:
+    resolution: {integrity: sha512-adBYQLivcg1jbdKEJeqScJJFvgm4qY9+3tXw+jdG6lkVeqRJEtiQmSWjmth8GKmDZuX7sYM4YFxQsf0AzMfGGw==}
     engines: {node: '>=10.13.0'}
 
   web-vitals@4.2.4:
@@ -6226,16 +6226,16 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@navikt/aksel-icons@7.21.1': {}
+  '@navikt/aksel-icons@7.22.0': {}
 
-  '@navikt/ds-css@7.21.1': {}
+  '@navikt/ds-css@7.22.0': {}
 
-  '@navikt/ds-react@7.21.1(@types/react@19.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@navikt/ds-react@7.22.0(@types/react@19.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@floating-ui/react': 0.27.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@floating-ui/react-dom': 2.1.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@navikt/aksel-icons': 7.21.1
-      '@navikt/ds-tokens': 7.21.1
+      '@navikt/aksel-icons': 7.22.0
+      '@navikt/ds-tokens': 7.22.0
       '@types/react': 19.1.4
       clsx: 2.1.1
       date-fns: 4.1.0
@@ -6244,7 +6244,7 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
 
-  '@navikt/ds-tokens@7.21.1': {}
+  '@navikt/ds-tokens@7.22.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -7624,7 +7624,7 @@ snapshots:
   enhanced-resolve@5.18.1:
     dependencies:
       graceful-fs: 4.2.11
-      tapable: 2.2.1
+      tapable: 2.2.2
 
   entities@4.5.0: {}
 
@@ -10002,7 +10002,7 @@ snapshots:
 
   tabbable@6.2.0: {}
 
-  tapable@2.2.1: {}
+  tapable@2.2.2: {}
 
   tdigest@0.1.2:
     dependencies:
@@ -10283,7 +10283,7 @@ snapshots:
     dependencies:
       makeerror: 1.0.12
 
-  watchpack@2.4.2:
+  watchpack@2.4.3:
     dependencies:
       glob-to-regexp: 0.4.1
       graceful-fs: 4.2.11
@@ -10328,9 +10328,9 @@ snapshots:
       mime-types: 2.1.35
       neo-async: 2.6.2
       schema-utils: 4.3.2
-      tapable: 2.2.1
+      tapable: 2.2.2
       terser-webpack-plugin: 5.3.14(webpack@5.99.8)
-      watchpack: 2.4.2
+      watchpack: 2.4.3
       webpack-sources: 3.2.3
     transitivePeerDependencies:
       - '@swc/core'
