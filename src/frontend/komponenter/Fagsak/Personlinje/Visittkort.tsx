@@ -1,7 +1,7 @@
 import type { IPerson } from '../../../typer/person';
 
-import { CopyButton, HStack, Label } from '@navikt/ds-react';
-import { ABorderStrong, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
+import { CopyButton, HStack, Stack, Label } from '@navikt/ds-react';
+import { ABorderStrong, ASpacing4, ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -17,12 +17,8 @@ interface IVisittkortProps {
 
 const StyledVisittkort = styled(HStack)`
     ${`border-bottom: 1px solid ${ABorderStrong}`};
-    height: 3rem;
-    padding: ${`0 ${ASpacing4}`};
-`;
-
-const GrådigChildrenContainer = styled(HStack)`
-    flex: 1;
+    padding: ${`${ASpacing2} ${ASpacing4}`};
+    flex-wrap: nowrap;
 `;
 
 const Visittkort = ({ navn, alder, kjønn, ident, children }: IVisittkortProps) => {
@@ -41,9 +37,9 @@ const Visittkort = ({ navn, alder, kjønn, ident, children }: IVisittkortProps) 
                     <CopyButton copyText={ident.replace(' ', '')} size="small" />
                 </HStack>
             </HStack>
-            <GrådigChildrenContainer align="center" gap="4">
+            <Stack gap="4" justify={{ xs: 'end' }}>
                 {children}
-            </GrådigChildrenContainer>
+            </Stack>
         </StyledVisittkort>
     );
 };
