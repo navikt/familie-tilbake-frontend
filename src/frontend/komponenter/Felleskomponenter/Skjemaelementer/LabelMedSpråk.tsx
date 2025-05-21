@@ -6,7 +6,7 @@ import { styled } from 'styled-components';
 const LabelFlex = styled.div`
     display: flex;
     justify-content: space-between;
-
+    gap: 0.5rem;
     .label {
         max-width: 80%;
     }
