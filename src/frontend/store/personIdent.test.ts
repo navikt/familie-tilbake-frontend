@@ -5,17 +5,17 @@ describe('usePersonIdentStore', () => {
         useFagsakStore.setState({ personIdent: undefined });
     });
 
-    test('PersonIdent ha undefined som default verdi', () => {
+    test('PersonIdent har undefined som default verdi', () => {
         const defaultState = useFagsakStore.getState();
         expect(defaultState.personIdent).toBeUndefined();
     });
 
-    test('FagsakId ha undefined som default verdi', () => {
+    test('FagsakId har undefined som default verdi', () => {
         const defaultState = useFagsakStore.getState();
         expect(defaultState.fagsakId).toBeUndefined();
     });
 
-    test('BehandlingId ha undefined som default verdi', () => {
+    test('BehandlingId har undefined som default verdi', () => {
         const defaultState = useFagsakStore.getState();
         expect(defaultState.behandlingId).toBeUndefined();
     });
