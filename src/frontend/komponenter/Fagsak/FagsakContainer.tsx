@@ -9,7 +9,7 @@ import { Fagsystem } from '../../kodeverk';
 import Personlinje from './Personlinje/Personlinje';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
-import { usePersonIdentStore } from '../../store/personIdent';
+import { useFagsakStore } from '../../store/fagsak';
 import { venteårsaker } from '../../typer/behandling';
 import { RessursStatus } from '../../typer/ressurs';
 import { formatterDatostring } from '../../utils';
@@ -52,24 +52,32 @@ const FagsakContainer: React.FC = () => {
         visVenteModal,
         settVisVenteModal,
     } = useBehandling();
-    const setPersonIdent = usePersonIdentStore(state => state.setPersonIdent);
+    const setPersonIdent = useFagsakStore(state => state.setPersonIdent);
+    const setBehandlingId = useFagsakStore(state => state.setBehandlingId);
+    const setFagsakId = useFagsakStore(state => state.setFagsakId);
 
     React.useEffect(() => {
         if (!!fagsystem && !!fagsakId) {
             hentFagsak(fagsystem, fagsakId);
+            setFagsakId(fagsakId);
         }
+        return () => setFagsakId(undefined);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsystem, fagsakId]);
 
     React.useEffect(() => {
         if (fagsak?.status === RessursStatus.Suksess && behandlingId) {
             hentBehandlingMedEksternBrukId(fagsak.data, behandlingId);
+            setBehandlingId(behandlingId);
         }
 
         if (fagsak?.status === RessursStatus.Suksess && fagsak?.data?.bruker.personIdent) {
             setPersonIdent(fagsak.data.bruker.personIdent);
         }
-        return () => setPersonIdent(undefined);
+        return () => {
+            setBehandlingId(undefined);
+            setPersonIdent(undefined);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsak, behandlingId]);
 

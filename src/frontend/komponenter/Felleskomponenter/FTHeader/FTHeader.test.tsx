@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { FTHeader } from './FTHeader';
 import { hentSystemUrl } from '../../../api/systemUrl';
-import { usePersonIdentStore } from '../../../store/personIdent';
+import { useFagsakStore } from '../../../store/fagsak';
 
 jest.mock('../../../api/systemUrl', () => ({
     hentSystemUrl: jest.fn(),
@@ -21,10 +21,10 @@ const queryClient = new QueryClient({
 
 describe('FTHeader', () => {
     beforeEach(() => {
-        usePersonIdentStore.setState({ personIdent: undefined });
+        useFagsakStore.setState({ personIdent: undefined });
 
         (hentSystemUrl as jest.Mock).mockResolvedValue({
-            aInntektBaseUrl: 'https://a-inntekt.nav.no',
+            aInntektUrl: 'https://a-inntekt.nav.no',
             gosysBaseUrl: 'https://gosys.nav.no',
             modiaBaseUrl: 'https://modia.nav.no',
         });
@@ -67,7 +67,7 @@ describe('FTHeader', () => {
     });
 
     test('Viser riktig overskrift når personIdent er satt', async () => {
-        usePersonIdentStore.setState({ personIdent: '12345678910' });
+        useFagsakStore.setState({ personIdent: '12345678910' });
 
         renderHeader();
 
@@ -85,7 +85,7 @@ describe('FTHeader', () => {
 
     test('Har riktig lenke til A-inntekt, Gosys og Modia når personIdent er satt', async () => {
         const personIdent = '12345678910';
-        usePersonIdentStore.setState({ personIdent });
+        useFagsakStore.setState({ personIdent });
 
         renderHeader();
 
@@ -96,7 +96,7 @@ describe('FTHeader', () => {
         const gosysLenke = screen.getByText('Gosys').closest('a');
         const modiaLenke = screen.getByText('Modia').closest('a');
 
-        expect(aInntektLenke).toHaveAttribute('href', `https://a-inntekt.nav.no/${personIdent}`);
+        expect(aInntektLenke).toHaveAttribute('href', `https://a-inntekt.nav.no`);
         expect(gosysLenke).toHaveAttribute(
             'href',
             `https://gosys.nav.no/personoversikt/fnr=${personIdent}`

@@ -84,7 +84,7 @@ if (!process.env.TILBAKE_SCOPE) {
 
 export const buildPath = 'dist';
 export const proxyUrl = env.proxyUrl;
-export const aInntektBaseUrl = env.aInntektUrl;
+export const aInntektUrl = env.aInntektUrl;
 export const gosysBaseUrl = env.gosysUrl;
 export const modiaBaseUrl = env.modiaUrl;
 

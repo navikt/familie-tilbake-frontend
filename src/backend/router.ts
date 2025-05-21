@@ -9,7 +9,7 @@ import { createServer as createViteServer } from 'vite';
 import { ensureAuthenticated } from './backend/auth/authenticate';
 import { genererCsrfToken } from './backend/auth/middleware';
 import { logRequest } from './backend/utils';
-import { aInntektBaseUrl, appConfig, buildPath, gosysBaseUrl, modiaBaseUrl } from './config';
+import { aInntektUrl, appConfig, buildPath, gosysBaseUrl, modiaBaseUrl } from './config';
 import { logError, LogLevel } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
@@ -36,7 +36,7 @@ export default async (texasClient: TexasClient, router: Router) => {
     });
 
     router.get('/system-url', (_: Request, res: Response) => {
-        res.status(200).send({ aInntektBaseUrl, gosysBaseUrl, modiaBaseUrl }).end();
+        res.status(200).send({ aInntektUrl, gosysBaseUrl, modiaBaseUrl }).end();
     });
 
     router.get('/error', (_: Request, res: Response) => {

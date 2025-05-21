@@ -6,37 +6,48 @@ import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { useMemo } from 'react';
 
-import { hentSystemUrl } from '../../../api/systemUrl';
-import { usePersonIdentStore } from '../../../store/personIdent';
+import { useHttp } from '../../../api/http/HttpProvider';
+import { hentAInntektUrl, hentSystemUrl } from '../../../api/systemUrl';
+import { useFagsakStore } from '../../../store/fagsak';
 
 interface Props {
     innloggetSaksbehandler?: ISaksbehandler;
 }
 
 export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
-    const query = useQuery({ queryKey: ['system-url'], queryFn: hentSystemUrl });
-    const personIdent = usePersonIdentStore(state => state.personIdent);
+    const { data: systemUrlData } = useQuery({
+        queryKey: ['hentSystemUrl'],
+        queryFn: hentSystemUrl,
+    });
+    const { aInntektUrl: reserveAInntektUrl, modiaBaseUrl, gosysBaseUrl } = systemUrlData || {};
+    const personIdent = useFagsakStore(state => state.personIdent);
+    const fagsakId = useFagsakStore(state => state.fagsakId);
+    const behandlingId = useFagsakStore(state => state.behandlingId);
+
+    const { request } = useHttp();
+    const { data: personligAInntektUrl } = useQuery({
+        queryKey: ['hentAInntektUrl', personIdent],
+        queryFn: () => hentAInntektUrl(request, personIdent, fagsakId, behandlingId),
+        retry: 1,
+    });
 
     const aInntektUrl = useMemo(
-        () =>
-            query.data?.aInntektBaseUrl && personIdent
-                ? `${query.data?.aInntektBaseUrl}/${personIdent}`
-                : query.data?.aInntektBaseUrl,
-        [personIdent, query.data?.aInntektBaseUrl]
+        () => (personligAInntektUrl ? personligAInntektUrl : reserveAInntektUrl),
+        [personligAInntektUrl, reserveAInntektUrl]
     );
+    console.log('ainntektUrl', aInntektUrl);
+
     const gosysUrl = useMemo(
         () =>
-            query.data?.gosysBaseUrl && personIdent
-                ? `${query.data.gosysBaseUrl}/personoversikt/fnr=${personIdent}`
-                : query.data?.gosysBaseUrl,
-        [query.data?.gosysBaseUrl, personIdent]
+            gosysBaseUrl && personIdent
+                ? `${gosysBaseUrl}/personoversikt/fnr=${personIdent}`
+                : gosysBaseUrl,
+        [gosysBaseUrl, personIdent]
     );
     const modiaUrl = useMemo(
         () =>
-            query.data?.modiaBaseUrl && personIdent
-                ? `${query.data.modiaBaseUrl}/person/${personIdent}`
-                : query.data?.modiaBaseUrl,
-        [query.data?.modiaBaseUrl, personIdent]
+            modiaBaseUrl && personIdent ? `${modiaBaseUrl}/person/${personIdent}` : modiaBaseUrl,
+        [modiaBaseUrl, personIdent]
     );
     const harGyldigLenke = useMemo(
         () => !!gosysUrl || !!modiaUrl || !!aInntektUrl,
