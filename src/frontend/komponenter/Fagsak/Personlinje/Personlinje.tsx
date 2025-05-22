@@ -73,7 +73,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                     {fagsak.institusjon.organisasjonsnummer}
                 </InstitusjonsTag>
             )}
-            <HStack justify="end" gap="4">
+            <HStack gap="4">
                 {behandling?.status === RessursStatus.Suksess && !erHistoriskVisning && (
                     <Link href={lagLenkeTilRevurdering()} target="_blank">
                         Gå til revurderingen
