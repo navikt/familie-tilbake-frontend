@@ -18,8 +18,8 @@ const config: Config.InitialOptions = {
     },
     transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@navikt*|uuid|nanoid)/)'],
     transform: {
-        '\\.[jt]s?$': 'babel-jest',
-        '\\.[jt]sx?$': 'babel-jest',
+        '\\.[jt]s?$': 'ts-jest',
+        '\\.[jt]sx?$': 'ts-jest',
     },
 };
 
