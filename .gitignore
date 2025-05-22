@@ -1,6 +1,5 @@
 node_modules
 dist
-frontend_development
 node_dist
 .DS_Store
 .idea
