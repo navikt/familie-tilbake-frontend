@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { DefaultTheme } from 'styled-components';
 
 import { ABorderStrong, ABgDefault, ASpacing3, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
@@ -6,7 +7,7 @@ import { styled } from 'styled-components';
 
 const borderRadius = 4;
 
-const ArrowBoxTop = styled.div`
+const ArrowBoxTop = styled.div<{ theme: DefaultTheme }>`
     .arrowBoxTop${props => props.theme.alignOffset} {
         border: 1px solid ${ABorderStrong};
         border-radius: ${borderRadius}px;
@@ -33,7 +34,7 @@ const ArrowBoxTop = styled.div`
     }
 `;
 
-const ArrowBoxLeft = styled.div`
+const ArrowBoxLeft = styled.div<{ theme: DefaultTheme }>`
     .arrowBoxLeft${props => props.theme.alignOffset} {
         border: 1px solid ${ABorderStrong};
         border-radius: ${borderRadius}px;
