@@ -19,7 +19,7 @@ importers:
         version: 7.22.0
       '@navikt/ds-react':
         specifier: 7.22.0
-        version: 7.22.0(@types/react@19.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 7.22.0(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@navikt/ds-tailwind':
         specifier: 7.22.0
         version: 7.22.0
@@ -115,8 +115,8 @@ importers:
         specifier: 1.5.0
         version: 1.5.0
       '@sentry/vite-plugin':
-        specifier: 3.4.0
-        version: 3.4.0
+        specifier: 3.5.0
+        version: 3.5.0
       '@tailwindcss/typography':
         specifier: 0.5.16
         version: 0.5.16(tailwindcss@4.1.7)
