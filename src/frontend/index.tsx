@@ -8,6 +8,8 @@ import App from './komponenter/App';
 import ErrorBoundary from './komponenter/Felleskomponenter/ErrorBoundary/ErrorBoundary';
 import { initGrafanaFaro } from './utils/grafanaFaro';
 
+import './index.css';
+
 const environment = window.location.hostname;
 
 if (process.env.NODE_ENV !== 'development') {
