@@ -1,9 +1,7 @@
 import type { IPerson } from '../../../typer/person';
 
-import { CopyButton, HStack, Label } from '@navikt/ds-react';
-import { ABorderStrong, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
+import { CopyButton, HStack, Stack, Label } from '@navikt/ds-react';
 import React from 'react';
-import styled from 'styled-components';
 
 import { FamilieIkonVelger } from './PersonIkon/FamilieIkonVelger';
 
@@ -15,19 +13,9 @@ interface IVisittkortProps {
     children: React.ReactNode;
 }
 
-const StyledVisittkort = styled(HStack)`
-    ${`border-bottom: 1px solid ${ABorderStrong}`};
-    height: 3rem;
-    padding: ${`0 ${ASpacing4}`};
-`;
-
-const GrådigChildrenContainer = styled(HStack)`
-    flex: 1;
-`;
-
 const Visittkort = ({ navn, alder, kjønn, ident, children }: IVisittkortProps) => {
     return (
-        <StyledVisittkort align="center" justify="space-between" gap="4">
+        <HStack gap="4" className="justify-between border-b-2 border-solid px-4 py-2">
             <HStack align="center" gap="4">
                 <FamilieIkonVelger alder={alder} kjønn={kjønn} width={24} height={24} />
 
@@ -41,10 +29,10 @@ const Visittkort = ({ navn, alder, kjønn, ident, children }: IVisittkortProps) 
                     <CopyButton copyText={ident.replace(' ', '')} size="small" />
                 </HStack>
             </HStack>
-            <GrådigChildrenContainer align="center" gap="4">
+            <Stack gap="4" justify={{ sm: 'space-between', md: 'end' }} className="flex-auto">
                 {children}
-            </GrådigChildrenContainer>
-        </StyledVisittkort>
+            </Stack>
+        </HStack>
     );
 };
 
