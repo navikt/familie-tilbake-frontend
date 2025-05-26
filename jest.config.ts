@@ -22,7 +22,7 @@ const config: Config.InitialOptions = {
             },
         ],
     },
-    silent: process.env.ENV === 'pre-prod' ? true : false,
+    silent: process.env.ENV === 'local' ? true : false,
 };
 
 export default config;
