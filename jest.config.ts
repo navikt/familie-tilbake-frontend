@@ -4,11 +4,6 @@ const config: Config.InitialOptions = {
     // verbose: true,
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
-    globals: {
-        'ts-jest': {
-            tsconfig: '<rootDir>/src/frontend/tsconfig.json',
-        },
-    },
     setupFilesAfterEnv: ['<rootDir>/src/jest-setup.ts'],
     moduleNameMapper: {
         '.+\\.(css)$': 'identity-obj-proxy',
@@ -18,8 +13,18 @@ const config: Config.InitialOptions = {
     },
     transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@navikt*|uuid|nanoid)/)'],
     transform: {
-        '\\.[jt]s?$': 'ts-jest',
-        '\\.[jt]sx?$': 'ts-jest',
+        '\\.[jt]s?$': [
+            'ts-jest',
+            {
+                tsconfig: '<rootDir>/src/frontend/tsconfig.json',
+            },
+        ],
+        '\\.[jt]sx?$': [
+            'ts-jest',
+            {
+                tsconfig: '<rootDir>/src/frontend/tsconfig.json',
+            },
+        ],
     },
 };
 
