@@ -4,9 +4,9 @@ import { isNumeric } from './miscUtils';
 import { feil, type FeltState, ok } from '../hooks/skjema';
 
 const textRegex =
-    /^[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'‐—–\-/\n%§!?#@_()+:;,="&\n\u00A0]*$/;
+    /^[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'‐—–\-/\n%§!?#@_()«»+:;,="&\n\u00A0]*$/;
 const textGyldigRegex =
-    /[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'‐—–\-/\n%§!?#@_()+:;,="&\n\u00A0]*/g;
+    /[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'‐—–\-/\n%§!?#@_()«»+:;,="&\n\u00A0]*/g;
 
 export enum DefinertFeilmelding {
     ObligatoriskFelt = 'OBLIGATORISK_FELT',
