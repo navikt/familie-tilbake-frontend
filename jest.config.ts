@@ -1,8 +1,10 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-    // verbose: true,
     preset: 'ts-jest',
+    maxWorkers: '50%',
+    cache: true,
+    cacheDirectory: '<rootDir>/.jest-cache',
     testEnvironment: 'jsdom',
     setupFilesAfterEnv: ['<rootDir>/src/jest-setup.ts'],
     moduleNameMapper: {
@@ -13,12 +15,6 @@ const config: Config.InitialOptions = {
     },
     transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@navikt*|uuid|nanoid)/)'],
     transform: {
-        '\\.[jt]s?$': [
-            'ts-jest',
-            {
-                tsconfig: '<rootDir>/src/frontend/tsconfig.json',
-            },
-        ],
         '\\.[jt]sx?$': [
             'ts-jest',
             {
@@ -26,6 +22,7 @@ const config: Config.InitialOptions = {
             },
         ],
     },
+    silent: process.env.ENV === 'pre-prod' ? true : false,
 };
 
 export default config;
