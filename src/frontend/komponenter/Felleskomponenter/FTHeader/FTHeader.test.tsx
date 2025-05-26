@@ -4,11 +4,12 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { FTHeader } from './FTHeader';
-import { hentSystemUrl } from '../../../api/systemUrl';
+import { hentAInntektUrl, hentSystemUrl } from '../../../api/systemUrl';
 import { useFagsakStore } from '../../../store/fagsak';
 
 jest.mock('../../../api/systemUrl', () => ({
     hentSystemUrl: jest.fn(),
+    hentAInntektUrl: jest.fn(),
 }));
 
 const queryClient = new QueryClient({
@@ -21,12 +22,19 @@ const queryClient = new QueryClient({
 
 describe('FTHeader', () => {
     beforeEach(() => {
+        jest.clearAllMocks();
         useFagsakStore.setState({ personIdent: undefined });
 
         (hentSystemUrl as jest.Mock).mockResolvedValue({
             aInntektUrl: 'https://a-inntekt.nav.no',
             gosysBaseUrl: 'https://gosys.nav.no',
             modiaBaseUrl: 'https://modia.nav.no',
+        });
+
+        (hentAInntektUrl as jest.Mock).mockImplementation((_, personIdent: string) => {
+            return personIdent
+                ? Promise.resolve(`https://a-inntekt.nav.no/mock=${personIdent}`)
+                : Promise.resolve(null);
         });
     });
 
@@ -52,51 +60,35 @@ describe('FTHeader', () => {
         expect(hentSystemUrl).toHaveBeenCalledTimes(1);
     });
 
-    test('Viser riktig overskrift når ingen personIdent er satt', async () => {
+    test('Viser riktig titler når ingen personIdent er satt', async () => {
         renderHeader();
 
-        const systemerOgOppslagsverkHeader = screen.getByText('Systemer og oppslagsverk', {
-            selector: '.navds-dropdown__list-heading',
-        });
-
-        const personoversiktHeader = screen.queryByText('Personoversikt', {
-            selector: '.navds-dropdown__list-heading',
-        });
-        expect(personoversiktHeader).not.toBeInTheDocument();
-        expect(systemerOgOppslagsverkHeader).toBeInTheDocument();
-    });
-
-    test('Viser riktig overskrift når personIdent er satt', async () => {
-        useFagsakStore.setState({ personIdent: '12345678910' });
-
-        renderHeader();
-
-        const menyknapp = screen.getByTitle('Systemer og oppslagsverk');
-        await userEvent.click(menyknapp);
-        const personoversiktHeader = screen.getByText('Personoversikt', {
-            selector: '.navds-dropdown__list-heading',
-        });
-        const systemerOgOppslagsverkHeader = screen.queryByText('Systemer og oppslagsverk', {
-            selector: '.navds-dropdown__list-heading',
-        });
-        expect(systemerOgOppslagsverkHeader).not.toBeInTheDocument();
-        expect(personoversiktHeader).toBeInTheDocument();
+        const modiaLenkeTekst = screen.getByText('Modia');
+        const modiaPersonoversiktLenkeTekst = screen.queryByText('Modia personoversikt');
+        expect(modiaPersonoversiktLenkeTekst).not.toBeInTheDocument();
+        expect(modiaLenkeTekst).toBeInTheDocument();
     });
 
     test('Har riktig lenke til A-inntekt, Gosys og Modia når personIdent er satt', async () => {
         const personIdent = '12345678910';
         useFagsakStore.setState({ personIdent });
-
         renderHeader();
+
+        await waitFor(() => {
+            expect(hentAInntektUrl).toHaveBeenCalled();
+        });
 
         const menyknapp = screen.getByTitle('Systemer og oppslagsverk');
         await userEvent.click(menyknapp);
 
-        const aInntektLenke = screen.getByText('A-inntekt').closest('a');
-        const gosysLenke = screen.getByText('Gosys').closest('a');
-        const modiaLenke = screen.getByText('Modia').closest('a');
+        const aInntektLenke = screen.getByText('A-inntekt personoversikt').closest('a');
+        const gosysLenke = screen.getByText('Gosys personoversikt').closest('a');
+        const modiaLenke = screen.getByText('Modia personoversikt').closest('a');
 
-        expect(aInntektLenke).toHaveAttribute('href', `https://a-inntekt.nav.no`);
+        expect(aInntektLenke).toHaveAttribute(
+            'href',
+            `https://a-inntekt.nav.no/mock=${personIdent}`
+        );
         expect(gosysLenke).toHaveAttribute(
             'href',
             `https://gosys.nav.no/personoversikt/fnr=${personIdent}`

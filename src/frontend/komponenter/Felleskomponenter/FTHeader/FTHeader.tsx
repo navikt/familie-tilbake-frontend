@@ -70,7 +70,7 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
                     <Dropdown.Menu>
                         <Dropdown.Menu.GroupedList>
                             <Dropdown.Menu.GroupedList.Heading>
-                                {personIdent ? 'Personoversikt' : 'Systemer og oppslagsverk'}
+                                Systemer og oppslagsverk
                             </Dropdown.Menu.GroupedList.Heading>
                             {aInntektUrl && (
                                 <Dropdown.Menu.GroupedList.Item
@@ -78,7 +78,10 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
                                     target="_blank"
                                     href={aInntektUrl}
                                 >
-                                    A-inntekt <ExternalLinkIcon aria-hidden />
+                                    {personligAInntektUrl
+                                        ? 'A-inntekt personoversikt'
+                                        : 'A-inntekt'}
+                                    <ExternalLinkIcon aria-hidden />
                                 </Dropdown.Menu.GroupedList.Item>
                             )}
                             {gosysUrl && (
@@ -87,7 +90,8 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
                                     target="_blank"
                                     href={gosysUrl}
                                 >
-                                    Gosys <ExternalLinkIcon aria-hidden />
+                                    {personIdent ? 'Gosys personoversikt' : 'Gosys'}
+                                    <ExternalLinkIcon aria-hidden />
                                 </Dropdown.Menu.GroupedList.Item>
                             )}
                             {modiaUrl && (
@@ -96,7 +100,8 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
                                     target="_blank"
                                     href={modiaUrl}
                                 >
-                                    Modia <ExternalLinkIcon aria-hidden />
+                                    {personIdent ? 'Modia personoversikt' : 'Modia'}
+                                    <ExternalLinkIcon aria-hidden />
                                 </Dropdown.Menu.GroupedList.Item>
                             )}
                         </Dropdown.Menu.GroupedList>
