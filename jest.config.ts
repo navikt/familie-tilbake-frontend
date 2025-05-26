@@ -22,7 +22,6 @@ const config: Config.InitialOptions = {
             },
         ],
     },
-    silent: process.env.ENV === 'local' ? true : false,
 };
 
 export default config;
