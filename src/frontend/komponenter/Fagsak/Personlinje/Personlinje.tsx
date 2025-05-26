@@ -2,7 +2,7 @@ import type { IFagsak } from '../../../typer/fagsak';
 import type { IPerson } from '../../../typer/person';
 
 import { Buildings3Icon, ExternalLinkIcon, LeaveIcon } from '@navikt/aksel-icons';
-import { Link, Tag } from '@navikt/ds-react';
+import { HStack, Link, Tag } from '@navikt/ds-react';
 import { AGray900, ATextOnInverted, ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { useLocation } from 'react-router';
@@ -15,10 +15,6 @@ import { useFagsak } from '../../../context/FagsakContext';
 import { RessursStatus } from '../../../typer/ressurs';
 import { formatterDatostring, hentAlder } from '../../../utils';
 import { erHistoriskSide } from '../../Felleskomponenter/Venstremeny/sider';
-
-const PlaceholderDiv = styled.div`
-    flex: 1;
-`;
 
 const DødsfallTag = styled(Tag)`
     color: ${ATextOnInverted};
@@ -53,7 +49,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
     const location = useLocation();
     const behandlingsPath = location.pathname.split('/').at(-1);
     const erHistoriskVisning = behandlingsPath && erHistoriskSide(behandlingsPath);
-    console.log(behandlingsPath);
+
     const { lagSaksoversiktUrl } = useFagsak();
     return (
         <Visittkort
@@ -77,25 +73,27 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                     {fagsak.institusjon.organisasjonsnummer}
                 </InstitusjonsTag>
             )}
-            <PlaceholderDiv />
-            {behandling?.status === RessursStatus.Suksess && !erHistoriskVisning && (
-                <Link href={lagLenkeTilRevurdering()} target="_blank">
-                    Gå til revurderingen
-                    <ExternalLinkIcon aria-label="Gå til revurderingen" fontSize="1.375rem" />
-                </Link>
-            )}
-            {!erHistoriskVisning && (
-                <Link href={lagSaksoversiktUrl()} target="_blank">
-                    Gå til saksoversikt
-                    <ExternalLinkIcon aria-label="Gå til saksoversikt" fontSize="1.375rem" />
-                </Link>
-            )}
-            {erHistoriskVisning && (
-                <Link href={`${location.pathname.replace(behandlingsPath, '')}`}>
-                    Gå til behandling
-                    <LeaveIcon title="Tilbake til behandlingen" fontSize="1.375rem" />
-                </Link>
-            )}
+            <HStack gap="4">
+                {behandling?.status === RessursStatus.Suksess && !erHistoriskVisning && (
+                    <Link href={lagLenkeTilRevurdering()} target="_blank">
+                        Gå til revurderingen
+                        <ExternalLinkIcon aria-label="Gå til revurderingen" fontSize="1.375rem" />
+                    </Link>
+                )}
+                {!erHistoriskVisning && (
+                    <Link href={lagSaksoversiktUrl()} target="_blank">
+                        Gå til saksoversikt
+                        <ExternalLinkIcon aria-label="Gå til saksoversikt" fontSize="1.375rem" />
+                    </Link>
+                )}
+                {erHistoriskVisning && (
+                    <Link href={`${location.pathname.replace(behandlingsPath, '')}`}>
+                        Gå til behandling
+                        <LeaveIcon title="Tilbake til behandlingen" fontSize="1.375rem" />
+                    </Link>
+                )}
+            </HStack>
+
             <Behandlingsmeny fagsak={fagsak} />
         </Visittkort>
     );

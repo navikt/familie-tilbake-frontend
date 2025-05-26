@@ -1,4 +1,5 @@
 import { sentryVitePlugin } from '@sentry/vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import console from 'console';
 import { dirname, resolve } from 'path';
@@ -20,6 +21,7 @@ export default defineConfig(() => {
             emptyOutDir: true,
         },
         plugins: [
+            tailwindcss(),
             react(),
             compression(),
             sentryVitePlugin({
