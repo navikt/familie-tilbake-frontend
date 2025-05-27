@@ -1,6 +1,9 @@
 import type { Land } from '../komponenter/Felleskomponenter/Landvelger/Landvelger';
 
 export const norskLandnavn = (alpha2: Land['alpha2']): string => {
+    if (!alpha2 || alpha2.length === 0) {
+        return alpha2;
+    }
     try {
         const lokalLandnavn = new Intl.DisplayNames(['nb'], { type: 'region' }).of(alpha2);
         if (!lokalLandnavn) {

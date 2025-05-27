@@ -1,14 +1,11 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-    // verbose: true,
     preset: 'ts-jest',
+    maxWorkers: '50%',
+    cache: true,
+    cacheDirectory: '<rootDir>/.jest-cache',
     testEnvironment: 'jsdom',
-    globals: {
-        'ts-jest': {
-            tsconfig: '<rootDir>/src/frontend/tsconfig.json',
-        },
-    },
     setupFilesAfterEnv: ['<rootDir>/src/jest-setup.ts'],
     moduleNameMapper: {
         '.+\\.(css)$': 'identity-obj-proxy',
@@ -18,8 +15,12 @@ const config: Config.InitialOptions = {
     },
     transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@navikt*|uuid|nanoid)/)'],
     transform: {
-        '\\.[jt]s?$': 'ts-jest',
-        '\\.[jt]sx?$': 'ts-jest',
+        '\\.[jt]sx?$': [
+            'ts-jest',
+            {
+                tsconfig: '<rootDir>/src/frontend/tsconfig.json',
+            },
+        ],
     },
 };
 
