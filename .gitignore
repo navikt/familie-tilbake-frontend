@@ -11,3 +11,4 @@ ci-tests/reports
 *.iml
 .pnpm-store/
 pnpm-debug.log
+.jest-cache
