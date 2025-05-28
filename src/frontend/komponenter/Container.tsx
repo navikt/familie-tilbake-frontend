@@ -17,9 +17,9 @@ import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
 import UlagretDataModal from './Felleskomponenter/Modal/UlagretDataModal';
 import Toasts from './Felleskomponenter/Toast/Toasts';
 
-const Dashboard = lazy(() => import('./Felleskomponenter/Dashboard'));
+const Dashboard = lazy(() => import('../pages/Dashboard'));
 const FagsakContainer = lazy(() => import('./Fagsak/FagsakContainer'));
-const Feilmelding = lazy(() => import('./Felleskomponenter/Feilmelding'));
+const IkkeFunnet = lazy(() => import('../pages/404'));
 
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
@@ -73,7 +73,7 @@ const AppRoutes = () => {
                     path="/*"
                     element={
                         <Suspense fallback={<div>Feilmelding laster...</div>}>
-                            <Feilmelding />
+                            <IkkeFunnet />
                         </Suspense>
                     }
                 />
