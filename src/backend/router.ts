@@ -35,7 +35,7 @@ export default async (texasClient: TexasClient, router: Router) => {
         res.status(200).send({ status: 'SUKSESS', data: appConfig.version }).end();
     });
 
-    router.get('/system-url', (_: Request, res: Response) => {
+    router.get('/brukerlenker', (_: Request, res: Response) => {
         res.status(200).send({ aInntektUrl, gosysBaseUrl, modiaBaseUrl }).end();
     });
 

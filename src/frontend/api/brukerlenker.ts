@@ -2,7 +2,7 @@ import type { FamilieRequest } from './http/HttpProvider';
 
 import { preferredAxios } from './axios';
 
-type Brukerlenker = {
+type BrukerlenkerResponse = {
     aInntektUrl: string;
     gosysBaseUrl: string;
     modiaBaseUrl: string;
@@ -12,8 +12,8 @@ type BrukerlenkeResponse = {
     url: string;
 };
 
-export const hentBrukerlenkeBaseUrl = async (): Promise<Brukerlenker> => {
-    const response = await preferredAxios.get<Brukerlenker>('/brukerlenke');
+export const hentBrukerlenkeBaseUrl = async (): Promise<BrukerlenkerResponse> => {
+    const response = await preferredAxios.get<BrukerlenkerResponse>('/brukerlenker');
     return response.data;
 };
 
