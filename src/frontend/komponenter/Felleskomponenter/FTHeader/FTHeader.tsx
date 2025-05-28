@@ -16,7 +16,7 @@ interface Props {
 
 export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
     const { data: brukerlenker } = useQuery({
-        queryKey: ['hentSystemUrl'],
+        queryKey: ['hentBrukerlenkeBaseUrl'],
         queryFn: hentBrukerlenkeBaseUrl,
     });
     const { aInntektUrl: reserveAInntektUrl, modiaBaseUrl, gosysBaseUrl } = brukerlenker || {};

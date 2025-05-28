@@ -54,7 +54,7 @@ describe('FTHeader', () => {
             </QueryClientProvider>
         );
     };
-    test('hentSystemUrl blir kalt én gang ved rendering', () => {
+    test('hentBrukerlenkeBaseUrl blir kalt én gang ved rendering', () => {
         renderHeader();
 
         expect(hentBrukerlenkeBaseUrl).toHaveBeenCalledTimes(1);
