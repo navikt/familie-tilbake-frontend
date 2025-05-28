@@ -6,8 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { useMemo } from 'react';
 
+import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
 import { useHttp } from '../../../api/http/HttpProvider';
-import { hentAInntektUrl, hentSystemUrl } from '../../../api/systemUrl';
 import { useFagsakStore } from '../../../store/fagsak';
 
 interface Props {
@@ -15,11 +15,11 @@ interface Props {
 }
 
 export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
-    const { data: systemUrlData } = useQuery({
+    const { data: brukerlenker } = useQuery({
         queryKey: ['hentSystemUrl'],
-        queryFn: hentSystemUrl,
+        queryFn: hentBrukerlenkeBaseUrl,
     });
-    const { aInntektUrl: reserveAInntektUrl, modiaBaseUrl, gosysBaseUrl } = systemUrlData || {};
+    const { aInntektUrl: reserveAInntektUrl, modiaBaseUrl, gosysBaseUrl } = brukerlenker || {};
     const personIdent = useFagsakStore(state => state.personIdent);
     const fagsakId = useFagsakStore(state => state.fagsakId);
     const behandlingId = useFagsakStore(state => state.behandlingId);

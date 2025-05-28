@@ -2,14 +2,18 @@ import type { FamilieRequest } from './http/HttpProvider';
 
 import { preferredAxios } from './axios';
 
-type SystemBaseUrl = {
+type Brukerlenker = {
     aInntektUrl: string;
     gosysBaseUrl: string;
     modiaBaseUrl: string;
 };
 
-export const hentSystemUrl = async (): Promise<SystemBaseUrl> => {
-    const response = await preferredAxios.get<SystemBaseUrl>('/system-url');
+type BrukerlenkeResponse = {
+    url: string;
+};
+
+export const hentBrukerlenkeBaseUrl = async (): Promise<Brukerlenker> => {
+    const response = await preferredAxios.get<Brukerlenker>('/brukerlenke');
     return response.data;
 };
 
@@ -20,14 +24,14 @@ export const hentAInntektUrl = async (
     behandlingId?: string
 ): Promise<string | null> => {
     if (!personIdent) return null;
-    const response = await request<void, string>({
+    const response = await request<void, BrukerlenkeResponse>({
         method: 'GET',
-        url: '/familie-tilbake/api/arbeid-og-inntekt/brukerlenke',
+        url: '/familie-tilbake/api/brukerlenke/ainntekt',
         headers: {
             'x-person-ident': personIdent,
             ...(fagsakId && { 'x-fagsak-id': fagsakId }),
             ...(behandlingId && { 'x-behandling-id': behandlingId }),
         },
     });
-    return response.status === 'SUKSESS' ? response.data : null;
+    return response.status === 'SUKSESS' ? response.data.url : null;
 };

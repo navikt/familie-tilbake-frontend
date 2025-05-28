@@ -4,11 +4,11 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { FTHeader } from './FTHeader';
-import { hentAInntektUrl, hentSystemUrl } from '../../../api/systemUrl';
+import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
 import { useFagsakStore } from '../../../store/fagsak';
 
-jest.mock('../../../api/systemUrl', () => ({
-    hentSystemUrl: jest.fn(),
+jest.mock('../../../api/brukerlenker', () => ({
+    hentBrukerlenkeBaseUrl: jest.fn(),
     hentAInntektUrl: jest.fn(),
 }));
 
@@ -25,7 +25,7 @@ describe('FTHeader', () => {
         jest.clearAllMocks();
         useFagsakStore.setState({ personIdent: undefined });
 
-        (hentSystemUrl as jest.Mock).mockResolvedValue({
+        (hentBrukerlenkeBaseUrl as jest.Mock).mockResolvedValue({
             aInntektUrl: 'https://a-inntekt.nav.no',
             gosysBaseUrl: 'https://gosys.nav.no',
             modiaBaseUrl: 'https://modia.nav.no',
@@ -57,7 +57,7 @@ describe('FTHeader', () => {
     test('hentSystemUrl blir kalt én gang ved rendering', () => {
         renderHeader();
 
-        expect(hentSystemUrl).toHaveBeenCalledTimes(1);
+        expect(hentBrukerlenkeBaseUrl).toHaveBeenCalledTimes(1);
     });
 
     test('Viser riktig titler når ingen personIdent er satt', async () => {
@@ -112,7 +112,7 @@ describe('FTHeader', () => {
     });
 
     test('Viser ingen menyknapp når ingen gyldige lenker eksisterer', async () => {
-        (hentSystemUrl as jest.Mock).mockResolvedValue({});
+        (hentBrukerlenkeBaseUrl as jest.Mock).mockResolvedValue({});
 
         renderHeader();
 
