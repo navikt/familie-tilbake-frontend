@@ -35,6 +35,7 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
         () => (personligAInntektUrl ? personligAInntektUrl : reserveAInntektUrl),
         [personligAInntektUrl, reserveAInntektUrl]
     );
+    console.log('url-er', aInntektUrl, personligAInntektUrl, reserveAInntektUrl);
 
     const gosysUrl = useMemo(
         () =>

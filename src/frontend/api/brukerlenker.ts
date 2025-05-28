@@ -33,5 +33,7 @@ export const hentAInntektUrl = async (
             ...(behandlingId && { 'x-behandling-id': behandlingId }),
         },
     });
+    console.log('hentAInntektUrl response', response);
+
     return response.status === 'SUKSESS' ? response.data.url : null;
 };
