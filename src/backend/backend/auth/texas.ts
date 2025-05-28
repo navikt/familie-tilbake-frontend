@@ -9,11 +9,6 @@ type SuccessResponse = {
     expires_in: number;
 };
 
-// type ErrorResponse = {
-//     error: string;
-//     status: string;
-// };
-
 export class TexasClient {
     private config: TexasConfig;
     constructor(config: TexasConfig) {
