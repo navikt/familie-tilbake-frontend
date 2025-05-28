@@ -23,7 +23,10 @@ export const hentAInntektUrl = async (
     fagsakId?: string,
     behandlingId?: string
 ): Promise<string | null> => {
-    if (!personIdent) return null;
+    console.log('requesting AInntekt URL with:', request, personIdent, fagsakId, behandlingId);
+    if (!personIdent) {
+        return null;
+    }
     const response = await request<void, BrukerlenkeResponse>({
         method: 'GET',
         url: '/familie-tilbake/api/brukerlenke/ainntekt',
@@ -32,8 +35,17 @@ export const hentAInntektUrl = async (
             ...(fagsakId && { 'x-fagsak-id': fagsakId }),
             ...(behandlingId && { 'x-behandling-id': behandlingId }),
         },
-    });
-    console.log('hentAInntektUrl response', response);
-
-    return response.status === 'SUKSESS' ? response.data.url : null;
+    })
+        .then(response => {
+            console.log('hentAInntektUrl response', response);
+            if (response.status === 'SUKSESS') {
+                return response.data.url;
+            }
+            return null;
+        })
+        .catch(error => {
+            console.error('Error fetching AInntekt URL:', error);
+            return null;
+        });
+    return response;
 };
