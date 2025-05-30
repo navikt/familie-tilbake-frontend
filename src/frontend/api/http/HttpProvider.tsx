@@ -68,6 +68,8 @@ export const [HttpProvider, useHttp] = constate(
                     const responsRessurs: ApiRessurs<SkjemaRespons> = response.data;
 
                     config.påvirkerSystemLaster && fjernRessursSomLaster(ressursId);
+                    console.log('Respons:', responsRessurs);
+
                     return håndterApiRespons({
                         defaultFeilmelding: config.defaultFeilmelding,
                         innloggetSaksbehandler,
@@ -79,6 +81,7 @@ export const [HttpProvider, useHttp] = constate(
                     if (error.message.includes('401') && settAutentisert) {
                         settAutentisert(false);
                     }
+                    console.log('Catch: fanger feil:', error);
 
                     config.påvirkerSystemLaster && fjernRessursSomLaster(ressursId);
 
