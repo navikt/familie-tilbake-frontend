@@ -9,7 +9,7 @@ import { createServer as createViteServer } from 'vite';
 import { ensureAuthenticated } from './backend/auth/authenticate';
 import { genererCsrfToken } from './backend/auth/middleware';
 import { logRequest } from './backend/utils';
-import { appConfig, buildPath } from './config';
+import { aInntektUrl, appConfig, buildPath, gosysBaseUrl, modiaBaseUrl } from './config';
 import { logError, LogLevel } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
@@ -33,6 +33,10 @@ const getHtmlInnholdDev = async (url: string) => {
 export default async (texasClient: TexasClient, router: Router) => {
     router.get('/version', (_: Request, res: Response) => {
         res.status(200).send({ status: 'SUKSESS', data: appConfig.version }).end();
+    });
+
+    router.get('/brukerlenker', (_: Request, res: Response) => {
+        res.status(200).send({ aInntektUrl, gosysBaseUrl, modiaBaseUrl }).end();
     });
 
     router.get('/error', (_: Request, res: Response) => {
