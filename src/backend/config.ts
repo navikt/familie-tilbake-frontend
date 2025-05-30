@@ -53,9 +53,9 @@ const Environment = () => {
         baSakUrl: 'https://barnetrygd.intern.nav.no',
         efSakUrl: 'https://ensligmorellerfar.intern.nav.no/ekstern',
         ksSakUrl: 'https://kontantstotte.intern.nav.no',
-        aInntekt: 'https://arbeid-og-inntekt.nais.adeo.no',
-        gosys: 'https://gosys.intern.nav.no/gosys',
-        modia: 'https://app.adeo.no/modiapersonoversikt',
+        aInntektUrl: 'https://arbeid-og-inntekt.nais.adeo.no',
+        gosysUrl: 'https://gosys.intern.nav.no/gosys',
+        modiaUrl: 'https://app.adeo.no/modiapersonoversikt',
     };
 };
 const env = Environment();
