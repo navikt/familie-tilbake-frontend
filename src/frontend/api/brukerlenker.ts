@@ -1,6 +1,7 @@
 import type { FamilieRequest } from './http/HttpProvider';
 
 import { preferredAxios } from './axios';
+import { RessursStatus } from '../typer/ressurs';
 
 type BrukerlenkerResponse = {
     aInntektUrl: string;
@@ -37,5 +38,5 @@ export const hentAInntektUrl = async (
         },
     });
 
-    return response.status === 'SUKSESS' ? response.data.url : null;
+    return response.status === RessursStatus.Suksess ? response.data.url : null;
 };
