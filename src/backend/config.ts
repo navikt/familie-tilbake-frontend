@@ -15,7 +15,17 @@ export const appConfig: IAppConfig = {
     graphApiUrl: 'https://graph.microsoft.com/v1.0/me',
 };
 
-const Environment = () => {
+type EnvironmentConfig = {
+    proxyUrl: string;
+    baSakUrl: string;
+    efSakUrl: string;
+    ksSakUrl: string;
+    aInntektUrl: string;
+    gosysUrl: string;
+    modiaUrl: string;
+};
+
+const Environment = (): EnvironmentConfig => {
     if (process.env.ENV === 'local') {
         return {
             proxyUrl: 'http://localhost:8030/api',
@@ -58,6 +68,7 @@ const Environment = () => {
         modiaUrl: 'https://app.adeo.no/modiapersonoversikt',
     };
 };
+
 const env = Environment();
 
 export const texasConfig: TexasConfig = {
