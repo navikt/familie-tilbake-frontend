@@ -23,7 +23,6 @@ export const hentAInntektUrl = async (
     fagsakId?: string,
     behandlingId?: string
 ): Promise<string | null> => {
-    console.log('requesting AInntekt URL med:', request, personIdent, fagsakId, behandlingId);
     if (!personIdent) {
         return null;
     }

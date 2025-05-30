@@ -28,14 +28,6 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
     } = apiRespons;
 
     let typetRessurs: Ressurs<T>;
-    console.log(
-        'Ressurs:',
-        ressurs,
-        'Error:',
-        error,
-        'Innlogget Saksbehandler:',
-        innloggetSaksbehandler
-    );
 
     if (!ressurs) {
         return {
