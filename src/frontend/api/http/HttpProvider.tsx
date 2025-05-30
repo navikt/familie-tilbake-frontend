@@ -81,6 +81,7 @@ export const [HttpProvider, useHttp] = constate(
                     }
 
                     config.påvirkerSystemLaster && fjernRessursSomLaster(ressursId);
+
                     const responsRessurs: ApiRessurs<SkjemaRespons> | undefined =
                         error.response?.data;
                     return håndterApiRespons({
