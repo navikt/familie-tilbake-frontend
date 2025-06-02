@@ -61,7 +61,7 @@ export default async (texasClient: TexasClient, router: Router) => {
     }
 
     router.get(
-        ['/', '/*splat'],
+        ['/', '/fagsystem/*splat'],
         ensureAuthenticated(texasClient, false),
         async (req: Request, res: Response): Promise<void> => {
             prometheusTellere.appLoad.inc();
