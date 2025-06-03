@@ -30,7 +30,7 @@ export const hentAInntektUrl = async (
 
     const response = await request<void, BrukerlenkeResponse>({
         method: 'GET',
-        url: '/familie-tilbake/api/brukerlenke/ainntekt',
+        url: '/familie-tilbake/api/brukerlenke',
         headers: {
             'x-person-ident': personIdent,
             ...(fagsakId && { 'x-fagsak-id': fagsakId }),
