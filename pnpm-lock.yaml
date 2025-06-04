@@ -27,17 +27,17 @@ importers:
         specifier: 7.22.0
         version: 7.22.0
       '@sentry/browser':
-        specifier: 9.24.0
-        version: 9.24.0
+        specifier: 9.25.1
+        version: 9.25.1
       '@sentry/core':
-        specifier: 9.24.0
-        version: 9.24.0
+        specifier: 9.25.1
+        version: 9.25.1
       '@tailwindcss/vite':
         specifier: 4.1.8
         version: 4.1.8(vite@6.3.5(@types/node@22.15.29)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.39.0)(yaml@2.8.0))
       '@tanstack/react-query':
-        specifier: 5.79.2
-        version: 5.79.2(react@19.1.0)
+        specifier: 5.80.2
+        version: 5.80.2(react@19.1.0)
       axios:
         specifier: 1.9.0
         version: 1.9.0
@@ -87,11 +87,11 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       react-router:
-        specifier: 7.6.1
-        version: 7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 7.6.2
+        version: 7.6.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       redis:
-        specifier: 5.1.1
-        version: 5.1.1
+        specifier: 5.5.5
+        version: 5.5.5
       styled-components:
         specifier: 6.1.18
         version: 6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -109,8 +109,8 @@ importers:
         version: 5.0.5(@types/react@19.1.6)(react@19.1.0)
     devDependencies:
       '@axe-core/react':
-        specifier: 4.10.1
-        version: 4.10.1
+        specifier: 4.10.2
+        version: 4.10.2
       '@eslint/js':
         specifier: 9.28.0
         version: 9.28.0
@@ -262,8 +262,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@axe-core/react@4.10.1':
-    resolution: {integrity: sha512-GRGx/3Gbce9WQYXgY0iZzqOaHIRXBNGyV+zoUhJzBuDeoTL+XoeY3u/9PzdIVyH0pbNs1n1RChfsmWBy6hzKPg==}
+  '@axe-core/react@4.10.2':
+    resolution: {integrity: sha512-BIHQ+kMtOpPTmtMrJDGQMkXQT8C3YX5GIUmqXQ6tCAUaK7ZwhfbyNBaYlG0h0IdC7mHL0uxTXYxOI6r4Lgnw6w==}
 
   '@babel/code-frame@7.27.1':
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
@@ -980,33 +980,33 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
 
-  '@redis/bloom@5.1.1':
-    resolution: {integrity: sha512-PnMcvpL7O2DHtnSL5JtyNmraNrdHuJXi3u2isGTUuPgkbAuWQKfZdknq471ySILL+qKtLfVJqzgDFMjYmZzK6Q==}
+  '@redis/bloom@5.5.5':
+    resolution: {integrity: sha512-M0GDmw8k0EOFoSpmMjhFUADk/apoano97fLSpT81opgmkkDtBB9iB6l6husxnzK5t2qNz/o0+OCVG9g6lEEwKw==}
     engines: {node: '>= 18'}
     peerDependencies:
-      '@redis/client': ^5.1.1
+      '@redis/client': ^5.5.5
 
-  '@redis/client@5.1.1':
-    resolution: {integrity: sha512-vojbBqUdbkD+ylCy3+ZDXLzSmgiYH9pLrv87kF+nDgsRaHKrVVxPV9B4u6EfWRx7XGvQGZqsXVkKFhsEOsG3LA==}
+  '@redis/client@5.5.5':
+    resolution: {integrity: sha512-1Dv/CVdMNLw0mlROSnmpp4MQu+6YIJX0YR0h3g2hnPdLvk6L7TcRcrUj7BQFGSeZD2MxklAUO+rp09ITUqE5Og==}
     engines: {node: '>= 18'}
 
-  '@redis/json@5.1.1':
-    resolution: {integrity: sha512-A5M0dcgxGKq+oE6spIPBcGLDBiwoSPTs2wesVb4x30rXfG6rPtqt1Z7fCMtvTL2kHUNRKgZ78zhD+0+MENZt7g==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      '@redis/client': ^5.1.1
-
-  '@redis/search@5.1.1':
-    resolution: {integrity: sha512-bChudQmcqfYUxEGMeXMkljXtwse4hzqcqRwbZDwRyYe+EEeW/lXVl3w/mS2tHnAb2yqGnfDghid8iHEtVNqjww==}
+  '@redis/json@5.5.5':
+    resolution: {integrity: sha512-Nq8wHjOhwuhD05YPWFPL9RyT3K1VdT37TKvqbhykZA2MWQgjjhLn5i1/6zZ+1b0Zc/Sr9E0eK9J8txk6YJR6EA==}
     engines: {node: '>= 18'}
     peerDependencies:
-      '@redis/client': ^5.1.1
+      '@redis/client': ^5.5.5
 
-  '@redis/time-series@5.1.1':
-    resolution: {integrity: sha512-HPjZLfcZxh5mBLqRgx7KCZG6JXxGnb7yJqo9qZ/KMTWK/k3SWyH47DHJbYbRNzKOEkbK/l/5kikDTm79uJuCbg==}
+  '@redis/search@5.5.5':
+    resolution: {integrity: sha512-xM/DKrRhbsMS2QQF5bBPjR7P/QEjWWZDUr92r+UOwkZjvc/kmy0tp7h8zkxBo2jtSF99vkk2mwMzn6fQ8d60aQ==}
     engines: {node: '>= 18'}
     peerDependencies:
-      '@redis/client': ^5.1.1
+      '@redis/client': ^5.5.5
+
+  '@redis/time-series@5.5.5':
+    resolution: {integrity: sha512-2ifwV75Fv/uVX4n0zqvgqIlIInHZtVj+afjcbXPBD2GhG2AeVfkitTz1bMnGnNDA78sWRYooK42OWH9yqujjyQ==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@redis/client': ^5.5.5
 
   '@rolldown/pluginutils@1.0.0-beta.9':
     resolution: {integrity: sha512-e9MeMtVWo186sgvFFJOPGy7/d2j2mZhLJIdVW0C/xDluuOvymEATqz6zKsP0ZmXGzQtqlyjz5sC1sYQUoJG98w==}
@@ -1114,28 +1114,28 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@sentry-internal/browser-utils@9.24.0':
-    resolution: {integrity: sha512-fWIrHyui8KKufnbqhGyDvvr+u9wiOEEzxXEjs/CKp+6fa+jej6Mk8K+su1f/mz7R3HVzhxvht/gZ+y193uK4qw==}
+  '@sentry-internal/browser-utils@9.25.1':
+    resolution: {integrity: sha512-/E8NKoGpkZCiGfZ7OuROWjnhBDKs22JpeiLDpbvl+zdA11zJXOl/i99fDzwZZmx/yGH737Ai7KSLiw3HVcsH5A==}
     engines: {node: '>=18'}
 
-  '@sentry-internal/feedback@9.24.0':
-    resolution: {integrity: sha512-Z9jQqKzRppwAEqiytLWNV8JOo52vlxcSGz52FjKx3KXG75PXwk0M3sBXh762WoGLisUIRLTp8LOk6304L/O8dg==}
+  '@sentry-internal/feedback@9.25.1':
+    resolution: {integrity: sha512-wPyX68izXUGRHIpE2vz/LzgIJXtfnEL+LXjKJW11RA2yzAvd8SSmX+raBTuIr4dFhUJ8fn08OlYSAo4L1fY1RQ==}
     engines: {node: '>=18'}
 
-  '@sentry-internal/replay-canvas@9.24.0':
-    resolution: {integrity: sha512-506RdDF6iE8hMyzpzp9Vc0GM7kELxxs7UCoi/6KpvXFftcydWI3S2bru8dEZsxVoKh2hdle6SpbNgl+iPI0DSQ==}
+  '@sentry-internal/replay-canvas@9.25.1':
+    resolution: {integrity: sha512-KR/zvg9Oe7pH0OBioHNSYOsk/Og6Ih7emkfIUvN6RmVkVeycOERDqJyXmKM8mKC9wFXDpivBZRhrWgg/dtAAPw==}
     engines: {node: '>=18'}
 
-  '@sentry-internal/replay@9.24.0':
-    resolution: {integrity: sha512-312wMPeQI8K2vO/lA/CF6Uv5UReoZC7RarsNUJEoOKa9Bq1BXWUq929oTHzu/2NDv194H2u3eqSGsSp6xiuKTw==}
+  '@sentry-internal/replay@9.25.1':
+    resolution: {integrity: sha512-m5e2t8TolKeRYwZkUQ19Z9sjntVnEHomfI5ggiGyMGLobOgRpG40q1+BVwuO6sjaT7jMvDSZeIbjeEl/f+jABA==}
     engines: {node: '>=18'}
 
   '@sentry/babel-plugin-component-annotate@3.5.0':
     resolution: {integrity: sha512-s2go8w03CDHbF9luFGtBHKJp4cSpsQzNVqgIa9Pfa4wnjipvrK6CxVT4icpLA3YO6kg5u622Yoa5GF3cJdippw==}
     engines: {node: '>= 14'}
 
-  '@sentry/browser@9.24.0':
-    resolution: {integrity: sha512-RP+27/owvIqD4J0TibIHK1UcA7iObxLOXBEilDKjaJOZMLhv3JkpU8A+UI9pFzEYqeIGVDDaBzYgbCHrLWcoCA==}
+  '@sentry/browser@9.25.1':
+    resolution: {integrity: sha512-wIpRGtwlO4SBqlO0E2xjM0ag3/J6H/zIySMz/zyG9onYThtjKVuM0I1IIWt4PN0cEO8eznBO/6cPSECVnIrQZA==}
     engines: {node: '>=18'}
 
   '@sentry/bundler-plugin-core@3.5.0':
@@ -1188,8 +1188,8 @@ packages:
     engines: {node: '>= 10'}
     hasBin: true
 
-  '@sentry/core@9.24.0':
-    resolution: {integrity: sha512-uRWrB4Y49ZOWcDLCXqdjd2Fs6Onill0GQI+JgXMw7wa+i03+QRiQvUAUyde8O62jR4dvP3GDo9PDWnDNhi3z5A==}
+  '@sentry/core@9.25.1':
+    resolution: {integrity: sha512-c87MOAJ7nAdysQgMFCnQXoKgWx30poLTJRsK+N72ZQhGiLIzp25xuIhCsTLuftxR852tZShd9X11yU0NuolmkA==}
     engines: {node: '>=18'}
 
   '@sentry/vite-plugin@3.5.0':
@@ -1300,11 +1300,11 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6
 
-  '@tanstack/query-core@5.79.2':
-    resolution: {integrity: sha512-kr+KQrBuqd6495eP9S41BoftFI1H50XA9O+6FmbnTx/Te6bjiq1mj8rt9rJjW3YZSO2aaUNUres0TWesJW1j1g==}
+  '@tanstack/query-core@5.80.2':
+    resolution: {integrity: sha512-g2Es97uwFk7omkWiH9JmtLWSA8lTUFVseIyzqbjqJEEx7qN+Hg6jbBdDvelqtakamppaJtGORQ64hEJ5S6ojSg==}
 
-  '@tanstack/react-query@5.79.2':
-    resolution: {integrity: sha512-kadeprsH6bWuhHCpqukXHRykJkxcLBxAaF0cQ05yawPmLZ/KiCpR1DyQenonF7A/70rnRUxhJD0RJejqk9wImQ==}
+  '@tanstack/react-query@5.80.2':
+    resolution: {integrity: sha512-LfA0SVheJBOqC8RfJw/JbOW3yh2zuONQeWU5Prjm7yjUGUONeOedky1Bj39Cfj8MRdXrZV+DxNT7/DN/M907lQ==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3701,8 +3701,8 @@ packages:
     resolution: {integrity: sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==}
     engines: {node: '>=0.10.0'}
 
-  react-router@7.6.1:
-    resolution: {integrity: sha512-hPJXXxHJZEsPFNVbtATH7+MMX43UDeOauz+EAU4cgqTn7ojdI9qQORqS8Z0qmDlL1TclO/6jLRYUEtbWidtdHQ==}
+  react-router@7.6.2:
+    resolution: {integrity: sha512-U7Nv3y+bMimgWjhlT5CRdzHPu2/KVmqPwKUCChW8en5P3znxUqwlYFlbmyj8Rgp1SF6zs5X4+77kBVknkg6a0w==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -3739,8 +3739,8 @@ packages:
     resolution: {integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==}
     engines: {node: '>=8'}
 
-  redis@5.1.1:
-    resolution: {integrity: sha512-4t6n2Q9aFqpQnqBR/g84zsXW+U0hdSzYymqoGGZk44p+kuzzHbgukjOAca+PlQ563TbXcgv1njerllYWjAWw4g==}
+  redis@5.5.5:
+    resolution: {integrity: sha512-x7vpciikEY7nptGzQrE5I+/pvwFZJDadPk/uEoyGSg/pZ2m/CX2n5EhSgUh+S5T7Gz3uKM6YzWcXEu3ioAsdFQ==}
     engines: {node: '>= 18'}
 
   reflect.getprototypeof@1.0.10:
@@ -4523,7 +4523,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@axe-core/react@4.10.1':
+  '@axe-core/react@4.10.2':
     dependencies:
       axe-core: 4.10.3
       requestidlecallback: 0.3.0
@@ -5333,25 +5333,25 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@redis/bloom@5.1.1(@redis/client@5.1.1)':
+  '@redis/bloom@5.5.5(@redis/client@5.5.5)':
     dependencies:
-      '@redis/client': 5.1.1
+      '@redis/client': 5.5.5
 
-  '@redis/client@5.1.1':
+  '@redis/client@5.5.5':
     dependencies:
       cluster-key-slot: 1.1.2
 
-  '@redis/json@5.1.1(@redis/client@5.1.1)':
+  '@redis/json@5.5.5(@redis/client@5.5.5)':
     dependencies:
-      '@redis/client': 5.1.1
+      '@redis/client': 5.5.5
 
-  '@redis/search@5.1.1(@redis/client@5.1.1)':
+  '@redis/search@5.5.5(@redis/client@5.5.5)':
     dependencies:
-      '@redis/client': 5.1.1
+      '@redis/client': 5.5.5
 
-  '@redis/time-series@5.1.1(@redis/client@5.1.1)':
+  '@redis/time-series@5.5.5(@redis/client@5.5.5)':
     dependencies:
-      '@redis/client': 5.1.1
+      '@redis/client': 5.5.5
 
   '@rolldown/pluginutils@1.0.0-beta.9': {}
 
@@ -5417,33 +5417,33 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@sentry-internal/browser-utils@9.24.0':
+  '@sentry-internal/browser-utils@9.25.1':
     dependencies:
-      '@sentry/core': 9.24.0
+      '@sentry/core': 9.25.1
 
-  '@sentry-internal/feedback@9.24.0':
+  '@sentry-internal/feedback@9.25.1':
     dependencies:
-      '@sentry/core': 9.24.0
+      '@sentry/core': 9.25.1
 
-  '@sentry-internal/replay-canvas@9.24.0':
+  '@sentry-internal/replay-canvas@9.25.1':
     dependencies:
-      '@sentry-internal/replay': 9.24.0
-      '@sentry/core': 9.24.0
+      '@sentry-internal/replay': 9.25.1
+      '@sentry/core': 9.25.1
 
-  '@sentry-internal/replay@9.24.0':
+  '@sentry-internal/replay@9.25.1':
     dependencies:
-      '@sentry-internal/browser-utils': 9.24.0
-      '@sentry/core': 9.24.0
+      '@sentry-internal/browser-utils': 9.25.1
+      '@sentry/core': 9.25.1
 
   '@sentry/babel-plugin-component-annotate@3.5.0': {}
 
-  '@sentry/browser@9.24.0':
+  '@sentry/browser@9.25.1':
     dependencies:
-      '@sentry-internal/browser-utils': 9.24.0
-      '@sentry-internal/feedback': 9.24.0
-      '@sentry-internal/replay': 9.24.0
-      '@sentry-internal/replay-canvas': 9.24.0
-      '@sentry/core': 9.24.0
+      '@sentry-internal/browser-utils': 9.25.1
+      '@sentry-internal/feedback': 9.25.1
+      '@sentry-internal/replay': 9.25.1
+      '@sentry-internal/replay-canvas': 9.25.1
+      '@sentry/core': 9.25.1
 
   '@sentry/bundler-plugin-core@3.5.0':
     dependencies:
@@ -5499,7 +5499,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@sentry/core@9.24.0': {}
+  '@sentry/core@9.25.1': {}
 
   '@sentry/vite-plugin@3.5.0':
     dependencies:
@@ -5598,11 +5598,11 @@ snapshots:
       tailwindcss: 4.1.8
       vite: 6.3.5(@types/node@22.15.29)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.39.0)(yaml@2.8.0)
 
-  '@tanstack/query-core@5.79.2': {}
+  '@tanstack/query-core@5.80.2': {}
 
-  '@tanstack/react-query@5.79.2(react@19.1.0)':
+  '@tanstack/react-query@5.80.2(react@19.1.0)':
     dependencies:
-      '@tanstack/query-core': 5.79.2
+      '@tanstack/query-core': 5.80.2
       react: 19.1.0
 
   '@testing-library/dom@10.4.0':
@@ -8477,7 +8477,7 @@ snapshots:
 
   react-refresh@0.17.0: {}
 
-  react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  react-router@7.6.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       cookie: 1.0.2
       react: 19.1.0
@@ -8528,13 +8528,13 @@ snapshots:
       indent-string: 4.0.0
       strip-indent: 3.0.0
 
-  redis@5.1.1:
+  redis@5.5.5:
     dependencies:
-      '@redis/bloom': 5.1.1(@redis/client@5.1.1)
-      '@redis/client': 5.1.1
-      '@redis/json': 5.1.1(@redis/client@5.1.1)
-      '@redis/search': 5.1.1(@redis/client@5.1.1)
-      '@redis/time-series': 5.1.1(@redis/client@5.1.1)
+      '@redis/bloom': 5.5.5(@redis/client@5.5.5)
+      '@redis/client': 5.5.5
+      '@redis/json': 5.5.5(@redis/client@5.5.5)
+      '@redis/search': 5.5.5(@redis/client@5.5.5)
+      '@redis/time-series': 5.5.5(@redis/client@5.5.5)
 
   reflect.getprototypeof@1.0.10:
     dependencies:
