@@ -15,13 +15,26 @@ export const appConfig: IAppConfig = {
     graphApiUrl: 'https://graph.microsoft.com/v1.0/me',
 };
 
-const Environment = () => {
+type EnvironmentConfig = {
+    proxyUrl: string;
+    baSakUrl: string;
+    efSakUrl: string;
+    ksSakUrl: string;
+    aInntektUrl: string;
+    gosysUrl: string;
+    modiaUrl: string;
+};
+
+const Environment = (): EnvironmentConfig => {
     if (process.env.ENV === 'local') {
         return {
             proxyUrl: 'http://localhost:8030/api',
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
             ksSakUrl: 'https://kontantstotte.ansatt.dev.nav.no',
+            aInntektUrl: 'https://arbeid-og-inntekt.dev.adeo.no',
+            gosysUrl: 'https://gosys-q1.dev.intern.nav.no/gosys',
+            modiaUrl: 'https://app-q1.adeo.no/modiapersonoversikt',
         };
     } else if (process.env.ENV === 'preprod') {
         return {
@@ -29,6 +42,9 @@ const Environment = () => {
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
             ksSakUrl: 'https://kontantstotte.ansatt.dev.nav.no',
+            aInntektUrl: 'https://arbeid-og-inntekt.dev.adeo.no',
+            gosysUrl: 'https://gosys-q1.dev.intern.nav.no/gosys',
+            modiaUrl: 'https://app-q1.adeo.no/modiapersonoversikt',
         };
     } else if (process.env.ENV === 'lokalt-mot-preprod') {
         return {
@@ -36,6 +52,9 @@ const Environment = () => {
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
             ksSakUrl: 'https://kontantstotte.ansatt.dev.nav.no',
+            aInntektUrl: 'https://arbeid-og-inntekt.dev.adeo.no',
+            gosysUrl: 'https://gosys-q1.dev.intern.nav.no/gosys',
+            modiaUrl: 'https://app-q1.adeo.no/modiapersonoversikt',
         };
     }
 
@@ -44,8 +63,12 @@ const Environment = () => {
         baSakUrl: 'https://barnetrygd.intern.nav.no',
         efSakUrl: 'https://ensligmorellerfar.intern.nav.no/ekstern',
         ksSakUrl: 'https://kontantstotte.intern.nav.no',
+        aInntektUrl: 'https://arbeid-og-inntekt.nais.adeo.no',
+        gosysUrl: 'https://gosys.intern.nav.no/gosys',
+        modiaUrl: 'https://app.adeo.no/modiapersonoversikt',
     };
 };
+
 const env = Environment();
 
 export const texasConfig: TexasConfig = {
@@ -72,6 +95,9 @@ if (!process.env.TILBAKE_SCOPE) {
 
 export const buildPath = 'dist';
 export const proxyUrl = env.proxyUrl;
+export const aInntektUrl = env.aInntektUrl;
+export const gosysBaseUrl = env.gosysUrl;
+export const modiaBaseUrl = env.modiaUrl;
 
 export const redirectRecords: Record<string, string> = {
     '/redirect/fagsystem/BA': env.baSakUrl,
