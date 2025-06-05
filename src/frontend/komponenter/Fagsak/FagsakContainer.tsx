@@ -96,7 +96,7 @@ const FagsakContainer: React.FC = () => {
             </>
         );
     } else {
-        return <DataLastIkkeSuksess ressurser={[behandling, fagsak]} />;
+        return <DataLastIkkeSuksess ressurser={[behandling, fagsak]} visFeilSide />;
     }
 };
 
