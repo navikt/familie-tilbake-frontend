@@ -15,7 +15,7 @@ import LeggTilFjernBrevmottakere from './LeggTilFjernBrevmottakere/LeggTilFjernB
 import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
 import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
-import SettBehandlingTilbakeTilFakta from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
+import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
 import { useApp } from '../../../../context/AppContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { ToggleName } from '../../../../context/toggles';
