@@ -22,7 +22,7 @@ const DataLastIkkeSuksess: React.FC<IProps> = ({
     const ingenTilgangRessurs = filtrerteRessurser.find(
         r => r.status === RessursStatus.IkkeTilgang
     );
-    const serverFeil = filtrerteRessurser.find(({ status }) => status === RessursStatus.ServerFeil);
+    const serverFeil = filtrerteRessurser.find(r => r.status === RessursStatus.ServerFeil);
 
     if (ingenTilgangRessurs) {
         return <Alert variant="warning">Ingen tilgang</Alert>;
