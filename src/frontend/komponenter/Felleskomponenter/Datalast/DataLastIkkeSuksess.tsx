@@ -18,17 +18,21 @@ const DataLastIkkeSuksess: React.FC<IProps> = ({
     henteBeskrivelse,
     visFeilSide,
 }) => {
-    const filtrerteRessurser = ressurser.filter(r => r !== undefined);
+    const filtrerteRessurser = ressurser.filter(ressurs => ressurs !== undefined);
     const ingenTilgangRessurs = filtrerteRessurser.find(
-        r => r.status === RessursStatus.IkkeTilgang
+        ressurs => ressurs.status === RessursStatus.IkkeTilgang
     );
-    const serverFeil = filtrerteRessurser.find(r => r.status === RessursStatus.ServerFeil);
+    const serverFeil = filtrerteRessurser.find(
+        ressurs => ressurs.status === RessursStatus.ServerFeil
+    );
 
     if (ingenTilgangRessurs) {
         return <Alert variant="warning">Ingen tilgang</Alert>;
     }
     const feiletRessurs = filtrerteRessurser.find(
-        r => r.status === RessursStatus.Feilet || r.status === RessursStatus.FunksjonellFeil
+        ressurs =>
+            ressurs.status === RessursStatus.Feilet ||
+            ressurs.status === RessursStatus.FunksjonellFeil
     );
     if (serverFeil && visFeilSide) {
         return <ServerFeil frontendFeilmelding={serverFeil?.frontendFeilmelding} />;
@@ -41,7 +45,9 @@ const DataLastIkkeSuksess: React.FC<IProps> = ({
         return <Alert variant="error">{serverFeil.frontendFeilmelding}</Alert>;
     }
 
-    const henterRessurs = filtrerteRessurser.find(r => r.status === RessursStatus.Henter);
+    const henterRessurs = filtrerteRessurser.find(
+        ressurs => ressurs.status === RessursStatus.Henter
+    );
     if (henterRessurs) {
         return (
             <HenterData
