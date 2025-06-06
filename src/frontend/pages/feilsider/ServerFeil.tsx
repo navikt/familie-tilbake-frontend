@@ -7,7 +7,6 @@ interface IProps {
 }
 
 const ServerFeil: React.FC<IProps> = ({ statusKode, frontendFeilmelding }) => {
-    console.log('frontendFeilmelding', frontendFeilmelding);
     return (
         <Page.Block as="main" width="xl" gutters>
             <Box paddingBlock="20 8">
