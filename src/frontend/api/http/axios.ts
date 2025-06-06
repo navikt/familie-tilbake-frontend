@@ -32,7 +32,7 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
 
     let typetRessurs: Ressurs<T>;
 
-    if (!ressurs && erServerFeil(httpStatus)) {
+    if (erServerFeil(httpStatus)) {
         return {
             frontendFeilmelding:
                 'En teknisk feil på våre servere gjør at siden er utilgjengelig. Dette skyldes ikke noe du gjorde. ',
