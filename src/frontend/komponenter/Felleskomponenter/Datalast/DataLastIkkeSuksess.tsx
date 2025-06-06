@@ -31,7 +31,6 @@ const DataLastIkkeSuksess: React.FC<IProps> = ({
         r => r.status === RessursStatus.Feilet || r.status === RessursStatus.FunksjonellFeil
     );
     if (serverFeil && visFeilSide) {
-        console.log('serverFeil', serverFeil);
         return <ServerFeil frontendFeilmelding={serverFeil?.frontendFeilmelding} />;
     }
     if (feiletRessurs) {
