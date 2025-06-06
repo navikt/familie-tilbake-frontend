@@ -1,3 +1,5 @@
+import { erServerFeil } from '../utils/httpUtils';
+
 export enum RessursStatus {
     Feilet = 'FEILET',
     FunksjonellFeil = 'FUNKSJONELL_FEIL',
@@ -5,6 +7,7 @@ export enum RessursStatus {
     IkkeHentet = 'IKKE_HENTET',
     IkkeTilgang = 'IKKE_TILGANG',
     Suksess = 'SUKSESS',
+    ServerFeil = 'SERVERFEIL',
 }
 
 export type ApiRessurs<T> = {
@@ -33,6 +36,10 @@ export type Ressurs<T> =
           status: RessursStatus.IkkeTilgang;
       }
     | {
+          frontendFeilmelding: string;
+          status: RessursStatus.ServerFeil;
+      }
+    | {
           status: RessursStatus.Henter;
       }
     | {
@@ -58,7 +65,16 @@ export const byggHenterRessurs = <T>(): Ressurs<T> => {
     };
 };
 
-export const byggFeiletRessurs = <T>(frontendFeilmelding: string): Ressurs<T> => {
+export const byggFeiletRessurs = <T>(
+    frontendFeilmelding: string,
+    httpStatus?: number
+): Ressurs<T> => {
+    if (erServerFeil(httpStatus)) {
+        return {
+            frontendFeilmelding,
+            status: RessursStatus.ServerFeil,
+        };
+    }
     return {
         frontendFeilmelding,
         status: RessursStatus.Feilet,
