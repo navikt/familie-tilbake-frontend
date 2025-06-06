@@ -35,7 +35,7 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
     if (erServerFeil(httpStatus)) {
         return {
             frontendFeilmelding:
-                'En teknisk feil på våre servere gjør at siden er utilgjengelig. Dette skyldes ikke noe du gjorde. ',
+                'En feil hos oss gjør at siden er utilgjengelig. Det skyldes ikke noe du gjorde.',
             status: RessursStatus.ServerFeil,
         };
     }
