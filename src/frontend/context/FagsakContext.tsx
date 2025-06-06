@@ -27,8 +27,8 @@ const [FagsakProvider, useFagsak] = createUseContext(() => {
                 settFagsak(hentetFagsak);
             })
 
-            .catch((_error: AxiosError) => {
-                settFagsak(byggFeiletRessurs('Ukjent feil ved henting av fagsak', _error.status));
+            .catch((error: AxiosError) => {
+                settFagsak(byggFeiletRessurs('Ukjent feil ved henting av fagsak', error.status));
             });
     };
 
