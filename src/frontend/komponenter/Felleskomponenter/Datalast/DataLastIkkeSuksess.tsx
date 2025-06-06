@@ -2,7 +2,7 @@ import { Alert } from '@navikt/ds-react';
 import * as React from 'react';
 
 import HenterData from './HenterData';
-import ServerFeil from '../../../pages/feilsider/ServerFeil';
+import { ServerFeil } from '../../../pages/feilsider/ServerFeil';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 interface IProps {

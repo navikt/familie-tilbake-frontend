@@ -1,12 +1,12 @@
 import { BodyShort, Box, HGrid, Heading, Link, Page, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
-interface IProps {
+interface Props {
     statusKode?: number;
     frontendFeilmelding?: string;
 }
 
-const ServerFeil: React.FC<IProps> = ({ statusKode, frontendFeilmelding }) => {
+export const ServerFeil: React.FC<Props> = ({ statusKode, frontendFeilmelding }) => {
     return (
         <Page.Block as="main" width="xl" gutters>
             <Box paddingBlock="20 8">
@@ -36,5 +36,3 @@ const ServerFeil: React.FC<IProps> = ({ statusKode, frontendFeilmelding }) => {
         </Page.Block>
     );
 };
-
-export default ServerFeil;
