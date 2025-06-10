@@ -47,6 +47,7 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
             typetRessurs = {
                 frontendFeilmelding: ressurs.frontendFeilmelding ?? 'Ikke tilgang',
                 status: RessursStatus.IkkeTilgang,
+                httpStatusCode: error?.status ? error.status : 403,
             };
             break;
         case RessursStatus.Feilet:
@@ -54,6 +55,7 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
             typetRessurs = {
                 frontendFeilmelding: ressurs.frontendFeilmelding ?? defaultFeilmelding,
                 status: RessursStatus.Feilet,
+                httpStatusCode: error?.status ? error.status : 500,
             };
             break;
         case RessursStatus.FunksjonellFeil:
@@ -61,12 +63,14 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
                 frontendFeilmelding:
                     ressurs.frontendFeilmelding ?? 'En funksjonell feil har oppstått!',
                 status: RessursStatus.FunksjonellFeil,
+                httpStatusCode: error?.status ? error.status : 400,
             };
             break;
         default:
             typetRessurs = {
                 frontendFeilmelding: defaultFeilmelding,
                 status: RessursStatus.Feilet,
+                httpStatusCode: error?.status ? error.status : 500,
             };
             break;
     }

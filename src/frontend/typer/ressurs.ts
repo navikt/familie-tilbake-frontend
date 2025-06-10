@@ -9,10 +9,11 @@ export enum RessursStatus {
 
 export type ApiRessurs<T> = {
     data: T;
-    status: RessursStatus;
     melding: string;
-    frontendFeilmelding?: string;
     stacktrace: string;
+    status: RessursStatus;
+    frontendFeilmelding?: string;
+    httpStatusCode?: number;
 };
 
 export type Ressurs<T> =
@@ -23,14 +24,17 @@ export type Ressurs<T> =
     | {
           frontendFeilmelding: string;
           status: RessursStatus.Feilet;
+          httpStatusCode?: number;
       }
     | {
           frontendFeilmelding: string;
           status: RessursStatus.FunksjonellFeil;
+          httpStatusCode?: number;
       }
     | {
           frontendFeilmelding: string;
           status: RessursStatus.IkkeTilgang;
+          httpStatusCode?: number;
       }
     | {
           status: RessursStatus.Henter;

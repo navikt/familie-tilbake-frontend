@@ -41,14 +41,14 @@ export const useSettBehandlingTilbakeTilFakta = () => {
                 return response;
             }
 
-            const feil = new Error(
+            throw new HttpError(
                 'frontendFeilmelding' in response && response.frontendFeilmelding
                     ? response.frontendFeilmelding
-                    : 'Ukjent feil ved å sette behandling tilbake til fakta.'
+                    : 'Ukjent feil ved å sette behandling tilbake til fakta.',
+                'httpStatusCode' in response && response.httpStatusCode
+                    ? response.httpStatusCode
+                    : 500
             );
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (feil as any).httpStatus = 'httpStatus' in response ? response.httpStatus : 500;
-            throw feil;
         },
         onSuccess: response => {
             if (response.status === RessursStatus.Suksess) {
@@ -57,3 +57,12 @@ export const useSettBehandlingTilbakeTilFakta = () => {
         },
     });
 };
+
+class HttpError extends Error {
+    status: number;
+    constructor(message: string, status: number) {
+        super(message);
+        this.name = 'HttpError';
+        this.status = status;
+    }
+}

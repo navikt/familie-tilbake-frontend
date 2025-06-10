@@ -33,13 +33,14 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
         nullstillIkkePersisterteKomponenter();
         mutation.mutate(behandling.behandlingId, {
             onSuccess: ressurs => {
-                ressurs.status === RessursStatus.Suksess && ressurs.data;
-                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                    utførRedirect(
-                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                    );
-                    window.location.reload();
-                });
+                if (ressurs.status === RessursStatus.Suksess) {
+                    hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
+                        utførRedirect(
+                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                        );
+                        window.location.reload();
+                    });
+                }
             },
             onError: () => {
                 setVisModal(false);
@@ -47,7 +48,6 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
             },
         });
     };
-    console.log('Feilen', mutation.error);
 
     return (
         <>
@@ -72,7 +72,14 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
                 setVisFeilModal={setVisFeilModal}
                 erSynlig={visFeilModal}
                 feilmelding={mutation.error?.message}
-                httpStatusCode={403}
+                httpStatusCode={
+                    mutation.error &&
+                    'status' in mutation.error &&
+                    mutation.error.status &&
+                    typeof mutation.error.status === 'number'
+                        ? mutation.error.status
+                        : 500
+                }
                 behandlingId={behandling.behandlingId}
                 fagsakId={fagsak.eksternFagsakId}
             />
