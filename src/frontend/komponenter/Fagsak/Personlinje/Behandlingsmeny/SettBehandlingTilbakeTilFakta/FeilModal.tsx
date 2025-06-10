@@ -113,7 +113,7 @@ export const FeilModal = ({ feil, erSynlig, setVisFeilModal, behandlingId, fagsa
                         </p>
                         <VStack>
                             <h3 className="font-semibold text-base">Hva kan du gjøre?</h3>
-                            <List as="ul">
+                            <List as="ul" size="small">
                                 {feilObjekt.hvaKanGjøres.map((handling, index) => (
                                     <List.Item key={`${handling}${index}`}>{handling}</List.Item>
                                 ))}
@@ -131,7 +131,11 @@ export const FeilModal = ({ feil, erSynlig, setVisFeilModal, behandlingId, fagsa
                         </VStack>
                     </VStack>
                     {(fagsakId || behandlingId) && (
-                        <VStack gap="1" style={{ color: 'var(--a-text-subtle)' }}>
+                        <VStack
+                            gap="1"
+                            style={{ color: 'var(--a-text-subtle)' }}
+                            className="text-sm"
+                        >
                             {fagsakId && <span>Fagsak id: {fagsakId}</span>}
                             {behandlingId && <span>Behandlings id: {behandlingId}</span>}
                         </VStack>
