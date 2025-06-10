@@ -4,6 +4,7 @@ import type { Ressurs } from '../typer/ressurs';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { Feil } from '../api/Feil';
 import { useHttp } from '../api/http/HttpProvider';
 import { ToggleName } from '../context/toggles';
 import { useToggles } from '../context/TogglesContext';
@@ -32,16 +33,14 @@ export const useSettBehandlingTilbakeTilFakta = () => {
     const { toggles } = useToggles();
     const queryClient = useQueryClient();
 
-    return useMutation({
+    return useMutation<Ressurs<string>, Feil, string>({
         mutationFn: async (behandlingId: string) => {
             const response = await settBehandlingTilbakeTilFakta(request, behandlingId, toggles);
-            console.log('Sett behandling tilbake til fakta:', response);
-
             if (response.status === RessursStatus.Suksess) {
                 return response;
             }
 
-            throw new HttpError(
+            throw new Feil(
                 'frontendFeilmelding' in response && response.frontendFeilmelding
                     ? response.frontendFeilmelding
                     : 'Ukjent feil ved å sette behandling tilbake til fakta.',
@@ -57,12 +56,3 @@ export const useSettBehandlingTilbakeTilFakta = () => {
         },
     });
 };
-
-class HttpError extends Error {
-    status: number;
-    constructor(message: string, status: number) {
-        super(message);
-        this.name = 'HttpError';
-        this.status = status;
-    }
-}

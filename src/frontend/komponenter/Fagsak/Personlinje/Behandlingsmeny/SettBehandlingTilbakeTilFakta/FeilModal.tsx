@@ -1,49 +1,94 @@
+import type { Feil } from '../../../../../api/Feil';
+
 import { XMarkOctagonFillIcon } from '@navikt/aksel-icons';
 import { Button, List, Modal, VStack } from '@navikt/ds-react';
 import React from 'react';
 
+type FeilMelding = {
+    tittel: string;
+    beskjed: string;
+    httpStatus?: string;
+};
+
+const hentFeilObjekt = (status: number): FeilMelding => {
+    switch (status) {
+        case 400:
+            return {
+                tittel: 'Ugyldig forespørsel',
+                beskjed: 'Forespørselen din er ugyldig',
+                httpStatus: `${status} Bad Request`,
+            };
+        case 401:
+            return {
+                tittel: 'Uautorisert',
+                beskjed: 'Du er ikke autorisert til å gjøre dette',
+                httpStatus: `${status} Unauthorized`,
+            };
+        case 403:
+            return {
+                tittel: 'Ingen tilgang',
+                beskjed: 'Du har ikke tilgang til å gjøre dette',
+                httpStatus: `${status} Forbidden`,
+            };
+        case 404:
+            return {
+                tittel: 'Ikke funnet',
+                beskjed: 'Ressursen du prøver å nå finnes ikke',
+                httpStatus: `${status} Not Found`,
+            };
+        case 500:
+            return {
+                tittel: 'Intern feil',
+                beskjed: 'Oi, dette fungerte vist ikke',
+                httpStatus: `${status} Internal Server Error`,
+            };
+        case 502:
+        case 503:
+        case 504:
+            return {
+                tittel: 'Feil hos noen andre',
+                beskjed: 'Noe galt har skjedd hos en annen part, prøv igjen senere',
+                httpStatus: `${status}`,
+            };
+        default:
+            return {
+                tittel: 'Ukjent feil',
+                beskjed: 'En ukjent feil har oppstått, vennligst prøv igjen senere',
+                httpStatus: `${status} Unknown Error`,
+            };
+    }
+};
+
 interface Props {
+    feil: Feil | null;
+    erSynlig: boolean;
     setVisFeilModal: (setVisFeilModal: boolean) => void;
     behandlingId?: string;
-    erSynlig?: boolean;
     fagsakId?: string;
-    feilmelding?: string;
-    httpStatusCode?: number;
 }
 
-export const FeilModal = ({
-    setVisFeilModal,
-    behandlingId,
-    erSynlig,
-    fagsakId,
-    feilmelding,
-    httpStatusCode = 500,
-}: Props) => {
-    const headerTittel = httpStatusCode === 403 ? 'Ingen tilgang' : 'Feil';
-    const contentTittel =
-        httpStatusCode === 403
-            ? 'Du har ikke tilgang til å utføre denne handlingen'
-            : 'Det oppstod en feil ved behandling av forespørselen';
+export const FeilModal = ({ feil, erSynlig, setVisFeilModal, behandlingId, fagsakId }: Props) => {
+    const feilObjekt = feil?.status ? hentFeilObjekt(feil.status) : hentFeilObjekt(500);
     return (
         <Modal
             open={erSynlig}
             onClose={() => setVisFeilModal(false)}
             header={{
                 icon: <XMarkOctagonFillIcon aria-hidden color="var(--a-icon-danger)" />,
-                heading: headerTittel,
+                heading: feilObjekt.tittel,
                 closeButton: false,
             }}
             className="bg-red-300"
             portal
         >
             <Modal.Body className="flex flex-col gap-6">
-                <p style={{ color: 'var(--a-text-subtle)' }}>{httpStatusCode} Forbidden</p>
+                <p style={{ color: 'var(--a-text-subtle)' }}>{feilObjekt.httpStatus}</p>
 
                 <VStack gap="4">
                     <VStack gap="4">
-                        <h2 className="font-semibold text-xl">{contentTittel}</h2>
+                        <h2 className="font-semibold text-xl">{feilObjekt.beskjed}</h2>
                         <p>
-                            {feilmelding ||
+                            {feil?.message ||
                                 'Dette er ikke din feil, det er en feil vi ikke greide å håndtere.'}
                         </p>
                         <VStack>

@@ -69,17 +69,9 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
             />
 
             <FeilModal
-                setVisFeilModal={setVisFeilModal}
+                feil={mutation.error}
                 erSynlig={visFeilModal}
-                feilmelding={mutation.error?.message}
-                httpStatusCode={
-                    mutation.error &&
-                    'status' in mutation.error &&
-                    mutation.error.status &&
-                    typeof mutation.error.status === 'number'
-                        ? mutation.error.status
-                        : 500
-                }
+                setVisFeilModal={setVisFeilModal}
                 behandlingId={behandling.behandlingId}
                 fagsakId={fagsak.eksternFagsakId}
             />
