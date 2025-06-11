@@ -106,7 +106,10 @@ export const FeilModal = ({ feil, erSynlig, setVisFeilModal, behandlingId, fagsa
                 <p style={{ color: 'var(--a-text-subtle)' }}>{feilObjekt.httpStatus}</p>
 
                 <VStack gap="4">
-                    <VStack gap="4">
+                    <VStack
+                        gap="4"
+                        className="border-b border-solid border-b-[rgba(7,26,54,0.21)] pb-6"
+                    >
                         <h2 className="font-semibold text-xl">{feilObjekt.beskjed}</h2>
                         <p>
                             {feil?.message ||
