@@ -111,7 +111,14 @@ const FagsakContainer: React.FC = () => {
             </>
         );
     } else {
-        return <DataLastIkkeSuksess ressurser={[behandling, fagsak]} visFeilSide />;
+        return (
+            <DataLastIkkeSuksess
+                ressurser={[behandling, fagsak]}
+                behandlingId={behandlingId}
+                eksternFagsakId={fagsakId}
+                visFeilSide
+            />
+        );
     }
 };
 

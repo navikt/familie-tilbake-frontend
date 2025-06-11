@@ -7,6 +7,8 @@ import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 interface IProps {
     ressurser: (Ressurs<unknown> | undefined)[];
+    eksternFagsakId?: string;
+    behandlingId?: string;
     henteBeskrivelse?: string;
     visFeilSide?: boolean;
     spinnerStørrelse?: '2xlarge' | 'large';
@@ -17,6 +19,8 @@ const DataLastIkkeSuksess: React.FC<IProps> = ({
     spinnerStørrelse,
     henteBeskrivelse,
     visFeilSide,
+    eksternFagsakId,
+    behandlingId,
 }) => {
     const filtrerteRessurser = ressurser.filter(ressurs => ressurs !== undefined);
     const ingenTilgangRessurs = filtrerteRessurser.find(
@@ -35,7 +39,13 @@ const DataLastIkkeSuksess: React.FC<IProps> = ({
             ressurs.status === RessursStatus.FunksjonellFeil
     );
     if (serverFeil && visFeilSide) {
-        return <ServerFeil frontendFeilmelding={serverFeil?.frontendFeilmelding} />;
+        return (
+            <ServerFeil
+                frontendFeilmelding={serverFeil?.frontendFeilmelding}
+                eksternFagsakId={eksternFagsakId}
+                behandlingId={behandlingId}
+            />
+        );
     }
     if (feiletRessurs) {
         return <Alert variant="error">{feiletRessurs.frontendFeilmelding}</Alert>;
