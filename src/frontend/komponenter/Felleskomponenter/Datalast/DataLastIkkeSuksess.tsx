@@ -39,13 +39,7 @@ const DataLastIkkeSuksess: React.FC<IProps> = ({
             ressurs.status === RessursStatus.FunksjonellFeil
     );
     if (serverFeil && visFeilSide) {
-        return (
-            <ServerFeil
-                frontendFeilmelding={serverFeil?.frontendFeilmelding}
-                eksternFagsakId={eksternFagsakId}
-                behandlingId={behandlingId}
-            />
-        );
+        return <ServerFeil eksternFagsakId={eksternFagsakId} behandlingId={behandlingId} />;
     }
     if (feiletRessurs) {
         return <Alert variant="error">{feiletRessurs.frontendFeilmelding}</Alert>;
