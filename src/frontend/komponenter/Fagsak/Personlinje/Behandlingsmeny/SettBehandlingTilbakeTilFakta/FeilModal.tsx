@@ -89,6 +89,7 @@ interface Props {
 
 export const FeilModal = ({ feil, erSynlig, setVisFeilModal, behandlingId, fagsakId }: Props) => {
     const feilObjekt = feil?.status ? hentFeilObjekt(feil.status) : hentFeilObjekt(500);
+    const innheholderCSRFTokenFeil = feil?.message?.includes('CSRF-token');
     return (
         <Modal
             open={erSynlig}
@@ -114,10 +115,18 @@ export const FeilModal = ({ feil, erSynlig, setVisFeilModal, behandlingId, fagsa
                         <VStack>
                             <h3 className="font-semibold text-base">Hva kan du gjøre?</h3>
                             <List as="ul" size="small">
-                                {feilObjekt.hvaKanGjøres.map((handling, index) => (
-                                    <List.Item key={`${handling}${index}`}>{handling}</List.Item>
-                                ))}
-                                {feil?.status !== 403 && (
+                                {!innheholderCSRFTokenFeil &&
+                                    feilObjekt.hvaKanGjøres.map((handling, index) => (
+                                        <List.Item key={`${handling}${index}`}>
+                                            {handling}
+                                        </List.Item>
+                                    ))}
+                                {innheholderCSRFTokenFeil && (
+                                    <List.Item>
+                                        Lagre det du holder på med, og last siden på nytt.
+                                    </List.Item>
+                                )}
+                                {(feil?.status !== 403 || innheholderCSRFTokenFeil) && (
                                     <List.Item>
                                         <Link
                                             href="https://jira.adeo.no/plugins/servlet/desk/portal/541?requestGroup=828"

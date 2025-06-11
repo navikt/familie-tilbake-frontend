@@ -40,13 +40,13 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
         case RessursStatus.Suksess:
             typetRessurs = {
                 data: ressurs.data,
-                status: RessursStatus.Suksess,
+                status: ressurs.status,
             };
             break;
         case RessursStatus.IkkeTilgang:
             typetRessurs = {
-                frontendFeilmelding: ressurs.frontendFeilmelding ?? 'Ikke tilgang',
-                status: RessursStatus.IkkeTilgang,
+                frontendFeilmelding: ressurs.frontendFeilmelding ?? 'Ingen tilgang',
+                status: ressurs.status,
                 httpStatusCode: error?.status ? error.status : 403,
             };
             break;
@@ -54,7 +54,7 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
             loggFeilTilSentry && loggFeil(error, innloggetSaksbehandler, ressurs.melding);
             typetRessurs = {
                 frontendFeilmelding: ressurs.frontendFeilmelding ?? defaultFeilmelding,
-                status: RessursStatus.Feilet,
+                status: ressurs.status,
                 httpStatusCode: error?.status ? error.status : 500,
             };
             break;
@@ -62,13 +62,13 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
             typetRessurs = {
                 frontendFeilmelding:
                     ressurs.frontendFeilmelding ?? 'En funksjonell feil har oppstått!',
-                status: RessursStatus.FunksjonellFeil,
+                status: ressurs.status,
                 httpStatusCode: error?.status ? error.status : 400,
             };
             break;
         default:
             typetRessurs = {
-                frontendFeilmelding: defaultFeilmelding,
+                frontendFeilmelding: ressurs.frontendFeilmelding ?? defaultFeilmelding,
                 status: RessursStatus.Feilet,
                 httpStatusCode: error?.status ? error.status : 500,
             };

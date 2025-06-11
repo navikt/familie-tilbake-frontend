@@ -28,13 +28,19 @@ export const csrfBeskyttelse = (req: Request, res: Response, next: NextFunction)
     const csrfToken = req.headers['x-csrf-token'];
 
     if (!csrfToken || typeof csrfToken !== 'string') {
-        res.status(403).json({ error: 'CSRF-token mangler' });
+        res.status(403).json({
+            frontendFeilmelding: 'CSRF-token mangler',
+            status: 'IKKE_TILGANG',
+        });
         return;
     }
 
     if (typeof csrfToken === 'string' && !verifiserCsrfToken(req.session, csrfToken)) {
         logError(`Ugyldig CSRF-token for sesjon ${req.sessionID}... IP= ${req.ip}`);
-        res.status(403).json({ error: 'Ugyldig CSRF-token' });
+        res.status(403).json({
+            frontendFeilmelding: 'Ugyldig CSRF-token',
+            status: 'IKKE_TILGANG',
+        });
         return;
     }
 
