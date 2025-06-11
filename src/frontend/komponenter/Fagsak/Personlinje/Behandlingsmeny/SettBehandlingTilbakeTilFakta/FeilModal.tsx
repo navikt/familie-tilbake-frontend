@@ -99,15 +99,9 @@ export const FeilModal = ({ feil, erSynlig, setVisFeilModal, behandlingId, fagsa
                 heading: feilObjekt.tittel,
                 closeButton: false,
             }}
+            className="[&_.navds-modal__header]:bg-[#FFE6E6]"
             portal
         >
-            <style>
-                {`
-                    .navds-modal__header {
-                        background-color: #FFE6E6;
-                    }
-                `}
-            </style>
             <Modal.Body className="flex flex-col gap-6">
                 <p style={{ color: 'var(--a-text-subtle)' }}>{feilObjekt.httpStatus}</p>
 
