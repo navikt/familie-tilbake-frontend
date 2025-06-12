@@ -57,13 +57,21 @@ const hentFeilObjekt = (status: number): FeilMelding => {
             };
         case 502:
         case 503:
-        case 504:
+        case 504: {
+            const statusCodeMap = {
+                502: 'Bad Gateway',
+                503: 'Service Unavailable',
+                504: 'Gateway Timeout',
+            };
+
+            const httpstatusText = statusCodeMap[status];
             return {
                 tittel: 'Feil hos noen andre',
                 beskjed: 'Noe galt har skjedd hos en annen part, prøv igjen senere',
-                httpStatus: `${status}`,
+                httpStatus: `${status} ${httpstatusText}`,
                 hvaKanGjøres: ['Vent et par minutter og prøv igjen'],
             };
+        }
         default:
             return {
                 tittel: 'Ukjent feil',
