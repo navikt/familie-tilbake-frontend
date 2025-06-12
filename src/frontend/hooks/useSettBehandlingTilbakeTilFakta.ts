@@ -16,7 +16,7 @@ export const settBehandlingTilbakeTilFakta = async (
     toggles: Toggles
 ): Promise<Ressurs<string>> => {
     if (!behandlingId) {
-        throw new Error('Behandling id er påkrevd for å sette behandling tilbake til fakta.');
+        throw new Feil('Behandling id er påkrevd for å sette behandling tilbake til fakta.', 400);
     }
     const resettUrl = toggles[ToggleName.SaksbehanderKanResettebehandling]
         ? `/familie-tilbake/api/behandling/${behandlingId}/flytt-behandling-til-fakta`
