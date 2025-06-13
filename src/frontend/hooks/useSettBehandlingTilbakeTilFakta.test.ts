@@ -14,7 +14,7 @@ jest.mock('@tanstack/react-query', () => {
         useMutation: jest.fn(({ mutationFn, onSuccess }) => {
             const mutateAsync = async (behandlingId: string) => {
                 const result = await mutationFn(behandlingId);
-                if (onSuccess && result.status === 'SUKSESS') {
+                if (onSuccess && result.status === RessursStatus.Suksess) {
                     await onSuccess(result);
                 }
                 return result;
