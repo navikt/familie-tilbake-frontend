@@ -4,13 +4,13 @@ import type { IFagsak } from '../../../../../typer/fagsak';
 import * as React from 'react';
 import { useState } from 'react';
 
-import { FeilModal } from './FeilModal';
 import SettBehandlingTilbakeTilFaktaModal from './SettBehandlingTilbakeTilFaktaModal';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { useSettBehandlingTilbakeTilFakta } from '../../../../../hooks/useSettBehandlingTilbakeTilFakta';
 import { RessursStatus } from '../../../../../typer/ressurs';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
+import { FeilModal } from '../../../../Felleskomponenter/Modal/Feil/FeilModal';
 
 interface Props {
     behandling: IBehandling;

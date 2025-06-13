@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { FeilModal } from './FeilModal';
-import { Feil } from '../../../../../api/Feil';
+import { Feil } from '../../../../api/Feil';
 
 describe('FeilModal', () => {
     const mockSetVisFeilModal = jest.fn();
@@ -196,6 +196,23 @@ describe('FeilModal', () => {
         expect(
             screen.getByText('Dette er ikke din feil, det er en feil vi ikke greide å håndtere.')
         ).toBeInTheDocument();
+    });
+
+    test('viser default feil-objekt når feil er noe annet enn håndtert', () => {
+        const feilmelding = 'Vi vet ikke hva som gikk galt.';
+        const mockFeil = new Feil(feilmelding, 520);
+
+        render(<FeilModal feil={mockFeil} erSynlig={true} setVisFeilModal={mockSetVisFeilModal} />);
+
+        expect(screen.getByText('Ukjent feil')).toBeInTheDocument();
+        expect(
+            screen.getByText('En ukjent feil har oppstått, vennligst prøv igjen senere')
+        ).toBeInTheDocument();
+        expect(screen.getByText(feilmelding)).toBeInTheDocument();
+        expect(screen.getByText('520 Unknown Error')).toBeInTheDocument();
+        expect(screen.getByText('Last inn siden på nytt')).toBeInTheDocument();
+        expect(screen.getByText('Vent et par minutter og prøv igjen')).toBeInTheDocument();
+        expect(screen.getByText('Meld feil i porten')).toBeInTheDocument();
     });
 
     test('viser ikke modal når erSynlig er false', () => {
