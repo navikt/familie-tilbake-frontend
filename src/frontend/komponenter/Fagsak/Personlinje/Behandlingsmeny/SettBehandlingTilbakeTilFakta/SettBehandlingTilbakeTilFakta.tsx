@@ -5,9 +5,9 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import SettBehandlingTilbakeTilFaktaModal from './SettBehandlingTilbakeTilFaktaModal';
+import { useSettBehandlingTilbakeTilFakta } from './useSettBehandlingTilbakeTilFakta';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
-import { useSettBehandlingTilbakeTilFakta } from '../../../../../hooks/useSettBehandlingTilbakeTilFakta';
 import { RessursStatus } from '../../../../../typer/ressurs';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../../Felleskomponenter/Modal/Feil/FeilModal';
@@ -26,7 +26,6 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const [visModal, setVisModal] = useState(false);
-    const [visFeilModal, setVisFeilModal] = useState(false);
     const mutation = useSettBehandlingTilbakeTilFakta();
 
     const handleResettBehandling = () => {
@@ -42,10 +41,7 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
                     });
                 }
             },
-            onError: () => {
-                setVisModal(false);
-                setVisFeilModal(true);
-            },
+            onError: () => setVisModal(false),
         });
     };
 
@@ -62,19 +58,21 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
                 Sett behandling tilbake til fakta
             </BehandlingsMenyButton>
 
-            <SettBehandlingTilbakeTilFaktaModal
-                isOpen={visModal}
-                onConfirm={handleResettBehandling}
-                onCancel={() => setVisModal(false)}
-            />
+            {visModal && (
+                <SettBehandlingTilbakeTilFaktaModal
+                    onConfirm={handleResettBehandling}
+                    onCancel={() => setVisModal(false)}
+                />
+            )}
 
-            <FeilModal
-                feil={mutation.error}
-                erSynlig={visFeilModal}
-                setVisFeilModal={setVisFeilModal}
-                behandlingId={behandling.behandlingId}
-                fagsakId={fagsak.eksternFagsakId}
-            />
+            {mutation.isError && (
+                <FeilModal
+                    feil={mutation.error}
+                    lukkFeilModal={mutation.reset}
+                    behandlingId={behandling.behandlingId}
+                    fagsakId={fagsak.eksternFagsakId}
+                />
+            )}
         </>
     );
 };

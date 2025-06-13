@@ -1,14 +1,14 @@
-import type { FamilieRequest } from '../api/http/HttpProvider';
-import type { Toggles } from '../context/toggles';
-import type { Ressurs } from '../typer/ressurs';
+import type { FamilieRequest } from '../../../../../api/http/HttpProvider';
+import type { Toggles } from '../../../../../context/toggles';
+import type { Ressurs } from '../../../../../typer/ressurs';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { Feil } from '../api/Feil';
-import { useHttp } from '../api/http/HttpProvider';
-import { ToggleName } from '../context/toggles';
-import { useToggles } from '../context/TogglesContext';
-import { RessursStatus } from '../typer/ressurs';
+import { Feil } from '../../../../../api/Feil';
+import { useHttp } from '../../../../../api/http/HttpProvider';
+import { ToggleName } from '../../../../../context/toggles';
+import { useToggles } from '../../../../../context/TogglesContext';
+import { RessursStatus } from '../../../../../typer/ressurs';
 
 const settBehandlingTilbakeTilFakta = async (
     request: FamilieRequest,

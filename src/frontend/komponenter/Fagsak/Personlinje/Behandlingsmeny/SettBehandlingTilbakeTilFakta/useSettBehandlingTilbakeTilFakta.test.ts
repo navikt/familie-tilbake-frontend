@@ -2,9 +2,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 
 import { useSettBehandlingTilbakeTilFakta } from './useSettBehandlingTilbakeTilFakta';
-import { Feil } from '../api/Feil';
-import * as TogglesContext from '../context/TogglesContext';
-import { RessursStatus } from '../typer/ressurs';
+import { Feil } from '../../../../../api/Feil';
+import * as TogglesContext from '../../../../../context/TogglesContext';
+import { RessursStatus } from '../../../../../typer/ressurs';
 
 const mockRequest = jest.fn();
 const behandlingId = '123';
@@ -34,13 +34,13 @@ jest.mock('@tanstack/react-query', () => {
     };
 });
 
-jest.mock('../api/http/HttpProvider', () => ({
+jest.mock('../../../../../api/http/HttpProvider', () => ({
     useHttp: jest.fn(() => ({
         request: mockRequest,
     })),
 }));
 
-jest.mock('../context/TogglesContext', () => ({
+jest.mock('../../../../../context/TogglesContext', () => ({
     useToggles: jest.fn(() => ({
         toggles: {
             'familie-tilbake-frontend.saksbehandler.kan.resette.behandling': true,

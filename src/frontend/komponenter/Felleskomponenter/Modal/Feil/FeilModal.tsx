@@ -1,7 +1,7 @@
 import type { Feil } from '../../../../api/Feil';
 
 import { XMarkOctagonFillIcon } from '@navikt/aksel-icons';
-import { Button, Link, List, Modal, VStack } from '@navikt/ds-react';
+import { Button, Heading, Link, List, Modal, VStack } from '@navikt/ds-react';
 import React from 'react';
 
 type FeilMelding = {
@@ -83,49 +83,29 @@ const hentFeilObjekt = (status: number): FeilMelding => {
 };
 
 interface Props {
-    feil: Feil | null;
-    erSynlig: boolean;
-    setVisFeilModal: (setVisFeilModal: boolean) => void;
+    feil: Feil;
+    lukkFeilModal: () => void;
     behandlingId?: string;
     fagsakId?: string;
 }
 
-export const FeilModal = ({ feil, erSynlig, setVisFeilModal, behandlingId, fagsakId }: Props) => {
-    const feilObjekt = feil?.status ? hentFeilObjekt(feil.status) : hentFeilObjekt(500);
-    const innheholderCSRFTokenFeil = feil?.message?.includes('CSRF-token');
+export const FeilModal = ({ feil, lukkFeilModal, behandlingId, fagsakId }: Props) => {
+    const feilObjekt = hentFeilObjekt(feil.status);
+    const innheholderCSRFTokenFeil = feil.message?.includes('CSRF-token');
     return (
-        <Modal
-            open={erSynlig}
-            onClose={() => setVisFeilModal(false)}
-            header={{
-                icon: <XMarkOctagonFillIcon aria-hidden color="var(--a-icon-danger)" />,
-                heading: feilObjekt.tittel,
-                closeButton: false,
-            }}
-            portal
-        >
-            {erSynlig && (
-                <style>
-                    {`
-                    .navds-modal__header {
-                        background-color: #FFE6E6;
-                    }
-                `}
-                </style>
-            )}
+        <Modal open onClose={lukkFeilModal} aria-labelledby="modal-heading" portal>
+            <Modal.Header className="bg-[#FFE6E6]" closeButton={false}>
+                <Heading level="1" className="flex items-center flex-row gap-1" size="medium">
+                    <XMarkOctagonFillIcon aria-hidden color="var(--a-icon-danger)" />
+                    {feilObjekt.tittel}
+                </Heading>
+            </Modal.Header>
             <Modal.Body className="flex flex-col gap-6">
-                <p style={{ color: 'var(--a-text-subtle)' }}>{feilObjekt.httpStatus}</p>
-
+                <p className="text-[#010B18AD] pt-4">{feilObjekt.httpStatus}</p>
                 <VStack gap="4">
-                    <VStack
-                        gap="4"
-                        className="border-b border-solid border-b-[rgba(7,26,54,0.21)] pb-6"
-                    >
+                    <VStack gap="4" className="border-b border-solid border-b-[#071A3636] pb-6">
                         <h2 className="font-semibold text-xl">{feilObjekt.beskjed}</h2>
-                        <p>
-                            {feil?.message ||
-                                'Dette er ikke din feil, det er en feil vi ikke greide å håndtere.'}
-                        </p>
+                        <p>{feil.message}</p>
                         <VStack>
                             <h3 className="font-semibold text-base">Hva kan du gjøre?</h3>
                             <List as="ul" size="small">
@@ -140,7 +120,7 @@ export const FeilModal = ({ feil, erSynlig, setVisFeilModal, behandlingId, fagsa
                                         Lagre det du holder på med, og last siden på nytt
                                     </List.Item>
                                 )}
-                                {(feil?.status !== 403 || innheholderCSRFTokenFeil) && (
+                                {(feil.status !== 403 || innheholderCSRFTokenFeil) && (
                                     <List.Item>
                                         <Link
                                             href="https://jira.adeo.no/plugins/servlet/desk/portal/541?requestGroup=828"
@@ -154,19 +134,15 @@ export const FeilModal = ({ feil, erSynlig, setVisFeilModal, behandlingId, fagsa
                         </VStack>
                     </VStack>
                     {(fagsakId || behandlingId) && (
-                        <VStack
-                            gap="1"
-                            style={{ color: 'var(--a-text-subtle)' }}
-                            className="text-sm"
-                        >
-                            {fagsakId && <span>Fagsak id: {fagsakId}</span>}
-                            {behandlingId && <span>Behandlings id: {behandlingId}</span>}
+                        <VStack gap="1" className="text-sm text-[#010B18AD]">
+                            {fagsakId && <span>Fagsak ID: {fagsakId}</span>}
+                            {behandlingId && <span>Behandling ID: {behandlingId}</span>}
                         </VStack>
                     )}
                 </VStack>
             </Modal.Body>
             <Modal.Footer>
-                <Button type="button" onClick={() => setVisFeilModal(false)}>
+                <Button type="button" onClick={lukkFeilModal}>
                     Ok
                 </Button>
             </Modal.Footer>

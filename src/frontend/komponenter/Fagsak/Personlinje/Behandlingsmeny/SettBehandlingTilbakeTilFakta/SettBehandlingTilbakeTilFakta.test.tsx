@@ -6,10 +6,10 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta';
+import { useSettBehandlingTilbakeTilFakta } from './useSettBehandlingTilbakeTilFakta';
 import { Feil } from '../../../../../api/Feil';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
-import { useSettBehandlingTilbakeTilFakta } from '../../../../../hooks/useSettBehandlingTilbakeTilFakta';
 import { Fagsystem, Ytelsetype } from '../../../../../kodeverk';
 import {
     Behandlingstatus,
@@ -27,16 +27,9 @@ jest.mock('../../../../../hooks/useRedirectEtterLagring', () => ({
     useRedirectEtterLagring: jest.fn(),
 }));
 
-jest.mock('../../../../../hooks/useSettBehandlingTilbakeTilFakta', () => ({
+jest.mock('./useSettBehandlingTilbakeTilFakta', () => ({
     useSettBehandlingTilbakeTilFakta: jest.fn(),
 }));
-
-const mockReload = jest.fn();
-Object.defineProperty(window, 'location', {
-    value: {
-        reload: mockReload,
-    },
-});
 
 describe('SettBehandlingTilbakeTilFakta', () => {
     const mockBehandling: IBehandling = {
@@ -106,11 +99,13 @@ describe('SettBehandlingTilbakeTilFakta', () => {
 
         (useSettBehandlingTilbakeTilFakta as jest.Mock).mockReturnValue({
             mutate: mockMutate,
+            isError: true,
             error: {
                 message:
                     'Du har rollen BESLUTTER og trenger rollen FORVALTER for å utføre denne handlingen',
                 status: 403,
             },
+            reset: jest.fn(),
         });
 
         render(
