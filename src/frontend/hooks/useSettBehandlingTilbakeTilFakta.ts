@@ -10,7 +10,7 @@ import { ToggleName } from '../context/toggles';
 import { useToggles } from '../context/TogglesContext';
 import { RessursStatus } from '../typer/ressurs';
 
-export const settBehandlingTilbakeTilFakta = async (
+const settBehandlingTilbakeTilFakta = async (
     request: FamilieRequest,
     behandlingId: string,
     toggles: Toggles
