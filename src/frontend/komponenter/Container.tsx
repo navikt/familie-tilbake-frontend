@@ -19,7 +19,7 @@ import Toasts from './Felleskomponenter/Toast/Toasts';
 
 const Dashboard = lazy(() => import('../pages/Dashboard'));
 const FagsakContainer = lazy(() => import('./Fagsak/FagsakContainer'));
-const IkkeFunnet = lazy(() => import('../pages/IkkeFunnet'));
+const IkkeFunnet = lazy(() => import('../pages/feilsider/IkkeFunnet'));
 
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
