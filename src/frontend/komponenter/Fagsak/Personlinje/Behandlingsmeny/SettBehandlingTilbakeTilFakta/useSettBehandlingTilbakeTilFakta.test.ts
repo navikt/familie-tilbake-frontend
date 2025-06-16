@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 
 import { useSettBehandlingTilbakeTilFakta } from './useSettBehandlingTilbakeTilFakta';
-import { Feil } from '../../../../../api/Ffeil';
+import { Feil } from '../../../../../api/feil';
 import * as TogglesContext from '../../../../../context/TogglesContext';
 import { RessursStatus } from '../../../../../typer/ressurs';
 

@@ -1,4 +1,4 @@
-import type { Feil } from '../../../../api/Ffeil';
+import type { Feil } from '../../../../api/feil';
 
 import { XMarkOctagonFillIcon } from '@navikt/aksel-icons';
 import { Button, Heading, Link, List, Modal, VStack } from '@navikt/ds-react';

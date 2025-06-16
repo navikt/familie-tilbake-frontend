@@ -4,7 +4,7 @@ import type { Ressurs } from '../../../../../typer/ressurs';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { Feil } from '../../../../../api/Ffeil';
+import { Feil } from '../../../../../api/feil';
 import { useHttp } from '../../../../../api/http/HttpProvider';
 import { ToggleName } from '../../../../../context/toggles';
 import { useToggles } from '../../../../../context/TogglesContext';
