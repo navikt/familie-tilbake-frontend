@@ -12,3 +12,4 @@ ci-tests/reports
 .pnpm-store/
 pnpm-debug.log
 .jest-cache
+coverage/

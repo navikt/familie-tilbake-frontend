@@ -74,7 +74,10 @@ export default async (texasClient: TexasClient, router: Router) => {
                 res.status(200).set({ 'Content-Type': 'text/html' }).end(htmlInnhold);
             } catch (error) {
                 logError(`Feil ved lesing av index.html: ${error}`);
-                res.status(500).json({ error: 'Feil ved lesing av index.html' });
+                res.status(500).json({
+                    frontendFeilmelding: 'Feil ved lesing av index.html.',
+                    status: 'FEILET',
+                });
             }
         }
     );
