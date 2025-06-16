@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { FeilModal } from './FeilModal';
-import { Feil } from '../../../../api/Feil';
+import { Feil } from '../../../../api/Ffeil';
 
 describe('FeilModal', () => {
     const mockSetVisFeilModal = jest.fn();

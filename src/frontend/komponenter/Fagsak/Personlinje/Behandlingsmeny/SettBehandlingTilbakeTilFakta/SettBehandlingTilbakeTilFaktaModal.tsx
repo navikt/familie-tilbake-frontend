@@ -16,7 +16,7 @@ const SettBehandlingTilbakeTilFaktaModal: React.FC<Props> = ({ onConfirm, onCanc
         >
             <Modal.Body>
                 <BodyShort>
-                    Er du sikker på at du vil sette behandlingen tilbake til fakta ?
+                    Er du sikker på at du vil resette behandlingen tilbake til fakta?
                 </BodyShort>
             </Modal.Body>
             <Modal.Footer>

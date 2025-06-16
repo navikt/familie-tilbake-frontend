@@ -7,7 +7,7 @@ import * as React from 'react';
 
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta';
 import { useSettBehandlingTilbakeTilFakta } from './useSettBehandlingTilbakeTilFakta';
-import { Feil } from '../../../../../api/Feil';
+import { Feil } from '../../../../../api/Ffeil';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { Fagsystem, Ytelsetype } from '../../../../../kodeverk';

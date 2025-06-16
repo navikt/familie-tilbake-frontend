@@ -4,7 +4,7 @@ import type { Ressurs } from '../../../../../typer/ressurs';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { Feil } from '../../../../../api/Feil';
+import { Feil } from '../../../../../api/Ffeil';
 import { useHttp } from '../../../../../api/http/HttpProvider';
 import { ToggleName } from '../../../../../context/toggles';
 import { useToggles } from '../../../../../context/TogglesContext';
@@ -39,14 +39,14 @@ export const useSettBehandlingTilbakeTilFakta = () => {
             if (response.status === RessursStatus.Suksess) {
                 return response;
             }
-
+            const finnesFeilmelding =
+                'frontendFeilmelding' in response && response.frontendFeilmelding;
+            const finnesHttpStatusKode = 'httpStatusCode' in response;
             throw new Feil(
-                'frontendFeilmelding' in response && response.frontendFeilmelding
+                finnesFeilmelding
                     ? response.frontendFeilmelding
                     : 'Ukjent feil ved å sette behandling tilbake til fakta.',
-                'httpStatusCode' in response && response.httpStatusCode
-                    ? response.httpStatusCode
-                    : 500
+                finnesHttpStatusKode && response.httpStatusCode ? response.httpStatusCode : 500
             );
         },
         onSuccess: response => {
