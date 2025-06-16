@@ -1,4 +1,4 @@
-import type { HendelseType, HendelseUndertype } from '../../../../kodeverk';
+import type { HendelseUndertype } from '../../../../kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
@@ -8,6 +8,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { HendelseType } from '../../../../kodeverk';
 import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
@@ -35,7 +36,9 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     const { settIkkePersistertKomponent } = useBehandling();
 
     React.useEffect(() => {
-        if (periode.hendelsestype) {
+        if (hendelseTyper?.[0] === HendelseType.Annet) {
+            settHendelseUnderTyper(hentHendelseUndertyper(hendelseTyper[0]));
+        } else if (periode.hendelsestype) {
             settHendelseUnderTyper(hentHendelseUndertyper(periode.hendelsestype));
         } else if (erLesevisning || !periode.hendelsestype) {
             // når det er lesevisning og perioden ikke er behandlet
@@ -87,7 +90,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                             }
                             size="small"
                         >
-                            <option>-</option>
+                            {hendelseTyper?.length === 1 ? null : <option>-</option>}
                             {hendelseTyper?.map(type => (
                                 <option key={type} value={type}>
                                     {hendelsetyper[type]}
@@ -120,7 +123,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                                 }
                                 size="small"
                             >
-                                <option>-</option>
+                                {hendelseUnderTyper.length > 1 && <option>-</option>}
                                 {hendelseUnderTyper.map(type => (
                                     <option key={type} value={type}>
                                         {hendelseundertyper[type]}
