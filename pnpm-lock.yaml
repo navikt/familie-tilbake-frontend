@@ -48,8 +48,8 @@ importers:
         specifier: 1.8.0
         version: 1.8.0
       connect-redis:
-        specifier: 8.1.0
-        version: 8.1.0(express-session@1.18.1)
+        specifier: 9.0.0
+        version: 9.0.0(express-session@1.18.1)(redis@5.5.6)
       constate:
         specifier: 3.3.3
         version: 3.3.3(react@19.1.0)
@@ -208,8 +208,8 @@ importers:
         specifier: 30.0.0
         version: 30.0.0
       jest-mock-extended:
-        specifier: 3.0.7
-        version: 3.0.7(jest@30.0.0(@types/node@24.0.1)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@24.0.1)(typescript@5.8.3)))(typescript@5.8.3)
+        specifier: 4.0.0
+        version: 4.0.0(@jest/globals@30.0.0)(jest@30.0.0(@types/node@24.0.1)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@24.0.1)(typescript@5.8.3)))(typescript@5.8.3)
       lint-staged:
         specifier: 16.1.2
         version: 16.1.2
@@ -943,6 +943,9 @@ packages:
     peerDependencies:
       '@types/react': '>=17.0.30'
       react: '>=17.0.0 || >19.0.0-rc'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@navikt/ds-tailwind@7.22.0':
     resolution: {integrity: sha512-qhDCcn9AcxKPSNrjgFqLkjbvTAEFj9sPMqGoF/AhkiDtbdHQeUlT8QV99CKNlX6cZnUN6VpZ4ikvJaZNmH5pwQ==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tailwind/7.22.0/558cee1e89b79fa9aff3c5b449b6cd47b596c8ae}
@@ -2093,11 +2096,12 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  connect-redis@8.1.0:
-    resolution: {integrity: sha512-Km0EYLDlmExF52UCss5gLGTtrukGC57G6WCC2aqEMft5Vr4xNWuM4tL+T97kWrw+vp40SXFteb6Xk/7MxgpwdA==}
+  connect-redis@9.0.0:
+    resolution: {integrity: sha512-QwzyvUePTMvEzG1hy45gZYw3X3YHrjmEdSkayURlcZft7hqadQ3X39wYkmCqblK2rGlw+XItELYt6GnyG6DEIQ==}
     engines: {node: '>=18'}
     peerDependencies:
       express-session: '>=1'
+      redis: '>=5'
 
   constate@3.3.3:
     resolution: {integrity: sha512-J1P1K/GSB2Bn7uLU9AC9ddJb4PooiMHvektj8PK31Tj6nDWYjnmqVkOajzFp2oT7dpCjE2dL1VXVt/XrNwNwQA==}
@@ -3157,10 +3161,11 @@ packages:
     resolution: {integrity: sha512-pV3qcrb4utEsa/U7UI2VayNzSDQcmCllBZLSoIucrESRu0geKThFZOjjh0kACDJFJRAQwsK7GVsmS6SpEceD8w==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
-  jest-mock-extended@3.0.7:
-    resolution: {integrity: sha512-7lsKdLFcW9B9l5NzZ66S/yTQ9k8rFtnwYdCNuRU/81fqDWicNDVhitTSPnrGmNeNm0xyw0JHexEOShrIKRCIRQ==}
+  jest-mock-extended@4.0.0:
+    resolution: {integrity: sha512-7BZpfuvLam+/HC+NxifIi9b+5VXj/utUDMPUqrDJehGWVuXPtLS9Jqlob2mJLrI/pg2k1S8DMfKDvEB88QNjaQ==}
     peerDependencies:
-      jest: ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0
+      '@jest/globals': ^28.0.0 || ^29.0.0 || ^30.0.0
+      jest: ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0 || ^30.0.0
       typescript: ^3.0.0 || ^4.0.0 || ^5.0.0
 
   jest-mock@30.0.0:
@@ -5519,11 +5524,12 @@ snapshots:
       '@floating-ui/react-dom': 2.1.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@navikt/aksel-icons': 7.22.0
       '@navikt/ds-tokens': 7.22.0
-      '@types/react': 19.1.8
       clsx: 2.1.1
       date-fns: 4.1.0
       react: 19.1.0
       react-day-picker: 9.6.1(react@19.1.0)
+    optionalDependencies:
+      '@types/react': 19.1.8
     transitivePeerDependencies:
       - react-dom
 
@@ -6711,9 +6717,10 @@ snapshots:
 
   concat-map@0.0.1: {}
 
-  connect-redis@8.1.0(express-session@1.18.1):
+  connect-redis@9.0.0(express-session@1.18.1)(redis@5.5.6):
     dependencies:
       express-session: 1.18.1
+      redis: 5.5.6
 
   constate@3.3.3(react@19.1.0):
     dependencies:
@@ -8069,8 +8076,9 @@ snapshots:
       slash: 3.0.0
       stack-utils: 2.0.6
 
-  jest-mock-extended@3.0.7(jest@30.0.0(@types/node@24.0.1)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@24.0.1)(typescript@5.8.3)))(typescript@5.8.3):
+  jest-mock-extended@4.0.0(@jest/globals@30.0.0)(jest@30.0.0(@types/node@24.0.1)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@24.0.1)(typescript@5.8.3)))(typescript@5.8.3):
     dependencies:
+      '@jest/globals': 30.0.0
       jest: 30.0.0(@types/node@24.0.1)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@24.0.1)(typescript@5.8.3))
       ts-essentials: 10.0.4(typescript@5.8.3)
       typescript: 5.8.3
