@@ -21,7 +21,7 @@ export const ytelsetype: Record<Ytelsetype, string> = {
     [Ytelsetype.Barnetilsyn]: 'Barnetilsyn',
     [Ytelsetype.Skolepenger]: 'Skolepenger',
     [Ytelsetype.Kontantstøtte]: 'Kontantstøtte',
-    [Ytelsetype.Tilleggsstønad]: 'Tilleggstønad',
+    [Ytelsetype.Tilleggsstønad]: 'Tilleggsstønad',
 };
 
 const hendelseTyperForYtelse = {
