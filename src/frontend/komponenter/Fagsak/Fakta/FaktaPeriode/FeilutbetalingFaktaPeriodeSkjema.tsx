@@ -36,7 +36,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     const { settIkkePersistertKomponent } = useBehandling();
 
     React.useEffect(() => {
-        if (hendelseTyper?.[0] === HendelseType.Annet) {
+        if (hendelseTyper?.length === 1 && hendelseTyper[0] === HendelseType.Annet) {
             settHendelseUnderTyper(hentHendelseUndertyper(hendelseTyper[0]));
         } else if (periode.hendelsestype) {
             settHendelseUnderTyper(hentHendelseUndertyper(periode.hendelsestype));
@@ -90,7 +90,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                             }
                             size="small"
                         >
-                            {hendelseTyper?.length === 1 ? null : <option>-</option>}
+                            <option>-</option>
                             {hendelseTyper?.map(type => (
                                 <option key={type} value={type}>
                                     {hendelsetyper[type]}
@@ -123,7 +123,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                                 }
                                 size="small"
                             >
-                                {hendelseUnderTyper.length > 1 && <option>-</option>}
+                                <option>-</option>
                                 {hendelseUnderTyper.map(type => (
                                     <option key={type} value={type}>
                                         {hendelseundertyper[type]}
