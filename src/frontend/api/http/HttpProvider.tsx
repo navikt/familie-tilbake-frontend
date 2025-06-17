@@ -73,6 +73,7 @@ export const [HttpProvider, useHttp] = constate(
                         innloggetSaksbehandler,
                         loggFeilTilSentry: config.loggFeilTilSentry,
                         ressurs: responsRessurs,
+                        httpStatus: response.status,
                     });
                 })
                 .catch((error: AxiosError<ApiRessurs<SkjemaRespons>>) => {
@@ -90,6 +91,7 @@ export const [HttpProvider, useHttp] = constate(
                         innloggetSaksbehandler,
                         loggFeilTilSentry: true,
                         ressurs: responsRessurs,
+                        httpStatus: error.response?.status,
                     });
                 });
         };

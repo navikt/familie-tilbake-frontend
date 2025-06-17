@@ -6,6 +6,7 @@ import * as Sentry from '@sentry/core';
 import axios from 'axios';
 
 import { RessursStatus } from '../../typer/ressurs';
+import { erServerFeil } from '../../utils/httpUtils';
 
 axios.defaults.baseURL = window.location.origin;
 export const preferredAxios = axios;
@@ -16,6 +17,7 @@ export interface ApiRespons<T> {
     innloggetSaksbehandler?: ISaksbehandler;
     loggFeilTilSentry?: boolean;
     ressurs?: ApiRessurs<T>;
+    httpStatus?: number;
 }
 
 export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => {
@@ -25,9 +27,18 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
         innloggetSaksbehandler,
         loggFeilTilSentry = false,
         ressurs,
+        httpStatus,
     } = apiRespons;
 
     let typetRessurs: Ressurs<T>;
+
+    if (erServerFeil(httpStatus)) {
+        return {
+            frontendFeilmelding:
+                'En feil hos oss gjør at siden er utilgjengelig. Det skyldes ikke noe du gjorde.',
+            status: RessursStatus.ServerFeil,
+        };
+    }
 
     if (!ressurs) {
         return {
