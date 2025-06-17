@@ -169,6 +169,7 @@ const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.Rea
         [Ytelsetype.Barnetilsyn]: vilkårsresultatHjelpetekster,
         [Ytelsetype.Overganggstønad]: vilkårsresultatHjelpetekster,
         [Ytelsetype.Skolepenger]: vilkårsresultatHjelpetekster,
+        [Ytelsetype.Tilleggsstønad]: vilkårsresultatHjelpetekster,
     }[fagsak.ytelsestype];
 
     return (
