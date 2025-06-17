@@ -120,6 +120,10 @@ export interface UseSkjemaVerdi<Felter, SkjemaRespons> {
                   status: RessursStatus.IkkeTilgang;
               }
             | {
+                  frontendFeilmelding: string;
+                  status: RessursStatus.ServerFeil;
+              }
+            | {
                   status: RessursStatus.Henter;
               }
             | {
