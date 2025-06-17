@@ -59,7 +59,7 @@ const FaktaSkjema: React.FC<IProps> = ({
 
     return (
         <HGrid columns={2} gap="10">
-            <VStack gap="5">
+            <VStack gap="7">
                 <Heading level="2" size="small">
                     Feilutbetaling
                 </Heading>
@@ -128,6 +128,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                 <Textarea
                     name="begrunnelse"
                     label="Forklar årsaken(e) til feilutbetalingen"
+                    description="Tekst som er her fra før, kommer fra fagsystemet. Legg gjerne til/rediger tekst."
                     readOnly={erLesevisning}
                     value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
                     onChange={e => {
