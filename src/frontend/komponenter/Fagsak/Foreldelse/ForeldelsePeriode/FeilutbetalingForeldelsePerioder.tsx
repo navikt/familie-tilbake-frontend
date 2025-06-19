@@ -9,6 +9,7 @@ import * as React from 'react';
 
 import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
+import { ClassNamePeriodeStatus } from '../../../../typer/periodeSkjemaData';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
@@ -17,14 +18,14 @@ const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean)
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
     switch (periode.foreldelsesvurderingstype) {
         case Foreldelsevurdering.Foreldet:
-            return classNames('avvist', aktivPeriodeCss);
+            return classNames(ClassNamePeriodeStatus.Avvist, aktivPeriodeCss);
         case Foreldelsevurdering.Tilleggsfrist:
         case Foreldelsevurdering.IkkeForeldet:
-            return classNames('behandlet', aktivPeriodeCss);
+            return classNames(ClassNamePeriodeStatus.Behandlet, aktivPeriodeCss);
         case Foreldelsevurdering.IkkeVurdert:
         case Foreldelsevurdering.Udefinert:
         default:
-            return classNames('ubehandlet', aktivPeriodeCss);
+            return classNames(ClassNamePeriodeStatus.Ubehandlet, aktivPeriodeCss);
     }
 };
 

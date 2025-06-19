@@ -6,3 +6,9 @@ export interface IPeriodeSkjemaData {
     periode: Periode;
     erSplittet?: boolean | false;
 }
+
+export enum ClassNamePeriodeStatus {
+    Behandlet = 'behandlet',
+    Ubehandlet = 'ubehandlet',
+    Avvist = 'avvist',
+}

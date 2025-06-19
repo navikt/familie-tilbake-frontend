@@ -4,53 +4,18 @@ import type { IFagsak } from '../../../typer/fagsak';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import { BodyShort, Button, VStack } from '@navikt/ds-react';
-import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
-import classNames from 'classnames';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
+import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
 import { FTAlertStripe, Navigering } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 
-const ValideringsFeilmelding = styled(BodyShort)`
-    font-weight: ${AFontWeightBold};
-`;
-
-const finnClassNamePeriode = (
-    periode: VilkårsvurderingPeriodeSkjemaData,
-    aktivPeriode: boolean,
-    erTotalbeløpUnder4Rettsgebyr: boolean
-) => {
-    const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
-    if (
-        periode.foreldet ||
-        (!!periode.vilkårsvurderingsresultatInfo &&
-            periode.vilkårsvurderingsresultatInfo.vilkårsvurderingsresultat ===
-                Vilkårsresultat.GodTro &&
-            !periode.vilkårsvurderingsresultatInfo.godTro?.beløpErIBehold) ||
-        (periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet ===
-            Aktsomhet.SimpelUaktsomhet &&
-            erTotalbeløpUnder4Rettsgebyr &&
-            !periode.vilkårsvurderingsresultatInfo.aktsomhet.tilbakekrevSmåbeløp)
-    ) {
-        return classNames('avvist', aktivPeriodeCss);
-    } else if (
-        !!periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat &&
-        !!periode.begrunnelse
-    ) {
-        return classNames('behandlet', aktivPeriodeCss);
-    }
-    return classNames('ubehandlet', aktivPeriodeCss);
-};
-
-const genererRader = (
+const lagTidslinjeRader = (
     perioder: VilkårsvurderingPeriodeSkjemaData[],
-    valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined,
-    erTotalbeløpUnder4Rettsgebyr: boolean
+    valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined
 ): TimelinePeriodProps[][] => {
     return [
         perioder.map((periode, index): TimelinePeriodProps => {
@@ -58,20 +23,35 @@ const genererRader = (
                 !!valgtPeriode &&
                 periode.periode.fom === valgtPeriode.periode.fom &&
                 periode.periode.tom === valgtPeriode.periode.tom;
+            const classNamePeriodeStatus = finnClassNamePeriodeStatus(periode);
+            const periodeStatus =
+                classNamePeriodeStatus === ClassNamePeriodeStatus.Avvist
+                    ? 'danger'
+                    : classNamePeriodeStatus === ClassNamePeriodeStatus.Behandlet
+                      ? 'success'
+                      : 'warning';
             return {
                 end: new Date(periode.periode.tom),
                 start: new Date(periode.periode.fom),
-                status: 'success',
+                status: periodeStatus,
                 isActive: erAktivPeriode,
                 id: `index_${index}`,
-                className: finnClassNamePeriode(
-                    periode,
-                    erAktivPeriode,
-                    erTotalbeløpUnder4Rettsgebyr
-                ),
+                className: classNamePeriodeStatus,
             };
         }),
     ];
+};
+
+const finnClassNamePeriodeStatus = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+    const { vilkårsvurderingsresultatInfo } = periode;
+    const { vilkårsvurderingsresultat } = vilkårsvurderingsresultatInfo || {};
+
+    if (periode.foreldet) {
+        return ClassNamePeriodeStatus.Avvist;
+    }
+
+    const erBehandlet = !!vilkårsvurderingsresultat && !!periode.begrunnelse;
+    return erBehandlet ? ClassNamePeriodeStatus.Behandlet : ClassNamePeriodeStatus.Ubehandlet;
 };
 
 interface IProps {
@@ -104,7 +84,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         valideringsFeilmelding,
     } = useFeilutbetalingVilkårsvurdering();
 
-    const tidslinjeRader = genererRader(perioder, valgtPeriode, erTotalbeløpUnder4Rettsgebyr);
+    const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
     const { harUlagredeData } = useBehandling();
 
     const erHovedKnappDisabled =
@@ -126,7 +106,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         <VStack gap="5">
             {valideringsfeil && (
                 <FTAlertStripe variant="error" fullWidth>
-                    <ValideringsFeilmelding>{valideringsFeilmelding}</ValideringsFeilmelding>
+                    <BodyShort className="font-semibold">{valideringsFeilmelding}</BodyShort>
                 </FTAlertStripe>
             )}
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
