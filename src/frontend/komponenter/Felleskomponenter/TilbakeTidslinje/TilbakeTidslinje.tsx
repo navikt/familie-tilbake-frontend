@@ -122,7 +122,7 @@ const TilbakeTidslinje: React.FC<IProps> = ({ rader, onSelectPeriode }) => {
                                         style={{ color: ARed800 }}
                                     />
                                 );
-                            console.log('xxx', periode.status);
+
                             return (
                                 <Timeline.Period
                                     key={periode.id}
