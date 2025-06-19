@@ -5,10 +5,33 @@ import { Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { useMemo } from 'react';
+import styled from 'styled-components';
 
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
 import { useHttp } from '../../../api/http/HttpProvider';
 import { useFagsakStore } from '../../../store/fagsak';
+
+const RainbowHeader = styled(InternalHeader)`
+    .navds-stack__spacer {
+        background: linear-gradient(
+            to bottom,
+            #ff0000 0%,
+            #ff0000 14.28%,
+            #ff7f00 14.28%,
+            #ff7f00 28.56%,
+            #ffff00 28.56%,
+            #ffff00 42.84%,
+            #00ff00 42.84%,
+            #00ff00 57.12%,
+            #0000ff 57.12%,
+            #0000ff 71.4%,
+            #4b0082 71.4%,
+            #4b0082 85.68%,
+            #9400d3 85.68%,
+            #9400d3 100%
+        );
+    }
+`;
 
 interface Props {
     innloggetSaksbehandler?: ISaksbehandler;
@@ -54,7 +77,7 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
     );
 
     return (
-        <InternalHeader>
+        <RainbowHeader>
             <InternalHeader.Title href="/">Nav - Tilbakekreving</InternalHeader.Title>
 
             <Spacer />
@@ -125,6 +148,6 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
                     </Dropdown.Menu.List>
                 </Dropdown.Menu>
             </Dropdown>
-        </InternalHeader>
+        </RainbowHeader>
     );
 };
