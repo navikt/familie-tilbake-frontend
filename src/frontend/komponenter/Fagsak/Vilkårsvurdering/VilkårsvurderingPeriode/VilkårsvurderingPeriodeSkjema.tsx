@@ -62,6 +62,7 @@ const StyledStack = styled(Stack)`
 
 const StyledSelect = styled(Select)`
     width: 15rem;
+    padding-bottom: 2rem;
 `;
 
 const StyledVilkårsresultatRadio = styled(Radio)`
@@ -80,70 +81,47 @@ const settSkjemadataFraPeriode = (
     periode: VilkårsvurderingPeriodeSkjemaData,
     kanIlleggeRenter: boolean
 ) => {
+    const { vilkårsvurderingsresultatInfo: vurdering } = periode || {};
     skjema.felter.vilkårsresultatBegrunnelse.onChange(periode?.begrunnelse || '');
-    skjema.felter.vilkårsresultatvurdering.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat || ''
-    );
-    const erGodTro = periode.vilkårsvurderingsresultatInfo?.godTro;
+    skjema.felter.vilkårsresultatvurdering.onChange(vurdering?.vilkårsvurderingsresultat || '');
     skjema.felter.aktsomhetBegrunnelse.onChange(
-        (erGodTro
-            ? periode.vilkårsvurderingsresultatInfo?.godTro?.begrunnelse
-            : periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.begrunnelse) || ''
+        (vurdering?.godTro ? vurdering?.godTro?.begrunnelse : vurdering?.aktsomhet?.begrunnelse) ||
+            ''
     );
     skjema.felter.erBeløpetIBehold.onChange(
-        finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.godTro?.beløpErIBehold) || ''
+        finnJaNeiOption(vurdering?.godTro?.beløpErIBehold) || ''
     );
     skjema.felter.godTroTilbakekrevesBeløp.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.godTro?.beløpTilbakekreves?.toString() || ''
+        vurdering?.godTro?.beløpTilbakekreves?.toString() || ''
     );
-    const erForsett =
-        periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.Forsett;
-    const erSimpelUaktsomhet =
-        periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.SimpelUaktsomhet;
-    skjema.felter.aktsomhetVurdering.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet || ''
-    );
+    const erForsett = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.Forsett;
+    const erSimpelUaktsomhet = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.SimpelUaktsomhet;
+    skjema.felter.aktsomhetVurdering.onChange(vurdering?.aktsomhet?.aktsomhet || '');
     skjema.felter.forstoIlleggeRenter.onChange(
-        !kanIlleggeRenter
-            ? OptionNEI
-            : finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.ileggRenter) || ''
+        !kanIlleggeRenter ? OptionNEI : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
     );
     skjema.felter.tilbakekrevSmåbeløp.onChange(
-        erSimpelUaktsomhet
-            ? finnJaNeiOption(
-                  periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
-              ) || ''
-            : ''
+        erSimpelUaktsomhet ? finnJaNeiOption(vurdering?.aktsomhet?.tilbakekrevSmåbeløp) || '' : ''
     );
     skjema.felter.særligeGrunnerBegrunnelse.onChange(
-        !erForsett
-            ? periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunnerBegrunnelse || ''
-            : ''
+        !erForsett ? vurdering?.aktsomhet?.særligeGrunnerBegrunnelse || '' : ''
     );
     skjema.felter.særligeGrunner.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunner?.map(
-            dto => dto.særligGrunn
-        ) || []
+        vurdering?.aktsomhet?.særligeGrunner?.map(dto => dto.særligGrunn) || []
     );
-    const annetSærligGrunn =
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunner?.find(
-            dto => dto.særligGrunn === SærligeGrunner.Annet
-        );
+    const annetSærligGrunn = vurdering?.aktsomhet?.særligeGrunner?.find(
+        dto => dto.særligGrunn === SærligeGrunner.Annet
+    );
     skjema.felter.særligeGrunnerAnnetBegrunnelse.onChange(annetSærligGrunn?.begrunnelse || '');
 
     skjema.felter.harMerEnnEnAktivitet.onChange(
         !!periode?.aktiviteter && periode.aktiviteter.length > 1
     );
     skjema.felter.harGrunnerTilReduksjon.onChange(
-        !erForsett
-            ? finnJaNeiOption(
-                  periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunnerTilReduksjon
-              ) || ''
-            : ''
+        !erForsett ? finnJaNeiOption(vurdering?.aktsomhet?.særligeGrunnerTilReduksjon) || '' : ''
     );
 
-    const andelTilbakekreves =
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.andelTilbakekreves?.toString() || '';
+    const andelTilbakekreves = vurdering?.aktsomhet?.andelTilbakekreves?.toString() || '';
     const erEgendefinert = !isEmpty(andelTilbakekreves) && !ANDELER.includes(andelTilbakekreves);
     skjema.felter.uaktsomAndelTilbakekreves.onChange(
         erEgendefinert ? EGENDEFINERT : andelTilbakekreves
@@ -153,12 +131,10 @@ const settSkjemadataFraPeriode = (
     );
 
     skjema.felter.uaktsomTilbakekrevesBeløp.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.beløpTilbakekreves?.toString() || ''
+        vurdering?.aktsomhet?.beløpTilbakekreves?.toString() || ''
     );
     skjema.felter.grovtUaktsomIlleggeRenter.onChange(
-        !kanIlleggeRenter
-            ? OptionNEI
-            : finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.ileggRenter) || ''
+        !kanIlleggeRenter ? OptionNEI : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
     );
 };
 
@@ -189,6 +165,7 @@ interface IProps {
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
+    perioder: VilkårsvurderingPeriodeSkjemaData[];
 }
 
 const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
@@ -198,6 +175,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
     fagsak,
+    perioder,
 }) => {
     const {
         kanIlleggeRenter,
@@ -205,7 +183,10 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         onSplitPeriode,
         nestePeriode,
         forrigePeriode,
-        settValgtPeriode,
+        senderInn,
+        lagreOgSendInnSkjema,
+        gåTilForrigeSteg,
+        gåTilNesteSteg,
     } = useFeilutbetalingVilkårsvurdering();
 
     const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
@@ -213,7 +194,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
+    const { settIkkePersistertKomponent, harUlagredeData: harEndringer } = useBehandling();
 
     React.useEffect(() => {
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
@@ -243,8 +224,66 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.visFeilmeldinger &&
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
 
+    const handleForrigeKnapp = () => {
+        if (erFørstePeriode) {
+            if (harEndringer) {
+                onBekreft(periode);
+                lagreOgSendInnSkjema(false, gåTilForrigeSteg);
+            } else {
+                gåTilForrigeSteg();
+            }
+        } else {
+            if (harEndringer) {
+                onBekreft(periode);
+                lagreOgSendInnSkjema(false, () => forrigePeriode(periode));
+            } else {
+                forrigePeriode(periode);
+            }
+        }
+    };
+    const handleNesteKnapp = () => {
+        if (erSistePeriode) {
+            if (harEndringer) {
+                onBekreft(periode);
+                lagreOgSendInnSkjema(true, gåTilNesteSteg);
+            } else {
+                gåTilNesteSteg();
+            }
+        } else {
+            if (harEndringer) {
+                onBekreft(periode);
+                lagreOgSendInnSkjema(false, () => nestePeriode(periode));
+            } else {
+                nestePeriode(periode);
+            }
+        }
+    };
+
+    const erFørstePeriode = periode.index === perioder[0].index;
+    const hentForrigeKnappTekst = (): string => {
+        if (erFørstePeriode) {
+            return harEndringer
+                ? 'Lagre og gå tilbake til foreldelse'
+                : 'Gå tilbake til foreldelse';
+        } else {
+            return harEndringer
+                ? 'Lagre og gå tilbake til forrige periode'
+                : 'Gå tilbake til forrige periode';
+        }
+    };
+    const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
+    const hentNesteKnappTekst = (): string => {
+        if (erSistePeriode) {
+            return harEndringer ? 'Lagre og gå videre til vedtak' : 'Gå videre til vedtak';
+        } else {
+            return harEndringer
+                ? 'Lagre og gå videre til neste periode'
+                : 'Gå videre til neste periode';
+        }
+    };
+
     return periode ? (
-        <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
+        <StyledBox padding="4">
             <HGrid columns="1fr 4rem">
                 <StyledStack
                     justify="space-between"
@@ -267,6 +306,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     forrigePeriode={() => forrigePeriode(periode)}
                 />
             </HGrid>
+
             <VStack gap="4">
                 <PeriodeOppsummering
                     fom={periode.periode.fom}
@@ -414,18 +454,13 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     </HGrid>
                 )}
             </VStack>
+
             <Navigering>
-                {!periode.foreldet && !erLesevisning && (
-                    <Button
-                        variant="primary"
-                        onClick={() => onBekreft(periode)}
-                        disabled={!harUlagredeData}
-                    >
-                        Bekreft
-                    </Button>
-                )}
-                <Button variant="secondary" onClick={() => settValgtPeriode(undefined)}>
-                    Lukk
+                <Button onClick={handleNesteKnapp} loading={senderInn}>
+                    {hentNesteKnappTekst()}
+                </Button>
+                <Button variant="secondary" onClick={handleForrigeKnapp} loading={senderInn}>
+                    {hentForrigeKnappTekst()}
                 </Button>
             </Navigering>
         </StyledBox>
