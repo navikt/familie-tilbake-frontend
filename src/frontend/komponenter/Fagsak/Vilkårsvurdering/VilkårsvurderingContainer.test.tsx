@@ -466,7 +466,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await waitFor(async () => {
             expect(getByText('Tilbakekreving')).toBeTruthy();
-            expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
+            expect(queryByText('Detaljer for valgt periode')).toBeTruthy();
             expect(
                 getByRole('button', {
                     name: 'Suksess fra 01.01.2020 til 31.03.2020',
