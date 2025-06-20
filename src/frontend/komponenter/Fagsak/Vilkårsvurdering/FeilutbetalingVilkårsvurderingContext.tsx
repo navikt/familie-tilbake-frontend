@@ -185,7 +185,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             perioder.splice(index, 1, periode);
             settSkjemaData(perioder);
             const førsteUbehandletPeriode = perioder.find(per => !erBehandlet(per));
-            settValgtPeriode(førsteUbehandletPeriode);
+            førsteUbehandletPeriode !== undefined && settValgtPeriode(førsteUbehandletPeriode);
         };
 
         const nestePeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -193,6 +193,8 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             if (index < skjemaData.length - 1) {
                 settValgtPeriode(skjemaData[index + 1]);
             }
+            const container = document.getElementById('vilkarsvurdering-container');
+            container?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
         const forrigePeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -200,6 +202,8 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             if (index > 0) {
                 settValgtPeriode(skjemaData[index - 1]);
             }
+            const container = document.getElementById('vilkarsvurdering-container');
+            container?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
         const onSplitPeriode = (
@@ -276,13 +280,20 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             }
         };
 
-        const sendInnSkjema = () => {
+        const lagreOgSendInnSkjema = (
+            skalVidereTilVedtak: boolean,
+            funksjonEtterInnsending?: () => void
+        ) => {
             settValideringsFeilmelding(undefined);
             settValideringsfeil(false);
             if (validerPerioder()) {
                 nullstillIkkePersisterteKomponenter();
                 const ikkeForeldetPerioder = skjemaData.filter(per => !per.foreldet);
-                if (stegErBehandlet && !harEndretOpplysninger(ikkeForeldetPerioder)) {
+                if (
+                    stegErBehandlet &&
+                    !harEndretOpplysninger(ikkeForeldetPerioder) &&
+                    skalVidereTilVedtak
+                ) {
                     utførRedirect(`${behandlingUrl}/${sider.VEDTAK.href}`);
                 } else {
                     settSenderInn(true);
@@ -304,7 +315,8 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                     sendInnFeilutbetalingVilkårsvurdering(behandling.behandlingId, payload).then(
                         (respons: Ressurs<string>) => {
                             settSenderInn(false);
-                            if (respons.status === RessursStatus.Suksess) {
+                            funksjonEtterInnsending?.();
+                            if (respons.status === RessursStatus.Suksess && skalVidereTilVedtak) {
                                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                                     navigate(
                                         `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
@@ -333,7 +345,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             senderInn,
             valideringsfeil,
             valideringsFeilmelding,
-            sendInnSkjema,
+            lagreOgSendInnSkjema,
             onSplitPeriode,
             nestePeriode,
             forrigePeriode,

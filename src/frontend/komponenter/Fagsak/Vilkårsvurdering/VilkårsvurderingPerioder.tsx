@@ -3,14 +3,13 @@ import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
-import { BodyShort, Button, VStack } from '@navikt/ds-react';
+import { BodyShort, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
-import { useBehandling } from '../../../context/BehandlingContext';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
-import { FTAlertStripe, Navigering } from '../../Felleskomponenter/Flytelementer';
+import { FTAlertStripe } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 
 const lagTidslinjeRader = (
@@ -72,26 +71,12 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
     const {
         valgtPeriode,
         settValgtPeriode,
-        stegErBehandlet,
-        erAutoutført,
-        gåTilForrigeSteg,
-        gåTilNesteSteg,
         behandletPerioder,
-        allePerioderBehandlet,
-        sendInnSkjema,
-        senderInn,
         valideringsfeil,
         valideringsFeilmelding,
     } = useFeilutbetalingVilkårsvurdering();
 
     const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
-    const { harUlagredeData } = useBehandling();
-
-    const erHovedKnappDisabled =
-        valgtPeriode !== undefined ||
-        erLesevisning ||
-        !allePerioderBehandlet ||
-        !behandling.kanEndres;
 
     const onSelectPeriode = (periode: TimelinePeriodProps) => {
         const periodeFom = periode.start.toISOString().substring(0, 10);
@@ -118,27 +103,9 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                     erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
                     erLesevisning={erLesevisning}
                     fagsak={fagsak}
+                    perioder={perioder}
                 />
             )}
-            <Navigering>
-                {erAutoutført || (stegErBehandlet && erLesevisning) ? (
-                    <Button variant="primary" onClick={gåTilNesteSteg}>
-                        Neste
-                    </Button>
-                ) : (
-                    <Button
-                        variant="primary"
-                        onClick={sendInnSkjema}
-                        loading={senderInn}
-                        disabled={erHovedKnappDisabled}
-                    >
-                        {harUlagredeData ? 'Lagre og fortsett' : 'Neste'}
-                    </Button>
-                )}
-                <Button variant="secondary" onClick={gåTilForrigeSteg}>
-                    Forrige
-                </Button>
-            </Navigering>
         </VStack>
     ) : null;
 };

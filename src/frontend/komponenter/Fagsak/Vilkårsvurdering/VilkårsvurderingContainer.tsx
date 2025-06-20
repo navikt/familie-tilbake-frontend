@@ -52,7 +52,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         );
 
         return (
-            <StyledVilkårsvurdering>
+            <StyledVilkårsvurdering id="vilkarsvurdering-container">
                 <Heading level="2" size="small" spacing>
                     Tilbakekreving
                 </Heading>
