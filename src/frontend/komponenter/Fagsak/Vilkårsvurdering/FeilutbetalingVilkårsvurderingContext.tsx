@@ -22,7 +22,7 @@ import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
-import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
+import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -41,22 +41,9 @@ const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData) => {
 };
 
 const utledValgtPeriode = (
-    skjemaPerioder: VilkårsvurderingPeriodeSkjemaData[],
-    behandlingStatus: Behandlingstatus
-): VilkårsvurderingPeriodeSkjemaData | undefined => {
-    const førsteUbehandledePeriode = skjemaPerioder.find(periode => !erBehandlet(periode));
-    const skalViseÅpentVurderingspanel =
-        skjemaPerioder.length > 0 &&
-        (behandlingStatus === Behandlingstatus.FatterVedtak ||
-            behandlingStatus === Behandlingstatus.Avsluttet);
-
-    if (førsteUbehandledePeriode) {
-        return førsteUbehandledePeriode;
-    } else if (skalViseÅpentVurderingspanel) {
-        return skjemaPerioder[0];
-    }
-    return undefined;
-};
+    skjemaPerioder: VilkårsvurderingPeriodeSkjemaData[]
+): VilkårsvurderingPeriodeSkjemaData | undefined =>
+    skjemaPerioder.find(periode => !erBehandlet(periode)) || skjemaPerioder[0];
 
 const kalkulerTotalBeløp = (perioder: VilkårsvurderingPeriode[]) => {
     return perioder.reduce(
@@ -135,12 +122,11 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
 
                 settSkjemaData(skjemaPerioder);
 
-                const valgtVilkårsperiode = utledValgtPeriode(skjemaPerioder, behandling.status);
+                const valgtVilkårsperiode = utledValgtPeriode(skjemaPerioder);
                 if (valgtVilkårsperiode) {
                     settValgtPeriode(valgtVilkårsperiode);
                 }
             }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [feilutbetalingVilkårsvurdering]);
 
         React.useEffect(() => {
