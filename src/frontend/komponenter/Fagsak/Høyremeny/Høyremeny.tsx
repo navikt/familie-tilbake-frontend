@@ -10,7 +10,7 @@ import {
     PersonGavelIcon,
 } from '@navikt/aksel-icons';
 import { Button, Tabs } from '@navikt/ds-react';
-import { AFontSizeMedium, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
+import { AFontSizeMedium, ASpacing4, AWhite } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
@@ -52,10 +52,13 @@ const ToggleVisningHøyremeny = styled(Button)<IToggleVisningHøyremenyProps>`
     width: 34px;
     min-width: 34px;
     height: 34px;
-    padding: 5px 0 0 0;
     border-radius: 50%;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
     z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: ${AWhite};
 `;
 
 interface IProps {
