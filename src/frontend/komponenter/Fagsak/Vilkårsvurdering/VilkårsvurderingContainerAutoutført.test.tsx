@@ -11,19 +11,12 @@ import * as React from 'react';
 
 import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
-import { useBehandlingApi } from '../../../api/behandling';
-import { useBehandling } from '../../../context/BehandlingContext';
 import { HendelseType, Ytelsetype } from '../../../kodeverk';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
-jest.setTimeout(25000);
-
-jest.mock('../../../api/http/HttpProvider', () => ({
-    useHttp: jest.fn(),
-}));
-
+const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: jest.fn(),
+    useBehandlingApi: () => mockUseBehandlingApi(),
 }));
 
 jest.mock('../../../api/http/HttpProvider', () => {
@@ -34,17 +27,14 @@ jest.mock('../../../api/http/HttpProvider', () => {
     };
 });
 
-jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: jest.fn(),
-}));
-
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: () => jest.fn(),
 }));
 
+const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: jest.fn(),
+    useBehandling: () => mockUseBehandling(),
 }));
 
 describe('Tester: VilkårsvurderingContainer', () => {
@@ -81,8 +71,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         vilkårsvurdering?: IFeilutbetalingVilkårsvurdering
     ) => {
         if (vilkårsvurdering) {
-            // @ts-expect-error mock
-            useBehandlingApi.mockImplementation(() => ({
+            mockUseBehandlingApi.mockImplementation(() => ({
                 gjerFeilutbetalingVilkårsvurderingKall: () => {
                     const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
                         status: RessursStatus.Suksess,
@@ -99,8 +88,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 },
             }));
         }
-        // @ts-expect-error mock
-        useBehandling.mockImplementation(() => ({
+        mockUseBehandling.mockImplementation(() => ({
             erStegBehandlet: () => behandlet,
             erStegAutoutført: () => autoutført,
             visVenteModal: false,
@@ -113,8 +101,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         setupMock(false, false, true, feilutbetalingVilkårsvurdering);
 
         const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
-        fagsak.ytelsestype = Ytelsetype.Barnetilsyn;
+        const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole } = render(
             <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
@@ -131,7 +118,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         await waitFor(async () => {
             expect(
                 getByRole('button', {
-                    name: 'Neste',
+                    name: 'Gå videre til neste periode',
                 })
             ).toBeEnabled();
         });
