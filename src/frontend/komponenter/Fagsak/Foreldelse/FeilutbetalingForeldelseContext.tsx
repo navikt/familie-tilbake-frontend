@@ -155,20 +155,6 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
             settValgtPeriode(førsteUbehandletPeriode);
         };
 
-        const nestePeriode = (periode: ForeldelsePeriodeSkjemeData) => {
-            const index = skjemaData.findIndex(bfp => bfp.index === periode.index);
-            if (index < skjemaData.length - 1) {
-                settValgtPeriode(skjemaData[index + 1]);
-            }
-        };
-
-        const forrigePeriode = (periode: ForeldelsePeriodeSkjemeData) => {
-            const index = skjemaData.findIndex(bfp => bfp.index === periode.index);
-            if (index > 0) {
-                settValgtPeriode(skjemaData[index - 1]);
-            }
-        };
-
         const onSplitPeriode = (
             periode: ForeldelsePeriodeSkjemeData,
             nyePerioder: ForeldelsePeriodeSkjemeData[]
@@ -253,8 +239,6 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
             senderInn,
             sendInnSkjema,
             onSplitPeriode,
-            nestePeriode,
-            forrigePeriode,
         };
     }
 );

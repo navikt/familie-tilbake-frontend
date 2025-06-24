@@ -1,7 +1,6 @@
 import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons';
 import * as React from 'react';
 
-import { TidslinjeIkonbakgrunn } from './ikonelementer';
 import { Journalposttype } from '../../../typer/journalføring';
 
 interface IProps {
@@ -10,7 +9,7 @@ interface IProps {
 
 const DokumentIkon: React.FC<IProps> = ({ type }) => {
     return (
-        <TidslinjeIkonbakgrunn>
+        <div className="bg-grayalpha-300 w-[26px] h-[26px] rounded-full inline-flex items-center justify-center">
             {type === Journalposttype.I && (
                 <ArrowRightIcon fontSize="1.2rem" aria-label="Innkommende" />
             )}
@@ -18,7 +17,7 @@ const DokumentIkon: React.FC<IProps> = ({ type }) => {
                 <ArrowLeftIcon fontSize="1.2rem" aria-label="Utgående" />
             )}
             {type === Journalposttype.N && <ArrowDownIcon fontSize="1.2rem" aria-label="Notat" />}
-        </TidslinjeIkonbakgrunn>
+        </div>
     );
 };
 
