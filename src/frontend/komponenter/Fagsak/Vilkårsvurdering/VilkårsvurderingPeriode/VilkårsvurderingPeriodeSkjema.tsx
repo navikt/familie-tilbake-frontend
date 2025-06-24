@@ -48,7 +48,6 @@ import {
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
 
 const StyledBox = styled(Box)`
@@ -199,14 +198,8 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erLesevisning,
     fagsak,
 }) => {
-    const {
-        kanIlleggeRenter,
-        oppdaterPeriode,
-        onSplitPeriode,
-        nestePeriode,
-        forrigePeriode,
-        settValgtPeriode,
-    } = useFeilutbetalingVilkårsvurdering();
+    const { kanIlleggeRenter, oppdaterPeriode, onSplitPeriode, settValgtPeriode } =
+        useFeilutbetalingVilkårsvurdering();
 
     const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -262,10 +255,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                         />
                     )}
                 </StyledStack>
-                <PeriodeController
-                    nestePeriode={() => nestePeriode(periode)}
-                    forrigePeriode={() => forrigePeriode(periode)}
-                />
             </HGrid>
             <VStack gap="4">
                 <PeriodeOppsummering
