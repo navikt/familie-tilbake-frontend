@@ -56,7 +56,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
         <>
             <Button
                 className={classNames(
-                    'absolute w-[34px] min-w-[34px] h-[34px] rounded-full z-[100] flex items-center justify-center not-active:bg-white ',
+                    'absolute w-[34px] min-w-[34px] h-[34px] rounded-full z-[100] flex items-center justify-center not-active:not-hover:bg-white ',
                     'drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
                     {
                         'ml-[-20px]': !åpenHøyremeny,
