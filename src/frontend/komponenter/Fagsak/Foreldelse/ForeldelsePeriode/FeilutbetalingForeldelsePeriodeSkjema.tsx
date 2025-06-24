@@ -140,25 +140,23 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
 
     return (
         <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
-            <HGrid columns="1fr 4rem">
-                <StyledStack
-                    justify="space-between"
-                    align={{ md: 'start', lg: 'center' }}
-                    direction={{ md: 'column', lg: 'row' }}
-                >
-                    <Heading size="small" level="2">
-                        Detaljer for valgt periode
-                    </Heading>
+            <StyledStack
+                justify="space-between"
+                align={{ md: 'start', lg: 'center' }}
+                direction={{ md: 'column', lg: 'row' }}
+            >
+                <Heading size="small" level="2">
+                    Detaljer for valgt periode
+                </Heading>
 
-                    {!erLesevisning && (
-                        <SplittPeriode
-                            behandling={behandling}
-                            periode={periode}
-                            onBekreft={onSplitPeriode}
-                        />
-                    )}
-                </StyledStack>
-            </HGrid>
+                {!erLesevisning && (
+                    <SplittPeriode
+                        behandling={behandling}
+                        periode={periode}
+                        onBekreft={onSplitPeriode}
+                    />
+                )}
+            </StyledStack>
             <StyledVStack gap="4">
                 <PeriodeOppsummering
                     fom={periode.periode.fom}
