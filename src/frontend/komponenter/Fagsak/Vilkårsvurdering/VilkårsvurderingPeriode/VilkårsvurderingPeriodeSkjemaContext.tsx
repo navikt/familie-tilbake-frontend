@@ -438,7 +438,7 @@ const useVilkårsvurderingPeriodeSkjema = (
         };
     };
 
-    const onBekreft = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+    const erAlleFelterValidert = (periode: VilkårsvurderingPeriodeSkjemaData) => {
         validerAlleSynligeFelter();
         if (kanSendeSkjema()) {
             const erGodTro =
@@ -454,12 +454,14 @@ const useVilkårsvurderingPeriodeSkjema = (
                 },
             });
             nullstillSkjema();
+            return true;
         }
+        return false;
     };
 
     return {
         skjema,
-        onBekreft,
+        erAlleFelterValidert,
     };
 };
 

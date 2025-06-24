@@ -176,13 +176,13 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Lagre og gå videre til neste periode',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Lagre og gå videre til neste periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -202,7 +202,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Lagre og gå videre til neste periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -217,7 +217,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Lagre og gå videre til neste periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -277,19 +277,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
-
-        // expect(
-        //     getByRole('button', {
-        //         name: 'Lagre og fortsett',
-        //     })
-        // ).toBeEnabled();
-
-        // await user.click(
-        //     getByRole('button', {
-        //         name: 'Lagre og fortsett',
-        //     })
-        // );
         expect(
             queryByText(
                 'Totalbeløpet er under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'

@@ -189,7 +189,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         gåTilNesteSteg,
     } = useFeilutbetalingVilkårsvurdering();
 
-    const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
+    const { skjema, erAlleFelterValidert } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
         }
@@ -227,15 +227,15 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const handleForrigeKnapp = () => {
         if (erFørstePeriode) {
             if (harEndringer) {
-                onBekreft(periode);
-                lagreOgSendInnSkjema(false, gåTilForrigeSteg);
+                const skalSendeInnSkjema = erAlleFelterValidert(periode);
+                skalSendeInnSkjema && lagreOgSendInnSkjema(false, gåTilForrigeSteg);
             } else {
                 gåTilForrigeSteg();
             }
         } else {
             if (harEndringer) {
-                onBekreft(periode);
-                lagreOgSendInnSkjema(false, () => forrigePeriode(periode));
+                const skalSendeInnSkjema = erAlleFelterValidert(periode);
+                skalSendeInnSkjema && lagreOgSendInnSkjema(false, () => forrigePeriode(periode));
             } else {
                 forrigePeriode(periode);
             }
@@ -244,15 +244,15 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const handleNesteKnapp = () => {
         if (erSistePeriode) {
             if (harEndringer) {
-                onBekreft(periode);
-                lagreOgSendInnSkjema(true, gåTilNesteSteg);
+                const skalSendeInnSkjema = erAlleFelterValidert(periode);
+                skalSendeInnSkjema && lagreOgSendInnSkjema(true, gåTilNesteSteg);
             } else {
                 gåTilNesteSteg();
             }
         } else {
             if (harEndringer) {
-                onBekreft(periode);
-                lagreOgSendInnSkjema(false, () => nestePeriode(periode));
+                const skalSendeInnSkjema = erAlleFelterValidert(periode);
+                skalSendeInnSkjema && lagreOgSendInnSkjema(false, () => nestePeriode(periode));
             } else {
                 nestePeriode(periode);
             }
