@@ -186,8 +186,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         forrigePeriode,
         senderInn,
         sendInnSkjemaOgNaviger,
-        gåTilForrigeSteg,
-        gåTilNesteSteg,
     } = useVilkårsvurdering();
     const [navigerer, settNavigerer] = useState(false);
     const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
@@ -226,49 +224,38 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.visFeilmeldinger &&
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
 
-    const handleForrigeKnapp = () => {
-        if (erFørstePeriode) {
-            if (!harEndringer) {
-                settNavigerer(true);
-                return gåTilForrigeSteg();
-            }
+    const handleNavigering = async (handling: PeriodeHandling) => {
+        if (harEndringer && !validerOgOppdaterFelter(periode)) {
+            return;
+        }
 
-            if (validerOgOppdaterFelter(periode)) {
-                settNavigerer(true);
-                return sendInnSkjemaOgNaviger(PeriodeHandling.GåTilForrigeSteg);
-            }
-        } else {
-            if (!harEndringer) {
-                settNavigerer(true);
+        settNavigerer(true);
+        if (harEndringer) {
+            return await sendInnSkjemaOgNaviger(handling);
+        }
+
+        switch (handling) {
+            case PeriodeHandling.ForrigePeriode:
                 return forrigePeriode(periode);
-            }
-
-            if (validerOgOppdaterFelter(periode)) {
-                settNavigerer(true);
-                return sendInnSkjemaOgNaviger(PeriodeHandling.ForrigePeriode);
-            }
+            case PeriodeHandling.NestePeriode:
+                return nestePeriode(periode);
+            default:
+                break;
         }
     };
+
+    const handleForrigeKnapp = async () => {
+        const handling = erFørstePeriode
+            ? PeriodeHandling.GåTilForrigeSteg
+            : PeriodeHandling.ForrigePeriode;
+        return await handleNavigering(handling);
+    };
+
     const handleNesteKnapp = async () => {
-        if (erSistePeriode) {
-            if (!harEndringer) {
-                settNavigerer(true);
-                return gåTilNesteSteg();
-            }
-            if (validerOgOppdaterFelter(periode)) {
-                settNavigerer(true);
-                return await sendInnSkjemaOgNaviger(PeriodeHandling.GåTilNesteSteg);
-            }
-        } else {
-            if (!harEndringer) {
-                settNavigerer(true);
-                return nestePeriode(periode);
-            }
-            if (validerOgOppdaterFelter(periode)) {
-                settNavigerer(true);
-                return await sendInnSkjemaOgNaviger(PeriodeHandling.NestePeriode);
-            }
-        }
+        const handling = erSistePeriode
+            ? PeriodeHandling.GåTilNesteSteg
+            : PeriodeHandling.NestePeriode;
+        return await handleNavigering(handling);
     };
 
     const erFørstePeriode = periode.index === perioder[0].index;

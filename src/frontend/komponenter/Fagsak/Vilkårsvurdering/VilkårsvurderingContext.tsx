@@ -296,8 +296,6 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             settValgtPeriode,
             behandletPerioder,
             allePerioderBehandlet,
-            gåTilNesteSteg,
-            gåTilForrigeSteg,
             senderInn,
             valideringsFeilmelding,
             sendInnSkjemaOgNaviger,
