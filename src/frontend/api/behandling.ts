@@ -91,7 +91,7 @@ const useBehandlingApi = () => {
         });
     };
 
-    const sendInnFeilutbetalingVilkårsvurdering = (
+    const sendInnFeilutbetalingVilkårsvurdering = async (
         behandlingId: string,
         payload: VilkårdsvurderingStegPayload
     ): Promise<Ressurs<string>> => {

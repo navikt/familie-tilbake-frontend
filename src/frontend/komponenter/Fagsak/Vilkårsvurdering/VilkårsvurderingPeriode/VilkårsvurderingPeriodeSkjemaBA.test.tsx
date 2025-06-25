@@ -33,7 +33,7 @@ jest.mock('../FeilutbetalingVilkårsvurderingContext', () => {
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),
             lukkValgtPeriode: jest.fn(),
-            lagreOgSendInnSkjema: jest.fn(),
+            sendInnSkjemaOgNaviger: jest.fn(),
         }),
     };
 });

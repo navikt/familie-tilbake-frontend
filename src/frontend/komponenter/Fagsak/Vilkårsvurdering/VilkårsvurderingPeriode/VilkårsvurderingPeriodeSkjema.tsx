@@ -19,6 +19,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import * as React from 'react';
+import { useState } from 'react';
 import { styled } from 'styled-components';
 
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
@@ -184,12 +185,12 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         nestePeriode,
         forrigePeriode,
         senderInn,
-        lagreOgSendInnSkjema,
+        sendInnSkjemaOgNaviger,
         gåTilForrigeSteg,
         gåTilNesteSteg,
     } = useFeilutbetalingVilkårsvurdering();
-
-    const { skjema, erAlleFelterValidert } = useVilkårsvurderingPeriodeSkjema(
+    const [navigerer, settNavigerer] = useState(false);
+    const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
         }
@@ -197,6 +198,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const { settIkkePersistertKomponent, harUlagredeData: harEndringer } = useBehandling();
 
     React.useEffect(() => {
+        settNavigerer(false);
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
         settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
@@ -226,35 +228,45 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
 
     const handleForrigeKnapp = () => {
         if (erFørstePeriode) {
-            if (harEndringer) {
-                const skalSendeInnSkjema = erAlleFelterValidert(periode);
-                skalSendeInnSkjema && lagreOgSendInnSkjema(false, gåTilForrigeSteg);
-            } else {
-                gåTilForrigeSteg();
+            if (!harEndringer) {
+                settNavigerer(true);
+                return gåTilForrigeSteg();
+            }
+
+            if (validerOgOppdaterFelter(periode)) {
+                settNavigerer(true);
+                return sendInnSkjemaOgNaviger(PeriodeHandling.GåTilForrigeSteg);
             }
         } else {
-            if (harEndringer) {
-                const skalSendeInnSkjema = erAlleFelterValidert(periode);
-                skalSendeInnSkjema && lagreOgSendInnSkjema(false, () => forrigePeriode(periode));
-            } else {
-                forrigePeriode(periode);
+            if (!harEndringer) {
+                settNavigerer(true);
+                return forrigePeriode(periode);
+            }
+
+            if (validerOgOppdaterFelter(periode)) {
+                settNavigerer(true);
+                return sendInnSkjemaOgNaviger(PeriodeHandling.ForrigePeriode);
             }
         }
     };
-    const handleNesteKnapp = () => {
+    const handleNesteKnapp = async () => {
         if (erSistePeriode) {
-            if (harEndringer) {
-                const skalSendeInnSkjema = erAlleFelterValidert(periode);
-                skalSendeInnSkjema && lagreOgSendInnSkjema(true, gåTilNesteSteg);
-            } else {
-                gåTilNesteSteg();
+            if (!harEndringer) {
+                settNavigerer(true);
+                return gåTilNesteSteg();
+            }
+            if (validerOgOppdaterFelter(periode)) {
+                settNavigerer(true);
+                return await sendInnSkjemaOgNaviger(PeriodeHandling.GåTilNesteSteg);
             }
         } else {
-            if (harEndringer) {
-                const skalSendeInnSkjema = erAlleFelterValidert(periode);
-                skalSendeInnSkjema && lagreOgSendInnSkjema(false, () => nestePeriode(periode));
-            } else {
-                nestePeriode(periode);
+            if (!harEndringer) {
+                settNavigerer(true);
+                return nestePeriode(periode);
+            }
+            if (validerOgOppdaterFelter(periode)) {
+                settNavigerer(true);
+                return await sendInnSkjemaOgNaviger(PeriodeHandling.NestePeriode);
             }
         }
     };
@@ -281,6 +293,10 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                 : 'Gå videre til neste periode';
         }
     };
+
+    if (navigerer) {
+        return <StyledBox padding="4">Navigerer...</StyledBox>;
+    }
 
     return periode ? (
         <StyledBox padding="4">
@@ -468,3 +484,9 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
 };
 
 export default VilkårsvurderingPeriodeSkjema;
+export enum PeriodeHandling {
+    GåTilForrigeSteg = 'GåTilForrigeSteg',
+    GåTilNesteSteg = 'GåTilNesteSteg',
+    ForrigePeriode = 'ForrigePeriode',
+    NestePeriode = 'NestePeriode',
+}

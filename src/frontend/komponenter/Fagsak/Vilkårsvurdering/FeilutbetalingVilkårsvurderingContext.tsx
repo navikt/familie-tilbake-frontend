@@ -1,8 +1,5 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
-import type {
-    PeriodeVilkårsvurderingStegPayload,
-    VilkårdsvurderingStegPayload,
-} from '../../../typer/api';
+import type { VilkårdsvurderingStegPayload } from '../../../typer/api';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type {
@@ -14,13 +11,12 @@ import type {
 import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
-import deepEqual from 'deep-equal';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 
+import { PeriodeHandling } from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { Behandlingssteg } from '../../../typer/behandling';
 import {
@@ -86,12 +82,10 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             erStegBehandlet,
             erStegAutoutført,
             visVenteModal,
-            hentBehandlingMedBehandlingId,
             nullstillIkkePersisterteKomponenter,
         } = useBehandling();
         const { gjerFeilutbetalingVilkårsvurderingKall, sendInnFeilutbetalingVilkårsvurdering } =
             useBehandlingApi();
-        const { utførRedirect } = useRedirectEtterLagring();
         const navigate = useNavigate();
         const kanIleggeRenter = ![Ytelsetype.Barnetrygd, Ytelsetype.Kontantstøtte].includes(
             fagsak.ytelsestype
@@ -235,83 +229,64 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             return true;
         };
 
-        const harEndretOpplysninger = (
-            ikkeforeldetPerioder: VilkårsvurderingPeriodeSkjemaData[]
-        ) => {
-            if (feilutbetalingVilkårsvurdering?.status === RessursStatus.Suksess) {
-                const hentetPerioder = feilutbetalingVilkårsvurdering.data.perioder;
-                return ikkeforeldetPerioder.some(skjemaPeriode => {
-                    if (skjemaPeriode.erSplittet) return true;
-                    const periode = hentetPerioder.find(
-                        per =>
-                            per.periode.fom === skjemaPeriode.periode.fom &&
-                            per.periode.tom === skjemaPeriode.periode.tom
-                    );
-                    const vurderingSkjema = skjemaPeriode.vilkårsvurderingsresultatInfo;
-                    const vurderingPeriode = periode?.vilkårsvurderingsresultatInfo;
-                    const endretBegrunnelseEllerVurdering =
-                        skjemaPeriode.begrunnelse !== periode?.begrunnelse ||
-                        vurderingSkjema?.vilkårsvurderingsresultat !==
-                            vurderingPeriode?.vilkårsvurderingsresultat;
-                    const endretGodTro = !deepEqual(
-                        vurderingSkjema?.godTro,
-                        vurderingPeriode?.godTro
-                    );
-                    const endretAktsomhet = !deepEqual(
-                        vurderingSkjema?.aktsomhet,
-                        vurderingPeriode?.aktsomhet
-                    );
-                    return endretBegrunnelseEllerVurdering || endretGodTro || endretAktsomhet;
-                });
-            }
+        const vilkårsvurderingStegPayload = (
+            skjemaData: VilkårsvurderingPeriodeSkjemaData[]
+        ): VilkårdsvurderingStegPayload => {
+            const ikkeForeldetPerioder = skjemaData.filter(per => !per.foreldet);
+            const payload: VilkårdsvurderingStegPayload = {
+                '@type': 'VILKÅRSVURDERING',
+                vilkårsvurderingsperioder: ikkeForeldetPerioder.map(per => {
+                    const resultat = per.vilkårsvurderingsresultatInfo;
+                    return {
+                        periode: per.periode,
+                        begrunnelse: per.begrunnelse as string,
+                        vilkårsvurderingsresultat:
+                            resultat?.vilkårsvurderingsresultat as Vilkårsresultat,
+                        godTroDto: resultat?.godTro as GodTro,
+                        aktsomhetDto: resultat?.aktsomhet as Aktsomhetsvurdering,
+                    };
+                }),
+            };
+            return payload;
         };
 
-        const lagreOgSendInnSkjema = (
-            skalVidereTilVedtak: boolean,
-            funksjonEtterInnsending?: () => void
-        ) => {
+        const sendInnSkjemaOgNaviger = async (handling: PeriodeHandling) => {
             settValideringsFeilmelding(undefined);
             settValideringsfeil(false);
-            if (validerPerioder()) {
-                nullstillIkkePersisterteKomponenter();
-                const ikkeForeldetPerioder = skjemaData.filter(per => !per.foreldet);
-                if (
-                    stegErBehandlet &&
-                    !harEndretOpplysninger(ikkeForeldetPerioder) &&
-                    skalVidereTilVedtak
-                ) {
-                    utførRedirect(`${behandlingUrl}/${sider.VEDTAK.href}`);
-                } else {
-                    settSenderInn(true);
-                    const payload: VilkårdsvurderingStegPayload = {
-                        '@type': 'VILKÅRSVURDERING',
-                        vilkårsvurderingsperioder:
-                            ikkeForeldetPerioder.map<PeriodeVilkårsvurderingStegPayload>(per => {
-                                const resultat = per.vilkårsvurderingsresultatInfo;
-                                return {
-                                    periode: per.periode,
-                                    begrunnelse: per.begrunnelse as string,
-                                    vilkårsvurderingsresultat:
-                                        resultat?.vilkårsvurderingsresultat as Vilkårsresultat,
-                                    godTroDto: resultat?.godTro as GodTro,
-                                    aktsomhetDto: resultat?.aktsomhet as Aktsomhetsvurdering,
-                                };
-                            }),
-                    };
-                    sendInnFeilutbetalingVilkårsvurdering(behandling.behandlingId, payload).then(
-                        (respons: Ressurs<string>) => {
-                            settSenderInn(false);
-                            funksjonEtterInnsending?.();
-                            if (respons.status === RessursStatus.Suksess && skalVidereTilVedtak) {
-                                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                                    navigate(
-                                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                                    );
-                                });
-                            }
-                        }
-                    );
-                }
+            if (!validerPerioder()) {
+                return;
+            }
+
+            nullstillIkkePersisterteKomponenter();
+            settSenderInn(true);
+            const payload = vilkårsvurderingStegPayload(skjemaData);
+
+            try {
+                await sendInnFeilutbetalingVilkårsvurdering(behandling.behandlingId, payload);
+            } catch (error) {
+                settSenderInn(false);
+                settValideringsFeilmelding(
+                    `Det oppstod en feil ved innsending av vilkårsvurdering. Prøv igjen senere. ${error}`
+                );
+                settValideringsfeil(true);
+                return;
+            } finally {
+                settSenderInn(false);
+            }
+
+            switch (handling) {
+                case PeriodeHandling.GåTilNesteSteg:
+                    gåTilNesteSteg();
+                    break;
+                case PeriodeHandling.GåTilForrigeSteg:
+                    gåTilForrigeSteg();
+                    break;
+                case PeriodeHandling.NestePeriode:
+                    valgtPeriode !== undefined && nestePeriode(valgtPeriode);
+                    break;
+                case PeriodeHandling.ForrigePeriode:
+                    valgtPeriode !== undefined && forrigePeriode(valgtPeriode);
+                    break;
             }
         };
 
@@ -331,7 +306,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             senderInn,
             valideringsfeil,
             valideringsFeilmelding,
-            lagreOgSendInnSkjema,
+            sendInnSkjemaOgNaviger,
             onSplitPeriode,
             nestePeriode,
             forrigePeriode,
