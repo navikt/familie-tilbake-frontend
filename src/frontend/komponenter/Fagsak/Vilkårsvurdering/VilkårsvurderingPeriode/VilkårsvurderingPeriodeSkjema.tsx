@@ -184,6 +184,8 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         onSplitPeriode,
         nestePeriode,
         forrigePeriode,
+        gåTilForrigeSteg,
+        gåTilNesteSteg,
         senderInn,
         sendInnSkjemaOgNaviger,
     } = useVilkårsvurdering();
@@ -235,6 +237,10 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         }
 
         switch (handling) {
+            case PeriodeHandling.GåTilForrigeSteg:
+                return gåTilForrigeSteg();
+            case PeriodeHandling.GåTilNesteSteg:
+                return gåTilNesteSteg();
             case PeriodeHandling.ForrigePeriode:
                 return forrigePeriode(periode);
             case PeriodeHandling.NestePeriode:
