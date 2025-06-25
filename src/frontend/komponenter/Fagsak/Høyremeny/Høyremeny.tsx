@@ -11,6 +11,7 @@ import {
 } from '@navikt/aksel-icons';
 import { Button, Tabs } from '@navikt/ds-react';
 import { AFontSizeMedium, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
+import classNames from 'classnames';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
@@ -39,25 +40,6 @@ const StyledTabs = styled(Tabs.Tab)`
     }
 `;
 
-interface IToggleVisningHøyremenyProps {
-    åpenhøyremeny: boolean;
-    harventegrunn: boolean;
-}
-
-const ToggleVisningHøyremeny = styled(Button)<IToggleVisningHøyremenyProps>`
-    position: absolute;
-    margin-left: ${(props: IToggleVisningHøyremenyProps) =>
-        !props.åpenhøyremeny ? '-20px' : '-17px'};
-    top: ${(props: IToggleVisningHøyremenyProps) => (props.harventegrunn ? '440px' : '378px')};
-    width: 34px;
-    min-width: 34px;
-    height: 34px;
-    padding: 5px 0 0 0;
-    border-radius: 50%;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-    z-index: 100;
-`;
-
 interface IProps {
     fagsak: IFagsak;
     behandling: IBehandling;
@@ -72,16 +54,23 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
 
     return (
         <>
-            <ToggleVisningHøyremeny
-                forwardedAs={Button}
+            <Button
+                className={classNames(
+                    'absolute w-[34px] min-w-[34px] h-[34px] rounded-full z-[100] flex items-center justify-center not-active:not-hover:bg-white ',
+                    'drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
+                    {
+                        'ml-[-20px]': !åpenHøyremeny,
+                        'ml-[-17px]': åpenHøyremeny,
+                        'top-[378px]': !harVentegrunn,
+                        'top-[440px]': harVentegrunn,
+                    }
+                )}
                 variant="secondary"
                 onMouseDown={(e: React.MouseEvent) => e.preventDefault()}
                 onClick={() => {
                     settÅpenHøyremeny(!åpenHøyremeny);
                 }}
                 size="small"
-                åpenhøyremeny={åpenHøyremeny ? 1 : 0}
-                harventegrunn={harVentegrunn ? 1 : 0}
                 title={åpenHøyremeny ? 'Skjul høyremeny' : 'Vis høyremeny'}
             >
                 {åpenHøyremeny ? (
@@ -89,7 +78,7 @@ const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
                 ) : (
                     <ChevronLeftIcon aria-label="Vis høyremeny" fontSize="1.5rem" />
                 )}
-            </ToggleVisningHøyremeny>
+            </Button>
             {åpenHøyremeny && (
                 <StyledContainer $værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}>
                     <Behandlingskort fagsak={fagsak} behandling={behandling} />

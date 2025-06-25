@@ -32,7 +32,6 @@ import { isoStringTilDate } from '../../../../utils/dato';
 import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import PeriodeController from '../../../Felleskomponenter/TilbakeTidslinje/PeriodeController/PeriodeController';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 
 const StyledVStack = styled(VStack)`
@@ -59,8 +58,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
     periode,
     erLesevisning,
 }) => {
-    const { oppdaterPeriode, onSplitPeriode, nestePeriode, forrigePeriode, settValgtPeriode } =
-        useFeilutbetalingForeldelse();
+    const { oppdaterPeriode, onSplitPeriode, settValgtPeriode } = useFeilutbetalingForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
     );
@@ -142,29 +140,23 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
 
     return (
         <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
-            <HGrid columns="1fr 4rem">
-                <StyledStack
-                    justify="space-between"
-                    align={{ md: 'start', lg: 'center' }}
-                    direction={{ md: 'column', lg: 'row' }}
-                >
-                    <Heading size="small" level="2">
-                        Detaljer for valgt periode
-                    </Heading>
+            <StyledStack
+                justify="space-between"
+                align={{ md: 'start', lg: 'center' }}
+                direction={{ md: 'column', lg: 'row' }}
+            >
+                <Heading size="small" level="2">
+                    Detaljer for valgt periode
+                </Heading>
 
-                    {!erLesevisning && (
-                        <SplittPeriode
-                            behandling={behandling}
-                            periode={periode}
-                            onBekreft={onSplitPeriode}
-                        />
-                    )}
-                </StyledStack>
-                <PeriodeController
-                    nestePeriode={() => nestePeriode(periode)}
-                    forrigePeriode={() => forrigePeriode(periode)}
-                />
-            </HGrid>
+                {!erLesevisning && (
+                    <SplittPeriode
+                        behandling={behandling}
+                        periode={periode}
+                        onBekreft={onSplitPeriode}
+                    />
+                )}
+            </StyledStack>
             <StyledVStack gap="4">
                 <PeriodeOppsummering
                     fom={periode.periode.fom}
