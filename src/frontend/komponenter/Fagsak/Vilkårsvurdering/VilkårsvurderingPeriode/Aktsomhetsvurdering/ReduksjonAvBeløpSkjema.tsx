@@ -23,7 +23,7 @@ import { Aktsomhet } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
-import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
+import { useVilkårsvurdering } from '../../VilkårsvurderingContext';
 import {
     ANDELER,
     EGENDEFINERT,
@@ -43,7 +43,7 @@ interface IProps {
 
 const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
-    const { valgtPeriode, kanIlleggeRenter } = useFeilutbetalingVilkårsvurdering();
+    const { valgtPeriode, kanIlleggeRenter } = useVilkårsvurdering();
     const harMerEnnEnAktivitet = skjema.felter.harMerEnnEnAktivitet.verdi === true;
     const erEgendefinert =
         !isEmpty(skjema.felter.uaktsomAndelTilbakekreves.verdi) &&

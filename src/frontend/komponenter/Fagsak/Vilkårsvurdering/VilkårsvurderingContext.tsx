@@ -14,7 +14,7 @@ import createUseContext from 'constate';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 
-import { PeriodeHandling } from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
+import { PeriodeHandling } from './typer/periodeHandling';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
@@ -59,8 +59,8 @@ interface IProps {
     fagsak: IFagsak;
 }
 
-const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurdering] =
-    createUseContext(({ behandling, fagsak }: IProps) => {
+const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
+    ({ behandling, fagsak }: IProps) => {
         const [feilutbetalingVilkårsvurdering, settFeilutbetalingVilkårsvurdering] =
             React.useState<Ressurs<IFeilutbetalingVilkårsvurdering>>();
         const [skjemaData, settSkjemaData] = React.useState<VilkårsvurderingPeriodeSkjemaData[]>(
@@ -76,7 +76,6 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         >([]);
         const [allePerioderBehandlet, settAllePerioderBehandlet] = React.useState<boolean>(false);
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
-        const [valideringsfeil, settValideringsfeil] = React.useState<boolean>(false);
         const [valideringsFeilmelding, settValideringsFeilmelding] = React.useState<string>();
         const {
             erStegBehandlet,
@@ -84,7 +83,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             visVenteModal,
             nullstillIkkePersisterteKomponenter,
         } = useBehandling();
-        const { gjerFeilutbetalingVilkårsvurderingKall, sendInnFeilutbetalingVilkårsvurdering } =
+        const { gjerFeilutbetalingVilkårsvurderingKall, sendInnVilkårsvurdering } =
             useBehandlingApi();
         const navigate = useNavigate();
         const kanIleggeRenter = ![Ytelsetype.Barnetrygd, Ytelsetype.Kontantstøtte].includes(
@@ -197,7 +196,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             settValgtPeriode(nyePerioder[0]);
         };
 
-        const validerPerioder = () => {
+        const validererTotaltBeløpMot4Rettsgebyr = () => {
             if (feilutbetalingVilkårsvurdering?.status !== RessursStatus.Suksess) return false; // Skal ikke være mulig, så return false ok
 
             if (erTotalbeløpUnder4Rettsgebyr(feilutbetalingVilkårsvurdering.data)) {
@@ -221,7 +220,6 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                     settValideringsFeilmelding(
                         'Totalbeløpet er under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
                     );
-                    settValideringsfeil(true);
                     return false;
                 }
             }
@@ -252,8 +250,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
 
         const sendInnSkjemaOgNaviger = async (handling: PeriodeHandling) => {
             settValideringsFeilmelding(undefined);
-            settValideringsfeil(false);
-            if (!validerPerioder()) {
+            if (!validererTotaltBeløpMot4Rettsgebyr()) {
                 return;
             }
 
@@ -262,13 +259,11 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             const payload = vilkårsvurderingStegPayload(skjemaData);
 
             try {
-                await sendInnFeilutbetalingVilkårsvurdering(behandling.behandlingId, payload);
+                await sendInnVilkårsvurdering(behandling.behandlingId, payload);
             } catch (error) {
                 settSenderInn(false);
-                settValideringsFeilmelding(
-                    `Det oppstod en feil ved innsending av vilkårsvurdering. Prøv igjen senere. ${error}`
-                );
-                settValideringsfeil(true);
+                const feil = `Det oppstod en feil ved innsending av vilkårsvurdering. Prøv igjen senere. Feilmelding: ${error}`;
+                settValideringsFeilmelding(feil);
                 return;
             } finally {
                 settSenderInn(false);
@@ -304,13 +299,13 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             gåTilNesteSteg,
             gåTilForrigeSteg,
             senderInn,
-            valideringsfeil,
             valideringsFeilmelding,
             sendInnSkjemaOgNaviger,
             onSplitPeriode,
             nestePeriode,
             forrigePeriode,
         };
-    });
+    }
+);
 
-export { FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurdering };
+export { VilkårsvurderingProvider, useVilkårsvurdering };

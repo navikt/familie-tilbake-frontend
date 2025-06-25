@@ -6,7 +6,7 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 import { BodyShort, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
+import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
 import { FTAlertStripe } from '../../Felleskomponenter/Flytelementer';
@@ -68,13 +68,8 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
 }) => {
-    const {
-        valgtPeriode,
-        settValgtPeriode,
-        behandletPerioder,
-        valideringsfeil,
-        valideringsFeilmelding,
-    } = useFeilutbetalingVilkårsvurdering();
+    const { valgtPeriode, settValgtPeriode, behandletPerioder, valideringsFeilmelding } =
+        useVilkårsvurdering();
 
     const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
 
@@ -89,7 +84,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
 
     return perioder && tidslinjeRader ? (
         <VStack gap="5">
-            {valideringsfeil && (
+            {valideringsFeilmelding && (
                 <FTAlertStripe variant="error" fullWidth>
                     <BodyShort className="font-semibold">{valideringsFeilmelding}</BodyShort>
                 </FTAlertStripe>

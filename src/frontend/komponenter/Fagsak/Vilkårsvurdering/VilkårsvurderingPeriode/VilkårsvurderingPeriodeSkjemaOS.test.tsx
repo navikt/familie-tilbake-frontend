@@ -26,9 +26,9 @@ jest.mock('../../../../api/http/HttpProvider', () => {
         }),
     };
 });
-jest.mock('../FeilutbetalingVilkårsvurderingContext', () => {
+jest.mock('../VilkårsvurderingContext', () => {
     return {
-        useFeilutbetalingVilkårsvurdering: () => ({
+        useVilkårsvurdering: () => ({
             kanIlleggeRenter: true,
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),

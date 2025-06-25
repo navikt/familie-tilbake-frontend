@@ -6,10 +6,7 @@ import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
-import {
-    erTotalbeløpUnder4Rettsgebyr,
-    useFeilutbetalingVilkårsvurdering,
-} from './FeilutbetalingVilkårsvurderingContext';
+import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
 import {
@@ -33,7 +30,7 @@ interface IProps {
 
 const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
     const { feilutbetalingVilkårsvurdering, stegErBehandlet, erAutoutført, skjemaData } =
-        useFeilutbetalingVilkårsvurdering();
+        useVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 

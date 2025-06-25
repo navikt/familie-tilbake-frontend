@@ -10,8 +10,8 @@ import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
-import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
+import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
 import { Aktsomhet, Fagsystem, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { Behandlingstatus } from '../../../typer/behandling';
@@ -119,9 +119,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
             render(
                 <BehandlingProvider>
-                    <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                    <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
                         <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-                    </FeilutbetalingVilkårsvurderingProvider>
+                    </VilkårsvurderingProvider>
                 </BehandlingProvider>
             );
 
@@ -298,9 +298,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         const { getByText, getByRole, getByLabelText, queryAllByText } = render(
             <BehandlingProvider>
-                <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
                     <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-                </FeilutbetalingVilkårsvurderingProvider>
+                </VilkårsvurderingProvider>
             </BehandlingProvider>
         );
 
@@ -404,9 +404,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } = render(
             <BehandlingProvider>
-                <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
                     <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-                </FeilutbetalingVilkårsvurderingProvider>
+                </VilkårsvurderingProvider>
             </BehandlingProvider>
         );
 
@@ -555,9 +555,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         const { getByText, getByRole, getByLabelText } = render(
             <BehandlingProvider>
-                <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
                     <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-                </FeilutbetalingVilkårsvurderingProvider>
+                </VilkårsvurderingProvider>
             </BehandlingProvider>
         );
 

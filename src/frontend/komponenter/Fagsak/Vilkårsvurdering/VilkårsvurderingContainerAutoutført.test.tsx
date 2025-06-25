@@ -9,8 +9,8 @@ import { render, waitFor } from '@testing-library/react';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
-import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
+import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { HendelseType, Ytelsetype } from '../../../kodeverk';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
@@ -104,9 +104,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole } = render(
-            <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+            <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
                 <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-            </FeilutbetalingVilkårsvurderingProvider>
+            </VilkårsvurderingProvider>
         );
 
         await waitFor(async () => {

@@ -49,7 +49,8 @@ import {
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
+import { PeriodeHandling } from '../typer/periodeHandling';
+import { useVilkårsvurdering } from '../VilkårsvurderingContext';
 
 const StyledBox = styled(Box)`
     min-width: 20rem;
@@ -187,7 +188,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         sendInnSkjemaOgNaviger,
         gåTilForrigeSteg,
         gåTilNesteSteg,
-    } = useFeilutbetalingVilkårsvurdering();
+    } = useVilkårsvurdering();
     const [navigerer, settNavigerer] = useState(false);
     const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -479,9 +480,3 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
 };
 
 export default VilkårsvurderingPeriodeSkjema;
-export enum PeriodeHandling {
-    GåTilForrigeSteg = 'GåTilForrigeSteg',
-    GåTilNesteSteg = 'GåTilNesteSteg',
-    ForrigePeriode = 'ForrigePeriode',
-    NestePeriode = 'NestePeriode',
-}
