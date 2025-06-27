@@ -398,7 +398,7 @@ describe('Tester: FaktaContainer', () => {
 
         const { getByText, getByLabelText, getByTestId, getByRole } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                <FaktaContainer ytelse={Ytelsetype.Overganggstønad} />
+                <FaktaContainer ytelse={Ytelsetype.Overgangsstønad} />
             </FeilutbetalingFaktaProvider>
         );
 
@@ -507,7 +507,7 @@ describe('Tester: FaktaContainer', () => {
 
         const { getByText, getByRole } = render(
             <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                <FaktaContainer ytelse={Ytelsetype.Overganggstønad} />
+                <FaktaContainer ytelse={Ytelsetype.Overgangsstønad} />
             </FeilutbetalingFaktaProvider>
         );
 

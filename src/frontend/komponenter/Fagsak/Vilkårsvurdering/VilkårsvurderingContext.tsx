@@ -3,8 +3,6 @@ import type { VilkårdsvurderingStegPayload } from '../../../typer/api';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type {
-    Aktsomhetsvurdering,
-    GodTro,
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
@@ -239,9 +237,9 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
                         periode: per.periode,
                         begrunnelse: per.begrunnelse as string,
                         vilkårsvurderingsresultat:
-                            resultat?.vilkårsvurderingsresultat as Vilkårsresultat,
-                        godTroDto: resultat?.godTro as GodTro,
-                        aktsomhetDto: resultat?.aktsomhet as Aktsomhetsvurdering,
+                            resultat?.vilkårsvurderingsresultat ?? Vilkårsresultat.Udefinert,
+                        godTroDto: resultat?.godTro,
+                        aktsomhetDto: resultat?.aktsomhet,
                     };
                 }),
             };

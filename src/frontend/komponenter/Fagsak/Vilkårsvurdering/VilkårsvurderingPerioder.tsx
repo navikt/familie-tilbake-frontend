@@ -8,6 +8,7 @@ import * as React from 'react';
 
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
+import { Vilkårsresultat } from '../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
 import { FTAlertStripe } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
@@ -49,7 +50,10 @@ const finnClassNamePeriodeStatus = (periode: VilkårsvurderingPeriodeSkjemaData)
         return ClassNamePeriodeStatus.Avvist;
     }
 
-    const erBehandlet = !!vilkårsvurderingsresultat && !!periode.begrunnelse;
+    const erBehandlet =
+        !!vilkårsvurderingsresultat &&
+        vilkårsvurderingsresultat !== Vilkårsresultat.Udefinert &&
+        !!periode.begrunnelse;
     return erBehandlet ? ClassNamePeriodeStatus.Behandlet : ClassNamePeriodeStatus.Ubehandlet;
 };
 

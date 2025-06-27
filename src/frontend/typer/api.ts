@@ -40,8 +40,8 @@ export interface PeriodeVilkårsvurderingStegPayload {
     periode: Periode;
     vilkårsvurderingsresultat: Vilkårsresultat;
     begrunnelse: string;
-    godTroDto: GodTro;
-    aktsomhetDto: Aktsomhetsvurdering;
+    godTroDto: GodTro | undefined;
+    aktsomhetDto: Aktsomhetsvurdering | undefined;
 }
 
 export interface VilkårdsvurderingStegPayload {

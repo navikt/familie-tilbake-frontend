@@ -38,7 +38,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         [Ytelsetype.Barnetrygd]: vilkårsvurderingStegInfotekstBarnetrygd,
         [Ytelsetype.Kontantstøtte]: vilkårsvurderingStegInfotekstKontantstøtte,
         [Ytelsetype.Barnetilsyn]: vilkårsvurderingStegInfotekst,
-        [Ytelsetype.Overganggstønad]: vilkårsvurderingStegInfotekst,
+        [Ytelsetype.Overgangsstønad]: vilkårsvurderingStegInfotekst,
         [Ytelsetype.Skolepenger]: vilkårsvurderingStegInfotekst,
         [Ytelsetype.Tilleggsstønad]: vilkårsvurderingStegInfotekst,
     }[fagsak.ytelsestype];
