@@ -195,7 +195,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const { settIkkePersistertKomponent, harUlagredeData: harEndringer } = useBehandling();
+    const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
 
     React.useEffect(() => {
         settNavigerer(false);
@@ -227,12 +227,12 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
 
     const handleNavigering = async (handling: PeriodeHandling) => {
-        if (harEndringer && !validerOgOppdaterFelter(periode)) {
+        if (harUlagredeData && !validerOgOppdaterFelter(periode)) {
             return;
         }
 
         settNavigerer(true);
-        if (harEndringer) {
+        if (harUlagredeData) {
             return await sendInnSkjemaOgNaviger(handling);
         }
 
@@ -267,11 +267,11 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const erFørstePeriode = periode.index === perioder[0].index;
     const hentForrigeKnappTekst = (): string => {
         if (erFørstePeriode) {
-            return harEndringer
+            return harUlagredeData
                 ? 'Lagre og gå tilbake til foreldelse'
                 : 'Gå tilbake til foreldelse';
         } else {
-            return harEndringer
+            return harUlagredeData
                 ? 'Lagre og gå tilbake til forrige periode'
                 : 'Gå tilbake til forrige periode';
         }
@@ -279,9 +279,9 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
     const hentNesteKnappTekst = (): string => {
         if (erSistePeriode) {
-            return harEndringer ? 'Lagre og gå videre til vedtak' : 'Gå videre til vedtak';
+            return harUlagredeData ? 'Lagre og gå videre til vedtak' : 'Gå videre til vedtak';
         } else {
-            return harEndringer
+            return harUlagredeData
                 ? 'Lagre og gå videre til neste periode'
                 : 'Gå videre til neste periode';
         }
