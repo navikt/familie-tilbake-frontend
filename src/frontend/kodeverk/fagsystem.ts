@@ -4,6 +4,7 @@ export enum Fagsystem {
     BA = 'BA',
     EF = 'EF',
     KS = 'KONT',
+    TS = 'TS',
 }
 
 export enum Ytelsetype {
