@@ -14,8 +14,8 @@ import { FeilutbetalingFaktaProvider } from './Fakta/FeilutbetalingFaktaContext'
 import { FeilutbetalingForeldelseProvider } from './Foreldelse/FeilutbetalingForeldelseContext';
 import { FeilutbetalingVedtakProvider } from './Vedtak/FeilutbetalingVedtakContext';
 import { VergeProvider } from './Verge/VergeContext';
-import { FeilutbetalingVilkårsvurderingProvider } from './Vilkårsvurdering/FeilutbetalingVilkårsvurderingContext';
 import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
+import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
 import { useBehandling } from '../../context/BehandlingContext';
 import { Behandlingstatus } from '../../typer/behandling';
 import {
@@ -193,17 +193,14 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                     <Route
                         path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
                         element={
-                            <FeilutbetalingVilkårsvurderingProvider
-                                behandling={behandling}
-                                fagsak={fagsak}
-                            >
+                            <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
                                 <Suspense fallback="Vilkårsvurdering laster...">
                                     <VilkårsvurderingContainer
                                         behandling={behandling}
                                         fagsak={fagsak}
                                     />
                                 </Suspense>
-                            </FeilutbetalingVilkårsvurderingProvider>
+                            </VilkårsvurderingProvider>
                         }
                     />
                     <Route

@@ -3,14 +3,14 @@ import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
-import { BodyShort, Button, VStack } from '@navikt/ds-react';
+import { BodyShort, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { useFeilutbetalingVilkårsvurdering } from './FeilutbetalingVilkårsvurderingContext';
+import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { Vilkårsresultat } from '../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
-import { FTAlertStripe, Navigering } from '../../Felleskomponenter/Flytelementer';
+import { FTAlertStripe } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 
 const lagTidslinjeRader = (
@@ -50,7 +50,10 @@ const finnClassNamePeriodeStatus = (periode: VilkårsvurderingPeriodeSkjemaData)
         return ClassNamePeriodeStatus.Avvist;
     }
 
-    const erBehandlet = !!vilkårsvurderingsresultat && !!periode.begrunnelse;
+    const erBehandlet =
+        !!vilkårsvurderingsresultat &&
+        vilkårsvurderingsresultat !== Vilkårsresultat.Udefinert &&
+        !!periode.begrunnelse;
     return erBehandlet ? ClassNamePeriodeStatus.Behandlet : ClassNamePeriodeStatus.Ubehandlet;
 };
 
@@ -69,29 +72,10 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
 }) => {
-    const {
-        valgtPeriode,
-        settValgtPeriode,
-        stegErBehandlet,
-        erAutoutført,
-        gåTilForrigeSteg,
-        gåTilNesteSteg,
-        behandletPerioder,
-        allePerioderBehandlet,
-        sendInnSkjema,
-        senderInn,
-        valideringsfeil,
-        valideringsFeilmelding,
-    } = useFeilutbetalingVilkårsvurdering();
+    const { valgtPeriode, settValgtPeriode, behandletPerioder, valideringsFeilmelding } =
+        useVilkårsvurdering();
 
     const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
-    const { harUlagredeData } = useBehandling();
-
-    const erHovedKnappDisabled =
-        valgtPeriode !== undefined ||
-        erLesevisning ||
-        !allePerioderBehandlet ||
-        !behandling.kanEndres;
 
     const onSelectPeriode = (periode: TimelinePeriodProps) => {
         const periodeFom = periode.start.toISOString().substring(0, 10);
@@ -104,7 +88,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
 
     return perioder && tidslinjeRader ? (
         <VStack gap="5">
-            {valideringsfeil && (
+            {valideringsFeilmelding && (
                 <FTAlertStripe variant="error" fullWidth>
                     <BodyShort className="font-semibold">{valideringsFeilmelding}</BodyShort>
                 </FTAlertStripe>
@@ -118,27 +102,9 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                     erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
                     erLesevisning={erLesevisning}
                     fagsak={fagsak}
+                    perioder={perioder}
                 />
             )}
-            <Navigering>
-                {erAutoutført || (stegErBehandlet && erLesevisning) ? (
-                    <Button variant="primary" onClick={gåTilNesteSteg}>
-                        Neste
-                    </Button>
-                ) : (
-                    <Button
-                        variant="primary"
-                        onClick={sendInnSkjema}
-                        loading={senderInn}
-                        disabled={erHovedKnappDisabled}
-                    >
-                        {harUlagredeData ? 'Lagre og fortsett' : 'Neste'}
-                    </Button>
-                )}
-                <Button variant="secondary" onClick={gåTilForrigeSteg}>
-                    Forrige
-                </Button>
-            </Navigering>
         </VStack>
     ) : null;
 };

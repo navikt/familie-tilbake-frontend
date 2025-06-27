@@ -9,7 +9,7 @@ export enum Fagsystem {
 
 export enum Ytelsetype {
     Barnetrygd = 'BARNETRYGD',
-    Overganggstønad = 'OVERGANGSSTØNAD',
+    Overgangsstønad = 'OVERGANGSSTØNAD',
     Barnetilsyn = 'BARNETILSYN',
     Skolepenger = 'SKOLEPENGER',
     Kontantstøtte = 'KONTANTSTØTTE',
@@ -18,7 +18,7 @@ export enum Ytelsetype {
 
 export const ytelsetype: Record<Ytelsetype, string> = {
     [Ytelsetype.Barnetrygd]: 'Barnetrygd',
-    [Ytelsetype.Overganggstønad]: 'Overgangsstønad',
+    [Ytelsetype.Overgangsstønad]: 'Overgangsstønad',
     [Ytelsetype.Barnetilsyn]: 'Barnetilsyn',
     [Ytelsetype.Skolepenger]: 'Skolepenger',
     [Ytelsetype.Kontantstøtte]: 'Kontantstøtte',

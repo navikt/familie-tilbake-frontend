@@ -1,26 +1,20 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
-import type {
-    PeriodeVilkårsvurderingStegPayload,
-    VilkårdsvurderingStegPayload,
-} from '../../../typer/api';
+import type { VilkårdsvurderingStegPayload } from '../../../typer/api';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type {
-    Aktsomhetsvurdering,
-    GodTro,
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
 import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
-import deepEqual from 'deep-equal';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 
+import { PeriodeHandling } from './typer/periodeHandling';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { Behandlingssteg } from '../../../typer/behandling';
 import {
@@ -63,8 +57,8 @@ interface IProps {
     fagsak: IFagsak;
 }
 
-const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurdering] =
-    createUseContext(({ behandling, fagsak }: IProps) => {
+const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
+    ({ behandling, fagsak }: IProps) => {
         const [feilutbetalingVilkårsvurdering, settFeilutbetalingVilkårsvurdering] =
             React.useState<Ressurs<IFeilutbetalingVilkårsvurdering>>();
         const [skjemaData, settSkjemaData] = React.useState<VilkårsvurderingPeriodeSkjemaData[]>(
@@ -80,18 +74,15 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
         >([]);
         const [allePerioderBehandlet, settAllePerioderBehandlet] = React.useState<boolean>(false);
         const [senderInn, settSenderInn] = React.useState<boolean>(false);
-        const [valideringsfeil, settValideringsfeil] = React.useState<boolean>(false);
         const [valideringsFeilmelding, settValideringsFeilmelding] = React.useState<string>();
         const {
             erStegBehandlet,
             erStegAutoutført,
             visVenteModal,
-            hentBehandlingMedBehandlingId,
             nullstillIkkePersisterteKomponenter,
         } = useBehandling();
-        const { gjerFeilutbetalingVilkårsvurderingKall, sendInnFeilutbetalingVilkårsvurdering } =
+        const { gjerFeilutbetalingVilkårsvurderingKall, sendInnVilkårsvurdering } =
             useBehandlingApi();
-        const { utførRedirect } = useRedirectEtterLagring();
         const navigate = useNavigate();
         const kanIleggeRenter = ![Ytelsetype.Barnetrygd, Ytelsetype.Kontantstøtte].includes(
             fagsak.ytelsestype
@@ -171,7 +162,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             perioder.splice(index, 1, periode);
             settSkjemaData(perioder);
             const førsteUbehandletPeriode = perioder.find(per => !erBehandlet(per));
-            settValgtPeriode(førsteUbehandletPeriode);
+            førsteUbehandletPeriode !== undefined && settValgtPeriode(førsteUbehandletPeriode);
         };
 
         const nestePeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -179,6 +170,8 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             if (index < skjemaData.length - 1) {
                 settValgtPeriode(skjemaData[index + 1]);
             }
+            const container = document.getElementById('vilkarsvurdering-container');
+            container?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
         const forrigePeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -186,6 +179,8 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             if (index > 0) {
                 settValgtPeriode(skjemaData[index - 1]);
             }
+            const container = document.getElementById('vilkarsvurdering-container');
+            container?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
         const onSplitPeriode = (
@@ -199,7 +194,7 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             settValgtPeriode(nyePerioder[0]);
         };
 
-        const validerPerioder = () => {
+        const validererTotaltBeløpMot4Rettsgebyr = () => {
             if (feilutbetalingVilkårsvurdering?.status !== RessursStatus.Suksess) return false; // Skal ikke være mulig, så return false ok
 
             if (erTotalbeløpUnder4Rettsgebyr(feilutbetalingVilkårsvurdering.data)) {
@@ -223,7 +218,6 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
                     settValideringsFeilmelding(
                         'Totalbeløpet er under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
                     );
-                    settValideringsfeil(true);
                     return false;
                 }
             }
@@ -231,75 +225,61 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             return true;
         };
 
-        const harEndretOpplysninger = (
-            ikkeforeldetPerioder: VilkårsvurderingPeriodeSkjemaData[]
-        ) => {
-            if (feilutbetalingVilkårsvurdering?.status === RessursStatus.Suksess) {
-                const hentetPerioder = feilutbetalingVilkårsvurdering.data.perioder;
-                return ikkeforeldetPerioder.some(skjemaPeriode => {
-                    if (skjemaPeriode.erSplittet) return true;
-                    const periode = hentetPerioder.find(
-                        per =>
-                            per.periode.fom === skjemaPeriode.periode.fom &&
-                            per.periode.tom === skjemaPeriode.periode.tom
-                    );
-                    const vurderingSkjema = skjemaPeriode.vilkårsvurderingsresultatInfo;
-                    const vurderingPeriode = periode?.vilkårsvurderingsresultatInfo;
-                    const endretBegrunnelseEllerVurdering =
-                        skjemaPeriode.begrunnelse !== periode?.begrunnelse ||
-                        vurderingSkjema?.vilkårsvurderingsresultat !==
-                            vurderingPeriode?.vilkårsvurderingsresultat;
-                    const endretGodTro = !deepEqual(
-                        vurderingSkjema?.godTro,
-                        vurderingPeriode?.godTro
-                    );
-                    const endretAktsomhet = !deepEqual(
-                        vurderingSkjema?.aktsomhet,
-                        vurderingPeriode?.aktsomhet
-                    );
-                    return endretBegrunnelseEllerVurdering || endretGodTro || endretAktsomhet;
-                });
-            }
+        const vilkårsvurderingStegPayload = (
+            skjemaData: VilkårsvurderingPeriodeSkjemaData[]
+        ): VilkårdsvurderingStegPayload => {
+            const ikkeForeldetPerioder = skjemaData.filter(per => !per.foreldet);
+            const payload: VilkårdsvurderingStegPayload = {
+                '@type': 'VILKÅRSVURDERING',
+                vilkårsvurderingsperioder: ikkeForeldetPerioder.map(per => {
+                    const resultat = per.vilkårsvurderingsresultatInfo;
+                    return {
+                        periode: per.periode,
+                        begrunnelse: per.begrunnelse as string,
+                        vilkårsvurderingsresultat:
+                            resultat?.vilkårsvurderingsresultat ?? Vilkårsresultat.Udefinert,
+                        godTroDto: resultat?.godTro,
+                        aktsomhetDto: resultat?.aktsomhet,
+                    };
+                }),
+            };
+            return payload;
         };
 
-        const sendInnSkjema = () => {
+        const sendInnSkjemaOgNaviger = async (handling: PeriodeHandling) => {
             settValideringsFeilmelding(undefined);
-            settValideringsfeil(false);
-            if (validerPerioder()) {
-                nullstillIkkePersisterteKomponenter();
-                const ikkeForeldetPerioder = skjemaData.filter(per => !per.foreldet);
-                if (stegErBehandlet && !harEndretOpplysninger(ikkeForeldetPerioder)) {
-                    utførRedirect(`${behandlingUrl}/${sider.VEDTAK.href}`);
-                } else {
-                    settSenderInn(true);
-                    const payload: VilkårdsvurderingStegPayload = {
-                        '@type': 'VILKÅRSVURDERING',
-                        vilkårsvurderingsperioder:
-                            ikkeForeldetPerioder.map<PeriodeVilkårsvurderingStegPayload>(per => {
-                                const resultat = per.vilkårsvurderingsresultatInfo;
-                                return {
-                                    periode: per.periode,
-                                    begrunnelse: per.begrunnelse as string,
-                                    vilkårsvurderingsresultat:
-                                        resultat?.vilkårsvurderingsresultat as Vilkårsresultat,
-                                    godTroDto: resultat?.godTro as GodTro,
-                                    aktsomhetDto: resultat?.aktsomhet as Aktsomhetsvurdering,
-                                };
-                            }),
-                    };
-                    sendInnFeilutbetalingVilkårsvurdering(behandling.behandlingId, payload).then(
-                        (respons: Ressurs<string>) => {
-                            settSenderInn(false);
-                            if (respons.status === RessursStatus.Suksess) {
-                                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                                    navigate(
-                                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                                    );
-                                });
-                            }
-                        }
-                    );
-                }
+            if (!validererTotaltBeløpMot4Rettsgebyr()) {
+                return;
+            }
+
+            nullstillIkkePersisterteKomponenter();
+            settSenderInn(true);
+            const payload = vilkårsvurderingStegPayload(skjemaData);
+
+            try {
+                await sendInnVilkårsvurdering(behandling.behandlingId, payload);
+            } catch (error) {
+                settSenderInn(false);
+                const feil = `Det oppstod en feil ved innsending av vilkårsvurdering. Prøv igjen senere. Feilmelding: ${error}`;
+                settValideringsFeilmelding(feil);
+                return;
+            } finally {
+                settSenderInn(false);
+            }
+
+            switch (handling) {
+                case PeriodeHandling.GåTilNesteSteg:
+                    gåTilNesteSteg();
+                    break;
+                case PeriodeHandling.GåTilForrigeSteg:
+                    gåTilForrigeSteg();
+                    break;
+                case PeriodeHandling.NestePeriode:
+                    valgtPeriode !== undefined && nestePeriode(valgtPeriode);
+                    break;
+                case PeriodeHandling.ForrigePeriode:
+                    valgtPeriode !== undefined && forrigePeriode(valgtPeriode);
+                    break;
             }
         };
 
@@ -317,13 +297,13 @@ const [FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurderi
             gåTilNesteSteg,
             gåTilForrigeSteg,
             senderInn,
-            valideringsfeil,
             valideringsFeilmelding,
-            sendInnSkjema,
+            sendInnSkjemaOgNaviger,
             onSplitPeriode,
             nestePeriode,
             forrigePeriode,
         };
-    });
+    }
+);
 
-export { FeilutbetalingVilkårsvurderingProvider, useFeilutbetalingVilkårsvurdering };
+export { VilkårsvurderingProvider, useVilkårsvurdering };
