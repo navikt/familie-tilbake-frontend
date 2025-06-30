@@ -35,18 +35,7 @@ jest.mock('react-router', () => ({
 }));
 
 beforeEach(() => {
-    const mockContainer = document.createElement('div');
-    mockContainer.id = 'vilkarsvurdering-container';
-    document.body.appendChild(mockContainer);
-
-    mockContainer.scrollIntoView = jest.fn();
-});
-
-afterEach(() => {
-    const container = document.getElementById('vilkarsvurdering-container');
-    if (container) {
-        document.body.removeChild(container);
-    }
+    Element.prototype.scrollIntoView = jest.fn();
 });
 
 describe('Tester: VilkårsvurderingContainer', () => {
