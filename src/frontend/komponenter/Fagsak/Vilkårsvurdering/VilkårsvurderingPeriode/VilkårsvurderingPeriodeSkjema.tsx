@@ -226,45 +226,30 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.visFeilmeldinger &&
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
 
-    const handleNavigering = async (handling: PeriodeHandling) => {
-        if (harUlagredeData && !validerOgOppdaterFelter(periode)) {
-            return;
-        }
-
-        settNavigerer(true);
+    const handleNavigering = async (handling: PeriodeHandling): Promise<void> => {
         if (harUlagredeData) {
+            if (!validerOgOppdaterFelter(periode)) return;
+            settNavigerer(true);
             return await sendInnSkjemaOgNaviger(handling);
         }
 
-        switch (handling) {
-            case PeriodeHandling.GåTilForrigeSteg:
-                return gåTilForrigeSteg();
-            case PeriodeHandling.GåTilNesteSteg:
-                return gåTilNesteSteg();
-            case PeriodeHandling.ForrigePeriode:
-                return forrigePeriode(periode);
-            case PeriodeHandling.NestePeriode:
-                return nestePeriode(periode);
-            default:
-                break;
-        }
+        const utførHandling = {
+            [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
+            [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
+            [PeriodeHandling.ForrigePeriode]: () => forrigePeriode(periode),
+            [PeriodeHandling.NestePeriode]: () => nestePeriode(periode),
+        }[handling];
+
+        return utførHandling?.();
     };
 
-    const handleForrigeKnapp = async () => {
+    const erFørstePeriode = periode.index === perioder[0].index;
+    const handleForrigeKnapp = async (): Promise<void> => {
         const handling = erFørstePeriode
             ? PeriodeHandling.GåTilForrigeSteg
             : PeriodeHandling.ForrigePeriode;
         return await handleNavigering(handling);
     };
-
-    const handleNesteKnapp = async () => {
-        const handling = erSistePeriode
-            ? PeriodeHandling.GåTilNesteSteg
-            : PeriodeHandling.NestePeriode;
-        return await handleNavigering(handling);
-    };
-
-    const erFørstePeriode = periode.index === perioder[0].index;
     const hentForrigeKnappTekst = (): string => {
         if (erFørstePeriode) {
             return harUlagredeData
@@ -276,7 +261,14 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                 : 'Gå tilbake til forrige periode';
         }
     };
+
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
+    const handleNesteKnapp = async (): Promise<void> => {
+        const handling = erSistePeriode
+            ? PeriodeHandling.GåTilNesteSteg
+            : PeriodeHandling.NestePeriode;
+        return await handleNavigering(handling);
+    };
     const hentNesteKnappTekst = (): string => {
         if (erSistePeriode) {
             return harUlagredeData ? 'Lagre og gå videre til vedtak' : 'Gå videre til vedtak';

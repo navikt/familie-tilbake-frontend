@@ -29,8 +29,13 @@ interface IProps {
 }
 
 const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
-    const { feilutbetalingVilkårsvurdering, stegErBehandlet, erAutoutført, skjemaData } =
-        useVilkårsvurdering();
+    const {
+        containerRef,
+        feilutbetalingVilkårsvurdering,
+        stegErBehandlet,
+        erAutoutført,
+        skjemaData,
+    } = useVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
@@ -49,7 +54,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         );
 
         return (
-            <StyledVilkårsvurdering id="vilkarsvurdering-container">
+            <StyledVilkårsvurdering ref={containerRef}>
                 <Heading level="2" size="small" spacing>
                     Tilbakekreving
                 </Heading>

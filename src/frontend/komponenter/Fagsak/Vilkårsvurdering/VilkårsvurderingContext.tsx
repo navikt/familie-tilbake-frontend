@@ -9,7 +9,7 @@ import type {
 import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
-import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { PeriodeHandling } from './typer/periodeHandling';
@@ -59,22 +59,19 @@ interface IProps {
 
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
     ({ behandling, fagsak }: IProps) => {
+        const containerRef = useRef<HTMLDivElement>(null);
         const [feilutbetalingVilkårsvurdering, settFeilutbetalingVilkårsvurdering] =
-            React.useState<Ressurs<IFeilutbetalingVilkårsvurdering>>();
-        const [skjemaData, settSkjemaData] = React.useState<VilkårsvurderingPeriodeSkjemaData[]>(
-            []
-        );
-        const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
-        const [erAutoutført, settErAutoutført] = React.useState<boolean>();
-        const [valgtPeriode, settValgtPeriode] =
-            React.useState<VilkårsvurderingPeriodeSkjemaData>();
-        const [kanIlleggeRenter, settKanIlleggeRenter] = React.useState<boolean>(true);
-        const [behandletPerioder, settBehandletPerioder] = React.useState<
+            useState<Ressurs<IFeilutbetalingVilkårsvurdering>>();
+        const [skjemaData, settSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
+        const [stegErBehandlet, settStegErBehandlet] = useState(false);
+        const [erAutoutført, settErAutoutført] = useState<boolean>();
+        const [valgtPeriode, settValgtPeriode] = useState<VilkårsvurderingPeriodeSkjemaData>();
+        const [kanIlleggeRenter, settKanIlleggeRenter] = useState(true);
+        const [behandletPerioder, settBehandletPerioder] = useState<
             VilkårsvurderingPeriodeSkjemaData[]
         >([]);
-        const [allePerioderBehandlet, settAllePerioderBehandlet] = React.useState<boolean>(false);
-        const [senderInn, settSenderInn] = React.useState<boolean>(false);
-        const [valideringsFeilmelding, settValideringsFeilmelding] = React.useState<string>();
+        const [senderInn, settSenderInn] = useState(false);
+        const [valideringsFeilmelding, settValideringsFeilmelding] = useState<string>();
         const {
             erStegBehandlet,
             erStegAutoutført,
@@ -89,8 +86,8 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         );
         const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
-        React.useEffect(() => {
-            if (visVenteModal === false) {
+        useEffect(() => {
+            if (!visVenteModal) {
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.Vilkårsvurdering));
                 settErAutoutført(erStegAutoutført(Behandlingssteg.Vilkårsvurdering));
                 hentFeilutbetalingVilkårsvurdering();
@@ -99,7 +96,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling, visVenteModal]);
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (feilutbetalingVilkårsvurdering?.status === RessursStatus.Suksess) {
                 const perioder = feilutbetalingVilkårsvurdering.data.perioder;
                 const sortertePerioder = sorterFeilutbetaltePerioder(perioder);
@@ -120,13 +117,11 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             }
         }, [feilutbetalingVilkårsvurdering]);
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (skjemaData) {
-                const nokonUbehandlet = skjemaData.some(per => !erBehandlet(per));
                 const behandletPerioder = skjemaData.filter(
-                    per => !per.foreldet && erBehandlet(per)
+                    periode => !periode.foreldet && erBehandlet(periode)
                 );
-                settAllePerioderBehandlet(!nokonUbehandlet);
                 settBehandletPerioder(behandletPerioder);
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,7 +156,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             const index = perioder.findIndex(bfp => bfp.index === periode.index);
             perioder.splice(index, 1, periode);
             settSkjemaData(perioder);
-            const førsteUbehandletPeriode = perioder.find(per => !erBehandlet(per));
+            const førsteUbehandletPeriode = perioder.find(periode => !erBehandlet(periode));
             førsteUbehandletPeriode !== undefined && settValgtPeriode(førsteUbehandletPeriode);
         };
 
@@ -170,8 +165,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             if (index < skjemaData.length - 1) {
                 settValgtPeriode(skjemaData[index + 1]);
             }
-            const container = document.getElementById('vilkarsvurdering-container');
-            container?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            containerRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
         const forrigePeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -179,8 +173,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             if (index > 0) {
                 settValgtPeriode(skjemaData[index - 1]);
             }
-            const container = document.getElementById('vilkarsvurdering-container');
-            container?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            containerRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
         const onSplitPeriode = (
@@ -199,17 +192,17 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
 
             if (erTotalbeløpUnder4Rettsgebyr(feilutbetalingVilkårsvurdering.data)) {
                 const filtrertePerioder = skjemaData
-                    .filter(per => !per.foreldet)
+                    .filter(({ foreldet }) => !foreldet)
                     .filter(
-                        per =>
-                            per.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat !==
+                        periode =>
+                            periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat !==
                             Vilkårsresultat.GodTro
                     );
                 const ikkeTilbakekrevSmåbeløpPerioder = filtrertePerioder.filter(
-                    per =>
-                        per.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet ===
+                    ({ vilkårsvurderingsresultatInfo }) =>
+                        vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet ===
                             Aktsomhet.SimpelUaktsomhet &&
-                        !per.vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
+                        !vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
                 );
                 if (
                     ikkeTilbakekrevSmåbeløpPerioder.length > 0 &&
@@ -228,14 +221,14 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         const vilkårsvurderingStegPayload = (
             skjemaData: VilkårsvurderingPeriodeSkjemaData[]
         ): VilkårdsvurderingStegPayload => {
-            const ikkeForeldetPerioder = skjemaData.filter(per => !per.foreldet);
+            const ikkeForeldetPerioder = skjemaData.filter(periode => !periode.foreldet);
             const payload: VilkårdsvurderingStegPayload = {
                 '@type': 'VILKÅRSVURDERING',
-                vilkårsvurderingsperioder: ikkeForeldetPerioder.map(per => {
-                    const resultat = per.vilkårsvurderingsresultatInfo;
+                vilkårsvurderingsperioder: ikkeForeldetPerioder.map(periode => {
+                    const resultat = periode.vilkårsvurderingsresultatInfo;
                     return {
-                        periode: per.periode,
-                        begrunnelse: per.begrunnelse as string,
+                        periode: periode.periode,
+                        begrunnelse: periode.begrunnelse as string,
                         vilkårsvurderingsresultat:
                             resultat?.vilkårsvurderingsresultat ?? Vilkårsresultat.Udefinert,
                         godTroDto: resultat?.godTro,
@@ -246,20 +239,18 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             return payload;
         };
 
-        const sendInnSkjemaOgNaviger = async (handling: PeriodeHandling) => {
+        const sendInnSkjemaOgNaviger = async (handling: PeriodeHandling): Promise<void> => {
             settValideringsFeilmelding(undefined);
             if (!validererTotaltBeløpMot4Rettsgebyr()) {
                 return;
             }
-
             nullstillIkkePersisterteKomponenter();
+
             settSenderInn(true);
             const payload = vilkårsvurderingStegPayload(skjemaData);
-
             try {
                 await sendInnVilkårsvurdering(behandling.behandlingId, payload);
             } catch (error) {
-                settSenderInn(false);
                 const feil = `Det oppstod en feil ved innsending av vilkårsvurdering. Prøv igjen senere. Feilmelding: ${error}`;
                 settValideringsFeilmelding(feil);
                 return;
@@ -267,23 +258,18 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
                 settSenderInn(false);
             }
 
-            switch (handling) {
-                case PeriodeHandling.GåTilNesteSteg:
-                    gåTilNesteSteg();
-                    break;
-                case PeriodeHandling.GåTilForrigeSteg:
-                    gåTilForrigeSteg();
-                    break;
-                case PeriodeHandling.NestePeriode:
-                    valgtPeriode !== undefined && nestePeriode(valgtPeriode);
-                    break;
-                case PeriodeHandling.ForrigePeriode:
-                    valgtPeriode !== undefined && forrigePeriode(valgtPeriode);
-                    break;
-            }
+            const utførHandling = {
+                [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
+                [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
+                [PeriodeHandling.NestePeriode]: () => valgtPeriode && nestePeriode(valgtPeriode),
+                [PeriodeHandling.ForrigePeriode]: () =>
+                    valgtPeriode && forrigePeriode(valgtPeriode),
+            }[handling];
+            return utførHandling?.();
         };
 
         return {
+            containerRef,
             feilutbetalingVilkårsvurdering,
             stegErBehandlet,
             erAutoutført,
@@ -293,7 +279,6 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             valgtPeriode,
             settValgtPeriode,
             behandletPerioder,
-            allePerioderBehandlet,
             gåTilNesteSteg,
             gåTilForrigeSteg,
             senderInn,
