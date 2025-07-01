@@ -5,12 +5,16 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import { BodyShort, VStack } from '@navikt/ds-react';
 import * as React from 'react';
+import { useState } from 'react';
 
+import { PeriodeHandling } from './typer/periodeHandling';
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { Vilkårsresultat } from '../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
 import { FTAlertStripe } from '../../Felleskomponenter/Flytelementer';
+import { ModalWrapper } from '../../Felleskomponenter/Modal/ModalWrapper';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 
 const lagTidslinjeRader = (
@@ -72,8 +76,19 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
 }) => {
-    const { valgtPeriode, settValgtPeriode, behandletPerioder, valideringsFeilmelding } =
-        useVilkårsvurdering();
+    const {
+        valgtPeriode,
+        settValgtPeriode,
+        behandletPerioder,
+        valideringsFeilmelding,
+        sendInnSkjemaOgNaviger,
+    } = useVilkårsvurdering();
+    const { harUlagredeData, nullstillIkkePersisterteKomponenter } = useBehandling();
+
+    const [visModal, setVisModal] = useState(false);
+    const [pendingPeriode, setPendingPeriode] = useState<
+        VilkårsvurderingPeriodeSkjemaData | undefined
+    >();
 
     const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
 
@@ -83,7 +98,42 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         const vilkårsvurderingPeriode = perioder.find(
             per => per.periode.fom === periodeFom && per.periode.tom === periodeTom
         );
+
+        if (harUlagredeData && vilkårsvurderingPeriode !== valgtPeriode) {
+            setPendingPeriode(vilkårsvurderingPeriode);
+            setVisModal(true);
+            return;
+        }
+
         settValgtPeriode(vilkårsvurderingPeriode);
+    };
+
+    const handleForlatUtenÅLagre = () => {
+        if (pendingPeriode) {
+            nullstillIkkePersisterteKomponenter();
+            settValgtPeriode(pendingPeriode);
+        }
+        setVisModal(false);
+        setPendingPeriode(undefined);
+    };
+
+    const handleLagreOgBytt = async () => {
+        try {
+            await sendInnSkjemaOgNaviger(PeriodeHandling.GåTilNesteSteg);
+
+            if (pendingPeriode) {
+                settValgtPeriode(pendingPeriode);
+            }
+            setVisModal(false);
+            setPendingPeriode(undefined);
+        } catch (error) {
+            console.error('Failed to save:', error);
+        }
+    };
+
+    const handleAvbryt = () => {
+        setVisModal(false);
+        setPendingPeriode(undefined);
     };
 
     return perioder && tidslinjeRader ? (
@@ -105,6 +155,28 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                     perioder={perioder}
                 />
             )}
+
+            <ModalWrapper
+                tittel="Du har ulagrede endringer"
+                visModal={visModal}
+                onClose={handleAvbryt}
+                aksjonsknapper={{
+                    hovedKnapp: {
+                        onClick: handleLagreOgBytt,
+                        tekst: 'Lagre og bytt periode',
+                    },
+                    lukkKnapp: {
+                        onClick: handleForlatUtenÅLagre,
+                        tekst: 'Bytt periode uten å lagre',
+                    },
+                    marginTop: 4,
+                }}
+            >
+                <BodyShort>
+                    Vil du lagre endringene dine før du bytter til en annen periode, eller vil du
+                    forkaste dem?
+                </BodyShort>
+            </ModalWrapper>
         </VStack>
     ) : null;
 };
