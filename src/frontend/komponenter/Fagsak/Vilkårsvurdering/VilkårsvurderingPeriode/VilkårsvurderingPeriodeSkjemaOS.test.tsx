@@ -41,7 +41,7 @@ jest.mock('../VilkårsvurderingContext', () => {
 describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     const behandling = mock<IBehandling>();
     const fagsak = mock<IFagsak>({
-        ytelsestype: Ytelsetype.Overganggstønad,
+        ytelsestype: Ytelsetype.Overgangsstønad,
     });
     const periode: VilkårsvurderingPeriodeSkjemaData = {
         index: 'i2',

@@ -35,18 +35,7 @@ jest.mock('react-router', () => ({
 }));
 
 beforeEach(() => {
-    const mockContainer = document.createElement('div');
-    mockContainer.id = 'vilkarsvurdering-container';
-    document.body.appendChild(mockContainer);
-
-    mockContainer.scrollIntoView = jest.fn();
-});
-
-afterEach(() => {
-    const container = document.getElementById('vilkarsvurdering-container');
-    if (container) {
-        document.body.removeChild(container);
-    }
+    Element.prototype.scrollIntoView = jest.fn();
 });
 
 describe('Tester: VilkårsvurderingContainer', () => {
@@ -705,5 +694,110 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 name: 'Gå videre til neste periode',
             })
         ).toBeEnabled();
+    });
+
+    test('- periode med udefinert resultat er ikke behandlet', async () => {
+        setupUseBehandlingApiMock({
+            perioder: [
+                {
+                    ...perioder[0],
+                    begrunnelse: 'Begrunnelse vilkår 1',
+                    vilkårsvurderingsresultatInfo: {
+                        vilkårsvurderingsresultat: Vilkårsresultat.Udefinert,
+                        aktsomhet: undefined,
+                        godTro: undefined,
+                    },
+                },
+                {
+                    ...perioder[1],
+                    begrunnelse: 'Begrunnelse vilkår 2',
+                    vilkårsvurderingsresultatInfo: {
+                        vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
+                        aktsomhet: {
+                            begrunnelse: 'Begrunnelse aktsomhet 2',
+                            aktsomhet: Aktsomhet.Forsett,
+                            særligeGrunner: [],
+                        },
+                        godTro: {
+                            begrunnelse: 'Begrunnelse god tro 2',
+                            beløpErIBehold: false,
+                        },
+                    },
+                },
+            ],
+            rettsgebyr: 1199,
+        });
+        setupHttpMock();
+        const behandling = mock<IBehandling>();
+        const fagsak = mock<IFagsak>({
+            ytelsestype: Ytelsetype.Overgangsstønad,
+        });
+
+        const { getByText, getByRole, getByLabelText } = render(
+            <BehandlingProvider>
+                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                    <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
+                </VilkårsvurderingProvider>
+            </BehandlingProvider>
+        );
+
+        await waitFor(async () => {
+            expect(getByText('Tilbakekreving')).toBeTruthy();
+            expect(getByText('Detaljer for valgt periode')).toBeTruthy();
+            expect(
+                getByRole('button', {
+                    name: 'Advarsel fra 01.01.2020 til 31.03.2020',
+                })
+            ).toBeTruthy();
+            expect(
+                getByRole('button', {
+                    name: 'Gå videre til neste periode',
+                })
+            ).toBeEnabled();
+            expect(
+                getByRole('button', {
+                    name: 'Gå tilbake til foreldelse',
+                })
+            ).toBeEnabled();
+
+            expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
+
+            expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue(
+                'Begrunnelse vilkår 1'
+            );
+            expect(
+                getByLabelText(
+                    'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
+            ).not.toBeChecked();
+            expect(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
+            ).not.toBeChecked();
+            expect(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
+            ).not.toBeChecked();
+            expect(
+                getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+                    selector: 'input',
+                    exact: false,
+                })
+            ).not.toBeChecked();
+        });
     });
 });

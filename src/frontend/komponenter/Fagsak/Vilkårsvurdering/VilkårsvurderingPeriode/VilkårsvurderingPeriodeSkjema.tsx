@@ -144,7 +144,7 @@ const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.Rea
         [Ytelsetype.Barnetrygd]: vilkårsresultatHjelpeteksterBarnetrygd,
         [Ytelsetype.Kontantstøtte]: vilkårsresultatHjelpeteksterKontantstøtte,
         [Ytelsetype.Barnetilsyn]: vilkårsresultatHjelpetekster,
-        [Ytelsetype.Overganggstønad]: vilkårsresultatHjelpetekster,
+        [Ytelsetype.Overgangsstønad]: vilkårsresultatHjelpetekster,
         [Ytelsetype.Skolepenger]: vilkårsresultatHjelpetekster,
         [Ytelsetype.Tilleggsstønad]: vilkårsresultatHjelpetekster,
     }[fagsak.ytelsestype];
@@ -195,7 +195,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const { settIkkePersistertKomponent, harUlagredeData: harEndringer } = useBehandling();
+    const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
 
     React.useEffect(() => {
         settNavigerer(false);
@@ -226,62 +226,54 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.visFeilmeldinger &&
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
 
-    const handleNavigering = async (handling: PeriodeHandling) => {
-        if (harEndringer && !validerOgOppdaterFelter(periode)) {
-            return;
-        }
-
-        settNavigerer(true);
-        if (harEndringer) {
+    const handleNavigering = async (handling: PeriodeHandling): Promise<void> => {
+        if (harUlagredeData) {
+            if (!validerOgOppdaterFelter(periode)) return;
+            settNavigerer(true);
             return await sendInnSkjemaOgNaviger(handling);
         }
 
-        switch (handling) {
-            case PeriodeHandling.GåTilForrigeSteg:
-                return gåTilForrigeSteg();
-            case PeriodeHandling.GåTilNesteSteg:
-                return gåTilNesteSteg();
-            case PeriodeHandling.ForrigePeriode:
-                return forrigePeriode(periode);
-            case PeriodeHandling.NestePeriode:
-                return nestePeriode(periode);
-            default:
-                break;
-        }
+        const utførHandling = {
+            [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
+            [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
+            [PeriodeHandling.ForrigePeriode]: () => forrigePeriode(periode),
+            [PeriodeHandling.NestePeriode]: () => nestePeriode(periode),
+        }[handling];
+
+        return utførHandling?.();
     };
 
-    const handleForrigeKnapp = async () => {
+    const erFørstePeriode = periode.index === perioder[0].index;
+    const handleForrigeKnapp = async (): Promise<void> => {
         const handling = erFørstePeriode
             ? PeriodeHandling.GåTilForrigeSteg
             : PeriodeHandling.ForrigePeriode;
         return await handleNavigering(handling);
     };
+    const hentForrigeKnappTekst = (): string => {
+        if (erFørstePeriode) {
+            return harUlagredeData
+                ? 'Lagre og gå tilbake til foreldelse'
+                : 'Gå tilbake til foreldelse';
+        } else {
+            return harUlagredeData
+                ? 'Lagre og gå tilbake til forrige periode'
+                : 'Gå tilbake til forrige periode';
+        }
+    };
 
-    const handleNesteKnapp = async () => {
+    const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
+    const handleNesteKnapp = async (): Promise<void> => {
         const handling = erSistePeriode
             ? PeriodeHandling.GåTilNesteSteg
             : PeriodeHandling.NestePeriode;
         return await handleNavigering(handling);
     };
-
-    const erFørstePeriode = periode.index === perioder[0].index;
-    const hentForrigeKnappTekst = (): string => {
-        if (erFørstePeriode) {
-            return harEndringer
-                ? 'Lagre og gå tilbake til foreldelse'
-                : 'Gå tilbake til foreldelse';
-        } else {
-            return harEndringer
-                ? 'Lagre og gå tilbake til forrige periode'
-                : 'Gå tilbake til forrige periode';
-        }
-    };
-    const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
     const hentNesteKnappTekst = (): string => {
         if (erSistePeriode) {
-            return harEndringer ? 'Lagre og gå videre til vedtak' : 'Gå videre til vedtak';
+            return harUlagredeData ? 'Lagre og gå videre til vedtak' : 'Gå videre til vedtak';
         } else {
-            return harEndringer
+            return harUlagredeData
                 ? 'Lagre og gå videre til neste periode'
                 : 'Gå videre til neste periode';
         }

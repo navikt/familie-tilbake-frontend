@@ -11,6 +11,7 @@ import { PeriodeHandling } from './typer/periodeHandling';
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { Vilkårsresultat } from '../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
 import { FTAlertStripe } from '../../Felleskomponenter/Flytelementer';
 import { ModalWrapper } from '../../Felleskomponenter/Modal/ModalWrapper';
@@ -53,7 +54,10 @@ const finnClassNamePeriodeStatus = (periode: VilkårsvurderingPeriodeSkjemaData)
         return ClassNamePeriodeStatus.Avvist;
     }
 
-    const erBehandlet = !!vilkårsvurderingsresultat && !!periode.begrunnelse;
+    const erBehandlet =
+        !!vilkårsvurderingsresultat &&
+        vilkårsvurderingsresultat !== Vilkårsresultat.Udefinert &&
+        !!periode.begrunnelse;
     return erBehandlet ? ClassNamePeriodeStatus.Behandlet : ClassNamePeriodeStatus.Ubehandlet;
 };
 

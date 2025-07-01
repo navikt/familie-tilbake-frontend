@@ -3,6 +3,7 @@ export enum Vilkårsresultat {
     FeilOpplysningerFraBruker = 'FEIL_OPPLYSNINGER_FRA_BRUKER',
     MangelfulleOpplysningerFraBruker = 'MANGELFULLE_OPPLYSNINGER_FRA_BRUKER',
     GodTro = 'GOD_TRO',
+    Udefinert = 'UDEFINERT',
 }
 
 export const vilkårsresultater: Record<Vilkårsresultat, string> = {
@@ -13,6 +14,7 @@ export const vilkårsresultater: Record<Vilkårsresultat, string> = {
     [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
         'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
     [Vilkårsresultat.GodTro]: 'Nei, mottaker har mottatt beløpet i god tro',
+    [Vilkårsresultat.Udefinert]: 'Udefinert',
 };
 
 export const vilkårsresultatHjelpetekster: Record<Vilkårsresultat, string> = {
@@ -21,6 +23,7 @@ export const vilkårsresultatHjelpetekster: Record<Vilkårsresultat, string> = {
     [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
         'Folketrygdloven § 22-15, 1. ledd, 2. punkt',
     [Vilkårsresultat.GodTro]: 'Folketrygdloven § 22-15, 1. ledd',
+    [Vilkårsresultat.Udefinert]: 'Udefinert',
 };
 
 export const vilkårsresultatHjelpeteksterBarnetrygd: Record<Vilkårsresultat, string> = {
@@ -31,6 +34,7 @@ export const vilkårsresultatHjelpeteksterBarnetrygd: Record<Vilkårsresultat, s
     [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
         'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
     [Vilkårsresultat.GodTro]: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd',
+    [Vilkårsresultat.Udefinert]: 'Udefinert',
 };
 
 export const vilkårsresultatHjelpeteksterKontantstøtte: Record<Vilkårsresultat, string> = {
@@ -41,6 +45,7 @@ export const vilkårsresultatHjelpeteksterKontantstøtte: Record<Vilkårsresulta
     [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
         'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
     [Vilkårsresultat.GodTro]: 'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd',
+    [Vilkårsresultat.Udefinert]: 'Udefinert',
 };
 
 export const vilkårsvurderingStegInfotekst =
