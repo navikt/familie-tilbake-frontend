@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { PeriodeHandling } from './typer/periodeHandling';
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
+import { useVilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vilkårsresultat } from '../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
@@ -82,8 +83,15 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         behandletPerioder,
         valideringsFeilmelding,
         sendInnSkjemaOgNaviger,
+        oppdaterPeriode,
     } = useVilkårsvurdering();
     const { harUlagredeData, nullstillIkkePersisterteKomponenter } = useBehandling();
+
+    const { validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
+        (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
+            oppdaterPeriode(oppdatertPeriode);
+        }
+    );
 
     const [visModal, setVisModal] = useState(false);
     const [pendingPeriode, setPendingPeriode] = useState<
@@ -119,6 +127,9 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
 
     const handleLagreOgBytt = async () => {
         try {
+            if (!pendingPeriode) return;
+            if (!validerOgOppdaterFelter(pendingPeriode)) return;
+
             await sendInnSkjemaOgNaviger(PeriodeHandling.GåTilNesteSteg);
 
             if (pendingPeriode) {
@@ -128,6 +139,8 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
             setPendingPeriode(undefined);
         } catch (error) {
             console.error('Failed to save:', error);
+        } finally {
+            setVisModal(false);
         }
     };
 
