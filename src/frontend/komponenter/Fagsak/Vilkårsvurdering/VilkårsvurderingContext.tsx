@@ -8,12 +8,14 @@ import type {
 } from '../../../typer/feilutbetalingtyper';
 import type { AxiosError } from 'axios';
 
+import { useMutation } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { PeriodeHandling } from './typer/periodeHandling';
 import { useBehandlingApi } from '../../../api/behandling';
+import { Feil } from '../../../api/feil';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { Behandlingssteg } from '../../../typer/behandling';
@@ -70,7 +72,6 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         const [behandletPerioder, settBehandletPerioder] = useState<
             VilkårsvurderingPeriodeSkjemaData[]
         >([]);
-        const [senderInn, settSenderInn] = useState(false);
         const [valideringsFeilmelding, settValideringsFeilmelding] = useState<string>();
         const {
             erStegBehandlet,
@@ -187,34 +188,35 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             settValgtPeriode(nyePerioder[0]);
         };
 
-        const validererTotaltBeløpMot4Rettsgebyr = () => {
-            if (feilutbetalingVilkårsvurdering?.status !== RessursStatus.Suksess) return false; // Skal ikke være mulig, så return false ok
-
-            if (erTotalbeløpUnder4Rettsgebyr(feilutbetalingVilkårsvurdering.data)) {
-                const filtrertePerioder = skjemaData
-                    .filter(({ foreldet }) => !foreldet)
-                    .filter(
-                        periode =>
-                            periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat !==
-                            Vilkårsresultat.GodTro
-                    );
-                const ikkeTilbakekrevSmåbeløpPerioder = filtrertePerioder.filter(
-                    ({ vilkårsvurderingsresultatInfo }) =>
-                        vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet ===
-                            Aktsomhet.SimpelUaktsomhet &&
-                        !vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
-                );
-                if (
-                    ikkeTilbakekrevSmåbeløpPerioder.length > 0 &&
-                    ikkeTilbakekrevSmåbeløpPerioder.length !== filtrertePerioder.length
-                ) {
-                    settValideringsFeilmelding(
-                        'Totalbeløpet er under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
-                    );
-                    return false;
-                }
+        const validererTotaltBeløpMot4Rettsgebyr = (): boolean => {
+            if (feilutbetalingVilkårsvurdering?.status !== RessursStatus.Suksess) {
+                return false; // Skal ikke være mulig, så return false ok
+            }
+            if (!erTotalbeløpUnder4Rettsgebyr(feilutbetalingVilkårsvurdering.data)) {
+                return true;
             }
 
+            const filtrertePerioder = skjemaData
+                .filter(({ foreldet }) => !foreldet)
+                .filter(
+                    periode =>
+                        periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat !==
+                        Vilkårsresultat.GodTro
+                );
+            const ikkeTilbakekrevSmåbeløpPerioder = filtrertePerioder.filter(
+                ({ vilkårsvurderingsresultatInfo: resultatInfo }) =>
+                    resultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.SimpelUaktsomhet &&
+                    !resultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
+            );
+            if (
+                ikkeTilbakekrevSmåbeløpPerioder.length > 0 &&
+                ikkeTilbakekrevSmåbeløpPerioder.length !== filtrertePerioder.length
+            ) {
+                settValideringsFeilmelding(
+                    'Totalbeløpet er under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
+                );
+                return false;
+            }
             return true;
         };
 
@@ -239,33 +241,47 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             return payload;
         };
 
+        const sendInnSkjemaMutation = useMutation<
+            void,
+            Feil,
+            { payload: VilkårdsvurderingStegPayload; handling: PeriodeHandling }
+        >({
+            mutationFn: async ({ payload, handling }) => {
+                settValideringsFeilmelding(undefined);
+                if (!validererTotaltBeløpMot4Rettsgebyr()) {
+                    return;
+                }
+                nullstillIkkePersisterteKomponenter();
+
+                const response = await sendInnVilkårsvurdering(behandling.behandlingId, payload);
+                if (response.status === RessursStatus.Suksess) {
+                    const utførHandling = {
+                        [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
+                        [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
+                        [PeriodeHandling.NestePeriode]: () =>
+                            valgtPeriode && nestePeriode(valgtPeriode),
+                        [PeriodeHandling.ForrigePeriode]: () =>
+                            valgtPeriode && forrigePeriode(valgtPeriode),
+                    }[handling];
+
+                    return utførHandling?.();
+                }
+
+                const finnesFeilmelding =
+                    'frontendFeilmelding' in response && response.frontendFeilmelding;
+                const finnesHttpStatusKode = 'httpStatusCode' in response;
+                throw new Feil(
+                    finnesFeilmelding
+                        ? response.frontendFeilmelding
+                        : 'Ukjent feil ved innsending av vilkårsvurdering.',
+                    finnesHttpStatusKode && response.httpStatusCode ? response.httpStatusCode : 500
+                );
+            },
+        });
+
         const sendInnSkjemaOgNaviger = async (handling: PeriodeHandling): Promise<void> => {
-            settValideringsFeilmelding(undefined);
-            if (!validererTotaltBeløpMot4Rettsgebyr()) {
-                return;
-            }
-            nullstillIkkePersisterteKomponenter();
-
-            settSenderInn(true);
             const payload = vilkårsvurderingStegPayload(skjemaData);
-            try {
-                await sendInnVilkårsvurdering(behandling.behandlingId, payload);
-            } catch (error) {
-                const feil = `Det oppstod en feil ved innsending av vilkårsvurdering. Prøv igjen senere. Feilmelding: ${error}`;
-                settValideringsFeilmelding(feil);
-                return;
-            } finally {
-                settSenderInn(false);
-            }
-
-            const utførHandling = {
-                [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
-                [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
-                [PeriodeHandling.NestePeriode]: () => valgtPeriode && nestePeriode(valgtPeriode),
-                [PeriodeHandling.ForrigePeriode]: () =>
-                    valgtPeriode && forrigePeriode(valgtPeriode),
-            }[handling];
-            return utførHandling?.();
+            return sendInnSkjemaMutation.mutate({ payload, handling });
         };
 
         return {
@@ -281,9 +297,9 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             behandletPerioder,
             gåTilNesteSteg,
             gåTilForrigeSteg,
-            senderInn,
             valideringsFeilmelding,
             sendInnSkjemaOgNaviger,
+            sendInnSkjemaMutation,
             onSplitPeriode,
             nestePeriode,
             forrigePeriode,

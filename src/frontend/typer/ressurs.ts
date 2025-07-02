@@ -42,6 +42,7 @@ export type Ressurs<T> =
     | {
           frontendFeilmelding: string;
           status: RessursStatus.ServerFeil;
+          httpStatusCode?: number;
       }
     | {
           status: RessursStatus.Henter;

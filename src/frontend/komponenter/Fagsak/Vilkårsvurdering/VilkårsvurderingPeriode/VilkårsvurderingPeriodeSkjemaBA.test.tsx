@@ -34,6 +34,12 @@ jest.mock('../VilkårsvurderingContext', () => {
             onSplitPeriode: jest.fn(),
             lukkValgtPeriode: jest.fn(),
             sendInnSkjemaOgNaviger: jest.fn(),
+            sendInnSkjemaMutation: {
+                isPending: false,
+                isError: false,
+                error: null,
+                reset: jest.fn(),
+            },
         }),
     };
 });

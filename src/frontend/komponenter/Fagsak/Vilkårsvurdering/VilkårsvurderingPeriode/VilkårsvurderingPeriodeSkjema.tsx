@@ -19,7 +19,6 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import * as React from 'react';
-import { useState } from 'react';
 import { styled } from 'styled-components';
 
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
@@ -48,6 +47,7 @@ import {
 } from '../../../../kodeverk';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
+import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { PeriodeHandling } from '../typer/periodeHandling';
 import { useVilkårsvurdering } from '../VilkårsvurderingContext';
@@ -186,10 +186,9 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         forrigePeriode,
         gåTilForrigeSteg,
         gåTilNesteSteg,
-        senderInn,
+        sendInnSkjemaMutation,
         sendInnSkjemaOgNaviger,
     } = useVilkårsvurdering();
-    const [navigerer, settNavigerer] = useState(false);
     const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
@@ -198,7 +197,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
 
     React.useEffect(() => {
-        settNavigerer(false);
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
         settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
@@ -229,7 +227,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const handleNavigering = async (handling: PeriodeHandling): Promise<void> => {
         if (harUlagredeData) {
             if (!validerOgOppdaterFelter(periode)) return;
-            settNavigerer(true);
             return await sendInnSkjemaOgNaviger(handling);
         }
 
@@ -279,11 +276,13 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         }
     };
 
-    if (navigerer) {
+    if (sendInnSkjemaMutation.isPending) {
         return <StyledBox padding="4">Navigerer...</StyledBox>;
     }
 
-    return periode ? (
+    if (!periode) return null;
+
+    return (
         <StyledBox padding="4">
             <HGrid columns="1fr 4rem">
                 <StyledStack
@@ -453,15 +452,29 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             </VStack>
 
             <Navigering>
-                <Button onClick={handleNesteKnapp} loading={senderInn}>
+                <Button onClick={handleNesteKnapp} loading={sendInnSkjemaMutation.isPending}>
                     {hentNesteKnappTekst()}
                 </Button>
-                <Button variant="secondary" onClick={handleForrigeKnapp} loading={senderInn}>
+                <Button
+                    variant="secondary"
+                    onClick={handleForrigeKnapp}
+                    loading={sendInnSkjemaMutation.isPending}
+                >
                     {hentForrigeKnappTekst()}
                 </Button>
             </Navigering>
+
+            {sendInnSkjemaMutation.isError && (
+                <FeilModal
+                    feil={sendInnSkjemaMutation.error}
+                    lukkFeilModal={sendInnSkjemaMutation.reset}
+                    modalBeskjed="Du kunne ikke lagre vilkårsvurderingen"
+                    behandlingId={behandling.behandlingId}
+                    fagsakId={fagsak.eksternFagsakId}
+                />
+            )}
         </StyledBox>
-    ) : null;
+    );
 };
 
 export default VilkårsvurderingPeriodeSkjema;

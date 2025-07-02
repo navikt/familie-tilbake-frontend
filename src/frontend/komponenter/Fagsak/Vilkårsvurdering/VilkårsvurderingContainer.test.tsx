@@ -34,6 +34,30 @@ jest.mock('react-router', () => ({
     useNavigate: () => jest.fn(),
 }));
 
+jest.mock('@tanstack/react-query', () => {
+    return {
+        useMutation: jest.fn(({ mutationFn, onSuccess }) => {
+            const mutateAsync = async (behandlingId: string) => {
+                const result = await mutationFn(behandlingId);
+                if (onSuccess && result.status === RessursStatus.Suksess) {
+                    await onSuccess(result);
+                }
+                return result;
+            };
+
+            return {
+                mutate: mutateAsync,
+                mutateAsync: mutateAsync,
+                isError: false,
+                error: null,
+            };
+        }),
+        useQueryClient: jest.fn(() => ({
+            invalidateQueries: jest.fn(),
+        })),
+    };
+});
+
 beforeEach(() => {
     Element.prototype.scrollIntoView = jest.fn();
 });
@@ -76,7 +100,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                     });
                     return Promise.resolve(ressurs);
                 },
-                sendInnFeilutbetalingVilkårsvurdering: () => {
+                sendInnVilkårsvurdering: () => {
                     const ressurs = mock<Ressurs<string>>({
                         status: RessursStatus.Suksess,
                         data: 'suksess',

@@ -9,11 +9,12 @@ import { hentFeilObjekt } from './feilObjekt';
 interface Props {
     feil: Feil;
     lukkFeilModal: () => void;
+    modalBeskjed?: string;
     behandlingId?: string;
     fagsakId?: string;
 }
 
-export const FeilModal = ({ feil, lukkFeilModal, behandlingId, fagsakId }: Props) => {
+export const FeilModal = ({ feil, lukkFeilModal, modalBeskjed, behandlingId, fagsakId }: Props) => {
     const feilObjekt = hentFeilObjekt(feil.status);
     const innheholderCSRFTokenFeil = feil.message?.includes('CSRF-token');
     return (
@@ -28,7 +29,9 @@ export const FeilModal = ({ feil, lukkFeilModal, behandlingId, fagsakId }: Props
                 <p className="text-[#010B18AD] pt-4">{feilObjekt.httpStatus}</p>
                 <VStack gap="4">
                     <VStack gap="4" className="border-b border-solid border-b-[#071A3636] pb-6">
-                        <h2 className="font-semibold text-xl">{feilObjekt.beskjed}</h2>
+                        <h2 className="font-semibold text-xl">
+                            {modalBeskjed ?? feilObjekt.beskjed}
+                        </h2>
                         <p>{feil.message}</p>
                         <VStack>
                             <h3 className="font-semibold text-base">Hva kan du gjøre?</h3>

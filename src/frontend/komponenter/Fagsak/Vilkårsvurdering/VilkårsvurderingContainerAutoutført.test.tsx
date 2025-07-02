@@ -5,6 +5,7 @@ import type {
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
@@ -13,6 +14,14 @@ import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { HendelseType, Ytelsetype } from '../../../kodeverk';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: false,
+        },
+    },
+});
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
@@ -79,7 +88,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                     });
                     return Promise.resolve(ressurs);
                 },
-                sendInnFeilutbetalingVilkårsvurdering: () => {
+                sendInnVilkårsvurdering: () => {
                     const ressurs = mock<Ressurs<string>>({
                         status: RessursStatus.Suksess,
                         data: 'suksess',
@@ -104,9 +113,11 @@ describe('Tester: VilkårsvurderingContainer', () => {
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole } = render(
-            <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-            </VilkårsvurderingProvider>
+            <QueryClientProvider client={queryClient}>
+                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                    <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
+                </VilkårsvurderingProvider>
+            </QueryClientProvider>
         );
 
         await waitFor(async () => {
