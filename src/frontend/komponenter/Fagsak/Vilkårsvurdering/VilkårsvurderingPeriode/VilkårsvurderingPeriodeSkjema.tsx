@@ -47,8 +47,10 @@ import {
 } from '../../../../kodeverk';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
+import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import { useFeilutbetalingVilkårsvurdering } from '../FeilutbetalingVilkårsvurderingContext';
+import { PeriodeHandling } from '../typer/periodeHandling';
+import { useVilkårsvurdering } from '../VilkårsvurderingContext';
 
 const StyledBox = styled(Box)`
     min-width: 20rem;
@@ -61,6 +63,7 @@ const StyledStack = styled(Stack)`
 
 const StyledSelect = styled(Select)`
     width: 15rem;
+    padding-bottom: 2rem;
 `;
 
 const StyledVilkårsresultatRadio = styled(Radio)`
@@ -79,70 +82,47 @@ const settSkjemadataFraPeriode = (
     periode: VilkårsvurderingPeriodeSkjemaData,
     kanIlleggeRenter: boolean
 ) => {
+    const { vilkårsvurderingsresultatInfo: vurdering } = periode || {};
     skjema.felter.vilkårsresultatBegrunnelse.onChange(periode?.begrunnelse || '');
-    skjema.felter.vilkårsresultatvurdering.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat || ''
-    );
-    const erGodTro = periode.vilkårsvurderingsresultatInfo?.godTro;
+    skjema.felter.vilkårsresultatvurdering.onChange(vurdering?.vilkårsvurderingsresultat || '');
     skjema.felter.aktsomhetBegrunnelse.onChange(
-        (erGodTro
-            ? periode.vilkårsvurderingsresultatInfo?.godTro?.begrunnelse
-            : periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.begrunnelse) || ''
+        (vurdering?.godTro ? vurdering?.godTro?.begrunnelse : vurdering?.aktsomhet?.begrunnelse) ||
+            ''
     );
     skjema.felter.erBeløpetIBehold.onChange(
-        finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.godTro?.beløpErIBehold) || ''
+        finnJaNeiOption(vurdering?.godTro?.beløpErIBehold) || ''
     );
     skjema.felter.godTroTilbakekrevesBeløp.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.godTro?.beløpTilbakekreves?.toString() || ''
+        vurdering?.godTro?.beløpTilbakekreves?.toString() || ''
     );
-    const erForsett =
-        periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.Forsett;
-    const erSimpelUaktsomhet =
-        periode.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.SimpelUaktsomhet;
-    skjema.felter.aktsomhetVurdering.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.aktsomhet || ''
-    );
+    const erForsett = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.Forsett;
+    const erSimpelUaktsomhet = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.SimpelUaktsomhet;
+    skjema.felter.aktsomhetVurdering.onChange(vurdering?.aktsomhet?.aktsomhet || '');
     skjema.felter.forstoIlleggeRenter.onChange(
-        !kanIlleggeRenter
-            ? OptionNEI
-            : finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.ileggRenter) || ''
+        !kanIlleggeRenter ? OptionNEI : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
     );
     skjema.felter.tilbakekrevSmåbeløp.onChange(
-        erSimpelUaktsomhet
-            ? finnJaNeiOption(
-                  periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
-              ) || ''
-            : ''
+        erSimpelUaktsomhet ? finnJaNeiOption(vurdering?.aktsomhet?.tilbakekrevSmåbeløp) || '' : ''
     );
     skjema.felter.særligeGrunnerBegrunnelse.onChange(
-        !erForsett
-            ? periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunnerBegrunnelse || ''
-            : ''
+        !erForsett ? vurdering?.aktsomhet?.særligeGrunnerBegrunnelse || '' : ''
     );
     skjema.felter.særligeGrunner.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunner?.map(
-            dto => dto.særligGrunn
-        ) || []
+        vurdering?.aktsomhet?.særligeGrunner?.map(dto => dto.særligGrunn) || []
     );
-    const annetSærligGrunn =
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunner?.find(
-            dto => dto.særligGrunn === SærligeGrunner.Annet
-        );
+    const annetSærligGrunn = vurdering?.aktsomhet?.særligeGrunner?.find(
+        dto => dto.særligGrunn === SærligeGrunner.Annet
+    );
     skjema.felter.særligeGrunnerAnnetBegrunnelse.onChange(annetSærligGrunn?.begrunnelse || '');
 
     skjema.felter.harMerEnnEnAktivitet.onChange(
         !!periode?.aktiviteter && periode.aktiviteter.length > 1
     );
     skjema.felter.harGrunnerTilReduksjon.onChange(
-        !erForsett
-            ? finnJaNeiOption(
-                  periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.særligeGrunnerTilReduksjon
-              ) || ''
-            : ''
+        !erForsett ? finnJaNeiOption(vurdering?.aktsomhet?.særligeGrunnerTilReduksjon) || '' : ''
     );
 
-    const andelTilbakekreves =
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.andelTilbakekreves?.toString() || '';
+    const andelTilbakekreves = vurdering?.aktsomhet?.andelTilbakekreves?.toString() || '';
     const erEgendefinert = !isEmpty(andelTilbakekreves) && !ANDELER.includes(andelTilbakekreves);
     skjema.felter.uaktsomAndelTilbakekreves.onChange(
         erEgendefinert ? EGENDEFINERT : andelTilbakekreves
@@ -152,12 +132,10 @@ const settSkjemadataFraPeriode = (
     );
 
     skjema.felter.uaktsomTilbakekrevesBeløp.onChange(
-        periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.beløpTilbakekreves?.toString() || ''
+        vurdering?.aktsomhet?.beløpTilbakekreves?.toString() || ''
     );
     skjema.felter.grovtUaktsomIlleggeRenter.onChange(
-        !kanIlleggeRenter
-            ? OptionNEI
-            : finnJaNeiOption(periode?.vilkårsvurderingsresultatInfo?.aktsomhet?.ileggRenter) || ''
+        !kanIlleggeRenter ? OptionNEI : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
     );
 };
 
@@ -166,7 +144,7 @@ const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.Rea
         [Ytelsetype.Barnetrygd]: vilkårsresultatHjelpeteksterBarnetrygd,
         [Ytelsetype.Kontantstøtte]: vilkårsresultatHjelpeteksterKontantstøtte,
         [Ytelsetype.Barnetilsyn]: vilkårsresultatHjelpetekster,
-        [Ytelsetype.Overganggstønad]: vilkårsresultatHjelpetekster,
+        [Ytelsetype.Overgangsstønad]: vilkårsresultatHjelpetekster,
         [Ytelsetype.Skolepenger]: vilkårsresultatHjelpetekster,
         [Ytelsetype.Tilleggsstønad]: vilkårsresultatHjelpetekster,
     }[fagsak.ytelsestype];
@@ -188,6 +166,7 @@ interface IProps {
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
+    perioder: VilkårsvurderingPeriodeSkjemaData[];
 }
 
 const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
@@ -197,11 +176,20 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
     fagsak,
+    perioder,
 }) => {
-    const { kanIlleggeRenter, oppdaterPeriode, onSplitPeriode, settValgtPeriode } =
-        useFeilutbetalingVilkårsvurdering();
-
-    const { skjema, onBekreft } = useVilkårsvurderingPeriodeSkjema(
+    const {
+        kanIlleggeRenter,
+        oppdaterPeriode,
+        onSplitPeriode,
+        nestePeriode,
+        forrigePeriode,
+        gåTilForrigeSteg,
+        gåTilNesteSteg,
+        sendInnSkjemaMutation,
+        sendInnSkjemaOgNaviger,
+    } = useVilkårsvurdering();
+    const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
         }
@@ -236,8 +224,66 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.visFeilmeldinger &&
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
 
-    return periode ? (
-        <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
+    const handleNavigering = async (handling: PeriodeHandling): Promise<void> => {
+        if (harUlagredeData) {
+            if (!validerOgOppdaterFelter(periode)) return;
+            return await sendInnSkjemaOgNaviger(handling);
+        }
+
+        const utførHandling = {
+            [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
+            [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
+            [PeriodeHandling.ForrigePeriode]: () => forrigePeriode(periode),
+            [PeriodeHandling.NestePeriode]: () => nestePeriode(periode),
+        }[handling];
+
+        return utførHandling?.();
+    };
+
+    const erFørstePeriode = periode.index === perioder[0].index;
+    const handleForrigeKnapp = async (): Promise<void> => {
+        const handling = erFørstePeriode
+            ? PeriodeHandling.GåTilForrigeSteg
+            : PeriodeHandling.ForrigePeriode;
+        return await handleNavigering(handling);
+    };
+    const hentForrigeKnappTekst = (): string => {
+        if (erFørstePeriode) {
+            return harUlagredeData
+                ? 'Lagre og gå tilbake til foreldelse'
+                : 'Gå tilbake til foreldelse';
+        } else {
+            return harUlagredeData
+                ? 'Lagre og gå tilbake til forrige periode'
+                : 'Gå tilbake til forrige periode';
+        }
+    };
+
+    const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
+    const handleNesteKnapp = async (): Promise<void> => {
+        const handling = erSistePeriode
+            ? PeriodeHandling.GåTilNesteSteg
+            : PeriodeHandling.NestePeriode;
+        return await handleNavigering(handling);
+    };
+    const hentNesteKnappTekst = (): string => {
+        if (erSistePeriode) {
+            return harUlagredeData ? 'Lagre og gå videre til vedtak' : 'Gå videre til vedtak';
+        } else {
+            return harUlagredeData
+                ? 'Lagre og gå videre til neste periode'
+                : 'Gå videre til neste periode';
+        }
+    };
+
+    if (sendInnSkjemaMutation.isPending) {
+        return <StyledBox padding="4">Navigerer...</StyledBox>;
+    }
+
+    if (!periode) return null;
+
+    return (
+        <StyledBox padding="4">
             <HGrid columns="1fr 4rem">
                 <StyledStack
                     justify="space-between"
@@ -256,6 +302,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     )}
                 </StyledStack>
             </HGrid>
+
             <VStack gap="4">
                 <PeriodeOppsummering
                     fom={periode.periode.fom}
@@ -403,22 +450,31 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     </HGrid>
                 )}
             </VStack>
+
             <Navigering>
-                {!periode.foreldet && !erLesevisning && (
-                    <Button
-                        variant="primary"
-                        onClick={() => onBekreft(periode)}
-                        disabled={!harUlagredeData}
-                    >
-                        Bekreft
-                    </Button>
-                )}
-                <Button variant="secondary" onClick={() => settValgtPeriode(undefined)}>
-                    Lukk
+                <Button onClick={handleNesteKnapp} loading={sendInnSkjemaMutation.isPending}>
+                    {hentNesteKnappTekst()}
+                </Button>
+                <Button
+                    variant="secondary"
+                    onClick={handleForrigeKnapp}
+                    loading={sendInnSkjemaMutation.isPending}
+                >
+                    {hentForrigeKnappTekst()}
                 </Button>
             </Navigering>
+
+            {sendInnSkjemaMutation.isError && (
+                <FeilModal
+                    feil={sendInnSkjemaMutation.error}
+                    lukkFeilModal={sendInnSkjemaMutation.reset}
+                    beskjed="Du kunne ikke lagre vilkårsvurderingen"
+                    behandlingId={behandling.behandlingId}
+                    fagsakId={fagsak.eksternFagsakId}
+                />
+            )}
         </StyledBox>
-    ) : null;
+    );
 };
 
 export default VilkårsvurderingPeriodeSkjema;

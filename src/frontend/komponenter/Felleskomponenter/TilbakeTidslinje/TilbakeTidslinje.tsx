@@ -14,7 +14,6 @@ import {
     ARed300,
     ARed400,
     ARed500,
-    ABorderStrong,
     ASpacing5,
     AOrange800,
     AGreen800,
@@ -29,7 +28,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { dateTilIsoDatoStringEllerUndefined } from '../../../utils/dato';
 
 const TidslinjeContainer = styled.div`
-    border: 1px solid ${ABorderStrong};
     margin-bottom: ${ASpacing5};
     padding: 12px 16px;
 

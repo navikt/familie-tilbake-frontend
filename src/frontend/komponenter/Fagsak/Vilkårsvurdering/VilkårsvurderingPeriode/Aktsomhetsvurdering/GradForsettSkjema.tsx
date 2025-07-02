@@ -8,7 +8,7 @@ import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 import { type ISkjema } from '../../../../../hooks/skjema';
 import { Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { useFeilutbetalingVilkårsvurdering } from '../../FeilutbetalingVilkårsvurderingContext';
+import { useVilkårsvurdering } from '../../VilkårsvurderingContext';
 
 const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;
@@ -20,7 +20,7 @@ interface IProps {
 }
 
 const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
-    const { kanIlleggeRenter } = useFeilutbetalingVilkårsvurdering();
+    const { kanIlleggeRenter } = useVilkårsvurdering();
 
     const erValgtResultatTypeForstoBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;

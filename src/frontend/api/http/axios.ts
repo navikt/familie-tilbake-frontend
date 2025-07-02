@@ -22,7 +22,7 @@ export interface ApiRespons<T> {
 
 export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => {
     const {
-        defaultFeilmelding = 'En feil har oppstått!',
+        defaultFeilmelding = 'En feil hos oss gjør at siden er utilgjengelig. Det skyldes ikke noe du gjorde.',
         error,
         innloggetSaksbehandler,
         loggFeilTilSentry = false,
@@ -34,9 +34,9 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
 
     if (erServerFeil(httpStatus)) {
         return {
-            frontendFeilmelding:
-                'En feil hos oss gjør at siden er utilgjengelig. Det skyldes ikke noe du gjorde.',
+            frontendFeilmelding: ressurs?.frontendFeilmelding ?? defaultFeilmelding,
             status: RessursStatus.ServerFeil,
+            httpStatusCode: httpStatus ?? 500,
         };
     }
 
@@ -44,6 +44,7 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
         return {
             frontendFeilmelding: defaultFeilmelding,
             status: RessursStatus.Feilet,
+            httpStatusCode: httpStatus ?? 500,
         };
     }
 

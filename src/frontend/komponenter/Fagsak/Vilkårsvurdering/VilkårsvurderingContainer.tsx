@@ -6,10 +6,7 @@ import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
-import {
-    erTotalbeløpUnder4Rettsgebyr,
-    useFeilutbetalingVilkårsvurdering,
-} from './FeilutbetalingVilkårsvurderingContext';
+import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
 import {
@@ -32,8 +29,13 @@ interface IProps {
 }
 
 const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
-    const { feilutbetalingVilkårsvurdering, stegErBehandlet, erAutoutført, skjemaData } =
-        useFeilutbetalingVilkårsvurdering();
+    const {
+        containerRef,
+        feilutbetalingVilkårsvurdering,
+        stegErBehandlet,
+        erAutoutført,
+        skjemaData,
+    } = useVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
@@ -41,7 +43,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         [Ytelsetype.Barnetrygd]: vilkårsvurderingStegInfotekstBarnetrygd,
         [Ytelsetype.Kontantstøtte]: vilkårsvurderingStegInfotekstKontantstøtte,
         [Ytelsetype.Barnetilsyn]: vilkårsvurderingStegInfotekst,
-        [Ytelsetype.Overganggstønad]: vilkårsvurderingStegInfotekst,
+        [Ytelsetype.Overgangsstønad]: vilkårsvurderingStegInfotekst,
         [Ytelsetype.Skolepenger]: vilkårsvurderingStegInfotekst,
         [Ytelsetype.Tilleggsstønad]: vilkårsvurderingStegInfotekst,
     }[fagsak.ytelsestype];
@@ -52,7 +54,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         );
 
         return (
-            <StyledVilkårsvurdering>
+            <StyledVilkårsvurdering ref={containerRef}>
                 <Heading level="2" size="small" spacing>
                     Tilbakekreving
                 </Heading>

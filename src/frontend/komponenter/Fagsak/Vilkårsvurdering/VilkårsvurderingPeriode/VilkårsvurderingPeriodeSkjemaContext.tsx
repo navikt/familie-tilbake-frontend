@@ -332,7 +332,7 @@ const useVilkårsvurderingPeriodeSkjema = (
         },
     });
 
-    const { skjema, validerAlleSynligeFelter, kanSendeSkjema, nullstillSkjema } = useSkjema<
+    const { skjema, kanSendeSkjema, nullstillSkjema } = useSkjema<
         VilkårsvurderingSkjemaDefinisjon,
         string
     >({
@@ -438,28 +438,28 @@ const useVilkårsvurderingPeriodeSkjema = (
         };
     };
 
-    const onBekreft = (periode: VilkårsvurderingPeriodeSkjemaData) => {
-        validerAlleSynligeFelter();
-        if (kanSendeSkjema()) {
-            const erGodTro =
-                skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GodTro;
-            oppdaterPeriode({
-                ...periode,
-                begrunnelse: skjema.felter.vilkårsresultatBegrunnelse.verdi,
-                vilkårsvurderingsresultatInfo: {
-                    vilkårsvurderingsresultat: skjema.felter.vilkårsresultatvurdering
-                        .verdi as Vilkårsresultat,
-                    godTro: erGodTro ? byggGodTro() : undefined,
-                    aktsomhet: !erGodTro ? byggAktsomhet() : undefined,
-                },
-            });
-            nullstillSkjema();
+    const validerOgOppdaterFelter = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+        if (!kanSendeSkjema()) {
+            return false;
         }
+        const erGodTro = skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GodTro;
+        oppdaterPeriode({
+            ...periode,
+            begrunnelse: skjema.felter.vilkårsresultatBegrunnelse.verdi,
+            vilkårsvurderingsresultatInfo: {
+                vilkårsvurderingsresultat: skjema.felter.vilkårsresultatvurdering
+                    .verdi as Vilkårsresultat,
+                godTro: erGodTro ? byggGodTro() : undefined,
+                aktsomhet: !erGodTro ? byggAktsomhet() : undefined,
+            },
+        });
+        nullstillSkjema();
+        return true;
     };
 
     return {
         skjema,
-        onBekreft,
+        validerOgOppdaterFelter,
     };
 };
 

@@ -5,15 +5,13 @@ import type {
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
 
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
-import { FeilutbetalingVilkårsvurderingProvider } from './FeilutbetalingVilkårsvurderingContext';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
-import { useBehandlingApi } from '../../../api/behandling';
-import { useHttp } from '../../../api/http/HttpProvider';
+import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
 import { Aktsomhet, Fagsystem, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { Behandlingstatus } from '../../../typer/behandling';
@@ -21,18 +19,48 @@ import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(25000);
 
+const mockUseHttp = jest.fn();
 jest.mock('../../../api/http/HttpProvider', () => ({
-    useHttp: jest.fn(),
+    useHttp: () => mockUseHttp(),
 }));
 
+const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: jest.fn(),
+    useBehandlingApi: () => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: () => jest.fn(),
 }));
+
+jest.mock('@tanstack/react-query', () => {
+    return {
+        useMutation: jest.fn(({ mutationFn, onSuccess }) => {
+            const mutateAsync = async (behandlingId: string) => {
+                const result = await mutationFn(behandlingId);
+                if (onSuccess && result.status === RessursStatus.Suksess) {
+                    await onSuccess(result);
+                }
+                return result;
+            };
+
+            return {
+                mutate: mutateAsync,
+                mutateAsync: mutateAsync,
+                isError: false,
+                error: null,
+            };
+        }),
+        useQueryClient: jest.fn(() => ({
+            invalidateQueries: jest.fn(),
+        })),
+    };
+});
+
+beforeEach(() => {
+    Element.prototype.scrollIntoView = jest.fn();
+});
 
 describe('Tester: VilkårsvurderingContainer', () => {
     const perioder: VilkårsvurderingPeriode[] = [
@@ -64,8 +92,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
     const setupUseBehandlingApiMock = (vilkårsvurdering?: IFeilutbetalingVilkårsvurdering) => {
         if (vilkårsvurdering) {
-            // @ts-expect-error mock
-            useBehandlingApi.mockImplementation(() => ({
+            mockUseBehandlingApi.mockImplementation(() => ({
                 gjerFeilutbetalingVilkårsvurderingKall: () => {
                     const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
                         status: RessursStatus.Suksess,
@@ -73,7 +100,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                     });
                     return Promise.resolve(ressurs);
                 },
-                sendInnFeilutbetalingVilkårsvurdering: () => {
+                sendInnVilkårsvurdering: () => {
                     const ressurs = mock<Ressurs<string>>({
                         status: RessursStatus.Suksess,
                         data: 'suksess',
@@ -85,8 +112,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
     };
 
     const setupHttpMock = () => {
-        // @ts-expect-error mock
-        useHttp.mockImplementation(() => ({
+        mockUseHttp.mockImplementation(() => ({
             request: () => {
                 return Promise.resolve({
                     status: RessursStatus.Suksess,
@@ -101,15 +127,14 @@ describe('Tester: VilkårsvurderingContainer', () => {
         setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
         setupHttpMock();
         const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
-        fagsak.ytelsestype = Ytelsetype.Barnetilsyn;
+        const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
             render(
                 <BehandlingProvider>
-                    <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                    <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
                         <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-                    </FeilutbetalingVilkårsvurderingProvider>
+                    </VilkårsvurderingProvider>
                 </BehandlingProvider>
             );
 
@@ -130,39 +155,33 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
-            })
-        ).toBeDisabled();
-
-        await act(() =>
-            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse vilkårene 1')
-        );
-
-        expect(
-            getByRole('button', {
-                name: 'Bekreft',
+                name: 'Gå videre til neste periode',
             })
         ).toBeEnabled();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
+        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse vilkårene 1');
+
+        expect(
+            getByRole('button', {
+                name: 'Lagre og gå videre til neste periode',
+            })
+        ).toBeEnabled();
+
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og gå videre til neste periode',
+            })
         );
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await act(() =>
-            user.click(
-                getByLabelText(
-                    'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
-                    {
-                        selector: 'input',
-                        exact: false,
-                    }
-                )
+        await user.click(
+            getByLabelText(
+                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                {
+                    selector: 'input',
+                    exact: false,
+                }
             )
         );
 
@@ -170,59 +189,49 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Lagre og gå videre til neste periode',
             })
         ).toBeEnabled();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og gå videre til neste periode',
+            })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await act(() =>
-            user.type(
-                getByLabelText(
-                    'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-                ),
-                'Begrunnelse aktsomhet 1'
-            )
+        await user.type(
+            getByLabelText(
+                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+            ),
+            'Begrunnelse aktsomhet 1'
         );
-        await act(() => user.click(getByLabelText('Burde ha forstått')));
+        await user.click(getByLabelText('Burde ha forstått'));
 
         expect(
             getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
         ).toBeTruthy();
         expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeFalsy();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og gå videre til neste periode',
+            })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await act(() =>
-            user.click(
-                getByRole('radio', {
-                    name: 'Nei',
-                })
-            )
+        await user.click(
+            getByRole('radio', {
+                name: 'Nei',
+            })
         );
 
         expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeTruthy();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og gå videre til neste periode',
+            })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(getByText('01.05.2020 - 30.06.2020')).toBeTruthy();
@@ -231,85 +240,56 @@ describe('Tester: VilkårsvurderingContainer', () => {
         expect(getByText('1 333')).toBeTruthy();
         expect(getByText('Bor med søker')).toBeTruthy();
 
-        await act(() =>
-            user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse vilkårene 2')
-        );
-        await act(() =>
-            user.click(
-                getByLabelText(
-                    'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
-                    {
-                        selector: 'input',
-                        exact: false,
-                    }
-                )
+        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse vilkårene 2');
+        await user.click(
+            getByLabelText(
+                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                {
+                    selector: 'input',
+                    exact: false,
+                }
             )
         );
 
-        await act(() =>
-            user.type(
-                getByLabelText(
-                    'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-                ),
-                'Begrunnelse aktsomhet 2'
-            )
+        await user.type(
+            getByLabelText(
+                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
+            ),
+            'Begrunnelse aktsomhet 2'
         );
-        await act(() => user.click(getByLabelText('Burde ha forstått')));
+        await user.click(getByLabelText('Burde ha forstått'));
 
         expect(
             getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
         ).toBeTruthy();
 
-        await act(() =>
-            user.click(
-                getByRole('radio', {
-                    name: 'Ja',
-                })
-            )
+        await user.click(
+            getByRole('radio', {
+                name: 'Ja',
+            })
         );
 
         expect(getByText('Vurder særlige grunner du har vektlagt for resultatet')).toBeTruthy();
 
-        await act(() =>
-            user.type(
-                getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-                'Begrunnelse særlige grunner 2'
-            )
+        await user.type(
+            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
+            'Begrunnelse særlige grunner 2'
         );
-        await act(() =>
-            user.click(
-                getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
-                    selector: 'input',
-                })
-            )
+        await user.click(
+            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+                selector: 'input',
+            })
         );
-        await act(() => user.click(getByTestId('harGrunnerTilReduksjon_Nei')));
+        await user.click(getByTestId('harGrunnerTilReduksjon_Nei'));
 
         expect(getByText('100 %')).toBeTruthy();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og gå videre til vedtak',
+            })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        expect(queryByText('Detaljer for valgt periode')).toBeFalsy;
-
-        expect(
-            getByRole('button', {
-                name: 'Lagre og fortsett',
-            })
-        ).toBeEnabled();
-
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lagre og fortsett',
-                })
-            )
-        );
         expect(
             queryByText(
                 'Totalbeløpet er under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
@@ -322,16 +302,18 @@ describe('Tester: VilkårsvurderingContainer', () => {
         setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
         setupHttpMock();
 
-        const fagsak = mock<IFagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
+        const fagsak = mock<IFagsak>({
+            fagsystem: Fagsystem.EF,
+            eksternFagsakId: '1',
+            ytelsestype: Ytelsetype.Barnetilsyn,
+        });
         const behandling = mock<IBehandling>({ eksternBrukId: '1' });
-
-        fagsak.ytelsestype = Ytelsetype.Barnetilsyn;
 
         const { getByText, getByRole, getByLabelText, queryAllByText } = render(
             <BehandlingProvider>
-                <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
                     <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-                </FeilutbetalingVilkårsvurderingProvider>
+                </VilkårsvurderingProvider>
             </BehandlingProvider>
         );
 
@@ -340,42 +322,34 @@ describe('Tester: VilkårsvurderingContainer', () => {
             expect(getByText('01.01.2020 - 31.03.2020')).toBeTruthy();
         });
 
-        await act(() => user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse1'));
-        await act(() =>
-            user.click(
-                getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
-                    selector: 'input',
-                    exact: false,
-                })
-            )
+        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse1');
+        await user.click(
+            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+                selector: 'input',
+                exact: false,
+            })
         );
-        await act(() => user.type(getByLabelText('Vurder om beløpet er i behold'), 'Begrunnelse2'));
-        await act(() =>
-            user.click(
-                getByRole('radio', {
-                    name: 'Nei',
-                })
-            )
+        await user.type(getByLabelText('Vurder om beløpet er i behold'), 'Begrunnelse2');
+        await user.click(
+            getByRole('radio', {
+                name: 'Nei',
+            })
         );
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og gå videre til neste periode',
+            })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
 
         expect(getByText('01.05.2020 - 30.06.2020')).toBeTruthy();
 
-        await act(() =>
-            user.selectOptions(
-                getByRole('combobox', {
-                    name: 'Kopier vilkårsvurdering fra',
-                }),
-                '01.01.2020 - 31.03.2020'
-            )
+        await user.selectOptions(
+            getByRole('combobox', {
+                name: 'Kopier vilkårsvurdering fra',
+            }),
+            '01.01.2020 - 31.03.2020'
         );
 
         expect(getByText('Er beløpet i behold?')).toBeTruthy();
@@ -396,26 +370,10 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(getByText('Ingen tilbakekreving')).toBeTruthy();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
-        );
-
-        expect(
+        await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Lagre og gå videre til vedtak',
             })
-        ).toBeEnabled();
-
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lagre og fortsett',
-                })
-            )
         );
     });
 
@@ -451,6 +409,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
+        setupHttpMock();
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>({
             ytelsestype: Ytelsetype.Barnetrygd,
@@ -458,9 +417,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } = render(
             <BehandlingProvider>
-                <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
                     <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-                </FeilutbetalingVilkårsvurderingProvider>
+                </VilkårsvurderingProvider>
             </BehandlingProvider>
         );
 
@@ -474,21 +433,24 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ).toBeTruthy();
         });
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Suksess fra 01.01.2020 til 31.03.2020',
+            })
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeTruthy();
 
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til neste periode',
             })
-        ).toBeDisabled();
+        ).toBeEnabled();
+        expect(
+            getByRole('button', {
+                name: 'Gå tilbake til foreldelse',
+            })
+        ).toBeEnabled();
 
         expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
 
@@ -512,12 +474,10 @@ describe('Tester: VilkårsvurderingContainer', () => {
         expect(queryByLabelText('Nei')).toBeFalsy();
         expect(getByText('Nei')).toBeTruthy();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
+            })
         );
 
         expect(
@@ -539,17 +499,31 @@ describe('Tester: VilkårsvurderingContainer', () => {
         expect(getByLabelText('Nei')).toBeChecked();
         expect(getByText('Ingen tilbakekreving')).toBeTruthy();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lukk',
-                })
-            )
+        expect(
+            getByRole('button', {
+                name: 'Gå videre til vedtak',
+            })
+        ).toBeEnabled();
+        expect(
+            getByRole('button', {
+                name: 'Gå tilbake til forrige periode',
+            })
+        ).toBeEnabled();
+
+        await user.click(
+            getByRole('button', {
+                name: 'Gå tilbake til forrige periode',
+            })
         );
 
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til neste periode',
+            })
+        ).toBeEnabled();
+        expect(
+            getByRole('button', {
+                name: 'Gå tilbake til foreldelse',
             })
         ).toBeEnabled();
     });
@@ -594,9 +568,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         const { getByText, getByRole, getByLabelText } = render(
             <BehandlingProvider>
-                <FeilutbetalingVilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
                     <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-                </FeilutbetalingVilkårsvurderingProvider>
+                </VilkårsvurderingProvider>
             </BehandlingProvider>
         );
 
@@ -648,28 +622,23 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 })
             ).toBeTruthy();
 
-            // Knapp for navigering tilbake mellom faner skal alltid være synlig enabled
             expect(
                 getByRole('button', {
-                    name: 'Forrige',
+                    name: 'Gå tilbake til foreldelse',
                 })
             ).toBeEnabled();
 
-            // Knapp for navigering til neste fane skal være synlig men disabled når vilkårspanel er åpent
             expect(
                 getByRole('button', {
-                    name: 'Neste',
+                    name: 'Gå videre til neste periode',
                 })
-            ).toBeDisabled();
+            ).toBeEnabled();
         });
 
-        await act(() =>
-            // Bruker klikker seg videre til den andre perioden
-            user.click(
-                getByRole('button', {
-                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
+            })
         );
 
         // Tittel skal alltid være synlig
@@ -720,41 +689,139 @@ describe('Tester: VilkårsvurderingContainer', () => {
             })
         ).toBeTruthy();
 
-        // Knapp for navigering tilbake mellom faner skal alltid være synlig enabled
         expect(
             getByRole('button', {
-                name: 'Forrige',
+                name: 'Gå tilbake til forrige periode',
             })
         ).toBeEnabled();
 
-        // Knapp for navigering til neste fane skal være synlig men disabled når vilkårspanel er åpent
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til vedtak',
             })
-        ).toBeDisabled();
+        ).toBeEnabled();
 
-        await act(() =>
-            // Bruker klikker på lukk knapp
-            user.click(
-                getByRole('button', {
-                    name: 'Lukk',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Gå tilbake til forrige periode',
+            })
         );
 
-        // Knapp for navigering tilbake mellom faner skal alltid være synlig enabled
         expect(
             getByRole('button', {
-                name: 'Forrige',
+                name: 'Gå tilbake til foreldelse',
             })
         ).toBeEnabled();
 
-        // Knapp for navigering til neste fane skal nå være synlig og enabled
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til neste periode',
             })
         ).toBeEnabled();
+    });
+
+    test('- periode med udefinert resultat er ikke behandlet', async () => {
+        setupUseBehandlingApiMock({
+            perioder: [
+                {
+                    ...perioder[0],
+                    begrunnelse: 'Begrunnelse vilkår 1',
+                    vilkårsvurderingsresultatInfo: {
+                        vilkårsvurderingsresultat: Vilkårsresultat.Udefinert,
+                        aktsomhet: undefined,
+                        godTro: undefined,
+                    },
+                },
+                {
+                    ...perioder[1],
+                    begrunnelse: 'Begrunnelse vilkår 2',
+                    vilkårsvurderingsresultatInfo: {
+                        vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
+                        aktsomhet: {
+                            begrunnelse: 'Begrunnelse aktsomhet 2',
+                            aktsomhet: Aktsomhet.Forsett,
+                            særligeGrunner: [],
+                        },
+                        godTro: {
+                            begrunnelse: 'Begrunnelse god tro 2',
+                            beløpErIBehold: false,
+                        },
+                    },
+                },
+            ],
+            rettsgebyr: 1199,
+        });
+        setupHttpMock();
+        const behandling = mock<IBehandling>();
+        const fagsak = mock<IFagsak>({
+            ytelsestype: Ytelsetype.Overgangsstønad,
+        });
+
+        const { getByText, getByRole, getByLabelText } = render(
+            <BehandlingProvider>
+                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                    <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
+                </VilkårsvurderingProvider>
+            </BehandlingProvider>
+        );
+
+        await waitFor(async () => {
+            expect(getByText('Tilbakekreving')).toBeTruthy();
+            expect(getByText('Detaljer for valgt periode')).toBeTruthy();
+            expect(
+                getByRole('button', {
+                    name: 'Advarsel fra 01.01.2020 til 31.03.2020',
+                })
+            ).toBeTruthy();
+            expect(
+                getByRole('button', {
+                    name: 'Gå videre til neste periode',
+                })
+            ).toBeEnabled();
+            expect(
+                getByRole('button', {
+                    name: 'Gå tilbake til foreldelse',
+                })
+            ).toBeEnabled();
+
+            expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
+
+            expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue(
+                'Begrunnelse vilkår 1'
+            );
+            expect(
+                getByLabelText(
+                    'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
+            ).not.toBeChecked();
+            expect(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
+            ).not.toBeChecked();
+            expect(
+                getByLabelText(
+                    'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                    {
+                        selector: 'input',
+                        exact: false,
+                    }
+                )
+            ).not.toBeChecked();
+            expect(
+                getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+                    selector: 'input',
+                    exact: false,
+                })
+            ).not.toBeChecked();
+        });
     });
 });
