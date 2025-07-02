@@ -468,7 +468,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                 <FeilModal
                     feil={sendInnSkjemaMutation.error}
                     lukkFeilModal={sendInnSkjemaMutation.reset}
-                    modalBeskjed="Du kunne ikke lagre vilkårsvurderingen"
+                    beskjed="Du kunne ikke lagre vilkårsvurderingen"
                     behandlingId={behandling.behandlingId}
                     fagsakId={fagsak.eksternFagsakId}
                 />
