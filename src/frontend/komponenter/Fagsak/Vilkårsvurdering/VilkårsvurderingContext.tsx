@@ -121,7 +121,11 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         useEffect(() => {
             if (skjemaData) {
                 const behandletPerioder = skjemaData.filter(
-                    periode => !periode.foreldet && erBehandlet(periode)
+                    periode =>
+                        !periode.foreldet &&
+                        erBehandlet(periode) &&
+                        periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat !==
+                            Vilkårsresultat.Udefinert
                 );
                 settBehandletPerioder(behandletPerioder);
             }
