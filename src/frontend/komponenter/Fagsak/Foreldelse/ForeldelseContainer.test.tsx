@@ -5,15 +5,13 @@ import type {
     IFeilutbetalingForeldelse,
 } from '../../../typer/feilutbetalingtyper';
 
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
 import { FeilutbetalingForeldelseProvider } from './FeilutbetalingForeldelseContext';
 import ForeldelseContainer from './ForeldelseContainer';
-import { useBehandlingApi } from '../../../api/behandling';
-import { useBehandling } from '../../../context/BehandlingContext';
 import { Fagsystem, Foreldelsevurdering } from '../../../kodeverk';
 import { Behandlingstatus } from '../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
@@ -27,13 +25,13 @@ jest.mock('../../../api/http/HttpProvider', () => {
         }),
     };
 });
-
+const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: jest.fn(),
+    useBehandling: () => mockUseBehandling(),
 }));
-
+const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: jest.fn(),
+    useBehandlingApi: () => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
@@ -41,7 +39,21 @@ jest.mock('react-router', () => ({
     useNavigate: () => jest.fn(),
 }));
 
+const renderForeldelseContainer = (behandling: IBehandling, fagsak: IFagsak) => {
+    return render(
+        <FeilutbetalingForeldelseProvider behandling={behandling} fagsak={fagsak}>
+            <ForeldelseContainer behandling={behandling} />
+        </FeilutbetalingForeldelseProvider>
+    );
+};
+
 describe('Tester: ForeldelseContainer', () => {
+    let user: ReturnType<typeof userEvent.setup>;
+
+    beforeEach(() => {
+        user = userEvent.setup();
+        jest.clearAllMocks();
+    });
     const perioder: ForeldelsePeriode[] = [
         {
             feilutbetaltBeløp: 1333,
@@ -78,8 +90,7 @@ describe('Tester: ForeldelseContainer', () => {
         foreldelse?: IFeilutbetalingForeldelse
     ) => {
         if (foreldelse) {
-            // @ts-expect-error mock
-            useBehandlingApi.mockImplementation(() => ({
+            mockUseBehandlingApi.mockImplementation(() => ({
                 gjerFeilutbetalingForeldelseKall: () => {
                     const ressurs = mock<Ressurs<IFeilutbetalingForeldelse>>({
                         status: RessursStatus.Suksess,
@@ -96,8 +107,7 @@ describe('Tester: ForeldelseContainer', () => {
                 },
             }));
         }
-        // @ts-expect-error mock
-        useBehandling.mockImplementation(() => ({
+        mockUseBehandling.mockImplementation(() => ({
             erStegBehandlet: () => behandlet,
             erStegAutoutført: () => autoutført,
             visVenteModal: false,
@@ -109,25 +119,21 @@ describe('Tester: ForeldelseContainer', () => {
     };
 
     test('- vis og fyll ut perioder og send inn', async () => {
-        const user = userEvent.setup();
         setupMock(false, false, false, feilutbetalingForeldelse);
         const fagsak = mock<IFagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
         const behandling = mock<IBehandling>({ eksternBrukId: '1' });
 
-        const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } = render(
-            <FeilutbetalingForeldelseProvider behandling={behandling} fagsak={fagsak}>
-                <ForeldelseContainer behandling={behandling} />
-            </FeilutbetalingForeldelseProvider>
-        );
+        const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
+            renderForeldelseContainer(behandling, fagsak);
 
-        await waitFor(async () => {
-            expect(getByText('Foreldelse')).toBeTruthy();
-            expect(getByText('Detaljer for valgt periode')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Foreldelse')).toBeInTheDocument();
+            expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         });
 
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeTruthy();
-        expect(getByText('3 måneder')).toBeTruthy();
-        expect(getByText('1 333')).toBeTruthy();
+        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+        expect(getByText('3 måneder')).toBeInTheDocument();
+        expect(getByText('1 333')).toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -135,26 +141,25 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toBeDisabled();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        await waitFor(() => {
+            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        });
+        await user.type(getByLabelText('Vurdering'), 'Begrunnelse 1');
+        await user.click(getByLabelText('Perioden er ikke foreldet'));
 
-        await act(() => user.type(getByLabelText('Vurdering'), 'Begrunnelse 1'));
-        await act(() => user.click(getByLabelText('Perioden er ikke foreldet')));
-
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await waitFor(() => {
+            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        });
 
         expect(
             getByRole('button', {
@@ -162,50 +167,46 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toBeDisabled();
 
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeTruthy();
-        expect(getByText('2 måneder')).toBeTruthy();
-        expect(getByText('1 333')).toBeTruthy();
+        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
+        expect(getByText('2 måneder')).toBeInTheDocument();
+        expect(getByText('1 333')).toBeInTheDocument();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        await waitFor(() => {
+            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        });
 
-        await act(() => user.type(getByLabelText('Vurdering'), 'Begrunnelse 2'));
-        await act(() => user.click(getByLabelText('Perioden er ikke foreldet')));
+        await user.type(getByLabelText('Vurdering'), 'Begrunnelse 2');
+        await user.click(getByLabelText('Perioden er ikke foreldet'));
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Bekreft',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Bekreft',
+            })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await waitFor(() => {
+            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        });
 
         expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
-
         expect(
             getByRole('button', {
                 name: 'Lagre og fortsett',
             })
         ).toBeEnabled();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lagre og fortsett',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og fortsett',
+            })
         );
     });
 
     test('- vis utfylt', async () => {
-        const user = userEvent.setup();
         setupMock(true, false, false, {
             foreldetPerioder: [
                 {
@@ -226,16 +227,14 @@ describe('Tester: ForeldelseContainer', () => {
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, getByLabelText, queryByText } = render(
-            <FeilutbetalingForeldelseProvider behandling={behandling} fagsak={fagsak}>
-                <ForeldelseContainer behandling={behandling} />
-            </FeilutbetalingForeldelseProvider>
+        const { getByText, getByRole, getByLabelText, queryByText } = renderForeldelseContainer(
+            behandling,
+            fagsak
         );
 
-        await waitFor(async () => {
-            expect(getByText('Foreldelse')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Foreldelse')).toBeInTheDocument();
             expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
-
             expect(
                 getByRole('button', {
                     name: 'Neste',
@@ -243,12 +242,10 @@ describe('Tester: ForeldelseContainer', () => {
             ).toBeEnabled();
         });
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Suksess fra 01.01.2020 til 31.03.2020',
+            })
         );
 
         expect(
@@ -257,9 +254,8 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toBeDisabled();
 
-        expect(queryByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeTruthy();
-
+        expect(queryByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
         expect(getByLabelText('Vurdering')).toHaveValue('Begrunnelse 1');
         expect(getByLabelText('Perioden er foreldet')).toBeChecked();
         expect(
@@ -269,16 +265,13 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toHaveValue('01.01.2021');
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
+            })
         );
 
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeTruthy();
-
+        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
         expect(getByLabelText('Vurdering')).toHaveValue('Begrunnelse 2');
         expect(
             getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
@@ -293,12 +286,10 @@ describe('Tester: ForeldelseContainer', () => {
             '24.12.2020'
         );
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lukk',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lukk',
+            })
         );
 
         expect(
@@ -309,7 +300,6 @@ describe('Tester: ForeldelseContainer', () => {
     });
 
     test('- vis utfylt - lesevisning', async () => {
-        const user = userEvent.setup();
         setupMock(true, true, false, {
             foreldetPerioder: [
                 {
@@ -330,77 +320,72 @@ describe('Tester: ForeldelseContainer', () => {
         const behandling = mock<IBehandling>({ status: Behandlingstatus.FatterVedtak });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, getByLabelText } = render(
-            <FeilutbetalingForeldelseProvider behandling={behandling} fagsak={fagsak}>
-                <ForeldelseContainer behandling={behandling} />
-            </FeilutbetalingForeldelseProvider>
+        const { getByText, getByRole, getByLabelText } = renderForeldelseContainer(
+            behandling,
+            fagsak
         );
 
-        await waitFor(async () => {
+        await waitFor(() => {
             // Tittel skal alltid være synlig
-            expect(getByText('Foreldelse', { selector: 'h2' })).toBeTruthy();
-
+            expect(getByText('Foreldelse', { selector: 'h2' })).toBeInTheDocument();
             // Første periode sitt endringspanel skal være åpnet by default i lesevisning, sjekker at riktige verdier er satt
-            expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeTruthy();
-            expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeTruthy();
-            expect(getByText('Begrunnelse 1')).toBeTruthy();
-            expect(
-                getByLabelText('Perioden er foreldet', {
-                    selector: 'input',
-                    exact: false,
-                })
-            ).toBeChecked();
-            expect(
-                getByLabelText(
-                    'Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes',
-                    {
-                        selector: 'input',
-                        exact: false,
-                    }
-                )
-            ).not.toBeChecked();
-            expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
-
-            // Alle tidslinje knappene skal alltid være synlige
-            expect(
-                getByRole('button', {
-                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
-                })
-            ).toBeTruthy();
-            expect(
-                getByRole('button', {
-                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
-                })
-            ).toBeTruthy();
-
-            // Knapper for navigering mellom faner skal alltid være synlige og enabled
-            expect(
-                getByRole('button', {
-                    name: 'Forrige',
-                })
-            ).toBeEnabled();
-            expect(
-                getByRole('button', {
-                    name: 'Neste',
-                })
-            ).toBeEnabled();
+            expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
         });
+        expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeInTheDocument();
+        expect(getByText('Begrunnelse 1')).toBeInTheDocument();
+        expect(
+            getByLabelText('Perioden er foreldet', {
+                selector: 'input',
+                exact: false,
+            })
+        ).toBeChecked();
+        expect(
+            getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes', {
+                selector: 'input',
+                exact: false,
+            })
+        ).not.toBeChecked();
+        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Suksess fra 01.05.2020 til 30.06.2020',
-                })
-            )
+        // Alle tidslinje knappene skal alltid være synlige
+        expect(
+            getByRole('button', {
+                name: 'Suksess fra 01.01.2020 til 31.03.2020',
+            })
+        ).toBeInTheDocument();
+        expect(
+            getByRole('button', {
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
+            })
+        ).toBeInTheDocument();
+
+        // Knapper for navigering mellom faner skal alltid være synlige og enabled
+        expect(
+            getByRole('button', {
+                name: 'Forrige',
+            })
+        ).toBeEnabled();
+        expect(
+            getByRole('button', {
+                name: 'Neste',
+            })
+        ).toBeEnabled();
+
+        await user.click(
+            getByRole('button', {
+                name: 'Suksess fra 01.05.2020 til 30.06.2020',
+            })
         );
 
         // Tittel skal alltid være synlig
-        expect(getByText('Foreldelse', { selector: 'h2' })).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Foreldelse', { selector: 'h2' })).toBeInTheDocument();
+        });
 
         // Andre periode sitt endringspanel skal nå være åpnet, sjekker at riktige verdier er satt
-        expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeTruthy();
-        expect(getByText('01.05.2020 - 30.06.2020', { selector: 'label' })).toBeTruthy();
-        expect(getByText('Begrunnelse 2')).toBeTruthy();
+        expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
+        expect(getByText('01.05.2020 - 30.06.2020', { selector: 'label' })).toBeInTheDocument();
+        expect(getByText('Begrunnelse 2')).toBeInTheDocument();
         expect(
             getByLabelText('Perioden er foreldet', {
                 selector: 'input',
@@ -423,12 +408,12 @@ describe('Tester: ForeldelseContainer', () => {
             getByRole('button', {
                 name: 'Suksess fra 01.01.2020 til 31.03.2020',
             })
-        ).toBeTruthy();
+        ).toBeInTheDocument();
         expect(
             getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
-        ).toBeTruthy();
+        ).toBeInTheDocument();
 
         // Knapper for navigering mellom faner skal alltid være synlige og enabled
         expect(
@@ -449,22 +434,18 @@ describe('Tester: ForeldelseContainer', () => {
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole } = render(
-            <FeilutbetalingForeldelseProvider behandling={behandling} fagsak={fagsak}>
-                <ForeldelseContainer behandling={behandling} />
-            </FeilutbetalingForeldelseProvider>
-        );
+        const { getByText, getByRole } = renderForeldelseContainer(behandling, fagsak);
 
-        await waitFor(async () => {
-            expect(getByText('Foreldelse')).toBeTruthy();
-            expect(getByText('Foreldelsesloven §§ 2 og 3')).toBeTruthy();
-            expect(getByText('Automatisk vurdert')).toBeTruthy();
-
-            expect(
-                getByRole('button', {
-                    name: 'Neste',
-                })
-            ).toBeEnabled();
+        await waitFor(() => {
+            expect(getByText('Foreldelse')).toBeInTheDocument();
         });
+        expect(getByText('Foreldelsesloven §§ 2 og 3')).toBeInTheDocument();
+        expect(getByText('Automatisk vurdert')).toBeInTheDocument();
+
+        expect(
+            getByRole('button', {
+                name: 'Neste',
+            })
+        ).toBeEnabled();
     });
 });
