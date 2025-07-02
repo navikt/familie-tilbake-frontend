@@ -13,7 +13,7 @@ export enum Ytelsetype {
     Barnetilsyn = 'BARNETILSYN',
     Skolepenger = 'SKOLEPENGER',
     Kontantstøtte = 'KONTANTSTØTTE',
-    Tilleggsstønad = 'TILLEGGSSTØNAD',
+    Tilleggsstønader = 'TILLEGGSSTØNADER',
 }
 
 export const ytelsetype: Record<Ytelsetype, string> = {
@@ -22,7 +22,7 @@ export const ytelsetype: Record<Ytelsetype, string> = {
     [Ytelsetype.Barnetilsyn]: 'Barnetilsyn',
     [Ytelsetype.Skolepenger]: 'Skolepenger',
     [Ytelsetype.Kontantstøtte]: 'Kontantstøtte',
-    [Ytelsetype.Tilleggsstønad]: 'Tilleggsstønad',
+    [Ytelsetype.Tilleggsstønader]: 'Tilleggsstønader',
 };
 
 const hendelseTyperForYtelse = {
@@ -82,7 +82,7 @@ const hendelseTyperForYtelse = {
 export const hentHendelseTyper = (ytelse: Ytelsetype, erInstitusjon: boolean): HendelseType[] => {
     if (
         (erInstitusjon && ytelse === Ytelsetype.Barnetrygd) ||
-        ytelse === Ytelsetype.Tilleggsstønad
+        ytelse === Ytelsetype.Tilleggsstønader
     ) {
         return [HendelseType.Annet];
     }

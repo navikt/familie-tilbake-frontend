@@ -43,7 +43,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         [Ytelsetype.Barnetilsyn]: vilkårsvurderingStegInfotekst,
         [Ytelsetype.Overganggstønad]: vilkårsvurderingStegInfotekst,
         [Ytelsetype.Skolepenger]: vilkårsvurderingStegInfotekst,
-        [Ytelsetype.Tilleggsstønad]: vilkårsvurderingStegInfotekst,
+        [Ytelsetype.Tilleggsstønader]: vilkårsvurderingStegInfotekst,
     }[fagsak.ytelsestype];
 
     if (feilutbetalingVilkårsvurdering?.status === RessursStatus.Suksess) {
