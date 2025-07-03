@@ -180,7 +180,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
 }) => {
     const {
         kanIlleggeRenter,
-        oppdaterPeriode,
         onSplitPeriode,
         nestePeriode,
         forrigePeriode,
@@ -190,12 +189,13 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         sendInnSkjemaOgNaviger,
     } = useVilkårsvurdering();
     const [navigerer, settNavigerer] = useState(false);
-    const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
-        (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
-            oppdaterPeriode(oppdatertPeriode);
-        }
-    );
+    const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema();
     const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
+
+    // Legg til debug logging
+    React.useEffect(() => {
+        console.log('VilkårsvurderingPeriodeSkjema - visFeilmeldinger:', skjema.visFeilmeldinger);
+    }, [skjema.visFeilmeldinger]);
 
     React.useEffect(() => {
         settNavigerer(false);

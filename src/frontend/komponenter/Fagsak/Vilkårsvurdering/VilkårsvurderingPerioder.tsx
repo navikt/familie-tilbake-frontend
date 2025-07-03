@@ -10,7 +10,10 @@ import { useState } from 'react';
 import { PeriodeHandling } from './typer/periodeHandling';
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
-import { useVilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjemaContext';
+import {
+    useVilkårsvurderingPeriodeSkjema,
+    VilkårsvurderingPeriodeSkjemaProvider,
+} from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vilkårsresultat } from '../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
@@ -87,18 +90,76 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
     } = useVilkårsvurdering();
     const { harUlagredeData, nullstillIkkePersisterteKomponenter } = useBehandling();
 
-    const { validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
-        (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
-            oppdaterPeriode(oppdatertPeriode);
-        }
-    );
-
     const [visModal, setVisModal] = useState(false);
     const [pendingPeriode, setPendingPeriode] = useState<
         VilkårsvurderingPeriodeSkjemaData | undefined
     >();
 
     const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
+
+    return perioder && tidslinjeRader ? (
+        <VilkårsvurderingPeriodeSkjemaProvider onOppdaterPeriode={oppdaterPeriode}>
+            <VilkårsvurderingPerioderContent
+                behandling={behandling}
+                fagsak={fagsak}
+                perioder={perioder}
+                erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
+                erLesevisning={erLesevisning}
+                valgtPeriode={valgtPeriode}
+                settValgtPeriode={settValgtPeriode}
+                behandletPerioder={behandletPerioder}
+                valideringsFeilmelding={valideringsFeilmelding}
+                sendInnSkjemaOgNaviger={sendInnSkjemaOgNaviger}
+                harUlagredeData={harUlagredeData}
+                nullstillIkkePersisterteKomponenter={nullstillIkkePersisterteKomponenter}
+                tidslinjeRader={tidslinjeRader}
+                visModal={visModal}
+                setVisModal={setVisModal}
+                pendingPeriode={pendingPeriode}
+                setPendingPeriode={setPendingPeriode}
+            />
+        </VilkårsvurderingPeriodeSkjemaProvider>
+    ) : null;
+};
+
+const VilkårsvurderingPerioderContent: React.FC<{
+    behandling: IBehandling;
+    fagsak: IFagsak;
+    perioder: VilkårsvurderingPeriodeSkjemaData[];
+    erTotalbeløpUnder4Rettsgebyr: boolean;
+    erLesevisning: boolean;
+    valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined;
+    settValgtPeriode: (periode: VilkårsvurderingPeriodeSkjemaData | undefined) => void;
+    behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
+    valideringsFeilmelding: string | undefined;
+    sendInnSkjemaOgNaviger: (handling: PeriodeHandling) => Promise<void>;
+    harUlagredeData: boolean;
+    nullstillIkkePersisterteKomponenter: () => void;
+    tidslinjeRader: TimelinePeriodProps[][];
+    visModal: boolean;
+    setVisModal: (vis: boolean) => void;
+    pendingPeriode: VilkårsvurderingPeriodeSkjemaData | undefined;
+    setPendingPeriode: (periode: VilkårsvurderingPeriodeSkjemaData | undefined) => void;
+}> = ({
+    behandling,
+    fagsak,
+    perioder,
+    erTotalbeløpUnder4Rettsgebyr,
+    erLesevisning,
+    valgtPeriode,
+    settValgtPeriode,
+    behandletPerioder,
+    valideringsFeilmelding,
+    sendInnSkjemaOgNaviger,
+    harUlagredeData,
+    nullstillIkkePersisterteKomponenter,
+    tidslinjeRader,
+    visModal,
+    setVisModal,
+    pendingPeriode,
+    setPendingPeriode,
+}) => {
+    const { validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema();
 
     const onSelectPeriode = (periode: TimelinePeriodProps) => {
         const periodeFom = periode.start.toISOString().substring(0, 10);
@@ -127,15 +188,19 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
 
     const handleLagreOgBytt = async () => {
         try {
-            if (!pendingPeriode) return;
-            if (!validerOgOppdaterFelter(pendingPeriode)) return;
+            if (!valgtPeriode) return;
 
-            await sendInnSkjemaOgNaviger(PeriodeHandling.GåTilNesteSteg);
+            console.log('Parent - calling validerOgOppdaterFelter for periode:', valgtPeriode);
+            const valideringsresultat = validerOgOppdaterFelter(valgtPeriode);
+            console.log('Parent - validation result:', valideringsresultat);
+
+            if (!valideringsresultat) return;
+
+            await sendInnSkjemaOgNaviger(PeriodeHandling.NestePeriode);
 
             if (pendingPeriode) {
                 settValgtPeriode(pendingPeriode);
             }
-            setVisModal(false);
             setPendingPeriode(undefined);
         } catch (error) {
             console.error('Failed to save:', error);
@@ -149,7 +214,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         setPendingPeriode(undefined);
     };
 
-    return perioder && tidslinjeRader ? (
+    return (
         <VStack gap="5">
             {valideringsFeilmelding && (
                 <FTAlertStripe variant="error" fullWidth>
@@ -191,7 +256,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                 </BodyShort>
             </ModalWrapper>
         </VStack>
-    ) : null;
+    );
 };
 
 export default VilkårsvurderingPerioder;

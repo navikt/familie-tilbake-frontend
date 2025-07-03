@@ -5,6 +5,8 @@ import type {
 } from '../../../../typer/feilutbetalingtyper';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
+import React, { createContext, useContext, useState, useCallback } from 'react';
+
 import {
     type Avhengigheter,
     feil,
@@ -113,9 +115,25 @@ const avhengigheterOppfyltMerEnnAktivitetFelter = (avhengigheter?: Avhengigheter
     avhengigheterOppfyltGrunnerTilReduksjonFelter(avhengigheter) &&
     avhengigheter?.harMerEnnEnAktivitet.verdi === true;
 
-const useVilkårsvurderingPeriodeSkjema = (
-    oppdaterPeriode: (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => void
-) => {
+// Context definition
+interface VilkarvurderingPeriodeSkjemaContextType {
+    skjema: ReturnType<typeof useSkjema<VilkårsvurderingSkjemaDefinisjon, string>>['skjema'] & {
+        visFeilmeldinger: boolean;
+    };
+    validerOgOppdaterFelter: (periode: VilkårsvurderingPeriodeSkjemaData) => boolean;
+    settVisFeilmeldinger: (vis: boolean) => void;
+}
+
+const VilkårsvurderingPeriodeSkjemaContext =
+    createContext<VilkarvurderingPeriodeSkjemaContextType | null>(null);
+
+export const VilkårsvurderingPeriodeSkjemaProvider: React.FC<{
+    children: React.ReactNode;
+    onOppdaterPeriode: (periode: VilkårsvurderingPeriodeSkjemaData) => void;
+}> = ({ children, onOppdaterPeriode }) => {
+    const [visFeilmeldinger, settVisFeilmeldinger] = useState(false);
+
+    // Flytt all hook-logikk hit
     const feilutbetaltBeløpPeriode = useFelt<number>({
         feltId: 'feilutbetaltBeløpPeriode',
         verdi: 0,
@@ -365,7 +383,7 @@ const useVilkårsvurderingPeriodeSkjema = (
         skjemanavn: 'vilkårsvurderingskjema',
     });
 
-    const byggGodTro = (): GodTro => {
+    const byggGodTro = useCallback((): GodTro => {
         const erBeløpErIBehold = skjema.felter.erBeløpetIBehold.verdi === OptionJA;
         return {
             begrunnelse: skjema.felter.aktsomhetBegrunnelse.verdi,
@@ -374,9 +392,13 @@ const useVilkårsvurderingPeriodeSkjema = (
                 ? parseStringToNumber(skjema.felter.godTroTilbakekrevesBeløp.verdi)
                 : undefined,
         };
-    };
+    }, [
+        skjema.felter.erBeløpetIBehold.verdi,
+        skjema.felter.aktsomhetBegrunnelse.verdi,
+        skjema.felter.godTroTilbakekrevesBeløp.verdi,
+    ]);
 
-    const byggAktsomhet = (): Aktsomhetsvurdering => {
+    const byggAktsomhet = useCallback((): Aktsomhetsvurdering => {
         const erEgendefinert = skjema.felter.uaktsomAndelTilbakekreves.verdi === EGENDEFINERT;
 
         const erForsto =
@@ -399,15 +421,22 @@ const useVilkårsvurderingPeriodeSkjema = (
         const harAndelTilbakekreves =
             harGrunnerTilReduksjon && skjema.felter.harMerEnnEnAktivitet.verdi !== true;
 
+        const ileggRenter = erForstoForsett
+            ? skjema.felter.forstoIlleggeRenter.verdi === OptionJA
+            : erGrovtUaktsomhet
+              ? skjema.felter.grovtUaktsomIlleggeRenter.verdi === OptionJA
+              : undefined;
+
+        const andelTilbakekreves = !harAndelTilbakekreves
+            ? undefined
+            : erEgendefinert
+              ? parseStringToNumber(skjema.felter.uaktsomAndelTilbakekrevesManuelt.verdi)
+              : parseStringToNumber(skjema.felter.uaktsomAndelTilbakekreves.verdi);
+
         return {
             begrunnelse: skjema.felter.aktsomhetBegrunnelse.verdi,
             aktsomhet: skjema.felter.aktsomhetVurdering.verdi as Aktsomhet,
-            ileggRenter:
-                !erForstoForsett && !erGrovtUaktsomhet
-                    ? undefined
-                    : erForstoForsett
-                      ? skjema.felter.forstoIlleggeRenter.verdi === OptionJA
-                      : skjema.felter.grovtUaktsomIlleggeRenter.verdi === OptionJA,
+            ileggRenter,
             tilbakekrevSmåbeløp: skalVurderereSmåbeløp
                 ? skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA
                 : undefined,
@@ -426,41 +455,72 @@ const useVilkårsvurderingPeriodeSkjema = (
             særligeGrunnerTilReduksjon: !skalIkkeVurdereSærligeGrunner
                 ? harGrunnerTilReduksjon
                 : undefined,
-            andelTilbakekreves: !harAndelTilbakekreves
-                ? undefined
-                : erEgendefinert
-                  ? parseStringToNumber(skjema.felter.uaktsomAndelTilbakekrevesManuelt.verdi)
-                  : parseStringToNumber(skjema.felter.uaktsomAndelTilbakekreves.verdi),
+            andelTilbakekreves,
             beløpTilbakekreves:
                 !erForstoForsett && !harAndelTilbakekreves && harGrunnerTilReduksjon
                     ? parseStringToNumber(skjema.felter.uaktsomTilbakekrevesBeløp.verdi)
                     : undefined,
         };
-    };
+    }, [skjema.felter]);
 
-    const validerOgOppdaterFelter = (periode: VilkårsvurderingPeriodeSkjemaData) => {
-        if (!kanSendeSkjema()) {
-            return false;
-        }
-        const erGodTro = skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GodTro;
-        oppdaterPeriode({
-            ...periode,
-            begrunnelse: skjema.felter.vilkårsresultatBegrunnelse.verdi,
-            vilkårsvurderingsresultatInfo: {
-                vilkårsvurderingsresultat: skjema.felter.vilkårsresultatvurdering
-                    .verdi as Vilkårsresultat,
-                godTro: erGodTro ? byggGodTro() : undefined,
-                aktsomhet: !erGodTro ? byggAktsomhet() : undefined,
-            },
-        });
-        nullstillSkjema();
-        return true;
-    };
+    const validerOgOppdaterFelter = useCallback(
+        (periode: VilkårsvurderingPeriodeSkjemaData) => {
+            // Sett visFeilmeldinger til true når validering startes
+            settVisFeilmeldinger(true);
 
-    return {
-        skjema,
+            if (!kanSendeSkjema()) {
+                return false;
+            }
+            const erGodTro =
+                skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GodTro;
+            onOppdaterPeriode({
+                ...periode,
+                begrunnelse: skjema.felter.vilkårsresultatBegrunnelse.verdi,
+                vilkårsvurderingsresultatInfo: {
+                    vilkårsvurderingsresultat: skjema.felter.vilkårsresultatvurdering
+                        .verdi as Vilkårsresultat,
+                    godTro: erGodTro ? byggGodTro() : undefined,
+                    aktsomhet: !erGodTro ? byggAktsomhet() : undefined,
+                },
+            });
+            nullstillSkjema();
+            return true;
+        },
+        [
+            kanSendeSkjema,
+            skjema.felter,
+            onOppdaterPeriode,
+            byggGodTro,
+            byggAktsomhet,
+            nullstillSkjema,
+        ]
+    );
+
+    const contextValue: VilkarvurderingPeriodeSkjemaContextType = {
+        skjema: {
+            ...skjema,
+            visFeilmeldinger,
+        },
         validerOgOppdaterFelter,
+        settVisFeilmeldinger,
     };
+
+    return (
+        <VilkårsvurderingPeriodeSkjemaContext.Provider value={contextValue}>
+            {children}
+        </VilkårsvurderingPeriodeSkjemaContext.Provider>
+    );
+};
+
+// Oppdater hook til å bruke context
+export const useVilkårsvurderingPeriodeSkjema = () => {
+    const context = useContext(VilkårsvurderingPeriodeSkjemaContext);
+    if (!context) {
+        throw new Error(
+            'useVilkårsvurderingPeriodeSkjema must be used within VilkårsvurderingPeriodeSkjemaProvider'
+        );
+    }
+    return context;
 };
 
 type VilkårsvurderingSkjemaDefinisjon = {
@@ -485,5 +545,4 @@ type VilkårsvurderingSkjemaDefinisjon = {
     grovtUaktsomIlleggeRenter: JaNeiOption | '';
 };
 
-export { useVilkårsvurderingPeriodeSkjema };
 export type { VilkårsvurderingSkjemaDefinisjon };
