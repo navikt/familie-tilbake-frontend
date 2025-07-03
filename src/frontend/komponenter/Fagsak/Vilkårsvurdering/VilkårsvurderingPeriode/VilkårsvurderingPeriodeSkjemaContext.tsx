@@ -5,7 +5,7 @@ import type {
 } from '../../../../typer/feilutbetalingtyper';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 
 import {
     type Avhengigheter,
@@ -122,6 +122,11 @@ interface VilkarvurderingPeriodeSkjemaContextType {
     };
     validerOgOppdaterFelter: (periode: VilkårsvurderingPeriodeSkjemaData) => boolean;
     settVisFeilmeldinger: (vis: boolean) => void;
+    nullstillSkjema: () => void;
+    populerSkjemaFraPeriode: (
+        periode: VilkårsvurderingPeriodeSkjemaData,
+        kanIlleggeRenter: boolean
+    ) => void;
 }
 
 const VilkårsvurderingPeriodeSkjemaContext =
@@ -488,22 +493,119 @@ export const VilkårsvurderingPeriodeSkjemaProvider: React.FC<{
         },
         [
             kanSendeSkjema,
-            skjema.felter,
             onOppdaterPeriode,
             byggGodTro,
             byggAktsomhet,
             nullstillSkjema,
+            skjema.felter.vilkårsresultatBegrunnelse.verdi,
+            skjema.felter.vilkårsresultatvurdering.verdi,
         ]
     );
 
-    const contextValue: VilkarvurderingPeriodeSkjemaContextType = {
-        skjema: {
-            ...skjema,
-            visFeilmeldinger,
+    const nullstillSkjemaOgFeilmeldinger = useCallback(() => {
+        nullstillSkjema();
+        settVisFeilmeldinger(false);
+    }, [nullstillSkjema]);
+
+    const populerSkjemaFraPeriode = useCallback(
+        (periode: VilkårsvurderingPeriodeSkjemaData, kanIlleggeRenter: boolean) => {
+            const { vilkårsvurderingsresultatInfo: vurdering } = periode || {};
+
+            skjema.felter.feilutbetaltBeløpPeriode.onChange(periode?.feilutbetaltBeløp || 0);
+            skjema.felter.vilkårsresultatBegrunnelse.onChange(periode?.begrunnelse || '');
+            skjema.felter.vilkårsresultatvurdering.onChange(
+                vurdering?.vilkårsvurderingsresultat || ''
+            );
+            skjema.felter.aktsomhetBegrunnelse.onChange(
+                (vurdering?.godTro
+                    ? vurdering?.godTro?.begrunnelse
+                    : vurdering?.aktsomhet?.begrunnelse) || ''
+            );
+            skjema.felter.erBeløpetIBehold.onChange(
+                finnJaNeiOption(vurdering?.godTro?.beløpErIBehold) || ''
+            );
+            skjema.felter.godTroTilbakekrevesBeløp.onChange(
+                vurdering?.godTro?.beløpTilbakekreves?.toString() || ''
+            );
+            const erForsett = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.Forsett;
+            const erSimpelUaktsomhet =
+                vurdering?.aktsomhet?.aktsomhet === Aktsomhet.SimpelUaktsomhet;
+            skjema.felter.aktsomhetVurdering.onChange(vurdering?.aktsomhet?.aktsomhet || '');
+            skjema.felter.forstoIlleggeRenter.onChange(
+                !kanIlleggeRenter
+                    ? OptionNEI
+                    : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
+            );
+            skjema.felter.tilbakekrevSmåbeløp.onChange(
+                erSimpelUaktsomhet
+                    ? finnJaNeiOption(vurdering?.aktsomhet?.tilbakekrevSmåbeløp) || ''
+                    : ''
+            );
+            skjema.felter.særligeGrunnerBegrunnelse.onChange(
+                !erForsett ? vurdering?.aktsomhet?.særligeGrunnerBegrunnelse || '' : ''
+            );
+            skjema.felter.særligeGrunner.onChange(
+                vurdering?.aktsomhet?.særligeGrunner?.map(dto => dto.særligGrunn) || []
+            );
+            const annetSærligGrunn = vurdering?.aktsomhet?.særligeGrunner?.find(
+                dto => dto.særligGrunn === SærligeGrunner.Annet
+            );
+            skjema.felter.særligeGrunnerAnnetBegrunnelse.onChange(
+                annetSærligGrunn?.begrunnelse || ''
+            );
+
+            skjema.felter.harMerEnnEnAktivitet.onChange(
+                !!periode?.aktiviteter && periode.aktiviteter.length > 1
+            );
+            skjema.felter.harGrunnerTilReduksjon.onChange(
+                !erForsett
+                    ? finnJaNeiOption(vurdering?.aktsomhet?.særligeGrunnerTilReduksjon) || ''
+                    : ''
+            );
+
+            const andelTilbakekreves = vurdering?.aktsomhet?.andelTilbakekreves?.toString() || '';
+            const erEgendefinert =
+                andelTilbakekreves !== '' && !ANDELER.includes(andelTilbakekreves);
+            skjema.felter.uaktsomAndelTilbakekreves.onChange(
+                erEgendefinert ? EGENDEFINERT : andelTilbakekreves
+            );
+            skjema.felter.uaktsomAndelTilbakekrevesManuelt.onChange(
+                erEgendefinert ? andelTilbakekreves : ''
+            );
+
+            skjema.felter.uaktsomTilbakekrevesBeløp.onChange(
+                vurdering?.aktsomhet?.beløpTilbakekreves?.toString() || ''
+            );
+            skjema.felter.grovtUaktsomIlleggeRenter.onChange(
+                !kanIlleggeRenter
+                    ? OptionNEI
+                    : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
+            );
+
+            settVisFeilmeldinger(false);
         },
-        validerOgOppdaterFelter,
-        settVisFeilmeldinger,
-    };
+        [skjema, settVisFeilmeldinger]
+    );
+
+    const contextValue: VilkarvurderingPeriodeSkjemaContextType = useMemo(
+        () => ({
+            skjema: {
+                ...skjema,
+                visFeilmeldinger,
+            },
+            validerOgOppdaterFelter,
+            settVisFeilmeldinger,
+            nullstillSkjema: nullstillSkjemaOgFeilmeldinger,
+            populerSkjemaFraPeriode,
+        }),
+        [
+            skjema,
+            visFeilmeldinger,
+            validerOgOppdaterFelter,
+            nullstillSkjemaOgFeilmeldinger,
+            populerSkjemaFraPeriode,
+        ]
+    );
 
     return (
         <VilkårsvurderingPeriodeSkjemaContext.Provider value={contextValue}>
@@ -512,7 +614,6 @@ export const VilkårsvurderingPeriodeSkjemaProvider: React.FC<{
     );
 };
 
-// Oppdater hook til å bruke context
 export const useVilkårsvurderingPeriodeSkjema = () => {
     const context = useContext(VilkårsvurderingPeriodeSkjemaContext);
     if (!context) {

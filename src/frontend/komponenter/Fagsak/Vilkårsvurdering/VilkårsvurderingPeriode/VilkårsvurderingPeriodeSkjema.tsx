@@ -1,4 +1,3 @@
-import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
@@ -26,18 +25,10 @@ import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/Aktsomhetsvurdering
 import GodTroSkjema from './GodTroSkjema';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
 import TilbakekrevingAktivitetTabell from './TilbakekrevingAktivitetTabell';
-import {
-    ANDELER,
-    EGENDEFINERT,
-    finnJaNeiOption,
-    OptionNEI,
-    useVilkårsvurderingPeriodeSkjema,
-} from './VilkårsvurderingPeriodeSkjemaContext';
+import { useVilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
+import { Valideringsstatus } from '../../../../hooks/skjema';
 import {
-    Aktsomhet,
-    SærligeGrunner,
     Vilkårsresultat,
     vilkårsresultater,
     vilkårsresultatHjelpetekster,
@@ -46,7 +37,7 @@ import {
     vilkårsresultatTyper,
     Ytelsetype,
 } from '../../../../kodeverk';
-import { formatterDatostring, isEmpty } from '../../../../utils';
+import { formatterDatostring } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { PeriodeHandling } from '../typer/periodeHandling';
@@ -76,68 +67,6 @@ const StyledVilkårsresultatRadio = styled(Radio)`
         min-width: max-content;
     }
 `;
-
-const settSkjemadataFraPeriode = (
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>,
-    periode: VilkårsvurderingPeriodeSkjemaData,
-    kanIlleggeRenter: boolean
-) => {
-    const { vilkårsvurderingsresultatInfo: vurdering } = periode || {};
-    skjema.felter.vilkårsresultatBegrunnelse.onChange(periode?.begrunnelse || '');
-    skjema.felter.vilkårsresultatvurdering.onChange(vurdering?.vilkårsvurderingsresultat || '');
-    skjema.felter.aktsomhetBegrunnelse.onChange(
-        (vurdering?.godTro ? vurdering?.godTro?.begrunnelse : vurdering?.aktsomhet?.begrunnelse) ||
-            ''
-    );
-    skjema.felter.erBeløpetIBehold.onChange(
-        finnJaNeiOption(vurdering?.godTro?.beløpErIBehold) || ''
-    );
-    skjema.felter.godTroTilbakekrevesBeløp.onChange(
-        vurdering?.godTro?.beløpTilbakekreves?.toString() || ''
-    );
-    const erForsett = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.Forsett;
-    const erSimpelUaktsomhet = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.SimpelUaktsomhet;
-    skjema.felter.aktsomhetVurdering.onChange(vurdering?.aktsomhet?.aktsomhet || '');
-    skjema.felter.forstoIlleggeRenter.onChange(
-        !kanIlleggeRenter ? OptionNEI : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
-    );
-    skjema.felter.tilbakekrevSmåbeløp.onChange(
-        erSimpelUaktsomhet ? finnJaNeiOption(vurdering?.aktsomhet?.tilbakekrevSmåbeløp) || '' : ''
-    );
-    skjema.felter.særligeGrunnerBegrunnelse.onChange(
-        !erForsett ? vurdering?.aktsomhet?.særligeGrunnerBegrunnelse || '' : ''
-    );
-    skjema.felter.særligeGrunner.onChange(
-        vurdering?.aktsomhet?.særligeGrunner?.map(dto => dto.særligGrunn) || []
-    );
-    const annetSærligGrunn = vurdering?.aktsomhet?.særligeGrunner?.find(
-        dto => dto.særligGrunn === SærligeGrunner.Annet
-    );
-    skjema.felter.særligeGrunnerAnnetBegrunnelse.onChange(annetSærligGrunn?.begrunnelse || '');
-
-    skjema.felter.harMerEnnEnAktivitet.onChange(
-        !!periode?.aktiviteter && periode.aktiviteter.length > 1
-    );
-    skjema.felter.harGrunnerTilReduksjon.onChange(
-        !erForsett ? finnJaNeiOption(vurdering?.aktsomhet?.særligeGrunnerTilReduksjon) || '' : ''
-    );
-
-    const andelTilbakekreves = vurdering?.aktsomhet?.andelTilbakekreves?.toString() || '';
-    const erEgendefinert = !isEmpty(andelTilbakekreves) && !ANDELER.includes(andelTilbakekreves);
-    skjema.felter.uaktsomAndelTilbakekreves.onChange(
-        erEgendefinert ? EGENDEFINERT : andelTilbakekreves
-    );
-    skjema.felter.uaktsomAndelTilbakekrevesManuelt.onChange(
-        erEgendefinert ? andelTilbakekreves : ''
-    );
-
-    skjema.felter.uaktsomTilbakekrevesBeløp.onChange(
-        vurdering?.aktsomhet?.beløpTilbakekreves?.toString() || ''
-    );
-    skjema.felter.grovtUaktsomIlleggeRenter.onChange(
-        !kanIlleggeRenter ? OptionNEI : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
-    );
-};
 
 const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.ReactNode => {
     const hjelpetekster = {
@@ -189,21 +118,16 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         sendInnSkjemaOgNaviger,
     } = useVilkårsvurdering();
     const [navigerer, settNavigerer] = useState(false);
-    const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema();
+    const { skjema, validerOgOppdaterFelter, populerSkjemaFraPeriode } =
+        useVilkårsvurderingPeriodeSkjema();
     const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
-
-    // Legg til debug logging
-    React.useEffect(() => {
-        console.log('VilkårsvurderingPeriodeSkjema - visFeilmeldinger:', skjema.visFeilmeldinger);
-    }, [skjema.visFeilmeldinger]);
 
     React.useEffect(() => {
         settNavigerer(false);
-        skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
+        populerSkjemaFraPeriode(periode, kanIlleggeRenter);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
-        settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [periode]);
+    }, [periode, kanIlleggeRenter, erTotalbeløpUnder4Rettsgebyr]);
 
     const onKopierPeriode = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const valgtPeriodeIndex = event.target.value;
@@ -211,7 +135,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             const per = behandletPerioder.find(per => per.index === valgtPeriodeIndex);
             settIkkePersistertKomponent('vilkårsvurdering');
             if (per) {
-                settSkjemadataFraPeriode(skjema, per, kanIlleggeRenter);
+                populerSkjemaFraPeriode(per, kanIlleggeRenter);
                 event.target.value = '-';
             }
         }

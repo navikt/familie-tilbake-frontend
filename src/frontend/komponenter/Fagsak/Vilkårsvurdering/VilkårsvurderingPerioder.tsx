@@ -159,7 +159,7 @@ const VilkårsvurderingPerioderContent: React.FC<{
     pendingPeriode,
     setPendingPeriode,
 }) => {
-    const { validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema();
+    const { validerOgOppdaterFelter, nullstillSkjema } = useVilkårsvurderingPeriodeSkjema();
 
     const onSelectPeriode = (periode: TimelinePeriodProps) => {
         const periodeFom = periode.start.toISOString().substring(0, 10);
@@ -180,6 +180,7 @@ const VilkårsvurderingPerioderContent: React.FC<{
     const handleForlatUtenÅLagre = () => {
         if (pendingPeriode) {
             nullstillIkkePersisterteKomponenter();
+            nullstillSkjema();
             settValgtPeriode(pendingPeriode);
         }
         setVisModal(false);
@@ -188,13 +189,7 @@ const VilkårsvurderingPerioderContent: React.FC<{
 
     const handleLagreOgBytt = async () => {
         try {
-            if (!valgtPeriode) return;
-
-            console.log('Parent - calling validerOgOppdaterFelter for periode:', valgtPeriode);
-            const valideringsresultat = validerOgOppdaterFelter(valgtPeriode);
-            console.log('Parent - validation result:', valideringsresultat);
-
-            if (!valideringsresultat) return;
+            if (!valgtPeriode || !validerOgOppdaterFelter(valgtPeriode)) return;
 
             await sendInnSkjemaOgNaviger(PeriodeHandling.NestePeriode);
 
@@ -203,7 +198,7 @@ const VilkårsvurderingPerioderContent: React.FC<{
             }
             setPendingPeriode(undefined);
         } catch (error) {
-            console.error('Failed to save:', error);
+            console.error('Failed to save:', error); //TODO: Legge til feilhåndtering
         } finally {
             setVisModal(false);
         }
