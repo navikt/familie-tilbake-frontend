@@ -25,28 +25,6 @@ export const vilkårsresultatHjelpetekster: Record<Vilkårsresultat, string> = {
     [Vilkårsresultat.Udefinert]: 'Udefinert',
 };
 
-export const vilkårsresultatHjelpeteksterBarnetrygd: Record<Vilkårsresultat, string> = {
-    [Vilkårsresultat.ForstoBurdeForstått]:
-        'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
-    [Vilkårsresultat.FeilOpplysningerFraBruker]:
-        'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
-        'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    [Vilkårsresultat.GodTro]: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd',
-    [Vilkårsresultat.Udefinert]: 'Udefinert',
-};
-
-export const vilkårsresultatHjelpeteksterKontantstøtte: Record<Vilkårsresultat, string> = {
-    [Vilkårsresultat.ForstoBurdeForstått]:
-        'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
-    [Vilkårsresultat.FeilOpplysningerFraBruker]:
-        'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
-        'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    [Vilkårsresultat.GodTro]: 'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd',
-    [Vilkårsresultat.Udefinert]: 'Udefinert',
-};
-
 export const vilkårsvurderingStegInfotekst =
     'Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering.';
 

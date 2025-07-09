@@ -69,7 +69,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
-            getAllByText,
         } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
@@ -114,12 +113,21 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryByText('Beløpet mottatt i god tro')).toBeFalsy();
         expect(queryByLabelText('Vurder om beløpet er i behold')).toBeFalsy();
         expect(
-            getByText('Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 1. punkt')
+            getByText(
+                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil (1. ledd, 1. punkt)'
+            )
         ).toBeTruthy();
         expect(
-            getAllByText('Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt')
-        ).toHaveLength(2);
-        expect(getByText('Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd')).toBeTruthy();
+            getByText(
+                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger (1. ledd, 2. punkt)'
+            )
+        ).toBeTruthy();
+        expect(
+            getByText(
+                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger (1. ledd, 2. punkt)'
+            )
+        ).toBeTruthy();
+        expect(getByText('Nei, mottaker har mottatt beløpet i god tro (1. ledd)')).toBeTruthy();
 
         expect(
             getByRole('button', {

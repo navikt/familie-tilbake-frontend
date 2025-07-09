@@ -38,10 +38,7 @@ import {
     Vilkårsresultat,
     vilkårsresultater,
     vilkårsresultatHjelpetekster,
-    vilkårsresultatHjelpeteksterBarnetrygd,
-    vilkårsresultatHjelpeteksterKontantstøtte,
     vilkårsresultatTyper,
-    Ytelsetype,
 } from '../../../../kodeverk';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
@@ -112,19 +109,10 @@ const settSkjemadataFraPeriode = (
     );
 };
 
-const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.ReactNode => {
-    const hjelpetekster = {
-        [Ytelsetype.Barnetrygd]: vilkårsresultatHjelpeteksterBarnetrygd,
-        [Ytelsetype.Kontantstøtte]: vilkårsresultatHjelpeteksterKontantstøtte,
-        [Ytelsetype.Barnetilsyn]: vilkårsresultatHjelpetekster,
-        [Ytelsetype.Overgangsstønad]: vilkårsresultatHjelpetekster,
-        [Ytelsetype.Skolepenger]: vilkårsresultatHjelpetekster,
-        [Ytelsetype.Tilleggsstønad]: vilkårsresultatHjelpetekster,
-    }[fagsak.ytelsestype];
-
+const lagLabeltekster = (resultat: Vilkårsresultat): React.ReactNode => {
     return (
         <div style={{ display: 'inline-flex' }}>
-            {`${vilkårsresultater[resultat]} (${hjelpetekster[resultat]})`}
+            {`${vilkårsresultater[resultat]} (${vilkårsresultatHjelpetekster[resultat]})`}
         </div>
     );
 };
@@ -362,7 +350,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                             >
                                 {vilkårsresultatTyper.map(type => (
                                     <Radio key={type} name="valgtVilkarResultatType" value={type}>
-                                        {lagLabeltekster(fagsak, type)}
+                                        {lagLabeltekster(type)}
                                     </Radio>
                                 ))}
                             </RadioGroup>

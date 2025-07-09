@@ -66,7 +66,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             getByLabelText,
             getByRole,
             getByText,
-            getAllByText,
             queryAllByText,
             queryByLabelText,
             queryByText,
@@ -113,9 +112,22 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Kopier vilkårsvurdering fra')).toBeTruthy();
         expect(queryByText('Beløpet mottatt i god tro')).toBeFalsy();
         expect(queryByLabelText('Vurder om beløpet er i behold')).toBeFalsy();
-        expect(getByText('Folketrygdloven § 22-15, 1. ledd, 1. punkt')).toBeTruthy();
-        expect(getAllByText('Folketrygdloven § 22-15, 1. ledd, 2. punkt')).toHaveLength(2);
-        expect(getByText('Folketrygdloven § 22-15, 1. ledd')).toBeTruthy();
+        expect(
+            getByText(
+                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil (1. ledd, 1. punkt)'
+            )
+        ).toBeTruthy();
+        expect(
+            getByText(
+                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger (1. ledd, 2. punkt)'
+            )
+        ).toBeTruthy();
+        expect(
+            getByText(
+                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger (1. ledd, 2. punkt)'
+            )
+        ).toBeTruthy();
+        expect(getByText('Nei, mottaker har mottatt beløpet i god tro (1. ledd)')).toBeTruthy();
 
         expect(
             getByRole('button', {
