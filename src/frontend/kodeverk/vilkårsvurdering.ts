@@ -18,33 +18,10 @@ export const vilkårsresultater: Record<Vilkårsresultat, string> = {
 };
 
 export const vilkårsresultatHjelpetekster: Record<Vilkårsresultat, string> = {
-    [Vilkårsresultat.ForstoBurdeForstått]: 'Folketrygdloven § 22-15, 1. ledd, 1. punkt',
-    [Vilkårsresultat.FeilOpplysningerFraBruker]: 'Folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
-        'Folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    [Vilkårsresultat.GodTro]: 'Folketrygdloven § 22-15, 1. ledd',
-    [Vilkårsresultat.Udefinert]: 'Udefinert',
-};
-
-export const vilkårsresultatHjelpeteksterBarnetrygd: Record<Vilkårsresultat, string> = {
-    [Vilkårsresultat.ForstoBurdeForstått]:
-        'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
-    [Vilkårsresultat.FeilOpplysningerFraBruker]:
-        'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
-        'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    [Vilkårsresultat.GodTro]: 'Barnetrygdloven § 13 og folketrygdloven § 22-15, 1. ledd',
-    [Vilkårsresultat.Udefinert]: 'Udefinert',
-};
-
-export const vilkårsresultatHjelpeteksterKontantstøtte: Record<Vilkårsresultat, string> = {
-    [Vilkårsresultat.ForstoBurdeForstått]:
-        'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 1. punkt',
-    [Vilkårsresultat.FeilOpplysningerFraBruker]:
-        'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
-        'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd, 2. punkt',
-    [Vilkårsresultat.GodTro]: 'Kontantstøtteloven § 11 og folketrygdloven § 22-15, 1. ledd',
+    [Vilkårsresultat.ForstoBurdeForstått]: '1. ledd, 1. punkt',
+    [Vilkårsresultat.FeilOpplysningerFraBruker]: '1. ledd, 2. punkt',
+    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]: '1. ledd, 2. punkt',
+    [Vilkårsresultat.GodTro]: '1. ledd',
     [Vilkårsresultat.Udefinert]: 'Udefinert',
 };
 

@@ -9,7 +9,6 @@ import {
     Button,
     Detail,
     Heading,
-    HelpText,
     HGrid,
     Radio,
     RadioGroup,
@@ -19,7 +18,6 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import GodTroSkjema from './GodTroSkjema';
@@ -40,10 +38,7 @@ import {
     Vilkårsresultat,
     vilkårsresultater,
     vilkårsresultatHjelpetekster,
-    vilkårsresultatHjelpeteksterBarnetrygd,
-    vilkårsresultatHjelpeteksterKontantstøtte,
     vilkårsresultatTyper,
-    Ytelsetype,
 } from '../../../../kodeverk';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
@@ -51,31 +46,6 @@ import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { PeriodeHandling } from '../typer/periodeHandling';
 import { useVilkårsvurdering } from '../VilkårsvurderingContext';
-
-const StyledBox = styled(Box)`
-    min-width: 20rem;
-`;
-
-const StyledStack = styled(Stack)`
-    max-width: 30rem;
-    width: 100%;
-`;
-
-const StyledSelect = styled(Select)`
-    width: 15rem;
-    padding-bottom: 2rem;
-`;
-
-const StyledVilkårsresultatRadio = styled(Radio)`
-    .navds-help-text {
-        margin-left: 0.3rem;
-        display: inline-block;
-    }
-
-    .navds-popover {
-        min-width: max-content;
-    }
-`;
 
 const settSkjemadataFraPeriode = (
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>,
@@ -139,22 +109,10 @@ const settSkjemadataFraPeriode = (
     );
 };
 
-const lagLabeltekster = (fagsak: IFagsak, resultat: Vilkårsresultat): React.ReactNode => {
-    const hjelpetekster = {
-        [Ytelsetype.Barnetrygd]: vilkårsresultatHjelpeteksterBarnetrygd,
-        [Ytelsetype.Kontantstøtte]: vilkårsresultatHjelpeteksterKontantstøtte,
-        [Ytelsetype.Barnetilsyn]: vilkårsresultatHjelpetekster,
-        [Ytelsetype.Overgangsstønad]: vilkårsresultatHjelpetekster,
-        [Ytelsetype.Skolepenger]: vilkårsresultatHjelpetekster,
-        [Ytelsetype.Tilleggsstønad]: vilkårsresultatHjelpetekster,
-    }[fagsak.ytelsestype];
-
+const lagLabeltekster = (resultat: Vilkårsresultat): React.ReactNode => {
     return (
         <div style={{ display: 'inline-flex' }}>
-            {vilkårsresultater[resultat]}
-            <HelpText placement="right" aria-label={hjelpetekster[resultat]} role="tooltip">
-                {hjelpetekster[resultat]}
-            </HelpText>
+            {`${vilkårsresultater[resultat]} (${vilkårsresultatHjelpetekster[resultat]})`}
         </div>
     );
 };
@@ -277,15 +235,20 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     };
 
     if (sendInnSkjemaMutation.isPending) {
-        return <StyledBox padding="4">Navigerer...</StyledBox>;
+        return (
+            <Box padding="4" className="min-w-[20rem]">
+                Navigerer...
+            </Box>
+        );
     }
 
     if (!periode) return null;
 
     return (
-        <StyledBox padding="4">
+        <Box padding="4" className="min-w-[20rem]">
             <HGrid columns="1fr 4rem">
-                <StyledStack
+                <Stack
+                    className="max-w-[30rem] w-full"
                     justify="space-between"
                     align={{ md: 'start', lg: 'center' }}
                     direction={{ md: 'column', lg: 'row' }}
@@ -300,7 +263,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                             onBekreft={onSplitPeriode}
                         />
                     )}
-                </StyledStack>
+                </Stack>
             </HGrid>
 
             <VStack gap="4">
@@ -315,7 +278,8 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     !periode.foreldet &&
                     behandletPerioder &&
                     behandletPerioder.length > 0 && (
-                        <StyledSelect
+                        <Select
+                            className="pb-8 w-[15rem]"
                             name="perioderForKopi"
                             onChange={event => onKopierPeriode(event)}
                             label={<Detail>Kopier vilkårsvurdering fra</Detail>}
@@ -333,7 +297,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                     )} - ${formatterDatostring(per.periode.tom)}`}
                                 </option>
                             ))}
-                        </StyledSelect>
+                        </Select>
                     )}
                 {periode.foreldet && (
                     <HGrid columns={{ lg: 2, md: 1 }} gap="5">
@@ -385,13 +349,9 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                                 }}
                             >
                                 {vilkårsresultatTyper.map(type => (
-                                    <StyledVilkårsresultatRadio
-                                        key={type}
-                                        name="valgtVilkarResultatType"
-                                        value={type}
-                                    >
-                                        {lagLabeltekster(fagsak, type)}
-                                    </StyledVilkårsresultatRadio>
+                                    <Radio key={type} name="valgtVilkarResultatType" value={type}>
+                                        {lagLabeltekster(type)}
+                                    </Radio>
                                 ))}
                             </RadioGroup>
                         </VStack>
@@ -473,7 +433,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     fagsakId={fagsak.eksternFagsakId}
                 />
             )}
-        </StyledBox>
+        </Box>
     );
 };
 
