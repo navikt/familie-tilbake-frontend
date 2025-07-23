@@ -34,7 +34,7 @@
     "@sentry/core": "9.37.0",
     "@tailwindcss/vite": "4.1.11",
     "@tanstack/react-query": "5.82.0",
-    "axios": "1.10.0",
+    "axios": "1.11.0",
     "classnames": "2.5.1",
     "compression": "1.8.0",
     "connect-redis": "9.0.0",
