@@ -77,6 +77,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             erStegBehandlet,
             erStegAutoutført,
             visVenteModal,
+            hentBehandlingMedBehandlingId,
             nullstillIkkePersisterteKomponenter,
         } = useBehandling();
         const { gjerFeilutbetalingVilkårsvurderingKall, sendInnVilkårsvurdering } =
@@ -246,29 +247,20 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         };
 
         const sendInnSkjemaMutation = useMutation<
-            void,
+            PeriodeHandling | undefined,
             Feil,
             { payload: VilkårdsvurderingStegPayload; handling: PeriodeHandling }
         >({
             mutationFn: async ({ payload, handling }) => {
                 settValideringsFeilmelding(undefined);
                 if (!validererTotaltBeløpMot4Rettsgebyr()) {
-                    return;
+                    return undefined;
                 }
                 nullstillIkkePersisterteKomponenter();
 
                 const response = await sendInnVilkårsvurdering(behandling.behandlingId, payload);
                 if (response.status === RessursStatus.Suksess) {
-                    const utførHandling = {
-                        [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
-                        [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
-                        [PeriodeHandling.NestePeriode]: () =>
-                            valgtPeriode && nestePeriode(valgtPeriode),
-                        [PeriodeHandling.ForrigePeriode]: () =>
-                            valgtPeriode && forrigePeriode(valgtPeriode),
-                    }[handling];
-
-                    return utførHandling?.();
+                    return handling;
                 }
 
                 const finnesFeilmelding =
@@ -280,6 +272,22 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
                         : 'Ukjent feil ved innsending av vilkårsvurdering.',
                     finnesHttpStatusKode && response.httpStatusCode ? response.httpStatusCode : 500
                 );
+            },
+            onSuccess: async (handling: PeriodeHandling | undefined) => {
+                if (handling) {
+                    await hentBehandlingMedBehandlingId(behandling.behandlingId);
+
+                    const utførHandling = {
+                        [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
+                        [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
+                        [PeriodeHandling.NestePeriode]: () =>
+                            valgtPeriode && nestePeriode(valgtPeriode),
+                        [PeriodeHandling.ForrigePeriode]: () =>
+                            valgtPeriode && forrigePeriode(valgtPeriode),
+                    }[handling];
+
+                    utførHandling?.();
+                }
             },
         });
 
