@@ -276,17 +276,26 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             onSuccess: async (handling: PeriodeHandling | undefined) => {
                 if (handling) {
                     await hentBehandlingMedBehandlingId(behandling.behandlingId);
-
-                    const utførHandling = {
-                        [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
-                        [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
-                        [PeriodeHandling.NestePeriode]: () =>
-                            valgtPeriode && nestePeriode(valgtPeriode),
-                        [PeriodeHandling.ForrigePeriode]: () =>
-                            valgtPeriode && forrigePeriode(valgtPeriode),
-                    }[handling];
-
-                    utførHandling?.();
+                    switch (handling) {
+                        case PeriodeHandling.GåTilNesteSteg:
+                            gåTilNesteSteg();
+                            break;
+                        case PeriodeHandling.GåTilForrigeSteg:
+                            gåTilForrigeSteg();
+                            break;
+                        case PeriodeHandling.NestePeriode:
+                            if (valgtPeriode) {
+                                nestePeriode(valgtPeriode);
+                            }
+                            break;
+                        case PeriodeHandling.ForrigePeriode:
+                            if (valgtPeriode) {
+                                forrigePeriode(valgtPeriode);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             },
         });
