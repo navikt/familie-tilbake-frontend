@@ -5,7 +5,7 @@ import { BodyShort } from '@navikt/ds-react';
 import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { lazy, Suspense } from 'react';
-import { Route, Routes, useLocation } from 'react-router';
+import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import { styled } from 'styled-components';
 
 import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
@@ -17,7 +17,6 @@ import { VergeProvider } from './Verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
 import { useBehandling } from '../../context/BehandlingContext';
-import { useRedirectEtterLagring } from '../../hooks/useRedirectEtterLagring';
 import { Behandlingstatus } from '../../typer/behandling';
 import {
     erHistoriskSide,
@@ -77,7 +76,7 @@ interface IProps {
 const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
     const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
     const location = useLocation();
-    const { utførRedirect } = useRedirectEtterLagring();
+    const navigate = useNavigate();
 
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
@@ -89,13 +88,13 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
             if (!erØnsketSideLovlig && aktivtSteg) {
                 const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
                 if (aktivSide) {
-                    utførRedirect(`${behandlingUrl}/${aktivSide?.href}`);
+                    navigate(`${behandlingUrl}/${aktivSide?.href}`);
                 }
             } else if (!erØnsketSideLovlig) {
                 if (behandling.status === Behandlingstatus.Avsluttet) {
-                    utførRedirect(`${behandlingUrl}/vedtak`);
+                    navigate(`${behandlingUrl}/vedtak`);
                 } else {
-                    utførRedirect(`${behandlingUrl}`);
+                    navigate(`${behandlingUrl}`);
                 }
             }
         }
