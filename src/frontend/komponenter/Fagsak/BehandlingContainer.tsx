@@ -5,7 +5,7 @@ import { BodyShort } from '@navikt/ds-react';
 import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { lazy, Suspense } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router';
+import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
 import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
@@ -75,8 +75,8 @@ interface IProps {
 
 const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
     const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
-    const location = useLocation();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
