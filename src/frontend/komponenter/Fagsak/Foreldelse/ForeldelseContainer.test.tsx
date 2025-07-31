@@ -192,7 +192,7 @@ describe('Tester: ForeldelseContainer', () => {
             expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         });
 
-        expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
+        expect(queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
         expect(
             getByRole('button', {
                 name: 'Lagre og fortsett',
@@ -234,7 +234,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
-            expect(queryByText('Detaljer for valgt periode')).toBeFalsy();
+            expect(queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
             expect(
                 getByRole('button', {
                     name: 'Neste',

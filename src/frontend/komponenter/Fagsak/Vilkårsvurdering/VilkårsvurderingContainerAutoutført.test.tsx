@@ -121,10 +121,10 @@ describe('Tester: VilkårsvurderingContainer', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Tilbakekreving')).toBeTruthy();
+            expect(getByText('Tilbakekreving')).toBeInTheDocument();
         });
 
-        expect(getByText('Automatisk vurdert. Alle perioder er foreldet.')).toBeTruthy();
+        expect(getByText('Automatisk vurdert. Alle perioder er foreldet.')).toBeInTheDocument();
 
         await waitFor(() => {
             expect(
