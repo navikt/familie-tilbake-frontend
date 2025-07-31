@@ -1,18 +1,16 @@
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
 import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
-import { useDokumentApi } from '../../../../api/dokument';
-import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, Fagsystem } from '../../../../kodeverk';
 import { Målform } from '../../../../typer/fagsak';
-import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
+import { RessursStatus } from '../../../../typer/ressurs';
 
 jest.mock('../../../../api/http/HttpProvider', () => {
     return {
@@ -22,12 +20,14 @@ jest.mock('../../../../api/http/HttpProvider', () => {
     };
 });
 
+const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
-    useBehandling: jest.fn(),
+    useBehandling: () => mockUseBehandling(),
 }));
 
+const mockUseDokumentApi = jest.fn();
 jest.mock('../../../../api/dokument', () => ({
-    useDokumentApi: jest.fn(),
+    useDokumentApi: () => mockUseDokumentApi(),
 }));
 
 jest.mock('react-router', () => ({
@@ -35,26 +35,38 @@ jest.mock('react-router', () => ({
     useNavigate: () => jest.fn(),
 }));
 
+const renderSendMelding = (fagsak: IFagsak, behandling: IBehandling) =>
+    render(
+        <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
+            <SendMelding fagsak={fagsak} behandling={behandling} />
+        </SendMeldingProvider>
+    );
+
+const setupMock = (behandlingILesemodus: boolean) => {
+    mockUseDokumentApi.mockImplementation(() => ({
+        bestillBrev: () =>
+            Promise.resolve({
+                status: RessursStatus.Suksess,
+                data: 'suksess',
+            }),
+    }));
+    mockUseBehandling.mockImplementation(() => ({
+        behandlingILesemodus: behandlingILesemodus,
+        hentBehandlingMedBehandlingId: () => Promise.resolve(),
+        settIkkePersistertKomponent: jest.fn(),
+        nullstillIkkePersisterteKomponenter: jest.fn(),
+    }));
+};
+
 describe('Tester: SendMelding', () => {
+    let user: ReturnType<typeof userEvent.setup>;
+    beforeEach(() => {
+        user = userEvent.setup();
+        jest.clearAllMocks();
+    });
+
     test('- fyller ut skjema og sender varsel', async () => {
-        const user = userEvent.setup();
-        // @ts-expect-error mock
-        useDokumentApi.mockImplementation(() => ({
-            bestillBrev: () => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-        // @ts-expect-error mock
-        useBehandling.mockImplementation(() => ({
-            behandlingILesemodus: false,
-            hentBehandlingMedBehandlingId: () => Promise.resolve(),
-            settIkkePersistertKomponent: jest.fn(),
-            nullstillIkkePersisterteKomponenter: jest.fn(),
-        }));
+        setupMock(false);
         const behandling = mock<IBehandling>({
             varselSendt: false,
             manuelleBrevmottakere: [],
@@ -66,17 +78,15 @@ describe('Tester: SendMelding', () => {
             eksternFagsakId: '1',
         });
 
-        const { getByText, getByLabelText, getByRole, queryByRole, queryByText } = render(
-            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
-                <SendMelding fagsak={fagsak} behandling={behandling} />
-            </SendMeldingProvider>
-        );
+        const { getByText, getByLabelText, getByRole, queryByRole, queryByText } =
+            renderSendMelding(fagsak, behandling);
 
-        await waitFor(async () => {
-            expect(getByText('Mottaker')).toBeTruthy();
-            expect(getByLabelText('Mal')).toHaveLength(3);
-            expect(queryByText('Bokmål')).toBeFalsy();
+        await waitFor(() => {
+            expect(getByText('Mottaker')).toBeInTheDocument();
         });
+
+        expect(getByLabelText('Mal')).toHaveLength(3);
+        expect(queryByText('Bokmål')).not.toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -88,9 +98,9 @@ describe('Tester: SendMelding', () => {
             queryByRole('button', {
                 name: 'Forhåndsvis',
             })
-        ).toBeFalsy();
+        ).not.toBeInTheDocument();
 
-        await act(() => user.selectOptions(getByLabelText('Mal'), DokumentMal.Varsel));
+        await user.selectOptions(getByLabelText('Mal'), DokumentMal.Varsel);
 
         expect(
             getByRole('button', {
@@ -98,10 +108,8 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeDisabled();
 
-        expect(getByText('Bokmål')).toBeTruthy();
-        await act(() =>
-            user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev')
-        );
+        expect(getByText('Bokmål')).toBeInTheDocument();
+        await user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
 
         expect(
             getByRole('button', {
@@ -113,34 +121,17 @@ describe('Tester: SendMelding', () => {
             getByRole('button', {
                 name: 'Forhåndsvis',
             })
-        ).toBeTruthy();
+        ).toBeInTheDocument();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Send brev',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Send brev',
+            })
         );
     });
 
     test('- fyller ut skjema og sender korrigert varsel', async () => {
-        const user = userEvent.setup();
-        // @ts-expect-error mock
-        useDokumentApi.mockImplementation(() => ({
-            bestillBrev: () => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-        // @ts-expect-error mock
-        useBehandling.mockImplementation(() => ({
-            behandlingILesemodus: false,
-            hentBehandlingMedBehandlingId: () => Promise.resolve(),
-        }));
+        setupMock(false);
         const behandling = mock<IBehandling>({
             varselSendt: true,
             manuelleBrevmottakere: [],
@@ -152,17 +143,17 @@ describe('Tester: SendMelding', () => {
             eksternFagsakId: '1',
         });
 
-        const { getByText, getByLabelText, getByRole, queryByText } = render(
-            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
-                <SendMelding fagsak={fagsak} behandling={behandling} />
-            </SendMeldingProvider>
+        const { getByText, getByLabelText, getByRole, queryByText } = renderSendMelding(
+            fagsak,
+            behandling
         );
 
-        await waitFor(async () => {
-            expect(getByText('Mottaker')).toBeTruthy();
-            expect(getByLabelText('Mal')).toHaveLength(3);
-            expect(queryByText('Nynorsk')).toBeFalsy();
+        await waitFor(() => {
+            expect(getByText('Mottaker')).toBeInTheDocument();
         });
+
+        expect(getByLabelText('Mal')).toHaveLength(3);
+        expect(queryByText('Nynorsk')).not.toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -170,45 +161,26 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeDisabled();
 
-        await act(() => user.selectOptions(getByLabelText('Mal'), DokumentMal.KorrigertVarsel));
+        await user.selectOptions(getByLabelText('Mal'), DokumentMal.KorrigertVarsel);
 
-        expect(getByText('Nynorsk')).toBeTruthy();
-        await act(() =>
-            user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev')
-        );
+        expect(getByText('Nynorsk')).toBeInTheDocument();
+        await user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
 
         expect(
             getByRole('button', {
                 name: 'Forhåndsvis',
             })
-        ).toBeTruthy();
+        ).toBeInTheDocument();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Send brev',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Send brev',
+            })
         );
     });
 
     test('- fyller ut skjema og sender innhent dokumentasjon', async () => {
-        const user = userEvent.setup();
-        // @ts-expect-error mock
-        useDokumentApi.mockImplementation(() => ({
-            bestillBrev: () => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-        // @ts-expect-error mock
-        useBehandling.mockImplementation(() => ({
-            behandlingILesemodus: false,
-            hentBehandlingMedBehandlingId: () => Promise.resolve(),
-        }));
+        setupMock(false);
         const behandling = mock<IBehandling>({
             varselSendt: true,
             manuelleBrevmottakere: [],
@@ -220,14 +192,10 @@ describe('Tester: SendMelding', () => {
             eksternFagsakId: '1',
         });
 
-        const { getByText, getByLabelText, getByRole } = render(
-            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
-                <SendMelding fagsak={fagsak} behandling={behandling} />
-            </SendMeldingProvider>
-        );
+        const { getByText, getByLabelText, getByRole } = renderSendMelding(fagsak, behandling);
 
-        await waitFor(async () => {
-            expect(getByText('Mottaker')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Mottaker')).toBeInTheDocument();
         });
         expect(
             getByRole('button', {
@@ -235,49 +203,29 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeDisabled();
 
-        await act(() =>
-            user.selectOptions(getByLabelText('Mal'), DokumentMal.InnhentDokumentasjon)
-        );
-        await act(() =>
-            user.type(
-                getByRole('textbox', {
-                    name: 'Liste over dokumenter (skriv ett dokument pr. linje)',
-                }),
-                'Liste over dokument'
-            )
+        await user.selectOptions(getByLabelText('Mal'), DokumentMal.InnhentDokumentasjon);
+        await user.type(
+            getByRole('textbox', {
+                name: 'Liste over dokumenter (skriv ett dokument pr. linje)',
+            }),
+            'Liste over dokument'
         );
 
         expect(
             getByRole('button', {
                 name: 'Forhåndsvis',
             })
-        ).toBeTruthy();
+        ).toBeInTheDocument();
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Send brev',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Send brev',
+            })
         );
     });
 
     test('- lesevisning - venter på svar på manuelt brev', async () => {
-        // @ts-expect-error mock
-        useDokumentApi.mockImplementation(() => ({
-            bestillBrev: () => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-        // @ts-expect-error mock
-        useBehandling.mockImplementation(() => ({
-            behandlingILesemodus: true,
-            hentBehandlingMedBehandlingId: () => Promise.resolve(),
-        }));
+        setupMock(true);
         const behandling = mock<IBehandling>({
             varselSendt: false,
             manuelleBrevmottakere: [],
@@ -288,13 +236,9 @@ describe('Tester: SendMelding', () => {
             eksternFagsakId: '1',
         });
 
-        const { getByText, getByRole, queryByLabelText } = render(
-            <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
-                <SendMelding fagsak={fagsak} behandling={behandling} />
-            </SendMeldingProvider>
-        );
+        const { getByText, getByRole, queryByLabelText } = renderSendMelding(fagsak, behandling);
 
-        expect(getByText('Mottaker')).toBeTruthy();
+        expect(getByText('Mottaker')).toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -302,8 +246,8 @@ describe('Tester: SendMelding', () => {
             })
         ).toBeDisabled();
 
-        expect(queryByLabelText('Mal')).toBeFalsy();
-        expect(getByText('Mal')).toBeTruthy();
-        expect(getByText('Velg brev')).toBeTruthy();
+        expect(queryByLabelText('Mal')).not.toBeInTheDocument();
+        expect(getByText('Mal')).toBeInTheDocument();
+        expect(getByText('Velg brev')).toBeInTheDocument();
     });
 });
