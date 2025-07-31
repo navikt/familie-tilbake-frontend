@@ -2,15 +2,13 @@ import type { VergeDto } from '../../../typer/api';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
 import VergeContainer from './VergeContainer';
 import { VergeProvider } from './VergeContext';
-import { useBehandlingApi } from '../../../api/behandling';
-import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype } from '../../../kodeverk/verge';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
@@ -22,12 +20,14 @@ jest.mock('../../../api/http/HttpProvider', () => {
     };
 });
 
+const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: jest.fn(),
+    useBehandling: () => mockUseBehandling(),
 }));
 
+const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: jest.fn(),
+    useBehandlingApi: () => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
@@ -35,15 +35,27 @@ jest.mock('react-router', () => ({
     useNavigate: () => jest.fn(),
 }));
 
+const renderVergeContainer = (behandling: IBehandling, fagsak: IFagsak) =>
+    render(
+        <VergeProvider behandling={behandling} fagsak={fagsak}>
+            <VergeContainer />
+        </VergeProvider>
+    );
+
 describe('Tester: VergeContainer', () => {
+    let user: ReturnType<typeof userEvent.setup>;
+    beforeEach(() => {
+        user = userEvent.setup();
+        jest.clearAllMocks();
+    });
+
     const setupMock = (
         behandlet: boolean,
         lesevisning: boolean,
         autoutført: boolean,
         verge?: VergeDto
     ) => {
-        // @ts-expect-error mock
-        useBehandlingApi.mockImplementation(() => ({
+        mockUseBehandlingApi.mockImplementation(() => ({
             gjerVergeKall: () => {
                 const ressurs = mock<Ressurs<VergeDto>>({
                     status: RessursStatus.Suksess,
@@ -59,8 +71,7 @@ describe('Tester: VergeContainer', () => {
                 return Promise.resolve(ressurs);
             },
         }));
-        // @ts-expect-error mock
-        useBehandling.mockImplementation(() => ({
+        mockUseBehandling.mockImplementation(() => ({
             erStegBehandlet: () => behandlet,
             erStegAutoutført: () => autoutført,
             behandlingILesemodus: lesevisning,
@@ -71,123 +82,103 @@ describe('Tester: VergeContainer', () => {
     };
 
     test('- fyller ut advokat', async () => {
-        const user = userEvent.setup();
         setupMock(false, false, false);
         const behandling = mock<IBehandling>({
             harVerge: false,
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, getByLabelText, queryAllByText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
+        const { getByText, getByRole, getByLabelText, queryAllByText } = renderVergeContainer(
+            behandling,
+            fagsak
         );
 
-        await waitFor(async () => {
-            expect(getByText('Verge')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Verge')).toBeInTheDocument();
         });
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lagre og fortsett',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og fortsett',
+            })
         );
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await act(() => user.selectOptions(getByLabelText('Vergetype'), Vergetype.Advokat));
+        await user.selectOptions(getByLabelText('Vergetype'), Vergetype.Advokat);
 
-        await act(() => user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat'));
+        await user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat');
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lagre og fortsett',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og fortsett',
+            })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await act(() => user.type(getByLabelText('Navn'), 'Advokat Advokatesen'));
-        await act(() => user.type(getByLabelText('Organisasjonsnummer'), 'DummyOrg'));
+        await user.type(getByLabelText('Navn'), 'Advokat Advokatesen');
+        await user.type(getByLabelText('Organisasjonsnummer'), 'DummyOrg');
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lagre og fortsett',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og fortsett',
+            })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('- fyller ut verge for barn', async () => {
-        const user = userEvent.setup();
         setupMock(false, false, false);
         const behandling = mock<IBehandling>({
             harVerge: false,
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
-        );
+        const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
+            renderVergeContainer(behandling, fagsak);
 
-        await waitFor(async () => {
-            expect(getByText('Verge')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Verge')).toBeInTheDocument();
         });
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lagre og fortsett',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og fortsett',
+            })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await act(() => user.selectOptions(getByLabelText('Vergetype'), Vergetype.VergeForBarn));
-        await act(() => user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat'));
+        await user.selectOptions(getByLabelText('Vergetype'), Vergetype.VergeForBarn);
+        await user.type(getByLabelText('Begrunn endringene'), 'Verge er advokat');
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lagre og fortsett',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og fortsett',
+            })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await act(() => user.type(getByLabelText('Navn'), 'Verge Vergesen'));
-        await act(() => user.type(getByLabelText('Fødselsnummer'), '12sdf678901'));
+        await user.type(getByLabelText('Navn'), 'Verge Vergesen');
+        await user.type(getByLabelText('Fødselsnummer'), '12sdf678901');
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lagre og fortsett',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og fortsett',
+            })
         );
-        expect(queryByText('Du må skrive minst 3 tegn')).toBeFalsy();
-        expect(queryByText('Ugyldig fødselsnummer')).toBeTruthy();
+        expect(queryByText('Du må skrive minst 3 tegn')).not.toBeInTheDocument();
+        expect(queryByText('Ugyldig fødselsnummer')).toBeInTheDocument();
 
-        await act(() => user.clear(getByLabelText('Fødselsnummer')));
-        await act(() => user.type(getByLabelText('Fødselsnummer'), '27106903129'));
+        await user.clear(getByLabelText('Fødselsnummer'));
+        await user.type(getByLabelText('Fødselsnummer'), '27106903129');
 
-        await act(() =>
-            user.click(
-                getByRole('button', {
-                    name: 'Lagre og fortsett',
-                })
-            )
+        await user.click(
+            getByRole('button', {
+                name: 'Lagre og fortsett',
+            })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        expect(queryByText('Ugyldig fødselsnummer')).toBeFalsy();
+        expect(queryByText('Ugyldig fødselsnummer')).not.toBeInTheDocument();
     });
 
     test('- vis utfylt - advokat - autoutført', async () => {
@@ -202,15 +193,16 @@ describe('Tester: VergeContainer', () => {
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, getByLabelText, queryByLabelText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
+        const { getByText, getByRole, getByLabelText, queryByLabelText } = renderVergeContainer(
+            behandling,
+            fagsak
         );
 
-        await waitFor(async () => {
-            expect(getByText('Verge')).toBeTruthy();
-            expect(getByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Verge')).toBeInTheDocument();
+            expect(
+                getByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
+            ).toBeInTheDocument();
         });
 
         expect(
@@ -223,7 +215,7 @@ describe('Tester: VergeContainer', () => {
         expect(getByLabelText('Begrunn endringene')).toHaveValue('');
         expect(getByLabelText('Navn')).toHaveValue('Advokat Advokatesen');
         expect(getByLabelText('Organisasjonsnummer')).toHaveValue('DummyOrg');
-        expect(queryByLabelText('Fødselsnummer')).toBeFalsy();
+        expect(queryByLabelText('Fødselsnummer')).not.toBeInTheDocument();
     });
 
     test('- vis utfylt - verge barn', async () => {
@@ -238,18 +230,14 @@ describe('Tester: VergeContainer', () => {
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
-        );
+        const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } =
+            renderVergeContainer(behandling, fagsak);
 
-        await waitFor(async () => {
-            expect(getByText('Verge')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Verge')).toBeInTheDocument();
             expect(
                 queryByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
-            ).toBeFalsy();
-
+            ).not.toBeInTheDocument();
             expect(
                 getByRole('button', {
                     name: 'Neste',
@@ -261,7 +249,7 @@ describe('Tester: VergeContainer', () => {
         expect(getByLabelText('Begrunn endringene')).toHaveValue('Verge er opprettet');
         expect(getByLabelText('Navn')).toHaveValue('Verge Vergesen');
         expect(getByLabelText('Fødselsnummer')).toHaveValue('27106903129');
-        expect(queryByLabelText('Organisasjonsnummer')).toBeFalsy();
+        expect(queryByLabelText('Organisasjonsnummer')).not.toBeInTheDocument();
     });
 
     test('- vis utfylt - advokat - lesevisning', async () => {
@@ -276,18 +264,16 @@ describe('Tester: VergeContainer', () => {
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, queryByText, getByLabelText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
+        const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
+            behandling,
+            fagsak
         );
 
-        await waitFor(async () => {
-            expect(getByText('Verge')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Verge')).toBeInTheDocument();
             expect(
                 queryByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
-            ).toBeFalsy();
-
+            ).not.toBeInTheDocument();
             expect(
                 getByRole('button', {
                     name: 'Neste',
@@ -295,11 +281,11 @@ describe('Tester: VergeContainer', () => {
             ).toBeEnabled();
         });
 
-        expect(getByText('Advokat/advokatfullmektig')).toBeTruthy();
-        expect(getByText('Bruker har engasjert advokat')).toBeTruthy();
+        expect(getByText('Advokat/advokatfullmektig')).toBeInTheDocument();
+        expect(getByText('Bruker har engasjert advokat')).toBeInTheDocument();
         expect(getByLabelText('Navn')).toHaveValue('Advokat Advokatesen');
         expect(getByLabelText('Organisasjonsnummer')).toHaveValue('DummyOrg');
-        expect(queryByText('Fødselsnummer')).toBeFalsy();
+        expect(queryByText('Fødselsnummer')).not.toBeInTheDocument();
     });
 
     test('- vis utfylt - verge barn - autoutført - lesevisning', async () => {
@@ -314,15 +300,16 @@ describe('Tester: VergeContainer', () => {
         });
         const fagsak = mock<IFagsak>();
 
-        const { getByText, getByRole, queryByText, getByLabelText } = render(
-            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                <VergeContainer />
-            </VergeProvider>
+        const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
+            behandling,
+            fagsak
         );
 
-        await waitFor(async () => {
-            expect(getByText('Verge')).toBeTruthy();
-            expect(getByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Verge')).toBeInTheDocument();
+            expect(
+                getByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
+            ).toBeInTheDocument();
         });
 
         expect(
@@ -331,10 +318,10 @@ describe('Tester: VergeContainer', () => {
             })
         ).toBeEnabled();
 
-        expect(getByText('Verge for barn under 18 år')).toBeTruthy();
+        expect(getByText('Verge for barn under 18 år')).toBeInTheDocument();
         expect(getByLabelText('Navn')).toHaveValue('Verge Vergesen');
         expect(getByLabelText('Begrunn endringene')).toHaveValue('');
         expect(getByLabelText('Fødselsnummer')).toHaveValue('27106903129');
-        expect(queryByText('Organisasjonsnummer')).toBeFalsy();
+        expect(queryByText('Organisasjonsnummer')).not.toBeInTheDocument();
     });
 });
