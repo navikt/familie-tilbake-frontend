@@ -6,7 +6,6 @@ import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetaling
 import {
     BodyShort,
     Box,
-    Button,
     Detail,
     Heading,
     HGrid,
@@ -41,10 +40,8 @@ import {
     vilkårsresultatTyper,
 } from '../../../../kodeverk';
 import { formatterDatostring, isEmpty } from '../../../../utils';
-import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import { PeriodeHandling } from '../typer/periodeHandling';
 import { useVilkårsvurdering } from '../VilkårsvurderingContext';
 
 const settSkjemadataFraPeriode = (
@@ -125,6 +122,9 @@ interface IProps {
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
+    validerOgOppdaterFelterRef?: React.RefObject<
+        ((periode: VilkårsvurderingPeriodeSkjemaData) => boolean) | null
+    >;
 }
 
 const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
@@ -134,25 +134,23 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
     fagsak,
-    perioder,
+    validerOgOppdaterFelterRef,
 }) => {
-    const {
-        kanIlleggeRenter,
-        oppdaterPeriode,
-        onSplitPeriode,
-        nestePeriode,
-        forrigePeriode,
-        gåTilForrigeSteg,
-        gåTilNesteSteg,
-        sendInnSkjemaMutation,
-        sendInnSkjemaOgNaviger,
-    } = useVilkårsvurdering();
+    const { kanIlleggeRenter, oppdaterPeriode, onSplitPeriode, sendInnSkjemaMutation } =
+        useVilkårsvurdering();
     const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandling();
+
+    // Set ref to expose validerOgOppdaterFelter to parent
+    React.useEffect(() => {
+        if (validerOgOppdaterFelterRef) {
+            validerOgOppdaterFelterRef.current = validerOgOppdaterFelter;
+        }
+    }, [validerOgOppdaterFelter, validerOgOppdaterFelterRef]);
 
     React.useEffect(() => {
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
@@ -181,58 +179,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const ugyldigVilkårsresultatValgt =
         skjema.visFeilmeldinger &&
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
-
-    const handleNavigering = async (handling: PeriodeHandling): Promise<void> => {
-        if (harUlagredeData) {
-            if (!validerOgOppdaterFelter(periode)) return;
-            return await sendInnSkjemaOgNaviger(handling);
-        }
-
-        const utførHandling = {
-            [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
-            [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
-            [PeriodeHandling.ForrigePeriode]: () => forrigePeriode(periode),
-            [PeriodeHandling.NestePeriode]: () => nestePeriode(periode),
-        }[handling];
-
-        return utførHandling?.();
-    };
-
-    const erFørstePeriode = periode.index === perioder[0].index;
-    const handleForrigeKnapp = async (): Promise<void> => {
-        const handling = erFørstePeriode
-            ? PeriodeHandling.GåTilForrigeSteg
-            : PeriodeHandling.ForrigePeriode;
-        return await handleNavigering(handling);
-    };
-    const hentForrigeKnappTekst = (): string => {
-        if (erFørstePeriode) {
-            return harUlagredeData
-                ? 'Lagre og gå tilbake til foreldelse'
-                : 'Gå tilbake til foreldelse';
-        } else {
-            return harUlagredeData
-                ? 'Lagre og gå tilbake til forrige periode'
-                : 'Gå tilbake til forrige periode';
-        }
-    };
-
-    const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
-    const handleNesteKnapp = async (): Promise<void> => {
-        const handling = erSistePeriode
-            ? PeriodeHandling.GåTilNesteSteg
-            : PeriodeHandling.NestePeriode;
-        return await handleNavigering(handling);
-    };
-    const hentNesteKnappTekst = (): string => {
-        if (erSistePeriode) {
-            return harUlagredeData ? 'Lagre og gå videre til vedtak' : 'Gå videre til vedtak';
-        } else {
-            return harUlagredeData
-                ? 'Lagre og gå videre til neste periode'
-                : 'Gå videre til neste periode';
-        }
-    };
 
     if (sendInnSkjemaMutation.isPending) {
         return (
@@ -410,19 +356,6 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     </HGrid>
                 )}
             </VStack>
-
-            <Navigering>
-                <Button onClick={handleNesteKnapp} loading={sendInnSkjemaMutation.isPending}>
-                    {hentNesteKnappTekst()}
-                </Button>
-                <Button
-                    variant="secondary"
-                    onClick={handleForrigeKnapp}
-                    loading={sendInnSkjemaMutation.isPending}
-                >
-                    {hentForrigeKnappTekst()}
-                </Button>
-            </Navigering>
 
             {sendInnSkjemaMutation.isError && (
                 <FeilModal

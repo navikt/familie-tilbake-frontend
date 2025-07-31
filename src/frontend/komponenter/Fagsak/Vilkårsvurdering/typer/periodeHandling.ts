@@ -3,4 +3,5 @@ export enum PeriodeHandling {
     GåTilNesteSteg = 'gåTilNesteSteg',
     ForrigePeriode = 'forrigePeriode',
     NestePeriode = 'nestePeriode',
+    GåTilPeriode = 'gåTilPeriode',
 }

@@ -13,7 +13,6 @@ import createUseContext from 'constate';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { PeriodeHandling } from './typer/periodeHandling';
 import { useBehandlingApi } from '../../../api/behandling';
 import { Feil } from '../../../api/feil';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -181,6 +180,11 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             containerRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
+        const gåTilPeriode = (targetPeriode: VilkårsvurderingPeriodeSkjemaData) => {
+            settValgtPeriode(targetPeriode);
+            containerRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
         const onSplitPeriode = (
             periode: VilkårsvurderingPeriodeSkjemaData,
             nyePerioder: VilkårsvurderingPeriodeSkjemaData[]
@@ -248,9 +252,11 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         const sendInnSkjemaMutation = useMutation<
             void,
             Feil,
-            { payload: VilkårdsvurderingStegPayload; handling: PeriodeHandling }
+            {
+                payload: VilkårdsvurderingStegPayload;
+            }
         >({
-            mutationFn: async ({ payload, handling }) => {
+            mutationFn: async ({ payload }: { payload: VilkårdsvurderingStegPayload }) => {
                 settValideringsFeilmelding(undefined);
                 if (!validererTotaltBeløpMot4Rettsgebyr()) {
                     return;
@@ -258,34 +264,25 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
                 nullstillIkkePersisterteKomponenter();
 
                 const response = await sendInnVilkårsvurdering(behandling.behandlingId, payload);
-                if (response.status === RessursStatus.Suksess) {
-                    const utførHandling = {
-                        [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
-                        [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
-                        [PeriodeHandling.NestePeriode]: () =>
-                            valgtPeriode && nestePeriode(valgtPeriode),
-                        [PeriodeHandling.ForrigePeriode]: () =>
-                            valgtPeriode && forrigePeriode(valgtPeriode),
-                    }[handling];
-
-                    return utførHandling?.();
+                if (response.status !== RessursStatus.Suksess) {
+                    const finnesFeilmelding =
+                        'frontendFeilmelding' in response && response.frontendFeilmelding;
+                    const finnesHttpStatusKode = 'httpStatusCode' in response;
+                    throw new Feil(
+                        finnesFeilmelding
+                            ? response.frontendFeilmelding
+                            : 'Ukjent feil ved innsending av vilkårsvurdering.',
+                        finnesHttpStatusKode && response.httpStatusCode
+                            ? response.httpStatusCode
+                            : 500
+                    );
                 }
-
-                const finnesFeilmelding =
-                    'frontendFeilmelding' in response && response.frontendFeilmelding;
-                const finnesHttpStatusKode = 'httpStatusCode' in response;
-                throw new Feil(
-                    finnesFeilmelding
-                        ? response.frontendFeilmelding
-                        : 'Ukjent feil ved innsending av vilkårsvurdering.',
-                    finnesHttpStatusKode && response.httpStatusCode ? response.httpStatusCode : 500
-                );
             },
         });
 
-        const sendInnSkjemaOgNaviger = async (handling: PeriodeHandling): Promise<void> => {
+        const sendInnSkjemaOgNaviger = async (): Promise<void> => {
             const payload = vilkårsvurderingStegPayload(skjemaData);
-            return sendInnSkjemaMutation.mutate({ payload, handling });
+            return sendInnSkjemaMutation.mutateAsync({ payload });
         };
 
         return {
@@ -307,6 +304,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             onSplitPeriode,
             nestePeriode,
             forrigePeriode,
+            gåTilPeriode,
         };
     }
 );
