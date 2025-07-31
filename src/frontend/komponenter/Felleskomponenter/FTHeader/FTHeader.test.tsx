@@ -3,14 +3,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+jest.mock('../../../api/brukerlenker');
+
 import { FTHeader } from './FTHeader';
-import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
+import { hentBrukerlenkeBaseUrl, hentAInntektUrl } from '../../../api/brukerlenker';
 import { useFagsakStore } from '../../../store/fagsak';
 
-jest.mock('../../../api/brukerlenker', () => ({
-    hentBrukerlenkeBaseUrl: jest.fn(),
-    hentAInntektUrl: jest.fn(),
-}));
+const mockHentBrukerlenkeBaseUrl = jest.mocked(hentBrukerlenkeBaseUrl);
+const mockHentAInntektUrl = jest.mocked(hentAInntektUrl);
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -20,44 +20,45 @@ const queryClient = new QueryClient({
     },
 });
 
+const renderHeader = () => {
+    const testSaksbehandler = {
+        displayName: 'Test Saksbehandler',
+        email: 'test@nav.no',
+        firstName: 'Test',
+        lastName: 'Saksbehandler',
+        identifier: '12345678901',
+        navIdent: 'TST123',
+        enhet: 'Test Enhet',
+    };
+    return render(
+        <QueryClientProvider client={queryClient}>
+            <FTHeader innloggetSaksbehandler={testSaksbehandler} />
+        </QueryClientProvider>
+    );
+};
+
 describe('FTHeader', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         useFagsakStore.setState({ personIdent: undefined });
 
-        (hentBrukerlenkeBaseUrl as jest.Mock).mockResolvedValue({
+        mockHentBrukerlenkeBaseUrl.mockResolvedValue({
             aInntektUrl: 'https://a-inntekt.nav.no',
             gosysBaseUrl: 'https://gosys.nav.no',
             modiaBaseUrl: 'https://modia.nav.no',
         });
 
-        (hentAInntektUrl as jest.Mock).mockImplementation((_, personIdent: string) => {
-            return personIdent
-                ? Promise.resolve(`https://a-inntekt.nav.no/mock=${personIdent}`)
-                : Promise.resolve(null);
+        mockHentAInntektUrl.mockImplementation((_, personIdent: string | undefined) => {
+            return Promise.resolve(
+                personIdent ? `https://a-inntekt.nav.no/mock=${personIdent}` : null
+            );
         });
     });
 
-    const renderHeader = () => {
-        const testSaksbehandler = {
-            displayName: 'Test Saksbehandler',
-            email: 'test@nav.no',
-            firstName: 'Test',
-            lastName: 'Saksbehandler',
-            identifier: '12345678901',
-            navIdent: 'TST123',
-            enhet: 'Test Enhet',
-        };
-        return render(
-            <QueryClientProvider client={queryClient}>
-                <FTHeader innloggetSaksbehandler={testSaksbehandler} />
-            </QueryClientProvider>
-        );
-    };
     test('hentBrukerlenkeBaseUrl blir kalt én gang ved rendering', () => {
         renderHeader();
 
-        expect(hentBrukerlenkeBaseUrl).toHaveBeenCalledTimes(1);
+        expect(mockHentBrukerlenkeBaseUrl).toHaveBeenCalledTimes(1);
     });
 
     test('Viser riktig titler når ingen personIdent er satt', async () => {
@@ -75,7 +76,7 @@ describe('FTHeader', () => {
         renderHeader();
 
         await waitFor(() => {
-            expect(hentAInntektUrl).toHaveBeenCalled();
+            expect(mockHentAInntektUrl).toHaveBeenCalled();
         });
 
         const menyknapp = screen.getByTitle('Systemer og oppslagsverk');
@@ -112,7 +113,11 @@ describe('FTHeader', () => {
     });
 
     test('Viser ingen menyknapp når ingen gyldige lenker eksisterer', async () => {
-        (hentBrukerlenkeBaseUrl as jest.Mock).mockResolvedValue({});
+        mockHentBrukerlenkeBaseUrl.mockResolvedValue({
+            aInntektUrl: '',
+            gosysBaseUrl: '',
+            modiaBaseUrl: '',
+        });
 
         renderHeader();
 
