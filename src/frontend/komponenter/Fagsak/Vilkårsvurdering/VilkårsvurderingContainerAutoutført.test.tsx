@@ -126,14 +126,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(getByText('Automatisk vurdert. Alle perioder er foreldet.')).toBeTruthy();
 
-        // I autoutført modus skal tidslinjen vises men ikke navigasjonsknapper
         await waitFor(async () => {
-            // Sjekk at tidslinjen er tilstede med periode-knapper
             expect(
                 getByRole('button', {
-                    name: /Advarsel fra 01\.01\.2020 til/,
+                    name: 'Gå videre til neste periode',
                 })
-            ).toBeInTheDocument();
+            ).toBeEnabled();
         });
     });
 });

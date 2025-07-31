@@ -6,6 +6,7 @@ import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetaling
 import {
     BodyShort,
     Box,
+    Button,
     Detail,
     Heading,
     HGrid,
@@ -40,8 +41,11 @@ import {
     vilkårsresultatTyper,
 } from '../../../../kodeverk';
 import { formatterDatostring, isEmpty } from '../../../../utils';
+import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
+import { ModalWrapper } from '../../../Felleskomponenter/Modal/ModalWrapper';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
+import { PeriodeHandling } from '../typer/periodeHandling';
 import { useVilkårsvurdering } from '../VilkårsvurderingContext';
 
 const settSkjemadataFraPeriode = (
@@ -122,8 +126,9 @@ interface IProps {
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
-    validerOgOppdaterFelterRef?: React.RefObject<
-        ((periode: VilkårsvurderingPeriodeSkjemaData) => boolean) | null
+    pendingPeriode: VilkårsvurderingPeriodeSkjemaData | undefined;
+    settPendingPeriode: React.Dispatch<
+        React.SetStateAction<VilkårsvurderingPeriodeSkjemaData | undefined>
     >;
 }
 
@@ -134,30 +139,86 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
     fagsak,
-    validerOgOppdaterFelterRef,
+    perioder,
+    pendingPeriode,
+    settPendingPeriode,
 }) => {
-    const { kanIlleggeRenter, oppdaterPeriode, onSplitPeriode, sendInnSkjemaMutation } =
-        useVilkårsvurdering();
+    const {
+        kanIlleggeRenter,
+        oppdaterPeriode,
+        onSplitPeriode,
+        nestePeriode,
+        forrigePeriode,
+        gåTilForrigeSteg,
+        gåTilNesteSteg,
+        sendInnSkjemaMutation,
+        sendInnSkjemaOgNaviger,
+        settValgtPeriode,
+    } = useVilkårsvurdering();
     const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent, harUlagredeData, nullstillIkkePersisterteKomponenter } =
+        useBehandling();
 
-    // Set ref to expose validerOgOppdaterFelter to parent
+    const [visUlagretDataModal, settVisUlagretDataModal] = React.useState(false);
+
     React.useEffect(() => {
-        if (validerOgOppdaterFelterRef) {
-            validerOgOppdaterFelterRef.current = validerOgOppdaterFelter;
+        if (pendingPeriode && harUlagredeData) {
+            settVisUlagretDataModal(true);
+        } else if (pendingPeriode && !harUlagredeData) {
+            settValgtPeriode(pendingPeriode);
+            settPendingPeriode(undefined);
+        } else {
+            settVisUlagretDataModal(false);
         }
-    }, [validerOgOppdaterFelter, validerOgOppdaterFelterRef]);
+    }, [harUlagredeData, pendingPeriode, settValgtPeriode, settPendingPeriode]);
 
     React.useEffect(() => {
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
         settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [periode]);
+    }, [periode, erTotalbeløpUnder4Rettsgebyr, kanIlleggeRenter]);
+
+    const handleForlatUtenÅLagre = () => {
+        if (pendingPeriode) {
+            nullstillIkkePersisterteKomponenter();
+            settValgtPeriode(pendingPeriode);
+
+            skjema.felter.feilutbetaltBeløpPeriode.onChange(pendingPeriode.feilutbetaltBeløp);
+            skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
+            settSkjemadataFraPeriode(skjema, pendingPeriode, kanIlleggeRenter);
+        }
+        settVisUlagretDataModal(false);
+        settPendingPeriode(undefined);
+    };
+
+    const handleLagreOgBytt = async () => {
+        if (!pendingPeriode) return;
+        try {
+            const valideringOK = validerOgOppdaterFelter(periode);
+            if (!valideringOK) {
+                return;
+            }
+
+            await sendInnSkjemaOgNaviger();
+
+            settValgtPeriode(pendingPeriode);
+            settVisUlagretDataModal(false);
+            settPendingPeriode(undefined);
+        } catch (error) {
+            console.error('Feil ved lagring av skjema:', error);
+        }
+    };
+
+    const handleAvbryt = () => {
+        nullstillIkkePersisterteKomponenter();
+        settVisUlagretDataModal(false);
+        settPendingPeriode(undefined);
+    };
 
     const onKopierPeriode = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const valgtPeriodeIndex = event.target.value;
@@ -179,6 +240,58 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const ugyldigVilkårsresultatValgt =
         skjema.visFeilmeldinger &&
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
+
+    const handleNavigering = async (handling: PeriodeHandling): Promise<void> => {
+        if (harUlagredeData) {
+            if (!validerOgOppdaterFelter(periode)) return;
+            await sendInnSkjemaOgNaviger();
+        }
+
+        const utførHandling = {
+            [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
+            [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
+            [PeriodeHandling.ForrigePeriode]: () => forrigePeriode(periode),
+            [PeriodeHandling.NestePeriode]: () => nestePeriode(periode),
+        }[handling];
+
+        return utførHandling?.();
+    };
+
+    const erFørstePeriode = periode.index === perioder[0].index;
+    const handleForrigeKnapp = async (): Promise<void> => {
+        const handling = erFørstePeriode
+            ? PeriodeHandling.GåTilForrigeSteg
+            : PeriodeHandling.ForrigePeriode;
+        return await handleNavigering(handling);
+    };
+    const hentForrigeKnappTekst = (): string => {
+        if (erFørstePeriode) {
+            return harUlagredeData
+                ? 'Lagre og gå tilbake til foreldelse'
+                : 'Gå tilbake til foreldelse';
+        } else {
+            return harUlagredeData
+                ? 'Lagre og gå tilbake til forrige periode'
+                : 'Gå tilbake til forrige periode';
+        }
+    };
+
+    const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
+    const handleNesteKnapp = async (): Promise<void> => {
+        const handling = erSistePeriode
+            ? PeriodeHandling.GåTilNesteSteg
+            : PeriodeHandling.NestePeriode;
+        return await handleNavigering(handling);
+    };
+    const hentNesteKnappTekst = (): string => {
+        if (erSistePeriode) {
+            return harUlagredeData ? 'Lagre og gå videre til vedtak' : 'Gå videre til vedtak';
+        } else {
+            return harUlagredeData
+                ? 'Lagre og gå videre til neste periode'
+                : 'Gå videre til neste periode';
+        }
+    };
 
     if (sendInnSkjemaMutation.isPending) {
         return (
@@ -357,6 +470,19 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                 )}
             </VStack>
 
+            <Navigering>
+                <Button onClick={handleNesteKnapp} loading={sendInnSkjemaMutation.isPending}>
+                    {hentNesteKnappTekst()}
+                </Button>
+                <Button
+                    variant="secondary"
+                    onClick={handleForrigeKnapp}
+                    loading={sendInnSkjemaMutation.isPending}
+                >
+                    {hentForrigeKnappTekst()}
+                </Button>
+            </Navigering>
+
             {sendInnSkjemaMutation.isError && (
                 <FeilModal
                     feil={sendInnSkjemaMutation.error}
@@ -364,6 +490,25 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     beskjed="Du kunne ikke lagre vilkårsvurderingen"
                     behandlingId={behandling.behandlingId}
                     fagsakId={fagsak.eksternFagsakId}
+                />
+            )}
+
+            {visUlagretDataModal && (
+                <ModalWrapper
+                    tittel="Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode"
+                    visModal={true}
+                    onClose={handleAvbryt}
+                    aksjonsknapper={{
+                        hovedKnapp: {
+                            onClick: handleLagreOgBytt,
+                            tekst: 'Lagre og bytt periode',
+                        },
+                        lukkKnapp: {
+                            onClick: handleForlatUtenÅLagre,
+                            tekst: 'Bytt uten å lagre',
+                        },
+                        marginTop: 4,
+                    }}
                 />
             )}
         </Box>

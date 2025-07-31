@@ -180,11 +180,6 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             containerRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
-        const gåTilPeriode = (targetPeriode: VilkårsvurderingPeriodeSkjemaData) => {
-            settValgtPeriode(targetPeriode);
-            containerRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        };
-
         const onSplitPeriode = (
             periode: VilkårsvurderingPeriodeSkjemaData,
             nyePerioder: VilkårsvurderingPeriodeSkjemaData[]
@@ -304,7 +299,6 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             onSplitPeriode,
             nestePeriode,
             forrigePeriode,
-            gåTilPeriode,
         };
     }
 );
