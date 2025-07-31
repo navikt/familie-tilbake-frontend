@@ -56,7 +56,7 @@
     "tailwindcss": "4.1.11",
     "uuid": "11.1.0",
     "winston": "3.17.0",
-    "zustand": "5.0.6"
+    "zustand": "5.0.7"
   },
   "devDependencies": {
     "@axe-core/react": "4.10.2",
