@@ -45,6 +45,11 @@ jest.mock('../VilkårsvurderingContext', () => {
 });
 
 describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
+    let user: ReturnType<typeof userEvent.setup>;
+    beforeEach(() => {
+        user = userEvent.setup();
+        jest.clearAllMocks();
+    });
     const behandling = mock<IBehandling>();
     const fagsak = mock<IFagsak>({
         ytelsestype: Ytelsetype.Overgangsstønad,
@@ -61,7 +66,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     };
 
     test('- god tro - beløp ikke i behold', async () => {
-        const user = userEvent.setup();
         const {
             getByLabelText,
             getByRole,
@@ -103,31 +107,33 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             </BehandlingProvider>
         );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(getByText('Feilutbetalt beløp')).toBeTruthy();
-        expect(getByText('Aktivitet 1')).toBeTruthy();
-        expect(getByText('1 333')).toBeTruthy();
-        expect(getByText('Aktivitet 2')).toBeTruthy();
-        expect(getByText('1 000')).toBeTruthy();
-        expect(getByText('Kopier vilkårsvurdering fra')).toBeTruthy();
-        expect(queryByText('Beløpet mottatt i god tro')).toBeFalsy();
-        expect(queryByLabelText('Vurder om beløpet er i behold')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(getByText('Feilutbetalt beløp')).toBeInTheDocument();
+        expect(getByText('Aktivitet 1')).toBeInTheDocument();
+        expect(getByText('1 333')).toBeInTheDocument();
+        expect(getByText('Aktivitet 2')).toBeInTheDocument();
+        expect(getByText('1 000')).toBeInTheDocument();
+        expect(getByText('Kopier vilkårsvurdering fra')).toBeInTheDocument();
+        expect(queryByText('Beløpet mottatt i god tro')).not.toBeInTheDocument();
+        expect(queryByLabelText('Vurder om beløpet er i behold')).not.toBeInTheDocument();
         expect(
             getByText(
                 'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil (1. ledd, 1. punkt)'
             )
-        ).toBeTruthy();
+        ).toBeInTheDocument();
         expect(
             getByText(
                 'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger (1. ledd, 2. punkt)'
             )
-        ).toBeTruthy();
+        ).toBeInTheDocument();
         expect(
             getByText(
                 'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger (1. ledd, 2. punkt)'
             )
-        ).toBeTruthy();
-        expect(getByText('Nei, mottaker har mottatt beløpet i god tro (1. ledd)')).toBeTruthy();
+        ).toBeInTheDocument();
+        expect(
+            getByText('Nei, mottaker har mottatt beløpet i god tro (1. ledd)')
+        ).toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -155,8 +161,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        expect(queryByText('Beløpet mottatt i god tro')).toBeTruthy();
-        expect(queryByLabelText('Vurder om beløpet er i behold')).toBeTruthy();
+        expect(queryByText('Beløpet mottatt i god tro')).toBeInTheDocument();
+        expect(queryByLabelText('Vurder om beløpet er i behold')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -165,7 +171,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
-        expect(queryByText('Ingen tilbakekreving')).toBeFalsy();
+        expect(queryByText('Ingen tilbakekreving')).not.toBeInTheDocument();
 
         await user.type(getByLabelText('Vurder om beløpet er i behold'), 'begrunnelse');
         await user.click(
@@ -174,7 +180,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Ingen tilbakekreving')).toBeTruthy();
+        expect(queryByText('Ingen tilbakekreving')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -185,7 +191,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- god tro - beløp i behold', async () => {
-        const user = userEvent.setup();
         const {
             getByLabelText,
             getByRole,
@@ -207,10 +212,10 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             </BehandlingProvider>
         );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByText('Kopier vilkårsvurdering fra')).toBeFalsy();
-        expect(queryByText('Beløpet mottatt i god tro')).toBeFalsy();
-        expect(queryByLabelText('Vurder om beløpet er i behold')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(queryByText('Kopier vilkårsvurdering fra')).not.toBeInTheDocument();
+        expect(queryByText('Beløpet mottatt i god tro')).not.toBeInTheDocument();
+        expect(queryByLabelText('Vurder om beløpet er i behold')).not.toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -245,8 +250,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        expect(queryByText('Ingen tilbakekreving')).toBeFalsy();
-        expect(queryByLabelText('Angi beløp som skal tilbakekreves')).toBeTruthy();
+        expect(queryByText('Ingen tilbakekreving')).not.toBeInTheDocument();
+        expect(queryByLabelText('Angi beløp som skal tilbakekreves')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -266,7 +271,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- forsto/burde forstått - forsto', async () => {
-        const user = userEvent.setup();
         const {
             getByLabelText,
             getByRole,
@@ -288,16 +292,16 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             </BehandlingProvider>
         );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByText('Aktsomhet')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
         expect(
             queryByLabelText(
                 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
             )
-        ).toBeFalsy();
+        ).not.toBeInTheDocument();
         expect(
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
-        ).toBeFalsy();
+        ).not.toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -328,15 +332,15 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        expect(queryByText('Aktsomhet')).toBeTruthy();
+        expect(queryByText('Aktsomhet')).toBeInTheDocument();
         expect(
             queryByLabelText(
                 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
             )
-        ).toBeTruthy();
+        ).toBeInTheDocument();
         expect(
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
-        ).toBeTruthy();
+        ).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -357,11 +361,11 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
-        expect(getByText('100 %')).toBeTruthy();
-        expect(getByText('Skal det tillegges renter?')).toBeTruthy();
-        expect(getByLabelText('Nei')).toBeTruthy();
-        expect(getByLabelText('Ja')).toBeTruthy();
+        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
+        expect(getByText('100 %')).toBeInTheDocument();
+        expect(getByText('Skal det tillegges renter?')).toBeInTheDocument();
+        expect(getByLabelText('Nei')).toBeInTheDocument();
+        expect(getByLabelText('Ja')).toBeInTheDocument();
 
         expect(getByLabelText('Nei')).toBeChecked();
 
@@ -375,7 +379,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- forsto/burde forstått - må ha forstått - ingen grunn til reduksjon', async () => {
-        const user = userEvent.setup();
         const {
             getByLabelText,
             getByRole,
@@ -399,16 +402,16 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             </BehandlingProvider>
         );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByText('Aktsomhet')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
         expect(
             queryByLabelText(
                 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
             )
-        ).toBeFalsy();
+        ).not.toBeInTheDocument();
         expect(
             queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
-        ).toBeFalsy();
+        ).not.toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -439,13 +442,15 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        expect(queryByText('Aktsomhet')).toBeTruthy();
-        expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
+        expect(queryByText('Aktsomhet')).toBeInTheDocument();
+        expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
         expect(
             queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
-        ).toBeFalsy();
-        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeFalsy();
-        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeFalsy();
+        ).not.toBeInTheDocument();
+        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).not.toBeInTheDocument();
+        expect(
+            queryByText('Skal særlige grunner gi reduksjon av beløpet?')
+        ).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText(
@@ -459,12 +464,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Særlige grunner 4. ledd')).toBeTruthy();
+        expect(queryByText('Særlige grunner 4. ledd')).toBeInTheDocument();
         expect(
             queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
-        ).toBeTruthy();
-        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeTruthy();
-        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeTruthy();
+        ).toBeInTheDocument();
+        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeInTheDocument();
+        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -479,7 +484,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByRole('textbox', {
                 name: '',
             })
-        ).toBeFalsy();
+        ).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
@@ -501,11 +506,11 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
-        expect(getByText('100 %')).toBeTruthy();
-        expect(getByText('Skal det tillegges renter?')).toBeTruthy();
-        expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeTruthy();
-        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeTruthy();
+        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
+        expect(getByText('100 %')).toBeInTheDocument();
+        expect(getByText('Skal det tillegges renter?')).toBeInTheDocument();
+        expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeInTheDocument();
+        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeInTheDocument();
         expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
 
         await user.click(
@@ -535,7 +540,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- feilaktig - forsto', async () => {
-        const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
@@ -550,8 +554,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             </BehandlingProvider>
         );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByText('Aktsomhet')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -576,7 +580,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryByText('Aktsomhet')).toBeTruthy();
+        expect(queryByText('Aktsomhet')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -601,10 +605,10 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
-        expect(getByText('100 %')).toBeTruthy();
-        expect(queryByText('Skal det tillegges renter?')).toBeFalsy();
-        expect(getByText('Det legges til 10 % renter')).toBeTruthy();
+        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
+        expect(getByText('100 %')).toBeInTheDocument();
+        expect(queryByText('Skal det tillegges renter?')).not.toBeInTheDocument();
+        expect(getByText('Det legges til 10 % renter')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -615,7 +619,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- feilaktige - grov uaktsomhet - ingen grunn til reduksjon', async () => {
-        const user = userEvent.setup();
         const { getByLabelText, getByRole, getByTestId, getByText, queryAllByText, queryByText } =
             render(
                 <BehandlingProvider>
@@ -631,8 +634,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 </BehandlingProvider>
             );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByText('Aktsomhet')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -661,8 +664,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 name: 'Lagre og gå videre til vedtak',
             })
         ).toBeEnabled();
-        expect(queryByText('Aktsomhet')).toBeTruthy();
-        expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
+        expect(queryByText('Aktsomhet')).toBeInTheDocument();
+        expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
@@ -674,7 +677,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Særlige grunner 4. ledd')).toBeTruthy();
+        expect(queryByText('Særlige grunner 4. ledd')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -699,9 +702,9 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
-        expect(getByText('Skal det tillegges renter?')).toBeTruthy();
-        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeTruthy();
+        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
+        expect(getByText('Skal det tillegges renter?')).toBeInTheDocument();
+        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -714,7 +717,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- feilaktige - grov uaktsomhet - grunn til reduksjon', async () => {
-        const user = userEvent.setup();
         const {
             getByLabelText,
             getByRole,
@@ -736,10 +738,14 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             </BehandlingProvider>
         );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByText('Aktsomhet')).toBeFalsy();
-        expect(queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')).toBeFalsy();
-        expect(queryByText('I hvilken grad har mottaker handlet uaktsomt?')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
+        expect(
+            queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')
+        ).not.toBeInTheDocument();
+        expect(
+            queryByText('I hvilken grad har mottaker handlet uaktsomt?')
+        ).not.toBeInTheDocument();
         expect(
             getByRole('button', {
                 name: 'Gå videre til vedtak',
@@ -768,14 +774,16 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        expect(queryByText('Aktsomhet')).toBeTruthy();
+        expect(queryByText('Aktsomhet')).toBeInTheDocument();
 
-        expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
+        expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
         expect(
             queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
-        ).toBeFalsy();
-        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeFalsy();
-        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeFalsy();
+        ).not.toBeInTheDocument();
+        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).not.toBeInTheDocument();
+        expect(
+            queryByText('Skal særlige grunner gi reduksjon av beløpet?')
+        ).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
@@ -787,12 +795,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Særlige grunner 4. ledd')).toBeTruthy();
+        expect(queryByText('Særlige grunner 4. ledd')).toBeInTheDocument();
         expect(
             queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
-        ).toBeTruthy();
-        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeTruthy();
-        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeTruthy();
+        ).toBeInTheDocument();
+        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeInTheDocument();
+        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -817,14 +825,14 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(getByText('Angi andel som skal tilbakekreves')).toBeTruthy();
-        expect(getByText('Skal det tillegges renter?')).toBeTruthy();
-        expect(getByLabelText('Nei')).toBeTruthy();
+        expect(getByText('Angi andel som skal tilbakekreves')).toBeInTheDocument();
+        expect(getByText('Skal det tillegges renter?')).toBeInTheDocument();
+        expect(getByLabelText('Nei')).toBeInTheDocument();
         expect(
             getByRole('combobox', {
                 name: 'Angi andel som skal tilbakekreves',
             })
-        ).toBeTruthy();
+        ).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -850,7 +858,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- feilaktige - grov uaktsomhet - grunn til reduksjon - egendefinert', async () => {
-        const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole, queryByText } =
             render(
                 <BehandlingProvider>
@@ -866,8 +873,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 </BehandlingProvider>
             );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByText('Aktsomhet')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
         expect(
             getByRole('button', {
                 name: 'Gå videre til vedtak',
@@ -896,7 +903,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        expect(queryByText('Aktsomhet')).toBeTruthy();
+        expect(queryByText('Aktsomhet')).toBeInTheDocument();
 
         await user.type(
             getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
@@ -927,7 +934,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             getByRole('combobox', {
                 name: 'Angi andel som skal tilbakekreves',
             })
-        ).toBeTruthy();
+        ).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -940,7 +947,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             queryByRole('textbox', {
                 name: '',
             })
-        ).toBeFalsy();
+        ).not.toBeInTheDocument();
 
         await user.selectOptions(
             getByRole('combobox', {
@@ -972,7 +979,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - grunn til reduksjon', async () => {
-        const user = userEvent.setup();
         const {
             getByLabelText,
             getByRole,
@@ -995,8 +1001,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             </BehandlingProvider>
         );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByText('Aktsomhet')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -1026,11 +1032,11 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        expect(queryByText('Aktsomhet')).toBeTruthy();
+        expect(queryByText('Aktsomhet')).toBeInTheDocument();
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
-        ).toBeFalsy();
-        expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
+        ).not.toBeInTheDocument();
+        expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
@@ -1044,8 +1050,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
-        ).toBeTruthy();
-        expect(queryByText('Særlige grunner 4. ledd')).toBeFalsy();
+        ).toBeInTheDocument();
+        expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -1059,12 +1065,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 name: 'Ja',
             })
         );
-        expect(queryByText('Særlige grunner 4. ledd')).toBeTruthy();
+        expect(queryByText('Særlige grunner 4. ledd')).toBeInTheDocument();
         expect(
             queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
-        ).toBeTruthy();
-        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeTruthy();
-        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeTruthy();
+        ).toBeInTheDocument();
+        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeInTheDocument();
+        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -1085,12 +1091,12 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         );
         await user.click(getByTestId('harGrunnerTilReduksjon_Ja'));
 
-        expect(queryByText('Skal det tillegges renter?')).toBeFalsy();
+        expect(queryByText('Skal det tillegges renter?')).not.toBeInTheDocument();
         expect(
             getByRole('combobox', {
                 name: 'Angi andel som skal tilbakekreves',
             })
-        ).toBeTruthy();
+        ).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -1116,7 +1122,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ingen grunn til reduksjon', async () => {
-        const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, getByTestId, queryAllByText, queryByText } =
             render(
                 <BehandlingProvider>
@@ -1132,8 +1137,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 </BehandlingProvider>
             );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByText('Aktsomhet')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -1175,8 +1180,10 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
-        ).toBeTruthy();
-        expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeFalsy();
+        ).toBeInTheDocument();
+        expect(
+            queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
+        ).not.toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -1191,8 +1198,10 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeFalsy();
-        expect(queryByText('Særlige grunner 4. ledd')).toBeTruthy();
+        expect(
+            queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
+        ).not.toBeInTheDocument();
+        expect(queryByText('Særlige grunner 4. ledd')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -1213,9 +1222,9 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         );
         await user.click(getByTestId('harGrunnerTilReduksjon_Nei'));
 
-        expect(getByText('Andel som skal tilbakekreves')).toBeTruthy();
-        expect(getByText('100 %')).toBeTruthy();
-        expect(queryByText('Skal det tillegges renter?')).toBeFalsy();
+        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
+        expect(getByText('100 %')).toBeInTheDocument();
+        expect(queryByText('Skal det tillegges renter?')).not.toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -1226,7 +1235,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('- mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ikke tilbakekreves', async () => {
-        const user = userEvent.setup();
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
@@ -1241,8 +1249,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             </BehandlingProvider>
         );
 
-        expect(getByText('Detaljer for valgt periode')).toBeTruthy();
-        expect(queryByText('Aktsomhet')).toBeFalsy();
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -1284,8 +1292,10 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
-        ).toBeTruthy();
-        expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeFalsy();
+        ).toBeInTheDocument();
+        expect(
+            queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
+        ).not.toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -1300,7 +1310,9 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Når 6. ledd anvendes må alle perioder behandles likt')).toBeTruthy();
+        expect(
+            queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
+        ).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -1335,8 +1347,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 />
             </BehandlingProvider>
         );
-        await waitFor(async () => {
-            expect(getByText('Detaljer for valgt periode')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         });
         expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Gitt i god tro');
         expect(
@@ -1386,8 +1398,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                 />
             </BehandlingProvider>
         );
-        await waitFor(async () => {
-            expect(getByText('Detaljer for valgt periode')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         });
         expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue(
             'Gitt mangelfulle opplysninger'
@@ -1407,7 +1419,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByLabelText('Simpel uaktsomhet')).toBeChecked();
         expect(
             getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
-        ).toBeTruthy();
+        ).toBeInTheDocument();
         expect(getByTestId('tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Ja')).toBeChecked();
         expect(getByLabelText('Vurder særlige grunner du har vektlagt for resultatet')).toHaveValue(
             'Det finnes særlige grunner'
