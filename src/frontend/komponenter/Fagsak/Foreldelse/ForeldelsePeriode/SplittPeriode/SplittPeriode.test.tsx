@@ -1,7 +1,7 @@
 import type { IBehandling } from '../../../../../typer/behandling';
 import type { ForeldelsePeriodeSkjemeData } from '../../typer/feilutbetalingForeldelse';
 
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
@@ -10,8 +10,13 @@ import SplittPeriode from './SplittPeriode';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
 
 describe('Tester: SplittPeriode - Foreldelse', () => {
+    let user: ReturnType<typeof userEvent.setup>;
+
+    beforeEach(() => {
+        user = userEvent.setup();
+        jest.clearAllMocks();
+    });
     test('Tester åpning av modal', async () => {
-        const user = userEvent.setup();
         const periode: ForeldelsePeriodeSkjemeData = {
             index: 'i1',
             feilutbetaltBeløp: 1333,
@@ -35,20 +40,20 @@ describe('Tester: SplittPeriode - Foreldelse', () => {
             </HttpProvider>
         );
 
-        expect(queryByAltText('Del opp perioden')).toBeTruthy();
+        expect(queryByAltText('Del opp perioden')).toBeInTheDocument();
         expect(queryAllByText('Del opp perioden')).toHaveLength(1);
-        expect(queryByText('01.01.2021 - 30.04.2021')).toBeFalsy();
+        expect(queryByText('01.01.2021 - 30.04.2021')).not.toBeInTheDocument();
 
-        await act(() => user.click(getByAltText('Del opp perioden')));
+        await user.click(getByAltText('Del opp perioden'));
 
         expect(queryAllByText('Del opp perioden')).toHaveLength(2);
-        expect(queryByText('01.01.2021 - 30.04.2021')).toBeTruthy();
+        expect(queryByText('01.01.2021 - 30.04.2021')).toBeInTheDocument();
         expect(
             getByText('Del opp perioden', {
                 selector: 'p',
             })
-        ).toBeTruthy();
-        expect(getByLabelText('Angi t.o.m. måned for første periode')).toBeTruthy();
+        ).toBeInTheDocument();
+        expect(getByLabelText('Angi t.o.m. måned for første periode')).toBeInTheDocument();
         expect(getByLabelText('Angi t.o.m. måned for første periode')).toHaveValue('april 2021');
     });
 });
