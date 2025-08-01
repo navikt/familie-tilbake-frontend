@@ -29,7 +29,7 @@ export const csrfBeskyttelse = (req: Request, res: Response, next: NextFunction)
 
     if (!csrfToken || typeof csrfToken !== 'string') {
         res.status(403).json({
-            frontendFeilmelding: 'CSRF-token mangler.',
+            frontendFeilmelding: 'CSRF-token mangler. Prøv å laste siden på nytt.',
             status: 'IKKE_TILGANG',
         });
         return;
@@ -38,7 +38,7 @@ export const csrfBeskyttelse = (req: Request, res: Response, next: NextFunction)
     if (typeof csrfToken === 'string' && !verifiserCsrfToken(req.session, csrfToken)) {
         logError(`Ugyldig CSRF-token for sesjon ${req.sessionID}... IP= ${req.ip}`);
         res.status(403).json({
-            frontendFeilmelding: 'Ugyldig CSRF-token.',
+            frontendFeilmelding: 'Ugyldig CSRF-token. Prøv å laste siden på nytt.',
             status: 'IKKE_TILGANG',
         });
         return;
