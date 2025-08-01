@@ -1,33 +1,34 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import PeriodeOppsummering from './PeriodeOppsummering';
 import { HendelseType } from '../../../kodeverk';
 
+const renderPeriodeOppsummering = (tom: string, beløp: number, hendelsestype?: HendelseType) =>
+    render(
+        <PeriodeOppsummering
+            hendelsetype={hendelsestype}
+            beløp={beløp}
+            fom="2021-01-01"
+            tom={tom}
+        />
+    );
+
 describe('Tester: PeriodeOppsummering', () => {
     test('- uten hendelsetype', () => {
-        const { getByText } = render(
-            <PeriodeOppsummering beløp={3333} fom="2021-01-01" tom="2021-05-31" />
-        );
-
-        expect(getByText('01.01.2021 - 31.05.2021')).toBeTruthy();
-        expect(getByText('5 måneder')).toBeTruthy();
-        expect(getByText('3 333')).toBeTruthy();
+        const { getByText } = renderPeriodeOppsummering('2021-05-31', 3333);
+        expect(getByText('01.01.2021 - 31.05.2021')).toBeInTheDocument();
+        expect(getByText('5 måneder')).toBeInTheDocument();
+        expect(getByText('3 333')).toBeInTheDocument();
     });
 
-    test('- med hendelsetype', () => {
-        const { getByText } = render(
-            <PeriodeOppsummering
-                hendelsetype={HendelseType.Annet}
-                beløp={333}
-                fom="2021-01-01"
-                tom="2021-04-30"
-            />
-        );
-
-        expect(getByText('01.01.2021 - 30.04.2021')).toBeTruthy();
-        expect(getByText('4 måneder')).toBeTruthy();
-        expect(getByText('333')).toBeTruthy();
-        expect(getByText('Annet')).toBeTruthy();
+    test('- med hendelsetype', async () => {
+        const { getByText } = renderPeriodeOppsummering('2021-04-30', 333, HendelseType.Annet);
+        await waitFor(() => {
+            expect(getByText('01.01.2021 - 30.04.2021')).toBeInTheDocument();
+        });
+        expect(getByText('4 måneder')).toBeInTheDocument();
+        expect(getByText('333')).toBeInTheDocument();
+        expect(getByText('Annet')).toBeInTheDocument();
     });
 });
