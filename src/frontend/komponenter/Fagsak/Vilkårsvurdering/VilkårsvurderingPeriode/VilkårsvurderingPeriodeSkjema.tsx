@@ -196,22 +196,18 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         settPendingPeriode(undefined);
     };
 
-    const handleLagreOgBytt = async () => {
+    const handleLagreOgByttPeriode = async () => {
         if (!pendingPeriode) return;
-        try {
-            const valideringOK = validerOgOppdaterFelter(periode);
-            if (!valideringOK) {
-                return;
-            }
-
-            await sendInnSkjemaOgNaviger();
-
-            settValgtPeriode(pendingPeriode);
-            settVisUlagretDataModal(false);
-            settPendingPeriode(undefined);
-        } catch (error) {
-            console.error('Feil ved lagring av skjema:', error);
+        const valideringOK = validerOgOppdaterFelter(periode);
+        if (!valideringOK) {
+            return;
         }
+
+        await sendInnSkjemaOgNaviger();
+
+        settValgtPeriode(pendingPeriode);
+        settVisUlagretDataModal(false);
+        settPendingPeriode(undefined);
     };
 
     const handleAvbryt = () => {
@@ -500,7 +496,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     onClose={handleAvbryt}
                     aksjonsknapper={{
                         hovedKnapp: {
-                            onClick: handleLagreOgBytt,
+                            onClick: handleLagreOgByttPeriode,
                             tekst: 'Lagre og bytt periode',
                         },
                         lukkKnapp: {
