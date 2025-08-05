@@ -203,7 +203,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             return;
         }
 
-        await sendInnSkjemaOgNaviger();
+        await sendInnSkjemaOgNaviger(PeriodeHandling.NestePeriode);
 
         settValgtPeriode(pendingPeriode);
         settVisUlagretDataModal(false);
@@ -240,7 +240,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const handleNavigering = async (handling: PeriodeHandling): Promise<void> => {
         if (harUlagredeData) {
             if (!validerOgOppdaterFelter(periode)) return;
-            await sendInnSkjemaOgNaviger();
+            return await sendInnSkjemaOgNaviger(handling);
         }
 
         const utførHandling = {
