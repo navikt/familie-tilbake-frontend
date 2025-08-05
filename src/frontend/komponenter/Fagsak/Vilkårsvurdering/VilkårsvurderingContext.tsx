@@ -13,6 +13,7 @@ import createUseContext from 'constate';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { PeriodeHandling } from './typer/periodeHandling';
 import { useBehandlingApi } from '../../../api/behandling';
 import { Feil } from '../../../api/feil';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -76,6 +77,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             erStegBehandlet,
             erStegAutoutført,
             visVenteModal,
+            hentBehandlingMedBehandlingId,
             nullstillIkkePersisterteKomponenter,
         } = useBehandling();
         const { gjerFeilutbetalingVilkårsvurderingKall, sendInnVilkårsvurdering } =
@@ -245,39 +247,62 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         };
 
         const sendInnSkjemaMutation = useMutation<
-            void,
+            PeriodeHandling | undefined,
             Feil,
-            {
-                payload: VilkårdsvurderingStegPayload;
-            }
+            { payload: VilkårdsvurderingStegPayload; handling: PeriodeHandling }
         >({
-            mutationFn: async ({ payload }: { payload: VilkårdsvurderingStegPayload }) => {
+            mutationFn: async ({ payload, handling }) => {
                 settValideringsFeilmelding(undefined);
                 if (!validererTotaltBeløpMot4Rettsgebyr()) {
-                    return;
+                    return undefined;
                 }
                 nullstillIkkePersisterteKomponenter();
 
                 const response = await sendInnVilkårsvurdering(behandling.behandlingId, payload);
-                if (response.status !== RessursStatus.Suksess) {
-                    const finnesFeilmelding =
-                        'frontendFeilmelding' in response && response.frontendFeilmelding;
-                    const finnesHttpStatusKode = 'httpStatusCode' in response;
-                    throw new Feil(
-                        finnesFeilmelding
-                            ? response.frontendFeilmelding
-                            : 'Ukjent feil ved innsending av vilkårsvurdering.',
-                        finnesHttpStatusKode && response.httpStatusCode
-                            ? response.httpStatusCode
-                            : 500
-                    );
+                if (response.status === RessursStatus.Suksess) {
+                    return handling;
+                }
+
+                const finnesFeilmelding =
+                    'frontendFeilmelding' in response && response.frontendFeilmelding;
+                const finnesHttpStatusKode = 'httpStatusCode' in response;
+                throw new Feil(
+                    finnesFeilmelding
+                        ? response.frontendFeilmelding
+                        : 'Ukjent feil ved innsending av vilkårsvurdering.',
+                    finnesHttpStatusKode && response.httpStatusCode ? response.httpStatusCode : 500
+                );
+            },
+            onSuccess: async (handling: PeriodeHandling | undefined) => {
+                if (handling) {
+                    await hentBehandlingMedBehandlingId(behandling.behandlingId);
+                    switch (handling) {
+                        case PeriodeHandling.GåTilNesteSteg:
+                            gåTilNesteSteg();
+                            break;
+                        case PeriodeHandling.GåTilForrigeSteg:
+                            gåTilForrigeSteg();
+                            break;
+                        case PeriodeHandling.NestePeriode:
+                            if (valgtPeriode) {
+                                nestePeriode(valgtPeriode);
+                            }
+                            break;
+                        case PeriodeHandling.ForrigePeriode:
+                            if (valgtPeriode) {
+                                forrigePeriode(valgtPeriode);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             },
         });
 
-        const sendInnSkjemaOgNaviger = async (): Promise<void> => {
+        const sendInnSkjemaOgNaviger = async (handling: PeriodeHandling): Promise<void> => {
             const payload = vilkårsvurderingStegPayload(skjemaData);
-            return sendInnSkjemaMutation.mutateAsync({ payload });
+            return sendInnSkjemaMutation.mutate({ payload, handling });
         };
 
         return {

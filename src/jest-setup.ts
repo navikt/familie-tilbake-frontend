@@ -13,7 +13,7 @@ global.console = {
     // error: jest.fn(),
 };
 
-global.TextEncoder = TextEncoder;
+Object.assign(global, { TextEncoder });
 
 const crypto = new Crypto();
 Object.defineProperty(global, 'crypto', {

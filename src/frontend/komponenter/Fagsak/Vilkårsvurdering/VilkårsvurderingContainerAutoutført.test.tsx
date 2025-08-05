@@ -46,66 +46,66 @@ jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: () => mockUseBehandling(),
 }));
 
-describe('Tester: VilkårsvurderingContainer', () => {
-    const perioder: VilkårsvurderingPeriode[] = [
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-01-01',
-                tom: '2020-03-31',
-            },
-            hendelsestype: HendelseType.BosattIRiket,
-            foreldet: false,
-            begrunnelse: undefined,
+const perioder: VilkårsvurderingPeriode[] = [
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-01-01',
+            tom: '2020-03-31',
         },
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-05-01',
-                tom: '2020-06-30',
-            },
-            hendelsestype: HendelseType.BorMedSøker,
-            foreldet: false,
-            begrunnelse: undefined,
+        hendelsestype: HendelseType.BosattIRiket,
+        foreldet: false,
+        begrunnelse: undefined,
+    },
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-05-01',
+            tom: '2020-06-30',
         },
-    ];
-    const feilutbetalingVilkårsvurdering: IFeilutbetalingVilkårsvurdering = {
-        perioder: perioder,
-        rettsgebyr: 1199,
-    };
-    const setupMock = (
-        behandlet: boolean,
-        lesevisning: boolean,
-        autoutført: boolean,
-        vilkårsvurdering?: IFeilutbetalingVilkårsvurdering
-    ) => {
-        if (vilkårsvurdering) {
-            mockUseBehandlingApi.mockImplementation(() => ({
-                gjerFeilutbetalingVilkårsvurderingKall: () => {
-                    const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
-                        status: RessursStatus.Suksess,
-                        data: vilkårsvurdering,
-                    });
-                    return Promise.resolve(ressurs);
-                },
-                sendInnVilkårsvurdering: () => {
-                    const ressurs = mock<Ressurs<string>>({
-                        status: RessursStatus.Suksess,
-                        data: 'suksess',
-                    });
-                    return Promise.resolve(ressurs);
-                },
-            }));
-        }
-        mockUseBehandling.mockImplementation(() => ({
-            erStegBehandlet: () => behandlet,
-            erStegAutoutført: () => autoutført,
-            visVenteModal: false,
-            behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: jest.fn(),
+        hendelsestype: HendelseType.BorMedSøker,
+        foreldet: false,
+        begrunnelse: undefined,
+    },
+];
+const feilutbetalingVilkårsvurdering: IFeilutbetalingVilkårsvurdering = {
+    perioder: perioder,
+    rettsgebyr: 1199,
+};
+const setupMock = (
+    behandlet: boolean,
+    lesevisning: boolean,
+    autoutført: boolean,
+    vilkårsvurdering?: IFeilutbetalingVilkårsvurdering
+) => {
+    if (vilkårsvurdering) {
+        mockUseBehandlingApi.mockImplementation(() => ({
+            gjerFeilutbetalingVilkårsvurderingKall: () => {
+                const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
+                    status: RessursStatus.Suksess,
+                    data: vilkårsvurdering,
+                });
+                return Promise.resolve(ressurs);
+            },
+            sendInnVilkårsvurdering: () => {
+                const ressurs = mock<Ressurs<string>>({
+                    status: RessursStatus.Suksess,
+                    data: 'suksess',
+                });
+                return Promise.resolve(ressurs);
+            },
         }));
-    };
+    }
+    mockUseBehandling.mockImplementation(() => ({
+        erStegBehandlet: () => behandlet,
+        erStegAutoutført: () => autoutført,
+        visVenteModal: false,
+        behandlingILesemodus: lesevisning,
+        hentBehandlingMedBehandlingId: jest.fn(),
+    }));
+};
 
+describe('Tester: VilkårsvurderingContainer', () => {
     test('- vis autoutført', async () => {
         setupMock(false, false, true, feilutbetalingVilkårsvurdering);
 
@@ -120,13 +120,13 @@ describe('Tester: VilkårsvurderingContainer', () => {
             </QueryClientProvider>
         );
 
-        await waitFor(async () => {
-            expect(getByText('Tilbakekreving')).toBeTruthy();
+        await waitFor(() => {
+            expect(getByText('Tilbakekreving')).toBeInTheDocument();
         });
 
-        expect(getByText('Automatisk vurdert. Alle perioder er foreldet.')).toBeTruthy();
+        expect(getByText('Automatisk vurdert. Alle perioder er foreldet.')).toBeInTheDocument();
 
-        await waitFor(async () => {
+        await waitFor(() => {
             expect(
                 getByRole('button', {
                     name: 'Gå videre til neste periode',
