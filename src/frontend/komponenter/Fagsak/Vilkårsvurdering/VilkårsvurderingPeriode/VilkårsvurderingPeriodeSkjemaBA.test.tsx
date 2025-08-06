@@ -65,6 +65,8 @@ const renderVilkårsvurderingPeriodeSkjema = (
                 erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
                 erLesevisning={false}
                 perioder={[periode]}
+                pendingPeriode={undefined}
+                settPendingPeriode={jest.fn()}
             />
         </BehandlingProvider>
     );
@@ -1076,6 +1078,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -1125,6 +1129,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );

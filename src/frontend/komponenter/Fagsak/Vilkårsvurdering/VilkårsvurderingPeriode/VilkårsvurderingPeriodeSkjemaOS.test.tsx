@@ -107,6 +107,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -212,6 +214,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -292,6 +296,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -402,6 +408,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -554,6 +562,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -634,6 +644,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                         erTotalbeløpUnder4Rettsgebyr={false}
                         erLesevisning={false}
                         perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={jest.fn()}
                     />
                 </BehandlingProvider>
             );
@@ -738,6 +750,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -873,6 +887,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                         erTotalbeløpUnder4Rettsgebyr={false}
                         erLesevisning={false}
                         perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={jest.fn()}
                     />
                 </BehandlingProvider>
             );
@@ -1001,6 +1017,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -1137,6 +1155,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                         erTotalbeløpUnder4Rettsgebyr={true}
                         erLesevisning={false}
                         perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={jest.fn()}
                     />
                 </BehandlingProvider>
             );
@@ -1249,6 +1269,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -1348,6 +1370,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                 />
             </BehandlingProvider>
         );
@@ -1396,6 +1420,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
                         },
                     }}
                     perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}

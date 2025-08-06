@@ -60,7 +60,6 @@ interface IProps {
     behandling: IBehandling;
     fagsak: IFagsak;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
-    behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
 }
@@ -68,12 +67,12 @@ interface IProps {
 const VilkårsvurderingPerioder: React.FC<IProps> = ({
     behandling,
     perioder,
-    behandletPerioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
     fagsak,
 }) => {
-    const { valgtPeriode, settValgtPeriode, valideringsFeilmelding } = useVilkårsvurdering();
+    const { valgtPeriode, settValgtPeriode, behandletPerioder, valideringsFeilmelding } =
+        useVilkårsvurdering();
     const [pendingPeriode, settPendingPeriode] = React.useState<
         VilkårsvurderingPeriodeSkjemaData | undefined
     >();
