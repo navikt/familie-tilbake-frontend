@@ -154,6 +154,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         sendInnSkjemaMutation,
         sendInnSkjemaOgNaviger,
         settValgtPeriode,
+        hentBehandlingMedBehandlingId,
     } = useVilkårsvurdering();
     const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -238,9 +239,11 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
 
     const handleNavigering = async (handling: PeriodeHandling): Promise<void> => {
+        let handlingResult: PeriodeHandling | undefined;
+
         if (harUlagredeData) {
             if (!validerOgOppdaterFelter(periode)) return;
-            return await sendInnSkjemaOgNaviger(handling);
+            handlingResult = await sendInnSkjemaOgNaviger(handling);
         }
 
         const utførHandling = {
@@ -250,7 +253,15 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             [PeriodeHandling.NestePeriode]: () => nestePeriode(periode),
         }[handling];
 
-        return utførHandling?.();
+        utførHandling?.();
+
+        if (
+            handlingResult &&
+            (handlingResult === PeriodeHandling.GåTilForrigeSteg ||
+                handlingResult === PeriodeHandling.GåTilNesteSteg)
+        ) {
+            await hentBehandlingMedBehandlingId(behandling.behandlingId);
+        }
     };
 
     const erFørstePeriode = periode.index === perioder[0].index;
