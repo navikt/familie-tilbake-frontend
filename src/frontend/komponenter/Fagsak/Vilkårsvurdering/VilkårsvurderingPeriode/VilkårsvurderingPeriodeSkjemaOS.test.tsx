@@ -32,7 +32,10 @@ jest.mock('../VilkårsvurderingContext', () => {
             kanIlleggeRenter: true,
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),
-            lukkValgtPeriode: jest.fn(),
+            nestePeriode: jest.fn(),
+            forrigePeriode: jest.fn(),
+            gåTilForrigeSteg: jest.fn(),
+            gåTilNesteSteg: jest.fn(),
             sendInnSkjemaOgNaviger: jest.fn(),
             sendInnSkjemaMutation: {
                 isPending: false,
@@ -40,6 +43,7 @@ jest.mock('../VilkårsvurderingContext', () => {
                 error: null,
                 reset: jest.fn(),
             },
+            hentBehandlingMedBehandlingId: jest.fn(),
         }),
     };
 });

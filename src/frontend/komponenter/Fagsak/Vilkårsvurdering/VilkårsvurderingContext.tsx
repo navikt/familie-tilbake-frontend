@@ -1,4 +1,5 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
+import type { PeriodeHandling } from './typer/periodeHandling';
 import type { VilkårdsvurderingStegPayload } from '../../../typer/api';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
@@ -13,7 +14,6 @@ import createUseContext from 'constate';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { PeriodeHandling } from './typer/periodeHandling';
 import { useBehandlingApi } from '../../../api/behandling';
 import { Feil } from '../../../api/feil';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -280,37 +280,13 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
                     finnesHttpStatusKode && response.httpStatusCode ? response.httpStatusCode : 500
                 );
             },
-            onSuccess: async (handling: PeriodeHandling | undefined) => {
-                if (handling) {
-                    await hentBehandlingMedBehandlingId(behandling.behandlingId);
-                    switch (handling) {
-                        case PeriodeHandling.GåTilNesteSteg:
-                            gåTilNesteSteg();
-                            break;
-                        case PeriodeHandling.GåTilForrigeSteg:
-                            gåTilForrigeSteg();
-                            break;
-                        case PeriodeHandling.NestePeriode:
-                            if (valgtPeriode) {
-                                nestePeriode(valgtPeriode);
-                            }
-                            break;
-                        case PeriodeHandling.ForrigePeriode:
-                            if (valgtPeriode) {
-                                forrigePeriode(valgtPeriode);
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            },
         });
 
-        const sendInnSkjemaOgNaviger = async (handling: PeriodeHandling): Promise<void> => {
+        const sendInnSkjemaOgNaviger = async (
+            handling: PeriodeHandling
+        ): Promise<PeriodeHandling | undefined> => {
             const payload = vilkårsvurderingStegPayload(skjemaData);
-
-            return sendInnSkjemaMutation.mutate({ payload, handling });
+            return await sendInnSkjemaMutation.mutateAsync({ payload, handling });
         };
 
         return {
@@ -332,6 +308,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             onSplitPeriode,
             nestePeriode,
             forrigePeriode,
+            hentBehandlingMedBehandlingId,
         };
     }
 );
