@@ -127,9 +127,7 @@ interface IProps {
     erLesevisning: boolean;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
     pendingPeriode: VilkårsvurderingPeriodeSkjemaData | undefined;
-    settPendingPeriode: React.Dispatch<
-        React.SetStateAction<VilkårsvurderingPeriodeSkjemaData | undefined>
-    >;
+    settPendingPeriode: (periode: VilkårsvurderingPeriodeSkjemaData | undefined) => void;
 }
 
 const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
