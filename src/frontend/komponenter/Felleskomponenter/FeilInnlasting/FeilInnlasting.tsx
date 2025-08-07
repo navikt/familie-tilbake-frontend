@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 
 import { Button, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
+import { lazy } from 'react';
 
 interface Props {
     komponentNavn: string;
@@ -24,14 +25,14 @@ export const lazyImportMedRetry = <T,>(
     importFunksjon: () => Promise<{ default: ComponentType<T> }>,
     komponentNavn: string
 ) => {
-    return React.lazy(() => {
-        let retryCount = 0;
-        const maxRetries = 2;
-        const attemptImport = async (): Promise<{ default: ComponentType<T> }> => {
+    return lazy(() => {
+        let forsøkAntall = 0;
+        const maxForsøk = 2;
+        const forsøkImport = async (): Promise<{ default: ComponentType<T> }> => {
             return importFunksjon().catch(() => {
-                if (retryCount < maxRetries) {
-                    retryCount++;
-                    return attemptImport();
+                if (forsøkAntall < maxForsøk) {
+                    forsøkAntall++;
+                    return forsøkImport();
                 }
 
                 return {
@@ -40,6 +41,6 @@ export const lazyImportMedRetry = <T,>(
             });
         };
 
-        return attemptImport();
+        return forsøkImport();
     });
 };
