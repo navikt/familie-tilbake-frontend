@@ -212,7 +212,6 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
     };
 
     const handleAvbryt = () => {
-        nullstillIkkePersisterteKomponenter();
         settVisUlagretDataModal(false);
         settPendingPeriode(undefined);
     };
