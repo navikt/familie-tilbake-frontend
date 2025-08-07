@@ -28,10 +28,9 @@ export const lazyImportMedRetry = <T,>(
         let retryCount = 0;
         const maxRetries = 2;
         const attemptImport = async (): Promise<{ default: ComponentType<T> }> => {
-            return importFunksjon().catch((error: Error) => {
+            return importFunksjon().catch(() => {
                 if (retryCount < maxRetries) {
                     retryCount++;
-                    console.log(`Retry ${retryCount}/${maxRetries} for ${komponentNavn}:`, error);
                     return attemptImport();
                 }
 
