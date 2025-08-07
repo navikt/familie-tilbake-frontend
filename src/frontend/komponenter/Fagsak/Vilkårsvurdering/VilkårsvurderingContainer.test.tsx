@@ -62,6 +62,65 @@ beforeEach(() => {
     Element.prototype.scrollIntoView = jest.fn();
 });
 
+const perioder: VilkårsvurderingPeriode[] = [
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-01-01',
+            tom: '2020-03-31',
+        },
+        hendelsestype: HendelseType.BosattIRiket,
+        foreldet: false,
+        begrunnelse: undefined,
+    },
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-05-01',
+            tom: '2020-06-30',
+        },
+        hendelsestype: HendelseType.BorMedSøker,
+        foreldet: false,
+        begrunnelse: undefined,
+    },
+];
+const feilutbetalingVilkårsvurdering: IFeilutbetalingVilkårsvurdering = {
+    perioder: perioder,
+    rettsgebyr: 1199,
+};
+
+const setupUseBehandlingApiMock = (vilkårsvurdering?: IFeilutbetalingVilkårsvurdering) => {
+    if (vilkårsvurdering) {
+        mockUseBehandlingApi.mockImplementation(() => ({
+            gjerFeilutbetalingVilkårsvurderingKall: () => {
+                const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
+                    status: RessursStatus.Suksess,
+                    data: vilkårsvurdering,
+                });
+                return Promise.resolve(ressurs);
+            },
+            sendInnVilkårsvurdering: () => {
+                const ressurs = mock<Ressurs<string>>({
+                    status: RessursStatus.Suksess,
+                    data: 'suksess',
+                });
+                return Promise.resolve(ressurs);
+            },
+        }));
+    }
+};
+
+const setupHttpMock = () => {
+    mockUseHttp.mockImplementation(() => ({
+        request: () => {
+            return Promise.resolve({
+                status: RessursStatus.Suksess,
+                data: mock<IBehandling>({ eksternBrukId: '1' }),
+            });
+        },
+    }));
+};
+
 const renderVilkårsvurderingContainer = (behandling: IBehandling, fagsak: IFagsak) =>
     render(
         <BehandlingProvider>
@@ -72,69 +131,16 @@ const renderVilkårsvurderingContainer = (behandling: IBehandling, fagsak: IFags
     );
 
 describe('Tester: VilkårsvurderingContainer', () => {
-    const perioder: VilkårsvurderingPeriode[] = [
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-01-01',
-                tom: '2020-03-31',
-            },
-            hendelsestype: HendelseType.BosattIRiket,
-            foreldet: false,
-            begrunnelse: undefined,
-        },
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-05-01',
-                tom: '2020-06-30',
-            },
-            hendelsestype: HendelseType.BorMedSøker,
-            foreldet: false,
-            begrunnelse: undefined,
-        },
-    ];
-    const feilutbetalingVilkårsvurdering: IFeilutbetalingVilkårsvurdering = {
-        perioder: perioder,
-        rettsgebyr: 1199,
-    };
+    let user: ReturnType<typeof userEvent.setup>;
 
-    const setupUseBehandlingApiMock = (vilkårsvurdering?: IFeilutbetalingVilkårsvurdering) => {
-        if (vilkårsvurdering) {
-            mockUseBehandlingApi.mockImplementation(() => ({
-                gjerFeilutbetalingVilkårsvurderingKall: () => {
-                    const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
-                        status: RessursStatus.Suksess,
-                        data: vilkårsvurdering,
-                    });
-                    return Promise.resolve(ressurs);
-                },
-                sendInnVilkårsvurdering: () => {
-                    const ressurs = mock<Ressurs<string>>({
-                        status: RessursStatus.Suksess,
-                        data: 'suksess',
-                    });
-                    return Promise.resolve(ressurs);
-                },
-            }));
-        }
-    };
-
-    const setupHttpMock = () => {
-        mockUseHttp.mockImplementation(() => ({
-            request: () => {
-                return Promise.resolve({
-                    status: RessursStatus.Suksess,
-                    data: mock<IBehandling>({ eksternBrukId: '1' }),
-                });
-            },
-        }));
-    };
+    beforeEach(() => {
+        user = userEvent.setup();
+        jest.clearAllMocks();
+        setupHttpMock();
+    });
 
     test('- totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
-        const user = userEvent.setup();
         setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
-        setupHttpMock();
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
@@ -307,9 +313,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
     });
 
     test('- vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
-        const user = userEvent.setup();
         setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
-        setupHttpMock();
 
         const fagsak = mock<IFagsak>({
             fagsystem: Fagsystem.EF,
@@ -382,7 +386,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
     });
 
     test('- vis utfylt - forstod/burde forstått - forsto', async () => {
-        const user = userEvent.setup();
         setupUseBehandlingApiMock({
             perioder: [
                 {
@@ -413,7 +416,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        setupHttpMock();
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>({
             ytelsestype: Ytelsetype.Barnetrygd,
@@ -528,7 +530,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
     });
 
     test('- vis utfylt - forstod/burde forstått - forsto - lesevisning', async () => {
-        const user = userEvent.setup();
         setupUseBehandlingApiMock({
             perioder: [
                 {
@@ -559,7 +560,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        setupHttpMock();
         const behandling = mock<IBehandling>({ status: Behandlingstatus.FatterVedtak });
         const fagsak = mock<IFagsak>({
             ytelsestype: Ytelsetype.Barnetrygd,
@@ -747,7 +747,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        setupHttpMock();
         const behandling = mock<IBehandling>();
         const fagsak = mock<IFagsak>({
             ytelsestype: Ytelsetype.Overgangsstønad,
