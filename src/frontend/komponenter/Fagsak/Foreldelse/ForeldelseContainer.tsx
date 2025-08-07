@@ -78,8 +78,8 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                     <>
                         <Steginformasjon
                             behandletSteg={stegErBehandlet}
-                            infotekst={`Perioden før ${getDate()} kan være foreldet. Del opp perioden ved behov og
-                                fastsett foreldelse`}
+                            infotekst={`I dette steget må du vurdere foreldelse manuelt. Perioden før ${getDate()} kan være foreldet. Del opp perioden ved behov og
+                                fastsett foreldelse.`}
                         />
                         <Spacer20 />
                     </>
