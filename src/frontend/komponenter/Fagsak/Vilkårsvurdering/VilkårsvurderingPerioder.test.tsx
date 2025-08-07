@@ -6,7 +6,7 @@ import type {
 } from '../../../typer/feilutbetalingtyper';
 import type { ByRoleMatcher, ByRoleOptions } from '@testing-library/react';
 
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
@@ -179,9 +179,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
 
         const { getByText, getAllByRole } = renderVilkårsvurderingPerioder(behandling, fagsak);
 
-        await waitFor(() => {
-            expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        });
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
 
         // Verifiser at første periode er valgt
         expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
@@ -195,9 +193,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         await user.click(andrePeriodeButton);
 
         // Verifiser at andre periode nå vises
-        await waitFor(() => {
-            expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
-        });
+        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
     });
 
     test('skal vise modal ved bytte av periode med ulagrede endringer', async () => {
@@ -207,9 +203,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         const { getByText, getByRole, getAllByRole, getByLabelText } =
             renderVilkårsvurderingPerioder(behandling, fagsak);
 
-        await waitFor(() => {
-            expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        });
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
 
         // Legg til ulagrede endringer
         const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
@@ -224,13 +218,11 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         await user.click(andrePeriodeButton);
 
         // Verifiser at modal vises
-        await waitFor(() => {
-            expect(
-                getByText(
-                    'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-                )
-            ).toBeInTheDocument();
-        });
+        expect(
+            getByText(
+                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
+            )
+        ).toBeInTheDocument();
 
         // Verifiser modal-knapper
         expect(getByRole('button', { name: 'Lagre og bytt periode' })).toBeInTheDocument();
@@ -244,9 +236,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder(behandling, fagsak);
 
-        await waitFor(() => {
-            expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        });
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
 
         // Legg til ulagrede endringer
         const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
@@ -259,20 +249,16 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         }
 
         // Vent på modal og klikk "Bytt uten å lagre"
-        await waitFor(() => {
-            expect(
-                getByText(
-                    'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-                )
-            ).toBeInTheDocument();
-        });
+        expect(
+            getByText(
+                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
+            )
+        ).toBeInTheDocument();
 
         await user.click(getByRole('button', { name: 'Bytt uten å lagre' }));
 
         // Verifiser at periode er byttet
-        await waitFor(() => {
-            expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
-        });
+        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
 
         // Verifiser at modal er borte
         expect(
@@ -289,9 +275,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder(behandling, fagsak);
 
-        await waitFor(() => {
-            expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        });
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
 
         // Fyll ut skjema for å gjøre det gyldig for lagring
         const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
@@ -316,20 +300,16 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         }
 
         // Klikk "Lagre og bytt periode"
-        await waitFor(() => {
-            expect(
-                getByText(
-                    'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-                )
-            ).toBeInTheDocument();
-        });
+        expect(
+            getByText(
+                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
+            )
+        ).toBeInTheDocument();
 
         await user.click(getByRole('button', { name: 'Lagre og bytt periode' }));
 
         // Verifiser at periode er byttet
-        await waitFor(() => {
-            expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
-        });
+        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
 
         // Verifiser at modal er borte
         expect(
@@ -346,9 +326,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder(behandling, fagsak);
 
-        await waitFor(() => {
-            expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        });
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
 
         // Legg til ulagrede endringer
         const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
@@ -361,21 +339,17 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         }
 
         // Lukk modal
-        await waitFor(() => {
-            expect(
-                getByText(
-                    'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-                )
-            ).toBeInTheDocument();
-        });
+        expect(
+            getByText(
+                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
+            )
+        ).toBeInTheDocument();
 
         const lukkButton = getByRole('button', { name: 'Lukk' });
         await user.click(lukkButton);
 
         // Verifiser at vi fortsatt er på første periode
-        await waitFor(() => {
-            expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
-        });
+        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
 
         // Verifiser at modal er borte
         expect(
