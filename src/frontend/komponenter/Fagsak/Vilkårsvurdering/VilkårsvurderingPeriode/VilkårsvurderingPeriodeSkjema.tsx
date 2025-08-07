@@ -503,7 +503,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
             {visUlagretDataModal && (
                 <ModalWrapper
                     tittel="Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode"
-                    visModal={true}
+                    visModal
                     onClose={handleAvbryt}
                     aksjonsknapper={{
                         hovedKnapp: {
