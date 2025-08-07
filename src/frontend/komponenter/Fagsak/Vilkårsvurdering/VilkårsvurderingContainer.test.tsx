@@ -72,6 +72,12 @@ const renderVilkårsvurderingContainer = (behandling: IBehandling, fagsak: IFags
     );
 
 describe('Tester: VilkårsvurderingContainer', () => {
+    let user: ReturnType<typeof userEvent.setup>;
+
+    beforeEach(() => {
+        user = userEvent.setup();
+        jest.clearAllMocks();
+    });
     const perioder: VilkårsvurderingPeriode[] = [
         {
             feilutbetaltBeløp: 1333,
@@ -132,7 +138,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
     };
 
     test('- totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
-        const user = userEvent.setup();
         setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
         setupHttpMock();
         const behandling = mock<IBehandling>();
@@ -307,7 +312,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
     });
 
     test('- vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
-        const user = userEvent.setup();
         setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
         setupHttpMock();
 
@@ -382,7 +386,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
     });
 
     test('- vis utfylt - forstod/burde forstått - forsto', async () => {
-        const user = userEvent.setup();
         setupUseBehandlingApiMock({
             perioder: [
                 {
@@ -528,7 +531,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
     });
 
     test('- vis utfylt - forstod/burde forstått - forsto - lesevisning', async () => {
-        const user = userEvent.setup();
         setupUseBehandlingApiMock({
             perioder: [
                 {
