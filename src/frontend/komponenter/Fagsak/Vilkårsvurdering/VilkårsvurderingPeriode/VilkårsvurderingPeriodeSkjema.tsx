@@ -2,6 +2,7 @@ import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPerio
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import type { ChangeEvent, FC, ReactNode } from 'react';
 
 import {
     BodyShort,
@@ -18,6 +19,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import GodTroSkjema from './GodTroSkjema';
@@ -110,7 +112,7 @@ const settSkjemadataFraPeriode = (
     );
 };
 
-const lagLabeltekster = (resultat: Vilkårsresultat): React.ReactNode => {
+const lagLabeltekster = (resultat: Vilkårsresultat): ReactNode => {
     return (
         <div style={{ display: 'inline-flex' }}>
             {`${vilkårsresultater[resultat]} (${vilkårsresultatHjelpetekster[resultat]})`}
@@ -130,7 +132,7 @@ interface IProps {
     settPendingPeriode: (periode: VilkårsvurderingPeriodeSkjemaData | undefined) => void;
 }
 
-const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
+const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
     behandling,
     periode,
     behandletPerioder,
@@ -162,9 +164,9 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     const { settIkkePersistertKomponent, harUlagredeData, nullstillIkkePersisterteKomponenter } =
         useBehandling();
 
-    const [visUlagretDataModal, settVisUlagretDataModal] = React.useState(false);
+    const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (pendingPeriode && harUlagredeData) {
             settVisUlagretDataModal(true);
         } else if (pendingPeriode && !harUlagredeData) {
@@ -175,7 +177,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         }
     }, [harUlagredeData, pendingPeriode, settValgtPeriode, settPendingPeriode]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
         settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
@@ -215,7 +217,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         settPendingPeriode(undefined);
     };
 
-    const onKopierPeriode = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const onKopierPeriode = (event: ChangeEvent<HTMLSelectElement>) => {
         const valgtPeriodeIndex = event.target.value;
         if (valgtPeriodeIndex !== '-') {
             const per = behandletPerioder.find(per => per.index === valgtPeriodeIndex);
