@@ -48,7 +48,7 @@ export const FeilModal = ({ feil, lukkFeilModal, beskjed, behandlingId, fagsakId
                                 {(feil.status !== 403 || innheholderCSRFTokenFeil) && (
                                     <List.Item>
                                         <Link
-                                            href="https://jira.adeo.no/plugins/servlet/desk/portal/541?requestGroup=828"
+                                            href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
                                             target="_blank"
                                         >
                                             Meld feil i porten
