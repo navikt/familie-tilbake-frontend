@@ -1,9 +1,8 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
-import type { TimelinePeriodProps } from '@navikt/ds-react';
 
-import { BodyShort, VStack } from '@navikt/ds-react';
+import { BodyShort, VStack, type TimelinePeriodProps } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
@@ -24,12 +23,12 @@ const lagTidslinjeRader = (
                 periode.periode.fom === valgtPeriode.periode.fom &&
                 periode.periode.tom === valgtPeriode.periode.tom;
             const classNamePeriodeStatus = finnClassNamePeriodeStatus(periode);
-            const periodeStatus =
-                classNamePeriodeStatus === ClassNamePeriodeStatus.Avvist
-                    ? 'danger'
-                    : classNamePeriodeStatus === ClassNamePeriodeStatus.Behandlet
-                      ? 'success'
-                      : 'warning';
+            let periodeStatus: 'danger' | 'info' | 'neutral' | 'success' | 'warning' = 'warning';
+            if (classNamePeriodeStatus === ClassNamePeriodeStatus.Avvist) {
+                periodeStatus = 'danger';
+            } else if (classNamePeriodeStatus === ClassNamePeriodeStatus.Behandlet) {
+                periodeStatus = 'success';
+            }
             return {
                 end: new Date(periode.periode.tom),
                 start: new Date(periode.periode.fom),
@@ -67,15 +66,24 @@ interface IProps {
 
 const VilkårsvurderingPerioder: React.FC<IProps> = ({
     behandling,
-    fagsak,
     perioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
+    fagsak,
 }) => {
     const { valgtPeriode, settValgtPeriode, behandletPerioder, valideringsFeilmelding } =
         useVilkårsvurdering();
+    const [pendingPeriode, settPendingPeriode] = React.useState<
+        VilkårsvurderingPeriodeSkjemaData | undefined
+    >();
 
     const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
+
+    React.useEffect(() => {
+        if (!valgtPeriode && perioder && perioder.length > 0) {
+            settValgtPeriode(perioder[0]);
+        }
+    }, [perioder, valgtPeriode, tidslinjeRader, settValgtPeriode]);
 
     const onSelectPeriode = (periode: TimelinePeriodProps) => {
         const periodeFom = periode.start.toISOString().substring(0, 10);
@@ -83,7 +91,8 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         const vilkårsvurderingPeriode = perioder.find(
             per => per.periode.fom === periodeFom && per.periode.tom === periodeTom
         );
-        settValgtPeriode(vilkårsvurderingPeriode);
+
+        settPendingPeriode(vilkårsvurderingPeriode);
     };
 
     return perioder && tidslinjeRader ? (
@@ -102,6 +111,8 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
                     erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
                     erLesevisning={erLesevisning}
                     fagsak={fagsak}
+                    pendingPeriode={pendingPeriode}
+                    settPendingPeriode={settPendingPeriode}
                     perioder={perioder}
                 />
             )}

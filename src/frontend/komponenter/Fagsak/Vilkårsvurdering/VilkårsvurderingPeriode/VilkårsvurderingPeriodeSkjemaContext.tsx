@@ -120,6 +120,12 @@ const useVilkårsvurderingPeriodeSkjema = (
         feltId: 'feilutbetaltBeløpPeriode',
         verdi: 0,
     });
+    const vilkårsresultatBegrunnelse = useFelt<string | ''>({
+        feltId: 'vilkårsresultatBegrunnelse',
+        verdi: '',
+        valideringsfunksjon: (felt: FeltState<string | ''>) =>
+            validerTekstFeltMaksLengde(3000, felt),
+    });
 
     const vilkårsresultatvurdering = useFelt<Vilkårsresultat | ''>({
         feltId: 'vilkårsresultatvurdering',
@@ -338,12 +344,7 @@ const useVilkårsvurderingPeriodeSkjema = (
     >({
         felter: {
             feilutbetaltBeløpPeriode,
-            vilkårsresultatBegrunnelse: useFelt<string | ''>({
-                feltId: 'vilkårsresultatBegrunnelse',
-                verdi: '',
-                valideringsfunksjon: (felt: FeltState<string | ''>) =>
-                    validerTekstFeltMaksLengde(3000, felt),
-            }),
+            vilkårsresultatBegrunnelse,
             vilkårsresultatvurdering,
             erBeløpetIBehold,
             godTroTilbakekrevesBeløp,

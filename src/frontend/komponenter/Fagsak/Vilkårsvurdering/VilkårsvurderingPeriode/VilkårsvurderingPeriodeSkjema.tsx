@@ -2,6 +2,7 @@ import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPerio
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import type { ChangeEvent, FC, ReactNode } from 'react';
 
 import {
     BodyShort,
@@ -18,6 +19,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import GodTroSkjema from './GodTroSkjema';
@@ -43,6 +45,7 @@ import {
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
+import { ModalWrapper } from '../../../Felleskomponenter/Modal/ModalWrapper';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { PeriodeHandling } from '../typer/periodeHandling';
 import { useVilkårsvurdering } from '../VilkårsvurderingContext';
@@ -109,7 +112,7 @@ const settSkjemadataFraPeriode = (
     );
 };
 
-const lagLabeltekster = (resultat: Vilkårsresultat): React.ReactNode => {
+const lagLabeltekster = (resultat: Vilkårsresultat): ReactNode => {
     return (
         <div style={{ display: 'inline-flex' }}>
             {`${vilkårsresultater[resultat]} (${vilkårsresultatHjelpetekster[resultat]})`}
@@ -125,9 +128,11 @@ interface IProps {
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
+    pendingPeriode: VilkårsvurderingPeriodeSkjemaData | undefined;
+    settPendingPeriode: (periode: VilkårsvurderingPeriodeSkjemaData | undefined) => void;
 }
 
-const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
+const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
     behandling,
     periode,
     behandletPerioder,
@@ -135,6 +140,8 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
     erLesevisning,
     fagsak,
     perioder,
+    pendingPeriode,
+    settPendingPeriode,
 }) => {
     const {
         kanIlleggeRenter,
@@ -146,6 +153,7 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
         gåTilNesteSteg,
         sendInnSkjemaMutation,
         sendInnSkjemaOgNaviger,
+        settValgtPeriode,
         hentBehandlingMedBehandlingId,
     } = useVilkårsvurdering();
     const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
@@ -153,16 +161,62 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
+    const { settIkkePersistertKomponent, harUlagredeData, nullstillIkkePersisterteKomponenter } =
+        useBehandling();
 
-    React.useEffect(() => {
+    const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
+
+    useEffect(() => {
+        if (pendingPeriode && harUlagredeData) {
+            settVisUlagretDataModal(true);
+        } else if (pendingPeriode && !harUlagredeData) {
+            settValgtPeriode(pendingPeriode);
+            settPendingPeriode(undefined);
+        } else {
+            settVisUlagretDataModal(false);
+        }
+    }, [harUlagredeData, pendingPeriode, settValgtPeriode, settPendingPeriode]);
+
+    useEffect(() => {
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
         settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [periode]);
+    }, [periode, erTotalbeløpUnder4Rettsgebyr, kanIlleggeRenter]);
 
-    const onKopierPeriode = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleForlatUtenÅLagre = () => {
+        if (pendingPeriode) {
+            nullstillIkkePersisterteKomponenter();
+            settValgtPeriode(pendingPeriode);
+
+            skjema.felter.feilutbetaltBeløpPeriode.onChange(pendingPeriode.feilutbetaltBeløp);
+            skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
+            settSkjemadataFraPeriode(skjema, pendingPeriode, kanIlleggeRenter);
+        }
+        settVisUlagretDataModal(false);
+        settPendingPeriode(undefined);
+    };
+
+    const handleLagreOgByttPeriode = async () => {
+        if (!pendingPeriode) return;
+        const valideringOK = validerOgOppdaterFelter(periode);
+        if (!valideringOK) {
+            return;
+        }
+
+        await sendInnSkjemaOgNaviger(PeriodeHandling.NestePeriode);
+
+        settValgtPeriode(pendingPeriode);
+        settVisUlagretDataModal(false);
+        settPendingPeriode(undefined);
+    };
+
+    const handleAvbryt = () => {
+        settVisUlagretDataModal(false);
+        settPendingPeriode(undefined);
+    };
+
+    const onKopierPeriode = (event: ChangeEvent<HTMLSelectElement>) => {
         const valgtPeriodeIndex = event.target.value;
         if (valgtPeriodeIndex !== '-') {
             const per = behandletPerioder.find(per => per.index === valgtPeriodeIndex);
@@ -442,6 +496,25 @@ const VilkårsvurderingPeriodeSkjema: React.FC<IProps> = ({
                     beskjed="Du kunne ikke lagre vilkårsvurderingen"
                     behandlingId={behandling.behandlingId}
                     fagsakId={fagsak.eksternFagsakId}
+                />
+            )}
+
+            {visUlagretDataModal && (
+                <ModalWrapper
+                    tittel="Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode"
+                    visModal
+                    onClose={handleAvbryt}
+                    aksjonsknapper={{
+                        hovedKnapp: {
+                            onClick: handleLagreOgByttPeriode,
+                            tekst: 'Lagre og bytt periode',
+                        },
+                        lukkKnapp: {
+                            onClick: handleForlatUtenÅLagre,
+                            tekst: 'Bytt uten å lagre',
+                        },
+                        marginTop: 4,
+                    }}
                 />
             )}
         </Box>
