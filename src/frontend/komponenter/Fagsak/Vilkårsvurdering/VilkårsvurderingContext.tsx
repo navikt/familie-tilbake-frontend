@@ -231,17 +231,24 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             const ikkeForeldetPerioder = skjemaData.filter(periode => !periode.foreldet);
             const payload: VilkårdsvurderingStegPayload = {
                 '@type': 'VILKÅRSVURDERING',
-                vilkårsvurderingsperioder: ikkeForeldetPerioder.map(periode => {
-                    const resultat = periode.vilkårsvurderingsresultatInfo;
-                    return {
-                        periode: periode.periode,
-                        begrunnelse: periode.begrunnelse as string,
-                        vilkårsvurderingsresultat:
-                            resultat?.vilkårsvurderingsresultat ?? Vilkårsresultat.Udefinert,
-                        godTroDto: resultat?.godTro,
-                        aktsomhetDto: resultat?.aktsomhet,
-                    };
-                }),
+                vilkårsvurderingsperioder: ikkeForeldetPerioder
+                    .filter(periode => !!periode.begrunnelse)
+                    .map(periode => {
+                        if (!periode.begrunnelse)
+                            throw new Feil(
+                                `Periode ${periode.periode.fom} til ${periode.periode.tom} må ha en begrunnelse.`,
+                                400
+                            );
+                        const resultat = periode.vilkårsvurderingsresultatInfo;
+                        return {
+                            periode: periode.periode,
+                            begrunnelse: periode.begrunnelse,
+                            vilkårsvurderingsresultat:
+                                resultat?.vilkårsvurderingsresultat ?? Vilkårsresultat.Udefinert,
+                            godTroDto: resultat?.godTro,
+                            aktsomhetDto: resultat?.aktsomhet,
+                        };
+                    }),
             };
             return payload;
         };
