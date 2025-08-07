@@ -4,6 +4,7 @@ import type {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
+import type { ByRoleMatcher, ByRoleOptions } from '@testing-library/react';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -147,8 +148,10 @@ const renderVilkårsvurderingPerioder = (
     );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const findPeriodButton = (getAllByRole: any, periodDate: string) => {
+const findPeriodButton = (
+    getAllByRole: (role: ByRoleMatcher, options?: ByRoleOptions | undefined) => HTMLElement[],
+    periodDate: string
+) => {
     const tidslinjeButtons = getAllByRole('button').filter(
         (button: HTMLElement) =>
             button.getAttribute('aria-label')?.includes('fra') &&
