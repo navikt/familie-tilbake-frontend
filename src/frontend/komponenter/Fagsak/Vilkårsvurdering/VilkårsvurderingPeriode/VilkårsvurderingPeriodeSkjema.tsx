@@ -373,7 +373,9 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                         <Select
                             className="pb-8 w-[15rem]"
                             name="perioderForKopi"
-                            onChange={event => onKopierPeriode(event)}
+                            onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                                onKopierPeriode(event)
+                            }
                             label={<Detail>Kopier vilkårsvurdering fra</Detail>}
                             readOnly={erLesevisning}
                             size="small"
@@ -418,7 +420,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                                 maxLength={3000}
                                 readOnly={erLesevisning}
                                 value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
-                                onChange={event => {
+                                onChange={(event: { target: { value: string } }) => {
                                     skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
                                         event.target.value
                                     );
@@ -481,7 +483,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                                             ? skjema.felter.aktsomhetBegrunnelse.verdi
                                             : ''
                                     }
-                                    onChange={event => {
+                                    onChange={(event: { target: { value: string } }) => {
                                         skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(
                                             event.target.value
                                         );
