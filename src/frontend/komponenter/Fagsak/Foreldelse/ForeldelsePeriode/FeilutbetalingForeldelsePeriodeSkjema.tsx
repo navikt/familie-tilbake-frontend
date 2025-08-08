@@ -16,6 +16,7 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
+import { differenceInMonths, parseISO } from 'date-fns';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
@@ -138,6 +139,12 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
         }
     };
 
+    const kanSplittePeriode = (periode: ForeldelsePeriodeSkjemeData): boolean => {
+        const fom = parseISO(periode.periode.fom);
+        const tom = parseISO(periode.periode.tom);
+        return differenceInMonths(tom, fom) >= 1;
+    };
+
     return (
         <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
             <StyledStack
@@ -149,7 +156,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
                     Detaljer for valgt periode
                 </Heading>
 
-                {!erLesevisning && (
+                {!erLesevisning && kanSplittePeriode(periode) && (
                     <SplittPeriode
                         behandling={behandling}
                         periode={periode}
