@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import {
     createBrowserRouter,
     createRoutesFromElements,
@@ -12,14 +12,18 @@ import { useApp } from '../context/AppContext';
 import { BehandlingProvider } from '../context/BehandlingContext';
 import { FagsakProvider } from '../context/FagsakContext';
 import { TogglesProvider } from '../context/TogglesContext';
+import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import { FTHeader } from './Felleskomponenter/FTHeader/FTHeader';
 import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
 import UlagretDataModal from './Felleskomponenter/Modal/UlagretDataModal';
 import Toasts from './Felleskomponenter/Toast/Toasts';
 
-const Dashboard = lazy(() => import('../pages/Dashboard'));
-const FagsakContainer = lazy(() => import('./Fagsak/FagsakContainer'));
-const IkkeFunnet = lazy(() => import('../pages/feilsider/IkkeFunnet'));
+const Dashboard = lazyImportMedRetry(() => import('../pages/Dashboard'), 'Dashboard');
+const FagsakContainer = lazyImportMedRetry(
+    () => import('./Fagsak/FagsakContainer'),
+    'FagsakContainer'
+);
+const IkkeFunnet = lazyImportMedRetry(() => import('../pages/feilsider/IkkeFunnet'), 'IkkeFunnet');
 
 const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
