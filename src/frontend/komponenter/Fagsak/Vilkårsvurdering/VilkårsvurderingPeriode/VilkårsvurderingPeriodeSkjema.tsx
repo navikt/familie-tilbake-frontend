@@ -18,6 +18,7 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
+import { differenceInMonths, parseISO } from 'date-fns';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
@@ -282,6 +283,12 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
         }
     };
 
+    const kanSplittePeriode = (periode: VilkårsvurderingPeriodeSkjemaData): boolean => {
+        const fom = parseISO(periode.periode.fom);
+        const tom = parseISO(periode.periode.tom);
+        return differenceInMonths(tom, fom) >= 1;
+    };
+
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
     const handleNesteKnapp = async (): Promise<void> => {
         const handling = erSistePeriode
@@ -321,7 +328,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                     <Heading size="small" level="2">
                         Detaljer for valgt periode
                     </Heading>
-                    {!erLesevisning && !periode.foreldet && (
+                    {!erLesevisning && !periode.foreldet && kanSplittePeriode(periode) && (
                         <SplittPeriode
                             behandling={behandling}
                             periode={periode}

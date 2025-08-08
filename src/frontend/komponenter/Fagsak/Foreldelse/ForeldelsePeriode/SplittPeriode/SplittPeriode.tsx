@@ -8,21 +8,13 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import { Detail, Link } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
+import { useCallback, useEffect, useState } from 'react';
 
 import splitPeriodImageUrl from '../../../../../images/splitt.svg';
 import splitPeriodImageHoverUrl from '../../../../../images/splitt_hover.svg';
 import { flyttDatoISODateStr } from '../../../../../utils';
 import Image from '../../../../Felleskomponenter/Image/Image';
 import { DelOppPeriode, useDelOppPeriode } from '../../../../Felleskomponenter/Modal/DelOppPeriode';
-
-const InlineUndertekst = styled(Detail)`
-    margin-left: 0.1rem;
-`;
-
-const StyledContainer = styled.div`
-    text-align: right;
-`;
 
 const konverterPeriode = (periode: ForeldelsePeriodeSkjemeData): TimelinePeriodProps => {
     return {
@@ -43,8 +35,7 @@ interface IProps {
 }
 
 const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => {
-    const [splittetPerioder, settSplittetPerioder] =
-        React.useState<ForeldelsePeriodeSkjemeData[]>();
+    const [splittetPerioder, settSplittetPerioder] = useState<ForeldelsePeriodeSkjemeData[]>();
     const {
         visModal,
         settVisModal,
@@ -58,53 +49,49 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
         validateNyPeriode,
     } = useDelOppPeriode(periode.periode.tom, behandling.behandlingId);
 
-    React.useEffect(() => {
-        const perRad: TimelinePeriodProps = konverterPeriode(periode);
-        settTidslinjeRader([[perRad]]);
-        settSplittDato(periode.periode.tom);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [periode]);
-
-    const onChangeDato = (nyVerdi?: string) => {
-        vedDatoEndring((månedsslutt: string) => {
-            const per: Periode = periode.periode;
-            if (validateNyPeriode(per, månedsslutt)) {
-                const nyePerioder: ForeldelsePeriodeSkjemeData[] = [
-                    {
-                        ...periode,
-                        index: `${periode.index}_1`,
-                        periode: {
-                            fom: per.fom,
-                            tom: månedsslutt,
+    const onChangeDato = useCallback(
+        (nyVerdi?: string) => {
+            vedDatoEndring((månedsslutt: string) => {
+                const per: Periode = periode.periode;
+                if (validateNyPeriode(per, månedsslutt)) {
+                    const nyePerioder: ForeldelsePeriodeSkjemeData[] = [
+                        {
+                            ...periode,
+                            index: `${periode.index}_1`,
+                            periode: {
+                                fom: per.fom,
+                                tom: månedsslutt,
+                            },
+                            oppdagelsesdato: undefined,
+                            foreldelsesfrist: undefined,
+                            foreldelsesvurderingstype: undefined,
+                            erSplittet: true,
                         },
-                        oppdagelsesdato: undefined,
-                        foreldelsesfrist: undefined,
-                        foreldelsesvurderingstype: undefined,
-                        erSplittet: true,
-                    },
-                    {
-                        ...periode,
-                        index: `${periode.index}_2`,
-                        periode: {
-                            fom: flyttDatoISODateStr(månedsslutt, { days: 1 }),
-                            tom: per.tom,
+                        {
+                            ...periode,
+                            index: `${periode.index}_2`,
+                            periode: {
+                                fom: flyttDatoISODateStr(månedsslutt, { days: 1 }),
+                                tom: per.tom,
+                            },
+                            oppdagelsesdato: undefined,
+                            foreldelsesfrist: undefined,
+                            foreldelsesvurderingstype: undefined,
+                            erSplittet: true,
                         },
-                        oppdagelsesdato: undefined,
-                        foreldelsesfrist: undefined,
-                        foreldelsesvurderingstype: undefined,
-                        erSplittet: true,
-                    },
-                ];
-                settSplittetPerioder(nyePerioder);
-                settTidslinjeRader([
-                    [konverterPeriode(nyePerioder[0]), konverterPeriode(nyePerioder[1])],
-                ]);
-            } else {
-                settSplittetPerioder([periode]);
-                settSplittDato(periode.periode.tom);
-            }
-        }, nyVerdi);
-    };
+                    ];
+                    settSplittetPerioder(nyePerioder);
+                    settTidslinjeRader([
+                        [konverterPeriode(nyePerioder[0]), konverterPeriode(nyePerioder[1])],
+                    ]);
+                } else {
+                    settSplittetPerioder([periode]);
+                    settSplittDato(periode.periode.tom);
+                }
+            }, nyVerdi);
+        },
+        [periode, settSplittDato, settTidslinjeRader, validateNyPeriode, vedDatoEndring]
+    );
 
     const onSubmit = () => {
         if (splittetPerioder) {
@@ -132,17 +119,22 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
         }
     };
 
+    useEffect(() => {
+        if (periode.periode.fom) {
+            onChangeDato(periode.periode.fom);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [periode.periode.fom]);
+
     return periode && tidslinjeRader ? (
-        <StyledContainer>
+        <div className="text-right">
             <Link
                 href="#"
                 role="button"
-                onClick={() => {
-                    settVisModal(true);
-                }}
+                onClick={() => settVisModal(true)}
                 onKeyUp={e => {
-                    const key = e.code || e.keyCode;
-                    if (key === 'Space' || key === 'Enter' || key === 32 || key === 13) {
+                    if (e.code === 'Space' || e.code === 'Enter') {
+                        e.preventDefault();
                         settVisModal(true);
                     }
                 }}
@@ -154,7 +146,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                     altText="Del opp perioden"
                     aria-label="Del opp perioden"
                 />
-                <InlineUndertekst size="small">Del opp perioden</InlineUndertekst>
+                <Detail className="ml-0.5">Del opp perioden</Detail>
             </Link>
             {visModal && (
                 <DelOppPeriode
@@ -162,14 +154,13 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                     tidslinjeRader={tidslinjeRader}
                     splittDato={splittDato}
                     visModal={visModal}
-                    senderInn={!splittetPerioder || splittetPerioder.length === 0}
                     settVisModal={settVisModal}
                     onChangeDato={onChangeDato}
                     onSubmit={onSubmit}
                     feilmelding={feilmelding}
                 />
             )}
-        </StyledContainer>
+        </div>
     ) : null;
 };
 

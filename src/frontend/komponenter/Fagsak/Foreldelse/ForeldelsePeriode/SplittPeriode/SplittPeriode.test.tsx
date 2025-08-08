@@ -54,6 +54,6 @@ describe('Tester: SplittPeriode - Foreldelse', () => {
             })
         ).toBeInTheDocument();
         expect(getByLabelText('Angi t.o.m. måned for første periode')).toBeInTheDocument();
-        expect(getByLabelText('Angi t.o.m. måned for første periode')).toHaveValue('april 2021');
+        expect(getByLabelText('Angi t.o.m. måned for første periode')).toHaveValue('januar 2021');
     });
 });

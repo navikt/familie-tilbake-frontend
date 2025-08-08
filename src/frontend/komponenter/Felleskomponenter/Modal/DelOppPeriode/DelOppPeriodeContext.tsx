@@ -1,17 +1,17 @@
 import type { IBeregnSplittetPeriodeRespons, Periode } from '../../../../typer/feilutbetalingtyper';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
-import * as React from 'react';
+import { useState } from 'react';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
 
-export const useDelOppPeriode = (tom: string, behandlingId: string) => {
-    const [visModal, settVisModal] = React.useState<boolean>(false);
-    const [splittDato, settSplittDato] = React.useState<string>(tom);
-    const [tidslinjeRader, settTidslinjeRader] = React.useState<TimelinePeriodProps[][]>();
-    const [feilmelding, settFeilmelding] = React.useState<string>();
+export const useDelOppPeriode = (fom: string, behandlingId: string) => {
+    const [visModal, settVisModal] = useState(false);
+    const [splittDato, settSplittDato] = useState(fom);
+    const [tidslinjeRader, settTidslinjeRader] = useState<TimelinePeriodProps[][]>();
+    const [feilmelding, settFeilmelding] = useState('');
     const { request } = useHttp();
 
     const vedDatoEndring = (splittPeriode: (månedsslutt: string) => void, nyVerdi?: string) => {
@@ -19,7 +19,7 @@ export const useDelOppPeriode = (tom: string, behandlingId: string) => {
         if (feilmelding) {
             settFeilmelding(feilmelding);
         } else {
-            settFeilmelding(undefined);
+            settFeilmelding('');
             const månedsslutt = getEndOfMonthISODateStr(nyVerdi);
             if (nyVerdi && månedsslutt) {
                 splittPeriode(månedsslutt);
