@@ -4,7 +4,7 @@ import type { IFagsak } from '../../typer/fagsak';
 import { BodyShort } from '@navikt/ds-react';
 import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
@@ -18,6 +18,7 @@ import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historik
 import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
 import { useBehandling } from '../../context/BehandlingContext';
 import { Behandlingstatus } from '../../typer/behandling';
+import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import {
     erHistoriskSide,
     erØnsketSideTilgjengelig,
@@ -25,23 +26,36 @@ import {
 } from '../Felleskomponenter/Venstremeny/sider';
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 
-const BrevmottakerContainer = lazy(() => import('./Brevmottaker/BrevmottakerContainer'));
-const FaktaContainer = lazy(() => import('./Fakta/FaktaContainer'));
-const HistoriskFaktaContainer = lazy(
-    () => import('./Fakta/FaktaPeriode/historikk/HistoriskFaktaContainer')
+const BrevmottakerContainer = lazyImportMedRetry(
+    () => import('./Brevmottaker/BrevmottakerContainer'),
+    'BrevmottakerContainer'
 );
-const ForeldelseContainer = lazy(() => import('./Foreldelse/ForeldelseContainer'));
-const VedtakContainer = lazy(() => import('./Vedtak/VedtakContainer'));
-const VergeContainer = lazy(() => import('./Verge/VergeContainer'));
-const VilkårsvurderingContainer = lazy(
-    () => import('./Vilkårsvurdering/VilkårsvurderingContainer')
+const FaktaContainer = lazyImportMedRetry(() => import('./Fakta/FaktaContainer'), 'FaktaContainer');
+const HistoriskFaktaContainer = lazyImportMedRetry(
+    () => import('./Fakta/FaktaPeriode/historikk/HistoriskFaktaContainer'),
+    'HistoriskFaktaContainer'
 );
-const HistoriskVilkårsvurderingContainer = lazy(
-    () => import('./Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContainer')
+const ForeldelseContainer = lazyImportMedRetry(
+    () => import('./Foreldelse/ForeldelseContainer'),
+    'ForeldelseContainer'
 );
-const Høyremeny = lazy(() => import('./Høyremeny/Høyremeny'));
-const HistoriskeVurderingermeny = lazy(
-    () => import('./HistoriskeVurderingermeny/HistoriskeVurderingermeny')
+const VedtakContainer = lazyImportMedRetry(
+    () => import('./Vedtak/VedtakContainer'),
+    'VedtakContainer'
+);
+const VergeContainer = lazyImportMedRetry(() => import('./Verge/VergeContainer'), 'VergeContainer');
+const VilkårsvurderingContainer = lazyImportMedRetry(
+    () => import('./Vilkårsvurdering/VilkårsvurderingContainer'),
+    'VilkårsvurderingContainer'
+);
+const HistoriskVilkårsvurderingContainer = lazyImportMedRetry(
+    () => import('./Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContainer'),
+    'HistoriskVilkårsvurderingContainer'
+);
+const Høyremeny = lazyImportMedRetry(() => import('./Høyremeny/Høyremeny'), 'Høyremeny');
+const HistoriskeVurderingermeny = lazyImportMedRetry(
+    () => import('./HistoriskeVurderingermeny/HistoriskeVurderingermeny'),
+    'HistoriskeVurderingermeny'
 );
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';

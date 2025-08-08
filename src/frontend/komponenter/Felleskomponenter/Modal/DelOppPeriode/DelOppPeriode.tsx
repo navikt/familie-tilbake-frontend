@@ -11,7 +11,7 @@ import {
     useMonthpicker,
 } from '@navikt/ds-react';
 import { ABorderStrong, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
-import { endOfMonth } from 'date-fns';
+import { endOfMonth, subMonths } from 'date-fns';
 import * as React from 'react';
 import { styled } from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,6 +27,10 @@ const TidslinjeContainer = styled.div`
     .etiketter div:last-child {
         max-width: max-content;
     }
+
+    .navds-timeline__period {
+        cursor: default;
+    }
 `;
 
 interface IProps {
@@ -34,7 +38,6 @@ interface IProps {
     tidslinjeRader: TimelinePeriodProps[][];
     splittDato: string;
     visModal: boolean;
-    senderInn: boolean;
     settVisModal: (vis: boolean) => void;
     onChangeDato: (nyVerdi: string | undefined) => void;
     onSubmit: () => void;
@@ -46,7 +49,6 @@ export const DelOppPeriode: React.FC<IProps> = ({
     tidslinjeRader,
     splittDato,
     visModal,
-    senderInn,
     settVisModal,
     onChangeDato,
     onSubmit,
@@ -54,7 +56,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
 }) => {
     const { monthpickerProps, inputProps } = useMonthpicker({
         fromDate: isoStringTilDate(periode.periode.fom),
-        toDate: isoStringTilDate(periode.periode.tom),
+        toDate: subMonths(isoStringTilDate(periode.periode.tom), 1),
         defaultSelected: isoStringTilDate(splittDato),
         onMonthChange: (dato?: Date) =>
             onChangeDato(dato ? dateTilIsoDatoString(endOfMonth(dato)) : undefined),
@@ -68,7 +70,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
                         heading: 'Del opp perioden',
                         size: 'medium',
                     }}
-                    portal={true}
+                    portal
                     width="small"
                     onClose={() => {
                         settVisModal(false);
@@ -111,21 +113,13 @@ export const DelOppPeriode: React.FC<IProps> = ({
                         </MonthPicker>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button
-                            variant="primary"
-                            key="bekreft"
-                            onClick={onSubmit}
-                            disabled={senderInn}
-                            size="small"
-                        >
+                        <Button variant="primary" key="bekreft" onClick={onSubmit} size="small">
                             Bekreft
                         </Button>
                         <Button
                             variant="tertiary"
                             key="avbryt"
-                            onClick={() => {
-                                settVisModal(false);
-                            }}
+                            onClick={() => settVisModal(false)}
                             size="small"
                         >
                             Lukk
