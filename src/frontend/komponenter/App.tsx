@@ -7,7 +7,8 @@ import { Suspense } from 'react';
 import { hentInnloggetBruker } from '../api/saksbehandler';
 import { AppProvider } from '../context/AppContext';
 import ErrorBoundary from './Felleskomponenter/ErrorBoundary/ErrorBoundary';
-const Container = React.lazy(() => import('./Container'));
+import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
+const Container = lazyImportMedRetry(() => import('./Container'), 'Container');
 
 const App: React.FC = () => {
     const [autentisertSaksbehandler, settAutentisertSaksbehandler] = React.useState<

@@ -39,7 +39,7 @@ export const ServerFeil: React.FC<Props> = ({ httpStatus, eksternFagsakId, behan
                                     <List.Item>
                                         <Link
                                             target="_blank"
-                                            href="https://jira.adeo.no/plugins/servlet/desk/portal/541?requestGroup=828"
+                                            href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
                                         >
                                             Meld feil i porten
                                         </Link>
