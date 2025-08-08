@@ -1,5 +1,4 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
-import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 import type { ChangeEvent, FC, ReactNode } from 'react';
@@ -42,6 +41,11 @@ import {
     vilkårsresultatHjelpetekster,
     vilkårsresultatTyper,
 } from '../../../../kodeverk';
+import {
+    Behandlingssteg,
+    Behandlingsstegstatus,
+    type IBehandling,
+} from '../../../../typer/behandling';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
@@ -166,6 +170,21 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
 
     const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
 
+    // Sjekk om ForeslåVedtak-steget har status tilbakeført
+    const erVedtakTilbakeført = behandling.behandlingsstegsinfo.some(
+        steg =>
+            steg.behandlingssteg === Behandlingssteg.ForeslåVedtak &&
+            steg.behandlingsstegstatus === Behandlingsstegstatus.Tilbakeført
+    );
+
+    // Hvis vedtak er tilbakeført, marker vilkårsvurdering som "har ulagrede endringer"
+    React.useEffect(() => {
+        if (erVedtakTilbakeført && !erLesevisning) {
+            console.log('erVedtakTilbakeført', erVedtakTilbakeført);
+            settIkkePersistertKomponent('vilkårsvurdering');
+        }
+    }, [erVedtakTilbakeført, erLesevisning, settIkkePersistertKomponent]);
+
     useEffect(() => {
         if (pendingPeriode && harUlagredeData) {
             settVisUlagretDataModal(true);
@@ -259,6 +278,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
             (handlingResult === PeriodeHandling.GåTilForrigeSteg ||
                 handlingResult === PeriodeHandling.GåTilNesteSteg)
         ) {
+            nullstillIkkePersisterteKomponenter();
             await hentBehandlingMedBehandlingId(behandling.behandlingId);
         }
     };
