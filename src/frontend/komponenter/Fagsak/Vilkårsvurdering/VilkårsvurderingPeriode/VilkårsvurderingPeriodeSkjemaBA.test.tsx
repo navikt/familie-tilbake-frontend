@@ -76,7 +76,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
-    const behandling = mock<IBehandling>();
+    const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
     const fagsak = mock<IFagsak>({
         ytelsestype: Ytelsetype.Barnetrygd,
     });

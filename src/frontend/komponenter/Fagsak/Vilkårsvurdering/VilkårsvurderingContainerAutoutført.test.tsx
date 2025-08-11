@@ -109,7 +109,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
     test('- vis autoutført', async () => {
         setupMock(false, false, true, feilutbetalingVilkårsvurdering);
 
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole } = render(
