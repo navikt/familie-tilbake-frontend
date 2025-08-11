@@ -117,7 +117,10 @@ const setupMocks = () => {
         request: () => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
-                data: mock<IBehandling>({ eksternBrukId: '1' }),
+                data: mock<IBehandling>({
+                    eksternBrukId: '1',
+                    behandlingsstegsinfo: [],
+                }),
             });
         },
     }));
@@ -174,7 +177,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
     });
 
     test('skal bytte periode direkte når det ikke er ulagrede endringer', async () => {
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getAllByRole } = renderVilkårsvurderingPerioder(behandling, fagsak);
@@ -197,7 +200,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
     });
 
     test('skal vise modal ved bytte av periode med ulagrede endringer', async () => {
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getAllByRole, getByLabelText } =
@@ -230,7 +233,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
     });
 
     test('skal bytte uten å lagre når "Bytt uten å lagre" klikkes', async () => {
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
@@ -269,7 +272,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
     });
 
     test('skal lagre og bytte når "Lagre og bytt periode" klikkes', async () => {
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
@@ -320,7 +323,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
     });
 
     test('skal lukke modal og forbli på nåværende periode når "Lukk" klikkes', async () => {
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =

@@ -115,7 +115,10 @@ const setupHttpMock = () => {
         request: () => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
-                data: mock<IBehandling>({ eksternBrukId: '1' }),
+                data: mock<IBehandling>({
+                    eksternBrukId: '1',
+                    behandlingsstegsinfo: [],
+                }),
             });
         },
     }));
@@ -141,7 +144,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
     test('- totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
         setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
@@ -320,7 +323,10 @@ describe('Tester: VilkårsvurderingContainer', () => {
             eksternFagsakId: '1',
             ytelsestype: Ytelsetype.Barnetilsyn,
         });
-        const behandling = mock<IBehandling>({ eksternBrukId: '1' });
+        const behandling = mock<IBehandling>({
+            eksternBrukId: '1',
+            behandlingsstegsinfo: [],
+        });
 
         const { getByText, getByRole, getByLabelText, queryAllByText } =
             renderVilkårsvurderingContainer(behandling, fagsak);
@@ -416,7 +422,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({
             ytelsestype: Ytelsetype.Barnetrygd,
         });
@@ -560,7 +566,10 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        const behandling = mock<IBehandling>({ status: Behandlingstatus.FatterVedtak });
+        const behandling = mock<IBehandling>({
+            status: Behandlingstatus.FatterVedtak,
+            behandlingsstegsinfo: [],
+        });
         const fagsak = mock<IFagsak>({
             ytelsestype: Ytelsetype.Barnetrygd,
         });
@@ -747,7 +756,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        const behandling = mock<IBehandling>();
+        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({
             ytelsestype: Ytelsetype.Overgangsstønad,
         });

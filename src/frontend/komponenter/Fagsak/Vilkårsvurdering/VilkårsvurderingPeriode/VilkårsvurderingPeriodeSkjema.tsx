@@ -1,5 +1,4 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
-import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
 import type { ChangeEvent, FC, ReactNode } from 'react';
@@ -43,6 +42,11 @@ import {
     vilkårsresultatHjelpetekster,
     vilkårsresultatTyper,
 } from '../../../../kodeverk';
+import {
+    Behandlingssteg,
+    Behandlingsstegstatus,
+    type IBehandling,
+} from '../../../../typer/behandling';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
@@ -167,6 +171,20 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
 
     const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
 
+    // Sjekk om ForeslåVedtak-steget har status tilbakeført
+    const erVedtakTilbakeført = behandling.behandlingsstegsinfo.some(
+        steg =>
+            steg.behandlingssteg === Behandlingssteg.ForeslåVedtak &&
+            steg.behandlingsstegstatus === Behandlingsstegstatus.Tilbakeført
+    );
+
+    // Hvis vedtak er tilbakeført, marker vilkårsvurdering som "har ulagrede endringer"
+    React.useEffect(() => {
+        if (erVedtakTilbakeført && !erLesevisning) {
+            settIkkePersistertKomponent('vilkårsvurdering');
+        }
+    }, [erVedtakTilbakeført, erLesevisning, settIkkePersistertKomponent]);
+
     useEffect(() => {
         if (pendingPeriode && harUlagredeData) {
             settVisUlagretDataModal(true);
@@ -260,6 +278,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
             (handlingResult === PeriodeHandling.GåTilForrigeSteg ||
                 handlingResult === PeriodeHandling.GåTilNesteSteg)
         ) {
+            nullstillIkkePersisterteKomponenter();
             await hentBehandlingMedBehandlingId(behandling.behandlingId);
         }
     };
@@ -353,7 +372,9 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                         <Select
                             className="pb-8 w-[15rem]"
                             name="perioderForKopi"
-                            onChange={event => onKopierPeriode(event)}
+                            onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                                onKopierPeriode(event)
+                            }
                             label={<Detail>Kopier vilkårsvurdering fra</Detail>}
                             readOnly={erLesevisning}
                             size="small"
@@ -398,7 +419,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                                 maxLength={3000}
                                 readOnly={erLesevisning}
                                 value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
-                                onChange={event => {
+                                onChange={(event: { target: { value: string } }) => {
                                     skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
                                         event.target.value
                                     );
@@ -461,7 +482,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                                             ? skjema.felter.aktsomhetBegrunnelse.verdi
                                             : ''
                                     }
-                                    onChange={event => {
+                                    onChange={(event: { target: { value: string } }) => {
                                         skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(
                                             event.target.value
                                         );
