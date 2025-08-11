@@ -95,9 +95,6 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         settPendingPeriode(vilkårsvurderingPeriode);
     };
 
-    console.log('behandling', behandling);
-    console.log('perioder', perioder);
-
     return perioder && tidslinjeRader ? (
         <VStack gap="5">
             {valideringsFeilmelding && (
