@@ -34,7 +34,8 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
 
     if (erServerFeil(httpStatus)) {
         return {
-            frontendFeilmelding: ressurs?.frontendFeilmelding ?? defaultFeilmelding,
+            frontendFeilmelding:
+                ressurs?.frontendFeilmelding ?? ressurs?.melding ?? defaultFeilmelding,
             status: RessursStatus.ServerFeil,
             httpStatusCode: httpStatus ?? 500,
         };
@@ -57,7 +58,8 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
             break;
         case RessursStatus.IkkeTilgang:
             typetRessurs = {
-                frontendFeilmelding: ressurs.frontendFeilmelding ?? 'Ingen tilgang',
+                frontendFeilmelding:
+                    ressurs.frontendFeilmelding ?? ressurs.melding ?? 'Ingen tilgang',
                 status: ressurs.status,
                 httpStatusCode: error?.status ? error.status : 403,
             };
@@ -65,7 +67,8 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
         case RessursStatus.Feilet:
             loggFeilTilSentry && loggFeil(error, innloggetSaksbehandler, ressurs.melding);
             typetRessurs = {
-                frontendFeilmelding: ressurs.frontendFeilmelding ?? defaultFeilmelding,
+                frontendFeilmelding:
+                    ressurs.frontendFeilmelding ?? ressurs.melding ?? defaultFeilmelding,
                 status: ressurs.status,
                 httpStatusCode: error?.status ? error.status : 500,
             };
@@ -73,14 +76,17 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
         case RessursStatus.FunksjonellFeil:
             typetRessurs = {
                 frontendFeilmelding:
-                    ressurs.frontendFeilmelding ?? 'En funksjonell feil har oppstått!',
+                    ressurs.frontendFeilmelding ??
+                    ressurs.melding ??
+                    'En funksjonell feil har oppstått!',
                 status: ressurs.status,
                 httpStatusCode: error?.status ? error.status : 400,
             };
             break;
         default:
             typetRessurs = {
-                frontendFeilmelding: ressurs.frontendFeilmelding ?? defaultFeilmelding,
+                frontendFeilmelding:
+                    ressurs.frontendFeilmelding ?? ressurs.melding ?? defaultFeilmelding,
                 status: RessursStatus.Feilet,
                 httpStatusCode: error?.status ? error.status : 500,
             };
