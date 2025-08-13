@@ -1,3 +1,4 @@
+import type { HendelseUndertype } from '../../../../kodeverk';
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
@@ -74,11 +75,23 @@ describe('FeilutbetalingFaktaPeriodeSkjema', () => {
         expect(screen.getByText('Annet')).toBeInTheDocument();
     });
 
-    test('skal sette default verdi når det kun er ett element i hendelseTyper lista', () => {
-        const periodeWithValue = { ...mockPeriode, hendelsestype: HendelseType.Annet };
+    test('skal sette default verdi i underårsak-select når hendelsestype er valgt og det kun er én undertype', () => {
+        const periodeWithValue = {
+            ...mockPeriode,
+            hendelsestype: HendelseType.Annet,
+            hendelsesundertype: 'ANNET_FRITEKST' as HendelseUndertype,
+        };
         renderComponent(periodeWithValue, [HendelseType.Annet]);
 
+        const underSelectElement = screen.getByTestId('perioder.0.underårsak');
+        expect(underSelectElement).toHaveValue('ANNET_FRITEKST');
+    });
+
+    test('skal velge "-" som default når det er flere elementer i hendelseTyper lista', () => {
+        const multipleHendelseTyper = [HendelseType.Annet, HendelseType.Dødsfall];
+        renderComponent(mockPeriode, multipleHendelseTyper);
+
         const selectElement = screen.getByTestId('perioder.0.årsak');
-        expect(selectElement).toHaveValue(HendelseType.Annet);
+        expect(selectElement).toHaveValue('-');
     });
 });
