@@ -5,17 +5,16 @@ import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
 import classNames from 'classnames';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { HendelseType } from '../../../../kodeverk';
-import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
+import {
+    HendelseType,
+    hendelsetyper,
+    hendelseundertyper,
+    hentHendelseUndertyper,
+} from '../../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
-
-const StyledVStack = styled(VStack)`
-    margin-top: ${ASpacing1};
-`;
 
 interface IProps {
     periode: FaktaPeriodeSkjemaData;
@@ -45,7 +44,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
             settHendelseUnderTyper([]);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [periode]);
+    }, [periode, hendelseTyper]);
 
     const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const årsak = e.target.value as HendelseType;
@@ -68,19 +67,24 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                 )} - ${formatterDatostring(periode.periode.tom)}`}</BodyShort>
             </Table.DataCell>
             <Table.DataCell>
-                <StyledVStack gap="1">
+                <VStack gap="1" className={`mt-[${ASpacing1}]`}>
                     {erLesevisning ? (
                         <BodyShort size="small">
                             {periode.hendelsestype && hendelsetyper[periode.hendelsestype]}
                         </BodyShort>
                     ) : (
                         <Select
+                            key={`arsak-${index}-${hendelseTyper?.length || 0}`}
                             id={`perioder.${index}.årsak`}
                             data-testid={`perioder.${index}.årsak`}
                             label="Årsak"
                             hideLabel
+                            defaultValue={
+                                hendelseTyper?.length === 1
+                                    ? hendelseTyper[0]
+                                    : periode.hendelsestype || '-'
+                            }
                             onChange={event => onChangeÅrsak(event)}
-                            value={periode.hendelsestype || '-'}
                             error={
                                 visFeilmeldinger &&
                                 feilmeldinger?.find(
@@ -107,12 +111,17 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                             </BodyShort>
                         ) : (
                             <Select
+                                key={`underarsak-${index}-${hendelseUnderTyper?.length || 0}`}
                                 id={`perioder.${index}.underårsak`}
                                 data-testid={`perioder.${index}.underårsak`}
                                 label="Underårsak"
                                 hideLabel
+                                defaultValue={
+                                    hendelseUnderTyper?.length === 1
+                                        ? hendelseUnderTyper[0]
+                                        : periode.hendelsesundertype || '-'
+                                }
                                 onChange={event => onChangeUnderÅrsak(event)}
-                                value={periode.hendelsesundertype || '-'}
                                 error={
                                     visFeilmeldinger &&
                                     feilmeldinger?.find(
@@ -131,7 +140,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                                 ))}
                             </Select>
                         ))}
-                </StyledVStack>
+                </VStack>
             </Table.DataCell>
             <Table.DataCell align="right" className={classNames('redText')}>
                 <BodyShort size="small">{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</BodyShort>
