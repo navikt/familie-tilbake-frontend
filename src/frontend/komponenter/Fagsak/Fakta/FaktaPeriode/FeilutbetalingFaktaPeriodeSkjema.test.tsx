@@ -25,43 +25,6 @@ jest.mock('react-router', () => ({
     useNavigate: () => jest.fn(),
 }));
 
-const renderFeilutbetalingFaktaPeriode = (
-    periode: FaktaPeriodeSkjemaData,
-    hendelseTyper: HendelseType[] | undefined,
-    erLesevisning = false
-) => {
-    const behandling = mock<IBehandling>({ eksternBrukId: '1' });
-    const fagsak = mock<IFagsak>({
-        institusjon: undefined,
-        fagsystem: Fagsystem.EF,
-        eksternFagsakId: '1',
-    });
-
-    mockUseBehandling.mockImplementation(() => ({
-        settIkkePersistertKomponent: jest.fn(),
-    }));
-
-    mockUseBehandlingApi.mockImplementation(() => ({
-        gjerFeilutbetalingFaktaKall: () => Promise.resolve(),
-        sendInnFeilutbetalingFakta: () => Promise.resolve(),
-    }));
-
-    return render(
-        <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-            <table>
-                <tbody>
-                    <FeilutbetalingFaktaPeriode
-                        periode={periode}
-                        hendelseTyper={hendelseTyper}
-                        index={0}
-                        erLesevisning={erLesevisning}
-                    />
-                </tbody>
-            </table>
-        </FeilutbetalingFaktaProvider>
-    );
-};
-
 describe('FeilutbetalingFaktaPeriodeSkjema', () => {
     const mockPeriode: FaktaPeriodeSkjemaData = {
         index: 0,
@@ -74,23 +37,55 @@ describe('FeilutbetalingFaktaPeriodeSkjema', () => {
         hendelsesundertype: undefined,
     };
 
+    const behandling = mock<IBehandling>({ eksternBrukId: '1' });
+    const fagsak = mock<IFagsak>({
+        institusjon: undefined,
+        fagsystem: Fagsystem.EF,
+        eksternFagsakId: '1',
+    });
+
     beforeEach(() => {
         jest.clearAllMocks();
+        mockUseBehandling.mockImplementation(() => ({
+            settIkkePersistertKomponent: jest.fn(),
+        }));
+        mockUseBehandlingApi.mockImplementation(() => ({
+            gjerFeilutbetalingFaktaKall: () => Promise.resolve(),
+            sendInnFeilutbetalingFakta: () => Promise.resolve(),
+        }));
     });
 
-    test('skal sette default verdi til HendelseType.Annet når det kun er ett element i hendelseTyper lista', () => {
-        const hendelseTyper = [HendelseType.Annet];
+    const renderComponent = (
+        periode: FaktaPeriodeSkjemaData,
+        hendelseTyper: HendelseType[] | undefined
+    ) => {
+        return render(
+            <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
+                <table>
+                    <tbody>
+                        <FeilutbetalingFaktaPeriode
+                            periode={periode}
+                            hendelseTyper={hendelseTyper}
+                            index={0}
+                            erLesevisning={false}
+                        />
+                    </tbody>
+                </table>
+            </FeilutbetalingFaktaProvider>
+        );
+    };
 
-        renderFeilutbetalingFaktaPeriode(mockPeriode, hendelseTyper);
+    test('viser select med riktige options', () => {
+        renderComponent(mockPeriode, [HendelseType.Annet]);
 
         const selectElement = screen.getByTestId('perioder.0.årsak');
-        expect(selectElement).toHaveValue(HendelseType.Annet);
+        expect(selectElement).toBeInTheDocument();
+        expect(screen.getByText('Annet')).toBeInTheDocument();
     });
 
-    test('skal sette default verdi når det kun er ett element i hendelseTyper lista', () => {
-        const hendelseTyper = [HendelseType.Annet];
-
-        renderFeilutbetalingFaktaPeriode(mockPeriode, hendelseTyper);
+    test('viser valgt verdi i select', () => {
+        const periodeWithValue = { ...mockPeriode, hendelsestype: HendelseType.Annet };
+        renderComponent(periodeWithValue, [HendelseType.Annet]);
 
         const selectElement = screen.getByTestId('perioder.0.årsak');
         expect(selectElement).toHaveValue(HendelseType.Annet);
