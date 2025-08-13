@@ -1,4 +1,4 @@
-import type { HendelseUndertype } from '../../../../kodeverk';
+import type { HendelseType, HendelseUndertype } from '../../../../kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
@@ -7,12 +7,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
-import {
-    HendelseType,
-    hendelsetyper,
-    hendelseundertyper,
-    hentHendelseUndertyper,
-} from '../../../../kodeverk';
+import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
 
@@ -35,8 +30,19 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     const { settIkkePersistertKomponent } = useBehandling();
 
     React.useEffect(() => {
-        if (hendelseTyper?.length === 1 && hendelseTyper[0] === HendelseType.Annet) {
-            settHendelseUnderTyper(hentHendelseUndertyper(hendelseTyper[0]));
+        if (hendelseTyper?.length === 1) {
+            const underTyper = hentHendelseUndertyper(hendelseTyper[0]);
+            settHendelseUnderTyper(underTyper);
+
+            if (!periode.hendelsestype) {
+                settIkkePersistertKomponent('fakta');
+                oppdaterÅrsakPåPeriode(periode, hendelseTyper[0]);
+            }
+
+            if (underTyper.length === 1 && !periode.hendelsesundertype) {
+                settIkkePersistertKomponent('fakta');
+                oppdaterUnderårsakPåPeriode(periode, underTyper[0]);
+            }
         } else if (periode.hendelsestype) {
             settHendelseUnderTyper(hentHendelseUndertyper(periode.hendelsestype));
         } else if (erLesevisning || !periode.hendelsestype) {
@@ -79,12 +85,8 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                             data-testid={`perioder.${index}.årsak`}
                             label="Årsak"
                             hideLabel
-                            defaultValue={
-                                hendelseTyper?.length === 1
-                                    ? hendelseTyper[0]
-                                    : periode.hendelsestype || '-'
-                            }
                             onChange={event => onChangeÅrsak(event)}
+                            value={periode.hendelsestype || '-'}
                             error={
                                 visFeilmeldinger &&
                                 feilmeldinger?.find(
@@ -116,12 +118,8 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                                 data-testid={`perioder.${index}.underårsak`}
                                 label="Underårsak"
                                 hideLabel
-                                defaultValue={
-                                    hendelseUnderTyper?.length === 1
-                                        ? hendelseUnderTyper[0]
-                                        : periode.hendelsesundertype || '-'
-                                }
                                 onChange={event => onChangeUnderÅrsak(event)}
+                                value={periode.hendelsesundertype || '-'}
                                 error={
                                     visFeilmeldinger &&
                                     feilmeldinger?.find(
