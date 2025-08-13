@@ -75,7 +75,7 @@ describe('FeilutbetalingFaktaPeriodeSkjema', () => {
         );
     };
 
-    test('viser select med riktige options', () => {
+    test('skal sette default verdi til HendelseType.Annet når det kun er ett element i hendelseTyper lista', () => {
         renderComponent(mockPeriode, [HendelseType.Annet]);
 
         const selectElement = screen.getByTestId('perioder.0.årsak');
@@ -83,7 +83,7 @@ describe('FeilutbetalingFaktaPeriodeSkjema', () => {
         expect(screen.getByText('Annet')).toBeInTheDocument();
     });
 
-    test('viser valgt verdi i select', () => {
+    test('skal sette default verdi når det kun er ett element i hendelseTyper lista', () => {
         const periodeWithValue = { ...mockPeriode, hendelsestype: HendelseType.Annet };
         renderComponent(periodeWithValue, [HendelseType.Annet]);
 
