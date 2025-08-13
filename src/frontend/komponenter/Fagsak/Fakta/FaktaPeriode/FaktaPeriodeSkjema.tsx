@@ -1,21 +1,15 @@
-import type { HendelseUndertype } from '../../../../kodeverk';
+import type { HendelseType, HendelseUndertype } from '../../../../kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
 import classNames from 'classnames';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { HendelseType } from '../../../../kodeverk';
 import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
-
-const StyledVStack = styled(VStack)`
-    margin-top: ${ASpacing1};
-`;
 
 interface IProps {
     periode: FaktaPeriodeSkjemaData;
@@ -36,8 +30,19 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
     const { settIkkePersistertKomponent } = useBehandling();
 
     React.useEffect(() => {
-        if (hendelseTyper?.length === 1 && hendelseTyper[0] === HendelseType.Annet) {
-            settHendelseUnderTyper(hentHendelseUndertyper(hendelseTyper[0]));
+        if (hendelseTyper?.length === 1) {
+            const underTyper = hentHendelseUndertyper(hendelseTyper[0]);
+            settHendelseUnderTyper(underTyper);
+
+            if (!periode.hendelsestype) {
+                settIkkePersistertKomponent('fakta');
+                oppdaterÅrsakPåPeriode(periode, hendelseTyper[0]);
+            }
+
+            if (underTyper.length === 1 && !periode.hendelsesundertype) {
+                settIkkePersistertKomponent('fakta');
+                oppdaterUnderårsakPåPeriode(periode, underTyper[0]);
+            }
         } else if (periode.hendelsestype) {
             settHendelseUnderTyper(hentHendelseUndertyper(periode.hendelsestype));
         } else if (erLesevisning || !periode.hendelsestype) {
@@ -45,7 +50,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
             settHendelseUnderTyper([]);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [periode]);
+    }, [periode, hendelseTyper]);
 
     const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const årsak = e.target.value as HendelseType;
@@ -68,13 +73,14 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                 )} - ${formatterDatostring(periode.periode.tom)}`}</BodyShort>
             </Table.DataCell>
             <Table.DataCell>
-                <StyledVStack gap="1">
+                <VStack gap="1" className={`mt-[${ASpacing1}]`}>
                     {erLesevisning ? (
                         <BodyShort size="small">
                             {periode.hendelsestype && hendelsetyper[periode.hendelsestype]}
                         </BodyShort>
                     ) : (
                         <Select
+                            key={`arsak-${index}-${hendelseTyper?.length || 0}`}
                             id={`perioder.${index}.årsak`}
                             data-testid={`perioder.${index}.årsak`}
                             label="Årsak"
@@ -107,6 +113,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                             </BodyShort>
                         ) : (
                             <Select
+                                key={`underarsak-${index}-${hendelseUnderTyper?.length || 0}`}
                                 id={`perioder.${index}.underårsak`}
                                 data-testid={`perioder.${index}.underårsak`}
                                 label="Underårsak"
@@ -131,7 +138,7 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
                                 ))}
                             </Select>
                         ))}
-                </StyledVStack>
+                </VStack>
             </Table.DataCell>
             <Table.DataCell align="right" className={classNames('redText')}>
                 <BodyShort size="small">{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</BodyShort>
