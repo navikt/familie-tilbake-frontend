@@ -15,66 +15,57 @@ jest.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: () => mockUseBehandling(),
 }));
 
-const mockUseBehandlingApi = jest.fn();
-jest.mock('../../../../api/behandling', () => ({
-    useBehandlingApi: () => mockUseBehandlingApi(),
-}));
-
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: () => jest.fn(),
 }));
 
+const behandling = mock<IBehandling>({ eksternBrukId: '1' });
+const fagsak = mock<IFagsak>({
+    institusjon: undefined,
+    fagsystem: Fagsystem.EF,
+    eksternFagsakId: '1',
+});
+
+const renderComponent = (
+    periode: FaktaPeriodeSkjemaData,
+    hendelseTyper: HendelseType[] | undefined
+) => {
+    return render(
+        <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
+            <table>
+                <tbody>
+                    <FeilutbetalingFaktaPeriode
+                        periode={periode}
+                        hendelseTyper={hendelseTyper}
+                        index={0}
+                        erLesevisning={false}
+                    />
+                </tbody>
+            </table>
+        </FeilutbetalingFaktaProvider>
+    );
+};
+
+const mockPeriode: FaktaPeriodeSkjemaData = {
+    index: 0,
+    feilutbetaltBeløp: 1000,
+    periode: {
+        fom: '2023-01-01',
+        tom: '2023-01-31',
+    },
+    hendelsestype: undefined,
+    hendelsesundertype: undefined,
+};
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockUseBehandling.mockImplementation(() => ({
+        settIkkePersistertKomponent: jest.fn(),
+    }));
+});
+
 describe('FeilutbetalingFaktaPeriodeSkjema', () => {
-    const mockPeriode: FaktaPeriodeSkjemaData = {
-        index: 0,
-        feilutbetaltBeløp: 1000,
-        periode: {
-            fom: '2023-01-01',
-            tom: '2023-01-31',
-        },
-        hendelsestype: undefined,
-        hendelsesundertype: undefined,
-    };
-
-    const behandling = mock<IBehandling>({ eksternBrukId: '1' });
-    const fagsak = mock<IFagsak>({
-        institusjon: undefined,
-        fagsystem: Fagsystem.EF,
-        eksternFagsakId: '1',
-    });
-
-    beforeEach(() => {
-        jest.clearAllMocks();
-        mockUseBehandling.mockImplementation(() => ({
-            settIkkePersistertKomponent: jest.fn(),
-        }));
-        mockUseBehandlingApi.mockImplementation(() => ({
-            gjerFeilutbetalingFaktaKall: () => Promise.resolve(),
-            sendInnFeilutbetalingFakta: () => Promise.resolve(),
-        }));
-    });
-
-    const renderComponent = (
-        periode: FaktaPeriodeSkjemaData,
-        hendelseTyper: HendelseType[] | undefined
-    ) => {
-        return render(
-            <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                <table>
-                    <tbody>
-                        <FeilutbetalingFaktaPeriode
-                            periode={periode}
-                            hendelseTyper={hendelseTyper}
-                            index={0}
-                            erLesevisning={false}
-                        />
-                    </tbody>
-                </table>
-            </FeilutbetalingFaktaProvider>
-        );
-    };
-
     test('skal sette default verdi til HendelseType.Annet når det kun er ett element i hendelseTyper lista', () => {
         renderComponent(mockPeriode, [HendelseType.Annet]);
 
