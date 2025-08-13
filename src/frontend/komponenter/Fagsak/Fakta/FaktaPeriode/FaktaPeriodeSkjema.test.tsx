@@ -6,7 +6,7 @@ import { render, screen } from '@testing-library/react';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
-import FeilutbetalingFaktaPeriode from './FeilutbetalingFaktaPeriodeSkjema';
+import FeilutbetalingFaktaPeriode from './FaktaPeriodeSkjema';
 import { Fagsystem, HendelseType } from '../../../../kodeverk';
 import { FeilutbetalingFaktaProvider } from '../FeilutbetalingFaktaContext';
 

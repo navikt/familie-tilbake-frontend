@@ -7,7 +7,7 @@ import * as React from 'react';
 import { harBrukerUttaltSegValgTilTekst } from '../../../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../../../utils';
 import FaktaRevurdering from '../../FaktaRevurdering';
-import FeilutbetalingFaktaPeriode from '../FeilutbetalingFaktaPeriodeSkjema';
+import FeilutbetalingFaktaPeriode from '../FaktaPeriodeSkjema';
 
 interface IProps {
     skjemaData: FaktaSkjemaData;
