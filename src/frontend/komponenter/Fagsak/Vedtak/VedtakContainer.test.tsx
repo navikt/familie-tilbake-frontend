@@ -228,11 +228,13 @@ describe('Tester: VedtakContainer', () => {
         expect(getAllByText('1 222')).toHaveLength(2);
         expect(getAllByText('2 445')).toHaveLength(2);
 
-        expect(
-            queryByRole('button', {
-                name: 'Forhåndsvis vedtaksbrev',
-            })
-        ).toBeInTheDocument();
+        await waitFor(() => {
+            expect(
+                queryByRole('button', {
+                    name: 'Forhåndsvis vedtaksbrev',
+                })
+            ).toBeInTheDocument();
+        });
 
         await waitFor(() => {
             expect(
@@ -348,11 +350,13 @@ describe('Tester: VedtakContainer', () => {
             )
         ).not.toBeInTheDocument();
 
-        expect(
-            queryByRole('button', {
-                name: 'Forhåndsvis vedtaksbrev',
-            })
-        ).toBeInTheDocument();
+        await waitFor(() => {
+            expect(
+                queryByRole('button', {
+                    name: 'Forhåndsvis vedtaksbrev',
+                })
+            ).toBeInTheDocument();
+        });
 
         await waitFor(() => {
             expect(
@@ -591,11 +595,13 @@ describe('Tester: VedtakContainer', () => {
             )
         ).not.toBeInTheDocument();
 
-        expect(
-            queryByRole('button', {
-                name: 'Forhåndsvis vedtaksbrev',
-            })
-        ).toBeInTheDocument();
+        await waitFor(() => {
+            expect(
+                queryByRole('button', {
+                    name: 'Forhåndsvis vedtaksbrev',
+                })
+            ).toBeInTheDocument();
+        });
 
         await waitFor(() => {
             expect(
@@ -731,11 +737,13 @@ describe('Tester: VedtakContainer', () => {
             expect(getByText('Vedtak')).toBeInTheDocument();
         });
 
-        expect(
-            queryByRole('button', {
-                name: 'Forhåndsvis vedtaksbrev',
-            })
-        ).toBeInTheDocument();
+        await waitFor(() => {
+            expect(
+                queryByRole('button', {
+                    name: 'Forhåndsvis vedtaksbrev',
+                })
+            ).toBeInTheDocument();
+        });
 
         await waitFor(() => {
             expect(
