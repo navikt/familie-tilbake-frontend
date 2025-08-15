@@ -5,7 +5,7 @@ import { Table } from '@navikt/ds-react';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
-import FeilutbetalingFaktaPeriode from './FeilutbetalingFaktaPeriodeSkjema';
+import FeilutbetalingFaktaPeriode from './FaktaPeriodeSkjema';
 import { hentHendelseTyper } from '../../../../kodeverk';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
 

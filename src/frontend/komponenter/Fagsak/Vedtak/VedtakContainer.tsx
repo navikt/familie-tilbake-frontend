@@ -154,15 +154,17 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                 </BodyLong>
                 <VedtakPerioder perioder={beregningsresultat.data.beregningsresultatsperioder} />
                 <Spacer20 />
-                <VedtakSkjema
-                    avsnitter={skjemaData}
-                    erLesevisning={erLesevisning}
-                    erRevurderingBortfaltBeløp={erRevurderingBortfaltBeløp}
-                    harBrukerUttaltSeg={
-                        beregningsresultat.data.vurderingAvBrukersUttalelse.harBrukerUttaltSeg ===
-                        HarBrukerUttaltSegValg.Ja
-                    }
-                />
+                {!!skjemaData.length && (
+                    <VedtakSkjema
+                        avsnitter={skjemaData}
+                        erLesevisning={erLesevisning}
+                        erRevurderingBortfaltBeløp={erRevurderingBortfaltBeløp}
+                        harBrukerUttaltSeg={
+                            beregningsresultat.data.vurderingAvBrukersUttalelse
+                                .harBrukerUttaltSeg === HarBrukerUttaltSegValg.Ja
+                        }
+                    />
+                )}
                 <Spacer20 />
                 {foreslåVedtakRespons &&
                     (foreslåVedtakRespons.status === RessursStatus.Feilet ||
@@ -183,8 +185,10 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                         </Button>
                     )}
                     <HStack gap="1">
-                        {kanViseForhåndsvisning && <ForhåndsvisVedtaksbrev />}
-                        {!erLesevisning && !erRevurderingKlageKA && (
+                        {kanViseForhåndsvisning && !!skjemaData.length && (
+                            <ForhåndsvisVedtaksbrev />
+                        )}
+                        {!erLesevisning && !erRevurderingKlageKA && !!skjemaData.length && (
                             <Button
                                 variant="tertiary"
                                 onClick={lagreUtkast}

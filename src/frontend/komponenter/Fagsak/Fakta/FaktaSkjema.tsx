@@ -17,7 +17,7 @@ import {
 } from '@navikt/ds-react';
 import * as React from 'react';
 
-import FeilutbetalingFaktaPerioder from './FaktaPeriode/FeilutbetalingFaktaPerioder';
+import FeilutbetalingFaktaPerioder from './FaktaPeriode/FaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 import { useBehandling } from '../../../context/BehandlingContext';
