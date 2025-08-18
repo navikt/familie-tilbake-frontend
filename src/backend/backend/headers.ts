@@ -10,7 +10,7 @@ const navTelemetryDev = 'https://telemetry.ekstern.dev.nav.no';
 
 const cspString = `default-src 'self' data: ${amplitude} ${sentry} ${navTelemetry} ${navTelemetryDev}; style-src 'self' ${styleSource} data: 'unsafe-inline'; font-src 'self' ${fontSource} ${navFontSource} data:; frame-src 'self' blob:;`;
 
-const setup = (app: Express) => {
+const setup = (app: Express): void => {
     app.disable('x-powered-by');
     app.use((_req, res, next) => {
         res.header('X-Frame-Options', 'DENY');

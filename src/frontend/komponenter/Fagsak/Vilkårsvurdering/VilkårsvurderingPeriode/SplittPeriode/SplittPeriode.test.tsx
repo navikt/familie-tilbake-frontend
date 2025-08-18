@@ -1,5 +1,6 @@
 import type { IBehandling } from '../../../../../typer/behandling';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
+import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -11,7 +12,7 @@ import { HttpProvider } from '../../../../../api/http/HttpProvider';
 import { HendelseType } from '../../../../../kodeverk';
 
 describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();

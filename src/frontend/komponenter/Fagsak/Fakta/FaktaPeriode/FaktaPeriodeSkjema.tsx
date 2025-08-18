@@ -52,14 +52,14 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [periode, hendelseTyper]);
 
-    const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         const årsak = e.target.value as HendelseType;
         settHendelseUnderTyper(hentHendelseUndertyper(årsak));
         settIkkePersistertKomponent('fakta');
         oppdaterÅrsakPåPeriode(periode, årsak);
     };
 
-    const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         const underÅrsak = e.target.value as HendelseUndertype;
         settIkkePersistertKomponent('fakta');
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);

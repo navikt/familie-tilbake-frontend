@@ -116,13 +116,13 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
                 });
         };
 
-        const oppdaterBegrunnelse = (nyBegrunnelse: string) => {
+        const oppdaterBegrunnelse = (nyBegrunnelse: string): void => {
             settSkjemaData(prevState => {
                 return { ...prevState, begrunnelse: nyBegrunnelse };
             });
         };
 
-        const oppdaterBrukerHarUttaltSeg = (harBrukerUttaltSeg: HarBrukerUttaltSegValg) => {
+        const oppdaterBrukerHarUttaltSeg = (harBrukerUttaltSeg: HarBrukerUttaltSegValg): void => {
             settSkjemaData(prevState => {
                 return {
                     ...prevState,
@@ -134,7 +134,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             });
         };
 
-        const oppdaterBeskrivelseBrukerHarUttaltSeg = (begrunnelse: string) => {
+        const oppdaterBeskrivelseBrukerHarUttaltSeg = (begrunnelse: string): void => {
             settSkjemaData(prevState => {
                 return {
                     ...prevState,
@@ -148,7 +148,10 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             });
         };
 
-        const oppdaterÅrsakPåPeriode = (periode: FaktaPeriodeSkjemaData, nyÅrsak: HendelseType) => {
+        const oppdaterÅrsakPåPeriode = (
+            periode: FaktaPeriodeSkjemaData,
+            nyÅrsak: HendelseType
+        ): void => {
             if (behandlePerioderSamlet) {
                 oppdaterÅrsaker(nyÅrsak);
             } else {
@@ -160,7 +163,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const oppdaterUnderårsakPåPeriode = (
             periode: FaktaPeriodeSkjemaData,
             nyUnderårsak: HendelseUndertype
-        ) => {
+        ): void => {
             if (behandlePerioderSamlet) {
                 oppdaterUnderårsaker(periode, nyUnderårsak);
             } else {
@@ -169,7 +172,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             settIkkePersistertKomponent('fakta');
         };
 
-        const oppdaterÅrsaker = (nyÅrsak: HendelseType) => {
+        const oppdaterÅrsaker = (nyÅrsak: HendelseType): void => {
             const nyePerioder = skjemaData.perioder.map(periode => {
                 return { ...periode, hendelsestype: nyÅrsak, hendelsesundertype: undefined };
             });
@@ -179,7 +182,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             });
         };
 
-        const oppdaterÅrsak = (periode: FaktaPeriodeSkjemaData, nyÅrsak: HendelseType) => {
+        const oppdaterÅrsak = (periode: FaktaPeriodeSkjemaData, nyÅrsak: HendelseType): void => {
             const gammelPeriodeIndex = skjemaData.perioder.findIndex(
                 gammelPeriode => gammelPeriode.index === periode.index
             );
@@ -194,7 +197,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const oppdaterUnderårsaker = (
             periode: FaktaPeriodeSkjemaData,
             nyUnderårsak: HendelseUndertype
-        ) => {
+        ): void => {
             const nyePerioder = skjemaData.perioder.map(gammelPeriode => {
                 if (gammelPeriode.hendelsestype === periode.hendelsestype) {
                     return { ...gammelPeriode, hendelsesundertype: nyUnderårsak };
@@ -210,7 +213,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
         const oppdaterUnderårsak = (
             periode: FaktaPeriodeSkjemaData,
             nyUnderårsak: HendelseUndertype
-        ) => {
+        ): void => {
             const gammelPeriodeIndex = skjemaData.perioder.findIndex(
                 gammelPeriode => gammelPeriode.index === periode.index
             );
@@ -275,7 +278,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             return feilmeldinger;
         };
 
-        const harEndretOpplysninger = () => {
+        const harEndretOpplysninger = (): boolean => {
             if (feilutbetalingFakta?.status === RessursStatus.Suksess) {
                 const hentetData = feilutbetalingFakta.data;
                 return (
@@ -313,7 +316,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             }
         };
 
-        const sendInnSkjema = () => {
+        const sendInnSkjema = (): void => {
             if (stegErBehandlet && !harEndretOpplysninger()) {
                 nullstillIkkePersisterteKomponenter();
                 utførRedirect(
@@ -361,7 +364,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             }
         };
 
-        const gåTilForrige = () => {
+        const gåTilForrige = (): void => {
             navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
             );

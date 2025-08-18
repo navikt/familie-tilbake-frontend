@@ -31,7 +31,7 @@ export const doProxy: any = () => {
 };
 
 export const doRedirectProxy = () => {
-    return (req: Request, res: Response) => {
+    return (req: Request, res: Response): void => {
         const urlKey = Object.keys(redirectRecords).find(k => req.originalUrl.includes(k));
         if (urlKey) {
             const basePath = redirectRecords[urlKey];
@@ -46,7 +46,7 @@ export const doRedirectProxy = () => {
 };
 
 export const attachToken = (texasClient: TexasClient, scope: string) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const requestToken = utledAccessToken(req);
         if (!requestToken) {
             res.sendStatus(401);

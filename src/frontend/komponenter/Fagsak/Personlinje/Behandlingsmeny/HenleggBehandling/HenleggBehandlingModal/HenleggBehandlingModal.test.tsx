@@ -1,5 +1,11 @@
+import type { BehandlingApi } from '../../../../../../api/behandling';
+import type { Http } from '../../../../../../api/http/HttpProvider';
+import type { BehandlingHook } from '../../../../../../context/BehandlingContext';
 import type { IBehandling } from '../../../../../../typer/behandling';
 import type { IFagsak } from '../../../../../../typer/fagsak';
+import type { Ressurs } from '../../../../../../typer/ressurs';
+import type { RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -9,30 +15,31 @@ import * as React from 'react';
 import HenleggBehandlingModal from './HenleggBehandlingModal';
 import { Behandlingresultat, Behandlingstype } from '../../../../../../typer/behandling';
 import { Målform } from '../../../../../../typer/fagsak';
-import { type Ressurs, RessursStatus } from '../../../../../../typer/ressurs';
+import { RessursStatus } from '../../../../../../typer/ressurs';
 
 jest.mock('../../../../../../api/http/HttpProvider', () => {
     return {
-        useHttp: () => ({
-            request: () => jest.fn(),
+        useHttp: (): Http => ({
+            systemetLaster: () => false,
+            request: jest.fn(),
         }),
     };
 });
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../../../context/BehandlingContext', () => ({
-    useBehandling: () => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../../../../api/behandling', () => ({
-    useBehandlingApi: () => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApi => mockUseBehandlingApi(),
 }));
 
 const renderHenleggBehandlingModal = (
     behandling: IBehandling,
     fagsak: IFagsak,
     årsaker: Behandlingresultat[]
-) =>
+): RenderResult =>
     render(
         <HenleggBehandlingModal
             behandling={behandling}
@@ -44,7 +51,7 @@ const renderHenleggBehandlingModal = (
     );
 
 describe('Tester: HenleggBehandlingModal', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
@@ -52,7 +59,7 @@ describe('Tester: HenleggBehandlingModal', () => {
 
     beforeEach(() => {
         mockUseBehandlingApi.mockImplementation(() => ({
-            henleggBehandling: () => {
+            henleggBehandling: (): Promise<Ressurs<string>> => {
                 const ressurs = mock<Ressurs<string>>({
                     status: RessursStatus.Suksess,
                     data: 'suksess',
@@ -61,7 +68,7 @@ describe('Tester: HenleggBehandlingModal', () => {
             },
         }));
         mockUseBehandling.mockImplementation(() => ({
-            hentBehandlingMedBehandlingId: () => Promise.resolve(),
+            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
             settIkkePersistertKomponent: jest.fn(),
             nullstillIkkePersisterteKomponenter: jest.fn(),
         }));

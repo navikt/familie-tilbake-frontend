@@ -7,7 +7,7 @@ import { logError } from '../../logging/logging';
 
 const IKKE_SIKRE_METODER = ['GET', 'HEAD', 'OPTIONS'];
 
-export const genererCsrfToken = (session: Session) => {
+export const genererCsrfToken = (session: Session): string => {
     session.csrfToken = crypto.randomUUID();
     return session.csrfToken;
 };

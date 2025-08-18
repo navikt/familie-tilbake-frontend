@@ -34,7 +34,7 @@ const VergeContainer: React.FC = () => {
     const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
-    const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         const nyVergetype = e.target.value as Vergetype;
         skjema.felter.vergetype.validerOgSettFelt(nyVergetype);
         settIkkePersistertKomponent('verge');

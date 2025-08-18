@@ -7,7 +7,7 @@ import { lazy } from 'react';
 interface Props {
     komponentNavn: string;
 }
-const FeilInnlasting = ({ komponentNavn }: Props) => {
+const FeilInnlasting: React.FC<Props> = ({ komponentNavn }: Props) => {
     return (
         <VStack gap="2" align="center" justify="center">
             <Heading level="2" size="small" spacing className="mt-6">
@@ -24,7 +24,7 @@ const FeilInnlasting = ({ komponentNavn }: Props) => {
 export const lazyImportMedRetry = <T,>(
     importFunksjon: () => Promise<{ default: ComponentType<T> }>,
     komponentNavn: string
-) => {
+): React.LazyExoticComponent<ComponentType<T>> => {
     return lazy(() => {
         let forsøkAntall = 0;
         const maxForsøk = 2;

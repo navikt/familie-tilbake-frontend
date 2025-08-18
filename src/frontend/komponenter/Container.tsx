@@ -51,7 +51,7 @@ const Container: React.FC = () => {
     );
 };
 
-const AppRoutes = () => {
+const AppRoutes: React.FC = () => {
     const router = createBrowserRouter(
         createRoutesFromElements(
             <Route path="/" element={<UlagretDataModalContainer />}>
@@ -88,7 +88,7 @@ const AppRoutes = () => {
     return <RouterProvider router={router} />;
 };
 
-const UlagretDataModalContainer = () => (
+const UlagretDataModalContainer: React.FC = () => (
     <>
         <Outlet />
         <UlagretDataModal />

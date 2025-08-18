@@ -1,9 +1,26 @@
+import type { FeltState, ISkjema } from '../../../../../hooks/skjema';
+
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { type FeltState, useFelt, useSkjema } from '../../../../../hooks/skjema';
+import { useFelt, useSkjema } from '../../../../../hooks/skjema';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../utils';
 
-const useEndreBehandlendeEnhet = (behandlingId: string, lukkModal: (_vis: boolean) => void) => {
+type EndreBehandlendeEnhetContext = {
+    skjema: ISkjema<
+        {
+            enhet: string | '';
+            begrunnelse: string | '';
+        },
+        string
+    >;
+    sendInn: () => void;
+    nullstillSkjema: () => void;
+};
+
+const useEndreBehandlendeEnhet = (
+    behandlingId: string,
+    lukkModal: (vis: boolean) => void
+): EndreBehandlendeEnhetContext => {
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
 
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
@@ -30,7 +47,7 @@ const useEndreBehandlendeEnhet = (behandlingId: string, lukkModal: (_vis: boolea
         skjemanavn: 'endreEnhetBehandling',
     });
 
-    const sendInn = () => {
+    const sendInn = (): void => {
         if (kanSendeSkjema()) {
             nullstillIkkePersisterteKomponenter();
             onSubmit(

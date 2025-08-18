@@ -27,7 +27,7 @@ const HentOppdatertKravgrunnlag: React.FC<IProps> = ({
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
 
-    const hentKorrigertKravgrunnlag = () => {
+    const hentKorrigertKravgrunnlag = (): void => {
         nullstillIkkePersisterteKomponenter();
         request<void, string>({
             method: 'PUT',

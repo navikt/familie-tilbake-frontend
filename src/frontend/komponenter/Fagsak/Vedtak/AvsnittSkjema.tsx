@@ -1,4 +1,5 @@
 import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
+import type { RuleSet } from 'styled-components';
 
 import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';
 import { ABorderWarning, ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
@@ -20,8 +21,8 @@ const stylingWarningKantlinje = css`
 const StyledExpansionHeader = styled(ExpansionCard.Header)<{
     $visWarningKantlinje: boolean;
 }>`
-    ${props => {
-        if (props.$visWarningKantlinje) {
+    ${({ $visWarningKantlinje }): RuleSet<object> | undefined => {
+        if ($visWarningKantlinje) {
             return stylingWarningKantlinje;
         }
     }}
@@ -30,13 +31,13 @@ const StyledExpansionHeader = styled(ExpansionCard.Header)<{
 const StyledExpansionContent = styled(ExpansionCard.Content)<{
     $visWarningKantlinje: boolean;
 }>`
-    ${props => {
-        if (props.$visWarningKantlinje) {
+    ${({ $visWarningKantlinje }): RuleSet<object> | undefined => {
+        if ($visWarningKantlinje) {
             return stylingWarningKantlinje;
         }
     }}
 `;
-const skalVisesÅpen = (avsnitt: AvsnittSkjemaData) => {
+const skalVisesÅpen = (avsnitt: AvsnittSkjemaData): boolean => {
     if (avsnitt.avsnittstype === Avsnittstype.Oppsummering) {
         return avsnitt.underavsnittsliste.some(
             underavsnitt =>

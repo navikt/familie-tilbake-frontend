@@ -183,7 +183,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
                 });
         };
 
-        const gåTilForrige = () => {
+        const gåTilForrige = (): void => {
             navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VILKÅRSVURDERING.href}`
             );
@@ -192,7 +192,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
         const oppdaterUnderavsnitt = (
             avsnittIndex: string,
             oppdatertUnderavsnitt: UnderavsnittSkjemaData
-        ) => {
+        ): void => {
             const avsnitter = skjemaData;
             const avsIndex = avsnitter.findIndex(avs => avs.index === avsnittIndex);
             const avsnitt = avsnitter.find(avs => avs.index === avsnittIndex);
@@ -209,7 +209,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             }
         };
 
-        const validerAlleAvsnittOk = (validerPåkrevetFritekst: boolean) => {
+        const validerAlleAvsnittOk = (validerPåkrevetFritekst: boolean): boolean => {
             const erRevurderingBortfaltBeløp =
                 behandling.type === Behandlingstype.RevurderingTilbakekreving &&
                 behandling.behandlingsårsakstype ===
@@ -261,7 +261,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             };
         };
 
-        const sendInnSkjema = () => {
+        const sendInnSkjema = (): void => {
             if (!harPåkrevetFritekstMenIkkeUtfylt && validerAlleAvsnittOk(true)) {
                 settSenderInn(true);
                 settForeslåVedtakRespons(undefined);
@@ -296,7 +296,7 @@ const [FeilutbetalingVedtakProvider, useFeilutbetalingVedtak] = createUseContext
             }
         };
 
-        const lagreUtkast = () => {
+        const lagreUtkast = (): void => {
             if (validerAlleAvsnittOk(false)) {
                 settSenderInn(true);
                 settForeslåVedtakRespons(undefined);

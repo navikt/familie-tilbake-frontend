@@ -54,7 +54,7 @@ const HentDokument: React.FC<IProps> = ({ journalpost, dokument, onClose }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling, journalpost, dokument]);
 
-    const nullstillHentetDokument = () => {
+    const nullstillHentetDokument = (): void => {
         settHentetDokument(byggTomRessurs);
     };
 

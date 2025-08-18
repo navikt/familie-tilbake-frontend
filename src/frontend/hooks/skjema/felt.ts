@@ -54,7 +54,7 @@ export const useFelt = <Verdi = string>({
         skalFeltetVises ? skalFeltetVises(avhengigheter) : true
     );
 
-    const nullstill = () => {
+    const nullstill = (): void => {
         settFeltState(initialFeltState);
     };
 
@@ -75,7 +75,7 @@ export const useFelt = <Verdi = string>({
         return validertFelt;
     };
 
-    const hentAvhengighetArray = () => {
+    const hentAvhengighetArray = (): unknown[] => {
         return avhengigheter
             ? Object.values(avhengigheter).reduce((acc: [], avhengighet: unknown) => {
                   if (avhengighet instanceof Object && 'valideringsstatus' in avhengighet) {

@@ -37,7 +37,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
 
         const settFeilutbetalingInaktivVilkårsvurdering = (
             feilutbetalingInaktivVilkårsvurdering?: IFeilutbetalingVilkårsvurdering
-        ) => {
+        ): void => {
             if (feilutbetalingInaktivVilkårsvurdering) {
                 const perioder = feilutbetalingInaktivVilkårsvurdering.perioder;
                 const sortertePerioder = sorterFeilutbetaltePerioder(perioder);

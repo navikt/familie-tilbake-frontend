@@ -71,7 +71,7 @@ const [AppContentProvider, useApp] = createUseContext(() => {
         autentisert,
         innloggetSaksbehandler,
         hentTilbakeInfo,
-        settToast: (toastId: ToastTyper, toast: IToast) =>
+        settToast: (toastId: ToastTyper, toast: IToast): void =>
             settToasts({
                 ...toasts,
                 [toastId]: toast,

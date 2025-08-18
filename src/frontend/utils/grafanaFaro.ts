@@ -6,11 +6,11 @@ enum TelemetryCollectorURL {
     Lokalt = 'http://localhost:12347/collect',
 }
 
-const erProd = () => {
+const erProd = (): boolean => {
     return window.location.hostname.indexOf('intern.nav.no') > -1;
 };
 
-const erDev = () => {
+const erDev = (): boolean => {
     return window.location.hostname.indexOf('dev.nav.no') > -1;
 };
 
@@ -26,7 +26,7 @@ const getTelemetryCollectorURL = (): TelemetryCollectorURL => {
     return TelemetryCollectorURL.Lokalt;
 };
 
-export function initGrafanaFaro() {
+export function initGrafanaFaro(): void {
     (erDev() || erProd()) &&
         initializeFaro({
             isolate: true,

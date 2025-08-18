@@ -35,7 +35,7 @@ const HenleggBehandlingModal: React.FC<IProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
 
-    const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         const årsak = e.target.value as Behandlingresultat;
         skjema.felter.årsakkode.validerOgSettFelt(årsak);
     };

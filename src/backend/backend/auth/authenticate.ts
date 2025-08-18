@@ -5,7 +5,7 @@ import { LogLevel } from '../../logging/logging';
 import { logRequest } from '../utils';
 
 export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: boolean) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const token = utledAccessToken(req);
         const validAccessToken = token && (await texasClient.validateLogin(token));
         logRequest(
@@ -28,7 +28,7 @@ export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: 
     };
 };
 
-export const utledAccessToken = (req: Request) => {
+export const utledAccessToken = (req: Request): string | false => {
     if (!req.headers.authorization?.startsWith('Bearer ')) {
         return false;
     }

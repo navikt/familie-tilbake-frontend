@@ -16,7 +16,7 @@ const GjennoptaBehandling: React.FC<IProps> = ({ behandling, onListElementClick 
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
 
-    const lukkModalOgHentBehandling = () => {
+    const lukkModalOgHentBehandling = (): void => {
         settVisModal(false);
         hentBehandlingMedBehandlingId(behandling.behandlingId);
     };

@@ -17,22 +17,29 @@ import { byggHenterRessurs, type Ressurs, RessursStatus } from '../../../typer/r
 import { isNumeric } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
-const feilNårFeltetErTomt = (felt: FeltState<string>, feilmelding?: string) => {
+const feilNårFeltetErTomt = (
+    felt: FeltState<string>,
+    feilmelding?: string
+): FeltState<string> | undefined => {
     return felt.verdi === '' ? feil(felt, feilmelding || 'Feltet er påkrevd') : undefined;
 };
-const feilNårFeltetOverskriderMakslengde = (felt: FeltState<string>, maksLengde: number) => {
+
+const feilNårFeltetOverskriderMakslengde = (
+    felt: FeltState<string>,
+    maksLengde: number
+): FeltState<string> => {
     return felt.verdi.length > maksLengde
         ? feil(felt, `Feltet kan ikke inneholde mer enn ${maksLengde} tegn`)
         : ok(felt);
 };
 
-const feilNårOrgnummerErUgyldig = (orgnrFelt: FeltState<string>) => {
+const feilNårOrgnummerErUgyldig = (orgnrFelt: FeltState<string>): FeltState<string> => {
     return orgnrFelt.verdi.length !== 9 || !isNumeric(orgnrFelt.verdi)
         ? feil(orgnrFelt, `Organisasjonsnummer må være 9 sammenhengende siffer`)
         : ok(orgnrFelt);
 };
 
-const feilNårFødselsnummerErUgyldig = (fnrFelt: FeltState<string>) => {
+const feilNårFødselsnummerErUgyldig = (fnrFelt: FeltState<string>): FeltState<string> => {
     return fnrFelt.verdi.length !== 11 || !isNumeric(fnrFelt.verdi)
         ? feil(fnrFelt, `Fødselsnummer må være 11 sammenhengende siffer`)
         : ok(fnrFelt);
@@ -43,7 +50,7 @@ const validerPåkrevdFeltForManuellRegistrering = (
     adresseKilde: AdresseKilde,
     maksLengde: number,
     feilmelding?: string
-) => {
+): FeltState<string> => {
     if (
         adresseKilde === AdresseKilde.ManuellRegistrering ||
         adresseKilde === AdresseKilde.Udefinert
@@ -60,7 +67,7 @@ const validerValgtMottakerType = (
     felt: FeltState<MottakerType | ''>,
     behandling: IBehandling,
     idTilMottakerUnderEndring: string | undefined
-) => {
+): FeltState<MottakerType | ''> => {
     const eksisterendeMottaker = behandling.manuelleBrevmottakere.find(
         mottaker => mottaker.id !== idTilMottakerUnderEndring
     )?.brevmottaker;
@@ -98,7 +105,7 @@ const validerValgtMottakerType = (
 const opprettManuellBrevmottakerRequest = (
     skjema: ISkjema<ILeggTilEndreBrevmottakerSkjema, string>,
     adresseKilde: AdresseKilde
-) => {
+): IBrevmottaker => {
     const type = skjema.felter.mottaker.verdi as MottakerType;
 
     return {
@@ -133,7 +140,7 @@ const opprettManuellBrevmottakerRequest = (
 const populerSkjema = (
     skjema: ISkjema<ILeggTilEndreBrevmottakerSkjema, string>,
     brevmottaker: IBrevmottaker
-) => {
+): void => {
     const [, eventuellKontaktperson] = brevmottaker.navn.split(' v/ ');
     const manuellAdresseInfo = brevmottaker.manuellAdresseInfo;
     skjema.felter.mottaker.validerOgSettFelt(brevmottaker.type);
@@ -151,7 +158,7 @@ const populerSkjema = (
     }
 };
 
-const skalEkskludereDefaultMottaker = (brevmottakere: IBrevmottaker[]) => {
+const skalEkskludereDefaultMottaker = (brevmottakere: IBrevmottaker[]): boolean => {
     return brevmottakere.some(
         brevmottaker =>
             brevmottaker.type === MottakerType.BrukerMedUtenlandskAdresse ||
@@ -235,11 +242,14 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [brevmottakerIdTilEndring]);
 
-        const leggTilEllerOppdaterBrevmottaker = (id: string, brevmottaker: IBrevmottaker) => {
+        const leggTilEllerOppdaterBrevmottaker = (
+            id: string,
+            brevmottaker: IBrevmottaker
+        ): void => {
             settBrevMottakere({ ...brevmottakere, [id]: brevmottaker });
         };
 
-        const fjernBrevmottaker = (id: string) => {
+        const fjernBrevmottaker = (id: string): void => {
             const { [id]: fjernet, ...gjenværende } = brevmottakere;
             if (fjernet !== undefined) {
                 settBrevMottakere(gjenværende);
@@ -249,7 +259,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
         const feilNårUtenlandskAdresseHarNorgeSomLand = (
             mottaker: MottakerType,
             felt: FeltState<string>
-        ) => {
+        ): FeltState<string> | undefined => {
             const norgeErUlovligValgt =
                 mottaker === MottakerType.BrukerMedUtenlandskAdresse && felt.verdi === 'NO';
 
@@ -394,7 +404,10 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             poststed.nullstill();
         }
 
-        const lagreBrevmottakerOgOppdaterState = (mottakerId?: string, lukkModal?: () => void) => {
+        const lagreBrevmottakerOgOppdaterState = (
+            mottakerId?: string,
+            lukkModal?: () => void
+        ): void => {
             if (kanSendeSkjema()) {
                 settSubmitRessurs(byggHenterRessurs());
                 settVisfeilmeldinger(false);
@@ -424,7 +437,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             }
         };
 
-        const fjernBrevMottakerOgOppdaterState = (mottakerId: string) => {
+        const fjernBrevMottakerOgOppdaterState = (mottakerId: string): void => {
             fjernManuellBrevmottaker(behandling.behandlingId, mottakerId).then(
                 (respons: Ressurs<string>) => {
                     if (respons.status === RessursStatus.Suksess) {
@@ -434,7 +447,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
             );
         };
 
-        const gåTilNeste = () => {
+        const gåTilNeste = (): void => {
             navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FAKTA.href}`
             );

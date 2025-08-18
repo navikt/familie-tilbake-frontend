@@ -41,7 +41,9 @@ const lagTidslinjeRader = (
     ];
 };
 
-const finnClassNamePeriodeStatus = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+const finnClassNamePeriodeStatus = (
+    periode: VilkårsvurderingPeriodeSkjemaData
+): ClassNamePeriodeStatus => {
     const { vilkårsvurderingsresultatInfo } = periode;
     const { vilkårsvurderingsresultat } = vilkårsvurderingsresultatInfo || {};
 
@@ -85,7 +87,7 @@ const VilkårsvurderingPerioder: React.FC<IProps> = ({
         }
     }, [perioder, valgtPeriode, tidslinjeRader, settValgtPeriode]);
 
-    const onSelectPeriode = (periode: TimelinePeriodProps) => {
+    const onSelectPeriode = (periode: TimelinePeriodProps): void => {
         const periodeFom = periode.start.toISOString().substring(0, 10);
         const periodeTom = periode.end.toISOString().substring(0, 10);
         const vilkårsvurderingPeriode = perioder.find(

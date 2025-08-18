@@ -1,10 +1,15 @@
+import type { BehandlingApi } from '../../../api/behandling';
+import type { Http } from '../../../api/http/HttpProvider';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
-import type { ByRoleMatcher, ByRoleOptions } from '@testing-library/react';
+import type { Ressurs } from '../../../typer/ressurs';
+import type { UseMutationResult } from '@tanstack/react-query';
+import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -15,27 +20,27 @@ import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
 import { HendelseType, Ytelsetype } from '../../../kodeverk';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import { RessursStatus } from '../../../typer/ressurs';
 
 const mockUseHttp = jest.fn();
 jest.mock('../../../api/http/HttpProvider', () => ({
-    useHttp: () => mockUseHttp(),
+    useHttp: (): Http => mockUseHttp(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: () => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApi => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: () => jest.fn(),
+    useNavigate: (): jest.Mock => jest.fn(),
 }));
 
 jest.mock('@tanstack/react-query', () => {
     return {
         useMutation: jest.fn(({ mutationFn, onSuccess }) => {
-            const mutateAsync = async (behandlingId: string) => {
+            const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
                 const result = await mutationFn(behandlingId);
                 if (onSuccess && result?.status === RessursStatus.Suksess) {
                     await onSuccess(result);
@@ -90,21 +95,23 @@ const perioder: VilkårsvurderingPeriode[] = [
     },
 ];
 
-const setupMocks = () => {
+const setupMocks = (): void => {
     const feilutbetalingVilkårsvurdering: IFeilutbetalingVilkårsvurdering = {
         perioder: perioder,
         rettsgebyr: 1199,
     };
 
     mockUseBehandlingApi.mockImplementation(() => ({
-        gjerFeilutbetalingVilkårsvurderingKall: () => {
+        gjerFeilutbetalingVilkårsvurderingKall: (): Promise<
+            Ressurs<IFeilutbetalingVilkårsvurdering>
+        > => {
             const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
                 status: RessursStatus.Suksess,
                 data: feilutbetalingVilkårsvurdering,
             });
             return Promise.resolve(ressurs);
         },
-        sendInnVilkårsvurdering: () => {
+        sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
             const ressurs = mock<Ressurs<string>>({
                 status: RessursStatus.Suksess,
                 data: 'suksess',
@@ -114,7 +121,7 @@ const setupMocks = () => {
     }));
 
     mockUseHttp.mockImplementation(() => ({
-        request: () => {
+        request: (): Promise<Ressurs<IBehandling>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
                 data: mock<IBehandling>({
@@ -130,7 +137,7 @@ const renderVilkårsvurderingPerioder = (
     behandling: IBehandling,
     fagsak: IFagsak,
     testPerioder: VilkårsvurderingPeriode[] = perioder
-) => {
+): RenderResult => {
     const skjemaData = testPerioder.map((periode, index) => ({
         index: `idx_fpsd_${index}`,
         ...periode,
@@ -154,7 +161,7 @@ const renderVilkårsvurderingPerioder = (
 const findPeriodButton = (
     getAllByRole: (role: ByRoleMatcher, options?: ByRoleOptions | undefined) => HTMLElement[],
     periodDate: string
-) => {
+): HTMLElement | undefined => {
     const tidslinjeButtons = getAllByRole('button').filter(
         (button: HTMLElement) =>
             button.getAttribute('aria-label')?.includes('fra') &&
@@ -167,7 +174,7 @@ const findPeriodButton = (
 };
 
 describe('Tester: VilkårsvurderingPerioder', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();

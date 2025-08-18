@@ -1,3 +1,5 @@
+import type { UseMutationResult } from '@tanstack/react-query';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 
@@ -12,7 +14,7 @@ const behandlingId = '123';
 jest.mock('@tanstack/react-query', () => {
     return {
         useMutation: jest.fn(({ mutationFn, onSuccess }) => {
-            const mutateAsync = async (behandlingId: string) => {
+            const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
                 const result = await mutationFn(behandlingId);
                 if (onSuccess && result.status === RessursStatus.Suksess) {
                     await onSuccess(result);

@@ -13,7 +13,7 @@ import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
 
-const tekstfeltLabel = (mal: DokumentMal) => {
+const tekstfeltLabel = (mal: DokumentMal): string => {
     return mal === DokumentMal.InnhentDokumentasjon
         ? 'Liste over dokumenter (skriv ett dokument pr. linje)'
         : 'Fritekst';
@@ -29,7 +29,7 @@ const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
-    const onChangeMal = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChangeMal = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         const nyMal = e.target.value as DokumentMal;
         skjema.felter.maltype.validerOgSettFelt(nyMal);
     };

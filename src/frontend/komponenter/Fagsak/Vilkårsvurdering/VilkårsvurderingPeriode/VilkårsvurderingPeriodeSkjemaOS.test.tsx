@@ -1,6 +1,9 @@
+import type { Http } from '../../../../api/http/HttpProvider';
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import type { VilkårsvurderingContext } from '../VilkårsvurderingContext';
+import type { UserEvent } from '@testing-library/user-event';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -21,14 +24,15 @@ jest.setTimeout(10000);
 
 jest.mock('../../../../api/http/HttpProvider', () => {
     return {
-        useHttp: () => ({
-            request: () => jest.fn(),
+        useHttp: (): Http => ({
+            systemetLaster: () => false,
+            request: jest.fn(),
         }),
     };
 });
 jest.mock('../VilkårsvurderingContext', () => {
     return {
-        useVilkårsvurdering: () => ({
+        useVilkårsvurdering: (): Partial<VilkårsvurderingContext> => ({
             kanIlleggeRenter: true,
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),
@@ -49,7 +53,7 @@ jest.mock('../VilkårsvurderingContext', () => {
 });
 
 describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();

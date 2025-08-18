@@ -14,7 +14,13 @@ interface Props {
     fagsakId?: string;
 }
 
-export const FeilModal = ({ feil, lukkFeilModal, beskjed, behandlingId, fagsakId }: Props) => {
+export const FeilModal: React.FC<Props> = ({
+    feil,
+    lukkFeilModal,
+    beskjed,
+    behandlingId,
+    fagsakId,
+}: Props) => {
     const feilObjekt = hentFeilObjekt(feil.status);
     const innheholderCSRFTokenFeil = feil.message?.includes('CSRF-token');
     return (

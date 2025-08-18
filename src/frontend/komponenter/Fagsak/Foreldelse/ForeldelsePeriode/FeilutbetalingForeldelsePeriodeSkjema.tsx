@@ -1,5 +1,6 @@
 import type { IBehandling } from '../../../../typer/behandling';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+import type { ReactNode } from 'react';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import {
@@ -94,7 +95,7 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
         skjema.visFeilmeldinger &&
         skjema.felter.oppdagelsesdato.valideringsstatus === Valideringsstatus.Feil;
 
-    const lagForeldelsesfristHjelpetekst = () => {
+    const lagForeldelsesfristHjelpetekst = (): ReactNode => {
         if (skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Tilleggsfrist) {
             return (
                 <>

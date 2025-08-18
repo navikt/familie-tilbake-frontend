@@ -1,3 +1,4 @@
+import type { ISkjema } from '../../../../../hooks/skjema';
 import type { Behandlingårsak } from '../../../../../typer/behandling';
 import type { IFagsak } from '../../../../../typer/fagsak';
 
@@ -8,11 +9,23 @@ import { Behandlingstype } from '../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { erFeltetEmpty } from '../../../../../utils';
 
+type OpprettBehandlingSkjemaHook = {
+    skjema: ISkjema<
+        {
+            behandlingstype: Behandlingstype;
+            behandlingsårsak: Behandlingårsak | '';
+        },
+        string
+    >;
+    sendInn: () => void;
+    nullstillSkjema: () => void;
+};
+
 const useOpprettBehandlingSkjema = (
     fagsak: IFagsak,
     behandlingId: string,
     lukkModal: (_vis: boolean) => void
-) => {
+): OpprettBehandlingSkjemaHook => {
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
@@ -35,7 +48,7 @@ const useOpprettBehandlingSkjema = (
         skjemanavn: 'opprettBehandling',
     });
 
-    const sendInn = () => {
+    const sendInn = (): void => {
         if (kanSendeSkjema()) {
             nullstillIkkePersisterteKomponenter();
             onSubmit(

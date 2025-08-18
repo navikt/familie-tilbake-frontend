@@ -8,16 +8,16 @@ import { styled } from 'styled-components';
 const borderRadius = 4;
 
 const ArrowBoxTop = styled.div<{ theme: DefaultTheme }>`
-    .arrowBoxTop${props => props.theme.alignOffset} {
+    .arrowBoxTop${(props): number => props.theme.alignOffset} {
         border: 1px solid ${ABorderStrong};
         border-radius: ${borderRadius}px;
         padding: ${ASpacing4};
         margin-bottom: ${ASpacing3};
-        margin-top: ${props => props.theme.marginTop}px;
-        margin-left: ${props => props.theme.marginLeft}px;
+        margin-top: ${(props): number => props.theme.marginTop}px;
+        margin-left: ${(props): number => props.theme.marginLeft}px;
         position: relative;
     }
-    .arrowBoxTop${props => props.theme.alignOffset}:before {
+    .arrowBoxTop${(props): number => props.theme.alignOffset}:before {
         background: ${ABgDefault};
         border: 1px solid ${ABorderStrong};
         border-bottom-width: 0;
@@ -27,7 +27,7 @@ const ArrowBoxTop = styled.div<{ theme: DefaultTheme }>`
         top: 0;
         margin-top: -1px;
         position: absolute;
-        left: ${props => props.theme.alignOffset}px;
+        left: ${(props): number => props.theme.alignOffset}px;
         transform: rotate(45deg) translateY(-100%) translateZ(0);
         transform-origin: 0 0;
         width: 1rem;
@@ -35,17 +35,17 @@ const ArrowBoxTop = styled.div<{ theme: DefaultTheme }>`
 `;
 
 const ArrowBoxLeft = styled.div<{ theme: DefaultTheme }>`
-    .arrowBoxLeft${props => props.theme.alignOffset} {
+    .arrowBoxLeft${(props): number => props.theme.alignOffset} {
         border: 1px solid ${ABorderStrong};
         border-radius: ${borderRadius}px;
         padding: ${ASpacing4};
         margin-bottom: ${ASpacing3};
-        margin-top: ${props => props.theme.marginTop}px;
-        margin-left: ${props => props.theme.marginLeft}px;
+        margin-top: ${(props): number => props.theme.marginTop}px;
+        margin-left: ${(props): number => props.theme.marginLeft}px;
         position: relative;
     }
 
-    .arrowBoxLeft${props => props.theme.alignOffset}:before {
+    .arrowBoxLeft${(props): number => props.theme.alignOffset}:before {
         background: ${ABgDefault};
         border: 1px solid ${ABorderStrong};
         border-bottom-width: 0;
@@ -55,14 +55,14 @@ const ArrowBoxLeft = styled.div<{ theme: DefaultTheme }>`
         left: 0;
         margin-left: -1px;
         position: absolute;
-        top: ${props => props.theme.alignOffset}px;
+        top: ${(props): number => props.theme.alignOffset}px;
         transform: rotate(-45deg) translateY(-100%) translateZ(0);
         transform-origin: 0 0;
         width: 1rem;
     }
 `;
 
-const getClassName = (alignOffset?: number, alignLeft?: boolean): string => {
+const getClassName = (alignOffset: number, alignLeft: boolean): string => {
     return alignLeft ? `arrowBoxLeft${alignOffset}` : `arrowBoxTop${alignOffset}`;
 };
 

@@ -22,8 +22,12 @@ const UlagretDataModal: FC = () => {
         }
     }, [blocker, harUlagredeData]);
 
-    const onAvbryt = () => blocker.state === 'blocked' && blocker.reset();
-    const onForlatSiden = () => blocker.state === 'blocked' && blocker.proceed();
+    const onAvbryt = (): void => {
+        blocker.state === 'blocked' && blocker.reset();
+    };
+    const onForlatSiden = (): void => {
+        blocker.state === 'blocked' && blocker.proceed();
+    };
 
     /**
      * Denne trengs for å fange opp når noen refresher siden eller prøver å gå ut av selve siden.

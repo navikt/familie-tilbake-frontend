@@ -93,7 +93,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
         [periode, settSplittDato, settTidslinjeRader, validateNyPeriode, vedDatoEndring]
     );
 
-    const onSubmit = () => {
+    const onSubmit = (): void => {
         if (splittetPerioder) {
             sendInnSkjema(
                 splittetPerioder.map(per => ({

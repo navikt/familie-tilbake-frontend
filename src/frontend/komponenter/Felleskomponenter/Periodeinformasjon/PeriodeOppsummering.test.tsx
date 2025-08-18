@@ -1,10 +1,16 @@
+import type { RenderResult } from '@testing-library/react';
+
 import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import PeriodeOppsummering from './PeriodeOppsummering';
 import { HendelseType } from '../../../kodeverk';
 
-const renderPeriodeOppsummering = (tom: string, beløp: number, hendelsestype?: HendelseType) =>
+const renderPeriodeOppsummering = (
+    tom: string,
+    beløp: number,
+    hendelsestype?: HendelseType
+): RenderResult =>
     render(
         <PeriodeOppsummering
             hendelsetype={hendelsestype}

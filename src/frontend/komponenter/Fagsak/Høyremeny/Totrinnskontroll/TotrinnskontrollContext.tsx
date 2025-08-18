@@ -109,7 +109,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             settSendTilSaksbehandler(!stegIkkeVurdert && !harValideringsFeil && !alleGodkjent);
         }, [skjemaData, nonUsedKey]);
 
-        const hentTotrinnkontroll = () => {
+        const hentTotrinnkontroll = (): void => {
             settTotrinnkontroll(byggHenterRessurs());
             gjerTotrinnkontrollKall(behandling.behandlingId)
                 .then((hentetTotrinnkontroll: Ressurs<ITotrinnkontroll>) => {
@@ -125,7 +125,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 });
         };
 
-        const oppdaterGodkjenning = (stegIndex: string, verdi: TotrinnGodkjenningOption) => {
+        const oppdaterGodkjenning = (stegIndex: string, verdi: TotrinnGodkjenningOption): void => {
             const totrinnsSteg = skjemaData;
             const ttsIndex = totrinnsSteg.findIndex(steg => steg.index === stegIndex);
             const steg = totrinnsSteg.find(steg => steg.index === stegIndex);
@@ -139,7 +139,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             }
         };
 
-        const oppdaterBegrunnelse = (stegIndex: string, verdi: string) => {
+        const oppdaterBegrunnelse = (stegIndex: string, verdi: string): void => {
             const totrinnsSteg = skjemaData;
             const ttsIndex = totrinnsSteg.findIndex(steg => steg.index === stegIndex);
             const steg = totrinnsSteg.find(steg => steg.index === stegIndex);
@@ -156,7 +156,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             }
         };
 
-        const validerToTrinn = () => {
+        const validerToTrinn = (): boolean => {
             let harFeil = false;
             const nySkjemaData = skjemaData.map(totrinn => {
                 let feilmelding;
@@ -182,7 +182,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             return !harFeil;
         };
 
-        const angreSendTilBeslutter = () => {
+        const angreSendTilBeslutter = (): void => {
             if (laster) {
                 return;
             }
@@ -204,7 +204,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 });
         };
 
-        const sendInnSkjema = () => {
+        const sendInnSkjema = (): void => {
             if (validerToTrinn()) {
                 if (senderInn) {
                     return;
@@ -251,7 +251,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             }
         };
 
-        const navigerTilSide = (side: ISide) => {
+        const navigerTilSide = (side: ISide): void => {
             navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );

@@ -59,7 +59,7 @@ const settSkjemadataFraPeriode = (
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>,
     periode: VilkårsvurderingPeriodeSkjemaData,
     kanIlleggeRenter: boolean
-) => {
+): void => {
     const { vilkårsvurderingsresultatInfo: vurdering } = periode || {};
     skjema.felter.vilkårsresultatBegrunnelse.onChange(periode?.begrunnelse || '');
     skjema.felter.vilkårsresultatvurdering.onChange(vurdering?.vilkårsvurderingsresultat || '');
@@ -203,7 +203,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [periode, erTotalbeløpUnder4Rettsgebyr, kanIlleggeRenter]);
 
-    const handleForlatUtenÅLagre = () => {
+    const handleForlatUtenÅLagre = (): void => {
         if (pendingPeriode) {
             nullstillIkkePersisterteKomponenter();
             settValgtPeriode(pendingPeriode);
@@ -216,7 +216,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
         settPendingPeriode(undefined);
     };
 
-    const handleLagreOgByttPeriode = async () => {
+    const handleLagreOgByttPeriode = async (): Promise<void> => {
         if (!pendingPeriode) return;
         const valideringOK = validerOgOppdaterFelter(periode);
         if (!valideringOK) {
@@ -230,12 +230,12 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
         settPendingPeriode(undefined);
     };
 
-    const handleAvbryt = () => {
+    const handleAvbryt = (): void => {
         settVisUlagretDataModal(false);
         settPendingPeriode(undefined);
     };
 
-    const onKopierPeriode = (event: ChangeEvent<HTMLSelectElement>) => {
+    const onKopierPeriode = (event: ChangeEvent<HTMLSelectElement>): void => {
         const valgtPeriodeIndex = event.target.value;
         if (valgtPeriodeIndex !== '-') {
             const per = behandletPerioder.find(per => per.index === valgtPeriodeIndex);
@@ -265,10 +265,10 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
         }
 
         const utførHandling = {
-            [PeriodeHandling.GåTilForrigeSteg]: () => gåTilForrigeSteg(),
-            [PeriodeHandling.GåTilNesteSteg]: () => gåTilNesteSteg(),
-            [PeriodeHandling.ForrigePeriode]: () => forrigePeriode(periode),
-            [PeriodeHandling.NestePeriode]: () => nestePeriode(periode),
+            [PeriodeHandling.GåTilForrigeSteg]: (): void => gåTilForrigeSteg(),
+            [PeriodeHandling.GåTilNesteSteg]: (): void => gåTilNesteSteg(),
+            [PeriodeHandling.ForrigePeriode]: (): void => forrigePeriode(periode),
+            [PeriodeHandling.NestePeriode]: (): void => nestePeriode(periode),
         }[handling];
 
         utførHandling?.();

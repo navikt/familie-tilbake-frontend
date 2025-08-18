@@ -1,6 +1,7 @@
 import type { User } from '../typer';
 import type { TexasClient } from './texas';
 import type { Userinfo } from '../../typer/entraid';
+import type { AxiosResponse } from 'axios';
 import type { Request, Response } from 'express';
 
 import axios from 'axios';
@@ -27,7 +28,8 @@ export const hentBrukerprofil = (texasClient: TexasClient) => {
     };
 };
 
-const fetchUserinfo = async (accessToken: string) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const fetchUserinfo = async (accessToken: string): Promise<AxiosResponse<Userinfo, any>> => {
     const query = 'onPremisesSamAccountName,displayName,mail,officeLocation,userPrincipalName,id';
 
     return await axios.get<Userinfo>(`${appConfig.graphApiUrl}?$select=${query}`, {
@@ -38,7 +40,11 @@ const fetchUserinfo = async (accessToken: string) => {
     });
 };
 
-const hentBrukerdata = async (accessToken: string, req: Request) => {
+const hentBrukerdata = async (
+    accessToken: string,
+    req: Request
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<AxiosResponse<Userinfo, any>> => {
     try {
         return retry(req, 'hente brukerdata', () => fetchUserinfo(accessToken));
     } catch (e: unknown) {

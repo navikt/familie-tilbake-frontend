@@ -18,7 +18,7 @@ interface UlProps {
     harMargin: boolean;
 }
 const StyledUl = styled.ul<UlProps>`
-    ${(props: UlProps) => (props.harMargin ? `` : `margin-top:0;margin-bottom:0;`)};
+    ${(props: UlProps): string => (props.harMargin ? `` : `margin-top:0;margin-bottom:0;`)};
 `;
 
 const BrevmottakerListe: React.FC<IProps> = ({

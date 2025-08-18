@@ -49,7 +49,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                 steg.behandlingsstegstatus !== Behandlingsstegstatus.Tilbakeført
         );
 
-    const opprettBrevmottakerSteg = () => {
+    const opprettBrevmottakerSteg = (): void => {
         nullstillIkkePersisterteKomponenter();
         settSenderInn(true);
         request<void, string>({
@@ -74,7 +74,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
         });
     };
 
-    const fjernBrevmottakerSteg = () => {
+    const fjernBrevmottakerSteg = (): void => {
         nullstillIkkePersisterteKomponenter();
         settSenderInn(true);
         request<void, string>({
@@ -99,7 +99,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
         });
     };
 
-    const opprettEllerFjernSteg = () => {
+    const opprettEllerFjernSteg = (): void => {
         if (kanFjerneManuelleBrevmottakere) {
             settVisFjernModal(true);
         } else {

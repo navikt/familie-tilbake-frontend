@@ -1,9 +1,16 @@
+import type { BehandlingApi } from '../../../api/behandling';
+import type { Http } from '../../../api/http/HttpProvider';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
+import type { Ressurs } from '../../../typer/ressurs';
+import type { UseMutationResult } from '@tanstack/react-query';
+import type { RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -15,29 +22,29 @@ import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
 import { Aktsomhet, Fagsystem, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { Behandlingstatus } from '../../../typer/behandling';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import { RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(25000);
 
 const mockUseHttp = jest.fn();
 jest.mock('../../../api/http/HttpProvider', () => ({
-    useHttp: () => mockUseHttp(),
+    useHttp: (): Http => mockUseHttp(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: () => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApi => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: () => jest.fn(),
+    useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
 jest.mock('@tanstack/react-query', () => {
     return {
         useMutation: jest.fn(({ mutationFn, onSuccess }) => {
-            const mutateAsync = async (behandlingId: string) => {
+            const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
                 const result = await mutationFn(behandlingId);
                 if (onSuccess && result?.status === RessursStatus.Suksess) {
                     await onSuccess(result);
@@ -89,17 +96,19 @@ const feilutbetalingVilkårsvurdering: IFeilutbetalingVilkårsvurdering = {
     rettsgebyr: 1199,
 };
 
-const setupUseBehandlingApiMock = (vilkårsvurdering?: IFeilutbetalingVilkårsvurdering) => {
+const setupUseBehandlingApiMock = (vilkårsvurdering?: IFeilutbetalingVilkårsvurdering): void => {
     if (vilkårsvurdering) {
         mockUseBehandlingApi.mockImplementation(() => ({
-            gjerFeilutbetalingVilkårsvurderingKall: () => {
+            gjerFeilutbetalingVilkårsvurderingKall: (): Promise<
+                Ressurs<IFeilutbetalingVilkårsvurdering>
+            > => {
                 const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
                     status: RessursStatus.Suksess,
                     data: vilkårsvurdering,
                 });
                 return Promise.resolve(ressurs);
             },
-            sendInnVilkårsvurdering: () => {
+            sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
                 const ressurs = mock<Ressurs<string>>({
                     status: RessursStatus.Suksess,
                     data: 'suksess',
@@ -110,9 +119,9 @@ const setupUseBehandlingApiMock = (vilkårsvurdering?: IFeilutbetalingVilkårsvu
     }
 };
 
-const setupHttpMock = () => {
+const setupHttpMock = (): void => {
     mockUseHttp.mockImplementation(() => ({
-        request: () => {
+        request: (): Promise<Ressurs<IBehandling>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
                 data: mock<IBehandling>({
@@ -124,7 +133,7 @@ const setupHttpMock = () => {
     }));
 };
 
-const renderVilkårsvurderingContainer = (behandling: IBehandling, fagsak: IFagsak) =>
+const renderVilkårsvurderingContainer = (behandling: IBehandling, fagsak: IFagsak): RenderResult =>
     render(
         <BehandlingProvider>
             <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
@@ -134,7 +143,7 @@ const renderVilkårsvurderingContainer = (behandling: IBehandling, fagsak: IFags
     );
 
 describe('Tester: VilkårsvurderingContainer', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();

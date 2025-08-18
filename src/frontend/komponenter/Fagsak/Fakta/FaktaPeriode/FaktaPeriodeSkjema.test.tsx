@@ -1,7 +1,10 @@
+import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { HendelseUndertype } from '../../../../kodeverk';
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
+import type { RenderResult } from '@testing-library/react';
+import type { NavigateFunction } from 'react-router';
 
 import { render, screen } from '@testing-library/react';
 import { mock } from 'jest-mock-extended';
@@ -13,12 +16,12 @@ import { FeilutbetalingFaktaProvider } from '../FeilutbetalingFaktaContext';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
-    useBehandling: () => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: () => jest.fn(),
+    useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
 const behandling = mock<IBehandling>({ eksternBrukId: '1' });
@@ -31,7 +34,7 @@ const fagsak = mock<IFagsak>({
 const renderComponent = (
     periode: FaktaPeriodeSkjemaData,
     hendelseTyper: HendelseType[] | undefined
-) => {
+): RenderResult => {
     return render(
         <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
             <table>

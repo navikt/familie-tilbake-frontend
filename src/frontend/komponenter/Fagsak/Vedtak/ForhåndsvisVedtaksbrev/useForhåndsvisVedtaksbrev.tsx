@@ -12,25 +12,33 @@ import {
 import { base64ToArrayBuffer } from '../../../../utils';
 import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
 
-const useForhåndsvisVedtaksbrev = () => {
+interface Props {
+    visModal: boolean;
+    kanViseForhåndsvisning: () => void;
+    hentetForhåndsvisning: Ressurs<string>;
+    hentVedtaksbrev: () => void;
+    nullstillHentetForhåndsvisning: () => void;
+}
+
+const useForhåndsvisVedtaksbrev = (): Props => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
         React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBrevdata, validerAlleAvsnittOk } = useFeilutbetalingVedtak();
     const { forhåndsvisVedtaksbrev } = useDokumentApi();
 
-    const nullstillHentetForhåndsvisning = () => {
+    const nullstillHentetForhåndsvisning = (): void => {
         settHentetForhåndsvisning(byggTomRessurs);
         settVisModal(false);
     };
 
-    const kanViseForhåndsvisning = () => {
+    const kanViseForhåndsvisning = (): void => {
         if (validerAlleAvsnittOk(false)) {
             settVisModal(true);
         }
     };
 
-    const hentVedtaksbrev = () => {
+    const hentVedtaksbrev = (): void => {
         settHentetForhåndsvisning(byggHenterRessurs());
         const payload = hentBrevdata();
         forhåndsvisVedtaksbrev(payload).then((response: Ressurs<string>) => {

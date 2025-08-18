@@ -14,7 +14,7 @@ import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
 
-const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean) => {
+const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean): string => {
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
     switch (periode.foreldelsesvurderingstype) {
         case Foreldelsevurdering.Foreldet:

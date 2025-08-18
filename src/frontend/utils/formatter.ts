@@ -15,19 +15,19 @@ const hentAlder = (fødselsdato: string): number => {
         : 0;
 };
 
-const kunSiffer = (value: string) => /^\d+$/.test(value);
+const kunSiffer = (value: string): boolean => /^\d+$/.test(value);
 
-const erPersonId = (personIdent: string) => {
+const erPersonId = (personIdent: string): boolean => {
     const id = personIdent.split(' ').join('');
     return /^[+-]?\d+(\.\d+)?$/.test(id) && id.length === 11;
 };
 
-const erOrgNr = (orgNr: string) => {
+const erOrgNr = (orgNr: string): boolean => {
     // Sjekker kun etter ni siffer, validerer ikke kontrollsifferet (det 9. sifferet)
     return kunSiffer(orgNr) && orgNr.length === 9;
 };
 
-export const formaterIdent = (personIdent: string, ukjentTekst = 'Ukjent id') => {
+export const formaterIdent = (personIdent: string, ukjentTekst = 'Ukjent id'): string => {
     if (personIdent === '') {
         return ukjentTekst;
     }

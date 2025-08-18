@@ -41,7 +41,7 @@ interface IProps {
 const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
 
-    const lukkModalOgHentBehandling = () => {
+    const lukkModalOgHentBehandling = (): void => {
         onClose();
         hentBehandlingMedBehandlingId(behandling.behandlingId);
     };
@@ -76,7 +76,7 @@ const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => 
         behandling.saksbehandlingstype ===
             Saksbehandlingstype.AutomatiskIkkeInnkrevingUnder4XRettsgebyr;
 
-    const lukkModal = () => {
+    const lukkModal = (): void => {
         tilbakestillFelterTilDefault();
         onClose();
     };

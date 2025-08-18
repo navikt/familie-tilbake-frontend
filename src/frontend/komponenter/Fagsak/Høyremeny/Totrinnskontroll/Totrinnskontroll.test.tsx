@@ -1,6 +1,12 @@
+import type { BehandlingApi } from '../../../../api/behandling';
+import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
+import type { Ressurs } from '../../../../typer/ressurs';
 import type { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
+import type { RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -10,40 +16,40 @@ import * as React from 'react';
 import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
 import { Behandlingssteg } from '../../../../typer/behandling';
-import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
+import { RessursStatus } from '../../../../typer/ressurs';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
-    useBehandling: () => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../../api/behandling', () => ({
-    useBehandlingApi: () => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApi => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: () => jest.fn(),
+    useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderTotrinnskontroll = (behandling: IBehandling, fagsak: IFagsak) =>
+const renderTotrinnskontroll = (behandling: IBehandling, fagsak: IFagsak): RenderResult =>
     render(
         <TotrinnskontrollProvider behandling={behandling} fagsak={fagsak}>
             <Totrinnskontroll />
         </TotrinnskontrollProvider>
     );
 
-const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: ITotrinnkontroll) => {
+const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: ITotrinnkontroll): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
-        gjerTotrinnkontrollKall: () => {
+        gjerTotrinnkontrollKall: (): Promise<Ressurs<ITotrinnkontroll>> => {
             const ressurs = mock<Ressurs<ITotrinnkontroll>>({
                 status: RessursStatus.Suksess,
                 data: totrinnkontroll,
             });
             return Promise.resolve(ressurs);
         },
-        sendInnFatteVedtak: () => {
+        sendInnFatteVedtak: (): Promise<Ressurs<string>> => {
             const ressurs = mock<Ressurs<string>>({
                 status: RessursStatus.Suksess,
                 data: 'suksess',
@@ -52,17 +58,17 @@ const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: ITotrinnkont
         },
     }));
     mockUseBehandling.mockImplementation(() => ({
-        erStegBehandlet: () => false,
+        erStegBehandlet: (): boolean => false,
         visVenteModal: false,
-        erBehandlingReturnertFraBeslutter: () => returnertFraBeslutter,
-        hentBehandlingMedBehandlingId: () => Promise.resolve(),
+        erBehandlingReturnertFraBeslutter: (): boolean => returnertFraBeslutter,
+        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
         settIkkePersistertKomponent: jest.fn(),
         nullstillIkkePersisterteKomponenter: jest.fn(),
     }));
 };
 
 describe('Tester: Totrinnskontroll', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();

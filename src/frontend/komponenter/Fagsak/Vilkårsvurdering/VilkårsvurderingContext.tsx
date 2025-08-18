@@ -28,7 +28,34 @@ import {
 import { sorterFeilutbetaltePerioder } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
-const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+export type VilkårsvurderingContext = {
+    containerRef: React.RefObject<HTMLDivElement | null>;
+    feilutbetalingVilkårsvurdering: Ressurs<IFeilutbetalingVilkårsvurdering> | undefined;
+    stegErBehandlet: boolean;
+    erAutoutført: boolean | undefined;
+    kanIlleggeRenter: boolean;
+    skjemaData: VilkårsvurderingPeriodeSkjemaData[];
+    oppdaterPeriode: (periode: VilkårsvurderingPeriodeSkjemaData) => void;
+    valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined;
+    settValgtPeriode: (periode: VilkårsvurderingPeriodeSkjemaData | undefined) => void;
+    behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
+    gåTilNesteSteg: () => void;
+    gåTilForrigeSteg: () => void;
+    valideringsFeilmelding: string | undefined;
+    sendInnSkjemaOgNaviger: () => Promise<PeriodeHandling | undefined>;
+    sendInnSkjemaMutation: {
+        isPending: boolean;
+        isError: boolean;
+        error: AxiosError | null;
+        reset: () => void;
+    };
+    onSplitPeriode: (periode: VilkårsvurderingPeriodeSkjemaData) => void;
+    nestePeriode: (periode: VilkårsvurderingPeriodeSkjemaData) => void;
+    forrigePeriode: (periode: VilkårsvurderingPeriodeSkjemaData) => void;
+    hentBehandlingMedBehandlingId: (behandlingId: string) => void;
+};
+
+const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData): boolean => {
     return (
         periode.foreldet ||
         (!!periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat &&
@@ -41,7 +68,7 @@ const utledValgtPeriode = (
 ): VilkårsvurderingPeriodeSkjemaData | undefined =>
     skjemaPerioder.find(periode => !erBehandlet(periode)) || skjemaPerioder[0];
 
-const kalkulerTotalBeløp = (perioder: VilkårsvurderingPeriode[]) => {
+const kalkulerTotalBeløp = (perioder: VilkårsvurderingPeriode[]): number => {
     return perioder.reduce(
         (acc: number, periode: VilkårsvurderingPeriode) =>
             !periode.foreldet ? acc + periode.feilutbetaltBeløp : acc,
@@ -49,7 +76,9 @@ const kalkulerTotalBeløp = (perioder: VilkårsvurderingPeriode[]) => {
     );
 };
 
-export const erTotalbeløpUnder4Rettsgebyr = (vurdering: IFeilutbetalingVilkårsvurdering) => {
+export const erTotalbeløpUnder4Rettsgebyr = (
+    vurdering: IFeilutbetalingVilkårsvurdering
+): boolean => {
     const totalbeløp = kalkulerTotalBeløp(vurdering.perioder);
     return totalbeløp && vurdering.rettsgebyr ? totalbeløp < vurdering.rettsgebyr * 4 : false;
 };
@@ -149,15 +178,15 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
                 });
         };
 
-        const gåTilNesteSteg = () => {
+        const gåTilNesteSteg = (): void => {
             navigate(`${behandlingUrl}/${sider.VEDTAK.href}`);
         };
 
-        const gåTilForrigeSteg = () => {
+        const gåTilForrigeSteg = (): void => {
             navigate(`${behandlingUrl}/${sider.FORELDELSE.href}`);
         };
 
-        const oppdaterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+        const oppdaterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): void => {
             const perioder = skjemaData;
             const index = perioder.findIndex(bfp => bfp.index === periode.index);
             perioder.splice(index, 1, periode);
@@ -166,7 +195,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             førsteUbehandletPeriode !== undefined && settValgtPeriode(førsteUbehandletPeriode);
         };
 
-        const nestePeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+        const nestePeriode = (periode: VilkårsvurderingPeriodeSkjemaData): void => {
             const index = skjemaData.findIndex(bfp => bfp.index === periode.index);
             if (index < skjemaData.length - 1) {
                 settValgtPeriode(skjemaData[index + 1]);
@@ -174,7 +203,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             containerRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
-        const forrigePeriode = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+        const forrigePeriode = (periode: VilkårsvurderingPeriodeSkjemaData): void => {
             const index = skjemaData.findIndex(bfp => bfp.index === periode.index);
             if (index > 0) {
                 settValgtPeriode(skjemaData[index - 1]);
@@ -185,7 +214,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         const onSplitPeriode = (
             periode: VilkårsvurderingPeriodeSkjemaData,
             nyePerioder: VilkårsvurderingPeriodeSkjemaData[]
-        ) => {
+        ): void => {
             const perioder = skjemaData;
             const index = perioder.findIndex(bfp => bfp.index === periode.index);
             perioder.splice(index, 1, ...nyePerioder);

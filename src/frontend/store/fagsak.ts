@@ -13,7 +13,7 @@ export const useFagsakStore = create<FagsakState>(set => ({
     personIdent: undefined,
     fagsakId: undefined,
     behandlingId: undefined,
-    setPersonIdent: personIdent => set({ personIdent }),
-    setFagsakId: fagsakId => set({ fagsakId }),
-    setBehandlingId: behandlingId => set({ behandlingId }),
+    setPersonIdent: (personIdent: string | undefined): void => set({ personIdent }),
+    setFagsakId: (fagsakId: string | undefined): void => set({ fagsakId }),
+    setBehandlingId: (behandlingId: string | undefined): void => set({ behandlingId }),
 }));

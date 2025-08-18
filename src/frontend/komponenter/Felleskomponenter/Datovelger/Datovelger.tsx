@@ -30,7 +30,7 @@ const tidligsteRelevanteDato = startOfDay(new Date(1900, 0));
 
 const senesteRelevanteDato = startOfDay(new Date(2500, 0));
 
-const Datovelger = ({
+const Datovelger: React.FC<IProps> = ({
     felt,
     label,
     visFeilmeldinger,
@@ -44,19 +44,19 @@ const Datovelger = ({
 }: IProps) => {
     const [error, setError] = useState<Feilmelding | undefined>(undefined);
 
-    const hentToDate = () => {
+    const hentToDate = (): Date => {
         if (maksDatoAvgrensning) return maksDatoAvgrensning;
         if (kanKunVelgeFortid) return dagensDato;
         return senesteRelevanteDato;
     };
 
-    const hentFromDate = () => {
+    const hentFromDate = (): Date => {
         if (minDatoAvgrensning) return minDatoAvgrensning;
         if (kanKunVelgeFremtid) return dagensDato;
         return tidligsteRelevanteDato;
     };
 
-    const nullstillOgSettFeilmelding = (feilmelding: Feilmelding) => {
+    const nullstillOgSettFeilmelding = (feilmelding: Feilmelding): void => {
         if (error !== feilmelding) {
             setError(feilmelding);
             felt.nullstill();
@@ -85,7 +85,7 @@ const Datovelger = ({
         },
     });
 
-    const feilmeldingForDatoFørMinDato = () => {
+    const feilmeldingForDatoFørMinDato = (): string => {
         if (kanKunVelgeFremtid) {
             return 'Du kan ikke sette en dato som er tilbake i tid';
         }
@@ -94,7 +94,7 @@ const Datovelger = ({
             : '';
         return `Du må velge en dato som er senere enn ${førsteUgyldigeDato}`;
     };
-    const feilmeldingForDatoEtterMaksDato = () => {
+    const feilmeldingForDatoEtterMaksDato = (): string => {
         if (kanKunVelgeFortid) {
             return 'Du kan ikke sette en dato som er frem i tid';
         }
