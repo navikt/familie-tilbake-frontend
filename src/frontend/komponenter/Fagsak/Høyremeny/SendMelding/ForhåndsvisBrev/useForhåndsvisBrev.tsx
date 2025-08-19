@@ -12,18 +12,26 @@ import {
 import { base64ToArrayBuffer } from '../../../../../utils';
 import { useSendMelding } from '../SendMeldingContext';
 
-const useForhåndsvisBrev = () => {
+type ForhåndsvisBrevHook = {
+    visModal: boolean;
+    settVisModal: React.Dispatch<React.SetStateAction<boolean>>;
+    hentetForhåndsvisning: Ressurs<string>;
+    hentBrev: () => void;
+    nullstillHentetForhåndsvisning: () => void;
+};
+
+const useForhåndsvisBrev = (): ForhåndsvisBrevHook => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
         React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBrevdata } = useSendMelding();
     const { forhåndsvisBrev } = useDokumentApi();
 
-    const nullstillHentetForhåndsvisning = () => {
+    const nullstillHentetForhåndsvisning = (): void => {
         settHentetForhåndsvisning(byggTomRessurs);
     };
 
-    const hentBrev = () => {
+    const hentBrev = (): void => {
         settHentetForhåndsvisning(byggHenterRessurs());
         const payload = hentBrevdata();
         forhåndsvisBrev(payload).then((response: Ressurs<string>) => {

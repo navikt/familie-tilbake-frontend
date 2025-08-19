@@ -1,5 +1,11 @@
+import type { DokumentApiHook } from '../../../../api/dokument';
+import type { Http } from '../../../../api/http/HttpProvider';
+import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
+import type { RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -14,37 +20,41 @@ import { RessursStatus } from '../../../../typer/ressurs';
 
 jest.mock('../../../../api/http/HttpProvider', () => {
     return {
-        useHttp: () => ({
-            request: () => jest.fn(),
+        useHttp: (): Http => ({
+            systemetLaster: () => false,
+            request: jest.fn(),
         }),
     };
 });
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
-    useBehandling: () => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const mockUseDokumentApi = jest.fn();
 jest.mock('../../../../api/dokument', () => ({
-    useDokumentApi: () => mockUseDokumentApi(),
+    useDokumentApi: (): DokumentApiHook => mockUseDokumentApi(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: () => jest.fn(),
+    useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderSendMelding = (fagsak: IFagsak, behandling: IBehandling) =>
+const renderSendMelding = (fagsak: IFagsak, behandling: IBehandling): RenderResult =>
     render(
         <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
             <SendMelding fagsak={fagsak} behandling={behandling} />
         </SendMeldingProvider>
     );
 
-const setupMock = (behandlingILesemodus: boolean) => {
+const setupMock = (behandlingILesemodus: boolean): void => {
     mockUseDokumentApi.mockImplementation(() => ({
-        bestillBrev: () =>
+        bestillBrev: (): Promise<{
+            status: RessursStatus;
+            data: string;
+        }> =>
             Promise.resolve({
                 status: RessursStatus.Suksess,
                 data: 'suksess',
@@ -52,14 +62,14 @@ const setupMock = (behandlingILesemodus: boolean) => {
     }));
     mockUseBehandling.mockImplementation(() => ({
         behandlingILesemodus: behandlingILesemodus,
-        hentBehandlingMedBehandlingId: () => Promise.resolve(),
+        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
         settIkkePersistertKomponent: jest.fn(),
         nullstillIkkePersisterteKomponenter: jest.fn(),
     }));
 };
 
 describe('Tester: SendMelding', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();

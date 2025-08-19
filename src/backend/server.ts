@@ -16,7 +16,7 @@ import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
 import setupRouter from './router';
 
-(async () => {
+(async (): Promise<void> => {
     const port = 8000;
 
     const { app, texasClient, router } = backend(texasConfig, prometheusTellere);

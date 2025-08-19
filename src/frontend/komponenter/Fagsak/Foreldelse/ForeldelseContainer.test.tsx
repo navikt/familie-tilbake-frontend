@@ -1,9 +1,16 @@
+import type { BehandlingApiHook } from '../../../api/behandling';
+import type { Http } from '../../../api/http/HttpProvider';
+import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type {
     ForeldelsePeriode,
     IFeilutbetalingForeldelse,
 } from '../../../typer/feilutbetalingtyper';
+import type { Ressurs } from '../../../typer/ressurs';
+import type { RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -14,32 +21,33 @@ import { FeilutbetalingForeldelseProvider } from './FeilutbetalingForeldelseCont
 import ForeldelseContainer from './ForeldelseContainer';
 import { Fagsystem, Foreldelsevurdering } from '../../../kodeverk';
 import { Behandlingstatus } from '../../../typer/behandling';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import { RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(10000);
 
 jest.mock('../../../api/http/HttpProvider', () => {
     return {
-        useHttp: () => ({
-            request: () => jest.fn(),
+        useHttp: (): Http => ({
+            systemetLaster: () => false,
+            request: jest.fn(),
         }),
     };
 });
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: () => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: () => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: () => jest.fn(),
+    useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderForeldelseContainer = (behandling: IBehandling, fagsak: IFagsak) => {
+const renderForeldelseContainer = (behandling: IBehandling, fagsak: IFagsak): RenderResult => {
     return render(
         <FeilutbetalingForeldelseProvider behandling={behandling} fagsak={fagsak}>
             <ForeldelseContainer behandling={behandling} />
@@ -48,7 +56,7 @@ const renderForeldelseContainer = (behandling: IBehandling, fagsak: IFagsak) => 
 };
 
 describe('Tester: ForeldelseContainer', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();
@@ -88,17 +96,19 @@ describe('Tester: ForeldelseContainer', () => {
         lesevisning: boolean,
         autoutført: boolean,
         foreldelse?: IFeilutbetalingForeldelse
-    ) => {
+    ): void => {
         if (foreldelse) {
             mockUseBehandlingApi.mockImplementation(() => ({
-                gjerFeilutbetalingForeldelseKall: () => {
+                gjerFeilutbetalingForeldelseKall: (): Promise<
+                    Ressurs<IFeilutbetalingForeldelse>
+                > => {
                     const ressurs = mock<Ressurs<IFeilutbetalingForeldelse>>({
                         status: RessursStatus.Suksess,
                         data: foreldelse,
                     });
                     return Promise.resolve(ressurs);
                 },
-                sendInnFeilutbetalingForeldelse: () => {
+                sendInnFeilutbetalingForeldelse: (): Promise<Ressurs<string>> => {
                     const ressurs = mock<Ressurs<string>>({
                         status: RessursStatus.Suksess,
                         data: 'suksess',
@@ -108,11 +118,11 @@ describe('Tester: ForeldelseContainer', () => {
             }));
         }
         mockUseBehandling.mockImplementation(() => ({
-            erStegBehandlet: () => behandlet,
-            erStegAutoutført: () => autoutført,
+            erStegBehandlet: (): boolean => behandlet,
+            erStegAutoutført: (): boolean => autoutført,
             visVenteModal: false,
             behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: () => Promise.resolve(),
+            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
             settIkkePersistertKomponent: jest.fn(),
             nullstillIkkePersisterteKomponenter: jest.fn(),
         }));

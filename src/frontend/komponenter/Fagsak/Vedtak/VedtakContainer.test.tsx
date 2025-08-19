@@ -1,10 +1,18 @@
+import type { BehandlingApiHook } from '../../../api/behandling';
+import type { Http } from '../../../api/http/HttpProvider';
+import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { SammenslåttPeriodeHook } from '../../../hooks/useSammenslåPerioder';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
+import type { Ressurs } from '../../../typer/ressurs';
 import type {
     BeregningsresultatPeriode,
     IBeregningsresultat,
     VedtaksbrevAvsnitt,
 } from '../../../typer/vedtakTyper';
+import type { RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -16,39 +24,40 @@ import VedtakContainer from './VedtakContainer';
 import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import { RessursStatus } from '../../../typer/ressurs';
 
 jest.mock('../../../api/http/HttpProvider', () => {
     return {
-        useHttp: () => ({
-            request: () => jest.fn(),
+        useHttp: (): Http => ({
+            systemetLaster: () => false,
+            request: jest.fn(),
         }),
     };
 });
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: () => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: () => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: () => jest.fn(),
+    useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
 const mockUseSammenslåPerioder = jest.fn();
 jest.mock('../../../hooks/useSammenslåPerioder', () => ({
-    useSammenslåPerioder: () => mockUseSammenslåPerioder(),
+    useSammenslåPerioder: (): SammenslåttPeriodeHook => mockUseSammenslåPerioder(),
 }));
 
 const mockedSettIkkePersistertKomponent = jest.fn();
 
-const renderVedtakContainer = (behandling: IBehandling, fagsak: IFagsak) =>
+const renderVedtakContainer = (behandling: IBehandling, fagsak: IFagsak): RenderResult =>
     render(
         <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
             <VedtakContainer behandling={behandling} fagsak={fagsak} />
@@ -56,7 +65,7 @@ const renderVedtakContainer = (behandling: IBehandling, fagsak: IFagsak) =>
     );
 
 describe('Tester: VedtakContainer', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();
@@ -119,23 +128,23 @@ describe('Tester: VedtakContainer', () => {
         lesevisning: boolean,
         avsnitt: VedtaksbrevAvsnitt[],
         resultat: IBeregningsresultat
-    ) => {
+    ): void => {
         mockUseBehandlingApi.mockImplementation(() => ({
-            gjerVedtaksbrevteksterKall: () => {
+            gjerVedtaksbrevteksterKall: (): Promise<Ressurs<VedtaksbrevAvsnitt[]>> => {
                 const ressurs = mock<Ressurs<VedtaksbrevAvsnitt[]>>({
                     status: RessursStatus.Suksess,
                     data: avsnitt,
                 });
                 return Promise.resolve(ressurs);
             },
-            gjerBeregningsresultatKall: () => {
+            gjerBeregningsresultatKall: (): Promise<Ressurs<IBeregningsresultat>> => {
                 const ressurs = mock<Ressurs<IBeregningsresultat>>({
                     status: RessursStatus.Suksess,
                     data: resultat,
                 });
                 return Promise.resolve(ressurs);
             },
-            sendInnForeslåVedtak: () => {
+            sendInnForeslåVedtak: (): Promise<Ressurs<string>> => {
                 const ressurs = mock<Ressurs<string>>({
                     status: RessursStatus.Suksess,
                     data: 'suksess',
@@ -145,15 +154,15 @@ describe('Tester: VedtakContainer', () => {
         }));
 
         mockUseSammenslåPerioder.mockImplementation(() => ({
-            hentErPerioderLike: () => Promise.resolve(),
-            hentErPerioderSammenslått: () => Promise.resolve(),
+            hentErPerioderLike: (): Promise<boolean> => Promise.resolve(false),
+            hentErPerioderSammenslått: (): Promise<boolean> => Promise.resolve(false),
             erPerioderLike: false,
         }));
 
         mockUseBehandling.mockImplementation(() => ({
             visVenteModal: false,
             behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: () => Promise.resolve(),
+            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
             settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
             nullstillIkkePersisterteKomponenter: jest.fn(),
         }));

@@ -1,19 +1,36 @@
+import type { ISkjema, FeltState } from '../../../../hooks/skjema';
 import type { IRestSettPåVent } from '../../../../typer/api';
 import type { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
+import type { Ressurs } from '../../../../typer/ressurs';
 
 import { useState } from 'react';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { useSkjema, useFelt, type FeltState, feil, ok } from '../../../../hooks/skjema';
-import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
+import { useSkjema, useFelt, feil, ok } from '../../../../hooks/skjema';
+import { RessursStatus } from '../../../../typer/ressurs';
 import { isEmpty, validerGyldigDato } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
+
+interface PåVentBehandlingHook {
+    skjema: ISkjema<
+        {
+            tidsfrist: Date | undefined;
+            årsak: Venteårsak | '';
+        },
+        string
+    >;
+    feilmelding?: string;
+    nullstillSkjema: () => void;
+    onBekreft: (behandlingId: string) => void;
+    onOkTaAvVent: (behandlingId: string) => void;
+    tilbakestillFelterTilDefault: () => void;
+}
 
 export const usePåVentBehandling = (
     lukkModal: () => void,
     ventegrunn?: IBehandlingsstegstilstand | undefined
-) => {
+): PåVentBehandlingHook => {
     const [feilmelding, settFeilmelding] = useState<string>();
     const { request } = useHttp();
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
@@ -54,14 +71,14 @@ export const usePåVentBehandling = (
         );
     }
 
-    const tilbakestillFelterTilDefault = () => {
+    const tilbakestillFelterTilDefault = (): void => {
         nullstillSkjema();
         skjema.felter.tidsfrist.validerOgSettFelt(
             ventegrunn?.tidsfrist ? isoStringTilDate(ventegrunn.tidsfrist) : undefined
         );
     };
 
-    const onBekreft = (behandlingId: string) => {
+    const onBekreft = (behandlingId: string): void => {
         if (kanSendeSkjema() && skjema.felter.årsak.verdi && skjema.felter.tidsfrist.verdi) {
             nullstillIkkePersisterteKomponenter();
             onSubmit<IRestSettPåVent>(
@@ -92,7 +109,7 @@ export const usePåVentBehandling = (
         }
     };
 
-    const onOkTaAvVent = (behandlingId: string) => {
+    const onOkTaAvVent = (behandlingId: string): void => {
         nullstillIkkePersisterteKomponenter();
         request<void, string>({
             method: 'PUT',

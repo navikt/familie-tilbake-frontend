@@ -15,7 +15,7 @@ export class TexasClient {
         this.config = config;
     }
 
-    exchangeToken = async (token: string, targetScope: string) => {
+    exchangeToken = async (token: string, targetScope: string): Promise<SuccessResponse> => {
         const response = await axios.post<SuccessResponse>(
             this.config.tokenExchangeEndpoint,
             {
@@ -30,7 +30,7 @@ export class TexasClient {
         return response.data;
     };
 
-    hentOnBehalfOfToken = async (token: string, targetScope: string) => {
+    hentOnBehalfOfToken = async (token: string, targetScope: string): Promise<string> => {
         const exchangeResponse = await this.exchangeToken(token, targetScope);
         return exchangeResponse.access_token;
     };

@@ -31,7 +31,7 @@ const FagsakContainerContent = styled.div`
     }
 `;
 
-const venteBeskjed = (ventegrunn: IBehandlingsstegstilstand) => {
+const venteBeskjed = (ventegrunn: IBehandlingsstegstilstand): string => {
     return `Behandlingen er satt på vent: ${
         venteårsaker[ventegrunn.venteårsak as Venteårsak]
     }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;
@@ -61,7 +61,7 @@ const FagsakContainer: React.FC = () => {
             hentFagsak(fagsystem, fagsakId);
             setFagsakId(fagsakId);
         }
-        return () => setFagsakId(undefined);
+        return (): void => setFagsakId(undefined);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsystem, fagsakId]);
 
@@ -74,14 +74,14 @@ const FagsakContainer: React.FC = () => {
         if (fagsak?.status === RessursStatus.Suksess && fagsak?.data?.bruker.personIdent) {
             setPersonIdent(fagsak.data.bruker.personIdent);
         }
-        return () => {
+        return (): void => {
             setBehandlingId(undefined);
             setPersonIdent(undefined);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsak, behandlingId]);
 
-    const lukkVenteModal = () => {
+    const lukkVenteModal = (): void => {
         settVisVenteModal(false);
     };
 

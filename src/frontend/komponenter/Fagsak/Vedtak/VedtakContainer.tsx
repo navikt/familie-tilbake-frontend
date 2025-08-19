@@ -77,7 +77,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         feilmelding,
     } = useSammenslåPerioder(behandling.behandlingId);
 
-    const handleKnappTrykk = async () => {
+    const handleKnappTrykk = async (): Promise<void> => {
         const oppdaterErPerioderSammenslått = !erPerioderSammenslått;
         settErPerioderSammenslått(oppdaterErPerioderSammenslått);
         if (!oppdaterErPerioderSammenslått) {
@@ -89,7 +89,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
     };
 
     useEffect(() => {
-        const fetch = async () => {
+        const fetch = async (): Promise<void> => {
             await hentErPerioderLike();
 
             const sammenslåttResponse = await hentErPerioderSammenslått();

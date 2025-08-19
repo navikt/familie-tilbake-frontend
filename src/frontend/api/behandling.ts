@@ -20,7 +20,60 @@ import type { IBeregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyp
 
 import { useHttp } from './http/HttpProvider';
 
-const useBehandlingApi = () => {
+export type BehandlingApiHook = {
+    gjerFeilutbetalingFaktaKall: (behandlingId: string) => Promise<Ressurs<IFeilutbetalingFakta>>;
+    gjerFeilutbetalingInaktiveFaktaKall: (
+        behandlingId: string
+    ) => Promise<Ressurs<IFeilutbetalingFakta[]>>;
+    sendInnFeilutbetalingFakta: (
+        behandlingId: string,
+        payload: FaktaStegPayload
+    ) => Promise<Ressurs<string>>;
+    gjerFeilutbetalingForeldelseKall: (
+        behandlingId: string
+    ) => Promise<Ressurs<IFeilutbetalingForeldelse>>;
+    sendInnFeilutbetalingForeldelse: (
+        behandlingId: string,
+        payload: ForeldelseStegPayload
+    ) => Promise<Ressurs<string>>;
+    gjerFeilutbetalingVilkårsvurderingKall: (
+        behandlingId: string
+    ) => Promise<Ressurs<IFeilutbetalingVilkårsvurdering>>;
+    sendInnVilkårsvurdering: (
+        behandlingId: string,
+        payload: VilkårdsvurderingStegPayload
+    ) => Promise<Ressurs<string>>;
+    gjerVedtaksbrevteksterKall: (behandlingId: string) => Promise<Ressurs<VedtaksbrevAvsnitt[]>>;
+    gjerBeregningsresultatKall: (behandlingId: string) => Promise<Ressurs<IBeregningsresultat>>;
+    sendInnForeslåVedtak: (
+        behandlingId: string,
+        payload: ForeslåVedtakStegPayload
+    ) => Promise<Ressurs<string>>;
+    gjerTotrinnkontrollKall: (behandlingId: string) => Promise<Ressurs<ITotrinnkontroll>>;
+    sendInnFatteVedtak: (
+        behandlingId: string,
+        payload: FatteVedtakStegPayload
+    ) => Promise<Ressurs<string>>;
+    gjerVergeKall: (behandlingId: string) => Promise<Ressurs<VergeDto>>;
+    sendInnVerge: (behandlingId: string, payload: VergeStegPayload) => Promise<Ressurs<string>>;
+    henleggBehandling: (
+        behandlingId: string,
+        payload: HenleggBehandlingPaylod
+    ) => Promise<Ressurs<string>>;
+    fjernManuellBrevmottaker: (
+        behandlingId: string,
+        brevmottakerId: string
+    ) => Promise<Ressurs<string>>;
+    hentManuelleBrevmottakere: (
+        behandlingId: string
+    ) => Promise<Ressurs<ManuellBrevmottakerResponseDto[]>>;
+    kallAngreSendTilBeslutter: (behandlingId: string) => Promise<Ressurs<string>>;
+    gjerFeilutbetalingInaktiveVilkårsvurderingerKall: (
+        behandlingId: string
+    ) => Promise<Ressurs<IFeilutbetalingVilkårsvurdering[]>>;
+};
+
+const useBehandlingApi = (): BehandlingApiHook => {
     const behandlingerApiPrefix = '/familie-tilbake/api/behandling';
     const { request } = useHttp();
 
@@ -186,7 +239,10 @@ const useBehandlingApi = () => {
         });
     };
 
-    const henleggBehandling = (behandlingId: string, payload: HenleggBehandlingPaylod) => {
+    const henleggBehandling = (
+        behandlingId: string,
+        payload: HenleggBehandlingPaylod
+    ): Promise<Ressurs<string>> => {
         return request<HenleggBehandlingPaylod, string>({
             method: 'PUT',
             url: `/familie-tilbake/api/behandling/${behandlingId}/henlegg/v1`,
@@ -194,7 +250,7 @@ const useBehandlingApi = () => {
         });
     };
 
-    const kallAngreSendTilBeslutter = (behandlingId: string) => {
+    const kallAngreSendTilBeslutter = (behandlingId: string): Promise<Ressurs<string>> => {
         return request<void, string>({
             method: 'PUT',
             url: `/familie-tilbake/api/behandling/${behandlingId}/angre-send-til-beslutter`,

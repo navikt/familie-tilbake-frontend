@@ -7,7 +7,7 @@ import HenleggBehandlingModal from './HenleggBehandlingModal/HenleggBehandlingMo
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 
-const getÅrsaker = (behandling: IBehandling) => {
+const getÅrsaker = (behandling: IBehandling): Behandlingresultat[] => {
     if (behandling.type === Behandlingstype.Tilbakekreving) {
         return [Behandlingresultat.HenlagtFeilopprettet];
     } else {

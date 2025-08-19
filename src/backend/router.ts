@@ -16,11 +16,11 @@ import { prometheusTellere } from './metrikker';
 let vite: ViteDevServer;
 const isProd = process.env.NODE_ENV === 'production';
 
-const getHtmlInnholdProd = () => {
+const getHtmlInnholdProd = (): string => {
     return fs.readFileSync(path.join(process.cwd(), buildPath, 'index.html'), 'utf-8');
 };
 
-const getHtmlInnholdDev = async (url: string) => {
+const getHtmlInnholdDev = async (url: string): Promise<string> => {
     let htmlInnhold = fs.readFileSync(
         path.join(process.cwd(), 'src/frontend', 'index.html'),
         'utf-8'
@@ -30,7 +30,7 @@ const getHtmlInnholdDev = async (url: string) => {
     return htmlInnhold;
 };
 
-export default async (texasClient: TexasClient, router: Router) => {
+export default async (texasClient: TexasClient, router: Router): Promise<Router> => {
     router.get('/version', (_: Request, res: Response) => {
         res.status(200).send({ status: 'SUKSESS', data: appConfig.version }).end();
     });

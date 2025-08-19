@@ -1,5 +1,6 @@
 import type { IBehandling } from '../../../../../typer/behandling';
 import type { ForeldelsePeriodeSkjemeData } from '../../typer/feilutbetalingForeldelse';
+import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -10,7 +11,7 @@ import SplittPeriode from './SplittPeriode';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
 
 describe('Tester: SplittPeriode - Foreldelse', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();

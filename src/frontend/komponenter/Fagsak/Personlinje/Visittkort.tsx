@@ -13,7 +13,7 @@ interface IVisittkortProps {
     children: React.ReactNode;
 }
 
-const Visittkort = ({ navn, alder, kjønn, ident, children }: IVisittkortProps) => {
+const Visittkort: React.FC<IVisittkortProps> = ({ navn, alder, kjønn, ident, children }) => {
     return (
         <HStack gap="4" className="justify-between border-b-2 border-solid px-4 py-2">
             <HStack align="center" gap="4">

@@ -48,7 +48,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
     const { navigerTilSide } = useHistorikk();
     const [visDokument, settVisDokument] = React.useState<boolean>(false);
 
-    const lagTittel = () => {
+    const lagTittel = (): React.ReactNode => {
         if (innslag.type === Historikkinnslagstype.Skjermlenke && innslag.steg) {
             const steg = innslag.steg as Behandlingssteg;
             const side = finnSideForSteg(steg);
@@ -65,7 +65,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
         return innslag.tittel;
     };
 
-    const tilpassTekst = () => {
+    const tilpassTekst = (): React.ReactNode => {
         // @ts-expect-error har verdi her
         const indexÅrsakMedBegrunnelse = innslag.tekst.indexOf(', Begrunnelse:');
         if (indexÅrsakMedBegrunnelse > -1) {
@@ -83,7 +83,7 @@ const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
         return <StyledBodyShort>{innslag.tekst}</StyledBodyShort>;
     };
 
-    const lagBrevLink = () => {
+    const lagBrevLink = (): React.ReactNode => {
         return (
             <span>
                 <Link

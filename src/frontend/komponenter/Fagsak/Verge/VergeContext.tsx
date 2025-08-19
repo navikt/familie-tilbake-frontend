@@ -29,10 +29,10 @@ import {
 } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
-const erVergetypeOppfylt = (avhengigheter?: Avhengigheter) =>
+const erVergetypeOppfylt = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.vergetype.valideringsstatus === Valideringsstatus.Ok;
 
-const erAdvokatValgt = (avhengigheter?: Avhengigheter) =>
+const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
     erVergetypeOppfylt(avhengigheter) && avhengigheter?.vergetype.verdi === Vergetype.Advokat;
 
 interface IProps {
@@ -67,7 +67,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
 
-    const hentVerge = () => {
+    const hentVerge = (): void => {
         gjerVergeKall(behandling.behandlingId).then((respons: Ressurs<VergeDto>) => {
             if (respons.status === RessursStatus.Suksess) {
                 settHenterData(false);
@@ -153,7 +153,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
         skjemanavn: 'vergeskjema',
     });
 
-    const harEndretOpplysninger = () => {
+    const harEndretOpplysninger = (): boolean => {
         if (verge) {
             const erAdvokat = verge.type === Vergetype.Advokat;
             return (
@@ -167,7 +167,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
         return false;
     };
 
-    const sendInn = () => {
+    const sendInn = (): void => {
         if (stegErBehandlet && !harEndretOpplysninger()) {
             nullstillIkkePersisterteKomponenter();
             utførRedirect(

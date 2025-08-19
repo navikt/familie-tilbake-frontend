@@ -7,6 +7,11 @@ import { useHttp } from '../api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '../typer/ressurs';
 import { hentFrontendFeilmelding } from '../utils';
 
+export type TogglesHook = {
+    toggles: Toggles;
+    feilmelding: string;
+};
+
 const [TogglesProvider, useToggles] = createUseContext(() => {
     const [toggles, settToggles] = useState<Toggles>({});
     const [feilmelding, settFeilmelding] = useState<string>('');
@@ -14,7 +19,7 @@ const [TogglesProvider, useToggles] = createUseContext(() => {
     TogglesProvider.displayName = 'TOGGLES_PROVIDER';
 
     const fetchToggles = useCallback(() => {
-        const hentToggles = () => {
+        const hentToggles = (): Promise<Ressurs<Toggles>> => {
             return request<void, Toggles>({
                 url: `/familie-tilbake/api/featuretoggle`,
                 method: 'GET',

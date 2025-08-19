@@ -1,3 +1,5 @@
+import type { RenderResult } from '@testing-library/react';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -20,7 +22,7 @@ const queryClient = new QueryClient({
     },
 });
 
-const renderHeader = () => {
+const renderHeader = (): RenderResult => {
     const testSaksbehandler = {
         displayName: 'Test Saksbehandler',
         email: 'test@nav.no',

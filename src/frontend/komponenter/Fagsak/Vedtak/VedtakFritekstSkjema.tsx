@@ -38,7 +38,7 @@ const VedtakFritekstSkjema: React.FC<IProps> = ({
 
     const lenkeKnappErSynlig = !fritekstfeltErSynlig && !erLesevisning;
 
-    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
         const maxLength = maximumLength ? maximumLength : 4000;
         const nyVerdi = e.target.value;
         const feilmelding =

@@ -1,9 +1,14 @@
+import type { BehandlingApiHook } from '../../../api/behandling';
+import type { Http } from '../../../api/http/HttpProvider';
+import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type {
     IFeilutbetalingVilkårsvurdering,
     VilkårsvurderingPeriode,
 } from '../../../typer/feilutbetalingtyper';
+import type { Ressurs } from '../../../typer/ressurs';
+import type { NavigateFunction } from 'react-router';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
@@ -13,7 +18,7 @@ import * as React from 'react';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { HendelseType, Ytelsetype } from '../../../kodeverk';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import { RessursStatus } from '../../../typer/ressurs';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -25,25 +30,26 @@ const queryClient = new QueryClient({
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: () => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 jest.mock('../../../api/http/HttpProvider', () => {
     return {
-        useHttp: () => ({
-            request: () => jest.fn(),
+        useHttp: (): Http => ({
+            systemetLaster: () => false,
+            request: jest.fn(),
         }),
     };
 });
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: () => jest.fn(),
+    useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: () => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const perioder: VilkårsvurderingPeriode[] = [
@@ -77,17 +83,19 @@ const setupMock = (
     lesevisning: boolean,
     autoutført: boolean,
     vilkårsvurdering?: IFeilutbetalingVilkårsvurdering
-) => {
+): void => {
     if (vilkårsvurdering) {
         mockUseBehandlingApi.mockImplementation(() => ({
-            gjerFeilutbetalingVilkårsvurderingKall: () => {
+            gjerFeilutbetalingVilkårsvurderingKall: (): Promise<
+                Ressurs<IFeilutbetalingVilkårsvurdering>
+            > => {
                 const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
                     status: RessursStatus.Suksess,
                     data: vilkårsvurdering,
                 });
                 return Promise.resolve(ressurs);
             },
-            sendInnVilkårsvurdering: () => {
+            sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
                 const ressurs = mock<Ressurs<string>>({
                     status: RessursStatus.Suksess,
                     data: 'suksess',
@@ -97,8 +105,8 @@ const setupMock = (
         }));
     }
     mockUseBehandling.mockImplementation(() => ({
-        erStegBehandlet: () => behandlet,
-        erStegAutoutført: () => autoutført,
+        erStegBehandlet: (): boolean => behandlet,
+        erStegAutoutført: (): boolean => autoutført,
         visVenteModal: false,
         behandlingILesemodus: lesevisning,
         hentBehandlingMedBehandlingId: jest.fn(),

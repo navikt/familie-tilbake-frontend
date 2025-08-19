@@ -12,7 +12,8 @@ import {
     settErforbindelsenTilValkeyTilgjengelig,
 } from '../utils';
 
-const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const redisClientForAiven = (sessionKonfigurasjon: ISessionKonfigurasjon): any => {
     const pingHvertFjerdeMinutt = 1000 * 60 * 4; // Connection blir ugyldig etter fem minutter, pinger derfor hvert fjerde minutt
     const redisClient = redis.createClient({
         database: 1,
@@ -43,7 +44,8 @@ export default (app: Express, sessionKonfigurasjon: ISessionKonfigurasjon): Requ
         /**
          * Logge hendelser i redisclient for å debugge merkelige sockettimeouts
          */
-        redisClient.on('error', err => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        redisClient.on('error', (err: any) => {
             logError(`Redis Error: ${err}`);
             settErforbindelsenTilValkeyTilgjengelig(false);
         });

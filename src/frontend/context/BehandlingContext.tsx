@@ -15,7 +15,31 @@ import {
     RessursStatus,
 } from '../typer/ressurs';
 
-const erStegUtført = (status: Behandlingsstegstatus) => {
+export type BehandlingHook = {
+    behandling: Ressurs<IBehandling> | undefined;
+    hentBehandlingMedEksternBrukId: (fagsak: IFagsak, behandlingId: string) => void;
+    hentBehandlingMedBehandlingId: (behandlingId: string) => Promise<void>;
+    behandlingILesemodus: boolean | undefined;
+    aktivtSteg: IBehandlingsstegstilstand | undefined;
+    ventegrunn: IBehandlingsstegstilstand | undefined;
+    visVenteModal: boolean;
+    settVisVenteModal: (visVenteModal: boolean) => void;
+    erStegBehandlet: (steg: Behandlingssteg) => boolean;
+    erStegAutoutført: (steg: Behandlingssteg) => boolean;
+    erBehandlingReturnertFraBeslutter: () => boolean;
+    harVærtPåFatteVedtakSteget: () => boolean;
+    harKravgrunnlag: boolean | undefined;
+    lagLenkeTilRevurdering: () => string;
+    åpenHøyremeny: boolean;
+    harUlagredeData: boolean;
+    settÅpenHøyremeny: (åpenHøyremeny: boolean) => void;
+    visBrevmottakerModal: boolean;
+    settVisBrevmottakerModal: (visBrevmottakerModal: boolean) => void;
+    settIkkePersistertKomponent: (komponentId: string) => void;
+    nullstillIkkePersisterteKomponenter: () => void;
+};
+
+const erStegUtført = (status: Behandlingsstegstatus): boolean => {
     return status === Behandlingsstegstatus.Utført || status === Behandlingsstegstatus.Autoutført;
 };
 
@@ -42,12 +66,12 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         [ikkePersisterteKomponenter]
     );
 
-    const settIkkePersistertKomponent = (komponentId: string) => {
+    const settIkkePersistertKomponent = (komponentId: string): void => {
         if (ikkePersisterteKomponenter.has(komponentId)) return;
         settIkkePersisterteKomponenter(new Set(ikkePersisterteKomponenter).add(komponentId));
     };
 
-    const nullstillIkkePersisterteKomponenter = () => {
+    const nullstillIkkePersisterteKomponenter = (): void => {
         if (ikkePersisterteKomponenter.size > 0) {
             settIkkePersisterteKomponenter(new Set());
         }
@@ -165,7 +189,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         return false;
     };
 
-    const harVærtPåFatteVedtakSteget = () => {
+    const harVærtPåFatteVedtakSteget = (): boolean => {
         return (
             behandling?.status === RessursStatus.Suksess &&
             behandling.data.behandlingsstegsinfo.some(
@@ -174,7 +198,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         );
     };
 
-    const lagLenkeTilRevurdering = () => {
+    const lagLenkeTilRevurdering = (): string => {
         return fagsak?.status === RessursStatus.Suksess &&
             behandling?.status === RessursStatus.Suksess
             ? `/redirect/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/${behandling.data.fagsystemsbehandlingId}`

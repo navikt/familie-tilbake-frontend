@@ -72,13 +72,16 @@ export const erSidenAktiv = (side: ISide, behandling: IBehandling): boolean => {
     return true;
 };
 
-const sjekkOmSidenErAktiv = (side: ISide, behandlingsstegsinfo: IBehandlingsstegstilstand[]) => {
+const sjekkOmSidenErAktiv = (
+    side: ISide,
+    behandlingsstegsinfo: IBehandlingsstegstilstand[]
+): boolean => {
     return behandlingsstegsinfo
         .filter(stegInfo => aktiveBehandlingstegstatuser.includes(stegInfo.behandlingsstegstatus))
         .some(stegInfo => stegInfo.behandlingssteg === side.steg);
 };
 
-export const visSide = (side: ISide, åpenBehandling: IBehandling) => {
+export const visSide = (side: ISide, åpenBehandling: IBehandling): boolean => {
     if (side.steg === Behandlingssteg.Brevmottaker) {
         return åpenBehandling.behandlingsstegsinfo
             .map(value => value.behandlingssteg)
@@ -110,7 +113,7 @@ const historiskeSider = [
     'inaktiv',
 ];
 
-export const erHistoriskSide = (side: string) => {
+export const erHistoriskSide = (side: string): boolean => {
     return historiskeSider.includes(side);
 };
 export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBehandling): boolean => {

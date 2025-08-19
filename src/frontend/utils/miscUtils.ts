@@ -18,7 +18,7 @@ export const isNumeric = (val: string): boolean => {
     return !isNaN(Number(val));
 };
 
-export const base64ToArrayBuffer = (base64: string) => {
+export const base64ToArrayBuffer = (base64: string): Uint8Array<ArrayBuffer> => {
     const binaryString = window.atob(base64);
     const binaryLen = binaryString.length;
     const bytes = new Uint8Array(binaryLen);

@@ -31,7 +31,9 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandli
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
 
-    const settFeilutbetalingInaktivFakta = (feilutbetalingInaktivFakta?: IFeilutbetalingFakta) => {
+    const settFeilutbetalingInaktivFakta = (
+        feilutbetalingInaktivFakta?: IFeilutbetalingFakta
+    ): void => {
         if (feilutbetalingInaktivFakta) {
             const sortertePerioder = sorterFeilutbetaltePerioder(
                 feilutbetalingInaktivFakta.feilutbetaltePerioder

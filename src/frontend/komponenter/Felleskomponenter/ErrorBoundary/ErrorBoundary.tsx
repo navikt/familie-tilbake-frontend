@@ -23,11 +23,11 @@ class ErrorBoundary extends React.Component<IProps, IState> {
         this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(_error: any) {
+    static getDerivedStateFromError(_error: any): IState {
         return { hasError: true };
     }
 
-    componentDidCatch(error: any, info: any) {
+    componentDidCatch(error: any, info: any): void {
         console.log(error, info);
 
         if (process.env.NODE_ENV !== 'development') {
@@ -52,7 +52,7 @@ class ErrorBoundary extends React.Component<IProps, IState> {
         }
     }
 
-    render() {
+    render(): React.ReactNode {
         if (this.state.hasError) {
             // You can render any custom fallback UI
             return <Label size="small">Noe har gått feil!</Label>;

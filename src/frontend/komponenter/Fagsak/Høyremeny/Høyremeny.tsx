@@ -20,7 +20,8 @@ import Menykontainer, { Menysider } from './Menykontainer';
 import { useBehandling } from '../../../context/BehandlingContext';
 
 const StyledContainer = styled.div<{ $værtPåFatteVedtakSteget: boolean }>`
-    width: ${({ $værtPåFatteVedtakSteget }) => ($værtPåFatteVedtakSteget ? '28rem' : '22rem')};
+    width: ${({ $værtPåFatteVedtakSteget }): string =>
+        $værtPåFatteVedtakSteget ? '28rem' : '22rem'};
 `;
 
 const HøyremenyContainer = styled.div`

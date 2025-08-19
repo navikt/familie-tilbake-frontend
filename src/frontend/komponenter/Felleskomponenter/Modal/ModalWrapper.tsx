@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const ModalContainer = styled(Modal)<{ $maxWidth?: number }>`
     min-width: 30rem;
-    max-width: ${props => (props.$maxWidth ? `${props.$maxWidth}rem` : '40rem')};
+    max-width: ${(props): string => (props.$maxWidth ? `${props.$maxWidth}rem` : '40rem')};
 `;
 
 const Innhold = styled.div`
@@ -15,7 +15,7 @@ const Innhold = styled.div`
 const ButtonContainer = styled.div<{ $marginTop?: number }>`
     display: flex;
     justify-content: flex-end;
-    margin-top: ${props => (props.$marginTop ? `${props.$marginTop}rem` : '1rem')};
+    margin-top: ${(props): string => (props.$marginTop ? `${props.$marginTop}rem` : '1rem')};
     margin-right: 2rem;
     margin-bottom: 0.5rem;
 `;
@@ -56,7 +56,7 @@ export const ModalWrapper: React.FC<ModalProps> = ({
         visModal && (
             <ModalContainer
                 open={visModal}
-                onClose={onClose ? () => onClose() : () => null}
+                onClose={onClose ? (): void => onClose() : (): null => null}
                 $maxWidth={maxWidth}
                 aria-label={ariaLabel ? ariaLabel : tittel}
                 header={{ heading: tittel, closeButton: !!onClose }}

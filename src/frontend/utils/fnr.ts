@@ -4,7 +4,7 @@ import { feil, type FeltState, ok } from '../hooks/skjema';
 /**
  * Validering fødselsnummer
  */
-const beregnKontrollsiffer = (fodselsnummer: string, multiplikatorTabell: number[]) => {
+const beregnKontrollsiffer = (fodselsnummer: string, multiplikatorTabell: number[]): number => {
     let sum = 0;
     for (let i = 0; i < multiplikatorTabell.length; i++) {
         sum += parseInt(fodselsnummer[i], 10) * multiplikatorTabell[i];
@@ -15,17 +15,17 @@ const beregnKontrollsiffer = (fodselsnummer: string, multiplikatorTabell: number
     return 11 - rest;
 };
 
-const beregnKontrollsiffer1 = (fodselsnummer: string) => {
+const beregnKontrollsiffer1 = (fodselsnummer: string): number => {
     const kontrollSiffer1Multiplikatorer = [3, 7, 6, 1, 8, 9, 4, 5, 2];
     return beregnKontrollsiffer(fodselsnummer, kontrollSiffer1Multiplikatorer);
 };
 
-const beregnKontrollsiffer2 = (fodselsnummer: string) => {
+const beregnKontrollsiffer2 = (fodselsnummer: string): number => {
     const kontrollSiffer2Multiplikatorer = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
     return beregnKontrollsiffer(fodselsnummer, kontrollSiffer2Multiplikatorer);
 };
 
-const validerFødselsnumer = (fnr: string) => {
+const validerFødselsnumer = (fnr: string): boolean => {
     if (fnr.length !== 11) {
         return false;
     }
@@ -35,7 +35,7 @@ const validerFødselsnumer = (fnr: string) => {
     );
 };
 
-export const validerFødselsnummerFelt = (felt: FeltState<string | ''>) => {
+export const validerFødselsnummerFelt = (felt: FeltState<string | ''>): FeltState<string> => {
     if (isEmpty(felt.verdi))
         return feil(felt, definerteFeilmeldinger[DefinertFeilmelding.ObligatoriskFelt]);
     return validerFødselsnumer(felt.verdi) ? ok(felt) : feil(felt, 'Ugyldig fødselsnummer');

@@ -76,7 +76,7 @@ export type ValiderOgSettFelt<Verdi> = (
     avhengigheter?: Avhengigheter
 ) => FeltState<Verdi>;
 
-export const defaultValidator = <Verdi>(felt: FeltState<Verdi>) => ({
+export const defaultValidator = <Verdi>(felt: FeltState<Verdi>): FeltState<Verdi> => ({
     ...felt,
     valideringsstatus: Valideringsstatus.Ok,
 });

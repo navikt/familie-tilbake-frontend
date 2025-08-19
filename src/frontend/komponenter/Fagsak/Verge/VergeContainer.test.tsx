@@ -1,6 +1,12 @@
+import type { BehandlingApiHook } from '../../../api/behandling';
+import type { Http } from '../../../api/http/HttpProvider';
+import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { VergeDto } from '../../../typer/api';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
+import type { RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -14,28 +20,29 @@ import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 jest.mock('../../../api/http/HttpProvider', () => {
     return {
-        useHttp: () => ({
-            request: () => jest.fn(),
+        useHttp: (): Http => ({
+            systemetLaster: () => false,
+            request: jest.fn(),
         }),
     };
 });
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: () => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: () => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: () => jest.fn(),
+    useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderVergeContainer = (behandling: IBehandling, fagsak: IFagsak) =>
+const renderVergeContainer = (behandling: IBehandling, fagsak: IFagsak): RenderResult =>
     render(
         <VergeProvider behandling={behandling} fagsak={fagsak}>
             <VergeContainer />
@@ -43,7 +50,7 @@ const renderVergeContainer = (behandling: IBehandling, fagsak: IFagsak) =>
     );
 
 describe('Tester: VergeContainer', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
@@ -54,16 +61,16 @@ describe('Tester: VergeContainer', () => {
         lesevisning: boolean,
         autoutført: boolean,
         verge?: VergeDto
-    ) => {
+    ): void => {
         mockUseBehandlingApi.mockImplementation(() => ({
-            gjerVergeKall: () => {
+            gjerVergeKall: (): Promise<Ressurs<VergeDto>> => {
                 const ressurs = mock<Ressurs<VergeDto>>({
                     status: RessursStatus.Suksess,
                     data: verge,
                 });
                 return Promise.resolve(ressurs);
             },
-            sendInnVerge: () => {
+            sendInnVerge: (): Promise<Ressurs<string>> => {
                 const ressurs = mock<Ressurs<string>>({
                     status: RessursStatus.Suksess,
                     data: 'suksess',
@@ -72,10 +79,10 @@ describe('Tester: VergeContainer', () => {
             },
         }));
         mockUseBehandling.mockImplementation(() => ({
-            erStegBehandlet: () => behandlet,
-            erStegAutoutført: () => autoutført,
+            erStegBehandlet: (): boolean => behandlet,
+            erStegAutoutført: (): boolean => autoutført,
             behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: () => Promise.resolve(),
+            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
             settIkkePersistertKomponent: jest.fn(),
             nullstillIkkePersisterteKomponenter: jest.fn(),
         }));

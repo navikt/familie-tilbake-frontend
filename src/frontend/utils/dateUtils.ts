@@ -28,21 +28,21 @@ const tidformat: Intl.DateTimeFormatOptions = {
     minute: '2-digit',
 };
 
-const formatterDato = (dato: Date) => dato.toLocaleDateString('no-NO', datoformat);
+const formatterDato = (dato: Date): string => dato.toLocaleDateString('no-NO', datoformat);
 
-export const formatterDatoOgTid = (dato: Date) =>
+export const formatterDatoOgTid = (dato: Date): string =>
     `${dato.toLocaleDateString('no-NO', {
         day: '2-digit',
         month: '2-digit',
         year: '2-digit',
     })} ${dato.toLocaleTimeString('no-NO', tidformat)}`;
 
-export const formatterDatostring = (datoAsString: string) => {
+export const formatterDatostring = (datoAsString: string): string => {
     const dato = parseISO(datoAsString);
     return dato.toLocaleDateString('no-NO', datoformat);
 };
 
-export const formatterDatoOgTidstring = (datoAsString: string) => {
+export const formatterDatoOgTidstring = (datoAsString: string): string => {
     const dato = parseISO(datoAsString);
     return `${dato.toLocaleDateString('no-NO', {
         day: '2-digit',
@@ -51,7 +51,7 @@ export const formatterDatoOgTidstring = (datoAsString: string) => {
     })} ${dato.toLocaleTimeString('no-NO', tidformat)}`;
 };
 
-export const hentAlder = (fødselsdato: string) => {
+export const hentAlder = (fødselsdato: string): number => {
     const now = new Date();
     const dato = parseISO(fødselsdato);
     return differenceInCalendarYears(now, dato);
@@ -134,7 +134,7 @@ export const sorterFeilutbetaltePerioder = <T extends FeilutbetalingPeriode>(
 export const hentDatoRegistrertSendt = (
     relevanteDatoer: IJournalpostRelevantDato[],
     journalposttype: string
-) => {
+): Date => {
     let datoRegistrert = relevanteDatoer.find(dato => {
         if (journalposttype === 'I') {
             return dato.datotype === JournalpostDatotype.DatoRegistrert;
@@ -153,6 +153,6 @@ export const hentDatoRegistrertSendt = (
     return parseISO(datoRegistrert.dato);
 };
 
-export const formatterDatoDDMMYYYY = (dato: Date) => {
+export const formatterDatoDDMMYYYY = (dato: Date): string => {
     return format(new Date(dato), 'dd.MM.yyyy');
 };

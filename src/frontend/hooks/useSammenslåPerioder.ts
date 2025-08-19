@@ -3,7 +3,17 @@ import { useCallback, useState } from 'react';
 import { useHttp } from '../api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '../typer/ressurs';
 
-export const useSammenslåPerioder = (behandlingId: string) => {
+export type SammenslåttPeriodeHook = {
+    hentErPerioderLike: () => Promise<boolean>;
+    hentErPerioderSammenslått: () => Promise<boolean>;
+    sammenslåPerioder: () => Promise<string | false | undefined>;
+    angreSammenslåingAvPerioder: () => Promise<string | false | undefined>;
+    erPerioderLike: boolean;
+    feilmelding: string | undefined;
+    laster: boolean;
+};
+
+export const useSammenslåPerioder = (behandlingId: string): SammenslåttPeriodeHook => {
     const { request } = useHttp();
     const [erPerioderLike, settErPerioderLike] = useState<boolean>(false);
     const [feilmelding, settFeilmelding] = useState<string>();
@@ -24,7 +34,7 @@ export const useSammenslåPerioder = (behandlingId: string) => {
         }
     }, [behandlingId, request]);
 
-    const sammenslåPerioder = async () => {
+    const sammenslåPerioder = async (): Promise<string | false | undefined> => {
         settLaster(true);
         const response: Ressurs<string> = await request<void, string>({
             method: 'POST',
@@ -45,7 +55,7 @@ export const useSammenslåPerioder = (behandlingId: string) => {
         }
     };
 
-    const angreSammenslåingAvPerioder = async () => {
+    const angreSammenslåingAvPerioder = async (): Promise<string | false | undefined> => {
         settLaster(true);
         const response: Ressurs<string> = await request<void, string>({
             method: 'POST',

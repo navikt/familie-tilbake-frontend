@@ -26,7 +26,7 @@ import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 const utledValgtPeriode = (
     skjemaPerioder: ForeldelsePeriodeSkjemeData[],
     behandlingStatus: Behandlingstatus
-) => {
+): ForeldelsePeriodeSkjemeData | undefined => {
     const førsteUbehandletPeriode = skjemaPerioder.find(
         periode => !periode.foreldelsesvurderingstype
     );
@@ -47,6 +47,27 @@ interface IProps {
     behandling: IBehandling;
     fagsak: IFagsak;
 }
+
+export type FeilutbetalingForeldelseHook = {
+    feilutbetalingForeldelse: Ressurs<IFeilutbetalingForeldelse> | undefined;
+    erAutoutført: boolean | undefined;
+    stegErBehandlet: boolean;
+    skjemaData: ForeldelsePeriodeSkjemeData[];
+    oppdaterPeriode: (periode: ForeldelsePeriodeSkjemeData) => void;
+    valgtPeriode: ForeldelsePeriodeSkjemeData | undefined;
+    settValgtPeriode: (
+        valgtPeriode: ForeldelsePeriodeSkjemeData | undefined
+    ) => ForeldelsePeriodeSkjemeData | undefined;
+    allePerioderBehandlet: boolean;
+    gåTilNesteSteg: () => void;
+    gåTilForrigeSteg: () => void;
+    senderInn: boolean;
+    sendInnSkjema: () => void;
+    onSplitPeriode: (
+        periode: ForeldelsePeriodeSkjemeData,
+        nyePerioder: ForeldelsePeriodeSkjemeData[]
+    ) => void;
+};
 
 const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUseContext(
     ({ behandling, fagsak }: IProps) => {
@@ -136,15 +157,15 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
                 });
         };
 
-        const gåTilNesteSteg = () => {
+        const gåTilNesteSteg = (): void => {
             navigate(`${behandlingUrl}/${sider.VILKÅRSVURDERING.href}`);
         };
 
-        const gåTilForrigeSteg = () => {
+        const gåTilForrigeSteg = (): void => {
             navigate(`${behandlingUrl}/${sider.FAKTA.href}`);
         };
 
-        const oppdaterPeriode = (periode: ForeldelsePeriodeSkjemeData) => {
+        const oppdaterPeriode = (periode: ForeldelsePeriodeSkjemeData): void => {
             const perioder = skjemaData;
             const index = perioder.findIndex(bfp => bfp.index === periode.index);
             perioder.splice(index, 1, periode);
@@ -158,7 +179,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         const onSplitPeriode = (
             periode: ForeldelsePeriodeSkjemeData,
             nyePerioder: ForeldelsePeriodeSkjemeData[]
-        ) => {
+        ): void => {
             const perioder = skjemaData;
             const index = perioder.findIndex(bfp => bfp.index === periode.index);
             perioder.splice(index, 1, ...nyePerioder);
@@ -166,7 +187,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
             settValgtPeriode(nyePerioder[0]);
         };
 
-        const harEndretOpplysninger = () => {
+        const harEndretOpplysninger = (): boolean | undefined => {
             if (feilutbetalingForeldelse?.status === RessursStatus.Suksess) {
                 const hentetPerioder = feilutbetalingForeldelse.data.foreldetPerioder;
                 return skjemaData.some(skjemaPeriode => {
@@ -187,7 +208,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
             }
         };
 
-        const sendInnSkjema = () => {
+        const sendInnSkjema = (): void => {
             nullstillIkkePersisterteKomponenter();
             if (stegErBehandlet && !harEndretOpplysninger()) {
                 utførRedirect(`${behandlingUrl}/${sider.VILKÅRSVURDERING.href}`);

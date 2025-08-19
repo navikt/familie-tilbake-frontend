@@ -48,7 +48,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
                 });
         };
 
-        const navigerTilSide = (side: ISide) => {
+        const navigerTilSide = (side: ISide): void => {
             navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );

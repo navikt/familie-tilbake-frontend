@@ -18,6 +18,11 @@ export type FamilieRequest = <SkjemaData, SkjemaRespons>(
     config: FamilieRequestConfig<SkjemaData>
 ) => Promise<Ressurs<SkjemaRespons>>;
 
+export type Http = {
+    systemetLaster: () => boolean;
+    request: FamilieRequest;
+};
+
 interface IProps {
     fjernRessursSomLasterTimeout?: number;
     innloggetSaksbehandler?: ISaksbehandler;
@@ -31,7 +36,7 @@ export const [HttpProvider, useHttp] = constate(
     ({ innloggetSaksbehandler, settAutentisert, fjernRessursSomLasterTimeout = 300 }: IProps) => {
         const [ressurserSomLaster, settRessurserSomLaster] = React.useState<string[]>([]);
 
-        const fjernRessursSomLaster = (ressursId: string) => {
+        const fjernRessursSomLaster = (ressursId: string): void => {
             setTimeout(() => {
                 settRessurserSomLaster((prevState: string[]) => {
                     return prevState.filter((ressurs: string) => ressurs !== ressursId);
@@ -39,7 +44,7 @@ export const [HttpProvider, useHttp] = constate(
             }, fjernRessursSomLasterTimeout);
         };
 
-        const systemetLaster = () => {
+        const systemetLaster = (): boolean => {
             return ressurserSomLaster.length > 0;
         };
 

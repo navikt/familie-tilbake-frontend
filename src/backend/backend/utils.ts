@@ -2,7 +2,7 @@ import type { Request } from 'express';
 
 import { LogLevel, logDebug, logError, logInfo, logWarn } from '../logging/logging';
 
-const prefix = (req: Request) => {
+const prefix = (req: Request): string => {
     return `${
         req.session && req.session.user
             ? `${req.session.user.displayName} -`
@@ -10,7 +10,7 @@ const prefix = (req: Request) => {
     } ${req.method} - ${req.originalUrl}`;
 };
 
-export const logRequest = (req: Request, message: string, level: LogLevel) => {
+export const logRequest = (req: Request, message: string, level: LogLevel): void => {
     const melding = `${prefix(req)}: ${message}`;
     const callId = req.header('nav-call-id');
     const requestId = req.header('x-request-id');
@@ -43,6 +43,6 @@ export const hentErforbindelsenTilValkeyTilgjengelig = (): boolean => {
     return erForbindelsenTilValkeyTilgjengelig;
 };
 
-export const settErforbindelsenTilValkeyTilgjengelig = (verdi: boolean) => {
+export const settErforbindelsenTilValkeyTilgjengelig = (verdi: boolean): void => {
     erForbindelsenTilValkeyTilgjengelig = verdi;
 };

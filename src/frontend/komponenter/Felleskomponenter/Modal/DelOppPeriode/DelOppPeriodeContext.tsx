@@ -7,14 +7,33 @@ import { useHttp } from '../../../../api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
 
-export const useDelOppPeriode = (fom: string, behandlingId: string) => {
+interface DelOppPeriodeHook {
+    visModal: boolean;
+    settVisModal: (vis: boolean) => void;
+    splittDato: string;
+    settSplittDato: (dato: string) => void;
+    tidslinjeRader: TimelinePeriodProps[][] | undefined;
+    settTidslinjeRader: (rader: TimelinePeriodProps[][]) => void;
+    feilmelding: string;
+    vedDatoEndring: (splittPeriode: (månedsslutt: string) => void, nyVerdi?: string) => void;
+    sendInnSkjema: (
+        payload: Periode[],
+        behandleRespons: (response: IBeregnSplittetPeriodeRespons) => void
+    ) => void;
+    validateNyPeriode: (periode: Periode, månedsslutt: string) => boolean;
+}
+
+export const useDelOppPeriode = (fom: string, behandlingId: string): DelOppPeriodeHook => {
     const [visModal, settVisModal] = useState(false);
     const [splittDato, settSplittDato] = useState(fom);
     const [tidslinjeRader, settTidslinjeRader] = useState<TimelinePeriodProps[][]>();
     const [feilmelding, settFeilmelding] = useState('');
     const { request } = useHttp();
 
-    const vedDatoEndring = (splittPeriode: (månedsslutt: string) => void, nyVerdi?: string) => {
+    const vedDatoEndring = (
+        splittPeriode: (månedsslutt: string) => void,
+        nyVerdi?: string
+    ): void => {
         const feilmelding = validerDato(nyVerdi);
         if (feilmelding) {
             settFeilmelding(feilmelding);
@@ -31,7 +50,7 @@ export const useDelOppPeriode = (fom: string, behandlingId: string) => {
     const sendInnSkjema = (
         payload: Periode[],
         behandleRespons: (response: IBeregnSplittetPeriodeRespons) => void
-    ) => {
+    ): void => {
         request<Periode[], IBeregnSplittetPeriodeRespons>({
             method: 'POST',
             url: `/familie-tilbake/api/behandling/${behandlingId}/beregn/v1`,

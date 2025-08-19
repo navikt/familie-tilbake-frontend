@@ -1,3 +1,4 @@
+import type { ISkjema } from '../../../../hooks/skjema';
 import type {
     Aktsomhetsvurdering,
     GodTro,
@@ -45,77 +46,93 @@ export const finnJaNeiOption = (verdi?: boolean): JaNeiOption | undefined => {
     return jaNeiOptions.find(opt => opt.verdi === verdi);
 };
 
-const erVilkårsresultatOppfylt = (resultat: Vilkårsresultat, avhengigheter?: Avhengigheter) =>
+const erVilkårsresultatOppfylt = (
+    resultat: Vilkårsresultat,
+    avhengigheter?: Avhengigheter
+): boolean =>
     avhengigheter?.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter?.vilkårsresultatvurdering.verdi === resultat;
 
-const avhengigheterOppfyltGodTroFelter = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltGodTroFelter = (avhengigheter?: Avhengigheter): boolean =>
     erVilkårsresultatOppfylt(Vilkårsresultat.GodTro, avhengigheter);
 
-const avhengigheterOppfyltGodTroTilbakekrevesBeløp = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltGodTroTilbakekrevesBeløp = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheterOppfyltGodTroFelter(avhengigheter) &&
     avhengigheter?.erBeløpetIBehold.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter.erBeløpetIBehold.verdi === OptionJA;
 
-const avhengigheterOppfyltAktsomhetFelter = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltAktsomhetFelter = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter?.vilkårsresultatvurdering.verdi !== Vilkårsresultat.GodTro;
 
-const erAktsomhetsvurderingOppfylt = (aktsomhet: Aktsomhet, avhengigheter?: Avhengigheter) =>
+const erAktsomhetsvurderingOppfylt = (
+    aktsomhet: Aktsomhet,
+    avhengigheter?: Avhengigheter
+): boolean =>
     avhengigheterOppfyltAktsomhetFelter(avhengigheter) &&
     avhengigheter?.aktsomhetVurdering.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter?.aktsomhetVurdering.verdi === aktsomhet;
 
-const avhengigheterOppfyltForstoIlleggrenter = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltForstoIlleggrenter = (avhengigheter?: Avhengigheter): boolean =>
     erVilkårsresultatOppfylt(Vilkårsresultat.ForstoBurdeForstått, avhengigheter) &&
     erAktsomhetsvurderingOppfylt(Aktsomhet.Forsett, avhengigheter);
 
-const erBeløpUnder4RettsgebyrOppfylt = (avhengigheter?: Avhengigheter) =>
+const erBeløpUnder4RettsgebyrOppfylt = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.totalbeløpUnder4Rettsgebyr.verdi === true;
 
-const avhengigheterOppfyltTilbakekrevesBeløpUnder4Rettsgebyr = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltTilbakekrevesBeløpUnder4Rettsgebyr = (
+    avhengigheter?: Avhengigheter
+): boolean =>
     erAktsomhetsvurderingOppfylt(Aktsomhet.SimpelUaktsomhet, avhengigheter) &&
     erBeløpUnder4RettsgebyrOppfylt(avhengigheter);
 
-const erTilbakekrevBeløpUnder4Rettsgebyr = (avhengigheter?: Avhengigheter) =>
+const erTilbakekrevBeløpUnder4Rettsgebyr = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter?.tilbakekrevSmåbeløp.verdi === OptionJA;
 
-const avhengigheterOppfyltSærligeGrunnerFelter = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltSærligeGrunnerFelter = (avhengigheter?: Avhengigheter): boolean =>
     (erAktsomhetsvurderingOppfylt(Aktsomhet.SimpelUaktsomhet, avhengigheter) &&
         (!erBeløpUnder4RettsgebyrOppfylt(avhengigheter) ||
             erTilbakekrevBeløpUnder4Rettsgebyr(avhengigheter))) ||
     erAktsomhetsvurderingOppfylt(Aktsomhet.GrovUaktsomhet, avhengigheter);
 
-const avhengigheterOppfyltSærligGrunnAnnetBegrunnelse = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltSærligGrunnAnnetBegrunnelse = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheterOppfyltSærligeGrunnerFelter(avhengigheter) &&
     avhengigheter?.særligeGrunner.verdi.length > 0 &&
     avhengigheter?.særligeGrunner.verdi.includes(SærligeGrunner.Annet);
 
-const erHarGrunnerTilReduksjonOppfylt = (valg: JaNeiOption, avhengigheter?: Avhengigheter) =>
+const erHarGrunnerTilReduksjonOppfylt = (
+    valg: JaNeiOption,
+    avhengigheter?: Avhengigheter
+): boolean =>
     avhengigheter?.harGrunnerTilReduksjon.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter.harGrunnerTilReduksjon.verdi === valg;
 
-const avhengigheterOppfyltGrovtIlleggRenter = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltGrovtIlleggRenter = (avhengigheter?: Avhengigheter): boolean =>
     erAktsomhetsvurderingOppfylt(Aktsomhet.GrovUaktsomhet, avhengigheter) &&
     erHarGrunnerTilReduksjonOppfylt(OptionNEI, avhengigheter);
 
-const avhengigheterOppfyltGrunnerTilReduksjonFelter = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltGrunnerTilReduksjonFelter = (avhengigheter?: Avhengigheter): boolean =>
     (erAktsomhetsvurderingOppfylt(Aktsomhet.SimpelUaktsomhet, avhengigheter) ||
         erAktsomhetsvurderingOppfylt(Aktsomhet.GrovUaktsomhet, avhengigheter)) &&
     erHarGrunnerTilReduksjonOppfylt(OptionJA, avhengigheter);
 
-const avhengigheterOppfyltIkkeMerEnnAktivitetFelter = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltIkkeMerEnnAktivitetFelter = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheterOppfyltGrunnerTilReduksjonFelter(avhengigheter) &&
     avhengigheter?.harMerEnnEnAktivitet.verdi === false;
 
-const avhengigheterOppfyltMerEnnAktivitetFelter = (avhengigheter?: Avhengigheter) =>
+const avhengigheterOppfyltMerEnnAktivitetFelter = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheterOppfyltGrunnerTilReduksjonFelter(avhengigheter) &&
     avhengigheter?.harMerEnnEnAktivitet.verdi === true;
 
+type VilkårsvurderingPeriodeSkjemaContext = {
+    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+    validerOgOppdaterFelter: (periode: VilkårsvurderingPeriodeSkjemaData) => boolean;
+};
+
 const useVilkårsvurderingPeriodeSkjema = (
     oppdaterPeriode: (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => void
-) => {
+): VilkårsvurderingPeriodeSkjemaContext => {
     const feilutbetaltBeløpPeriode = useFelt<number>({
         feltId: 'feilutbetaltBeløpPeriode',
         verdi: 0,
@@ -439,7 +456,7 @@ const useVilkårsvurderingPeriodeSkjema = (
         };
     };
 
-    const validerOgOppdaterFelter = (periode: VilkårsvurderingPeriodeSkjemaData) => {
+    const validerOgOppdaterFelter = (periode: VilkårsvurderingPeriodeSkjemaData): boolean => {
         if (!kanSendeSkjema()) {
             return false;
         }

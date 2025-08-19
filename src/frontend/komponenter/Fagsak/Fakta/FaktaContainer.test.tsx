@@ -1,6 +1,12 @@
+import type { BehandlingApiHook } from '../../../api/behandling';
+import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { TogglesHook } from '../../../context/TogglesContext';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type { FaktaPeriode, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
+import type { RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -16,27 +22,31 @@ import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: () => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const mockUseToggles = jest.fn();
 jest.mock('../../../context/TogglesContext', () => ({
-    useToggles: () => mockUseToggles(),
+    useToggles: (): TogglesHook => mockUseToggles(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: () => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: () => jest.fn(),
+    useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
 const mockedSettIkkePersistertKomponent = jest.fn();
 
-const renderFaktaContainer = (behandling: IBehandling, ytelse: Ytelsetype, fagsak: IFagsak) => {
+const renderFaktaContainer = (
+    behandling: IBehandling,
+    ytelse: Ytelsetype,
+    fagsak: IFagsak
+): RenderResult => {
     return render(
         <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
             <FaktaContainer ytelse={ytelse} />
@@ -45,7 +55,7 @@ const renderFaktaContainer = (behandling: IBehandling, ytelse: Ytelsetype, fagsa
 };
 
 describe('Tester: FaktaContainer', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();
@@ -107,16 +117,20 @@ describe('Tester: FaktaContainer', () => {
         eksternFagsakId: '1',
     });
 
-    const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: IFeilutbetalingFakta) => {
+    const setupMock = (
+        behandlet: boolean,
+        lesemodus: boolean,
+        fakta: IFeilutbetalingFakta
+    ): void => {
         mockUseBehandlingApi.mockImplementation(() => ({
-            gjerFeilutbetalingFaktaKall: () => {
+            gjerFeilutbetalingFaktaKall: (): Promise<Ressurs<IFeilutbetalingFakta>> => {
                 const ressurs = mock<Ressurs<IFeilutbetalingFakta>>({
                     status: RessursStatus.Suksess,
                     data: fakta,
                 });
                 return Promise.resolve(ressurs);
             },
-            sendInnFeilutbetalingFakta: () => {
+            sendInnFeilutbetalingFakta: (): Promise<Ressurs<string>> => {
                 const ressurs = mock<Ressurs<string>>({
                     status: RessursStatus.Suksess,
                     data: 'suksess',
@@ -125,10 +139,10 @@ describe('Tester: FaktaContainer', () => {
             },
         }));
         mockUseBehandling.mockImplementation(() => ({
-            erStegBehandlet: () => behandlet,
+            erStegBehandlet: (): boolean => behandlet,
             visVenteModal: false,
             behandlingILesemodus: lesemodus,
-            hentBehandlingMedBehandlingId: () => Promise.resolve(),
+            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
             settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
             nullstillIkkePersisterteKomponenter: jest.fn(),
         }));

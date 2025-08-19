@@ -21,7 +21,7 @@ const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
         // console.log('bør no trigge re-rendring');
     }, [nonUsedKey]);
 
-    const onChanngeSærligeGrunner2 = (val: SærligeGrunner[]) => {
+    const onChanngeSærligeGrunner2 = (val: SærligeGrunner[]): void => {
         skjema.felter.særligeGrunner.validerOgSettFelt(val);
         if (val.indexOf(SærligeGrunner.Annet) > -1) {
             skjema.felter.særligeGrunnerAnnetBegrunnelse.nullstill();

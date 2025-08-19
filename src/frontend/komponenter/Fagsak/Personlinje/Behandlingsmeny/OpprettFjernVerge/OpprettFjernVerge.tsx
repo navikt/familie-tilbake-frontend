@@ -33,7 +33,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
     const kanFjerneVerge =
         behandling.harVerge || aktivtSteg?.behandlingssteg === Behandlingssteg.Verge;
 
-    const opprettVerge = () => {
+    const opprettVerge = (): void => {
         nullstillIkkePersisterteKomponenter();
         request<void, string>({
             method: 'POST',
@@ -57,7 +57,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
         });
     };
 
-    const fjernVerge = () => {
+    const fjernVerge = (): void => {
         nullstillIkkePersisterteKomponenter();
         request<void, string>({
             method: 'PUT',
@@ -81,7 +81,7 @@ const OpprettFjernVerge: React.FC<IProps> = ({ behandling, fagsak, onListElement
         });
     };
 
-    const opprettEllerFjern = () => {
+    const opprettEllerFjern = (): void => {
         settSenderInn(true);
         if (kanFjerneVerge) {
             fjernVerge();

@@ -12,7 +12,7 @@ const Image: React.FC<IProps> = ({
     src,
     srcHover,
     altText,
-    onClick = () => undefined,
+    onClick = (): undefined => undefined,
     onKeyDown,
 }) => {
     const [isHovering, setHoovering] = React.useState(false);

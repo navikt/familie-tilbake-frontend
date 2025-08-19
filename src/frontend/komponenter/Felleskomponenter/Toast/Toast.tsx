@@ -42,7 +42,7 @@ const Toast: React.FC<{ toastId: string; toast: IToast }> = ({ toastId, toast })
             },
             Math.max(...[toast.tekst.length * 50, 7000])
         );
-        return () => clearTimeout(timer);
+        return (): void => clearTimeout(timer);
     });
 
     return (

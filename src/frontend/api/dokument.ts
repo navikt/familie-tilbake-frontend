@@ -8,7 +8,20 @@ import type { Ressurs } from '../typer/ressurs';
 
 import { useHttp } from './http/HttpProvider';
 
-const useDokumentApi = () => {
+export type DokumentApiHook = {
+    bestillBrev: (payload: BrevPayload) => Promise<Ressurs<void>>;
+    forhåndsvisBrev: (payload: BrevPayload) => Promise<Ressurs<string>>;
+    forhåndsvisVedtaksbrev: (payload: ForhåndsvisVedtaksbrev) => Promise<Ressurs<string>>;
+    forhåndsvisHenleggelsesbrev: (
+        payload: ForhåndsvisHenleggelsesbrevPayload
+    ) => Promise<Ressurs<string>>;
+    lagreUtkastVedtaksbrev: (
+        behandlingId: string,
+        payload: Fritekstavsnitt
+    ) => Promise<Ressurs<string>>;
+};
+
+const useDokumentApi = (): DokumentApiHook => {
     const dokumentApiPrefix = '/familie-tilbake/api/dokument';
     const { request } = useHttp();
 

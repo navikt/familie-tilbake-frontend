@@ -1,3 +1,6 @@
+import type { SettBehandlingTilbakeTilFaktaHook } from './useSettBehandlingTilbakeTilFakta';
+import type { BehandlingHook } from '../../../../../context/BehandlingContext';
+import type { RedirectEtterLagringHook } from '../../../../../hooks/useRedirectEtterLagring';
 import type { IBehandling } from '../../../../../typer/behandling';
 import type { IFagsak } from '../../../../../typer/fagsak';
 import type { IPerson } from '../../../../../typer/person';
@@ -18,17 +21,18 @@ import { Kjønn } from '../../../../../typer/person';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../../context/BehandlingContext', () => ({
-    useBehandling: () => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const mockUseRedirectEtterLagring = jest.fn();
 jest.mock('../../../../../hooks/useRedirectEtterLagring', () => ({
-    useRedirectEtterLagring: () => mockUseRedirectEtterLagring(),
+    useRedirectEtterLagring: (): RedirectEtterLagringHook => mockUseRedirectEtterLagring(),
 }));
 
 const mockUseSettBehandlingTilbakeTilFakta = jest.fn();
 jest.mock('./useSettBehandlingTilbakeTilFakta', () => ({
-    useSettBehandlingTilbakeTilFakta: () => mockUseSettBehandlingTilbakeTilFakta(),
+    useSettBehandlingTilbakeTilFakta: (): SettBehandlingTilbakeTilFaktaHook =>
+        mockUseSettBehandlingTilbakeTilFakta(),
 }));
 
 const mockBehandling: IBehandling = {

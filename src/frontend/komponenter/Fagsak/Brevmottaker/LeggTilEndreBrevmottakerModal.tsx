@@ -36,11 +36,11 @@ const MottakerSelect = styled(Select)`
     max-width: 19rem;
 `;
 
-const erMottakerBruker = (mottakerType: MottakerType | '') =>
+const erMottakerBruker = (mottakerType: MottakerType | ''): boolean =>
     mottakerType === MottakerType.BrukerMedUtenlandskAdresse ||
     mottakerType === MottakerType.Dødsbo;
 
-const preutfyltNavnFixed = (mottaker: MottakerType | '', land: string, navn: string) => {
+const preutfyltNavnFixed = (mottaker: MottakerType | '', land: string, navn: string): string => {
     if (mottaker === MottakerType.Dødsbo) {
         return !land || land === 'NO' ? `${navn} v/dødsbo` : `Estate of ${navn}`;
     }
@@ -67,14 +67,14 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         ? preutfyltNavnFixed(mottaker.verdi, land.verdi, bruker.navn)
         : undefined;
 
-    const lukkModal = () => {
+    const lukkModal = (): void => {
         settVisBrevmottakerModal(false);
         settAdresseKilde(AdresseKilde.Udefinert);
         settBrevmottakerIdTilEndring(undefined);
         nullstillSkjema();
     };
 
-    const nullstillManuellAdresseInput = (inkludertNavn?: boolean) => {
+    const nullstillManuellAdresseInput = (inkludertNavn?: boolean): void => {
         inkludertNavn && skjema.felter.navn.nullstill();
         skjema.felter.adresselinje1.nullstill();
         skjema.felter.adresselinje2.nullstill();
@@ -84,7 +84,7 @@ export const LeggTilEndreBrevmottakerModal: React.FC = () => {
         settVisfeilmeldinger(false);
     };
 
-    const skalNullstilleAdresseInputVedNyMottakerType = (nyMottakerType: MottakerType) =>
+    const skalNullstilleAdresseInputVedNyMottakerType = (nyMottakerType: MottakerType): boolean =>
         erMottakerBruker(nyMottakerType) !== erMottakerBruker(skjema.felter.mottaker.verdi) ||
         adresseKilde === AdresseKilde.OppslagOrganisasjonsregister;
 

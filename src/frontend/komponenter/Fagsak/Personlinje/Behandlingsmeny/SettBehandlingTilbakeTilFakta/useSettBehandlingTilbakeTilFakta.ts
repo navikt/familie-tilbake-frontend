@@ -1,6 +1,7 @@
 import type { FamilieRequest } from '../../../../../api/http/HttpProvider';
 import type { Toggles } from '../../../../../context/toggles';
 import type { Ressurs } from '../../../../../typer/ressurs';
+import type { UseMutationResult } from '@tanstack/react-query';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -28,7 +29,14 @@ const settBehandlingTilbakeTilFakta = async (
     });
 };
 
-export const useSettBehandlingTilbakeTilFakta = () => {
+export type SettBehandlingTilbakeTilFaktaHook = UseMutationResult<
+    Ressurs<string>,
+    Feil,
+    string,
+    unknown
+>;
+
+export const useSettBehandlingTilbakeTilFakta = (): SettBehandlingTilbakeTilFaktaHook => {
     const { request } = useHttp();
     const { toggles } = useToggles();
     const queryClient = useQueryClient();

@@ -16,21 +16,31 @@ import {
 } from '../../../../../../typer/ressurs';
 import { base64ToArrayBuffer } from '../../../../../../utils';
 
+type ForhåndsvisHenleggelsesbrevHook = {
+    visModal: boolean;
+    settVisModal: React.Dispatch<React.SetStateAction<boolean>>;
+    hentetForhåndsvisning: Ressurs<string>;
+    hentBrev: (behandling: IBehandling) => void;
+    nullstillHentetForhåndsvisning: () => void;
+};
+
 interface IProps {
     skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;
 }
 
-export const useForhåndsvisHenleggelsesbrev = ({ skjema }: IProps) => {
+export const useForhåndsvisHenleggelsesbrev = ({
+    skjema,
+}: IProps): ForhåndsvisHenleggelsesbrevHook => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
         React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { forhåndsvisHenleggelsesbrev } = useDokumentApi();
 
-    const nullstillHentetForhåndsvisning = () => {
+    const nullstillHentetForhåndsvisning = (): void => {
         settHentetForhåndsvisning(byggTomRessurs);
     };
 
-    const hentBrev = (behandling: IBehandling) => {
+    const hentBrev = (behandling: IBehandling): void => {
         settHentetForhåndsvisning(byggHenterRessurs());
 
         forhåndsvisHenleggelsesbrev({

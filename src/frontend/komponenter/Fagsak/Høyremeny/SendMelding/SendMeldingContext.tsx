@@ -43,7 +43,7 @@ type SendMeldingSkjemaDefinisjon = {
     fritekst: string | '';
 };
 
-const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter) =>
+const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.maltype.valideringsstatus === Valideringsstatus.Ok;
 
 interface IProps {
@@ -102,7 +102,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fa
         };
     };
 
-    const sendBrev = () => {
+    const sendBrev = (): void => {
         validerAlleSynligeFelter();
         if (kanSendeSkjema()) {
             settSenderInn(true);

@@ -30,7 +30,7 @@ export const useSkjema = <Felter, SkjemaRespons>({
     const [visFeilmeldinger, settVisfeilmeldinger] = useState(false);
     const [submitRessurs, settSubmitRessurs] = useState(byggTomRessurs<SkjemaRespons>());
 
-    const alleSynligeFelter = () => {
+    const alleSynligeFelter = (): unknown[] => {
         return Object.values(felter).filter(felt => (felt as Felt<unknown>).erSynlig);
     };
 
@@ -57,7 +57,7 @@ export const useSkjema = <Felter, SkjemaRespons>({
         ];
     };
 
-    const valideringErOk = () => {
+    const valideringErOk = (): boolean => {
         return (
             alleSynligeFelter().filter(felt => {
                 const unknownFelt = felt as Felt<unknown>;
@@ -78,7 +78,7 @@ export const useSkjema = <Felter, SkjemaRespons>({
         );
     };
 
-    const nullstillSkjema = () => {
+    const nullstillSkjema = (): void => {
         alleSynligeFelter().forEach((felt: unknown) => (felt as Felt<unknown>).nullstill());
         settVisfeilmeldinger(false);
     };
@@ -87,7 +87,7 @@ export const useSkjema = <Felter, SkjemaRespons>({
         familieAxiosRequestConfig: FamilieRequestConfig<SkjemaData>,
         onSuccess: (ressurs: Ressurs<SkjemaRespons>) => void,
         onError?: (ressurs: Ressurs<SkjemaRespons>) => void
-    ) => {
+    ): void => {
         if (kanSendeSkjema()) {
             settSubmitRessurs(byggHenterRessurs());
 

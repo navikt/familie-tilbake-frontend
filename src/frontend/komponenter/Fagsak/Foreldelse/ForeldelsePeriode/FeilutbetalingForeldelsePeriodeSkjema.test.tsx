@@ -1,5 +1,10 @@
+import type { Http } from '../../../../api/http/HttpProvider';
+import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { IBehandling } from '../../../../typer/behandling';
+import type { FeilutbetalingForeldelseHook } from '../FeilutbetalingForeldelseContext';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+import type { RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -11,26 +16,25 @@ import { Foreldelsevurdering } from '../../../../kodeverk';
 
 jest.mock('../../../../api/http/HttpProvider', () => {
     return {
-        useHttp: () => ({
-            request: () => jest.fn(),
+        useHttp: (): Http => ({
+            systemetLaster: () => false,
+            request: jest.fn(),
         }),
     };
 });
 jest.mock('../FeilutbetalingForeldelseContext', () => {
     return {
-        useFeilutbetalingForeldelse: () => ({
+        useFeilutbetalingForeldelse: (): Partial<FeilutbetalingForeldelseHook> => ({
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),
-            lukkValgtPeriode: jest.fn(),
         }),
     };
 });
 
 jest.mock('../../../../context/BehandlingContext', () => {
     return {
-        useBehandling: () => ({
+        useBehandling: (): Partial<BehandlingHook> => ({
             settIkkePersistertKomponent: jest.fn(),
-            nullstillIkkePersistertKomponent: jest.fn(),
         }),
     };
 });
@@ -47,7 +51,7 @@ const periode: ForeldelsePeriodeSkjemeData = {
 const renderFeilutbetalingForeldelsePeriodeSkjema = (
     behandling: IBehandling,
     periode: ForeldelsePeriodeSkjemeData
-) =>
+): RenderResult =>
     render(
         <FeilutbetalingForeldelsePeriodeSkjema
             behandling={behandling}
@@ -57,7 +61,7 @@ const renderFeilutbetalingForeldelsePeriodeSkjema = (
     );
 
 describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
-    let user: ReturnType<typeof userEvent.setup>;
+    let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();

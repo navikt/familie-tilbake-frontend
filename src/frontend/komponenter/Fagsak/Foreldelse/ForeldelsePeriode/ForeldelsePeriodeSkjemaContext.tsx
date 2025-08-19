@@ -1,18 +1,12 @@
+import type { Avhengigheter, FeltState, ISkjema } from '../../../../hooks/skjema';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 
-import {
-    type Avhengigheter,
-    type FeltState,
-    ok,
-    useFelt,
-    useSkjema,
-    Valideringsstatus,
-} from '../../../../hooks/skjema';
+import { ok, useFelt, useSkjema, Valideringsstatus } from '../../../../hooks/skjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { erFeltetEmpty, validerGyldigDato, validerTekstFeltMaksLengde } from '../../../../utils';
 import { dateTilIsoDatoStringEllerUndefined } from '../../../../utils/dato';
 
-const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter) => {
+const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter): boolean => {
     return (
         avhengigheter?.foreldelsesvurderingstype.valideringsstatus === Valideringsstatus.Ok &&
         (avhengigheter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Foreldet ||
@@ -20,16 +14,29 @@ const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter) => 
     );
 };
 
-const avhengigheterOppfyltOppdagelsesdato = (avhengigheter?: Avhengigheter) => {
+const avhengigheterOppfyltOppdagelsesdato = (avhengigheter?: Avhengigheter): boolean => {
     return (
         avhengigheter?.foreldelsesvurderingstype.valideringsstatus === Valideringsstatus.Ok &&
         avhengigheter?.foreldelsesvurderingstype?.verdi === Foreldelsevurdering.Tilleggsfrist
     );
 };
 
+type ForeldelsesPeriodeSkjemaHook = {
+    skjema: ISkjema<
+        {
+            begrunnelse: string | '';
+            foreldelsesvurderingstype: Foreldelsevurdering | '';
+            foreldelsesfrist: Date | undefined;
+            oppdagelsesdato: Date | undefined;
+        },
+        string
+    >;
+    onBekreft: (periode: ForeldelsePeriodeSkjemeData) => void;
+};
+
 const useForeldelsePeriodeSkjema = (
     oppdaterPeriode: (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => void
-) => {
+): ForeldelsesPeriodeSkjemaHook => {
     const foreldelsesvurderingstype = useFelt<Foreldelsevurdering | ''>({
         verdi: '',
         valideringsfunksjon: (felt: FeltState<Foreldelsevurdering | ''>) => {
@@ -77,7 +84,7 @@ const useForeldelsePeriodeSkjema = (
         skjemanavn: 'foreldelseperiodeskjema',
     });
 
-    const onBekreft = (periode: ForeldelsePeriodeSkjemeData) => {
+    const onBekreft = (periode: ForeldelsePeriodeSkjemeData): void => {
         validerAlleSynligeFelter();
         if (kanSendeSkjema()) {
             oppdaterPeriode({

@@ -32,7 +32,7 @@ const [FagsakProvider, useFagsak] = createUseContext(() => {
             });
     };
 
-    const lagSaksoversiktUrl = () => {
+    const lagSaksoversiktUrl = (): string => {
         return fagsak?.status === RessursStatus.Suksess
             ? `/redirect/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/saksoversikt`
             : '#';

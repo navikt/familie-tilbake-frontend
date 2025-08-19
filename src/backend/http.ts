@@ -8,7 +8,7 @@ export const retry = async <T, D>(
     req: Request,
     action: string,
     callback: () => Promise<AxiosResponse<T, D>>
-) => {
+): Promise<AxiosResponse<T, D>> => {
     try {
         return callback();
     } catch (e) {

@@ -28,7 +28,7 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
     const [visModal, setVisModal] = useState(false);
     const mutation = useSettBehandlingTilbakeTilFakta();
 
-    const handleResettBehandling = () => {
+    const handleResettBehandling = (): void => {
         nullstillIkkePersisterteKomponenter();
         mutation.mutate(behandling.behandlingId, {
             onSuccess: ressurs => {

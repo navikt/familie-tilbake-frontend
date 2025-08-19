@@ -1,21 +1,15 @@
+import type { Avhengigheter, FeltState, ISkjema } from '../../../../../../hooks/skjema';
 import type { HenleggBehandlingPaylod } from '../../../../../../typer/api';
 import type { IBehandling } from '../../../../../../typer/behandling';
 
 import { useBehandlingApi } from '../../../../../../api/behandling';
 import { useBehandling } from '../../../../../../context/BehandlingContext';
-import {
-    type Avhengigheter,
-    type FeltState,
-    ok,
-    useFelt,
-    useSkjema,
-    Valideringsstatus,
-} from '../../../../../../hooks/skjema';
+import { ok, useFelt, useSkjema, Valideringsstatus } from '../../../../../../hooks/skjema';
 import { Behandlingresultat, Behandlingstype } from '../../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../../typer/ressurs';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../../utils';
 
-const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter) =>
+const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.behandlingstype.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter?.behandlingstype.verdi === Behandlingstype.RevurderingTilbakekreving &&
     avhengigheter?.årsakkode.valideringsstatus === Valideringsstatus.Ok &&
@@ -33,7 +27,18 @@ interface IProps {
     settVisModal: (vis: boolean) => void;
 }
 
-export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps) => {
+type HenleggBehandlingSkjemaHook = {
+    skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;
+    erVisFritekst: () => boolean;
+    onBekreft: () => void;
+    nullstillSkjema: () => void;
+    erKanForhåndsvise: () => boolean;
+};
+
+export const useHenleggBehandlingSkjema = ({
+    behandling,
+    settVisModal,
+}: IProps): HenleggBehandlingSkjemaHook => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
     const { henleggBehandling } = useBehandlingApi();
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
@@ -76,7 +81,7 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
         skjemanavn: 'henleggBehandling',
     });
 
-    const onBekreft = () => {
+    const onBekreft = (): void => {
         validerAlleSynligeFelter();
         if (kanSendeSkjema()) {
             nullstillIkkePersisterteKomponenter();
@@ -97,14 +102,15 @@ export const useHenleggBehandlingSkjema = ({ behandling, settVisModal }: IProps)
         }
     };
 
-    const erÅrsakValgt = () => skjema.felter.årsakkode.valideringsstatus === Valideringsstatus.Ok;
+    const erÅrsakValgt = (): boolean =>
+        skjema.felter.årsakkode.valideringsstatus === Valideringsstatus.Ok;
 
-    const erVisFritekst = () =>
+    const erVisFritekst = (): boolean =>
         erÅrsakValgt() &&
         skjema.felter.behandlingstype.verdi === Behandlingstype.RevurderingTilbakekreving &&
         skjema.felter.årsakkode.verdi === Behandlingresultat.HenlagtFeilopprettetMedBrev;
 
-    const erKanForhåndsvise = () => {
+    const erKanForhåndsvise = (): boolean => {
         switch (skjema.felter.behandlingstype.verdi) {
             case Behandlingstype.RevurderingTilbakekreving:
                 return (
