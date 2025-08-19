@@ -1461,4 +1461,35 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByTestId('harGrunnerTilReduksjon_Ja')).toBeChecked();
         expect(getByTestId('andelSomTilbakekrevesManuell')).toHaveValue('33');
     });
+
+    test('- validering vises når man forsøker å gå videre uten å fylle inn påkrevde felter', async () => {
+        const { getByRole, queryAllByText } = render(
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    erLesevisning={false}
+                    perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
+                />
+            </BehandlingProvider>
+        );
+
+        // Sjekk at det ikke er noen feilmeldinger fra start
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+
+        // Klikk på "Gå videre til vedtak" uten å fylle inn noen felter
+        await user.click(
+            getByRole('button', {
+                name: 'Gå videre til vedtak',
+            })
+        );
+
+        // Sjekk at validering vises - skal være feil på vilkårsbegrunnelse og vilkårsresultat
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+    });
 });
