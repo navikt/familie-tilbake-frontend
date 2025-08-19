@@ -39,7 +39,7 @@ export interface ForeldelseStegPayload {
 export interface PeriodeVilkårsvurderingStegPayload {
     periode: Periode;
     vilkårsvurderingsresultat: Vilkårsresultat;
-    begrunnelse: string;
+    begrunnelse: string | null;
     godTroDto: GodTro | undefined;
     aktsomhetDto: Aktsomhetsvurdering | undefined;
 }

@@ -261,9 +261,10 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             const payload: VilkårdsvurderingStegPayload = {
                 '@type': 'VILKÅRSVURDERING',
                 vilkårsvurderingsperioder: ikkeForeldetPerioder
-                    .filter(periode => !!periode.begrunnelse)
+                    //Hvis det er splittet periode skal den uvurderte perioden også sendes inn
+                    .filter(periode => periode.erSplittet || !!periode.begrunnelse)
                     .map(periode => {
-                        if (!periode.begrunnelse)
+                        if (!periode.erSplittet && !periode.begrunnelse)
                             throw new Feil(
                                 `Periode ${periode.periode.fom} til ${periode.periode.tom} må ha en begrunnelse.`,
                                 400
@@ -271,7 +272,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
                         const resultat = periode.vilkårsvurderingsresultatInfo;
                         return {
                             periode: periode.periode,
-                            begrunnelse: periode.begrunnelse,
+                            begrunnelse: periode.begrunnelse ?? null,
                             vilkårsvurderingsresultat:
                                 resultat?.vilkårsvurderingsresultat ?? Vilkårsresultat.Udefinert,
                             godTroDto: resultat?.godTro,
