@@ -259,8 +259,15 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
     const handleNavigering = async (handling: PeriodeHandling): Promise<void> => {
         let handlingResult: PeriodeHandling | undefined;
 
+        // Alltid valider når man går til vedtak, eller når det er ulagrede data
+        const skalValidere = handling === PeriodeHandling.GåTilNesteSteg || harUlagredeData;
+
+        if (skalValidere && !validerOgOppdaterFelter(periode)) {
+            return;
+        }
+
+        // Lagre data hvis det er ulagrede endringer
         if (harUlagredeData) {
-            if (!validerOgOppdaterFelter(periode)) return;
             handlingResult = await sendInnSkjemaOgNaviger(handling);
         }
 
