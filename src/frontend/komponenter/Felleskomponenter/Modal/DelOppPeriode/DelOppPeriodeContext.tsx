@@ -7,7 +7,7 @@ import { useHttp } from '../../../../api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
 
-interface Props {
+interface DelOppPeriodeHook {
     visModal: boolean;
     settVisModal: (vis: boolean) => void;
     splittDato: string;
@@ -23,7 +23,7 @@ interface Props {
     validateNyPeriode: (periode: Periode, månedsslutt: string) => boolean;
 }
 
-export const useDelOppPeriode = (fom: string, behandlingId: string): Props => {
+export const useDelOppPeriode = (fom: string, behandlingId: string): DelOppPeriodeHook => {
     const [visModal, settVisModal] = useState(false);
     const [splittDato, settSplittDato] = useState(fom);
     const [tidslinjeRader, settTidslinjeRader] = useState<TimelinePeriodProps[][]>();

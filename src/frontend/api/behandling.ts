@@ -20,7 +20,7 @@ import type { IBeregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyp
 
 import { useHttp } from './http/HttpProvider';
 
-export interface BehandlingApi {
+export type BehandlingApiHook = {
     gjerFeilutbetalingFaktaKall: (behandlingId: string) => Promise<Ressurs<IFeilutbetalingFakta>>;
     gjerFeilutbetalingInaktiveFaktaKall: (
         behandlingId: string
@@ -71,9 +71,9 @@ export interface BehandlingApi {
     gjerFeilutbetalingInaktiveVilkårsvurderingerKall: (
         behandlingId: string
     ) => Promise<Ressurs<IFeilutbetalingVilkårsvurdering[]>>;
-}
+};
 
-const useBehandlingApi = (): BehandlingApi => {
+const useBehandlingApi = (): BehandlingApiHook => {
     const behandlingerApiPrefix = '/familie-tilbake/api/behandling';
     const { request } = useHttp();
 

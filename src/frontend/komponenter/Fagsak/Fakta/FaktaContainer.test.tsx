@@ -1,6 +1,6 @@
-import type { BehandlingApi } from '../../../api/behandling';
+import type { BehandlingApiHook } from '../../../api/behandling';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { TogglesContext } from '../../../context/TogglesContext';
+import type { TogglesHook } from '../../../context/TogglesContext';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type { FaktaPeriode, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
@@ -27,12 +27,12 @@ jest.mock('../../../context/BehandlingContext', () => ({
 
 const mockUseToggles = jest.fn();
 jest.mock('../../../context/TogglesContext', () => ({
-    useToggles: (): TogglesContext => mockUseToggles(),
+    useToggles: (): TogglesHook => mockUseToggles(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: (): BehandlingApi => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({

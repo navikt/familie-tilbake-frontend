@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { useHttp } from '../api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '../typer/ressurs';
 
-export type SammenslåttPeriodeContext = {
+export type SammenslåttPeriodeHook = {
     hentErPerioderLike: () => Promise<boolean>;
     hentErPerioderSammenslått: () => Promise<boolean>;
     sammenslåPerioder: () => Promise<string | false | undefined>;
@@ -13,7 +13,7 @@ export type SammenslåttPeriodeContext = {
     laster: boolean;
 };
 
-export const useSammenslåPerioder = (behandlingId: string): SammenslåttPeriodeContext => {
+export const useSammenslåPerioder = (behandlingId: string): SammenslåttPeriodeHook => {
     const { request } = useHttp();
     const [erPerioderLike, settErPerioderLike] = useState<boolean>(false);
     const [feilmelding, settFeilmelding] = useState<string>();

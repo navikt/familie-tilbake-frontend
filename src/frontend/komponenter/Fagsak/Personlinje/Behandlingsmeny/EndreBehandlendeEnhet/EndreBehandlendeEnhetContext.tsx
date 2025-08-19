@@ -5,7 +5,7 @@ import { useFelt, useSkjema } from '../../../../../hooks/skjema';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../utils';
 
-type EndreBehandlendeEnhetContext = {
+type EndreBehandlendeEnhetHook = {
     skjema: ISkjema<
         {
             enhet: string | '';
@@ -20,7 +20,7 @@ type EndreBehandlendeEnhetContext = {
 const useEndreBehandlendeEnhet = (
     behandlingId: string,
     lukkModal: (vis: boolean) => void
-): EndreBehandlendeEnhetContext => {
+): EndreBehandlendeEnhetHook => {
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
 
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<

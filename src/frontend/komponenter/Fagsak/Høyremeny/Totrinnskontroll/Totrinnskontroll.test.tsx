@@ -1,4 +1,4 @@
-import type { BehandlingApi } from '../../../../api/behandling';
+import type { BehandlingApiHook } from '../../../../api/behandling';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
@@ -25,7 +25,7 @@ jest.mock('../../../../context/BehandlingContext', () => ({
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../../api/behandling', () => ({
-    useBehandlingApi: (): BehandlingApi => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({

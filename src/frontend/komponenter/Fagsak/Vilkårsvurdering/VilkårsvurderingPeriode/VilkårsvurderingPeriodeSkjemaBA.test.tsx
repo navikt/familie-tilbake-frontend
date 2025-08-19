@@ -2,7 +2,7 @@ import type { Http } from '../../../../api/http/HttpProvider';
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
-import type { VilkårsvurderingContext } from '../VilkårsvurderingContext';
+import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -33,7 +33,7 @@ jest.mock('../../../../api/http/HttpProvider', () => {
 });
 jest.mock('../VilkårsvurderingContext', () => {
     return {
-        useVilkårsvurdering: (): Partial<VilkårsvurderingContext> => ({
+        useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({
             kanIlleggeRenter: false,
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),

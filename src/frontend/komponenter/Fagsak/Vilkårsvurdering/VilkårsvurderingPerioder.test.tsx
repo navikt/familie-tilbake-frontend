@@ -1,4 +1,4 @@
-import type { BehandlingApi } from '../../../api/behandling';
+import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
@@ -10,6 +10,7 @@ import type { Ressurs } from '../../../typer/ressurs';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -29,12 +30,12 @@ jest.mock('../../../api/http/HttpProvider', () => ({
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: (): BehandlingApi => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useNavigate: (): jest.Mock => jest.fn(),
+    useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
 jest.mock('@tanstack/react-query', () => {

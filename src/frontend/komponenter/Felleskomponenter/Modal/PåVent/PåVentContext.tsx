@@ -12,7 +12,7 @@ import { RessursStatus } from '../../../../typer/ressurs';
 import { isEmpty, validerGyldigDato } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
 
-interface Props {
+interface PåVentBehandlingHook {
     skjema: ISkjema<
         {
             tidsfrist: Date | undefined;
@@ -30,7 +30,7 @@ interface Props {
 export const usePåVentBehandling = (
     lukkModal: () => void,
     ventegrunn?: IBehandlingsstegstilstand | undefined
-): Props => {
+): PåVentBehandlingHook => {
     const [feilmelding, settFeilmelding] = useState<string>();
     const { request } = useHttp();
     const { nullstillIkkePersisterteKomponenter } = useBehandling();

@@ -28,7 +28,7 @@ import {
 import { sorterFeilutbetaltePerioder } from '../../../utils';
 import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
-export type VilkårsvurderingContext = {
+export type VilkårsvurderingHook = {
     containerRef: React.RefObject<HTMLDivElement | null>;
     feilutbetalingVilkårsvurdering: Ressurs<IFeilutbetalingVilkårsvurdering> | undefined;
     stegErBehandlet: boolean;

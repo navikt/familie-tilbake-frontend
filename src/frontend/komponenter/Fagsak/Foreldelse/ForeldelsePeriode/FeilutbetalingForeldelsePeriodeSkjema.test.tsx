@@ -1,7 +1,7 @@
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { IBehandling } from '../../../../typer/behandling';
-import type { FeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
+import type { FeilutbetalingForeldelseHook } from '../FeilutbetalingForeldelseContext';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -24,7 +24,7 @@ jest.mock('../../../../api/http/HttpProvider', () => {
 });
 jest.mock('../FeilutbetalingForeldelseContext', () => {
     return {
-        useFeilutbetalingForeldelse: (): Partial<FeilutbetalingForeldelse> => ({
+        useFeilutbetalingForeldelse: (): Partial<FeilutbetalingForeldelseHook> => ({
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),
         }),

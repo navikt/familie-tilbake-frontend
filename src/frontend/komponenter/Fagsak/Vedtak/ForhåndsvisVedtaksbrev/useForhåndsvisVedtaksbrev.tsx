@@ -12,7 +12,7 @@ import {
 import { base64ToArrayBuffer } from '../../../../utils';
 import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
 
-interface Props {
+interface ForhåndsvisVedtaksbrevHook {
     visModal: boolean;
     kanViseForhåndsvisning: () => void;
     hentetForhåndsvisning: Ressurs<string>;
@@ -20,7 +20,7 @@ interface Props {
     nullstillHentetForhåndsvisning: () => void;
 }
 
-const useForhåndsvisVedtaksbrev = (): Props => {
+const useForhåndsvisVedtaksbrev = (): ForhåndsvisVedtaksbrevHook => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
         React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);

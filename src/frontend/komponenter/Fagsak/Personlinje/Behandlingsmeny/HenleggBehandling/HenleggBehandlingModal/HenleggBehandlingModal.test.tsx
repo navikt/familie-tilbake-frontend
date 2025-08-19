@@ -1,4 +1,4 @@
-import type { BehandlingApi } from '../../../../../../api/behandling';
+import type { BehandlingApiHook } from '../../../../../../api/behandling';
 import type { Http } from '../../../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../../../context/BehandlingContext';
 import type { IBehandling } from '../../../../../../typer/behandling';
@@ -32,7 +32,7 @@ jest.mock('../../../../../../context/BehandlingContext', () => ({
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../../../../api/behandling', () => ({
-    useBehandlingApi: (): BehandlingApi => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 const renderHenleggBehandlingModal = (

@@ -1,8 +1,10 @@
-import type { BehandlingApi } from '../../../api/behandling';
+import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { SammenslåttPeriodeContext } from '../../../hooks/useSammenslåPerioder';
+import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { SammenslåttPeriodeHook } from '../../../hooks/useSammenslåPerioder';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
+import type { Ressurs } from '../../../typer/ressurs';
 import type {
     BeregningsresultatPeriode,
     IBeregningsresultat,
@@ -22,7 +24,7 @@ import VedtakContainer from './VedtakContainer';
 import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import { RessursStatus } from '../../../typer/ressurs';
 
 jest.mock('../../../api/http/HttpProvider', () => {
     return {
@@ -35,12 +37,12 @@ jest.mock('../../../api/http/HttpProvider', () => {
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): typeof mockUseBehandling => mockUseBehandling(),
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
-    useBehandlingApi: (): BehandlingApi => mockUseBehandlingApi(),
+    useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 jest.mock('react-router', () => ({
@@ -50,7 +52,7 @@ jest.mock('react-router', () => ({
 
 const mockUseSammenslåPerioder = jest.fn();
 jest.mock('../../../hooks/useSammenslåPerioder', () => ({
-    useSammenslåPerioder: (): SammenslåttPeriodeContext => mockUseSammenslåPerioder(),
+    useSammenslåPerioder: (): SammenslåttPeriodeHook => mockUseSammenslåPerioder(),
 }));
 
 const mockedSettIkkePersistertKomponent = jest.fn();

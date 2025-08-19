@@ -48,7 +48,7 @@ interface IProps {
     fagsak: IFagsak;
 }
 
-export type FeilutbetalingForeldelse = {
+export type FeilutbetalingForeldelseHook = {
     feilutbetalingForeldelse: Ressurs<IFeilutbetalingForeldelse> | undefined;
     erAutoutført: boolean | undefined;
     stegErBehandlet: boolean;
