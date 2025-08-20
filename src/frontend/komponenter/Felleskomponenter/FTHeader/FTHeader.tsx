@@ -63,7 +63,7 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
         if (erHistoriskVisning) {
             return `${location.pathname.replace(behandlingsPath, '')}`;
         }
-        if (fagSystem == Fagsystem.TS) {
+        if (fagSystem === Fagsystem.TS) {
             return `/redirect/fagsystem/${fagSystem}/ekstern/person/${fagsakId}`;
         }
         return `/redirect/fagsystem/${fagSystem}/fagsak/${fagsakId}/saksoversikt`;
