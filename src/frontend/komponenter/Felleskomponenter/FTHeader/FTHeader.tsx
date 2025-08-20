@@ -4,7 +4,7 @@ import { ExternalLinkIcon, LeaveIcon, MenuGridIcon } from '@navikt/aksel-icons';
 import { Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
 import { useHttp } from '../../../api/http/HttpProvider';
@@ -17,8 +17,6 @@ interface Props {
 }
 
 export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
-    const [erSystemDropdownApen, setErSystemDropdownApen] = useState(false);
-
     const { data: brukerlenker } = useQuery({
         queryKey: ['hentBrukerlenkeBaseUrl'],
         queryFn: hentBrukerlenkeBaseUrl,
@@ -76,71 +74,63 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
             <InternalHeader.Title href="/">Nav - Tilbakekreving</InternalHeader.Title>
             <Spacer />
             {harGyldigLenke && (
-                <button
-                    type="button"
-                    className="flex align-center bg-transparent border-none cursor-pointer"
-                    onMouseEnter={() => setErSystemDropdownApen(true)}
-                    onMouseLeave={() => setErSystemDropdownApen(false)}
-                    onClick={() => setErSystemDropdownApen(!erSystemDropdownApen)}
-                >
-                    <Dropdown open={erSystemDropdownApen}>
-                        <InternalHeader.Button as={Dropdown.Toggle}>
-                            <MenuGridIcon
-                                style={{ fontSize: '1.5rem' }}
-                                title="Systemer og oppslagsverk"
-                            />
-                        </InternalHeader.Button>
-                        <Dropdown.Menu>
-                            <Dropdown.Menu.GroupedList>
-                                <Dropdown.Menu.GroupedList.Heading>
-                                    Systemer og oppslagsverk
-                                </Dropdown.Menu.GroupedList.Heading>
-                                {aInntektUrl && (
-                                    <Dropdown.Menu.GroupedList.Item
-                                        as="a"
-                                        target="_blank"
-                                        href={aInntektUrl}
-                                    >
-                                        {personligAInntektUrl
-                                            ? 'A-inntekt personoversikt'
-                                            : 'A-inntekt'}
-                                        <ExternalLinkIcon aria-hidden />
-                                    </Dropdown.Menu.GroupedList.Item>
-                                )}
-                                {gosysUrl && (
-                                    <Dropdown.Menu.GroupedList.Item
-                                        as="a"
-                                        target="_blank"
-                                        href={gosysUrl}
-                                    >
-                                        {personIdent ? 'Gosys personoversikt' : 'Gosys'}
-                                        <ExternalLinkIcon aria-hidden />
-                                    </Dropdown.Menu.GroupedList.Item>
-                                )}
-                                {modiaUrl && (
-                                    <Dropdown.Menu.GroupedList.Item
-                                        as="a"
-                                        target="_blank"
-                                        href={modiaUrl}
-                                    >
-                                        {personIdent ? 'Modia personoversikt' : 'Modia'}
-                                        <ExternalLinkIcon aria-hidden />
-                                    </Dropdown.Menu.GroupedList.Item>
-                                )}
-                                {!erHistoriskVisning && (
-                                    <Dropdown.Menu.GroupedList.Item
-                                        as="a"
-                                        target="_blank"
-                                        href={saksoversiktUrl}
-                                    >
-                                        Gå til saksoversikt
-                                        <ExternalLinkIcon aria-hidden />
-                                    </Dropdown.Menu.GroupedList.Item>
-                                )}
-                            </Dropdown.Menu.GroupedList>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </button>
+                <Dropdown>
+                    <InternalHeader.Button as={Dropdown.Toggle}>
+                        <MenuGridIcon
+                            style={{ fontSize: '1.5rem' }}
+                            title="Systemer og oppslagsverk"
+                        />
+                    </InternalHeader.Button>
+                    <Dropdown.Menu>
+                        <Dropdown.Menu.GroupedList>
+                            <Dropdown.Menu.GroupedList.Heading>
+                                Systemer og oppslagsverk
+                            </Dropdown.Menu.GroupedList.Heading>
+                            {aInntektUrl && (
+                                <Dropdown.Menu.GroupedList.Item
+                                    as="a"
+                                    target="_blank"
+                                    href={aInntektUrl}
+                                >
+                                    {personligAInntektUrl
+                                        ? 'A-inntekt personoversikt'
+                                        : 'A-inntekt'}
+                                    <ExternalLinkIcon aria-hidden />
+                                </Dropdown.Menu.GroupedList.Item>
+                            )}
+                            {gosysUrl && (
+                                <Dropdown.Menu.GroupedList.Item
+                                    as="a"
+                                    target="_blank"
+                                    href={gosysUrl}
+                                >
+                                    {personIdent ? 'Gosys personoversikt' : 'Gosys'}
+                                    <ExternalLinkIcon aria-hidden />
+                                </Dropdown.Menu.GroupedList.Item>
+                            )}
+                            {modiaUrl && (
+                                <Dropdown.Menu.GroupedList.Item
+                                    as="a"
+                                    target="_blank"
+                                    href={modiaUrl}
+                                >
+                                    {personIdent ? 'Modia personoversikt' : 'Modia'}
+                                    <ExternalLinkIcon aria-hidden />
+                                </Dropdown.Menu.GroupedList.Item>
+                            )}
+                            {!erHistoriskVisning && (
+                                <Dropdown.Menu.GroupedList.Item
+                                    as="a"
+                                    target="_blank"
+                                    href={saksoversiktUrl}
+                                >
+                                    Gå til saksoversikt
+                                    <ExternalLinkIcon aria-hidden />
+                                </Dropdown.Menu.GroupedList.Item>
+                            )}
+                        </Dropdown.Menu.GroupedList>
+                    </Dropdown.Menu>
+                </Dropdown>
             )}
             <Dropdown>
                 <InternalHeader.UserButton
