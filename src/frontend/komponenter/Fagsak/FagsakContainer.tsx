@@ -63,7 +63,11 @@ const FagsakContainer: React.FC = () => {
             setFagsakId(fagsakId);
             setFagSystem(fagsystem);
         }
-        return (): void => setFagsakId(undefined);
+        return (): void => {
+            setFagsakId(undefined);
+            setFagSystem(undefined);
+        };
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsystem, fagsakId]);
 

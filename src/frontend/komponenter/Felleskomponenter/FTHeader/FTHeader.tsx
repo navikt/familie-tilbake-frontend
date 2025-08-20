@@ -8,6 +8,7 @@ import { useMemo, useState } from 'react';
 
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
 import { useHttp } from '../../../api/http/HttpProvider';
+import { Fagsystem } from '../../../kodeverk';
 import { useFagsakStore } from '../../../store/fagsak';
 import { erHistoriskSide } from '../Venstremeny/sider';
 
@@ -27,7 +28,6 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
     const fagsakId = useFagsakStore(state => state.fagsakId);
     const behandlingId = useFagsakStore(state => state.behandlingId);
     const fagSystem = useFagsakStore(state => state.fagSystem);
-    const tilleggsStønader = 'TS';
 
     const { request } = useHttp();
     const { data: personligAInntektUrl } = useQuery({
@@ -65,11 +65,11 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
         if (erHistoriskVisning) {
             return `${location.pathname.replace(behandlingsPath, '')}`;
         }
-        if (fagSystem == tilleggsStønader) {
+        if (fagSystem == Fagsystem.TS) {
             return `/redirect/fagsystem/${fagSystem}/ekstern/person/${fagsakId}`;
         }
         return `/redirect/fagsystem/${fagSystem}/fagsak/${fagsakId}/saksoversikt`;
-    }, [erHistoriskVisning, fagSystem, fagsakId, tilleggsStønader, behandlingsPath]);
+    }, [erHistoriskVisning, fagSystem, fagsakId, behandlingsPath]);
 
     return (
         <InternalHeader>
