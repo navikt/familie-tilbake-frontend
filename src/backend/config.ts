@@ -20,6 +20,7 @@ type EnvironmentConfig = {
     baSakUrl: string;
     efSakUrl: string;
     ksSakUrl: string;
+    tsSakUrl: string;
     aInntektUrl: string;
     gosysUrl: string;
     modiaUrl: string;
@@ -32,6 +33,7 @@ const Environment = (): EnvironmentConfig => {
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
             ksSakUrl: 'https://kontantstotte.ansatt.dev.nav.no',
+            tsSakUrl: 'https://tilleggsstonader.intern.dev.nav.no',
             aInntektUrl: 'https://arbeid-og-inntekt.dev.adeo.no',
             gosysUrl: 'https://gosys-q1.dev.intern.nav.no/gosys',
             modiaUrl: 'https://app-q1.adeo.no/modiapersonoversikt',
@@ -42,6 +44,7 @@ const Environment = (): EnvironmentConfig => {
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
             ksSakUrl: 'https://kontantstotte.ansatt.dev.nav.no',
+            tsSakUrl: 'https://tilleggsstonader.intern.dev.nav.no',
             aInntektUrl: 'https://arbeid-og-inntekt.dev.adeo.no',
             gosysUrl: 'https://gosys-q1.dev.intern.nav.no/gosys',
             modiaUrl: 'https://app-q1.adeo.no/modiapersonoversikt',
@@ -52,6 +55,7 @@ const Environment = (): EnvironmentConfig => {
             baSakUrl: 'https://barnetrygd.ansatt.dev.nav.no',
             efSakUrl: 'https://ensligmorellerfar.ansatt.dev.nav.no/ekstern',
             ksSakUrl: 'https://kontantstotte.ansatt.dev.nav.no',
+            tsSakUrl: 'https://tilleggsstonader.intern.dev.nav.no',
             aInntektUrl: 'https://arbeid-og-inntekt.dev.adeo.no',
             gosysUrl: 'https://gosys-q1.dev.intern.nav.no/gosys',
             modiaUrl: 'https://app-q1.adeo.no/modiapersonoversikt',
@@ -63,6 +67,7 @@ const Environment = (): EnvironmentConfig => {
         baSakUrl: 'https://barnetrygd.intern.nav.no',
         efSakUrl: 'https://ensligmorellerfar.intern.nav.no/ekstern',
         ksSakUrl: 'https://kontantstotte.intern.nav.no',
+        tsSakUrl: 'https://tilleggsstonader.intern.nav.no',
         aInntektUrl: 'https://arbeid-og-inntekt.nais.adeo.no',
         gosysUrl: 'https://gosys.intern.nav.no/gosys',
         modiaUrl: 'https://app.adeo.no/modiapersonoversikt',
@@ -103,4 +108,5 @@ export const redirectRecords: Record<string, string> = {
     '/redirect/fagsystem/BA': env.baSakUrl,
     '/redirect/fagsystem/EF': env.efSakUrl,
     '/redirect/fagsystem/KONT': env.ksSakUrl,
+    '/redirect/fagsystem/TS': env.tsSakUrl,
 };

@@ -55,13 +55,19 @@ const FagsakContainer: React.FC = () => {
     const setPersonIdent = useFagsakStore(state => state.setPersonIdent);
     const setBehandlingId = useFagsakStore(state => state.setBehandlingId);
     const setFagsakId = useFagsakStore(state => state.setFagsakId);
+    const setFagSystem = useFagsakStore(state => state.setFagSystem);
 
     React.useEffect(() => {
         if (!!fagsystem && !!fagsakId) {
             hentFagsak(fagsystem, fagsakId);
             setFagsakId(fagsakId);
+            setFagSystem(fagsystem);
         }
-        return (): void => setFagsakId(undefined);
+        return (): void => {
+            setFagsakId(undefined);
+            setFagSystem(undefined);
+        };
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsystem, fagsakId]);
 

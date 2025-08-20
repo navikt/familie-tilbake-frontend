@@ -8,7 +8,9 @@ import { useMemo } from 'react';
 
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
 import { useHttp } from '../../../api/http/HttpProvider';
+import { Fagsystem } from '../../../kodeverk';
 import { useFagsakStore } from '../../../store/fagsak';
+import { erHistoriskSide } from '../Venstremeny/sider';
 
 interface Props {
     innloggetSaksbehandler?: ISaksbehandler;
@@ -23,6 +25,7 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
     const personIdent = useFagsakStore(state => state.personIdent);
     const fagsakId = useFagsakStore(state => state.fagsakId);
     const behandlingId = useFagsakStore(state => state.behandlingId);
+    const fagSystem = useFagsakStore(state => state.fagSystem);
 
     const { request } = useHttp();
     const { data: personligAInntektUrl } = useQuery({
@@ -32,7 +35,7 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
     });
 
     const aInntektUrl = useMemo(
-        () => (personligAInntektUrl ? personligAInntektUrl : reserveAInntektUrl),
+        () => personligAInntektUrl || reserveAInntektUrl,
         [personligAInntektUrl, reserveAInntektUrl]
     );
 
@@ -53,12 +56,23 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
         [gosysUrl, modiaUrl, aInntektUrl]
     );
 
+    const behandlingsPath = location.pathname.split('/').at(-1);
+    const erHistoriskVisning = behandlingsPath && erHistoriskSide(behandlingsPath);
+
+    const saksoversiktUrl = useMemo(() => {
+        if (erHistoriskVisning) {
+            return `${location.pathname.replace(behandlingsPath, '')}`;
+        }
+        if (fagSystem === Fagsystem.TS) {
+            return `/redirect/fagsystem/${fagSystem}/ekstern/person/${fagsakId}`;
+        }
+        return `/redirect/fagsystem/${fagSystem}/fagsak/${fagsakId}/saksoversikt`;
+    }, [erHistoriskVisning, fagSystem, fagsakId, behandlingsPath]);
+
     return (
         <InternalHeader>
             <InternalHeader.Title href="/">Nav - Tilbakekreving</InternalHeader.Title>
-
             <Spacer />
-
             {harGyldigLenke && (
                 <Dropdown>
                     <InternalHeader.Button as={Dropdown.Toggle}>
@@ -104,11 +118,20 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
                                     <ExternalLinkIcon aria-hidden />
                                 </Dropdown.Menu.GroupedList.Item>
                             )}
+                            {!erHistoriskVisning && (
+                                <Dropdown.Menu.GroupedList.Item
+                                    as="a"
+                                    target="_blank"
+                                    href={saksoversiktUrl}
+                                >
+                                    Gå til saksoversikt
+                                    <ExternalLinkIcon aria-hidden />
+                                </Dropdown.Menu.GroupedList.Item>
+                            )}
                         </Dropdown.Menu.GroupedList>
                     </Dropdown.Menu>
                 </Dropdown>
             )}
-
             <Dropdown>
                 <InternalHeader.UserButton
                     as={Dropdown.Toggle}

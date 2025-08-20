@@ -1,7 +1,7 @@
 import type { IFagsak } from '../../../typer/fagsak';
 import type { IPerson } from '../../../typer/person';
 
-import { Buildings3Icon, ExternalLinkIcon, LeaveIcon } from '@navikt/aksel-icons';
+import { Buildings3Icon, LeaveIcon } from '@navikt/aksel-icons';
 import { HStack, Link, Tag } from '@navikt/ds-react';
 import { AGray900, ATextOnInverted, ASpacing2, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
@@ -10,9 +10,6 @@ import { styled } from 'styled-components';
 
 import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
 import Visittkort from './Visittkort';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useFagsak } from '../../../context/FagsakContext';
-import { RessursStatus } from '../../../typer/ressurs';
 import { formatterDatostring, hentAlder } from '../../../utils';
 import { erHistoriskSide } from '../../Felleskomponenter/Venstremeny/sider';
 
@@ -45,12 +42,10 @@ interface IProps {
 }
 
 const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
-    const { behandling, lagLenkeTilRevurdering } = useBehandling();
     const location = useLocation();
     const behandlingsPath = location.pathname.split('/').at(-1);
     const erHistoriskVisning = behandlingsPath && erHistoriskSide(behandlingsPath);
 
-    const { lagSaksoversiktUrl } = useFagsak();
     return (
         <Visittkort
             navn={bruker.navn}
@@ -74,18 +69,6 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
                 </InstitusjonsTag>
             )}
             <HStack gap="4">
-                {behandling?.status === RessursStatus.Suksess && !erHistoriskVisning && (
-                    <Link href={lagLenkeTilRevurdering()} target="_blank">
-                        Gå til revurderingen
-                        <ExternalLinkIcon aria-label="Gå til revurderingen" fontSize="1.375rem" />
-                    </Link>
-                )}
-                {!erHistoriskVisning && (
-                    <Link href={lagSaksoversiktUrl()} target="_blank">
-                        Gå til saksoversikt
-                        <ExternalLinkIcon aria-label="Gå til saksoversikt" fontSize="1.375rem" />
-                    </Link>
-                )}
                 {erHistoriskVisning && (
                     <Link href={`${location.pathname.replace(behandlingsPath, '')}`}>
                         Gå til behandling
