@@ -430,6 +430,10 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
                             hentBehandlingMedBehandlingId(behandling.behandlingId);
                             lukkModal ? lukkModal() : nullstillSkjema();
                         }
+                    },
+                    (errorResponse: Ressurs<string>) => {
+                        settSubmitRessurs(errorResponse);
+                        settVisfeilmeldinger(true);
                     }
                 );
             } else {
