@@ -2,44 +2,13 @@ import type { IBrevmottaker } from '../../../typer/Brevmottaker';
 
 import { PencilIcon, TrashIcon } from '@navikt/aksel-icons';
 import { Button, Heading } from '@navikt/ds-react';
-import { AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
-import { styled } from 'styled-components';
 
-import { useBrevmottaker } from './BrevmottakerContext';
+import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
-
-const FlexDiv = styled.div`
-    display: flex;
-    justify-content: space-between;
-    width: 26.5rem;
-`;
-
-const StyledDiv = styled.div`
-    margin-top: 2.5rem;
-    margin-right: 3.5rem;
-`;
-
-const DefinitionList = styled.dl`
-    display: grid;
-    row-gap: 1rem;
-    column-gap: 2rem;
-    grid-template-columns: 10.5rem 20rem;
-    margin-left: 0.2rem;
-
-    dt {
-        font-weight: ${AFontWeightBold};
-    }
-    dd {
-        margin-left: 0;
-    }
-`;
-
-const EndreBrukerKnapp = styled(Button)`
-    margin-top: 1rem;
-`;
 
 interface IProps {
     brevmottaker: IBrevmottaker;
@@ -52,23 +21,37 @@ interface IProps {
 const Brevmottaker: React.FC<IProps> = ({
     brevmottaker,
     brevmottakerId,
+    behandlingId,
     erLesevisning,
     antallBrevmottakere,
 }) => {
-    const {
-        fjernBrevMottakerOgOppdaterState,
-        settBrevmottakerIdTilEndring,
-        validerAlleSynligeFelter,
-    } = useBrevmottaker();
+    const { hentBehandlingMedBehandlingId } = useBehandling();
+    const { fjernManuellBrevmottaker } = useBehandlingApi();
     const { settVisBrevmottakerModal } = useBehandling();
+
     const landnavn = brevmottaker.manuellAdresseInfo
         ? norskLandnavn(brevmottaker.manuellAdresseInfo.landkode)
         : undefined;
     const [organisasjonsnavn, kontaktperson] = brevmottaker.navn.split(' v/ ');
 
+    const fjernBrevMottakerOgOppdaterState = (mottakerId: string): void => {
+        fjernManuellBrevmottaker(behandlingId, mottakerId).then((respons: Ressurs<string>) => {
+            if (respons.status === RessursStatus.Suksess) {
+                hentBehandlingMedBehandlingId(behandlingId);
+            }
+        });
+    };
+
+    const håndterEndreBrevmottaker = (): void => {
+        // MERK: brevmottakerIdTilEndring håndteres nå ikke lenger siden vi fjernet contexten.
+        // Modal-komponenten må refaktoreres til å få denne informasjonen på en annen måte,
+        // f.eks. som prop eller via URL-parameter.
+        settVisBrevmottakerModal(true);
+    };
+
     return (
-        <StyledDiv>
-            <FlexDiv>
+        <div>
+            <div>
                 <Heading size="medium">{mottakerTypeVisningsnavn[brevmottaker.type]}</Heading>
                 {!erLesevisning && brevmottaker.type !== MottakerType.Bruker && (
                     <Button
@@ -80,8 +63,8 @@ const Brevmottaker: React.FC<IProps> = ({
                         Fjern
                     </Button>
                 )}
-            </FlexDiv>
-            <DefinitionList>
+            </div>
+            <dl>
                 {brevmottaker.organisasjonsnummer ? (
                     <>
                         {kontaktperson && (
@@ -121,14 +104,12 @@ const Brevmottaker: React.FC<IProps> = ({
                         <dd>{landnavn}</dd>
                     </>
                 )}
-            </DefinitionList>
+            </dl>
             {!erLesevisning && brevmottaker.type !== MottakerType.Bruker && (
                 <Button
                     variant="tertiary"
                     onClick={() => {
-                        settBrevmottakerIdTilEndring(brevmottakerId);
-                        settVisBrevmottakerModal(true);
-                        validerAlleSynligeFelter();
+                        håndterEndreBrevmottaker();
                     }}
                     size="small"
                     icon={<PencilIcon />}
@@ -140,19 +121,18 @@ const Brevmottaker: React.FC<IProps> = ({
             {!erLesevisning &&
                 brevmottaker.type === MottakerType.Bruker &&
                 antallBrevmottakere > 1 && (
-                    <EndreBrukerKnapp
+                    <Button
                         variant="tertiary"
                         size="small"
                         icon={<PencilIcon />}
                         onClick={() => {
-                            settBrevmottakerIdTilEndring(brevmottakerId);
-                            settVisBrevmottakerModal(true);
+                            håndterEndreBrevmottaker();
                         }}
                     >
                         Endre
-                    </EndreBrukerKnapp>
+                    </Button>
                 )}
-        </StyledDiv>
+        </div>
     );
 };
 
