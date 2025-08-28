@@ -10,7 +10,7 @@ import { ensureAuthenticated } from './backend/auth/authenticate';
 import { genererCsrfToken } from './backend/auth/middleware';
 import { logRequest } from './backend/utils';
 import { aInntektUrl, appConfig, buildPath, gosysBaseUrl, modiaBaseUrl } from './config';
-import { logError, LogLevel } from './logging/logging';
+import { logError, logInfo, LogLevel } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
 let vite: ViteDevServer;
@@ -65,7 +65,11 @@ export default async (texasClient: TexasClient, router: Router): Promise<Router>
         ensureAuthenticated(texasClient, false),
         async (req: Request, res: Response): Promise<void> => {
             prometheusTellere.appLoad.inc();
+            const gammelCsrfToken = req.session.csrfToken;
             const csrfToken = genererCsrfToken(req.session);
+            logInfo(
+                `Gammel CSRF-tokenstart=${gammelCsrfToken?.substring(0, 4)}, CSRF-tokenstart=${csrfToken.substring(0, 4)}`
+            );
             const url = req.originalUrl;
             try {
                 let htmlInnhold = isProd ? getHtmlInnholdProd() : await getHtmlInnholdDev(url);
