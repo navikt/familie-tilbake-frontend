@@ -179,11 +179,9 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
     );
 
     // Hvis vedtak er tilbakeført, marker vilkårsvurdering som "har ulagrede endringer"
-    React.useEffect(() => {
-        if (erVedtakTilbakeført && !erLesevisning) {
-            settIkkePersistertKomponent('vilkårsvurdering');
-        }
-    }, [erVedtakTilbakeført, erLesevisning, settIkkePersistertKomponent]);
+    if (erVedtakTilbakeført && !erLesevisning) {
+        settIkkePersistertKomponent('vilkårsvurdering');
+    }
 
     useEffect(() => {
         if (pendingPeriode && harUlagredeData) {
