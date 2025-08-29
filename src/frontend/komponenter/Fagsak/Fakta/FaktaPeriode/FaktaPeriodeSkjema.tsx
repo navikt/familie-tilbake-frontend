@@ -5,31 +5,32 @@ import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
 import classNames from 'classnames';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
 
-interface IProps {
+interface Props {
     periode: FaktaPeriodeSkjemaData;
     hendelseTyper: HendelseType[] | undefined;
     index: number;
     erLesevisning: boolean;
 }
 
-const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
+const FeilutbetalingFaktaPeriode: React.FC<Props> = ({
     periode,
     hendelseTyper,
     index,
     erLesevisning,
 }) => {
-    const [hendelseUnderTyper, settHendelseUnderTyper] = React.useState<HendelseUndertype[]>();
+    const [hendelseUnderTyper, settHendelseUnderTyper] = useState<HendelseUndertype[]>();
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
         useFeilutbetalingFakta();
     const { settIkkePersistertKomponent } = useBehandling();
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (hendelseTyper?.length === 1) {
             const underTyper = hentHendelseUndertyper(hendelseTyper[0]);
             settHendelseUnderTyper(underTyper);
@@ -51,6 +52,15 @@ const FeilutbetalingFaktaPeriode: React.FC<IProps> = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [periode, hendelseTyper]);
+
+    useEffect(() => {
+        //Hvis hendelsesType er satt og dens hendelsesundertype kun har 1 i lengde, så skal den være satt
+        if (periode.hendelsestype && hentHendelseUndertyper(periode.hendelsestype)?.length === 1) {
+            settIkkePersistertKomponent('fakta');
+            hendelseUnderTyper && oppdaterUnderårsakPåPeriode(periode, hendelseUnderTyper[0]);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [periode.hendelsestype]);
 
     const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         const årsak = e.target.value as HendelseType;
