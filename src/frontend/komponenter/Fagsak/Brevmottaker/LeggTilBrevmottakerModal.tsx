@@ -18,20 +18,15 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
     open,
     onClose,
 }) => {
-    const { settVisBrevmottakerModal, visBrevmottakerModal } = useBehandling();
+    const { lukkBrevmottakerModal, visBrevmottakerModal } = useBehandling();
 
-    // Hvis open ikke er oppgitt, bruk visBrevmottakerModal fra context
     const isOpen = open ?? visBrevmottakerModal;
-
-    const lukkModal = (): void => {
-        settVisBrevmottakerModal(false);
-    };
 
     const handleCancel = (): void => {
         if (onClose) {
             onClose();
         } else {
-            lukkModal();
+            lukkBrevmottakerModal();
         }
     };
 
@@ -68,7 +63,6 @@ const LeggTilBrevmottakerContent: React.FC<{ onCancel: () => void }> = ({ onCanc
             clearError();
             onCancel();
         } else if (result.error) {
-            // Sett feilmelding på riktig felt basert på mottakertype og adresseKilde
             if (data.mottakerType === 'FULLMEKTIG') {
                 if (data.fullmektig?.organisasjonsnummer) {
                     setError('fullmektig.organisasjonsnummer', { message: result.error });

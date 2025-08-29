@@ -16,16 +16,12 @@ export const EndreBrevmottakerModal: React.FC<EndreBrevmottakerModalProps> = ({
     eksisterendeMottaker,
     mottakerId,
 }) => {
-    const { settVisBrevmottakerModal } = useBehandling();
-
-    const lukkModal = (): void => {
-        settVisBrevmottakerModal(false);
-    };
+    const { lukkBrevmottakerModal } = useBehandling();
 
     return (
         <Modal
             open={true}
-            onClose={lukkModal}
+            onClose={lukkBrevmottakerModal}
             header={{
                 heading: 'Endre brevmottaker',
                 size: 'medium',
@@ -35,7 +31,7 @@ export const EndreBrevmottakerModal: React.FC<EndreBrevmottakerModalProps> = ({
                 <EndreBrevmottakerContent
                     eksisterendeMottaker={eksisterendeMottaker}
                     mottakerId={mottakerId}
-                    onCancel={lukkModal}
+                    onCancel={lukkBrevmottakerModal}
                 />
             </Modal.Body>
         </Modal>

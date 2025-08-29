@@ -144,27 +144,28 @@ const Brevmottaker: React.FC<IBrevmottakerProps> = ({
 };
 
 const Brevmottakere: React.FC = () => {
-    const { behandling, behandlingILesemodus, visBrevmottakerModal, settVisBrevmottakerModal } =
-        useBehandling();
+    const {
+        behandling,
+        behandlingILesemodus,
+        visBrevmottakerModal,
+        settVisBrevmottakerModal,
+        settBrevmottakerIdTilEndring,
+    } = useBehandling();
     const { fagsak } = useFagsak();
     const navigate = useNavigate();
 
     const erLesevisning = !!behandlingILesemodus;
 
-    // Beregn brevmottakere med bruker som default + manuelle
     const brevmottakere: { [id: string]: IBrevmottaker } = {};
 
     if (behandling?.status === 'SUKSESS' && fagsak?.status === 'SUKSESS') {
-        // Legg til bruker som default brevmottaker
         brevmottakere['default-user'] = {
             type: MottakerType.Bruker,
             navn: fagsak.data.bruker.navn,
             personIdent: fagsak.data.bruker.personIdent,
-            // Marker som default så vi kan håndtere det forskjellig i UI
             isDefault: true,
         } as IBrevmottaker & { isDefault: boolean };
 
-        // Legg til manuelle brevmottakere
         behandling.data.manuelleBrevmottakere.forEach(value => {
             brevmottakere[value.id] = value.brevmottaker;
         });
@@ -212,7 +213,10 @@ const Brevmottakere: React.FC = () => {
                                             variant="tertiary"
                                             size="small"
                                             icon={<PlusCircleIcon />}
-                                            onClick={() => settVisBrevmottakerModal(true)}
+                                            onClick={() => {
+                                                settBrevmottakerIdTilEndring(undefined);
+                                                settVisBrevmottakerModal(true);
+                                            }}
                                         >
                                             Legg til ny mottaker
                                         </Button>
