@@ -211,8 +211,9 @@ describe('Tester: FaktaContainer', () => {
                 name: 'Lagre og fortsett',
             })
         );
+        // BorMedSøker har kun 1 underårsak og vil derfor bli automatisk satt
         await waitFor(() => {
-            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(3);
+            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         });
 
         await user.selectOptions(
@@ -516,5 +517,34 @@ describe('Tester: FaktaContainer', () => {
                 name: 'Neste',
             })
         ).toBeInTheDocument();
+    });
+
+    test('- velg hendelsesundertype automatisk ved kun ett valg', async () => {
+        setupMock(false, false, {
+            ...feilutbetalingFakta,
+            feilutbetaltePerioder: [
+                {
+                    ...perioder[0],
+                },
+            ],
+            begrunnelse: 'Dette er en test-begrunnelse',
+        });
+        const behandling = mock<IBehandling>();
+
+        const { getByTestId, getAllByRole } = renderFaktaContainer(
+            behandling,
+            Ytelsetype.Overgangsstønad,
+            fagsak
+        );
+
+        await waitFor(() => {
+            user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.Overgangsstønad);
+        });
+
+        expect(getAllByRole('combobox')).toHaveLength(1);
+
+        await waitFor(() => {
+            expect(getByTestId('perioder.0.underårsak')).toHaveValue(HendelseUndertype.Barn8År);
+        });
     });
 });
