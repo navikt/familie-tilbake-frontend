@@ -185,8 +185,6 @@ const Brevmottakere: React.FC = () => {
         return null; // eller loading spinner
     }
 
-    console.log('brevmottakere', behandling);
-
     return (
         <div>
             {visBrevmottakerModal && <LeggTilEndreBrevmottakerModal />}
