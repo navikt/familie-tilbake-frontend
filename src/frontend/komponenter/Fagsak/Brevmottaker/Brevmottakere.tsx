@@ -1,16 +1,22 @@
-import type { IBrevmottaker } from '../../../typer/Brevmottaker';
-
-import { PencilIcon, TrashIcon } from '@navikt/aksel-icons';
+import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
 import { Button, Heading } from '@navikt/ds-react';
-import React from 'react';
+import * as React from 'react';
+import { useNavigate } from 'react-router';
 
+import { LeggTilEndreBrevmottakerModal } from './LeggTilEndreBrevmottakerModal';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import { useFagsak } from '../../../context/FagsakContext';
+import {
+    MottakerType,
+    mottakerTypeVisningsnavn,
+    type IBrevmottaker,
+} from '../../../typer/Brevmottaker';
 import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
+import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
-interface IProps {
+interface IBrevmottakerProps {
     brevmottaker: IBrevmottaker & { isDefault?: boolean };
     brevmottakerId: string;
     behandlingId: string;
@@ -18,16 +24,19 @@ interface IProps {
     antallBrevmottakere: number;
 }
 
-const Brevmottaker: React.FC<IProps> = ({
+const Brevmottaker: React.FC<IBrevmottakerProps> = ({
     brevmottaker,
     brevmottakerId,
     behandlingId,
     erLesevisning,
     antallBrevmottakere,
 }) => {
-    const { hentBehandlingMedBehandlingId } = useBehandling();
+    const {
+        hentBehandlingMedBehandlingId,
+        settVisBrevmottakerModal,
+        settBrevmottakerIdTilEndring,
+    } = useBehandling();
     const { fjernManuellBrevmottaker } = useBehandlingApi();
-    const { settVisBrevmottakerModal } = useBehandling();
 
     const landnavn = brevmottaker.manuellAdresseInfo
         ? norskLandnavn(brevmottaker.manuellAdresseInfo.landkode)
@@ -45,9 +54,7 @@ const Brevmottaker: React.FC<IProps> = ({
     };
 
     const håndterEndreBrevmottaker = (): void => {
-        // MERK: brevmottakerIdTilEndring håndteres nå ikke lenger siden vi fjernet contexten.
-        // Modal-komponenten må refaktoreres til å få denne informasjonen på en annen måte,
-        // f.eks. som prop eller via URL-parameter.
+        settBrevmottakerIdTilEndring(brevmottakerId);
         settVisBrevmottakerModal(true);
     };
 
@@ -136,4 +143,89 @@ const Brevmottaker: React.FC<IProps> = ({
     );
 };
 
-export default Brevmottaker;
+const Brevmottakere: React.FC = () => {
+    const { behandling, behandlingILesemodus, visBrevmottakerModal, settVisBrevmottakerModal } =
+        useBehandling();
+    const { fagsak } = useFagsak();
+    const navigate = useNavigate();
+
+    const erLesevisning = !!behandlingILesemodus;
+
+    // Beregn brevmottakere med bruker som default + manuelle
+    const brevmottakere: { [id: string]: IBrevmottaker } = {};
+
+    if (behandling?.status === 'SUKSESS' && fagsak?.status === 'SUKSESS') {
+        // Legg til bruker som default brevmottaker
+        brevmottakere['default-user'] = {
+            type: MottakerType.Bruker,
+            navn: fagsak.data.bruker.navn,
+            personIdent: fagsak.data.bruker.personIdent,
+            // Marker som default så vi kan håndtere det forskjellig i UI
+            isDefault: true,
+        } as IBrevmottaker & { isDefault: boolean };
+
+        // Legg til manuelle brevmottakere
+        behandling.data.manuelleBrevmottakere.forEach(value => {
+            brevmottakere[value.id] = value.brevmottaker;
+        });
+    }
+
+    const antallBrevmottakere = Object.keys(brevmottakere).length;
+
+    const gåTilNeste = (): void => {
+        if (behandling?.status === 'SUKSESS' && fagsak?.status === 'SUKSESS') {
+            navigate(
+                `/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/behandling/${behandling.data.eksternBrukId}/${sider.FAKTA.href}`
+            );
+        }
+    };
+
+    if (behandling?.status !== 'SUKSESS' || fagsak?.status !== 'SUKSESS') {
+        return null; // eller loading spinner
+    }
+
+    console.log('brevmottakere', behandling);
+
+    return (
+        <div>
+            {visBrevmottakerModal && <LeggTilEndreBrevmottakerModal />}
+            <div>
+                <Heading size="large" level="1">
+                    Brevmottaker(e)
+                </Heading>
+                <div>
+                    {Object.keys(brevmottakere)
+                        .sort((a, b) => brevmottakere[a].type.localeCompare(brevmottakere[b].type))
+                        .map(id => (
+                            <div key={id}>
+                                <Brevmottaker
+                                    brevmottaker={brevmottakere[id]}
+                                    brevmottakerId={id}
+                                    behandlingId={behandling.data.behandlingId}
+                                    erLesevisning={erLesevisning}
+                                    antallBrevmottakere={antallBrevmottakere}
+                                />
+                                {antallBrevmottakere == 1 &&
+                                    !erLesevisning &&
+                                    MottakerType.Dødsbo !== brevmottakere[id].type && (
+                                        <Button
+                                            variant="tertiary"
+                                            size="small"
+                                            icon={<PlusCircleIcon />}
+                                            onClick={() => settVisBrevmottakerModal(true)}
+                                        >
+                                            Legg til ny mottaker
+                                        </Button>
+                                    )}
+                            </div>
+                        ))}
+                </div>
+                <Button variant="primary" onClick={gåTilNeste}>
+                    Neste
+                </Button>
+            </div>
+        </div>
+    );
+};
+
+export default Brevmottakere;

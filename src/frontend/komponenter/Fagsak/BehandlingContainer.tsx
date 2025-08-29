@@ -25,9 +25,9 @@ import {
 } from '../Felleskomponenter/Venstremeny/sider';
 import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 
-const BrevmottakerContainer = lazyImportMedRetry(
-    () => import('./Brevmottaker/BrevmottakerContainer'),
-    'BrevmottakerContainer'
+const Brevmottakere = lazyImportMedRetry(
+    () => import('./Brevmottaker/Brevmottakere'),
+    'Brevmottakere'
 );
 const FaktaContainer = lazyImportMedRetry(() => import('./Fakta/FaktaContainer'), 'FaktaContainer');
 const HistoriskFaktaContainer = lazyImportMedRetry(
@@ -240,7 +240,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
                         element={
                             <Suspense fallback="Brevmottakere laster...">
-                                <BrevmottakerContainer />
+                                <Brevmottakere />
                             </Suspense>
                         }
                     />
