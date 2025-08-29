@@ -19,7 +19,7 @@ interface Props {
     erLesevisning: boolean;
 }
 
-const FeilutbetalingFaktaPeriode: React.FC<Props> = ({
+export const FaktaPeriodeSkjema: React.FC<Props> = ({
     periode,
     hendelseTyper,
     index,
@@ -156,5 +156,3 @@ const FeilutbetalingFaktaPeriode: React.FC<Props> = ({
         </Table.Row>
     );
 };
-
-export default FeilutbetalingFaktaPeriode;
