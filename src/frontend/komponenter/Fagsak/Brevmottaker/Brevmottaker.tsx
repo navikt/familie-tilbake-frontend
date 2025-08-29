@@ -6,12 +6,12 @@ import React from 'react';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import { mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
 
 interface IProps {
-    brevmottaker: IBrevmottaker;
+    brevmottaker: IBrevmottaker & { isDefault?: boolean };
     brevmottakerId: string;
     behandlingId: string;
     erLesevisning: boolean;
@@ -34,6 +34,8 @@ const Brevmottaker: React.FC<IProps> = ({
         : undefined;
     const [organisasjonsnavn, kontaktperson] = brevmottaker.navn.split(' v/ ');
 
+    const erDefaultBruker = brevmottakerId === 'default-user' || brevmottaker.isDefault;
+
     const fjernBrevMottakerOgOppdaterState = (mottakerId: string): void => {
         fjernManuellBrevmottaker(behandlingId, mottakerId).then((respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.Suksess) {
@@ -53,7 +55,7 @@ const Brevmottaker: React.FC<IProps> = ({
         <div>
             <div>
                 <Heading size="medium">{mottakerTypeVisningsnavn[brevmottaker.type]}</Heading>
-                {!erLesevisning && brevmottaker.type !== MottakerType.Bruker && (
+                {!erLesevisning && !erDefaultBruker && (
                     <Button
                         variant="tertiary"
                         onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
@@ -105,7 +107,7 @@ const Brevmottaker: React.FC<IProps> = ({
                     </>
                 )}
             </dl>
-            {!erLesevisning && brevmottaker.type !== MottakerType.Bruker && (
+            {!erLesevisning && !erDefaultBruker && (
                 <Button
                     variant="tertiary"
                     onClick={() => {
@@ -118,20 +120,18 @@ const Brevmottaker: React.FC<IProps> = ({
                 </Button>
             )}
 
-            {!erLesevisning &&
-                brevmottaker.type === MottakerType.Bruker &&
-                antallBrevmottakere > 1 && (
-                    <Button
-                        variant="tertiary"
-                        size="small"
-                        icon={<PencilIcon />}
-                        onClick={() => {
-                            håndterEndreBrevmottaker();
-                        }}
-                    >
-                        Endre
-                    </Button>
-                )}
+            {!erLesevisning && erDefaultBruker && antallBrevmottakere > 1 && (
+                <Button
+                    variant="tertiary"
+                    size="small"
+                    icon={<PencilIcon />}
+                    onClick={() => {
+                        håndterEndreBrevmottaker();
+                    }}
+                >
+                    Endre
+                </Button>
+            )}
         </div>
     );
 };

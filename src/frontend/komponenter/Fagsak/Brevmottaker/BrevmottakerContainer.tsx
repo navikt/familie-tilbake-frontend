@@ -18,16 +18,24 @@ const BrevmottakerContainer: React.FC = () => {
 
     const erLesevisning = !!behandlingILesemodus;
 
-    // Beregn brevmottakere direkte fra behandling
-    const brevmottakere = React.useMemo(() => {
-        const manuelleBrevmottakere: { [id: string]: IBrevmottaker } = {};
-        if (behandling?.status === 'SUKSESS') {
-            behandling.data.manuelleBrevmottakere.forEach(value => {
-                manuelleBrevmottakere[value.id] = value.brevmottaker;
-            });
-        }
-        return manuelleBrevmottakere;
-    }, [behandling]);
+    // Beregn brevmottakere med bruker som default + manuelle
+    const brevmottakere: { [id: string]: IBrevmottaker } = {};
+
+    if (behandling?.status === 'SUKSESS' && fagsak?.status === 'SUKSESS') {
+        // Legg til bruker som default brevmottaker
+        brevmottakere['default-user'] = {
+            type: MottakerType.Bruker,
+            navn: fagsak.data.bruker.navn,
+            personIdent: fagsak.data.bruker.personIdent,
+            // Marker som default så vi kan håndtere det forskjellig i UI
+            isDefault: true,
+        } as IBrevmottaker & { isDefault: boolean };
+
+        // Legg til manuelle brevmottakere
+        behandling.data.manuelleBrevmottakere.forEach(value => {
+            brevmottakere[value.id] = value.brevmottaker;
+        });
+    }
 
     const antallBrevmottakere = Object.keys(brevmottakere).length;
 
