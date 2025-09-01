@@ -37,7 +37,7 @@ export const csrfBeskyttelse = (req: Request, res: Response, next: NextFunction)
 
     if (typeof csrfToken === 'string' && !verifiserCsrfToken(req.session, csrfToken)) {
         logError(
-            `Ugyldig CSRF-token for sesjon ${req.sessionID}... IP= ${req.ip}, CSRF-tokenstart=${csrfToken.substring(0, 4)}`
+            `Ugyldig CSRF-token for sesjon ${req.sessionID}... IP= ${req.ip}, CSRF-tokenstart=${csrfToken.substring(0, 4)}, path=${req.path}`
         );
         res.status(403).json({
             frontendFeilmelding:
