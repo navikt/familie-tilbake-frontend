@@ -1,4 +1,4 @@
-import type { FormData } from './BrevmottakerForm';
+import type { FormData } from './types/FormData';
 
 import { Modal, VStack } from '@navikt/ds-react';
 import React from 'react';

@@ -1,7 +1,8 @@
 import { Alert, Modal, VStack } from '@navikt/ds-react';
 import React from 'react';
 
-import { BrevmottakerForm, type FormData } from './BrevmottakerForm';
+import { BrevmottakerForm } from './BrevmottakerForm';
+import { type FormData } from './types/FormData';
 import { mapFormDataToBrevmottaker } from './utils/brevmottakerMapper';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';

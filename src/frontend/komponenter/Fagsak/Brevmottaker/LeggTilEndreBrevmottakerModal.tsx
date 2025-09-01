@@ -1,4 +1,4 @@
-import type { FormData } from './BrevmottakerForm';
+import type { FormData } from './types/FormData';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 

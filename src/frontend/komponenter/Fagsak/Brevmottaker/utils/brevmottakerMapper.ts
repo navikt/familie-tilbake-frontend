@@ -1,5 +1,5 @@
 import type { IBrevmottaker } from '../../../../typer/Brevmottaker';
-import type { FormData } from '../BrevmottakerForm';
+import type { FormData } from '../types/FormData';
 
 import { Vergetype as VergetypeEnum } from '../../../../kodeverk/verge';
 import { MottakerType, AdresseKilde } from '../../../../typer/Brevmottaker';

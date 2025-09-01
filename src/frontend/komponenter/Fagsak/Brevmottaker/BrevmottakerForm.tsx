@@ -7,51 +7,10 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { BrukerMedUtenlandskAdresse } from './BrukerMedUtenlandskAdresse';
 import { Dødsbo } from './Dødsbo';
 import { Fullmektig } from './Fullmektig';
+import { type FormData } from './types/FormData';
+import { opprettStandardSkjemaverdier } from './utils/formDefaults';
 import { Verge } from './Verge';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
-
-interface FormData {
-    mottakerType: string;
-    brukerMedUtenlandskAdresse?: {
-        navn: string;
-        land: string;
-        adresselinje1: string;
-        adresselinje2: string;
-        postnummer: string;
-        poststed: string;
-    };
-    fullmektig?: {
-        adresseKilde: string;
-        personnummer: string;
-        organisasjonsnummer: string;
-        navn: string;
-        land: string;
-        adresselinje1: string;
-        adresselinje2: string;
-        postnummer: string;
-        poststed: string;
-    };
-    verge?: {
-        vergetype: string;
-        adresseKilde: string;
-        personnummer: string;
-        organisasjonsnummer: string;
-        navn: string;
-        land: string;
-        adresselinje1: string;
-        adresselinje2: string;
-        postnummer: string;
-        poststed: string;
-    };
-    dødsbo?: {
-        navn: string;
-        land: string;
-        adresselinje1: string;
-        adresselinje2: string;
-        postnummer: string;
-        poststed: string;
-    };
-}
 
 interface BrevmottakerFormProps {
     initialData?: Partial<FormData>;
@@ -72,52 +31,7 @@ export const BrevmottakerForm: React.FC<BrevmottakerFormProps> = ({
     const methods = useForm<FormData>({
         reValidateMode: 'onBlur',
         shouldFocusError: false,
-        defaultValues: {
-            mottakerType: initialData?.mottakerType || '',
-            brukerMedUtenlandskAdresse: {
-                navn: '',
-                land: '',
-                adresselinje1: '',
-                adresselinje2: '',
-                postnummer: '',
-                poststed: '',
-                ...initialData?.brukerMedUtenlandskAdresse,
-            },
-            fullmektig: {
-                adresseKilde: '',
-                personnummer: '',
-                organisasjonsnummer: '',
-                navn: '',
-                land: '',
-                adresselinje1: '',
-                adresselinje2: '',
-                postnummer: '',
-                poststed: '',
-                ...initialData?.fullmektig,
-            },
-            verge: {
-                vergetype: '',
-                adresseKilde: '',
-                personnummer: '',
-                organisasjonsnummer: '',
-                navn: '',
-                land: '',
-                adresselinje1: '',
-                adresselinje2: '',
-                postnummer: '',
-                poststed: '',
-                ...initialData?.verge,
-            },
-            dødsbo: {
-                navn: '',
-                land: '',
-                adresselinje1: '',
-                adresselinje2: '',
-                postnummer: '',
-                poststed: '',
-                ...initialData?.dødsbo,
-            },
-        },
+        defaultValues: opprettStandardSkjemaverdier(initialData),
     });
 
     const { handleSubmit, setValue, watch, setError } = methods;
@@ -174,5 +88,3 @@ export const BrevmottakerForm: React.FC<BrevmottakerFormProps> = ({
         </FormProvider>
     );
 };
-
-export type { FormData };
