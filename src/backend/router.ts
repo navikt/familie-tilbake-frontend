@@ -68,7 +68,7 @@ export default async (texasClient: TexasClient, router: Router): Promise<Router>
             const gammelCsrfToken = req.session.csrfToken;
             const csrfToken = genererCsrfToken(req.session);
             logInfo(
-                `Gammel CSRF-tokenstart=${gammelCsrfToken?.substring(0, 4)}, CSRF-tokenstart=${csrfToken.substring(0, 4)}`
+                `Gammel CSRF-tokenstart=${gammelCsrfToken?.substring(0, 4)}, CSRF-tokenstart=${csrfToken.substring(0, 4)}, path=${req.path}`
             );
             const url = req.originalUrl;
             try {
