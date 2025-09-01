@@ -5,7 +5,7 @@ import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
 import classNames from 'classnames';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
@@ -25,56 +25,56 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
     index,
     erLesevisning,
 }) => {
-    const [hendelseUnderTyper, settHendelseUnderTyper] = useState<HendelseUndertype[]>();
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
         useFeilutbetalingFakta();
     const { settIkkePersistertKomponent } = useBehandling();
 
-    useEffect(() => {
+    const aktuellHendelsetype = useMemo(() => {
+        if (periode.hendelsestype) {
+            return periode.hendelsestype;
+        }
+
         if (hendelseTyper?.length === 1) {
-            const underTyper = hentHendelseUndertyper(hendelseTyper[0]);
-            settHendelseUnderTyper(underTyper);
-
-            if (!periode.hendelsestype) {
-                settIkkePersistertKomponent('fakta');
+            setTimeout(() => {
                 oppdaterÅrsakPåPeriode(periode, hendelseTyper[0]);
-            }
-
-            if (underTyper.length === 1 && !periode.hendelsesundertype) {
-                settIkkePersistertKomponent('fakta');
-                oppdaterUnderårsakPåPeriode(periode, underTyper[0]);
-            }
-        } else if (periode.hendelsestype) {
-            settHendelseUnderTyper(hentHendelseUndertyper(periode.hendelsestype));
-        } else if (erLesevisning || !periode.hendelsestype) {
-            // når det er lesevisning og perioden ikke er behandlet
-            settHendelseUnderTyper([]);
+            }, 0);
+            return hendelseTyper[0];
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [periode, hendelseTyper]);
 
-    useEffect(() => {
-        //Hvis hendelsesType er satt og dens hendelsesundertype kun har 1 i lengde, så skal den være satt
-        if (periode.hendelsestype && hentHendelseUndertyper(periode.hendelsestype)?.length === 1) {
-            settIkkePersistertKomponent('fakta');
-            hendelseUnderTyper && oppdaterUnderårsakPåPeriode(periode, hendelseUnderTyper[0]);
+        return undefined;
+    }, [hendelseTyper, periode, oppdaterÅrsakPåPeriode]);
+
+    const hendelseUnderTyper = useMemo(() => {
+        return aktuellHendelsetype ? hentHendelseUndertyper(aktuellHendelsetype) : [];
+    }, [aktuellHendelsetype]);
+
+    const aktuellHendelseundertype = useMemo(() => {
+        if (periode.hendelsesundertype) {
+            return periode.hendelsesundertype;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [periode.hendelsestype]);
+
+        if (hendelseUnderTyper.length === 1 && aktuellHendelsetype) {
+            setTimeout(() => {
+                oppdaterUnderårsakPåPeriode(periode, hendelseUnderTyper[0]);
+            }, 0);
+            return hendelseUnderTyper[0];
+        }
+
+        return undefined;
+    }, [hendelseUnderTyper, aktuellHendelsetype, periode, oppdaterUnderårsakPåPeriode]);
 
     const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-        const årsak = e.target.value as HendelseType;
-        settHendelseUnderTyper(hentHendelseUndertyper(årsak));
-        settIkkePersistertKomponent('fakta');
+        const årsak = e.target.value === '-' ? undefined : (e.target.value as HendelseType);
         oppdaterÅrsakPåPeriode(periode, årsak);
+        settIkkePersistertKomponent('fakta');
     };
 
     const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-        const underÅrsak = e.target.value as HendelseUndertype;
-        settIkkePersistertKomponent('fakta');
+        const underÅrsak =
+            e.target.value === '-' ? undefined : (e.target.value as HendelseUndertype);
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);
+        settIkkePersistertKomponent('fakta');
     };
-
     return (
         <Table.Row>
             <Table.DataCell>
@@ -86,7 +86,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
                 <VStack gap="1" className={`mt-[${ASpacing1}]`}>
                     {erLesevisning ? (
                         <BodyShort size="small">
-                            {periode.hendelsestype && hendelsetyper[periode.hendelsestype]}
+                            {aktuellHendelsetype && hendelsetyper[aktuellHendelsetype]}
                         </BodyShort>
                     ) : (
                         <Select
@@ -96,7 +96,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
                             label="Årsak"
                             hideLabel
                             onChange={event => onChangeÅrsak(event)}
-                            value={periode.hendelsestype || '-'}
+                            value={aktuellHendelsetype || '-'}
                             error={
                                 visFeilmeldinger &&
                                 feilmeldinger?.find(
@@ -118,8 +118,8 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
                         hendelseUnderTyper.length > 0 &&
                         (erLesevisning ? (
                             <BodyShort size="small">
-                                {periode.hendelsesundertype &&
-                                    hendelseundertyper[periode.hendelsesundertype]}
+                                {aktuellHendelseundertype &&
+                                    hendelseundertyper[aktuellHendelseundertype]}
                             </BodyShort>
                         ) : (
                             <Select
@@ -129,7 +129,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
                                 label="Underårsak"
                                 hideLabel
                                 onChange={event => onChangeUnderÅrsak(event)}
-                                value={periode.hendelsesundertype || '-'}
+                                value={aktuellHendelseundertype || '-'}
                                 error={
                                     visFeilmeldinger &&
                                     feilmeldinger?.find(

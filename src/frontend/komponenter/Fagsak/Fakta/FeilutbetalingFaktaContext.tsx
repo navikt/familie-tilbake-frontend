@@ -150,8 +150,10 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const oppdaterÅrsakPåPeriode = (
             periode: FaktaPeriodeSkjemaData,
-            nyÅrsak: HendelseType
+            nyÅrsak: HendelseType | undefined
         ): void => {
+            console.log('Setter årsak på periode:', periode.index, nyÅrsak);
+
             if (behandlePerioderSamlet) {
                 oppdaterÅrsaker(nyÅrsak);
             } else {
@@ -162,7 +164,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const oppdaterUnderårsakPåPeriode = (
             periode: FaktaPeriodeSkjemaData,
-            nyUnderårsak: HendelseUndertype
+            nyUnderårsak: HendelseUndertype | undefined
         ): void => {
             if (behandlePerioderSamlet) {
                 oppdaterUnderårsaker(periode, nyUnderårsak);
@@ -172,7 +174,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             settIkkePersistertKomponent('fakta');
         };
 
-        const oppdaterÅrsaker = (nyÅrsak: HendelseType): void => {
+        const oppdaterÅrsaker = (nyÅrsak: HendelseType | undefined): void => {
             const nyePerioder = skjemaData.perioder.map(periode => {
                 return { ...periode, hendelsestype: nyÅrsak, hendelsesundertype: undefined };
             });
@@ -182,10 +184,15 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             });
         };
 
-        const oppdaterÅrsak = (periode: FaktaPeriodeSkjemaData, nyÅrsak: HendelseType): void => {
+        const oppdaterÅrsak = (
+            periode: FaktaPeriodeSkjemaData,
+            nyÅrsak: HendelseType | undefined
+        ): void => {
             const gammelPeriodeIndex = skjemaData.perioder.findIndex(
                 gammelPeriode => gammelPeriode.index === periode.index
             );
+            console.log('Oppdaterer årsak for periode:', periode.index, nyÅrsak);
+
             const nyPeriode = { ...periode, hendelsestype: nyÅrsak, hendelsesundertype: undefined };
             const nyePerioder = skjemaData.perioder.toSpliced(gammelPeriodeIndex, 1, nyPeriode);
 
@@ -196,7 +203,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const oppdaterUnderårsaker = (
             periode: FaktaPeriodeSkjemaData,
-            nyUnderårsak: HendelseUndertype
+            nyUnderårsak: HendelseUndertype | undefined
         ): void => {
             const nyePerioder = skjemaData.perioder.map(gammelPeriode => {
                 if (gammelPeriode.hendelsestype === periode.hendelsestype) {
@@ -212,7 +219,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const oppdaterUnderårsak = (
             periode: FaktaPeriodeSkjemaData,
-            nyUnderårsak: HendelseUndertype
+            nyUnderårsak: HendelseUndertype | undefined
         ): void => {
             const gammelPeriodeIndex = skjemaData.perioder.findIndex(
                 gammelPeriode => gammelPeriode.index === periode.index

@@ -77,6 +77,7 @@ export const hendelsetyper: Record<HendelseType, string> = {
 };
 
 export enum HendelseUndertype {
+    Ingen = '-',
     // Felles
     AnnetFritekst = 'ANNET_FRITEKST',
     BrukerFlyttetFraNorge = 'BRUKER_FLYTTET_FRA_NORGE',
@@ -200,6 +201,7 @@ export enum HendelseUndertype {
 }
 
 export const hendelseundertyper: Record<HendelseUndertype, string> = {
+    [HendelseUndertype.Ingen]: '-',
     // Felles
     [HendelseUndertype.AnnetFritekst]: 'Annet fritekst',
     [HendelseUndertype.BrukerFlyttetFraNorge]: 'Bruker flyttet fra Norge',
@@ -499,6 +501,8 @@ const undertyper = {
     ],
 };
 
-export const hentHendelseUndertyper = (hendelseType: HendelseType): HendelseUndertype[] => {
-    return undertyper[hendelseType];
+export const hentHendelseUndertyper = (
+    hendelseType: HendelseType | undefined
+): HendelseUndertype[] => {
+    return hendelseType ? undertyper[hendelseType] : [];
 };
