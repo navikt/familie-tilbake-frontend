@@ -5,7 +5,7 @@ import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
 import classNames from 'classnames';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
@@ -25,56 +25,47 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
     index,
     erLesevisning,
 }) => {
-    const [hendelseUnderTyper, settHendelseUnderTyper] = useState<HendelseUndertype[]>();
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
         useFeilutbetalingFakta();
     const { settIkkePersistertKomponent } = useBehandling();
 
     useEffect(() => {
-        if (hendelseTyper?.length === 1) {
-            const underTyper = hentHendelseUndertyper(hendelseTyper[0]);
-            settHendelseUnderTyper(underTyper);
-
-            if (!periode.hendelsestype) {
-                settIkkePersistertKomponent('fakta');
-                oppdaterÅrsakPåPeriode(periode, hendelseTyper[0]);
-            }
-
-            if (underTyper.length === 1 && !periode.hendelsesundertype) {
-                settIkkePersistertKomponent('fakta');
-                oppdaterUnderårsakPåPeriode(periode, underTyper[0]);
-            }
-        } else if (periode.hendelsestype) {
-            settHendelseUnderTyper(hentHendelseUndertyper(periode.hendelsestype));
-        } else if (erLesevisning || !periode.hendelsestype) {
-            // når det er lesevisning og perioden ikke er behandlet
-            settHendelseUnderTyper([]);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [periode, hendelseTyper]);
-
-    useEffect(() => {
-        //Hvis hendelsesType er satt og dens hendelsesundertype kun har 1 i lengde, så skal den være satt
-        if (periode.hendelsestype && hentHendelseUndertyper(periode.hendelsestype)?.length === 1) {
+        const skalAutoVelgeHendelsestype = !periode.hendelsestype && hendelseTyper?.length === 1;
+        if (skalAutoVelgeHendelsestype) {
+            oppdaterÅrsakPåPeriode(periode, hendelseTyper[0]);
             settIkkePersistertKomponent('fakta');
-            hendelseUnderTyper && oppdaterUnderårsakPåPeriode(periode, hendelseUnderTyper[0]);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hendelseTyper]);
+
+    const hendelseUnderTyper = useMemo(() => {
+        return periode.hendelsestype ? hentHendelseUndertyper(periode.hendelsestype) : [];
     }, [periode.hendelsestype]);
 
+    useEffect(() => {
+        const skalAutoVelgeUnderType =
+            !periode.hendelsesundertype &&
+            hendelseUnderTyper.length === 1 &&
+            !!periode.hendelsestype;
+        if (skalAutoVelgeUnderType) {
+            oppdaterUnderårsakPåPeriode(periode, hendelseUnderTyper[0]);
+            settIkkePersistertKomponent('fakta');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hendelseUnderTyper]);
+
     const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-        const årsak = e.target.value as HendelseType;
-        settHendelseUnderTyper(hentHendelseUndertyper(årsak));
-        settIkkePersistertKomponent('fakta');
+        const årsak = e.target.value === '-' ? undefined : (e.target.value as HendelseType);
         oppdaterÅrsakPåPeriode(periode, årsak);
+        settIkkePersistertKomponent('fakta');
     };
 
     const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-        const underÅrsak = e.target.value as HendelseUndertype;
-        settIkkePersistertKomponent('fakta');
+        const underÅrsak =
+            e.target.value === '-' ? undefined : (e.target.value as HendelseUndertype);
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);
+        settIkkePersistertKomponent('fakta');
     };
-
     return (
         <Table.Row>
             <Table.DataCell>
@@ -106,7 +97,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
                             }
                             size="small"
                         >
-                            <option>-</option>
+                            {hendelseTyper && hendelseTyper.length > 1 && <option>-</option>}
                             {hendelseTyper?.map(type => (
                                 <option key={type} value={type}>
                                     {hendelsetyper[type]}
@@ -140,7 +131,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
                                 }
                                 size="small"
                             >
-                                <option>-</option>
+                                {hendelseUnderTyper.length > 1 && <option>-</option>}
                                 {hendelseUnderTyper.map(type => (
                                     <option key={type} value={type}>
                                         {hendelseundertyper[type]}

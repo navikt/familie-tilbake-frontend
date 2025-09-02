@@ -499,6 +499,8 @@ const undertyper = {
     ],
 };
 
-export const hentHendelseUndertyper = (hendelseType: HendelseType): HendelseUndertype[] => {
-    return undertyper[hendelseType];
+export const hentHendelseUndertyper = (
+    hendelseType: HendelseType | undefined
+): HendelseUndertype[] => {
+    return hendelseType ? undertyper[hendelseType] : [];
 };
