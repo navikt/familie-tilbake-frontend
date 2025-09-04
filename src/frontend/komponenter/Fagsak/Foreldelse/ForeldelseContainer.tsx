@@ -1,6 +1,7 @@
 import type { IBehandling } from '../../../typer/behandling';
 
-import { BodyLong, BodyShort, Button, Heading } from '@navikt/ds-react';
+import { ExternalLinkIcon } from '@navikt/aksel-icons';
+import { Alert, BodyLong, Button, Heading, Link, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
@@ -22,12 +23,6 @@ const StyledForeldelse = styled.div`
     padding: ${ASpacing3};
 `;
 
-const StyledAutomatiskForeldelse = styled.div`
-    padding: ${ASpacing3};
-    min-width: 15rem;
-    max-width: 30rem;
-`;
-
 interface IProps {
     behandling: IBehandling;
 }
@@ -46,16 +41,42 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
 
     if (erAutoutført) {
         return (
-            <StyledAutomatiskForeldelse>
-                <Heading spacing size="small" level="2">
+            <VStack padding="4" gap="4">
+                <Heading size="small" level="2">
                     Foreldelse
                 </Heading>
-                <BodyShort size="small" spacing>
-                    Foreldelsesloven §§ 2 og 3
-                </BodyShort>
-                <BodyLong size="small" spacing>
-                    Automatisk vurdert
-                </BodyLong>
+                <Alert variant="success" className="min-w-80">
+                    <Heading spacing size="small" level="3">
+                        Perioden er ikke foreldet
+                    </Heading>
+                    <VStack gap="6">
+                        <BodyLong>
+                            Ingen perioder er foreldet etter foreldelsesloven{' '}
+                            <Link
+                                href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A72"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-text-action"
+                            >
+                                § 2 <ExternalLinkIcon title="Ekstern link ikon" />
+                            </Link>{' '}
+                            og{' '}
+                            <Link
+                                href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A73"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-text-action"
+                            >
+                                § 3 <ExternalLinkIcon title="Ekstern link ikon" />
+                            </Link>
+                            .
+                        </BodyLong>
+                        <BodyLong>
+                            Perioden blir automatisk vurdert dersom det er mer enn 6 måneder til den
+                            er foreldet.
+                        </BodyLong>
+                    </VStack>
+                </Alert>
                 <Navigering>
                     <Button variant="primary" onClick={gåTilNesteSteg}>
                         Neste
@@ -64,7 +85,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                         Forrige
                     </Button>
                 </Navigering>
-            </StyledAutomatiskForeldelse>
+            </VStack>
         );
     }
 
