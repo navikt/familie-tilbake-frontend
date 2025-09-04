@@ -1,5 +1,6 @@
 import type { IBehandling } from '../../../typer/behandling';
 
+import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Alert, BodyLong, Button, Heading, Link, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
@@ -55,16 +56,18 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                                 href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A72"
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                className="text-text-action"
                             >
-                                § 2
+                                § 2 <ExternalLinkIcon title="Ekstern link ikon" />
                             </Link>{' '}
                             og{' '}
                             <Link
                                 href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A73"
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                className="text-text-action"
                             >
-                                § 3
+                                § 3 <ExternalLinkIcon title="Ekstern link ikon" />
                             </Link>
                             .
                         </BodyLong>
