@@ -60,7 +60,7 @@ export const BrevmottakerModalWrapper: React.FC<BrevmottakerModalWrapperProps> =
 
     return <LeggTilBrevmottakerModal />;
 };
-export const LeggTilEndreBrevmottakerModal: React.FC = () => {
+export const BrevmottakerModal: React.FC = () => {
     const { visBrevmottakerModal, brevmottakerIdTilEndring, behandling } = useBehandling();
     const { fagsak } = useFagsak();
 

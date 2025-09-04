@@ -3,7 +3,7 @@ import { Button, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 
-import { LeggTilEndreBrevmottakerModal } from './LeggTilEndreBrevmottakerModal';
+import { BrevmottakerModal } from './BrevmottakerModal';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
@@ -187,7 +187,7 @@ const Brevmottakere: React.FC = () => {
 
     return (
         <div>
-            {visBrevmottakerModal && <LeggTilEndreBrevmottakerModal />}
+            {visBrevmottakerModal && <BrevmottakerModal />}
             <div>
                 <Heading size="large" level="1">
                     Brevmottaker(e)
