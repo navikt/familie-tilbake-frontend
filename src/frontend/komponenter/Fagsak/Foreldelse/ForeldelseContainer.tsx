@@ -1,6 +1,5 @@
 import type { IBehandling } from '../../../typer/behandling';
 
-import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Alert, BodyLong, Button, Heading, Link, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
@@ -58,7 +57,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                                 rel="noopener noreferrer"
                                 className="text-text-action"
                             >
-                                § 2 <ExternalLinkIcon title="Ekstern link ikon" />
+                                § 2
                             </Link>{' '}
                             og{' '}
                             <Link
@@ -67,7 +66,7 @@ const ForeldelseContainer: React.FC<IProps> = ({ behandling }) => {
                                 rel="noopener noreferrer"
                                 className="text-text-action"
                             >
-                                § 3 <ExternalLinkIcon title="Ekstern link ikon" />
+                                § 3
                             </Link>
                             .
                         </BodyLong>
