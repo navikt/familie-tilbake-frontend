@@ -153,6 +153,21 @@ export const mapBrevmottakerToFormData = (brevmottaker: IBrevmottaker): Partial<
                 },
             };
 
+        case MottakerType.Bruker:
+            // Default-bruker skal redigeres som "Bruker med utenlandsk adresse"
+            return {
+                ...baseData,
+                mottakerType: MottakerType.BrukerMedUtenlandskAdresse, // Konverter til riktig skjematype
+                brukerMedUtenlandskAdresse: {
+                    navn: brevmottaker.navn,
+                    land: adresseInfo?.landkode || '',
+                    adresselinje1: adresseInfo?.adresselinje1 || '',
+                    adresselinje2: adresseInfo?.adresselinje2 || '',
+                    postnummer: adresseInfo?.postnummer || '',
+                    poststed: adresseInfo?.poststed || '',
+                },
+            };
+
         case MottakerType.Dødsbo:
             return {
                 ...baseData,
