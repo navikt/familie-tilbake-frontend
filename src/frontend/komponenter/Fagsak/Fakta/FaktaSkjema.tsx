@@ -56,7 +56,6 @@ const FaktaSkjema: React.FC<IProps> = ({
     const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== feilutbetalingFakta.kravgrunnlagReferanse;
-    console.log(behandling.behandlingsstegsinfo);
 
     return (
         <HGrid columns={2} gap="10">
