@@ -20,7 +20,6 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
         useFeilutbetalingForeldelse();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
-    console.log(behandling);
 
     if (erAutoutført) {
         return (
