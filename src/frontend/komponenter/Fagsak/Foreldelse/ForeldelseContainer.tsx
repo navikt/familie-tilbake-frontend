@@ -28,38 +28,44 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                     Foreldelse
                 </Heading>
                 <Alert variant="success" className="min-w-80">
-                    <VStack gap="2">
+                    {behandling.erNyModell ? (
                         <Heading size="small" level="3">
-                            Perioden er ikke foreldet
+                            Vurder foreldelse
                         </Heading>
-                        <VStack gap="6">
-                            <BodyLong>
-                                Ingen perioder er foreldet etter foreldelsesloven{' '}
-                                <Link
-                                    href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A72"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-text-action"
-                                >
-                                    § 2
-                                </Link>{' '}
-                                og{' '}
-                                <Link
-                                    href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A73"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-text-action"
-                                >
-                                    § 3
-                                </Link>
-                                .
-                            </BodyLong>
-                            <BodyLong>
-                                Perioden blir automatisk vurdert dersom det er mer enn 6 måneder til
-                                den er foreldet.
-                            </BodyLong>
+                    ) : (
+                        <VStack gap="2">
+                            <Heading size="small" level="3">
+                                Perioden er ikke foreldet
+                            </Heading>
+                            <VStack gap="6">
+                                <BodyLong>
+                                    Ingen perioder er foreldet etter foreldelsesloven{' '}
+                                    <Link
+                                        href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A72"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-text-action"
+                                    >
+                                        § 2
+                                    </Link>{' '}
+                                    og{' '}
+                                    <Link
+                                        href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A73"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-text-action"
+                                    >
+                                        § 3
+                                    </Link>
+                                    .
+                                </BodyLong>
+                                <BodyLong>
+                                    Perioden blir automatisk vurdert dersom det er mer enn 6 måneder
+                                    til den er foreldet.
+                                </BodyLong>
+                            </VStack>
                         </VStack>
-                    </VStack>
+                    )}
                 </Alert>
                 <Navigering>
                     <Button variant="primary" onClick={gåTilNesteSteg}>
