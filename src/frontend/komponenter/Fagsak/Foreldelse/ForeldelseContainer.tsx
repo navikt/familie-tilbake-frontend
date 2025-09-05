@@ -79,7 +79,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                 <Heading size="small" level="2">
                     Foreldelse
                 </Heading>
-                <Alert variant="info" className="min-w-80 wide-alert">
+                <Alert variant="info" className="min-w-80" contentMaxWidth={false}>
                     <VStack gap="2">
                         <Heading size="small" level="3">
                             Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan være foreldet
