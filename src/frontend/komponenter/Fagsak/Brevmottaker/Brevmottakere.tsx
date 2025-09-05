@@ -1,5 +1,5 @@
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
-import { Button, Heading } from '@navikt/ds-react';
+import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 
@@ -59,87 +59,148 @@ const Brevmottaker: React.FC<IBrevmottakerProps> = ({
     };
 
     return (
-        <div>
-            <div>
-                <Heading size="medium">{mottakerTypeVisningsnavn[brevmottaker.type]}</Heading>
-                {!erLesevisning && !erDefaultBruker && (
-                    <Button
-                        variant="tertiary"
-                        onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
-                        size="small"
-                        icon={<TrashIcon />}
-                    >
-                        Fjern
-                    </Button>
-                )}
+        <>
+            <div className="flex justify-between items-center mb-4">
+                <BodyShort weight="semibold" size="medium">
+                    {mottakerTypeVisningsnavn[brevmottaker.type]}
+                </BodyShort>
+                <div className="flex gap-1">
+                    {!erLesevisning && !erDefaultBruker && (
+                        <Button
+                            variant="tertiary"
+                            onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
+                            size="small"
+                            icon={<TrashIcon />}
+                        >
+                            Fjern
+                        </Button>
+                    )}
+                    {!erLesevisning && !erDefaultBruker && (
+                        <Button
+                            variant="tertiary"
+                            onClick={() => {
+                                håndterEndreBrevmottaker();
+                            }}
+                            size="small"
+                            icon={<PencilIcon />}
+                        >
+                            Endre
+                        </Button>
+                    )}
+                    {!erLesevisning && erDefaultBruker && antallBrevmottakere > 1 && (
+                        <Button
+                            variant="tertiary"
+                            size="small"
+                            icon={<PencilIcon />}
+                            onClick={() => {
+                                håndterEndreBrevmottaker();
+                            }}
+                        >
+                            Endre
+                        </Button>
+                    )}
+                </div>
             </div>
             <dl>
                 {brevmottaker.organisasjonsnummer ? (
-                    <>
+                    <div className="px-4 sm:grid sm:grid-cols-2 sm:gap-2 sm:px-0">
                         {kontaktperson && (
                             <>
                                 <dt>Kontaktperson</dt>
                                 <dd>{kontaktperson}</dd>
                             </>
                         )}
-                        <dt>Organisasjonsnummer</dt>
-                        <dd>{brevmottaker.organisasjonsnummer}</dd>
-                        <dt>Organisasjonsnavn</dt>
-                        <dd>{organisasjonsnavn}</dd>
-                    </>
+                        <dt>
+                            <BodyShort weight="semibold">Organisasjonsnummer</BodyShort>
+                        </dt>
+                        <dd>
+                            <BodyShort size="small">{brevmottaker.organisasjonsnummer}</BodyShort>
+                        </dd>
+                        <dt>
+                            <BodyShort weight="semibold">Organisasjonsnavn</BodyShort>
+                        </dt>
+                        <dd>
+                            <BodyShort size="small">{organisasjonsnavn}</BodyShort>
+                        </dd>
+                    </div>
                 ) : (
-                    <>
-                        <dt>Navn</dt>
-                        <dd>{brevmottaker.navn}</dd>
-                    </>
+                    <div className="px-4 sm:grid sm:grid-cols-2 sm:gap-2 sm:px-0">
+                        <dt>
+                            <BodyShort size="small" weight="semibold">
+                                Navn
+                            </BodyShort>
+                        </dt>
+                        <dd>
+                            <BodyShort size="small">{brevmottaker.navn}</BodyShort>
+                        </dd>
+                    </div>
                 )}
                 {brevmottaker.personIdent && (
-                    <>
-                        <dt>Fødselsnummer</dt>
-                        <dd>{brevmottaker.personIdent}</dd>
-                    </>
+                    <div className="px-4 sm:grid sm:grid-cols-2 sm:gap-2 sm:px-0">
+                        <dt>
+                            <BodyShort size="small" weight="semibold">
+                                Fødselsnummer
+                            </BodyShort>
+                        </dt>
+                        <dd>
+                            <BodyShort size="small">{brevmottaker.personIdent}</BodyShort>
+                        </dd>
+                    </div>
                 )}
                 {brevmottaker.manuellAdresseInfo && (
-                    <>
-                        <dt>Adresselinje 1</dt>
-                        <dd>{brevmottaker.manuellAdresseInfo?.adresselinje1}</dd>
-                        <dt>Adresselinje 2</dt>
-                        <dd>{brevmottaker.manuellAdresseInfo?.adresselinje2 || '-'}</dd>
-                        <dt>Postnummer</dt>
-                        <dd>{brevmottaker.manuellAdresseInfo?.postnummer || '-'}</dd>
-                        <dt>Poststed</dt>
-                        <dd>{brevmottaker.manuellAdresseInfo?.poststed || '-'}</dd>
-                        <dt>Land</dt>
-                        <dd>{landnavn}</dd>
-                    </>
+                    <div className="px-4 sm:grid sm:grid-cols-2 sm:gap-2 sm:px-0">
+                        <dt>
+                            <BodyShort size="small" weight="semibold">
+                                Adresselinje 1
+                            </BodyShort>
+                        </dt>
+                        <dd>
+                            <BodyShort size="small">
+                                {brevmottaker.manuellAdresseInfo?.adresselinje1}
+                            </BodyShort>
+                        </dd>
+                        <dt>
+                            <BodyShort size="small" weight="semibold">
+                                Adresselinje 2
+                            </BodyShort>
+                        </dt>
+                        <dd>
+                            <BodyShort size="small">
+                                {brevmottaker.manuellAdresseInfo?.adresselinje2 || '-'}
+                            </BodyShort>
+                        </dd>
+                        <dt>
+                            <BodyShort size="small" weight="semibold">
+                                Postnummer
+                            </BodyShort>
+                        </dt>
+                        <dd>
+                            <BodyShort size="small">
+                                {brevmottaker.manuellAdresseInfo?.postnummer || '-'}
+                            </BodyShort>
+                        </dd>
+                        <dt>
+                            <BodyShort size="small" weight="semibold">
+                                Poststed
+                            </BodyShort>
+                        </dt>
+                        <dd>
+                            <BodyShort size="small">
+                                {brevmottaker.manuellAdresseInfo?.poststed || '-'}
+                            </BodyShort>
+                        </dd>
+                        <dt>
+                            <BodyShort size="small" weight="semibold">
+                                Land
+                            </BodyShort>
+                        </dt>
+                        <dd>
+                            <BodyShort size="small">{landnavn}</BodyShort>
+                        </dd>
+                    </div>
                 )}
             </dl>
-            {!erLesevisning && !erDefaultBruker && (
-                <Button
-                    variant="tertiary"
-                    onClick={() => {
-                        håndterEndreBrevmottaker();
-                    }}
-                    size="small"
-                    icon={<PencilIcon />}
-                >
-                    Endre
-                </Button>
-            )}
-
-            {!erLesevisning && erDefaultBruker && antallBrevmottakere > 1 && (
-                <Button
-                    variant="tertiary"
-                    size="small"
-                    icon={<PencilIcon />}
-                    onClick={() => {
-                        håndterEndreBrevmottaker();
-                    }}
-                >
-                    Endre
-                </Button>
-            )}
-        </div>
+        </>
     );
 };
 
@@ -182,21 +243,27 @@ const Brevmottakere: React.FC = () => {
     };
 
     if (behandling?.status !== 'SUKSESS' || fagsak?.status !== 'SUKSESS') {
-        return null; // eller loading spinner
+        return null;
     }
 
     return (
-        <div>
+        <>
             {visBrevmottakerModal && <BrevmottakerModal />}
-            <div>
-                <Heading size="large" level="1">
+            <VStack padding="space-24" gap="4">
+                <Heading size="small" level="1">
                     Brevmottaker(e)
                 </Heading>
-                <div>
+                <VStack gap="4" maxWidth="430px">
                     {Object.keys(brevmottakere)
                         .sort((a, b) => brevmottakere[a].type.localeCompare(brevmottakere[b].type))
                         .map(id => (
-                            <div key={id}>
+                            <Box
+                                borderWidth="1"
+                                borderRadius="xlarge"
+                                padding="4"
+                                borderColor="border-divider"
+                                key={id}
+                            >
                                 <Brevmottaker
                                     brevmottaker={brevmottakere[id]}
                                     brevmottakerId={id}
@@ -219,14 +286,14 @@ const Brevmottakere: React.FC = () => {
                                             Legg til ny mottaker
                                         </Button>
                                     )}
-                            </div>
+                            </Box>
                         ))}
-                </div>
+                </VStack>
                 <Button variant="primary" onClick={gåTilNeste}>
                     Neste
                 </Button>
-            </div>
-        </div>
+            </VStack>
+        </>
     );
 };
 

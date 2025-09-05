@@ -22,6 +22,7 @@ export const EndreBrevmottakerModal: React.FC<EndreBrevmottakerModalProps> = ({
     return (
         <Modal
             open={true}
+            width="small"
             onClose={lukkBrevmottakerModal}
             header={{
                 heading: 'Endre brevmottaker',
