@@ -3,12 +3,3 @@
 
 
 @config './tailwind.config.js';
-
-.wide-alert .navds-alert__wrapper--maxwidth {
-    display: none !important;
-}
-
-.wide-alert .navds-alert__wrapper {
-    display: block !important;
-    max-width: none !important;
-}
