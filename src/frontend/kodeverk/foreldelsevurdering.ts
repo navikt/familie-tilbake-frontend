@@ -16,7 +16,7 @@ export const foreldelsevurderinger: Record<Foreldelsevurdering, string> = {
 };
 
 export const foreldelseVurderingTyper: readonly Foreldelsevurdering[] = [
-    Foreldelsevurdering.Foreldet,
     Foreldelsevurdering.IkkeForeldet,
+    Foreldelsevurdering.Foreldet,
     Foreldelsevurdering.Tilleggsfrist,
 ] as const;
