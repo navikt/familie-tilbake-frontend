@@ -34,7 +34,7 @@ import {
     sorterFeilutbetaltePerioder,
     validerTekstMaksLengde,
 } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../Felleskomponenter/Venstremeny/sider';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 
@@ -323,7 +323,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             if (stegErBehandlet && !harEndretOpplysninger()) {
                 nullstillIkkePersisterteKomponenter();
                 utførRedirect(
-                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FORELDELSE.href}`
+                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
                 );
             } else {
                 const feilmeldinger = validerForInnsending();
@@ -369,7 +369,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const gåTilForrige = (): void => {
             navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
+                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
             );
         };
 

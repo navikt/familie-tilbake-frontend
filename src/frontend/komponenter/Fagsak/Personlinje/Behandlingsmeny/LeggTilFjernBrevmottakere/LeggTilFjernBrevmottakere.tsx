@@ -14,7 +14,7 @@ import { Behandlingssteg, Behandlingsstegstatus } from '../../../../../typer/beh
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
-import { sider } from '../../../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../../Felleskomponenter/Venstremeny/sider';
 
 interface IProps {
     behandling: IBehandling;
@@ -61,7 +61,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                 settVisBrevmottakerModal(true);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                     navigate(
-                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`
+                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`
                     );
                 });
             } else if (

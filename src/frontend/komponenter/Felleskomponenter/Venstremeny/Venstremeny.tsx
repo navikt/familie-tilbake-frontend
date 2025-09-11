@@ -14,7 +14,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import Link from './Link';
-import { erSidenAktiv, sider, visSide } from './sider';
+import { erSidenAktiv, SYNLIGE_STEG, visSide } from './sider';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { RessursStatus } from '../../../typer/ressurs';
 
@@ -70,7 +70,7 @@ const Venstremeny: React.FunctionComponent<IProps> = ({ fagsak }) => {
     return (
         <StyledNav>
             {behandling?.status === RessursStatus.Suksess
-                ? Object.entries(sider)
+                ? Object.entries(SYNLIGE_STEG)
                       // eslint-disable-next-line @typescript-eslint/no-unused-vars
                       .filter(([_, side]) => visSide(side, behandling.data))
                       .map(([sideId, side], index: number) => {

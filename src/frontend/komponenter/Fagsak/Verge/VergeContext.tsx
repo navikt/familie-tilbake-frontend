@@ -27,7 +27,7 @@ import {
     validerTekstFelt,
     validerTekstFeltMaksLengde,
 } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../Felleskomponenter/Venstremeny/sider';
 
 const erVergetypeOppfylt = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.vergetype.valideringsstatus === Valideringsstatus.Ok;
@@ -171,7 +171,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
         if (stegErBehandlet && !harEndretOpplysninger()) {
             nullstillIkkePersisterteKomponenter();
             utførRedirect(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FAKTA.href}`
+                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
             );
         } else if (kanSendeSkjema()) {
             settSenderInn(true);

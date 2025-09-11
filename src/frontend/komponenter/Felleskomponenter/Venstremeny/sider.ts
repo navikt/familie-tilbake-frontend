@@ -2,48 +2,47 @@ import type { IBehandling, IBehandlingsstegstilstand } from '../../../typer/beha
 
 import { Behandlingssteg, Behandlingsstegstatus } from '../../../typer/behandling';
 
-export interface ISide {
+export type SynligSteg = {
     href: string;
     navn: string;
     steg: Behandlingssteg;
-}
+};
 
-enum SideId {
-    Fakta = 'FAKTA',
-    Foreldelse = 'FORELDELSE',
-    Vilkårsvurdering = 'VILKÅRSVURDERING',
-    Verge = 'VERGE',
-    Vedtak = 'VEDTAK',
-    Brevmottaker = 'BREVMOTTAKER',
-}
+type SynligeStegType =
+    | Behandlingssteg.Brevmottaker
+    | Behandlingssteg.Fakta
+    | Behandlingssteg.Foreldelse
+    | Behandlingssteg.ForeslåVedtak
+    | Behandlingssteg.Verge
+    | Behandlingssteg.Vilkårsvurdering;
 
-export const sider: Record<SideId, ISide> = {
-    [SideId.Brevmottaker]: {
+export const SYNLIGE_STEG: Record<SynligeStegType, SynligSteg> = {
+    [Behandlingssteg.Brevmottaker]: {
         href: 'brevmottakere',
         navn: 'Brevmottaker(e)',
         steg: Behandlingssteg.Brevmottaker,
     },
-    [SideId.Verge]: {
+    [Behandlingssteg.Verge]: {
         href: 'verge',
         navn: 'Verge',
         steg: Behandlingssteg.Verge,
     },
-    [SideId.Fakta]: {
+    [Behandlingssteg.Fakta]: {
         href: 'fakta',
         navn: 'Fakta',
         steg: Behandlingssteg.Fakta,
     },
-    [SideId.Foreldelse]: {
+    [Behandlingssteg.Foreldelse]: {
         href: 'foreldelse',
         navn: 'Foreldelse',
         steg: Behandlingssteg.Foreldelse,
     },
-    [SideId.Vilkårsvurdering]: {
+    [Behandlingssteg.Vilkårsvurdering]: {
         href: 'vilkaarsvurdering',
         navn: 'Vilkårsvurdering',
         steg: Behandlingssteg.Vilkårsvurdering,
     },
-    [SideId.Vedtak]: {
+    [Behandlingssteg.ForeslåVedtak]: {
         href: 'vedtak',
         navn: 'Vedtak',
         steg: Behandlingssteg.ForeslåVedtak,
@@ -57,8 +56,8 @@ const aktiveBehandlingstegstatuser = [
     Behandlingsstegstatus.Venter,
 ];
 
-export const erSidenAktiv = (side: ISide, behandling: IBehandling): boolean => {
-    if (side === sider.VERGE) {
+export const erSidenAktiv = (side: SynligSteg, behandling: IBehandling): boolean => {
+    if (side === SYNLIGE_STEG.VERGE) {
         return (
             behandling.harVerge ||
             (behandling.behandlingsstegsinfo &&
@@ -73,7 +72,7 @@ export const erSidenAktiv = (side: ISide, behandling: IBehandling): boolean => {
 };
 
 const sjekkOmSidenErAktiv = (
-    side: ISide,
+    side: SynligSteg,
     behandlingsstegsinfo: IBehandlingsstegstilstand[]
 ): boolean => {
     return behandlingsstegsinfo
@@ -81,7 +80,7 @@ const sjekkOmSidenErAktiv = (
         .some(stegInfo => stegInfo.behandlingssteg === side.steg);
 };
 
-export const visSide = (side: ISide, åpenBehandling: IBehandling): boolean => {
+export const visSide = (side: SynligSteg, åpenBehandling: IBehandling): boolean => {
     if (side.steg === Behandlingssteg.Brevmottaker) {
         return åpenBehandling.behandlingsstegsinfo
             .map(value => value.behandlingssteg)
@@ -93,13 +92,13 @@ export const visSide = (side: ISide, åpenBehandling: IBehandling): boolean => {
     return true;
 };
 
-export const utledBehandlingSide = (steg: Behandlingssteg): ISide | undefined => {
+export const utledBehandlingSide = (steg: Behandlingssteg): SynligSteg | undefined => {
     switch (steg) {
         case Behandlingssteg.FatteVedtak:
-            return sider.FAKTA;
+            return SYNLIGE_STEG.FAKTA;
         case Behandlingssteg.Avsluttet:
         case Behandlingssteg.IverksettVedtak:
-            return sider.VEDTAK;
+            return SYNLIGE_STEG.FORESLÅ_VEDTAK;
         default:
             return finnSideForSteg(steg);
     }
@@ -120,8 +119,11 @@ export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBeha
     if (erHistoriskSide(ønsketSide)) {
         return true;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const funnetØnsketSide = Object.entries(sider).find(([_, side]) => side.href === ønsketSide);
+
+    const funnetØnsketSide = Object.entries(SYNLIGE_STEG).find(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ([_, side]) => side.href === ønsketSide
+    );
 
     if (funnetØnsketSide && behandling.behandlingsstegsinfo) {
         const steg = behandling.behandlingsstegsinfo.find(
@@ -133,8 +135,8 @@ export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBeha
     return !!funnetØnsketSide;
 };
 
-export const finnSideForSteg = (steg: Behandlingssteg): ISide | undefined => {
+export const finnSideForSteg = (steg: Behandlingssteg): SynligSteg | undefined => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const sideForSteg = Object.entries(sider).find(([_, side]) => side.steg === steg);
+    const sideForSteg = Object.entries(SYNLIGE_STEG).find(([_, side]) => side.steg === steg);
     return sideForSteg ? sideForSteg[1] : undefined;
 };

@@ -1,5 +1,5 @@
 import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
-import type { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
+import type { SynligSteg } from '../../../Felleskomponenter/Venstremeny/sider';
 
 import { Alert, BodyShort, Button, Label, Link, Radio, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -101,7 +101,7 @@ const Totrinnskontroll: React.FC = () => {
                                             onMouseDown={(e: React.MouseEvent) =>
                                                 e.preventDefault()
                                             }
-                                            onClick={() => navigerTilSide(side as ISide)}
+                                            onClick={() => navigerTilSide(side as SynligSteg)}
                                         >
                                             {behandlingssteg[totrinnSteg.behandlingssteg]}
                                         </Link>

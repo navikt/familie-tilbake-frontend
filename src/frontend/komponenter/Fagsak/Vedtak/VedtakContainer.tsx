@@ -19,7 +19,7 @@ import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../Felleskomponenter/Venstremeny/sider';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};
@@ -143,7 +143,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                             )}
                             institusjon={fagsak?.institusjon}
                             bruker={fagsak.bruker}
-                            linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`}
+                            linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
                         />
                         <Spacer20 />
                     </>

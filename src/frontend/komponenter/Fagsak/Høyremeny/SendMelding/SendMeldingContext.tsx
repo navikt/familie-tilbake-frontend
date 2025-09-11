@@ -23,7 +23,7 @@ import {
     hentFrontendFeilmelding,
     validerTekstFeltMaksLengde,
 } from '../../../../utils';
-import { sider } from '../../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../Felleskomponenter/Venstremeny/sider';
 
 interface Mottaker {
     verdi: string;
@@ -113,7 +113,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fa
                     nullstillSkjema();
                     hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                         navigate(
-                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
+                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
                         );
                     });
                 } else {

@@ -1,7 +1,7 @@
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { IHistorikkInnslag } from '../../../../typer/historikk';
-import type { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
+import type { SynligSteg } from '../../../Felleskomponenter/Venstremeny/sider';
 import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
@@ -48,7 +48,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
                 });
         };
 
-        const navigerTilSide = (side: ISide): void => {
+        const navigerTilSide = (side: SynligSteg): void => {
             navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );
