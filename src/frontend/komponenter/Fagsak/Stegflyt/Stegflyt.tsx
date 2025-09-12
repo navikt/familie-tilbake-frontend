@@ -75,11 +75,12 @@ export const Stegflyt: React.FC<Props> = ({ behandlingsstegInfo }) => {
             onStepChange={gåTilSteg}
             orientation="horizontal"
             className="mx-4"
+            aria-label="Behandlingssteg"
         >
             {stegListe.map(steg => {
                 const ariaLabel = steg.erAktiv
                     ? `Gå til ${steg.navn}`
-                    : 'Inaktivt steg, ikke klikkbart';
+                    : `Inaktivt steg, ${steg.navn}, ikke klikkbar`;
                 return (
                     <Stepper.Step
                         key={steg.steg}

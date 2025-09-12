@@ -56,7 +56,7 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
-const StyledMainContainer = styled.div`
+const StyledMainContainer = styled.main`
     flex: 1;
     overflow: auto;
 `;
@@ -66,7 +66,7 @@ const HenlagtContainer = styled.div`
     text-align: center;
 `;
 
-const StyledHøyremenyContainer = styled.div`
+const StyledHøyremenyContainer = styled.aside`
     border-left: 1px solid ${ABorderDefault};
     overflow-x: hidden;
     overflow-y: scroll;
@@ -167,8 +167,13 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
         </>
     ) : harKravgrunnlag ? (
         <>
-            <main id="fagsak-main" className="flex-1 overflow-auto mt-4 [scrollbar-gutter:stable]">
-                <Stegflyt behandlingsstegInfo={behandling.behandlingsstegsinfo} />
+            <main
+                className="flex-1 overflow-auto mt-4 [scrollbar-gutter:stable]"
+                aria-label="Behandling innhold"
+            >
+                <nav aria-label="Behandlingssteg">
+                    <Stegflyt behandlingsstegInfo={behandling.behandlingsstegsinfo} />
+                </nav>
                 <section className="mx-6">
                     <Routes>
                         <Route
@@ -246,7 +251,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                     </Routes>
                 </section>
             </main>
-            <StyledHøyremenyContainer>
+            <StyledHøyremenyContainer aria-label="Høyremeny med informasjon og handlinger for behandlingen">
                 <Suspense fallback="Høyremeny kravgrunnlag laster...">
                     <Høyremeny fagsak={fagsak} behandling={behandling} />
                 </Suspense>

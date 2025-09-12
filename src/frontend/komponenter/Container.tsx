@@ -34,16 +34,14 @@ const Container: React.FC = () => {
             {autentisert ? (
                 <>
                     <Toasts />
-                    <main>
-                        <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
-                        <TogglesProvider>
-                            <FagsakProvider>
-                                <BehandlingProvider>
-                                    <AppRoutes />
-                                </BehandlingProvider>
-                            </FagsakProvider>
-                        </TogglesProvider>
-                    </main>
+                    <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
+                    <TogglesProvider>
+                        <FagsakProvider>
+                            <BehandlingProvider>
+                                <AppRoutes />
+                            </BehandlingProvider>
+                        </FagsakProvider>
+                    </TogglesProvider>
                 </>
             ) : (
                 <UgyldigSesjon />
