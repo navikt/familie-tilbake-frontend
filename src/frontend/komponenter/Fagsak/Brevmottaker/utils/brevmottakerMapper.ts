@@ -1,10 +1,10 @@
 import type { IBrevmottaker } from '../../../../typer/Brevmottaker';
-import type { FormData } from '../types/FormData';
+import type { BrevmottakerFormData } from '../schema/brevmottakerFormData';
 
 import { Vergetype as VergetypeEnum } from '../../../../kodeverk/verge';
 import { MottakerType, AdresseKilde } from '../../../../typer/Brevmottaker';
 
-export const mapFormDataToBrevmottaker = (data: FormData): IBrevmottaker => {
+export const mapFormDataToBrevmottaker = (data: BrevmottakerFormData): IBrevmottaker => {
     const mottakerType = data.mottakerType as MottakerType;
 
     switch (mottakerType) {
@@ -99,7 +99,9 @@ export const mapFormDataToBrevmottaker = (data: FormData): IBrevmottaker => {
     }
 };
 
-export const mapBrevmottakerToFormData = (brevmottaker: IBrevmottaker): Partial<FormData> => {
+export const mapBrevmottakerToFormData = (
+    brevmottaker: IBrevmottaker
+): Partial<BrevmottakerFormData> => {
     const baseData = {
         mottakerType: brevmottaker.type,
     };

@@ -7,15 +7,15 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { BrukerMedUtenlandskAdresse } from './BrukerMedUtenlandskAdresse';
 import { Dødsbo } from './Dødsbo';
 import { Fullmektig } from './Fullmektig';
-import { type FormData } from './types/FormData';
+import { type BrevmottakerFormData } from './schema/brevmottakerFormData';
 import { opprettStandardSkjemaverdier } from './utils/formDefaults';
 import { Verge } from './Verge';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 
 interface BrevmottakerFormProps {
-    initialData?: Partial<FormData>;
+    readonly initialData?: Partial<BrevmottakerFormData>;
     onSubmit: (
-        data: FormData,
+        data: BrevmottakerFormData,
         setError: (fieldName: string, error: { message: string }) => void
     ) => void;
     onCancel: () => void;
@@ -28,7 +28,7 @@ export const BrevmottakerForm: React.FC<BrevmottakerFormProps> = ({
     onCancel,
     submitButtonText,
 }) => {
-    const methods = useForm<FormData>({
+    const methods = useForm<BrevmottakerFormData>({
         reValidateMode: 'onBlur',
         shouldFocusError: false,
         defaultValues: opprettStandardSkjemaverdier(initialData),
@@ -37,9 +37,9 @@ export const BrevmottakerForm: React.FC<BrevmottakerFormProps> = ({
     const { handleSubmit, setValue, watch, setError } = methods;
     const mottakerType = watch('mottakerType');
 
-    const handleFormSubmit: SubmitHandler<FormData> = data => {
+    const handleFormSubmit: SubmitHandler<BrevmottakerFormData> = data => {
         const setErrorWrapper = (fieldName: string, error: { message: string }): void => {
-            setError(fieldName as keyof FormData, error);
+            setError(fieldName as keyof BrevmottakerFormData, error);
         };
         onSubmit(data, setErrorWrapper);
     };

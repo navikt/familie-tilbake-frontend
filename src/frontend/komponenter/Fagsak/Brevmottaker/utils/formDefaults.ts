@@ -1,7 +1,11 @@
-import type { FormData } from '../types/FormData';
+import type { BrevmottakerFormData } from '../schema/brevmottakerFormData';
 
-const opprettStandardSkjemaverdier = (initialData?: Partial<FormData>): FormData => ({
-    mottakerType: initialData?.mottakerType || '',
+import { MottakerType, AdresseKilde } from '../../../../typer/Brevmottaker';
+
+const opprettStandardSkjemaverdier = (
+    initialData?: Partial<BrevmottakerFormData>
+): BrevmottakerFormData => ({
+    mottakerType: initialData?.mottakerType || MottakerType.BrukerMedUtenlandskAdresse,
     brukerMedUtenlandskAdresse: {
         navn: '',
         land: '',
@@ -12,7 +16,7 @@ const opprettStandardSkjemaverdier = (initialData?: Partial<FormData>): FormData
         ...initialData?.brukerMedUtenlandskAdresse,
     },
     fullmektig: {
-        adresseKilde: '',
+        adresseKilde: AdresseKilde.ManuellRegistrering,
         personnummer: '',
         organisasjonsnummer: '',
         navn: '',
@@ -25,7 +29,7 @@ const opprettStandardSkjemaverdier = (initialData?: Partial<FormData>): FormData
     },
     verge: {
         vergetype: '',
-        adresseKilde: '',
+        adresseKilde: AdresseKilde.ManuellRegistrering,
         personnummer: '',
         organisasjonsnummer: '',
         navn: '',

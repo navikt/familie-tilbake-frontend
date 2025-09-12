@@ -1,6 +1,6 @@
-import type { FormData } from './types/FormData';
 import type { SubmitHandler } from 'react-hook-form';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -8,6 +8,9 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { BrukerMedUtenlandskAdresse } from './BrukerMedUtenlandskAdresse';
 import { Dødsbo } from './Dødsbo';
 import { Fullmektig } from './Fullmektig';
+import brevmottakerFormDataSchema, {
+    type BrevmottakerFormData,
+} from './schema/brevmottakerFormData';
 import { mapFormDataToBrevmottaker } from './utils/brevmottakerMapper';
 import { opprettStandardSkjemaverdier } from './utils/formDefaults';
 import { Verge } from './Verge';
@@ -30,7 +33,8 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
 
     const isOpen = open ?? visBrevmottakerModal;
 
-    const methods = useForm<FormData>({
+    const methods = useForm<BrevmottakerFormData>({
+        resolver: zodResolver(brevmottakerFormDataSchema),
         reValidateMode: 'onBlur',
         shouldFocusError: false,
         defaultValues: opprettStandardSkjemaverdier(),
@@ -47,7 +51,7 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
         }
     };
 
-    const handleLeggTil: SubmitHandler<FormData> = async data => {
+    const handleLeggTil: SubmitHandler<BrevmottakerFormData> = async data => {
         if (!behandling || behandling.status !== RessursStatus.Suksess) {
             return;
         }
@@ -59,13 +63,13 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
             clearError();
             handleCancel();
         } else if (result.error) {
-            if (data.mottakerType === 'FULLMEKTIG') {
+            if (data.mottakerType === MottakerType.Fullmektig) {
                 if (data.fullmektig?.organisasjonsnummer) {
                     setError('fullmektig.organisasjonsnummer', { message: result.error });
                 } else if (data.fullmektig?.personnummer) {
                     setError('fullmektig.personnummer', { message: result.error });
                 }
-            } else if (data.mottakerType === 'VERGE') {
+            } else if (data.mottakerType === MottakerType.Verge) {
                 if (data.verge?.organisasjonsnummer) {
                     setError('verge.organisasjonsnummer', { message: result.error });
                 } else if (data.verge?.personnummer) {

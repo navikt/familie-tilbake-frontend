@@ -1,4 +1,4 @@
-import type { FormData } from './types/FormData';
+import type { BrevmottakerFormData } from './schema/brevmottakerFormData';
 
 import React from 'react';
 
@@ -10,9 +10,9 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
 
 interface BrevmottakerModalWrapperProps {
-    mode: 'endre' | 'leggTil';
-    eksisterendeMottaker?: Partial<FormData>;
-    mottakerId?: string;
+    readonly mode: 'endre' | 'leggTil';
+    readonly eksisterendeMottaker?: Partial<BrevmottakerFormData>;
+    readonly mottakerId?: string;
 }
 
 export const BrevmottakerModalWrapper: React.FC<BrevmottakerModalWrapperProps> = ({
