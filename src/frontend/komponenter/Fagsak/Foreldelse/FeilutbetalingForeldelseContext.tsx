@@ -21,7 +21,7 @@ import {
     RessursStatus,
 } from '../../../typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 
 const utledValgtPeriode = (
     skjemaPerioder: ForeldelsePeriodeSkjemeData[],
@@ -158,11 +158,11 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         };
 
         const gåTilNesteSteg = (): void => {
-            navigate(`${behandlingUrl}/${sider.VILKÅRSVURDERING.href}`);
+            navigate(`${behandlingUrl}/${SYNLIGE_STEG.VILKÅRSVURDERING.href}`);
         };
 
         const gåTilForrigeSteg = (): void => {
-            navigate(`${behandlingUrl}/${sider.FAKTA.href}`);
+            navigate(`${behandlingUrl}/${SYNLIGE_STEG.FAKTA.href}`);
         };
 
         const oppdaterPeriode = (periode: ForeldelsePeriodeSkjemeData): void => {
@@ -211,7 +211,7 @@ const [FeilutbetalingForeldelseProvider, useFeilutbetalingForeldelse] = createUs
         const sendInnSkjema = (): void => {
             nullstillIkkePersisterteKomponenter();
             if (stegErBehandlet && !harEndretOpplysninger()) {
-                utførRedirect(`${behandlingUrl}/${sider.VILKÅRSVURDERING.href}`);
+                utførRedirect(`${behandlingUrl}/${SYNLIGE_STEG.VILKÅRSVURDERING.href}`);
             } else {
                 settSenderInn(true);
                 const payload: ForeldelseStegPayload = {

@@ -26,7 +26,7 @@ import {
     RessursStatus,
 } from '../../../typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 
 export type VilkårsvurderingHook = {
     containerRef: React.RefObject<HTMLDivElement | null>;
@@ -179,11 +179,11 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         };
 
         const gåTilNesteSteg = (): void => {
-            navigate(`${behandlingUrl}/${sider.VEDTAK.href}`);
+            navigate(`${behandlingUrl}/${SYNLIGE_STEG.FORESLÅ_VEDTAK.href}`);
         };
 
         const gåTilForrigeSteg = (): void => {
-            navigate(`${behandlingUrl}/${sider.FORELDELSE.href}`);
+            navigate(`${behandlingUrl}/${SYNLIGE_STEG.FORELDELSE.href}`);
         };
 
         const oppdaterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): void => {

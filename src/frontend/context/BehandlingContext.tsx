@@ -39,7 +39,7 @@ export type BehandlingHook = {
     nullstillIkkePersisterteKomponenter: () => void;
 };
 
-const erStegUtført = (status: Behandlingsstegstatus): boolean => {
+export const erStegUtført = (status: Behandlingsstegstatus): boolean => {
     return status === Behandlingsstegstatus.Utført || status === Behandlingsstegstatus.Autoutført;
 };
 

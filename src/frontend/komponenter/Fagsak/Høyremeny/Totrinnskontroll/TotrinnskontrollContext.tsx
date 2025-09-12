@@ -3,7 +3,7 @@ import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
-import type { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
+import type { SynligSteg } from '../../../../utils/sider';
 import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
@@ -21,7 +21,7 @@ import {
     RessursStatus,
 } from '../../../../typer/ressurs';
 import { hentFrontendFeilmelding, validerTekstMaksLengde } from '../../../../utils';
-import { sider } from '../../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../../utils/sider';
 
 const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
     const option = totrinnGodkjenningOptions.find(opt => opt.verdi === verdi);
@@ -229,7 +229,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                         if (respons.status === RessursStatus.Suksess) {
                             hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                                 navigate(
-                                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
+                                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
                                 );
                             });
                         } else if (
@@ -251,7 +251,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             }
         };
 
-        const navigerTilSide = (side: ISide): void => {
+        const navigerTilSide = (side: SynligSteg): void => {
             navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );

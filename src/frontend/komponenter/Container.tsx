@@ -12,6 +12,7 @@ import { useApp } from '../context/AppContext';
 import { BehandlingProvider } from '../context/BehandlingContext';
 import { FagsakProvider } from '../context/FagsakContext';
 import { TogglesProvider } from '../context/TogglesContext';
+import { StegflytSkeleton } from './Fagsak/Stegflyt/StegflytSkeleton';
 import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import { FTHeader } from './Felleskomponenter/FTHeader/FTHeader';
 import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
@@ -33,16 +34,14 @@ const Container: React.FC = () => {
             {autentisert ? (
                 <>
                     <Toasts />
-                    <main>
-                        <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
-                        <TogglesProvider>
-                            <FagsakProvider>
-                                <BehandlingProvider>
-                                    <AppRoutes />
-                                </BehandlingProvider>
-                            </FagsakProvider>
-                        </TogglesProvider>
-                    </main>
+                    <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
+                    <TogglesProvider>
+                        <FagsakProvider>
+                            <BehandlingProvider>
+                                <AppRoutes />
+                            </BehandlingProvider>
+                        </FagsakProvider>
+                    </TogglesProvider>
                 </>
             ) : (
                 <UgyldigSesjon />
@@ -59,7 +58,7 @@ const AppRoutes: React.FC = () => {
                     <Route
                         path="*"
                         element={
-                            <Suspense fallback={<div>Fagsak-container laster...</div>}>
+                            <Suspense fallback={<StegflytSkeleton />}>
                                 <FagsakContainer />
                             </Suspense>
                         }

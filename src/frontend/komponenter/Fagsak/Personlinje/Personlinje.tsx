@@ -11,7 +11,7 @@ import { styled } from 'styled-components';
 import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
 import Visittkort from './Visittkort';
 import { formatterDatostring, hentAlder } from '../../../utils';
-import { erHistoriskSide } from '../../Felleskomponenter/Venstremeny/sider';
+import { erHistoriskSide } from '../../../utils/sider';
 
 const DødsfallTag = styled(Tag)`
     color: ${ATextOnInverted};
