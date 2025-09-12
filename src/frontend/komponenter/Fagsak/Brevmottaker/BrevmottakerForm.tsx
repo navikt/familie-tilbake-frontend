@@ -78,7 +78,7 @@ export const BrevmottakerForm: React.FC<BrevmottakerFormProps> = ({
                         {mottakerType === MottakerType.Dødsbo && <Dødsbo />}
                     </Fieldset>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <div>
                     <Button type="submit">{submitButtonText}</Button>
                     <Button variant="tertiary" type="button" onClick={onCancel}>
                         Avbryt

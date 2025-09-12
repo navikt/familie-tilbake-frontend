@@ -1,4 +1,4 @@
-import { Radio, RadioGroup, TextField } from '@navikt/ds-react';
+import { Radio, RadioGroup, TextField, VStack } from '@navikt/ds-react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -37,7 +37,7 @@ export const Fullmektig: React.FC = () => {
     };
 
     return (
-        <>
+        <VStack gap="8">
             <RadioGroup
                 legend="Adresse"
                 value={adresseKilde || ''}
@@ -91,6 +91,6 @@ export const Fullmektig: React.FC = () => {
                     />
                 </>
             )}
-        </>
+        </VStack>
     );
 };

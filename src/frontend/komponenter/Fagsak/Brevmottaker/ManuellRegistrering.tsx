@@ -1,6 +1,6 @@
 import type { Land } from '../../Felleskomponenter/Landvelger/Landvelger';
 
-import { Alert, Fieldset, TextField } from '@navikt/ds-react';
+import { Alert, Fieldset, TextField, VStack } from '@navikt/ds-react';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -57,59 +57,61 @@ const ManuellRegistrering: React.FC<IProps> = ({ preutfyltNavn, mottakerType, pr
 
     return (
         <Fieldset legend="Manuell adresseregistrering" hideLegend>
-            <TextField
-                {...register(fieldPath('navn'), { required: 'Navn er påkrevd' })}
-                label="Navn"
-                readOnly={!!preutfyltNavn}
-                error={getFieldError('navn')}
-            />
-            <Landvelger
-                id={`landvelger-${prefix || 'brevmottaker'}`}
-                eksluderLandkoder={eksluderLandKoder}
-                valgtLandkode={landValue}
-                håndterLandValgt={håndterLandValgt}
-                error={getFieldError('land')}
-            />
-            {landValue && (
-                <>
-                    <TextField
-                        {...register(fieldPath('adresselinje1'), {
-                            required: 'Adresselinje 1 er påkrevd',
-                        })}
-                        label="Adresselinje 1"
-                        error={getFieldError('adresselinje1')}
-                    />
-                    <TextField
-                        {...register(fieldPath('adresselinje2'))}
-                        label="Adresselinje 2 (valgfri)"
-                        error={getFieldError('adresselinje2')}
-                    />
-                    {landValue !== 'NO' && (
-                        <Alert variant="info">
-                            Ved utenlandsk adresse skal postnummer og poststed legges i
-                            adresselinjene.
-                        </Alert>
-                    )}
-                    {landValue === 'NO' && (
-                        <div>
-                            <TextField
-                                {...register(fieldPath('postnummer'), {
-                                    required: 'Postnummer er påkrevd',
-                                })}
-                                label="Postnummer"
-                                error={getFieldError('postnummer')}
-                            />
-                            <TextField
-                                {...register(fieldPath('poststed'), {
-                                    required: 'Poststed er påkrevd',
-                                })}
-                                label="Poststed"
-                                error={getFieldError('poststed')}
-                            />
-                        </div>
-                    )}
-                </>
-            )}
+            <VStack gap="4">
+                <TextField
+                    {...register(fieldPath('navn'), { required: 'Navn er påkrevd' })}
+                    label="Navn"
+                    readOnly={!!preutfyltNavn}
+                    error={getFieldError('navn')}
+                />
+                <Landvelger
+                    id={`landvelger-${prefix || 'brevmottaker'}`}
+                    eksluderLandkoder={eksluderLandKoder}
+                    valgtLandkode={landValue}
+                    håndterLandValgt={håndterLandValgt}
+                    error={getFieldError('land')}
+                />
+                {landValue && (
+                    <>
+                        <TextField
+                            {...register(fieldPath('adresselinje1'), {
+                                required: 'Adresselinje 1 er påkrevd',
+                            })}
+                            label="Adresselinje 1"
+                            error={getFieldError('adresselinje1')}
+                        />
+                        <TextField
+                            {...register(fieldPath('adresselinje2'))}
+                            label="Adresselinje 2 (valgfri)"
+                            error={getFieldError('adresselinje2')}
+                        />
+                        {landValue !== 'NO' && (
+                            <Alert variant="info">
+                                Ved utenlandsk adresse skal postnummer og poststed legges i
+                                adresselinjene.
+                            </Alert>
+                        )}
+                        {landValue === 'NO' && (
+                            <div>
+                                <TextField
+                                    {...register(fieldPath('postnummer'), {
+                                        required: 'Postnummer er påkrevd',
+                                    })}
+                                    label="Postnummer"
+                                    error={getFieldError('postnummer')}
+                                />
+                                <TextField
+                                    {...register(fieldPath('poststed'), {
+                                        required: 'Poststed er påkrevd',
+                                    })}
+                                    label="Poststed"
+                                    error={getFieldError('poststed')}
+                                />
+                            </div>
+                        )}
+                    </>
+                )}
+            </VStack>
         </Fieldset>
     );
 };

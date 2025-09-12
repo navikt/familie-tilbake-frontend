@@ -249,11 +249,11 @@ const Brevmottakere: React.FC = () => {
     return (
         <>
             {visBrevmottakerModal && <BrevmottakerModal />}
-            <VStack padding="space-24" gap="4">
+            <VStack padding="space-24" gap="4" align="start">
                 <Heading size="small" level="1">
                     Brevmottaker(e)
                 </Heading>
-                <VStack gap="4" maxWidth="430px">
+                <VStack gap="4" minWidth="430px">
                     {Object.keys(brevmottakere)
                         .sort((a, b) => brevmottakere[a].type.localeCompare(brevmottakere[b].type))
                         .map(id => (
