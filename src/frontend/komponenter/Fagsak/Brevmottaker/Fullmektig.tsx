@@ -11,12 +11,17 @@ export const Fullmektig: React.FC = () => {
         register,
         watch,
         setValue,
+        unregister,
         formState: { errors },
     } = useFormContext();
 
     const adresseKilde = watch('fullmektig.adresseKilde');
 
     const nullstillManuellAdresseInput = (nullstillAdresseKilde = false): void => {
+        unregister('fullmektig.personnummer');
+        unregister('fullmektig.organisasjonsnummer');
+        unregister('fullmektig.navn');
+
         setValue('fullmektig.personnummer', '');
         setValue('fullmektig.organisasjonsnummer', '');
         setValue('fullmektig.navn', '');

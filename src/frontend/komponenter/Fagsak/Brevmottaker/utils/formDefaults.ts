@@ -1,8 +1,5 @@
 import type { FormData } from '../types/FormData';
 
-/**
- * Standardverdier for brevmottaker-skjemaet
- */
 const opprettStandardSkjemaverdier = (initialData?: Partial<FormData>): FormData => ({
     mottakerType: initialData?.mottakerType || '',
     brukerMedUtenlandskAdresse: {

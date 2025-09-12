@@ -1,7 +1,7 @@
 import type { FormData } from './types/FormData';
 import type { SubmitHandler } from 'react-hook-form';
 
-import { Alert, Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
+import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -26,7 +26,7 @@ export const EndreBrevmottakerModal: React.FC<EndreBrevmottakerModalProps> = ({
     mottakerId,
 }) => {
     const { lukkBrevmottakerModal, behandling } = useBehandling();
-    const { lagreBrevmottaker, error, clearError } = useBrevmottakerApi();
+    const { lagreBrevmottaker, clearError } = useBrevmottakerApi();
 
     const methods = useForm<FormData>({
         reValidateMode: 'onBlur',
@@ -34,7 +34,7 @@ export const EndreBrevmottakerModal: React.FC<EndreBrevmottakerModalProps> = ({
         defaultValues: opprettStandardSkjemaverdier(eksisterendeMottaker),
     });
 
-    const { handleSubmit, setValue, watch } = methods;
+    const { handleSubmit, setValue, watch, setError } = methods;
     const mottakerType = watch('mottakerType');
 
     const handleEndre: SubmitHandler<FormData> = async data => {
@@ -52,6 +52,20 @@ export const EndreBrevmottakerModal: React.FC<EndreBrevmottakerModalProps> = ({
         if (result.success) {
             clearError();
             lukkBrevmottakerModal();
+        } else if (result.error) {
+            if (data.mottakerType === 'FULLMEKTIG') {
+                if (data.fullmektig?.organisasjonsnummer) {
+                    setError('fullmektig.organisasjonsnummer', { message: result.error });
+                } else if (data.fullmektig?.personnummer) {
+                    setError('fullmektig.personnummer', { message: result.error });
+                }
+            } else if (data.mottakerType === 'VERGE') {
+                if (data.verge?.organisasjonsnummer) {
+                    setError('verge.organisasjonsnummer', { message: result.error });
+                } else if (data.verge?.personnummer) {
+                    setError('verge.personnummer', { message: result.error });
+                }
+            }
         }
     };
 
@@ -73,11 +87,6 @@ export const EndreBrevmottakerModal: React.FC<EndreBrevmottakerModalProps> = ({
                     {/*  Må ha en min høyde for at select dropdown ikke skal overlappe */}
                     <Modal.Body style={{ minHeight: '700px' }}>
                         <VStack gap="4">
-                            {error && (
-                                <Alert variant="error" className="mb-4">
-                                    {error}
-                                </Alert>
-                            )}
                             <Fieldset legend="Skjema for å endre brevmottaker" hideLegend>
                                 <VStack gap="8">
                                     <Select

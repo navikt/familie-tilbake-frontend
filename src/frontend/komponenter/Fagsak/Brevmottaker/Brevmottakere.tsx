@@ -217,20 +217,13 @@ const Brevmottakere: React.FC = () => {
 
     const erLesevisning = !!behandlingILesemodus;
 
-    const brevmottakere: { [id: string]: IBrevmottaker } = {};
-
-    if (behandling?.status === 'SUKSESS' && fagsak?.status === 'SUKSESS') {
-        brevmottakere['default-user'] = {
-            type: MottakerType.Bruker,
-            navn: fagsak.data.bruker.navn,
-            personIdent: fagsak.data.bruker.personIdent,
-            isDefault: true,
-        } as IBrevmottaker & { isDefault: boolean };
-
-        behandling.data.manuelleBrevmottakere.forEach(value => {
-            brevmottakere[value.id] = value.brevmottaker;
-        });
+    if (behandling?.status !== 'SUKSESS' || fagsak?.status !== 'SUKSESS') {
+        return null;
     }
+
+    const brevmottakere = behandling.data.manuelleBrevmottakere.map(value => {
+        return { id: value.id, ...value.brevmottaker };
+    });
 
     const antallBrevmottakere = Object.keys(brevmottakere).length;
 
@@ -242,9 +235,10 @@ const Brevmottakere: React.FC = () => {
         }
     };
 
-    if (behandling?.status !== 'SUKSESS' || fagsak?.status !== 'SUKSESS') {
-        return null;
-    }
+    const kanLeggeTilMottaker =
+        antallBrevmottakere == 0 &&
+        !erLesevisning &&
+        !brevmottakere.some(brevmottaker => brevmottaker.type === MottakerType.Dødsbo);
 
     return (
         <>
@@ -254,41 +248,59 @@ const Brevmottakere: React.FC = () => {
                     Brevmottaker(e)
                 </Heading>
                 <VStack gap="4" minWidth="430px">
-                    {Object.keys(brevmottakere)
-                        .sort((a, b) => brevmottakere[a].type.localeCompare(brevmottakere[b].type))
-                        .map(id => (
+                    <Box
+                        borderWidth="1"
+                        borderRadius="xlarge"
+                        padding="4"
+                        borderColor="border-divider"
+                        key={fagsak.data.bruker.personIdent}
+                    >
+                        <Brevmottaker
+                            brevmottaker={{
+                                type: MottakerType.Bruker,
+                                navn: fagsak.data.bruker.navn,
+                                personIdent: fagsak.data.bruker.personIdent,
+                                isDefault: true,
+                            }}
+                            brevmottakerId={fagsak.data.bruker.personIdent}
+                            behandlingId={behandling.data.behandlingId}
+                            erLesevisning={erLesevisning}
+                            antallBrevmottakere={antallBrevmottakere}
+                        />
+                    </Box>
+
+                    {brevmottakere.length > 0 &&
+                        brevmottakere.map(brevmottaker => (
                             <Box
                                 borderWidth="1"
                                 borderRadius="xlarge"
                                 padding="4"
                                 borderColor="border-divider"
-                                key={id}
+                                key={brevmottaker.id}
                             >
                                 <Brevmottaker
-                                    brevmottaker={brevmottakere[id]}
-                                    brevmottakerId={id}
+                                    brevmottaker={brevmottaker}
+                                    brevmottakerId={brevmottaker.id}
                                     behandlingId={behandling.data.behandlingId}
                                     erLesevisning={erLesevisning}
                                     antallBrevmottakere={antallBrevmottakere}
                                 />
-                                {antallBrevmottakere == 1 &&
-                                    !erLesevisning &&
-                                    MottakerType.Dødsbo !== brevmottakere[id].type && (
-                                        <Button
-                                            variant="tertiary"
-                                            size="small"
-                                            icon={<PlusCircleIcon />}
-                                            onClick={() => {
-                                                settBrevmottakerIdTilEndring(undefined);
-                                                settVisBrevmottakerModal(true);
-                                            }}
-                                        >
-                                            Legg til ny mottaker
-                                        </Button>
-                                    )}
                             </Box>
                         ))}
                 </VStack>
+                {kanLeggeTilMottaker && (
+                    <Button
+                        variant="tertiary"
+                        size="small"
+                        icon={<PlusCircleIcon />}
+                        onClick={() => {
+                            settBrevmottakerIdTilEndring(undefined);
+                            settVisBrevmottakerModal(true);
+                        }}
+                    >
+                        Legg til ny mottaker
+                    </Button>
+                )}
                 <Button variant="primary" onClick={gåTilNeste}>
                     Neste
                 </Button>

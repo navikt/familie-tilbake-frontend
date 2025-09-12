@@ -88,17 +88,6 @@ export const validatePersonnummer = (value: string | undefined): boolean | strin
     return result.error.issues[0]?.message || 'Ugyldig fødselsnummer';
 };
 
-// Validering for utenlandsk adresse - Norge kan ikke velges
-export const validateLandForUtenlandskAdresse = (
-    land: string,
-    mottakerType: string
-): boolean | string => {
-    if (mottakerType === 'BrukerMedUtenlandskAdresse' && land === 'NO') {
-        return 'Norge kan ikke være satt for bruker med utenlandsk adresse';
-    }
-    return true;
-};
-
 // Validering for manuell adresse basert på adressekilde
 export const validateManuellAdresse = (
     value: string | undefined,
