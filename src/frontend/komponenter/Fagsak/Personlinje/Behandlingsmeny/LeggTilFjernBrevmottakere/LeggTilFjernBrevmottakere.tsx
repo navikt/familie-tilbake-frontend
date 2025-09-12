@@ -12,9 +12,9 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { Behandlingssteg, Behandlingsstegstatus } from '../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
+import { SYNLIGE_STEG } from '../../../../../utils/sider';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
-import { SYNLIGE_STEG } from '../../../../Felleskomponenter/Venstremeny/sider';
 
 interface IProps {
     behandling: IBehandling;

@@ -17,9 +17,9 @@ import { vedtaksresultater } from '../../../kodeverk';
 import { Behandlingssteg, Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { RessursStatus } from '../../../typer/ressurs';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
-import { SYNLIGE_STEG } from '../../Felleskomponenter/Venstremeny/sider';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};

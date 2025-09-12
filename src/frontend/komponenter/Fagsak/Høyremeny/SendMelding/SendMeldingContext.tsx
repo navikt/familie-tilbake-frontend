@@ -23,7 +23,7 @@ import {
     hentFrontendFeilmelding,
     validerTekstFeltMaksLengde,
 } from '../../../../utils';
-import { SYNLIGE_STEG } from '../../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../../utils/sider';
 
 interface Mottaker {
     verdi: string;

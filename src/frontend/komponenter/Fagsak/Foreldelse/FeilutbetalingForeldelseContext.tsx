@@ -21,7 +21,7 @@ import {
     RessursStatus,
 } from '../../../typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
-import { SYNLIGE_STEG } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 
 const utledValgtPeriode = (
     skjemaPerioder: ForeldelsePeriodeSkjemeData[],

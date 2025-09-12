@@ -1,7 +1,7 @@
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { IHistorikkInnslag } from '../../../../typer/historikk';
-import type { SynligSteg } from '../../../Felleskomponenter/Venstremeny/sider';
+import type { SynligSteg } from '../../../../utils/sider';
 import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';

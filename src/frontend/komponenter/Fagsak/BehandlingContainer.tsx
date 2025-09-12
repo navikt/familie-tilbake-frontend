@@ -19,12 +19,8 @@ import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historik
 import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
 import { useBehandling } from '../../context/BehandlingContext';
 import { Behandlingstatus } from '../../typer/behandling';
+import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from '../../utils/sider';
 import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
-import {
-    erHistoriskSide,
-    erØnsketSideTilgjengelig,
-    utledBehandlingSide,
-} from '../Felleskomponenter/Venstremeny/sider';
 
 const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./Brevmottaker/BrevmottakerContainer'),

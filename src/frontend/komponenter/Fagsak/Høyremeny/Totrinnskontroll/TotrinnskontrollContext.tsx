@@ -3,7 +3,7 @@ import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
-import type { SynligSteg } from '../../../Felleskomponenter/Venstremeny/sider';
+import type { SynligSteg } from '../../../../utils/sider';
 import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
@@ -21,7 +21,7 @@ import {
     RessursStatus,
 } from '../../../../typer/ressurs';
 import { hentFrontendFeilmelding, validerTekstMaksLengde } from '../../../../utils';
-import { SYNLIGE_STEG } from '../../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../../utils/sider';
 
 const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
     const option = totrinnGodkjenningOptions.find(opt => opt.verdi === verdi);

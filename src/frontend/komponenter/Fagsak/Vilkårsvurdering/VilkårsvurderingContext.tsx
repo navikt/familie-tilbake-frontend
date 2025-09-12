@@ -26,7 +26,7 @@ import {
     RessursStatus,
 } from '../../../typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
-import { SYNLIGE_STEG } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 
 export type VilkårsvurderingHook = {
     containerRef: React.RefObject<HTMLDivElement | null>;

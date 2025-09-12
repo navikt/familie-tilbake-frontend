@@ -1,6 +1,6 @@
-import type { IBehandling, IBehandlingsstegstilstand } from '../../../typer/behandling';
+import type { IBehandling, IBehandlingsstegstilstand } from '../typer/behandling';
 
-import { Behandlingssteg, Behandlingsstegstatus } from '../../../typer/behandling';
+import { Behandlingssteg, Behandlingsstegstatus } from '../typer/behandling';
 
 export type SynligSteg = {
     href: string;

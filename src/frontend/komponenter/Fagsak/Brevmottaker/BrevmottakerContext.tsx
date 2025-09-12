@@ -15,7 +15,7 @@ import { Vergetype } from '../../../kodeverk/verge';
 import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { byggHenterRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
 import { isNumeric } from '../../../utils';
-import { SYNLIGE_STEG } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 
 const feilNårFeltetErTomt = (
     felt: FeltState<string>,

@@ -1,6 +1,6 @@
 import type { IBehandling, IBehandlingsstegstilstand } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
-import type { SynligSteg } from '../../Felleskomponenter/Venstremeny/sider';
+import type { SynligSteg } from '../../../utils/sider';
 
 import { Stepper } from '@navikt/ds-react';
 import * as React from 'react';
@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { erStegUtført, useBehandling } from '../../../context/BehandlingContext';
 import { useFagsakStore } from '../../../store/fagsak';
 import { RessursStatus } from '../../../typer/ressurs';
-import { erSidenAktiv, SYNLIGE_STEG, visSide } from '../../Felleskomponenter/Venstremeny/sider';
+import { erSidenAktiv, SYNLIGE_STEG, visSide } from '../../../utils/sider';
 
 interface StepperSteg extends SynligSteg {
     erUtført: boolean;
