@@ -56,19 +56,16 @@ const aktiveBehandlingstegstatuser = [
     Behandlingsstegstatus.Venter,
 ];
 
-export const erSidenAktiv = (side: SynligSteg, behandling: IBehandling): boolean => {
-    if (side === SYNLIGE_STEG.VERGE) {
+export const erSidenAktiv = (synligSteg: SynligSteg, behandling: IBehandling): boolean => {
+    if (!behandling.behandlingsstegsinfo) return true;
+
+    if (synligSteg === SYNLIGE_STEG.VERGE) {
         return (
-            behandling.harVerge ||
-            (behandling.behandlingsstegsinfo &&
-                sjekkOmSidenErAktiv(side, behandling.behandlingsstegsinfo))
+            behandling.harVerge || sjekkOmSidenErAktiv(synligSteg, behandling.behandlingsstegsinfo)
         );
     }
 
-    if (behandling.behandlingsstegsinfo) {
-        return sjekkOmSidenErAktiv(side, behandling.behandlingsstegsinfo);
-    }
-    return true;
+    return sjekkOmSidenErAktiv(synligSteg, behandling.behandlingsstegsinfo);
 };
 
 const sjekkOmSidenErAktiv = (
@@ -80,15 +77,16 @@ const sjekkOmSidenErAktiv = (
         .some(stegInfo => stegInfo.behandlingssteg === side.steg);
 };
 
-export const visSide = (side: SynligSteg, åpenBehandling: IBehandling): boolean => {
-    if (side.steg === Behandlingssteg.Brevmottaker) {
-        return åpenBehandling.behandlingsstegsinfo
-            .map(value => value.behandlingssteg)
-            .includes(side.steg);
+export const visSide = (steg: Behandlingssteg, behandling: IBehandling): boolean => {
+    if (steg === Behandlingssteg.Brevmottaker) {
+        return behandling.behandlingsstegsinfo
+            .map(({ behandlingssteg }) => behandlingssteg)
+            .includes(steg);
     }
-    if (side.steg === Behandlingssteg.Verge) {
-        return !åpenBehandling.støtterManuelleBrevmottakere;
+    if (steg === Behandlingssteg.Verge) {
+        return !behandling.støtterManuelleBrevmottakere;
     }
+
     return true;
 };
 
@@ -115,19 +113,18 @@ const historiskeSider = [
 export const erHistoriskSide = (side: string): boolean => {
     return historiskeSider.includes(side);
 };
-export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBehandling): boolean => {
-    if (erHistoriskSide(ønsketSide)) {
-        return true;
-    }
 
-    const funnetØnsketSide = Object.entries(SYNLIGE_STEG).find(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_, side]) => side.href === ønsketSide
-    );
+export const erØnsketSideTilgjengelig = (
+    ønsketSide: string,
+    behandlingssteginfo: IBehandlingsstegstilstand[]
+): boolean => {
+    if (erHistoriskSide(ønsketSide)) return true;
 
-    if (funnetØnsketSide && behandling.behandlingsstegsinfo) {
-        const steg = behandling.behandlingsstegsinfo.find(
-            stegInfo => stegInfo.behandlingssteg === funnetØnsketSide[1].steg
+    const funnetØnsketSide = Object.values(SYNLIGE_STEG).find(({ href }) => href === ønsketSide);
+
+    if (funnetØnsketSide && behandlingssteginfo) {
+        const steg = behandlingssteginfo.find(
+            ({ behandlingssteg }) => behandlingssteg === funnetØnsketSide.steg
         );
         return !!steg && aktiveBehandlingstegstatuser.includes(steg?.behandlingsstegstatus);
     }
@@ -135,8 +132,6 @@ export const erØnsketSideTilgjengelig = (ønsketSide: string, behandling: IBeha
     return !!funnetØnsketSide;
 };
 
-export const finnSideForSteg = (steg: Behandlingssteg): SynligSteg | undefined => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const sideForSteg = Object.entries(SYNLIGE_STEG).find(([_, side]) => side.steg === steg);
-    return sideForSteg ? sideForSteg[1] : undefined;
+export const finnSideForSteg = (behandlingssteg: Behandlingssteg): SynligSteg | undefined => {
+    return Object.values(SYNLIGE_STEG).find(({ steg }) => steg === behandlingssteg);
 };
