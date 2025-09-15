@@ -1,7 +1,7 @@
 import type { Ytelsetype } from '../../../kodeverk';
 
 import { Heading } from '@navikt/ds-react';
-import { AFontWeightBold, ATextDanger, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import { AFontWeightBold, ASpacing4, ATextDanger } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
@@ -14,7 +14,7 @@ import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 const StyledFeilutbetalingFakta = styled.div`
-    padding: ${ASpacing3};
+    padding: ${ASpacing4} 0;
 
     .redText {
         color: ${ATextDanger};

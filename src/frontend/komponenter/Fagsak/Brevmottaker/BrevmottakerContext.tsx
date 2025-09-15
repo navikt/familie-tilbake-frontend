@@ -15,7 +15,7 @@ import { Vergetype } from '../../../kodeverk/verge';
 import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { byggHenterRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
 import { isNumeric } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 
 const feilNårFeltetErTomt = (
     felt: FeltState<string>,
@@ -449,7 +449,7 @@ const [BrevmottakerProvider, useBrevmottaker] = createUseContext(
 
         const gåTilNeste = (): void => {
             navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FAKTA.href}`
+                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
             );
         };
 

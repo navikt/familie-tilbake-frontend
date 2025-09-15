@@ -10,7 +10,7 @@ import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenk
 import { useHttp } from '../../../api/http/HttpProvider';
 import { Fagsystem } from '../../../kodeverk';
 import { useFagsakStore } from '../../../store/fagsak';
-import { erHistoriskSide } from '../Venstremeny/sider';
+import { erHistoriskSide } from '../../../utils/sider';
 
 interface Props {
     innloggetSaksbehandler?: ISaksbehandler;

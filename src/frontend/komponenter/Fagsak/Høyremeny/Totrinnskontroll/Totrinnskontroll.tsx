@@ -1,5 +1,5 @@
 import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
-import type { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
+import type { SynligSteg } from '../../../../utils/sider';
 
 import { Alert, BodyShort, Button, Label, Link, Radio, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -14,11 +14,11 @@ import {
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
+import { finnSideForSteg } from '../../../../utils/sider';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
-import { finnSideForSteg } from '../../../Felleskomponenter/Venstremeny/sider';
 
 const StyledContainer = styled.div`
     margin-top: 10px;
@@ -101,7 +101,7 @@ const Totrinnskontroll: React.FC = () => {
                                             onMouseDown={(e: React.MouseEvent) =>
                                                 e.preventDefault()
                                             }
-                                            onClick={() => navigerTilSide(side as ISide)}
+                                            onClick={() => navigerTilSide(side as SynligSteg)}
                                         >
                                             {behandlingssteg[totrinnSteg.behandlingssteg]}
                                         </Link>
