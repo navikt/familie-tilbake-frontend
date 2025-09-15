@@ -11,11 +11,7 @@ import React from 'react';
 
 import { Stegflyt } from './Stegflyt';
 import { Fagsystem } from '../../../kodeverk';
-import {
-    Behandlingssteg,
-    Behandlingsstegstatus,
-    Behandlingstatus,
-} from '../../../typer/behandling';
+import { Behandlingssteg, Behandlingsstegstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
 const mockNavigate = jest.fn();
@@ -24,7 +20,6 @@ const mockUseBehandling = jest.fn();
 const mockUseFagsakStore = jest.fn();
 
 jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => mockNavigate,
     useLocation: (): Location => mockUseLocation(),
 }));
@@ -43,7 +38,6 @@ const createMockBehandling = (props = {}): Ressurs<Partial<IBehandling>> => ({
     data: {
         eksternBrukId: '456',
         behandlingId: '123',
-        status: Behandlingstatus.Utredes,
         behandlingsstegsinfo: createMockStegInfo(),
         ...props,
     },
