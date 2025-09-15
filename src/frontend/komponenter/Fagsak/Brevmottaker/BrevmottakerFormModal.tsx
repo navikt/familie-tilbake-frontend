@@ -1,49 +1,43 @@
-import type { SubmitHandler } from 'react-hook-form';
-
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { BrukerMedUtenlandskAdresse } from './Mottaker/BrukerMedUtenlandskAdresse';
 import { Dødsbo } from './Mottaker/Dødsbo';
 import { Fullmektig } from './Mottaker/Fullmektig';
 import { Verge } from './Mottaker/Verge';
 import {
-    brevmottakerFormDataInputSchema,
     brevmottakerFormDataSchema,
-    type BrevmottakerFormData,
     createFormDefaults,
+    type BrevmottakerFormData,
 } from './schema/brevmottakerSchema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { RessursStatus } from '../../../typer/ressurs';
 
-interface LeggTilBrevmottakerModalProps {
+interface BrevmottakerFormModalProps {
+    mode: 'endre' | 'leggTil';
+    initialData?: Partial<BrevmottakerFormData>;
+    mottakerId?: string;
     open?: boolean;
     onClose?: () => void;
 }
 
-export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> = ({
+export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
+    mode,
+    initialData,
+    mottakerId,
     open,
     onClose,
 }) => {
     const { lukkBrevmottakerModal, visBrevmottakerModal, behandling } = useBehandling();
-    const { lagreBrevmottaker, clearError } = useBrevmottakerApi();
+    const { lagreBrevmottaker } = useBrevmottakerApi();
 
     const isOpen = open ?? visBrevmottakerModal;
 
-    const methods = useForm<BrevmottakerFormData>({
-        resolver: zodResolver(brevmottakerFormDataInputSchema),
-        mode: 'onBlur',
-        defaultValues: createFormDefaults(),
-    });
-
-    const { handleSubmit, setValue, watch, setError } = methods;
-    const mottakerType = watch('mottakerType');
-
-    const handleCancel = (): void => {
+    const closeModal = (): void => {
         if (onClose) {
             onClose();
         } else {
@@ -51,31 +45,58 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
         }
     };
 
-    const handleLeggTil: SubmitHandler<BrevmottakerFormData> = async data => {
+    const methods = useForm<BrevmottakerFormData>({
+        reValidateMode: 'onBlur',
+        shouldFocusError: false,
+        defaultValues: createFormDefaults(initialData),
+    });
+
+    const { handleSubmit, setValue, watch, setError } = methods;
+    const mottakerType = watch('mottakerType');
+
+    const handleSubmitForm = async (formData: BrevmottakerFormData): Promise<void> => {
         if (!behandling || behandling.status !== RessursStatus.Suksess) {
             return;
         }
 
-        const brevmottaker = brevmottakerFormDataSchema.parse(data);
+        try {
+            const brevmottaker = brevmottakerFormDataSchema.parse(formData);
 
-        const result = await lagreBrevmottaker(behandling.data.behandlingId, brevmottaker);
+            const response = await lagreBrevmottaker(
+                behandling.data.behandlingId,
+                brevmottaker,
+                mottakerId
+            );
 
-        if (result.success) {
-            clearError();
-            handleCancel();
-        } else if (result.error) {
-            if (data.mottakerType === MottakerType.Fullmektig) {
-                if (data.fullmektig?.organisasjonsnummer) {
-                    setError('fullmektig.organisasjonsnummer', { message: result.error });
-                } else if (data.fullmektig?.personnummer) {
-                    setError('fullmektig.personnummer', { message: result.error });
+            if (response.success) {
+                closeModal();
+                return;
+            }
+
+            const errorMessage = response.error || 'En ukjent feil oppstod';
+            handleBrevmottakerError(formData, errorMessage);
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                const firstError = error.issues[0];
+                if (firstError) {
+                    handleBrevmottakerError(formData, firstError.message);
                 }
-            } else if (data.mottakerType === MottakerType.Verge) {
-                if (data.verge?.organisasjonsnummer) {
-                    setError('verge.organisasjonsnummer', { message: result.error });
-                } else if (data.verge?.personnummer) {
-                    setError('verge.personnummer', { message: result.error });
-                }
+            }
+        }
+    };
+
+    const handleBrevmottakerError = (data: BrevmottakerFormData, errorMessage: string): void => {
+        if (data.mottakerType === MottakerType.Fullmektig) {
+            if (data.fullmektig?.organisasjonsnummer) {
+                setError('fullmektig.organisasjonsnummer', { message: errorMessage });
+            } else if (data.fullmektig?.personnummer) {
+                setError('fullmektig.personnummer', { message: errorMessage });
+            }
+        } else if (data.mottakerType === MottakerType.Verge) {
+            if (data.verge?.organisasjonsnummer) {
+                setError('verge.organisasjonsnummer', { message: errorMessage });
+            } else if (data.verge?.personnummer) {
+                setError('verge.personnummer', { message: errorMessage });
             }
         }
     };
@@ -84,24 +105,38 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
         return null;
     }
 
+    const modalConfig = {
+        leggTil: {
+            heading: 'Legg til brevmottaker',
+            submitText: 'Legg til',
+            legend: 'Skjema for å legge til brevmottaker',
+        },
+        endre: {
+            heading: 'Endre brevmottaker',
+            submitText: 'Lagre endringer',
+            legend: 'Skjema for å endre brevmottaker',
+        },
+    };
+
+    const config = modalConfig[mode];
+
     return (
         <FormProvider {...methods}>
             <Modal
                 open={isOpen}
-                onClose={handleCancel}
-                header={{ heading: 'Legg til brevmottaker' }}
+                onClose={closeModal}
+                header={{ heading: config.heading }}
                 width="medium"
             >
                 <form
                     onSubmit={e => {
-                        console.log('Form submit triggered!', e);
-                        handleSubmit(handleLeggTil)(e);
+                        handleSubmit(handleSubmitForm)(e);
                     }}
                 >
-                    {/*  Må ha en min høyde for at select dropdown ikke skal overlappe */}
+                    {/* Må ha en min høyde for at select dropdown ikke skal overlappe */}
                     <Modal.Body style={{ minHeight: '700px' }}>
                         <VStack gap="4">
-                            <Fieldset legend="Skjema for å legge til brevmottaker" hideLegend>
+                            <Fieldset legend={config.legend} hideLegend>
                                 <VStack gap="8">
                                     <Select
                                         label="Mottaker"
@@ -135,10 +170,8 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
                         </VStack>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button type="submit" onClick={() => console.log('Submit button clicked!')}>
-                            Legg til
-                        </Button>
-                        <Button variant="secondary" type="button" onClick={handleCancel}>
+                        <Button type="submit">{config.submitText}</Button>
+                        <Button variant="secondary" type="button" onClick={closeModal}>
                             Avbryt
                         </Button>
                     </Modal.Footer>
@@ -147,5 +180,3 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
         </FormProvider>
     );
 };
-
-export default LeggTilBrevmottakerModal;

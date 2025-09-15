@@ -61,7 +61,7 @@ export const Fullmektig: React.FC = () => {
             )}
 
             {adresseKilde === AdresseKilde.OppslagOrganisasjonsregister && (
-                <>
+                <VStack>
                     <TextField
                         label="Organisasjonsnummer"
                         {...register('fullmektig.organisasjonsnummer')}
@@ -73,7 +73,7 @@ export const Fullmektig: React.FC = () => {
                         {...register('fullmektig.navn')}
                         error={getErrorMessage('fullmektig.navn')}
                     />
-                </>
+                </VStack>
             )}
         </VStack>
     );

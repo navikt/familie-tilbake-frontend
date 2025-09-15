@@ -1,4 +1,3 @@
-import type { BrevmottakerFormData } from './schema/brevmottakerSchema';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IBrevmottaker } from '../../../typer/Brevmottaker';
 import type { IFagsak } from '../../../typer/fagsak';
@@ -6,8 +5,7 @@ import type { Ressurs } from '../../../typer/ressurs';
 
 import React from 'react';
 
-import { EndreBrevmottakerModal } from './EndreBrevmottakerModal';
-import { LeggTilBrevmottakerModal } from './LeggTilBrevmottakerModal';
+import { BrevmottakerFormModal } from './BrevmottakerFormModal';
 import { mapBrevmottakerToFormData } from './schema/brevmottakerSchema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
@@ -29,28 +27,6 @@ const hentEksisterendeBrevmottaker = (
     return manuellMottaker?.brevmottaker;
 };
 
-interface BrevmottakerModalWrapperProps {
-    readonly mode: 'endre' | 'leggTil';
-    readonly eksisterendeMottaker?: Partial<BrevmottakerFormData>;
-    readonly mottakerId?: string;
-}
-
-export const BrevmottakerModalWrapper: React.FC<BrevmottakerModalWrapperProps> = ({
-    mode,
-    eksisterendeMottaker,
-    mottakerId,
-}) => {
-    if (mode === 'endre' && eksisterendeMottaker) {
-        return (
-            <EndreBrevmottakerModal
-                eksisterendeMottaker={eksisterendeMottaker}
-                mottakerId={mottakerId}
-            />
-        );
-    }
-
-    return <LeggTilBrevmottakerModal />;
-};
 export const BrevmottakerModal: React.FC = () => {
     const { visBrevmottakerModal, brevmottakerIdTilEndring, behandling } = useBehandling();
     const { fagsak } = useFagsak();
@@ -69,14 +45,14 @@ export const BrevmottakerModal: React.FC = () => {
         if (eksisterendeMottaker) {
             const formData = mapBrevmottakerToFormData(eksisterendeMottaker);
             return (
-                <BrevmottakerModalWrapper
+                <BrevmottakerFormModal
                     mode="endre"
-                    eksisterendeMottaker={formData}
+                    initialData={formData}
                     mottakerId={brevmottakerIdTilEndring}
                 />
             );
         }
     }
 
-    return <BrevmottakerModalWrapper mode="leggTil" />;
+    return <BrevmottakerFormModal mode="leggTil" />;
 };
