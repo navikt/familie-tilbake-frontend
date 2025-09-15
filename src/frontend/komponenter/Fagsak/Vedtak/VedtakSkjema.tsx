@@ -1,4 +1,4 @@
-import type { AvsnittSkjemaData } from './typer/feilutbetalingVedtak';
+import type { AvsnittSkjemaData } from './typer/vedtak';
 
 import { Alert, Heading } from '@navikt/ds-react';
 import * as React from 'react';

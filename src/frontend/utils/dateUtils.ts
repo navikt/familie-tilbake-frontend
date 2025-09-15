@@ -1,5 +1,5 @@
-import type { FeilutbetalingPeriode } from '../typer/feilutbetalingtyper';
 import type { IJournalpostRelevantDato } from '../typer/journalføring';
+import type { FaktaPeriode } from '../typer/tilbakekrevingstyper';
 import type { Duration } from 'date-fns';
 
 import {
@@ -123,9 +123,7 @@ export const flyttDatoISODateStr = (dato: string, config: Duration): string => {
     return newDate.toISOString().substring(0, 10);
 };
 
-export const sorterFeilutbetaltePerioder = <T extends FeilutbetalingPeriode>(
-    perioder: T[]
-): T[] => {
+export const sorterFeilutbetaltePerioder = <T extends FaktaPeriode>(perioder: T[]): T[] => {
     return perioder.sort((a, b) =>
         differenceInMilliseconds(parseISO(a.periode.fom), parseISO(b.periode.fom))
     );

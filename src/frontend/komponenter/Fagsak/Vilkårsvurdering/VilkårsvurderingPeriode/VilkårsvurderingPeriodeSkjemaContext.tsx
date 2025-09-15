@@ -3,8 +3,8 @@ import type {
     Aktsomhetsvurdering,
     GodTro,
     SærligeGrunnerDto,
-} from '../../../../typer/feilutbetalingtyper';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+} from '../../../../typer/tilbakekrevingstyper';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
 import {
     type Avhengigheter,

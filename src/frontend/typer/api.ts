@@ -1,6 +1,6 @@
 import type { Behandlingresultat, Behandlingssteg, Venteårsak } from './behandling';
 import type { IBrevmottaker } from './Brevmottaker';
-import type { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
+import type { Aktsomhetsvurdering, GodTro, Periode } from './tilbakekrevingstyper';
 import type {
     DokumentMal,
     Foreldelsevurdering,

@@ -1,4 +1,4 @@
-import type { YtelseInfo } from '../../../../typer/feilutbetalingtyper';
+import type { YtelseInfo } from '../../../../typer/tilbakekrevingstyper';
 
 import { Table } from '@navikt/ds-react';
 import * as React from 'react';

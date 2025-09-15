@@ -2,11 +2,11 @@ import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
-import type {
-    IFeilutbetalingVilkårsvurdering,
-    VilkårsvurderingPeriode,
-} from '../../../typer/feilutbetalingtyper';
 import type { Ressurs } from '../../../typer/ressurs';
+import type {
+    VilkårsvurderingResponse,
+    VilkårsvurderingPeriode,
+} from '../../../typer/tilbakekrevingstyper';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -91,18 +91,16 @@ const perioder: VilkårsvurderingPeriode[] = [
         begrunnelse: undefined,
     },
 ];
-const feilutbetalingVilkårsvurdering: IFeilutbetalingVilkårsvurdering = {
+const vilkårsvurdering: VilkårsvurderingResponse = {
     perioder: perioder,
     rettsgebyr: 1199,
 };
 
-const setupUseBehandlingApiMock = (vilkårsvurdering?: IFeilutbetalingVilkårsvurdering): void => {
+const setupUseBehandlingApiMock = (vilkårsvurdering?: VilkårsvurderingResponse): void => {
     if (vilkårsvurdering) {
         mockUseBehandlingApi.mockImplementation(() => ({
-            gjerFeilutbetalingVilkårsvurderingKall: (): Promise<
-                Ressurs<IFeilutbetalingVilkårsvurdering>
-            > => {
-                const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
+            gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
+                const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
                     status: RessursStatus.Suksess,
                     data: vilkårsvurdering,
                 });
@@ -152,7 +150,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
     });
 
     test('- totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
-        setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
+        setupUseBehandlingApiMock(vilkårsvurdering);
         const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
@@ -325,7 +323,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
     });
 
     test('- vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
-        setupUseBehandlingApiMock(feilutbetalingVilkårsvurdering);
+        setupUseBehandlingApiMock(vilkårsvurdering);
 
         const fagsak = mock<IFagsak>({
             fagsystem: Fagsystem.EF,

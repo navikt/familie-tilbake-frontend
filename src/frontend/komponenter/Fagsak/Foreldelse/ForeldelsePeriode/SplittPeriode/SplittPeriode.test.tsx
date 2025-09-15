@@ -1,5 +1,5 @@
 import type { IBehandling } from '../../../../../typer/behandling';
-import type { ForeldelsePeriodeSkjemeData } from '../../typer/feilutbetalingForeldelse';
+import type { ForeldelsePeriodeSkjemeData } from '../../typer/foreldelse';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';

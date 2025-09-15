@@ -22,10 +22,9 @@ interface IProps {
 }
 
 const HistoriskFaktaContainer: React.FC<IProps> = () => {
-    const { feilutbetalingInaktiveFakta, skjemaData, fakta, settFeilutbetalingInaktivFakta } =
-        useHistoriskFakta();
+    const { inaktiveFakta, skjemaData, fakta, setInaktivFakta } = useHistoriskFakta();
 
-    if (feilutbetalingInaktiveFakta?.status === RessursStatus.Suksess) {
+    if (inaktiveFakta?.status === RessursStatus.Suksess) {
         return (
             <Container>
                 <VStack gap="5">
@@ -35,8 +34,8 @@ const HistoriskFaktaContainer: React.FC<IProps> = () => {
                         </Heading>
                     </Alert>
                     <VelgHistoriskFaktaVurdering
-                        feilutbetalingInaktiveFakta={feilutbetalingInaktiveFakta.data}
-                        settFeilutbetalingInaktivFakta={settFeilutbetalingInaktivFakta}
+                        inaktiveFakta={inaktiveFakta.data}
+                        setInaktivFakta={setInaktivFakta}
                     />
                     {skjemaData && fakta && (
                         <HistoriskFaktaVisning skjemaData={skjemaData} fakta={fakta} />
@@ -45,7 +44,7 @@ const HistoriskFaktaContainer: React.FC<IProps> = () => {
             </Container>
         );
     } else {
-        return <DataLastIkkeSuksess ressurser={[feilutbetalingInaktiveFakta]} />;
+        return <DataLastIkkeSuksess ressurser={[inaktiveFakta]} />;
     }
 };
 

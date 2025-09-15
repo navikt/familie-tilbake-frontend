@@ -1,5 +1,5 @@
 import type { IBehandling } from '../../../../../typer/behandling';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/vilkårsvurdering';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';

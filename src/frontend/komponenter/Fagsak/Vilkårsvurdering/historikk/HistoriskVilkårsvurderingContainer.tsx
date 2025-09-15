@@ -22,13 +22,10 @@ interface IProps {
 }
 
 const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
-    const {
-        feilutbetalingInaktiveVilkårsvurderinger,
-        skjemaData,
-        settFeilutbetalingInaktivVilkårsvurdering,
-    } = useHistoriskVilkårsvurdering();
+    const { inaktiveVilkårsvurderinger, skjemaData, setInaktivVilkårsvurdering } =
+        useHistoriskVilkårsvurdering();
 
-    if (feilutbetalingInaktiveVilkårsvurderinger?.status === RessursStatus.Suksess) {
+    if (inaktiveVilkårsvurderinger?.status === RessursStatus.Suksess) {
         return (
             <Container>
                 <VStack gap="5">
@@ -38,12 +35,8 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
                         </Heading>
                     </Alert>
                     <VelgHistoriskVilkårsvurdering
-                        feilutbetalingInaktiveVilkårsvurderinger={
-                            feilutbetalingInaktiveVilkårsvurderinger.data
-                        }
-                        settFeilutbetalingInaktivVilkårsvurdering={
-                            settFeilutbetalingInaktivVilkårsvurdering
-                        }
+                        inaktiveVilkårsvurderinger={inaktiveVilkårsvurderinger.data}
+                        setInaktivVilkårsvurdering={setInaktivVilkårsvurdering}
                     />
                     {skjemaData && skjemaData.length > 0 && (
                         <HistoriskVilkårsvurderingVisning perioder={skjemaData} />
@@ -52,7 +45,7 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
             </Container>
         );
     } else {
-        return <DataLastIkkeSuksess ressurser={[feilutbetalingInaktiveVilkårsvurderinger]} />;
+        return <DataLastIkkeSuksess ressurser={[inaktiveVilkårsvurderinger]} />;
     }
 };
 
