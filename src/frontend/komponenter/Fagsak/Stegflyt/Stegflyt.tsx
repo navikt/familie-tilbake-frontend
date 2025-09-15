@@ -17,7 +17,7 @@ interface StepperSteg extends SynligSteg {
 }
 
 const mapStegTilStepperSteg = (
-    stegInfo: IBehandlingsstegstilstand[],
+    stegsinfo: IBehandlingsstegstilstand[],
     behandling: Ressurs<IBehandling> | undefined
 ): StepperSteg[] | undefined => {
     if (behandling?.status !== RessursStatus.Suksess) return undefined;
@@ -25,34 +25,33 @@ const mapStegTilStepperSteg = (
     return Object.values(SYNLIGE_STEG)
         .filter(({ steg }) => visSide(steg, behandling.data))
         .map(synligSteg => {
-            const info = stegInfo.find(
-                ({ behandlingssteg }) => behandlingssteg === synligSteg.steg
-            );
+            const { behandlingsstegstatus } =
+                stegsinfo.find(({ behandlingssteg }) => behandlingssteg === synligSteg.steg) || {};
 
             return {
                 steg: synligSteg.steg,
                 navn: synligSteg.navn,
                 href: synligSteg.href,
-                erUtført: info ? erStegUtført(info.behandlingsstegstatus) : false,
+                erUtført: behandlingsstegstatus ? erStegUtført(behandlingsstegstatus) : false,
                 erAktiv: erSidenAktiv(synligSteg, behandling.data),
             };
         });
 };
 
-type Props = {
-    behandlingsstegInfo: IBehandlingsstegstilstand[];
-};
-
-export const Stegflyt: React.FC<Props> = ({ behandlingsstegInfo }) => {
+export const Stegflyt: React.FC = () => {
     const { behandling } = useBehandling();
     const location = useLocation();
     const navigate = useNavigate();
     const { fagsakId, fagSystem } = useFagsakStore();
 
-    const stegListe = mapStegTilStepperSteg(behandlingsstegInfo, behandling);
-    const aktivtStegIndeks =
-        stegListe?.findIndex(steg => location.pathname.includes(steg.href)) ?? -1;
-    const aktivtStegNummer = aktivtStegIndeks > -1 ? aktivtStegIndeks + 1 : 0;
+    const stegsinfo = mapStegTilStepperSteg(
+        behandling?.status === RessursStatus.Suksess ? behandling.data.behandlingsstegsinfo : [],
+        behandling
+    );
+
+    const aktivStegindeks =
+        stegsinfo?.findIndex(steg => location.pathname.includes(steg.href)) ?? -1;
+    const aktivStegnummer = aktivStegindeks > -1 ? aktivStegindeks + 1 : 0;
 
     const fagsakPath = (sideHref: string): string | null => {
         if (behandling?.status === RessursStatus.Suksess && fagSystem && fagsakId)
@@ -61,23 +60,23 @@ export const Stegflyt: React.FC<Props> = ({ behandlingsstegInfo }) => {
     };
 
     const gåTilSteg = (stegNummer: number): void => {
-        const nyttSteg = stegListe?.[stegNummer - 1];
-        if (nyttSteg?.href && aktivtStegNummer !== stegNummer) {
+        const nyttSteg = stegsinfo?.[stegNummer - 1];
+        if (nyttSteg?.href && aktivStegnummer !== stegNummer) {
             navigate(`${fagsakPath(nyttSteg.href)}`);
         }
     };
 
-    if (aktivtStegNummer < 1 || !stegListe) return null;
+    if (aktivStegnummer < 1 || !stegsinfo) return null;
 
     return (
         <Stepper
-            activeStep={aktivtStegNummer}
+            activeStep={aktivStegnummer}
             onStepChange={gåTilSteg}
             orientation="horizontal"
             className="mx-4"
             aria-label="Behandlingssteg"
         >
-            {stegListe.map(steg => {
+            {stegsinfo.map(steg => {
                 const ariaLabel = steg.erAktiv
                     ? `Gå til ${steg.navn}`
                     : `Inaktivt steg, ${steg.navn}, ikke klikkbar`;

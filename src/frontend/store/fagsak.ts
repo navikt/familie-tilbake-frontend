@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface FagsakState {
+export type FagsakState = {
     personIdent: string | undefined;
     fagsakId: string | undefined;
     behandlingId: string | undefined;
@@ -9,7 +9,7 @@ interface FagsakState {
     setFagsakId: (fagsakId: string | undefined) => void;
     setBehandlingId: (behandlingId: string | undefined) => void;
     setFagSystem: (fagSystem: string | undefined) => void;
-}
+};
 
 export const useFagsakStore = create<FagsakState>(set => ({
     personIdent: undefined,

@@ -56,6 +56,15 @@ const aktiveBehandlingstegstatuser = [
     Behandlingsstegstatus.Venter,
 ];
 
+const sjekkOmSidenErAktiv = (
+    side: SynligSteg,
+    behandlingsstegsinfo: IBehandlingsstegstilstand[]
+): boolean => {
+    return behandlingsstegsinfo
+        .filter(stegInfo => aktiveBehandlingstegstatuser.includes(stegInfo.behandlingsstegstatus))
+        .some(stegInfo => stegInfo.behandlingssteg === side.steg);
+};
+
 export const erSidenAktiv = (synligSteg: SynligSteg, behandling: IBehandling): boolean => {
     if (!behandling.behandlingsstegsinfo) return true;
 
@@ -66,15 +75,6 @@ export const erSidenAktiv = (synligSteg: SynligSteg, behandling: IBehandling): b
     }
 
     return sjekkOmSidenErAktiv(synligSteg, behandling.behandlingsstegsinfo);
-};
-
-const sjekkOmSidenErAktiv = (
-    side: SynligSteg,
-    behandlingsstegsinfo: IBehandlingsstegstilstand[]
-): boolean => {
-    return behandlingsstegsinfo
-        .filter(stegInfo => aktiveBehandlingstegstatuser.includes(stegInfo.behandlingsstegstatus))
-        .some(stegInfo => stegInfo.behandlingssteg === side.steg);
 };
 
 export const visSide = (steg: Behandlingssteg, behandling: IBehandling): boolean => {
