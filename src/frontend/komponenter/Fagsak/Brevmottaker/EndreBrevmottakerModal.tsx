@@ -5,15 +5,15 @@ import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { BrukerMedUtenlandskAdresse } from './BrukerMedUtenlandskAdresse';
-import { Dødsbo } from './Dødsbo';
-import { Fullmektig } from './Fullmektig';
+import { BrukerMedUtenlandskAdresse } from './Mottaker/BrukerMedUtenlandskAdresse';
+import { Dødsbo } from './Mottaker/Dødsbo';
+import { Fullmektig } from './Mottaker/Fullmektig';
+import { Verge } from './Mottaker/Verge';
 import {
     brevmottakerFormDataInputSchema,
     brevmottakerFormDataSchema,
     type BrevmottakerFormData,
 } from './schema/brevmottakerSchema';
-import { Verge } from './Verge';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';

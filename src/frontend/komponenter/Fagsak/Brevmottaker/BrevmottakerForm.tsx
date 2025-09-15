@@ -4,12 +4,12 @@ import { Button, Fieldset, Select } from '@navikt/ds-react';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { BrukerMedUtenlandskAdresse } from './BrukerMedUtenlandskAdresse';
-import { Dødsbo } from './Dødsbo';
-import { Fullmektig } from './Fullmektig';
+import { BrukerMedUtenlandskAdresse } from './Mottaker/BrukerMedUtenlandskAdresse';
+import { Dødsbo } from './Mottaker/Dødsbo';
+import { Fullmektig } from './Mottaker/Fullmektig';
+import { Verge } from './Mottaker/Verge';
 import { type BrevmottakerFormData } from './schema/brevmottakerSchema';
 import { createFormDefaults } from './schema/brevmottakerSchema';
-import { Verge } from './Verge';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 
 interface BrevmottakerFormProps {

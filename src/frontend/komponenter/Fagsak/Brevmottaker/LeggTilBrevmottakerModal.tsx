@@ -5,16 +5,16 @@ import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { BrukerMedUtenlandskAdresse } from './BrukerMedUtenlandskAdresse';
-import { Dødsbo } from './Dødsbo';
-import { Fullmektig } from './Fullmektig';
+import { BrukerMedUtenlandskAdresse } from './Mottaker/BrukerMedUtenlandskAdresse';
+import { Dødsbo } from './Mottaker/Dødsbo';
+import { Fullmektig } from './Mottaker/Fullmektig';
+import { Verge } from './Mottaker/Verge';
 import {
     brevmottakerFormDataInputSchema,
     brevmottakerFormDataSchema,
     type BrevmottakerFormData,
     createFormDefaults,
 } from './schema/brevmottakerSchema';
-import { Verge } from './Verge';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
@@ -40,13 +40,8 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
         defaultValues: createFormDefaults(),
     });
 
-    const { handleSubmit, setValue, watch, setError, formState } = methods;
+    const { handleSubmit, setValue, watch, setError } = methods;
     const mottakerType = watch('mottakerType');
-
-    // Debug form state
-    console.log('Form state:', formState);
-    console.log('Form errors:', formState.errors);
-    console.log('Form isValid:', formState.isValid);
 
     const handleCancel = (): void => {
         if (onClose) {
@@ -57,17 +52,11 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
     };
 
     const handleLeggTil: SubmitHandler<BrevmottakerFormData> = async data => {
-        console.log('handleLeggTil called with data:', data);
-
         if (!behandling || behandling.status !== RessursStatus.Suksess) {
-            console.log('No behandling or wrong status');
             return;
         }
 
-        // Use the schema transform to convert form data to IBrevmottaker
-        console.log('Parsing data with schema...');
         const brevmottaker = brevmottakerFormDataSchema.parse(data);
-        console.log('Parsed brevmottaker:', brevmottaker);
 
         const result = await lagreBrevmottaker(behandling.data.behandlingId, brevmottaker);
 

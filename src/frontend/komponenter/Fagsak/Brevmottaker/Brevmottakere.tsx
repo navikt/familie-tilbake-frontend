@@ -43,8 +43,6 @@ const Brevmottaker: React.FC<IBrevmottakerProps> = ({
         : undefined;
     const [organisasjonsnavn, kontaktperson] = brevmottaker.navn.split(' v/ ');
 
-    const erDefaultBruker = brevmottakerId === 'default-user' || brevmottaker.isDefault;
-
     const fjernBrevMottakerOgOppdaterState = (mottakerId: string): void => {
         fjernManuellBrevmottaker(behandlingId, mottakerId).then((respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.Suksess) {
@@ -65,7 +63,7 @@ const Brevmottaker: React.FC<IBrevmottakerProps> = ({
                     {mottakerTypeVisningsnavn[brevmottaker.type]}
                 </BodyShort>
                 <div className="flex gap-1">
-                    {!erLesevisning && !erDefaultBruker && (
+                    {!erLesevisning && !brevmottaker.isDefault && (
                         <Button
                             variant="tertiary"
                             onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
@@ -75,7 +73,7 @@ const Brevmottaker: React.FC<IBrevmottakerProps> = ({
                             Fjern
                         </Button>
                     )}
-                    {!erLesevisning && !erDefaultBruker && (
+                    {!erLesevisning && !brevmottaker.isDefault && (
                         <Button
                             variant="tertiary"
                             onClick={() => {
@@ -87,7 +85,7 @@ const Brevmottaker: React.FC<IBrevmottakerProps> = ({
                             Endre
                         </Button>
                     )}
-                    {!erLesevisning && erDefaultBruker && antallBrevmottakere > 1 && (
+                    {!erLesevisning && brevmottaker.isDefault && antallBrevmottakere > 1 && (
                         <Button
                             variant="tertiary"
                             size="small"

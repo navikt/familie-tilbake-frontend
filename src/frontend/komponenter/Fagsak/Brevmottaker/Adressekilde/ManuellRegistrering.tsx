@@ -1,11 +1,11 @@
-import type { Land } from '../../Felleskomponenter/Landvelger/Landvelger';
+import type { Land } from '../../../Felleskomponenter/Landvelger/Landvelger';
 
 import { Alert, Fieldset, TextField, VStack } from '@navikt/ds-react';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { MottakerType } from '../../../typer/Brevmottaker';
-import Landvelger from '../../Felleskomponenter/Landvelger/Landvelger';
+import { MottakerType } from '../../../../typer/Brevmottaker';
+import Landvelger from '../../../Felleskomponenter/Landvelger/Landvelger';
 
 interface IProps {
     preutfyltNavn?: string;

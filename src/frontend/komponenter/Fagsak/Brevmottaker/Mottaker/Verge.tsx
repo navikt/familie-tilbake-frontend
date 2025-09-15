@@ -2,8 +2,8 @@ import { Radio, RadioGroup, TextField, VStack } from '@navikt/ds-react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import ManuellRegistrering from './ManuellRegistrering';
-import { AdresseKilde, MottakerType } from '../../../typer/Brevmottaker';
+import { AdresseKilde, MottakerType } from '../../../../typer/Brevmottaker';
+import ManuellRegistrering from '../Adressekilde/ManuellRegistrering';
 
 export const Verge: React.FC = () => {
     const {
