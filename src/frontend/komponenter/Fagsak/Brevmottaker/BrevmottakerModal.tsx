@@ -1,11 +1,11 @@
-import type { BrevmottakerFormData } from './schema/brevmottakerFormData';
+import type { BrevmottakerFormData } from './schema/brevmottakerSchema';
 
 import React from 'react';
 
 import { EndreBrevmottakerModal } from './EndreBrevmottakerModal';
 import { LeggTilBrevmottakerModal } from './LeggTilBrevmottakerModal';
+import { mapBrevmottakerToFormData } from './schema/brevmottakerSchema';
 import { hentEksisterendeBrevmottaker } from './utils/brevmottakerHelper';
-import { mapBrevmottakerToFormData } from './utils/brevmottakerMapper';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
 

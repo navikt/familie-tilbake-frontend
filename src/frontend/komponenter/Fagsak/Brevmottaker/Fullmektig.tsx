@@ -4,31 +4,19 @@ import { useFormContext } from 'react-hook-form';
 
 import ManuellRegistrering from './ManuellRegistrering';
 import { AdresseKilde, adresseKilder, MottakerType } from '../../../typer/Brevmottaker';
-import { validateOrganisasjonsnummer, validatePersonnummer } from '../../../utils/validation';
 
 export const Fullmektig: React.FC = () => {
     const {
         register,
         watch,
         setValue,
-        unregister,
         formState: { errors },
     } = useFormContext();
 
     const adresseKilde = watch('fullmektig.adresseKilde');
 
-    const nullstillManuellAdresseInput = (nullstillAdresseKilde = false): void => {
-        unregister('fullmektig.personnummer');
-        unregister('fullmektig.organisasjonsnummer');
-        unregister('fullmektig.navn');
-
-        setValue('fullmektig.personnummer', '');
-        setValue('fullmektig.organisasjonsnummer', '');
-        setValue('fullmektig.navn', '');
-
-        if (nullstillAdresseKilde) {
-            setValue('fullmektig.adresseKilde', '');
-        }
+    const handleAdresseKildeChange = (val: AdresseKilde): void => {
+        setValue('fullmektig.adresseKilde', val);
     };
 
     const getErrorMessage = (path: string): string | undefined => {
@@ -46,10 +34,7 @@ export const Fullmektig: React.FC = () => {
             <RadioGroup
                 legend="Adresse"
                 value={adresseKilde || ''}
-                onChange={(val: AdresseKilde) => {
-                    setValue('fullmektig.adresseKilde', val);
-                    nullstillManuellAdresseInput(false);
-                }}
+                onChange={handleAdresseKildeChange}
                 error={getErrorMessage('fullmektig.adresseKilde')}
             >
                 <Radio value={AdresseKilde.ManuellRegistrering}>
@@ -70,10 +55,7 @@ export const Fullmektig: React.FC = () => {
             {adresseKilde === AdresseKilde.OppslagRegister && (
                 <TextField
                     label="Fødselsnummer"
-                    {...register('fullmektig.personnummer', {
-                        required: 'Fødselsnummer er påkrevd',
-                        validate: validatePersonnummer,
-                    })}
+                    {...register('fullmektig.personnummer')}
                     error={getErrorMessage('fullmektig.personnummer')}
                 />
             )}
@@ -82,10 +64,7 @@ export const Fullmektig: React.FC = () => {
                 <>
                     <TextField
                         label="Organisasjonsnummer"
-                        {...register('fullmektig.organisasjonsnummer', {
-                            required: 'Organisasjonsnummer er påkrevd',
-                            validate: validateOrganisasjonsnummer,
-                        })}
+                        {...register('fullmektig.organisasjonsnummer')}
                         error={getErrorMessage('fullmektig.organisasjonsnummer')}
                     />
                     <TextField

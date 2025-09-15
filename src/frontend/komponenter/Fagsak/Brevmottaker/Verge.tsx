@@ -4,7 +4,6 @@ import { useFormContext } from 'react-hook-form';
 
 import ManuellRegistrering from './ManuellRegistrering';
 import { AdresseKilde, MottakerType } from '../../../typer/Brevmottaker';
-import { validatePersonnummer } from '../../../utils/validation';
 
 export const Verge: React.FC = () => {
     const {
@@ -16,12 +15,8 @@ export const Verge: React.FC = () => {
 
     const adresseKilde = watch('verge.adresseKilde');
 
-    const nullstillManuellAdresseInput = (nullstillAdresseKilde = false): void => {
-        setValue('verge.personnummer', '');
-
-        if (nullstillAdresseKilde) {
-            setValue('verge.adresseKilde', '');
-        }
+    const handleAdresseKildeChange = (val: AdresseKilde): void => {
+        setValue('verge.adresseKilde', val);
     };
 
     const getErrorMessage = (path: string): string | undefined => {
@@ -39,10 +34,7 @@ export const Verge: React.FC = () => {
             <RadioGroup
                 legend="Verge"
                 value={adresseKilde || ''}
-                onChange={(val: AdresseKilde) => {
-                    setValue('verge.adresseKilde', val);
-                    nullstillManuellAdresseInput(false);
-                }}
+                onChange={handleAdresseKildeChange}
                 error={getErrorMessage('verge.adresseKilde')}
             >
                 <Radio value={AdresseKilde.ManuellRegistrering}>Manuell registrering</Radio>
@@ -56,10 +48,7 @@ export const Verge: React.FC = () => {
             {adresseKilde === AdresseKilde.OppslagRegister && (
                 <TextField
                     label="Fødselsnummer"
-                    {...register('verge.personnummer', {
-                        required: 'Fødselsnummer er påkrevd',
-                        validate: validatePersonnummer,
-                    })}
+                    {...register('verge.personnummer')}
                     error={getErrorMessage('verge.personnummer')}
                 />
             )}

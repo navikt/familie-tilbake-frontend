@@ -8,11 +8,12 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { BrukerMedUtenlandskAdresse } from './BrukerMedUtenlandskAdresse';
 import { Dødsbo } from './Dødsbo';
 import { Fullmektig } from './Fullmektig';
-import brevmottakerFormDataSchema, {
+import {
+    brevmottakerFormDataInputSchema,
+    brevmottakerFormDataSchema,
     type BrevmottakerFormData,
-} from './schema/brevmottakerFormData';
-import { mapFormDataToBrevmottaker } from './utils/brevmottakerMapper';
-import { opprettStandardSkjemaverdier } from './utils/formDefaults';
+    createFormDefaults,
+} from './schema/brevmottakerSchema';
 import { Verge } from './Verge';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';
@@ -34,14 +35,18 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
     const isOpen = open ?? visBrevmottakerModal;
 
     const methods = useForm<BrevmottakerFormData>({
-        resolver: zodResolver(brevmottakerFormDataSchema),
-        reValidateMode: 'onBlur',
-        shouldFocusError: false,
-        defaultValues: opprettStandardSkjemaverdier(),
+        resolver: zodResolver(brevmottakerFormDataInputSchema),
+        mode: 'onBlur',
+        defaultValues: createFormDefaults(),
     });
 
-    const { handleSubmit, setValue, watch, setError } = methods;
+    const { handleSubmit, setValue, watch, setError, formState } = methods;
     const mottakerType = watch('mottakerType');
+
+    // Debug form state
+    console.log('Form state:', formState);
+    console.log('Form errors:', formState.errors);
+    console.log('Form isValid:', formState.isValid);
 
     const handleCancel = (): void => {
         if (onClose) {
@@ -52,11 +57,18 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
     };
 
     const handleLeggTil: SubmitHandler<BrevmottakerFormData> = async data => {
+        console.log('handleLeggTil called with data:', data);
+
         if (!behandling || behandling.status !== RessursStatus.Suksess) {
+            console.log('No behandling or wrong status');
             return;
         }
 
-        const brevmottaker = mapFormDataToBrevmottaker(data);
+        // Use the schema transform to convert form data to IBrevmottaker
+        console.log('Parsing data with schema...');
+        const brevmottaker = brevmottakerFormDataSchema.parse(data);
+        console.log('Parsed brevmottaker:', brevmottaker);
+
         const result = await lagreBrevmottaker(behandling.data.behandlingId, brevmottaker);
 
         if (result.success) {
@@ -91,7 +103,12 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
                 header={{ heading: 'Legg til brevmottaker' }}
                 width="medium"
             >
-                <form onSubmit={handleSubmit(handleLeggTil)}>
+                <form
+                    onSubmit={e => {
+                        console.log('Form submit triggered!', e);
+                        handleSubmit(handleLeggTil)(e);
+                    }}
+                >
                     {/*  Må ha en min høyde for at select dropdown ikke skal overlappe */}
                     <Modal.Body style={{ minHeight: '700px' }}>
                         <VStack gap="4">
@@ -129,7 +146,9 @@ export const LeggTilBrevmottakerModal: React.FC<LeggTilBrevmottakerModalProps> =
                         </VStack>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button type="submit">Legg til</Button>
+                        <Button type="submit" onClick={() => console.log('Submit button clicked!')}>
+                            Legg til
+                        </Button>
                         <Button variant="secondary" type="button" onClick={handleCancel}>
                             Avbryt
                         </Button>

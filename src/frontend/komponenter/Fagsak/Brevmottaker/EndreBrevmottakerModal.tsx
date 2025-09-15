@@ -8,11 +8,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { BrukerMedUtenlandskAdresse } from './BrukerMedUtenlandskAdresse';
 import { Dødsbo } from './Dødsbo';
 import { Fullmektig } from './Fullmektig';
-import brevmottakerFormDataSchema, {
+import {
+    brevmottakerFormDataInputSchema,
+    brevmottakerFormDataSchema,
     type BrevmottakerFormData,
-} from './schema/brevmottakerFormData';
-import { mapFormDataToBrevmottaker } from './utils/brevmottakerMapper';
-import { opprettStandardSkjemaverdier } from './utils/formDefaults';
+} from './schema/brevmottakerSchema';
 import { Verge } from './Verge';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';
@@ -32,20 +32,35 @@ export function EndreBrevmottakerModal({
     const { lagreBrevmottaker } = useBrevmottakerApi();
 
     const methods = useForm<BrevmottakerFormData>({
-        resolver: zodResolver(brevmottakerFormDataSchema),
-        reValidateMode: 'onBlur',
-        defaultValues: opprettStandardSkjemaverdier(eksisterendeMottaker),
+        resolver: zodResolver(brevmottakerFormDataInputSchema),
+        mode: 'onBlur',
+        defaultValues: eksisterendeMottaker,
     });
 
-    const { handleSubmit, watch, setError, setValue } = methods;
+    const { handleSubmit, watch, setError, setValue, formState } = methods;
     const mottakerType = watch('mottakerType');
 
+    // Debug form state
+    console.log('EndreBrevmottaker - Form state:', formState);
+    console.log('EndreBrevmottaker - Form errors:', formState.errors);
+    console.log('EndreBrevmottaker - Form errors fullmektig:', formState.errors.fullmektig);
+    console.log('EndreBrevmottaker - Form isValid:', formState.isValid);
+    console.log('EndreBrevmottaker - mottakerType:', mottakerType);
+    console.log('EndreBrevmottaker - eksisterendeMottaker:', eksisterendeMottaker);
+
     const handleEndre: SubmitHandler<BrevmottakerFormData> = async data => {
+        console.log('handleEndre called with data:', data);
+
         if (!behandling || behandling.status !== RessursStatus.Suksess || !mottakerId) {
+            console.log('No behandling, wrong status, or no mottakerId');
             return;
         }
 
-        const brevmottaker = mapFormDataToBrevmottaker(data);
+        // Use the schema transform to convert form data to IBrevmottaker
+        console.log('Parsing data with schema...');
+        const brevmottaker = brevmottakerFormDataSchema.parse(data);
+        console.log('Parsed brevmottaker:', brevmottaker);
+
         const response = await lagreBrevmottaker(
             behandling.data.behandlingId,
             brevmottaker,
@@ -90,7 +105,12 @@ export function EndreBrevmottakerModal({
                 header={{ heading: 'Endre brevmottaker' }}
                 width="medium"
             >
-                <form onSubmit={handleSubmit(handleEndre)}>
+                <form
+                    onSubmit={e => {
+                        console.log('EndreBrevmottaker - Form submit triggered!', e);
+                        handleSubmit(handleEndre)(e);
+                    }}
+                >
                     {/* Må ha en min høyde for at select dropdown ikke skal overlappe */}
                     <Modal.Body style={{ minHeight: '700px' }}>
                         <VStack gap="4">
@@ -128,7 +148,14 @@ export function EndreBrevmottakerModal({
                         </VStack>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button type="submit">Lagre endringer</Button>
+                        <Button
+                            type="submit"
+                            onClick={() =>
+                                console.log('EndreBrevmottaker - Submit button clicked!')
+                            }
+                        >
+                            Lagre endringer
+                        </Button>
                         <Button variant="secondary" type="button" onClick={handleCancel}>
                             Avbryt
                         </Button>

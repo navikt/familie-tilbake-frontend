@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-import { MottakerType, AdresseKilde } from '../typer/Brevmottaker';
-
 // Validering for norsk organisasjonsnummer (kun format-validering)
 // Egentlig validering og oppslag skjer på backend ved lagring
 export const organisasjonsnummerSchema = z
@@ -48,14 +46,6 @@ export const poststedSchema = z
     .string()
     .min(1, 'Feltet er påkrevd')
     .max(50, 'Feltet kan ikke inneholde mer enn 50 tegn');
-
-// Schema for fullmektig validering
-export const fullmektigSchema = z.object({
-    adresseKilde: z.string().min(1, 'Adressekilde må velges'),
-    organisasjonsnummer: organisasjonsnummerSchema.optional(),
-    personnummer: personnummerSchema.optional(),
-    navn: navnSchema.optional(),
-});
 
 // Hjelpefunksjon for å konvertere Zod-feil til react-hook-form format
 export const zodValidate = <T>(schema: z.ZodSchema<T>) => {
@@ -163,90 +153,3 @@ export const validateMottakerType = (
 
     return true;
 };
-
-// Base adresse felter som brukes av alle mottakertyper
-const baseAdresseSchema = z.object({
-    navn: navnSchema,
-    land: landSchema,
-    adresselinje1: adresseFeltSchema,
-    adresselinje2: adresseFelt2Schema.optional(),
-    postnummer: postnummerSchema,
-    poststed: poststedSchema,
-});
-
-// Utvidete adresse felter for fullmektig og verge
-const utvideteAdresseSchema = baseAdresseSchema.extend({
-    adresseKilde: z.enum([
-        AdresseKilde.ManuellRegistrering,
-        AdresseKilde.OppslagRegister,
-        AdresseKilde.OppslagOrganisasjonsregister,
-        AdresseKilde.Udefinert,
-    ]),
-    personnummer: personnummerSchema.optional(),
-    organisasjonsnummer: organisasjonsnummerSchema.optional(),
-});
-
-// Fullmektig schema med conditional validering
-const fullmektigValidationSchema = utvideteAdresseSchema.refine(
-    data => {
-        if (data.adresseKilde === AdresseKilde.OppslagRegister) {
-            return data.personnummer && data.personnummer.length === 11;
-        }
-        if (data.adresseKilde === AdresseKilde.OppslagOrganisasjonsregister) {
-            return data.organisasjonsnummer && data.organisasjonsnummer.length === 9;
-        }
-        return true; // ManuellRegistrering trenger ikke ekstra validering
-    },
-    {
-        message: 'Ugyldig identifikator for valgt adressekilde',
-        path: ['personnummer'], // Dette kan være dynamisk basert på adresseKilde
-    }
-);
-
-// Verge schema
-const vergeValidationSchema = utvideteAdresseSchema.extend({
-    vergetype: z.string().min(1, 'Vergetype er påkrevd'),
-});
-
-// Dødsbo schema
-const dødsboValidationSchema = baseAdresseSchema;
-
-// Bruker med utenlandsk adresse schema
-const brukerMedUtenlandskAdresseValidationSchema = baseAdresseSchema;
-
-// Hovedschema som dekker hele FormData for brevmottaker
-export const brevmottakerSchema = z
-    .object({
-        mottakerType: z.enum([
-            MottakerType.Fullmektig,
-            MottakerType.Verge,
-            MottakerType.Dødsbo,
-            MottakerType.BrukerMedUtenlandskAdresse,
-            MottakerType.Bruker,
-        ]),
-        fullmektig: fullmektigValidationSchema.optional(),
-        verge: vergeValidationSchema.optional(),
-        dødsbo: dødsboValidationSchema.optional(),
-        brukerMedUtenlandskAdresse: brukerMedUtenlandskAdresseValidationSchema.optional(),
-    })
-    .refine(
-        data => {
-            // Sørg for at riktig mottakertype har data
-            switch (data.mottakerType) {
-                case MottakerType.Fullmektig:
-                    return !!data.fullmektig;
-                case MottakerType.Verge:
-                    return !!data.verge;
-                case MottakerType.Dødsbo:
-                    return !!data.dødsbo;
-                case MottakerType.BrukerMedUtenlandskAdresse:
-                    return !!data.brukerMedUtenlandskAdresse;
-                default:
-                    return false;
-            }
-        },
-        {
-            message: 'Manglende data for valgt mottakertype',
-            path: ['mottakerType'],
-        }
-    );

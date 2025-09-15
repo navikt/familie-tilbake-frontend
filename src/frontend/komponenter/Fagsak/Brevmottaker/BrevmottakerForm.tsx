@@ -7,8 +7,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { BrukerMedUtenlandskAdresse } from './BrukerMedUtenlandskAdresse';
 import { Dødsbo } from './Dødsbo';
 import { Fullmektig } from './Fullmektig';
-import { type BrevmottakerFormData } from './schema/brevmottakerFormData';
-import { opprettStandardSkjemaverdier } from './utils/formDefaults';
+import { type BrevmottakerFormData } from './schema/brevmottakerSchema';
+import { createFormDefaults } from './schema/brevmottakerSchema';
 import { Verge } from './Verge';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 
@@ -31,7 +31,7 @@ export const BrevmottakerForm: React.FC<BrevmottakerFormProps> = ({
     const methods = useForm<BrevmottakerFormData>({
         reValidateMode: 'onBlur',
         shouldFocusError: false,
-        defaultValues: opprettStandardSkjemaverdier(initialData),
+        defaultValues: createFormDefaults(initialData),
     });
 
     const { handleSubmit, setValue, watch, setError } = methods;
