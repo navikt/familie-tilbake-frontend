@@ -24,14 +24,14 @@ import { isChangeEvent } from './utils';
  * skjuler felter for bruker under gitte omstendigheter
  * @avhengigheter avhengighetene som brukes til validering og vis/skjul
  */
-export interface FeltConfig<Verdi> {
+type FeltConfig<Verdi> = {
     avhengigheter?: Avhengigheter;
     feltId?: string;
     skalFeltetVises?: (avhengigheter: Avhengigheter) => boolean;
     valideringsfunksjon?: ValiderFelt<Verdi>;
     verdi: Verdi;
     nullstillVedAvhengighetEndring?: boolean;
-}
+};
 
 export const useFelt = <Verdi = string>({
     avhengigheter = {},

@@ -11,14 +11,14 @@ import { erServerFeil } from '../../utils/httpUtils';
 axios.defaults.baseURL = window.location.origin;
 export const preferredAxios = axios;
 
-export interface ApiRespons<T> {
+type ApiRespons<T> = {
     defaultFeilmelding?: string;
     error?: AxiosError;
     innloggetSaksbehandler?: ISaksbehandler;
     loggFeilTilSentry?: boolean;
     ressurs?: ApiRessurs<T>;
     httpStatus?: number;
-}
+};
 
 export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => {
     const {
