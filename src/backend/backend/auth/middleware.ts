@@ -36,9 +36,12 @@ export const csrfBeskyttelse = (req: Request, res: Response, next: NextFunction)
     }
 
     if (typeof csrfToken === 'string' && !verifiserCsrfToken(req.session, csrfToken)) {
-        logError(`Ugyldig CSRF-token for sesjon ${req.sessionID}... IP= ${req.ip}`);
+        logError(
+            `Ugyldig CSRF-token for sesjon ${req.sessionID}... IP= ${req.ip}, CSRF-tokenstart=${csrfToken.substring(0, 4)}, path=${req.path}`
+        );
         res.status(403).json({
-            frontendFeilmelding: 'Ugyldig CSRF-token. Prøv å laste siden på nytt.',
+            frontendFeilmelding:
+                'Ugyldig CSRF-token. Ta vare på ulagret data og last inn siden på nytt.',
             status: 'IKKE_TILGANG',
         });
         return;

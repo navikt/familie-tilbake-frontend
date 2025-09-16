@@ -34,7 +34,7 @@ import {
     sorterFeilutbetaltePerioder,
     validerTekstMaksLengde,
 } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 
@@ -150,7 +150,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const oppdaterÅrsakPåPeriode = (
             periode: FaktaPeriodeSkjemaData,
-            nyÅrsak: HendelseType
+            nyÅrsak: HendelseType | undefined
         ): void => {
             if (behandlePerioderSamlet) {
                 oppdaterÅrsaker(nyÅrsak);
@@ -162,7 +162,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const oppdaterUnderårsakPåPeriode = (
             periode: FaktaPeriodeSkjemaData,
-            nyUnderårsak: HendelseUndertype
+            nyUnderårsak: HendelseUndertype | undefined
         ): void => {
             if (behandlePerioderSamlet) {
                 oppdaterUnderårsaker(periode, nyUnderårsak);
@@ -172,7 +172,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             settIkkePersistertKomponent('fakta');
         };
 
-        const oppdaterÅrsaker = (nyÅrsak: HendelseType): void => {
+        const oppdaterÅrsaker = (nyÅrsak: HendelseType | undefined): void => {
             const nyePerioder = skjemaData.perioder.map(periode => {
                 return { ...periode, hendelsestype: nyÅrsak, hendelsesundertype: undefined };
             });
@@ -182,7 +182,10 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             });
         };
 
-        const oppdaterÅrsak = (periode: FaktaPeriodeSkjemaData, nyÅrsak: HendelseType): void => {
+        const oppdaterÅrsak = (
+            periode: FaktaPeriodeSkjemaData,
+            nyÅrsak: HendelseType | undefined
+        ): void => {
             const gammelPeriodeIndex = skjemaData.perioder.findIndex(
                 gammelPeriode => gammelPeriode.index === periode.index
             );
@@ -196,7 +199,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const oppdaterUnderårsaker = (
             periode: FaktaPeriodeSkjemaData,
-            nyUnderårsak: HendelseUndertype
+            nyUnderårsak: HendelseUndertype | undefined
         ): void => {
             const nyePerioder = skjemaData.perioder.map(gammelPeriode => {
                 if (gammelPeriode.hendelsestype === periode.hendelsestype) {
@@ -212,7 +215,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const oppdaterUnderårsak = (
             periode: FaktaPeriodeSkjemaData,
-            nyUnderårsak: HendelseUndertype
+            nyUnderårsak: HendelseUndertype | undefined
         ): void => {
             const gammelPeriodeIndex = skjemaData.perioder.findIndex(
                 gammelPeriode => gammelPeriode.index === periode.index
@@ -320,7 +323,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
             if (stegErBehandlet && !harEndretOpplysninger()) {
                 nullstillIkkePersisterteKomponenter();
                 utførRedirect(
-                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FORELDELSE.href}`
+                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
                 );
             } else {
                 const feilmeldinger = validerForInnsending();
@@ -366,7 +369,7 @@ const [FeilutbetalingFaktaProvider, useFeilutbetalingFakta] = createUseContext(
 
         const gåTilForrige = (): void => {
             navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
+                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
             );
         };
 

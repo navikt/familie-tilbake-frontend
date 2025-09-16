@@ -449,8 +449,7 @@ describe('Tester: ForeldelseContainer', () => {
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
         });
-        expect(getByText('Foreldelsesloven §§ 2 og 3')).toBeInTheDocument();
-        expect(getByText('Automatisk vurdert')).toBeInTheDocument();
+        expect(getByText('Perioden er ikke foreldet')).toBeInTheDocument();
 
         expect(
             getByRole('button', {

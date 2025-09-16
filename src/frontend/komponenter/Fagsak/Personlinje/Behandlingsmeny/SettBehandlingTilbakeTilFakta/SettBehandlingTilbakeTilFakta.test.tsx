@@ -54,6 +54,7 @@ const mockBehandling: IBehandling = {
     harVerge: false,
     resultatstype: undefined,
     kanHenleggeBehandling: true,
+    erNyModell: false,
 };
 
 const mockPerson: IPerson = {

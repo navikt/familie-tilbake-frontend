@@ -5,7 +5,7 @@ import { Table } from '@navikt/ds-react';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
-import FeilutbetalingFaktaPeriode from './FaktaPeriodeSkjema';
+import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
 import { hentHendelseTyper } from '../../../../kodeverk';
 import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
 
@@ -48,7 +48,7 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLes
             <Table.Body>
                 {perioder.map(periode => {
                     return (
-                        <FeilutbetalingFaktaPeriode
+                        <FaktaPeriodeSkjema
                             hendelseTyper={hendelseTyper}
                             periode={periode}
                             key={`formIndex${periode.index + 1}`}

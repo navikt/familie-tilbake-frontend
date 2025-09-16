@@ -7,7 +7,7 @@ import * as React from 'react';
 import { harBrukerUttaltSegValgTilTekst } from '../../../../../typer/feilutbetalingtyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../../../utils';
 import FaktaRevurdering from '../../FaktaRevurdering';
-import FeilutbetalingFaktaPeriode from '../FaktaPeriodeSkjema';
+import { FaktaPeriodeSkjema } from '../FaktaPeriodeSkjema';
 
 interface IProps {
     skjemaData: FaktaSkjemaData;
@@ -56,7 +56,7 @@ const HistoriskFaktaVisning: React.FC<IProps> = ({ skjemaData, fakta }) => {
                         <Table.Body>
                             {skjemaData.perioder.map((periode, i) => {
                                 return (
-                                    <FeilutbetalingFaktaPeriode
+                                    <FaktaPeriodeSkjema
                                         key={i}
                                         periode={periode}
                                         hendelseTyper={[]}

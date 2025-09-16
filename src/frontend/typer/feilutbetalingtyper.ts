@@ -117,15 +117,9 @@ export type YtelseInfo = {
     beløp: number;
 };
 
-export type ReduserteBeløpInfo = {
-    trekk: boolean;
-    beløp: number;
-};
-
 export interface VilkårsvurderingPeriode extends FeilutbetalingPeriode {
     hendelsestype: HendelseType;
     aktiviteter?: YtelseInfo[];
-    reduserteBeløper?: ReduserteBeløpInfo[];
     foreldet: boolean;
     begrunnelse?: string;
     vilkårsvurderingsresultatInfo?: VilkårsresultatInfo;

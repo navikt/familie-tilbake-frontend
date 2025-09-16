@@ -174,4 +174,5 @@ export interface IBehandling {
     manuelleBrevmottakere: ManuellBrevmottakerResponseDto[];
     begrunnelseForTilbakekreving?: string;
     saksbehandlingstype: Saksbehandlingstype;
+    erNyModell: boolean;
 }

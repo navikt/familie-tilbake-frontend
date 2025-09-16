@@ -11,8 +11,8 @@ import HentDokument from './HentDokument';
 import { useHistorikk } from './HistorikkContext';
 import { Aktør, aktører, Historikkinnslagstype } from '../../../../typer/historikk';
 import { formatterDatoOgTidstring } from '../../../../utils';
+import { finnSideForSteg } from '../../../../utils/sider';
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
-import { finnSideForSteg } from '../../../Felleskomponenter/Venstremeny/sider';
 
 const Innslag = styled.div`
     display: flex;
