@@ -15,7 +15,7 @@ interface DateTilFormatertStringProps {
     defaultString?: string;
 }
 
-export const dateTilFormatertString = ({
+const dateTilFormatertString = ({
     date,
     tilFormat,
     defaultString = '',
