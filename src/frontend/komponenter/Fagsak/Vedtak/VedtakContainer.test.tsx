@@ -19,12 +19,12 @@ import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
-import { FeilutbetalingVedtakProvider } from './FeilutbetalingVedtakContext';
 import VedtakContainer from './VedtakContainer';
+import { VedtakProvider } from './VedtakContext';
 import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
-import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { RessursStatus } from '../../../typer/ressurs';
+import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 
 jest.mock('../../../api/http/HttpProvider', () => {
     return {
@@ -59,9 +59,9 @@ const mockedSettIkkePersistertKomponent = jest.fn();
 
 const renderVedtakContainer = (behandling: IBehandling, fagsak: IFagsak): RenderResult =>
     render(
-        <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
+        <VedtakProvider behandling={behandling} fagsak={fagsak}>
             <VedtakContainer behandling={behandling} fagsak={fagsak} />
-        </FeilutbetalingVedtakProvider>
+        </VedtakProvider>
     );
 
 describe('Tester: VedtakContainer', () => {

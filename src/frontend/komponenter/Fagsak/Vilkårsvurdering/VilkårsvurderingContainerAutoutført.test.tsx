@@ -3,11 +3,11 @@ import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
-import type {
-    IFeilutbetalingVilkårsvurdering,
-    VilkårsvurderingPeriode,
-} from '../../../typer/feilutbetalingtyper';
 import type { Ressurs } from '../../../typer/ressurs';
+import type {
+    VilkårsvurderingResponse,
+    VilkårsvurderingPeriode,
+} from '../../../typer/tilbakekrevingstyper';
 import type { NavigateFunction } from 'react-router';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -74,22 +74,22 @@ const perioder: VilkårsvurderingPeriode[] = [
         begrunnelse: undefined,
     },
 ];
-const feilutbetalingVilkårsvurdering: IFeilutbetalingVilkårsvurdering = {
+
+const vilkårsvurdering: VilkårsvurderingResponse = {
     perioder: perioder,
     rettsgebyr: 1199,
 };
+
 const setupMock = (
     behandlet: boolean,
     lesevisning: boolean,
     autoutført: boolean,
-    vilkårsvurdering?: IFeilutbetalingVilkårsvurdering
+    vilkårsvurdering?: VilkårsvurderingResponse
 ): void => {
     if (vilkårsvurdering) {
         mockUseBehandlingApi.mockImplementation(() => ({
-            gjerFeilutbetalingVilkårsvurderingKall: (): Promise<
-                Ressurs<IFeilutbetalingVilkårsvurdering>
-            > => {
-                const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
+            gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
+                const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
                     status: RessursStatus.Suksess,
                     data: vilkårsvurdering,
                 });
@@ -115,7 +115,7 @@ const setupMock = (
 
 describe('Tester: VilkårsvurderingContainer', () => {
     test('- vis autoutført', async () => {
-        setupMock(false, false, true, feilutbetalingVilkårsvurdering);
+        setupMock(false, false, true, vilkårsvurdering);
 
         const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });

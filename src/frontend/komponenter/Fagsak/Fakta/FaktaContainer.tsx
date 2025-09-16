@@ -5,15 +5,15 @@ import { AFontWeightBold, ASpacing4, ATextDanger } from '@navikt/ds-tokens/dist/
 import * as React from 'react';
 import { styled } from 'styled-components';
 
+import { useFakta } from './FaktaContext';
 import FaktaSkjema from './FaktaSkjema';
-import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
-const StyledFeilutbetalingFakta = styled.div`
+const StyledFakta = styled.div`
     padding: ${ASpacing4} 0;
 
     .redText {
@@ -27,13 +27,13 @@ interface IProps {
 }
 
 const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
-    const { stegErBehandlet, skjemaData, feilutbetalingFakta } = useFeilutbetalingFakta();
+    const { stegErBehandlet, skjemaData, fakta } = useFakta();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
-    if (feilutbetalingFakta?.status === RessursStatus.Suksess) {
+    if (fakta?.status === RessursStatus.Suksess) {
         return (
-            <StyledFeilutbetalingFakta>
+            <StyledFakta>
                 <Heading level="2" size="small" spacing>
                     Fakta om feilutbetaling
                 </Heading>
@@ -48,14 +48,14 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
                 )}
                 <FaktaSkjema
                     skjemaData={skjemaData}
-                    feilutbetalingFakta={feilutbetalingFakta.data}
+                    fakta={fakta.data}
                     ytelse={ytelse}
                     erLesevisning={erLesevisning}
                 />
-            </StyledFeilutbetalingFakta>
+            </StyledFakta>
         );
     } else {
-        return <DataLastIkkeSuksess ressurser={[feilutbetalingFakta]} />;
+        return <DataLastIkkeSuksess ressurser={[fakta]} />;
     }
 };
 

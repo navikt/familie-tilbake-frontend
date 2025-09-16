@@ -1,7 +1,7 @@
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { UserEvent } from '@testing-library/user-event';
 

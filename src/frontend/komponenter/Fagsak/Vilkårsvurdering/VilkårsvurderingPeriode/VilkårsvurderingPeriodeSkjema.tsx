@@ -1,6 +1,6 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
 import type { IFagsak } from '../../../../typer/fagsak';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { ChangeEvent, FC, ReactNode } from 'react';
 
 import {

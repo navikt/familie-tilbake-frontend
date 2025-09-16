@@ -1,4 +1,4 @@
-import { HendelseType } from './feilutbetalingsÅrsak';
+import { HendelseType } from './rettsligGrunnlag';
 
 export enum Fagsystem {
     BA = 'BA',

@@ -1,5 +1,5 @@
 import type { Avhengigheter, FeltState, ISkjema } from '../../../../hooks/skjema';
-import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 
 import { ok, useFelt, useSkjema, Valideringsstatus } from '../../../../hooks/skjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';

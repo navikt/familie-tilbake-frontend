@@ -1,5 +1,5 @@
 import type { HendelseType, Ytelsetype } from '../../../../kodeverk';
-import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
+import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
 import { Table } from '@navikt/ds-react';
 import * as React from 'react';
@@ -7,7 +7,7 @@ import { styled } from 'styled-components';
 
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
 import { hentHendelseTyper } from '../../../../kodeverk';
-import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
+import { useFakta } from '../FaktaContext';
 
 const StyledPeriodeTable = styled(Table)`
     td {
@@ -25,9 +25,9 @@ interface IProps {
     erLesevisning: boolean;
 }
 
-const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLesevisning }) => {
+const FaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLesevisning }) => {
     const [hendelseTyper, settHendelseTyper] = React.useState<HendelseType[]>();
-    const { fagsak } = useFeilutbetalingFakta();
+    const { fagsak } = useFakta();
 
     React.useEffect(() => {
         settHendelseTyper(hentHendelseTyper(ytelse, !!fagsak.institusjon));
@@ -62,4 +62,4 @@ const FeilutbetalingFaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLes
     );
 };
 
-export default FeilutbetalingFaktaPerioder;
+export default FaktaPerioder;

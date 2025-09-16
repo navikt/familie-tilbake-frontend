@@ -10,7 +10,7 @@ import {
     RessursStatus,
 } from '../../../../typer/ressurs';
 import { base64ToArrayBuffer } from '../../../../utils';
-import { useFeilutbetalingVedtak } from '../FeilutbetalingVedtakContext';
+import { useVedtak } from '../VedtakContext';
 
 interface ForhåndsvisVedtaksbrevHook {
     visModal: boolean;
@@ -24,7 +24,7 @@ const useForhåndsvisVedtaksbrev = (): ForhåndsvisVedtaksbrevHook => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
         React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
-    const { hentBrevdata, validerAlleAvsnittOk } = useFeilutbetalingVedtak();
+    const { hentBrevdata, validerAlleAvsnittOk } = useVedtak();
     const { forhåndsvisVedtaksbrev } = useDokumentApi();
 
     const nullstillHentetForhåndsvisning = (): void => {

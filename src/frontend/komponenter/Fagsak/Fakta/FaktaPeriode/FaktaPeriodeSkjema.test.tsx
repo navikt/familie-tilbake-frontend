@@ -2,7 +2,7 @@ import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { HendelseUndertype } from '../../../../kodeverk';
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
-import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
+import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
@@ -12,7 +12,7 @@ import * as React from 'react';
 
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
 import { Fagsystem, HendelseType } from '../../../../kodeverk';
-import { FeilutbetalingFaktaProvider } from '../FeilutbetalingFaktaContext';
+import { FaktaProvider } from '../FaktaContext';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
@@ -36,7 +36,7 @@ const renderComponent = (
     hendelseTyper: HendelseType[] | undefined
 ): RenderResult => {
     return render(
-        <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
+        <FaktaProvider behandling={behandling} fagsak={fagsak}>
             <table>
                 <tbody>
                     <FaktaPeriodeSkjema
@@ -47,7 +47,7 @@ const renderComponent = (
                     />
                 </tbody>
             </table>
-        </FeilutbetalingFaktaProvider>
+        </FaktaProvider>
     );
 };
 
@@ -69,7 +69,7 @@ beforeEach(() => {
     }));
 });
 
-describe('FeilutbetalingFaktaPeriodeSkjema', () => {
+describe('FaktaPeriodeSkjema', () => {
     test('skal sette default verdi til HendelseType.Annet når det kun er ett element i hendelseTyper lista', () => {
         renderComponent(mockPeriode, [HendelseType.Annet]);
 

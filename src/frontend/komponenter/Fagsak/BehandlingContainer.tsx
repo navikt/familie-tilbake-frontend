@@ -9,11 +9,11 @@ import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
 import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
+import { FaktaProvider } from './Fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
-import { FeilutbetalingFaktaProvider } from './Fakta/FeilutbetalingFaktaContext';
-import { FeilutbetalingForeldelseProvider } from './Foreldelse/FeilutbetalingForeldelseContext';
+import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
 import { Stegflyt } from './Stegflyt/Stegflyt';
-import { FeilutbetalingVedtakProvider } from './Vedtak/FeilutbetalingVedtakContext';
+import { VedtakProvider } from './Vedtak/VedtakContext';
 import { VergeProvider } from './Verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
@@ -179,27 +179,21 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         <Route
                             path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                             element={
-                                <FeilutbetalingFaktaProvider
-                                    behandling={behandling}
-                                    fagsak={fagsak}
-                                >
+                                <FaktaProvider behandling={behandling} fagsak={fagsak}>
                                     <Suspense fallback="Fakta laster...">
                                         <FaktaContainer ytelse={fagsak.ytelsestype} />
                                     </Suspense>
-                                </FeilutbetalingFaktaProvider>
+                                </FaktaProvider>
                             }
                         />
                         <Route
                             path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
                             element={
-                                <FeilutbetalingForeldelseProvider
-                                    behandling={behandling}
-                                    fagsak={fagsak}
-                                >
+                                <ForeldelseProvider behandling={behandling} fagsak={fagsak}>
                                     <Suspense fallback="Foreldelse laster...">
                                         <ForeldelseContainer behandling={behandling} />
                                     </Suspense>
-                                </FeilutbetalingForeldelseProvider>
+                                </ForeldelseProvider>
                             }
                         />
                         <Route
@@ -218,14 +212,11 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         <Route
                             path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                             element={
-                                <FeilutbetalingVedtakProvider
-                                    behandling={behandling}
-                                    fagsak={fagsak}
-                                >
+                                <VedtakProvider behandling={behandling} fagsak={fagsak}>
                                     <Suspense fallback="Vedtak laster...">
                                         <VedtakContainer behandling={behandling} fagsak={fagsak} />
                                     </Suspense>
-                                </FeilutbetalingVedtakProvider>
+                                </VedtakProvider>
                             }
                         />
                         <Route
