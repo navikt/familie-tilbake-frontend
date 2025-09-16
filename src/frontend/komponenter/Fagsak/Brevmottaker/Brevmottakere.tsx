@@ -14,7 +14,7 @@ import {
 } from '../../../typer/Brevmottaker';
 import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 
 interface IBrevmottakerProps {
     brevmottaker: IBrevmottaker & { isDefault?: boolean };
@@ -228,7 +228,7 @@ const Brevmottakere: React.FC = () => {
     const gåTilNeste = (): void => {
         if (behandling?.status === 'SUKSESS' && fagsak?.status === 'SUKSESS') {
             navigate(
-                `/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/behandling/${behandling.data.eksternBrukId}/${sider.FAKTA.href}`
+                `/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/behandling/${behandling.data.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
             );
         }
     };
