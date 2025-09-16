@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -8,13 +9,14 @@ import { Dødsbo } from './Mottaker/Dødsbo';
 import { Fullmektig } from './Mottaker/Fullmektig';
 import { Verge } from './Mottaker/Verge';
 import {
+    brevmottakerFormDataInputSchema,
     brevmottakerFormDataSchema,
     createFormDefaults,
     type BrevmottakerFormData,
 } from './schema/brevmottakerSchema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';
-import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
+import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { RessursStatus } from '../../../typer/ressurs';
 
 interface BrevmottakerFormModalProps {
@@ -49,6 +51,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
         reValidateMode: 'onBlur',
         shouldFocusError: false,
         defaultValues: createFormDefaults(initialData),
+        resolver: zodResolver(brevmottakerFormDataInputSchema),
     });
 
     const { handleSubmit, setValue, watch, setError } = methods;
@@ -87,15 +90,15 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
 
     const handleBrevmottakerError = (data: BrevmottakerFormData, errorMessage: string): void => {
         if (data.mottakerType === MottakerType.Fullmektig) {
-            if (data.fullmektig?.organisasjonsnummer) {
+            if (data.fullmektig?.adresseKilde === AdresseKilde.OppslagOrganisasjonsregister) {
                 setError('fullmektig.organisasjonsnummer', { message: errorMessage });
-            } else if (data.fullmektig?.personnummer) {
+            } else if (data.fullmektig?.adresseKilde === AdresseKilde.OppslagRegister) {
                 setError('fullmektig.personnummer', { message: errorMessage });
             }
         } else if (data.mottakerType === MottakerType.Verge) {
-            if (data.verge?.organisasjonsnummer) {
+            if (data.verge?.adresseKilde === AdresseKilde.OppslagOrganisasjonsregister) {
                 setError('verge.organisasjonsnummer', { message: errorMessage });
-            } else if (data.verge?.personnummer) {
+            } else if (data.verge?.adresseKilde === AdresseKilde.OppslagRegister) {
                 setError('verge.personnummer', { message: errorMessage });
             }
         }

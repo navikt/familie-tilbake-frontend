@@ -22,13 +22,31 @@ const flexibleManuellAdresseSchema = z.object({
     adresselinje2: z.string().optional(),
     postnummer: z.string().optional(),
     poststed: z.string().optional(),
-    personnummer: z.string().optional(),
-    organisasjonsnummer: z.string().optional(),
+    personnummer: z
+        .string()
+        .optional()
+        .refine(
+            val => !val || (val.length === 11 && /^\d+$/.test(val)),
+            'Fødselsnummer må være 11 sammenhengende siffer'
+        ),
+    organisasjonsnummer: z
+        .string()
+        .optional()
+        .refine(
+            val => !val || (val.length === 9 && /^\d+$/.test(val)),
+            'Organisasjonsnummer må være 9 sammenhengende siffer'
+        ),
 });
 
 const flexibleRegisterOppslagSchema = z.object({
     adresseKilde: z.literal(AdresseKilde.OppslagRegister),
-    personnummer: z.string().optional(),
+    personnummer: z
+        .string()
+        .optional()
+        .refine(
+            val => !val || (val.length === 11 && /^\d+$/.test(val)),
+            'Fødselsnummer må være 11 sammenhengende siffer'
+        ),
     organisasjonsnummer: z.string().optional(),
     navn: z.string().optional(),
     land: z.string().optional(),
@@ -41,7 +59,13 @@ const flexibleRegisterOppslagSchema = z.object({
 const flexibleOrganisasjonsregisterOppslagSchema = z.object({
     adresseKilde: z.literal(AdresseKilde.OppslagOrganisasjonsregister),
     personnummer: z.string().optional(),
-    organisasjonsnummer: z.string().optional(),
+    organisasjonsnummer: z
+        .string()
+        .optional()
+        .refine(
+            val => !val || (val.length === 9 && /^\d+$/.test(val)),
+            'Organisasjonsnummer må være 9 sammenhengende siffer'
+        ),
     navn: z.string().optional(),
     land: z.string().optional(),
     adresselinje1: z.string().optional(),
