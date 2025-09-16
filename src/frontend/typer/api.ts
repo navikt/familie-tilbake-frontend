@@ -36,13 +36,13 @@ export interface ForeldelseStegPayload {
     foreldetPerioder: PeriodeForeldelseStegPayload[];
 }
 
-export interface PeriodeVilkårsvurderingStegPayload {
+type PeriodeVilkårsvurderingStegPayload = {
     periode: Periode;
     vilkårsvurderingsresultat: Vilkårsresultat;
     begrunnelse: string;
     godTroDto: GodTro | undefined;
     aktsomhetDto: Aktsomhetsvurdering | undefined;
-}
+};
 
 export interface VilkårdsvurderingStegPayload {
     '@type': string;

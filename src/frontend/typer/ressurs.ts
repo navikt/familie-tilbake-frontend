@@ -85,25 +85,3 @@ export const byggFeiletRessurs = <T>(
         status: RessursStatus.Feilet,
     };
 };
-
-export const byggFunksjonellFeilRessurs = <T>(frontendFeilmelding: string): Ressurs<T> => {
-    return {
-        frontendFeilmelding,
-        status: RessursStatus.FunksjonellFeil,
-    };
-};
-
-export const byggSuksessRessurs = <T>(data: T): Ressurs<T> => {
-    return {
-        data,
-        status: RessursStatus.Suksess,
-    };
-};
-
-export const hentDataFraRessurs = <T>(ressurs: Ressurs<T>): T | undefined => {
-    return ressurs.status === RessursStatus.Suksess ? ressurs.data : undefined;
-};
-
-export const hentDataFraRessursMedFallback = <T>(ressurs: Ressurs<T>, fallbackData: T): T => {
-    return ressurs.status === RessursStatus.Suksess ? ressurs.data : fallbackData;
-};
