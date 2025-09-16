@@ -1,17 +1,17 @@
-import type { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
+import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 
 import { BodyShort, Detail, Heading, HGrid, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { tilbakekrevingsvalg } from '../../../typer/feilutbetalingtyper';
+import { tilbakekrevingsvalg } from '../../../typer/tilbakekrevingstyper';
 import { formatterDatostring } from '../../../utils';
 
 interface IProps {
-    feilutbetalingFakta: IFeilutbetalingFakta;
+    fakta: FaktaResponse;
 }
 
-const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
-    return feilutbetalingFakta ? (
+const FaktaRevurdering: React.FC<IProps> = ({ fakta }) => {
+    return fakta ? (
         <VStack gap="5">
             <Heading level="2" size="small">
                 Revurdering
@@ -20,42 +20,40 @@ const FaktaRevurdering: React.FC<IProps> = ({ feilutbetalingFakta }) => {
                 <HGrid columns={2}>
                     <div>
                         <Detail weight="semibold">Årsak(er) til revurdering</Detail>
-                        {feilutbetalingFakta.faktainfo?.revurderingsårsak && (
-                            <BodyShort size="small">
-                                {feilutbetalingFakta.faktainfo.revurderingsårsak}
-                            </BodyShort>
+                        {fakta.faktainfo?.revurderingsårsak && (
+                            <BodyShort size="small">{fakta.faktainfo.revurderingsårsak}</BodyShort>
                         )}
                     </div>
                     <div>
                         <Detail weight="semibold">Dato for revurderingsvedtak</Detail>
                         <BodyShort size="small">
-                            {formatterDatostring(feilutbetalingFakta.revurderingsvedtaksdato)}
+                            {formatterDatostring(fakta.revurderingsvedtaksdato)}
                         </BodyShort>
                     </div>
                 </HGrid>
                 <HGrid columns={2}>
                     <div>
                         <Detail weight="semibold">Resultat</Detail>
-                        {feilutbetalingFakta.faktainfo?.revurderingsresultat && (
+                        {fakta.faktainfo?.revurderingsresultat && (
                             <BodyShort size="small">
-                                {feilutbetalingFakta.faktainfo.revurderingsresultat}
+                                {fakta.faktainfo.revurderingsresultat}
                             </BodyShort>
                         )}
                     </div>
                     <div>
                         <Detail weight="semibold">Konsekvens</Detail>
-                        {feilutbetalingFakta.faktainfo?.konsekvensForYtelser && (
+                        {fakta.faktainfo?.konsekvensForYtelser && (
                             <BodyShort size="small">
-                                {feilutbetalingFakta.faktainfo.konsekvensForYtelser?.join(', ')}
+                                {fakta.faktainfo.konsekvensForYtelser?.join(', ')}
                             </BodyShort>
                         )}
                     </div>
                 </HGrid>
                 <div>
                     <Detail weight="semibold">Tilbakekrevingsvalg</Detail>
-                    {feilutbetalingFakta.faktainfo?.tilbakekrevingsvalg && (
+                    {fakta.faktainfo?.tilbakekrevingsvalg && (
                         <BodyShort size="small">
-                            {tilbakekrevingsvalg[feilutbetalingFakta.faktainfo.tilbakekrevingsvalg]}
+                            {tilbakekrevingsvalg[fakta.faktainfo.tilbakekrevingsvalg]}
                         </BodyShort>
                     )}
                 </div>

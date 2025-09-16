@@ -3,11 +3,8 @@ import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
-import type {
-    ForeldelsePeriode,
-    IFeilutbetalingForeldelse,
-} from '../../../typer/feilutbetalingtyper';
 import type { Ressurs } from '../../../typer/ressurs';
+import type { ForeldelsePeriode, ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -17,8 +14,8 @@ import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
-import { FeilutbetalingForeldelseProvider } from './FeilutbetalingForeldelseContext';
 import ForeldelseContainer from './ForeldelseContainer';
+import { ForeldelseProvider } from './ForeldelseContext';
 import { Fagsystem, Foreldelsevurdering } from '../../../kodeverk';
 import { Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
@@ -49,9 +46,9 @@ jest.mock('react-router', () => ({
 
 const renderForeldelseContainer = (behandling: IBehandling, fagsak: IFagsak): RenderResult => {
     return render(
-        <FeilutbetalingForeldelseProvider behandling={behandling} fagsak={fagsak}>
+        <ForeldelseProvider behandling={behandling} fagsak={fagsak}>
             <ForeldelseContainer behandling={behandling} />
-        </FeilutbetalingForeldelseProvider>
+        </ForeldelseProvider>
     );
 };
 
@@ -87,7 +84,7 @@ describe('Tester: ForeldelseContainer', () => {
         },
     ];
 
-    const feilutbetalingForeldelse: IFeilutbetalingForeldelse = {
+    const foreldelse: ForeldelseResponse = {
         foreldetPerioder: perioder,
     };
 
@@ -95,20 +92,18 @@ describe('Tester: ForeldelseContainer', () => {
         behandlet: boolean,
         lesevisning: boolean,
         autoutført: boolean,
-        foreldelse?: IFeilutbetalingForeldelse
+        foreldelse?: ForeldelseResponse
     ): void => {
         if (foreldelse) {
             mockUseBehandlingApi.mockImplementation(() => ({
-                gjerFeilutbetalingForeldelseKall: (): Promise<
-                    Ressurs<IFeilutbetalingForeldelse>
-                > => {
-                    const ressurs = mock<Ressurs<IFeilutbetalingForeldelse>>({
+                gjerForeldelseKall: (): Promise<Ressurs<ForeldelseResponse>> => {
+                    const ressurs = mock<Ressurs<ForeldelseResponse>>({
                         status: RessursStatus.Suksess,
                         data: foreldelse,
                     });
                     return Promise.resolve(ressurs);
                 },
-                sendInnFeilutbetalingForeldelse: (): Promise<Ressurs<string>> => {
+                sendInnForeldelse: (): Promise<Ressurs<string>> => {
                     const ressurs = mock<Ressurs<string>>({
                         status: RessursStatus.Suksess,
                         data: 'suksess',
@@ -129,7 +124,7 @@ describe('Tester: ForeldelseContainer', () => {
     };
 
     test('- vis og fyll ut perioder og send inn', async () => {
-        setupMock(false, false, false, feilutbetalingForeldelse);
+        setupMock(false, false, false, foreldelse);
         const fagsak = mock<IFagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
         const behandling = mock<IBehandling>({ eksternBrukId: '1' });
 

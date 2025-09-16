@@ -1,6 +1,6 @@
 import type { IBehandling } from '../../../../../typer/behandling';
-import type { IFeilutbetalingFakta } from '../../../../../typer/feilutbetalingtyper';
-import type { FaktaPeriodeSkjemaData, FaktaSkjemaData } from '../../typer/feilutbetalingFakta';
+import type { FaktaResponse } from '../../../../../typer/tilbakekrevingstyper';
+import type { FaktaPeriodeSkjemaData, FaktaSkjemaData } from '../../typer/fakta';
 import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
@@ -20,23 +20,20 @@ interface IProps {
 }
 
 const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandling }: IProps) => {
-    const [feilutbetalingInaktiveFakta, settFeilutbetalingInaktiveFakta] =
-        useState<Ressurs<IFeilutbetalingFakta[]>>(byggTomRessurs);
+    const [inaktiveFakta, setInaktiveFakta] = useState<Ressurs<FaktaResponse[]>>(byggTomRessurs);
 
     const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>();
-    const [fakta, settFakta] = useState<IFeilutbetalingFakta>();
+    const [fakta, settFakta] = useState<FaktaResponse>();
 
     useEffect(() => {
-        hentFeilutbetalingFakta();
+        hentFakta();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
 
-    const settFeilutbetalingInaktivFakta = (
-        feilutbetalingInaktivFakta?: IFeilutbetalingFakta
-    ): void => {
-        if (feilutbetalingInaktivFakta) {
+    const setInaktivFakta = (inaktivFakta?: FaktaResponse): void => {
+        if (inaktivFakta) {
             const sortertePerioder = sorterFeilutbetaltePerioder(
-                feilutbetalingInaktivFakta.feilutbetaltePerioder
+                inaktivFakta.feilutbetaltePerioder
             );
             const behandletPerioder = sortertePerioder.map((fuFP, index) => {
                 const behandletPeriode: FaktaPeriodeSkjemaData = {
@@ -50,26 +47,26 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandli
             });
 
             const data: FaktaSkjemaData = {
-                begrunnelse: feilutbetalingInaktivFakta.begrunnelse || undefined,
+                begrunnelse: inaktivFakta.begrunnelse || undefined,
                 perioder: behandletPerioder,
-                vurderingAvBrukersUttalelse: feilutbetalingInaktivFakta.vurderingAvBrukersUttalelse,
+                vurderingAvBrukersUttalelse: inaktivFakta.vurderingAvBrukersUttalelse,
             };
             settSkjemaData(data);
-            settFakta(feilutbetalingInaktivFakta);
+            settFakta(inaktivFakta);
         }
     };
 
-    const { gjerFeilutbetalingInaktiveFaktaKall } = useBehandlingApi();
+    const { gjerInaktiveFaktaKall } = useBehandlingApi();
 
-    const hentFeilutbetalingFakta = (): void => {
-        settFeilutbetalingInaktiveFakta(byggHenterRessurs());
-        gjerFeilutbetalingInaktiveFaktaKall(behandling.behandlingId)
-            .then((respons: Ressurs<IFeilutbetalingFakta[]>) => {
-                settFeilutbetalingInaktiveFakta(respons);
+    const hentFakta = (): void => {
+        setInaktiveFakta(byggHenterRessurs());
+        gjerInaktiveFaktaKall(behandling.behandlingId)
+            .then((respons: Ressurs<FaktaResponse[]>) => {
+                setInaktiveFakta(respons);
             })
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .catch((_error: AxiosError) => {
-                settFeilutbetalingInaktiveFakta(
+                setInaktiveFakta(
                     byggFeiletRessurs(
                         'Ukjent feil ved henting av inaktive fakta-perioder for behandling'
                     )
@@ -78,8 +75,8 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandli
     };
 
     return {
-        feilutbetalingInaktiveFakta,
-        settFeilutbetalingInaktivFakta,
+        inaktiveFakta,
+        setInaktivFakta,
         skjemaData,
         fakta,
     };

@@ -1,5 +1,5 @@
 import type { IBehandling } from '../../../../typer/behandling';
-import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { ReactNode } from 'react';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
@@ -34,7 +34,7 @@ import { isoStringTilDate } from '../../../../utils/dato';
 import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
-import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
+import { useForeldelse } from '../ForeldelseContext';
 
 const StyledVStack = styled(VStack)`
     max-width: 50rem;
@@ -55,12 +55,8 @@ interface IProps {
     erLesevisning: boolean;
 }
 
-const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
-    behandling,
-    periode,
-    erLesevisning,
-}) => {
-    const { oppdaterPeriode, onSplitPeriode, settValgtPeriode } = useFeilutbetalingForeldelse();
+const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLesevisning }) => {
+    const { oppdaterPeriode, onSplitPeriode, settValgtPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
     );
@@ -259,4 +255,4 @@ const FeilutbetalingForeldelsePeriodeSkjema: React.FC<IProps> = ({
     );
 };
 
-export default FeilutbetalingForeldelsePeriodeSkjema;
+export default ForeldelsePeriodeSkjema;

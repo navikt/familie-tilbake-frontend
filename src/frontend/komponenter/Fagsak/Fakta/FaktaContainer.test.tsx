@@ -3,7 +3,7 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { TogglesHook } from '../../../context/TogglesContext';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
-import type { FaktaPeriode, IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
+import type { FaktaPeriode, FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -14,11 +14,11 @@ import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
 import FaktaContainer from './FaktaContainer';
-import { FeilutbetalingFaktaProvider } from './FeilutbetalingFaktaContext';
+import { FaktaProvider } from './FaktaContext';
 import { ToggleName } from '../../../context/toggles';
 import { Fagsystem, HendelseType, HendelseUndertype, Ytelsetype } from '../../../kodeverk';
-import { HarBrukerUttaltSegValg, Tilbakekrevingsvalg } from '../../../typer/feilutbetalingtyper';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import { HarBrukerUttaltSegValg, Tilbakekrevingsvalg } from '../../../typer/tilbakekrevingstyper';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
@@ -48,9 +48,9 @@ const renderFaktaContainer = (
     fagsak: IFagsak
 ): RenderResult => {
     return render(
-        <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
+        <FaktaProvider behandling={behandling} fagsak={fagsak}>
             <FaktaContainer ytelse={ytelse} />
-        </FeilutbetalingFaktaProvider>
+        </FaktaProvider>
     );
 };
 
@@ -90,7 +90,7 @@ describe('Tester: FaktaContainer', () => {
             hendelsesundertype: undefined,
         },
     ];
-    const feilutbetalingFakta: IFeilutbetalingFakta = {
+    const fakta: FaktaResponse = {
         feilutbetaltePerioder: perioder,
         revurderingsvedtaksdato: '2021-02-05',
         totalFeilutbetaltPeriode: {
@@ -117,20 +117,16 @@ describe('Tester: FaktaContainer', () => {
         eksternFagsakId: '1',
     });
 
-    const setupMock = (
-        behandlet: boolean,
-        lesemodus: boolean,
-        fakta: IFeilutbetalingFakta
-    ): void => {
+    const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: FaktaResponse): void => {
         mockUseBehandlingApi.mockImplementation(() => ({
-            gjerFeilutbetalingFaktaKall: (): Promise<Ressurs<IFeilutbetalingFakta>> => {
-                const ressurs = mock<Ressurs<IFeilutbetalingFakta>>({
+            gjerFaktaKall: (): Promise<Ressurs<FaktaResponse>> => {
+                const ressurs = mock<Ressurs<FaktaResponse>>({
                     status: RessursStatus.Suksess,
                     data: fakta,
                 });
                 return Promise.resolve(ressurs);
             },
-            sendInnFeilutbetalingFakta: (): Promise<Ressurs<string>> => {
+            sendInnFakta: (): Promise<Ressurs<string>> => {
                 const ressurs = mock<Ressurs<string>>({
                     status: RessursStatus.Suksess,
                     data: 'suksess',
@@ -153,7 +149,7 @@ describe('Tester: FaktaContainer', () => {
     };
 
     test('- vis og fyll ut skjema', async () => {
-        setupMock(false, false, feilutbetalingFakta);
+        setupMock(false, false, fakta);
         const behandling = mock<IBehandling>({ eksternBrukId: '1' });
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } =
@@ -241,7 +237,7 @@ describe('Tester: FaktaContainer', () => {
     });
 
     test('- vis og fyll ut skjema - behandle perioder samlet', async () => {
-        setupMock(false, false, feilutbetalingFakta);
+        setupMock(false, false, fakta);
         const behandling = mock<IBehandling>({ eksternBrukId: '1' });
 
         const { getByText, getByLabelText, getByRole, getAllByRole, getByTestId, queryAllByText } =
@@ -309,7 +305,7 @@ describe('Tester: FaktaContainer', () => {
 
     test('- vis utfylt skjema - Barnetrygd', async () => {
         setupMock(true, false, {
-            ...feilutbetalingFakta,
+            ...fakta,
             feilutbetaltePerioder: [
                 {
                     ...perioder[0],
@@ -365,7 +361,7 @@ describe('Tester: FaktaContainer', () => {
 
     test('- vis utfylt skjema - Overgangsstønad', async () => {
         setupMock(true, false, {
-            ...feilutbetalingFakta,
+            ...fakta,
             feilutbetaltePerioder: [
                 {
                     ...perioder[0],
@@ -419,7 +415,7 @@ describe('Tester: FaktaContainer', () => {
 
     test('- vis utfylt skjema - lesevisning - Barnetrygd', async () => {
         setupMock(true, true, {
-            ...feilutbetalingFakta,
+            ...fakta,
             feilutbetaltePerioder: [
                 {
                     ...perioder[0],
@@ -470,7 +466,7 @@ describe('Tester: FaktaContainer', () => {
 
     test('- vis utfylt skjema - lesevisning - Overgangsstønad', async () => {
         setupMock(true, true, {
-            ...feilutbetalingFakta,
+            ...fakta,
             feilutbetaltePerioder: [
                 {
                     ...perioder[0],
@@ -521,7 +517,7 @@ describe('Tester: FaktaContainer', () => {
 
     test('- velg hendelsesundertype automatisk ved kun ett valg', async () => {
         setupMock(false, false, {
-            ...feilutbetalingFakta,
+            ...fakta,
             feilutbetaltePerioder: [
                 {
                     ...perioder[0],

@@ -1,4 +1,4 @@
-import type { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
+import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
 import type { IFagsak } from '../../../typer/fagsak';
 
 import { BodyShort, VStack, type TimelinePeriodProps } from '@navikt/ds-react';

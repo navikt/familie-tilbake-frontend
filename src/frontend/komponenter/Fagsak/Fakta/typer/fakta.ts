@@ -1,21 +1,21 @@
 import type { HendelseType, HendelseUndertype } from '../../../../kodeverk';
-import type { VurderingAvBrukersUttalelse, Periode } from '../../../../typer/feilutbetalingtyper';
+import type { VurderingAvBrukersUttalelse, Periode } from '../../../../typer/tilbakekrevingstyper';
 
-export interface FaktaPeriodeSkjemaData {
+export type FaktaPeriodeSkjemaData = {
     index: number;
     feilutbetaltBeløp: number;
     periode: Periode;
     hendelsestype?: HendelseType | null;
     hendelsesundertype?: HendelseUndertype;
-}
+};
 
-export interface FaktaSkjemaData {
+export type FaktaSkjemaData = {
     begrunnelse?: string;
     perioder: FaktaPeriodeSkjemaData[];
     vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelse;
-}
+};
 
-export interface Feilmelding {
+export type Feilmelding = {
     gjelderBegrunnelse: boolean;
     gjelderBeskrivelseBrukerHarUttaltSeg?: boolean;
     melding?: string;
@@ -23,4 +23,4 @@ export interface Feilmelding {
     gjelderHendelsetype?: boolean;
     gjelderHendelseundertype?: boolean;
     gjelderBrukerHarUttaltSeg?: boolean;
-}
+};

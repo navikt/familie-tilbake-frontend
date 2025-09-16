@@ -35,28 +35,30 @@ export interface FaktaPeriode extends FeilutbetalingPeriode {
     hendelsesundertype?: HendelseUndertype;
 }
 
-export interface IFeilutbetalingFakta {
+type FaktaInfo = {
+    revurderingsårsak?: string;
+    revurderingsresultat?: string;
+    tilbakekrevingsvalg?: Tilbakekrevingsvalg;
+    konsekvensForYtelser?: string[];
+};
+
+export type FaktaResponse = {
     feilutbetaltePerioder: FaktaPeriode[];
     totalFeilutbetaltPeriode: Periode;
     totaltFeilutbetaltBeløp: number;
     varsletBeløp?: number;
-    faktainfo?: {
-        revurderingsårsak?: string;
-        revurderingsresultat?: string;
-        tilbakekrevingsvalg?: Tilbakekrevingsvalg;
-        konsekvensForYtelser?: string[];
-    };
+    faktainfo?: FaktaInfo;
     revurderingsvedtaksdato: string;
     begrunnelse?: string;
     kravgrunnlagReferanse?: string;
     vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelse;
     opprettetTid: string;
-}
+};
 
-export interface VurderingAvBrukersUttalelse {
+export type VurderingAvBrukersUttalelse = {
     harBrukerUttaltSeg: HarBrukerUttaltSegValg;
     beskrivelse?: string;
-}
+};
 
 export enum HarBrukerUttaltSegValg {
     Ja = 'JA',
@@ -79,9 +81,9 @@ export interface ForeldelsePeriode extends FeilutbetalingPeriode {
     oppdagelsesdato?: string;
 }
 
-export interface IFeilutbetalingForeldelse {
+export type ForeldelseResponse = {
     foreldetPerioder: ForeldelsePeriode[];
-}
+};
 
 export type GodTro = {
     begrunnelse: string;
@@ -125,12 +127,12 @@ export interface VilkårsvurderingPeriode extends FeilutbetalingPeriode {
     vilkårsvurderingsresultatInfo?: VilkårsresultatInfo;
 }
 
-export interface IFeilutbetalingVilkårsvurdering {
+export type VilkårsvurderingResponse = {
     perioder: VilkårsvurderingPeriode[];
     rettsgebyr: number;
     opprettetTid?: string;
-}
+};
 
-export interface IBeregnSplittetPeriodeRespons {
+export type BeregnSplittetPeriodeRespons = {
     beregnetPerioder: FeilutbetalingPeriode[];
-}
+};

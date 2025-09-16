@@ -1,6 +1,6 @@
 import type { Behandlingresultat, Behandlingssteg, Venteårsak } from './behandling';
 import type { IBrevmottaker } from './Brevmottaker';
-import type { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
+import type { Aktsomhetsvurdering, GodTro, Periode } from './tilbakekrevingstyper';
 import type {
     DokumentMal,
     Foreldelsevurdering,
@@ -36,13 +36,13 @@ export interface ForeldelseStegPayload {
     foreldetPerioder: PeriodeForeldelseStegPayload[];
 }
 
-export interface PeriodeVilkårsvurderingStegPayload {
+type PeriodeVilkårsvurderingStegPayload = {
     periode: Periode;
     vilkårsvurderingsresultat: Vilkårsresultat;
     begrunnelse: string;
     godTroDto: GodTro | undefined;
     aktsomhetDto: Aktsomhetsvurdering | undefined;
-}
+};
 
 export interface VilkårdsvurderingStegPayload {
     '@type': string;

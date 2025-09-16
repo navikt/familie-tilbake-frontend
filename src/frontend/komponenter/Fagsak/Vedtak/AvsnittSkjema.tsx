@@ -1,4 +1,4 @@
-import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
+import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
 import type { RuleSet } from 'styled-components';
 
 import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';

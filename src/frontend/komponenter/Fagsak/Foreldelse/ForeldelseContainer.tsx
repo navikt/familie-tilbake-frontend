@@ -3,8 +3,8 @@ import type { IBehandling } from '../../../typer/behandling';
 import { Alert, BodyLong, Button, Heading, Link, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { useFeilutbetalingForeldelse } from './FeilutbetalingForeldelseContext';
-import FeilutbetalingForeldelsePerioder from './ForeldelsePeriode/FeilutbetalingForeldelsePerioder';
+import { useForeldelse } from './ForeldelseContext';
+import ForeldelsePerioder from './ForeldelsePeriode/ForeldelsePerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { RessursStatus } from '../../../typer/ressurs';
 import { finnDatoRelativtTilNå } from '../../../utils';
@@ -16,8 +16,8 @@ interface Props {
 }
 
 const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
-    const { feilutbetalingForeldelse, skjemaData, erAutoutført, gåTilNesteSteg, gåTilForrigeSteg } =
-        useFeilutbetalingForeldelse();
+    const { foreldelse, skjemaData, erAutoutført, gåTilNesteSteg, gåTilForrigeSteg } =
+        useForeldelse();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
@@ -73,7 +73,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
         );
     }
 
-    if (feilutbetalingForeldelse?.status === RessursStatus.Suksess) {
+    if (foreldelse?.status === RessursStatus.Suksess) {
         return (
             <VStack padding="4" gap="4">
                 <Heading size="small" level="2">
@@ -118,7 +118,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                 </Alert>
 
                 {skjemaData.length > 0 && (
-                    <FeilutbetalingForeldelsePerioder
+                    <ForeldelsePerioder
                         behandling={behandling}
                         perioder={skjemaData}
                         erLesevisning={erLesevisning}
@@ -127,7 +127,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
             </VStack>
         );
     } else {
-        return <DataLastIkkeSuksess ressurser={[feilutbetalingForeldelse]} />;
+        return <DataLastIkkeSuksess ressurser={[foreldelse]} />;
     }
 };
 

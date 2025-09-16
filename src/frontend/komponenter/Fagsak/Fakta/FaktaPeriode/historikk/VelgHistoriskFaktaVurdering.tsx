@@ -1,4 +1,4 @@
-import type { IFeilutbetalingFakta } from '../../../../../typer/feilutbetalingtyper';
+import type { FaktaResponse } from '../../../../../typer/tilbakekrevingstyper';
 
 import { Select } from '@navikt/ds-react';
 import { parseISO } from 'date-fns';
@@ -7,26 +7,23 @@ import * as React from 'react';
 import { formatterDatoOgTidstring } from '../../../../../utils';
 
 interface IProps {
-    feilutbetalingInaktiveFakta: IFeilutbetalingFakta[];
-    settFeilutbetalingInaktivFakta: (valgtFakta?: IFeilutbetalingFakta) => void;
+    inaktiveFakta: FaktaResponse[];
+    setInaktivFakta: (valgtFakta?: FaktaResponse) => void;
 }
 
-const VelgHistoriskFaktaVurdering: React.FC<IProps> = ({
-    feilutbetalingInaktiveFakta,
-    settFeilutbetalingInaktivFakta,
-}) => {
+const VelgHistoriskFaktaVurdering: React.FC<IProps> = ({ inaktiveFakta, setInaktivFakta }) => {
     return (
         <Select
             onChange={e => {
-                const valgtVurdering = feilutbetalingInaktiveFakta.find(
+                const valgtVurdering = inaktiveFakta.find(
                     fakta => fakta.opprettetTid === e.target.value
                 );
-                settFeilutbetalingInaktivFakta(valgtVurdering);
+                setInaktivFakta(valgtVurdering);
             }}
             label="Velg versjon"
         >
             <option>Velg</option>
-            {feilutbetalingInaktiveFakta
+            {inaktiveFakta
                 .sort((a, b) => {
                     return a.opprettetTid && b.opprettetTid
                         ? parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime()

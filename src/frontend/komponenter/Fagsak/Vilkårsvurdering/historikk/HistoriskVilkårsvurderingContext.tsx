@@ -1,10 +1,10 @@
 import type { IBehandling } from '../../../../typer/behandling';
-import type { IFeilutbetalingVilkårsvurdering } from '../../../../typer/feilutbetalingtyper';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import type { VilkårsvurderingResponse } from '../../../../typer/tilbakekrevingstyper';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 import { useBehandlingApi } from '../../../../api/behandling';
 import {
@@ -21,25 +21,21 @@ interface IProps {
 
 const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = createUseContext(
     ({ behandling }: IProps) => {
-        const [
-            feilutbetalingInaktiveVilkårsvurderinger,
-            settFeilutbetalingInaktiveVilkårsvurderinger,
-        ] = React.useState<Ressurs<IFeilutbetalingVilkårsvurdering[]>>(byggTomRessurs);
+        const [inaktiveVilkårsvurderinger, setInaktiveVilkårsvurderinger] =
+            useState<Ressurs<VilkårsvurderingResponse[]>>(byggTomRessurs);
 
-        const [skjemaData, settSkjemaData] = React.useState<VilkårsvurderingPeriodeSkjemaData[]>(
-            []
-        );
+        const [skjemaData, settSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
 
-        React.useEffect(() => {
-            hentFeilutbetalingVilkårsvurdering();
+        useEffect(() => {
+            hentVilkårsvurdering();
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling]);
 
-        const settFeilutbetalingInaktivVilkårsvurdering = (
-            feilutbetalingInaktivVilkårsvurdering?: IFeilutbetalingVilkårsvurdering
+        const setInaktivVilkårsvurdering = (
+            inaktivVilkårsvurdering?: VilkårsvurderingResponse
         ): void => {
-            if (feilutbetalingInaktivVilkårsvurdering) {
-                const perioder = feilutbetalingInaktivVilkårsvurdering.perioder;
+            if (inaktivVilkårsvurdering) {
+                const perioder = inaktivVilkårsvurdering.perioder;
                 const sortertePerioder = sorterFeilutbetaltePerioder(perioder);
                 const skjemaPerioder = sortertePerioder.map((fuFP, index) => {
                     const skjemaPeriode: VilkårsvurderingPeriodeSkjemaData = {
@@ -53,17 +49,17 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
             }
         };
 
-        const { gjerFeilutbetalingInaktiveVilkårsvurderingerKall } = useBehandlingApi();
+        const { gjerInaktiveVilkårsvurderingerKall } = useBehandlingApi();
 
-        const hentFeilutbetalingVilkårsvurdering = (): void => {
-            settFeilutbetalingInaktiveVilkårsvurderinger(byggHenterRessurs());
-            gjerFeilutbetalingInaktiveVilkårsvurderingerKall(behandling.behandlingId)
-                .then((respons: Ressurs<IFeilutbetalingVilkårsvurdering[]>) => {
-                    settFeilutbetalingInaktiveVilkårsvurderinger(respons);
+        const hentVilkårsvurdering = (): void => {
+            setInaktiveVilkårsvurderinger(byggHenterRessurs());
+            gjerInaktiveVilkårsvurderingerKall(behandling.behandlingId)
+                .then((respons: Ressurs<VilkårsvurderingResponse[]>) => {
+                    setInaktiveVilkårsvurderinger(respons);
                 })
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch((_error: AxiosError) => {
-                    settFeilutbetalingInaktiveVilkårsvurderinger(
+                    setInaktiveVilkårsvurderinger(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av vilkårsvurdering-perioder for behandling'
                         )
@@ -72,8 +68,8 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
         };
 
         return {
-            feilutbetalingInaktiveVilkårsvurderinger,
-            settFeilutbetalingInaktivVilkårsvurdering,
+            inaktiveVilkårsvurderinger,
+            setInaktivVilkårsvurdering,
             skjemaData,
         };
     }

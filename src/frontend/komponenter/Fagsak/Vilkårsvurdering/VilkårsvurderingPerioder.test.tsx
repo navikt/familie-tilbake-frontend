@@ -2,11 +2,11 @@ import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
-import type {
-    IFeilutbetalingVilkårsvurdering,
-    VilkårsvurderingPeriode,
-} from '../../../typer/feilutbetalingtyper';
 import type { Ressurs } from '../../../typer/ressurs';
+import type {
+    VilkårsvurderingResponse,
+    VilkårsvurderingPeriode,
+} from '../../../typer/tilbakekrevingstyper';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -97,18 +97,16 @@ const perioder: VilkårsvurderingPeriode[] = [
 ];
 
 const setupMocks = (): void => {
-    const feilutbetalingVilkårsvurdering: IFeilutbetalingVilkårsvurdering = {
+    const vilkårsvurdering: VilkårsvurderingResponse = {
         perioder: perioder,
         rettsgebyr: 1199,
     };
 
     mockUseBehandlingApi.mockImplementation(() => ({
-        gjerFeilutbetalingVilkårsvurderingKall: (): Promise<
-            Ressurs<IFeilutbetalingVilkårsvurdering>
-        > => {
-            const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
+        gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
+            const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
                 status: RessursStatus.Suksess,
-                data: feilutbetalingVilkårsvurdering,
+                data: vilkårsvurdering,
             });
             return Promise.resolve(ressurs);
         },
