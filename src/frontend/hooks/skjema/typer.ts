@@ -11,7 +11,7 @@ export interface FeltState<Verdi> {
     verdi: Verdi;
 }
 
-export type FeltOnChange<Verdi> = (
+type FeltOnChange<Verdi> = (
     verdi:
         | ChangeEvent<HTMLInputElement>
         | ChangeEvent<HTMLSelectElement>
@@ -71,10 +71,7 @@ export type ValiderFelt<Verdi> = (
     avhengigheter?: Avhengigheter
 ) => FeltState<Verdi>;
 
-export type ValiderOgSettFelt<Verdi> = (
-    verdi: Verdi,
-    avhengigheter?: Avhengigheter
-) => FeltState<Verdi>;
+type ValiderOgSettFelt<Verdi> = (verdi: Verdi, avhengigheter?: Avhengigheter) => FeltState<Verdi>;
 
 export const defaultValidator = <Verdi>(felt: FeltState<Verdi>): FeltState<Verdi> => ({
     ...felt,
