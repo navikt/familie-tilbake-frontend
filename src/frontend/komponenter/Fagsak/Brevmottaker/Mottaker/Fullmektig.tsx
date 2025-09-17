@@ -3,7 +3,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { AdresseKilde, adresseKilder, MottakerType } from '../../../../typer/Brevmottaker';
-import ManuellRegistrering from '../Adressekilde/ManuellRegistrering';
+import { ManuellRegistrering } from '../Adressekilde/ManuellRegistrering';
 
 export const Fullmektig: React.FC = () => {
     const {

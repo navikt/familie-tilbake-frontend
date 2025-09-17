@@ -16,15 +16,15 @@ import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
 import { SYNLIGE_STEG } from '../../../utils/sider';
 
-interface IBrevmottakerProps {
+type BrevmottakerProps = {
     brevmottaker: IBrevmottaker & { isDefault?: boolean };
     brevmottakerId: string;
     behandlingId: string;
     erLesevisning: boolean;
     antallBrevmottakere: number;
-}
+};
 
-const Brevmottaker: React.FC<IBrevmottakerProps> = ({
+const Brevmottaker: React.FC<BrevmottakerProps> = ({
     brevmottaker,
     brevmottakerId,
     behandlingId,
@@ -64,35 +64,31 @@ const Brevmottaker: React.FC<IBrevmottakerProps> = ({
                 </BodyShort>
                 <div className="flex gap-1">
                     {!erLesevisning && !brevmottaker.isDefault && (
-                        <Button
-                            variant="tertiary"
-                            onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
-                            size="small"
-                            icon={<TrashIcon />}
-                        >
-                            Fjern
-                        </Button>
-                    )}
-                    {!erLesevisning && !brevmottaker.isDefault && (
-                        <Button
-                            variant="tertiary"
-                            onClick={() => {
-                                håndterEndreBrevmottaker();
-                            }}
-                            size="small"
-                            icon={<PencilIcon />}
-                        >
-                            Endre
-                        </Button>
+                        <>
+                            <Button
+                                variant="tertiary"
+                                onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
+                                size="small"
+                                icon={<TrashIcon />}
+                            >
+                                Fjern
+                            </Button>
+                            <Button
+                                variant="tertiary"
+                                onClick={håndterEndreBrevmottaker}
+                                size="small"
+                                icon={<PencilIcon />}
+                            >
+                                Endre
+                            </Button>
+                        </>
                     )}
                     {!erLesevisning && brevmottaker.isDefault && antallBrevmottakere > 1 && (
                         <Button
                             variant="tertiary"
                             size="small"
                             icon={<PencilIcon />}
-                            onClick={() => {
-                                håndterEndreBrevmottaker();
-                            }}
+                            onClick={håndterEndreBrevmottaker}
                         >
                             Endre
                         </Button>
@@ -157,36 +153,48 @@ const Brevmottaker: React.FC<IBrevmottakerProps> = ({
                                 {brevmottaker.manuellAdresseInfo?.adresselinje1}
                             </BodyShort>
                         </dd>
-                        <dt>
-                            <BodyShort size="small" weight="semibold">
-                                Adresselinje 2
-                            </BodyShort>
-                        </dt>
-                        <dd>
-                            <BodyShort size="small">
-                                {brevmottaker.manuellAdresseInfo?.adresselinje2 || '-'}
-                            </BodyShort>
-                        </dd>
-                        <dt>
-                            <BodyShort size="small" weight="semibold">
-                                Postnummer
-                            </BodyShort>
-                        </dt>
-                        <dd>
-                            <BodyShort size="small">
-                                {brevmottaker.manuellAdresseInfo?.postnummer || '-'}
-                            </BodyShort>
-                        </dd>
-                        <dt>
-                            <BodyShort size="small" weight="semibold">
-                                Poststed
-                            </BodyShort>
-                        </dt>
-                        <dd>
-                            <BodyShort size="small">
-                                {brevmottaker.manuellAdresseInfo?.poststed || '-'}
-                            </BodyShort>
-                        </dd>
+                        {brevmottaker.manuellAdresseInfo?.adresselinje2 && (
+                            <>
+                                <dt>
+                                    <BodyShort size="small" weight="semibold">
+                                        Adresselinje 2
+                                    </BodyShort>
+                                </dt>
+                                <dd>
+                                    <BodyShort size="small">
+                                        {brevmottaker.manuellAdresseInfo.adresselinje2}
+                                    </BodyShort>
+                                </dd>
+                            </>
+                        )}
+                        {brevmottaker.manuellAdresseInfo?.postnummer && (
+                            <>
+                                <dt>
+                                    <BodyShort size="small" weight="semibold">
+                                        Postnummer
+                                    </BodyShort>
+                                </dt>
+                                <dd>
+                                    <BodyShort size="small">
+                                        {brevmottaker.manuellAdresseInfo.postnummer}
+                                    </BodyShort>
+                                </dd>
+                            </>
+                        )}
+                        {brevmottaker.manuellAdresseInfo?.poststed && (
+                            <>
+                                <dt>
+                                    <BodyShort size="small" weight="semibold">
+                                        Poststed
+                                    </BodyShort>
+                                </dt>
+                                <dd>
+                                    <BodyShort size="small">
+                                        {brevmottaker.manuellAdresseInfo.poststed}
+                                    </BodyShort>
+                                </dd>
+                            </>
+                        )}
                         <dt>
                             <BodyShort size="small" weight="semibold">
                                 Land
@@ -299,9 +307,7 @@ const Brevmottakere: React.FC = () => {
                         Legg til ny mottaker
                     </Button>
                 )}
-                <Button variant="primary" onClick={gåTilNeste}>
-                    Neste
-                </Button>
+                <Button onClick={gåTilNeste}>Neste</Button>
             </VStack>
         </>
     );

@@ -21,7 +21,7 @@ const hentEksisterendeBrevmottaker = (
     }
 
     const manuellMottaker = behandling.data.manuelleBrevmottakere.find(
-        (m: { id: string; brevmottaker: IBrevmottaker }) => m.id === brevmottakerIdTilEndring
+        ({ id }) => id === brevmottakerIdTilEndring
     );
 
     return manuellMottaker?.brevmottaker;

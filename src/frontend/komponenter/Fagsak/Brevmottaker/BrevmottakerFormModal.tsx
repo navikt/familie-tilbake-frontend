@@ -19,13 +19,13 @@ import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';
 import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { RessursStatus } from '../../../typer/ressurs';
 
-interface BrevmottakerFormModalProps {
+type BrevmottakerFormModalProps = {
     mode: 'endre' | 'leggTil';
     initialData?: Partial<BrevmottakerFormData>;
     mottakerId?: string;
     open?: boolean;
     onClose?: () => void;
-}
+};
 
 export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     mode,
@@ -151,7 +151,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
                                             );
                                         }}
                                     >
-                                        <option value="" disabled={true}>
+                                        <option value="" disabled>
                                             Velg
                                         </option>
                                         {Object.values(MottakerType)

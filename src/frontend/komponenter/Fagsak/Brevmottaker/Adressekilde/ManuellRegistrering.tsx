@@ -7,13 +7,17 @@ import { useFormContext } from 'react-hook-form';
 import { MottakerType } from '../../../../typer/Brevmottaker';
 import Landvelger from '../../../Felleskomponenter/Landvelger/Landvelger';
 
-interface IProps {
+type Props = {
     preutfyltNavn?: string;
     mottakerType?: MottakerType;
     prefix?: string;
-}
+};
 
-const ManuellRegistrering: React.FC<IProps> = ({ preutfyltNavn, mottakerType, prefix = '' }) => {
+export const ManuellRegistrering: React.FC<Props> = ({
+    preutfyltNavn,
+    mottakerType,
+    prefix = '',
+}) => {
     const {
         register,
         watch,
@@ -115,5 +119,3 @@ const ManuellRegistrering: React.FC<IProps> = ({ preutfyltNavn, mottakerType, pr
         </Fieldset>
     );
 };
-
-export default ManuellRegistrering;
