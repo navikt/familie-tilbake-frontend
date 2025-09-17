@@ -137,7 +137,12 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
                             </BodyShort>
                         </dt>
                         <dd>
-                            <BodyShort size="small">{brevmottaker.personIdent}</BodyShort>
+                            <BodyShort
+                                size="small"
+                                aria-label={brevmottaker.personIdent?.split('').join(' ')}
+                            >
+                                {brevmottaker.personIdent}
+                            </BodyShort>
                         </dd>
                     </div>
                 )}
