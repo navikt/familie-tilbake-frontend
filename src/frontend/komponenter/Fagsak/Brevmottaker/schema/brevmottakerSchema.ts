@@ -6,6 +6,10 @@ import { Vergetype as VergetypeEnum } from '../../../../kodeverk/verge';
 import { AdresseKilde, MottakerType } from '../../../../typer/Brevmottaker';
 import { isNumeric } from '../../../../utils';
 
+const BACKEND_PLACEHOLDERS = {
+    NAVN_PENDING: ' ',
+} as const;
+
 const fødselsnummerSchema = z
     .string()
     .refine(val => !val || (val.length === 11 && isNumeric(val)), {
@@ -34,14 +38,36 @@ const adresseFelterSchema = z.object({
         .optional(),
 });
 
-const manuellAdresseSchema = adresseFelterSchema.extend({
-    adresseKilde: z.literal(AdresseKilde.ManuellRegistrering),
-    postnummer: z
-        .string()
-        .min(4, { message: 'Postnummer må ha 4 siffer' })
-        .max(4, { message: 'Postnummer må ha 4 siffer' }),
-    poststed: z.string(),
-});
+const manuellAdresseSchema = adresseFelterSchema
+    .extend({
+        adresseKilde: z.literal(AdresseKilde.ManuellRegistrering),
+        postnummer: z.string().optional(),
+        poststed: z.string().optional(),
+    })
+    .refine(
+        data => {
+            if (data.land === 'NO' || data.land === 'Norge') {
+                return data.postnummer && z.string().length(4).safeParse(data.postnummer).success;
+            }
+            return true;
+        },
+        {
+            message: 'Postnummer må være 4 siffer',
+            path: ['postnummer'],
+        }
+    )
+    .refine(
+        data => {
+            if (data.land === 'NO' || data.land === 'Norge') {
+                return data.poststed && z.string().min(1).safeParse(data.poststed.trim()).success;
+            }
+            return true;
+        },
+        {
+            message: 'Poststed er påkrevd',
+            path: ['poststed'],
+        }
+    );
 
 const registerOppslagSchema = z.object({
     adresseKilde: z.literal(AdresseKilde.OppslagRegister),
@@ -63,157 +89,141 @@ const adresseKildeSchema = z.discriminatedUnion('adresseKilde', [
     organisasjonsregisterOppslagSchema,
 ]);
 
-export const brevmottakerFormDataInputSchema = z.object({
-    mottakerType: z.enum([
-        MottakerType.BrukerMedUtenlandskAdresse,
-        MottakerType.Fullmektig,
-        MottakerType.Verge,
-        MottakerType.Dødsbo,
-        MottakerType.Bruker,
-    ]),
-    brukerMedUtenlandskAdresse: adresseFelterSchema.optional(),
-    fullmektig: adresseKildeSchema.optional(),
-    verge: adresseKildeSchema.optional(),
-    dødsbo: manuellAdresseSchema.optional(),
-});
+export const brevmottakerFormDataInputSchema = z
+    .object({
+        mottakerType: z.enum([
+            MottakerType.BrukerMedUtenlandskAdresse,
+            MottakerType.Fullmektig,
+            MottakerType.Verge,
+            MottakerType.Dødsbo,
+            MottakerType.Bruker,
+        ]),
+        brukerMedUtenlandskAdresse: adresseFelterSchema.optional(),
+        fullmektig: adresseKildeSchema.optional(),
+        verge: adresseKildeSchema.optional(),
+        dødsbo: manuellAdresseSchema.optional(),
+    })
+    .refine(
+        data => {
+            switch (data.mottakerType) {
+                case MottakerType.BrukerMedUtenlandskAdresse:
+                    return data.brukerMedUtenlandskAdresse !== undefined;
+                case MottakerType.Fullmektig:
+                    return data.fullmektig !== undefined;
+                case MottakerType.Verge:
+                    return data.verge !== undefined;
+                case MottakerType.Dødsbo:
+                    return data.dødsbo !== undefined;
+                case MottakerType.Bruker:
+                    return true;
+                default:
+                    return false;
+            }
+        },
+        {
+            message: 'Påkrevde data mangler for valgt mottakertype',
+        }
+    );
 
 export const brevmottakerFormDataSchema = brevmottakerFormDataInputSchema.transform(
     (data): IBrevmottaker => {
-        switch (data.mottakerType) {
-            case MottakerType.Fullmektig:
-                if (!data.fullmektig) {
-                    throw new Error('Fullmektig data is missing');
-                }
-                return mapUtvideteAdresseToBrevmottaker(data.fullmektig, MottakerType.Fullmektig);
-
-            case MottakerType.Verge:
-                if (!data.verge) {
-                    throw new Error('Verge data is missing');
-                }
-                return mapUtvideteAdresseToBrevmottaker(data.verge, MottakerType.Verge);
-
-            case MottakerType.BrukerMedUtenlandskAdresse:
-                if (!data.brukerMedUtenlandskAdresse) {
-                    throw new Error('Bruker med utenlandsk adresse data is missing');
-                }
-                return mapAdresseFelterToBrevmottaker(
-                    data.brukerMedUtenlandskAdresse,
-                    MottakerType.BrukerMedUtenlandskAdresse
-                );
-
-            case MottakerType.Dødsbo:
-                if (!data.dødsbo) {
-                    throw new Error('Dødsbo data is missing');
-                }
-                return mapUtvideteAdresseToBrevmottaker(data.dødsbo, MottakerType.Dødsbo);
-
-            case MottakerType.Bruker:
-                return {
-                    type: MottakerType.Bruker,
-                    navn: '',
-                    personIdent: undefined,
-                    organisasjonsnummer: undefined,
-                    vergetype: VergetypeEnum.Udefinert,
-                    manuellAdresseInfo: undefined,
-                };
-
-            default:
-                throw new Error(`Unsupported mottaker type: ${data.mottakerType}`);
-        }
+        return mapFormDataToBrevmottaker(data, data.mottakerType);
     }
 );
 
-const mapUtvideteAdresseToBrevmottaker = (
-    data: z.infer<typeof adresseKildeSchema>,
-    type: MottakerType.Dødsbo | MottakerType.Fullmektig | MottakerType.Verge
+const mapFormDataToBrevmottaker = (
+    data: z.infer<typeof brevmottakerFormDataInputSchema>,
+    type: MottakerType
 ): IBrevmottaker => {
-    switch (data.adresseKilde) {
-        case AdresseKilde.ManuellRegistrering:
+    const baseResult: IBrevmottaker = {
+        type,
+        navn: '',
+        personIdent: undefined,
+        organisasjonsnummer: undefined,
+        vergetype: VergetypeEnum.Udefinert,
+        manuellAdresseInfo: undefined,
+    };
+
+    switch (type) {
+        case MottakerType.BrukerMedUtenlandskAdresse: {
+            const adresseData = data.brukerMedUtenlandskAdresse;
+            if (!adresseData) {
+                throw new Error('Adresse data mangler');
+            }
             return {
-                type,
-                navn: data.navn,
-                personIdent: undefined,
-                organisasjonsnummer: undefined,
-                vergetype: VergetypeEnum.Udefinert,
+                ...baseResult,
+                navn: adresseData.navn,
                 manuellAdresseInfo: {
-                    adresselinje1: data.adresselinje1,
-                    adresselinje2: data.adresselinje2 || undefined,
-                    postnummer: data.postnummer.toString(),
-                    poststed: data.poststed,
-                    landkode: data.land,
+                    adresselinje1: adresseData.adresselinje1,
+                    adresselinje2: adresseData.adresselinje2 || undefined,
+                    postnummer: '',
+                    poststed: '',
+                    landkode: adresseData.land,
                 },
             };
+        }
 
-        case AdresseKilde.OppslagRegister:
-            return {
-                type,
-                navn: '',
-                personIdent: data.personnummer,
-                organisasjonsnummer: undefined,
-                vergetype: VergetypeEnum.Udefinert,
-                manuellAdresseInfo: undefined,
-            };
+        case MottakerType.Fullmektig:
+        case MottakerType.Verge: {
+            const adresseData = type === MottakerType.Fullmektig ? data.fullmektig : data.verge;
+            if (!adresseData) {
+                throw new Error('Adresse data mangler');
+            }
 
-        case AdresseKilde.OppslagOrganisasjonsregister:
+            switch (adresseData.adresseKilde) {
+                case AdresseKilde.ManuellRegistrering:
+                    return {
+                        ...baseResult,
+                        navn: adresseData.navn,
+                        manuellAdresseInfo: {
+                            adresselinje1: adresseData.adresselinje1,
+                            adresselinje2: adresseData.adresselinje2 || undefined,
+                            postnummer: adresseData.postnummer || '',
+                            poststed: adresseData.poststed || '',
+                            landkode: adresseData.land,
+                        },
+                    };
+
+                case AdresseKilde.OppslagRegister:
+                    return {
+                        ...baseResult,
+                        navn: BACKEND_PLACEHOLDERS.NAVN_PENDING,
+                        personIdent: adresseData.personnummer,
+                    };
+
+                case AdresseKilde.OppslagOrganisasjonsregister:
+                    return {
+                        ...baseResult,
+                        navn: adresseData.navn || BACKEND_PLACEHOLDERS.NAVN_PENDING,
+                        organisasjonsnummer: adresseData.organisasjonsnummer,
+                    };
+            }
+            break;
+        }
+
+        case MottakerType.Dødsbo: {
+            const adresseData = data.dødsbo;
+            if (!adresseData) {
+                throw new Error('Adresse data mangler');
+            }
             return {
-                type,
-                navn: data.navn || '',
-                personIdent: undefined,
-                organisasjonsnummer: data.organisasjonsnummer,
-                vergetype: VergetypeEnum.Udefinert,
-                manuellAdresseInfo: undefined,
+                ...baseResult,
+                navn: adresseData.navn,
+                manuellAdresseInfo: {
+                    adresselinje1: adresseData.adresselinje1,
+                    adresselinje2: adresseData.adresselinje2 || undefined,
+                    postnummer: adresseData.postnummer || '',
+                    poststed: adresseData.poststed || '',
+                    landkode: adresseData.land,
+                },
             };
+        }
+
+        case MottakerType.Bruker:
+            return baseResult;
     }
-};
 
-const mapAdresseFelterToBrevmottaker = (
-    data: z.infer<typeof adresseFelterSchema>,
-    type: MottakerType.BrukerMedUtenlandskAdresse
-): IBrevmottaker => ({
-    type,
-    navn: data.navn,
-    personIdent: undefined,
-    organisasjonsnummer: undefined,
-    vergetype: VergetypeEnum.Udefinert,
-    manuellAdresseInfo: {
-        adresselinje1: data.adresselinje1,
-        adresselinje2: data.adresselinje2 || undefined,
-        postnummer: '',
-        poststed: '',
-        landkode: data.land,
-    },
-});
-
-export const createFormDefaults = (
-    initialData?: Partial<BrevmottakerFormData>
-): BrevmottakerFormData => {
-    const mottakerType = initialData?.mottakerType || MottakerType.BrukerMedUtenlandskAdresse;
-
-    return {
-        mottakerType,
-        brukerMedUtenlandskAdresse:
-            mottakerType === MottakerType.BrukerMedUtenlandskAdresse
-                ? {
-                      navn: initialData?.brukerMedUtenlandskAdresse?.navn || '',
-                      land: initialData?.brukerMedUtenlandskAdresse?.land || '',
-                      adresselinje1: initialData?.brukerMedUtenlandskAdresse?.adresselinje1 || '',
-                      adresselinje2: initialData?.brukerMedUtenlandskAdresse?.adresselinje2 || '',
-                  }
-                : undefined,
-        fullmektig: initialData?.fullmektig as AdresseRegistreringsData | undefined,
-        verge: initialData?.verge as AdresseRegistreringsData | undefined,
-        dødsbo: initialData?.dødsbo
-            ? {
-                  adresseKilde: AdresseKilde.ManuellRegistrering,
-                  navn: initialData.dødsbo.navn || '',
-                  land: initialData.dødsbo.land || '',
-                  adresselinje1: initialData.dødsbo.adresselinje1 || '',
-                  adresselinje2: initialData.dødsbo.adresselinje2 || '',
-                  postnummer: initialData.dødsbo.postnummer || '',
-                  poststed: initialData.dødsbo.poststed || '',
-              }
-            : undefined,
-    };
+    return baseResult;
 };
 
 export const mapBrevmottakerToFormData = (

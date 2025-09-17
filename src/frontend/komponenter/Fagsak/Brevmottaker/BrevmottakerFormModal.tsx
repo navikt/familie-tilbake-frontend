@@ -11,7 +11,6 @@ import { Verge } from './Mottaker/Verge';
 import {
     brevmottakerFormDataInputSchema,
     brevmottakerFormDataSchema,
-    createFormDefaults,
     type BrevmottakerFormData,
 } from './schema/brevmottakerSchema';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -50,7 +49,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     const methods = useForm<BrevmottakerFormData>({
         reValidateMode: 'onBlur',
         shouldFocusError: false,
-        defaultValues: createFormDefaults(initialData),
+        defaultValues: initialData,
         resolver: zodResolver(brevmottakerFormDataInputSchema),
     });
 
