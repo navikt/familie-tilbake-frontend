@@ -2,7 +2,7 @@ import type { Land } from '../../../Felleskomponenter/Landvelger/Landvelger';
 
 import { Alert, Fieldset, TextField, VStack } from '@navikt/ds-react';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, get } from 'react-hook-form';
 
 import { MottakerType } from '../../../../typer/Brevmottaker';
 import Landvelger from '../../../Felleskomponenter/Landvelger/Landvelger';
@@ -52,18 +52,16 @@ export const ManuellRegistrering: React.FC<Props> = ({
         }
     }, [preutfyltNavn, setValue, fieldPath]);
 
-    const getFieldError = (fieldName: string): string | undefined => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const nestedErrors = prefix ? (errors as any)[prefix] : errors;
-        const error = nestedErrors?.[fieldName];
-        return error?.message as string | undefined;
-    };
+    const getFieldError = useCallback(
+        (key: string) => get(errors, fieldPath(key))?.message,
+        [errors, fieldPath]
+    );
 
     return (
         <Fieldset legend="Manuell adresseregistrering" hideLegend>
             <VStack gap="4">
                 <TextField
-                    {...register(fieldPath('navn'), { required: 'Navn er påkrevd' })}
+                    {...register(fieldPath('navn'))}
                     label="Navn"
                     readOnly={!!preutfyltNavn}
                     error={getFieldError('navn')}
@@ -78,9 +76,7 @@ export const ManuellRegistrering: React.FC<Props> = ({
                 {landValue && (
                     <>
                         <TextField
-                            {...register(fieldPath('adresselinje1'), {
-                                required: 'Adresselinje 1 er påkrevd',
-                            })}
+                            {...register(fieldPath('adresselinje1'))}
                             label="Adresselinje 1"
                             error={getFieldError('adresselinje1')}
                         />
@@ -98,16 +94,12 @@ export const ManuellRegistrering: React.FC<Props> = ({
                         {landValue === 'NO' && (
                             <div>
                                 <TextField
-                                    {...register(fieldPath('postnummer'), {
-                                        required: 'Postnummer er påkrevd',
-                                    })}
+                                    {...register(fieldPath('postnummer'))}
                                     label="Postnummer"
                                     error={getFieldError('postnummer')}
                                 />
                                 <TextField
-                                    {...register(fieldPath('poststed'), {
-                                        required: 'Poststed er påkrevd',
-                                    })}
+                                    {...register(fieldPath('poststed'))}
                                     label="Poststed"
                                     error={getFieldError('poststed')}
                                 />
