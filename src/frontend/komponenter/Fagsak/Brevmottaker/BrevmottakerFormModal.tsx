@@ -22,29 +22,15 @@ type BrevmottakerFormModalProps = {
     mode: 'endre' | 'leggTil';
     initialData?: Partial<BrevmottakerFormData>;
     mottakerId?: string;
-    open?: boolean;
-    onClose?: () => void;
 };
 
 export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     mode,
     initialData,
     mottakerId,
-    open,
-    onClose,
 }) => {
     const { lukkBrevmottakerModal, visBrevmottakerModal, behandling } = useBehandling();
     const { lagreBrevmottaker } = useBrevmottakerApi();
-
-    const isOpen = open ?? visBrevmottakerModal;
-
-    const closeModal = (): void => {
-        if (onClose) {
-            onClose();
-        } else {
-            lukkBrevmottakerModal();
-        }
-    };
 
     const methods = useForm<BrevmottakerFormData>({
         reValidateMode: 'onBlur',
@@ -71,7 +57,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
             );
 
             if (response.success) {
-                closeModal();
+                lukkBrevmottakerModal();
                 return;
             }
 
@@ -125,8 +111,8 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     return (
         <FormProvider {...methods}>
             <Modal
-                open={isOpen}
-                onClose={closeModal}
+                open={visBrevmottakerModal}
+                onClose={lukkBrevmottakerModal}
                 header={{ heading: config.heading }}
                 width="medium"
             >
@@ -173,7 +159,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="submit">{config.submitText}</Button>
-                        <Button variant="secondary" type="button" onClick={closeModal}>
+                        <Button variant="secondary" type="button" onClick={lukkBrevmottakerModal}>
                             Avbryt
                         </Button>
                     </Modal.Footer>
