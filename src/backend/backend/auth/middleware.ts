@@ -28,9 +28,12 @@ const verifiserCsrfToken = (session: Session, mottattToken: string): boolean => 
     if (!session.csrfToken || session.gyldigeCsrfTokens.length === 0) {
         return false;
     }
-    const erGyldigToken = session.gyldigeCsrfTokens.includes(mottattToken);
 
-    return erGyldigToken;
+    if (session.csrfToken === mottattToken) {
+        return true;
+    }
+
+    return session.gyldigeCsrfTokens.includes(mottattToken);
 };
 
 export const csrfBeskyttelse = (req: Request, res: Response, next: NextFunction): void => {
