@@ -4,131 +4,64 @@ import { z } from 'zod';
 
 import { Vergetype as VergetypeEnum } from '../../../../kodeverk/verge';
 import { AdresseKilde, MottakerType } from '../../../../typer/Brevmottaker';
+import { isNumeric } from '../../../../utils';
 
-const flexibleGrunnleggendeAdresseFelterSchema = z.object({
-    navn: z.string().optional(),
-    land: z.string().optional(),
-    adresselinje1: z.string().optional(),
-    adresselinje2: z.string().optional(),
-    postnummer: z.string().optional(),
-    poststed: z.string().optional(),
+const fødselsnummerSchema = z
+    .string()
+    .refine(val => !val || (val.length === 11 && isNumeric(val)), {
+        message: 'Fødselsnummer må være 11 sammenhengende siffer',
+    });
+
+const organisasjonsnummerSchema = z
+    .string()
+    .refine(val => !val || (val.length === 9 && isNumeric(val)), {
+        message: 'Organisasjonsnummer må være 9 sammenhengende siffer',
+    });
+
+const adresseFelterSchema = z.object({
+    navn: z
+        .string()
+        .min(1, 'Navn på person eller organisasjon er påkrevd')
+        .max(80, 'Navn kan ikke inneholde mer enn 80 tegn'),
+    land: z.string().min(1, 'Land er påkrevd'),
+    adresselinje1: z
+        .string()
+        .min(1, 'Adresselinje 1 er påkrevd')
+        .max(80, 'Adresselinje 1 kan ikke inneholde mer enn 80 tegn'),
+    adresselinje2: z
+        .string()
+        .max(80, 'Adresselinje 2 kan ikke inneholde mer enn 80 tegn')
+        .optional(),
 });
 
-const flexibleManuellAdresseSchema = z.object({
+const manuellAdresseSchema = adresseFelterSchema.extend({
     adresseKilde: z.literal(AdresseKilde.ManuellRegistrering),
-    navn: z.string().optional(),
-    land: z.string().optional(),
-    adresselinje1: z.string().optional(),
-    adresselinje2: z.string().optional(),
-    postnummer: z.string().optional(),
-    poststed: z.string().optional(),
-    personnummer: z
+    postnummer: z
         .string()
-        .optional()
-        .refine(
-            val => !val || (val.length === 11 && /^\d+$/.test(val)),
-            'Fødselsnummer må være 11 sammenhengende siffer'
-        ),
-    organisasjonsnummer: z
-        .string()
-        .optional()
-        .refine(
-            val => !val || (val.length === 9 && /^\d+$/.test(val)),
-            'Organisasjonsnummer må være 9 sammenhengende siffer'
-        ),
+        .min(4, { message: 'Postnummer må ha 4 siffer' })
+        .max(4, { message: 'Postnummer må ha 4 siffer' }),
+    poststed: z.string(),
 });
 
-const flexibleRegisterOppslagSchema = z.object({
+const registerOppslagSchema = z.object({
     adresseKilde: z.literal(AdresseKilde.OppslagRegister),
-    personnummer: z
-        .string()
-        .optional()
-        .refine(
-            val => !val || (val.length === 11 && /^\d+$/.test(val)),
-            'Fødselsnummer må være 11 sammenhengende siffer'
-        ),
-    organisasjonsnummer: z.string().optional(),
-    navn: z.string().optional(),
-    land: z.string().optional(),
-    adresselinje1: z.string().optional(),
-    adresselinje2: z.string().optional(),
-    postnummer: z.string().optional(),
-    poststed: z.string().optional(),
+    personnummer: z.string().min(1, 'Fødselsnummer er påkrevd').pipe(fødselsnummerSchema),
 });
 
-const flexibleOrganisasjonsregisterOppslagSchema = z.object({
+const organisasjonsregisterOppslagSchema = z.object({
     adresseKilde: z.literal(AdresseKilde.OppslagOrganisasjonsregister),
-    personnummer: z.string().optional(),
     organisasjonsnummer: z
         .string()
-        .optional()
-        .refine(
-            val => !val || (val.length === 9 && /^\d+$/.test(val)),
-            'Organisasjonsnummer må være 9 sammenhengende siffer'
-        ),
-    navn: z.string().optional(),
-    land: z.string().optional(),
-    adresselinje1: z.string().optional(),
-    adresselinje2: z.string().optional(),
-    postnummer: z.string().optional(),
-    poststed: z.string().optional(),
+        .min(1, 'Organisasjonsnummer er påkrevd')
+        .pipe(organisasjonsnummerSchema),
+    navn: z.string().max(80, 'Navn kan ikke inneholde mer enn 80 tegn').optional(),
 });
 
-const utvideteAdresseFelterSchema = z.discriminatedUnion('adresseKilde', [
-    flexibleManuellAdresseSchema,
-    flexibleRegisterOppslagSchema,
-    flexibleOrganisasjonsregisterOppslagSchema,
+const adresseKildeSchema = z.discriminatedUnion('adresseKilde', [
+    manuellAdresseSchema,
+    registerOppslagSchema,
+    organisasjonsregisterOppslagSchema,
 ]);
-
-const mapUtvideteAdresseToBrevmottaker = (
-    data: z.infer<typeof utvideteAdresseFelterSchema>,
-    type: MottakerType.Fullmektig | MottakerType.Verge
-): IBrevmottaker => {
-    const skalHaManuellAdresse = data.adresseKilde === AdresseKilde.ManuellRegistrering;
-
-    return {
-        type,
-        navn: data.navn || ' ',
-        personIdent: data.personnummer || undefined,
-        organisasjonsnummer: data.organisasjonsnummer || undefined,
-        vergetype: VergetypeEnum.Udefinert,
-        manuellAdresseInfo:
-            skalHaManuellAdresse &&
-            data.adresselinje1 &&
-            data.postnummer &&
-            data.poststed &&
-            data.land
-                ? {
-                      adresselinje1: data.adresselinje1,
-                      adresselinje2: data.adresselinje2 || undefined,
-                      postnummer: data.postnummer,
-                      poststed: data.poststed,
-                      landkode: data.land,
-                  }
-                : undefined,
-    };
-};
-
-const mapGrunnleggendeAdresseToBrevmottaker = (
-    data: z.infer<typeof flexibleGrunnleggendeAdresseFelterSchema>,
-    type: MottakerType.BrukerMedUtenlandskAdresse | MottakerType.Dødsbo
-): IBrevmottaker => ({
-    type,
-    navn: data.navn || '',
-    personIdent: undefined,
-    organisasjonsnummer: undefined,
-    vergetype: VergetypeEnum.Udefinert,
-    manuellAdresseInfo:
-        data.adresselinje1 && data.postnummer && data.poststed && data.land
-            ? {
-                  adresselinje1: data.adresselinje1,
-                  adresselinje2: data.adresselinje2 || undefined,
-                  postnummer: data.postnummer,
-                  poststed: data.poststed,
-                  landkode: data.land,
-              }
-            : undefined,
-});
 
 export const brevmottakerFormDataInputSchema = z.object({
     mottakerType: z.enum([
@@ -138,10 +71,10 @@ export const brevmottakerFormDataInputSchema = z.object({
         MottakerType.Dødsbo,
         MottakerType.Bruker,
     ]),
-    brukerMedUtenlandskAdresse: flexibleGrunnleggendeAdresseFelterSchema.optional(),
-    fullmektig: utvideteAdresseFelterSchema.optional(),
-    verge: utvideteAdresseFelterSchema.optional(),
-    dødsbo: flexibleGrunnleggendeAdresseFelterSchema.optional(),
+    brukerMedUtenlandskAdresse: adresseFelterSchema.optional(),
+    fullmektig: adresseKildeSchema.optional(),
+    verge: adresseKildeSchema.optional(),
+    dødsbo: manuellAdresseSchema.optional(),
 });
 
 export const brevmottakerFormDataSchema = brevmottakerFormDataInputSchema.transform(
@@ -163,7 +96,7 @@ export const brevmottakerFormDataSchema = brevmottakerFormDataInputSchema.transf
                 if (!data.brukerMedUtenlandskAdresse) {
                     throw new Error('Bruker med utenlandsk adresse data is missing');
                 }
-                return mapGrunnleggendeAdresseToBrevmottaker(
+                return mapAdresseFelterToBrevmottaker(
                     data.brukerMedUtenlandskAdresse,
                     MottakerType.BrukerMedUtenlandskAdresse
                 );
@@ -172,7 +105,7 @@ export const brevmottakerFormDataSchema = brevmottakerFormDataInputSchema.transf
                 if (!data.dødsbo) {
                     throw new Error('Dødsbo data is missing');
                 }
-                return mapGrunnleggendeAdresseToBrevmottaker(data.dødsbo, MottakerType.Dødsbo);
+                return mapUtvideteAdresseToBrevmottaker(data.dødsbo, MottakerType.Dødsbo);
 
             case MottakerType.Bruker:
                 return {
@@ -190,6 +123,67 @@ export const brevmottakerFormDataSchema = brevmottakerFormDataInputSchema.transf
     }
 );
 
+const mapUtvideteAdresseToBrevmottaker = (
+    data: z.infer<typeof adresseKildeSchema>,
+    type: MottakerType.Dødsbo | MottakerType.Fullmektig | MottakerType.Verge
+): IBrevmottaker => {
+    switch (data.adresseKilde) {
+        case AdresseKilde.ManuellRegistrering:
+            return {
+                type,
+                navn: data.navn,
+                personIdent: undefined,
+                organisasjonsnummer: undefined,
+                vergetype: VergetypeEnum.Udefinert,
+                manuellAdresseInfo: {
+                    adresselinje1: data.adresselinje1,
+                    adresselinje2: data.adresselinje2 || undefined,
+                    postnummer: data.postnummer.toString(),
+                    poststed: data.poststed,
+                    landkode: data.land,
+                },
+            };
+
+        case AdresseKilde.OppslagRegister:
+            return {
+                type,
+                navn: '',
+                personIdent: data.personnummer,
+                organisasjonsnummer: undefined,
+                vergetype: VergetypeEnum.Udefinert,
+                manuellAdresseInfo: undefined,
+            };
+
+        case AdresseKilde.OppslagOrganisasjonsregister:
+            return {
+                type,
+                navn: data.navn || '',
+                personIdent: undefined,
+                organisasjonsnummer: data.organisasjonsnummer,
+                vergetype: VergetypeEnum.Udefinert,
+                manuellAdresseInfo: undefined,
+            };
+    }
+};
+
+const mapAdresseFelterToBrevmottaker = (
+    data: z.infer<typeof adresseFelterSchema>,
+    type: MottakerType.BrukerMedUtenlandskAdresse
+): IBrevmottaker => ({
+    type,
+    navn: data.navn,
+    personIdent: undefined,
+    organisasjonsnummer: undefined,
+    vergetype: VergetypeEnum.Udefinert,
+    manuellAdresseInfo: {
+        adresselinje1: data.adresselinje1,
+        adresselinje2: data.adresselinje2 || undefined,
+        postnummer: '',
+        poststed: '',
+        landkode: data.land,
+    },
+});
+
 export const createFormDefaults = (
     initialData?: Partial<BrevmottakerFormData>
 ): BrevmottakerFormData => {
@@ -204,42 +198,13 @@ export const createFormDefaults = (
                       land: initialData?.brukerMedUtenlandskAdresse?.land || '',
                       adresselinje1: initialData?.brukerMedUtenlandskAdresse?.adresselinje1 || '',
                       adresselinje2: initialData?.brukerMedUtenlandskAdresse?.adresselinje2 || '',
-                      postnummer: initialData?.brukerMedUtenlandskAdresse?.postnummer || '',
-                      poststed: initialData?.brukerMedUtenlandskAdresse?.poststed || '',
                   }
                 : undefined,
-        fullmektig: initialData?.fullmektig
-            ? {
-                  ...initialData.fullmektig,
-                  adresseKilde:
-                      initialData.fullmektig.adresseKilde || AdresseKilde.ManuellRegistrering,
-                  personnummer: initialData.fullmektig.personnummer || '',
-                  organisasjonsnummer: initialData.fullmektig.organisasjonsnummer || '',
-                  navn: initialData.fullmektig.navn || '',
-                  land: initialData.fullmektig.land || '',
-                  adresselinje1: initialData.fullmektig.adresselinje1 || '',
-                  adresselinje2: initialData.fullmektig.adresselinje2 || '',
-                  postnummer: initialData.fullmektig.postnummer || '',
-                  poststed: initialData.fullmektig.poststed || '',
-              }
-            : undefined,
-        verge: initialData?.verge
-            ? {
-                  ...initialData.verge,
-                  adresseKilde: initialData.verge.adresseKilde || AdresseKilde.ManuellRegistrering,
-                  personnummer: initialData.verge.personnummer || '',
-                  organisasjonsnummer: initialData.verge.organisasjonsnummer || '',
-                  navn: initialData.verge.navn || '',
-                  land: initialData.verge.land || '',
-                  adresselinje1: initialData.verge.adresselinje1 || '',
-                  adresselinje2: initialData.verge.adresselinje2 || '',
-                  postnummer: initialData.verge.postnummer || '',
-                  poststed: initialData.verge.poststed || '',
-              }
-            : undefined,
+        fullmektig: initialData?.fullmektig as AdresseRegistreringsData | undefined,
+        verge: initialData?.verge as AdresseRegistreringsData | undefined,
         dødsbo: initialData?.dødsbo
             ? {
-                  ...initialData.dødsbo,
+                  adresseKilde: AdresseKilde.ManuellRegistrering,
                   navn: initialData.dødsbo.navn || '',
                   land: initialData.dødsbo.land || '',
                   adresselinje1: initialData.dødsbo.adresselinje1 || '',
@@ -256,21 +221,6 @@ export const mapBrevmottakerToFormData = (
 ): Partial<BrevmottakerFormData> => {
     const baseFormData: Partial<BrevmottakerFormData> = {
         mottakerType: brevmottaker.type,
-    };
-
-    const getAdresseKilde = (
-        brevmottaker: IBrevmottaker
-    ):
-        | AdresseKilde.ManuellRegistrering
-        | AdresseKilde.OppslagOrganisasjonsregister
-        | AdresseKilde.OppslagRegister => {
-        if (brevmottaker.manuellAdresseInfo) {
-            return AdresseKilde.ManuellRegistrering;
-        }
-        if (brevmottaker.organisasjonsnummer) {
-            return AdresseKilde.OppslagOrganisasjonsregister;
-        }
-        return AdresseKilde.OppslagRegister;
     };
 
     const mapAdresse = (
@@ -291,39 +241,83 @@ export const mapBrevmottakerToFormData = (
         poststed: brevmottaker.manuellAdresseInfo?.poststed || '',
     });
 
+    const hentAdresseKilde = (
+        brevmottaker: IBrevmottaker
+    ):
+        | AdresseKilde.ManuellRegistrering
+        | AdresseKilde.OppslagOrganisasjonsregister
+        | AdresseKilde.OppslagRegister => {
+        if (brevmottaker.manuellAdresseInfo) {
+            return AdresseKilde.ManuellRegistrering;
+        }
+        if (brevmottaker.organisasjonsnummer) {
+            return AdresseKilde.OppslagOrganisasjonsregister;
+        }
+        return AdresseKilde.OppslagRegister;
+    };
+
     switch (brevmottaker.type) {
         case MottakerType.BrukerMedUtenlandskAdresse:
             return {
                 ...baseFormData,
-                brukerMedUtenlandskAdresse: mapAdresse(brevmottaker),
+                brukerMedUtenlandskAdresse: {
+                    navn: brevmottaker.navn || '',
+                    land: brevmottaker.manuellAdresseInfo?.landkode || '',
+                    adresselinje1: brevmottaker.manuellAdresseInfo?.adresselinje1 || '',
+                    adresselinje2: brevmottaker.manuellAdresseInfo?.adresselinje2 || '',
+                },
             };
 
         case MottakerType.Fullmektig:
-            return {
-                ...baseFormData,
-                fullmektig: {
-                    ...mapAdresse(brevmottaker),
-                    adresseKilde: getAdresseKilde(brevmottaker),
-                    personnummer: brevmottaker.personIdent || '',
-                    organisasjonsnummer: brevmottaker.organisasjonsnummer || '',
-                },
-            };
+        case MottakerType.Verge: {
+            const adresseKilde = hentAdresseKilde(brevmottaker);
+            const baseAddress = mapAdresse(brevmottaker);
 
-        case MottakerType.Verge:
+            let adresseData: AdresseRegistreringsData;
+
+            if (adresseKilde === AdresseKilde.ManuellRegistrering) {
+                adresseData = {
+                    adresseKilde,
+                    navn: baseAddress.navn,
+                    land: baseAddress.land,
+                    adresselinje1: baseAddress.adresselinje1,
+                    adresselinje2: baseAddress.adresselinje2 || undefined,
+                    postnummer: baseAddress.postnummer,
+                    poststed: baseAddress.poststed,
+                } as ManuellAdresse;
+            } else if (adresseKilde === AdresseKilde.OppslagRegister) {
+                adresseData = {
+                    adresseKilde,
+                    personnummer: brevmottaker.personIdent || '',
+                } as RegisterOppslag;
+            } else {
+                adresseData = {
+                    adresseKilde,
+                    organisasjonsnummer: brevmottaker.organisasjonsnummer || '',
+                    navn: brevmottaker.navn || '',
+                } as OrganisasjonsregisterOppslag;
+            }
+
             return {
                 ...baseFormData,
-                verge: {
-                    ...mapAdresse(brevmottaker),
-                    adresseKilde: getAdresseKilde(brevmottaker),
-                    personnummer: brevmottaker.personIdent || '',
-                    organisasjonsnummer: brevmottaker.organisasjonsnummer || '',
-                },
+                ...(brevmottaker.type === MottakerType.Fullmektig
+                    ? { fullmektig: adresseData }
+                    : { verge: adresseData }),
             };
+        }
 
         case MottakerType.Dødsbo:
             return {
                 ...baseFormData,
-                dødsbo: mapAdresse(brevmottaker),
+                dødsbo: {
+                    adresseKilde: AdresseKilde.ManuellRegistrering,
+                    navn: brevmottaker.navn || '',
+                    land: brevmottaker.manuellAdresseInfo?.landkode || '',
+                    adresselinje1: brevmottaker.manuellAdresseInfo?.adresselinje1 || '',
+                    adresselinje2: brevmottaker.manuellAdresseInfo?.adresselinje2 || '',
+                    postnummer: brevmottaker.manuellAdresseInfo?.postnummer || '',
+                    poststed: brevmottaker.manuellAdresseInfo?.poststed || '',
+                },
             };
 
         default:
@@ -335,11 +329,9 @@ export type BrevmottakerFormData = z.input<typeof brevmottakerFormDataSchema>;
 
 export type BrevmottakerApiData = z.output<typeof brevmottakerFormDataSchema>;
 
-export type GrunnleggendeAdresseFelter = z.infer<typeof flexibleGrunnleggendeAdresseFelterSchema>;
-export type UtvideteAdresseFelter = z.infer<typeof utvideteAdresseFelterSchema>;
+export type AdresseRegistreringsData = z.infer<typeof adresseKildeSchema>;
 
-export type ManuellAdresse = z.infer<typeof flexibleManuellAdresseSchema>;
-export type RegisterOppslag = z.infer<typeof flexibleRegisterOppslagSchema>;
-export type OrganisasjonsregisterOppslag = z.infer<
-    typeof flexibleOrganisasjonsregisterOppslagSchema
->;
+export type ManuellAdresse = z.infer<typeof manuellAdresseSchema>;
+export type RegisterOppslag = z.infer<typeof registerOppslagSchema>;
+export type OrganisasjonsregisterOppslag = z.infer<typeof organisasjonsregisterOppslagSchema>;
+export type AdresseFelter = z.infer<typeof adresseFelterSchema>;
