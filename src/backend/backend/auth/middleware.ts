@@ -6,17 +6,34 @@ import crypto from 'crypto';
 import { logError } from '../../logging/logging';
 
 const IKKE_SIKRE_METODER = ['GET', 'HEAD', 'OPTIONS'];
+const MAKS_GYLDIGE_CSRF_TOKENS = 5;
 
 export const genererCsrfToken = (session: Session): string => {
-    session.csrfToken = crypto.randomUUID();
+    if (!session.gyldigeCsrfTokens) {
+        session.gyldigeCsrfTokens = [];
+    }
+
+    const nyttToken = crypto.randomUUID();
+    session.csrfToken = nyttToken;
+    session.gyldigeCsrfTokens.push(nyttToken);
+
+    if (session.gyldigeCsrfTokens.length >= MAKS_GYLDIGE_CSRF_TOKENS) {
+        session.gyldigeCsrfTokens.shift();
+    }
+
     return session.csrfToken;
 };
 
-const verifiserCsrfToken = ({ csrfToken }: Session, mottattToken: string): boolean => {
-    if (!csrfToken) {
+const verifiserCsrfToken = (session: Session, mottattToken: string): boolean => {
+    if (!session.csrfToken || session.gyldigeCsrfTokens?.length === 0) {
         return false;
     }
-    return csrfToken === mottattToken;
+
+    if (session.csrfToken === mottattToken) {
+        return true;
+    }
+
+    return session.gyldigeCsrfTokens.includes(mottattToken);
 };
 
 export const csrfBeskyttelse = (req: Request, res: Response, next: NextFunction): void => {
