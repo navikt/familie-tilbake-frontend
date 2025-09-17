@@ -25,7 +25,7 @@ export const genererCsrfToken = (session: Session): string => {
 };
 
 const verifiserCsrfToken = (session: Session, mottattToken: string): boolean => {
-    if (!session.csrfToken || session.gyldigeCsrfTokens.length === 0) {
+    if (!session.csrfToken || session.gyldigeCsrfTokens?.length === 0) {
         return false;
     }
 
