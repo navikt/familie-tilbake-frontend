@@ -69,7 +69,7 @@ export const Fullmektig: React.FC = () => {
                     />
                     <TextField
                         label="Kontaktperson i organisasjonen"
-                        description='Valgfritt. Navnet vises etter organisasjonsnavnet slik "Organisasjon AS v/ Navn Navnesen"'
+                        description='Navnet vises etter organisasjonsnavnet slik "Organisasjon AS v/ Navn Navnesen"'
                         {...register('fullmektig.navn')}
                         error={getErrorMessage('fullmektig.navn')}
                     />
