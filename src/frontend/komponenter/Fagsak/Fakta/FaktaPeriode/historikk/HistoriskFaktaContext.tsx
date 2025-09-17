@@ -1,7 +1,6 @@
 import type { IBehandling } from '../../../../../typer/behandling';
 import type { FaktaResponse } from '../../../../../typer/tilbakekrevingstyper';
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData } from '../../typer/fakta';
-import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
@@ -64,8 +63,7 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandli
             .then((respons: Ressurs<FaktaResponse[]>) => {
                 setInaktiveFakta(respons);
             })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .catch((_error: AxiosError) => {
+            .catch(() => {
                 setInaktiveFakta(
                     byggFeiletRessurs(
                         'Ukjent feil ved henting av inaktive fakta-perioder for behandling'

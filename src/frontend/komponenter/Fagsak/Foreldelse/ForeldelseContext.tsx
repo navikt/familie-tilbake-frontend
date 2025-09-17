@@ -3,7 +3,6 @@ import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
-import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
@@ -144,8 +143,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling, fags
             .then((hentetForeldelse: Ressurs<ForeldelseResponse>) => {
                 setForeldelse(hentetForeldelse);
             })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .catch((_error: AxiosError) => {
+            .catch(() => {
                 setForeldelse(
                     byggFeiletRessurs(
                         'Ukjent feil ved henting av foreldelse-perioder for behandling'

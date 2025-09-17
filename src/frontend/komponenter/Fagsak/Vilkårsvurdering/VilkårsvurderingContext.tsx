@@ -165,8 +165,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
                 .then((hentetVilkårsvurdering: Ressurs<VilkårsvurderingResponse>) => {
                     setVilkårsvurdering(hentetVilkårsvurdering);
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     setVilkårsvurdering(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av vilkårsvurdering-perioder for behandling'

@@ -4,7 +4,6 @@ import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
 import type { SynligSteg } from '../../../../utils/sider';
-import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
@@ -115,8 +114,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 .then((hentetTotrinnkontroll: Ressurs<ITotrinnkontroll>) => {
                     settTotrinnkontroll(hentetTotrinnkontroll);
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     settTotrinnkontroll(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av to-trinnskontroll for behandling'
@@ -239,8 +237,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                             settFatteVedtakRespons(respons);
                         }
                     })
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    .catch((_error: AxiosError) => {
+                    .catch(() => {
                         settFatteVedtakRespons(
                             byggFeiletRessurs('Ukjent feil ved sending av vedtak')
                         );

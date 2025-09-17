@@ -35,8 +35,7 @@ const [TogglesProvider, useToggles] = createUseContext(() => {
                     settFeilmelding('Kunne ikke hente toggles');
                 }
             })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .catch((_: Error) => {
+            .catch(() => {
                 settFeilmelding('Kunne ikke hente toggles');
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps

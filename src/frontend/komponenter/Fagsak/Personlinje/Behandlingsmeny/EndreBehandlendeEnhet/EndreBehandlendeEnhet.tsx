@@ -32,7 +32,7 @@ const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListEle
     );
 
     React.useEffect(() => {
-        settBehandendeEnheter(finnMuligeEnheter(ytelse));
+        settBehandendeEnheter(finnMuligeEnheter());
     }, [ytelse]);
 
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
