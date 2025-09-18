@@ -51,10 +51,10 @@ export const formatterDatoOgTidstring = (datoAsString: string): string => {
     })} ${dato.toLocaleTimeString('no-NO', tidformat)}`;
 };
 
-export const hentAlder = (fødselsdato: string): number => {
-    const now = new Date();
-    const dato = parseISO(fødselsdato);
-    return differenceInCalendarYears(now, dato);
+export const hentAlder = (fødselsdato: string, dødsdato: string | undefined): number => {
+    const dødsdatoEllerNå = dødsdato ? parseISO(dødsdato) : new Date();
+    const fødselsdatoDate = parseISO(fødselsdato);
+    return differenceInCalendarYears(dødsdatoEllerNå, fødselsdatoDate);
 };
 
 const finnDateRelativtTilNå = (config: Duration): Date => {
