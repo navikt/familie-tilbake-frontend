@@ -1,48 +1,37 @@
-import type { IBehandling } from '../../../typer/behandling';
+import type { ManuellBrevmottakerResponseDto } from '../../../typer/api';
 import type { IBrevmottaker } from '../../../typer/Brevmottaker';
-import type { IFagsak } from '../../../typer/fagsak';
-import type { Ressurs } from '../../../typer/ressurs';
 
 import React from 'react';
 
 import { BrevmottakerFormModal } from './BrevmottakerFormModal';
 import { mapBrevmottakerToFormData } from './schema/brevmottakerSchema';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useFagsak } from '../../../context/FagsakContext';
-import { RessursStatus } from '../../../typer/ressurs';
 
 const hentEksisterendeBrevmottaker = (
     brevmottakerIdTilEndring: string,
-    behandling: Ressurs<IBehandling> | undefined,
-    fagsak: Ressurs<IFagsak> | undefined
+    brevmottakere: ManuellBrevmottakerResponseDto[]
 ): IBrevmottaker | undefined => {
-    if (behandling?.status !== RessursStatus.Suksess || fagsak?.status !== RessursStatus.Suksess) {
-        return undefined;
-    }
-
-    const manuellMottaker = behandling.data.manuelleBrevmottakere.find(
-        ({ id }) => id === brevmottakerIdTilEndring
-    );
+    const manuellMottaker = brevmottakere.find(({ id }) => id === brevmottakerIdTilEndring);
 
     return manuellMottaker?.brevmottaker;
 };
 
-interface BrevmottakerModalProps {
+type BrevmottakerModalProps = {
     visBrevmottakerModal: boolean;
     brevmottakerIdTilEndring: string | undefined;
+    behandlingId: string;
+    brevmottakere: ManuellBrevmottakerResponseDto[];
     settVisBrevmottakerModal: (vis: boolean) => void;
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
-}
+};
 
 export const BrevmottakerModal: React.FC<BrevmottakerModalProps> = ({
     visBrevmottakerModal,
     brevmottakerIdTilEndring,
+    behandlingId,
+    brevmottakere,
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
 }) => {
-    const { behandling } = useBehandling();
-    const { fagsak } = useFagsak();
-
     if (!visBrevmottakerModal) {
         return null;
     }
@@ -50,8 +39,7 @@ export const BrevmottakerModal: React.FC<BrevmottakerModalProps> = ({
     if (brevmottakerIdTilEndring) {
         const eksisterendeMottaker = hentEksisterendeBrevmottaker(
             brevmottakerIdTilEndring,
-            behandling,
-            fagsak
+            brevmottakere
         );
 
         if (eksisterendeMottaker) {
@@ -61,6 +49,7 @@ export const BrevmottakerModal: React.FC<BrevmottakerModalProps> = ({
                     mode="endre"
                     initialData={formData}
                     mottakerId={brevmottakerIdTilEndring}
+                    behandlingId={behandlingId}
                     visBrevmottakerModal={visBrevmottakerModal}
                     settVisBrevmottakerModal={settVisBrevmottakerModal}
                     settBrevmottakerIdTilEndring={settBrevmottakerIdTilEndring}
@@ -72,6 +61,7 @@ export const BrevmottakerModal: React.FC<BrevmottakerModalProps> = ({
     return (
         <BrevmottakerFormModal
             mode="leggTil"
+            behandlingId={behandlingId}
             visBrevmottakerModal={visBrevmottakerModal}
             settVisBrevmottakerModal={settVisBrevmottakerModal}
             settBrevmottakerIdTilEndring={settBrevmottakerIdTilEndring}

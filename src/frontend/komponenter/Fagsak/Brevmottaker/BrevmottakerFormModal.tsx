@@ -13,15 +13,14 @@ import {
     brevmottakerFormDataSchema,
     type BrevmottakerFormData,
 } from './schema/brevmottakerSchema';
-import { useBehandling } from '../../../context/BehandlingContext';
 import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';
 import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
-import { RessursStatus } from '../../../typer/ressurs';
 
 type BrevmottakerFormModalProps = {
     mode: 'endre' | 'leggTil';
     initialData?: Partial<BrevmottakerFormData>;
     mottakerId?: string;
+    behandlingId: string;
     visBrevmottakerModal: boolean;
     settVisBrevmottakerModal: (vis: boolean) => void;
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
@@ -31,11 +30,11 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     mode,
     initialData,
     mottakerId,
+    behandlingId,
     visBrevmottakerModal,
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
 }) => {
-    const { behandling } = useBehandling();
     const { lagreBrevmottaker } = useBrevmottakerApi();
 
     const lukkModal = (): void => {
@@ -54,18 +53,10 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     const mottakerType = watch('mottakerType');
 
     const handleSubmitForm = async (formData: BrevmottakerFormData): Promise<void> => {
-        if (!behandling || behandling.status !== RessursStatus.Suksess) {
-            return;
-        }
-
         try {
             const brevmottaker = brevmottakerFormDataSchema.parse(formData);
 
-            const response = await lagreBrevmottaker(
-                behandling.data.behandlingId,
-                brevmottaker,
-                mottakerId
-            );
+            const response = await lagreBrevmottaker(behandlingId, brevmottaker, mottakerId);
 
             if (response.success) {
                 lukkModal();
@@ -99,10 +90,6 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
             }
         }
     };
-
-    if (!behandling || behandling.status !== RessursStatus.Suksess) {
-        return null;
-    }
 
     const modalConfig = {
         leggTil: {
