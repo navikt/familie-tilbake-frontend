@@ -7,7 +7,6 @@ import type {
     FaktaResponse,
     VurderingAvBrukersUttalelse,
 } from '../../../typer/tilbakekrevingstyper';
-import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
@@ -100,8 +99,7 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling, fagsak }: IPro
             .then((hentetFakta: Ressurs<FaktaResponse>) => {
                 setFakta(hentetFakta);
             })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .catch((_error: AxiosError) => {
+            .catch(() => {
                 setFakta(
                     byggFeiletRessurs('Ukjent feil ved henting av fakta-perioder for behandling')
                 );

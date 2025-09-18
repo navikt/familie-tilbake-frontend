@@ -1,7 +1,6 @@
 import type { VergeDto, VergeStegPayload } from '../../../typer/api';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
-import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import * as React from 'react';
@@ -207,8 +206,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
                         settVergeRepons(respons);
                     }
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     settSenderInn(false);
                     settVergeRepons(byggFeiletRessurs('Ukjent feil ved sending av verge'));
                 });
