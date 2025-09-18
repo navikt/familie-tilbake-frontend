@@ -51,7 +51,7 @@ const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
             navn={bruker.navn}
             ident={bruker.personIdent}
             kjønn={bruker.kjønn}
-            alder={hentAlder(bruker.fødselsdato)}
+            alder={hentAlder(bruker.fødselsdato, bruker.dødsdato)}
         >
             {bruker.dødsdato && (
                 <DødsfallTag variant="info" size="small">
