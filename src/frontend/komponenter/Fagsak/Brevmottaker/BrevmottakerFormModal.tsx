@@ -22,15 +22,26 @@ type BrevmottakerFormModalProps = {
     mode: 'endre' | 'leggTil';
     initialData?: Partial<BrevmottakerFormData>;
     mottakerId?: string;
+    visBrevmottakerModal: boolean;
+    settVisBrevmottakerModal: (vis: boolean) => void;
+    settBrevmottakerIdTilEndring: (id: string | undefined) => void;
 };
 
 export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     mode,
     initialData,
     mottakerId,
+    visBrevmottakerModal,
+    settVisBrevmottakerModal,
+    settBrevmottakerIdTilEndring,
 }) => {
-    const { lukkBrevmottakerModal, visBrevmottakerModal, behandling } = useBehandling();
+    const { behandling } = useBehandling();
     const { lagreBrevmottaker } = useBrevmottakerApi();
+
+    const lukkModal = (): void => {
+        settVisBrevmottakerModal(false);
+        settBrevmottakerIdTilEndring(undefined);
+    };
 
     const methods = useForm<BrevmottakerFormData>({
         reValidateMode: 'onBlur',
@@ -57,7 +68,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
             );
 
             if (response.success) {
-                lukkBrevmottakerModal();
+                lukkModal();
                 return;
             }
 
@@ -112,7 +123,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
         <FormProvider {...methods}>
             <Modal
                 open={visBrevmottakerModal}
-                onClose={lukkBrevmottakerModal}
+                onClose={lukkModal}
                 header={{ heading: config.heading }}
                 width="medium"
             >
@@ -159,7 +170,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="submit">{config.submitText}</Button>
-                        <Button variant="secondary" type="button" onClick={lukkBrevmottakerModal}>
+                        <Button variant="secondary" type="button" onClick={lukkModal}>
                             Avbryt
                         </Button>
                     </Modal.Footer>

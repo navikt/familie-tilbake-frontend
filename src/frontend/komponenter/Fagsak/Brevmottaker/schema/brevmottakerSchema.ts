@@ -46,7 +46,7 @@ const manuellAdresseSchema = adresseFelterSchema
     })
     .refine(
         data => {
-            if (data.land === 'NO' || data.land === 'Norge') {
+            if (data.land === 'NO') {
                 return data.postnummer && z.string().length(4).safeParse(data.postnummer).success;
             }
             return true;
@@ -58,7 +58,7 @@ const manuellAdresseSchema = adresseFelterSchema
     )
     .refine(
         data => {
-            if (data.land === 'NO' || data.land === 'Norge') {
+            if (data.land === 'NO') {
                 return data.poststed && z.string().min(1).safeParse(data.poststed.trim()).success;
             }
             return true;

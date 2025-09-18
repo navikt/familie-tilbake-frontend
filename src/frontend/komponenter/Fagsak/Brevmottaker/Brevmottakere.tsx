@@ -1,6 +1,7 @@
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { BrevmottakerModal } from './BrevmottakerModal';
@@ -24,18 +25,21 @@ type BrevmottakerProps = {
     antallBrevmottakere: number;
 };
 
-const Brevmottaker: React.FC<BrevmottakerProps> = ({
+const Brevmottaker: React.FC<
+    BrevmottakerProps & {
+        settVisBrevmottakerModal: (vis: boolean) => void;
+        settBrevmottakerIdTilEndring: (id: string | undefined) => void;
+    }
+> = ({
     brevmottaker,
     brevmottakerId,
     behandlingId,
     erLesevisning,
     antallBrevmottakere,
+    settVisBrevmottakerModal,
+    settBrevmottakerIdTilEndring,
 }) => {
-    const {
-        hentBehandlingMedBehandlingId,
-        settVisBrevmottakerModal,
-        settBrevmottakerIdTilEndring,
-    } = useBehandling();
+    const { hentBehandlingMedBehandlingId } = useBehandling();
     const { fjernManuellBrevmottaker } = useBehandlingApi();
 
     const landnavn = brevmottaker.manuellAdresseInfo
@@ -216,15 +220,14 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
 };
 
 const Brevmottakere: React.FC = () => {
-    const {
-        behandling,
-        behandlingILesemodus,
-        visBrevmottakerModal,
-        settVisBrevmottakerModal,
-        settBrevmottakerIdTilEndring,
-    } = useBehandling();
+    const { behandling, behandlingILesemodus } = useBehandling();
     const { fagsak } = useFagsak();
     const navigate = useNavigate();
+
+    const [visBrevmottakerModal, setVisBrevmottakerModal] = useState<boolean>(false);
+    const [brevmottakerIdTilEndring, setBrevmottakerIdTilEndring] = useState<string | undefined>(
+        undefined
+    );
 
     const erLesevisning = !!behandlingILesemodus;
 
@@ -253,7 +256,14 @@ const Brevmottakere: React.FC = () => {
 
     return (
         <>
-            {visBrevmottakerModal && <BrevmottakerModal />}
+            {visBrevmottakerModal && (
+                <BrevmottakerModal
+                    visBrevmottakerModal={visBrevmottakerModal}
+                    brevmottakerIdTilEndring={brevmottakerIdTilEndring}
+                    settVisBrevmottakerModal={setVisBrevmottakerModal}
+                    settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}
+                />
+            )}
             <VStack padding="space-24" gap="4" align="start">
                 <Heading size="small" level="1">
                     Brevmottaker(e)
@@ -277,6 +287,8 @@ const Brevmottakere: React.FC = () => {
                             behandlingId={behandling.data.behandlingId}
                             erLesevisning={erLesevisning}
                             antallBrevmottakere={antallBrevmottakere}
+                            settVisBrevmottakerModal={setVisBrevmottakerModal}
+                            settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}
                         />
                     </Box>
 
@@ -295,6 +307,8 @@ const Brevmottakere: React.FC = () => {
                                     behandlingId={behandling.data.behandlingId}
                                     erLesevisning={erLesevisning}
                                     antallBrevmottakere={antallBrevmottakere}
+                                    settVisBrevmottakerModal={setVisBrevmottakerModal}
+                                    settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}
                                 />
                             </Box>
                         ))}
@@ -305,8 +319,8 @@ const Brevmottakere: React.FC = () => {
                         size="small"
                         icon={<PlusCircleIcon />}
                         onClick={() => {
-                            settBrevmottakerIdTilEndring(undefined);
-                            settVisBrevmottakerModal(true);
+                            setBrevmottakerIdTilEndring(undefined);
+                            setVisBrevmottakerModal(true);
                         }}
                     >
                         Legg til ny mottaker
