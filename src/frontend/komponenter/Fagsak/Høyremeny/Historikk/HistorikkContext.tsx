@@ -2,7 +2,6 @@ import type { IBehandling } from '../../../../typer/behandling';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { IHistorikkInnslag } from '../../../../typer/historikk';
 import type { SynligSteg } from '../../../../utils/sider';
-import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
@@ -40,8 +39,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
                 .then((hentetHistorikk: Ressurs<IHistorikkInnslag[]>) => {
                     settHistorikkInnslag(hentetHistorikk);
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     settHistorikkInnslag(
                         byggFeiletRessurs('Ukjent feil ved henting av logg for behandling')
                     );
