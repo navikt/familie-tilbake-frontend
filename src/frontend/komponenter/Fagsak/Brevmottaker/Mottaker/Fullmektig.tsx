@@ -61,7 +61,7 @@ export const Fullmektig: React.FC = () => {
             )}
 
             {adresseKilde === AdresseKilde.OppslagOrganisasjonsregister && (
-                <VStack>
+                <VStack gap="4">
                     <TextField
                         label="Organisasjonsnummer"
                         {...register('fullmektig.organisasjonsnummer')}

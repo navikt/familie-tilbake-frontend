@@ -1,6 +1,6 @@
 import type { Land } from '../../../Felleskomponenter/Landvelger/Landvelger';
 
-import { Alert, Fieldset, TextField, VStack } from '@navikt/ds-react';
+import { Alert, Fieldset, HStack, TextField, VStack } from '@navikt/ds-react';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext, get } from 'react-hook-form';
 
@@ -92,18 +92,20 @@ export const ManuellRegistrering: React.FC<Props> = ({
                             </Alert>
                         )}
                         {landValue === 'NO' && (
-                            <div>
+                            <HStack gap="4" wrap>
                                 <TextField
                                     {...register(fieldPath('postnummer'))}
                                     label="Postnummer"
                                     error={getFieldError('postnummer')}
+                                    className="flex-1"
                                 />
                                 <TextField
                                     {...register(fieldPath('poststed'))}
                                     label="Poststed"
                                     error={getFieldError('poststed')}
+                                    className="flex-2"
                                 />
-                            </div>
+                            </HStack>
                         )}
                     </>
                 )}
