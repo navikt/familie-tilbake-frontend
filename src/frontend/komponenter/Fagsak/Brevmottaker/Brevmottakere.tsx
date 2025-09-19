@@ -238,11 +238,9 @@ const Brevmottakere: React.FC = () => {
     const antallBrevmottakere = Object.keys(manuelleBrevmottakerRespons).length;
 
     const gåTilNeste = (): void => {
-        if (behandling?.status === 'SUKSESS' && fagsak?.status === 'SUKSESS') {
-            navigate(
-                `/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/behandling/${behandling.data.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
-            );
-        }
+        navigate(
+            `/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/behandling/${behandling.data.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
+        );
     };
 
     const kanLeggeTilMottaker =
