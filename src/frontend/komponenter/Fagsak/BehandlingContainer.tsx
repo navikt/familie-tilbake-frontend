@@ -172,7 +172,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                 aria-label="Behandling innhold"
             >
                 <Stegflyt />
-                <section className="mx-6">
+                <section className="m-4">
                     <Routes>
                         <Route
                             path={BEHANDLING_KONTEKST_PATH + '/fakta'}
