@@ -235,14 +235,7 @@ export const mapBrevmottakerToFormData = (
 
     const mapAdresse = (
         brevmottaker: IBrevmottaker
-    ): {
-        navn: string;
-        land: string;
-        adresselinje1: string;
-        adresselinje2: string;
-        postnummer: string;
-        poststed: string;
-    } => ({
+    ): AdresseFelter & { postnummer: string; poststed: string } => ({
         navn: brevmottaker.navn || '',
         land: brevmottaker.manuellAdresseInfo?.landkode || '',
         adresselinje1: brevmottaker.manuellAdresseInfo?.adresselinje1 || '',
