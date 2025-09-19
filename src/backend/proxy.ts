@@ -1,6 +1,6 @@
 import type { TexasClient } from './backend/auth/texas';
 import type { NextFunction, Request, Response } from 'express';
-import type { ClientRequest, IncomingMessage, OutgoingMessage } from 'http';
+import type { ClientRequest, IncomingMessage } from 'http';
 
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
@@ -8,8 +8,7 @@ import { utledAccessToken } from './backend';
 import { proxyUrl, redirectRecords } from './config';
 import { stdoutLogger } from './logging/logging';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const restream = (proxyReq: ClientRequest, req: IncomingMessage, _res: OutgoingMessage): void => {
+const restream = (proxyReq: ClientRequest, req: IncomingMessage): void => {
     const requestBody = (req as Request).body;
     if (requestBody) {
         const bodyData = JSON.stringify(requestBody);

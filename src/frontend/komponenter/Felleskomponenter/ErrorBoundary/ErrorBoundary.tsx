@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
 import type { ISaksbehandler } from '../../../typer/saksbehandler';
 
 import { Label } from '@navikt/ds-react';
@@ -23,10 +22,11 @@ class ErrorBoundary extends React.Component<IProps, IState> {
         this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(_error: any): IState {
+    static getDerivedStateFromError(): IState {
         return { hasError: true };
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     componentDidCatch(error: any, info: any): void {
         console.log(error, info);
 

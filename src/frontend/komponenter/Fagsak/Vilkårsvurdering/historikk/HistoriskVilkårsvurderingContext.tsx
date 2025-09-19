@@ -1,7 +1,6 @@
 import type { IBehandling } from '../../../../typer/behandling';
 import type { VilkårsvurderingResponse } from '../../../../typer/tilbakekrevingstyper';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
-import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
@@ -57,8 +56,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
                 .then((respons: Ressurs<VilkårsvurderingResponse[]>) => {
                     setInaktiveVilkårsvurderinger(respons);
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     setInaktiveVilkårsvurderinger(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av vilkårsvurdering-perioder for behandling'

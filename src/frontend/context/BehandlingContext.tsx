@@ -1,6 +1,5 @@
 import type { IBehandling, IBehandlingsstegstilstand } from '../typer/behandling';
 import type { IFagsak } from '../typer/fagsak';
-import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
@@ -99,62 +98,57 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         settBehandlingILesemodus(undefined);
         settVentegrunn(undefined);
         settVisVenteModal(false);
-        return (
-            request<void, IBehandling>({
-                method: 'GET',
-                url: `/familie-tilbake/api/behandling/v1/${behandlingId}`,
-            })
-                .then((hentetBehandling: Ressurs<IBehandling>) => {
-                    if (hentetBehandling.status === RessursStatus.Suksess) {
-                        const erILeseModus =
-                            hentetBehandling.data.status === Behandlingstatus.Avsluttet ||
-                            hentetBehandling.data.erBehandlingPåVent ||
-                            hentetBehandling.data.kanEndres === false ||
-                            hentetBehandling.data.behandlingsstegsinfo.some(
-                                stegInfo =>
-                                    stegInfo.behandlingssteg === Behandlingssteg.Avsluttet ||
-                                    (stegInfo.behandlingssteg === Behandlingssteg.IverksettVedtak &&
-                                        stegInfo.behandlingsstegstatus !==
-                                            Behandlingsstegstatus.Tilbakeført) ||
-                                    (stegInfo.behandlingssteg === Behandlingssteg.FatteVedtak &&
-                                        stegInfo.behandlingsstegstatus ===
-                                            Behandlingsstegstatus.Klar)
-                            );
-                        settBehandlingILesemodus(erILeseModus);
-
-                        const harFåttKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo.some(
-                            stegInfo => stegInfo.behandlingssteg === Behandlingssteg.Fakta
+        return request<void, IBehandling>({
+            method: 'GET',
+            url: `/familie-tilbake/api/behandling/v1/${behandlingId}`,
+        })
+            .then((hentetBehandling: Ressurs<IBehandling>) => {
+                if (hentetBehandling.status === RessursStatus.Suksess) {
+                    const erILeseModus =
+                        hentetBehandling.data.status === Behandlingstatus.Avsluttet ||
+                        hentetBehandling.data.erBehandlingPåVent ||
+                        hentetBehandling.data.kanEndres === false ||
+                        hentetBehandling.data.behandlingsstegsinfo.some(
+                            stegInfo =>
+                                stegInfo.behandlingssteg === Behandlingssteg.Avsluttet ||
+                                (stegInfo.behandlingssteg === Behandlingssteg.IverksettVedtak &&
+                                    stegInfo.behandlingsstegstatus !==
+                                        Behandlingsstegstatus.Tilbakeført) ||
+                                (stegInfo.behandlingssteg === Behandlingssteg.FatteVedtak &&
+                                    stegInfo.behandlingsstegstatus === Behandlingsstegstatus.Klar)
                         );
-                        settHarKravgrunnlag(harFåttKravgrunnlag);
+                    settBehandlingILesemodus(erILeseModus);
 
-                        const funnetAktivtsteg =
-                            hentetBehandling.data.status === Behandlingstatus.Avsluttet
-                                ? null
-                                : hentetBehandling.data.behandlingsstegsinfo.find(
-                                      stegInfo =>
-                                          stegInfo.behandlingsstegstatus ===
-                                              Behandlingsstegstatus.Klar ||
-                                          stegInfo.behandlingsstegstatus ===
-                                              Behandlingsstegstatus.Venter
-                                  );
-                        if (funnetAktivtsteg) {
-                            settAktivtSteg(funnetAktivtsteg);
-                            if (
-                                funnetAktivtsteg.behandlingsstegstatus ===
-                                Behandlingsstegstatus.Venter
-                            ) {
-                                settVentegrunn(funnetAktivtsteg);
-                                settVisVenteModal(true);
-                            }
+                    const harFåttKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo.some(
+                        stegInfo => stegInfo.behandlingssteg === Behandlingssteg.Fakta
+                    );
+                    settHarKravgrunnlag(harFåttKravgrunnlag);
+
+                    const funnetAktivtsteg =
+                        hentetBehandling.data.status === Behandlingstatus.Avsluttet
+                            ? null
+                            : hentetBehandling.data.behandlingsstegsinfo.find(
+                                  stegInfo =>
+                                      stegInfo.behandlingsstegstatus ===
+                                          Behandlingsstegstatus.Klar ||
+                                      stegInfo.behandlingsstegstatus ===
+                                          Behandlingsstegstatus.Venter
+                              );
+                    if (funnetAktivtsteg) {
+                        settAktivtSteg(funnetAktivtsteg);
+                        if (
+                            funnetAktivtsteg.behandlingsstegstatus === Behandlingsstegstatus.Venter
+                        ) {
+                            settVentegrunn(funnetAktivtsteg);
+                            settVisVenteModal(true);
                         }
                     }
-                    settBehandling(hentetBehandling);
-                })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
-                    settBehandling(byggFeiletRessurs('Ukjent feil ved henting av behandling'));
-                })
-        );
+                }
+                settBehandling(hentetBehandling);
+            })
+            .catch(() => {
+                settBehandling(byggFeiletRessurs('Ukjent feil ved henting av behandling'));
+            });
     };
 
     const erStegBehandlet = (steg: Behandlingssteg): boolean => {

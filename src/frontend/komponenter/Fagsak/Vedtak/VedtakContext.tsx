@@ -8,7 +8,6 @@ import type {
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 import type { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
-import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import * as React from 'react';
@@ -150,8 +149,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: IP
             .then((hentetVedtaksbrevavsnitt: Ressurs<VedtaksbrevAvsnitt[]>) => {
                 setVedtaksbrevavsnitt(hentetVedtaksbrevavsnitt);
             })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .catch((_error: AxiosError) => {
+            .catch(() => {
                 setVedtaksbrevavsnitt(
                     byggFeiletRessurs(
                         'Ukjent feil ved henting av vilkårsvurdering-perioder for behandling'
@@ -166,8 +164,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: IP
             .then((hentetBeregningsresultat: Ressurs<IBeregningsresultat>) => {
                 settBeregningsresultat(hentetBeregningsresultat);
             })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .catch((_error: AxiosError) => {
+            .catch(() => {
                 settBeregningsresultat(
                     byggFeiletRessurs(
                         'Ukjent feil ved henting av beregningsresultat for behandling'
@@ -277,8 +274,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: IP
                         settForeslåVedtakRespons(respons);
                     }
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     settSenderInn(false);
                     settForeslåVedtakRespons(
                         byggFeiletRessurs('Ukjent feil ved sending av vedtak')
@@ -308,8 +304,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: IP
                         settForeslåVedtakRespons(respons);
                     }
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     settSenderInn(false);
                     settForeslåVedtakRespons(
                         byggFeiletRessurs('Ukjent feil ved mellomlagring av vedtak')

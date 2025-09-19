@@ -1,6 +1,5 @@
 import type { IBehandling } from '../../../../../../typer/behandling';
 import type { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
-import type { AxiosError } from 'axios';
 
 import * as React from 'react';
 
@@ -66,8 +65,7 @@ export const useForhåndsvisHenleggelsesbrev = ({
                     );
                 }
             })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .catch((_error: AxiosError) => {
+            .catch(() => {
                 settHentetForhåndsvisning(
                     byggFeiletRessurs('Ukjent feil, kunne ikke generere forhåndsvisning.')
                 );

@@ -1,6 +1,5 @@
 import type { IBehandling } from '../../../../typer/behandling';
 import type { IJournalpost } from '../../../../typer/journalføring';
-import type { AxiosError } from 'axios';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
@@ -35,8 +34,7 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
                 .then((hentetDokumenter: Ressurs<IJournalpost[]>) => {
                     settJournalposter(hentetDokumenter);
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     settJournalposter(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av dokumentlisting for behandling'
