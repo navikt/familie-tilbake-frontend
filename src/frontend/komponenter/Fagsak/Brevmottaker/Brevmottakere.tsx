@@ -15,22 +15,21 @@ import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
 import { SYNLIGE_STEG } from '../../../utils/sider';
 
-type BrevmottakerProps = {
-    brevmottaker: IBrevmottaker & { isDefault?: boolean };
+export type BrevmottakerProps = {
+    brevmottaker: IBrevmottaker;
+    erStandardMottaker?: boolean;
     brevmottakerId: string;
     behandlingId: string;
     erLesevisning: boolean;
     antallBrevmottakere: number;
+    settVisBrevmottakerModal: (vis: boolean) => void;
+    settBrevmottakerIdTilEndring: (id: string | undefined) => void;
 };
 
-const Brevmottaker: React.FC<
-    BrevmottakerProps & {
-        settVisBrevmottakerModal: (vis: boolean) => void;
-        settBrevmottakerIdTilEndring: (id: string | undefined) => void;
-    }
-> = ({
+const Brevmottaker: React.FC<BrevmottakerProps> = ({
     brevmottaker,
     brevmottakerId,
+    erStandardMottaker,
     behandlingId,
     erLesevisning,
     antallBrevmottakere,
@@ -65,7 +64,7 @@ const Brevmottaker: React.FC<
                     {mottakerTypeVisningsnavn[brevmottaker.type]}
                 </BodyShort>
                 <div className="flex gap-1">
-                    {!erLesevisning && !brevmottaker.isDefault && (
+                    {!erLesevisning && !erStandardMottaker && (
                         <>
                             <Button
                                 variant="tertiary"
@@ -85,7 +84,7 @@ const Brevmottaker: React.FC<
                             </Button>
                         </>
                     )}
-                    {!erLesevisning && brevmottaker.isDefault && antallBrevmottakere > 1 && (
+                    {!erLesevisning && erStandardMottaker && antallBrevmottakere > 1 && (
                         <Button
                             variant="tertiary"
                             size="small"
@@ -280,8 +279,8 @@ const Brevmottakere: React.FC = () => {
                                 type: MottakerType.Bruker,
                                 navn: fagsak.data.bruker.navn,
                                 personIdent: fagsak.data.bruker.personIdent,
-                                isDefault: true,
                             }}
+                            erStandardMottaker={true}
                             brevmottakerId={fagsak.data.bruker.personIdent}
                             behandlingId={behandling.data.behandlingId}
                             erLesevisning={erLesevisning}

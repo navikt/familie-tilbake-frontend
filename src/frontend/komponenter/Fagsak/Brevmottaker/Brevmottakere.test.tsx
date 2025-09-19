@@ -149,8 +149,7 @@ describe('Brevmottakere', () => {
                     personIdent: '10987654321',
                     manuellAdresseInfo: undefined,
                     organisasjonsnummer: undefined,
-                    isDefault: false,
-                } as IBrevmottaker & { isDefault?: boolean },
+                } as IBrevmottaker,
             };
 
             setupMock([manuellBrevmottaker], true, false);
