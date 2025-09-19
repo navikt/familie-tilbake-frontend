@@ -8,6 +8,11 @@ import * as React from 'react';
 import { useHttp } from '../api/http/HttpProvider';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../typer/ressurs';
 
+export type FagsakHook = {
+    fagsak: Ressurs<IFagsak> | undefined;
+    hentFagsak: (fagsystem: Fagsystem, eksternFagsakId: string) => void;
+};
+
 const [FagsakProvider, useFagsak] = createUseContext(() => {
     const [fagsak, settFagsak] = React.useState<Ressurs<IFagsak>>();
     const { request } = useHttp();
