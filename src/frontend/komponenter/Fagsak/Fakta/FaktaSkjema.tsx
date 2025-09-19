@@ -25,6 +25,7 @@ import { HendelseType } from '../../../kodeverk';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
+import { ActionBar } from '../ActionBar/ActionBar';
 
 interface IProps {
     ytelse: Ytelsetype;
@@ -48,7 +49,7 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
         senderInn,
         gåTilForrige,
     } = useFakta();
-    const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
+    const { settIkkePersistertKomponent, harUlagredeData, åpenHøyremeny } = useBehandling();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
 
@@ -215,8 +216,8 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
                     )}
                 </Navigering>
             </VStack>
-
             <FaktaRevurdering fakta={fakta} />
+            <ActionBar åpenHøyremeny={åpenHøyremeny} />
         </HGrid>
     );
 };

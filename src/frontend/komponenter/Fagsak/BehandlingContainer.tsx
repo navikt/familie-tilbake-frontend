@@ -8,7 +8,6 @@ import { Suspense } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
-import { ActionBar } from './ActionBar/ActionBar';
 import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
 import { FaktaProvider } from './Fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
@@ -172,9 +171,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                 className="flex-1 overflow-auto pt-4 [scrollbar-gutter:stable]"
                 aria-label="Behandling innhold"
             >
-                <nav aria-label="Behandlingssteg">
-                    <Stegflyt />
-                </nav>
+                <Stegflyt />
                 <section className="mx-6">
                     <Routes>
                         <Route
@@ -242,10 +239,6 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         />
                     </Routes>
                 </section>
-                {/* For at innholdet over ikke skal synes i det 8px gapet mellom <ActionBar /> og bunnen av skjermen */}
-                <div className="sticky bottom-0 bg-white h-6" />
-
-                <ActionBar behandling={behandling} />
             </main>
             <StyledHøyremenyContainer aria-label="Høyremeny med informasjon og handlinger for behandlingen">
                 <Suspense fallback="Høyremeny kravgrunnlag laster...">
