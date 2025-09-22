@@ -334,8 +334,6 @@ export const mapBrevmottakerToFormData = (
 
 export type BrevmottakerFormData = z.input<typeof brevmottakerFormDataSchema>;
 
-export type BrevmottakerApiData = z.output<typeof brevmottakerFormDataSchema>;
-
 export type AdresseRegistreringsData = z.infer<typeof adresseKildeSchema>;
 
 export type ManuellAdresse = z.infer<typeof manuellAdresseSchema>;
