@@ -34,7 +34,7 @@ export const Verge: React.FC = () => {
             )}
 
             {adresseKilde === AdresseKilde.OppslagRegister && (
-                <TextField label="Fødselsnummer" {...register('personnummer')} />
+                <TextField label="Fødselsnummer" {...register('fødselsnummer')} />
             )}
         </VStack>
     );

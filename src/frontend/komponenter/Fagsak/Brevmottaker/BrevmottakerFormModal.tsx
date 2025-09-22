@@ -122,7 +122,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
                                 <VStack gap="8">
                                     <Select
                                         label="Mottaker"
-                                        defaultValue={mottakerType}
+                                        defaultValue={mottakerType || ''}
                                         onChange={(
                                             event: React.ChangeEvent<HTMLSelectElement>
                                         ): void => {
