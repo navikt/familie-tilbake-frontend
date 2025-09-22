@@ -43,13 +43,13 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     };
 
     const methods = useForm<BrevmottakerFormData>({
-        reValidateMode: 'onBlur',
+        reValidateMode: 'onChange',
         shouldFocusError: false,
         defaultValues: initialData,
         resolver: zodResolver(brevmottakerFormDataInputSchema),
     });
 
-    const { handleSubmit, setValue, watch, setError } = methods;
+    const { handleSubmit, watch, setError, register, formState } = methods;
     const mottakerType = watch('mottakerType');
 
     const handleSubmitForm = async (formData: BrevmottakerFormData): Promise<void> => {
@@ -83,9 +83,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
                 setError('fullmektig.fødselsnummer', { message: errorMessage });
             }
         } else if (data.mottakerType === MottakerType.Verge) {
-            if (data.verge?.adresseKilde === AdresseKilde.OppslagOrganisasjonsregister) {
-                setError('verge.organisasjonsnummer', { message: errorMessage });
-            } else if (data.verge?.adresseKilde === AdresseKilde.OppslagRegister) {
+            if (data.verge?.adresseKilde === AdresseKilde.OppslagRegister) {
                 setError('verge.fødselsnummer', { message: errorMessage });
             }
         }
@@ -121,16 +119,10 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
                             <Fieldset legend={tekster.beskrivelse} hideLegend>
                                 <VStack gap="8">
                                     <Select
+                                        {...register('mottakerType')}
                                         label="Mottaker"
-                                        defaultValue={mottakerType || ''}
-                                        onChange={(
-                                            event: React.ChangeEvent<HTMLSelectElement>
-                                        ): void => {
-                                            setValue(
-                                                'mottakerType',
-                                                event.target.value as MottakerType
-                                            );
-                                        }}
+                                        defaultValue=""
+                                        error={formState.errors.mottakerType?.message}
                                     >
                                         <option value="" disabled>
                                             Velg

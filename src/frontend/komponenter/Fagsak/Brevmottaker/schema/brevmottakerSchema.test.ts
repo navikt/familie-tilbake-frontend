@@ -79,7 +79,7 @@ describe('brevmottakerSchema', () => {
                 ...validPersonData,
                 [mottakerKey]: {
                     ...mottakerData,
-                    personnummer: '123456789',
+                    fødselsnummer: '123456789',
                 },
             };
             const result = brevmottakerFormDataInputSchema.safeParse(invalidData);
@@ -92,7 +92,7 @@ describe('brevmottakerSchema', () => {
                 ...validPersonData,
                 [mottakerKey]: {
                     ...mottakerData,
-                    personnummer: '1234567890a',
+                    fødselsnummer: '1234567890a',
                 },
             };
             const result = brevmottakerFormDataInputSchema.safeParse(invalidData);
@@ -140,7 +140,7 @@ describe('brevmottakerSchema', () => {
             };
 
             const result = brevmottakerFormDataInputSchema.safeParse(invalidData);
-            expectValidationError(result, 'Påkrevde data mangler');
+            expectValidationError(result, 'Mangler data for valgt mottakertype');
         });
 
         test('adresselinje 1 påkrevd', () => {
@@ -199,7 +199,7 @@ describe('brevmottakerSchema', () => {
                 mottakerType: MottakerType.Fullmektig,
                 fullmektig: {
                     adresseKilde: AdresseKilde.OppslagRegister,
-                    personnummer: '12345678901',
+                    fødselsnummer: '12345678901',
                 },
             };
 
@@ -293,7 +293,7 @@ describe('brevmottakerSchema', () => {
                 mottakerType: MottakerType.Verge,
                 verge: {
                     adresseKilde: AdresseKilde.OppslagRegister,
-                    personnummer: '12345678901',
+                    fødselsnummer: '12345678901',
                 },
             };
 

@@ -264,7 +264,7 @@ describe('BrevmottakerFormModal', () => {
 
     const expectVergeRadiogruppe = async (): Promise<void> => {
         await waitFor(() => {
-            expect(screen.getByRole('group', { name: /verge/i })).toBeInTheDocument();
+            expect(screen.getByRole('group', { name: /adresse/i })).toBeInTheDocument();
             expect(screen.getByText('Manuell registrering')).toBeInTheDocument();
             expect(screen.getByText('Oppslag i personregister')).toBeInTheDocument();
             expect(screen.queryByText('Oppslag i organisasjonsregister')).not.toBeInTheDocument();
