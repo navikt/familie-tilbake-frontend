@@ -1,3 +1,5 @@
+import type { AdresseRegistreringsData } from '../schema/brevmottakerSchema';
+
 import { Radio, RadioGroup, TextField, VStack } from '@navikt/ds-react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -6,27 +8,14 @@ import { AdresseKilde, adresseKilder, MottakerType } from '../../../../typer/Bre
 import { ManuellRegistrering } from '../Adressekilde/ManuellRegistrering';
 
 export const Fullmektig: React.FC = () => {
-    const {
-        register,
-        watch,
-        setValue,
-        formState: { errors },
-    } = useFormContext();
+    const { register, watch, setValue } = useFormContext<AdresseRegistreringsData>();
 
-    const adresseKilde = watch('fullmektig.adresseKilde');
+    const adresseKilde = watch('adresseKilde');
 
-    const handleAdresseKildeChange = (val: AdresseKilde): void => {
-        setValue('fullmektig.adresseKilde', val);
-    };
-
-    const getErrorMessage = (path: string): string | undefined => {
-        const errorObj = errors as Record<string, Record<string, { message?: string }>>;
-        const pathParts = path.split('.');
-        let current: Record<string, unknown> = errorObj;
-        for (const part of pathParts) {
-            current = current?.[part] as Record<string, unknown>;
-        }
-        return (current as { message?: string })?.message;
+    const handleAdresseKildeChange = (
+        nyAdresseKilde: Exclude<AdresseKilde, AdresseKilde.Udefinert>
+    ): void => {
+        setValue('adresseKilde', nyAdresseKilde);
     };
 
     return (
@@ -35,7 +24,6 @@ export const Fullmektig: React.FC = () => {
                 legend="Adresse"
                 value={adresseKilde || ''}
                 onChange={handleAdresseKildeChange}
-                error={getErrorMessage('fullmektig.adresseKilde')}
             >
                 <Radio value={AdresseKilde.ManuellRegistrering}>
                     {adresseKilder[AdresseKilde.ManuellRegistrering]}
@@ -53,25 +41,16 @@ export const Fullmektig: React.FC = () => {
             )}
 
             {adresseKilde === AdresseKilde.OppslagRegister && (
-                <TextField
-                    label="Fødselsnummer"
-                    {...register('fullmektig.personnummer')}
-                    error={getErrorMessage('fullmektig.personnummer')}
-                />
+                <TextField label="Fødselsnummer" {...register('personnummer')} />
             )}
 
             {adresseKilde === AdresseKilde.OppslagOrganisasjonsregister && (
                 <VStack gap="4">
-                    <TextField
-                        label="Organisasjonsnummer"
-                        {...register('fullmektig.organisasjonsnummer')}
-                        error={getErrorMessage('fullmektig.organisasjonsnummer')}
-                    />
+                    <TextField label="Organisasjonsnummer" {...register('organisasjonsnummer')} />
                     <TextField
                         label="Kontaktperson i organisasjonen"
                         description='Navnet vises etter organisasjonsnavnet slik "Organisasjon AS v/ Navn Navnesen"'
-                        {...register('fullmektig.navn')}
-                        error={getErrorMessage('fullmektig.navn')}
+                        {...register('navn')}
                     />
                 </VStack>
             )}

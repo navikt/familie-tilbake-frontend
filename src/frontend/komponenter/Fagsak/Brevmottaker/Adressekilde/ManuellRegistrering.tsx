@@ -9,15 +9,11 @@ import Landvelger from '../../../Felleskomponenter/Landvelger/Landvelger';
 
 type Props = {
     preutfyltNavn?: string;
-    mottakerType?: MottakerType;
-    prefix?: string;
+    mottakerType: MottakerType;
+    prefix: string;
 };
 
-export const ManuellRegistrering: React.FC<Props> = ({
-    preutfyltNavn,
-    mottakerType,
-    prefix = '',
-}) => {
+export const ManuellRegistrering: React.FC<Props> = ({ preutfyltNavn, mottakerType, prefix }) => {
     const {
         register,
         watch,
@@ -25,10 +21,7 @@ export const ManuellRegistrering: React.FC<Props> = ({
         formState: { errors },
     } = useFormContext();
 
-    const fieldPath = useCallback(
-        (field: string): string => (prefix ? `${prefix}.${field}` : field),
-        [prefix]
-    );
+    const fieldPath = useCallback((field: string): string => `${prefix}.${field}`, [prefix]);
 
     const landValue = watch(fieldPath('land'));
 
@@ -67,7 +60,7 @@ export const ManuellRegistrering: React.FC<Props> = ({
                     error={getFieldError('navn')}
                 />
                 <Landvelger
-                    id={`landvelger-${prefix || 'brevmottaker'}`}
+                    id={`landvelger-${prefix}`}
                     eksluderLandkoder={eksluderLandKoder}
                     valgtLandkode={landValue}
                     håndterLandValgt={håndterLandValgt}
