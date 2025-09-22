@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
-import React from 'react';
+import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -34,7 +34,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     visBrevmottakerModal,
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
-}) => {
+}: BrevmottakerFormModalProps) => {
     const { lagreBrevmottaker } = useBrevmottakerApi();
 
     const lukkModal = (): void => {
@@ -80,54 +80,52 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
             if (data.fullmektig?.adresseKilde === AdresseKilde.OppslagOrganisasjonsregister) {
                 setError('fullmektig.organisasjonsnummer', { message: errorMessage });
             } else if (data.fullmektig?.adresseKilde === AdresseKilde.OppslagRegister) {
-                setError('fullmektig.personnummer', { message: errorMessage });
+                setError('fullmektig.fødselsnummer', { message: errorMessage });
             }
         } else if (data.mottakerType === MottakerType.Verge) {
             if (data.verge?.adresseKilde === AdresseKilde.OppslagOrganisasjonsregister) {
                 setError('verge.organisasjonsnummer', { message: errorMessage });
             } else if (data.verge?.adresseKilde === AdresseKilde.OppslagRegister) {
-                setError('verge.personnummer', { message: errorMessage });
+                setError('verge.fødselsnummer', { message: errorMessage });
             }
         }
     };
 
-    const modalConfig = {
+    const modalTekster = {
         leggTil: {
-            heading: 'Legg til brevmottaker',
-            submitText: 'Legg til',
-            legend: 'Skjema for å legge til brevmottaker',
+            tittel: 'Legg til brevmottaker',
+            sendInnTekst: 'Legg til',
+            beskrivelse: 'Skjema for å legge til brevmottaker',
         },
         endre: {
-            heading: 'Endre brevmottaker',
-            submitText: 'Lagre endringer',
-            legend: 'Skjema for å endre brevmottaker',
+            tittel: 'Endre brevmottaker',
+            sendInnTekst: 'Lagre endringer',
+            beskrivelse: 'Skjema for å endre brevmottaker',
         },
-    };
+    } as const;
 
-    const config = modalConfig[mode];
+    const tekster = modalTekster[mode];
 
     return (
         <FormProvider {...methods}>
             <Modal
                 open={visBrevmottakerModal}
                 onClose={lukkModal}
-                header={{ heading: config.heading }}
+                header={{ heading: tekster.tittel }}
                 width="medium"
             >
-                <form
-                    onSubmit={e => {
-                        handleSubmit(handleSubmitForm)(e);
-                    }}
-                >
+                <form onSubmit={handleSubmit(handleSubmitForm)}>
                     {/* Må ha en min høyde for at select dropdown ikke skal overlappe */}
                     <Modal.Body style={{ minHeight: '700px' }}>
                         <VStack gap="4">
-                            <Fieldset legend={config.legend} hideLegend>
+                            <Fieldset legend={tekster.beskrivelse} hideLegend>
                                 <VStack gap="8">
                                     <Select
                                         label="Mottaker"
                                         defaultValue={mottakerType}
-                                        onChange={(event): void => {
+                                        onChange={(
+                                            event: React.ChangeEvent<HTMLSelectElement>
+                                        ): void => {
                                             setValue(
                                                 'mottakerType',
                                                 event.target.value as MottakerType
@@ -156,7 +154,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
                         </VStack>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button type="submit">{config.submitText}</Button>
+                        <Button type="submit">{tekster.sendInnTekst}</Button>
                         <Button variant="secondary" type="button" onClick={lukkModal}>
                             Avbryt
                         </Button>

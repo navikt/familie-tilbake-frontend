@@ -232,7 +232,10 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                             path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
                             element={
                                 <Suspense fallback="Brevmottakere laster...">
-                                    <BrevmottakerContainer />
+                                    <BrevmottakerContainer
+                                        fagsak={fagsak}
+                                        behandling={behandling}
+                                    />
                                 </Suspense>
                             }
                         />
