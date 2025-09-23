@@ -492,7 +492,7 @@ export const mapBrevmottakerToFormData = (
                     navn: brevmottaker.navn || '',
                     land: brevmottaker.manuellAdresseInfo?.landkode || '',
                     adresselinje1: brevmottaker.manuellAdresseInfo?.adresselinje1 || '',
-                    adresselinje2: brevmottaker.manuellAdresseInfo?.adresselinje2 || '',
+                    adresselinje2: brevmottaker.manuellAdresseInfo?.adresselinje2,
                 },
             };
 
