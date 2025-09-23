@@ -2,9 +2,7 @@ import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';
 
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
-import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
@@ -19,23 +17,14 @@ import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
-const StyledVilkårsvurdering = styled.div`
-    padding: ${ASpacing3};
-`;
-
 interface IProps {
     fagsak: IFagsak;
     behandling: IBehandling;
 }
 
 const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
-    const {
-        containerRef,
-        vilkårsvurdering: vilkårsvurdering,
-        stegErBehandlet,
-        erAutoutført,
-        skjemaData,
-    } = useVilkårsvurdering();
+    const { containerRef, vilkårsvurdering, stegErBehandlet, erAutoutført, skjemaData } =
+        useVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
@@ -52,8 +41,11 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data);
 
         return (
-            <StyledVilkårsvurdering ref={containerRef}>
-                <Heading level="2" size="small" spacing>
+            <div
+                className="py-4 mb-24 border-border-divider border-1 rounded-2xl px-6 bg-white"
+                ref={containerRef}
+            >
+                <Heading level="1" size="small" spacing>
                     Tilbakekreving
                 </Heading>
                 <VStack gap="5">
@@ -78,7 +70,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
                         />
                     )}
                 </VStack>
-            </StyledVilkårsvurdering>
+            </div>
         );
     } else {
         return <DataLastIkkeSuksess ressurser={[vilkårsvurdering]} />;
