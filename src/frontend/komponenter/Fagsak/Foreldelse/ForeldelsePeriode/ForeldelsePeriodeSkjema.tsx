@@ -5,7 +5,6 @@ import type { ReactNode } from 'react';
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import {
     BodyLong,
-    Box,
     Button,
     Heading,
     HGrid,
@@ -32,7 +31,6 @@ import {
 } from '../../../../kodeverk';
 import { isoStringTilDate } from '../../../../utils/dato';
 import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
-import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { useForeldelse } from '../ForeldelseContext';
 
@@ -45,10 +43,6 @@ const StyledStack = styled(Stack)`
     width: 100%;
 `;
 
-const StyledBox = styled(Box)`
-    min-width: 20rem;
-`;
-
 interface IProps {
     behandling: IBehandling;
     periode: ForeldelsePeriodeSkjemeData;
@@ -56,7 +50,7 @@ interface IProps {
 }
 
 const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLesevisning }) => {
-    const { oppdaterPeriode, onSplitPeriode, settValgtPeriode } = useForeldelse();
+    const { oppdaterPeriode, onSplitPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
     );
@@ -143,7 +137,7 @@ const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLese
     };
 
     return (
-        <StyledBox padding="4" borderColor="border-strong" borderWidth="1">
+        <div className="p-4 bg-white">
             <StyledStack
                 justify="space-between"
                 align={{ md: 'start', lg: 'center' }}
@@ -241,17 +235,14 @@ const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLese
                 </HGrid>
 
                 {!erLesevisning && (
-                    <Navigering>
-                        <Button variant="primary" onClick={() => onBekreft(periode)}>
-                            Bekreft
+                    <div className="flex justify-end">
+                        <Button className="w-40" onClick={() => onBekreft(periode)}>
+                            Bekreft periode
                         </Button>
-                        <Button variant="secondary" onClick={() => settValgtPeriode(undefined)}>
-                            Lukk
-                        </Button>
-                    </Navigering>
+                    </div>
                 )}
             </StyledVStack>
-        </StyledBox>
+        </div>
     );
 };
 

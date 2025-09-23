@@ -22,8 +22,8 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
 
     if (fakta?.status === RessursStatus.Suksess) {
         return (
-            <div className="py-4 mb-24 border-border-divider border-1 rounded-2xl px-4">
-                <Heading level="2" size="small" spacing>
+            <div className="py-4 mb-24 border-border-divider border-1 rounded-2xl px-6 bg-white">
+                <Heading level="1" size="small">
                     Fakta om feilutbetaling
                 </Heading>
                 {(!erLesevisning || stegErBehandlet) && (

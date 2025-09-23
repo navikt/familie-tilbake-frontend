@@ -168,7 +168,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
     ) : harKravgrunnlag ? (
         <>
             <main
-                className="flex-1 overflow-auto pt-4 [scrollbar-gutter:stable]"
+                className="flex-1 overflow-auto pt-4 bg-gray-50 [scrollbar-gutter:stable]"
                 aria-label="Behandling innhold"
             >
                 <Stegflyt />
