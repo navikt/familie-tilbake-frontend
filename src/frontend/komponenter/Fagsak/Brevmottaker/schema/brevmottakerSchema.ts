@@ -17,8 +17,10 @@ const navnSchema = z
 
 const adresselinje1Schema = z
     .string()
-    .min(1, 'Adresselinje 1 er påkrevd')
-    .max(80, 'Adresselinje 1 kan ikke inneholde mer enn 80 tegn');
+    .nullable()
+    .default('')
+    .refine(val => val && val.trim().length > 0, 'Adresselinje 1 er påkrevd')
+    .refine(val => !val || val.length <= 80, 'Adresselinje 1 kan ikke inneholde mer enn 80 tegn');
 
 const adresselinje2Schema = z
     .string()
@@ -78,9 +80,9 @@ const fullmektigSchema = z
         ),
         fødselsnummer: z.string().optional(),
         organisasjonsnummer: z.string().optional(),
-        navn: navnSchema.optional(),
+        navn: z.string().optional(),
         land: z.string().optional(),
-        adresselinje1: adresselinje1Schema.optional(),
+        adresselinje1: z.string().optional(),
         adresselinje2: adresselinje2Schema.optional(),
         postnummer: z.string().optional(),
         poststed: z.string().optional(),
@@ -186,10 +188,10 @@ const vergeSchema = z
             error: 'Du må velge en adressetype',
         }),
         fødselsnummer: z.string().optional(),
-        navn: navnSchema.optional(),
+        navn: z.string().optional(),
         land: z.string().optional(),
-        adresselinje1: adresselinje1Schema.optional(),
-        adresselinje2: adresselinje2Schema.optional(),
+        adresselinje1: z.string().optional(),
+        adresselinje2: z.string().optional(),
         postnummer: z.string().optional(),
         poststed: z.string().optional(),
     })
@@ -371,7 +373,7 @@ const getManuellAdresseInfo = (
 ): IBrevmottaker['manuellAdresseInfo'] => {
     if (isBrukerMedUtenlandskAdresse(adresseData)) {
         return {
-            adresselinje1: adresseData.adresselinje1,
+            adresselinje1: adresseData.adresselinje1 || '',
             adresselinje2: adresseData.adresselinje2,
             postnummer: '',
             poststed: '',
@@ -507,7 +509,7 @@ export const mapBrevmottakerToFormData = (
                     adresseKilde,
                     navn: baseAddress.navn,
                     land: baseAddress.land,
-                    adresselinje1: baseAddress.adresselinje1,
+                    adresselinje1: baseAddress.adresselinje1 || '',
                     adresselinje2: baseAddress.adresselinje2,
                     postnummer: baseAddress.postnummer,
                     poststed: baseAddress.poststed,
@@ -542,7 +544,7 @@ export const mapBrevmottakerToFormData = (
                     adresseKilde,
                     navn: baseAddress.navn,
                     land: baseAddress.land,
-                    adresselinje1: baseAddress.adresselinje1,
+                    adresselinje1: baseAddress.adresselinje1 || '',
                     adresselinje2: baseAddress.adresselinje2,
                     postnummer: baseAddress.postnummer,
                     poststed: baseAddress.poststed,
