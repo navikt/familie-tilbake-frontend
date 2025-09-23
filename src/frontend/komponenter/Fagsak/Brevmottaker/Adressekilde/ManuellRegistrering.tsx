@@ -9,7 +9,7 @@ import Landvelger from '../../../Felleskomponenter/Landvelger/Landvelger';
 
 type Props = {
     preutfyltNavn?: string;
-    mottakerType?: MottakerType;
+    mottakerType: MottakerType;
     prefix: string;
 };
 
