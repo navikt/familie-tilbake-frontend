@@ -297,7 +297,7 @@ describe('brevmottakerSchema', () => {
                 },
             };
 
-            testPersonnummerValidering(validPersonregisterData, 'verge');
+            testFødselsnummerValidering(validPersonregisterData, 'verge');
         });
     });
 
