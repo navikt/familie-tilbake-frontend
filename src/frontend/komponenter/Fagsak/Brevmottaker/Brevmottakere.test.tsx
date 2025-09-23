@@ -1,4 +1,3 @@
-// import type { Http } from '../../../api/http/HttpProvider';
 import type { ManuellBrevmottakerResponseDto } from '../../../typer/api';
 import type { IBehandling } from '../../../typer/behandling';
 import type { IFagsak } from '../../../typer/fagsak';

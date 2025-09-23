@@ -10,37 +10,34 @@ const BACKEND_PLACEHOLDERS = {
     DEFAULT_NAVN: ' ',
 } as const;
 
+const navnSchema = z
+    .string()
+    .min(1, 'Navn på person eller organisasjon er påkrevd')
+    .max(80, 'Navn kan ikke inneholde mer enn 80 tegn');
+
+const adresselinje1Schema = z
+    .string()
+    .min(1, 'Adresselinje 1 er påkrevd')
+    .max(80, 'Adresselinje 1 kan ikke inneholde mer enn 80 tegn');
+
+const adresselinje2Schema = z
+    .string()
+    .max(80, 'Adresselinje 2 kan ikke inneholde mer enn 80 tegn')
+    .optional();
+
 const brukerMedUtenlandskAdresseSchema = z.object({
-    navn: z
-        .string()
-        .min(1, 'Navn på person eller organisasjon er påkrevd')
-        .max(80, 'Navn kan ikke inneholde mer enn 80 tegn'),
+    navn: navnSchema,
     land: z.string({ error: 'Land er påkrevd' }).min(1, 'Land er påkrevd'),
-    adresselinje1: z
-        .string()
-        .min(1, 'Adresselinje 1 er påkrevd')
-        .max(80, 'Adresselinje 1 kan ikke inneholde mer enn 80 tegn'),
-    adresselinje2: z
-        .string()
-        .max(80, 'Adresselinje 2 kan ikke inneholde mer enn 80 tegn')
-        .optional(),
+    adresselinje1: adresselinje1Schema,
+    adresselinje2: adresselinje2Schema,
 });
 
 const dødsboSchema = z
     .object({
-        navn: z
-            .string()
-            .min(1, 'Navn på person eller organisasjon er påkrevd')
-            .max(80, 'Navn kan ikke inneholde mer enn 80 tegn'),
+        navn: navnSchema,
         land: z.string({ error: 'Land er påkrevd' }).min(1, 'Land er påkrevd'),
-        adresselinje1: z
-            .string()
-            .min(1, 'Adresselinje 1 er påkrevd')
-            .max(80, 'Adresselinje 1 kan ikke inneholde mer enn 80 tegn'),
-        adresselinje2: z
-            .string()
-            .max(80, 'Adresselinje 2 kan ikke inneholde mer enn 80 tegn')
-            .optional(),
+        adresselinje1: adresselinje1Schema,
+        adresselinje2: adresselinje2Schema,
         postnummer: z.string().optional(),
         poststed: z.string().optional(),
     })
@@ -81,16 +78,10 @@ const fullmektigSchema = z
         ),
         fødselsnummer: z.string().optional(),
         organisasjonsnummer: z.string().optional(),
-        navn: z.string().max(80, 'Navn kan ikke inneholde mer enn 80 tegn').optional(),
+        navn: navnSchema.optional(),
         land: z.string().optional(),
-        adresselinje1: z
-            .string()
-            .max(80, 'Adresselinje 1 kan ikke inneholde mer enn 80 tegn')
-            .optional(),
-        adresselinje2: z
-            .string()
-            .max(80, 'Adresselinje 2 kan ikke inneholde mer enn 80 tegn')
-            .optional(),
+        adresselinje1: adresselinje1Schema.optional(),
+        adresselinje2: adresselinje2Schema.optional(),
         postnummer: z.string().optional(),
         poststed: z.string().optional(),
     })
@@ -195,16 +186,10 @@ const vergeSchema = z
             error: 'Du må velge en adressetype',
         }),
         fødselsnummer: z.string().optional(),
-        navn: z.string().max(80, 'Navn kan ikke inneholde mer enn 80 tegn').optional(),
+        navn: navnSchema.optional(),
         land: z.string().optional(),
-        adresselinje1: z
-            .string()
-            .max(80, 'Adresselinje 1 kan ikke inneholde mer enn 80 tegn')
-            .optional(),
-        adresselinje2: z
-            .string()
-            .max(80, 'Adresselinje 2 kan ikke inneholde mer enn 80 tegn')
-            .optional(),
+        adresselinje1: adresselinje1Schema.optional(),
+        adresselinje2: adresselinje2Schema.optional(),
         postnummer: z.string().optional(),
         poststed: z.string().optional(),
     })
