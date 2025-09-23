@@ -64,7 +64,7 @@ describe('brevmottakerSchema', () => {
         });
     };
 
-    const testPersonnummerValidering = (
+    const testFødselsnummerValidering = (
         validPersonData: BrevmottakerFormData,
         mottakerKey: keyof BrevmottakerFormData
     ): void => {
@@ -203,7 +203,7 @@ describe('brevmottakerSchema', () => {
                 },
             };
 
-            testPersonnummerValidering(validPersonregisterData, 'fullmektig');
+            testFødselsnummerValidering(validPersonregisterData, 'fullmektig');
         });
 
         describe('Oppslag i organisasjonsregister', () => {
