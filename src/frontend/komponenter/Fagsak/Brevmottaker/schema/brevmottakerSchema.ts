@@ -352,11 +352,11 @@ const isBrukerMedUtenlandskAdresse = withNullCheck<BrukerMedUtenlandskAdresseDat
 
 const isDødsbo = withNullCheck<DødsboData>(
     (data): data is DødsboData =>
-        'adresseKilde' in data &&
-        data.adresseKilde === AdresseKilde.ManuellRegistrering &&
+        !('adresseKilde' in data) &&
         'navn' in data &&
         'land' in data &&
-        'adresselinje1' in data
+        'adresselinje1' in data &&
+        ('postnummer' in data || 'poststed' in data)
 );
 
 const isRegisterOppslag = withNullCheck<RegisterOppslag>(
@@ -506,7 +506,7 @@ export const mapBrevmottakerToFormData = (
                     adresselinje2: baseAddress.adresselinje2,
                     postnummer: baseAddress.postnummer,
                     poststed: baseAddress.poststed,
-                } as DødsboData;
+                };
             } else if (adresseKilde === AdresseKilde.OppslagRegister) {
                 adresseData = {
                     adresseKilde,
@@ -541,7 +541,7 @@ export const mapBrevmottakerToFormData = (
                     adresselinje2: baseAddress.adresselinje2,
                     postnummer: baseAddress.postnummer,
                     poststed: baseAddress.poststed,
-                } as DødsboData;
+                };
             } else if (adresseKilde === AdresseKilde.OppslagRegister) {
                 adresseData = {
                     adresseKilde,
@@ -569,7 +569,6 @@ export const mapBrevmottakerToFormData = (
             return {
                 ...baseFormData,
                 dødsbo: {
-                    adresseKilde: AdresseKilde.ManuellRegistrering,
                     navn: brevmottaker.navn,
                     land: brevmottaker.manuellAdresseInfo?.landkode || '',
                     adresselinje1: brevmottaker.manuellAdresseInfo?.adresselinje1 || '',

@@ -306,7 +306,6 @@ describe('brevmottakerSchema', () => {
             const validManuellData: BrevmottakerFormData = {
                 mottakerType: MottakerType.Dødsbo,
                 dødsbo: {
-                    adresseKilde: AdresseKilde.ManuellRegistrering,
                     navn: 'Test Bruker v/dødsbo',
                     land: 'SE',
                     adresselinje1: 'Test Gate 123',
@@ -325,7 +324,6 @@ describe('brevmottakerSchema', () => {
                 const validNorgeData: BrevmottakerFormData = {
                     mottakerType: MottakerType.Dødsbo,
                     dødsbo: {
-                        adresseKilde: AdresseKilde.ManuellRegistrering,
                         navn: 'Test Bruker v/dødsbo',
                         land: 'NO',
                         adresselinje1: 'Test Gate 123',
