@@ -10,7 +10,7 @@ const BACKEND_PLACEHOLDERS = {
     DEFAULT_NAVN: ' ',
 } as const;
 
-const adresseFelterSchema = z.object({
+const brukerMedUtenlandskAdresseSchema = z.object({
     navn: z
         .string()
         .min(1, 'Navn på person eller organisasjon er påkrevd')
@@ -26,9 +26,21 @@ const adresseFelterSchema = z.object({
         .optional(),
 });
 
-const manuellAdresseSchema = adresseFelterSchema
-    .extend({
-        adresseKilde: z.literal(AdresseKilde.ManuellRegistrering),
+const dødsboSchema = z
+    .object({
+        navn: z
+            .string()
+            .min(1, 'Navn på person eller organisasjon er påkrevd')
+            .max(80, 'Navn kan ikke inneholde mer enn 80 tegn'),
+        land: z.string({ error: 'Land er påkrevd' }).min(1, 'Land er påkrevd'),
+        adresselinje1: z
+            .string()
+            .min(1, 'Adresselinje 1 er påkrevd')
+            .max(80, 'Adresselinje 1 kan ikke inneholde mer enn 80 tegn'),
+        adresselinje2: z
+            .string()
+            .max(80, 'Adresselinje 2 kan ikke inneholde mer enn 80 tegn')
+            .optional(),
         postnummer: z.string().optional(),
         poststed: z.string().optional(),
     })
@@ -285,10 +297,10 @@ export const brevmottakerFormDataInputSchema = z
                 'Det må velges en gyldig mottakertype'
             )
             .transform(val => val as MottakerType),
-        brukerMedUtenlandskAdresse: adresseFelterSchema.optional(),
+        brukerMedUtenlandskAdresse: brukerMedUtenlandskAdresseSchema.optional(),
         fullmektig: fullmektigSchema.optional(),
         verge: vergeSchema.optional(),
-        dødsbo: manuellAdresseSchema.optional(),
+        dødsbo: dødsboSchema.optional(),
     })
     .refine(
         data => {
@@ -318,7 +330,13 @@ export const brevmottakerFormDataSchema = brevmottakerFormDataInputSchema.transf
     }
 );
 
-type AdresseDataUnion = AdresseFelter | FullmektigData | VergeData | null | undefined;
+type AdresseDataUnion =
+    | BrukerMedUtenlandskAdresseData
+    | DødsboData
+    | FullmektigData
+    | VergeData
+    | null
+    | undefined;
 
 const withNullCheck =
     <T extends NonNullable<AdresseDataUnion>>(
@@ -328,12 +346,12 @@ const withNullCheck =
         return data != null && predicate(data);
     };
 
-const isAdresseFelter = withNullCheck<AdresseFelter>(
-    (data): data is AdresseFelter => 'land' in data && !('adresseKilde' in data)
+const isBrukerMedUtenlandskAdresse = withNullCheck<BrukerMedUtenlandskAdresseData>(
+    (data): data is BrukerMedUtenlandskAdresseData => 'land' in data && !('adresseKilde' in data)
 );
 
-const isManuellAdresse = withNullCheck<ManuellAdresse>(
-    (data): data is ManuellAdresse =>
+const isDødsbo = withNullCheck<DødsboData>(
+    (data): data is DødsboData =>
         'adresseKilde' in data &&
         data.adresseKilde === AdresseKilde.ManuellRegistrering &&
         'navn' in data &&
@@ -358,19 +376,19 @@ const isOrganisasjonsregisterOppslag = withNullCheck<OrganisasjonsregisterOppsla
 const getManuellAdresseInfo = (
     adresseData: AdresseDataUnion
 ): IBrevmottaker['manuellAdresseInfo'] => {
-    if (isAdresseFelter(adresseData)) {
+    if (isBrukerMedUtenlandskAdresse(adresseData)) {
         return {
             adresselinje1: adresseData.adresselinje1,
-            adresselinje2: adresseData.adresselinje2,
+            adresselinje2: adresseData.adresselinje2 || '',
             postnummer: '',
             poststed: '',
             landkode: adresseData.land,
         };
     }
-    if (isManuellAdresse(adresseData)) {
+    if (isDødsbo(adresseData)) {
         return {
             adresselinje1: adresseData.adresselinje1,
-            adresselinje2: adresseData.adresselinje2,
+            adresselinje2: adresseData.adresselinje2 || '',
             postnummer: adresseData.postnummer ?? '',
             poststed: adresseData.poststed ?? '',
             landkode: adresseData.land,
@@ -402,7 +420,7 @@ const mapFormDataToBrevmottaker = (
     const { adresseData } = flattenFormData(data);
 
     const navn = ((): string => {
-        if (isAdresseFelter(adresseData) || isManuellAdresse(adresseData)) {
+        if (isBrukerMedUtenlandskAdresse(adresseData) || isDødsbo(adresseData)) {
             return adresseData.navn;
         }
         if (isOrganisasjonsregisterOppslag(adresseData)) {
@@ -440,7 +458,7 @@ export const mapBrevmottakerToFormData = (
 
     const mapAdresse = (
         brevmottaker: IBrevmottaker
-    ): AdresseFelter & { postnummer: string; poststed: string } => ({
+    ): BrukerMedUtenlandskAdresseData & { postnummer: string; poststed: string } => ({
         navn: brevmottaker.navn || '',
         land: brevmottaker.manuellAdresseInfo?.landkode || '',
         adresselinje1: brevmottaker.manuellAdresseInfo?.adresselinje1 || '',
@@ -488,7 +506,7 @@ export const mapBrevmottakerToFormData = (
                     adresselinje2: baseAddress.adresselinje2,
                     postnummer: baseAddress.postnummer,
                     poststed: baseAddress.poststed,
-                } as ManuellAdresse;
+                } as DødsboData;
             } else if (adresseKilde === AdresseKilde.OppslagRegister) {
                 adresseData = {
                     adresseKilde,
@@ -523,7 +541,7 @@ export const mapBrevmottakerToFormData = (
                     adresselinje2: baseAddress.adresselinje2,
                     postnummer: baseAddress.postnummer,
                     poststed: baseAddress.poststed,
-                } as ManuellAdresse;
+                } as DødsboData;
             } else if (adresseKilde === AdresseKilde.OppslagRegister) {
                 adresseData = {
                     adresseKilde,
@@ -538,7 +556,7 @@ export const mapBrevmottakerToFormData = (
                     adresselinje2: baseAddress.adresselinje2,
                     postnummer: baseAddress.postnummer,
                     poststed: baseAddress.poststed,
-                } as ManuellAdresse;
+                } as VergeData;
             }
 
             return {
@@ -568,11 +586,10 @@ export const mapBrevmottakerToFormData = (
 
 export type BrevmottakerFormData = z.input<typeof brevmottakerFormDataSchema>;
 
+export type BrukerMedUtenlandskAdresseData = z.infer<typeof brukerMedUtenlandskAdresseSchema>;
 export type FullmektigData = z.infer<typeof fullmektigSchema>;
 export type VergeData = z.infer<typeof vergeSchema>;
-
-export type ManuellAdresse = z.infer<typeof manuellAdresseSchema>;
-export type AdresseFelter = z.infer<typeof adresseFelterSchema>;
+export type DødsboData = z.infer<typeof dødsboSchema>;
 
 export type RegisterOppslag = {
     adresseKilde: AdresseKilde.OppslagRegister;
