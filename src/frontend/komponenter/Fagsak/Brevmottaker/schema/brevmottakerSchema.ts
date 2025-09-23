@@ -387,7 +387,7 @@ const getManuellAdresseInfo = (
     if (isBrukerMedUtenlandskAdresse(adresseData)) {
         return {
             adresselinje1: adresseData.adresselinje1,
-            adresselinje2: adresseData.adresselinje2 || '',
+            adresselinje2: adresseData.adresselinje2,
             postnummer: '',
             poststed: '',
             landkode: adresseData.land,
@@ -396,7 +396,7 @@ const getManuellAdresseInfo = (
     if (isDødsbo(adresseData)) {
         return {
             adresselinje1: adresseData.adresselinje1,
-            adresselinje2: adresseData.adresselinje2 || '',
+            adresselinje2: adresseData.adresselinje2,
             postnummer: adresseData.postnummer ?? '',
             poststed: adresseData.poststed ?? '',
             landkode: adresseData.land,
@@ -405,7 +405,7 @@ const getManuellAdresseInfo = (
     if (isManuellAdresse(adresseData)) {
         return {
             adresselinje1: adresseData.adresselinje1 || '',
-            adresselinje2: adresseData.adresselinje2 || '',
+            adresselinje2: adresseData.adresselinje2,
             postnummer: adresseData.postnummer || '',
             poststed: adresseData.poststed || '',
             landkode: adresseData.land || '',
@@ -482,7 +482,7 @@ export const mapBrevmottakerToFormData = (
         navn: brevmottaker.navn || '',
         land: brevmottaker.manuellAdresseInfo?.landkode || '',
         adresselinje1: brevmottaker.manuellAdresseInfo?.adresselinje1 || '',
-        adresselinje2: brevmottaker.manuellAdresseInfo?.adresselinje2 || '',
+        adresselinje2: brevmottaker.manuellAdresseInfo?.adresselinje2,
         postnummer: brevmottaker.manuellAdresseInfo?.postnummer || '',
         poststed: brevmottaker.manuellAdresseInfo?.poststed || '',
     });
@@ -605,17 +605,17 @@ export const mapBrevmottakerToFormData = (
 
 export type BrevmottakerFormData = z.input<typeof brevmottakerFormDataSchema>;
 
-export type BrukerMedUtenlandskAdresseData = z.infer<typeof brukerMedUtenlandskAdresseSchema>;
-export type FullmektigData = z.infer<typeof fullmektigSchema>;
-export type VergeData = z.infer<typeof vergeSchema>;
-export type DødsboData = z.infer<typeof dødsboSchema>;
+type BrukerMedUtenlandskAdresseData = z.infer<typeof brukerMedUtenlandskAdresseSchema>;
+type FullmektigData = z.infer<typeof fullmektigSchema>;
+type VergeData = z.infer<typeof vergeSchema>;
+type DødsboData = z.infer<typeof dødsboSchema>;
 
-export type RegisterOppslag = {
+type RegisterOppslag = {
     adresseKilde: AdresseKilde.OppslagRegister;
     fødselsnummer: string;
 };
 
-export type OrganisasjonsregisterOppslag = {
+type OrganisasjonsregisterOppslag = {
     adresseKilde: AdresseKilde.OppslagOrganisasjonsregister;
     organisasjonsnummer: string;
     navn?: string;
