@@ -1,6 +1,5 @@
 import {
     BodyLong,
-    Button,
     ErrorMessage,
     Heading,
     HGrid,
@@ -9,7 +8,6 @@ import {
     TextField,
     VStack,
 } from '@navikt/ds-react';
-import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
@@ -18,12 +16,8 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { hentFrontendFeilmelding } from '../../../utils';
 import HenterData from '../../Felleskomponenter/Datalast/HenterData';
-import { Navigering } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-
-const StyledVerge = styled.div`
-    padding: ${ASpacing3};
-`;
+import { ActionBar } from '../ActionBar/ActionBar';
 
 const StyledVStack = styled(VStack)`
     max-width: 30rem;
@@ -31,7 +25,7 @@ const StyledVStack = styled(VStack)`
 
 const VergeContainer: React.FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } = useVerge();
-    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandling();
+    const { behandlingILesemodus, settIkkePersistertKomponent, åpenHøyremeny } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -45,8 +39,8 @@ const VergeContainer: React.FC = () => {
     const feilmelding = vergeRespons && hentFrontendFeilmelding(vergeRespons);
 
     return (
-        <StyledVerge>
-            <Heading level="2" size="small" spacing>
+        <div className="py-4 mb-24 border-border-divider border-1 rounded-2xl px-6 bg-white">
+            <Heading level="1" size="small" spacing>
                 Verge
             </Heading>
             {henterData ? (
@@ -138,18 +132,19 @@ const VergeContainer: React.FC = () => {
                         maxLength={400}
                     />
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
-                    <Navigering>
-                        <Button
-                            variant="primary"
-                            onClick={sendInn}
-                            disabled={erLesevisning && !stegErBehandlet}
-                        >
-                            {stegErBehandlet ? 'Neste' : 'Lagre og fortsett'}
-                        </Button>
-                    </Navigering>
+
+                    <ActionBar
+                        forrigeTekst={undefined}
+                        nesteTekst="Neste"
+                        forrigeAriaLabel={undefined}
+                        nesteAriaLabel="Gå videre til faktasteget"
+                        åpenHøyremeny={åpenHøyremeny}
+                        onNeste={sendInn}
+                        onForrige={undefined}
+                    />
                 </StyledVStack>
             )}
-        </StyledVerge>
+        </div>
     );
 };
 

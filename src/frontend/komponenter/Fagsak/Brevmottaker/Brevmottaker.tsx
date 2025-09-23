@@ -69,7 +69,9 @@ const Brevmottaker: React.FC<IProps> = ({
     return (
         <StyledDiv>
             <FlexDiv>
-                <Heading size="medium">{mottakerTypeVisningsnavn[brevmottaker.type]}</Heading>
+                <Heading level="2" size="small">
+                    {mottakerTypeVisningsnavn[brevmottaker.type]}
+                </Heading>
                 {!erLesevisning && brevmottaker.type !== MottakerType.Bruker && (
                     <Button
                         variant="tertiary"
