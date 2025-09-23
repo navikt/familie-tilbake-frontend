@@ -373,6 +373,14 @@ const isOrganisasjonsregisterOppslag = withNullCheck<OrganisasjonsregisterOppsla
         'organisasjonsnummer' in data
 );
 
+const isManuellAdresse = withNullCheck<FullmektigData | VergeData>(
+    (data): data is FullmektigData | VergeData =>
+        'adresseKilde' in data &&
+        data.adresseKilde === AdresseKilde.ManuellRegistrering &&
+        'land' in data &&
+        'adresselinje1' in data
+);
+
 const getManuellAdresseInfo = (
     adresseData: AdresseDataUnion
 ): IBrevmottaker['manuellAdresseInfo'] => {
@@ -392,6 +400,15 @@ const getManuellAdresseInfo = (
             postnummer: adresseData.postnummer ?? '',
             poststed: adresseData.poststed ?? '',
             landkode: adresseData.land,
+        };
+    }
+    if (isManuellAdresse(adresseData)) {
+        return {
+            adresselinje1: adresseData.adresselinje1 || '',
+            adresselinje2: adresseData.adresselinje2 || '',
+            postnummer: adresseData.postnummer || '',
+            poststed: adresseData.poststed || '',
+            landkode: adresseData.land || '',
         };
     }
     return undefined;
@@ -425,6 +442,9 @@ const mapFormDataToBrevmottaker = (
         }
         if (isOrganisasjonsregisterOppslag(adresseData)) {
             return adresseData?.navn || BACKEND_PLACEHOLDERS.DEFAULT_NAVN;
+        }
+        if (isManuellAdresse(adresseData)) {
+            return adresseData.navn || BACKEND_PLACEHOLDERS.DEFAULT_NAVN;
         }
         return BACKEND_PLACEHOLDERS.DEFAULT_NAVN;
     })();
