@@ -34,6 +34,9 @@ export type BehandlingHook = {
     settÅpenHøyremeny: (åpenHøyremeny: boolean) => void;
     visBrevmottakerModal: boolean;
     settVisBrevmottakerModal: (visBrevmottakerModal: boolean) => void;
+    brevmottakerIdTilEndring?: string;
+    settBrevmottakerIdTilEndring: (brevmottakerId?: string) => void;
+    lukkBrevmottakerModal: () => void;
     settIkkePersistertKomponent: (komponentId: string) => void;
     nullstillIkkePersisterteKomponenter: () => void;
 };
@@ -48,6 +51,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [ventegrunn, settVentegrunn] = useState<IBehandlingsstegstilstand>();
     const [visVenteModal, settVisVenteModal] = useState<boolean>(false);
     const [visBrevmottakerModal, settVisBrevmottakerModal] = useState<boolean>(false);
+    const [brevmottakerIdTilEndring, settBrevmottakerIdTilEndring] = useState<string | undefined>();
     const [harKravgrunnlag, settHarKravgrunnlag] = useState<boolean>();
     const [behandlingILesemodus, settBehandlingILesemodus] = useState<boolean>();
     const [åpenHøyremeny, settÅpenHøyremeny] = useState(true);
@@ -199,6 +203,11 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
             : '#';
     };
 
+    const lukkBrevmottakerModal = (): void => {
+        settVisBrevmottakerModal(false);
+        settBrevmottakerIdTilEndring(undefined);
+    };
+
     return {
         behandling,
         hentBehandlingMedEksternBrukId,
@@ -219,6 +228,9 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         settÅpenHøyremeny,
         visBrevmottakerModal,
         settVisBrevmottakerModal,
+        brevmottakerIdTilEndring,
+        settBrevmottakerIdTilEndring,
+        lukkBrevmottakerModal,
         settIkkePersistertKomponent,
         nullstillIkkePersisterteKomponenter,
     };
