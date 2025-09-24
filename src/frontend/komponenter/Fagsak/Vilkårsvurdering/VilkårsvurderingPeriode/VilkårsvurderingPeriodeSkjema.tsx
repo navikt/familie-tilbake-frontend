@@ -48,6 +48,7 @@ import {
     type IBehandling,
 } from '../../../../typer/behandling';
 import { formatterDatostring, isEmpty } from '../../../../utils';
+import { formaterMedFetTekst } from '../../../../utils/formaterMedFetTekst';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { ModalWrapper } from '../../../Felleskomponenter/Modal/ModalWrapper';
@@ -119,9 +120,10 @@ const settSkjemadataFraPeriode = (
 
 const lagLabeltekster = (resultat: Vilkårsresultat): ReactNode => {
     return (
-        <div style={{ display: 'inline-flex' }}>
-            {`${vilkårsresultater[resultat]} (${vilkårsresultatHjelpetekster[resultat]})`}
-        </div>
+        <span>
+            {formaterMedFetTekst(vilkårsresultater[resultat])} (
+            {vilkårsresultatHjelpetekster[resultat]})
+        </span>
     );
 };
 

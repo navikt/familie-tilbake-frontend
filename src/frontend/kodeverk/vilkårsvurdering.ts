@@ -10,9 +10,9 @@ export const vilkårsresultater: Record<Vilkårsresultat, string> = {
     [Vilkårsresultat.ForstoBurdeForstått]:
         'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
     [Vilkårsresultat.FeilOpplysningerFraBruker]:
-        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt **feilaktige** opplysninger',
     [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
-        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt **mangelfulle** opplysninger',
     [Vilkårsresultat.GodTro]: 'Nei, mottaker har mottatt beløpet i god tro',
     [Vilkårsresultat.Udefinert]: 'Udefinert',
 };
