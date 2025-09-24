@@ -13,7 +13,6 @@ import HentOppdatertKravgrunnlag from './hentOppdatertKravgrunnlag/HentOppdatert
 import HistoriskeVurderinger from './HistoriskeVurderinger/HistoriskeVurderinger';
 import LeggTilFjernBrevmottakere from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
 import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
-import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
 import { useApp } from '../../../../context/AppContext';
@@ -157,13 +156,6 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                             />
                                         </li>
                                     )}
-                                    <li>
-                                        <OpprettFjernVerge
-                                            behandling={behandling.data}
-                                            fagsak={fagsak}
-                                            onListElementClick={() => settVisMeny(false)}
-                                        />
-                                    </li>
                                     <li>
                                         <HistoriskeVurderinger
                                             behandling={behandling.data}
