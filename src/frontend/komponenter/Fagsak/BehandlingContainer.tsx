@@ -167,11 +167,11 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
     ) : harKravgrunnlag ? (
         <>
             <main
-                className="flex-1 overflow-auto pt-4 bg-gray-50 [scrollbar-gutter:stable]"
+                className="flex-1 pt-4 overflow-auto bg-gray-50 [scrollbar-gutter:stable]"
                 aria-label="Behandling innhold"
             >
                 <Stegflyt />
-                <section className="m-4">
+                <section className="py-4 mb-24 border-border-divider border-1 rounded-2xl px-6 bg-white m-4">
                     <Routes>
                         <Route
                             path={BEHANDLING_KONTEKST_PATH + '/fakta'}

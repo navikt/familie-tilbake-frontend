@@ -39,7 +39,7 @@ const VergeContainer: React.FC = () => {
     const feilmelding = vergeRespons && hentFrontendFeilmelding(vergeRespons);
 
     return (
-        <div className="py-4 mb-24 border-border-divider border-1 rounded-2xl px-6 bg-white">
+        <>
             <Heading level="1" size="small" spacing>
                 Verge
             </Heading>
@@ -144,7 +144,7 @@ const VergeContainer: React.FC = () => {
                     />
                 </StyledVStack>
             )}
-        </div>
+        </>
     );
 };
 

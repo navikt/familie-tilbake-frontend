@@ -31,11 +31,8 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
         erAutoutført || (stegErBehandlet && erLesevisning) ? gåTilNesteSteg : sendInnSkjema;
 
     return (
-        <VStack
-            gap="4"
-            className="rounded-2xl bg-white px-6 py-4 border-border-divider border-1 mb-24 min-h-144"
-        >
-            <Heading size="small" level="1">
+        <>
+            <Heading size="small" level="1" spacing>
                 Foreldelse
             </Heading>
             {erAutoutført ? (
@@ -133,7 +130,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                 onForrige={gåTilForrigeSteg}
                 onNeste={navigerEllerLagreOgNaviger}
             />
-        </VStack>
+        </>
     );
 };
 

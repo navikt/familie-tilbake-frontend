@@ -15,6 +15,7 @@ import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmotta
 import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
 import { SYNLIGE_STEG } from '../../../utils/sider';
+import { ActionBar } from '../ActionBar/ActionBar';
 
 export type BrevmottakerProps = {
     brevmottaker: IBrevmottaker;
@@ -262,7 +263,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
                     settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}
                 />
             )}
-            <VStack padding="space-24" gap="4" align="start">
+            <VStack gap="4" align="start">
                 <Heading size="small" level="1">
                     Brevmottaker(e)
                 </Heading>
@@ -324,8 +325,17 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
                         Legg til ny mottaker
                     </Button>
                 )}
-                <Button onClick={gåTilNeste}>Neste</Button>
             </VStack>
+
+            <ActionBar
+                forrigeTekst={undefined}
+                nesteTekst="Neste"
+                forrigeAriaLabel={undefined}
+                nesteAriaLabel="Gå til faktasteget"
+                åpenHøyremeny={false}
+                onNeste={gåTilNeste}
+                onForrige={undefined}
+            />
         </>
     );
 };

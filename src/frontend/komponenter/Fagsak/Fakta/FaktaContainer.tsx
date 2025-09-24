@@ -22,8 +22,8 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
 
     if (fakta?.status === RessursStatus.Suksess) {
         return (
-            <div className="py-4 mb-24 border-border-divider border-1 rounded-2xl px-6 bg-white">
-                <Heading level="1" size="small">
+            <>
+                <Heading level="1" size="small" spacing>
                     Fakta om feilutbetaling
                 </Heading>
                 {(!erLesevisning || stegErBehandlet) && (
@@ -41,7 +41,7 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
                     ytelse={ytelse}
                     erLesevisning={erLesevisning}
                 />
-            </div>
+            </>
         );
     } else {
         return <DataLastIkkeSuksess ressurser={[fakta]} />;

@@ -41,11 +41,8 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data);
 
         return (
-            <div
-                className="py-4 mb-24 border-border-divider border-1 rounded-2xl px-6 bg-white"
-                ref={containerRef}
-            >
-                <Heading level="1" size="small" spacing>
+            <>
+                <Heading level="1" size="small" spacing ref={containerRef}>
                     Tilbakekreving
                 </Heading>
                 <VStack gap="5">
@@ -70,7 +67,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
                         />
                     )}
                 </VStack>
-            </div>
+            </>
         );
     } else {
         return <DataLastIkkeSuksess ressurser={[vilkårsvurdering]} />;
