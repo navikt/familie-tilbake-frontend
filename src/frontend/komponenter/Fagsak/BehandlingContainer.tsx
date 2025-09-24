@@ -8,7 +8,6 @@ import { Suspense } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
-import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
 import { FaktaProvider } from './Fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
 import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
@@ -23,7 +22,7 @@ import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from 
 import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
 
 const BrevmottakerContainer = lazyImportMedRetry(
-    () => import('./Brevmottaker/BrevmottakerContainer'),
+    () => import('./Brevmottaker/Brevmottakere'),
     'BrevmottakerContainer'
 );
 const FaktaContainer = lazyImportMedRetry(() => import('./Fakta/FaktaContainer'), 'FaktaContainer');
@@ -232,11 +231,12 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                         <Route
                             path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
                             element={
-                                <BrevmottakerProvider behandling={behandling} fagsak={fagsak}>
-                                    <Suspense fallback="Brevmottakere laster...">
-                                        <BrevmottakerContainer />
-                                    </Suspense>
-                                </BrevmottakerProvider>
+                                <Suspense fallback="Brevmottakere laster...">
+                                    <BrevmottakerContainer
+                                        fagsak={fagsak}
+                                        behandling={behandling}
+                                    />
+                                </Suspense>
                             }
                         />
                     </Routes>

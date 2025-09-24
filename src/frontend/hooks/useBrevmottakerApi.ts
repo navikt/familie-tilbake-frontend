@@ -1,0 +1,111 @@
+import type { IBrevmottaker } from '../typer/Brevmottaker';
+
+import { useState } from 'react';
+
+import { useHttp } from '../api/http/HttpProvider';
+import { useBehandling } from '../context/BehandlingContext';
+import { RessursStatus } from '../typer/ressurs';
+
+export const useBrevmottakerApi = (): {
+    lagreBrevmottaker: (
+        behandlingId: string,
+        brevmottaker: IBrevmottaker,
+        mottakerId?: string
+    ) => Promise<{ success: boolean; error?: string }>;
+    fjernBrevmottaker: (behandlingId: string, mottakerId: string) => Promise<boolean>;
+    loading: boolean;
+    error: string | null;
+    clearError: () => void;
+} => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const { hentBehandlingMedBehandlingId } = useBehandling();
+    const { request } = useHttp();
+
+    const lagreBrevmottaker = async (
+        behandlingId: string,
+        brevmottaker: IBrevmottaker,
+        mottakerId?: string
+    ): Promise<{ success: boolean; error?: string }> => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const url = mottakerId
+                ? `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}/${mottakerId}`
+                : `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}`;
+
+            const method = mottakerId ? 'PUT' : 'POST';
+
+            const response = await request<IBrevmottaker, void>({
+                method,
+                url,
+                data: brevmottaker,
+            });
+
+            if (response.status !== RessursStatus.Suksess) {
+                const errorMessage =
+                    'frontendFeilmelding' in response
+                        ? response.frontendFeilmelding
+                        : 'Ukjent feil ved lagring';
+
+                setError(errorMessage);
+                return { success: false, error: errorMessage };
+            }
+
+            await hentBehandlingMedBehandlingId(behandlingId);
+            return { success: true };
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Ukjent feil ved lagring';
+            setError(errorMessage);
+            return { success: false, error: errorMessage };
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fjernBrevmottaker = async (
+        behandlingId: string,
+        mottakerId: string
+    ): Promise<boolean> => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await request<void, void>({
+                method: 'DELETE',
+                url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}/${mottakerId}`,
+            });
+
+            if (response.status !== RessursStatus.Suksess) {
+                if ('frontendFeilmelding' in response) {
+                    setError(response.frontendFeilmelding);
+                } else {
+                    setError('Ukjent feil ved sletting');
+                }
+                return false;
+            }
+
+            await hentBehandlingMedBehandlingId(behandlingId);
+            return true;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Ukjent feil ved sletting';
+            setError(errorMessage);
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const clearError = (): void => {
+        setError(null);
+    };
+
+    return {
+        lagreBrevmottaker,
+        fjernBrevmottaker,
+        loading,
+        error,
+        clearError,
+    };
+};
