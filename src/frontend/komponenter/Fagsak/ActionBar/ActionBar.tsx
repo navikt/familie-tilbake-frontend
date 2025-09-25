@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
-import { BodyShort, Button, HStack } from '@navikt/ds-react';
+import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -44,27 +44,31 @@ const ActionBar: React.FC<Props> = ({
                 </BodyShort>
                 <HStack gap="4" className="flex-nowrap">
                     {forrigeTekst && forrigeAriaLabel && onForrige && (
+                        <Tooltip content={forrigeAriaLabel}>
+                            <Button
+                                variant="secondary"
+                                icon={<ChevronLeftIcon />}
+                                className="hidden sm:flex gap-0 lg:gap-2 text-nowrap py-2"
+                                size="small"
+                                onClick={onForrige}
+                                aria-label={forrigeAriaLabel}
+                            >
+                                <span className="hidden lg:block">{forrigeTekst}</span>
+                            </Button>
+                        </Tooltip>
+                    )}
+                    <Tooltip content={nesteAriaLabel}>
                         <Button
-                            variant="secondary"
-                            icon={<ChevronLeftIcon />}
+                            icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
+                            iconPosition="right"
                             className="hidden sm:flex gap-0 lg:gap-2 text-nowrap py-2"
                             size="small"
-                            onClick={onForrige}
-                            aria-label={forrigeAriaLabel}
+                            onClick={onNeste}
+                            aria-label={nesteAriaLabel}
                         >
-                            <span className="hidden lg:block">{forrigeTekst}</span>
+                            <span className="hidden lg:block">{nesteTekst}</span>
                         </Button>
-                    )}
-                    <Button
-                        icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
-                        iconPosition="right"
-                        className="hidden sm:flex gap-0 lg:gap-2 text-nowrap py-2"
-                        size="small"
-                        onClick={onNeste}
-                        aria-label={nesteAriaLabel}
-                    >
-                        <span className="hidden lg:block">{nesteTekst}</span>
-                    </Button>
+                    </Tooltip>
                 </HStack>
             </HStack>
         </>
