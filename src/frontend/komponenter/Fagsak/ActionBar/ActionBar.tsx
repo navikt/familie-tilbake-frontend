@@ -27,13 +27,13 @@ const ActionBar: React.FC<Props> = ({
             {/* For å unngå synlig innhold ved scrolling i mellomrommet under actionbaren */}
             <div
                 className={classNames('fixed bottom-0 bg-gray-50 h-5 left-4 right-8', {
-                    'right-100': åpenHøyremeny,
+                    'right-96': åpenHøyremeny,
                 })}
             />
             <HStack
                 className={classNames(
-                    'fixed bottom-2 left-4 bg-white right-12 px-4 sm:px-6 md:px-8 py-4 rounded-2xl border-border-divider border-1 justify-end z-10 gap-0 sm:gap-8 flex-nowrap overflow-auto',
-                    { 'right-100': åpenHøyremeny }
+                    'fixed bottom-2 left-4 bg-white right-8 px-4 sm:px-6 md:px-8 py-4 rounded-2xl border-border-divider border-1 justify-end z-10 gap-0 sm:gap-8 flex-nowrap overflow-auto',
+                    { 'right-96': åpenHøyremeny }
                 )}
                 aria-label="Behandling handlingsknapper"
             >

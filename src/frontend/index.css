@@ -3,3 +3,37 @@
 
 
 @config './tailwind.config.js';
+
+.scrollbar-stable {
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+}
+
+.scrollbar-stable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-stable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-stable::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.scrollbar-stable:hover::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+/* Firefox */
+.scrollbar-stable {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s ease;
+}
+
+.scrollbar-stable:hover {
+  scrollbar-color: #cbd5e1 transparent;
+}
