@@ -6,25 +6,6 @@ export enum Vilkårsresultat {
     Udefinert = 'UDEFINERT',
 }
 
-export const vilkårsresultater: Record<Vilkårsresultat, string> = {
-    [Vilkårsresultat.ForstoBurdeForstått]:
-        'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
-    [Vilkårsresultat.FeilOpplysningerFraBruker]:
-        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt **feilaktige** opplysninger',
-    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
-        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt **mangelfulle** opplysninger',
-    [Vilkårsresultat.GodTro]: 'Nei, mottaker har mottatt beløpet i god tro',
-    [Vilkårsresultat.Udefinert]: 'Udefinert',
-};
-
-export const vilkårsresultatHjelpetekster: Record<Vilkårsresultat, string> = {
-    [Vilkårsresultat.ForstoBurdeForstått]: '1. ledd, 1. punkt',
-    [Vilkårsresultat.FeilOpplysningerFraBruker]: '1. ledd, 2. punkt',
-    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]: '1. ledd, 2. punkt',
-    [Vilkårsresultat.GodTro]: '1. ledd',
-    [Vilkårsresultat.Udefinert]: 'Udefinert',
-};
-
 export const vilkårsvurderingStegInfotekst =
     'Fastsett tilbakekreving etter §22-15. Del opp perioden ved behov for ulik vurdering.';
 
