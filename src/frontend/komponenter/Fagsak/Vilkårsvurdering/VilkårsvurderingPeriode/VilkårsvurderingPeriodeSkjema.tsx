@@ -172,6 +172,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
         harUlagredeData,
         nullstillIkkePersisterteKomponenter,
         åpenHøyremeny,
+        actionBarStegtekst,
     } = useBehandling();
 
     const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
@@ -506,6 +507,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                 )}
             </HStack>
             <ActionBar
+                stegtekst={actionBarStegtekst(Behandlingssteg.Vilkårsvurdering)}
                 forrigeTekst="Forrige"
                 nesteTekst="Neste"
                 forrigeAriaLabel="Gå tilbake til foreldelsessteget"

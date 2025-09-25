@@ -14,6 +14,7 @@ import { styled } from 'styled-components';
 import { useVerge } from './VergeContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
+import { Behandlingssteg } from '../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../utils';
 import HenterData from '../../Felleskomponenter/Datalast/HenterData';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
@@ -25,7 +26,8 @@ const StyledVStack = styled(VStack)`
 
 const VergeContainer: React.FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } = useVerge();
-    const { behandlingILesemodus, settIkkePersistertKomponent, åpenHøyremeny } = useBehandling();
+    const { behandlingILesemodus, settIkkePersistertKomponent, åpenHøyremeny, actionBarStegtekst } =
+        useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -134,6 +136,7 @@ const VergeContainer: React.FC = () => {
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
 
                     <ActionBar
+                        stegtekst={actionBarStegtekst(Behandlingssteg.Verge)}
                         forrigeTekst={undefined}
                         nesteTekst="Neste"
                         forrigeAriaLabel={undefined}

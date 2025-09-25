@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import React from 'react';
 
 type Props = {
+    stegtekst: string | undefined;
     forrigeTekst: string | undefined;
     nesteTekst: string;
     forrigeAriaLabel: string | undefined;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 const ActionBar: React.FC<Props> = ({
+    stegtekst = '',
     nesteTekst,
     forrigeTekst,
     forrigeAriaLabel,
@@ -38,7 +40,7 @@ const ActionBar: React.FC<Props> = ({
                 aria-label="Behandling handlingsknapper"
             >
                 <BodyShort size="large" className="text-text-subtle flex items-center text-nowrap">
-                    Steg 2 av 5
+                    {stegtekst}
                 </BodyShort>
                 <HStack gap="4" className="flex-nowrap">
                     {forrigeTekst && forrigeAriaLabel && onForrige && (

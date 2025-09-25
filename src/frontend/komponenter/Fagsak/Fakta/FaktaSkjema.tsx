@@ -21,6 +21,7 @@ import FaktaPerioder from './FaktaPeriode/FaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { HendelseType } from '../../../kodeverk';
+import { Behandlingssteg } from '../../../typer/behandling';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { ActionBar } from '../ActionBar/ActionBar';
@@ -45,7 +46,7 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
         feilmeldinger,
         gåTilForrige,
     } = useFakta();
-    const { settIkkePersistertKomponent, åpenHøyremeny } = useBehandling();
+    const { settIkkePersistertKomponent, åpenHøyremeny, actionBarStegtekst } = useBehandling();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
 
@@ -199,6 +200,7 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
             </VStack>
             <FaktaRevurdering fakta={fakta} />
             <ActionBar
+                stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
                 forrigeTekst={behandling.harVerge ? 'Forrige' : undefined}
                 nesteTekst="Neste"
                 forrigeAriaLabel={behandling.harVerge ? 'Gå tilbake til Verge-steget' : undefined}

@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useForeldelse } from './ForeldelseContext';
 import ForeldelsePerioder from './ForeldelsePeriode/ForeldelsePerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { Behandlingssteg } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { finnDatoRelativtTilNå } from '../../../utils';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
@@ -25,7 +26,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
         stegErBehandlet,
         sendInnSkjema,
     } = useForeldelse();
-    const { behandlingILesemodus, åpenHøyremeny } = useBehandling();
+    const { behandlingILesemodus, åpenHøyremeny, actionBarStegtekst } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
     const navigerEllerLagreOgNaviger =
         erAutoutført || (stegErBehandlet && erLesevisning) ? gåTilNesteSteg : sendInnSkjema;
@@ -122,6 +123,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                 <DataLastIkkeSuksess ressurser={[foreldelse]} />
             )}
             <ActionBar
+                stegtekst={actionBarStegtekst(Behandlingssteg.Foreldelse)}
                 forrigeTekst="Forrige"
                 nesteTekst="Neste"
                 forrigeAriaLabel="Gå tilbake til fakta-steget"

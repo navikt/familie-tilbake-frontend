@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router';
 import { BrevmottakerModal } from './BrevmottakerModal';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { Behandlingssteg } from '../../../typer/behandling';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
@@ -224,7 +225,7 @@ type BrevmottakereProps = {
 };
 
 const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => {
-    const { behandlingILesemodus } = useBehandling();
+    const { behandlingILesemodus, actionBarStegtekst } = useBehandling();
     const navigate = useNavigate();
 
     const [visBrevmottakerModal, setVisBrevmottakerModal] = useState(false);
@@ -328,6 +329,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
             </VStack>
 
             <ActionBar
+                stegtekst={actionBarStegtekst(Behandlingssteg.Brevmottaker)}
                 forrigeTekst={undefined}
                 nesteTekst="Neste"
                 forrigeAriaLabel={undefined}
