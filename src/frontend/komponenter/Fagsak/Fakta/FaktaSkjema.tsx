@@ -46,7 +46,12 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
         feilmeldinger,
         gåTilForrige,
     } = useFakta();
-    const { settIkkePersistertKomponent, åpenHøyremeny, actionBarStegtekst } = useBehandling();
+    const {
+        settIkkePersistertKomponent,
+        åpenHøyremeny,
+        actionBarStegtekst,
+        harVærtPåFatteVedtakSteget,
+    } = useBehandling();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
 
@@ -208,6 +213,7 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
                 åpenHøyremeny={åpenHøyremeny}
                 onForrige={behandling.harVerge ? gåTilForrige : undefined}
                 onNeste={sendInnSkjema}
+                harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
             />
         </HGrid>
     );

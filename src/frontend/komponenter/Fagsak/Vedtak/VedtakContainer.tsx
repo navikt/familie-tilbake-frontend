@@ -54,7 +54,13 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         lagreUtkast,
         hentVedtaksbrevtekster,
     } = useVedtak();
-    const { behandlingILesemodus, aktivtSteg, åpenHøyremeny, actionBarStegtekst } = useBehandling();
+    const {
+        behandlingILesemodus,
+        aktivtSteg,
+        åpenHøyremeny,
+        actionBarStegtekst,
+        harVærtPåFatteVedtakSteget,
+    } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA =
         behandling.behandlingsårsakstype === Behandlingårsak.RevurderingKlageKa;
@@ -212,6 +218,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                     åpenHøyremeny={åpenHøyremeny}
                     onNeste={sendInnSkjema}
                     onForrige={gåTilForrige}
+                    harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
                 />
             </>
         );

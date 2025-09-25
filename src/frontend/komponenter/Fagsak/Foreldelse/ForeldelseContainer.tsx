@@ -26,7 +26,8 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
         stegErBehandlet,
         sendInnSkjema,
     } = useForeldelse();
-    const { behandlingILesemodus, åpenHøyremeny, actionBarStegtekst } = useBehandling();
+    const { behandlingILesemodus, åpenHøyremeny, actionBarStegtekst, harVærtPåFatteVedtakSteget } =
+        useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
     const navigerEllerLagreOgNaviger =
         erAutoutført || (stegErBehandlet && erLesevisning) ? gåTilNesteSteg : sendInnSkjema;
@@ -131,6 +132,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                 åpenHøyremeny={åpenHøyremeny}
                 onForrige={gåTilForrigeSteg}
                 onNeste={navigerEllerLagreOgNaviger}
+                harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
             />
         </>
     );

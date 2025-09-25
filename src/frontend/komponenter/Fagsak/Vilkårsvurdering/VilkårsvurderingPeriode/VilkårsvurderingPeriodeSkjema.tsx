@@ -173,6 +173,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
         nullstillIkkePersisterteKomponenter,
         åpenHøyremeny,
         actionBarStegtekst,
+        harVærtPåFatteVedtakSteget,
     } = useBehandling();
 
     const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
@@ -515,6 +516,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                 åpenHøyremeny={åpenHøyremeny}
                 onNeste={() => handleNavigering(PeriodeHandling.GåTilNesteSteg)}
                 onForrige={() => handleNavigering(PeriodeHandling.GåTilForrigeSteg)}
+                harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
             />
 
             {sendInnSkjemaMutation.isError && (

@@ -225,7 +225,8 @@ type BrevmottakereProps = {
 };
 
 const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => {
-    const { behandlingILesemodus, actionBarStegtekst } = useBehandling();
+    const { behandlingILesemodus, actionBarStegtekst, harVærtPåFatteVedtakSteget } =
+        useBehandling();
     const navigate = useNavigate();
 
     const [visBrevmottakerModal, setVisBrevmottakerModal] = useState(false);
@@ -337,6 +338,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
                 åpenHøyremeny={false}
                 onNeste={gåTilNeste}
                 onForrige={undefined}
+                harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
             />
         </>
     );
