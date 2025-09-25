@@ -8,10 +8,20 @@ import {
     forstodBurdeForståttAktsomheter,
     særligegrunner,
     Vilkårsresultat,
-    vilkårsresultater,
 } from '../../../../kodeverk';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../../utils';
 import TilbakekrevingAktivitetTabell from '../VilkårsvurderingPeriode/TilbakekrevingAktivitetTabell';
+
+const vilkårsresultaterTekster: Record<Vilkårsresultat, string> = {
+    [Vilkårsresultat.ForstoBurdeForstått]:
+        'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+    [Vilkårsresultat.FeilOpplysningerFraBruker]:
+        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+    [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
+        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+    [Vilkårsresultat.GodTro]: 'Nei, mottaker har mottatt beløpet i god tro',
+    [Vilkårsresultat.Udefinert]: 'Udefinert',
+};
 
 interface IProps {
     perioder: VilkårsvurderingPeriodeSkjemaData[];
@@ -66,7 +76,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
                                         verdi={
                                             skjema.vilkårsvurderingsresultatInfo
                                                 ?.vilkårsvurderingsresultat
-                                                ? vilkårsresultater[
+                                                ? vilkårsresultaterTekster[
                                                       skjema.vilkårsvurderingsresultatInfo
                                                           ?.vilkårsvurderingsresultat
                                                   ]

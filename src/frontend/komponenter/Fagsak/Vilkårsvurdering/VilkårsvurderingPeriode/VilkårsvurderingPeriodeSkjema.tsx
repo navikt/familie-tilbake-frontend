@@ -1,7 +1,7 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
 import type { IFagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
-import type { ChangeEvent, FC, ReactNode } from 'react';
+import type { ChangeEvent, FC } from 'react';
 
 import {
     BodyShort,
@@ -34,14 +34,7 @@ import {
 } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
-import {
-    Aktsomhet,
-    SærligeGrunner,
-    Vilkårsresultat,
-    vilkårsresultater,
-    vilkårsresultatHjelpetekster,
-    vilkårsresultatTyper,
-} from '../../../../kodeverk';
+import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import {
     Behandlingssteg,
     Behandlingsstegstatus,
@@ -114,14 +107,6 @@ const settSkjemadataFraPeriode = (
     );
     skjema.felter.grovtUaktsomIlleggeRenter.onChange(
         !kanIlleggeRenter ? OptionNEI : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
-    );
-};
-
-const lagLabeltekster = (resultat: Vilkårsresultat): ReactNode => {
-    return (
-        <div style={{ display: 'inline-flex' }}>
-            {`${vilkårsresultater[resultat]} (${vilkårsresultatHjelpetekster[resultat]})`}
-        </div>
     );
 };
 
@@ -446,11 +431,35 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                                     settIkkePersistertKomponent('vilkårsvurdering');
                                 }}
                             >
-                                {vilkårsresultatTyper.map(type => (
-                                    <Radio key={type} name="valgtVilkarResultatType" value={type}>
-                                        {lagLabeltekster(type)}
-                                    </Radio>
-                                ))}
+                                <Radio
+                                    name="valgtVilkarResultatType"
+                                    value={Vilkårsresultat.ForstoBurdeForstått}
+                                >
+                                    Ja, mottaker forsto eller burde forstått at utbetalingen
+                                    skyldtes en feil (1. ledd, 1. punkt)
+                                </Radio>
+                                <Radio
+                                    name="valgtVilkarResultatType"
+                                    value={Vilkårsresultat.FeilOpplysningerFraBruker}
+                                >
+                                    Ja, mottaker har forårsaket feilutbetalingen ved forsett eller
+                                    uaktsomt gitt <strong>feilaktige</strong> opplysninger (1. ledd,
+                                    2. punkt)
+                                </Radio>
+                                <Radio
+                                    name="valgtVilkarResultatType"
+                                    value={Vilkårsresultat.MangelfulleOpplysningerFraBruker}
+                                >
+                                    Ja, mottaker har forårsaket feilutbetalingen ved forsett eller
+                                    uaktsomt gitt <strong>mangelfulle</strong> opplysninger (1.
+                                    ledd, 2. punkt)
+                                </Radio>
+                                <Radio
+                                    name="valgtVilkarResultatType"
+                                    value={Vilkårsresultat.GodTro}
+                                >
+                                    Nei, mottaker har mottatt beløpet i god tro (1. ledd)
+                                </Radio>
                             </RadioGroup>
                         </VStack>
                         {vilkårsresultatVurderingGjort && (
