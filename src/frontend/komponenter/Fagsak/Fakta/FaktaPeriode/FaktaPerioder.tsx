@@ -39,7 +39,7 @@ const FaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLesevisning }) =>
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
-                    <Table.HeaderCell scope="col">Hendelse</Table.HeaderCell>
+                    <Table.HeaderCell scope="col">Rettslig grunnlag</Table.HeaderCell>
                     <Table.HeaderCell scope="col" align="right">
                         Feilutbetalt beløp
                     </Table.HeaderCell>

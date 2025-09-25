@@ -50,7 +50,7 @@ const HistoriskFaktaVisning: React.FC<IProps> = ({ skjemaData, fakta }) => {
                     <Table>
                         <Table.Header>
                             <Table.HeaderCell textSize="small">Periode</Table.HeaderCell>
-                            <Table.HeaderCell textSize="small">Hendelse</Table.HeaderCell>
+                            <Table.HeaderCell textSize="small">Rettslig grunnlag</Table.HeaderCell>
                             <Table.HeaderCell textSize="small">Feilutbetalt beløp</Table.HeaderCell>
                         </Table.Header>
                         <Table.Body>
