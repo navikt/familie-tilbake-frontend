@@ -118,7 +118,7 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
                 </VStack>
                 <Textarea
                     name="begrunnelse"
-                    label="Forklar årsaken(e) til feilutbetalingen"
+                    label="Årsak til feilutbetalingen"
                     description="Tekst som er her fra før, kommer fra fagsystemet. Legg gjerne til/rediger tekst."
                     readOnly={erLesevisning}
                     value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
