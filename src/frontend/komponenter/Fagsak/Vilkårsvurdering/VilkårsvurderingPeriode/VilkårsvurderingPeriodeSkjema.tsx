@@ -10,6 +10,7 @@ import {
     Detail,
     Heading,
     HGrid,
+    HStack,
     Radio,
     RadioGroup,
     Select,
@@ -41,10 +42,10 @@ import {
     type IBehandling,
 } from '../../../../typer/behandling';
 import { formatterDatostring, isEmpty } from '../../../../utils';
-import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { ModalWrapper } from '../../../Felleskomponenter/Modal/ModalWrapper';
 import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
+import { ActionBar } from '../../ActionBar/ActionBar';
 import { PeriodeHandling } from '../typer/periodeHandling';
 import { useVilkårsvurdering } from '../VilkårsvurderingContext';
 
@@ -151,8 +152,13 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const { settIkkePersistertKomponent, harUlagredeData, nullstillIkkePersisterteKomponenter } =
-        useBehandling();
+    const {
+        settIkkePersistertKomponent,
+        harUlagredeData,
+        nullstillIkkePersisterteKomponenter,
+        åpenHøyremeny,
+        actionBarStegtekst,
+    } = useBehandling();
 
     const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
 
@@ -274,23 +280,6 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
     };
 
     const erFørstePeriode = periode.index === perioder[0].index;
-    const handleForrigeKnapp = async (): Promise<void> => {
-        const handling = erFørstePeriode
-            ? PeriodeHandling.GåTilForrigeSteg
-            : PeriodeHandling.ForrigePeriode;
-        return await handleNavigering(handling);
-    };
-    const hentForrigeKnappTekst = (): string => {
-        if (erFørstePeriode) {
-            return harUlagredeData
-                ? 'Lagre og gå tilbake til foreldelse'
-                : 'Gå tilbake til foreldelse';
-        } else {
-            return harUlagredeData
-                ? 'Lagre og gå tilbake til forrige periode'
-                : 'Gå tilbake til forrige periode';
-        }
-    };
 
     const kanSplittePeriode = (periode: VilkårsvurderingPeriodeSkjemaData): boolean => {
         const fom = parseISO(periode.periode.fom);
@@ -299,21 +288,6 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
     };
 
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
-    const handleNesteKnapp = async (): Promise<void> => {
-        const handling = erSistePeriode
-            ? PeriodeHandling.GåTilNesteSteg
-            : PeriodeHandling.NestePeriode;
-        return await handleNavigering(handling);
-    };
-    const hentNesteKnappTekst = (): string => {
-        if (erSistePeriode) {
-            return harUlagredeData ? 'Lagre og gå videre til vedtak' : 'Gå videre til vedtak';
-        } else {
-            return harUlagredeData
-                ? 'Lagre og gå videre til neste periode'
-                : 'Gå videre til neste periode';
-        }
-    };
 
     if (sendInnSkjemaMutation.isPending) {
         return (
@@ -518,18 +492,39 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                 )}
             </VStack>
 
-            <Navigering>
-                <Button onClick={handleNesteKnapp} loading={sendInnSkjemaMutation.isPending}>
-                    {hentNesteKnappTekst()}
-                </Button>
-                <Button
-                    variant="secondary"
-                    onClick={handleForrigeKnapp}
-                    loading={sendInnSkjemaMutation.isPending}
-                >
-                    {hentForrigeKnappTekst()}
-                </Button>
-            </Navigering>
+            <HStack className="justify-end gap-4">
+                {!erFørstePeriode && (
+                    <Button
+                        variant="secondary"
+                        onClick={() => handleNavigering(PeriodeHandling.ForrigePeriode)}
+                        loading={sendInnSkjemaMutation.isPending}
+                        size="small"
+                        className="py-2"
+                    >
+                        Forrige periode
+                    </Button>
+                )}
+                {!erSistePeriode && (
+                    <Button
+                        onClick={() => handleNavigering(PeriodeHandling.NestePeriode)}
+                        loading={sendInnSkjemaMutation.isPending}
+                        size="small"
+                        className="py-2"
+                    >
+                        Neste periode
+                    </Button>
+                )}
+            </HStack>
+            <ActionBar
+                stegtekst={actionBarStegtekst(Behandlingssteg.Vilkårsvurdering)}
+                forrigeTekst="Forrige"
+                nesteTekst="Neste"
+                forrigeAriaLabel="Gå tilbake til foreldelsessteget"
+                nesteAriaLabel="Gå videre til vedtakssteget"
+                åpenHøyremeny={åpenHøyremeny}
+                onNeste={() => handleNavigering(PeriodeHandling.GåTilNesteSteg)}
+                onForrige={() => handleNavigering(PeriodeHandling.GåTilForrigeSteg)}
+            />
 
             {sendInnSkjemaMutation.isError && (
                 <FeilModal

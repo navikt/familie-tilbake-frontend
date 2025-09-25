@@ -5,7 +5,6 @@ import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 import {
     Alert,
     BodyShort,
-    Button,
     Checkbox,
     Detail,
     Heading,
@@ -22,9 +21,10 @@ import FaktaPerioder from './FaktaPeriode/FaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { HendelseType } from '../../../kodeverk';
+import { Behandlingssteg } from '../../../typer/behandling';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
-import { Navigering } from '../../Felleskomponenter/Flytelementer';
+import { ActionBar } from '../ActionBar/ActionBar';
 
 interface IProps {
     ytelse: Ytelsetype;
@@ -36,7 +36,6 @@ interface IProps {
 const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisning }) => {
     const {
         behandling,
-        stegErBehandlet,
         oppdaterBegrunnelse,
         oppdaterBeskrivelseBrukerHarUttaltSeg,
         oppdaterBrukerHarUttaltSeg,
@@ -45,10 +44,9 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
         sendInnSkjema,
         visFeilmeldinger,
         feilmeldinger,
-        senderInn,
         gåTilForrige,
     } = useFakta();
-    const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
+    const { settIkkePersistertKomponent, åpenHøyremeny, actionBarStegtekst } = useBehandling();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
 
@@ -78,7 +76,7 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
                     </div>
                     <div>
                         <Detail weight="semibold">Feilutbetalt beløp totalt</Detail>
-                        <BodyShort size="small" className="redText">
+                        <BodyShort size="small" className="text-text-danger font-bold">
                             {`${formatCurrencyNoKr(fakta.totaltFeilutbetaltBeløp)}`}
                         </BodyShort>
                     </div>
@@ -199,24 +197,18 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
                         />
                     )}
                 </VStack>
-                <Navigering>
-                    <Button
-                        variant="primary"
-                        onClick={sendInnSkjema}
-                        loading={senderInn}
-                        disabled={erLesevisning && !stegErBehandlet}
-                    >
-                        {!stegErBehandlet || harUlagredeData ? 'Lagre og fortsett' : 'Neste'}
-                    </Button>
-                    {behandling.harVerge && (
-                        <Button variant="secondary" onClick={gåTilForrige}>
-                            Forrige
-                        </Button>
-                    )}
-                </Navigering>
             </VStack>
-
             <FaktaRevurdering fakta={fakta} />
+            <ActionBar
+                stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
+                forrigeTekst={behandling.harVerge ? 'Forrige' : undefined}
+                nesteTekst="Neste"
+                forrigeAriaLabel={behandling.harVerge ? 'Gå tilbake til Verge-steget' : undefined}
+                nesteAriaLabel="Gå videre til foreldelsessteget"
+                åpenHøyremeny={åpenHøyremeny}
+                onForrige={behandling.harVerge ? gåTilForrige : undefined}
+                onNeste={sendInnSkjema}
+            />
         </HGrid>
     );
 };

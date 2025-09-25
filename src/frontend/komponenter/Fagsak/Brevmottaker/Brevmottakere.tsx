@@ -11,10 +11,12 @@ import { useNavigate } from 'react-router';
 import { BrevmottakerModal } from './BrevmottakerModal';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { Behandlingssteg } from '../../../typer/behandling';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
 import { SYNLIGE_STEG } from '../../../utils/sider';
+import { ActionBar } from '../ActionBar/ActionBar';
 
 export type BrevmottakerProps = {
     brevmottaker: IBrevmottaker;
@@ -223,7 +225,7 @@ type BrevmottakereProps = {
 };
 
 const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => {
-    const { behandlingILesemodus } = useBehandling();
+    const { behandlingILesemodus, actionBarStegtekst } = useBehandling();
     const navigate = useNavigate();
 
     const [visBrevmottakerModal, setVisBrevmottakerModal] = useState(false);
@@ -262,7 +264,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
                     settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}
                 />
             )}
-            <VStack padding="space-24" gap="4" align="start">
+            <VStack gap="4" align="start">
                 <Heading size="small" level="1">
                     Brevmottaker(e)
                 </Heading>
@@ -324,8 +326,18 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
                         Legg til ny mottaker
                     </Button>
                 )}
-                <Button onClick={gåTilNeste}>Neste</Button>
             </VStack>
+
+            <ActionBar
+                stegtekst={actionBarStegtekst(Behandlingssteg.Brevmottaker)}
+                forrigeTekst={undefined}
+                nesteTekst="Neste"
+                forrigeAriaLabel={undefined}
+                nesteAriaLabel="Gå til faktasteget"
+                åpenHøyremeny={false}
+                onNeste={gåTilNeste}
+                onForrige={undefined}
+            />
         </>
     );
 };

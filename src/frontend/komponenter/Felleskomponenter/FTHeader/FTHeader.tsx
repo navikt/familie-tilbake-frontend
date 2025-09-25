@@ -71,7 +71,9 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
 
     return (
         <InternalHeader>
-            <InternalHeader.Title href="/">Nav - Tilbakekreving</InternalHeader.Title>
+            <InternalHeader.Title href="/" className="text-nowrap">
+                Nav - Tilbakekreving
+            </InternalHeader.Title>
             <Spacer />
             {harGyldigLenke && (
                 <Dropdown>
@@ -134,6 +136,7 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
             )}
             <Dropdown>
                 <InternalHeader.UserButton
+                    className="text-nowrap"
                     as={Dropdown.Toggle}
                     name={innloggetSaksbehandler?.displayName || 'Ukjent'}
                     description={innloggetSaksbehandler?.enhet || 'Ukjent enhet'}

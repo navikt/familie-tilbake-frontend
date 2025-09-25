@@ -3,14 +3,13 @@ import type { ForeldelsePeriode } from '../../../../typer/tilbakekrevingstyper';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
-import { Button, VStack } from '@navikt/ds-react';
+import { VStack } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
 import ForeldelsePeriodeSkjema from './ForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../../typer/periodeSkjemaData';
-import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useForeldelse } from '../ForeldelseContext';
 
@@ -59,31 +58,11 @@ interface IProps {
 
 const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisning }) => {
     const [tidslinjeRader, settTidslinjeRader] = React.useState<TimelinePeriodProps[][]>();
-    const [disableBekreft, settDisableBekreft] = React.useState<boolean>(true);
-    const {
-        valgtPeriode,
-        settValgtPeriode,
-        stegErBehandlet,
-        erAutoutført,
-        gåTilForrigeSteg,
-        gåTilNesteSteg,
-        allePerioderBehandlet,
-        sendInnSkjema,
-        senderInn,
-    } = useForeldelse();
+    const { valgtPeriode, settValgtPeriode } = useForeldelse();
 
     React.useEffect(() => {
         settTidslinjeRader(genererRader(perioder, valgtPeriode));
     }, [perioder, valgtPeriode]);
-
-    React.useEffect(() => {
-        if (!valgtPeriode) {
-            settDisableBekreft(!allePerioderBehandlet || !behandling.kanEndres || erLesevisning);
-        } else {
-            settDisableBekreft(true);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [valgtPeriode, allePerioderBehandlet]);
 
     const onSelectPeriode = (periode: TimelinePeriodProps): void => {
         const periodeFom = periode.start.toISOString().substring(0, 10);
@@ -97,7 +76,6 @@ const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisn
     return perioder && tidslinjeRader ? (
         <VStack gap="5">
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
-
             {!!valgtPeriode && (
                 <ForeldelsePeriodeSkjema
                     behandling={behandling}
@@ -105,25 +83,6 @@ const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisn
                     erLesevisning={erLesevisning}
                 />
             )}
-            <Navigering>
-                {erAutoutført || (stegErBehandlet && erLesevisning) ? (
-                    <Button variant="primary" onClick={gåTilNesteSteg}>
-                        Neste
-                    </Button>
-                ) : (
-                    <Button
-                        variant="primary"
-                        onClick={sendInnSkjema}
-                        loading={senderInn}
-                        disabled={disableBekreft}
-                    >
-                        {stegErBehandlet ? 'Neste' : 'Lagre og fortsett'}
-                    </Button>
-                )}
-                <Button variant="secondary" onClick={gåTilForrigeSteg}>
-                    Forrige
-                </Button>
-            </Navigering>
         </VStack>
     ) : null;
 };
