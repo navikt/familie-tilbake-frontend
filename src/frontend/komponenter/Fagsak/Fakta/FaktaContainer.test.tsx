@@ -155,7 +155,7 @@ describe('Tester: FaktaContainer', () => {
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } =
             renderFaktaContainer(behandling, Ytelsetype.Barnetrygd, fagsak);
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -244,7 +244,7 @@ describe('Tester: FaktaContainer', () => {
             renderFaktaContainer(behandling, Ytelsetype.Barnetrygd, fagsak);
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -334,7 +334,7 @@ describe('Tester: FaktaContainer', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -390,7 +390,7 @@ describe('Tester: FaktaContainer', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -444,7 +444,7 @@ describe('Tester: FaktaContainer', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -495,7 +495,7 @@ describe('Tester: FaktaContainer', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
