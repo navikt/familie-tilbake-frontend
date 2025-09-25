@@ -12,6 +12,7 @@ type Props = {
     åpenHøyremeny: boolean;
     onNeste: () => void;
     onForrige: (() => void) | undefined;
+    disableNeste: boolean;
 };
 
 const ActionBar: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const ActionBar: React.FC<Props> = ({
     åpenHøyremeny,
     onNeste,
     onForrige,
+    disableNeste = false,
 }) => {
     return (
         <>
@@ -57,7 +59,7 @@ const ActionBar: React.FC<Props> = ({
                             </Button>
                         </Tooltip>
                     )}
-                    <Tooltip content={nesteAriaLabel}>
+                    <Tooltip content={nesteAriaLabel} aria-disabled={disableNeste}>
                         <Button
                             icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
                             iconPosition="right"
@@ -65,6 +67,7 @@ const ActionBar: React.FC<Props> = ({
                             size="small"
                             onClick={onNeste}
                             aria-label={nesteAriaLabel}
+                            disabled={disableNeste}
                         >
                             <span className="hidden lg:block">{nesteTekst}</span>
                         </Button>
