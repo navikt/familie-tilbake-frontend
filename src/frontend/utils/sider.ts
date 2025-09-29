@@ -80,8 +80,11 @@ export const erSidenAktiv = (synligSteg: SynligSteg, behandling: IBehandling): b
 export const visSide = (steg: Behandlingssteg, behandling: IBehandling): boolean => {
     if (steg === Behandlingssteg.Brevmottaker) {
         return behandling.behandlingsstegsinfo
-            .map(({ behandlingssteg }) => behandlingssteg)
-            .includes(steg);
+            .filter(
+                ({ behandlingsstegstatus }) =>
+                    behandlingsstegstatus !== Behandlingsstegstatus.Tilbakeført
+            )
+            .some(({ behandlingssteg }) => behandlingssteg === steg);
     }
     if (steg === Behandlingssteg.Verge) {
         return !behandling.støtterManuelleBrevmottakere;
