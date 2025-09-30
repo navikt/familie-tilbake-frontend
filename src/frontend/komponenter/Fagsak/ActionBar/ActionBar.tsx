@@ -34,14 +34,14 @@ const ActionBar: React.FC<Props> = ({
         <>
             {/* For å unngå synlig innhold ved scrolling i mellomrommet under actionbaren */}
             <div
-                className={classNames('fixed bottom-0 bg-gray-50 h-5 left-4 right-8', {
+                className={classNames('fixed bottom-0 bg-gray-50 h-5 left-4 right-8 min-w-95', {
                     'right-96': åpenHøyremeny,
                     'right-120': harVærtPåFatteVedtakSteg && åpenHøyremeny,
                 })}
             />
             <HStack
                 className={classNames(
-                    'fixed bottom-2 left-4 bg-white right-8 px-4 sm:px-6 md:px-8 py-4 rounded-2xl border-border-divider border-1 justify-end z-10 gap-0 sm:gap-8 flex-nowrap overflow-auto',
+                    'fixed bottom-2 left-4 bg-white right-8 px-8 py-4 rounded-2xl border-border-divider border-1 justify-end z-10 gap-8 flex-nowrap overflow-auto min-w-95',
                     {
                         'right-96': åpenHøyremeny,
                         'right-120': harVærtPåFatteVedtakSteg && åpenHøyremeny,
@@ -58,12 +58,12 @@ const ActionBar: React.FC<Props> = ({
                             <Button
                                 variant="secondary"
                                 icon={<ChevronLeftIcon />}
-                                className="hidden sm:flex gap-0 lg:gap-2 text-nowrap py-2"
+                                className="flex gap-0 lg:gap-2 text-nowrap py-2"
                                 size="small"
                                 onClick={onForrige}
                                 aria-label={forrigeAriaLabel}
                             >
-                                <span className="hidden lg:block">{forrigeTekst}</span>
+                                <span className="hidden md:block">{forrigeTekst}</span>
                             </Button>
                         </Tooltip>
                     )}
@@ -72,13 +72,13 @@ const ActionBar: React.FC<Props> = ({
                             <Button
                                 icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
                                 iconPosition="right"
-                                className="hidden sm:flex gap-0 lg:gap-2 text-nowrap py-2"
+                                className="flex gap-0 lg:gap-2 text-nowrap py-2"
                                 size="small"
                                 onClick={onNeste}
                                 aria-label={nesteAriaLabel}
                                 disabled={disableNeste}
                             >
-                                <span className="hidden lg:block">{nesteTekst}</span>
+                                <span className="hidden md:block">{nesteTekst}</span>
                             </Button>
                         </Tooltip>
                     )}
