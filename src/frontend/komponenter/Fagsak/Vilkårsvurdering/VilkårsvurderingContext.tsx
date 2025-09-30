@@ -11,7 +11,7 @@ import type { AxiosError } from 'axios';
 
 import { useMutation } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
@@ -218,6 +218,10 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             settValgtPeriode(nyePerioder[0]);
         };
 
+        const erAllePerioderBehandlet = useMemo(() => {
+            return skjemaData.every(periode => erBehandlet(periode));
+        }, [skjemaData]);
+
         const validererTotaltBeløpMot4Rettsgebyr = (): boolean => {
             if (vilkårsvurdering?.status !== RessursStatus.Suksess) {
                 return false; // Skal ikke være mulig, så return false ok
@@ -334,6 +338,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             nestePeriode,
             forrigePeriode,
             hentBehandlingMedBehandlingId,
+            erAllePerioderBehandlet,
         };
     }
 );

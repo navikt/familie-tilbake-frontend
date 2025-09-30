@@ -161,6 +161,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
         sendInnSkjemaOgNaviger,
         settValgtPeriode,
         hentBehandlingMedBehandlingId,
+        erAllePerioderBehandlet,
     } = useVilkårsvurdering();
     const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
@@ -517,6 +518,9 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
                 onNeste={() => handleNavigering(PeriodeHandling.GåTilNesteSteg)}
                 onForrige={() => handleNavigering(PeriodeHandling.GåTilForrigeSteg)}
                 harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
+                // Foreldede perioder blir ikke riktig validert, derfor de disables her. Opprettet bug i trello for dette.
+                // https://trello.com/c/CEfUALXj/369-ved-trykk-p%C3%A5-neste-steg-i-vilk%C3%A5rsvurderingen-ved-foreldet-steg-s%C3%A5-er-det-en-feil-i-valideringen-som-sier-at-perioden-mangler-vil
+                disableNeste={(!erAllePerioderBehandlet && !erSistePeriode) || periode.foreldet}
             />
 
             {sendInnSkjemaMutation.isError && (
