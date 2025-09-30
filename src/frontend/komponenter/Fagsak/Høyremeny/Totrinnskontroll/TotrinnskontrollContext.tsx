@@ -20,7 +20,6 @@ import {
     RessursStatus,
 } from '../../../../typer/ressurs';
 import { hentFrontendFeilmelding, validerTekstMaksLengde } from '../../../../utils';
-import { SYNLIGE_STEG } from '../../../../utils/sider';
 
 const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
     const option = totrinnGodkjenningOptions.find(opt => opt.verdi === verdi);
@@ -225,11 +224,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 sendInnFatteVedtak(behandling.behandlingId, payload)
                     .then((respons: Ressurs<string>) => {
                         if (respons.status === RessursStatus.Suksess) {
-                            hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                                navigate(
-                                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
-                                );
-                            });
+                            hentBehandlingMedBehandlingId(behandling.behandlingId);
                         } else if (
                             respons.status === RessursStatus.Feilet ||
                             respons.status === RessursStatus.FunksjonellFeil
