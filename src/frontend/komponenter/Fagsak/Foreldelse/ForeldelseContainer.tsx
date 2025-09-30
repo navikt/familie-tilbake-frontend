@@ -128,7 +128,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                 stegtekst={actionBarStegtekst(Behandlingssteg.Foreldelse)}
                 forrigeTekst="Forrige"
                 nesteTekst="Neste"
-                forrigeAriaLabel="Gå tilbake til fakta-steget"
+                forrigeAriaLabel="Gå tilbake til faktasteget"
                 nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
                 åpenHøyremeny={åpenHøyremeny}
                 onForrige={gåTilForrigeSteg}

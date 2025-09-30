@@ -13,6 +13,7 @@ type Props = {
     harVærtPåFatteVedtakSteg: boolean;
     onNeste: () => void;
     onForrige: (() => void) | undefined;
+    skjulNeste?: boolean;
     disableNeste?: boolean;
 };
 
@@ -26,6 +27,7 @@ const ActionBar: React.FC<Props> = ({
     harVærtPåFatteVedtakSteg,
     onNeste,
     onForrige,
+    skjulNeste = false,
     disableNeste = false,
 }) => {
     return (
@@ -65,19 +67,21 @@ const ActionBar: React.FC<Props> = ({
                             </Button>
                         </Tooltip>
                     )}
-                    <Tooltip content={nesteAriaLabel} aria-disabled={disableNeste}>
-                        <Button
-                            icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
-                            iconPosition="right"
-                            className="hidden sm:flex gap-0 lg:gap-2 text-nowrap py-2"
-                            size="small"
-                            onClick={onNeste}
-                            aria-label={nesteAriaLabel}
-                            disabled={disableNeste}
-                        >
-                            <span className="hidden lg:block">{nesteTekst}</span>
-                        </Button>
-                    </Tooltip>
+                    {!skjulNeste && (
+                        <Tooltip content={nesteAriaLabel} aria-disabled={disableNeste}>
+                            <Button
+                                icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
+                                iconPosition="right"
+                                className="hidden sm:flex gap-0 lg:gap-2 text-nowrap py-2"
+                                size="small"
+                                onClick={onNeste}
+                                aria-label={nesteAriaLabel}
+                                disabled={disableNeste}
+                            >
+                                <span className="hidden lg:block">{nesteTekst}</span>
+                            </Button>
+                        </Tooltip>
+                    )}
                 </HStack>
             </HStack>
         </>

@@ -174,7 +174,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Gå videre til neste periode',
+                name: 'Neste periode',
             })
         ).toBeEnabled();
 
@@ -182,13 +182,13 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Lagre og gå videre til neste periode',
+                name: 'Neste periode',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til neste periode',
+                name: 'Neste periode',
             })
         );
 
@@ -208,13 +208,13 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Lagre og gå videre til neste periode',
+                name: 'Neste periode',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til neste periode',
+                name: 'Neste periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -236,7 +236,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til neste periode',
+                name: 'Neste periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -253,7 +253,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til neste periode',
+                name: 'Neste periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -311,7 +311,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -359,7 +359,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til neste periode',
+                name: 'Neste periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -393,7 +393,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
     });
@@ -457,12 +457,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Gå videre til neste periode',
+                name: 'Neste periode',
             })
         ).toBeEnabled();
         expect(
             getByRole('button', {
-                name: 'Gå tilbake til foreldelse',
+                name: 'Gå tilbake til foreldelsessteget',
             })
         ).toBeEnabled();
 
@@ -515,29 +515,29 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         ).toBeEnabled();
         expect(
             getByRole('button', {
-                name: 'Gå tilbake til forrige periode',
+                name: 'Forrige periode',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Gå tilbake til forrige periode',
+                name: 'Forrige periode',
             })
         );
 
         expect(
             getByRole('button', {
-                name: 'Gå videre til neste periode',
+                name: 'Neste periode',
             })
         ).toBeEnabled();
         expect(
             getByRole('button', {
-                name: 'Gå tilbake til foreldelse',
+                name: 'Gå tilbake til foreldelsessteget',
             })
         ).toBeEnabled();
     });
@@ -588,7 +588,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         await waitFor(() => {
             // Tittel skal alltid være synlig
-            expect(getByText('Tilbakekreving', { selector: 'h2' })).toBeInTheDocument();
+            expect(getByText('Tilbakekreving', { selector: 'h1' })).toBeInTheDocument();
             // Første periode sitt endringspanel skal være åpnet by default i lesevisning, sjekker at riktige verdier er satt
             expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
         });
@@ -637,13 +637,13 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Gå tilbake til foreldelse',
+                name: 'Gå tilbake til foreldelsessteget',
             })
         ).toBeEnabled();
 
         expect(
             getByRole('button', {
-                name: 'Gå videre til neste periode',
+                name: 'Neste periode',
             })
         ).toBeEnabled();
 
@@ -654,7 +654,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         );
 
         // Tittel skal alltid være synlig
-        expect(getByText('Tilbakekreving', { selector: 'h2' })).toBeInTheDocument();
+        expect(getByText('Tilbakekreving', { selector: 'h1' })).toBeInTheDocument();
 
         // Andre periode sitt endringspanel skal nå være åpnet, sjekker at riktige verdier er satt
         expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
@@ -703,31 +703,31 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Gå tilbake til forrige periode',
+                name: 'Forrige periode',
             })
         ).toBeEnabled();
 
         expect(
             getByRole('button', {
-                name: 'Gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Gå tilbake til forrige periode',
+                name: 'Forrige periode',
             })
         );
 
         expect(
             getByRole('button', {
-                name: 'Gå tilbake til foreldelse',
+                name: 'Gå tilbake til foreldelsessteget',
             })
         ).toBeEnabled();
 
         expect(
             getByRole('button', {
-                name: 'Gå videre til neste periode',
+                name: 'Neste periode',
             })
         ).toBeEnabled();
     });
@@ -784,12 +784,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
         ).toBeInTheDocument();
         expect(
             getByRole('button', {
-                name: 'Gå videre til neste periode',
+                name: 'Gå videre til vedtakssteget',
             })
         ).toBeEnabled();
         expect(
             getByRole('button', {
-                name: 'Gå tilbake til foreldelse',
+                name: 'Gå tilbake til foreldelsessteget',
             })
         ).toBeEnabled();
 

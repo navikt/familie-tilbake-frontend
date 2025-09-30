@@ -120,6 +120,8 @@ describe('Tester: ForeldelseContainer', () => {
             hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
             settIkkePersistertKomponent: jest.fn(),
             nullstillIkkePersisterteKomponenter: jest.fn(),
+            actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 4'),
+            harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
         }));
     };
 
@@ -142,13 +144,13 @@ describe('Tester: ForeldelseContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeDisabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         await waitFor(() => {
@@ -159,7 +161,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         await waitFor(() => {
@@ -168,7 +170,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeDisabled();
 
@@ -178,7 +180,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         await waitFor(() => {
@@ -190,7 +192,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         await waitFor(() => {
@@ -200,13 +202,13 @@ describe('Tester: ForeldelseContainer', () => {
         expect(queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
         expect(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til vilkårsvurderingssteget',
             })
         );
     });
@@ -242,24 +244,29 @@ describe('Tester: ForeldelseContainer', () => {
             expect(queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
             expect(
                 getByRole('button', {
-                    name: 'Neste',
+                    name: 'Gå videre til vilkårsvurderingssteget',
                 })
             ).toBeEnabled();
         });
 
-        await user.click(
-            getByRole('button', {
-                name: 'Suksess fra 01.01.2020 til 31.03.2020',
-            })
-        );
+        await waitFor(() => {
+            user.click(
+                getByRole('button', {
+                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
+                })
+            );
+        });
 
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til vilkårsvurderingssteget',
             })
-        ).toBeDisabled();
+        ).toBeEnabled();
 
-        expect(queryByText('Detaljer for valgt periode')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(queryByText('Detaljer for valgt periode')).toBeInTheDocument();
+        });
+
         expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
         expect(getByLabelText('Vurdering')).toHaveValue('Begrunnelse 1');
         expect(getByLabelText('Perioden er foreldet')).toBeChecked();
@@ -291,15 +298,9 @@ describe('Tester: ForeldelseContainer', () => {
             '24.12.2020'
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Lukk',
-            })
-        );
-
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
     });
@@ -332,7 +333,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         await waitFor(() => {
             // Tittel skal alltid være synlig
-            expect(getByText('Foreldelse', { selector: 'h2' })).toBeInTheDocument();
+            expect(getByText('Foreldelse', { selector: 'h1' })).toBeInTheDocument();
             // Første periode sitt endringspanel skal være åpnet by default i lesevisning, sjekker at riktige verdier er satt
             expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
         });
@@ -367,12 +368,12 @@ describe('Tester: ForeldelseContainer', () => {
         // Knapper for navigering mellom faner skal alltid være synlige og enabled
         expect(
             getByRole('button', {
-                name: 'Forrige',
+                name: 'Gå tilbake til faktasteget',
             })
         ).toBeEnabled();
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
 
@@ -384,7 +385,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         // Tittel skal alltid være synlig
         await waitFor(() => {
-            expect(getByText('Foreldelse', { selector: 'h2' })).toBeInTheDocument();
+            expect(getByText('Foreldelse', { selector: 'h1' })).toBeInTheDocument();
         });
 
         // Andre periode sitt endringspanel skal nå være åpnet, sjekker at riktige verdier er satt
@@ -423,12 +424,12 @@ describe('Tester: ForeldelseContainer', () => {
         // Knapper for navigering mellom faner skal alltid være synlige og enabled
         expect(
             getByRole('button', {
-                name: 'Forrige',
+                name: 'Gå tilbake til faktasteget',
             })
         ).toBeEnabled();
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
     });
@@ -448,7 +449,7 @@ describe('Tester: ForeldelseContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
     });
