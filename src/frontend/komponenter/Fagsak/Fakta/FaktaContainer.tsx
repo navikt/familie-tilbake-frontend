@@ -24,7 +24,7 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
         return (
             <>
                 <Heading level="1" size="small" spacing>
-                    Fakta om feilutbetaling
+                    Fakta fra feilutbetalingssaken
                 </Heading>
                 {(!erLesevisning || stegErBehandlet) && (
                     <>

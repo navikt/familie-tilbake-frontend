@@ -98,7 +98,7 @@ export const behandlingssteg: Record<Behandlingssteg, string> = {
     [Behandlingssteg.Grunnlag]: 'Kravgrunnlag',
     [Behandlingssteg.Verge]: 'Verge',
     [Behandlingssteg.Brevmottaker]: 'Brevmottaker',
-    [Behandlingssteg.Fakta]: 'Fakta om feilutbetaling',
+    [Behandlingssteg.Fakta]: 'Fakta fra feilutbetalingssaken',
     [Behandlingssteg.Foreldelse]: 'Foreldelse',
     [Behandlingssteg.Vilkårsvurdering]: 'Tilbakekreving',
     [Behandlingssteg.ForeslåVedtak]: 'Vedtak',

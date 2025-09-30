@@ -105,7 +105,7 @@ describe('Tester: Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(3);
@@ -179,7 +179,7 @@ describe('Tester: Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
@@ -268,7 +268,7 @@ describe('Tester: Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
@@ -330,7 +330,7 @@ describe('Tester: Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
