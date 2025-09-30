@@ -25,6 +25,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
         gåTilForrigeSteg,
         stegErBehandlet,
         sendInnSkjema,
+        allePerioderBehandlet,
     } = useForeldelse();
     const { behandlingILesemodus, åpenHøyremeny, actionBarStegtekst, harVærtPåFatteVedtakSteget } =
         useBehandling();
@@ -133,6 +134,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                 onForrige={gåTilForrigeSteg}
                 onNeste={navigerEllerLagreOgNaviger}
                 harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
+                disableNeste={!allePerioderBehandlet}
             />
         </>
     );
