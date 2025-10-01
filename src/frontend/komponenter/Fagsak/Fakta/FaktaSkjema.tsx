@@ -42,6 +42,7 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
         behandlePerioderSamlet,
         settBehandlePerioderSamlet,
         sendInnSkjema,
+        senderInn,
         visFeilmeldinger,
         feilmeldinger,
         gåTilForrige,
@@ -214,6 +215,7 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
                 onForrige={behandling.harVerge ? gåTilForrige : undefined}
                 onNeste={sendInnSkjema}
                 harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
+                isLoading={senderInn}
             />
         </HGrid>
     );

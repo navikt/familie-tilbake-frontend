@@ -25,7 +25,8 @@ const StyledVStack = styled(VStack)`
 `;
 
 const VergeContainer: React.FC = () => {
-    const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } = useVerge();
+    const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =
+        useVerge();
     const {
         behandlingILesemodus,
         settIkkePersistertKomponent,
@@ -150,6 +151,7 @@ const VergeContainer: React.FC = () => {
                         onNeste={sendInn}
                         onForrige={undefined}
                         harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
+                        isLoading={senderInn}
                     />
                 </StyledVStack>
             )}

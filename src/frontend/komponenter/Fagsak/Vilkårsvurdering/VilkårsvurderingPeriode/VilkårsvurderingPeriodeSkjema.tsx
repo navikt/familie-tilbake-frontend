@@ -293,7 +293,7 @@ const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
 
     if (sendInnSkjemaMutation.isPending) {
         return (
-            <Box padding="4" className="min-w-[20rem]">
+            <Box padding="4" className="min-w-[20rem]" aria-live="polite">
                 Navigerer...
             </Box>
         );

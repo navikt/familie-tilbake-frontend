@@ -220,6 +220,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                     onNeste={sendInnSkjema}
                     onForrige={gåTilForrige}
                     harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
+                    isLoading={senderInn}
                 />
             </>
         );

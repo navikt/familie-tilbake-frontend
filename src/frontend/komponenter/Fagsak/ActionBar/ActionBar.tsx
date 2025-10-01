@@ -13,6 +13,7 @@ type Props = {
     harVærtPåFatteVedtakSteg: boolean;
     onNeste: () => void;
     onForrige: (() => void) | undefined;
+    isLoading?: boolean;
     skjulNeste?: boolean;
     disableNeste?: boolean;
 };
@@ -27,6 +28,7 @@ const ActionBar: React.FC<Props> = ({
     harVærtPåFatteVedtakSteg,
     onNeste,
     onForrige,
+    isLoading = false,
     skjulNeste = false,
     disableNeste = false,
 }) => {
@@ -60,7 +62,9 @@ const ActionBar: React.FC<Props> = ({
                                 icon={<ChevronLeftIcon />}
                                 className="flex gap-0 lg:gap-2 text-nowrap py-2"
                                 size="small"
-                                onClick={onForrige}
+                                onClick={() => {
+                                    if (!isLoading) onForrige();
+                                }}
                                 aria-label={forrigeAriaLabel}
                             >
                                 <span className="hidden md:block">{forrigeTekst}</span>
@@ -74,7 +78,9 @@ const ActionBar: React.FC<Props> = ({
                                 iconPosition="right"
                                 className="flex gap-0 lg:gap-2 text-nowrap py-2"
                                 size="small"
-                                onClick={onNeste}
+                                onClick={() => {
+                                    if (!isLoading) onNeste();
+                                }}
                                 aria-label={nesteAriaLabel}
                                 disabled={disableNeste}
                             >
@@ -89,3 +95,5 @@ const ActionBar: React.FC<Props> = ({
 };
 
 export { ActionBar };
+// fjern navn før sm
+// action bar forskyvninger
