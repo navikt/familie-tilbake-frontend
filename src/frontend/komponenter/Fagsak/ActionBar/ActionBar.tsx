@@ -40,8 +40,9 @@ const ActionBar: React.FC<Props> = ({
                 })}
             />
             <HStack
+                gap="8"
                 className={classNames(
-                    'fixed bottom-2 left-4 bg-white right-8 px-8 py-4 rounded-2xl border-border-divider border-1 justify-end z-10 gap-8 flex-nowrap overflow-auto min-w-95',
+                    'fixed bottom-2 left-4 bg-white right-8 px-8 py-4 rounded-2xl border-border-divider border-1 justify-end z-10 flex-nowrap overflow-auto min-w-141',
                     {
                         'right-96': åpenHøyremeny,
                         'right-120': harVærtPåFatteVedtakSteg && åpenHøyremeny,
@@ -93,5 +94,3 @@ const ActionBar: React.FC<Props> = ({
 };
 
 export { ActionBar };
-// fjern navn før sm
-// action bar forskyvninger

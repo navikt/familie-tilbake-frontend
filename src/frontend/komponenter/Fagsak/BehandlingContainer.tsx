@@ -172,7 +172,7 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
                 aria-label="Behandling innhold"
             >
                 <Stegflyt />
-                <section className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white m-4 scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 mb-25">
+                <section className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white m-4 scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 mb-25 min-w-141">
                     <Suspense fallback={<BehandlingContainerSkeleton />}>
                         <Routes>
                             <Route
