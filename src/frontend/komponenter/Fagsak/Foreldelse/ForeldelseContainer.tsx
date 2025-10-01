@@ -127,7 +127,6 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
             )}
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Foreldelse)}
-                forrigeTekst="Forrige"
                 nesteTekst="Neste"
                 forrigeAriaLabel="Gå tilbake til faktasteget"
                 nesteAriaLabel="Gå videre til vilkårsvurderingssteget"

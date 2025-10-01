@@ -5,7 +5,6 @@ import React from 'react';
 
 type Props = {
     stegtekst: string | undefined;
-    forrigeTekst: string | undefined;
     nesteTekst: string;
     forrigeAriaLabel: string | undefined;
     nesteAriaLabel: string;
@@ -21,7 +20,6 @@ type Props = {
 const ActionBar: React.FC<Props> = ({
     stegtekst = '',
     nesteTekst,
-    forrigeTekst,
     forrigeAriaLabel,
     nesteAriaLabel,
     åpenHøyremeny,
@@ -55,7 +53,7 @@ const ActionBar: React.FC<Props> = ({
                     {stegtekst}
                 </BodyShort>
                 <HStack gap="4" className="flex-nowrap">
-                    {forrigeTekst && forrigeAriaLabel && onForrige && (
+                    {forrigeAriaLabel && onForrige && (
                         <Tooltip content={forrigeAriaLabel}>
                             <Button
                                 variant="secondary"
@@ -67,7 +65,7 @@ const ActionBar: React.FC<Props> = ({
                                 }}
                                 aria-label={forrigeAriaLabel}
                             >
-                                <span className="hidden md:block">{forrigeTekst}</span>
+                                <span className="hidden md:block">Forrige</span>
                             </Button>
                         </Tooltip>
                     )}

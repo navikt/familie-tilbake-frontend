@@ -212,7 +212,6 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                     disableNeste={senderInn || disableBekreft || harValideringsFeil}
                     skjulNeste={erLesevisning}
                     stegtekst={actionBarStegtekst(Behandlingssteg.ForeslåVedtak)}
-                    forrigeTekst="Forrige"
                     nesteTekst="Send til godkjenning"
                     forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
                     nesteAriaLabel="Send til godkjenning hos beslutter"
