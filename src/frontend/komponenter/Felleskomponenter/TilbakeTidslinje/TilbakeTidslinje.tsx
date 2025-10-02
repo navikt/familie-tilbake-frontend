@@ -86,65 +86,61 @@ const TilbakeTidslinje: React.FC<IProps> = ({ rader, onSelectPeriode }) => {
     return (
         <TidslinjeContainer>
             <Timeline>
-                {rader.map(rad => {
-                    console.log(rad, rader);
-
-                    return (
-                        <Timeline.Row label="" key={rad[0].id}>
-                            {rad.map(periode => {
-                                const handling =
-                                    periode.status === 'success'
-                                        ? 'Behandlet'
-                                        : periode.status === 'warning'
-                                          ? 'Ubehandlet'
-                                          : 'Avvist';
-                                const varighetTekst = `${handling} periode fra ${dateTilIsoDatoStringEllerUndefined(new Date(periode.start))} til ${dateTilIsoDatoStringEllerUndefined(new Date(periode.end))}`;
-                                const ikon =
-                                    periode.status === 'warning' ? (
-                                        <PencilIcon
-                                            title="a11y-title"
-                                            fontSize="1.5rem"
-                                            aria-hidden="true"
-                                            style={{ color: AOrange800 }}
-                                        />
-                                    ) : periode.status === 'success' ? (
-                                        <CheckmarkCircleIcon
-                                            title="a11y-title"
-                                            fontSize="1.5rem"
-                                            aria-hidden="true"
-                                            style={{ color: AGreen800 }}
-                                        />
-                                    ) : (
-                                        <XMarkOctagonIcon
-                                            title="a11y-title"
-                                            fontSize="1.5rem"
-                                            aria-hidden="true"
-                                            style={{ color: ARed800 }}
-                                        />
-                                    );
-
-                                return (
-                                    <Timeline.Period
-                                        key={periode.id}
-                                        icon={ikon}
-                                        start={periode.start}
-                                        end={periode.end}
-                                        status={periode.status}
-                                        isActive={periode.isActive}
-                                        className={classNames(
-                                            periode.className,
-                                            periode.isActive && 'aktivPeriode'
-                                        )}
-                                        aria-label={`${periode.status} ${varighetTekst}`}
-                                        onClick={() => onSelectPeriode(periode)}
-                                    >
-                                        {varighetTekst}
-                                    </Timeline.Period>
+                {rader.map(rad => (
+                    <Timeline.Row label="" key={rad[0].id}>
+                        {rad.map(periode => {
+                            const handling =
+                                periode.status === 'success'
+                                    ? 'Behandlet'
+                                    : periode.status === 'warning'
+                                      ? 'Ubehandlet'
+                                      : 'Avvist';
+                            const varighetTekst = `${handling} periode fra ${dateTilIsoDatoStringEllerUndefined(new Date(periode.start))} til ${dateTilIsoDatoStringEllerUndefined(new Date(periode.end))}`;
+                            const ikon =
+                                periode.status === 'warning' ? (
+                                    <PencilIcon
+                                        title="a11y-title"
+                                        fontSize="1.5rem"
+                                        aria-hidden="true"
+                                        style={{ color: AOrange800 }}
+                                    />
+                                ) : periode.status === 'success' ? (
+                                    <CheckmarkCircleIcon
+                                        title="a11y-title"
+                                        fontSize="1.5rem"
+                                        aria-hidden="true"
+                                        style={{ color: AGreen800 }}
+                                    />
+                                ) : (
+                                    <XMarkOctagonIcon
+                                        title="a11y-title"
+                                        fontSize="1.5rem"
+                                        aria-hidden="true"
+                                        style={{ color: ARed800 }}
+                                    />
                                 );
-                            })}
-                        </Timeline.Row>
-                    );
-                })}
+
+                            return (
+                                <Timeline.Period
+                                    key={periode.id}
+                                    icon={ikon}
+                                    start={periode.start}
+                                    end={periode.end}
+                                    status={periode.status}
+                                    isActive={periode.isActive}
+                                    className={classNames(
+                                        periode.className,
+                                        periode.isActive && 'aktivPeriode'
+                                    )}
+                                    aria-label={`${periode.status} ${varighetTekst}`}
+                                    onClick={() => onSelectPeriode(periode)}
+                                >
+                                    {varighetTekst}
+                                </Timeline.Period>
+                            );
+                        })}
+                    </Timeline.Row>
+                ))}
             </Timeline>
         </TidslinjeContainer>
     );
