@@ -1,6 +1,6 @@
 import type { Ytelsetype } from '../../../../../kodeverk';
-import type { IBehandling } from '../../../../../typer/behandling';
-import type { IArbeidsfordelingsenhet } from '../../../../../typer/enhet';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Arbeidsfordelingsenhet } from '../../../../../typer/enhet';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -12,17 +12,15 @@ import { RessursStatus } from '../../../../../typer/ressurs';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
 import { BehandlingsMenyButton, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 
-interface IProps {
+type Props = {
     ytelse: Ytelsetype;
-    behandling: IBehandling;
+    behandling: Behandling;
     onListElementClick: () => void;
-}
+};
 
-const EndreBehandlendeEnhet: React.FC<IProps> = ({ ytelse, behandling, onListElementClick }) => {
+const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElementClick }) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
-    const [behandendeEnheter, settBehandendeEnheter] = React.useState<IArbeidsfordelingsenhet[]>(
-        []
-    );
+    const [behandendeEnheter, settBehandendeEnheter] = React.useState<Arbeidsfordelingsenhet[]>([]);
     const { behandlingILesemodus } = useBehandling();
     const { skjema, sendInn, nullstillSkjema } = useEndreBehandlendeEnhet(
         behandling.behandlingId,

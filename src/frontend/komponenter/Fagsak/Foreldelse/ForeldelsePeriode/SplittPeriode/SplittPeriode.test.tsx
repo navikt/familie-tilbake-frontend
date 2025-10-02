@@ -1,4 +1,4 @@
-import type { IBehandling } from '../../../../../typer/behandling';
+import type { Behandling } from '../../../../../typer/behandling';
 import type { ForeldelsePeriodeSkjemeData } from '../../typer/foreldelse';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -26,7 +26,7 @@ describe('Tester: SplittPeriode - Foreldelse', () => {
                 tom: '2021-04-30',
             },
         };
-        const behandling = mock<IBehandling>({});
+        const behandling = mock<Behandling>({});
 
         const {
             getByAltText,

@@ -67,17 +67,13 @@ const skalVisesÅpen = (avsnitt: AvsnittSkjemaData): boolean => {
 export const avsnittKey = (avsnitt: AvsnittSkjemaData): string =>
     `${avsnitt.avsnittstype}_${avsnitt.fom}`;
 
-interface IProps {
+type Props = {
     avsnitt: AvsnittSkjemaData;
     erLesevisning: boolean;
     erRevurderingBortfaltBeløp: boolean;
-}
+};
 
-const AvsnittSkjema: React.FC<IProps> = ({
-    avsnitt,
-    erLesevisning,
-    erRevurderingBortfaltBeløp,
-}) => {
+const AvsnittSkjema: React.FC<Props> = ({ avsnitt, erLesevisning, erRevurderingBortfaltBeløp }) => {
     const [erEkspandert, settErEkspandert] = React.useState<boolean>(false);
 
     const harPåkrevetFritekstMenIkkeUtfylt = skalVisesÅpen(avsnitt);

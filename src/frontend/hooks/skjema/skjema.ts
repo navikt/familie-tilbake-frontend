@@ -3,7 +3,7 @@ import type {
     Felt,
     FeltState,
     FieldDictionary,
-    ISkjema,
+    Skjema,
     UseSkjemaVerdi,
 } from './typer';
 import type { FamilieRequestConfig } from '../../api/http/HttpProvider';
@@ -119,7 +119,7 @@ export const useSkjema = <Felter, SkjemaRespons>({
             });
     };
 
-    const skjema: ISkjema<Felter, SkjemaRespons> = {
+    const skjema: Skjema<Felter, SkjemaRespons> = {
         felter,
         visFeilmeldinger,
         skjemanavn,

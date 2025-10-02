@@ -1,4 +1,4 @@
-import type { IHistorikkInnslag } from '../../../../typer/historikk';
+import type { HistorikkInnslag } from '../../../../typer/historikk';
 
 import * as React from 'react';
 
@@ -15,12 +15,12 @@ import {
 import { base64ToArrayBuffer } from '../../../../utils';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
-interface IProps {
-    innslag: IHistorikkInnslag;
+type Props = {
+    innslag: HistorikkInnslag;
     onClose: () => void;
-}
+};
 
-const HentDokument: React.FC<IProps> = ({ innslag, onClose }) => {
+const HentDokument: React.FC<Props> = ({ innslag, onClose }) => {
     const [hentetDokument, settHentetDokument] = React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { behandling } = useHistorikk();

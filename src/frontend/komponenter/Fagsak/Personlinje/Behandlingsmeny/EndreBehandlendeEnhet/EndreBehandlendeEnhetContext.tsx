@@ -1,4 +1,4 @@
-import type { FeltState, ISkjema } from '../../../../../hooks/skjema';
+import type { FeltState, Skjema } from '../../../../../hooks/skjema';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useFelt, useSkjema } from '../../../../../hooks/skjema';
@@ -6,7 +6,7 @@ import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../utils';
 
 type EndreBehandlendeEnhetHook = {
-    skjema: ISkjema<
+    skjema: Skjema<
         {
             enhet: string | '';
             begrunnelse: string | '';

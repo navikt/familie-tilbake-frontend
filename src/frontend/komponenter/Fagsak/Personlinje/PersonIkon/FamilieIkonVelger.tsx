@@ -1,4 +1,4 @@
-import type { IPerson } from '../../../../typer/person';
+import type { Person } from '../../../../typer/person';
 
 import * as React from 'react';
 
@@ -9,15 +9,15 @@ import { MannIkon } from './MannIkon';
 import { NøytralPersonIkon } from './NøytralPersonIkon';
 import { Kjønn } from '../../../../typer/person';
 
-export interface IProps {
+export type Props = {
     alder: number;
     className?: string;
-    kjønn: IPerson['kjønn'];
+    kjønn: Person['kjønn'];
     width?: number;
     height?: number;
-}
+};
 
-export const FamilieIkonVelger: React.FunctionComponent<IProps> = ({
+export const FamilieIkonVelger: React.FunctionComponent<Props> = ({
     className,
     alder,
     kjønn,
@@ -27,17 +27,17 @@ export const FamilieIkonVelger: React.FunctionComponent<IProps> = ({
     switch (kjønn) {
         case Kjønn.Kvinne:
             if (alder < 18) {
-                return <JenteIkon className={className} heigth={height} width={width} />;
+                return <JenteIkon className={className} height={height} width={width} />;
             } else {
-                return <KvinneIkon className={className} heigth={height} width={width} />;
+                return <KvinneIkon className={className} height={height} width={width} />;
             }
         case Kjønn.Mann:
             if (alder < 18) {
-                return <GuttIkon className={className} heigth={height} width={width} />;
+                return <GuttIkon className={className} height={height} width={width} />;
             } else {
-                return <MannIkon className={className} heigth={height} width={width} />;
+                return <MannIkon className={className} height={height} width={width} />;
             }
         default:
-            return <NøytralPersonIkon className={className} heigth={height} width={width} />;
+            return <NøytralPersonIkon className={className} height={height} width={width} />;
     }
 };

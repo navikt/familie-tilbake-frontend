@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../typer/behandling';
-import type { IFagsak } from '../../typer/fagsak';
+import type { Behandling } from '../../typer/behandling';
+import type { Fagsak } from '../../typer/fagsak';
 
 import { BodyShort } from '@navikt/ds-react';
 import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -71,12 +71,12 @@ const StyledHøyremenyContainer = styled.aside`
     overflow-y: scroll;
 `;
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+type Props = {
+    fagsak: Fagsak;
+    behandling: Behandling;
+};
 
-const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
+const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
     const navigate = useNavigate();
     const location = useLocation();

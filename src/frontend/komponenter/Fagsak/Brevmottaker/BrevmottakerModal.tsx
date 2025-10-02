@@ -1,5 +1,5 @@
 import type { ManuellBrevmottakerResponseDto } from '../../../typer/api';
-import type { IBrevmottaker } from '../../../typer/Brevmottaker';
+import type { Brevmottaker } from '../../../typer/Brevmottaker';
 
 import React from 'react';
 
@@ -9,7 +9,7 @@ import { mapBrevmottakerToFormData } from './schema/brevmottakerSchema';
 const hentEksisterendeBrevmottaker = (
     brevmottakerIdTilEndring: string,
     brevmottakere: ManuellBrevmottakerResponseDto[]
-): IBrevmottaker | undefined => {
+): Brevmottaker | undefined => {
     const manuellMottaker = brevmottakere.find(({ id }) => id === brevmottakerIdTilEndring);
 
     return manuellMottaker?.brevmottaker;

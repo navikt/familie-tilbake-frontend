@@ -1,8 +1,8 @@
 import type { TotrinnGodkjenningOption, TotrinnStegSkjemaData } from './typer/totrinnSkjemaTyper';
 import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer/api';
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
-import type { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
+import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
 import type { SynligSteg } from '../../../../utils/sider';
 
 import createUseContext from 'constate';
@@ -35,14 +35,14 @@ const stegRekkefølge = [
     Behandlingssteg.ForeslåVedtak,
 ];
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
-    ({ fagsak, behandling }: IProps) => {
-        const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<ITotrinnkontroll>>();
+    ({ fagsak, behandling }: Props) => {
+        const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
         const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
         const [erLesevisning, settErLesevisning] = useState<boolean>(false);
         const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
@@ -110,7 +110,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
         const hentTotrinnkontroll = (): void => {
             settTotrinnkontroll(byggHenterRessurs());
             gjerTotrinnkontrollKall(behandling.behandlingId)
-                .then((hentetTotrinnkontroll: Ressurs<ITotrinnkontroll>) => {
+                .then((hentetTotrinnkontroll: Ressurs<Totrinnkontroll>) => {
                     settTotrinnkontroll(hentetTotrinnkontroll);
                 })
                 .catch(() => {

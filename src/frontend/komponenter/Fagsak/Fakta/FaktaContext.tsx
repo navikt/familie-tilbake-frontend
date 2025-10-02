@@ -1,8 +1,8 @@
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/fakta';
 import type { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type {
     FaktaResponse,
     VurderingAvBrukersUttalelse,
@@ -33,12 +33,12 @@ import { SYNLIGE_STEG } from '../../../utils/sider';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
-const [FaktaProvider, useFakta] = createUseContext(({ behandling, fagsak }: IProps) => {
+const [FaktaProvider, useFakta] = createUseContext(({ behandling, fagsak }: Props) => {
     const [fakta, setFakta] = useState<Ressurs<FaktaResponse>>();
     const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({
         perioder: [],

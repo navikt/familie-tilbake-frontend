@@ -1,4 +1,4 @@
-import type { IBrevmottaker } from '../typer/Brevmottaker';
+import type { Brevmottaker } from '../typer/Brevmottaker';
 
 import { useState } from 'react';
 
@@ -9,7 +9,7 @@ import { RessursStatus } from '../typer/ressurs';
 export const useBrevmottakerApi = (): {
     lagreBrevmottaker: (
         behandlingId: string,
-        brevmottaker: IBrevmottaker,
+        brevmottaker: Brevmottaker,
         mottakerId?: string
     ) => Promise<{ success: boolean; error?: string }>;
     fjernBrevmottaker: (behandlingId: string, mottakerId: string) => Promise<boolean>;
@@ -24,7 +24,7 @@ export const useBrevmottakerApi = (): {
 
     const lagreBrevmottaker = async (
         behandlingId: string,
-        brevmottaker: IBrevmottaker,
+        brevmottaker: Brevmottaker,
         mottakerId?: string
     ): Promise<{ success: boolean; error?: string }> => {
         setLoading(true);
@@ -37,7 +37,7 @@ export const useBrevmottakerApi = (): {
 
             const method = mottakerId ? 'PUT' : 'POST';
 
-            const response = await request<IBrevmottaker, void>({
+            const response = await request<Brevmottaker, void>({
                 method,
                 url,
                 data: brevmottaker,

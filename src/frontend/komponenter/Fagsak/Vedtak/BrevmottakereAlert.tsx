@@ -1,6 +1,6 @@
-import type { IBrevmottaker } from '../../../typer/Brevmottaker';
-import type { IInstitusjon } from '../../../typer/fagsak';
-import type { IPerson } from '../../../typer/person';
+import type { Brevmottaker } from '../../../typer/Brevmottaker';
+import type { Institusjon } from '../../../typer/fagsak';
+import type { Person } from '../../../typer/person';
 
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Alert, Button } from '@navikt/ds-react';
@@ -14,12 +14,12 @@ const StyledAlert = styled(Alert)`
     margin-bottom: 1.5rem;
 `;
 
-interface Props {
-    brevmottakere: IBrevmottaker[];
-    institusjon?: IInstitusjon;
-    bruker: IPerson;
+type Props = {
+    brevmottakere: Brevmottaker[];
+    institusjon?: Institusjon;
+    bruker: Person;
     linkTilBrevmottakerSteg: string;
-}
+};
 
 export const BrevmottakereAlert: React.FC<Props> = ({
     brevmottakere,

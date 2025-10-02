@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 import { dagensDato, Datoformat } from '../../../utils/dato';
 
-interface IProps {
+type Props = {
     felt: Felt<Date | undefined>;
     label: string;
     description?: React.ReactNode;
@@ -18,7 +18,7 @@ interface IProps {
     kanKunVelgeFremtid?: boolean;
     readOnly?: boolean;
     settIkkePersistertKomponent?: () => void;
-}
+};
 
 enum Feilmelding {
     UgyldigDato = 'UGYLDIG_DATO',
@@ -30,7 +30,7 @@ const tidligsteRelevanteDato = startOfDay(new Date(1900, 0));
 
 const senesteRelevanteDato = startOfDay(new Date(2500, 0));
 
-const Datovelger: React.FC<IProps> = ({
+const Datovelger: React.FC<Props> = ({
     felt,
     label,
     visFeilmeldinger,
@@ -41,7 +41,7 @@ const Datovelger: React.FC<IProps> = ({
     kanKunVelgeFremtid = false,
     readOnly = false,
     settIkkePersistertKomponent,
-}: IProps) => {
+}: Props) => {
     const [error, setError] = useState<Feilmelding | undefined>(undefined);
 
     const hentToDate = (): Date => {

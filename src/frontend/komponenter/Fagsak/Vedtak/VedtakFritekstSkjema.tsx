@@ -14,14 +14,14 @@ const StyledUndertekst = styled(BodyShort)`
     display: inline-block;
     margin-left: 1ex;
 `;
-interface IProps {
+type Props = {
     avsnittIndex: string;
     underavsnitt: UnderavsnittSkjemaData;
     maximumLength?: number;
     erLesevisning: boolean;
-}
+};
 
-const VedtakFritekstSkjema: React.FC<IProps> = ({
+const VedtakFritekstSkjema: React.FC<Props> = ({
     avsnittIndex,
     underavsnitt,
     maximumLength,

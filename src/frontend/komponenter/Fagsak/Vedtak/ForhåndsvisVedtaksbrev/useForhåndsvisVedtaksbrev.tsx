@@ -12,13 +12,13 @@ import {
 import { base64ToArrayBuffer } from '../../../../utils';
 import { useVedtak } from '../VedtakContext';
 
-interface ForhåndsvisVedtaksbrevHook {
+type ForhåndsvisVedtaksbrevHook = {
     visModal: boolean;
     kanViseForhåndsvisning: () => void;
     hentetForhåndsvisning: Ressurs<string>;
     hentVedtaksbrev: () => void;
     nullstillHentetForhåndsvisning: () => void;
-}
+};
 
 const useForhåndsvisVedtaksbrev = (): ForhåndsvisVedtaksbrevHook => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =

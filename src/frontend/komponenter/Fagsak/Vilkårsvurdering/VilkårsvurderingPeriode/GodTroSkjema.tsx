@@ -9,7 +9,7 @@ import { styled } from 'styled-components';
 
 import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
+import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 
@@ -17,12 +17,12 @@ const ArrowBoxContainer = styled.div`
     width: 300px;
 `;
 
-interface IProps {
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+type Props = {
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-}
+};
 
-const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
 
     const ugyldigErBeløpetIBeholdValgt =

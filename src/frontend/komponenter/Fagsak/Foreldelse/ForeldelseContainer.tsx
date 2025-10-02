@@ -1,4 +1,4 @@
-import type { IBehandling } from '../../../typer/behandling';
+import type { Behandling } from '../../../typer/behandling';
 
 import { Alert, BodyLong, Button, Heading, Link, VStack } from '@navikt/ds-react';
 import * as React from 'react';
@@ -11,9 +11,9 @@ import { finnDatoRelativtTilNå } from '../../../utils';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
 
-interface Props {
-    behandling: IBehandling;
-}
+type Props = {
+    behandling: Behandling;
+};
 
 const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
     const { foreldelse, skjemaData, erAutoutført, gåTilNesteSteg, gåTilForrigeSteg } =

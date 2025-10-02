@@ -1,7 +1,7 @@
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { HendelseUndertype } from '../../../../kodeverk';
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
@@ -24,8 +24,8 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const behandling = mock<IBehandling>({ eksternBrukId: '1' });
-const fagsak = mock<IFagsak>({
+const behandling = mock<Behandling>({ eksternBrukId: '1' });
+const fagsak = mock<Fagsak>({
     institusjon: undefined,
     fagsystem: Fagsystem.EF,
     eksternFagsakId: '1',

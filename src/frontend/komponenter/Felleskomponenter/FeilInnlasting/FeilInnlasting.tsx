@@ -4,9 +4,10 @@ import { Button, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 import { lazy } from 'react';
 
-interface Props {
+type Props = {
     komponentNavn: string;
-}
+};
+
 const FeilInnlasting: React.FC<Props> = ({ komponentNavn }: Props) => {
     return (
         <VStack gap="2" align="center" justify="center">

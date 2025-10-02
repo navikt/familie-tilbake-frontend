@@ -1,4 +1,4 @@
-import type { Avhengigheter, FeltState, ISkjema } from '../../../../hooks/skjema';
+import type { Avhengigheter, FeltState, Skjema } from '../../../../hooks/skjema';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 
 import { ok, useFelt, useSkjema, Valideringsstatus } from '../../../../hooks/skjema';
@@ -22,7 +22,7 @@ const avhengigheterOppfyltOppdagelsesdato = (avhengigheter?: Avhengigheter): boo
 };
 
 type ForeldelsesPeriodeSkjemaHook = {
-    skjema: ISkjema<
+    skjema: Skjema<
         {
             begrunnelse: string | '';
             foreldelsesvurderingstype: Foreldelsevurdering | '';
