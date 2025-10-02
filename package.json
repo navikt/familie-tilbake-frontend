@@ -54,7 +54,6 @@
     "redis": "5.8.2",
     "styled-components": "6.1.19",
     "tailwindcss": "4.1.13",
-    "uuid": "13.0.0",
     "winston": "3.17.0",
     "zustand": "5.0.8"
   },
