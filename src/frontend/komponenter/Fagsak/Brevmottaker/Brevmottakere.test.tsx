@@ -1,6 +1,6 @@
 import type { ManuellBrevmottakerResponseDto } from '../../../typer/api';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
@@ -21,7 +21,7 @@ jest.mock('react-router', () => ({
 
 const createMockBehandling = (
     manuelleBrevmottakere: ManuellBrevmottakerResponseDto[] = []
-): IBehandling => ({
+): Behandling => ({
     behandlingId: 'test-behandling-id',
     eksternBrukId: 'test-ekstern-id',
     opprettetDato: '2023-01-01',
@@ -41,7 +41,7 @@ const createMockBehandling = (
     erNyModell: true,
 });
 
-const createMockFagsak = (): IFagsak => ({
+const createMockFagsak = (): Fagsak => ({
     eksternFagsakId: 'test-fagsak-id',
     fagsystem: Fagsystem.BA,
     ytelsestype: Ytelsetype.Barnetrygd,
@@ -94,8 +94,8 @@ const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponseDto[] => [
 ];
 
 const renderBrevmottakere = (
-    behandling: IBehandling = createMockBehandling(),
-    fagsak: IFagsak = createMockFagsak()
+    behandling: Behandling = createMockBehandling(),
+    fagsak: Fagsak = createMockFagsak()
 ): RenderResult => {
     return render(<Brevmottakere behandling={behandling} fagsak={fagsak} />);
 };

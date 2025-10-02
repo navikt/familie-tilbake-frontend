@@ -1,4 +1,4 @@
-import type { IBehandling } from '../../../../typer/behandling';
+import type { Behandling } from '../../../../typer/behandling';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { ReactNode } from 'react';
 
@@ -49,13 +49,13 @@ const StyledBox = styled(Box)`
     min-width: 20rem;
 `;
 
-interface IProps {
-    behandling: IBehandling;
+type Props = {
+    behandling: Behandling;
     periode: ForeldelsePeriodeSkjemeData;
     erLesevisning: boolean;
-}
+};
 
-const ForeldelsePeriodeSkjema: React.FC<IProps> = ({ behandling, periode, erLesevisning }) => {
+const ForeldelsePeriodeSkjema: React.FC<Props> = ({ behandling, periode, erLesevisning }) => {
     const { oppdaterPeriode, onSplitPeriode, settValgtPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)

@@ -1,4 +1,4 @@
-import type { ISaksbehandler } from '../typer/saksbehandler';
+import type { Saksbehandler } from '../typer/saksbehandler';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as React from 'react';
@@ -12,12 +12,12 @@ const Container = lazyImportMedRetry(() => import('./Container'), 'Container');
 
 const App: React.FC = () => {
     const [autentisertSaksbehandler, settAutentisertSaksbehandler] = React.useState<
-        ISaksbehandler | undefined
+        Saksbehandler | undefined
     >(undefined);
     const queryClient = new QueryClient();
 
     React.useEffect(() => {
-        hentInnloggetBruker().then((innhentetInnloggetSaksbehandler: ISaksbehandler) => {
+        hentInnloggetBruker().then((innhentetInnloggetSaksbehandler: Saksbehandler) => {
             settAutentisertSaksbehandler(innhentetInnloggetSaksbehandler);
         });
     }, []);

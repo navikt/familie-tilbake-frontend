@@ -14,12 +14,12 @@ import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-interface IProps {
+type Props = {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-}
+};
 
-const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const erValgtResultatTypeForstoBurdeForstaatt =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;

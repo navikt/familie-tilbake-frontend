@@ -26,10 +26,10 @@ import {
 export const EGENDEFINERT = 'Egendefinert';
 export const ANDELER = ['30', '50', '70', EGENDEFINERT];
 
-export interface JaNeiOption {
+export type JaNeiOption = {
     verdi: boolean;
     label: string;
-}
+};
 
 export const OptionJA: JaNeiOption = {
     verdi: true,

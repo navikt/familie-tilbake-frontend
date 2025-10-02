@@ -1,5 +1,5 @@
 import type { ApiRessurs, Ressurs } from '../../typer/ressurs';
-import type { ISaksbehandler } from '../../typer/saksbehandler';
+import type { Saksbehandler } from '../../typer/saksbehandler';
 import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 import constate from 'constate';
@@ -23,17 +23,17 @@ export type Http = {
     request: FamilieRequest;
 };
 
-interface IProps {
+type Props = {
     fjernRessursSomLasterTimeout?: number;
-    innloggetSaksbehandler?: ISaksbehandler;
+    innloggetSaksbehandler?: Saksbehandler;
     settAutentisert?: (autentisert: boolean) => void;
-}
+};
 
 const hentCsrfTokenFraMeta = (): string | null =>
     document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || null;
 
 export const [HttpProvider, useHttp] = constate(
-    ({ innloggetSaksbehandler, settAutentisert, fjernRessursSomLasterTimeout = 300 }: IProps) => {
+    ({ innloggetSaksbehandler, settAutentisert, fjernRessursSomLasterTimeout = 300 }: Props) => {
         const [ressurserSomLaster, settRessurserSomLaster] = React.useState<string[]>([]);
 
         const fjernRessursSomLaster = (ressursId: string): void => {

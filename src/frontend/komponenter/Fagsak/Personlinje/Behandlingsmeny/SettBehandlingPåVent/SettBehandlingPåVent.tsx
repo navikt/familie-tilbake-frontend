@@ -1,4 +1,4 @@
-import type { IBehandling } from '../../../../../typer/behandling';
+import type { Behandling } from '../../../../../typer/behandling';
 
 import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { addDays, addMonths } from 'date-fns';
@@ -16,12 +16,12 @@ import {
 } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 
-interface IProps {
-    behandling: IBehandling;
+type Props = {
+    behandling: Behandling;
     onListElementClick: () => void;
-}
+};
 
-const SettBehandlingPåVent: React.FC<IProps> = ({ behandling, onListElementClick }) => {
+const SettBehandlingPåVent: React.FC<Props> = ({ behandling, onListElementClick }) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
 

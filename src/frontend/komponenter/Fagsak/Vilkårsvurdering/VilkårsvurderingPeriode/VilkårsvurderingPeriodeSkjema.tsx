@@ -1,5 +1,5 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Fagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { ChangeEvent, FC } from 'react';
 
@@ -38,7 +38,7 @@ import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeve
 import {
     Behandlingssteg,
     Behandlingsstegstatus,
-    type IBehandling,
+    type Behandling,
 } from '../../../../typer/behandling';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
@@ -110,9 +110,9 @@ const settSkjemadataFraPeriode = (
     );
 };
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
+type Props = {
+    fagsak: Fagsak;
+    behandling: Behandling;
     periode: VilkårsvurderingPeriodeSkjemaData;
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
@@ -120,9 +120,9 @@ interface IProps {
     perioder: VilkårsvurderingPeriodeSkjemaData[];
     pendingPeriode: VilkårsvurderingPeriodeSkjemaData | undefined;
     settPendingPeriode: (periode: VilkårsvurderingPeriodeSkjemaData | undefined) => void;
-}
+};
 
-const VilkårsvurderingPeriodeSkjema: FC<IProps> = ({
+const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     behandling,
     periode,
     behandletPerioder,

@@ -14,12 +14,12 @@ const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;
 `;
 
-interface IProps {
+type Props = {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-}
+};
 
-const GradForsettSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const GradForsettSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { kanIlleggeRenter } = useVilkårsvurdering();
 
     const erValgtResultatTypeForstoBurdeForstått =

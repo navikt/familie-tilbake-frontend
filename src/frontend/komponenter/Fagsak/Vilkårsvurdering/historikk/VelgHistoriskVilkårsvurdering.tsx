@@ -6,12 +6,12 @@ import * as React from 'react';
 
 import { formatterDatoOgTidstring } from '../../../../utils';
 
-interface IProps {
+type Props = {
     inaktiveVilkårsvurderinger: VilkårsvurderingResponse[];
     setInaktivVilkårsvurdering: (valgtFakta?: VilkårsvurderingResponse) => void;
-}
+};
 
-const VelgHistoriskVilkårsvurdering: React.FC<IProps> = ({
+const VelgHistoriskVilkårsvurdering: React.FC<Props> = ({
     inaktiveVilkårsvurderinger,
     setInaktivVilkårsvurdering,
 }) => {

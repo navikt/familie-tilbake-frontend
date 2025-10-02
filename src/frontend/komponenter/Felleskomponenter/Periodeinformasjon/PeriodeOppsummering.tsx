@@ -20,14 +20,14 @@ const BodyShortDanger = styled(BodyShort)`
     color: ${ATextDanger};
 `;
 
-interface IProps {
+type Props = {
     fom: string;
     tom: string;
     beløp: number;
     hendelsetype?: HendelseType;
-}
+};
 
-const PeriodeOppsummering: React.FC<IProps> = ({ fom, tom, beløp, hendelsetype }) => {
+const PeriodeOppsummering: React.FC<Props> = ({ fom, tom, beløp, hendelsetype }) => {
     return (
         <StyledVStack gap="5">
             <HGrid columns={{ md: 1, lg: '5fr 3fr' }} gap="4">

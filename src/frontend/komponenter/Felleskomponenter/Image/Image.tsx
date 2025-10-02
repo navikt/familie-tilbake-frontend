@@ -1,14 +1,14 @@
 import * as React from 'react';
 
-interface IProps {
+type Props = {
     src: string;
     srcHover?: string;
     altText: string;
     onClick?: (event: React.MouseEvent) => void;
     onKeyDown?: (event: React.KeyboardEvent) => void;
-}
+};
 
-const Image: React.FC<IProps> = ({
+const Image: React.FC<Props> = ({
     src,
     srcHover,
     altText,

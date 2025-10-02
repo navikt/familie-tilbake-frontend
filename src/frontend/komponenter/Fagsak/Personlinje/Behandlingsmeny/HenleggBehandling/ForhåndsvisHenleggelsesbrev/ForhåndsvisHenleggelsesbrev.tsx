@@ -1,4 +1,4 @@
-import type { IBehandling } from '../../../../../../typer/behandling';
+import type { Behandling } from '../../../../../../typer/behandling';
 import type { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
@@ -15,13 +15,13 @@ const StyledContainer = styled.div`
     margin-right: auto;
 `;
 
-interface IProps {
-    behandling: IBehandling;
+type Props = {
+    behandling: Behandling;
     skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;
     kanForhåndsvise: boolean;
-}
+};
 
-const ForhåndsvisHenleggelsesBrev: React.FC<IProps> = ({ behandling, skjema, kanForhåndsvise }) => {
+const ForhåndsvisHenleggelsesBrev: React.FC<Props> = ({ behandling, skjema, kanForhåndsvise }) => {
     const {
         hentetForhåndsvisning,
         hentBrev,

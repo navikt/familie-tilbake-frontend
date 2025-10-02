@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import * as React from 'react';
 
@@ -19,13 +19,13 @@ export enum Menysider {
     Dokumenter = 'DOKUMENTER',
 }
 
-interface IProps {
+type Props = {
     valgtMenyside: Menysider;
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+    fagsak: Fagsak;
+    behandling: Behandling;
+};
 
-const Menykontainer: React.FC<IProps> = ({ valgtMenyside, fagsak, behandling }) => {
+const Menykontainer: React.FC<Props> = ({ valgtMenyside, fagsak, behandling }) => {
     switch (valgtMenyside) {
         case Menysider.Totrinn:
             return (

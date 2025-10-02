@@ -1,5 +1,5 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import { BodyShort, VStack, type TimelinePeriodProps } from '@navikt/ds-react';
 import * as React from 'react';
@@ -7,7 +7,7 @@ import * as React from 'react';
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 import { Vilkårsresultat } from '../../../kodeverk';
-import { type IBehandling } from '../../../typer/behandling';
+import { type Behandling } from '../../../typer/behandling';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
 import { FTAlertStripe } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
@@ -58,15 +58,15 @@ const finnClassNamePeriodeStatus = (
     return erBehandlet ? ClassNamePeriodeStatus.Behandlet : ClassNamePeriodeStatus.Ubehandlet;
 };
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
-}
+};
 
-const VilkårsvurderingPerioder: React.FC<IProps> = ({
+const VilkårsvurderingPerioder: React.FC<Props> = ({
     behandling,
     perioder,
     erTotalbeløpUnder4Rettsgebyr,

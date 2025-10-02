@@ -8,12 +8,12 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { type ISkjema } from '../../../../../hooks/skjema';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 
-interface IProps {
+type Props = {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-}
+};
 
-const SærligeGrunnerSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const [nonUsedKey, settNonUsedKey] = React.useState<string>(Date.now().toString());
 

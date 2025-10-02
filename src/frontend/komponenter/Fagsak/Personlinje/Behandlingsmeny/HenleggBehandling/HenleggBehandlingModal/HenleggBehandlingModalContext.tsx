@@ -1,6 +1,6 @@
 import type { Avhengigheter, FeltState, ISkjema } from '../../../../../../hooks/skjema';
 import type { HenleggBehandlingPaylod } from '../../../../../../typer/api';
-import type { IBehandling } from '../../../../../../typer/behandling';
+import type { Behandling } from '../../../../../../typer/behandling';
 
 import { useBehandlingApi } from '../../../../../../api/behandling';
 import { useBehandling } from '../../../../../../context/BehandlingContext';
@@ -22,10 +22,10 @@ export type HenleggelseSkjemaDefinisjon = {
     fritekst: string | '';
 };
 
-interface IProps {
-    behandling: IBehandling;
+type Props = {
+    behandling: Behandling;
     settVisModal: (vis: boolean) => void;
-}
+};
 
 type HenleggBehandlingSkjemaHook = {
     skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;
@@ -38,7 +38,7 @@ type HenleggBehandlingSkjemaHook = {
 export const useHenleggBehandlingSkjema = ({
     behandling,
     settVisModal,
-}: IProps): HenleggBehandlingSkjemaHook => {
+}: Props): HenleggBehandlingSkjemaHook => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
     const { henleggBehandling } = useBehandlingApi();
     const { nullstillIkkePersisterteKomponenter } = useBehandling();

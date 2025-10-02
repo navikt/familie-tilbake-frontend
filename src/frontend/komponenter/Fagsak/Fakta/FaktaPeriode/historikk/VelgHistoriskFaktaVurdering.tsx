@@ -6,12 +6,12 @@ import * as React from 'react';
 
 import { formatterDatoOgTidstring } from '../../../../../utils';
 
-interface IProps {
+type Props = {
     inaktiveFakta: FaktaResponse[];
     setInaktivFakta: (valgtFakta?: FaktaResponse) => void;
-}
+};
 
-const VelgHistoriskFaktaVurdering: React.FC<IProps> = ({ inaktiveFakta, setInaktivFakta }) => {
+const VelgHistoriskFaktaVurdering: React.FC<Props> = ({ inaktiveFakta, setInaktivFakta }) => {
     return (
         <Select
             onChange={e => {

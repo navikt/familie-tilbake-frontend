@@ -36,12 +36,12 @@ const StyledNormaltekst = styled(BodyShort)`
     padding-top: 15px;
 `;
 
-interface IProps {
+type Props = {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-}
+};
 
-const ReduksjonAvBeløpSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const { valgtPeriode, kanIlleggeRenter } = useVilkårsvurdering();
     const harMerEnnEnAktivitet = skjema.felter.harMerEnnEnAktivitet.verdi === true;

@@ -1,6 +1,6 @@
 import type { ISkjema, FeltState } from '../../../../hooks/skjema';
 import type { IRestSettPåVent } from '../../../../typer/api';
-import type { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
+import type { Behandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
 import type { Ressurs } from '../../../../typer/ressurs';
 
 import { useState } from 'react';
@@ -12,7 +12,7 @@ import { RessursStatus } from '../../../../typer/ressurs';
 import { isEmpty, validerGyldigDato } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
 
-interface PåVentBehandlingHook {
+type PåVentBehandlingHook = {
     skjema: ISkjema<
         {
             tidsfrist: Date | undefined;
@@ -25,11 +25,11 @@ interface PåVentBehandlingHook {
     onBekreft: (behandlingId: string) => void;
     onOkTaAvVent: (behandlingId: string) => void;
     tilbakestillFelterTilDefault: () => void;
-}
+};
 
 export const usePåVentBehandling = (
     lukkModal: () => void,
-    ventegrunn?: IBehandlingsstegstilstand | undefined
+    ventegrunn?: Behandlingsstegstilstand | undefined
 ): PåVentBehandlingHook => {
     const [feilmelding, settFeilmelding] = useState<string>();
     const { request } = useHttp();
@@ -61,7 +61,7 @@ export const usePåVentBehandling = (
     });
 
     const [forrigeVentegrunn, settForrigeVentegrunn] = useState<
-        IBehandlingsstegstilstand | undefined
+        Behandlingsstegstilstand | undefined
     >();
 
     if (ventegrunn !== forrigeVentegrunn) {

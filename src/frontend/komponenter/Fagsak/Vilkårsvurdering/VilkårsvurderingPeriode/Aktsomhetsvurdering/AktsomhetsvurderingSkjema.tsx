@@ -17,12 +17,12 @@ import {
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-interface IProps {
+type Props = {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-}
+};
 
-const AktsomhetsvurderingSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const erForstodBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;

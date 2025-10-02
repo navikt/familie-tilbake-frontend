@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../typer/fagsak';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
 
 import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
@@ -16,17 +16,13 @@ import { SYNLIGE_STEG } from '../../../../../utils/sider';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
     onListElementClick: () => void;
-}
+};
 
-const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
-    behandling,
-    fagsak,
-    onListElementClick,
-}) => {
+const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, fagsak, onListElementClick }) => {
     const [visFjernModal, settVisFjernModal] = React.useState<boolean>(false);
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string>();

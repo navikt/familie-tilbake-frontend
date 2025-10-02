@@ -1,4 +1,4 @@
-import type { IBehandling } from '../../../../typer/behandling';
+import type { Behandling } from '../../../../typer/behandling';
 import type { ForeldelsePeriode } from '../../../../typer/tilbakekrevingstyper';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
@@ -51,13 +51,13 @@ const genererRader = (
     ];
 };
 
-interface IProps {
-    behandling: IBehandling;
+type Props = {
+    behandling: Behandling;
     perioder: ForeldelsePeriodeSkjemeData[];
     erLesevisning: boolean;
-}
+};
 
-const ForeldelsePerioder: React.FC<IProps> = ({ behandling, perioder, erLesevisning }) => {
+const ForeldelsePerioder: React.FC<Props> = ({ behandling, perioder, erLesevisning }) => {
     const [tidslinjeRader, settTidslinjeRader] = React.useState<TimelinePeriodProps[][]>();
     const [disableBekreft, settDisableBekreft] = React.useState<boolean>(true);
     const {

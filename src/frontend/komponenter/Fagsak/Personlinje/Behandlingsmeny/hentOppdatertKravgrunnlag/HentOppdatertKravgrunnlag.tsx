@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../typer/fagsak';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
 
 import * as React from 'react';
 
@@ -11,17 +11,13 @@ import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
     onListElementClick: () => void;
-}
+};
 
-const HentOppdatertKravgrunnlag: React.FC<IProps> = ({
-    behandling,
-    fagsak,
-    onListElementClick,
-}) => {
+const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling, fagsak, onListElementClick }) => {
     const { request } = useHttp();
     const { settToast } = useApp();
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();

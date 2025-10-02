@@ -1,4 +1,4 @@
-import type { IBrevmottaker } from '../../../../typer/Brevmottaker';
+import type { Brevmottaker } from '../../../../typer/Brevmottaker';
 
 import { z } from 'zod';
 
@@ -312,7 +312,7 @@ export const brevmottakerFormDataInputSchema = z
     );
 
 export const brevmottakerFormDataSchema = brevmottakerFormDataInputSchema.transform(
-    (data): IBrevmottaker => {
+    (data): Brevmottaker => {
         return mapFormDataToBrevmottaker(data, data.mottakerType);
     }
 );
@@ -370,7 +370,7 @@ const isManuellAdresse = withNullCheck<FullmektigData | VergeData>(
 
 const getManuellAdresseInfo = (
     adresseData: AdresseDataUnion
-): IBrevmottaker['manuellAdresseInfo'] => {
+): Brevmottaker['manuellAdresseInfo'] => {
     if (isBrukerMedUtenlandskAdresse(adresseData)) {
         return {
             adresselinje1: adresseData.adresselinje1 || '',
@@ -420,7 +420,7 @@ const flattenFormData = (
 const mapFormDataToBrevmottaker = (
     data: z.infer<typeof brevmottakerFormDataInputSchema>,
     type: MottakerType
-): IBrevmottaker => {
+): Brevmottaker => {
     const { adresseData } = flattenFormData(data);
 
     const navn = ((): string => {
@@ -457,14 +457,14 @@ const mapFormDataToBrevmottaker = (
 };
 
 export const mapBrevmottakerToFormData = (
-    brevmottaker: IBrevmottaker
+    brevmottaker: Brevmottaker
 ): Partial<BrevmottakerFormData> => {
     const baseFormData: Partial<BrevmottakerFormData> = {
         mottakerType: brevmottaker.type,
     };
 
     const mapAdresse = (
-        brevmottaker: IBrevmottaker
+        brevmottaker: Brevmottaker
     ): BrukerMedUtenlandskAdresseData & { postnummer: string; poststed: string } => ({
         navn: brevmottaker.navn || '',
         land: brevmottaker.manuellAdresseInfo?.landkode || '',
@@ -475,7 +475,7 @@ export const mapBrevmottakerToFormData = (
     });
 
     const hentAdresseKilde = (
-        brevmottaker: IBrevmottaker
+        brevmottaker: Brevmottaker
     ): Exclude<AdresseKilde, AdresseKilde.Udefinert> => {
         if (brevmottaker.manuellAdresseInfo) {
             return AdresseKilde.ManuellRegistrering;

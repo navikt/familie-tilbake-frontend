@@ -1,7 +1,7 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     VilkårsvurderingResponse,
@@ -119,10 +119,10 @@ const setupUseBehandlingApiMock = (vilkårsvurdering?: VilkårsvurderingResponse
 
 const setupHttpMock = (): void => {
     mockUseHttp.mockImplementation(() => ({
-        request: (): Promise<Ressurs<IBehandling>> => {
+        request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
-                data: mock<IBehandling>({
+                data: mock<Behandling>({
                     eksternBrukId: '1',
                     behandlingsstegsinfo: [],
                 }),
@@ -131,7 +131,7 @@ const setupHttpMock = (): void => {
     }));
 };
 
-const renderVilkårsvurderingContainer = (behandling: IBehandling, fagsak: IFagsak): RenderResult =>
+const renderVilkårsvurderingContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
     render(
         <BehandlingProvider>
             <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
@@ -151,8 +151,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
 
     test('- totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
         setupUseBehandlingApiMock(vilkårsvurdering);
-        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
+        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
             renderVilkårsvurderingContainer(behandling, fagsak);
@@ -325,12 +325,12 @@ describe('Tester: VilkårsvurderingContainer', () => {
     test('- vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
         setupUseBehandlingApiMock(vilkårsvurdering);
 
-        const fagsak = mock<IFagsak>({
+        const fagsak = mock<Fagsak>({
             fagsystem: Fagsystem.EF,
             eksternFagsakId: '1',
             ytelsestype: Ytelsetype.Barnetilsyn,
         });
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             eksternBrukId: '1',
             behandlingsstegsinfo: [],
         });
@@ -429,8 +429,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<IFagsak>({
+        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+        const fagsak = mock<Fagsak>({
             ytelsestype: Ytelsetype.Barnetrygd,
         });
 
@@ -573,11 +573,11 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             status: Behandlingstatus.FatterVedtak,
             behandlingsstegsinfo: [],
         });
-        const fagsak = mock<IFagsak>({
+        const fagsak = mock<Fagsak>({
             ytelsestype: Ytelsetype.Barnetrygd,
         });
 
@@ -763,8 +763,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<IFagsak>({
+        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+        const fagsak = mock<Fagsak>({
             ytelsestype: Ytelsetype.Overgangsstønad,
         });
 

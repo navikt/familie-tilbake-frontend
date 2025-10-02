@@ -6,11 +6,11 @@ import * as React from 'react';
 import { tilbakekrevingsvalg } from '../../../typer/tilbakekrevingstyper';
 import { formatterDatostring } from '../../../utils';
 
-interface IProps {
+type Props = {
     fakta: FaktaResponse;
-}
+};
 
-const FaktaRevurdering: React.FC<IProps> = ({ fakta }) => {
+const FaktaRevurdering: React.FC<Props> = ({ fakta }) => {
     return fakta ? (
         <VStack gap="5">
             <Heading level="2" size="small">

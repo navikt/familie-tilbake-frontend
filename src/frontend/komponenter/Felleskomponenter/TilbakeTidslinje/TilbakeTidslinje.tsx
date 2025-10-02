@@ -78,12 +78,12 @@ const TidslinjeContainer = styled.div`
     }
 `;
 
-interface IProps {
+type Props = {
     rader: TimelinePeriodProps[][];
     onSelectPeriode: (periode: TimelinePeriodProps) => void;
-}
+};
 
-const TilbakeTidslinje: React.FC<IProps> = ({ rader, onSelectPeriode }) => {
+const TilbakeTidslinje: React.FC<Props> = ({ rader, onSelectPeriode }) => {
     return (
         <TidslinjeContainer>
             <Timeline>

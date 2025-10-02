@@ -1,6 +1,6 @@
 import type { ISkjema } from '../../../../../hooks/skjema';
 import type { Behandlingårsak } from '../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../typer/fagsak';
+import type { Fagsak } from '../../../../../typer/fagsak';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useFelt, useSkjema } from '../../../../../hooks/skjema';
@@ -22,7 +22,7 @@ type OpprettBehandlingSkjemaHook = {
 };
 
 const useOpprettBehandlingSkjema = (
-    fagsak: IFagsak,
+    fagsak: Fagsak,
     behandlingId: string,
     lukkModal: (_vis: boolean) => void
 ): OpprettBehandlingSkjemaHook => {

@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../typer/fagsak';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
 
 import * as React from 'react';
 
@@ -7,7 +7,7 @@ import HenleggBehandlingModal from './HenleggBehandlingModal/HenleggBehandlingMo
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 
-const getÅrsaker = (behandling: IBehandling): Behandlingresultat[] => {
+const getÅrsaker = (behandling: Behandling): Behandlingresultat[] => {
     if (behandling.type === Behandlingstype.Tilbakekreving) {
         return [Behandlingresultat.HenlagtFeilopprettet];
     } else {
@@ -18,13 +18,13 @@ const getÅrsaker = (behandling: IBehandling): Behandlingresultat[] => {
     }
 };
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
     onListElementClick: () => void;
-}
+};
 
-const HenleggBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElementClick }) => {
+const HenleggBehandling: React.FC<Props> = ({ behandling, fagsak, onListElementClick }) => {
     const [årsaker, settÅrsaker] = React.useState<Behandlingresultat[]>([]);
     const [visModal, settVisModal] = React.useState<boolean>(false);
 

@@ -17,12 +17,12 @@ const ArrowBoxContainer = styled.div`
     width: 300px;
 `;
 
-interface IProps {
+type Props = {
     skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-}
+};
 
-const GodTroSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
 
     const ugyldigErBeløpetIBeholdValgt =
