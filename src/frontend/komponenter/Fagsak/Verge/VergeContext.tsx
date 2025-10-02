@@ -1,7 +1,6 @@
 import type { VergeDto, VergeStegPayload } from '../../../typer/api';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
-import type { AxiosError } from 'axios';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import createUseContext from 'constate';
 import * as React from 'react';
@@ -27,7 +26,7 @@ import {
     validerTekstFelt,
     validerTekstFeltMaksLengde,
 } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 
 const erVergetypeOppfylt = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.vergetype.valideringsstatus === Valideringsstatus.Ok;
@@ -35,12 +34,12 @@ const erVergetypeOppfylt = (avhengigheter?: Avhengigheter): boolean =>
 const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
     erVergetypeOppfylt(avhengigheter) && avhengigheter?.vergetype.verdi === Vergetype.Advokat;
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
-const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IProps) => {
+const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: Props) => {
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
     const [erAutoutført, settErAutoutført] = React.useState<boolean>();
     const [verge, settVerge] = React.useState<VergeDto>();
@@ -171,7 +170,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
         if (stegErBehandlet && !harEndretOpplysninger()) {
             nullstillIkkePersisterteKomponenter();
             utførRedirect(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.FAKTA.href}`
+                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
             );
         } else if (kanSendeSkjema()) {
             settSenderInn(true);
@@ -207,8 +206,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IPro
                         settVergeRepons(respons);
                     }
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     settSenderInn(false);
                     settVergeRepons(byggFeiletRessurs('Ukjent feil ved sending av verge'));
                 });

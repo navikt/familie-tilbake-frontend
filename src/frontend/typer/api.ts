@@ -1,6 +1,6 @@
 import type { Behandlingresultat, Behandlingssteg, Venteårsak } from './behandling';
-import type { IBrevmottaker } from './Brevmottaker';
-import type { Aktsomhetsvurdering, GodTro, Periode } from './feilutbetalingtyper';
+import type { Brevmottaker } from './Brevmottaker';
+import type { Aktsomhetsvurdering, GodTro, Periode } from './tilbakekrevingstyper';
 import type {
     DokumentMal,
     Foreldelsevurdering,
@@ -11,124 +11,124 @@ import type {
 import type { Vergetype } from '../kodeverk/verge';
 import type { IsoDatoString } from '../utils/dato';
 
-export interface PeriodeFaktaStegPayload {
+export type PeriodeFaktaStegPayload = {
     periode: Periode;
     hendelsestype: HendelseType;
     hendelsesundertype: HendelseUndertype;
-}
+};
 
-export interface FaktaStegPayload {
+export type FaktaStegPayload = {
     '@type': string;
     begrunnelse: string;
     feilutbetaltePerioder: PeriodeFaktaStegPayload[];
-}
+};
 
-export interface PeriodeForeldelseStegPayload {
+export type PeriodeForeldelseStegPayload = {
     periode: Periode;
     foreldelsesvurderingstype?: Foreldelsevurdering;
     begrunnelse?: string;
     foreldelsesfrist?: string;
     oppdagelsesdato?: string;
-}
+};
 
-export interface ForeldelseStegPayload {
+export type ForeldelseStegPayload = {
     '@type': string;
     foreldetPerioder: PeriodeForeldelseStegPayload[];
-}
+};
 
-export interface PeriodeVilkårsvurderingStegPayload {
+type PeriodeVilkårsvurderingStegPayload = {
     periode: Periode;
     vilkårsvurderingsresultat: Vilkårsresultat;
     begrunnelse: string;
     godTroDto: GodTro | undefined;
     aktsomhetDto: Aktsomhetsvurdering | undefined;
-}
+};
 
-export interface VilkårdsvurderingStegPayload {
+export type VilkårdsvurderingStegPayload = {
     '@type': string;
     vilkårsvurderingsperioder: PeriodeVilkårsvurderingStegPayload[];
-}
+};
 
-export interface PeriodeMedTekst {
+export type PeriodeMedTekst = {
     periode: Periode;
     faktaAvsnitt?: string;
     foreldelseAvsnitt?: string;
     vilkårAvsnitt?: string;
     særligeGrunnerAvsnitt?: string;
     særligeGrunnerAnnetAvsnitt?: string;
-}
+};
 
-export interface Fritekstavsnitt {
+export type Fritekstavsnitt = {
     oppsummeringstekst?: string;
     perioderMedTekst: PeriodeMedTekst[];
-}
+};
 
-export interface ForeslåVedtakStegPayload {
+export type ForeslåVedtakStegPayload = {
     '@type': string;
     fritekstavsnitt: Fritekstavsnitt;
-}
+};
 
-export interface TotrinnsStegVurdering {
+export type TotrinnsStegVurdering = {
     behandlingssteg: Behandlingssteg;
     godkjent: boolean;
     begrunnelse?: string;
-}
+};
 
-export interface FatteVedtakStegPayload {
+export type FatteVedtakStegPayload = {
     '@type': string;
     totrinnsvurderinger: TotrinnsStegVurdering[];
-}
+};
 
-export interface ForhåndsvisVedtaksbrev {
+export type ForhåndsvisVedtaksbrev = {
     behandlingId: string;
     oppsummeringstekst?: string;
     perioderMedTekst: PeriodeMedTekst[];
-}
+};
 
-export interface BrevPayload {
+export type BrevPayload = {
     behandlingId: string;
     brevmalkode: DokumentMal;
     fritekst: string;
-}
+};
 
-export interface ForhåndsvisHenleggelsesbrevPayload {
+export type ForhåndsvisHenleggelsesbrevPayload = {
     behandlingId: string;
     fritekst: string;
-}
+};
 
-export interface ManuellBrevmottakerResponseDto {
+export type ManuellBrevmottakerResponseDto = {
     id: string;
-    brevmottaker: IBrevmottaker;
-}
+    brevmottaker: Brevmottaker;
+};
 
-export interface VergeDto {
+export type VergeDto = {
     type: Vergetype;
     ident?: string;
     orgNr?: string;
     begrunnelse: string;
     navn: string;
-}
+};
 
-interface VergePayload {
+type VergePayload = {
     type: Vergetype;
     ident?: string;
     orgNr?: string;
     begrunnelse: string;
     navn: string;
-}
+};
 
-export interface VergeStegPayload {
+export type VergeStegPayload = {
     '@type': string;
     verge: VergePayload;
-}
+};
 
-export interface HenleggBehandlingPaylod {
+export type HenleggBehandlingPaylod = {
     behandlingsresultatstype: Behandlingresultat;
     begrunnelse: string;
     fritekst: string;
-}
+};
 
-export interface IRestSettPåVent {
+export type RestSettPåVent = {
     venteårsak: Venteårsak;
     tidsfrist: IsoDatoString;
-}
+};

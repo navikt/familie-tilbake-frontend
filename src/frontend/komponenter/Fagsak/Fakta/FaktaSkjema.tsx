@@ -1,6 +1,6 @@
-import type { FaktaSkjemaData } from './typer/feilutbetalingFakta';
+import type { FaktaSkjemaData } from './typer/fakta';
 import type { Ytelsetype } from '../../../kodeverk';
-import type { IFeilutbetalingFakta } from '../../../typer/feilutbetalingtyper';
+import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 
 import {
     Alert,
@@ -17,28 +17,23 @@ import {
 } from '@navikt/ds-react';
 import * as React from 'react';
 
-import FeilutbetalingFaktaPerioder from './FaktaPeriode/FaktaPerioder';
+import { useFakta } from './FaktaContext';
+import FaktaPerioder from './FaktaPeriode/FaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
-import { useFeilutbetalingFakta } from './FeilutbetalingFaktaContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { HendelseType } from '../../../kodeverk';
-import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
+import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
 
-interface IProps {
+type Props = {
     ytelse: Ytelsetype;
     erLesevisning: boolean;
     skjemaData: FaktaSkjemaData;
-    feilutbetalingFakta: IFeilutbetalingFakta;
-}
+    fakta: FaktaResponse;
+};
 
-const FaktaSkjema: React.FC<IProps> = ({
-    skjemaData,
-    feilutbetalingFakta,
-    ytelse,
-    erLesevisning,
-}) => {
+const FaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning }) => {
     const {
         behandling,
         stegErBehandlet,
@@ -52,10 +47,10 @@ const FaktaSkjema: React.FC<IProps> = ({
         feilmeldinger,
         senderInn,
         gåTilForrige,
-    } = useFeilutbetalingFakta();
+    } = useFakta();
     const { settIkkePersistertKomponent, harUlagredeData } = useBehandling();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
-        behandling.fagsystemsbehandlingId !== feilutbetalingFakta.kravgrunnlagReferanse;
+        behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
 
     return (
         <HGrid columns={2} gap="10">
@@ -77,24 +72,20 @@ const FaktaSkjema: React.FC<IProps> = ({
                         <Detail weight="semibold">Periode med feilutbetaling</Detail>
                         <BodyShort size="small">
                             {`${formatterDatostring(
-                                feilutbetalingFakta.totalFeilutbetaltPeriode.fom
-                            )} - ${formatterDatostring(
-                                feilutbetalingFakta.totalFeilutbetaltPeriode.tom
-                            )}`}
+                                fakta.totalFeilutbetaltPeriode.fom
+                            )} - ${formatterDatostring(fakta.totalFeilutbetaltPeriode.tom)}`}
                         </BodyShort>
                     </div>
                     <div>
                         <Detail weight="semibold">Feilutbetalt beløp totalt</Detail>
                         <BodyShort size="small" className="redText">
-                            {`${formatCurrencyNoKr(feilutbetalingFakta.totaltFeilutbetaltBeløp)}`}
+                            {`${formatCurrencyNoKr(fakta.totaltFeilutbetaltBeløp)}`}
                         </BodyShort>
                     </div>
                     <div>
                         <Detail weight="semibold">Tidligere varslet beløp</Detail>
                         <BodyShort size="small">
-                            {feilutbetalingFakta.varsletBeløp
-                                ? `${formatCurrencyNoKr(feilutbetalingFakta.varsletBeløp)}`
-                                : ''}
+                            {fakta.varsletBeløp ? `${formatCurrencyNoKr(fakta.varsletBeløp)}` : ''}
                         </BodyShort>
                     </div>
                 </HGrid>
@@ -118,7 +109,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                         </Alert>
                     )}
                     {skjemaData.perioder && (
-                        <FeilutbetalingFaktaPerioder
+                        <FaktaPerioder
                             ytelse={ytelse}
                             erLesevisning={erLesevisning}
                             perioder={skjemaData.perioder}
@@ -127,7 +118,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                 </VStack>
                 <Textarea
                     name="begrunnelse"
-                    label="Forklar årsaken(e) til feilutbetalingen"
+                    label="Årsak til feilutbetalingen"
                     description="Tekst som er her fra før, kommer fra fagsystemet. Legg gjerne til/rediger tekst."
                     readOnly={erLesevisning}
                     value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
@@ -225,7 +216,7 @@ const FaktaSkjema: React.FC<IProps> = ({
                 </Navigering>
             </VStack>
 
-            <FaktaRevurdering feilutbetalingFakta={feilutbetalingFakta} />
+            <FaktaRevurdering fakta={fakta} />
         </HGrid>
     );
 };

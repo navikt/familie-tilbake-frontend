@@ -1,12 +1,12 @@
-import type { VilkårsvurderingPeriodeSkjemaData } from './typer/feilutbetalingVilkårsvurdering';
 import type { PeriodeHandling } from './typer/periodeHandling';
+import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
 import type { VilkårdsvurderingStegPayload } from '../../../typer/api';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type {
-    IFeilutbetalingVilkårsvurdering,
+    VilkårsvurderingResponse,
     VilkårsvurderingPeriode,
-} from '../../../typer/feilutbetalingtyper';
+} from '../../../typer/tilbakekrevingstyper';
 import type { AxiosError } from 'axios';
 
 import { useMutation } from '@tanstack/react-query';
@@ -26,11 +26,11 @@ import {
     RessursStatus,
 } from '../../../typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 
 export type VilkårsvurderingHook = {
     containerRef: React.RefObject<HTMLDivElement | null>;
-    feilutbetalingVilkårsvurdering: Ressurs<IFeilutbetalingVilkårsvurdering> | undefined;
+    vilkårsvurdering: Ressurs<VilkårsvurderingResponse> | undefined;
     stegErBehandlet: boolean;
     erAutoutført: boolean | undefined;
     kanIlleggeRenter: boolean;
@@ -76,23 +76,21 @@ const kalkulerTotalBeløp = (perioder: VilkårsvurderingPeriode[]): number => {
     );
 };
 
-export const erTotalbeløpUnder4Rettsgebyr = (
-    vurdering: IFeilutbetalingVilkårsvurdering
-): boolean => {
+export const erTotalbeløpUnder4Rettsgebyr = (vurdering: VilkårsvurderingResponse): boolean => {
     const totalbeløp = kalkulerTotalBeløp(vurdering.perioder);
     return totalbeløp && vurdering.rettsgebyr ? totalbeløp < vurdering.rettsgebyr * 4 : false;
 };
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
-    ({ behandling, fagsak }: IProps) => {
+    ({ behandling, fagsak }: Props) => {
         const containerRef = useRef<HTMLDivElement>(null);
-        const [feilutbetalingVilkårsvurdering, settFeilutbetalingVilkårsvurdering] =
-            useState<Ressurs<IFeilutbetalingVilkårsvurdering>>();
+        const [vilkårsvurdering, setVilkårsvurdering] =
+            useState<Ressurs<VilkårsvurderingResponse>>();
         const [skjemaData, settSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
         const [stegErBehandlet, settStegErBehandlet] = useState(false);
         const [erAutoutført, settErAutoutført] = useState<boolean>();
@@ -109,8 +107,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             hentBehandlingMedBehandlingId,
             nullstillIkkePersisterteKomponenter,
         } = useBehandling();
-        const { gjerFeilutbetalingVilkårsvurderingKall, sendInnVilkårsvurdering } =
-            useBehandlingApi();
+        const { gjerVilkårsvurderingKall, sendInnVilkårsvurdering } = useBehandlingApi();
         const navigate = useNavigate();
         const kanIleggeRenter = ![Ytelsetype.Barnetrygd, Ytelsetype.Kontantstøtte].includes(
             fagsak.ytelsestype
@@ -121,15 +118,15 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             if (!visVenteModal) {
                 settStegErBehandlet(erStegBehandlet(Behandlingssteg.Vilkårsvurdering));
                 settErAutoutført(erStegAutoutført(Behandlingssteg.Vilkårsvurdering));
-                hentFeilutbetalingVilkårsvurdering();
+                hentVilkårsvurdering();
                 settKanIlleggeRenter(kanIleggeRenter);
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling, visVenteModal]);
 
         useEffect(() => {
-            if (feilutbetalingVilkårsvurdering?.status === RessursStatus.Suksess) {
-                const perioder = feilutbetalingVilkårsvurdering.data.perioder;
+            if (vilkårsvurdering?.status === RessursStatus.Suksess) {
+                const perioder = vilkårsvurdering.data.perioder;
                 const sortertePerioder = sorterFeilutbetaltePerioder(perioder);
                 const skjemaPerioder = sortertePerioder.map((fuFP, index) => {
                     const skjemaPeriode: VilkårsvurderingPeriodeSkjemaData = {
@@ -146,7 +143,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
                     settValgtPeriode(valgtVilkårsperiode);
                 }
             }
-        }, [feilutbetalingVilkårsvurdering]);
+        }, [vilkårsvurdering]);
 
         useEffect(() => {
             if (skjemaData) {
@@ -162,15 +159,14 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [valgtPeriode]);
 
-        const hentFeilutbetalingVilkårsvurdering = (): void => {
-            settFeilutbetalingVilkårsvurdering(byggHenterRessurs());
-            gjerFeilutbetalingVilkårsvurderingKall(behandling.behandlingId)
-                .then((hentetVilkårsvurdering: Ressurs<IFeilutbetalingVilkårsvurdering>) => {
-                    settFeilutbetalingVilkårsvurdering(hentetVilkårsvurdering);
+        const hentVilkårsvurdering = (): void => {
+            setVilkårsvurdering(byggHenterRessurs());
+            gjerVilkårsvurderingKall(behandling.behandlingId)
+                .then((hentetVilkårsvurdering: Ressurs<VilkårsvurderingResponse>) => {
+                    setVilkårsvurdering(hentetVilkårsvurdering);
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
-                    settFeilutbetalingVilkårsvurdering(
+                .catch(() => {
+                    setVilkårsvurdering(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av vilkårsvurdering-perioder for behandling'
                         )
@@ -179,11 +175,11 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         };
 
         const gåTilNesteSteg = (): void => {
-            navigate(`${behandlingUrl}/${sider.VEDTAK.href}`);
+            navigate(`${behandlingUrl}/${SYNLIGE_STEG.FORESLÅ_VEDTAK.href}`);
         };
 
         const gåTilForrigeSteg = (): void => {
-            navigate(`${behandlingUrl}/${sider.FORELDELSE.href}`);
+            navigate(`${behandlingUrl}/${SYNLIGE_STEG.FORELDELSE.href}`);
         };
 
         const oppdaterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): void => {
@@ -223,10 +219,10 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         };
 
         const validererTotaltBeløpMot4Rettsgebyr = (): boolean => {
-            if (feilutbetalingVilkårsvurdering?.status !== RessursStatus.Suksess) {
+            if (vilkårsvurdering?.status !== RessursStatus.Suksess) {
                 return false; // Skal ikke være mulig, så return false ok
             }
-            if (!erTotalbeløpUnder4Rettsgebyr(feilutbetalingVilkårsvurdering.data)) {
+            if (!erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data)) {
                 return true;
             }
 
@@ -320,7 +316,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
 
         return {
             containerRef,
-            feilutbetalingVilkårsvurdering,
+            vilkårsvurdering,
             stegErBehandlet,
             erAutoutført,
             kanIlleggeRenter,

@@ -10,7 +10,6 @@ import type { ChangeEvent } from 'react';
 
 import deepEqual from 'deep-equal';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 import { defaultValidator, Valideringsstatus } from './typer';
 import { isChangeEvent } from './utils';
@@ -24,14 +23,14 @@ import { isChangeEvent } from './utils';
  * skjuler felter for bruker under gitte omstendigheter
  * @avhengigheter avhengighetene som brukes til validering og vis/skjul
  */
-export interface FeltConfig<Verdi> {
+type FeltConfig<Verdi> = {
     avhengigheter?: Avhengigheter;
     feltId?: string;
     skalFeltetVises?: (avhengigheter: Avhengigheter) => boolean;
     valideringsfunksjon?: ValiderFelt<Verdi>;
     verdi: Verdi;
     nullstillVedAvhengighetEndring?: boolean;
-}
+};
 
 export const useFelt = <Verdi = string>({
     avhengigheter = {},
@@ -41,7 +40,7 @@ export const useFelt = <Verdi = string>({
     verdi,
     nullstillVedAvhengighetEndring = true,
 }: FeltConfig<Verdi>): Felt<Verdi> => {
-    const [id] = useState(feltId ? feltId : uuidv4());
+    const [id] = useState(feltId ? feltId : crypto.randomUUID());
     const initialFeltState = {
         feilmelding: '',
         valider: valideringsfunksjon,

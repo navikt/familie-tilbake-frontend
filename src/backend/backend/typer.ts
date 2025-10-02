@@ -1,4 +1,4 @@
-export interface ISessionKonfigurasjon {
+export type SessionKonfigurasjon = {
     valkeyFullUrl?: string;
     valkeyBrukernavn?: string;
     valkeyPassord?: string;
@@ -6,31 +6,33 @@ export interface ISessionKonfigurasjon {
     secureCookie: boolean;
     sessionMaxAgeSekunder?: number;
     cookieSecret: string[] | string;
-}
+};
+
 export type TexasConfig = {
     tokenEndpoint: string;
     tokenExchangeEndpoint: string;
     tokenIntrospectionEndpoint: string;
 };
 
-export interface IAppConfig {
+export type AppConfig = {
     sessionSecret: string;
     backendApiScope: string;
     version: string;
     graphApiUrl: string;
-}
+};
 
-export interface User {
+export type User = {
     displayName: string;
     email: string;
     enhet: string;
     identifier: string;
     navIdent: string;
-}
+};
 
 declare module 'express-session' {
     interface Session {
         user: User | null;
         csrfToken: string | null;
+        gyldigeCsrfTokens: string[];
     }
 }

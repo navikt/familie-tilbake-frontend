@@ -6,6 +6,6 @@ type TotrinnsStegInfo = {
     begrunnelse?: string;
 };
 
-export interface ITotrinnkontroll {
+export type Totrinnkontroll = {
     totrinnsstegsinfo: TotrinnsStegInfo[];
-}
+};

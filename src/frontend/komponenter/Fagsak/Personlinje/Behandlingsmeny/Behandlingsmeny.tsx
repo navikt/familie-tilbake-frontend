@@ -1,4 +1,4 @@
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Fagsak } from '../../../../typer/fagsak';
 
 import { ChevronDownIcon } from '@navikt/aksel-icons';
 import { Button, Popover } from '@navikt/ds-react';
@@ -13,7 +13,6 @@ import HentOppdatertKravgrunnlag from './hentOppdatertKravgrunnlag/HentOppdatert
 import HistoriskeVurderinger from './HistoriskeVurderinger/HistoriskeVurderinger';
 import LeggTilFjernBrevmottakere from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
 import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
-import OpprettFjernVerge from './OpprettFjernVerge/OpprettFjernVerge';
 import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
 import { useApp } from '../../../../context/AppContext';
@@ -37,10 +36,10 @@ const StyledButton = styled(Button)`
     }
 `;
 
-interface IProps {
-    fagsak: IFagsak;
-}
-const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
+type Props = {
+    fagsak: Fagsak;
+};
+const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
     const [visMeny, settVisMeny] = React.useState<boolean>(false);
     const buttonRef = React.useRef(null);
@@ -105,15 +104,13 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                         />
                                     </li>
                                     {erForvalter && (
-                                        <>
-                                            <li>
-                                                <HentOppdatertKravgrunnlag
-                                                    behandling={behandling.data}
-                                                    fagsak={fagsak}
-                                                    onListElementClick={() => settVisMeny(false)}
-                                                />
-                                            </li>
-                                        </>
+                                        <li>
+                                            <HentOppdatertKravgrunnlag
+                                                behandling={behandling.data}
+                                                fagsak={fagsak}
+                                                onListElementClick={() => settVisMeny(false)}
+                                            />
+                                        </li>
                                     )}
                                     {(toggles[ToggleName.SaksbehanderKanResettebehandling] ||
                                         erForvalter) && (
@@ -150,7 +147,7 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                             />
                                         </li>
                                     )}
-                                    {behandling.data.støtterManuelleBrevmottakere ? (
+                                    {behandling.data.støtterManuelleBrevmottakere && (
                                         <li>
                                             <LeggTilFjernBrevmottakere
                                                 behandling={behandling.data}
@@ -158,22 +155,7 @@ const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
                                                 onListElementClick={() => settVisMeny(false)}
                                             />
                                         </li>
-                                    ) : (
-                                        <li>
-                                            <OpprettFjernVerge
-                                                behandling={behandling.data}
-                                                fagsak={fagsak}
-                                                onListElementClick={() => settVisMeny(false)}
-                                            />
-                                        </li>
                                     )}
-                                    <li>
-                                        <OpprettFjernVerge
-                                            behandling={behandling.data}
-                                            fagsak={fagsak}
-                                            onListElementClick={() => settVisMeny(false)}
-                                        />
-                                    </li>
                                     <li>
                                         <HistoriskeVurderinger
                                             behandling={behandling.data}

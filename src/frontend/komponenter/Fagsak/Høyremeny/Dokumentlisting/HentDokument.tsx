@@ -1,4 +1,4 @@
-import type { IDokumentInfo, IJournalpost } from '../../../../typer/journalføring';
+import type { DokumentInfo, Journalpost } from '../../../../typer/journalføring';
 
 import * as React from 'react';
 
@@ -15,13 +15,13 @@ import {
 import { base64ToArrayBuffer } from '../../../../utils';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
-interface IProps {
-    journalpost: IJournalpost;
-    dokument: IDokumentInfo;
+type Props = {
+    journalpost: Journalpost;
+    dokument: DokumentInfo;
     onClose: () => void;
-}
+};
 
-const HentDokument: React.FC<IProps> = ({ journalpost, dokument, onClose }) => {
+const HentDokument: React.FC<Props> = ({ journalpost, dokument, onClose }) => {
     const [hentetDokument, settHentetDokument] = React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { behandling } = useDokumentlisting();

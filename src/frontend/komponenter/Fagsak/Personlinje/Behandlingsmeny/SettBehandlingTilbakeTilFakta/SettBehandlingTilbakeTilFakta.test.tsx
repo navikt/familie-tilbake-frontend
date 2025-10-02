@@ -1,9 +1,9 @@
 import type { SettBehandlingTilbakeTilFaktaHook } from './useSettBehandlingTilbakeTilFakta';
 import type { BehandlingHook } from '../../../../../context/BehandlingContext';
 import type { RedirectEtterLagringHook } from '../../../../../hooks/useRedirectEtterLagring';
-import type { IBehandling } from '../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../typer/fagsak';
-import type { IPerson } from '../../../../../typer/person';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
+import type { Person } from '../../../../../typer/person';
 
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import * as React from 'react';
@@ -35,7 +35,7 @@ jest.mock('./useSettBehandlingTilbakeTilFakta', () => ({
         mockUseSettBehandlingTilbakeTilFakta(),
 }));
 
-const mockBehandling: IBehandling = {
+const mockBehandling: Behandling = {
     behandlingId: '123',
     eksternBrukId: 'ekstId123',
     kanSetteTilbakeTilFakta: true,
@@ -54,16 +54,17 @@ const mockBehandling: IBehandling = {
     harVerge: false,
     resultatstype: undefined,
     kanHenleggeBehandling: true,
+    erNyModell: false,
 };
 
-const mockPerson: IPerson = {
+const mockPerson: Person = {
     personIdent: '123456789',
     navn: 'Ola Nordmann',
     fødselsdato: '1990-01-01',
     kjønn: Kjønn.Mann,
 };
 
-const mockFagsak: IFagsak = {
+const mockFagsak: Fagsak = {
     eksternFagsakId: '456',
     fagsystem: Fagsystem.BA,
     ytelsestype: Ytelsetype.Barnetrygd,

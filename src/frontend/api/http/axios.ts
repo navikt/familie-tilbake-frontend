@@ -1,5 +1,5 @@
 import type { ApiRessurs, Ressurs } from '../../typer/ressurs';
-import type { ISaksbehandler } from '../../typer/saksbehandler';
+import type { Saksbehandler } from '../../typer/saksbehandler';
 import type { AxiosError, AxiosResponse } from 'axios';
 
 import * as Sentry from '@sentry/core';
@@ -11,14 +11,14 @@ import { erServerFeil } from '../../utils/httpUtils';
 axios.defaults.baseURL = window.location.origin;
 export const preferredAxios = axios;
 
-export interface ApiRespons<T> {
+type ApiRespons<T> = {
     defaultFeilmelding?: string;
     error?: AxiosError;
-    innloggetSaksbehandler?: ISaksbehandler;
+    innloggetSaksbehandler?: Saksbehandler;
     loggFeilTilSentry?: boolean;
     ressurs?: ApiRessurs<T>;
     httpStatus?: number;
-}
+};
 
 export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => {
     const {
@@ -96,9 +96,9 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
     return typetRessurs;
 };
 
-export const loggFeil = (
+const loggFeil = (
     error?: AxiosError,
-    innloggetSaksbehandler?: ISaksbehandler,
+    innloggetSaksbehandler?: Saksbehandler,
     feilmelding?: string
 ): void => {
     if (process.env.NODE_ENV !== 'development') {

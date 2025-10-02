@@ -8,18 +8,18 @@ import * as React from 'react';
 
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
+import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-interface IProps {
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+type Props = {
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-}
+};
 
-const GradUaktsomhetSkjema: React.FC<IProps> = ({ skjema, erLesevisning }) => {
+const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
     const erValgtResultatTypeForstoBurdeForstaatt =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;

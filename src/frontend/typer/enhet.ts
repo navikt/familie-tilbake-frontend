@@ -1,6 +1,4 @@
-import type { Ytelsetype } from '../kodeverk';
-
-const behandendeEnheter: IArbeidsfordelingsenhet[] = [
+const behandendeEnheter: Arbeidsfordelingsenhet[] = [
     { enhetId: '2103', enhetNavn: 'Nav Vikafossen' },
     { enhetId: '4806', enhetNavn: 'Nav Familie- og pensjonsytelser Drammen' },
     { enhetId: '4820', enhetNavn: 'Nav Familie- og pensjonsytelser Vadsø' },
@@ -9,12 +7,11 @@ const behandendeEnheter: IArbeidsfordelingsenhet[] = [
     { enhetId: '4817', enhetNavn: 'Nav Familie- og pensjonsytelser Steinkjer' },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const finnMuligeEnheter = (_ytelse: Ytelsetype): IArbeidsfordelingsenhet[] => {
+export const finnMuligeEnheter = (): Arbeidsfordelingsenhet[] => {
     return behandendeEnheter;
 };
 
-export interface IArbeidsfordelingsenhet {
+export type Arbeidsfordelingsenhet = {
     enhetId: string;
     enhetNavn: string;
-}
+};

@@ -1,4 +1,4 @@
-export interface IJournalpost {
+export type Journalpost = {
     avsenderMottaker?: AvsenderMottaker;
     datoMottatt?: string;
     journalpostId: string;
@@ -6,25 +6,25 @@ export interface IJournalpost {
     journalstatus: Journalstatus;
     tema?: string;
     behandlingstema?: string;
-    sak?: IJournalpostSak;
-    bruker?: IJournalpostBruker;
+    sak?: JournalpostSak;
+    bruker?: JournalpostBruker;
     journalforendeEnhet?: string;
     kanal?: string;
-    dokumenter?: IDokumentInfo[];
+    dokumenter?: DokumentInfo[];
     tittel?: string;
-    relevanteDatoer: IJournalpostRelevantDato[];
+    relevanteDatoer: JournalpostRelevantDato[];
     utsendingsinfo?: Utsendingsinfo;
-}
+};
 
-export interface AvsenderMottaker {
+type AvsenderMottaker = {
     erLikBruker: boolean;
     id: string;
     land: string;
     navn: string;
     type: AvsenderMottakerIdType;
-}
+};
 
-export enum AvsenderMottakerIdType {
+enum AvsenderMottakerIdType {
     Fnr = 'FNR',
     HprNr = 'HPRNR',
     OrgNr = 'ORGNR',
@@ -38,7 +38,7 @@ export enum Journalposttype {
     N = 'N',
 }
 
-export enum Journalstatus {
+enum Journalstatus {
     Mottatt = 'MOTTATT',
     Journalfoert = 'JOURNALFOERT',
     Ferdigstilt = 'FERDIGSTILT',
@@ -53,52 +53,52 @@ export enum Journalstatus {
     Ukjent = 'UKJENT',
 }
 
-export interface IJournalpostSak {
+type JournalpostSak = {
     arkivsaksnummer?: string;
     arkivsaksystem?: string;
     fagsakId?: string;
     fagsaksystem?: string;
-}
+};
 
-export interface IJournalpostBruker {
+type JournalpostBruker = {
     id: string;
-}
+};
 
-export interface IDokumentInfo {
+export type DokumentInfo = {
     tittel?: string;
     brevkode?: string;
     dokumentInfoId?: string;
     dokumentstatus?: Dokumentstatus;
-    dokumentvarianter?: IDokumentvariant[];
-    logiskeVedlegg: ILogiskVedlegg[];
-}
+    dokumentvarianter?: Dokumentvariant[];
+    logiskeVedlegg: LogiskVedlegg[];
+};
 
-export interface IJournalpostRelevantDato {
+export type JournalpostRelevantDato = {
     dato: string;
     datotype: JournalpostDatotype;
-}
+};
 
-export type Utsendingsinfo = {
+type Utsendingsinfo = {
     varselSendt: VarselSendt[];
     fysiskpostSendt?: FysiskpostSendt;
     digitalpostSendt?: DigitalpostSendt;
 };
 
-export enum Dokumentstatus {
+enum Dokumentstatus {
     Ferdigstilt = 'FERDIGSTILT',
     Avbrutt = 'AVBRUTT',
     UnderRedigering = 'UNDER_REDIGERING',
     Kassert = 'KASSERT',
 }
 
-export interface IDokumentvariant {
+type Dokumentvariant = {
     variantformat: string;
-}
+};
 
-export interface ILogiskVedlegg {
+type LogiskVedlegg = {
     logiskVedleggId: string;
     tittel: string;
-}
+};
 
 export enum JournalpostDatotype {
     DatoSendtPrint = 'DATO_SENDT_PRINT',

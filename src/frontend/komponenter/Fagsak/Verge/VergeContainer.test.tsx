@@ -2,8 +2,8 @@ import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { VergeDto } from '../../../typer/api';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -42,7 +42,7 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderVergeContainer = (behandling: IBehandling, fagsak: IFagsak): RenderResult =>
+const renderVergeContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
     render(
         <VergeProvider behandling={behandling} fagsak={fagsak}>
             <VergeContainer />
@@ -90,10 +90,10 @@ describe('Tester: VergeContainer', () => {
 
     test('- fyller ut advokat', async () => {
         setupMock(false, false, false);
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             harVerge: false,
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText, queryAllByText } = renderVergeContainer(
             behandling,
@@ -136,10 +136,10 @@ describe('Tester: VergeContainer', () => {
 
     test('- fyller ut verge for barn', async () => {
         setupMock(false, false, false);
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             harVerge: false,
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
             renderVergeContainer(behandling, fagsak);
@@ -195,10 +195,10 @@ describe('Tester: VergeContainer', () => {
             orgNr: 'DummyOrg',
             begrunnelse: '',
         });
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             harVerge: true,
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText, queryByLabelText } = renderVergeContainer(
             behandling,
@@ -232,10 +232,10 @@ describe('Tester: VergeContainer', () => {
             ident: '27106903129',
             begrunnelse: 'Verge er opprettet',
         });
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             harVerge: true,
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } =
             renderVergeContainer(behandling, fagsak);
@@ -266,10 +266,10 @@ describe('Tester: VergeContainer', () => {
             orgNr: 'DummyOrg',
             begrunnelse: 'Bruker har engasjert advokat',
         });
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             harVerge: true,
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
             behandling,
@@ -302,10 +302,10 @@ describe('Tester: VergeContainer', () => {
             ident: '27106903129',
             begrunnelse: '',
         });
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             harVerge: true,
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
             behandling,

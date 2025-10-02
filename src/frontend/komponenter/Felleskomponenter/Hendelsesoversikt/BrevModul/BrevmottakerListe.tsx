@@ -1,6 +1,6 @@
-import type { IBrevmottaker } from '../../../../typer/Brevmottaker';
-import type { IInstitusjon } from '../../../../typer/fagsak';
-import type { IPerson } from '../../../../typer/person';
+import type { Brevmottaker } from '../../../../typer/Brevmottaker';
+import type { Institusjon } from '../../../../typer/fagsak';
+import type { Person } from '../../../../typer/person';
 
 import React from 'react';
 import { styled } from 'styled-components';
@@ -8,20 +8,22 @@ import { styled } from 'styled-components';
 import { MottakerType } from '../../../../typer/Brevmottaker';
 import { formaterIdent, lagPersonLabel } from '../../../../utils/formatter';
 
-interface IProps {
-    bruker: IPerson;
-    institusjon: IInstitusjon | undefined;
-    brevmottakere: IBrevmottaker[];
+type Props = {
+    bruker: Person;
+    institusjon: Institusjon | undefined;
+    brevmottakere: Brevmottaker[];
     harMargin?: boolean;
-}
-interface UlProps {
+};
+
+type UlProps = {
     harMargin: boolean;
-}
+};
+
 const StyledUl = styled.ul<UlProps>`
     ${(props: UlProps): string => (props.harMargin ? `` : `margin-top:0;margin-bottom:0;`)};
 `;
 
-const BrevmottakerListe: React.FC<IProps> = ({
+const BrevmottakerListe: React.FC<Props> = ({
     bruker,
     institusjon,
     brevmottakere,

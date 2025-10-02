@@ -9,47 +9,38 @@ import type {
     VergeStegPayload,
     VilkårdsvurderingStegPayload,
 } from '../typer/api';
-import type {
-    IFeilutbetalingFakta,
-    IFeilutbetalingForeldelse,
-    IFeilutbetalingVilkårsvurdering,
-} from '../typer/feilutbetalingtyper';
 import type { Ressurs } from '../typer/ressurs';
-import type { ITotrinnkontroll } from '../typer/totrinnTyper';
-import type { IBeregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyper';
+import type {
+    FaktaResponse,
+    ForeldelseResponse,
+    VilkårsvurderingResponse,
+} from '../typer/tilbakekrevingstyper';
+import type { Totrinnkontroll } from '../typer/totrinnTyper';
+import type { Beregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyper';
 
 import { useHttp } from './http/HttpProvider';
 
 export type BehandlingApiHook = {
-    gjerFeilutbetalingFaktaKall: (behandlingId: string) => Promise<Ressurs<IFeilutbetalingFakta>>;
-    gjerFeilutbetalingInaktiveFaktaKall: (
-        behandlingId: string
-    ) => Promise<Ressurs<IFeilutbetalingFakta[]>>;
-    sendInnFeilutbetalingFakta: (
-        behandlingId: string,
-        payload: FaktaStegPayload
-    ) => Promise<Ressurs<string>>;
-    gjerFeilutbetalingForeldelseKall: (
-        behandlingId: string
-    ) => Promise<Ressurs<IFeilutbetalingForeldelse>>;
-    sendInnFeilutbetalingForeldelse: (
+    gjerFaktaKall: (behandlingId: string) => Promise<Ressurs<FaktaResponse>>;
+    gjerInaktiveFaktaKall: (behandlingId: string) => Promise<Ressurs<FaktaResponse[]>>;
+    sendInnFakta: (behandlingId: string, payload: FaktaStegPayload) => Promise<Ressurs<string>>;
+    gjerForeldelseKall: (behandlingId: string) => Promise<Ressurs<ForeldelseResponse>>;
+    sendInnForeldelse: (
         behandlingId: string,
         payload: ForeldelseStegPayload
     ) => Promise<Ressurs<string>>;
-    gjerFeilutbetalingVilkårsvurderingKall: (
-        behandlingId: string
-    ) => Promise<Ressurs<IFeilutbetalingVilkårsvurdering>>;
+    gjerVilkårsvurderingKall: (behandlingId: string) => Promise<Ressurs<VilkårsvurderingResponse>>;
     sendInnVilkårsvurdering: (
         behandlingId: string,
         payload: VilkårdsvurderingStegPayload
     ) => Promise<Ressurs<string>>;
     gjerVedtaksbrevteksterKall: (behandlingId: string) => Promise<Ressurs<VedtaksbrevAvsnitt[]>>;
-    gjerBeregningsresultatKall: (behandlingId: string) => Promise<Ressurs<IBeregningsresultat>>;
+    gjerBeregningsresultatKall: (behandlingId: string) => Promise<Ressurs<Beregningsresultat>>;
     sendInnForeslåVedtak: (
         behandlingId: string,
         payload: ForeslåVedtakStegPayload
     ) => Promise<Ressurs<string>>;
-    gjerTotrinnkontrollKall: (behandlingId: string) => Promise<Ressurs<ITotrinnkontroll>>;
+    gjerTotrinnkontrollKall: (behandlingId: string) => Promise<Ressurs<Totrinnkontroll>>;
     sendInnFatteVedtak: (
         behandlingId: string,
         payload: FatteVedtakStegPayload
@@ -68,34 +59,30 @@ export type BehandlingApiHook = {
         behandlingId: string
     ) => Promise<Ressurs<ManuellBrevmottakerResponseDto[]>>;
     kallAngreSendTilBeslutter: (behandlingId: string) => Promise<Ressurs<string>>;
-    gjerFeilutbetalingInaktiveVilkårsvurderingerKall: (
+    gjerInaktiveVilkårsvurderingerKall: (
         behandlingId: string
-    ) => Promise<Ressurs<IFeilutbetalingVilkårsvurdering[]>>;
+    ) => Promise<Ressurs<VilkårsvurderingResponse[]>>;
 };
 
 const useBehandlingApi = (): BehandlingApiHook => {
     const behandlingerApiPrefix = '/familie-tilbake/api/behandling';
     const { request } = useHttp();
 
-    const gjerFeilutbetalingFaktaKall = (
-        behandlingId: string
-    ): Promise<Ressurs<IFeilutbetalingFakta>> => {
-        return request<void, IFeilutbetalingFakta>({
+    const gjerFaktaKall = (behandlingId: string): Promise<Ressurs<FaktaResponse>> => {
+        return request<void, FaktaResponse>({
             method: 'GET',
             url: `${behandlingerApiPrefix}/${behandlingId}/fakta/v1`,
         });
     };
 
-    const gjerFeilutbetalingInaktiveFaktaKall = (
-        behandlingId: string
-    ): Promise<Ressurs<IFeilutbetalingFakta[]>> => {
-        return request<void, IFeilutbetalingFakta[]>({
+    const gjerInaktiveFaktaKall = (behandlingId: string): Promise<Ressurs<FaktaResponse[]>> => {
+        return request<void, FaktaResponse[]>({
             method: 'GET',
             url: `${behandlingerApiPrefix}/${behandlingId}/fakta/inaktiv`,
         });
     };
 
-    const sendInnFeilutbetalingFakta = (
+    const sendInnFakta = (
         behandlingId: string,
         payload: FaktaStegPayload
     ): Promise<Ressurs<string>> => {
@@ -106,16 +93,14 @@ const useBehandlingApi = (): BehandlingApiHook => {
         });
     };
 
-    const gjerFeilutbetalingForeldelseKall = (
-        behandlingId: string
-    ): Promise<Ressurs<IFeilutbetalingForeldelse>> => {
-        return request<void, IFeilutbetalingForeldelse>({
+    const gjerForeldelseKall = (behandlingId: string): Promise<Ressurs<ForeldelseResponse>> => {
+        return request<void, ForeldelseResponse>({
             method: 'GET',
             url: `${behandlingerApiPrefix}/${behandlingId}/foreldelse/v1`,
         });
     };
 
-    const sendInnFeilutbetalingForeldelse = (
+    const sendInnForeldelse = (
         behandlingId: string,
         payload: ForeldelseStegPayload
     ): Promise<Ressurs<string>> => {
@@ -126,19 +111,19 @@ const useBehandlingApi = (): BehandlingApiHook => {
         });
     };
 
-    const gjerFeilutbetalingVilkårsvurderingKall = (
+    const gjerVilkårsvurderingKall = (
         behandlingId: string
-    ): Promise<Ressurs<IFeilutbetalingVilkårsvurdering>> => {
-        return request<void, IFeilutbetalingVilkårsvurdering>({
+    ): Promise<Ressurs<VilkårsvurderingResponse>> => {
+        return request<void, VilkårsvurderingResponse>({
             method: 'GET',
             url: `${behandlingerApiPrefix}/${behandlingId}/vilkarsvurdering/v1`,
         });
     };
 
-    const gjerFeilutbetalingInaktiveVilkårsvurderingerKall = (
+    const gjerInaktiveVilkårsvurderingerKall = (
         behandlingId: string
-    ): Promise<Ressurs<IFeilutbetalingVilkårsvurdering[]>> => {
-        return request<void, IFeilutbetalingVilkårsvurdering[]>({
+    ): Promise<Ressurs<VilkårsvurderingResponse[]>> => {
+        return request<void, VilkårsvurderingResponse[]>({
             method: 'GET',
             url: `${behandlingerApiPrefix}/${behandlingId}/vilkarsvurdering/inaktiv`,
         });
@@ -166,8 +151,8 @@ const useBehandlingApi = (): BehandlingApiHook => {
 
     const gjerBeregningsresultatKall = (
         behandlingId: string
-    ): Promise<Ressurs<IBeregningsresultat>> => {
-        return request<void, IBeregningsresultat>({
+    ): Promise<Ressurs<Beregningsresultat>> => {
+        return request<void, Beregningsresultat>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/${behandlingId}/beregn/resultat/v1`,
         });
@@ -184,8 +169,8 @@ const useBehandlingApi = (): BehandlingApiHook => {
         });
     };
 
-    const gjerTotrinnkontrollKall = (behandlingId: string): Promise<Ressurs<ITotrinnkontroll>> => {
-        return request<void, ITotrinnkontroll>({
+    const gjerTotrinnkontrollKall = (behandlingId: string): Promise<Ressurs<Totrinnkontroll>> => {
+        return request<void, Totrinnkontroll>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/${behandlingId}/totrinn/v1`,
         });
@@ -258,12 +243,12 @@ const useBehandlingApi = (): BehandlingApiHook => {
     };
 
     return {
-        gjerFeilutbetalingFaktaKall,
-        gjerFeilutbetalingInaktiveFaktaKall,
-        sendInnFeilutbetalingFakta,
-        gjerFeilutbetalingForeldelseKall,
-        sendInnFeilutbetalingForeldelse,
-        gjerFeilutbetalingVilkårsvurderingKall,
+        gjerFaktaKall,
+        gjerInaktiveFaktaKall,
+        sendInnFakta,
+        gjerForeldelseKall,
+        sendInnForeldelse,
+        gjerVilkårsvurderingKall,
         sendInnVilkårsvurdering,
         gjerVedtaksbrevteksterKall,
         gjerBeregningsresultatKall,
@@ -276,7 +261,7 @@ const useBehandlingApi = (): BehandlingApiHook => {
         fjernManuellBrevmottaker,
         hentManuelleBrevmottakere,
         kallAngreSendTilBeslutter,
-        gjerFeilutbetalingInaktiveVilkårsvurderingerKall,
+        gjerInaktiveVilkårsvurderingerKall,
     };
 };
 

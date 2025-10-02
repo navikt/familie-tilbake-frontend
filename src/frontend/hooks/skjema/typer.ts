@@ -4,14 +4,14 @@ import type { ChangeEvent, Dispatch, ReactNode, SetStateAction } from 'react';
 
 import { type Ressurs } from '../../typer/ressurs';
 
-export interface FeltState<Verdi> {
+export type FeltState<Verdi> = {
     feilmelding: ReactNode;
     valider: ValiderFelt<Verdi>;
     valideringsstatus: Valideringsstatus;
     verdi: Verdi;
-}
+};
 
-export type FeltOnChange<Verdi> = (
+type FeltOnChange<Verdi> = (
     verdi:
         | ChangeEvent<HTMLInputElement>
         | ChangeEvent<HTMLSelectElement>
@@ -19,7 +19,7 @@ export type FeltOnChange<Verdi> = (
         | Verdi
 ) => void;
 
-export interface Felt<Verdi> {
+export type Felt<Verdi> = {
     erSynlig: boolean;
     feilmelding: ReactNode;
     hentNavBaseSkjemaProps(visFeilmelding: boolean): NavBaseSkjemaProps<Verdi>;
@@ -31,14 +31,14 @@ export interface Felt<Verdi> {
     validerOgSettFelt: ValiderOgSettFelt<Verdi>;
     valideringsstatus: Valideringsstatus;
     verdi: Verdi;
-}
+};
 
-export interface NavBaseSkjemaProps<Verdi> {
+export type NavBaseSkjemaProps<Verdi> = {
     id: string;
     feil: ReactNode | undefined; // Deprecated i nytt designsystem
     error: ReactNode | undefined; // Støtte nytt designsystem
     value: Verdi;
-}
+};
 
 export interface NavInputProps<Verdi> extends NavBaseSkjemaProps<Verdi> {
     id: string;
@@ -46,7 +46,7 @@ export interface NavInputProps<Verdi> extends NavBaseSkjemaProps<Verdi> {
 }
 
 // Kopiert fra feiloppsummering, men ønsker ikke å trekke inn dette som dependency
-export interface FeiloppsummeringFeil {
+export type FeiloppsummeringFeil = {
     /**
      * ID til skjemaelementet som feilmeldingen tilhører.
      */
@@ -55,7 +55,7 @@ export interface FeiloppsummeringFeil {
      * Selve feilmeldingen.
      */
     feilmelding: string;
-}
+};
 
 export enum Valideringsstatus {
     Feil = 'FEIL',
@@ -71,10 +71,7 @@ export type ValiderFelt<Verdi> = (
     avhengigheter?: Avhengigheter
 ) => FeltState<Verdi>;
 
-export type ValiderOgSettFelt<Verdi> = (
-    verdi: Verdi,
-    avhengigheter?: Avhengigheter
-) => FeltState<Verdi>;
+type ValiderOgSettFelt<Verdi> = (verdi: Verdi, avhengigheter?: Avhengigheter) => FeltState<Verdi>;
 
 export const defaultValidator = <Verdi>(felt: FeltState<Verdi>): FeltState<Verdi> => ({
     ...felt,
@@ -85,14 +82,14 @@ export type FieldDictionary<Record> = {
     [Key in keyof Record]: Felt<Record[Key]>;
 };
 
-export interface ISkjema<Felter, SkjemaRespons> {
+export type Skjema<Felter, SkjemaRespons> = {
     felter: FieldDictionary<Felter>;
     submitRessurs: Ressurs<SkjemaRespons>;
     skjemanavn: string;
     visFeilmeldinger: boolean;
-}
+};
 
-export interface UseSkjemaVerdi<Felter, SkjemaRespons> {
+export type UseSkjemaVerdi<Felter, SkjemaRespons> = {
     hentFeilTilOppsummering: () => FeiloppsummeringFeil[];
     kanSendeSkjema: () => boolean;
     nullstillSkjema: () => void;
@@ -132,7 +129,7 @@ export interface UseSkjemaVerdi<Felter, SkjemaRespons> {
         >
     >;
     settVisfeilmeldinger: Dispatch<SetStateAction<boolean>>;
-    skjema: ISkjema<Felter, SkjemaRespons>;
+    skjema: Skjema<Felter, SkjemaRespons>;
     validerAlleSynligeFelter: () => FeltState<unknown>[];
     valideringErOk: () => boolean;
-}
+};

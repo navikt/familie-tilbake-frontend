@@ -1,10 +1,10 @@
-import type { ISkjema } from '../../../../hooks/skjema';
+import type { Skjema } from '../../../../hooks/skjema';
 import type {
     Aktsomhetsvurdering,
     GodTro,
     SærligeGrunnerDto,
-} from '../../../../typer/feilutbetalingtyper';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+} from '../../../../typer/tilbakekrevingstyper';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
 import {
     type Avhengigheter,
@@ -26,10 +26,10 @@ import {
 export const EGENDEFINERT = 'Egendefinert';
 export const ANDELER = ['30', '50', '70', EGENDEFINERT];
 
-export interface JaNeiOption {
+export type JaNeiOption = {
     verdi: boolean;
     label: string;
-}
+};
 
 export const OptionJA: JaNeiOption = {
     verdi: true,
@@ -126,7 +126,7 @@ const avhengigheterOppfyltMerEnnAktivitetFelter = (avhengigheter?: Avhengigheter
     avhengigheter?.harMerEnnEnAktivitet.verdi === true;
 
 type VilkårsvurderingPeriodeSkjemaContext = {
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     validerOgOppdaterFelter: (periode: VilkårsvurderingPeriodeSkjemaData) => boolean;
 };
 

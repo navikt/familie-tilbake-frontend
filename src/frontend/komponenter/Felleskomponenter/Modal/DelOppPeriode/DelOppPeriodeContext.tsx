@@ -1,4 +1,4 @@
-import type { IBeregnSplittetPeriodeRespons, Periode } from '../../../../typer/feilutbetalingtyper';
+import type { BeregnSplittetPeriodeRespons, Periode } from '../../../../typer/tilbakekrevingstyper';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import { useState } from 'react';
@@ -7,7 +7,7 @@ import { useHttp } from '../../../../api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
 
-interface DelOppPeriodeHook {
+type DelOppPeriodeHook = {
     visModal: boolean;
     settVisModal: (vis: boolean) => void;
     splittDato: string;
@@ -18,10 +18,10 @@ interface DelOppPeriodeHook {
     vedDatoEndring: (splittPeriode: (månedsslutt: string) => void, nyVerdi?: string) => void;
     sendInnSkjema: (
         payload: Periode[],
-        behandleRespons: (response: IBeregnSplittetPeriodeRespons) => void
+        behandleRespons: (response: BeregnSplittetPeriodeRespons) => void
     ) => void;
     validateNyPeriode: (periode: Periode, månedsslutt: string) => boolean;
-}
+};
 
 export const useDelOppPeriode = (fom: string, behandlingId: string): DelOppPeriodeHook => {
     const [visModal, settVisModal] = useState(false);
@@ -49,13 +49,13 @@ export const useDelOppPeriode = (fom: string, behandlingId: string): DelOppPerio
 
     const sendInnSkjema = (
         payload: Periode[],
-        behandleRespons: (response: IBeregnSplittetPeriodeRespons) => void
+        behandleRespons: (response: BeregnSplittetPeriodeRespons) => void
     ): void => {
-        request<Periode[], IBeregnSplittetPeriodeRespons>({
+        request<Periode[], BeregnSplittetPeriodeRespons>({
             method: 'POST',
             url: `/familie-tilbake/api/behandling/${behandlingId}/beregn/v1`,
             data: payload,
-        }).then((response: Ressurs<IBeregnSplittetPeriodeRespons>) => {
+        }).then((response: Ressurs<BeregnSplittetPeriodeRespons>) => {
             if (response.status === RessursStatus.Suksess) {
                 behandleRespons(response.data);
                 settVisModal(false);

@@ -1,7 +1,7 @@
-export interface IToast {
+export type Toast = {
     alertType: AlertType;
     tekst: string;
-}
+};
 
 export enum ToastTyper {
     BrevmottakerIkkeTillat = 'BREVMOTTAKER_IKKE_TILLATT',

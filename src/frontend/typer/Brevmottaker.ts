@@ -8,21 +8,21 @@ export enum MottakerType {
     Bruker = 'BRUKER',
 }
 
-interface ManuellAdresseInfo {
+type ManuellAdresseInfo = {
     adresselinje1: string;
     adresselinje2?: string;
     postnummer: string;
     poststed: string;
     landkode: string;
-}
-export interface IBrevmottaker {
+};
+export type Brevmottaker = {
     navn: string;
     personIdent?: string;
     organisasjonsnummer?: string;
     type: MottakerType;
     vergetype?: Vergetype;
     manuellAdresseInfo?: ManuellAdresseInfo;
-}
+};
 
 export const mottakerTypeVisningsnavn: Record<MottakerType, string> = {
     BRUKER_MED_UTENLANDSK_ADRESSE: 'Bruker med utenlandsk adresse',

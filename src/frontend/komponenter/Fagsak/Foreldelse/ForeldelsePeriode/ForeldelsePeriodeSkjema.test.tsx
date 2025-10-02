@@ -1,8 +1,8 @@
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { IBehandling } from '../../../../typer/behandling';
-import type { FeilutbetalingForeldelseHook } from '../FeilutbetalingForeldelseContext';
-import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+import type { Behandling } from '../../../../typer/behandling';
+import type { ForeldelseHook } from '../ForeldelseContext';
+import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -11,7 +11,7 @@ import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
-import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
+import ForeldelsePeriodeSkjema from './ForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
 
 jest.mock('../../../../api/http/HttpProvider', () => {
@@ -22,9 +22,9 @@ jest.mock('../../../../api/http/HttpProvider', () => {
         }),
     };
 });
-jest.mock('../FeilutbetalingForeldelseContext', () => {
+jest.mock('../ForeldelseContext', () => {
     return {
-        useFeilutbetalingForeldelse: (): Partial<FeilutbetalingForeldelseHook> => ({
+        useForeldelse: (): Partial<ForeldelseHook> => ({
             oppdaterPeriode: jest.fn(),
             onSplitPeriode: jest.fn(),
         }),
@@ -38,7 +38,7 @@ jest.mock('../../../../context/BehandlingContext', () => {
         }),
     };
 });
-const behandling = mock<IBehandling>();
+const behandling = mock<Behandling>();
 const periode: ForeldelsePeriodeSkjemeData = {
     index: 'i1',
     feilutbetaltBeløp: 1333,
@@ -48,19 +48,15 @@ const periode: ForeldelsePeriodeSkjemeData = {
     },
 };
 
-const renderFeilutbetalingForeldelsePeriodeSkjema = (
-    behandling: IBehandling,
+const renderForeldelsePeriodeSkjema = (
+    behandling: Behandling,
     periode: ForeldelsePeriodeSkjemeData
 ): RenderResult =>
     render(
-        <FeilutbetalingForeldelsePeriodeSkjema
-            behandling={behandling}
-            periode={periode}
-            erLesevisning={false}
-        />
+        <ForeldelsePeriodeSkjema behandling={behandling} periode={periode} erLesevisning={false} />
     );
 
-describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
+describe('Tester: ForeldelsePeriodeSkjema', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
@@ -68,7 +64,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
     });
     test('- vurderer periode ikke foreldet ', async () => {
         const { getByRole, getByText, getByLabelText, queryAllByText, queryByLabelText } =
-            renderFeilutbetalingForeldelsePeriodeSkjema(behandling, periode);
+            renderForeldelsePeriodeSkjema(behandling, periode);
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
@@ -103,7 +99,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
 
     test('- vurderer periode foreldet ', async () => {
         const { getByLabelText, getByRole, getByText, queryByLabelText, queryAllByText } =
-            renderFeilutbetalingForeldelsePeriodeSkjema(behandling, periode);
+            renderForeldelsePeriodeSkjema(behandling, periode);
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
@@ -145,7 +141,7 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
 
     test('- vurderer periode til å bruke tilleggsfrist ', async () => {
         const { getByText, getByRole, getByLabelText, queryByLabelText, queryAllByText } =
-            renderFeilutbetalingForeldelsePeriodeSkjema(behandling, periode);
+            renderForeldelsePeriodeSkjema(behandling, periode);
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
@@ -201,8 +197,10 @@ describe('Tester: FeilutbetalingForeldelsePeriodeSkjema', () => {
             oppdagelsesdato: '2019-09-18',
         };
 
-        const { getByLabelText, getByText, queryByLabelText } =
-            renderFeilutbetalingForeldelsePeriodeSkjema(behandling, vurdertPeriode);
+        const { getByLabelText, getByText, queryByLabelText } = renderForeldelsePeriodeSkjema(
+            behandling,
+            vurdertPeriode
+        );
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(

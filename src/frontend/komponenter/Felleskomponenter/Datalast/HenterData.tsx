@@ -8,12 +8,12 @@ const HenterDataContainer = styled.div`
     text-align: center;
 `;
 
-interface IProps {
+type Props = {
     beskrivelse: string;
     størrelse?: '2xlarge' | 'large';
-}
+};
 
-const HenterData: React.FC<IProps> = ({ beskrivelse, størrelse = '2xlarge' }) => {
+const HenterData: React.FC<Props> = ({ beskrivelse, størrelse = '2xlarge' }) => {
     return (
         <HenterDataContainer>
             <BodyLong>{beskrivelse}</BodyLong>

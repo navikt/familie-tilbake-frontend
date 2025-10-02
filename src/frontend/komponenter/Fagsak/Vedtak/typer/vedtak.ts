@@ -1,6 +1,6 @@
 import type { Avsnittstype, Underavsnittstype } from '../../../../kodeverk';
 
-export interface UnderavsnittSkjemaData {
+export type UnderavsnittSkjemaData = {
     index: string;
     underavsnittstype?: Underavsnittstype;
     brødtekst?: string;
@@ -10,13 +10,13 @@ export interface UnderavsnittSkjemaData {
     fritekstPåkrevet: boolean;
     harFeil?: boolean;
     feilmelding?: string;
-}
+};
 
-export interface AvsnittSkjemaData {
+export type AvsnittSkjemaData = {
     index: string;
     avsnittstype: Avsnittstype;
     fom?: string;
     tom?: string;
     overskrift?: string;
     underavsnittsliste: UnderavsnittSkjemaData[];
-}
+};

@@ -1,5 +1,5 @@
 import type { HendelseType, HendelseUndertype } from '../../../../kodeverk';
-import type { FaktaPeriodeSkjemaData } from '../typer/feilutbetalingFakta';
+import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
@@ -10,14 +10,14 @@ import { useEffect, useMemo } from 'react';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
-import { useFeilutbetalingFakta } from '../FeilutbetalingFaktaContext';
+import { useFakta } from '../FaktaContext';
 
-interface Props {
+type Props = {
     periode: FaktaPeriodeSkjemaData;
     hendelseTyper: HendelseType[] | undefined;
     index: number;
     erLesevisning: boolean;
-}
+};
 
 export const FaktaPeriodeSkjema: React.FC<Props> = ({
     periode,
@@ -26,7 +26,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
     erLesevisning,
 }) => {
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
-        useFeilutbetalingFakta();
+        useFakta();
     const { settIkkePersistertKomponent } = useBehandling();
 
     useEffect(() => {

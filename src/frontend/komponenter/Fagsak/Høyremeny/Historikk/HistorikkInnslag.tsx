@@ -1,5 +1,5 @@
 import type { Behandlingssteg } from '../../../../typer/behandling';
-import type { IHistorikkInnslag } from '../../../../typer/historikk';
+import type { HistorikkInnslag } from '../../../../typer/historikk';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
@@ -11,8 +11,8 @@ import HentDokument from './HentDokument';
 import { useHistorikk } from './HistorikkContext';
 import { Aktør, aktører, Historikkinnslagstype } from '../../../../typer/historikk';
 import { formatterDatoOgTidstring } from '../../../../utils';
+import { finnSideForSteg } from '../../../../utils/sider';
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
-import { finnSideForSteg } from '../../../Felleskomponenter/Venstremeny/sider';
 
 const Innslag = styled.div`
     display: flex;
@@ -40,11 +40,11 @@ const Innhold = styled.div`
     margin-bottom: ${ASpacing6};
 `;
 
-interface IProps {
-    innslag: IHistorikkInnslag;
-}
+type Props = {
+    innslag: HistorikkInnslag;
+};
 
-const HistorikkInnslag: React.FC<IProps> = ({ innslag }) => {
+const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
     const { navigerTilSide } = useHistorikk();
     const [visDokument, settVisDokument] = React.useState<boolean>(false);
 

@@ -98,7 +98,7 @@ export const behandlingssteg: Record<Behandlingssteg, string> = {
     [Behandlingssteg.Grunnlag]: 'Kravgrunnlag',
     [Behandlingssteg.Verge]: 'Verge',
     [Behandlingssteg.Brevmottaker]: 'Brevmottaker',
-    [Behandlingssteg.Fakta]: 'Fakta om feilutbetaling',
+    [Behandlingssteg.Fakta]: 'Fakta fra feilutbetalingssaken',
     [Behandlingssteg.Foreldelse]: 'Foreldelse',
     [Behandlingssteg.Vilkårsvurdering]: 'Tilbakekreving',
     [Behandlingssteg.ForeslåVedtak]: 'Vedtak',
@@ -142,14 +142,14 @@ export const venteårsaker: Record<Venteårsak, string> = {
     [Venteårsak.VentPåMuligMotregning]: 'Mulig motregning med annen ytelse',
 };
 
-export interface IBehandlingsstegstilstand {
+export type Behandlingsstegstilstand = {
     behandlingssteg: Behandlingssteg;
     behandlingsstegstatus: Behandlingsstegstatus;
     venteårsak?: Venteårsak;
     tidsfrist?: string;
-}
+};
 
-export interface IBehandling {
+export type Behandling = {
     behandlingId: string;
     eksternBrukId: string;
     opprettetDato: string;
@@ -167,11 +167,12 @@ export interface IBehandling {
     kanHenleggeBehandling: boolean;
     kanRevurderingOpprettes: boolean;
     varselSendt: boolean;
-    behandlingsstegsinfo: IBehandlingsstegstilstand[];
+    behandlingsstegsinfo: Behandlingsstegstilstand[];
     fagsystemsbehandlingId: string;
     behandlingsårsakstype?: Behandlingårsak;
     støtterManuelleBrevmottakere?: boolean;
     manuelleBrevmottakere: ManuellBrevmottakerResponseDto[];
     begrunnelseForTilbakekreving?: string;
     saksbehandlingstype: Saksbehandlingstype;
-}
+    erNyModell: boolean;
+};

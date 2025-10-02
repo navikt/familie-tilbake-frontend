@@ -1,7 +1,7 @@
-import type { FeilutbetalingPeriode, VurderingAvBrukersUttalelse } from './feilutbetalingtyper';
+import type { FaktaPeriode, VurderingAvBrukersUttalelse } from './tilbakekrevingstyper';
 import type { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../kodeverk/';
 
-export interface BeregningsresultatPeriode extends FeilutbetalingPeriode {
+export interface BeregningsresultatPeriode extends FaktaPeriode {
     vurdering: Vurdering;
     andelAvBeløp?: number;
     renteprosent?: number;
@@ -9,11 +9,11 @@ export interface BeregningsresultatPeriode extends FeilutbetalingPeriode {
     tilbakekrevesBeløpEtterSkatt: number;
 }
 
-export interface IBeregningsresultat {
+export type Beregningsresultat = {
     beregningsresultatsperioder: BeregningsresultatPeriode[];
     vedtaksresultat: Vedtaksresultat;
     vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelse;
-}
+};
 
 type VedtaksbrevUnderavsnitt = {
     underavsnittstype?: Underavsnittstype;

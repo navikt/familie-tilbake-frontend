@@ -1,10 +1,9 @@
 import type { TotrinnGodkjenningOption, TotrinnStegSkjemaData } from './typer/totrinnSkjemaTyper';
 import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer/api';
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
-import type { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
-import type { ISide } from '../../../Felleskomponenter/Venstremeny/sider';
-import type { AxiosError } from 'axios';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
+import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
+import type { SynligSteg } from '../../../../utils/sider';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
@@ -21,7 +20,6 @@ import {
     RessursStatus,
 } from '../../../../typer/ressurs';
 import { hentFrontendFeilmelding, validerTekstMaksLengde } from '../../../../utils';
-import { sider } from '../../../Felleskomponenter/Venstremeny/sider';
 
 const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption | '' => {
     const option = totrinnGodkjenningOptions.find(opt => opt.verdi === verdi);
@@ -37,14 +35,14 @@ const stegRekkefølge = [
     Behandlingssteg.ForeslåVedtak,
 ];
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
-    ({ fagsak, behandling }: IProps) => {
-        const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<ITotrinnkontroll>>();
+    ({ fagsak, behandling }: Props) => {
+        const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
         const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
         const [erLesevisning, settErLesevisning] = useState<boolean>(false);
         const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
@@ -112,11 +110,10 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
         const hentTotrinnkontroll = (): void => {
             settTotrinnkontroll(byggHenterRessurs());
             gjerTotrinnkontrollKall(behandling.behandlingId)
-                .then((hentetTotrinnkontroll: Ressurs<ITotrinnkontroll>) => {
+                .then((hentetTotrinnkontroll: Ressurs<Totrinnkontroll>) => {
                     settTotrinnkontroll(hentetTotrinnkontroll);
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     settTotrinnkontroll(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av to-trinnskontroll for behandling'
@@ -227,11 +224,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 sendInnFatteVedtak(behandling.behandlingId, payload)
                     .then((respons: Ressurs<string>) => {
                         if (respons.status === RessursStatus.Suksess) {
-                            hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                                navigate(
-                                    `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.VERGE.href}`
-                                );
-                            });
+                            hentBehandlingMedBehandlingId(behandling.behandlingId);
                         } else if (
                             respons.status === RessursStatus.Feilet ||
                             respons.status === RessursStatus.FunksjonellFeil
@@ -239,8 +232,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                             settFatteVedtakRespons(respons);
                         }
                     })
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    .catch((_error: AxiosError) => {
+                    .catch(() => {
                         settFatteVedtakRespons(
                             byggFeiletRessurs('Ukjent feil ved sending av vedtak')
                         );
@@ -251,7 +243,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             }
         };
 
-        const navigerTilSide = (side: ISide): void => {
+        const navigerTilSide = (side: SynligSteg): void => {
             navigate(
                 `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );

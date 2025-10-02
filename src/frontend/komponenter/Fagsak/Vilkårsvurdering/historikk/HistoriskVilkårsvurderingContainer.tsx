@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 
 import { Alert, Heading, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -16,19 +16,16 @@ const Container = styled.div`
     padding: ${ASpacing3};
 `;
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+type Props = {
+    fagsak: Fagsak;
+    behandling: Behandling;
+};
 
-const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
-    const {
-        feilutbetalingInaktiveVilkårsvurderinger,
-        skjemaData,
-        settFeilutbetalingInaktivVilkårsvurdering,
-    } = useHistoriskVilkårsvurdering();
+const HistoriskVilkårsvurderingContainer: React.FC<Props> = () => {
+    const { inaktiveVilkårsvurderinger, skjemaData, setInaktivVilkårsvurdering } =
+        useHistoriskVilkårsvurdering();
 
-    if (feilutbetalingInaktiveVilkårsvurderinger?.status === RessursStatus.Suksess) {
+    if (inaktiveVilkårsvurderinger?.status === RessursStatus.Suksess) {
         return (
             <Container>
                 <VStack gap="5">
@@ -38,12 +35,8 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
                         </Heading>
                     </Alert>
                     <VelgHistoriskVilkårsvurdering
-                        feilutbetalingInaktiveVilkårsvurderinger={
-                            feilutbetalingInaktiveVilkårsvurderinger.data
-                        }
-                        settFeilutbetalingInaktivVilkårsvurdering={
-                            settFeilutbetalingInaktivVilkårsvurdering
-                        }
+                        inaktiveVilkårsvurderinger={inaktiveVilkårsvurderinger.data}
+                        setInaktivVilkårsvurdering={setInaktivVilkårsvurdering}
                     />
                     {skjemaData && skjemaData.length > 0 && (
                         <HistoriskVilkårsvurderingVisning perioder={skjemaData} />
@@ -52,7 +45,7 @@ const HistoriskVilkårsvurderingContainer: React.FC<IProps> = () => {
             </Container>
         );
     } else {
-        return <DataLastIkkeSuksess ressurser={[feilutbetalingInaktiveVilkårsvurderinger]} />;
+        return <DataLastIkkeSuksess ressurser={[inaktiveVilkårsvurderinger]} />;
     }
 };
 

@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../typer/behandling';
-import type { IFagsak } from '../../typer/fagsak';
+import type { Behandling } from '../../typer/behandling';
+import type { Fagsak } from '../../typer/fagsak';
 
 import { BodyShort } from '@navikt/ds-react';
 import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -8,26 +8,21 @@ import { Suspense } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
-import { BrevmottakerProvider } from './Brevmottaker/BrevmottakerContext';
+import { FaktaProvider } from './Fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
-import { FeilutbetalingFaktaProvider } from './Fakta/FeilutbetalingFaktaContext';
-import { FeilutbetalingForeldelseProvider } from './Foreldelse/FeilutbetalingForeldelseContext';
-import { FeilutbetalingVedtakProvider } from './Vedtak/FeilutbetalingVedtakContext';
+import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
+import { Stegflyt } from './Stegflyt/Stegflyt';
+import { VedtakProvider } from './Vedtak/VedtakContext';
 import { VergeProvider } from './Verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
 import { useBehandling } from '../../context/BehandlingContext';
 import { Behandlingstatus } from '../../typer/behandling';
+import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from '../../utils/sider';
 import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
-import {
-    erHistoriskSide,
-    erØnsketSideTilgjengelig,
-    utledBehandlingSide,
-} from '../Felleskomponenter/Venstremeny/sider';
-import Venstremeny from '../Felleskomponenter/Venstremeny/Venstremeny';
 
 const BrevmottakerContainer = lazyImportMedRetry(
-    () => import('./Brevmottaker/BrevmottakerContainer'),
+    () => import('./Brevmottaker/Brevmottakere'),
     'BrevmottakerContainer'
 );
 const FaktaContainer = lazyImportMedRetry(() => import('./Fakta/FaktaContainer'), 'FaktaContainer');
@@ -60,13 +55,7 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
-const StyledVenstremenyContainer = styled.div`
-    min-width: 10rem;
-    border-right: 1px solid ${ABorderDefault};
-    overflow: hidden;
-`;
-
-const StyledMainContainer = styled.div`
+const StyledMainContainer = styled.main`
     flex: 1;
     overflow: auto;
 `;
@@ -76,25 +65,26 @@ const HenlagtContainer = styled.div`
     text-align: center;
 `;
 
-const StyledHøyremenyContainer = styled.div`
+const StyledHøyremenyContainer = styled.aside`
     border-left: 1px solid ${ABorderDefault};
     overflow-x: hidden;
     overflow-y: scroll;
 `;
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+type Props = {
+    fagsak: Fagsak;
+    behandling: Behandling;
+};
 
-const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
+const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
     const navigate = useNavigate();
     const location = useLocation();
 
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
-    const erØnsketSideLovlig = ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling);
+    const erØnsketSideLovlig =
+        ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
     const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
     React.useEffect(() => {
@@ -176,80 +166,83 @@ const BehandlingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
         </>
     ) : harKravgrunnlag ? (
         <>
-            <StyledVenstremenyContainer>
-                <Venstremeny fagsak={fagsak} />
-            </StyledVenstremenyContainer>
-            <StyledMainContainer id="fagsak-main">
-                <Routes>
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/fakta'}
-                        element={
-                            <FeilutbetalingFaktaProvider behandling={behandling} fagsak={fagsak}>
-                                <Suspense fallback="Fakta laster...">
-                                    <FaktaContainer ytelse={fagsak.ytelsestype} />
-                                </Suspense>
-                            </FeilutbetalingFaktaProvider>
-                        }
-                    />
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
-                        element={
-                            <FeilutbetalingForeldelseProvider
-                                behandling={behandling}
-                                fagsak={fagsak}
-                            >
-                                <Suspense fallback="Foreldelse laster...">
-                                    <ForeldelseContainer behandling={behandling} />
-                                </Suspense>
-                            </FeilutbetalingForeldelseProvider>
-                        }
-                    />
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
-                        element={
-                            <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                                <Suspense fallback="Vilkårsvurdering laster...">
-                                    <VilkårsvurderingContainer
-                                        behandling={behandling}
+            <main
+                className="flex-1 overflow-auto mt-4 [scrollbar-gutter:stable]"
+                aria-label="Behandling innhold"
+            >
+                <nav aria-label="Behandlingssteg">
+                    <Stegflyt />
+                </nav>
+                <section className="mx-6">
+                    <Routes>
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/fakta'}
+                            element={
+                                <FaktaProvider behandling={behandling} fagsak={fagsak}>
+                                    <Suspense fallback="Fakta laster...">
+                                        <FaktaContainer ytelse={fagsak.ytelsestype} />
+                                    </Suspense>
+                                </FaktaProvider>
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
+                            element={
+                                <ForeldelseProvider behandling={behandling} fagsak={fagsak}>
+                                    <Suspense fallback="Foreldelse laster...">
+                                        <ForeldelseContainer behandling={behandling} />
+                                    </Suspense>
+                                </ForeldelseProvider>
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
+                            element={
+                                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                                    <Suspense fallback="Vilkårsvurdering laster...">
+                                        <VilkårsvurderingContainer
+                                            behandling={behandling}
+                                            fagsak={fagsak}
+                                        />
+                                    </Suspense>
+                                </VilkårsvurderingProvider>
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
+                            element={
+                                <VedtakProvider behandling={behandling} fagsak={fagsak}>
+                                    <Suspense fallback="Vedtak laster...">
+                                        <VedtakContainer behandling={behandling} fagsak={fagsak} />
+                                    </Suspense>
+                                </VedtakProvider>
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/verge'}
+                            element={
+                                <VergeProvider behandling={behandling} fagsak={fagsak}>
+                                    <Suspense fallback="Verge laster...">
+                                        <VergeContainer />
+                                    </Suspense>
+                                </VergeProvider>
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
+                            element={
+                                <Suspense fallback="Brevmottakere laster...">
+                                    <BrevmottakerContainer
                                         fagsak={fagsak}
+                                        behandling={behandling}
                                     />
                                 </Suspense>
-                            </VilkårsvurderingProvider>
-                        }
-                    />
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
-                        element={
-                            <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
-                                <Suspense fallback="Vedtak laster...">
-                                    <VedtakContainer behandling={behandling} fagsak={fagsak} />
-                                </Suspense>
-                            </FeilutbetalingVedtakProvider>
-                        }
-                    />
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/verge'}
-                        element={
-                            <VergeProvider behandling={behandling} fagsak={fagsak}>
-                                <Suspense fallback="Verge laster...">
-                                    <VergeContainer />
-                                </Suspense>
-                            </VergeProvider>
-                        }
-                    />
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
-                        element={
-                            <BrevmottakerProvider behandling={behandling} fagsak={fagsak}>
-                                <Suspense fallback="Brevmottakere laster...">
-                                    <BrevmottakerContainer />
-                                </Suspense>
-                            </BrevmottakerProvider>
-                        }
-                    />
-                </Routes>
-            </StyledMainContainer>
-            <StyledHøyremenyContainer>
+                            }
+                        />
+                    </Routes>
+                </section>
+            </main>
+            <StyledHøyremenyContainer aria-label="Høyremeny med informasjon og handlinger for behandlingen">
                 <Suspense fallback="Høyremeny kravgrunnlag laster...">
                     <Høyremeny fagsak={fagsak} behandling={behandling} />
                 </Suspense>

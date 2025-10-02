@@ -1,18 +1,18 @@
-import type { IBehandling } from '../../../../typer/behandling';
-import type { ForeldelsePeriode } from '../../../../typer/feilutbetalingtyper';
-import type { ForeldelsePeriodeSkjemeData } from '../typer/feilutbetalingForeldelse';
+import type { Behandling } from '../../../../typer/behandling';
+import type { ForeldelsePeriode } from '../../../../typer/tilbakekrevingstyper';
+import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import { Button, VStack } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import FeilutbetalingForeldelsePeriodeSkjema from './FeilutbetalingForeldelsePeriodeSkjema';
+import ForeldelsePeriodeSkjema from './ForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../../typer/periodeSkjemaData';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
-import { useFeilutbetalingForeldelse } from '../FeilutbetalingForeldelseContext';
+import { useForeldelse } from '../ForeldelseContext';
 
 const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean): string => {
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
@@ -51,17 +51,13 @@ const genererRader = (
     ];
 };
 
-interface IProps {
-    behandling: IBehandling;
+type Props = {
+    behandling: Behandling;
     perioder: ForeldelsePeriodeSkjemeData[];
     erLesevisning: boolean;
-}
+};
 
-const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
-    behandling,
-    perioder,
-    erLesevisning,
-}) => {
+const ForeldelsePerioder: React.FC<Props> = ({ behandling, perioder, erLesevisning }) => {
     const [tidslinjeRader, settTidslinjeRader] = React.useState<TimelinePeriodProps[][]>();
     const [disableBekreft, settDisableBekreft] = React.useState<boolean>(true);
     const {
@@ -74,7 +70,7 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
         allePerioderBehandlet,
         sendInnSkjema,
         senderInn,
-    } = useFeilutbetalingForeldelse();
+    } = useForeldelse();
 
     React.useEffect(() => {
         settTidslinjeRader(genererRader(perioder, valgtPeriode));
@@ -103,7 +99,7 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
 
             {!!valgtPeriode && (
-                <FeilutbetalingForeldelsePeriodeSkjema
+                <ForeldelsePeriodeSkjema
                     behandling={behandling}
                     periode={valgtPeriode}
                     erLesevisning={erLesevisning}
@@ -132,4 +128,4 @@ const FeilutbetalingForeldelsePerioder: React.FC<IProps> = ({
     ) : null;
 };
 
-export default FeilutbetalingForeldelsePerioder;
+export default ForeldelsePerioder;

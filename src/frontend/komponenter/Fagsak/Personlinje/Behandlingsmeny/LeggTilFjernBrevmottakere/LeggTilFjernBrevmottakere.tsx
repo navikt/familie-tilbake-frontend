@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../typer/fagsak';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
 
 import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
@@ -12,21 +12,17 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { Behandlingssteg, Behandlingsstegstatus } from '../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
+import { SYNLIGE_STEG } from '../../../../../utils/sider';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
-import { sider } from '../../../../Felleskomponenter/Venstremeny/sider';
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
     onListElementClick: () => void;
-}
+};
 
-const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
-    behandling,
-    fagsak,
-    onListElementClick,
-}) => {
+const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, fagsak, onListElementClick }) => {
     const [visFjernModal, settVisFjernModal] = React.useState<boolean>(false);
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string>();
@@ -61,7 +57,7 @@ const LeggTilFjernBrevmottakere: React.FC<IProps> = ({
                 settVisBrevmottakerModal(true);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                     navigate(
-                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`
+                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`
                     );
                 });
             } else if (

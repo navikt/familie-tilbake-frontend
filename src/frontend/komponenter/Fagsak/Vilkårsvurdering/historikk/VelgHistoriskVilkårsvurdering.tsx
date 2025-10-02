@@ -1,4 +1,4 @@
-import type { IFeilutbetalingVilkårsvurdering } from '../../../../typer/feilutbetalingtyper';
+import type { VilkårsvurderingResponse } from '../../../../typer/tilbakekrevingstyper';
 
 import { Select } from '@navikt/ds-react';
 import { parseISO } from 'date-fns';
@@ -6,29 +6,27 @@ import * as React from 'react';
 
 import { formatterDatoOgTidstring } from '../../../../utils';
 
-interface IProps {
-    feilutbetalingInaktiveVilkårsvurderinger: IFeilutbetalingVilkårsvurdering[];
-    settFeilutbetalingInaktivVilkårsvurdering: (
-        valgtFakta?: IFeilutbetalingVilkårsvurdering
-    ) => void;
-}
+type Props = {
+    inaktiveVilkårsvurderinger: VilkårsvurderingResponse[];
+    setInaktivVilkårsvurdering: (valgtFakta?: VilkårsvurderingResponse) => void;
+};
 
-const VelgHistoriskVilkårsvurdering: React.FC<IProps> = ({
-    feilutbetalingInaktiveVilkårsvurderinger,
-    settFeilutbetalingInaktivVilkårsvurdering,
+const VelgHistoriskVilkårsvurdering: React.FC<Props> = ({
+    inaktiveVilkårsvurderinger,
+    setInaktivVilkårsvurdering,
 }) => {
     return (
         <Select
             onChange={e => {
-                const valgtVurdering = feilutbetalingInaktiveVilkårsvurderinger.find(
+                const valgtVurdering = inaktiveVilkårsvurderinger.find(
                     vurdering => vurdering.opprettetTid === e.target.value
                 );
-                settFeilutbetalingInaktivVilkårsvurdering(valgtVurdering);
+                setInaktivVilkårsvurdering(valgtVurdering);
             }}
             label="Velg versjon"
         >
             <option>Velg</option>
-            {feilutbetalingInaktiveVilkårsvurderinger
+            {inaktiveVilkårsvurderinger
                 .sort((a, b) => {
                     return a.opprettetTid && b.opprettetTid
                         ? parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime()

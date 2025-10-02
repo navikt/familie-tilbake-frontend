@@ -1,11 +1,11 @@
-import type { UnderavsnittSkjemaData } from './typer/feilutbetalingVedtak';
+import type { UnderavsnittSkjemaData } from './typer/vedtak';
 
 import { PlusCircleIcon } from '@navikt/aksel-icons';
 import { BodyShort, Link, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
-import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
+import { useVedtak } from './VedtakContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { harVerdi, isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
@@ -14,20 +14,20 @@ const StyledUndertekst = styled(BodyShort)`
     display: inline-block;
     margin-left: 1ex;
 `;
-interface IProps {
+type Props = {
     avsnittIndex: string;
     underavsnitt: UnderavsnittSkjemaData;
     maximumLength?: number;
     erLesevisning: boolean;
-}
+};
 
-const VedtakFritekstSkjema: React.FC<IProps> = ({
+const VedtakFritekstSkjema: React.FC<Props> = ({
     avsnittIndex,
     underavsnitt,
     maximumLength,
     erLesevisning,
 }) => {
-    const { oppdaterUnderavsnitt } = useFeilutbetalingVedtak();
+    const { oppdaterUnderavsnitt } = useVedtak();
     const { settIkkePersistertKomponent } = useBehandling();
     const { fritekst, fritekstPåkrevet, index, harFeil, feilmelding } = underavsnitt;
     const [fritekstfeltErSynlig, settFritekstfeltErSynlig] = React.useState<boolean>();

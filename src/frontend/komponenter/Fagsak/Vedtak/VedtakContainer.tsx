@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -7,19 +7,19 @@ import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { BrevmottakereAlert } from './BrevmottakereAlert';
-import { useFeilutbetalingVedtak } from './FeilutbetalingVedtakContext';
 import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
+import { useVedtak } from './VedtakContext';
 import VedtakPerioder from './VedtakPerioder';
 import VedtakSkjema from './VedtakSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
 import { Behandlingssteg, Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
-import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { RessursStatus } from '../../../typer/ressurs';
+import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
+import { SYNLIGE_STEG } from '../../../utils/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
-import { sider } from '../../Felleskomponenter/Venstremeny/sider';
 
 const StyledVedtak = styled.div`
     padding: ${ASpacing3};
@@ -38,14 +38,14 @@ const VarselbrevInfo = styled(BodyShort)`
     font-weight: ${AFontWeightBold};
 `;
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
-const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
+const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
     const {
-        feilutbetalingVedtaksbrevavsnitt,
+        vedtaksbrevavsnitt,
         beregningsresultat,
         skjemaData,
         nonUsedKey,
@@ -56,7 +56,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
         foreslåVedtakRespons,
         lagreUtkast,
         hentVedtaksbrevtekster,
-    } = useFeilutbetalingVedtak();
+    } = useVedtak();
     const { behandlingILesemodus, aktivtSteg } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA =
@@ -117,7 +117,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
 
     if (
         beregningsresultat?.status === RessursStatus.Suksess &&
-        feilutbetalingVedtaksbrevavsnitt?.status === RessursStatus.Suksess
+        vedtaksbrevavsnitt?.status === RessursStatus.Suksess
     ) {
         return (
             <StyledVedtak>
@@ -143,7 +143,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
                             )}
                             institusjon={fagsak?.institusjon}
                             bruker={fagsak.bruker}
-                            linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sider.BREVMOTTAKER.href}`}
+                            linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
                         />
                         <Spacer20 />
                     </>
@@ -220,11 +220,7 @@ const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
             </StyledVedtak>
         );
     } else {
-        return (
-            <DataLastIkkeSuksess
-                ressurser={[beregningsresultat, feilutbetalingVedtaksbrevavsnitt]}
-            />
-        );
+        return <DataLastIkkeSuksess ressurser={[beregningsresultat, vedtaksbrevavsnitt]} />;
     }
 };
 

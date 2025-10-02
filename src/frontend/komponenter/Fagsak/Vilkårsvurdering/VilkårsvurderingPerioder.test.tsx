@@ -1,12 +1,12 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
-import type {
-    IFeilutbetalingVilkårsvurdering,
-    VilkårsvurderingPeriode,
-} from '../../../typer/feilutbetalingtyper';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
+import type {
+    VilkårsvurderingResponse,
+    VilkårsvurderingPeriode,
+} from '../../../typer/tilbakekrevingstyper';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -97,18 +97,16 @@ const perioder: VilkårsvurderingPeriode[] = [
 ];
 
 const setupMocks = (): void => {
-    const feilutbetalingVilkårsvurdering: IFeilutbetalingVilkårsvurdering = {
+    const vilkårsvurdering: VilkårsvurderingResponse = {
         perioder: perioder,
         rettsgebyr: 1199,
     };
 
     mockUseBehandlingApi.mockImplementation(() => ({
-        gjerFeilutbetalingVilkårsvurderingKall: (): Promise<
-            Ressurs<IFeilutbetalingVilkårsvurdering>
-        > => {
-            const ressurs = mock<Ressurs<IFeilutbetalingVilkårsvurdering>>({
+        gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
+            const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
                 status: RessursStatus.Suksess,
-                data: feilutbetalingVilkårsvurdering,
+                data: vilkårsvurdering,
             });
             return Promise.resolve(ressurs);
         },
@@ -122,10 +120,10 @@ const setupMocks = (): void => {
     }));
 
     mockUseHttp.mockImplementation(() => ({
-        request: (): Promise<Ressurs<IBehandling>> => {
+        request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
-                data: mock<IBehandling>({
+                data: mock<Behandling>({
                     eksternBrukId: '1',
                     behandlingsstegsinfo: [],
                 }),
@@ -135,8 +133,8 @@ const setupMocks = (): void => {
 };
 
 const renderVilkårsvurderingPerioder = (
-    behandling: IBehandling,
-    fagsak: IFagsak,
+    behandling: Behandling,
+    fagsak: Fagsak,
     testPerioder: VilkårsvurderingPeriode[] = perioder
 ): RenderResult => {
     const skjemaData = testPerioder.map((periode, index) => ({
@@ -185,8 +183,8 @@ describe('Tester: VilkårsvurderingPerioder', () => {
     });
 
     test('skal bytte periode direkte når det ikke er ulagrede endringer', async () => {
-        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
+        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getAllByRole } = renderVilkårsvurderingPerioder(behandling, fagsak);
 
@@ -208,8 +206,8 @@ describe('Tester: VilkårsvurderingPerioder', () => {
     });
 
     test('skal vise modal ved bytte av periode med ulagrede endringer', async () => {
-        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
+        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getAllByRole, getByLabelText } =
             renderVilkårsvurderingPerioder(behandling, fagsak);
@@ -241,8 +239,8 @@ describe('Tester: VilkårsvurderingPerioder', () => {
     });
 
     test('skal bytte uten å lagre når "Bytt uten å lagre" klikkes', async () => {
-        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
+        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder(behandling, fagsak);
@@ -280,8 +278,8 @@ describe('Tester: VilkårsvurderingPerioder', () => {
     });
 
     test('skal lagre og bytte når "Lagre og bytt periode" klikkes', async () => {
-        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
+        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder(behandling, fagsak);
@@ -331,8 +329,8 @@ describe('Tester: VilkårsvurderingPerioder', () => {
     });
 
     test('skal lukke modal og forbli på nåværende periode når "Lukk" klikkes', async () => {
-        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
+        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder(behandling, fagsak);

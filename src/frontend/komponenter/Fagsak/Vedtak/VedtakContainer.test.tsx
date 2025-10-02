@@ -2,12 +2,12 @@ import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { SammenslåttPeriodeHook } from '../../../hooks/useSammenslåPerioder';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     BeregningsresultatPeriode,
-    IBeregningsresultat,
+    Beregningsresultat,
     VedtaksbrevAvsnitt,
 } from '../../../typer/vedtakTyper';
 import type { RenderResult } from '@testing-library/react';
@@ -19,12 +19,12 @@ import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
-import { FeilutbetalingVedtakProvider } from './FeilutbetalingVedtakContext';
 import VedtakContainer from './VedtakContainer';
+import { VedtakProvider } from './VedtakContext';
 import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
-import { HarBrukerUttaltSegValg } from '../../../typer/feilutbetalingtyper';
 import { RessursStatus } from '../../../typer/ressurs';
+import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 
 jest.mock('../../../api/http/HttpProvider', () => {
     return {
@@ -57,11 +57,11 @@ jest.mock('../../../hooks/useSammenslåPerioder', () => ({
 
 const mockedSettIkkePersistertKomponent = jest.fn();
 
-const renderVedtakContainer = (behandling: IBehandling, fagsak: IFagsak): RenderResult =>
+const renderVedtakContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
     render(
-        <FeilutbetalingVedtakProvider behandling={behandling} fagsak={fagsak}>
+        <VedtakProvider behandling={behandling} fagsak={fagsak}>
             <VedtakContainer behandling={behandling} fagsak={fagsak} />
-        </FeilutbetalingVedtakProvider>
+        </VedtakProvider>
     );
 
 describe('Tester: VedtakContainer', () => {
@@ -97,7 +97,7 @@ describe('Tester: VedtakContainer', () => {
             tilbakekrevesBeløpEtterSkatt: 1223,
         },
     ];
-    const beregningsresultat: IBeregningsresultat = {
+    const beregningsresultat: Beregningsresultat = {
         beregningsresultatsperioder: perioder,
         vedtaksresultat: Vedtaksresultat.DelvisTilbakebetaling,
         vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.Nei },
@@ -127,7 +127,7 @@ describe('Tester: VedtakContainer', () => {
     const setupMock = (
         lesevisning: boolean,
         avsnitt: VedtaksbrevAvsnitt[],
-        resultat: IBeregningsresultat
+        resultat: Beregningsresultat
     ): void => {
         mockUseBehandlingApi.mockImplementation(() => ({
             gjerVedtaksbrevteksterKall: (): Promise<Ressurs<VedtaksbrevAvsnitt[]>> => {
@@ -137,8 +137,8 @@ describe('Tester: VedtakContainer', () => {
                 });
                 return Promise.resolve(ressurs);
             },
-            gjerBeregningsresultatKall: (): Promise<Ressurs<IBeregningsresultat>> => {
-                const ressurs = mock<Ressurs<IBeregningsresultat>>({
+            gjerBeregningsresultatKall: (): Promise<Ressurs<Beregningsresultat>> => {
+                const ressurs = mock<Ressurs<Beregningsresultat>>({
                     status: RessursStatus.Suksess,
                     data: resultat,
                 });
@@ -207,10 +207,10 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             manuelleBrevmottakere: [],
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getAllByText, getByRole, queryByRole, queryByText } =
             renderVedtakContainer(behandling, fagsak);
@@ -339,12 +339,12 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             type: Behandlingstype.RevurderingTilbakekreving,
             behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
             manuelleBrevmottakere: [],
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole, queryByText } =
             renderVedtakContainer(behandling, fagsak);
@@ -463,12 +463,12 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             type: Behandlingstype.RevurderingTilbakekreving,
             behandlingsårsakstype: Behandlingårsak.RevurderingKlageKa,
             manuelleBrevmottakere: [],
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } =
             renderVedtakContainer(behandling, fagsak);
@@ -584,12 +584,12 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             type: Behandlingstype.RevurderingTilbakekreving,
             behandlingsårsakstype: Behandlingårsak.RevurderingKlageNfp,
             manuelleBrevmottakere: [],
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByText, queryByRole } =
             renderVedtakContainer(behandling, fagsak);
@@ -732,10 +732,10 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             manuelleBrevmottakere: [],
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByTestId, queryByRole } = renderVedtakContainer(
             behandling,
@@ -858,10 +858,10 @@ describe('Tester: VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             manuelleBrevmottakere: [],
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, queryByRole } = renderVedtakContainer(behandling, fagsak);
 

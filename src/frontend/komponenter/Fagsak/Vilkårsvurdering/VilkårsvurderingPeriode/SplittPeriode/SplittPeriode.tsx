@@ -1,9 +1,9 @@
-import type { IBehandling } from '../../../../../typer/behandling';
+import type { Behandling } from '../../../../../typer/behandling';
 import type {
-    IBeregnSplittetPeriodeRespons,
+    BeregnSplittetPeriodeRespons,
     Periode,
-} from '../../../../../typer/feilutbetalingtyper';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/feilutbetalingVilkårsvurdering';
+} from '../../../../../typer/tilbakekrevingstyper';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/vilkårsvurdering';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import { Detail, Link } from '@navikt/ds-react';
@@ -25,16 +25,16 @@ const konverterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): Timeline
     };
 };
 
-interface IProps {
+type Props = {
     periode: VilkårsvurderingPeriodeSkjemaData;
-    behandling: IBehandling;
+    behandling: Behandling;
     onBekreft: (
         periode: VilkårsvurderingPeriodeSkjemaData,
         nyePerioder: VilkårsvurderingPeriodeSkjemaData[]
     ) => void;
-}
+};
 
-const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => {
+const SplittPeriode: React.FC<Props> = ({ behandling, periode, onBekreft }) => {
     const [splittetPerioder, settSplittetPerioder] =
         useState<VilkårsvurderingPeriodeSkjemaData[]>();
     const {
@@ -97,7 +97,7 @@ const SplittPeriode: React.FC<IProps> = ({ behandling, periode, onBekreft }) => 
                     fom: per.periode.fom,
                     tom: per.periode.tom,
                 })),
-                (response: IBeregnSplittetPeriodeRespons) => {
+                (response: BeregnSplittetPeriodeRespons) => {
                     const beregnetperioder = response.beregnetPerioder;
                     const beregnetNyePerioder: VilkårsvurderingPeriodeSkjemaData[] = [
                         {

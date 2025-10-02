@@ -14,12 +14,12 @@ const StyledAlert = styled(Alert)`
     }
 `;
 
-interface IProps {
+type Props = {
     behandletSteg: boolean;
     infotekst: string;
-}
+};
 
-const Steginformasjon: React.FC<IProps> = ({ behandletSteg, infotekst }) => {
+const Steginformasjon: React.FC<Props> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
         <StyledAlert variant="info" size="small">
             {infotekst}

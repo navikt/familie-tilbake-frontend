@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
-import type { ISaksbehandler } from '../../../typer/saksbehandler';
+import type { Saksbehandler } from '../../../typer/saksbehandler';
 
 import { Label } from '@navikt/ds-react';
 import { getCurrentScope, showReportDialog } from '@sentry/browser';
@@ -8,25 +7,26 @@ import * as React from 'react';
 
 import { apiLoggFeil } from '../../../api/axios';
 
-interface IProps {
-    autentisertSaksbehandler?: ISaksbehandler;
+type Props = {
+    autentisertSaksbehandler?: Saksbehandler;
     children: React.ReactNode;
-}
+};
 
-interface IState {
+type State = {
     hasError: boolean;
-}
+};
 
-class ErrorBoundary extends React.Component<IProps, IState> {
-    public constructor(props: IProps) {
+class ErrorBoundary extends React.Component<Props, State> {
+    public constructor(props: Props) {
         super(props);
         this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(_error: any): IState {
+    static getDerivedStateFromError(): State {
         return { hasError: true };
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     componentDidCatch(error: any, info: any): void {
         console.log(error, info);
 

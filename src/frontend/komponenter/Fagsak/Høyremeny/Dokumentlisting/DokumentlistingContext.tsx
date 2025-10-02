@@ -1,6 +1,5 @@
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IJournalpost } from '../../../../typer/journalføring';
-import type { AxiosError } from 'axios';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Journalpost } from '../../../../typer/journalføring';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
@@ -9,14 +8,14 @@ import { useHttp } from '../../../../api/http/HttpProvider';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
 import { Menysider } from '../Menykontainer';
 
-interface IProps {
-    behandling: IBehandling;
+type Props = {
+    behandling: Behandling;
     valgtMenyside: Menysider;
-}
+};
 
 const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
-    ({ behandling, valgtMenyside }: IProps) => {
-        const [journalposter, settJournalposter] = useState<Ressurs<IJournalpost[]>>();
+    ({ behandling, valgtMenyside }: Props) => {
+        const [journalposter, settJournalposter] = useState<Ressurs<Journalpost[]>>();
         const { request } = useHttp();
 
         useEffect(() => {
@@ -28,15 +27,14 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
 
         const hentDokumentlisting = (): void => {
             settJournalposter(byggHenterRessurs());
-            request<void, IJournalpost[]>({
+            request<void, Journalpost[]>({
                 method: 'GET',
                 url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/journalposter`,
             })
-                .then((hentetDokumenter: Ressurs<IJournalpost[]>) => {
+                .then((hentetDokumenter: Ressurs<Journalpost[]>) => {
                     settJournalposter(hentetDokumenter);
                 })
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch((_error: AxiosError) => {
+                .catch(() => {
                     settJournalposter(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av dokumentlisting for behandling'

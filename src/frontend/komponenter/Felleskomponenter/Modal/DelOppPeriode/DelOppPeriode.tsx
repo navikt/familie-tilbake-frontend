@@ -1,4 +1,4 @@
-import type { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
+import type { PeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import {
@@ -14,7 +14,6 @@ import { ABorderStrong, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { endOfMonth, subMonths } from 'date-fns';
 import * as React from 'react';
 import { styled } from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
 
 import { formatterDatoDDMMYYYY, formatterDatostring } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
@@ -33,8 +32,8 @@ const TidslinjeContainer = styled.div`
     }
 `;
 
-interface IProps {
-    periode: IPeriodeSkjemaData;
+type Props = {
+    periode: PeriodeSkjemaData;
     tidslinjeRader: TimelinePeriodProps[][];
     splittDato: string;
     visModal: boolean;
@@ -42,9 +41,9 @@ interface IProps {
     onChangeDato: (nyVerdi: string | undefined) => void;
     onSubmit: () => void;
     feilmelding?: string;
-}
+};
 
-export const DelOppPeriode: React.FC<IProps> = ({
+export const DelOppPeriode: React.FC<Props> = ({
     periode,
     tidslinjeRader,
     splittDato,
@@ -86,7 +85,7 @@ export const DelOppPeriode: React.FC<IProps> = ({
                         <TidslinjeContainer>
                             <Timeline>
                                 {tidslinjeRader.map(rad => (
-                                    <Timeline.Row label="" key={uuidv4()}>
+                                    <Timeline.Row label="" key={rad[0].id}>
                                         {rad.map(periode => (
                                             <Timeline.Period
                                                 key={periode.id}

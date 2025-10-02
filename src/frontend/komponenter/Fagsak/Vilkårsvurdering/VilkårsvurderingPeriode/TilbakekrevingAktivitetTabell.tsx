@@ -1,4 +1,4 @@
-import type { YtelseInfo } from '../../../../typer/feilutbetalingtyper';
+import type { YtelseInfo } from '../../../../typer/tilbakekrevingstyper';
 
 import { Table } from '@navikt/ds-react';
 import * as React from 'react';
@@ -10,11 +10,11 @@ const StyledPeriodeTable = styled(Table)`
     max-width: 30rem;
 `;
 
-interface IProps {
+type Props = {
     ytelser?: YtelseInfo[];
-}
+};
 
-const TilbakekrevingAktivitetTabell: React.FC<IProps> = ({ ytelser }) => {
+const TilbakekrevingAktivitetTabell: React.FC<Props> = ({ ytelser }) => {
     return ytelser && ytelser.length > 0 ? (
         <StyledPeriodeTable>
             <Table.Header>

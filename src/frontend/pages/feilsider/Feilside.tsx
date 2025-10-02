@@ -1,11 +1,11 @@
 import { BodyShort, Box, Button, HGrid, Link, Heading, List, Page, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
-interface Props {
+type Props = {
     httpStatus?: number;
     eksternFagsakId?: string;
     behandlingId?: string;
-}
+};
 
 export const ServerFeil: React.FC<Props> = ({ httpStatus, eksternFagsakId, behandlingId }) => {
     return (

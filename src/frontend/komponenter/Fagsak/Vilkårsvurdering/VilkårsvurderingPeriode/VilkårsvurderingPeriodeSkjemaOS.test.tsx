@@ -1,7 +1,7 @@
 import type { Http } from '../../../../api/http/HttpProvider';
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/feilutbetalingVilkårsvurdering';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -58,8 +58,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
-    const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-    const fagsak = mock<IFagsak>({
+    const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+    const fagsak = mock<Fagsak>({
         ytelsestype: Ytelsetype.Overgangsstønad,
     });
     const periode: VilkårsvurderingPeriodeSkjemaData = {
@@ -126,23 +126,29 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Kopier vilkårsvurdering fra')).toBeInTheDocument();
         expect(queryByText('Beløpet mottatt i god tro')).not.toBeInTheDocument();
         expect(queryByLabelText('Vurder om beløpet er i behold')).not.toBeInTheDocument();
+
         expect(
-            getByText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil (1. ledd, 1. punkt)'
-            )
+            getByRole('radio', {
+                name: /mottaker forsto eller burde forstått at utbetalingen skyldtes en feil/i,
+            })
         ).toBeInTheDocument();
+
         expect(
-            getByText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger (1. ledd, 2. punkt)'
-            )
+            getByRole('radio', {
+                name: /mottaker har forårsaket feilutbetalingen.*feilaktige.*opplysninger/i,
+            })
         ).toBeInTheDocument();
+
         expect(
-            getByText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger (1. ledd, 2. punkt)'
-            )
+            getByRole('radio', {
+                name: /mottaker har forårsaket feilutbetalingen.*mangelfulle.*opplysninger/i,
+            })
         ).toBeInTheDocument();
+
         expect(
-            getByText('Nei, mottaker har mottatt beløpet i god tro (1. ledd)')
+            getByRole('radio', {
+                name: /mottaker har mottatt beløpet i god tro/i,
+            })
         ).toBeInTheDocument();
 
         expect(

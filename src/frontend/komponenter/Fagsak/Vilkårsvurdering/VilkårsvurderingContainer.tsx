@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -23,15 +23,15 @@ const StyledVilkårsvurdering = styled.div`
     padding: ${ASpacing3};
 `;
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+type Props = {
+    fagsak: Fagsak;
+    behandling: Behandling;
+};
 
-const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
+const VilkårsvurderingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     const {
         containerRef,
-        feilutbetalingVilkårsvurdering,
+        vilkårsvurdering: vilkårsvurdering,
         stegErBehandlet,
         erAutoutført,
         skjemaData,
@@ -48,10 +48,8 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
         [Ytelsetype.Tilleggsstønad]: vilkårsvurderingStegInfotekst,
     }[fagsak.ytelsestype];
 
-    if (feilutbetalingVilkårsvurdering?.status === RessursStatus.Suksess) {
-        const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(
-            feilutbetalingVilkårsvurdering.data
-        );
+    if (vilkårsvurdering?.status === RessursStatus.Suksess) {
+        const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data);
 
         return (
             <StyledVilkårsvurdering ref={containerRef}>
@@ -83,7 +81,7 @@ const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) =>
             </StyledVilkårsvurdering>
         );
     } else {
-        return <DataLastIkkeSuksess ressurser={[feilutbetalingVilkårsvurdering]} />;
+        return <DataLastIkkeSuksess ressurser={[vilkårsvurdering]} />;
     }
 };
 
