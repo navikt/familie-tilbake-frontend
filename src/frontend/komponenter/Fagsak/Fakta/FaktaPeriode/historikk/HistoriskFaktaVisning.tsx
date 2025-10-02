@@ -9,12 +9,12 @@ import { formatCurrencyNoKr, formatterDatostring } from '../../../../../utils';
 import FaktaRevurdering from '../../FaktaRevurdering';
 import { FaktaPeriodeSkjema } from '../FaktaPeriodeSkjema';
 
-interface IProps {
+type Props = {
     skjemaData: FaktaSkjemaData;
     fakta: FaktaResponse;
-}
+};
 
-const HistoriskFaktaVisning: React.FC<IProps> = ({ skjemaData, fakta }) => {
+const HistoriskFaktaVisning: React.FC<Props> = ({ skjemaData, fakta }) => {
     return (
         <HGrid columns={2} gap="10">
             <VStack gap="6">
@@ -50,7 +50,7 @@ const HistoriskFaktaVisning: React.FC<IProps> = ({ skjemaData, fakta }) => {
                     <Table>
                         <Table.Header>
                             <Table.HeaderCell textSize="small">Periode</Table.HeaderCell>
-                            <Table.HeaderCell textSize="small">Hendelse</Table.HeaderCell>
+                            <Table.HeaderCell textSize="small">Rettslig grunnlag</Table.HeaderCell>
                             <Table.HeaderCell textSize="small">Feilutbetalt beløp</Table.HeaderCell>
                         </Table.Header>
                         <Table.Body>

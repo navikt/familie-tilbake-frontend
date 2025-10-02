@@ -1,17 +1,17 @@
 import * as React from 'react';
 
-interface INøytralPersonIkon {
+type Props = {
     className?: string;
-    heigth?: number;
+    height?: number;
     width?: number;
-}
+};
 
-export const NøytralPersonIkon: React.FC<INøytralPersonIkon> = ({ className, heigth, width }) => {
+export const NøytralPersonIkon: React.FC<Props> = ({ className, height, width }) => {
     return (
         <svg
             aria-labelledby="nøytralPerson"
             className={className}
-            height={heigth}
+            height={height}
             width={width}
             viewBox="0 0 32 32"
             xmlns="http://www.w3.org/2000/svg"

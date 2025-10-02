@@ -22,11 +22,11 @@ const StyledFakta = styled.div`
     }
 `;
 
-interface IProps {
+type Props = {
     ytelse: Ytelsetype;
-}
+};
 
-const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
+const FaktaContainer: React.FC<Props> = ({ ytelse }) => {
     const { stegErBehandlet, skjemaData, fakta } = useFakta();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -35,7 +35,7 @@ const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
         return (
             <StyledFakta>
                 <Heading level="2" size="small" spacing>
-                    Fakta om feilutbetaling
+                    Fakta fra feilutbetalingssaken
                 </Heading>
                 {(!erLesevisning || stegErBehandlet) && (
                     <>

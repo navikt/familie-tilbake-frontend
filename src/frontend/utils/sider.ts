@@ -1,4 +1,4 @@
-import type { IBehandling, IBehandlingsstegstilstand } from '../typer/behandling';
+import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
 
 import { Behandlingssteg, Behandlingsstegstatus } from '../typer/behandling';
 
@@ -58,14 +58,14 @@ const aktiveBehandlingstegstatuser = [
 
 const sjekkOmSidenErAktiv = (
     side: SynligSteg,
-    behandlingsstegsinfo: IBehandlingsstegstilstand[]
+    behandlingsstegsinfo: Behandlingsstegstilstand[]
 ): boolean => {
     return behandlingsstegsinfo
         .filter(stegInfo => aktiveBehandlingstegstatuser.includes(stegInfo.behandlingsstegstatus))
         .some(stegInfo => stegInfo.behandlingssteg === side.steg);
 };
 
-export const erSidenAktiv = (synligSteg: SynligSteg, behandling: IBehandling): boolean => {
+export const erSidenAktiv = (synligSteg: SynligSteg, behandling: Behandling): boolean => {
     if (!behandling.behandlingsstegsinfo) return true;
 
     if (synligSteg === SYNLIGE_STEG.VERGE) {
@@ -77,11 +77,14 @@ export const erSidenAktiv = (synligSteg: SynligSteg, behandling: IBehandling): b
     return sjekkOmSidenErAktiv(synligSteg, behandling.behandlingsstegsinfo);
 };
 
-export const visSide = (steg: Behandlingssteg, behandling: IBehandling): boolean => {
+export const visSide = (steg: Behandlingssteg, behandling: Behandling): boolean => {
     if (steg === Behandlingssteg.Brevmottaker) {
         return behandling.behandlingsstegsinfo
-            .map(({ behandlingssteg }) => behandlingssteg)
-            .includes(steg);
+            .filter(
+                ({ behandlingsstegstatus }) =>
+                    behandlingsstegstatus !== Behandlingsstegstatus.Tilbakeført
+            )
+            .some(({ behandlingssteg }) => behandlingssteg === steg);
     }
     if (steg === Behandlingssteg.Verge) {
         return !behandling.støtterManuelleBrevmottakere;
@@ -116,7 +119,7 @@ export const erHistoriskSide = (side: string): boolean => {
 
 export const erØnsketSideTilgjengelig = (
     ønsketSide: string,
-    behandlingssteginfo: IBehandlingsstegstilstand[]
+    behandlingssteginfo: Behandlingsstegstilstand[]
 ): boolean => {
     if (erHistoriskSide(ønsketSide)) return true;
 

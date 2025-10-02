@@ -1,4 +1,4 @@
-export interface IJournalpost {
+export type Journalpost = {
     avsenderMottaker?: AvsenderMottaker;
     datoMottatt?: string;
     journalpostId: string;
@@ -10,11 +10,11 @@ export interface IJournalpost {
     bruker?: JournalpostBruker;
     journalforendeEnhet?: string;
     kanal?: string;
-    dokumenter?: IDokumentInfo[];
+    dokumenter?: DokumentInfo[];
     tittel?: string;
-    relevanteDatoer: IJournalpostRelevantDato[];
+    relevanteDatoer: JournalpostRelevantDato[];
     utsendingsinfo?: Utsendingsinfo;
-}
+};
 
 type AvsenderMottaker = {
     erLikBruker: boolean;
@@ -64,19 +64,19 @@ type JournalpostBruker = {
     id: string;
 };
 
-export interface IDokumentInfo {
+export type DokumentInfo = {
     tittel?: string;
     brevkode?: string;
     dokumentInfoId?: string;
     dokumentstatus?: Dokumentstatus;
     dokumentvarianter?: Dokumentvariant[];
     logiskeVedlegg: LogiskVedlegg[];
-}
+};
 
-export interface IJournalpostRelevantDato {
+export type JournalpostRelevantDato = {
     dato: string;
     datotype: JournalpostDatotype;
-}
+};
 
 type Utsendingsinfo = {
     varselSendt: VarselSendt[];

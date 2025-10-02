@@ -66,15 +66,15 @@ const getClassName = (alignOffset: number, alignLeft: boolean): string => {
     return alignLeft ? `arrowBoxLeft${alignOffset}` : `arrowBoxTop${alignOffset}`;
 };
 
-interface IProps {
+type Props = {
     children: ReactNode | ReactNode[];
     alignOffset?: number;
     alignLeft?: boolean;
     marginTop?: number;
     marginLeft?: number;
-}
+};
 
-const ArrowBox: React.FC<IProps> = ({
+const ArrowBox: React.FC<Props> = ({
     children,
     alignOffset = 0,
     alignLeft = false,

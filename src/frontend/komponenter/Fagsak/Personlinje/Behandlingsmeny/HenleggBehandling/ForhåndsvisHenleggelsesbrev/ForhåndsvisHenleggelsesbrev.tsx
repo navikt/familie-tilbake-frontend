@@ -1,4 +1,4 @@
-import type { IBehandling } from '../../../../../../typer/behandling';
+import type { Behandling } from '../../../../../../typer/behandling';
 import type { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
@@ -7,7 +7,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { useForhåndsvisHenleggelsesbrev } from './useForhåndsvisHenleggelsesbrev';
-import { type ISkjema } from '../../../../../../hooks/skjema';
+import { type Skjema } from '../../../../../../hooks/skjema';
 import PdfVisningModal from '../../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 const StyledContainer = styled.div`
@@ -15,13 +15,13 @@ const StyledContainer = styled.div`
     margin-right: auto;
 `;
 
-interface IProps {
-    behandling: IBehandling;
-    skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;
+type Props = {
+    behandling: Behandling;
+    skjema: Skjema<HenleggelseSkjemaDefinisjon, string>;
     kanForhåndsvise: boolean;
-}
+};
 
-const ForhåndsvisHenleggelsesBrev: React.FC<IProps> = ({ behandling, skjema, kanForhåndsvise }) => {
+const ForhåndsvisHenleggelsesBrev: React.FC<Props> = ({ behandling, skjema, kanForhåndsvise }) => {
     const {
         hentetForhåndsvisning,
         hentBrev,

@@ -1,4 +1,4 @@
-import type { IBehandling } from '../../../../../typer/behandling';
+import type { Behandling } from '../../../../../typer/behandling';
 import type { FaktaResponse } from '../../../../../typer/tilbakekrevingstyper';
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData } from '../../typer/fakta';
 
@@ -14,11 +14,11 @@ import {
 } from '../../../../../typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '../../../../../utils';
 
-interface IProps {
-    behandling: IBehandling;
-}
+type Props = {
+    behandling: Behandling;
+};
 
-const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandling }: IProps) => {
+const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandling }: Props) => {
     const [inaktiveFakta, setInaktiveFakta] = useState<Ressurs<FaktaResponse[]>>(byggTomRessurs);
 
     const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>();

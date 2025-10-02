@@ -9,13 +9,13 @@ import { Valideringsstatus } from '../../../../../hooks/skjema';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { jaNeiOptions } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-interface IProps {
+type Props = {
     erLesevisning: boolean;
     kanIlleggeRenter: boolean;
     felt: Felt<JaNeiOption | ''>;
     visFeilmeldingerForSkjema: boolean;
-}
-const TilleggesRenterRadioGroup: React.FC<IProps> = ({
+};
+const TilleggesRenterRadioGroup: React.FC<Props> = ({
     erLesevisning,
     kanIlleggeRenter,
     felt,

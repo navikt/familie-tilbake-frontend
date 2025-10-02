@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -23,12 +23,12 @@ const StyledVilkårsvurdering = styled.div`
     padding: ${ASpacing3};
 `;
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+type Props = {
+    fagsak: Fagsak;
+    behandling: Behandling;
+};
 
-const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
+const VilkårsvurderingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     const {
         containerRef,
         vilkårsvurdering: vilkårsvurdering,

@@ -1,10 +1,10 @@
 import { BodyShort, Button, Modal } from '@navikt/ds-react';
 import React from 'react';
 
-interface Props {
+type Props = {
     onConfirm: () => void;
     onCancel: () => void;
-}
+};
 
 const SettBehandlingTilbakeTilFaktaModal: React.FC<Props> = ({ onConfirm, onCancel }) => {
     return (

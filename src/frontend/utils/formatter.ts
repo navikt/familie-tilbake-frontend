@@ -1,4 +1,4 @@
-import type { IPerson } from '../typer/person';
+import type { Person } from '../typer/person';
 
 import { differenceInMilliseconds } from 'date-fns';
 
@@ -49,7 +49,7 @@ const formaterNavnAlderOgIdent = (person: {
     )}`;
 };
 
-export const lagPersonLabel = (ident: string, bruker: IPerson): string => {
+export const lagPersonLabel = (ident: string, bruker: Person): string => {
     if (bruker) {
         return formaterNavnAlderOgIdent({ ...bruker });
     } else {

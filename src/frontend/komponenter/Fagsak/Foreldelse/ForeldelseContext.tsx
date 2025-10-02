@@ -1,7 +1,7 @@
 import type { ForeldelsePeriodeSkjemeData } from './typer/foreldelse';
 import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../../typer/api';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 
 import createUseContext from 'constate';
@@ -42,10 +42,10 @@ const utledValgtPeriode = (
     return undefined;
 };
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
 export type ForeldelseHook = {
     foreldelse: Ressurs<ForeldelseResponse> | undefined;
@@ -68,7 +68,7 @@ export type ForeldelseHook = {
     ) => void;
 };
 
-const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling, fagsak }: IProps) => {
+const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling, fagsak }: Props) => {
     const [foreldelse, setForeldelse] = useState<Ressurs<ForeldelseResponse>>();
     const [skjemaData, settSkjemaData] = useState<ForeldelsePeriodeSkjemeData[]>([]);
     const [erAutoutført, settErAutoutført] = useState<boolean>();

@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../typer/fagsak';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
 
 import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import * as React from 'react';
@@ -18,13 +18,13 @@ import {
     Spacer8,
 } from '../../../../Felleskomponenter/Flytelementer';
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
     onListElementClick: () => void;
-}
+};
 
-const OpprettBehandling: React.FC<IProps> = ({ behandling, fagsak, onListElementClick }) => {
+const OpprettBehandling: React.FC<Props> = ({ behandling, fagsak, onListElementClick }) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { skjema, sendInn, nullstillSkjema } = useOpprettBehandlingSkjema(
         fagsak,

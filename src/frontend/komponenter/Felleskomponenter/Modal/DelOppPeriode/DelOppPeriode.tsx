@@ -1,4 +1,4 @@
-import type { IPeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
+import type { PeriodeSkjemaData } from '../../../../typer/periodeSkjemaData';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import {
@@ -32,8 +32,8 @@ const TidslinjeContainer = styled.div`
     }
 `;
 
-interface IProps {
-    periode: IPeriodeSkjemaData;
+type Props = {
+    periode: PeriodeSkjemaData;
     tidslinjeRader: TimelinePeriodProps[][];
     splittDato: string;
     visModal: boolean;
@@ -41,9 +41,9 @@ interface IProps {
     onChangeDato: (nyVerdi: string | undefined) => void;
     onSubmit: () => void;
     feilmelding?: string;
-}
+};
 
-export const DelOppPeriode: React.FC<IProps> = ({
+export const DelOppPeriode: React.FC<Props> = ({
     periode,
     tidslinjeRader,
     splittDato,

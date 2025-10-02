@@ -6,13 +6,13 @@ import React from 'react';
 
 import { hentFeilObjekt } from './feilObjekt';
 
-interface Props {
-    feil: Feil;
+type Props = {
     lukkFeilModal: () => void;
+    feil: Feil;
     beskjed?: string;
     behandlingId?: string;
     fagsakId?: string;
-}
+};
 
 export const FeilModal: React.FC<Props> = ({
     feil,

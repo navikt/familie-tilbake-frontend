@@ -1,8 +1,8 @@
 import type { PeriodeHandling } from './typer/periodeHandling';
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
 import type { VilkårdsvurderingStegPayload } from '../../../typer/api';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type {
     VilkårsvurderingResponse,
     VilkårsvurderingPeriode,
@@ -81,13 +81,13 @@ export const erTotalbeløpUnder4Rettsgebyr = (vurdering: VilkårsvurderingRespon
     return totalbeløp && vurdering.rettsgebyr ? totalbeløp < vurdering.rettsgebyr * 4 : false;
 };
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
-    ({ behandling, fagsak }: IProps) => {
+    ({ behandling, fagsak }: Props) => {
         const containerRef = useRef<HTMLDivElement>(null);
         const [vilkårsvurdering, setVilkårsvurdering] =
             useState<Ressurs<VilkårsvurderingResponse>>();

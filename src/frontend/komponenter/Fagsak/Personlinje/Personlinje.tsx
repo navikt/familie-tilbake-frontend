@@ -1,5 +1,5 @@
-import type { IFagsak } from '../../../typer/fagsak';
-import type { IPerson } from '../../../typer/person';
+import type { Fagsak } from '../../../typer/fagsak';
+import type { Person } from '../../../typer/person';
 
 import { Buildings3Icon, LeaveIcon } from '@navikt/aksel-icons';
 import { HStack, Link, Tag } from '@navikt/ds-react';
@@ -36,12 +36,12 @@ const MaksLengdeInstitusjonNavn = styled.span`
     display: inline-block;
 `;
 
-interface IProps {
-    bruker: IPerson;
-    fagsak: IFagsak;
-}
+type Props = {
+    bruker: Person;
+    fagsak: Fagsak;
+};
 
-const Personlinje: React.FC<IProps> = ({ bruker, fagsak }) => {
+const Personlinje: React.FC<Props> = ({ bruker, fagsak }) => {
     const location = useLocation();
     const behandlingsPath = location.pathname.split('/').at(-1);
     const erHistoriskVisning = behandlingsPath && erHistoriskSide(behandlingsPath);

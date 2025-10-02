@@ -26,14 +26,14 @@ import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { Navigering } from '../../Felleskomponenter/Flytelementer';
 
-interface IProps {
+type Props = {
     ytelse: Ytelsetype;
     erLesevisning: boolean;
     skjemaData: FaktaSkjemaData;
     fakta: FaktaResponse;
-}
+};
 
-const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisning }) => {
+const FaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning }) => {
     const {
         behandling,
         stegErBehandlet,
@@ -118,7 +118,7 @@ const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisnin
                 </VStack>
                 <Textarea
                     name="begrunnelse"
-                    label="Forklar årsaken(e) til feilutbetalingen"
+                    label="Årsak til feilutbetalingen"
                     description="Tekst som er her fra før, kommer fra fagsystemet. Legg gjerne til/rediger tekst."
                     readOnly={erLesevisning}
                     value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}

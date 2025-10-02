@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -38,12 +38,12 @@ const VarselbrevInfo = styled(BodyShort)`
     font-weight: ${AFontWeightBold};
 `;
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
-const VedtakContainer: React.FC<IProps> = ({ behandling, fagsak }) => {
+const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
     const {
         vedtaksbrevavsnitt,
         beregningsresultat,

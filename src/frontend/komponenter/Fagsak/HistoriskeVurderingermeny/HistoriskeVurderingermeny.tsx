@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import { BodyLong, Heading, HStack, Link } from '@navikt/ds-react';
 import * as React from 'react';
@@ -8,7 +8,7 @@ import { styled } from 'styled-components';
 const Container = styled.div`
     margin: 2rem;
 `;
-const HistoriskeVurderingermeny: React.FC<{ fagsak: IFagsak; behandling: IBehandling }> = ({
+const HistoriskeVurderingermeny: React.FC<{ fagsak: Fagsak; behandling: Behandling }> = ({
     fagsak,
     behandling,
 }) => {

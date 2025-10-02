@@ -1,8 +1,8 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { TogglesHook } from '../../../context/TogglesContext';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type { FaktaPeriode, FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -43,9 +43,9 @@ jest.mock('react-router', () => ({
 const mockedSettIkkePersistertKomponent = jest.fn();
 
 const renderFaktaContainer = (
-    behandling: IBehandling,
+    behandling: Behandling,
     ytelse: Ytelsetype,
-    fagsak: IFagsak
+    fagsak: Fagsak
 ): RenderResult => {
     return render(
         <FaktaProvider behandling={behandling} fagsak={fagsak}>
@@ -111,7 +111,7 @@ describe('Tester: FaktaContainer', () => {
         },
         opprettetTid: '2020-01-01',
     };
-    const fagsak = mock<IFagsak>({
+    const fagsak = mock<Fagsak>({
         institusjon: undefined,
         fagsystem: Fagsystem.EF,
         eksternFagsakId: '1',
@@ -150,12 +150,12 @@ describe('Tester: FaktaContainer', () => {
 
     test('- vis og fyll ut skjema', async () => {
         setupMock(false, false, fakta);
-        const behandling = mock<IBehandling>({ eksternBrukId: '1' });
+        const behandling = mock<Behandling>({ eksternBrukId: '1' });
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } =
             renderFaktaContainer(behandling, Ytelsetype.Barnetrygd, fagsak);
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -194,7 +194,7 @@ describe('Tester: FaktaContainer', () => {
         await user.selectOptions(getByTestId('perioder.2.årsak'), HendelseType.BosattIRiket);
 
         await user.type(
-            getByRole('textbox', { name: 'Forklar årsaken(e) til feilutbetalingen' }),
+            getByRole('textbox', { name: 'Årsak til feilutbetalingen' }),
             'Begrunnelse'
         );
 
@@ -238,13 +238,13 @@ describe('Tester: FaktaContainer', () => {
 
     test('- vis og fyll ut skjema - behandle perioder samlet', async () => {
         setupMock(false, false, fakta);
-        const behandling = mock<IBehandling>({ eksternBrukId: '1' });
+        const behandling = mock<Behandling>({ eksternBrukId: '1' });
 
         const { getByText, getByLabelText, getByRole, getAllByRole, getByTestId, queryAllByText } =
             renderFaktaContainer(behandling, Ytelsetype.Barnetrygd, fagsak);
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -269,7 +269,7 @@ describe('Tester: FaktaContainer', () => {
         );
 
         await user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BosattIRiket);
-        await user.type(getByLabelText('Forklar årsaken(e) til feilutbetalingen'), 'Begrunnelse');
+        await user.type(getByLabelText('Årsak til feilutbetalingen'), 'Begrunnelse');
 
         expect(getAllByRole('combobox')).toHaveLength(6);
 
@@ -325,7 +325,7 @@ describe('Tester: FaktaContainer', () => {
             ],
             begrunnelse: 'Dette er en test-begrunnelse',
         });
-        const behandling = mock<IBehandling>();
+        const behandling = mock<Behandling>();
 
         const { getByText, getByLabelText, getByTestId, getByRole } = renderFaktaContainer(
             behandling,
@@ -334,7 +334,7 @@ describe('Tester: FaktaContainer', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -348,7 +348,7 @@ describe('Tester: FaktaContainer', () => {
         expect(getByTestId('perioder.1.underårsak')).toHaveValue(HendelseUndertype.AnnetFritekst);
         expect(getByTestId('perioder.2.underårsak')).toHaveValue(HendelseUndertype.BarnOver6År);
 
-        expect(getByLabelText('Forklar årsaken(e) til feilutbetalingen')).toHaveValue(
+        expect(getByLabelText('Årsak til feilutbetalingen')).toHaveValue(
             'Dette er en test-begrunnelse'
         );
 
@@ -381,7 +381,7 @@ describe('Tester: FaktaContainer', () => {
             ],
             begrunnelse: 'Dette er en test-begrunnelse',
         });
-        const behandling = mock<IBehandling>();
+        const behandling = mock<Behandling>();
 
         const { getByText, getByLabelText, getByTestId, getByRole } = renderFaktaContainer(
             behandling,
@@ -390,7 +390,7 @@ describe('Tester: FaktaContainer', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -402,7 +402,7 @@ describe('Tester: FaktaContainer', () => {
         expect(getByTestId('perioder.1.underårsak')).toHaveValue(HendelseUndertype.AnnetFritekst);
         expect(getByTestId('perioder.2.underårsak')).toHaveValue(HendelseUndertype.Arbeid);
 
-        expect(getByLabelText('Forklar årsaken(e) til feilutbetalingen')).toHaveValue(
+        expect(getByLabelText('Årsak til feilutbetalingen')).toHaveValue(
             'Dette er en test-begrunnelse'
         );
 
@@ -435,7 +435,7 @@ describe('Tester: FaktaContainer', () => {
             ],
             begrunnelse: 'Dette er en test-begrunnelse',
         });
-        const behandling = mock<IBehandling>();
+        const behandling = mock<Behandling>();
 
         const { getByText, getByRole } = renderFaktaContainer(
             behandling,
@@ -444,7 +444,7 @@ describe('Tester: FaktaContainer', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -486,7 +486,7 @@ describe('Tester: FaktaContainer', () => {
             ],
             begrunnelse: 'Dette er en test-begrunnelse',
         });
-        const behandling = mock<IBehandling>();
+        const behandling = mock<Behandling>();
 
         const { getByText, getByRole } = renderFaktaContainer(
             behandling,
@@ -495,7 +495,7 @@ describe('Tester: FaktaContainer', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetaling')).toBeInTheDocument();
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
@@ -525,7 +525,7 @@ describe('Tester: FaktaContainer', () => {
             ],
             begrunnelse: 'Dette er en test-begrunnelse',
         });
-        const behandling = mock<IBehandling>();
+        const behandling = mock<Behandling>();
 
         const { getByTestId, getAllByRole } = renderFaktaContainer(
             behandling,
