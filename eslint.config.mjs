@@ -22,7 +22,7 @@ export default tseslint.config(
     {
         plugins: { 'react-hooks': reactHooks, import: importPlugin },
         rules: {
-            ...reactHooks.configs.recommended.rules,
+            ...reactHooks.configs['recommended-legacy'].rules,
             '@typescript-eslint/explicit-function-return-type': 'warn',
             '@typescript-eslint/consistent-type-imports': [
                 'warn',
