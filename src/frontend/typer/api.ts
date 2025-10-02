@@ -128,7 +128,7 @@ export type HenleggBehandlingPaylod = {
     fritekst: string;
 };
 
-export type IRestSettPåVent = {
+export type RestSettPåVent = {
     venteårsak: Venteårsak;
     tidsfrist: IsoDatoString;
 };

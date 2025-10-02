@@ -9,7 +9,7 @@ import { styled } from 'styled-components';
 
 import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
+import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 
@@ -18,7 +18,7 @@ const ArrowBoxContainer = styled.div`
 `;
 
 type Props = {
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
 };
 

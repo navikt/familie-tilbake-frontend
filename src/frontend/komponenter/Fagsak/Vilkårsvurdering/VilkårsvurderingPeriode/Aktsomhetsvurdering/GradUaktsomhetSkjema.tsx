@@ -8,14 +8,14 @@ import * as React from 'react';
 
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
+import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
 };
 

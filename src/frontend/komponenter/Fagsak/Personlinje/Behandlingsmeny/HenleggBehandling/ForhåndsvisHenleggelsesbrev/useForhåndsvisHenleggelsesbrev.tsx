@@ -4,7 +4,7 @@ import type { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/Henl
 import * as React from 'react';
 
 import { useDokumentApi } from '../../../../../../api/dokument';
-import { type ISkjema } from '../../../../../../hooks/skjema';
+import { type Skjema } from '../../../../../../hooks/skjema';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -24,7 +24,7 @@ type ForhåndsvisHenleggelsesbrevHook = {
 };
 
 type Props = {
-    skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;
+    skjema: Skjema<HenleggelseSkjemaDefinisjon, string>;
 };
 
 export const useForhåndsvisHenleggelsesbrev = ({

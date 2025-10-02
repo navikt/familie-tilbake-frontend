@@ -7,7 +7,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { useForhåndsvisHenleggelsesbrev } from './useForhåndsvisHenleggelsesbrev';
-import { type ISkjema } from '../../../../../../hooks/skjema';
+import { type Skjema } from '../../../../../../hooks/skjema';
 import PdfVisningModal from '../../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 const StyledContainer = styled.div`
@@ -17,7 +17,7 @@ const StyledContainer = styled.div`
 
 type Props = {
     behandling: Behandling;
-    skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;
+    skjema: Skjema<HenleggelseSkjemaDefinisjon, string>;
     kanForhåndsvise: boolean;
 };
 

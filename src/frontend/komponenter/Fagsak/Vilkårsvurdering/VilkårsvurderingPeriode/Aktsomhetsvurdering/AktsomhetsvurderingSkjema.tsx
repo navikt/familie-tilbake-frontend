@@ -6,7 +6,7 @@ import * as React from 'react';
 import GradForsettSkjema from './GradForsettSkjema';
 import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
+import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import {
     Aktsomhet,
     aktsomheter,
@@ -18,7 +18,7 @@ import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelemen
 import { OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
 };
 

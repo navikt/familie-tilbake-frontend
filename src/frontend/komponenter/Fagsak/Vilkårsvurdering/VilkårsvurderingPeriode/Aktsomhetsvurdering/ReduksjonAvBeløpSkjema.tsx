@@ -18,7 +18,7 @@ import { styled } from 'styled-components';
 
 import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { type ISkjema, Valideringsstatus } from '../../../../../hooks/skjema';
+import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
@@ -37,7 +37,7 @@ const StyledNormaltekst = styled(BodyShort)`
 `;
 
 type Props = {
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
 };
 

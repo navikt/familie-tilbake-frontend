@@ -1,4 +1,4 @@
-import type { ISkjema } from '../../../../../hooks/skjema';
+import type { Skjema } from '../../../../../hooks/skjema';
 import type { Behandlingårsak } from '../../../../../typer/behandling';
 import type { Fagsak } from '../../../../../typer/fagsak';
 
@@ -10,7 +10,7 @@ import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { erFeltetEmpty } from '../../../../../utils';
 
 type OpprettBehandlingSkjemaHook = {
-    skjema: ISkjema<
+    skjema: Skjema<
         {
             behandlingstype: Behandlingstype;
             behandlingsårsak: Behandlingårsak | '';

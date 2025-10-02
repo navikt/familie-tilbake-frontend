@@ -5,7 +5,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
-import { type ISkjema } from '../../../../../hooks/skjema';
+import { type Skjema } from '../../../../../hooks/skjema';
 import { Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { useVilkårsvurdering } from '../../VilkårsvurderingContext';
@@ -15,7 +15,7 @@ const StyledNormaltekst = styled(BodyShort)`
 `;
 
 type Props = {
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
 };
 

@@ -1,5 +1,5 @@
-import type { ISkjema, FeltState } from '../../../../hooks/skjema';
-import type { IRestSettPåVent } from '../../../../typer/api';
+import type { Skjema, FeltState } from '../../../../hooks/skjema';
+import type { RestSettPåVent } from '../../../../typer/api';
 import type { Behandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
 import type { Ressurs } from '../../../../typer/ressurs';
 
@@ -13,7 +13,7 @@ import { isEmpty, validerGyldigDato } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
 
 type PåVentBehandlingHook = {
-    skjema: ISkjema<
+    skjema: Skjema<
         {
             tidsfrist: Date | undefined;
             årsak: Venteårsak | '';
@@ -81,7 +81,7 @@ export const usePåVentBehandling = (
     const onBekreft = (behandlingId: string): void => {
         if (kanSendeSkjema() && skjema.felter.årsak.verdi && skjema.felter.tidsfrist.verdi) {
             nullstillIkkePersisterteKomponenter();
-            onSubmit<IRestSettPåVent>(
+            onSubmit<RestSettPåVent>(
                 {
                     method: 'PUT',
                     data: {

@@ -1,4 +1,4 @@
-import type { Avhengigheter, FeltState, ISkjema } from '../../../../../../hooks/skjema';
+import type { Avhengigheter, FeltState, Skjema } from '../../../../../../hooks/skjema';
 import type { HenleggBehandlingPaylod } from '../../../../../../typer/api';
 import type { Behandling } from '../../../../../../typer/behandling';
 
@@ -28,7 +28,7 @@ type Props = {
 };
 
 type HenleggBehandlingSkjemaHook = {
-    skjema: ISkjema<HenleggelseSkjemaDefinisjon, string>;
+    skjema: Skjema<HenleggelseSkjemaDefinisjon, string>;
     erVisFritekst: () => boolean;
     onBekreft: () => void;
     nullstillSkjema: () => void;

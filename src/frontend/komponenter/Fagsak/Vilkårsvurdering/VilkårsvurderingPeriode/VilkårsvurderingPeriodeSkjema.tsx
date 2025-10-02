@@ -33,7 +33,7 @@ import {
     useVilkårsvurderingPeriodeSkjema,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { type ISkjema, Valideringsstatus } from '../../../../hooks/skjema';
+import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import {
     Behandlingssteg,
@@ -49,7 +49,7 @@ import { PeriodeHandling } from '../typer/periodeHandling';
 import { useVilkårsvurdering } from '../VilkårsvurderingContext';
 
 const settSkjemadataFraPeriode = (
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>,
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>,
     periode: VilkårsvurderingPeriodeSkjemaData,
     kanIlleggeRenter: boolean
 ): void => {

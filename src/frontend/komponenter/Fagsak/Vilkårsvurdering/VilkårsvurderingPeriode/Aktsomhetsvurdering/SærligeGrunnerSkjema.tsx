@@ -5,11 +5,11 @@ import * as React from 'react';
 
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { type ISkjema } from '../../../../../hooks/skjema';
+import { type Skjema } from '../../../../../hooks/skjema';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 
 type Props = {
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
 };
 

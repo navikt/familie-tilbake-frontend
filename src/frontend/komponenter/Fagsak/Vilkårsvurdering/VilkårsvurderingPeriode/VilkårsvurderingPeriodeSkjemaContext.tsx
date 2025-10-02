@@ -1,4 +1,4 @@
-import type { ISkjema } from '../../../../hooks/skjema';
+import type { Skjema } from '../../../../hooks/skjema';
 import type {
     Aktsomhetsvurdering,
     GodTro,
@@ -126,7 +126,7 @@ const avhengigheterOppfyltMerEnnAktivitetFelter = (avhengigheter?: Avhengigheter
     avhengigheter?.harMerEnnEnAktivitet.verdi === true;
 
 type VilkårsvurderingPeriodeSkjemaContext = {
-    skjema: ISkjema<VilkårsvurderingSkjemaDefinisjon, string>;
+    skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     validerOgOppdaterFelter: (periode: VilkårsvurderingPeriodeSkjemaData) => boolean;
 };
 

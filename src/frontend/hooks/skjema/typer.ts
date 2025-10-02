@@ -82,7 +82,7 @@ export type FieldDictionary<Record> = {
     [Key in keyof Record]: Felt<Record[Key]>;
 };
 
-export type ISkjema<Felter, SkjemaRespons> = {
+export type Skjema<Felter, SkjemaRespons> = {
     felter: FieldDictionary<Felter>;
     submitRessurs: Ressurs<SkjemaRespons>;
     skjemanavn: string;
@@ -129,7 +129,7 @@ export type UseSkjemaVerdi<Felter, SkjemaRespons> = {
         >
     >;
     settVisfeilmeldinger: Dispatch<SetStateAction<boolean>>;
-    skjema: ISkjema<Felter, SkjemaRespons>;
+    skjema: Skjema<Felter, SkjemaRespons>;
     validerAlleSynligeFelter: () => FeltState<unknown>[];
     valideringErOk: () => boolean;
 };
