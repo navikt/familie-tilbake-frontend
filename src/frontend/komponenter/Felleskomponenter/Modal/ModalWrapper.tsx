@@ -26,7 +26,7 @@ const ModalKnapp = styled(Button)`
     margin-left: 1rem;
 `;
 
-interface ModalProps {
+type ModalProps = {
     tittel: string;
     visModal: boolean;
     onClose?: () => void;
@@ -34,14 +34,14 @@ interface ModalProps {
     maxWidth?: number;
     ariaLabel?: string;
     children?: React.ReactNode;
-}
+};
 
-interface Aksjonsknapp {
+type Aksjonsknapp = {
     onClick: () => void;
     tekst: string;
     disabled?: boolean;
     loading?: boolean;
-}
+};
 
 export const ModalWrapper: React.FC<ModalProps> = ({
     tittel,

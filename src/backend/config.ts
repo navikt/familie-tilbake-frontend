@@ -1,6 +1,6 @@
 // Konfigurer appen før backend prøver å sette opp konfigurasjon
 
-import type { IAppConfig, ISessionKonfigurasjon, TexasConfig } from './backend/typer';
+import type { AppConfig, SessionKonfigurasjon, TexasConfig } from './backend/typer';
 
 import * as dotenv from 'dotenv';
 
@@ -8,7 +8,7 @@ import { envVar } from './utils';
 
 dotenv.config();
 
-export const appConfig: IAppConfig = {
+export const appConfig: AppConfig = {
     sessionSecret: envVar('SESSION_SECRET'),
     backendApiScope: envVar('TILBAKE_SCOPE'),
     version: envVar('APP_VERSION'),
@@ -82,7 +82,7 @@ export const texasConfig: TexasConfig = {
     tokenIntrospectionEndpoint: envVar('NAIS_TOKEN_INTROSPECTION_ENDPOINT'),
 };
 
-export const sessionConfig: ISessionKonfigurasjon = {
+export const sessionConfig: SessionKonfigurasjon = {
     cookieSecret: [`${process.env.COOKIE_KEY1}`, `${process.env.COOKIE_KEY2}`],
     navn: 'tilbakekreving-backend-v1',
     valkeyFullUrl: process.env.VALKEY_HOST_SESSIONS

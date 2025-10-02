@@ -1,9 +1,9 @@
 import type { BehandlingApiHook } from '../../../../api/behandling';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 import type { Ressurs } from '../../../../typer/ressurs';
-import type { ITotrinnkontroll } from '../../../../typer/totrinnTyper';
+import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -33,17 +33,17 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderTotrinnskontroll = (behandling: IBehandling, fagsak: IFagsak): RenderResult =>
+const renderTotrinnskontroll = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
     render(
         <TotrinnskontrollProvider behandling={behandling} fagsak={fagsak}>
             <Totrinnskontroll />
         </TotrinnskontrollProvider>
     );
 
-const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: ITotrinnkontroll): void => {
+const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkontroll): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
-        gjerTotrinnkontrollKall: (): Promise<Ressurs<ITotrinnkontroll>> => {
-            const ressurs = mock<Ressurs<ITotrinnkontroll>>({
+        gjerTotrinnkontrollKall: (): Promise<Ressurs<Totrinnkontroll>> => {
+            const ressurs = mock<Ressurs<Totrinnkontroll>>({
                 status: RessursStatus.Suksess,
                 data: totrinnkontroll,
             });
@@ -94,10 +94,10 @@ describe('Tester: Totrinnskontroll', () => {
                 },
             ],
         });
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             kanEndres: true,
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
             behandling,
@@ -168,10 +168,10 @@ describe('Tester: Totrinnskontroll', () => {
                 },
             ],
         });
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             kanEndres: true,
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
             behandling,
@@ -257,10 +257,10 @@ describe('Tester: Totrinnskontroll', () => {
                 },
             ],
         });
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             kanEndres: true,
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
             behandling,
@@ -319,10 +319,10 @@ describe('Tester: Totrinnskontroll', () => {
                 },
             ],
         });
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             kanEndres: false,
         });
-        const fagsak = mock<IFagsak>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
             behandling,

@@ -28,13 +28,13 @@ const IframePdfVisning = styled.iframe`
     width: 100%;
 `;
 
-interface IProps {
+type Props = {
     onRequestClose: () => void;
     pdfdata: Ressurs<string>;
     åpen: boolean;
-}
+};
 
-const PdfVisningModal: React.FC<IProps> = ({ onRequestClose, pdfdata, åpen }) => {
+const PdfVisningModal: React.FC<Props> = ({ onRequestClose, pdfdata, åpen }) => {
     return (
         <StyledModal
             open={åpen}

@@ -19,13 +19,13 @@ const StyledPeriodeTable = styled(Table)`
     }
 `;
 
-interface IProps {
+type Props = {
     ytelse: Ytelsetype;
     perioder: FaktaPeriodeSkjemaData[];
     erLesevisning: boolean;
-}
+};
 
-const FaktaPerioder: React.FC<IProps> = ({ ytelse, perioder, erLesevisning }) => {
+const FaktaPerioder: React.FC<Props> = ({ ytelse, perioder, erLesevisning }) => {
     const [hendelseTyper, settHendelseTyper] = React.useState<HendelseType[]>();
     const { fagsak } = useFakta();
 

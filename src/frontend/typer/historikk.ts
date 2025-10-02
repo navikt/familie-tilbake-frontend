@@ -16,7 +16,7 @@ export enum Historikkinnslagstype {
     Brev = 'BREV',
 }
 
-export interface IHistorikkInnslag {
+export type HistorikkInnslag = {
     behandlingId?: string;
     aktør: Aktør;
     aktørIdent: string;
@@ -27,4 +27,4 @@ export interface IHistorikkInnslag {
     journalpostId?: string;
     dokumentId?: string;
     opprettetTid: string;
-}
+};

@@ -1,8 +1,8 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     VilkårsvurderingResponse,
@@ -117,8 +117,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
     test('- vis autoutført', async () => {
         setupMock(false, false, true, vilkårsvurdering);
 
-        const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<IFagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
+        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole } = render(
             <QueryClientProvider client={queryClient}>

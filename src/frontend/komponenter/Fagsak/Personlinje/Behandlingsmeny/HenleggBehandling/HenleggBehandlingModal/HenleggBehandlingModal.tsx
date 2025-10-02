@@ -1,6 +1,6 @@
-import type { IBehandling } from '../../../../../../typer/behandling';
+import type { Behandling } from '../../../../../../typer/behandling';
 import type { Behandlingresultat } from '../../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../../typer/fagsak';
+import type { Fagsak } from '../../../../../../typer/fagsak';
 
 import { Button, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -12,15 +12,15 @@ import { Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
 import { LabelMedSpråk } from '../../../../../Felleskomponenter/Skjemaelementer';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
     visModal: boolean;
     settVisModal: (vis: boolean) => void;
     årsaker: Behandlingresultat[];
-}
+};
 
-const HenleggBehandlingModal: React.FC<IProps> = ({
+const HenleggBehandlingModal: React.FC<Props> = ({
     behandling,
     fagsak,
     visModal,

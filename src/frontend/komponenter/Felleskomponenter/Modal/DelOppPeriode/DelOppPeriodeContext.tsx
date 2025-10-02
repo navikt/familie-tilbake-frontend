@@ -7,7 +7,7 @@ import { useHttp } from '../../../../api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
 
-interface DelOppPeriodeHook {
+type DelOppPeriodeHook = {
     visModal: boolean;
     settVisModal: (vis: boolean) => void;
     splittDato: string;
@@ -21,7 +21,7 @@ interface DelOppPeriodeHook {
         behandleRespons: (response: BeregnSplittetPeriodeRespons) => void
     ) => void;
     validateNyPeriode: (periode: Periode, månedsslutt: string) => boolean;
-}
+};
 
 export const useDelOppPeriode = (fom: string, behandlingId: string): DelOppPeriodeHook => {
     const [visModal, settVisModal] = useState(false);

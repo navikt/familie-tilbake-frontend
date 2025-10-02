@@ -1,4 +1,4 @@
-import type { IBehandling } from '../typer/behandling';
+import type { Behandling } from '../typer/behandling';
 
 import { visSide } from './sider';
 import { Behandlingssteg, Behandlingsstegstatus } from '../typer/behandling';
@@ -30,13 +30,13 @@ const mockBehandlingsstegsinfo = [
     },
 ];
 
-const mockBehandling: Partial<IBehandling> = {
+const mockBehandling: Partial<Behandling> = {
     behandlingsstegsinfo: mockBehandlingsstegsinfo,
 };
 
 describe('sider', () => {
     test('visSide skal ikke vise brevmottaker dersom den informasjonen ikke er på behandlingen', () => {
-        const result = visSide(Behandlingssteg.Brevmottaker, mockBehandling as IBehandling);
+        const result = visSide(Behandlingssteg.Brevmottaker, mockBehandling as Behandling);
         expect(result).toBe(false);
     });
 
@@ -51,14 +51,14 @@ describe('sider', () => {
                     tidsfrist: undefined,
                 },
             ],
-        } as IBehandling;
+        } as Behandling;
         const result = visSide(Behandlingssteg.Brevmottaker, mockBehandling);
         expect(result).toBe(true);
     });
 
     test('visSide skal vise de synlige stegene: Fakta, Foreldelse, Vilkårsvurdering, Vedtak', () => {
         mockBehandling.behandlingsstegsinfo?.forEach(stegInfo => {
-            const result = visSide(stegInfo.behandlingssteg, mockBehandling as IBehandling);
+            const result = visSide(stegInfo.behandlingssteg, mockBehandling as Behandling);
             expect(result).toBe(true);
         });
     });

@@ -22,11 +22,11 @@ const StyledFakta = styled.div`
     }
 `;
 
-interface IProps {
+type Props = {
     ytelse: Ytelsetype;
-}
+};
 
-const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
+const FaktaContainer: React.FC<Props> = ({ ytelse }) => {
     const { stegErBehandlet, skjemaData, fakta } = useFakta();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;

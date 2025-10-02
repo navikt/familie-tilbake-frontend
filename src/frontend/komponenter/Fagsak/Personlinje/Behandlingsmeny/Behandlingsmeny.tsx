@@ -1,4 +1,4 @@
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Fagsak } from '../../../../typer/fagsak';
 
 import { ChevronDownIcon } from '@navikt/aksel-icons';
 import { Button, Popover } from '@navikt/ds-react';
@@ -36,10 +36,10 @@ const StyledButton = styled(Button)`
     }
 `;
 
-interface IProps {
-    fagsak: IFagsak;
-}
-const Behandlingsmeny: React.FC<IProps> = ({ fagsak }) => {
+type Props = {
+    fagsak: Fagsak;
+};
+const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
     const [visMeny, settVisMeny] = React.useState<boolean>(false);
     const buttonRef = React.useRef(null);

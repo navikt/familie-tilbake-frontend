@@ -1,4 +1,4 @@
-import type { IBehandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
+import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
 
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router';
@@ -31,7 +31,7 @@ const FagsakContainerContent = styled.div`
     }
 `;
 
-const venteBeskjed = (ventegrunn: IBehandlingsstegstilstand): string => {
+const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
     return `Behandlingen er satt på vent: ${
         venteårsaker[ventegrunn.venteårsak as Venteårsak]
     }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;

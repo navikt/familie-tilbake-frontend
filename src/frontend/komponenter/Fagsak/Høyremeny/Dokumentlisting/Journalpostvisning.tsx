@@ -1,4 +1,4 @@
-import type { IJournalpost } from '../../../../typer/journalføring';
+import type { Journalpost } from '../../../../typer/journalføring';
 
 import { Detail } from '@navikt/ds-react';
 import { AGray400, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
@@ -38,11 +38,11 @@ const typer: Record<Journalposttype, string> = {
     [Journalposttype.N]: 'Notat',
 };
 
-interface IProps {
-    journalpost: IJournalpost;
-}
+type Props = {
+    journalpost: Journalpost;
+};
 
-const JournalpostVisning: React.FC<IProps> = ({ journalpost }) => {
+const JournalpostVisning: React.FC<Props> = ({ journalpost }) => {
     const datoRegistrertSendt = hentDatoRegistrertSendt(
         journalpost.relevanteDatoer,
         journalpost.journalposttype

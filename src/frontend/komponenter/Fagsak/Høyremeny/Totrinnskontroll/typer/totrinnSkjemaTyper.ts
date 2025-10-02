@@ -1,9 +1,9 @@
 import type { Behandlingssteg } from '../../../../../typer/behandling';
 
-export interface TotrinnGodkjenningOption {
+export type TotrinnGodkjenningOption = {
     verdi: boolean;
     label: string;
-}
+};
 
 export const OptionGodkjent = {
     verdi: true,
@@ -17,7 +17,7 @@ export const OptionIkkeGodkjent = {
 
 export const totrinnGodkjenningOptions = [OptionGodkjent, OptionIkkeGodkjent];
 
-export interface TotrinnStegSkjemaData {
+export type TotrinnStegSkjemaData = {
     index: string;
     behandlingssteg: Behandlingssteg;
     godkjent: TotrinnGodkjenningOption | '';
@@ -25,4 +25,4 @@ export interface TotrinnStegSkjemaData {
     harFeilIBegrunnelse?: boolean;
     begrunnelseFeilmelding?: string;
     feilmelding?: string;
-}
+};

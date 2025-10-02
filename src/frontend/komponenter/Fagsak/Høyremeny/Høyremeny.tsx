@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import {
     ChevronLeftIcon,
@@ -41,12 +41,12 @@ const StyledTabs = styled(Tabs.Tab)`
     }
 `;
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+type Props = {
+    fagsak: Fagsak;
+    behandling: Behandling;
+};
 
-const Høyremeny: React.FC<IProps> = ({ fagsak, behandling }) => {
+const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
     const { harVærtPåFatteVedtakSteget, åpenHøyremeny, settÅpenHøyremeny, ventegrunn } =
         useBehandling();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();

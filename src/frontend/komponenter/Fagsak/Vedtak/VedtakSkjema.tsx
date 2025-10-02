@@ -13,14 +13,14 @@ const StyledAlert = styled(Alert)`
     margin-bottom: 1.5rem;
 `;
 
-interface IProps {
+type Props = {
     avsnitter: AvsnittSkjemaData[];
     erLesevisning: boolean;
     erRevurderingBortfaltBeløp: boolean;
     harBrukerUttaltSeg: boolean;
-}
+};
 
-const VedtakSkjema: React.FC<IProps> = ({
+const VedtakSkjema: React.FC<Props> = ({
     avsnitter,
     erLesevisning,
     erRevurderingBortfaltBeløp,

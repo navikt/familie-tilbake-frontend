@@ -1,4 +1,4 @@
-import type { IBehandling } from '../../../../typer/behandling';
+import type { Behandling } from '../../../../typer/behandling';
 import type { VilkårsvurderingResponse } from '../../../../typer/tilbakekrevingstyper';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
@@ -14,12 +14,12 @@ import {
 } from '../../../../typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '../../../../utils';
 
-interface IProps {
-    behandling: IBehandling;
-}
+type Props = {
+    behandling: Behandling;
+};
 
 const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = createUseContext(
-    ({ behandling }: IProps) => {
+    ({ behandling }: Props) => {
         const [inaktiveVilkårsvurderinger, setInaktiveVilkårsvurderinger] =
             useState<Ressurs<VilkårsvurderingResponse[]>>(byggTomRessurs);
 

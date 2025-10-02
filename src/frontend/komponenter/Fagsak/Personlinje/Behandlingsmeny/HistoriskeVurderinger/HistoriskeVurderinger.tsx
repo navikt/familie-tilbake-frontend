@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../typer/fagsak';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
 
 import * as React from 'react';
 
@@ -8,13 +8,13 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { ToggleName } from '../../../../../context/toggles';
 import { useToggles } from '../../../../../context/TogglesContext';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
     onListElementClick: () => void;
-}
+};
 
-const HistoriskeVurderinger: React.FC<IProps> = ({ behandling, fagsak, onListElementClick }) => {
+const HistoriskeVurderinger: React.FC<Props> = ({ behandling, fagsak, onListElementClick }) => {
     const { behandlingILesemodus } = useBehandling();
     const { innloggetSaksbehandler } = useApp();
     const { toggles } = useToggles();

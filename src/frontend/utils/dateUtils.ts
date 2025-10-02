@@ -1,4 +1,4 @@
-import type { IJournalpostRelevantDato } from '../typer/journalføring';
+import type { JournalpostRelevantDato } from '../typer/journalføring';
 import type { FaktaPeriode } from '../typer/tilbakekrevingstyper';
 import type { Duration } from 'date-fns';
 
@@ -130,7 +130,7 @@ export const sorterFeilutbetaltePerioder = <T extends FaktaPeriode>(perioder: T[
 };
 
 export const hentDatoRegistrertSendt = (
-    relevanteDatoer: IJournalpostRelevantDato[],
+    relevanteDatoer: JournalpostRelevantDato[],
     journalposttype: string
 ): Date => {
     let datoRegistrert = relevanteDatoer.find(dato => {

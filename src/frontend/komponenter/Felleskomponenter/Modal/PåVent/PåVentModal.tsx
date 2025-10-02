@@ -1,4 +1,4 @@
-import type { IBehandling, IBehandlingsstegstilstand } from '../../../../typer/behandling';
+import type { Behandling, Behandlingsstegstilstand } from '../../../../typer/behandling';
 
 import { Alert, BodyLong, Button, Heading, Modal, Select } from '@navikt/ds-react';
 import { ASpacing8, ATextDanger } from '@navikt/ds-tokens/dist/tokens';
@@ -32,13 +32,13 @@ const FeilContainer = styled.div`
     }
 `;
 
-interface IProps {
-    behandling: IBehandling;
-    ventegrunn: IBehandlingsstegstilstand;
+type Props = {
+    behandling: Behandling;
+    ventegrunn: Behandlingsstegstilstand;
     onClose: () => void;
-}
+};
 
-const PåVentModal: React.FC<IProps> = ({ behandling, ventegrunn, onClose }) => {
+const PåVentModal: React.FC<Props> = ({ behandling, ventegrunn, onClose }) => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
 
     const lukkModalOgHentBehandling = (): void => {

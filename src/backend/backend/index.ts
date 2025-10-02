@@ -16,17 +16,17 @@ export * from './utils';
 
 export { Counter } from 'prom-client';
 
-interface IApp {
+type App = {
     app: Express;
     texasClient: TexasClient;
     router: Router;
     prometheusRegistry: Registry;
-}
+};
 
 export default (
     texasConfig: TexasConfig,
     prometheusTellere?: { [key: string]: Counter<string> }
-): IApp => {
+): App => {
     const app = express();
     headers.setup(app);
 
