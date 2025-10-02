@@ -14,7 +14,6 @@ import { ABorderStrong, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { endOfMonth, subMonths } from 'date-fns';
 import * as React from 'react';
 import { styled } from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
 
 import { formatterDatoDDMMYYYY, formatterDatostring } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
@@ -86,7 +85,7 @@ export const DelOppPeriode: React.FC<Props> = ({
                         <TidslinjeContainer>
                             <Timeline>
                                 {tidslinjeRader.map(rad => (
-                                    <Timeline.Row label="" key={uuidv4()}>
+                                    <Timeline.Row label="" key={rad[0].id}>
                                         {rad.map(periode => (
                                             <Timeline.Period
                                                 key={periode.id}
