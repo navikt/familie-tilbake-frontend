@@ -19,13 +19,14 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '22'
-          scope: '@navikt'
+          node-version: "22"
+          cache: "pnpm"
+          scope: "@navikt"
           registry-url: "https://npm.pkg.github.com"
 
       - name: Install dependencies
         uses: pnpm/action-setup@v4
-        env: 
+        env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           run_install: |
