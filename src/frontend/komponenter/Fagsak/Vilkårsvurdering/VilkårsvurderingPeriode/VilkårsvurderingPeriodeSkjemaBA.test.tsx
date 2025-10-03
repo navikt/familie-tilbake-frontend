@@ -170,13 +170,13 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             getByRole('button', {
-                name: 'Gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         ).toBeEnabled();
 
         expect(
             getByRole('button', {
-                name: 'Gå tilbake til foreldelse',
+                name: 'Gå tilbake til foreldelsessteget',
             })
         ).toBeEnabled();
 
@@ -186,13 +186,13 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
 
@@ -210,7 +210,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå tilbake til foreldelse',
+                name: 'Gå videre til vedtakssteget',
             })
         );
 
@@ -228,7 +228,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -269,7 +269,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -278,7 +278,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -328,7 +328,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -352,7 +352,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -422,7 +422,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -462,7 +462,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
 
@@ -478,7 +478,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -506,7 +506,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -528,7 +528,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -569,7 +569,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -596,7 +596,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -663,7 +663,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -695,7 +695,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -710,7 +710,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -769,7 +769,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -789,7 +789,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -803,7 +803,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -857,7 +857,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -876,7 +876,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -902,7 +902,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -917,7 +917,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -960,7 +960,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -978,7 +978,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -1001,7 +1001,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -1044,7 +1044,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -1061,7 +1061,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -1188,17 +1188,14 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
             false
         );
 
-        // Sjekk at det ikke er noen feilmeldinger fra start
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
 
-        // Klikk på "Gå videre til vedtak" uten å fylle inn noen felter
         await user.click(
             getByRole('button', {
-                name: 'Gå videre til vedtak',
+                name: 'Gå videre til vedtakssteget',
             })
         );
 
-        // Sjekk at validering vises - skal være feil på vilkårsbegrunnelse og vilkårsresultat
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
     });
 });

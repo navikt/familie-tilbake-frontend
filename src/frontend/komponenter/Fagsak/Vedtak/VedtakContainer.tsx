@@ -20,10 +20,7 @@ import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { SYNLIGE_STEG } from '../../../utils/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
-
-const StyledVedtak = styled.div`
-    padding: ${ASpacing3};
-`;
+import { ActionBar } from '../ActionBar/ActionBar';
 
 const StyledNavigering = styled(Navigering)`
     width: 90%;
@@ -57,7 +54,13 @@ const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
         lagreUtkast,
         hentVedtaksbrevtekster,
     } = useVedtak();
-    const { behandlingILesemodus, aktivtSteg } = useBehandling();
+    const {
+        behandlingILesemodus,
+        aktivtSteg,
+        åpenHøyremeny,
+        actionBarStegtekst,
+        harVærtPåFatteVedtakSteget,
+    } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA =
         behandling.behandlingsårsakstype === Behandlingårsak.RevurderingKlageKa;
@@ -120,8 +123,8 @@ const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
         vedtaksbrevavsnitt?.status === RessursStatus.Suksess
     ) {
         return (
-            <StyledVedtak>
-                <Heading level="2" size="small" spacing>
+            <>
+                <Heading level="1" size="small" spacing>
                     Vedtak
                 </Heading>
                 {erRevurderingKlageKA && (
@@ -174,16 +177,6 @@ const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
                         </StyledAlert>
                     )}
                 <StyledNavigering>
-                    {!erLesevisning && (
-                        <Button
-                            variant="primary"
-                            onClick={sendInnSkjema}
-                            loading={senderInn}
-                            disabled={senderInn || disableBekreft || harValideringsFeil}
-                        >
-                            Til godkjenning
-                        </Button>
-                    )}
                     <HStack gap="1">
                         {kanViseForhåndsvisning && !!skjemaData.length && (
                             <ForhåndsvisVedtaksbrev />
@@ -213,11 +206,22 @@ const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
 
                         {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
                     </HStack>
-                    <Button variant="secondary" onClick={gåTilForrige}>
-                        Forrige
-                    </Button>
                 </StyledNavigering>
-            </StyledVedtak>
+
+                <ActionBar
+                    disableNeste={senderInn || disableBekreft || harValideringsFeil}
+                    skjulNeste={erLesevisning}
+                    stegtekst={actionBarStegtekst(Behandlingssteg.ForeslåVedtak)}
+                    nesteTekst="Send til godkjenning"
+                    forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
+                    nesteAriaLabel="Send til godkjenning hos beslutter"
+                    åpenHøyremeny={åpenHøyremeny}
+                    onNeste={sendInnSkjema}
+                    onForrige={gåTilForrige}
+                    harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
+                    isLoading={senderInn}
+                />
+            </>
         );
     } else {
         return <DataLastIkkeSuksess ressurser={[beregningsresultat, vedtaksbrevavsnitt]} />;

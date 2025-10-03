@@ -3,7 +3,6 @@ import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
-import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect, useMemo } from 'react';
 
@@ -141,7 +140,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
                         ))}
                 </VStack>
             </Table.DataCell>
-            <Table.DataCell align="right" className={classNames('redText')}>
+            <Table.DataCell align="right" className="text-text-danger font-bold">
                 <BodyShort size="small">{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</BodyShort>
             </Table.DataCell>
         </Table.Row>

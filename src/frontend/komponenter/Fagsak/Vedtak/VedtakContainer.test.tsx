@@ -165,6 +165,8 @@ describe('Tester: VedtakContainer', () => {
             hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
             settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
             nullstillIkkePersisterteKomponenter: jest.fn(),
+            actionBarStegtekst: jest.fn().mockReturnValue('Steg 4 av 4'),
+            harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
         }));
     };
 
@@ -248,7 +250,7 @@ describe('Tester: VedtakContainer', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Til godkjenning',
+                    name: 'Send til godkjenning hos beslutter',
                 })
             ).toBeDisabled();
         });
@@ -282,13 +284,13 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Til godkjenning',
+                name: 'Send til godkjenning hos beslutter',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Til godkjenning',
+                name: 'Send til godkjenning hos beslutter',
             })
         );
     });
@@ -370,7 +372,7 @@ describe('Tester: VedtakContainer', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Til godkjenning',
+                    name: 'Send til godkjenning hos beslutter',
                 })
             ).toBeDisabled();
         });
@@ -406,13 +408,13 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Til godkjenning',
+                name: 'Send til godkjenning hos beslutter',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Til godkjenning',
+                name: 'Send til godkjenning hos beslutter',
             })
         );
     });
@@ -488,7 +490,7 @@ describe('Tester: VedtakContainer', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Til godkjenning',
+                    name: 'Send til godkjenning hos beslutter',
                 })
             ).toBeDisabled();
         });
@@ -525,14 +527,14 @@ describe('Tester: VedtakContainer', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Til godkjenning',
+                    name: 'Send til godkjenning hos beslutter',
                 })
             ).toBeEnabled();
         });
 
         await user.click(
             getByRole('button', {
-                name: 'Til godkjenning',
+                name: 'Send til godkjenning hos beslutter',
             })
         );
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('vedtak');
@@ -615,7 +617,7 @@ describe('Tester: VedtakContainer', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Til godkjenning',
+                    name: 'Send til godkjenning hos beslutter',
                 })
             ).toBeDisabled();
         });
@@ -678,14 +680,14 @@ describe('Tester: VedtakContainer', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Til godkjenning',
+                    name: 'Send til godkjenning hos beslutter',
                 })
             ).toBeEnabled();
         });
 
         await user.click(
             getByRole('button', {
-                name: 'Til godkjenning',
+                name: 'Send til godkjenning hos beslutter',
             })
         );
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('vedtak');
@@ -757,7 +759,7 @@ describe('Tester: VedtakContainer', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Til godkjenning',
+                    name: 'Send til godkjenning hos beslutter',
                 })
             ).toBeEnabled();
         });
@@ -877,7 +879,7 @@ describe('Tester: VedtakContainer', () => {
 
         expect(
             queryByRole('button', {
-                name: 'Til godkjenning',
+                name: 'Send til godkjenning hos beslutter',
             })
         ).not.toBeInTheDocument();
 

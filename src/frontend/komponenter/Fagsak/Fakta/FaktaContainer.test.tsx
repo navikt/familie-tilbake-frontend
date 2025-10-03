@@ -141,6 +141,8 @@ describe('Tester: FaktaContainer', () => {
             hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
             settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
             nullstillIkkePersisterteKomponenter: jest.fn(),
+            actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 4'),
+            harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
         }));
         mockUseToggles.mockImplementation(() => ({
             toggles: { [ToggleName.Dummy]: true },
@@ -182,7 +184,7 @@ describe('Tester: FaktaContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til foreldelsessteget',
             })
         );
         await waitFor(() => {
@@ -204,7 +206,7 @@ describe('Tester: FaktaContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til foreldelsessteget',
             })
         );
         // BorMedSøker har kun 1 underårsak og vil derfor bli automatisk satt
@@ -227,7 +229,7 @@ describe('Tester: FaktaContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til foreldelsessteget',
             })
         );
         await waitFor(() => {
@@ -255,7 +257,7 @@ describe('Tester: FaktaContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til foreldelsessteget',
             })
         );
         await waitFor(() => {
@@ -275,7 +277,7 @@ describe('Tester: FaktaContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til foreldelsessteget',
             })
         );
 
@@ -294,7 +296,7 @@ describe('Tester: FaktaContainer', () => {
         );
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til foreldelsessteget',
             })
         );
         await waitFor(() => {
@@ -354,7 +356,7 @@ describe('Tester: FaktaContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til foreldelsessteget',
             })
         ).toBeInTheDocument();
     });
@@ -408,7 +410,7 @@ describe('Tester: FaktaContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til foreldelsessteget',
             })
         ).toBeInTheDocument();
     });
@@ -459,7 +461,7 @@ describe('Tester: FaktaContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til foreldelsessteget',
             })
         ).toBeInTheDocument();
     });
@@ -510,7 +512,7 @@ describe('Tester: FaktaContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til foreldelsessteget',
             })
         ).toBeInTheDocument();
     });
