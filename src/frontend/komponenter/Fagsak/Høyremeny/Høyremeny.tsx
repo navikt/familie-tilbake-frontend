@@ -1,5 +1,6 @@
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
+import type { Person } from '../../../typer/person';
 
 import {
     ChevronLeftIcon,
@@ -15,15 +16,12 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
-import Behandlingskort from './Behandlingskort/Behandlingskort';
-import { Faktaboks } from './Faktaboks/Faktaboks';
+// import Behandlingskort from './Behandlingskort/Behandlingskort';
+import { BrukerBoks } from './Informasjonsbokser/BrukerBoks';
+import { Faktaboks } from './Informasjonsbokser/Faktaboks';
 import Menykontainer, { Menysider } from './Menykontainer';
 import { useBehandling } from '../../../context/BehandlingContext';
-
-const StyledContainer = styled.div<{ $værtPåFatteVedtakSteget: boolean }>`
-    width: ${({ $værtPåFatteVedtakSteget }): string =>
-        $værtPåFatteVedtakSteget ? '28rem' : '22rem'};
-`;
+import { Kjønn } from '../../../typer/person';
 
 const HøyremenyContainer = styled.div`
     padding: 0 10px 0 10px;
@@ -53,9 +51,20 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
 
     const harVentegrunn = ventegrunn !== undefined;
+    const bruker: Person = {
+        navn: 'Fredrik Garseg Mørk',
+        fødselsdato: '1995-01-01',
+        dødsdato: undefined,
+        kjønn: Kjønn.Mann,
+        personIdent: '12312312312',
+    };
+    const insitusjon = {
+        navn: 'Institusjon AS',
+        organisasjonsnummer: '123456789',
+    };
 
     return (
-        <>
+        <div className="bg-gray-50">
             <Button
                 className={classNames(
                     'absolute w-[34px] min-w-[34px] h-[34px] rounded-full z-[100] flex items-center justify-center not-active:not-hover:bg-white ',
@@ -69,9 +78,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
                 )}
                 variant="secondary"
                 onMouseDown={(e: React.MouseEvent) => e.preventDefault()}
-                onClick={() => {
-                    settÅpenHøyremeny(!åpenHøyremeny);
-                }}
+                onClick={() => settÅpenHøyremeny(!åpenHøyremeny)}
                 size="small"
                 title={åpenHøyremeny ? 'Skjul høyremeny' : 'Vis høyremeny'}
             >
@@ -82,10 +89,15 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
                 )}
             </Button>
             {åpenHøyremeny && (
-                <StyledContainer $værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}>
+                <div
+                    className={classNames('w-[22rem] gap-4 flex flex-col', {
+                        'w-[28rem]': værtPåFatteVedtakSteget,
+                    })}
+                >
                     <Faktaboks tittel="Faktaboks tittel" />
-                    <Behandlingskort fagsak={fagsak} behandling={behandling} />
-                    <div>
+                    <BrukerBoks bruker={bruker} insitusjon={insitusjon} />
+                    {/* <Behandlingskort fagsak={fagsak} behandling={behandling} /> */}
+                    <div className="border border-border-divider rounded-2xl bg-white">
                         <Tabs
                             defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
                             iconPosition="top"
@@ -165,9 +177,9 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
                             </HøyremenyContainer>
                         </Tabs>
                     </div>
-                </StyledContainer>
+                </div>
             )}
-        </>
+        </div>
     );
 };
 

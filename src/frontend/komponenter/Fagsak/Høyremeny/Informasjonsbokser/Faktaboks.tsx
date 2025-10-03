@@ -21,13 +21,16 @@ export const Faktaboks: React.FC<Props> = () => {
     const enhet = '1234'; // TODO
 
     return (
-        <Box padding="4" className="border-1 rounded-xl border-border-divider flex flex-col gap-4">
+        <Box
+            padding="4"
+            className="border-1 rounded-xl border-border-divider flex flex-col gap-4 bg-white"
+        >
             <Heading size="xsmall" level="2">
-                Tilbakekreving av {type}
+                Revurdering tilbakekreving av {type}
             </Heading>
 
             <dl className="grid grid-cols-[120px_1fr] gap-y-2 gap-x-4">
-                <dt className="w-30 text-medium font-bold flex flex-row gap-2 items-center">
+                <dt className="w-36 text-medium font-bold flex flex-row gap-2 items-center">
                     <FileCheckmarkIcon
                         title="a11y-title"
                         fontSize="1rem"
@@ -44,7 +47,7 @@ export const Faktaboks: React.FC<Props> = () => {
 
                 {resultat && (
                     <>
-                        <dt className="w-30 shrink-0 text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="w-36 shrink-0 text-medium font-bold flex flex-row gap-2 items-center">
                             <ClipboardIcon
                                 title="a11y-title"
                                 fontSize="1rem"
@@ -63,7 +66,7 @@ export const Faktaboks: React.FC<Props> = () => {
 
                 {opprettet && (
                     <>
-                        <dt className="w-30 text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="w-36 text-medium font-bold flex flex-row gap-2 items-center">
                             <CalendarIcon
                                 title="a11y-title"
                                 fontSize="1rem"

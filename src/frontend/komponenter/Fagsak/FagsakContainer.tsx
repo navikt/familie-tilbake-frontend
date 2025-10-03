@@ -5,10 +5,10 @@ import { useLocation, useParams } from 'react-router';
 import { styled } from 'styled-components';
 
 import BehandlingContainer from './BehandlingContainer';
-import { Fagsystem } from '../../kodeverk';
-import Personlinje from './Personlinje/Personlinje';
+// import Personlinje from './Personlinje/Personlinje';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
+import { Fagsystem } from '../../kodeverk';
 import { useFagsakStore } from '../../store/fagsak';
 import { venteårsaker } from '../../typer/behandling';
 import { RessursStatus } from '../../typer/ressurs';
@@ -98,7 +98,7 @@ const FagsakContainer: React.FC = () => {
     if (fagsak?.status === RessursStatus.Suksess && behandling?.status === RessursStatus.Suksess) {
         return (
             <>
-                <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} />
+                {/* <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} /> */}
 
                 {ventegrunn && (
                     <FTAlertStripe variant="info">{venteBeskjed(ventegrunn)}</FTAlertStripe>
