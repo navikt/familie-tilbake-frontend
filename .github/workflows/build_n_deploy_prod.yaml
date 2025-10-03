@@ -3,7 +3,7 @@ name: Build&deploy to dev and prod
 on:
   push:
     branches:
-      - 'main'
+      - "main"
 
 env:
   VERSION: familie-tilbake-frontend:${{ github.sha }}
@@ -21,14 +21,14 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: '22'
-          scope: '@navikt'
+          node-version: "22"
+          scope: "@navikt"
           registry-url: "https://npm.pkg.github.com"
+          package-manager-cache: false
 
-      - name: Install dependencies
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
