@@ -17,18 +17,18 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          scope: "@navikt"
+          registry-url: "https://npm.pkg.github.com"
+
       - uses: pnpm/action-setup@v4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           run_install: |
             - args: [--frozen-lockfile, --prefer-offline]
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: "22"
-          scope: "@navikt"
-          registry-url: "https://npm.pkg.github.com"
 
       - name: Build and test
         env:
