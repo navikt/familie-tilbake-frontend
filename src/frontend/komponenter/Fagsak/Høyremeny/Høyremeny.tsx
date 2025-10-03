@@ -16,6 +16,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import Behandlingskort from './Behandlingskort/Behandlingskort';
+import { Faktaboks } from './Faktaboks/Faktaboks';
 import Menykontainer, { Menysider } from './Menykontainer';
 import { useBehandling } from '../../../context/BehandlingContext';
 
@@ -82,6 +83,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
             </Button>
             {åpenHøyremeny && (
                 <StyledContainer $værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}>
+                    <Faktaboks tittel="Faktaboks tittel" />
                     <Behandlingskort fagsak={fagsak} behandling={behandling} />
                     <div>
                         <Tabs
