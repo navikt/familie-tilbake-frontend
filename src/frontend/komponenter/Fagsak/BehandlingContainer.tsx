@@ -159,7 +159,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     ) : harKravgrunnlag ? (
         <>
             <main
-                className="flex-1 pt-6 bg-gray-50 flex flex-col min-h-0"
+                className="flex-1 pt-6 bg-gray-50 flex flex-col min-h-screen"
                 aria-label="Behandling innhold"
             >
                 <Stegflyt />

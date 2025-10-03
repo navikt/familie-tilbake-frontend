@@ -64,7 +64,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
     };
 
     return (
-        <div className="bg-gray-50">
+        <div className="bg-gray-50 min-h-screen">
             <Button
                 className={classNames(
                     'absolute w-[34px] min-w-[34px] h-[34px] rounded-full z-[100] flex items-center justify-center not-active:not-hover:bg-white ',
