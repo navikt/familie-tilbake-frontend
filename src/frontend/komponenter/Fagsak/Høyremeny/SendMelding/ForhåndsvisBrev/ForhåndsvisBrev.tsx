@@ -5,11 +5,11 @@ import { useForhåndsvisBrev } from './useForhåndsvisBrev';
 import PdfVisningModal from '../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { useSendMelding } from '../SendMeldingContext';
 
-interface IProps {
+type Props = {
     test?: boolean;
-}
+};
 
-const ForhåndsvisBrev: React.FC<IProps> = () => {
+const ForhåndsvisBrev: React.FC<Props> = () => {
     const {
         hentetForhåndsvisning,
         hentBrev,

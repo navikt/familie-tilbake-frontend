@@ -24,11 +24,11 @@ const StyledPeriodeTable = styled.table`
     }
 `;
 
-interface IProps {
+type Props = {
     perioder: BeregningsresultatPeriode[];
-}
+};
 
-const VedtakPerioder: React.FC<IProps> = ({ perioder }) => {
+const VedtakPerioder: React.FC<Props> = ({ perioder }) => {
     return (
         <StyledPeriodeTable cellPadding="0" cellSpacing="0">
             <thead>

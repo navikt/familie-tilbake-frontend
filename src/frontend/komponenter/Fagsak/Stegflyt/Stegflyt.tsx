@@ -1,4 +1,4 @@
-import type { IBehandling, IBehandlingsstegstilstand } from '../../../typer/behandling';
+import type { Behandling, Behandlingsstegstilstand } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { SynligSteg } from '../../../utils/sider';
 
@@ -17,8 +17,8 @@ interface StepperSteg extends SynligSteg {
 }
 
 const mapStegTilStepperSteg = (
-    stegsinfo: IBehandlingsstegstilstand[],
-    behandling: Ressurs<IBehandling> | undefined
+    stegsinfo: Behandlingsstegstilstand[],
+    behandling: Ressurs<Behandling> | undefined
 ): StepperSteg[] | undefined => {
     if (behandling?.status !== RessursStatus.Suksess) return undefined;
 

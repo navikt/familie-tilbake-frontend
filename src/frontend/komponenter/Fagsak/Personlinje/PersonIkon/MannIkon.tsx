@@ -1,17 +1,17 @@
 import * as React from 'react';
 
-interface IMannIkon {
+type Props = {
     className?: string;
-    heigth?: number;
+    height?: number;
     width?: number;
-}
+};
 
-export const MannIkon: React.FC<IMannIkon> = ({ className, heigth, width }) => {
+export const MannIkon: React.FC<Props> = ({ className, height, width }) => {
     return (
         <svg
             aria-labelledby="mann"
             className={className}
-            height={heigth}
+            height={height}
             width={width}
             viewBox="0 0 165.4 162.59"
             xmlns="http://www.w3.org/2000/svg"

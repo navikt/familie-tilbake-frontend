@@ -11,12 +11,12 @@ import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../..
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFakta } from '../FaktaContext';
 
-interface Props {
+type Props = {
     periode: FaktaPeriodeSkjemaData;
     hendelseTyper: HendelseType[] | undefined;
     index: number;
     erLesevisning: boolean;
-}
+};
 
 export const FaktaPeriodeSkjema: React.FC<Props> = ({
     periode,

@@ -1,17 +1,17 @@
 import * as React from 'react';
 
-interface IJenteIkon {
+type Props = {
     className?: string;
-    heigth?: number;
+    height?: number;
     width?: number;
-}
+};
 
-export const JenteIkon: React.FC<IJenteIkon> = ({ className, heigth, width }) => {
+export const JenteIkon: React.FC<Props> = ({ className, height, width }) => {
     return (
         <svg
             aria-labelledby="jente"
             className={className}
-            height={heigth}
+            height={height}
             width={width}
             viewBox="0 0 165.4 162.59"
             xmlns="http://www.w3.org/2000/svg"

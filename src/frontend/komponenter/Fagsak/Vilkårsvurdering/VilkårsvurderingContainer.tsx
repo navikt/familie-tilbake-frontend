@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
@@ -17,14 +17,19 @@ import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+type Props = {
+    fagsak: Fagsak;
+    behandling: Behandling;
+};
 
-const VilkårsvurderingContainer: React.FC<IProps> = ({ fagsak, behandling }) => {
-    const { containerRef, vilkårsvurdering, stegErBehandlet, erAutoutført, skjemaData } =
-        useVilkårsvurdering();
+const VilkårsvurderingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
+    const {
+        containerRef,
+        vilkårsvurdering: vilkårsvurdering,
+        stegErBehandlet,
+        erAutoutført,
+        skjemaData,
+    } = useVilkårsvurdering();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 

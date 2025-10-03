@@ -23,7 +23,6 @@ import {
 import classNames from 'classnames';
 import * as React from 'react';
 import { styled } from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
 
 import { dateTilIsoDatoStringEllerUndefined } from '../../../utils/dato';
 
@@ -78,17 +77,17 @@ const TidslinjeContainer = styled.div`
     }
 `;
 
-interface IProps {
+type Props = {
     rader: TimelinePeriodProps[][];
     onSelectPeriode: (periode: TimelinePeriodProps) => void;
-}
+};
 
-const TilbakeTidslinje: React.FC<IProps> = ({ rader, onSelectPeriode }) => {
+const TilbakeTidslinje: React.FC<Props> = ({ rader, onSelectPeriode }) => {
     return (
         <TidslinjeContainer>
             <Timeline>
                 {rader.map(rad => (
-                    <Timeline.Row label="" key={uuidv4()}>
+                    <Timeline.Row label="" key={rad[0].id}>
                         {rad.map(periode => {
                             const handling =
                                 periode.status === 'success'

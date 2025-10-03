@@ -1,4 +1,4 @@
-export interface ISaksbehandler {
+export type Saksbehandler = {
     displayName: string;
     email: string;
     firstName: string;
@@ -7,4 +7,4 @@ export interface ISaksbehandler {
     lastName: string;
     enhet: string;
     navIdent: string;
-}
+};

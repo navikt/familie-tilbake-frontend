@@ -4,7 +4,6 @@ import cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'express';
 import expressStaticGzip from 'express-static-gzip';
 import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 
 import backend from './backend';
 import { ensureAuthenticated } from './backend/auth/authenticate';
@@ -26,7 +25,7 @@ import setupRouter from './router';
     }
 
     app.use((req: Request, _res: Response, next: NextFunction) => {
-        req.headers['nav-call-id'] = uuidv4();
+        req.headers['nav-call-id'] = crypto.randomUUID();
         req.headers['nav-consumer-id'] = 'familie-tilbake-frontend';
         next();
     });

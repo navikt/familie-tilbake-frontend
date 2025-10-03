@@ -3,11 +3,11 @@ import * as React from 'react';
 
 import { Journalposttype } from '../../../typer/journalføring';
 
-interface IProps {
+type Props = {
     type: Journalposttype;
-}
+};
 
-const DokumentIkon: React.FC<IProps> = ({ type }) => {
+const DokumentIkon: React.FC<Props> = ({ type }) => {
     return (
         <div className="bg-grayalpha-300 w-[26px] h-[26px] rounded-full inline-flex items-center justify-center">
             {type === Journalposttype.I && (

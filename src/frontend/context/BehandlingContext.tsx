@@ -1,5 +1,5 @@
-import type { IBehandling, IBehandlingsstegstilstand } from '../typer/behandling';
-import type { IFagsak } from '../typer/fagsak';
+import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
+import type { Fagsak } from '../typer/fagsak';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
@@ -16,13 +16,13 @@ import {
 import { SYNLIGE_STEG } from '../utils/sider';
 
 export type BehandlingHook = {
-    behandling: Ressurs<IBehandling> | undefined;
-    hentBehandlingMedEksternBrukId: (fagsak: IFagsak, behandlingId: string) => void;
+    behandling: Ressurs<Behandling> | undefined;
+    hentBehandlingMedEksternBrukId: (fagsak: Fagsak, behandlingId: string) => void;
     hentBehandlingMedBehandlingId: (behandlingId: string) => Promise<void>;
     behandlingILesemodus: boolean | undefined;
-    aktivtSteg: IBehandlingsstegstilstand | undefined;
     actionBarStegtekst: string | undefined;
-    ventegrunn: IBehandlingsstegstilstand | undefined;
+    aktivtSteg: Behandlingsstegstilstand | undefined;
+    ventegrunn: Behandlingsstegstilstand | undefined;
     visVenteModal: boolean;
     settVisVenteModal: (visVenteModal: boolean) => void;
     erStegBehandlet: (steg: Behandlingssteg) => boolean;
@@ -48,9 +48,9 @@ export const erStegUtført = (status: Behandlingsstegstatus): boolean => {
 };
 
 const [BehandlingProvider, useBehandling] = createUseContext(() => {
-    const [behandling, settBehandling] = useState<Ressurs<IBehandling>>();
-    const [aktivtSteg, settAktivtSteg] = useState<IBehandlingsstegstilstand>();
-    const [ventegrunn, settVentegrunn] = useState<IBehandlingsstegstilstand>();
+    const [behandling, settBehandling] = useState<Ressurs<Behandling>>();
+    const [aktivtSteg, settAktivtSteg] = useState<Behandlingsstegstilstand>();
+    const [ventegrunn, settVentegrunn] = useState<Behandlingsstegstilstand>();
     const [visVenteModal, settVisVenteModal] = useState<boolean>(false);
     const [visBrevmottakerModal, settVisBrevmottakerModal] = useState<boolean>(false);
     const [brevmottakerIdTilEndring, settBrevmottakerIdTilEndring] = useState<string | undefined>();
@@ -82,7 +82,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         }
     };
 
-    const hentBehandlingMedEksternBrukId = (fagsak: IFagsak, behandlingId: string): void => {
+    const hentBehandlingMedEksternBrukId = (fagsak: Fagsak, behandlingId: string): void => {
         const fagsakBehandling = fagsak.behandlinger.find(
             behandling => behandling.eksternBrukId === behandlingId
         );
@@ -100,11 +100,11 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         settBehandlingILesemodus(undefined);
         settVentegrunn(undefined);
         settVisVenteModal(false);
-        return request<void, IBehandling>({
+        return request<void, Behandling>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/v1/${behandlingId}`,
         })
-            .then((hentetBehandling: Ressurs<IBehandling>) => {
+            .then((hentetBehandling: Ressurs<Behandling>) => {
                 if (hentetBehandling.status === RessursStatus.Suksess) {
                     const erILeseModus =
                         hentetBehandling.data.status === Behandlingstatus.Avsluttet ||

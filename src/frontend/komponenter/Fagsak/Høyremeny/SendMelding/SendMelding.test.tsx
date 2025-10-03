@@ -1,8 +1,8 @@
 import type { DokumentApiHook } from '../../../../api/dokument';
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -42,7 +42,7 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderSendMelding = (fagsak: IFagsak, behandling: IBehandling): RenderResult =>
+const renderSendMelding = (fagsak: Fagsak, behandling: Behandling): RenderResult =>
     render(
         <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
             <SendMelding fagsak={fagsak} behandling={behandling} />
@@ -77,12 +77,12 @@ describe('Tester: SendMelding', () => {
 
     test('- fyller ut skjema og sender varsel', async () => {
         setupMock(false);
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             varselSendt: false,
             manuelleBrevmottakere: [],
             eksternBrukId: '1',
         });
-        const fagsak = mock<IFagsak>({
+        const fagsak = mock<Fagsak>({
             språkkode: Målform.Nb,
             fagsystem: Fagsystem.EF,
             eksternFagsakId: '1',
@@ -142,12 +142,12 @@ describe('Tester: SendMelding', () => {
 
     test('- fyller ut skjema og sender korrigert varsel', async () => {
         setupMock(false);
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             varselSendt: true,
             manuelleBrevmottakere: [],
             eksternBrukId: '1',
         });
-        const fagsak = mock<IFagsak>({
+        const fagsak = mock<Fagsak>({
             språkkode: Målform.Nn,
             fagsystem: Fagsystem.EF,
             eksternFagsakId: '1',
@@ -191,12 +191,12 @@ describe('Tester: SendMelding', () => {
 
     test('- fyller ut skjema og sender innhent dokumentasjon', async () => {
         setupMock(false);
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             varselSendt: true,
             manuelleBrevmottakere: [],
             eksternBrukId: '1',
         });
-        const fagsak = mock<IFagsak>({
+        const fagsak = mock<Fagsak>({
             språkkode: Målform.Nb,
             fagsystem: Fagsystem.EF,
             eksternFagsakId: '1',
@@ -236,11 +236,11 @@ describe('Tester: SendMelding', () => {
 
     test('- lesevisning - venter på svar på manuelt brev', async () => {
         setupMock(true);
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             varselSendt: false,
             manuelleBrevmottakere: [],
         });
-        const fagsak = mock<IFagsak>({
+        const fagsak = mock<Fagsak>({
             språkkode: Målform.Nb,
             fagsystem: Fagsystem.EF,
             eksternFagsakId: '1',

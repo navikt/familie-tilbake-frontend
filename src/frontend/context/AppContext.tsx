@@ -1,6 +1,6 @@
-import type { IToast, ToastTyper } from '../komponenter/Felleskomponenter/Toast/typer';
+import type { Toast, ToastTyper } from '../komponenter/Felleskomponenter/Toast/typer';
 import type { Ressurs } from '../typer/ressurs';
-import type { ISaksbehandler } from '../typer/saksbehandler';
+import type { Saksbehandler } from '../typer/saksbehandler';
 
 import createUseContext from 'constate';
 import * as React from 'react';
@@ -8,25 +8,25 @@ import { useState } from 'react';
 
 import { HttpProvider, useHttp } from '../api/http/HttpProvider';
 
-interface IInfo {
+type Info = {
     appImage: string;
     appName: string;
     clusterName: string;
-}
+};
 
-interface IProps {
+type Props = {
     children: React.ReactNode;
-}
+};
 
-interface AppProps {
-    autentisertSaksbehandler: ISaksbehandler | undefined;
-}
+type AppProps = {
+    autentisertSaksbehandler: Saksbehandler | undefined;
+};
 
-interface AuthProviderExports {
+type AuthProviderExports = {
     autentisert: boolean;
     settAutentisert: (autentisert: boolean) => void;
-    innloggetSaksbehandler: ISaksbehandler | undefined;
-}
+    innloggetSaksbehandler: Saksbehandler | undefined;
+};
 
 const [AuthProvider, useAuth] = createUseContext(
     ({ autentisertSaksbehandler }: AppProps): AuthProviderExports => {
@@ -52,13 +52,13 @@ const [AuthProvider, useAuth] = createUseContext(
 const [AppContentProvider, useApp] = createUseContext(() => {
     const { autentisert, innloggetSaksbehandler } = useAuth();
     const { request } = useHttp();
-    const [toasts, settToasts] = useState<{ [toastId: string]: IToast }>({});
+    const [toasts, settToasts] = useState<{ [toastId: string]: Toast }>({});
 
     const hentTilbakeInfo = (): void => {
-        request<void, IInfo>({
+        request<void, Info>({
             url: '/familie-tilbake/api/info',
             method: 'GET',
-        }).then((info: Ressurs<IInfo>) => {
+        }).then((info: Ressurs<Info>) => {
             if (info.status === 'SUKSESS') {
                 console.log('info response: ', info.data);
             } else {
@@ -71,7 +71,7 @@ const [AppContentProvider, useApp] = createUseContext(() => {
         autentisert,
         innloggetSaksbehandler,
         hentTilbakeInfo,
-        settToast: (toastId: ToastTyper, toast: IToast): void =>
+        settToast: (toastId: ToastTyper, toast: Toast): void =>
             settToasts({
                 ...toasts,
                 [toastId]: toast,
@@ -81,7 +81,7 @@ const [AppContentProvider, useApp] = createUseContext(() => {
     };
 });
 
-const AuthOgHttpProvider: React.FC<IProps> = ({ children }) => {
+const AuthOgHttpProvider: React.FC<Props> = ({ children }) => {
     const { innloggetSaksbehandler, settAutentisert } = useAuth();
 
     return (
@@ -94,7 +94,7 @@ const AuthOgHttpProvider: React.FC<IProps> = ({ children }) => {
     );
 };
 
-const AppProvider: React.FC<AppProps & IProps> = ({ autentisertSaksbehandler, children }) => {
+const AppProvider: React.FC<AppProps & Props> = ({ autentisertSaksbehandler, children }) => {
     return (
         <AuthProvider autentisertSaksbehandler={autentisertSaksbehandler}>
             <AuthOgHttpProvider>{children}</AuthOgHttpProvider>

@@ -5,9 +5,9 @@ import type {
     Fritekstavsnitt,
     PeriodeMedTekst,
 } from '../../../typer/api';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
-import type { IBeregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
+import type { Beregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
 
 import createUseContext from 'constate';
 import * as React from 'react';
@@ -80,14 +80,14 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
     return perioderMedTekst;
 };
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
-const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: IProps) => {
+const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: Props) => {
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
-    const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<IBeregningsresultat>>();
+    const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
     const [skjemaData, settSkjemaData] = useState<AvsnittSkjemaData[]>([]);
     const [harPåkrevetFritekstMenIkkeUtfylt, settHarPåkrevetFritekstMenIkkeUtfylt] =
         useState<boolean>(false);
@@ -161,7 +161,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: IP
     const hentBeregningsresultat = (): void => {
         settBeregningsresultat(byggHenterRessurs());
         gjerBeregningsresultatKall(behandling.behandlingId)
-            .then((hentetBeregningsresultat: Ressurs<IBeregningsresultat>) => {
+            .then((hentetBeregningsresultat: Ressurs<Beregningsresultat>) => {
                 settBeregningsresultat(hentetBeregningsresultat);
             })
             .catch(() => {

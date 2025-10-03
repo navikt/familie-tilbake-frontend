@@ -8,13 +8,13 @@ export type Land = {
     alpha2: string;
 };
 
-interface Props {
+type Props = {
     id: string;
     valgtLandkode: Land['alpha2'];
     håndterLandValgt: (land: Land) => void;
     eksluderLandkoder?: string[];
     error?: string;
-}
+};
 
 const Landvelger: React.FC<Props> = ({
     id,

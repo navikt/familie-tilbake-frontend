@@ -1,8 +1,8 @@
 import type { BehandlingApiHook } from '../../../../../../api/behandling';
 import type { Http } from '../../../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../../../context/BehandlingContext';
-import type { IBehandling } from '../../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../../typer/fagsak';
+import type { Behandling } from '../../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../../typer/fagsak';
 import type { Ressurs } from '../../../../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -36,8 +36,8 @@ jest.mock('../../../../../../api/behandling', () => ({
 }));
 
 const renderHenleggBehandlingModal = (
-    behandling: IBehandling,
-    fagsak: IFagsak,
+    behandling: Behandling,
+    fagsak: Fagsak,
     årsaker: Behandlingresultat[]
 ): RenderResult =>
     render(
@@ -75,11 +75,11 @@ describe('Tester: HenleggBehandlingModal', () => {
     });
 
     test('- henlegger behandling med varsel sendt', async () => {
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             type: Behandlingstype.Tilbakekreving,
             varselSendt: true,
         });
-        const fagsak = mock<IFagsak>({});
+        const fagsak = mock<Fagsak>({});
 
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
             renderHenleggBehandlingModal(behandling, fagsak, [
@@ -117,11 +117,11 @@ describe('Tester: HenleggBehandlingModal', () => {
     });
 
     test('- henlegger behandling med varsel ikke sendt', async () => {
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             type: Behandlingstype.Tilbakekreving,
             varselSendt: false,
         });
-        const fagsak = mock<IFagsak>({});
+        const fagsak = mock<Fagsak>({});
 
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
             renderHenleggBehandlingModal(behandling, fagsak, [
@@ -159,10 +159,10 @@ describe('Tester: HenleggBehandlingModal', () => {
     });
 
     test('- henlegger revurdering, med brev', async () => {
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             type: Behandlingstype.RevurderingTilbakekreving,
         });
-        const fagsak = mock<IFagsak>({
+        const fagsak = mock<Fagsak>({
             språkkode: Målform.Nb,
         });
 
@@ -218,10 +218,10 @@ describe('Tester: HenleggBehandlingModal', () => {
     });
 
     test('- henlegger revurdering, uten brev', async () => {
-        const behandling = mock<IBehandling>({
+        const behandling = mock<Behandling>({
             type: Behandlingstype.RevurderingTilbakekreving,
         });
-        const fagsak = mock<IFagsak>({
+        const fagsak = mock<Fagsak>({
             språkkode: Målform.Nb,
         });
 

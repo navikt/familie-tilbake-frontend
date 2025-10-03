@@ -1,6 +1,6 @@
 import type { VergeDto, VergeStegPayload } from '../../../typer/api';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import createUseContext from 'constate';
 import * as React from 'react';
@@ -34,12 +34,12 @@ const erVergetypeOppfylt = (avhengigheter?: Avhengigheter): boolean =>
 const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
     erVergetypeOppfylt(avhengigheter) && avhengigheter?.vergetype.verdi === Vergetype.Advokat;
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
-const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: IProps) => {
+const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: Props) => {
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
     const [erAutoutført, settErAutoutført] = React.useState<boolean>();
     const [verge, settVerge] = React.useState<VergeDto>();

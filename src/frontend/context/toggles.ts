@@ -1,6 +1,6 @@
-export interface Toggles {
+export type Toggles = {
     [key: string]: boolean;
-}
+};
 
 export enum ToggleName {
     // Permission-toggles - la stå

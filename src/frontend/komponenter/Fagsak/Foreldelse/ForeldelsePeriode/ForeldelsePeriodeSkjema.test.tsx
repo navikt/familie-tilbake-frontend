@@ -1,6 +1,6 @@
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { IBehandling } from '../../../../typer/behandling';
+import type { Behandling } from '../../../../typer/behandling';
 import type { ForeldelseHook } from '../ForeldelseContext';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { RenderResult } from '@testing-library/react';
@@ -38,7 +38,7 @@ jest.mock('../../../../context/BehandlingContext', () => {
         }),
     };
 });
-const behandling = mock<IBehandling>();
+const behandling = mock<Behandling>();
 const periode: ForeldelsePeriodeSkjemeData = {
     index: 'i1',
     feilutbetaltBeløp: 1333,
@@ -49,7 +49,7 @@ const periode: ForeldelsePeriodeSkjemeData = {
 };
 
 const renderForeldelsePeriodeSkjema = (
-    behandling: IBehandling,
+    behandling: Behandling,
     periode: ForeldelsePeriodeSkjemeData
 ): RenderResult =>
     render(

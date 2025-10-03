@@ -1,4 +1,4 @@
-import type { IBehandling } from '../../../../../typer/behandling';
+import type { Behandling } from '../../../../../typer/behandling';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/vilkårsvurdering';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -29,7 +29,7 @@ describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
                 tom: '2021-04-30',
             },
         };
-        const behandling = mock<IBehandling>({});
+        const behandling = mock<Behandling>({});
 
         const {
             getByAltText,

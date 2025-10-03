@@ -10,7 +10,6 @@ import type { ChangeEvent } from 'react';
 
 import deepEqual from 'deep-equal';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 import { defaultValidator, Valideringsstatus } from './typer';
 import { isChangeEvent } from './utils';
@@ -41,7 +40,7 @@ export const useFelt = <Verdi = string>({
     verdi,
     nullstillVedAvhengighetEndring = true,
 }: FeltConfig<Verdi>): Felt<Verdi> => {
-    const [id] = useState(feltId ? feltId : uuidv4());
+    const [id] = useState(feltId ? feltId : crypto.randomUUID());
     const initialFeltState = {
         feilmelding: '',
         valider: valideringsfunksjon,

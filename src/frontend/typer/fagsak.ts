@@ -1,5 +1,5 @@
 import type { Behandlingstatus, Behandlingstype } from './behandling';
-import type { IPerson } from './person';
+import type { Person } from './person';
 import type { Fagsystem, Ytelsetype } from '../kodeverk';
 
 export enum Målform {
@@ -12,24 +12,24 @@ export const målform: Record<Målform, string> = {
     [Målform.Nn]: 'Nynorsk',
 };
 
-export interface IInstitusjon {
+export type Institusjon = {
     organisasjonsnummer: string;
     navn: string;
-}
+};
 
-interface IFagsakBehandling {
+type FagsakBehandling = {
     behandlingId: string;
     eksternBrukId: string;
     type: Behandlingstype;
     status: Behandlingstatus;
-}
-export interface IFagsak {
+};
+export type Fagsak = {
     eksternFagsakId: string;
     status?: string;
     fagsystem: Fagsystem;
     ytelsestype: Ytelsetype;
     språkkode: Målform;
-    bruker: IPerson;
-    behandlinger: IFagsakBehandling[];
-    institusjon?: IInstitusjon;
-}
+    bruker: Person;
+    behandlinger: FagsakBehandling[];
+    institusjon?: Institusjon;
+};

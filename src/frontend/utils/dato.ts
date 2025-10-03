@@ -9,11 +9,11 @@ export enum Datoformat {
     IsoDag = 'yyyy-MM-dd',
 }
 
-interface DateTilFormatertStringProps {
+type DateTilFormatertStringProps = {
     date?: Date;
     tilFormat: Datoformat;
     defaultString?: string;
-}
+};
 
 const dateTilFormatertString = ({
     date,

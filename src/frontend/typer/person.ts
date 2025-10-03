@@ -4,10 +4,10 @@ export enum Kjønn {
     Ukjent = 'UKJENT',
 }
 
-export interface IPerson {
+export type Person = {
     personIdent: string;
     navn: string;
     fødselsdato: string;
     kjønn: Kjønn;
     dødsdato?: string;
-}
+};

@@ -12,20 +12,20 @@ const StyledContainer = styled.div`
     }
 `;
 
-interface IInformasjon {
+type Informasjon = {
     label: string;
     tekst: string;
     tekstTitle?: string;
-}
+};
 
-interface IProps {
-    informasjon: IInformasjon[];
-}
+type Props = {
+    informasjon: Informasjon[];
+};
 
-const Informasjonsbolk: React.FC<IProps> = ({ informasjon }) => {
+const Informasjonsbolk: React.FC<Props> = ({ informasjon }) => {
     return (
         <StyledContainer>
-            {informasjon.map((info: IInformasjon) => (
+            {informasjon.map((info: Informasjon) => (
                 <div key={info.label + info.tekst}>
                     <div>
                         <BodyShort size="small">{info.label}</BodyShort>

@@ -9,11 +9,11 @@ export interface BeregningsresultatPeriode extends FaktaPeriode {
     tilbakekrevesBeløpEtterSkatt: number;
 }
 
-export interface IBeregningsresultat {
+export type Beregningsresultat = {
     beregningsresultatsperioder: BeregningsresultatPeriode[];
     vedtaksresultat: Vedtaksresultat;
     vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelse;
-}
+};
 
 type VedtaksbrevUnderavsnitt = {
     underavsnittstype?: Underavsnittstype;

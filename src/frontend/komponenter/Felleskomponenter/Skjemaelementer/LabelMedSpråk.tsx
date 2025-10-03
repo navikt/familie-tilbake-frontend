@@ -16,12 +16,12 @@ const LabelFlex = styled.div`
     }
 `;
 
-interface IProps {
+type Props = {
     label: string;
     språk: string;
-}
+};
 
-const LabelMedSpråk: React.FC<IProps> = ({ label, språk }) => {
+const LabelMedSpråk: React.FC<Props> = ({ label, språk }) => {
     return (
         <LabelFlex>
             <div className="label">

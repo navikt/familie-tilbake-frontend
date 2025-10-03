@@ -1,6 +1,6 @@
 import type { BrevPayload } from '../../../../typer/api';
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 
 import createUseContext from 'constate';
 import * as React from 'react';
@@ -25,10 +25,10 @@ import {
 } from '../../../../utils';
 import { SYNLIGE_STEG } from '../../../../utils/sider';
 
-interface Mottaker {
+type Mottaker = {
     verdi: string;
     label: string;
-}
+};
 
 const Mottakere: Mottaker[] = [
     {
@@ -46,12 +46,12 @@ type SendMeldingSkjemaDefinisjon = {
 const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.maltype.valideringsstatus === Valideringsstatus.Ok;
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
-}
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
+};
 
-const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fagsak }: IProps) => {
+const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fagsak }: Props) => {
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string | undefined>();
     const { hentBehandlingMedBehandlingId } = useBehandling();

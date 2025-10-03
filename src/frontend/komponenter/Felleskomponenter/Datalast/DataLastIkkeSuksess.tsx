@@ -5,16 +5,16 @@ import HenterData from './HenterData';
 import { ServerFeil } from '../../../pages/feilsider/Feilside';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
-interface IProps {
+type Props = {
     ressurser: (Ressurs<unknown> | undefined)[];
     eksternFagsakId?: string;
     behandlingId?: string;
     henteBeskrivelse?: string;
     visFeilSide?: boolean;
     spinnerStørrelse?: '2xlarge' | 'large';
-}
+};
 
-const DataLastIkkeSuksess: React.FC<IProps> = ({
+const DataLastIkkeSuksess: React.FC<Props> = ({
     ressurser,
     spinnerStørrelse,
     henteBeskrivelse,

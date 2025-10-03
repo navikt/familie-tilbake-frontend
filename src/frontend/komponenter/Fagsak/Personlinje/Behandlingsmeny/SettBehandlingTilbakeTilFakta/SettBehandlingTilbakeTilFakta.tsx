@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../../../typer/behandling';
-import type { IFagsak } from '../../../../../typer/fagsak';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
 
 import * as React from 'react';
 import { useState } from 'react';
@@ -12,11 +12,11 @@ import { RessursStatus } from '../../../../../typer/ressurs';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../../Felleskomponenter/Modal/Feil/FeilModal';
 
-interface Props {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
     onListElementClick: () => void;
-}
+};
 
 export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
     behandling,

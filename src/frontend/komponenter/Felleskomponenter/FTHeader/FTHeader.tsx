@@ -1,4 +1,4 @@
-import type { ISaksbehandler } from '../../../typer/saksbehandler';
+import type { Saksbehandler } from '../../../typer/saksbehandler';
 
 import { ExternalLinkIcon, LeaveIcon, MenuGridIcon } from '@navikt/aksel-icons';
 import { Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
@@ -12,9 +12,9 @@ import { Fagsystem } from '../../../kodeverk';
 import { useFagsakStore } from '../../../store/fagsak';
 import { erHistoriskSide } from '../../../utils/sider';
 
-interface Props {
-    innloggetSaksbehandler?: ISaksbehandler;
-}
+type Props = {
+    innloggetSaksbehandler?: Saksbehandler;
+};
 
 export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
     const { data: brukerlenker } = useQuery({

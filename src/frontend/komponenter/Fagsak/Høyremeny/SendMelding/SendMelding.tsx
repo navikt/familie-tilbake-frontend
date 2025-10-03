@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 
 import { BodyShort, Button, Fieldset, Heading, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -19,12 +19,12 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
         : 'Fritekst';
 };
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+type Props = {
+    fagsak: Fagsak;
+    behandling: Behandling;
+};
 
-const SendMelding: React.FC<IProps> = ({ fagsak, behandling }) => {
+const SendMelding: React.FC<Props> = ({ fagsak, behandling }) => {
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;

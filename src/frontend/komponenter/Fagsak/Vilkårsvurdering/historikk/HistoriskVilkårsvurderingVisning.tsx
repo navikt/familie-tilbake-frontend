@@ -23,11 +23,11 @@ const vilkårsresultaterTekster: Record<Vilkårsresultat, string> = {
     [Vilkårsresultat.Udefinert]: 'Udefinert',
 };
 
-interface IProps {
+type Props = {
     perioder: VilkårsvurderingPeriodeSkjemaData[];
-}
+};
 
-const HistoriskVilkårsvurderingVisning: React.FC<IProps> = ({ perioder }) => {
+const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
     return (
         <VStack gap="10">
             {perioder.map(skjema => {

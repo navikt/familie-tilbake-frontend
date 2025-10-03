@@ -1,6 +1,6 @@
-import type { ISkjema, FeltState } from '../../../../hooks/skjema';
-import type { IRestSettPåVent } from '../../../../typer/api';
-import type { IBehandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
+import type { Skjema, FeltState } from '../../../../hooks/skjema';
+import type { RestSettPåVent } from '../../../../typer/api';
+import type { Behandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
 import type { Ressurs } from '../../../../typer/ressurs';
 
 import { useState } from 'react';
@@ -12,8 +12,8 @@ import { RessursStatus } from '../../../../typer/ressurs';
 import { isEmpty, validerGyldigDato } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
 
-interface PåVentBehandlingHook {
-    skjema: ISkjema<
+type PåVentBehandlingHook = {
+    skjema: Skjema<
         {
             tidsfrist: Date | undefined;
             årsak: Venteårsak | '';
@@ -25,11 +25,11 @@ interface PåVentBehandlingHook {
     onBekreft: (behandlingId: string) => void;
     onOkTaAvVent: (behandlingId: string) => void;
     tilbakestillFelterTilDefault: () => void;
-}
+};
 
 export const usePåVentBehandling = (
     lukkModal: () => void,
-    ventegrunn?: IBehandlingsstegstilstand | undefined
+    ventegrunn?: Behandlingsstegstilstand | undefined
 ): PåVentBehandlingHook => {
     const [feilmelding, settFeilmelding] = useState<string>();
     const { request } = useHttp();
@@ -61,7 +61,7 @@ export const usePåVentBehandling = (
     });
 
     const [forrigeVentegrunn, settForrigeVentegrunn] = useState<
-        IBehandlingsstegstilstand | undefined
+        Behandlingsstegstilstand | undefined
     >();
 
     if (ventegrunn !== forrigeVentegrunn) {
@@ -81,7 +81,7 @@ export const usePåVentBehandling = (
     const onBekreft = (behandlingId: string): void => {
         if (kanSendeSkjema() && skjema.felter.årsak.verdi && skjema.felter.tidsfrist.verdi) {
             nullstillIkkePersisterteKomponenter();
-            onSubmit<IRestSettPåVent>(
+            onSubmit<RestSettPåVent>(
                 {
                     method: 'PUT',
                     data: {

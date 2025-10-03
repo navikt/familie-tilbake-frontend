@@ -1,6 +1,6 @@
-import type { IBehandling } from '../../../typer/behandling';
-import type { IBrevmottaker } from '../../../typer/Brevmottaker';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Brevmottaker } from '../../../typer/Brevmottaker';
+import type { Fagsak } from '../../../typer/fagsak';
 
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
@@ -19,7 +19,7 @@ import { SYNLIGE_STEG } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 export type BrevmottakerProps = {
-    brevmottaker: IBrevmottaker;
+    brevmottaker: Brevmottaker;
     erStandardMottaker?: boolean;
     brevmottakerId: string;
     behandlingId: string;
@@ -220,8 +220,8 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
 };
 
 type BrevmottakereProps = {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+    behandling: Behandling;
+    fagsak: Fagsak;
 };
 
 const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => {

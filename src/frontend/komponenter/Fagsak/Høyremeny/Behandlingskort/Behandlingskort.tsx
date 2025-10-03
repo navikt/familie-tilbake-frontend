@@ -1,5 +1,5 @@
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 
 import { BodyShort, Heading } from '@navikt/ds-react';
 import { AGray100, AGray400, ASpacing2, ASpacing8 } from '@navikt/ds-tokens/dist/tokens';
@@ -30,12 +30,12 @@ const StyledHr = styled.hr`
     border-bottom: 1px solid ${AGray100};
 `;
 
-interface IProps {
-    fagsak: IFagsak;
-    behandling: IBehandling;
-}
+type Props = {
+    fagsak: Fagsak;
+    behandling: Behandling;
+};
 
-const Behandlingskort: React.FC<IProps> = ({ fagsak, behandling }) => {
+const Behandlingskort: React.FC<Props> = ({ fagsak, behandling }) => {
     const tittel =
         behandling.type === Behandlingstype.RevurderingTilbakekreving
             ? 'Revurdering tilbakekreving'

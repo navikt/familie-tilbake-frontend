@@ -26,14 +26,14 @@ import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { ActionBar } from '../ActionBar/ActionBar';
 
-interface IProps {
+type Props = {
     ytelse: Ytelsetype;
     erLesevisning: boolean;
     skjemaData: FaktaSkjemaData;
     fakta: FaktaResponse;
-}
+};
 
-const FaktaSkjema: React.FC<IProps> = ({ skjemaData, fakta, ytelse, erLesevisning }) => {
+const FaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning }) => {
     const {
         behandling,
         oppdaterBegrunnelse,

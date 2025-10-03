@@ -1,6 +1,6 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { FagsakState } from '../../../store/fagsak';
-import type { IBehandling, IBehandlingsstegstilstand } from '../../../typer/behandling';
+import type { Behandling, Behandlingsstegstilstand } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { Location, NavigateFunction } from 'react-router';
@@ -33,7 +33,7 @@ jest.mock('../../../store/fagsak', () => ({
     useFagsakStore: (): UseBoundStore<StoreApi<FagsakState>> => mockUseFagsakStore(),
 }));
 
-const createMockBehandling = (props = {}): Ressurs<Partial<IBehandling>> => ({
+const createMockBehandling = (props = {}): Ressurs<Partial<Behandling>> => ({
     status: RessursStatus.Suksess,
     data: {
         eksternBrukId: '456',
@@ -43,7 +43,7 @@ const createMockBehandling = (props = {}): Ressurs<Partial<IBehandling>> => ({
     },
 });
 
-const createMockStegInfo = (includeBrevmottaker = false): IBehandlingsstegstilstand[] => {
+const createMockStegInfo = (includeBrevmottaker = false): Behandlingsstegstilstand[] => {
     const synligeSteg = [
         {
             behandlingssteg: Behandlingssteg.Fakta,

@@ -1,6 +1,6 @@
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
-import type { IHistorikkInnslag } from '../../../../typer/historikk';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
+import type { HistorikkInnslag } from '../../../../typer/historikk';
 import type { SynligSteg } from '../../../../utils/sider';
 
 import createUseContext from 'constate';
@@ -11,15 +11,15 @@ import { useHttp } from '../../../../api/http/HttpProvider';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
 import { Menysider } from '../Menykontainer';
 
-interface IProps {
-    behandling: IBehandling;
-    fagsak: IFagsak;
+type Props = {
+    behandling: Behandling;
+    fagsak: Fagsak;
     valgtMenyside: Menysider;
-}
+};
 
 const [HistorikkProvider, useHistorikk] = createUseContext(
-    ({ fagsak, behandling, valgtMenyside }: IProps) => {
-        const [historikkInnslag, settHistorikkInnslag] = useState<Ressurs<IHistorikkInnslag[]>>();
+    ({ fagsak, behandling, valgtMenyside }: Props) => {
+        const [historikkInnslag, settHistorikkInnslag] = useState<Ressurs<HistorikkInnslag[]>>();
         const navigate = useNavigate();
         const { request } = useHttp();
 
@@ -32,11 +32,11 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
 
         const hentHistorikkinnslag = (): void => {
             settHistorikkInnslag(byggHenterRessurs());
-            request<void, IHistorikkInnslag[]>({
+            request<void, HistorikkInnslag[]>({
                 method: 'GET',
                 url: `/familie-tilbake/api/behandlinger/${behandling.behandlingId}/historikk`,
             })
-                .then((hentetHistorikk: Ressurs<IHistorikkInnslag[]>) => {
+                .then((hentetHistorikk: Ressurs<HistorikkInnslag[]>) => {
                     settHistorikkInnslag(hentetHistorikk);
                 })
                 .catch(() => {

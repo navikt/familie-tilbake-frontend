@@ -1,6 +1,6 @@
 import type { Http } from '../../../../api/http/HttpProvider';
-import type { IBehandling } from '../../../../typer/behandling';
-import type { IFagsak } from '../../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { UserEvent } from '@testing-library/user-event';
@@ -58,8 +58,8 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
-    const behandling = mock<IBehandling>({ behandlingsstegsinfo: [] });
-    const fagsak = mock<IFagsak>({
+    const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+    const fagsak = mock<Fagsak>({
         ytelsestype: Ytelsetype.Overgangsstønad,
     });
     const periode: VilkårsvurderingPeriodeSkjemaData = {

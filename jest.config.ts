@@ -13,7 +13,7 @@ const config: Config.InitialOptions = {
             '<rootDir>/src/__mocks__/@navikt/ds-tokens/dist/tokens.js',
         '.+\\.(svg)$': '<rootDir>/src/frontend/__mocks__/fileMock.ts',
     },
-    transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@navikt*|uuid|nanoid)/)'],
+    transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@navikt*)/)'],
     transform: {
         '\\.[jt]sx?$': [
             'ts-jest',

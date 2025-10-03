@@ -1,8 +1,8 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { IBehandling } from '../../../typer/behandling';
-import type { IFagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../typer/behandling';
+import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { ForeldelsePeriode, ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
@@ -44,7 +44,7 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderForeldelseContainer = (behandling: IBehandling, fagsak: IFagsak): RenderResult => {
+const renderForeldelseContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult => {
     return render(
         <ForeldelseProvider behandling={behandling} fagsak={fagsak}>
             <ForeldelseContainer behandling={behandling} />
@@ -127,8 +127,8 @@ describe('Tester: ForeldelseContainer', () => {
 
     test('- vis og fyll ut perioder og send inn', async () => {
         setupMock(false, false, false, foreldelse);
-        const fagsak = mock<IFagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
-        const behandling = mock<IBehandling>({ eksternBrukId: '1' });
+        const fagsak = mock<Fagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
+        const behandling = mock<Behandling>({ eksternBrukId: '1' });
 
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
             renderForeldelseContainer(behandling, fagsak);
@@ -231,8 +231,8 @@ describe('Tester: ForeldelseContainer', () => {
                 },
             ],
         });
-        const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
+        const behandling = mock<Behandling>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText, queryByText } = renderForeldelseContainer(
             behandling,
@@ -323,8 +323,8 @@ describe('Tester: ForeldelseContainer', () => {
                 },
             ],
         });
-        const behandling = mock<IBehandling>({ status: Behandlingstatus.FatterVedtak });
-        const fagsak = mock<IFagsak>();
+        const behandling = mock<Behandling>({ status: Behandlingstatus.FatterVedtak });
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText } = renderForeldelseContainer(
             behandling,
@@ -437,8 +437,8 @@ describe('Tester: ForeldelseContainer', () => {
     test('- vis autoutført', async () => {
         setupMock(false, false, true);
 
-        const behandling = mock<IBehandling>();
-        const fagsak = mock<IFagsak>();
+        const behandling = mock<Behandling>();
+        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole } = renderForeldelseContainer(behandling, fagsak);
 

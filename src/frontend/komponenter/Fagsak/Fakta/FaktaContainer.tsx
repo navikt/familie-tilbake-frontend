@@ -11,11 +11,11 @@ import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSu
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
-interface IProps {
+type Props = {
     ytelse: Ytelsetype;
-}
+};
 
-const FaktaContainer: React.FC<IProps> = ({ ytelse }) => {
+const FaktaContainer: React.FC<Props> = ({ ytelse }) => {
     const { stegErBehandlet, skjemaData, fakta } = useFakta();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;

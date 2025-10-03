@@ -15,8 +15,8 @@ import type {
     ForeldelseResponse,
     VilkårsvurderingResponse,
 } from '../typer/tilbakekrevingstyper';
-import type { ITotrinnkontroll } from '../typer/totrinnTyper';
-import type { IBeregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyper';
+import type { Totrinnkontroll } from '../typer/totrinnTyper';
+import type { Beregningsresultat, VedtaksbrevAvsnitt } from '../typer/vedtakTyper';
 
 import { useHttp } from './http/HttpProvider';
 
@@ -35,12 +35,12 @@ export type BehandlingApiHook = {
         payload: VilkårdsvurderingStegPayload
     ) => Promise<Ressurs<string>>;
     gjerVedtaksbrevteksterKall: (behandlingId: string) => Promise<Ressurs<VedtaksbrevAvsnitt[]>>;
-    gjerBeregningsresultatKall: (behandlingId: string) => Promise<Ressurs<IBeregningsresultat>>;
+    gjerBeregningsresultatKall: (behandlingId: string) => Promise<Ressurs<Beregningsresultat>>;
     sendInnForeslåVedtak: (
         behandlingId: string,
         payload: ForeslåVedtakStegPayload
     ) => Promise<Ressurs<string>>;
-    gjerTotrinnkontrollKall: (behandlingId: string) => Promise<Ressurs<ITotrinnkontroll>>;
+    gjerTotrinnkontrollKall: (behandlingId: string) => Promise<Ressurs<Totrinnkontroll>>;
     sendInnFatteVedtak: (
         behandlingId: string,
         payload: FatteVedtakStegPayload
@@ -151,8 +151,8 @@ const useBehandlingApi = (): BehandlingApiHook => {
 
     const gjerBeregningsresultatKall = (
         behandlingId: string
-    ): Promise<Ressurs<IBeregningsresultat>> => {
-        return request<void, IBeregningsresultat>({
+    ): Promise<Ressurs<Beregningsresultat>> => {
+        return request<void, Beregningsresultat>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/${behandlingId}/beregn/resultat/v1`,
         });
@@ -169,8 +169,8 @@ const useBehandlingApi = (): BehandlingApiHook => {
         });
     };
 
-    const gjerTotrinnkontrollKall = (behandlingId: string): Promise<Ressurs<ITotrinnkontroll>> => {
-        return request<void, ITotrinnkontroll>({
+    const gjerTotrinnkontrollKall = (behandlingId: string): Promise<Ressurs<Totrinnkontroll>> => {
+        return request<void, Totrinnkontroll>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/${behandlingId}/totrinn/v1`,
         });
