@@ -22,6 +22,7 @@ jobs:
           node-version: "22"
           scope: "@navikt"
           registry-url: "https://npm.pkg.github.com"
+          package-manager-cache: false
 
       - uses: pnpm/action-setup@v4
         env:
