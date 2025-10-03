@@ -2,7 +2,7 @@ import type { Behandling } from '../../typer/behandling';
 import type { Fagsak } from '../../typer/fagsak';
 
 import { BodyShort } from '@navikt/ds-react';
-import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { Suspense } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router';
@@ -66,12 +66,6 @@ const HenlagtContainer = styled.div`
     text-align: center;
 `;
 
-const StyledHøyremenyContainer = styled.aside`
-    border-left: 1px solid ${ABorderDefault};
-    overflow-x: hidden;
-    overflow-y: scroll;
-`;
-
 type Props = {
     fagsak: Fagsak;
     behandling: Behandling;
@@ -113,20 +107,17 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                     <BodyShort size="small">Behandlingen er henlagt</BodyShort>
                 </HenlagtContainer>
             </StyledMainContainer>
-            <StyledHøyremenyContainer>
-                <Suspense fallback="Høyremeny for henlagt behandling laster...">
-                    <Høyremeny fagsak={fagsak} behandling={behandling} />
-                </Suspense>
-            </StyledHøyremenyContainer>
+
+            <Suspense fallback="Høyremeny laster...">
+                <Høyremeny fagsak={fagsak} behandling={behandling} />
+            </Suspense>
         </>
     ) : !harKravgrunnlag ? (
         <>
             <StyledMainContainer id="fagsak-main" />
-            <StyledHøyremenyContainer>
-                <Suspense fallback="Høyremeny for behandling uten kravgrunnlag laster...">
-                    <Høyremeny fagsak={fagsak} behandling={behandling} />
-                </Suspense>
-            </StyledHøyremenyContainer>
+            <Suspense fallback="Høyremeny laster...">
+                <Høyremeny fagsak={fagsak} behandling={behandling} />
+            </Suspense>
         </>
     ) : erHistoriskeVerdier ? (
         <>
@@ -168,7 +159,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     ) : harKravgrunnlag ? (
         <>
             <main
-                className="flex-1 pt-6 bg-gray-50 flex flex-col min-h-0"
+                className="flex-1 pt-6 bg-gray-50 flex flex-col min-h-screen"
                 aria-label="Behandling innhold"
             >
                 <Stegflyt />
@@ -234,11 +225,9 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                     </Suspense>
                 </section>
             </main>
-            <StyledHøyremenyContainer aria-label="Høyremeny med informasjon og handlinger for behandlingen">
-                <Suspense fallback="Høyremeny kravgrunnlag laster...">
-                    <Høyremeny fagsak={fagsak} behandling={behandling} />
-                </Suspense>
-            </StyledHøyremenyContainer>
+            <Suspense fallback="Høyremeny laster...">
+                <Høyremeny fagsak={fagsak} behandling={behandling} />
+            </Suspense>
         </>
     ) : null;
 };
