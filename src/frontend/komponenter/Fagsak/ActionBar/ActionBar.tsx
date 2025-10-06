@@ -5,13 +5,13 @@ import React from 'react';
 
 type Props = {
     stegtekst: string | undefined;
-    nesteTekst: string;
     forrigeAriaLabel: string | undefined;
     nesteAriaLabel: string;
     åpenHøyremeny: boolean;
     harVærtPåFatteVedtakSteg: boolean;
     onNeste: () => void;
     onForrige: (() => void) | undefined;
+    nesteTekst?: string;
     isLoading?: boolean;
     skjulNeste?: boolean;
     disableNeste?: boolean;
@@ -19,26 +19,19 @@ type Props = {
 
 const ActionBar: React.FC<Props> = ({
     stegtekst = '',
-    nesteTekst,
     forrigeAriaLabel,
     nesteAriaLabel,
     åpenHøyremeny,
     harVærtPåFatteVedtakSteg,
     onNeste,
     onForrige,
+    nesteTekst = 'Neste',
     isLoading = false,
     skjulNeste = false,
     disableNeste = false,
 }) => {
     return (
         <>
-            {/* For å unngå synlig innhold ved scrolling i mellomrommet under actionbaren */}
-            <div
-                className={classNames('fixed bottom-0 bg-gray-50 h-5 left-4 right-8 min-w-95', {
-                    'right-96': åpenHøyremeny,
-                    'right-120': harVærtPåFatteVedtakSteg && åpenHøyremeny,
-                })}
-            />
             <HStack
                 gap="8"
                 className={classNames(

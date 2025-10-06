@@ -143,7 +143,6 @@ const VergeContainer: React.FC = () => {
 
                     <ActionBar
                         stegtekst={actionBarStegtekst(Behandlingssteg.Verge)}
-                        nesteTekst="Neste"
                         forrigeAriaLabel={undefined}
                         nesteAriaLabel="Gå videre til faktasteget"
                         åpenHøyremeny={åpenHøyremeny}
