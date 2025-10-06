@@ -71,7 +71,7 @@ describe('Tester: ForeldelsePeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -82,7 +82,7 @@ describe('Tester: ForeldelsePeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -91,7 +91,7 @@ describe('Tester: ForeldelsePeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -115,7 +115,7 @@ describe('Tester: ForeldelsePeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -132,7 +132,7 @@ describe('Tester: ForeldelsePeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
@@ -163,7 +163,7 @@ describe('Tester: ForeldelsePeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -181,7 +181,7 @@ describe('Tester: ForeldelsePeriodeSkjema', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Bekreft',
+                name: 'Bekreft periode',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);

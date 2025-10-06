@@ -1,3 +1,4 @@
+import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { ManuellBrevmottakerResponseDto } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
@@ -17,6 +18,11 @@ import { Kjønn } from '../../../typer/person';
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+}));
+
+const mockUseBehandling = jest.fn();
+jest.mock('../../../context/BehandlingContext', () => ({
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const createMockBehandling = (
@@ -93,6 +99,13 @@ const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponseDto[] => [
     },
 ];
 
+const setupMock = (): void => {
+    mockUseBehandling.mockImplementation(() => ({
+        actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 5'),
+        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+    }));
+};
+
 const renderBrevmottakere = (
     behandling: Behandling = createMockBehandling(),
     fagsak: Fagsak = createMockFagsak()
@@ -103,6 +116,7 @@ const renderBrevmottakere = (
 describe('Brevmottakere', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        setupMock();
     });
 
     describe('Default bruker brevmottaker', () => {

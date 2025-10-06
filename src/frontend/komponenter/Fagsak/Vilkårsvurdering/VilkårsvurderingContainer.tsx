@@ -2,9 +2,7 @@ import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
 
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
-import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
@@ -18,10 +16,6 @@ import {
 import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-
-const StyledVilkårsvurdering = styled.div`
-    padding: ${ASpacing3};
-`;
 
 type Props = {
     fagsak: Fagsak;
@@ -52,8 +46,8 @@ const VilkårsvurderingContainer: React.FC<Props> = ({ fagsak, behandling }) => 
         const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data);
 
         return (
-            <StyledVilkårsvurdering ref={containerRef}>
-                <Heading level="2" size="small" spacing>
+            <>
+                <Heading level="1" size="small" spacing ref={containerRef}>
                     Tilbakekreving
                 </Heading>
                 <VStack gap="5">
@@ -78,7 +72,7 @@ const VilkårsvurderingContainer: React.FC<Props> = ({ fagsak, behandling }) => 
                         />
                     )}
                 </VStack>
-            </StyledVilkårsvurdering>
+            </>
         );
     } else {
         return <DataLastIkkeSuksess ressurser={[vilkårsvurdering]} />;
