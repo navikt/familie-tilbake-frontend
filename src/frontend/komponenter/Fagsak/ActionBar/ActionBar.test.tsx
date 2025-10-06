@@ -11,7 +11,6 @@ describe('ActionBar', () => {
         render(
             <ActionBar
                 stegtekst="Steg 2 av 5"
-                nesteTekst="Neste"
                 forrigeAriaLabel="Gå tilbake til faktasteget"
                 nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
                 åpenHøyremeny={false}

@@ -207,7 +207,6 @@ const FaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning
             <FaktaRevurdering fakta={fakta} />
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
-                nesteTekst="Neste"
                 forrigeAriaLabel={behandling.harVerge ? 'Gå tilbake til vergesteget' : undefined}
                 nesteAriaLabel="Gå videre til foreldelsessteget"
                 åpenHøyremeny={åpenHøyremeny}
