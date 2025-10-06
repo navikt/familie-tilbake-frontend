@@ -1,32 +1,45 @@
 import type { Behandling } from '../../../typer/behandling';
 
-import { Alert, BodyLong, Button, Heading, Link, VStack } from '@navikt/ds-react';
+import { Alert, BodyLong, Heading, Link, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useForeldelse } from './ForeldelseContext';
 import ForeldelsePerioder from './ForeldelsePeriode/ForeldelsePerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { Behandlingssteg } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { finnDatoRelativtTilNå } from '../../../utils';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import { Navigering } from '../../Felleskomponenter/Flytelementer';
+import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
     behandling: Behandling;
 };
 
 const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
-    const { foreldelse, skjemaData, erAutoutført, gåTilNesteSteg, gåTilForrigeSteg } =
-        useForeldelse();
-    const { behandlingILesemodus } = useBehandling();
+    const {
+        foreldelse,
+        skjemaData,
+        erAutoutført,
+        gåTilNesteSteg,
+        gåTilForrigeSteg,
+        stegErBehandlet,
+        sendInnSkjema,
+        senderInn,
+        allePerioderBehandlet,
+    } = useForeldelse();
+    const { behandlingILesemodus, åpenHøyremeny, actionBarStegtekst, harVærtPåFatteVedtakSteget } =
+        useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
+    const navigerEllerLagreOgNaviger =
+        erAutoutført || (stegErBehandlet && erLesevisning) ? gåTilNesteSteg : sendInnSkjema;
 
-    if (erAutoutført) {
-        return (
-            <VStack padding="4" gap="4">
-                <Heading size="small" level="2">
-                    Foreldelse
-                </Heading>
+    return (
+        <>
+            <Heading size="small" level="1" spacing>
+                Foreldelse
+            </Heading>
+            {erAutoutført ? (
                 <Alert variant="success" className="min-w-80">
                     <VStack gap="2">
                         <Heading size="small" level="3">
@@ -61,74 +74,70 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                         </VStack>
                     </VStack>
                 </Alert>
-                <Navigering>
-                    <Button variant="primary" onClick={gåTilNesteSteg}>
-                        Neste
-                    </Button>
-                    <Button variant="secondary" onClick={gåTilForrigeSteg}>
-                        Forrige
-                    </Button>
-                </Navigering>
-            </VStack>
-        );
-    }
-
-    if (foreldelse?.status === RessursStatus.Suksess) {
-        return (
-            <VStack padding="4" gap="4">
-                <Heading size="small" level="2">
-                    Foreldelse
-                </Heading>
-                <Alert variant="info" className="min-w-80" contentMaxWidth={false}>
-                    {behandling.erNyModell ? (
-                        <Heading size="small" level="3">
-                            Vurder foreldelse
-                        </Heading>
-                    ) : (
-                        <VStack gap="2">
+            ) : foreldelse?.status === RessursStatus.Suksess ? (
+                <>
+                    <Alert variant="info" className="min-w-80" contentMaxWidth={false}>
+                        {behandling.erNyModell ? (
                             <Heading size="small" level="3">
-                                Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan være
-                                foreldet
+                                Vurder foreldelse
                             </Heading>
-                            <BodyLong size="medium">
-                                Når den alminnelige foreldelsesfristen etter foreldelsesloven{' '}
-                                <Link
-                                    href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A72"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-text-action"
-                                >
-                                    § 2
-                                </Link>{' '}
-                                og{' '}
-                                <Link
-                                    href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A73"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-text-action"
-                                >
-                                    § 3
-                                </Link>{' '}
-                                på 3 år er utløpt eller nærmer seg{' '}
-                                <span className="text-nowrap">(6 måneder før)</span>, må foreldelse
-                                vurderes manuelt. Del opp perioden ved behov og begrunn vurderingen.
-                            </BodyLong>
-                        </VStack>
+                        ) : (
+                            <VStack gap="2">
+                                <Heading size="small" level="3">
+                                    Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan være
+                                    foreldet
+                                </Heading>
+                                <BodyLong size="medium">
+                                    Når den alminnelige foreldelsesfristen etter foreldelsesloven{' '}
+                                    <Link
+                                        href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A72"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-text-action"
+                                    >
+                                        § 2
+                                    </Link>{' '}
+                                    og{' '}
+                                    <Link
+                                        href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A73"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-text-action"
+                                    >
+                                        § 3
+                                    </Link>{' '}
+                                    på 3 år er utløpt eller nærmer seg{' '}
+                                    <span className="text-nowrap">(6 måneder før)</span>, må
+                                    foreldelse vurderes manuelt. Del opp perioden ved behov og
+                                    begrunn vurderingen.
+                                </BodyLong>
+                            </VStack>
+                        )}
+                    </Alert>
+                    {skjemaData.length > 0 && (
+                        <ForeldelsePerioder
+                            behandling={behandling}
+                            perioder={skjemaData}
+                            erLesevisning={erLesevisning}
+                        />
                     )}
-                </Alert>
-
-                {skjemaData.length > 0 && (
-                    <ForeldelsePerioder
-                        behandling={behandling}
-                        perioder={skjemaData}
-                        erLesevisning={erLesevisning}
-                    />
-                )}
-            </VStack>
-        );
-    } else {
-        return <DataLastIkkeSuksess ressurser={[foreldelse]} />;
-    }
+                </>
+            ) : (
+                <DataLastIkkeSuksess ressurser={[foreldelse]} />
+            )}
+            <ActionBar
+                stegtekst={actionBarStegtekst(Behandlingssteg.Foreldelse)}
+                forrigeAriaLabel="Gå tilbake til faktasteget"
+                nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
+                åpenHøyremeny={åpenHøyremeny}
+                onForrige={gåTilForrigeSteg}
+                onNeste={navigerEllerLagreOgNaviger}
+                harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
+                disableNeste={!allePerioderBehandlet}
+                isLoading={senderInn}
+            />
+        </>
+    );
 };
 
 export default ForeldelseContainer;

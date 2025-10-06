@@ -13,12 +13,14 @@ import {
     type Ressurs,
     RessursStatus,
 } from '../typer/ressurs';
+import { SYNLIGE_STEG } from '../utils/sider';
 
 export type BehandlingHook = {
     behandling: Ressurs<Behandling> | undefined;
     hentBehandlingMedEksternBrukId: (fagsak: Fagsak, behandlingId: string) => void;
     hentBehandlingMedBehandlingId: (behandlingId: string) => Promise<void>;
     behandlingILesemodus: boolean | undefined;
+    actionBarStegtekst: string | undefined;
     aktivtSteg: Behandlingsstegstilstand | undefined;
     ventegrunn: Behandlingsstegstilstand | undefined;
     visVenteModal: boolean;
@@ -151,6 +153,22 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
             });
     };
 
+    const actionBarStegtekst = (valgtSteg: Behandlingssteg): string | undefined => {
+        if (behandling?.status !== RessursStatus.Suksess) return undefined;
+        const antallSynligeSteg = Object.values(SYNLIGE_STEG).filter(({ steg }) => {
+            if (steg === Behandlingssteg.Verge || steg === Behandlingssteg.Brevmottaker) {
+                return behandling.data.behandlingsstegsinfo.some(
+                    ({ behandlingssteg }) => behandlingssteg === steg
+                );
+            }
+
+            return true;
+        });
+        const aktivtStegnummer = antallSynligeSteg.findIndex(({ steg }) => steg === valgtSteg) + 1;
+
+        return `Steg ${aktivtStegnummer} av ${antallSynligeSteg.length}`;
+    };
+
     const erStegBehandlet = (steg: Behandlingssteg): boolean => {
         if (behandling?.status === RessursStatus.Suksess) {
             return behandling.data.behandlingsstegsinfo.some(
@@ -213,6 +231,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         hentBehandlingMedEksternBrukId,
         hentBehandlingMedBehandlingId,
         behandlingILesemodus,
+        actionBarStegtekst,
         aktivtSteg,
         ventegrunn,
         visVenteModal,

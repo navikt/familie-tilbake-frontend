@@ -110,6 +110,8 @@ const setupMock = (
         visVenteModal: false,
         behandlingILesemodus: lesevisning,
         hentBehandlingMedBehandlingId: jest.fn(),
+        actionBarStegtekst: jest.fn().mockReturnValue('Steg 3 av 4'),
+        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
     }));
 };
 
@@ -137,7 +139,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Gå videre til neste periode',
+                    name: 'Neste periode',
                 })
             ).toBeEnabled();
         });
