@@ -1,5 +1,6 @@
 import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
 
+import { ToggleName } from '../context/toggles';
 import { Behandlingssteg, Behandlingsstegstatus } from '../typer/behandling';
 
 export type SynligSteg = {
@@ -13,6 +14,7 @@ type SynligeStegType =
     | Behandlingssteg.Fakta
     | Behandlingssteg.Foreldelse
     | Behandlingssteg.ForeslåVedtak
+    | Behandlingssteg.Forhåndsvarsel
     | Behandlingssteg.Verge
     | Behandlingssteg.Vilkårsvurdering;
 
@@ -31,6 +33,11 @@ export const SYNLIGE_STEG: Record<SynligeStegType, SynligSteg> = {
         href: 'fakta',
         navn: 'Fakta',
         steg: Behandlingssteg.Fakta,
+    },
+    [Behandlingssteg.Forhåndsvarsel]: {
+        href: 'forhaandsvarsel',
+        navn: 'Forhåndsvarsel',
+        steg: Behandlingssteg.Forhåndsvarsel,
     },
     [Behandlingssteg.Foreldelse]: {
         href: 'foreldelse',
@@ -77,7 +84,11 @@ export const erSidenAktiv = (synligSteg: SynligSteg, behandling: Behandling): bo
     return sjekkOmSidenErAktiv(synligSteg, behandling.behandlingsstegsinfo);
 };
 
-export const visSide = (steg: Behandlingssteg, behandling: Behandling): boolean => {
+export const visSide = (
+    steg: Behandlingssteg,
+    behandling: Behandling,
+    aktiveToggles: Record<string, boolean>
+): boolean => {
     if (steg === Behandlingssteg.Brevmottaker) {
         return behandling.behandlingsstegsinfo
             .filter(
@@ -88,6 +99,12 @@ export const visSide = (steg: Behandlingssteg, behandling: Behandling): boolean 
     }
     if (steg === Behandlingssteg.Verge) {
         return !behandling.støtterManuelleBrevmottakere;
+    }
+    if (steg === Behandlingssteg.Forhåndsvarsel) {
+        const harForhåndsvarselSteg = behandling.behandlingsstegsinfo.some(
+            ({ behandlingssteg }) => behandlingssteg === Behandlingssteg.Forhåndsvarsel
+        );
+        return harForhåndsvarselSteg && aktiveToggles[ToggleName.Forhåndsvarselsteg];
     }
 
     return true;

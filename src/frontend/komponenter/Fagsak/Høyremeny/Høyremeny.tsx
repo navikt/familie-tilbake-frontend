@@ -69,13 +69,20 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
                                 label="Dokumenter"
                                 icon={<FolderIcon fontSize="1.5rem" aria-label="Ikon dokumenter" />}
                             />
-                            <Tabs.Tab
-                                value="send-brev"
-                                label="Send brev"
-                                icon={
-                                    <PaperplaneIcon fontSize="1.5rem" aria-label="Ikon send brev" />
-                                }
-                            />
+                            {/* TODO: Rydde opp etter feature toggle */}
+                            {!behandling.erNyModell && (
+                                <Tabs.Tab
+                                    value="send-brev"
+                                    label="Send brev"
+                                    icon={
+                                        <PaperplaneIcon
+                                            fontSize="1.5rem"
+                                            aria-label="Ikon send brev"
+                                        />
+                                    }
+                                />
+                            )}
+                            {/* .. */}
                         </div>
                         <div className="px-2 mt-4 flex-1 min-h-0 overflow-y-auto scrollbar-stable">
                             {værtPåFatteVedtakSteget && (
