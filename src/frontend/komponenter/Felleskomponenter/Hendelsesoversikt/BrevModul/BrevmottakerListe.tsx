@@ -10,7 +10,7 @@ import { formaterIdent, lagPersonLabel } from '../../../../utils/formatter';
 
 type Props = {
     bruker: Person;
-    institusjon: Institusjon | undefined;
+    institusjon: Institusjon | null;
     brevmottakere: Brevmottaker[];
     harMargin?: boolean;
 };

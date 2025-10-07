@@ -20,16 +20,16 @@ export type Institusjon = {
 type FagsakBehandling = {
     behandlingId: string;
     eksternBrukId: string;
-    type: Behandlingstype;
     status: Behandlingstatus;
+    type: Behandlingstype;
 };
+
 export type Fagsak = {
     eksternFagsakId: string;
-    status?: string;
-    fagsystem: Fagsystem;
     ytelsestype: Ytelsetype;
+    fagsystem: Fagsystem;
     språkkode: Målform;
     bruker: Person;
     behandlinger: FagsakBehandling[];
-    institusjon?: Institusjon;
+    institusjon: Institusjon | null;
 };

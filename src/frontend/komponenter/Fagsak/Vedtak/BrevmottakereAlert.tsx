@@ -16,7 +16,7 @@ const StyledAlert = styled(Alert)`
 
 type Props = {
     brevmottakere: Brevmottaker[];
-    institusjon?: Institusjon;
+    institusjon: Institusjon | null;
     bruker: Person;
     linkTilBrevmottakerSteg: string;
 };

@@ -1,6 +1,7 @@
 import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
 
 import * as React from 'react';
+import { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router';
 import { styled } from 'styled-components';
 
@@ -9,7 +10,8 @@ import { Fagsystem } from '../../kodeverk';
 import Personlinje from './Personlinje/Personlinje';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
-import { useFagsakStore } from '../../store/fagsak';
+import { useBehandlingStore } from '../../stores/behandlingStore';
+import { useFagsakStore } from '../../stores/fagsakStore';
 import { venteårsaker } from '../../typer/behandling';
 import { RessursStatus } from '../../typer/ressurs';
 import { formatterDatostring } from '../../utils';
@@ -38,7 +40,7 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
 };
 
 const FagsakContainer: React.FC = () => {
-    const { fagsystem: fagsystemParam, fagsakId } = useParams();
+    const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
     const fagsystem = Fagsystem[fagsystemParam as keyof typeof Fagsystem];
 
     const location = useLocation();
@@ -52,26 +54,28 @@ const FagsakContainer: React.FC = () => {
         visVenteModal,
         settVisVenteModal,
     } = useBehandling();
-    const setPersonIdent = useFagsakStore(state => state.setPersonIdent);
-    const setBehandlingId = useFagsakStore(state => state.setBehandlingId);
-    const setFagsakId = useFagsakStore(state => state.setFagsakId);
-    const setFagSystem = useFagsakStore(state => state.setFagSystem);
+    const setPersonIdent = useBehandlingStore(state => state.setPersonIdent);
+    const setBehandlingId = useBehandlingStore(state => state.setBehandlingId);
+    const setEksternFagsakId = useFagsakStore(state => state.setEksternFagsakId);
+    const setFagSystem = useFagsakStore(state => state.setFagsystem);
+    const setYtelsestype = useFagsakStore(state => state.setYtelsestype);
+    const setSpråkkode = useFagsakStore(state => state.setSpråkkode);
 
-    React.useEffect(() => {
-        if (!!fagsystem && !!fagsakId) {
-            hentFagsak(fagsystem, fagsakId);
-            setFagsakId(fagsakId);
-            setFagSystem(fagsystem);
+    useEffect(() => {
+        if (!!fagsystem && !!eksternFagsakId) {
+            hentFagsak(fagsystem, eksternFagsakId);
         }
         return (): void => {
-            setFagsakId(undefined);
+            setEksternFagsakId(undefined);
+            setYtelsestype(undefined);
             setFagSystem(undefined);
+            setSpråkkode(undefined);
         };
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fagsystem, fagsakId]);
+    }, [fagsystem, eksternFagsakId]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (fagsak?.status === RessursStatus.Suksess && behandlingId) {
             hentBehandlingMedEksternBrukId(fagsak.data, behandlingId);
             setBehandlingId(behandlingId);
@@ -121,7 +125,7 @@ const FagsakContainer: React.FC = () => {
             <DataLastIkkeSuksess
                 ressurser={[behandling, fagsak]}
                 behandlingId={behandlingId}
-                eksternFagsakId={fagsakId}
+                eksternFagsakId={eksternFagsakId}
                 visFeilSide
             />
         );

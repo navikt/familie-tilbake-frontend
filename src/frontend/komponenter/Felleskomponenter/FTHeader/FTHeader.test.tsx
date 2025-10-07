@@ -9,7 +9,7 @@ jest.mock('../../../api/brukerlenker');
 
 import { FTHeader } from './FTHeader';
 import { hentBrukerlenkeBaseUrl, hentAInntektUrl } from '../../../api/brukerlenker';
-import { useFagsakStore } from '../../../store/fagsak';
+import { useBehandlingStore } from '../../../stores/behandlingStore';
 
 const mockHentBrukerlenkeBaseUrl = jest.mocked(hentBrukerlenkeBaseUrl);
 const mockHentAInntektUrl = jest.mocked(hentAInntektUrl);
@@ -42,7 +42,7 @@ const renderHeader = (): RenderResult => {
 describe('FTHeader', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        useFagsakStore.setState({ personIdent: undefined });
+        useBehandlingStore.setState({ personIdent: undefined });
 
         mockHentBrukerlenkeBaseUrl.mockResolvedValue({
             aInntektUrl: 'https://a-inntekt.nav.no',
@@ -74,7 +74,7 @@ describe('FTHeader', () => {
 
     test('Har riktig lenke til A-inntekt, Gosys og Modia når personIdent er satt', async () => {
         const personIdent = '12345678910';
-        useFagsakStore.setState({ personIdent });
+        useBehandlingStore.setState({ personIdent });
         renderHeader();
 
         await waitFor(() => {

@@ -1,5 +1,5 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { FagsakState } from '../../../store/fagsak';
+import type { FagsakState } from '../../../stores/fagsakStore';
 import type { Behandling, Behandlingsstegstilstand } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
@@ -29,7 +29,7 @@ jest.mock('../../../context/BehandlingContext', () => ({
     erStegUtført: (status: string): boolean => status === 'UTFØRT',
 }));
 
-jest.mock('../../../store/fagsak', () => ({
+jest.mock('../../../stores/fagsakStore', () => ({
     useFagsakStore: (): UseBoundStore<StoreApi<FagsakState>> => mockUseFagsakStore(),
 }));
 
@@ -88,8 +88,8 @@ describe('Stegflyt', () => {
         });
 
         mockUseFagsakStore.mockReturnValue({
-            fagsakId: '123',
-            fagSystem: Fagsystem.BA,
+            eksternFagsakId: '123',
+            fagsystem: Fagsystem.BA,
         });
 
         mockUseLocation.mockReturnValue({

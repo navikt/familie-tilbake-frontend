@@ -70,6 +70,7 @@ const mockFagsak: Fagsak = {
     ytelsestype: Ytelsetype.Barnetrygd,
     språkkode: Målform.Nb,
     bruker: mockPerson,
+    institusjon: null,
     behandlinger: [],
 };
 
