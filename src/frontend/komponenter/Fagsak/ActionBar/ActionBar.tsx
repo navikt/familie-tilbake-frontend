@@ -7,10 +7,9 @@ type Props = {
     stegtekst: string | undefined;
     forrigeAriaLabel: string | undefined;
     nesteAriaLabel: string;
-    åpenHøyremeny: boolean;
-    harVærtPåFatteVedtakSteg: boolean;
     onNeste: () => void;
     onForrige: (() => void) | undefined;
+    dobbeltNøstet?: boolean;
     nesteTekst?: string;
     isLoading?: boolean;
     skjulNeste?: boolean;
@@ -21,10 +20,9 @@ const ActionBar: React.FC<Props> = ({
     stegtekst = '',
     forrigeAriaLabel,
     nesteAriaLabel,
-    åpenHøyremeny,
-    harVærtPåFatteVedtakSteg,
     onNeste,
     onForrige,
+    dobbeltNøstet = false,
     nesteTekst = 'Neste',
     isLoading = false,
     skjulNeste = false,
@@ -34,11 +32,12 @@ const ActionBar: React.FC<Props> = ({
         <>
             <HStack
                 gap="8"
+                /* Hacker plasseringen til pga at den ikke er på behandlingcontainer nivå men nede i stegcontainerene som styrer hvor startposisjon er */
                 className={classNames(
-                    'fixed bottom-2 left-4 bg-white right-8 px-8 py-4 rounded-2xl border-border-divider border-1 justify-end z-10 flex-nowrap overflow-auto min-w-141',
+                    'fixed bottom-4 bg-white px-8 py-4 rounded-2xl border-border-divider border-1 justify-end z-10 flex-nowrap overflow-auto lg:w-[calc((100vw*2/3)-34px)] w-[calc(100vw-32px)]',
                     {
-                        'right-96': åpenHøyremeny,
-                        'right-120': harVærtPåFatteVedtakSteg && åpenHøyremeny,
+                        '-ml-6': !dobbeltNøstet,
+                        '-ml-10': dobbeltNøstet,
                     }
                 )}
                 aria-label="Behandling handlingsknapper"

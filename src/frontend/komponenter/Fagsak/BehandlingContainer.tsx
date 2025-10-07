@@ -103,16 +103,12 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                 </HenlagtContainer>
             </div>
 
-            <Suspense fallback="Høyremeny laster...">
-                <Høyremeny fagsak={fagsak} behandling={behandling} />
-            </Suspense>
+            <Høyremeny fagsak={fagsak} behandling={behandling} />
         </>
     ) : !harKravgrunnlag ? (
         <>
             <div className="flex-1 overflow-auto" />
-            <Suspense fallback="Høyremeny laster...">
-                <Høyremeny fagsak={fagsak} behandling={behandling} />
-            </Suspense>
+            <Høyremeny fagsak={fagsak} behandling={behandling} />
         </>
     ) : erHistoriskeVerdier ? (
         <>
@@ -152,11 +148,14 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
             </div>
         </>
     ) : harKravgrunnlag ? (
-        <div className="bg-red-50">
-            <section className="bg-gray-50 flex flex-col min-h-screen">
+        <>
+            <section
+                className="flex flex-col gap-4 flex-1 min-h-0"
+                aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
+            >
                 <Stegflyt />
                 <section
-                    className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white scrollbar-stable overflow-x-hidden overflow-y-auto min-w-141"
+                    className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
                     aria-label="Behandlingsinnhold"
                 >
                     <Suspense fallback={<BehandlingContainerSkeleton />}>
@@ -220,10 +219,9 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                     </Suspense>
                 </section>
             </section>
-            <Suspense fallback="Høyremeny laster...">
-                <Høyremeny fagsak={fagsak} behandling={behandling} />
-            </Suspense>
-        </div>
+
+            <Høyremeny fagsak={fagsak} behandling={behandling} />
+        </>
     ) : null;
 };
 

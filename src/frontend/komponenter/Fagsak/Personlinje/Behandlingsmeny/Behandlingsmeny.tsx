@@ -2,7 +2,6 @@ import type { Fagsak } from '../../../../typer/fagsak';
 
 import { ChevronDownIcon } from '@navikt/aksel-icons';
 import { Button, Popover } from '@navikt/ds-react';
-import { AFontSizeXlarge, AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
@@ -27,13 +26,6 @@ const StyledList = styled.ul`
     list-style-type: none;
     padding: 0;
     min-width: 210px;
-`;
-
-const StyledButton = styled(Button)`
-    & .navds-label {
-        font-size: ${AFontSizeXlarge};
-        font-weight: ${AFontWeightBold};
-    }
 `;
 
 type Props = {
@@ -61,7 +53,7 @@ const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
 
     return (
         <>
-            <StyledButton
+            <Button
                 ref={buttonRef}
                 id="behandlingsmeny-arialabel-knapp"
                 size="small"
@@ -71,8 +63,7 @@ const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
                 iconPosition="right"
             >
                 Behandlingsmeny
-            </StyledButton>
-
+            </Button>
             {buttonRef && (
                 <Popover
                     open={visMeny}

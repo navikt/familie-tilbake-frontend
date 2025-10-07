@@ -1,8 +1,9 @@
 import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
 
+import classNames from 'classnames';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router';
-import { styled } from 'styled-components';
 
 import BehandlingContainer from './BehandlingContainer';
 import { useBehandling } from '../../context/BehandlingContext';
@@ -16,18 +17,6 @@ import DataLastIkkeSuksess from '../Felleskomponenter/Datalast/DataLastIkkeSukse
 import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
 import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
-
-const HØYDE_HEADER = 48;
-const HØYDE_FTALERTSTRIPE = 62;
-
-const FagsakContainerContent = styled.div`
-    display: flex;
-    height: calc(100vh - ${HØYDE_HEADER}px);
-
-    &.venter {
-        height: calc(100vh - ${HØYDE_HEADER + HØYDE_FTALERTSTRIPE}px);
-    }
-`;
 
 const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
     return `Behandlingen er satt på vent: ${
@@ -55,7 +44,7 @@ const FagsakContainer: React.FC = () => {
     const setFagsakId = useFagsakStore(state => state.setFagsakId);
     const setFagSystem = useFagsakStore(state => state.setFagSystem);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!!fagsystem && !!fagsakId) {
             hentFagsak(fagsystem, fagsakId);
             setFagsakId(fagsakId);
@@ -69,7 +58,7 @@ const FagsakContainer: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsystem, fagsakId]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (fagsak?.status === RessursStatus.Suksess && behandlingId) {
             hentBehandlingMedEksternBrukId(fagsak.data, behandlingId);
             setBehandlingId(behandlingId);
@@ -85,15 +74,15 @@ const FagsakContainer: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsak, behandlingId]);
 
-    const lukkVenteModal = (): void => {
-        settVisVenteModal(false);
-    };
-
     if (fagsak?.status === RessursStatus.Henter || behandling?.status === RessursStatus.Henter) {
         return <HenterBehandling />;
     }
 
     if (fagsak?.status === RessursStatus.Suksess && behandling?.status === RessursStatus.Suksess) {
+        // TODO kanskje fjerne denne?
+        // const containerHøydeClassName = ventegrunn
+        //     ? 'h-[calc(100vh-110px)]' // 48px Header + 62px Alert
+        //     : 'h-[calc(100vh-48px)]'; // 48px Header
         return (
             <>
                 {ventegrunn && (
@@ -103,13 +92,20 @@ const FagsakContainer: React.FC = () => {
                     <PåVentModal
                         behandling={behandling.data}
                         ventegrunn={ventegrunn}
-                        onClose={lukkVenteModal}
+                        onClose={() => settVisVenteModal(false)}
                     />
                 )}
-
-                <FagsakContainerContent className={ventegrunn ? 'venter' : ''}>
+                <div
+                    className={classNames(
+                        'grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-gray-50 min-h-screen',
+                        // containerHøydeClassName,
+                        {
+                            venter: !!ventegrunn,
+                        }
+                    )}
+                >
                     <BehandlingContainer fagsak={fagsak.data} behandling={behandling.data} />
-                </FagsakContainerContent>
+                </div>
             </>
         );
     } else {

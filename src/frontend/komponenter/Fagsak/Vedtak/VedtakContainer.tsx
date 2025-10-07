@@ -54,13 +54,7 @@ const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
         lagreUtkast,
         hentVedtaksbrevtekster,
     } = useVedtak();
-    const {
-        behandlingILesemodus,
-        aktivtSteg,
-        åpenHøyremeny,
-        actionBarStegtekst,
-        harVærtPåFatteVedtakSteget,
-    } = useBehandling();
+    const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA =
         behandling.behandlingsårsakstype === Behandlingårsak.RevurderingKlageKa;
@@ -215,10 +209,8 @@ const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
                     nesteTekst="Send til godkjenning"
                     forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
                     nesteAriaLabel="Send til godkjenning hos beslutter"
-                    åpenHøyremeny={åpenHøyremeny}
                     onNeste={sendInnSkjema}
                     onForrige={gåTilForrige}
-                    harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
                     isLoading={senderInn}
                 />
             </>

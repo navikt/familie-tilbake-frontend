@@ -34,7 +34,7 @@ export const BrukerBoks: React.FC<Props> = ({ bruker, insitusjon }) => {
                 <dt className="w-36 text-medium font-bold flex flex-row gap-2 items-center">
                     <BagdeIcon title="a11y-title" fontSize="1rem" className="text-icon-subtle" />
                     Fødselsnummer
-                    {/* D-nummer logikk + oppdeling av tallet + kopiering + lengde på fnr*/}
+                    {/* D-nummer logikk + oppdeling av tallet + kopiering(CopyButton) + lengde på fnr*/}
                 </dt>
                 <dd className="text-medium">{bruker.personIdent}</dd>
 

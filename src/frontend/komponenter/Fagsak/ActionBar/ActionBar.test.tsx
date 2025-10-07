@@ -13,8 +13,6 @@ describe('ActionBar', () => {
                 stegtekst="Steg 2 av 5"
                 forrigeAriaLabel="Gå tilbake til faktasteget"
                 nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
-                åpenHøyremeny={false}
-                harVærtPåFatteVedtakSteg={false}
                 onNeste={onNeste}
                 onForrige={onForrige}
                 isLoading
