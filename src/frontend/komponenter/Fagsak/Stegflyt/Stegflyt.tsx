@@ -52,8 +52,6 @@ export const Stegflyt: React.FC = () => {
         aktiveToggles
     );
 
-    console.log('stegsinfo', stegsinfo);
-
     const aktivStegindeks =
         stegsinfo?.findIndex(steg => location.pathname.includes(steg.href)) ?? -1;
     const aktivStegnummer = aktivStegindeks > -1 ? aktivStegindeks + 1 : 0;
