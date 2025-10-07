@@ -1,7 +1,13 @@
 import type { Institusjon } from '../../../../typer/fagsak';
 import type { Person } from '../../../../typer/person';
 
-import { BagdeIcon, Buildings2Icon, FlowerPetalFallingIcon, PersonIcon } from '@navikt/aksel-icons';
+import {
+    BagdeIcon,
+    Buildings2Icon,
+    CandleIcon,
+    FlowerPetalFallingIcon,
+    PersonCircleIcon,
+} from '@navikt/aksel-icons';
 import { Box, Heading, Tag } from '@navikt/ds-react';
 import React from 'react';
 
@@ -22,16 +28,24 @@ export const BrukerBoks: React.FC<Props> = ({ bruker, insitusjon }) => {
                 Bruker
             </Heading>
 
-            <dl className="grid grid-cols-[120px_1fr] gap-y-2 gap-x-4">
-                <dt className="w-36 text-medium font-bold flex flex-row gap-2 items-center">
-                    <PersonIcon title="a11y-title" fontSize="1rem" className="text-icon-subtle" />
+            <dl className="grid grid-cols-[136px_1fr] gap-y-2 gap-x-4">
+                <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                    <PersonCircleIcon
+                        title="a11y-title"
+                        fontSize="1rem"
+                        className="text-icon-subtle"
+                    />
                     Navn
                 </dt>
-                <dd className="text-medium">
-                    {bruker.navn} ({hentAlder(bruker.fødselsdato, bruker.dødsdato)} år)
-                </dd>
+                <dd className="text-medium">{bruker.navn}</dd>
 
-                <dt className="w-36 text-medium font-bold flex flex-row gap-2 items-center">
+                <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                    <CandleIcon title="a11y-title" fontSize="1rem" className="text-icon-subtle" />
+                    Alder
+                </dt>
+                <dd className="text-medium">{hentAlder(bruker.fødselsdato, bruker.dødsdato)} år</dd>
+
+                <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                     <BagdeIcon title="a11y-title" fontSize="1rem" className="text-icon-subtle" />
                     Fødselsnummer
                     {/* D-nummer logikk + oppdeling av tallet + kopiering(CopyButton) + lengde på fnr*/}
@@ -40,7 +54,7 @@ export const BrukerBoks: React.FC<Props> = ({ bruker, insitusjon }) => {
 
                 {bruker.dødsdato && (
                     <>
-                        <dt className="w-36 text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <FlowerPetalFallingIcon
                                 title="a11y-title"
                                 fontSize="1rem"
@@ -57,7 +71,7 @@ export const BrukerBoks: React.FC<Props> = ({ bruker, insitusjon }) => {
                 )}
                 {insitusjon && (
                     <>
-                        <dt className="w-36 text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <Buildings2Icon
                                 title="a11y-title"
                                 fontSize="1rem"
@@ -66,7 +80,7 @@ export const BrukerBoks: React.FC<Props> = ({ bruker, insitusjon }) => {
                             Institusjon
                         </dt>
                         <dd className="text-medium">{insitusjon.navn}</dd>
-                        <dt className="w-36 text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <Buildings2Icon
                                 title="a11y-title"
                                 fontSize="1rem"
