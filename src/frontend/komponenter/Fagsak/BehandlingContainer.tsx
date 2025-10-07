@@ -11,12 +11,15 @@ import { styled } from 'styled-components';
 import { FaktaProvider } from './Fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
 import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
+import { Forhåndsvarsel } from './Forhåndsvarsel/Forhåndsvarsel';
 import { Stegflyt } from './Stegflyt/Stegflyt';
 import { VedtakProvider } from './Vedtak/VedtakContext';
 import { VergeProvider } from './Verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
 import { useBehandling } from '../../context/BehandlingContext';
+import { ToggleName } from '../../context/toggles';
+import { useToggles } from '../../context/TogglesContext';
 import { Behandlingstatus } from '../../typer/behandling';
 import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from '../../utils/sider';
 import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
@@ -80,6 +83,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
     const navigate = useNavigate();
     const location = useLocation();
+    const { toggles } = useToggles();
 
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
@@ -185,6 +189,20 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                                 </FaktaProvider>
                             }
                         />
+                        {/* TODO: Rydde opp etter feature toggle */}
+                        {toggles[ToggleName.Forhåndsvarselsteg] && (
+                            <Route
+                                path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
+                                element={
+                                    <FaktaProvider behandling={behandling} fagsak={fagsak}>
+                                        <Suspense fallback="Fakta laster...">
+                                            <Forhåndsvarsel />
+                                        </Suspense>
+                                    </FaktaProvider>
+                                }
+                            />
+                        )}
+                        {/* ... */}
                         <Route
                             path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
                             element={
