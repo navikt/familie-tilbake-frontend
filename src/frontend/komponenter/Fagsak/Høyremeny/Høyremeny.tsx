@@ -118,16 +118,20 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
                                         />
                                     }
                                 />
-                                <StyledTabs
-                                    value="send-brev"
-                                    label="Send brev"
-                                    icon={
-                                        <PaperplaneIcon
-                                            fontSize="1.5rem"
-                                            aria-label="Ikon send brev"
-                                        />
-                                    }
-                                />
+                                {/* TODO: Rydde opp etter feature toggle */}
+                                {!behandling.erNyModell && (
+                                    <StyledTabs
+                                        value="send-brev"
+                                        label="Send brev"
+                                        icon={
+                                            <PaperplaneIcon
+                                                fontSize="1.5rem"
+                                                aria-label="Ikon send brev"
+                                            />
+                                        }
+                                    />
+                                )}
+                                {/* .. */}
                             </StyledTabList>
                             <HøyremenyContainer>
                                 {værtPåFatteVedtakSteget && (
