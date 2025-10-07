@@ -218,6 +218,8 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             settValgtPeriode(nyePerioder[0]);
         };
 
+        const erAllePerioderBehandlet = skjemaData.every(periode => erBehandlet(periode));
+
         const validererTotaltBeløpMot4Rettsgebyr = (): boolean => {
             if (vilkårsvurdering?.status !== RessursStatus.Suksess) {
                 return false; // Skal ikke være mulig, så return false ok
@@ -334,6 +336,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             nestePeriode,
             forrigePeriode,
             hentBehandlingMedBehandlingId,
+            erAllePerioderBehandlet,
         };
     }
 );

@@ -1,6 +1,5 @@
 import {
     BodyLong,
-    Button,
     ErrorMessage,
     Heading,
     HGrid,
@@ -9,29 +8,32 @@ import {
     TextField,
     VStack,
 } from '@navikt/ds-react';
-import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { useVerge } from './VergeContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
+import { Behandlingssteg } from '../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../utils';
 import HenterData from '../../Felleskomponenter/Datalast/HenterData';
-import { Navigering } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
-
-const StyledVerge = styled.div`
-    padding: ${ASpacing3};
-`;
+import { ActionBar } from '../ActionBar/ActionBar';
 
 const StyledVStack = styled(VStack)`
     max-width: 30rem;
 `;
 
 const VergeContainer: React.FC = () => {
-    const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, vergeRespons } = useVerge();
-    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandling();
+    const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =
+        useVerge();
+    const {
+        behandlingILesemodus,
+        settIkkePersistertKomponent,
+        åpenHøyremeny,
+        actionBarStegtekst,
+        harVærtPåFatteVedtakSteget,
+    } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -45,8 +47,8 @@ const VergeContainer: React.FC = () => {
     const feilmelding = vergeRespons && hentFrontendFeilmelding(vergeRespons);
 
     return (
-        <StyledVerge>
-            <Heading level="2" size="small" spacing>
+        <>
+            <Heading level="1" size="small" spacing>
                 Verge
             </Heading>
             {henterData ? (
@@ -138,18 +140,20 @@ const VergeContainer: React.FC = () => {
                         maxLength={400}
                     />
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
-                    <Navigering>
-                        <Button
-                            variant="primary"
-                            onClick={sendInn}
-                            disabled={erLesevisning && !stegErBehandlet}
-                        >
-                            {stegErBehandlet ? 'Neste' : 'Lagre og fortsett'}
-                        </Button>
-                    </Navigering>
+
+                    <ActionBar
+                        stegtekst={actionBarStegtekst(Behandlingssteg.Verge)}
+                        forrigeAriaLabel={undefined}
+                        nesteAriaLabel="Gå videre til faktasteget"
+                        åpenHøyremeny={åpenHøyremeny}
+                        onNeste={sendInn}
+                        onForrige={undefined}
+                        harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
+                        isLoading={senderInn}
+                    />
                 </StyledVStack>
             )}
-        </StyledVerge>
+        </>
     );
 };
 

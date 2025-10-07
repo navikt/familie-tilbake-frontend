@@ -85,6 +85,8 @@ describe('Tester: VergeContainer', () => {
             hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
             settIkkePersistertKomponent: jest.fn(),
             nullstillIkkePersisterteKomponenter: jest.fn(),
+            actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 5'),
+            harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
         }));
     };
 
@@ -106,7 +108,7 @@ describe('Tester: VergeContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til faktasteget',
             })
         );
 
@@ -118,7 +120,7 @@ describe('Tester: VergeContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til faktasteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -128,7 +130,7 @@ describe('Tester: VergeContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til faktasteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -150,7 +152,7 @@ describe('Tester: VergeContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til faktasteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -160,7 +162,7 @@ describe('Tester: VergeContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til faktasteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -170,7 +172,7 @@ describe('Tester: VergeContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til faktasteget',
             })
         );
         expect(queryByText('Du må skrive minst 3 tegn')).not.toBeInTheDocument();
@@ -181,7 +183,7 @@ describe('Tester: VergeContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Lagre og fortsett',
+                name: 'Gå videre til faktasteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -214,7 +216,7 @@ describe('Tester: VergeContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til faktasteget',
             })
         ).toBeEnabled();
 
@@ -247,7 +249,7 @@ describe('Tester: VergeContainer', () => {
             ).not.toBeInTheDocument();
             expect(
                 getByRole('button', {
-                    name: 'Neste',
+                    name: 'Gå videre til faktasteget',
                 })
             ).toBeEnabled();
         });
@@ -283,7 +285,7 @@ describe('Tester: VergeContainer', () => {
             ).not.toBeInTheDocument();
             expect(
                 getByRole('button', {
-                    name: 'Neste',
+                    name: 'Gå videre til faktasteget',
                 })
             ).toBeEnabled();
         });
@@ -321,7 +323,7 @@ describe('Tester: VergeContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Neste',
+                name: 'Gå videre til faktasteget',
             })
         ).toBeEnabled();
 

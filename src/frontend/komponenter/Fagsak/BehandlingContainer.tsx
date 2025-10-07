@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
+import { BehandlingContainerSkeleton } from './BehandlingContainerSkeleton';
 import { FaktaProvider } from './Fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
 import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
@@ -171,93 +172,84 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     ) : harKravgrunnlag ? (
         <>
             <main
-                className="flex-1 overflow-auto mt-4 [scrollbar-gutter:stable]"
+                className="flex-1 pt-6 bg-gray-50 flex flex-col min-h-0"
                 aria-label="Behandling innhold"
             >
-                <nav aria-label="Behandlingssteg">
-                    <Stegflyt />
-                </nav>
-                <section className="mx-6">
-                    <Routes>
-                        <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/fakta'}
-                            element={
-                                <FaktaProvider behandling={behandling} fagsak={fagsak}>
-                                    <Suspense fallback="Fakta laster...">
-                                        <FaktaContainer ytelse={fagsak.ytelsestype} />
-                                    </Suspense>
-                                </FaktaProvider>
-                            }
-                        />
-                        {/* TODO: Rydde opp etter feature toggle */}
-                        {toggles[ToggleName.Forhåndsvarselsteg] && (
+                <Stegflyt />
+                <section className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white m-4 scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 mb-25 min-w-141">
+                    <Suspense fallback={<BehandlingContainerSkeleton />}>
+                        <Routes>
                             <Route
-                                path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
+                                path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                                 element={
                                     <FaktaProvider behandling={behandling} fagsak={fagsak}>
-                                        <Suspense fallback="Fakta laster...">
-                                            <Forhåndsvarsel />
-                                        </Suspense>
+                                        <FaktaContainer ytelse={fagsak.ytelsestype} />
                                     </FaktaProvider>
                                 }
                             />
-                        )}
-                        {/* ... */}
-                        <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
-                            element={
-                                <ForeldelseProvider behandling={behandling} fagsak={fagsak}>
-                                    <Suspense fallback="Foreldelse laster...">
+                            {/* TODO: Rydde opp etter feature toggle */}
+                            {toggles[ToggleName.Forhåndsvarselsteg] && (
+                                <Route
+                                    path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
+                                    element={
+                                        <FaktaProvider behandling={behandling} fagsak={fagsak}>
+                                            <Suspense fallback="Fakta laster...">
+                                                <Forhåndsvarsel />
+                                            </Suspense>
+                                        </FaktaProvider>
+                                    }
+                                />
+                            )}
+                            {/* ... */}
+                            <Route
+                                path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
+                                element={
+                                    <ForeldelseProvider behandling={behandling} fagsak={fagsak}>
                                         <ForeldelseContainer behandling={behandling} />
-                                    </Suspense>
-                                </ForeldelseProvider>
-                            }
-                        />
-                        <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
-                            element={
-                                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                                    <Suspense fallback="Vilkårsvurdering laster...">
+                                    </ForeldelseProvider>
+                                }
+                            />
+                            <Route
+                                path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
+                                element={
+                                    <VilkårsvurderingProvider
+                                        behandling={behandling}
+                                        fagsak={fagsak}
+                                    >
                                         <VilkårsvurderingContainer
                                             behandling={behandling}
                                             fagsak={fagsak}
                                         />
-                                    </Suspense>
-                                </VilkårsvurderingProvider>
-                            }
-                        />
-                        <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
-                            element={
-                                <VedtakProvider behandling={behandling} fagsak={fagsak}>
-                                    <Suspense fallback="Vedtak laster...">
+                                    </VilkårsvurderingProvider>
+                                }
+                            />
+                            <Route
+                                path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
+                                element={
+                                    <VedtakProvider behandling={behandling} fagsak={fagsak}>
                                         <VedtakContainer behandling={behandling} fagsak={fagsak} />
-                                    </Suspense>
-                                </VedtakProvider>
-                            }
-                        />
-                        <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/verge'}
-                            element={
-                                <VergeProvider behandling={behandling} fagsak={fagsak}>
-                                    <Suspense fallback="Verge laster...">
+                                    </VedtakProvider>
+                                }
+                            />
+                            <Route
+                                path={BEHANDLING_KONTEKST_PATH + '/verge'}
+                                element={
+                                    <VergeProvider behandling={behandling} fagsak={fagsak}>
                                         <VergeContainer />
-                                    </Suspense>
-                                </VergeProvider>
-                            }
-                        />
-                        <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
-                            element={
-                                <Suspense fallback="Brevmottakere laster...">
+                                    </VergeProvider>
+                                }
+                            />
+                            <Route
+                                path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
+                                element={
                                     <BrevmottakerContainer
                                         fagsak={fagsak}
                                         behandling={behandling}
                                     />
-                                </Suspense>
-                            }
-                        />
-                    </Routes>
+                                }
+                            />
+                        </Routes>
+                    </Suspense>
                 </section>
             </main>
             <StyledHøyremenyContainer aria-label="Høyremeny med informasjon og handlinger for behandlingen">

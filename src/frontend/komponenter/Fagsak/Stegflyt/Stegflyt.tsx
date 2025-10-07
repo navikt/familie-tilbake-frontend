@@ -74,28 +74,30 @@ export const Stegflyt: React.FC = () => {
     if (aktivStegnummer < 1 || !stegsinfo) return null;
 
     return (
-        <Stepper
-            activeStep={aktivStegnummer}
-            onStepChange={gåTilSteg}
-            orientation="horizontal"
-            className="mx-4"
-            aria-label="Behandlingssteg"
-        >
-            {stegsinfo.map(steg => {
-                const ariaLabel = steg.erAktiv
-                    ? `Gå til ${steg.navn}`
-                    : `Inaktivt steg, ${steg.navn}, ikke klikkbar`;
-                return (
-                    <Stepper.Step
-                        key={steg.steg}
-                        completed={steg.erUtført}
-                        interactive={steg.erAktiv}
-                        aria-label={ariaLabel}
-                    >
-                        {steg.navn}
-                    </Stepper.Step>
-                );
-            })}
-        </Stepper>
+        <nav aria-label="Behandlingssteg">
+            <Stepper
+                activeStep={aktivStegnummer}
+                onStepChange={gåTilSteg}
+                orientation="horizontal"
+                className="mx-4"
+                aria-label="Behandlingssteg"
+            >
+                {stegsinfo.map(steg => {
+                    const ariaLabel = steg.erAktiv
+                        ? `Gå til ${steg.navn}`
+                        : `Inaktivt steg, ${steg.navn}, ikke klikkbar`;
+                    return (
+                        <Stepper.Step
+                            key={steg.steg}
+                            completed={steg.erUtført}
+                            interactive={steg.erAktiv}
+                            aria-label={ariaLabel}
+                        >
+                            {steg.navn}
+                        </Stepper.Step>
+                    );
+                })}
+            </Stepper>
+        </nav>
     );
 };
