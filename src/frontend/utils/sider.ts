@@ -89,7 +89,6 @@ export const visSide = (
     behandling: Behandling,
     aktiveToggles: Record<string, boolean>
 ): boolean => {
-    console.log('steg', steg);
     if (steg === Behandlingssteg.Brevmottaker) {
         return behandling.behandlingsstegsinfo
             .filter(
