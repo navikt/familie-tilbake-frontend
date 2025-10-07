@@ -1,27 +1,30 @@
 import type { SettBehandlingTilbakeTilFaktaHook } from './useSettBehandlingTilbakeTilFakta';
 import type { BehandlingHook } from '../../../../../context/BehandlingContext';
 import type { RedirectEtterLagringHook } from '../../../../../hooks/useRedirectEtterLagring';
+import type { FagsakState } from '../../../../../stores/fagsakStore';
 import type { Behandling } from '../../../../../typer/behandling';
-import type { Fagsak } from '../../../../../typer/fagsak';
-import type { Person } from '../../../../../typer/person';
+import type { StoreApi, UseBoundStore } from 'zustand';
 
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta';
 import { Feil } from '../../../../../api/feil';
-import { Fagsystem, Ytelsetype } from '../../../../../kodeverk';
+import { Fagsystem } from '../../../../../kodeverk';
 import {
     Behandlingstatus,
     Behandlingstype,
     Saksbehandlingstype,
 } from '../../../../../typer/behandling';
-import { Målform } from '../../../../../typer/fagsak';
-import { Kjønn } from '../../../../../typer/person';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
+}));
+
+const mockUseFagsakStore = jest.fn();
+jest.mock('../../../../../stores/fagsakStore', () => ({
+    useFagsakStore: (): UseBoundStore<StoreApi<FagsakState>> => mockUseFagsakStore(),
 }));
 
 const mockUseRedirectEtterLagring = jest.fn();
@@ -57,23 +60,6 @@ const mockBehandling: Behandling = {
     erNyModell: false,
 };
 
-const mockPerson: Person = {
-    personIdent: '123456789',
-    navn: 'Ola Nordmann',
-    fødselsdato: '1990-01-01',
-    kjønn: Kjønn.Mann,
-};
-
-const mockFagsak: Fagsak = {
-    eksternFagsakId: '456',
-    fagsystem: Fagsystem.BA,
-    ytelsestype: Ytelsetype.Barnetrygd,
-    språkkode: Målform.Nb,
-    bruker: mockPerson,
-    institusjon: null,
-    behandlinger: [],
-};
-
 const mockOnListElementClick = jest.fn();
 const mockHentBehandling = jest.fn().mockResolvedValue(undefined);
 const mockNullstill = jest.fn();
@@ -86,6 +72,11 @@ describe('SettBehandlingTilbakeTilFakta', () => {
         mockUseBehandling.mockReturnValue({
             hentBehandlingMedBehandlingId: mockHentBehandling,
             nullstillIkkePersisterteKomponenter: mockNullstill,
+        });
+
+        mockUseFagsakStore.mockReturnValue({
+            eksternFagsakId: '123',
+            fagsystem: Fagsystem.BA,
         });
 
         mockUseRedirectEtterLagring.mockReturnValue({
@@ -117,7 +108,6 @@ describe('SettBehandlingTilbakeTilFakta', () => {
         render(
             <SettBehandlingTilbakeTilFakta
                 behandling={mockBehandling}
-                fagsak={mockFagsak}
                 onListElementClick={mockOnListElementClick}
             />
         );
