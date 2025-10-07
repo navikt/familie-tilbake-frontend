@@ -104,11 +104,7 @@ export const visSide = (
         const harForhåndsvarselSteg = behandling.behandlingsstegsinfo.some(
             ({ behandlingssteg }) => behandlingssteg === Behandlingssteg.Forhåndsvarsel
         );
-        return (
-            harForhåndsvarselSteg &&
-            behandling.erNyModell &&
-            aktiveToggles[ToggleName.Forhåndsvarselsteg]
-        );
+        return harForhåndsvarselSteg && aktiveToggles[ToggleName.Forhåndsvarselsteg];
     }
 
     return true;
