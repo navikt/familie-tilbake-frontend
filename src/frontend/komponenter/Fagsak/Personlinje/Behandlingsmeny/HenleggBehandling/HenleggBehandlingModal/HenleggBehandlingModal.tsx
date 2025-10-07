@@ -1,11 +1,12 @@
 import type { Behandling } from '../../../../../../typer/behandling';
 import type { Behandlingresultat } from '../../../../../../typer/behandling';
-import type { Fagsak } from '../../../../../../typer/fagsak';
 
 import { Button, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
+import { useEffect } from 'react';
 
 import { useHenleggBehandlingSkjema } from './HenleggBehandlingModalContext';
+import { useFagsakStore } from '../../../../../../stores/fagsakStore';
 import { behandlingsresultater } from '../../../../../../typer/behandling';
 import { målform } from '../../../../../../typer/fagsak';
 import { Spacer20 } from '../../../../../Felleskomponenter/Flytelementer';
@@ -14,7 +15,6 @@ import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/Forhå
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
     visModal: boolean;
     settVisModal: (vis: boolean) => void;
     årsaker: Behandlingresultat[];
@@ -22,15 +22,15 @@ type Props = {
 
 const HenleggBehandlingModal: React.FC<Props> = ({
     behandling,
-    fagsak,
     visModal,
     settVisModal,
     årsaker,
 }) => {
     const { skjema, erVisFritekst, onBekreft, nullstillSkjema, erKanForhåndsvise } =
         useHenleggBehandlingSkjema({ behandling, settVisModal });
+    const { språkkode } = useFagsakStore();
 
-    React.useEffect(() => {
+    useEffect(() => {
         skjema.felter.behandlingstype.onChange(behandling.type);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
@@ -49,7 +49,7 @@ const HenleggBehandlingModal: React.FC<Props> = ({
                 <Modal
                     open
                     header={{ heading: 'Behandlingen henlegges', size: 'medium' }}
-                    portal={true}
+                    portal
                     width="small"
                     onClose={() => {
                         nullstillSkjema();
@@ -62,7 +62,7 @@ const HenleggBehandlingModal: React.FC<Props> = ({
                             label="Velg årsak"
                             onChange={e => onChangeÅrsakskode(e)}
                         >
-                            <option value="" disabled={true}>
+                            <option value="" disabled>
                                 Velg årsak til henleggelse
                             </option>
                             {årsaker.map(årsak => (
@@ -81,7 +81,7 @@ const HenleggBehandlingModal: React.FC<Props> = ({
                                     label={
                                         <LabelMedSpråk
                                             label="Fritekst til brev"
-                                            språk={målform[fagsak.språkkode]}
+                                            språk={målform[språkkode ?? 'NB']}
                                         />
                                     }
                                     aria-label="Fritekst til brev"
@@ -116,7 +116,6 @@ const HenleggBehandlingModal: React.FC<Props> = ({
                             kanForhåndsvise={kanForhåndsvise}
                         />
                         <Button
-                            variant="primary"
                             key="bekreft"
                             onClick={() => {
                                 onBekreft();

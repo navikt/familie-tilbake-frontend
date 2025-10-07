@@ -1,7 +1,7 @@
 import type { Behandling } from '../../../../../typer/behandling';
-import type { Fagsak } from '../../../../../typer/fagsak';
 
 import * as React from 'react';
+import { useEffect } from 'react';
 
 import HenleggBehandlingModal from './HenleggBehandlingModal/HenleggBehandlingModal';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
@@ -20,15 +20,14 @@ const getÅrsaker = (behandling: Behandling): Behandlingresultat[] => {
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
     onListElementClick: () => void;
 };
 
-const HenleggBehandling: React.FC<Props> = ({ behandling, fagsak, onListElementClick }) => {
+const HenleggBehandling: React.FC<Props> = ({ behandling, onListElementClick }) => {
     const [årsaker, settÅrsaker] = React.useState<Behandlingresultat[]>([]);
     const [visModal, settVisModal] = React.useState<boolean>(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         settÅrsaker(getÅrsaker(behandling));
     }, [behandling]);
 
@@ -48,7 +47,6 @@ const HenleggBehandling: React.FC<Props> = ({ behandling, fagsak, onListElementC
             {visModal && (
                 <HenleggBehandlingModal
                     behandling={behandling}
-                    fagsak={fagsak}
                     visModal={visModal}
                     settVisModal={settVisModal}
                     årsaker={årsaker}

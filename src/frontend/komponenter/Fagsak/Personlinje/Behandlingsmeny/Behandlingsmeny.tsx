@@ -1,9 +1,8 @@
-import type { Fagsak } from '../../../../typer/fagsak';
-
 import { ChevronDownIcon } from '@navikt/aksel-icons';
 import { Button, Popover } from '@navikt/ds-react';
 import { AFontSizeXlarge, AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
+import { useRef, useState } from 'react';
 import { styled } from 'styled-components';
 
 import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
@@ -20,6 +19,7 @@ import { useBehandling } from '../../../../context/BehandlingContext';
 import { ToggleName } from '../../../../context/toggles';
 import { useToggles } from '../../../../context/TogglesContext';
 import { Fagsystem } from '../../../../kodeverk';
+import { useFagsakStore } from '../../../../stores/fagsakStore';
 import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 
@@ -36,14 +36,11 @@ const StyledButton = styled(Button)`
     }
 `;
 
-type Props = {
-    fagsak: Fagsak;
-};
-const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
+const Behandlingsmeny: React.FC = () => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
-    const [visMeny, settVisMeny] = React.useState<boolean>(false);
-    const buttonRef = React.useRef(null);
-
+    const [visMeny, settVisMeny] = useState(false);
+    const buttonRef = useRef(null);
+    const { fagsystem, ytelsestype } = useFagsakStore();
     const { innloggetSaksbehandler } = useApp();
     const erProd =
         !window.location.hostname.includes('dev') &&
@@ -86,7 +83,6 @@ const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
                             <li>
                                 <OpprettBehandling
                                     behandling={behandling.data}
-                                    fagsak={fagsak}
                                     onListElementClick={() => settVisMeny(false)}
                                 />
                             </li>
@@ -99,7 +95,6 @@ const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
                                     <li>
                                         <HenleggBehandling
                                             behandling={behandling.data}
-                                            fagsak={fagsak}
                                             onListElementClick={() => settVisMeny(false)}
                                         />
                                     </li>
@@ -107,7 +102,6 @@ const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
                                         <li>
                                             <HentOppdatertKravgrunnlag
                                                 behandling={behandling.data}
-                                                fagsak={fagsak}
                                                 onListElementClick={() => settVisMeny(false)}
                                             />
                                         </li>
@@ -117,7 +111,6 @@ const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
                                         <li>
                                             <SettBehandlingTilbakeTilFakta
                                                 behandling={behandling.data}
-                                                fagsak={fagsak}
                                                 onListElementClick={() => settVisMeny(false)}
                                             />
                                         </li>
@@ -138,10 +131,10 @@ const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
                                                 />
                                             </li>
                                         ))}
-                                    {fagsak.fagsystem === Fagsystem.BA && (
+                                    {fagsystem === Fagsystem.BA && ytelsestype && (
                                         <li>
                                             <EndreBehandlendeEnhet
-                                                ytelse={fagsak.ytelsestype}
+                                                ytelse={ytelsestype}
                                                 behandling={behandling.data}
                                                 onListElementClick={() => settVisMeny(false)}
                                             />
@@ -151,7 +144,6 @@ const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
                                         <li>
                                             <LeggTilFjernBrevmottakere
                                                 behandling={behandling.data}
-                                                fagsak={fagsak}
                                                 onListElementClick={() => settVisMeny(false)}
                                             />
                                         </li>
@@ -159,7 +151,6 @@ const Behandlingsmeny: React.FC<Props> = ({ fagsak }) => {
                                     <li>
                                         <HistoriskeVurderinger
                                             behandling={behandling.data}
-                                            fagsak={fagsak}
                                             onListElementClick={() => settVisMeny(false)}
                                         />
                                     </li>
