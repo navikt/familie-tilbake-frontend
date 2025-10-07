@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { Suspense } from 'react';
 
-import { BrukerBoks } from './Informasjonsbokser/BrukerBoks';
+import { BrukerInformasjon } from './Informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './Informasjonsbokser/Faktaboks';
 import Menykontainer, { Menysider } from './Menykontainer';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -46,7 +46,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
             >
                 <div className="gap-4 flex flex-col flex-1 min-h-0">
                     <Faktaboks tittel="Faktaboks tittel" />
-                    <BrukerBoks bruker={bruker} insitusjon={insitusjon} />
+                    <BrukerInformasjon bruker={bruker} insitusjon={insitusjon} />
                     <Tabs
                         defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
                         iconPosition="top"

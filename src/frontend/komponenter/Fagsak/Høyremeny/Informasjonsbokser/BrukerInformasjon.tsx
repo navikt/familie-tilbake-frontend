@@ -18,7 +18,7 @@ type Props = {
     insitusjon?: Institusjon;
 };
 
-export const BrukerBoks: React.FC<Props> = ({ bruker, insitusjon }) => {
+export const BrukerInformasjon: React.FC<Props> = ({ bruker, insitusjon }) => {
     return (
         <Box
             padding="4"
