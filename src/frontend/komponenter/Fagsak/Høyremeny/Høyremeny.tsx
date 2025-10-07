@@ -4,6 +4,7 @@ import type { Person } from '../../../typer/person';
 
 import { ClockIcon, FolderIcon, PaperplaneIcon, PersonGavelIcon } from '@navikt/aksel-icons';
 import { Tabs } from '@navikt/ds-react';
+import classNames from 'classnames';
 import * as React from 'react';
 import { Suspense } from 'react';
 
@@ -19,7 +20,7 @@ type Props = {
 };
 
 const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
-    const { harVærtPåFatteVedtakSteget } = useBehandling();
+    const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandling();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
 
     const bruker: Person = {
@@ -37,7 +38,12 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
     return (
         <Suspense fallback="Høyremeny laster...">
             {/* Reduserer høyden med header(48)-høyde og padding(16+16)-høyde til fagsakcontainer */}
-            <aside className="flex-col gap-4 bg-gray-50 hidden lg:flex max-h-[calc(100vh-80px)]">
+            <aside
+                className={classNames(
+                    'flex-col gap-4 bg-gray-50 hidden lg:flex max-h-[calc(100vh-80px)]',
+                    { 'max-h-[calc(100vh-142px)]': !!ventegrunn }
+                )}
+            >
                 <div className="gap-4 flex flex-col flex-1 min-h-0">
                     <Faktaboks tittel="Faktaboks tittel" />
                     <BrukerBoks bruker={bruker} insitusjon={insitusjon} />
