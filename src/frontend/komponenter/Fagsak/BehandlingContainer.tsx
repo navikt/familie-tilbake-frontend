@@ -192,11 +192,9 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                                 <Route
                                     path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
                                     element={
-                                        <FaktaProvider behandling={behandling} fagsak={fagsak}>
-                                            <Suspense fallback="Fakta laster...">
-                                                <Forhåndsvarsel />
-                                            </Suspense>
-                                        </FaktaProvider>
+                                        <Suspense fallback="Fakta laster...">
+                                            <Forhåndsvarsel />
+                                        </Suspense>
                                     }
                                 />
                             )}
