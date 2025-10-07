@@ -56,11 +56,6 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
-const StyledMainContainer = styled.main`
-    flex: 1;
-    overflow: auto;
-`;
-
 const HenlagtContainer = styled.div`
     padding: ${ASpacing3};
     text-align: center;
@@ -102,11 +97,11 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
 
     return behandling.erBehandlingHenlagt ? (
         <>
-            <StyledMainContainer id="fagsak-main">
+            <div className="flex-1 overflow-auto">
                 <HenlagtContainer>
                     <BodyShort size="small">Behandlingen er henlagt</BodyShort>
                 </HenlagtContainer>
-            </StyledMainContainer>
+            </div>
 
             <Suspense fallback="Høyremeny laster...">
                 <Høyremeny fagsak={fagsak} behandling={behandling} />
@@ -114,14 +109,14 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
         </>
     ) : !harKravgrunnlag ? (
         <>
-            <StyledMainContainer id="fagsak-main" />
+            <div className="flex-1 overflow-auto" />
             <Suspense fallback="Høyremeny laster...">
                 <Høyremeny fagsak={fagsak} behandling={behandling} />
             </Suspense>
         </>
     ) : erHistoriskeVerdier ? (
         <>
-            <StyledMainContainer id="fagsak-main">
+            <div className="flex-1 overflow-auto">
                 <Suspense fallback="Historiske vurderinger laster...">
                     <HistoriskeVurderingermeny behandling={behandling} fagsak={fagsak} />
                 </Suspense>
@@ -154,16 +149,16 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                     />
                     <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
                 </Routes>
-            </StyledMainContainer>
+            </div>
         </>
     ) : harKravgrunnlag ? (
-        <>
-            <main
-                className="flex-1 pt-6 bg-gray-50 flex flex-col min-h-screen"
-                aria-label="Behandling innhold"
-            >
+        <div className="bg-red-50">
+            <section className="bg-gray-50 flex flex-col min-h-screen">
                 <Stegflyt />
-                <section className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white m-4 scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 mb-25 min-w-141">
+                <section
+                    className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white scrollbar-stable overflow-x-hidden overflow-y-auto min-w-141"
+                    aria-label="Behandlingsinnhold"
+                >
                     <Suspense fallback={<BehandlingContainerSkeleton />}>
                         <Routes>
                             <Route
@@ -224,11 +219,11 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                         </Routes>
                     </Suspense>
                 </section>
-            </main>
+            </section>
             <Suspense fallback="Høyremeny laster...">
                 <Høyremeny fagsak={fagsak} behandling={behandling} />
             </Suspense>
-        </>
+        </div>
     ) : null;
 };
 

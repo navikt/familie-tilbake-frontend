@@ -5,7 +5,6 @@ import { useLocation, useParams } from 'react-router';
 import { styled } from 'styled-components';
 
 import BehandlingContainer from './BehandlingContainer';
-// import Personlinje from './Personlinje/Personlinje';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { Fagsystem } from '../../kodeverk';
@@ -19,15 +18,14 @@ import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 
 const HØYDE_HEADER = 48;
-const HØYDE_PERSONLINJE = 48;
 const HØYDE_FTALERTSTRIPE = 62;
 
 const FagsakContainerContent = styled.div`
     display: flex;
-    height: calc(100vh - ${HØYDE_HEADER + HØYDE_PERSONLINJE}px);
+    height: calc(100vh - ${HØYDE_HEADER}px);
 
     &.venter {
-        height: calc(100vh - ${HØYDE_HEADER + HØYDE_PERSONLINJE + HØYDE_FTALERTSTRIPE}px);
+        height: calc(100vh - ${HØYDE_HEADER + HØYDE_FTALERTSTRIPE}px);
     }
 `;
 
@@ -98,8 +96,6 @@ const FagsakContainer: React.FC = () => {
     if (fagsak?.status === RessursStatus.Suksess && behandling?.status === RessursStatus.Suksess) {
         return (
             <>
-                {/* <Personlinje bruker={fagsak.data.bruker} fagsak={fagsak.data} /> */}
-
                 {ventegrunn && (
                     <FTAlertStripe variant="info">{venteBeskjed(ventegrunn)}</FTAlertStripe>
                 )}
