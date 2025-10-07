@@ -5,7 +5,7 @@ export const Forhåndsvarsel: React.FC = () => {
     return (
         <div>
             <Heading level="1" size="small" spacing>
-                Fakta fra feilutbetalingssaken
+                Forhåndsvarsel
             </Heading>
         </div>
     );
