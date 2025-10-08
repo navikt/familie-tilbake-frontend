@@ -11,10 +11,9 @@ import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelement
 
 type Props = {
     behandling: Behandling;
-    onListElementClick: () => void;
 };
 
-const HistoriskeVurderinger: React.FC<Props> = ({ behandling, onListElementClick }) => {
+export const HistoriskeVurderinger: React.FC<Props> = ({ behandling }) => {
     const { behandlingILesemodus } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsakStore();
 
@@ -32,12 +31,11 @@ const HistoriskeVurderinger: React.FC<Props> = ({ behandling, onListElementClick
         eksternFagsakId && (
             <BehandlingsMenyButton
                 variant="tertiary"
-                onClick={() => {
-                    onListElementClick();
+                onClick={() =>
                     window.open(
                         `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/inaktiv`
-                    );
-                }}
+                    )
+                }
                 disabled={!behandling.kanEndres || behandlingILesemodus}
             >
                 Se historiske vurderinger
@@ -45,5 +43,3 @@ const HistoriskeVurderinger: React.FC<Props> = ({ behandling, onListElementClick
         )
     );
 };
-
-export default HistoriskeVurderinger;

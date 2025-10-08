@@ -18,13 +18,12 @@ import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer
 
 type Props = {
     behandling: Behandling;
-    onListElementClick: () => void;
 };
 
-const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, onListElementClick }) => {
+export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
     const [visFjernModal, settVisFjernModal] = useState(false);
     const [senderInn, settSenderInn] = useState(false);
-    const [feilmelding, settFeilmelding] = useState<string>();
+    const [feilmelding, settFeilmelding] = useState('');
     const {
         hentBehandlingMedBehandlingId,
         behandlingILesemodus,
@@ -105,7 +104,7 @@ const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, onListElementC
     };
 
     useEffect(() => {
-        if (feilmelding && feilmelding !== '') {
+        if (feilmelding !== '') {
             settToast(ToastTyper.BrevmottakerIkkeTillat, {
                 alertType: AlertType.Warning,
                 tekst: feilmelding,
@@ -119,10 +118,7 @@ const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, onListElementC
         <>
             <BehandlingsMenyButton
                 variant="tertiary"
-                onClick={() => {
-                    opprettEllerFjernSteg();
-                    onListElementClick();
-                }}
+                onClick={opprettEllerFjernSteg}
                 disabled={!behandling.kanEndres || behandlingILesemodus}
             >
                 {kanFjerneManuelleBrevmottakere ? 'Fjern brevmottaker(e)' : 'Legg til brevmottaker'}
@@ -134,16 +130,14 @@ const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, onListElementC
                     header={{ heading: 'Ønsker du å fjerne brevmottaker(e)?', size: 'medium' }}
                     portal
                     width="small"
-                    onClose={() => {
-                        settVisFjernModal(false);
-                    }}
+                    onClose={() => settVisFjernModal(false)}
                 >
                     <Modal.Body>
                         <div>
                             Dette vil både fjerne eventuelt registrerte brevmottakere og fjerne
                             steget &quot;Brevmottaker(e)&quot;.
                         </div>
-                        {feilmelding && feilmelding !== '' && (
+                        {feilmelding !== '' && (
                             <div className="skjemaelement__feilmelding">
                                 <ErrorMessage size="small">{feilmelding}</ErrorMessage>
                             </div>
@@ -154,7 +148,7 @@ const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, onListElementC
                             key="bekreft"
                             disabled={senderInn}
                             loading={senderInn}
-                            onClick={() => fjernBrevmottakerSteg()}
+                            onClick={fjernBrevmottakerSteg}
                             size="small"
                         >
                             Ja, fjern
@@ -162,9 +156,7 @@ const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, onListElementC
                         <Button
                             variant="tertiary"
                             key="avbryt"
-                            onClick={() => {
-                                settVisFjernModal(false);
-                            }}
+                            onClick={() => settVisFjernModal(false)}
                             size="small"
                         >
                             Nei, behold
@@ -175,5 +167,3 @@ const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, onListElementC
         </>
     );
 };
-
-export default LeggTilFjernBrevmottakere;

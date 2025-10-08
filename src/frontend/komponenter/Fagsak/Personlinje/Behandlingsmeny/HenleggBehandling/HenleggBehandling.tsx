@@ -1,7 +1,7 @@
 import type { Behandling } from '../../../../../typer/behandling';
 
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import HenleggBehandlingModal from './HenleggBehandlingModal/HenleggBehandlingModal';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
@@ -20,12 +20,11 @@ const getÅrsaker = (behandling: Behandling): Behandlingresultat[] => {
 
 type Props = {
     behandling: Behandling;
-    onListElementClick: () => void;
 };
 
-const HenleggBehandling: React.FC<Props> = ({ behandling, onListElementClick }) => {
-    const [årsaker, settÅrsaker] = React.useState<Behandlingresultat[]>([]);
-    const [visModal, settVisModal] = React.useState<boolean>(false);
+export const HenleggBehandling: React.FC<Props> = ({ behandling }) => {
+    const [årsaker, settÅrsaker] = useState<Behandlingresultat[]>([]);
+    const [visModal, settVisModal] = useState(false);
 
     useEffect(() => {
         settÅrsaker(getÅrsaker(behandling));
@@ -36,10 +35,7 @@ const HenleggBehandling: React.FC<Props> = ({ behandling, onListElementClick }) 
             <BehandlingsMenyButton
                 variant="tertiary"
                 disabled={!behandling.kanHenleggeBehandling || !behandling.kanEndres}
-                onClick={() => {
-                    settVisModal(true);
-                    onListElementClick();
-                }}
+                onClick={() => settVisModal(true)}
             >
                 Henlegg behandlingen og avslutt
             </BehandlingsMenyButton>
@@ -55,5 +51,3 @@ const HenleggBehandling: React.FC<Props> = ({ behandling, onListElementClick }) 
         </>
     );
 };
-
-export default HenleggBehandling;
