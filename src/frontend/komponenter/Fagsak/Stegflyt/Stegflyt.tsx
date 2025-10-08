@@ -77,7 +77,7 @@ export const Stegflyt: React.FC = () => {
                 activeStep={aktivStegnummer}
                 onStepChange={gåTilSteg}
                 orientation="horizontal"
-                className="mx-4"
+                className="mx-4 mt-4"
                 aria-label="Behandlingssteg"
             >
                 {stegsinfo.map(steg => {

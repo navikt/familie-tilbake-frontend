@@ -28,7 +28,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, insitusjon }) => {
                 Bruker
             </Heading>
 
-            <dl className="grid grid-cols-[136px_1fr] gap-y-2 gap-x-4">
+            <dl className="grid grid-cols-[136px_1fr] xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                     <PersonCircleIcon
                         title="a11y-title"
