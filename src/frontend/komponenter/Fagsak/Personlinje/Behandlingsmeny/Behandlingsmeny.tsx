@@ -46,13 +46,13 @@ const Behandlingsmeny: React.FC = () => {
                 as={Dropdown.Toggle}
                 id="behandlingsmeny-arialabel-knapp"
                 size="small"
-                variant="secondary"
+                variant="tertiary"
                 icon={<MenuElipsisHorizontalIcon fontSize="1.5rem" />}
             >
                 Behandlingsmeny
             </Button>
 
-            <Dropdown.Menu placement="bottom-end" aria-labelledby="behandlingsmeny-arialabel-knapp">
+            <Dropdown.Menu placement="top-start" aria-labelledby="behandlingsmeny-arialabel-knapp">
                 <ul className="min-w-60 m-0" role="menu">
                     {behandling?.status === RessursStatus.Suksess && (
                         <li>

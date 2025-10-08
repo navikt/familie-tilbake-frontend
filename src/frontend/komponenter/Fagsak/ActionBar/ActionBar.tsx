@@ -35,7 +35,7 @@ const ActionBar: React.FC<Props> = ({
             <HStack
                 /* Hacker plasseringen til pga at den ikke er på behandlingcontainer nivå men nede i stegcontainerene som styrer hvor startposisjon er */
                 className={classNames(
-                    'fixed bottom-4 bg-white px-8 py-4 rounded-2xl border-border-divider border-1 justify-between z-10 flex-nowrap overflow-auto lg:w-[calc((100vw*2/3)-34px)] w-[calc(100vw-32px)]',
+                    'fixed bottom-4 bg-white px-8 py-4 rounded-2xl border-border-divider border-1 justify-between z-10 flex-nowrap lg:w-[calc((100vw*2/3)-34px)] w-[calc(100vw-32px)]',
                     {
                         '-ml-6': !dobbeltNøstet,
                         '-ml-10': dobbeltNøstet,
