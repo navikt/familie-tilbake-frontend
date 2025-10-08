@@ -29,8 +29,8 @@ export const Faktaboks: React.FC<Props> = () => {
                 Revurdering tilbakekreving av {type}
             </Heading>
 
-            <dl className="grid grid-cols-[120px_1fr] gap-y-2 gap-x-4">
-                <dt className="w-36 text-medium font-bold flex flex-row gap-2 items-center">
+            <dl className="grid grid-cols-[136px_1fr] gap-y-2 gap-x-4">
+                <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                     <FileCheckmarkIcon
                         title="a11y-title"
                         fontSize="1rem"
@@ -47,7 +47,7 @@ export const Faktaboks: React.FC<Props> = () => {
 
                 {resultat && (
                     <>
-                        <dt className="w-36 shrink-0 text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="shrink-0 text-medium font-bold flex flex-row gap-2 items-center">
                             <ClipboardIcon
                                 title="a11y-title"
                                 fontSize="1rem"
@@ -66,7 +66,7 @@ export const Faktaboks: React.FC<Props> = () => {
 
                 {opprettet && (
                     <>
-                        <dt className="w-36 text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <CalendarIcon
                                 title="a11y-title"
                                 fontSize="1rem"
