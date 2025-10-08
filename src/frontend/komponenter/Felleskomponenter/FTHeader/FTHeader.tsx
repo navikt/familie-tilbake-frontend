@@ -9,7 +9,8 @@ import { useMemo } from 'react';
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
 import { useHttp } from '../../../api/http/HttpProvider';
 import { Fagsystem } from '../../../kodeverk';
-import { useFagsakStore } from '../../../store/fagsak';
+import { useBehandlingStore } from '../../../stores/behandlingStore';
+import { useFagsakStore } from '../../../stores/fagsakStore';
 import { erHistoriskSide } from '../../../utils/sider';
 
 type Props = {
@@ -22,10 +23,10 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
         queryFn: hentBrukerlenkeBaseUrl,
     });
     const { aInntektUrl: reserveAInntektUrl, modiaBaseUrl, gosysBaseUrl } = brukerlenker || {};
-    const personIdent = useFagsakStore(state => state.personIdent);
-    const fagsakId = useFagsakStore(state => state.fagsakId);
-    const behandlingId = useFagsakStore(state => state.behandlingId);
-    const fagSystem = useFagsakStore(state => state.fagSystem);
+    const personIdent = useBehandlingStore(state => state.personIdent);
+    const fagsakId = useFagsakStore(state => state.eksternFagsakId);
+    const behandlingId = useBehandlingStore(state => state.behandlingId);
+    const fagSystem = useFagsakStore(state => state.fagsystem);
 
     const { request } = useHttp();
     const { data: personligAInntektUrl } = useQuery({

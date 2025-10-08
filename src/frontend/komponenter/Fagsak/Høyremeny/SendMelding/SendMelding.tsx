@@ -47,7 +47,7 @@ const SendMelding: React.FC<Props> = ({ fagsak, behandling }) => {
                         brevmottakere={behandling.manuelleBrevmottakere.map(
                             brevmottakerDto => brevmottakerDto.brevmottaker
                         )}
-                        institusjon={fagsak?.institusjon}
+                        institusjon={fagsak.institusjon}
                         bruker={fagsak.bruker}
                         harMargin={false}
                     />

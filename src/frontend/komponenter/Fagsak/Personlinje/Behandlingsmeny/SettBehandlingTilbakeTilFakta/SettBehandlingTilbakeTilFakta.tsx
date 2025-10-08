@@ -1,5 +1,4 @@
 import type { Behandling } from '../../../../../typer/behandling';
-import type { Fagsak } from '../../../../../typer/fagsak';
 
 import * as React from 'react';
 import { useState } from 'react';
@@ -8,23 +7,23 @@ import SettBehandlingTilbakeTilFaktaModal from './SettBehandlingTilbakeTilFaktaM
 import { useSettBehandlingTilbakeTilFakta } from './useSettBehandlingTilbakeTilFakta';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
+import { useFagsakStore } from '../../../../../stores/fagsakStore';
 import { RessursStatus } from '../../../../../typer/ressurs';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../../Felleskomponenter/Modal/Feil/FeilModal';
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
     onListElementClick: () => void;
 };
 
 export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
     behandling,
-    fagsak,
     onListElementClick,
 }) => {
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
+    const { fagsystem, eksternFagsakId } = useFagsakStore();
     const [visModal, setVisModal] = useState(false);
     const mutation = useSettBehandlingTilbakeTilFakta();
 
@@ -32,10 +31,10 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
         nullstillIkkePersisterteKomponenter();
         mutation.mutate(behandling.behandlingId, {
             onSuccess: ressurs => {
-                if (ressurs.status === RessursStatus.Suksess) {
+                if (ressurs.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
                     hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                         utførRedirect(
-                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                         );
                         window.location.reload();
                     });
@@ -65,12 +64,12 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
                 />
             )}
 
-            {mutation.isError && (
+            {mutation.isError && eksternFagsakId && (
                 <FeilModal
                     feil={mutation.error}
                     lukkFeilModal={mutation.reset}
                     behandlingId={behandling.behandlingId}
-                    fagsakId={fagsak.eksternFagsakId}
+                    fagsakId={eksternFagsakId}
                 />
             )}
         </>
