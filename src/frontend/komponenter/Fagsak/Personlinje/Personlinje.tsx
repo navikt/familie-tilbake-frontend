@@ -8,7 +8,7 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
-import Behandlingsmeny from './Behandlingsmeny/Behandlingsmeny';
+import { Behandlingsmeny } from './Behandlingsmeny/Behandlingsmeny';
 import Visittkort from './Visittkort';
 import { formatterDatostring, hentAlder } from '../../../utils';
 import { erHistoriskSide } from '../../../utils/sider';

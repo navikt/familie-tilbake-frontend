@@ -1,10 +1,9 @@
 import type { Behandling } from '../../../../../typer/behandling';
 
-import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
+import { Button, Dropdown, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 
 type Props = {
@@ -23,15 +22,11 @@ export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
     const { feilmelding, onOkTaAvVent } = usePåVentBehandling(lukkModalOgHentBehandling);
 
     return (
-        <>
-            <BehandlingsMenyButton
-                variant="tertiary"
-                onClick={() => settVisModal(true)}
-                disabled={!behandling.kanEndres}
-            >
-                Fortsett behandlingen
-            </BehandlingsMenyButton>
-
+        <Dropdown.Menu.List.Item
+            onClick={() => settVisModal(true)}
+            disabled={!behandling.kanEndres}
+        >
+            Fortsett behandlingen
             {visModal && (
                 <Modal
                     open
@@ -66,6 +61,6 @@ export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
                     </Modal.Footer>
                 </Modal>
             )}
-        </>
+        </Dropdown.Menu.List.Item>
     );
 };

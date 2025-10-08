@@ -1,6 +1,6 @@
 import type { Behandling } from '../../../../../typer/behandling';
 
-import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
+import { Button, Dropdown, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -13,7 +13,6 @@ import { useFagsakStore } from '../../../../../stores/fagsakStore';
 import { Behandlingssteg, Behandlingsstegstatus } from '../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { SYNLIGE_STEG } from '../../../../../utils/sider';
-import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
 
 type Props = {
@@ -115,14 +114,11 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
     }, [feilmelding]);
 
     return (
-        <>
-            <BehandlingsMenyButton
-                variant="tertiary"
-                onClick={opprettEllerFjernSteg}
-                disabled={!behandling.kanEndres || behandlingILesemodus}
-            >
-                {kanFjerneManuelleBrevmottakere ? 'Fjern brevmottaker(e)' : 'Legg til brevmottaker'}
-            </BehandlingsMenyButton>
+        <Dropdown.Menu.List.Item
+            onClick={opprettEllerFjernSteg}
+            disabled={!behandling.kanEndres || behandlingILesemodus}
+        >
+            {kanFjerneManuelleBrevmottakere ? 'Fjern brevmottaker(e)' : 'Legg til brevmottaker'}
 
             {visFjernModal && (
                 <Modal
@@ -164,6 +160,6 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
                     </Modal.Footer>
                 </Modal>
             )}
-        </>
+        </Dropdown.Menu.List.Item>
     );
 };

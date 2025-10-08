@@ -1,5 +1,6 @@
 import type { Behandling } from '../../../../../typer/behandling';
 
+import { Dropdown } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useHttp } from '../../../../../api/http/HttpProvider';
@@ -8,7 +9,6 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { useFagsakStore } from '../../../../../stores/fagsakStore';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
-import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
 
 type Props = {
@@ -52,12 +52,11 @@ export const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
     };
 
     return (
-        <BehandlingsMenyButton
-            variant="tertiary"
+        <Dropdown.Menu.List.Item
             onClick={hentKorrigertKravgrunnlag}
             disabled={!behandling.kanEndres}
         >
             Hent korrigert kravgrunnlag
-        </BehandlingsMenyButton>
+        </Dropdown.Menu.List.Item>
     );
 };

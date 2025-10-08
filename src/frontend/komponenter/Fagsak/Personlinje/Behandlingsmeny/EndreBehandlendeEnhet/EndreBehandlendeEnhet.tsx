@@ -2,7 +2,7 @@ import type { Ytelsetype } from '../../../../../kodeverk';
 import type { Behandling } from '../../../../../typer/behandling';
 import type { Arbeidsfordelingsenhet } from '../../../../../typer/enhet';
 
-import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
+import { Button, Dropdown, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
@@ -11,7 +11,7 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { finnMuligeEnheter } from '../../../../../typer/enhet';
 import { RessursStatus } from '../../../../../typer/ressurs';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
-import { BehandlingsMenyButton, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
+import { Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 
 type Props = {
     ytelse: Ytelsetype;
@@ -34,14 +34,11 @@ export const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling }) =
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
     return (
-        <>
-            <BehandlingsMenyButton
-                variant="tertiary"
-                onClick={() => settVisModal(true)}
-                disabled={!behandling.kanEndres || behandlingILesemodus}
-            >
-                Endre behandlende enhet
-            </BehandlingsMenyButton>
+        <Dropdown.Menu.List.Item
+            onClick={() => settVisModal(true)}
+            disabled={!behandling.kanEndres || behandlingILesemodus}
+        >
+            Endre behandlende enhet
             {visModal && (
                 <Modal
                     open
@@ -106,6 +103,6 @@ export const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling }) =
                     </Modal.Footer>
                 </Modal>
             )}
-        </>
+        </Dropdown.Menu.List.Item>
     );
 };

@@ -1,11 +1,11 @@
 import type { Behandling } from '../../../../../typer/behandling';
 
+import { Dropdown } from '@navikt/ds-react';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import HenleggBehandlingModal from './HenleggBehandlingModal/HenleggBehandlingModal';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
-import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 
 const getÅrsaker = (behandling: Behandling): Behandlingresultat[] => {
     if (behandling.type === Behandlingstype.Tilbakekreving) {
@@ -31,15 +31,11 @@ export const HenleggBehandling: React.FC<Props> = ({ behandling }) => {
     }, [behandling]);
 
     return (
-        <>
-            <BehandlingsMenyButton
-                variant="tertiary"
-                disabled={!behandling.kanHenleggeBehandling || !behandling.kanEndres}
-                onClick={() => settVisModal(true)}
-            >
-                Henlegg behandlingen og avslutt
-            </BehandlingsMenyButton>
-
+        <Dropdown.Menu.List.Item
+            onClick={() => settVisModal(true)}
+            disabled={!behandling.kanHenleggeBehandling || !behandling.kanEndres}
+        >
+            Henlegg behandlingen og avslutt
             {visModal && (
                 <HenleggBehandlingModal
                     behandling={behandling}
@@ -48,6 +44,6 @@ export const HenleggBehandling: React.FC<Props> = ({ behandling }) => {
                     årsaker={årsaker}
                 />
             )}
-        </>
+        </Dropdown.Menu.List.Item>
     );
 };

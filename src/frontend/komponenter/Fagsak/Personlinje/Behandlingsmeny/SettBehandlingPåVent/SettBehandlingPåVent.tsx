@@ -1,6 +1,6 @@
 import type { Behandling } from '../../../../../typer/behandling';
 
-import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
+import { Button, Dropdown, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
 import { useState } from 'react';
@@ -10,11 +10,7 @@ import { Valideringsstatus } from '../../../../../hooks/skjema/typer';
 import { manuelleVenteÅrsaker, venteårsaker } from '../../../../../typer/behandling';
 import { dagensDato } from '../../../../../utils/dato';
 import Datovelger from '../../../../Felleskomponenter/Datovelger/Datovelger';
-import {
-    BehandlingsMenyButton,
-    Spacer20,
-    Spacer8,
-} from '../../../../Felleskomponenter/Flytelementer';
+import { Spacer20, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 
 type Props = {
@@ -45,15 +41,11 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
     };
 
     return (
-        <>
-            <BehandlingsMenyButton
-                variant="tertiary"
-                onClick={() => settVisModal(true)}
-                disabled={!behandling.kanEndres}
-            >
-                Sett behandling på vent
-            </BehandlingsMenyButton>
-
+        <Dropdown.Menu.List.Item
+            onClick={() => settVisModal(true)}
+            disabled={!behandling.kanEndres}
+        >
+            Sett behandling på vent
             {visModal && (
                 <Modal
                     open
@@ -61,7 +53,7 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                         heading: 'Sett behandlingen på vent',
                         size: 'medium',
                     }}
-                    portal={true}
+                    portal
                     width="small"
                     onClose={lukkModal}
                 >
@@ -110,6 +102,6 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                     </Modal.Footer>
                 </Modal>
             )}
-        </>
+        </Dropdown.Menu.List.Item>
     );
 };

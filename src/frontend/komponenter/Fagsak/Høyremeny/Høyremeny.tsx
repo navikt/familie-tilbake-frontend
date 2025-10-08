@@ -1,6 +1,5 @@
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
-// import type { Person } from '../../../typer/person';
 
 import { ClockIcon, FolderIcon, PaperplaneIcon, PersonGavelIcon } from '@navikt/aksel-icons';
 import { Tabs } from '@navikt/ds-react';
@@ -12,7 +11,6 @@ import { BrukerInformasjon } from './Informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './Informasjonsbokser/Faktaboks';
 import Menykontainer, { Menysider } from './Menykontainer';
 import { useBehandling } from '../../../context/BehandlingContext';
-// import { Kjønn } from '../../../typer/person';
 
 type Props = {
     fagsak: Fagsak;
@@ -22,18 +20,6 @@ type Props = {
 const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
     const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandling();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
-
-    // const bruker: Bruker = {
-    //     navn: 'Fredrik Garseg Mørk',
-    //     fødselsdato: '1995-01-01',
-    //     dødsdato: undefined,
-    //     kjønn: Kjønn.Mann,
-    //     personIdent: '12312312312',
-    // };
-    // const institusjon = {
-    //     navn: 'Institusjon AS',
-    //     organisasjonsnummer: '123456789',
-    // };
 
     return (
         <Suspense fallback="Høyremeny laster...">

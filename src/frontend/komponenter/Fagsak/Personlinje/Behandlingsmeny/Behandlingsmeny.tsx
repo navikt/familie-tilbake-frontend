@@ -20,7 +20,7 @@ import { useFagsakStore } from '../../../../stores/fagsakStore';
 import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 
-const Behandlingsmeny: React.FC = () => {
+export const Behandlingsmeny: React.FC = () => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
     const { fagsystem, ytelsestype } = useFagsakStore();
     const { innloggetSaksbehandler } = useApp();
@@ -38,13 +38,17 @@ const Behandlingsmeny: React.FC = () => {
         aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak;
     const { toggles } = useToggles();
 
+    if (behandling?.status !== RessursStatus.Suksess) {
+        return null;
+    }
+
     return (
         <Dropdown closeOnSelect>
             <Button
                 as={Dropdown.Toggle}
                 id="behandlingsmeny-arialabel-knapp"
                 size="small"
-                variant="secondary"
+                variant="tertiary"
                 icon={<MenuElipsisHorizontalIcon fontSize="1.5rem" />}
             >
                 Behandlingsmeny
@@ -52,65 +56,42 @@ const Behandlingsmeny: React.FC = () => {
 
             <Dropdown.Menu placement="top-start" aria-labelledby="behandlingsmeny-arialabel-knapp">
                 <Dropdown.Menu.List className="min-w-60 m-0">
-                    {behandling?.status === RessursStatus.Suksess && (
-                        <Dropdown.Menu.List.Item className="p-0">
-                            <OpprettBehandling behandling={behandling.data} />
-                        </Dropdown.Menu.List.Item>
-                    )}
+                    <OpprettBehandling behandling={behandling.data} />
 
-                    {behandling?.status === RessursStatus.Suksess &&
-                        behandling.data.status !== Behandlingstatus.Avsluttet &&
+                    {behandling.data.status !== Behandlingstatus.Avsluttet &&
                         !vedtakFattetEllerFattes &&
                         behandling.data.kanEndres && (
                             <>
-                                <Dropdown.Menu.List.Item className="p-0">
-                                    <HenleggBehandling behandling={behandling.data} />
-                                </Dropdown.Menu.List.Item>
+                                <HenleggBehandling behandling={behandling.data} />
 
                                 {erForvalter && (
-                                    <Dropdown.Menu.List.Item className="p-0">
-                                        <HentOppdatertKravgrunnlag behandling={behandling.data} />
-                                    </Dropdown.Menu.List.Item>
+                                    <HentOppdatertKravgrunnlag behandling={behandling.data} />
                                 )}
 
                                 {(toggles[ToggleName.SaksbehanderKanResettebehandling] ||
                                     erForvalter) && (
-                                    <Dropdown.Menu.List.Item className="p-0">
-                                        <SettBehandlingTilbakeTilFakta
-                                            behandling={behandling.data}
-                                        />
-                                    </Dropdown.Menu.List.Item>
+                                    <SettBehandlingTilbakeTilFakta behandling={behandling.data} />
                                 )}
 
                                 {!venterPåKravgrunnlag &&
                                     (behandling.data.erBehandlingPåVent || ventegrunn ? (
-                                        <Dropdown.Menu.List.Item className="p-0">
-                                            <GjennoptaBehandling behandling={behandling.data} />
-                                        </Dropdown.Menu.List.Item>
+                                        <GjennoptaBehandling behandling={behandling.data} />
                                     ) : (
-                                        <Dropdown.Menu.List.Item className="p-0">
-                                            <SettBehandlingPåVent behandling={behandling.data} />
-                                        </Dropdown.Menu.List.Item>
+                                        <SettBehandlingPåVent behandling={behandling.data} />
                                     ))}
 
                                 {fagsystem === Fagsystem.BA && ytelsestype && (
-                                    <Dropdown.Menu.List.Item className="p-0">
-                                        <EndreBehandlendeEnhet
-                                            ytelse={ytelsestype}
-                                            behandling={behandling.data}
-                                        />
-                                    </Dropdown.Menu.List.Item>
+                                    <EndreBehandlendeEnhet
+                                        ytelse={ytelsestype}
+                                        behandling={behandling.data}
+                                    />
                                 )}
 
                                 {behandling.data.støtterManuelleBrevmottakere && (
-                                    <Dropdown.Menu.List.Item className="p-0">
-                                        <LeggTilFjernBrevmottakere behandling={behandling.data} />
-                                    </Dropdown.Menu.List.Item>
+                                    <LeggTilFjernBrevmottakere behandling={behandling.data} />
                                 )}
 
-                                <Dropdown.Menu.List.Item className="p-0">
-                                    <HistoriskeVurderinger behandling={behandling.data} />
-                                </Dropdown.Menu.List.Item>
+                                <HistoriskeVurderinger behandling={behandling.data} />
                             </>
                         )}
                 </Dropdown.Menu.List>
@@ -118,5 +99,3 @@ const Behandlingsmeny: React.FC = () => {
         </Dropdown>
     );
 };
-
-export default Behandlingsmeny;

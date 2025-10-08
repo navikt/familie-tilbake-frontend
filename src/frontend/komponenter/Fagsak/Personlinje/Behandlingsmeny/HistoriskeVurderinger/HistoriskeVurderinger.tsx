@@ -1,5 +1,6 @@
 import type { Behandling } from '../../../../../typer/behandling';
 
+import { Dropdown } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useApp } from '../../../../../context/AppContext';
@@ -7,7 +8,6 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { ToggleName } from '../../../../../context/toggles';
 import { useToggles } from '../../../../../context/TogglesContext';
 import { useFagsakStore } from '../../../../../stores/fagsakStore';
-import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 
 type Props = {
     behandling: Behandling;
@@ -29,8 +29,7 @@ export const HistoriskeVurderinger: React.FC<Props> = ({ behandling }) => {
         harTilgang &&
         fagsystem &&
         eksternFagsakId && (
-            <BehandlingsMenyButton
-                variant="tertiary"
+            <Dropdown.Menu.List.Item
                 onClick={() =>
                     window.open(
                         `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/inaktiv`
@@ -39,7 +38,7 @@ export const HistoriskeVurderinger: React.FC<Props> = ({ behandling }) => {
                 disabled={!behandling.kanEndres || behandlingILesemodus}
             >
                 Se historiske vurderinger
-            </BehandlingsMenyButton>
+            </Dropdown.Menu.List.Item>
         )
     );
 };

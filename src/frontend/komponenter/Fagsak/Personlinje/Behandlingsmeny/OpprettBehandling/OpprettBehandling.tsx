@@ -1,6 +1,6 @@
 import type { Behandling } from '../../../../../typer/behandling';
 
-import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
+import { Button, Dropdown, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -12,11 +12,7 @@ import {
     behandlingÅrsaker,
 } from '../../../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
-import {
-    BehandlingsMenyButton,
-    Spacer20,
-    Spacer8,
-} from '../../../../Felleskomponenter/Flytelementer';
+import { Spacer20, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 
 type Props = {
     behandling: Behandling;
@@ -32,15 +28,11 @@ export const OpprettBehandling: React.FC<Props> = ({ behandling }) => {
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
     return (
-        <>
-            <BehandlingsMenyButton
-                variant="tertiary"
-                onClick={() => settVisModal(true)}
-                disabled={!behandling.kanRevurderingOpprettes}
-            >
-                Opprett behandling
-            </BehandlingsMenyButton>
-
+        <Dropdown.Menu.List.Item
+            disabled={!behandling.kanRevurderingOpprettes}
+            onClick={() => settVisModal(true)}
+        >
+            Opprett behandling
             {visModal && (
                 <Modal
                     open
@@ -108,6 +100,6 @@ export const OpprettBehandling: React.FC<Props> = ({ behandling }) => {
                     </Modal.Footer>
                 </Modal>
             )}
-        </>
+        </Dropdown.Menu.List.Item>
     );
 };

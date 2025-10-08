@@ -1,5 +1,6 @@
 import type { Behandling } from '../../../../../typer/behandling';
 
+import { Dropdown } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -9,7 +10,6 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
 import { useFagsakStore } from '../../../../../stores/fagsakStore';
 import { RessursStatus } from '../../../../../typer/ressurs';
-import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { FeilModal } from '../../../../Felleskomponenter/Modal/Feil/FeilModal';
 
 type Props = {
@@ -41,22 +41,17 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) =
     };
 
     return (
-        <>
-            <BehandlingsMenyButton
-                variant="tertiary"
-                onClick={() => setVisModal(true)}
-                disabled={!behandling.kanSetteTilbakeTilFakta}
-            >
-                Sett behandling tilbake til fakta
-            </BehandlingsMenyButton>
-
+        <Dropdown.Menu.List.Item
+            onClick={() => setVisModal(true)}
+            disabled={!behandling.kanSetteTilbakeTilFakta}
+        >
+            Sett behandling tilbake til fakta
             {visModal && (
                 <SettBehandlingTilbakeTilFaktaModal
                     onConfirm={handleResettBehandling}
                     onCancel={() => setVisModal(false)}
                 />
             )}
-
             {mutation.isError && eksternFagsakId && (
                 <FeilModal
                     feil={mutation.error}
@@ -65,6 +60,6 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) =
                     fagsakId={eksternFagsakId}
                 />
             )}
-        </>
+        </Dropdown.Menu.List.Item>
     );
 };

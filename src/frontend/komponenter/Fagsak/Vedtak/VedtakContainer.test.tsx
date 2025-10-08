@@ -167,6 +167,7 @@ describe('Tester: VedtakContainer', () => {
             nullstillIkkePersisterteKomponenter: jest.fn(),
             actionBarStegtekst: jest.fn().mockReturnValue('Steg 4 av 4'),
             harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+            erStegBehandlet: jest.fn().mockReturnValue(false),
         }));
     };
 

@@ -1,5 +1,6 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
+import type { TogglesHook } from '../../../context/TogglesContext';
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
@@ -20,6 +21,7 @@ import * as React from 'react';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
+// import { ToggleName } from '../../../context/toggles';
 import { Aktsomhet, Fagsystem, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
@@ -34,6 +36,11 @@ jest.mock('../../../api/http/HttpProvider', () => ({
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
+}));
+
+const mockUseToggles = jest.fn();
+jest.mock('../../../context/TogglesContext', () => ({
+    useToggles: (): TogglesHook => mockUseToggles(),
 }));
 
 jest.mock('react-router', () => ({
@@ -147,6 +154,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
         user = userEvent.setup();
         jest.clearAllMocks();
         setupHttpMock();
+        mockUseToggles.mockImplementation(() => ({
+            toggles: {},
+        }));
     });
 
     test('- totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
