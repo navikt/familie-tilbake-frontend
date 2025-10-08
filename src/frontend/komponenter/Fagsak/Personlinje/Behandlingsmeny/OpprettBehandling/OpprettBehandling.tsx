@@ -20,10 +20,9 @@ import {
 
 type Props = {
     behandling: Behandling;
-    onListElementClick: () => void;
 };
 
-const OpprettBehandling: React.FC<Props> = ({ behandling, onListElementClick }) => {
+export const OpprettBehandling: React.FC<Props> = ({ behandling }) => {
     const [visModal, settVisModal] = useState(false);
     const { skjema, sendInn, nullstillSkjema } = useOpprettBehandlingSkjema(
         behandling.behandlingId,
@@ -36,10 +35,7 @@ const OpprettBehandling: React.FC<Props> = ({ behandling, onListElementClick }) 
         <>
             <BehandlingsMenyButton
                 variant="tertiary"
-                onClick={() => {
-                    settVisModal(true);
-                    onListElementClick();
-                }}
+                onClick={() => settVisModal(true)}
                 disabled={!behandling.kanRevurderingOpprettes}
             >
                 Opprett behandling
@@ -49,15 +45,13 @@ const OpprettBehandling: React.FC<Props> = ({ behandling, onListElementClick }) 
                 <Modal
                     open
                     header={{ heading: 'Opprett behandling', size: 'medium' }}
-                    portal={true}
+                    portal
                     width="small"
-                    onClose={() => {
-                        settVisModal(false);
-                    }}
+                    onClose={() => settVisModal(false)}
                 >
                     <Modal.Body>
                         <Select
-                            readOnly={true}
+                            readOnly
                             name="Behandling"
                             label="Type behandling"
                             value={Behandlingstype.RevurderingTilbakekreving}
@@ -78,7 +72,7 @@ const OpprettBehandling: React.FC<Props> = ({ behandling, onListElementClick }) 
                             value={skjema.felter.behandlingsårsak.verdi}
                             onChange={event => skjema.felter.behandlingsårsak.onChange(event)}
                         >
-                            <option disabled={true} value="">
+                            <option disabled value="">
                                 Velg årsak til revurderingen
                             </option>
                             {behandlingÅrsaker.map(opt => (
@@ -97,14 +91,7 @@ const OpprettBehandling: React.FC<Props> = ({ behandling, onListElementClick }) 
                         )}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button
-                            variant="primary"
-                            key="bekreft"
-                            onClick={() => {
-                                sendInn();
-                            }}
-                            size="small"
-                        >
+                        <Button key="bekreft" onClick={sendInn} size="small">
                             Ok
                         </Button>
                         <Button
@@ -124,5 +111,3 @@ const OpprettBehandling: React.FC<Props> = ({ behandling, onListElementClick }) 
         </>
     );
 };
-
-export default OpprettBehandling;
