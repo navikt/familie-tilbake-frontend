@@ -3,6 +3,7 @@ import type { Behandling } from '../../../../../typer/behandling';
 import { Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
+import { useState } from 'react';
 
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { Valideringsstatus } from '../../../../../hooks/skjema/typer';
@@ -18,11 +19,10 @@ import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVen
 
 type Props = {
     behandling: Behandling;
-    onListElementClick: () => void;
 };
 
-const SettBehandlingPåVent: React.FC<Props> = ({ behandling, onListElementClick }) => {
-    const [visModal, settVisModal] = React.useState<boolean>(false);
+export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
+    const [visModal, settVisModal] = useState(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
 
     const lukkModalOgHentBehandling = (): void => {
@@ -48,10 +48,7 @@ const SettBehandlingPåVent: React.FC<Props> = ({ behandling, onListElementClick
         <>
             <BehandlingsMenyButton
                 variant="tertiary"
-                onClick={() => {
-                    settVisModal(true);
-                    onListElementClick();
-                }}
+                onClick={() => settVisModal(true)}
                 disabled={!behandling.kanEndres}
             >
                 Sett behandling på vent
@@ -101,11 +98,8 @@ const SettBehandlingPåVent: React.FC<Props> = ({ behandling, onListElementClick
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
-                            variant="primary"
                             key="bekreft"
-                            onClick={() => {
-                                onBekreft(behandling.behandlingId);
-                            }}
+                            onClick={() => onBekreft(behandling.behandlingId)}
                             size="small"
                         >
                             Bekreft
@@ -119,5 +113,3 @@ const SettBehandlingPåVent: React.FC<Props> = ({ behandling, onListElementClick
         </>
     );
 };
-
-export default SettBehandlingPåVent;

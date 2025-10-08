@@ -4,6 +4,7 @@ import type { Arbeidsfordelingsenhet } from '../../../../../typer/enhet';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
@@ -15,22 +16,19 @@ import { BehandlingsMenyButton, Spacer8 } from '../../../../Felleskomponenter/Fl
 type Props = {
     ytelse: Ytelsetype;
     behandling: Behandling;
-    onListElementClick: () => void;
 };
 
-const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElementClick }) => {
-    const [visModal, settVisModal] = React.useState<boolean>(false);
-    const [behandendeEnheter, settBehandendeEnheter] = React.useState<Arbeidsfordelingsenhet[]>([]);
+export const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling }) => {
+    const [visModal, settVisModal] = useState(false);
+    const [behandlendeEnheter, setBehandlendeEnheter] = useState<Arbeidsfordelingsenhet[]>([]);
     const { behandlingILesemodus } = useBehandling();
     const { skjema, sendInn, nullstillSkjema } = useEndreBehandlendeEnhet(
         behandling.behandlingId,
-        () => {
-            settVisModal(false);
-        }
+        () => settVisModal(false)
     );
 
-    React.useEffect(() => {
-        settBehandendeEnheter(finnMuligeEnheter());
+    useEffect(() => {
+        setBehandlendeEnheter(finnMuligeEnheter());
     }, [ytelse]);
 
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
@@ -39,10 +37,7 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
         <>
             <BehandlingsMenyButton
                 variant="tertiary"
-                onClick={() => {
-                    settVisModal(true);
-                    onListElementClick();
-                }}
+                onClick={() => settVisModal(true)}
                 disabled={!behandling.kanEndres || behandlingILesemodus}
             >
                 Endre behandlende enhet
@@ -51,7 +46,7 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
                 <Modal
                     open
                     header={{ heading: 'Endre enhet for behandlingen', size: 'medium' }}
-                    portal={true}
+                    portal
                     onClose={() => {
                         nullstillSkjema();
                         settVisModal(false);
@@ -64,10 +59,10 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
                             name="enhet"
                             label="Velg ny enhet"
                         >
-                            <option value="" disabled={true}>
+                            <option value="" disabled>
                                 Velg ny enhet
                             </option>
-                            {behandendeEnheter.map(enhet => (
+                            {behandlendeEnheter.map(enhet => (
                                 <option key={enhet.enhetId} value={enhet.enhetId}>
                                     {enhet.enhetNavn}
                                 </option>
@@ -93,10 +88,9 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
-                            variant="primary"
                             disabled={skjema.submitRessurs.status === RessursStatus.Henter}
                             key="bekreft"
-                            onClick={() => sendInn()}
+                            onClick={sendInn}
                             size="small"
                         >
                             Bekreft
@@ -104,9 +98,7 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
                         <Button
                             variant="tertiary"
                             key="avbryt"
-                            onClick={() => {
-                                settVisModal(false);
-                            }}
+                            onClick={() => settVisModal(false)}
                             size="small"
                         >
                             Avbryt
@@ -117,5 +109,3 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
         </>
     );
 };
-
-export default EndreBehandlendeEnhet;
