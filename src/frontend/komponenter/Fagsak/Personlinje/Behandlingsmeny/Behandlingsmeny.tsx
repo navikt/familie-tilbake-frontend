@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from '@navikt/aksel-icons';
+import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import { Button, Popover } from '@navikt/ds-react';
 import * as React from 'react';
 import { useRef, useState } from 'react';
@@ -54,10 +54,9 @@ const Behandlingsmeny: React.FC = () => {
                 ref={buttonRef}
                 id="behandlingsmeny-arialabel-knapp"
                 size="small"
-                variant="secondary"
+                variant="tertiary"
                 onClick={() => settVisMeny(!visMeny)}
-                icon={<ChevronDownIcon fontSize="1.375rem" />}
-                iconPosition="right"
+                icon={<MenuElipsisHorizontalIcon fontSize="1.5rem" />}
             >
                 Behandlingsmeny
             </Button>
