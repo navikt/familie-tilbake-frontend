@@ -77,7 +77,7 @@ const Personlinje: React.FC<Props> = ({ bruker, fagsak }) => {
                 )}
             </HStack>
 
-            <Behandlingsmeny fagsak={fagsak} />
+            <Behandlingsmeny />
         </Visittkort>
     );
 };
