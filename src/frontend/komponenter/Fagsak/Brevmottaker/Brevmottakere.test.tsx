@@ -52,6 +52,7 @@ const createMockFagsak = (): Fagsak => ({
     fagsystem: Fagsystem.BA,
     ytelsestype: Ytelsetype.Barnetrygd,
     språkkode: Målform.Nb,
+    institusjon: null,
     bruker: {
         personIdent: '12345678901',
         navn: 'Test Bruker',

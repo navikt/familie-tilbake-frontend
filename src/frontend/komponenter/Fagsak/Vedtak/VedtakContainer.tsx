@@ -138,7 +138,7 @@ const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
                             brevmottakere={behandling.manuelleBrevmottakere.map(
                                 brevmottakerDto => brevmottakerDto.brevmottaker
                             )}
-                            institusjon={fagsak?.institusjon}
+                            institusjon={fagsak.institusjon}
                             bruker={fagsak.bruker}
                             linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
                         />

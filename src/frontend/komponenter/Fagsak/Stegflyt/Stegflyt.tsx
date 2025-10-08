@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { erStegUtført, useBehandling } from '../../../context/BehandlingContext';
 import { useToggles } from '../../../context/TogglesContext';
-import { useFagsakStore } from '../../../store/fagsak';
+import { useFagsakStore } from '../../../stores/fagsakStore';
 import { type Behandling, type Behandlingsstegstilstand } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { erSidenAktiv, SYNLIGE_STEG, visSide } from '../../../utils/sider';
@@ -43,7 +43,7 @@ export const Stegflyt: React.FC = () => {
     const { behandling } = useBehandling();
     const location = useLocation();
     const navigate = useNavigate();
-    const { fagsakId, fagSystem } = useFagsakStore();
+    const { eksternFagsakId, fagsystem } = useFagsakStore();
     const { toggles: aktiveToggles } = useToggles();
 
     const stegsinfo = mapStegTilStepperSteg(
@@ -57,8 +57,8 @@ export const Stegflyt: React.FC = () => {
     const aktivStegnummer = aktivStegindeks > -1 ? aktivStegindeks + 1 : 0;
 
     const fagsakPath = (sideHref: string): string | null => {
-        if (behandling?.status === RessursStatus.Suksess && fagSystem && fagsakId)
-            return `/fagsystem/${fagSystem}/fagsak/${fagsakId}/behandling/${behandling.data.eksternBrukId}/${sideHref}`;
+        if (behandling?.status === RessursStatus.Suksess && fagsystem && eksternFagsakId)
+            return `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.data.eksternBrukId}/${sideHref}`;
         else return null;
     };
 

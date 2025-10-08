@@ -1,15 +1,15 @@
 import type { Behandling } from '../../../../../typer/behandling';
-import type { Fagsak } from '../../../../../typer/fagsak';
 
 import { Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useHttp } from '../../../../../api/http/HttpProvider';
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
+import { useFagsakStore } from '../../../../../stores/fagsakStore';
 import { Behandlingssteg, Behandlingsstegstatus } from '../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { SYNLIGE_STEG } from '../../../../../utils/sider';
@@ -18,20 +18,21 @@ import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
     onListElementClick: () => void;
 };
 
-const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, fagsak, onListElementClick }) => {
-    const [visFjernModal, settVisFjernModal] = React.useState<boolean>(false);
-    const [senderInn, settSenderInn] = React.useState<boolean>(false);
-    const [feilmelding, settFeilmelding] = React.useState<string>();
+const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, onListElementClick }) => {
+    const [visFjernModal, settVisFjernModal] = useState(false);
+    const [senderInn, settSenderInn] = useState(false);
+    const [feilmelding, settFeilmelding] = useState<string>();
     const {
         hentBehandlingMedBehandlingId,
         behandlingILesemodus,
         settVisBrevmottakerModal,
         nullstillIkkePersisterteKomponenter,
     } = useBehandling();
+
+    const { fagsystem, eksternFagsakId } = useFagsakStore();
     const { utførRedirect } = useRedirectEtterLagring();
     const { request } = useHttp();
     const { settToast } = useApp();
@@ -53,11 +54,11 @@ const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, fagsak, onList
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandling.behandlingId}/aktiver`,
         }).then((respons: Ressurs<string>) => {
             settSenderInn(false);
-            if (respons.status === RessursStatus.Suksess) {
+            if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
                 settVisBrevmottakerModal(true);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                     navigate(
-                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`
+                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`
                     );
                 });
             } else if (
@@ -78,11 +79,11 @@ const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, fagsak, onList
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandling.behandlingId}/deaktiver`,
         }).then((respons: Ressurs<string>) => {
             settSenderInn(false);
-            if (respons.status === RessursStatus.Suksess) {
+            if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
                 settVisFjernModal(false);
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                     utførRedirect(
-                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                     );
                 });
             } else if (
@@ -131,7 +132,7 @@ const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, fagsak, onList
                 <Modal
                     open
                     header={{ heading: 'Ønsker du å fjerne brevmottaker(e)?', size: 'medium' }}
-                    portal={true}
+                    portal
                     width="small"
                     onClose={() => {
                         settVisFjernModal(false);
@@ -150,7 +151,6 @@ const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling, fagsak, onList
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
-                            variant="primary"
                             key="bekreft"
                             disabled={senderInn}
                             loading={senderInn}

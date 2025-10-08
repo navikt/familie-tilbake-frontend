@@ -1,5 +1,4 @@
 import type { Behandling } from '../../../../../typer/behandling';
-import type { Fagsak } from '../../../../../typer/fagsak';
 
 import * as React from 'react';
 
@@ -7,21 +6,22 @@ import { useHttp } from '../../../../../api/http/HttpProvider';
 import { useApp } from '../../../../../context/AppContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../../hooks/useRedirectEtterLagring';
+import { useFagsakStore } from '../../../../../stores/fagsakStore';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { BehandlingsMenyButton } from '../../../../Felleskomponenter/Flytelementer';
 import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer';
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
     onListElementClick: () => void;
 };
 
-const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling, fagsak, onListElementClick }) => {
+const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling, onListElementClick }) => {
     const { request } = useHttp();
     const { settToast } = useApp();
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
+    const { fagsystem, eksternFagsakId } = useFagsakStore();
 
     const hentKorrigertKravgrunnlag = (): void => {
         nullstillIkkePersisterteKomponenter();
@@ -29,14 +29,14 @@ const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling, fagsak, onList
             method: 'PUT',
             url: `/familie-tilbake/api/forvaltning/behandling/${behandling.behandlingId}/kravgrunnlag/v1`,
         }).then((respons: Ressurs<string>) => {
-            if (respons.status === RessursStatus.Suksess) {
+            if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
                 settToast(ToastTyper.KravgrunnlaHentet, {
                     alertType: AlertType.Info,
                     tekst: 'Hentet korrigert kravgrunnlag',
                 });
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                     utførRedirect(
-                        `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                     );
                 });
             } else if (

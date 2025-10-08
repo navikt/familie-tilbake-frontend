@@ -2,7 +2,6 @@ import type { BehandlingApiHook } from '../../../../../../api/behandling';
 import type { Http } from '../../../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../../../context/BehandlingContext';
 import type { Behandling } from '../../../../../../typer/behandling';
-import type { Fagsak } from '../../../../../../typer/fagsak';
 import type { Ressurs } from '../../../../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -14,7 +13,6 @@ import * as React from 'react';
 
 import HenleggBehandlingModal from './HenleggBehandlingModal';
 import { Behandlingresultat, Behandlingstype } from '../../../../../../typer/behandling';
-import { Målform } from '../../../../../../typer/fagsak';
 import { RessursStatus } from '../../../../../../typer/ressurs';
 
 jest.mock('../../../../../../api/http/HttpProvider', () => {
@@ -37,14 +35,12 @@ jest.mock('../../../../../../api/behandling', () => ({
 
 const renderHenleggBehandlingModal = (
     behandling: Behandling,
-    fagsak: Fagsak,
     årsaker: Behandlingresultat[]
 ): RenderResult =>
     render(
         <HenleggBehandlingModal
             behandling={behandling}
-            fagsak={fagsak}
-            visModal={true}
+            visModal
             settVisModal={() => jest.fn()}
             årsaker={årsaker}
         />
@@ -79,12 +75,9 @@ describe('Tester: HenleggBehandlingModal', () => {
             type: Behandlingstype.Tilbakekreving,
             varselSendt: true,
         });
-        const fagsak = mock<Fagsak>({});
 
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
-            renderHenleggBehandlingModal(behandling, fagsak, [
-                Behandlingresultat.HenlagtFeilopprettet,
-            ]);
+            renderHenleggBehandlingModal(behandling, [Behandlingresultat.HenlagtFeilopprettet]);
 
         await waitFor(() => {
             expect(getByText('Behandlingen henlegges')).toBeInTheDocument();
@@ -121,12 +114,9 @@ describe('Tester: HenleggBehandlingModal', () => {
             type: Behandlingstype.Tilbakekreving,
             varselSendt: false,
         });
-        const fagsak = mock<Fagsak>({});
 
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
-            renderHenleggBehandlingModal(behandling, fagsak, [
-                Behandlingresultat.HenlagtFeilopprettet,
-            ]);
+            renderHenleggBehandlingModal(behandling, [Behandlingresultat.HenlagtFeilopprettet]);
 
         await waitFor(() => {
             expect(getByText('Behandlingen henlegges')).toBeInTheDocument();
@@ -162,12 +152,9 @@ describe('Tester: HenleggBehandlingModal', () => {
         const behandling = mock<Behandling>({
             type: Behandlingstype.RevurderingTilbakekreving,
         });
-        const fagsak = mock<Fagsak>({
-            språkkode: Målform.Nb,
-        });
 
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
-            renderHenleggBehandlingModal(behandling, fagsak, [
+            renderHenleggBehandlingModal(behandling, [
                 Behandlingresultat.HenlagtFeilopprettetMedBrev,
                 Behandlingresultat.HenlagtFeilopprettetUtenBrev,
             ]);
@@ -221,12 +208,9 @@ describe('Tester: HenleggBehandlingModal', () => {
         const behandling = mock<Behandling>({
             type: Behandlingstype.RevurderingTilbakekreving,
         });
-        const fagsak = mock<Fagsak>({
-            språkkode: Målform.Nb,
-        });
 
         const { getByText, getByLabelText, getByRole, queryByText, queryByRole, queryAllByText } =
-            renderHenleggBehandlingModal(behandling, fagsak, [
+            renderHenleggBehandlingModal(behandling, [
                 Behandlingresultat.HenlagtFeilopprettetMedBrev,
                 Behandlingresultat.HenlagtFeilopprettetUtenBrev,
             ]);
