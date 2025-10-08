@@ -1,4 +1,4 @@
-import type { Person } from '../../../typer/person';
+import type { Bruker } from '../../../typer/bruker';
 
 import { CopyButton, HStack, Stack, Label } from '@navikt/ds-react';
 import React from 'react';
@@ -6,9 +6,9 @@ import React from 'react';
 import { FamilieIkonVelger } from './PersonIkon/FamilieIkonVelger';
 
 type Props = {
-    navn: Person['navn'];
-    ident: Person['personIdent'];
-    kjønn: Person['kjønn'];
+    navn: Bruker['navn'];
+    ident: Bruker['personIdent'];
+    kjønn: Bruker['kjønn'];
     alder: number;
     children: React.ReactNode;
 };

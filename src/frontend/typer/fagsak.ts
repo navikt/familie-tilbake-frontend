@@ -1,5 +1,5 @@
 import type { Behandlingstatus, Behandlingstype } from './behandling';
-import type { Person } from './person';
+import type { Bruker } from './bruker';
 import type { Fagsystem, Ytelsetype } from '../kodeverk';
 
 export enum Målform {
@@ -29,7 +29,7 @@ export type Fagsak = {
     ytelsestype: Ytelsetype;
     fagsystem: Fagsystem;
     språkkode: Målform;
-    bruker: Person;
+    bruker: Bruker;
     behandlinger: FagsakBehandling[];
     institusjon: Institusjon | null;
 };

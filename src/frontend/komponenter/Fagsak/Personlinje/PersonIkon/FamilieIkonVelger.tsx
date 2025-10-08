@@ -1,4 +1,4 @@
-import type { Person } from '../../../../typer/person';
+import type { Bruker } from '../../../../typer/bruker';
 
 import * as React from 'react';
 
@@ -7,12 +7,12 @@ import { JenteIkon } from './JenteIkon';
 import { KvinneIkon } from './KvinneIkon';
 import { MannIkon } from './MannIkon';
 import { NøytralPersonIkon } from './NøytralPersonIkon';
-import { Kjønn } from '../../../../typer/person';
+import { Kjønn } from '../../../../typer/bruker';
 
 export type Props = {
     alder: number;
     className?: string;
-    kjønn: Person['kjønn'];
+    kjønn: Bruker['kjønn'];
     width?: number;
     height?: number;
 };

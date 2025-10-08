@@ -1,5 +1,5 @@
+import type { Bruker } from '../../../../typer/bruker';
 import type { Institusjon } from '../../../../typer/fagsak';
-import type { Person } from '../../../../typer/person';
 
 import {
     BagdeIcon,
@@ -14,11 +14,11 @@ import React from 'react';
 import { hentAlder } from '../../../../utils';
 
 type Props = {
-    bruker: Person;
-    insitusjon?: Institusjon;
+    bruker: Bruker;
+    institusjon: Institusjon | null;
 };
 
-export const BrukerInformasjon: React.FC<Props> = ({ bruker, insitusjon }) => {
+export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
     return (
         <Box
             padding="4"
@@ -69,7 +69,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, insitusjon }) => {
                         </dd>
                     </>
                 )}
-                {insitusjon && (
+                {institusjon && (
                     <>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <Buildings2Icon
@@ -79,7 +79,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, insitusjon }) => {
                             />
                             Institusjon
                         </dt>
-                        <dd className="text-medium">{insitusjon.navn}</dd>
+                        <dd className="text-medium">{institusjon.navn}</dd>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <Buildings2Icon
                                 title="a11y-title"
@@ -89,7 +89,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, insitusjon }) => {
                             Org.nummer
                         </dt>
                         <dd className="text-medium">
-                            {insitusjon.organisasjonsnummer}
+                            {institusjon.organisasjonsnummer}
                             {/* TODO 3+2+3 og kopier logikk */}
                         </dd>
                     </>

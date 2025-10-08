@@ -4,10 +4,10 @@ export enum Kjønn {
     Ukjent = 'UKJENT',
 }
 
-export type Person = {
+export type Bruker = {
     personIdent: string;
     navn: string;
     fødselsdato: string;
     kjønn: Kjønn;
-    dødsdato?: string;
+    dødsdato: string | null;
 };

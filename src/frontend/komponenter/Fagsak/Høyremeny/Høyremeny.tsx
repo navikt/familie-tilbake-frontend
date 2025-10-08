@@ -1,6 +1,6 @@
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
-import type { Person } from '../../../typer/person';
+// import type { Person } from '../../../typer/person';
 
 import { ClockIcon, FolderIcon, PaperplaneIcon, PersonGavelIcon } from '@navikt/aksel-icons';
 import { Tabs } from '@navikt/ds-react';
@@ -12,7 +12,7 @@ import { BrukerInformasjon } from './Informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './Informasjonsbokser/Faktaboks';
 import Menykontainer, { Menysider } from './Menykontainer';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Kjønn } from '../../../typer/person';
+// import { Kjønn } from '../../../typer/person';
 
 type Props = {
     fagsak: Fagsak;
@@ -23,17 +23,17 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
     const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandling();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
 
-    const bruker: Person = {
-        navn: 'Fredrik Garseg Mørk',
-        fødselsdato: '1995-01-01',
-        dødsdato: undefined,
-        kjønn: Kjønn.Mann,
-        personIdent: '12312312312',
-    };
-    const insitusjon = {
-        navn: 'Institusjon AS',
-        organisasjonsnummer: '123456789',
-    };
+    // const bruker: Bruker = {
+    //     navn: 'Fredrik Garseg Mørk',
+    //     fødselsdato: '1995-01-01',
+    //     dødsdato: undefined,
+    //     kjønn: Kjønn.Mann,
+    //     personIdent: '12312312312',
+    // };
+    // const institusjon = {
+    //     navn: 'Institusjon AS',
+    //     organisasjonsnummer: '123456789',
+    // };
 
     return (
         <Suspense fallback="Høyremeny laster...">
@@ -46,7 +46,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
             >
                 <div className="gap-4 flex flex-col flex-1 min-h-0">
                     <Faktaboks tittel="Faktaboks tittel" />
-                    <BrukerInformasjon bruker={bruker} insitusjon={insitusjon} />
+                    <BrukerInformasjon bruker={fagsak.bruker} institusjon={fagsak.institusjon} />
                     <Tabs
                         defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
                         iconPosition="top"

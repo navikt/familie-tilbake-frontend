@@ -1,5 +1,5 @@
+import type { Bruker } from '../../../typer/bruker';
 import type { Fagsak } from '../../../typer/fagsak';
-import type { Person } from '../../../typer/person';
 
 import { Buildings3Icon, LeaveIcon } from '@navikt/aksel-icons';
 import { HStack, Link, Tag } from '@navikt/ds-react';
@@ -37,7 +37,7 @@ const MaksLengdeInstitusjonNavn = styled.span`
 `;
 
 type Props = {
-    bruker: Person;
+    bruker: Bruker;
     fagsak: Fagsak;
 };
 
