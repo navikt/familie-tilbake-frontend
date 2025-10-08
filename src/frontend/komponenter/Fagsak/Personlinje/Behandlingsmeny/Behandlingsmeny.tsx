@@ -52,11 +52,11 @@ const Behandlingsmeny: React.FC = () => {
             </Button>
 
             <Dropdown.Menu placement="bottom-end" aria-labelledby="behandlingsmeny-arialabel-knapp">
-                <ul className="min-w-60 m-0" role="menu">
+                <Dropdown.Menu.List className="min-w-60 m-0">
                     {behandling?.status === RessursStatus.Suksess && (
-                        <li>
+                        <Dropdown.Menu.List.Item className="p-0">
                             <OpprettBehandling behandling={behandling.data} />
-                        </li>
+                        </Dropdown.Menu.List.Item>
                     )}
 
                     {behandling?.status === RessursStatus.Suksess &&
@@ -64,57 +64,57 @@ const Behandlingsmeny: React.FC = () => {
                         !vedtakFattetEllerFattes &&
                         behandling.data.kanEndres && (
                             <>
-                                <li>
+                                <Dropdown.Menu.List.Item className="p-0">
                                     <HenleggBehandling behandling={behandling.data} />
-                                </li>
+                                </Dropdown.Menu.List.Item>
 
                                 {erForvalter && (
-                                    <li>
+                                    <Dropdown.Menu.List.Item className="p-0">
                                         <HentOppdatertKravgrunnlag behandling={behandling.data} />
-                                    </li>
+                                    </Dropdown.Menu.List.Item>
                                 )}
 
                                 {(toggles[ToggleName.SaksbehanderKanResettebehandling] ||
                                     erForvalter) && (
-                                    <li>
+                                    <Dropdown.Menu.List.Item className="p-0">
                                         <SettBehandlingTilbakeTilFakta
                                             behandling={behandling.data}
                                         />
-                                    </li>
+                                    </Dropdown.Menu.List.Item>
                                 )}
 
                                 {!venterPåKravgrunnlag &&
                                     (behandling.data.erBehandlingPåVent || ventegrunn ? (
-                                        <li>
+                                        <Dropdown.Menu.List.Item className="p-0">
                                             <GjennoptaBehandling behandling={behandling.data} />
-                                        </li>
+                                        </Dropdown.Menu.List.Item>
                                     ) : (
-                                        <li>
+                                        <Dropdown.Menu.List.Item className="p-0">
                                             <SettBehandlingPåVent behandling={behandling.data} />
-                                        </li>
+                                        </Dropdown.Menu.List.Item>
                                     ))}
 
                                 {fagsystem === Fagsystem.BA && ytelsestype && (
-                                    <li>
+                                    <Dropdown.Menu.List.Item className="p-0">
                                         <EndreBehandlendeEnhet
                                             ytelse={ytelsestype}
                                             behandling={behandling.data}
                                         />
-                                    </li>
+                                    </Dropdown.Menu.List.Item>
                                 )}
 
                                 {behandling.data.støtterManuelleBrevmottakere && (
-                                    <li>
+                                    <Dropdown.Menu.List.Item className="p-0">
                                         <LeggTilFjernBrevmottakere behandling={behandling.data} />
-                                    </li>
+                                    </Dropdown.Menu.List.Item>
                                 )}
 
-                                <li>
+                                <Dropdown.Menu.List.Item className="p-0">
                                     <HistoriskeVurderinger behandling={behandling.data} />
-                                </li>
+                                </Dropdown.Menu.List.Item>
                             </>
                         )}
-                </ul>
+                </Dropdown.Menu.List>
             </Dropdown.Menu>
         </Dropdown>
     );

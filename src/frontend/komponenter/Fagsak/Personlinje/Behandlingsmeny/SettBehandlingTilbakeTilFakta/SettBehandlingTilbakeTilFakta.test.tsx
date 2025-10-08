@@ -60,7 +60,6 @@ const mockBehandling: Behandling = {
     erNyModell: false,
 };
 
-const mockOnListElementClick = jest.fn();
 const mockHentBehandling = jest.fn().mockResolvedValue(undefined);
 const mockNullstill = jest.fn();
 const mockUtførRedirect = jest.fn();
@@ -105,17 +104,10 @@ describe('SettBehandlingTilbakeTilFakta', () => {
             reset: jest.fn(),
         });
 
-        render(
-            <SettBehandlingTilbakeTilFakta
-                behandling={mockBehandling}
-                onListElementClick={mockOnListElementClick}
-            />
-        );
+        render(<SettBehandlingTilbakeTilFakta behandling={mockBehandling} />);
 
         const button = screen.getByText('Sett behandling tilbake til fakta');
         fireEvent.click(button);
-
-        expect(mockOnListElementClick).toHaveBeenCalledTimes(1);
 
         const fortsettKnapp = screen.getByText('Fortsett');
         fireEvent.click(fortsettKnapp);
