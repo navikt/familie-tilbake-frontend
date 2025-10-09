@@ -180,6 +180,7 @@ export type Behandling = {
     varselSendt: boolean;
     behandlingsstegsinfo: Behandlingsstegstilstand[];
     fagsystemsbehandlingId: string;
+    /** Ikke i bruk */
     eksternFaksakId: string;
     behandlingsårsakstype: Behandlingårsak | null;
     støtterManuelleBrevmottakere: boolean;
