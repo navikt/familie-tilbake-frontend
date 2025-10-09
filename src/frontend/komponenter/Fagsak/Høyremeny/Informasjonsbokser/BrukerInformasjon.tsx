@@ -8,10 +8,18 @@ import {
     FlowerPetalFallingIcon,
     PersonCircleIcon,
 } from '@navikt/aksel-icons';
-import { Box, Heading, Tag } from '@navikt/ds-react';
+import { Box, CopyButton, Heading, Tag } from '@navikt/ds-react';
 import React from 'react';
 
 import { hentAlder } from '../../../../utils';
+
+const erDNummer = (personIdent: string): boolean => personIdent.charAt(0) > '3';
+
+const formatterPersonIdent = (personIdent: string): string =>
+    personIdent.replace(/(\d{6})(\d{5})/, '$1 $2');
+
+const formatterOrgNummer = (orgNummer: string): string =>
+    orgNummer.replace(/(\d{3})(\d{2})(\d{3})/, '$1 $2 $3');
 
 type Props = {
     bruker: Bruker;
@@ -47,10 +55,12 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                     <BagdeIcon title="a11y-title" fontSize="1rem" className="text-icon-subtle" />
-                    Fødselsnummer
-                    {/* D-nummer logikk + oppdeling av tallet + kopiering(CopyButton) + lengde på fnr*/}
+                    {erDNummer(bruker.personIdent) ? ' D-nummer' : 'Fødselsnummer'}
                 </dt>
-                <dd className="text-medium">{bruker.personIdent}</dd>
+                <dd className="text-medium flex flex-row gap-2 items-center">
+                    {formatterPersonIdent(bruker.personIdent)}
+                    <CopyButton copyText={bruker.personIdent} className="p-0" />
+                </dd>
 
                 {bruker.dødsdato && (
                     <>
@@ -80,6 +90,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                             Institusjon
                         </dt>
                         <dd className="text-medium">{institusjon.navn}</dd>
+
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <Buildings2Icon
                                 title="a11y-title"
@@ -88,9 +99,12 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                             />
                             Org.nummer
                         </dt>
-                        <dd className="text-medium">
-                            {institusjon.organisasjonsnummer}
-                            {/* TODO 3+2+3 og kopier logikk */}
+                        <dd className="text-medium flex flex-row gap-2 items-center">
+                            {formatterOrgNummer(institusjon.organisasjonsnummer)}
+                            <CopyButton
+                                copyText={institusjon.organisasjonsnummer}
+                                className="p-0"
+                            />
                         </dd>
                     </>
                 )}
