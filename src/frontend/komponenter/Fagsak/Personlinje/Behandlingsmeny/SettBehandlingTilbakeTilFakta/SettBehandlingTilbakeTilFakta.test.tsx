@@ -55,9 +55,21 @@ const mockBehandling: Behandling = {
     kanRevurderingOpprettes: true,
     erBehandlingPåVent: false,
     harVerge: false,
-    resultatstype: undefined,
+    resultatstype: null,
     kanHenleggeBehandling: true,
     erNyModell: false,
+    avsluttetDato: null,
+    endretTidspunkt: '',
+    vedtaksDato: null,
+    enhetskode: '',
+    enhetsnavn: '',
+    ansvarligSaksbehandler: '',
+    ansvarligBeslutter: null,
+    eksternFaksakId: '',
+    behandlingsårsakstype: null,
+    støtterManuelleBrevmottakere: false,
+    harManuelleBrevmottakere: false,
+    begrunnelseForTilbakekreving: null,
 };
 
 const mockHentBehandling = jest.fn().mockResolvedValue(undefined);

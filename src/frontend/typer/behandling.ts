@@ -152,29 +152,42 @@ export type Behandlingsstegstilstand = {
 };
 
 export type Behandling = {
-    behandlingId: string;
+    /** UUID */
     eksternBrukId: string;
-    opprettetDato: string;
-    avsluttetDato?: string;
-    ansvarligSaksbehandler?: string;
-    enhetskode?: string;
-    resultatstype?: Behandlingresultat;
-    status: Behandlingstatus;
+    /** UUID */
+    behandlingId: string;
+    erBehandlingHenlagt: boolean;
     type: Behandlingstype;
-    erBehandlingHenlagt?: boolean;
-    erBehandlingPåVent?: boolean;
-    kanEndres: boolean;
-    kanSetteTilbakeTilFakta: boolean;
-    harVerge: boolean;
+    status: Behandlingstatus;
+    opprettetDato: string;
+    avsluttetDato: string | null;
+    /** Ikke i bruk */
+    endretTidspunkt: string;
+    /** Ikke i bruk */
+    vedtaksDato: string | null;
+    enhetskode: string;
+    enhetsnavn: string;
+    resultatstype: Behandlingresultat | null;
+    ansvarligSaksbehandler: string;
+    /** Ikke i bruk */
+    ansvarligBeslutter: string | null;
+    erBehandlingPåVent: boolean;
     kanHenleggeBehandling: boolean;
     kanRevurderingOpprettes: boolean;
+    harVerge: boolean;
+    kanEndres: boolean;
+    kanSetteTilbakeTilFakta: boolean;
     varselSendt: boolean;
     behandlingsstegsinfo: Behandlingsstegstilstand[];
     fagsystemsbehandlingId: string;
-    behandlingsårsakstype?: Behandlingårsak;
-    støtterManuelleBrevmottakere?: boolean;
+    /** Ikke i bruk */
+    eksternFaksakId: string;
+    behandlingsårsakstype: Behandlingårsak | null;
+    støtterManuelleBrevmottakere: boolean;
+    /** Ikke i bruk */
+    harManuelleBrevmottakere: boolean;
     manuelleBrevmottakere: ManuellBrevmottakerResponseDto[];
-    begrunnelseForTilbakekreving?: string;
+    begrunnelseForTilbakekreving: string | null;
     saksbehandlingstype: Saksbehandlingstype;
     erNyModell: boolean;
 };
