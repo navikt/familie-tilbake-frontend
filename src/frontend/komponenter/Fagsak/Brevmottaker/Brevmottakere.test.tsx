@@ -45,6 +45,20 @@ const createMockBehandling = (
     manuelleBrevmottakere,
     saksbehandlingstype: Saksbehandlingstype.Ordinær,
     erNyModell: true,
+    erBehandlingHenlagt: false,
+    avsluttetDato: null,
+    endretTidspunkt: '',
+    vedtaksDato: null,
+    enhetskode: '',
+    enhetsnavn: '',
+    resultatstype: null,
+    ansvarligSaksbehandler: '',
+    ansvarligBeslutter: null,
+    erBehandlingPåVent: false,
+    eksternFaksakId: '',
+    behandlingsårsakstype: null,
+    harManuelleBrevmottakere: false,
+    begrunnelseForTilbakekreving: null,
 });
 
 const createMockFagsak = (): Fagsak => ({
