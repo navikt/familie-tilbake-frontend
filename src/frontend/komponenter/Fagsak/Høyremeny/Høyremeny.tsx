@@ -31,7 +31,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
                 )}
             >
                 <div className="gap-4 flex flex-col flex-1 min-h-0">
-                    <Faktaboks tittel="Faktaboks tittel" />
+                    <Faktaboks behandling={behandling} ytelsestype={fagsak.ytelsestype} />
                     <BrukerInformasjon bruker={fagsak.bruker} institusjon={fagsak.institusjon} />
                     <Tabs
                         defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}

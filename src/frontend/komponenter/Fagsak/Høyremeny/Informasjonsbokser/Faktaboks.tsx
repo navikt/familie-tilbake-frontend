@@ -1,3 +1,6 @@
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
+
 import {
     Buildings3Icon,
     CalendarFillIcon,
@@ -8,15 +11,17 @@ import {
 import { Box, Heading, Tag } from '@navikt/ds-react';
 import React from 'react';
 
+import { formatterDatostring } from '../../../../utils';
+
 type Props = {
-    tittel: string;
+    behandling: Behandling;
+    ytelsestype: Fagsak['ytelsestype'];
 };
 
-export const Faktaboks: React.FC<Props> = () => {
-    const type = 'overgangsstønad'; //TODO
+export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
+    // const årsak = ''; // TODO
     const status = 'Avsluttet'; // TODO
     const resultat = 'Ingen tilbakebetaling'; // TODO
-    const opprettet = '01.01.2024'; // TODO
     const avsluttet = '01.01.2025'; // TODO
     const enhet = '1234'; // TODO
 
@@ -26,7 +31,7 @@ export const Faktaboks: React.FC<Props> = () => {
             className="border-1 rounded-xl border-border-divider flex flex-col gap-4 bg-white"
         >
             <Heading size="xsmall" level="2">
-                Revurdering tilbakekreving av {type}
+                Revurdering tilbakekreving av {ytelsestype}
             </Heading>
 
             <dl className="grid grid-cols-[136px_1fr] xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
@@ -64,7 +69,7 @@ export const Faktaboks: React.FC<Props> = () => {
                     </>
                 )}
 
-                {opprettet && (
+                {behandling.opprettetDato && (
                     <>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <CalendarIcon
@@ -74,7 +79,9 @@ export const Faktaboks: React.FC<Props> = () => {
                             />
                             Opprettet
                         </dt>
-                        <dd className="text-medium items-center flex">{opprettet}</dd>
+                        <dd className="text-medium items-center flex">
+                            {formatterDatostring(behandling.opprettetDato)}
+                        </dd>
                     </>
                 )}
 
