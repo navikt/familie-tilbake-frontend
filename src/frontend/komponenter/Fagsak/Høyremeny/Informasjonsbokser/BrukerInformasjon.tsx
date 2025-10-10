@@ -19,7 +19,7 @@ const formatterPersonIdent = (personIdent: string): string =>
     personIdent.replace(/(\d{6})(\d{5})/, '$1 $2');
 
 const formatterOrgNummer = (orgNummer: string): string =>
-    orgNummer.replace(/(\d{3})(\d{2})(\d{3})/, '$1 $2 $3');
+    orgNummer.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
 
 type Props = {
     bruker: Bruker;
