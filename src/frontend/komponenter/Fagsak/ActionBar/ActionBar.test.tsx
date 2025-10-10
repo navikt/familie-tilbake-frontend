@@ -1,4 +1,5 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -23,6 +24,18 @@ const locationMockValue: Partial<Location> = {
     pathname: '/fagsak/123/behandling/456/inaktiv-foreldelse',
 };
 
+const renderActionBar = (isLoading: boolean = false): RenderResult =>
+    render(
+        <ActionBar
+            stegtekst="Steg 2 av 5"
+            forrigeAriaLabel="gå tilbake til faktasteget"
+            nesteAriaLabel="gå videre til vilkårsvurderingssteget"
+            onNeste={jest.fn()}
+            isLoading={isLoading}
+            onForrige={undefined}
+        />
+    );
+
 describe('ActionBar', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -32,7 +45,7 @@ describe('ActionBar', () => {
         mockUseLocation.mockReturnValue(locationMockValue);
     });
 
-    it('kaller ikke onNeste eller onForrige når isLoading = true', () => {
+    it('Kaller ikke onNeste eller onForrige når isLoading = true', () => {
         const onNeste = jest.fn();
         const onForrige = jest.fn();
         render(
@@ -56,37 +69,15 @@ describe('ActionBar', () => {
     });
 
     it('Har knapp tilbake til Tilbakekrevingen når på inaktiv side', () => {
-        const onNeste = jest.fn();
-        const onForrige = jest.fn();
-        render(
-            <ActionBar
-                stegtekst="Steg 2 av 5"
-                forrigeAriaLabel="Gå tilbake til faktasteget"
-                nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
-                onNeste={onNeste}
-                onForrige={onForrige}
-            />
-        );
-
+        renderActionBar(false);
         expect(screen.getByRole('link', { name: /gå til behandling/i })).toBeInTheDocument();
     });
 
     it('Har ikke knapp tilbake til Tilbakekrevingen når ikke på inaktiv side', () => {
-        const onNeste = jest.fn();
-        const onForrige = jest.fn();
         mockUseLocation.mockReturnValue({
             pathname: '/fagsak/123/behandling/456/foreldelse',
         });
-        render(
-            <ActionBar
-                stegtekst="Steg 2 av 5"
-                forrigeAriaLabel="Gå tilbake til faktasteget"
-                nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
-                onNeste={onNeste}
-                onForrige={onForrige}
-            />
-        );
-
+        renderActionBar(false);
         expect(screen.queryByRole('link', { name: /gå til behandling/i })).not.toBeInTheDocument();
     });
 });
