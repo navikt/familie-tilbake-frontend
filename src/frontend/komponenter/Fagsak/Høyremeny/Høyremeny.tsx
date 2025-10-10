@@ -1,45 +1,16 @@
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
 
-import {
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    ClockIcon,
-    FolderIcon,
-    PaperplaneIcon,
-    PersonGavelIcon,
-} from '@navikt/aksel-icons';
-import { Button, Tabs } from '@navikt/ds-react';
-import { AFontSizeMedium, ASpacing4 } from '@navikt/ds-tokens/dist/tokens';
+import { ClockIcon, FolderIcon, PaperplaneIcon, PersonGavelIcon } from '@navikt/aksel-icons';
+import { Tabs } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
-import { styled } from 'styled-components';
+import { Suspense } from 'react';
 
-import Behandlingskort from './Behandlingskort/Behandlingskort';
+import { BrukerInformasjon } from './Informasjonsbokser/BrukerInformasjon';
+import { Faktaboks } from './Informasjonsbokser/Faktaboks';
 import Menykontainer, { Menysider } from './Menykontainer';
 import { useBehandling } from '../../../context/BehandlingContext';
-
-const StyledContainer = styled.div<{ $værtPåFatteVedtakSteget: boolean }>`
-    width: ${({ $værtPåFatteVedtakSteget }): string =>
-        $værtPåFatteVedtakSteget ? '28rem' : '22rem'};
-`;
-
-const HøyremenyContainer = styled.div`
-    padding: 0 10px 0 10px;
-    margin-top: ${ASpacing4};
-`;
-
-const StyledTabList = styled(Tabs.List)`
-    display: flex;
-    justify-content: center;
-    width: 100%;
-`;
-
-const StyledTabs = styled(Tabs.Tab)`
-    & span {
-        font-size: ${AFontSizeMedium};
-    }
-`;
 
 type Props = {
     fagsak: Fagsak;
@@ -47,129 +18,100 @@ type Props = {
 };
 
 const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
-    const { harVærtPåFatteVedtakSteget, åpenHøyremeny, settÅpenHøyremeny, ventegrunn } =
-        useBehandling();
+    const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandling();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
 
-    const harVentegrunn = ventegrunn !== undefined;
-
     return (
-        <>
-            <Button
+        <Suspense fallback="Høyremeny laster...">
+            {/* Reduserer høyden med header(48)-høyde og padding(16+16)-høyde til fagsakcontainer */}
+            <aside
                 className={classNames(
-                    'absolute w-[34px] min-w-[34px] h-[34px] rounded-full z-[100] flex items-center justify-center not-active:not-hover:bg-white ',
-                    'drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-                    {
-                        'ml-[-20px]': !åpenHøyremeny,
-                        'ml-[-17px]': åpenHøyremeny,
-                        'top-[378px]': !harVentegrunn,
-                        'top-[440px]': harVentegrunn,
-                    }
+                    'flex-col gap-4 bg-gray-50 hidden lg:flex max-h-[calc(100vh-80px)]',
+                    { 'max-h-[calc(100vh-142px)]': !!ventegrunn }
                 )}
-                variant="secondary"
-                onMouseDown={(e: React.MouseEvent) => e.preventDefault()}
-                onClick={() => {
-                    settÅpenHøyremeny(!åpenHøyremeny);
-                }}
-                size="small"
-                title={åpenHøyremeny ? 'Skjul høyremeny' : 'Vis høyremeny'}
             >
-                {åpenHøyremeny ? (
-                    <ChevronRightIcon aria-label="Skjul høyremeny" fontSize="1.5rem" />
-                ) : (
-                    <ChevronLeftIcon aria-label="Vis høyremeny" fontSize="1.5rem" />
-                )}
-            </Button>
-            {åpenHøyremeny && (
-                <StyledContainer $værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}>
-                    <Behandlingskort fagsak={fagsak} behandling={behandling} />
-                    <div>
-                        <Tabs
-                            defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
-                            iconPosition="top"
-                        >
-                            <StyledTabList>
-                                {værtPåFatteVedtakSteget && (
-                                    <StyledTabs
-                                        value="to-trinn"
-                                        label="Fatte vedtak"
-                                        icon={
-                                            <PersonGavelIcon
-                                                fontSize="1.5rem"
-                                                aria-label="Ikon fatte vedtak"
-                                            />
-                                        }
-                                    />
-                                )}
-                                <StyledTabs
-                                    value="logg"
-                                    label="Historikk"
+                <div className="gap-4 flex flex-col flex-1 min-h-0">
+                    <Faktaboks behandling={behandling} ytelsestype={fagsak.ytelsestype} />
+                    <BrukerInformasjon bruker={fagsak.bruker} institusjon={fagsak.institusjon} />
+                    <Tabs
+                        defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
+                        iconPosition="top"
+                        className="border border-border-divider rounded-2xl bg-white h-full flex flex-col min-h-0"
+                    >
+                        <div className="flex justify-center">
+                            {værtPåFatteVedtakSteget && (
+                                <Tabs.Tab
+                                    value="to-trinn"
+                                    label="Fatte vedtak"
                                     icon={
-                                        <ClockIcon fontSize="1.5rem" aria-label="Ikon historikk" />
-                                    }
-                                />
-                                <StyledTabs
-                                    value="dokumenter"
-                                    label="Dokumenter"
-                                    icon={
-                                        <FolderIcon
+                                        <PersonGavelIcon
                                             fontSize="1.5rem"
-                                            aria-label="Ikon dokumenter"
+                                            aria-label="Ikon fatte vedtak"
                                         />
                                     }
                                 />
-                                {/* TODO: Rydde opp etter feature toggle */}
-                                {!behandling.erNyModell && (
-                                    <StyledTabs
-                                        value="send-brev"
-                                        label="Send brev"
-                                        icon={
-                                            <PaperplaneIcon
-                                                fontSize="1.5rem"
-                                                aria-label="Ikon send brev"
-                                            />
-                                        }
-                                    />
-                                )}
-                                {/* .. */}
-                            </StyledTabList>
-                            <HøyremenyContainer>
-                                {værtPåFatteVedtakSteget && (
-                                    <Tabs.Panel value="to-trinn">
-                                        <Menykontainer
-                                            valgtMenyside={Menysider.Totrinn}
-                                            behandling={behandling}
-                                            fagsak={fagsak}
+                            )}
+                            <Tabs.Tab
+                                value="logg"
+                                label="Historikk"
+                                icon={<ClockIcon fontSize="1.5rem" aria-label="Ikon historikk" />}
+                            />
+                            <Tabs.Tab
+                                value="dokumenter"
+                                label="Dokumenter"
+                                icon={<FolderIcon fontSize="1.5rem" aria-label="Ikon dokumenter" />}
+                            />
+                            {/* TODO: Rydde opp etter feature toggle */}
+                            {!behandling.erNyModell && (
+                                <Tabs.Tab
+                                    value="send-brev"
+                                    label="Send brev"
+                                    icon={
+                                        <PaperplaneIcon
+                                            fontSize="1.5rem"
+                                            aria-label="Ikon send brev"
                                         />
-                                    </Tabs.Panel>
-                                )}
-                                <Tabs.Panel value="logg">
+                                    }
+                                />
+                            )}
+                            {/* .. */}
+                        </div>
+                        <div className="px-2 mt-4 flex-1 min-h-0 overflow-y-auto scrollbar-stable">
+                            {værtPåFatteVedtakSteget && (
+                                <Tabs.Panel value="to-trinn">
                                     <Menykontainer
-                                        valgtMenyside={Menysider.Historikk}
+                                        valgtMenyside={Menysider.Totrinn}
                                         behandling={behandling}
                                         fagsak={fagsak}
                                     />
                                 </Tabs.Panel>
-                                <Tabs.Panel value="dokumenter">
-                                    <Menykontainer
-                                        valgtMenyside={Menysider.Dokumenter}
-                                        behandling={behandling}
-                                        fagsak={fagsak}
-                                    />
-                                </Tabs.Panel>
-                                <Tabs.Panel value="send-brev">
-                                    <Menykontainer
-                                        valgtMenyside={Menysider.SendBrev}
-                                        behandling={behandling}
-                                        fagsak={fagsak}
-                                    />
-                                </Tabs.Panel>
-                            </HøyremenyContainer>
-                        </Tabs>
-                    </div>
-                </StyledContainer>
-            )}
-        </>
+                            )}
+                            <Tabs.Panel value="logg">
+                                <Menykontainer
+                                    valgtMenyside={Menysider.Historikk}
+                                    behandling={behandling}
+                                    fagsak={fagsak}
+                                />
+                            </Tabs.Panel>
+                            <Tabs.Panel value="dokumenter">
+                                <Menykontainer
+                                    valgtMenyside={Menysider.Dokumenter}
+                                    behandling={behandling}
+                                    fagsak={fagsak}
+                                />
+                            </Tabs.Panel>
+                            <Tabs.Panel value="send-brev">
+                                <Menykontainer
+                                    valgtMenyside={Menysider.SendBrev}
+                                    behandling={behandling}
+                                    fagsak={fagsak}
+                                />
+                            </Tabs.Panel>
+                        </div>
+                    </Tabs>
+                </div>
+            </aside>
+        </Suspense>
     );
 };
 

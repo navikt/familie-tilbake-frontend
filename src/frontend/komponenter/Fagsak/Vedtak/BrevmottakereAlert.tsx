@@ -1,6 +1,6 @@
 import type { Brevmottaker } from '../../../typer/Brevmottaker';
+import type { Bruker } from '../../../typer/bruker';
 import type { Institusjon } from '../../../typer/fagsak';
-import type { Person } from '../../../typer/person';
 
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Alert, Button } from '@navikt/ds-react';
@@ -17,7 +17,7 @@ const StyledAlert = styled(Alert)`
 type Props = {
     brevmottakere: Brevmottaker[];
     institusjon: Institusjon | null;
-    bruker: Person;
+    bruker: Bruker;
     linkTilBrevmottakerSteg: string;
 };
 

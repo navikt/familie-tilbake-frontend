@@ -30,7 +30,7 @@ const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
 
     return (
-        <>
+        <main>
             {autentisert ? (
                 <>
                     <Toasts />
@@ -46,7 +46,7 @@ const Container: React.FC = () => {
             ) : (
                 <UgyldigSesjon />
             )}
-        </>
+        </main>
     );
 };
 

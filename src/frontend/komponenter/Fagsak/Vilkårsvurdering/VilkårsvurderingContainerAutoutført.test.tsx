@@ -42,10 +42,15 @@ jest.mock('../../../api/http/HttpProvider', () => {
     };
 });
 
+const mockUseLocation = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useLocation: (): Location => mockUseLocation(),
 }));
+const locationMock: Partial<Location> = {
+    pathname: '/fagsak/123/behandling/456/vilkaarsvurdering',
+};
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
@@ -113,6 +118,7 @@ const setupMock = (
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 3 av 4'),
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
     }));
+    mockUseLocation.mockReturnValue(locationMock);
 };
 
 describe('Tester: VilkårsvurderingContainer', () => {

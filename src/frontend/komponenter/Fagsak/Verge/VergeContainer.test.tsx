@@ -37,10 +37,13 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
+const mockUseLocation = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useLocation: (): Location => mockUseLocation(),
 }));
+const locationMockValue: Partial<Location> = { pathname: '/fagsak/123/behandling/456/verge' };
 
 const renderVergeContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
     render(
@@ -88,6 +91,7 @@ describe('Tester: VergeContainer', () => {
             actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 5'),
             harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
         }));
+        mockUseLocation.mockReturnValue(locationMockValue);
     };
 
     test('- fyller ut advokat', async () => {

@@ -5,6 +5,7 @@ import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurder
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -22,6 +23,14 @@ import {
 } from '../../../../kodeverk';
 
 jest.setTimeout(10000);
+
+const mockUseLocation = jest.fn();
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
+    useNavigate: (): NavigateFunction => jest.fn(),
+    useLocation: (): Location => mockUseLocation(),
+}));
+const locationMockValue = { pathname: '/fagsak/123/behandling/456/vilkaarsvurdering' };
 
 jest.mock('../../../../api/http/HttpProvider', () => {
     return {
@@ -80,6 +89,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
+        mockUseLocation.mockReturnValue(locationMockValue);
     });
     const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
     const fagsak = mock<Fagsak>({

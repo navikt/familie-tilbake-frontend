@@ -27,13 +27,8 @@ const StyledVStack = styled(VStack)`
 const VergeContainer: React.FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =
         useVerge();
-    const {
-        behandlingILesemodus,
-        settIkkePersistertKomponent,
-        åpenHøyremeny,
-        actionBarStegtekst,
-        harVærtPåFatteVedtakSteget,
-    } = useBehandling();
+    const { behandlingILesemodus, settIkkePersistertKomponent, actionBarStegtekst } =
+        useBehandling();
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -145,10 +140,8 @@ const VergeContainer: React.FC = () => {
                         stegtekst={actionBarStegtekst(Behandlingssteg.Verge)}
                         forrigeAriaLabel={undefined}
                         nesteAriaLabel="Gå videre til faktasteget"
-                        åpenHøyremeny={åpenHøyremeny}
                         onNeste={sendInn}
                         onForrige={undefined}
-                        harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
                         isLoading={senderInn}
                     />
                 </StyledVStack>

@@ -225,8 +225,7 @@ type BrevmottakereProps = {
 };
 
 const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => {
-    const { behandlingILesemodus, actionBarStegtekst, harVærtPåFatteVedtakSteget, åpenHøyremeny } =
-        useBehandling();
+    const { behandlingILesemodus, actionBarStegtekst } = useBehandling();
     const navigate = useNavigate();
 
     const [visBrevmottakerModal, setVisBrevmottakerModal] = useState(false);
@@ -333,10 +332,8 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
                 stegtekst={actionBarStegtekst(Behandlingssteg.Brevmottaker)}
                 forrigeAriaLabel={undefined}
                 nesteAriaLabel="Gå til faktasteget"
-                åpenHøyremeny={åpenHøyremeny}
                 onNeste={gåTilNeste}
                 onForrige={undefined}
-                harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
             />
         </>
     );

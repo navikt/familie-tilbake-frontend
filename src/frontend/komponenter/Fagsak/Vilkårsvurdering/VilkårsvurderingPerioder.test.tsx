@@ -33,10 +33,13 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
+const mockUseLocation = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useLocation: (): Location => mockUseLocation(),
 }));
+const locationMockValue = { pathname: '/fagsak/123/behandling/456/vilkaarsvurdering' };
 
 jest.mock('@tanstack/react-query', () => {
     return {
@@ -130,6 +133,7 @@ const setupMocks = (): void => {
             });
         },
     }));
+    mockUseLocation.mockReturnValue(locationMockValue);
 };
 
 const renderVilkårsvurderingPerioder = (

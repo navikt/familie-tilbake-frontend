@@ -12,13 +12,18 @@ import Brevmottakere from './Brevmottakere';
 import { Fagsystem, Ytelsetype } from '../../../kodeverk';
 import { Behandlingstatus, Behandlingstype, Saksbehandlingstype } from '../../../typer/behandling';
 import { MottakerType } from '../../../typer/Brevmottaker';
+import { Kjønn } from '../../../typer/bruker';
 import { Målform } from '../../../typer/fagsak';
-import { Kjønn } from '../../../typer/person';
 
+const mockUseLocation = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useLocation: (): Location => mockUseLocation(),
 }));
+const locationMockValue: Partial<Location> = {
+    pathname: '/fagsak/123/behandling/456/brevmottakere',
+};
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
@@ -72,6 +77,7 @@ const createMockFagsak = (): Fagsak => ({
         navn: 'Test Bruker',
         fødselsdato: '1990-01-01',
         kjønn: Kjønn.Mann,
+        dødsdato: null,
     },
     behandlinger: [],
 });
@@ -118,7 +124,9 @@ const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 5'),
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+        erStegBehandlet: jest.fn().mockReturnValue(false),
     }));
+    mockUseLocation.mockReturnValue(locationMockValue);
 };
 
 const renderBrevmottakere = (

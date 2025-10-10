@@ -1,6 +1,6 @@
 import type { Brevmottaker } from '../../../../typer/Brevmottaker';
+import type { Bruker } from '../../../../typer/bruker';
 import type { Institusjon } from '../../../../typer/fagsak';
-import type { Person } from '../../../../typer/person';
 
 import React from 'react';
 import { styled } from 'styled-components';
@@ -9,7 +9,7 @@ import { MottakerType } from '../../../../typer/Brevmottaker';
 import { formaterIdent, lagPersonLabel } from '../../../../utils/formatter';
 
 type Props = {
-    bruker: Person;
+    bruker: Bruker;
     institusjon: Institusjon | null;
     brevmottakere: Brevmottaker[];
     harMargin?: boolean;
