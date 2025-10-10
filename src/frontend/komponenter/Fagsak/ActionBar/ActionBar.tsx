@@ -1,8 +1,10 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
-import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
+import { ChevronLeftIcon, ChevronRightIcon, LeaveIcon } from '@navikt/aksel-icons';
+import { BodyShort, Button, HStack, Link, Tooltip } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
+import { useLocation } from 'react-router';
 
+import { erHistoriskSide } from '../../../utils/sider';
 import { Behandlingsmeny } from '../Personlinje/Behandlingsmeny/Behandlingsmeny';
 
 type Props = {
@@ -30,6 +32,9 @@ const ActionBar: React.FC<Props> = ({
     skjulNeste = false,
     disableNeste = false,
 }) => {
+    const location = useLocation();
+    const behandlingsPath = location.pathname.split('/').at(-1);
+    const erHistoriskVisning = behandlingsPath && erHistoriskSide(behandlingsPath);
     return (
         <>
             <HStack
@@ -43,7 +48,15 @@ const ActionBar: React.FC<Props> = ({
                 )}
                 aria-label="Behandling handlingsknapper"
             >
-                <Behandlingsmeny />
+                <HStack gap="4">
+                    <Behandlingsmeny />
+                    {erHistoriskVisning && (
+                        <Link href={`${location.pathname.replace(behandlingsPath, '')}`}>
+                            Gå til behandling
+                            <LeaveIcon title="Tilbake til behandlingen" fontSize="1.375rem" />
+                        </Link>
+                    )}
+                </HStack>
                 <HStack gap="8">
                     <BodyShort
                         size="large"
