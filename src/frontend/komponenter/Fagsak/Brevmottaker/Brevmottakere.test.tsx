@@ -15,10 +15,15 @@ import { MottakerType } from '../../../typer/Brevmottaker';
 import { Kjønn } from '../../../typer/bruker';
 import { Målform } from '../../../typer/fagsak';
 
+const mockUseLocation = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useLocation: (): Location => mockUseLocation(),
 }));
+const locationMockValue: Partial<Location> = {
+    pathname: '/fagsak/123/behandling/456/brevmottakere',
+};
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
@@ -121,6 +126,7 @@ const setupMock = (): void => {
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
         erStegBehandlet: jest.fn().mockReturnValue(false),
     }));
+    mockUseLocation.mockReturnValue(locationMockValue);
 };
 
 const renderBrevmottakere = (

@@ -7,9 +7,11 @@ import '@testing-library/jest-dom';
 
 import { ActionBar } from './ActionBar';
 
+const mockUseLocation = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useLocation: (): Location => mockUseLocation(),
 }));
 
 const mockUseBehandling = jest.fn();
@@ -17,12 +19,17 @@ jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
+const locationMockValue: Partial<Location> = {
+    pathname: '/fagsak/123/behandling/456/inaktiv-foreldelse',
+};
+
 describe('ActionBar', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockUseBehandling.mockImplementation(() => ({
             erStegBehandlet: jest.fn().mockReturnValue(false),
         }));
+        mockUseLocation.mockReturnValue(locationMockValue);
     });
 
     it('kaller ikke onNeste eller onForrige når isLoading = true', () => {
@@ -46,5 +53,40 @@ describe('ActionBar', () => {
 
         expect(onNeste).not.toHaveBeenCalled();
         expect(onForrige).not.toHaveBeenCalled();
+    });
+
+    it('Har knapp tilbake til Tilbakekrevingen når på inaktiv side', () => {
+        const onNeste = jest.fn();
+        const onForrige = jest.fn();
+        render(
+            <ActionBar
+                stegtekst="Steg 2 av 5"
+                forrigeAriaLabel="Gå tilbake til faktasteget"
+                nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
+                onNeste={onNeste}
+                onForrige={onForrige}
+            />
+        );
+
+        expect(screen.getByRole('link', { name: /gå til behandling/i })).toBeInTheDocument();
+    });
+
+    it('Har ikke knapp tilbake til Tilbakekrevingen når ikke på inaktiv side', () => {
+        const onNeste = jest.fn();
+        const onForrige = jest.fn();
+        mockUseLocation.mockReturnValue({
+            pathname: '/fagsak/123/behandling/456/foreldelse',
+        });
+        render(
+            <ActionBar
+                stegtekst="Steg 2 av 5"
+                forrigeAriaLabel="Gå tilbake til faktasteget"
+                nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
+                onNeste={onNeste}
+                onForrige={onForrige}
+            />
+        );
+
+        expect(screen.queryByRole('link', { name: /gå til behandling/i })).not.toBeInTheDocument();
     });
 });

@@ -45,10 +45,15 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
+const mockUseLocation = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useLocation: (): Location => mockUseLocation(),
 }));
+const locationMock: Partial<Location> = {
+    pathname: '/fagsak/123/behandling/456/vedtak',
+};
 
 const mockUseSammenslåPerioder = jest.fn();
 jest.mock('../../../hooks/useSammenslåPerioder', () => ({
@@ -70,6 +75,7 @@ describe('Tester: VedtakContainer', () => {
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
+        mockUseLocation.mockReturnValue(locationMock);
     });
     const perioder: BeregningsresultatPeriode[] = [
         {

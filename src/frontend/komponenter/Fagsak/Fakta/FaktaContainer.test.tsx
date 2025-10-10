@@ -35,10 +35,16 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
+const mockUseLocation = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useLocation: (): Location => mockUseLocation(),
 }));
+
+const locationMock: Partial<Location> = {
+    pathname: '/fagsak/123/behandling/456/fakta',
+};
 
 const mockedSettIkkePersistertKomponent = jest.fn();
 
@@ -60,6 +66,7 @@ describe('Tester: FaktaContainer', () => {
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
+        mockUseLocation.mockReturnValue(locationMock);
     });
     const perioder: FaktaPeriode[] = [
         {

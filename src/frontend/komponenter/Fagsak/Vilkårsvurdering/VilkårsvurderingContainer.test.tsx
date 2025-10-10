@@ -42,10 +42,15 @@ jest.mock('../../../context/TogglesContext', () => ({
     useToggles: (): TogglesHook => mockUseToggles(),
 }));
 
+const mockUseLocation = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useLocation: (): Location => mockUseLocation(),
 }));
+const locationMock: Partial<Location> = {
+    pathname: '/fagsak/123/behandling/456/vilkaarsvurdering',
+};
 
 jest.mock('@tanstack/react-query', () => {
     return {
@@ -123,7 +128,7 @@ const setupUseBehandlingApiMock = (vilkårsvurdering?: VilkårsvurderingResponse
     }
 };
 
-const setupHttpMock = (): void => {
+const setupMocks = (): void => {
     mockUseHttp.mockImplementation(() => ({
         request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
@@ -134,6 +139,10 @@ const setupHttpMock = (): void => {
                 }),
             });
         },
+    }));
+    mockUseLocation.mockReturnValue(locationMock);
+    mockUseToggles.mockImplementation(() => ({
+        toggles: {},
     }));
 };
 
@@ -152,10 +161,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
-        setupHttpMock();
-        mockUseToggles.mockImplementation(() => ({
-            toggles: {},
-        }));
+        setupMocks();
     });
 
     test('- totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
