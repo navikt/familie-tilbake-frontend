@@ -72,6 +72,7 @@ export const Stegflyt: React.FC = () => {
     if (aktivStegnummer < 1 || !stegsinfo) return null;
 
     return (
+        /* TODO: Padding her istedenfor margin på children */
         <nav aria-label="Behandlingssteg">
             <Stepper
                 activeStep={aktivStegnummer}
