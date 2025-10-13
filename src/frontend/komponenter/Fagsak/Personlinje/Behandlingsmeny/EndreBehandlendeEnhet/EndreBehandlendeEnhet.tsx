@@ -1,35 +1,40 @@
-import type { Ytelsetype } from '../../../../../kodeverk';
 import type { Behandling } from '../../../../../typer/behandling';
-import type { Arbeidsfordelingsenhet } from '../../../../../typer/enhet';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { finnMuligeEnheter } from '../../../../../typer/enhet';
 import { RessursStatus } from '../../../../../typer/ressurs';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
 import { BehandlingsMenyButton, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 
+type Arbeidsfordelingsenhet = {
+    enhetskode: Behandling['enhetskode'];
+    enhetsnavn: Behandling['enhetsnavn'];
+};
+
+const behandlendeEnheter: Arbeidsfordelingsenhet[] = [
+    { enhetskode: '2103', enhetsnavn: 'Nav Vikafossen' },
+    { enhetskode: '4806', enhetsnavn: 'Nav Familie- og pensjonsytelser Drammen' },
+    { enhetskode: '4820', enhetsnavn: 'Nav Familie- og pensjonsytelser Vadsø' },
+    { enhetskode: '4833', enhetsnavn: 'Nav Familie- og pensjonsytelser Oslo 1' },
+    { enhetskode: '4842', enhetsnavn: 'Nav Familie- og pensjonsytelser Stord' },
+    { enhetskode: '4817', enhetsnavn: 'Nav Familie- og pensjonsytelser Steinkjer' },
+];
+
 type Props = {
-    ytelse: Ytelsetype;
     behandling: Behandling;
 };
 
-export const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling }) => {
+export const EndreBehandlendeEnhet: React.FC<Props> = ({ behandling }) => {
     const [visModal, settVisModal] = useState(false);
-    const [behandlendeEnheter, setBehandlendeEnheter] = useState<Arbeidsfordelingsenhet[]>([]);
     const { behandlingILesemodus } = useBehandling();
     const { skjema, sendInn, nullstillSkjema } = useEndreBehandlendeEnhet(
         behandling.behandlingId,
         () => settVisModal(false)
     );
-
-    useEffect(() => {
-        setBehandlendeEnheter(finnMuligeEnheter());
-    }, [ytelse]);
 
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
@@ -63,8 +68,8 @@ export const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling }) =
                                 Velg ny enhet
                             </option>
                             {behandlendeEnheter.map(enhet => (
-                                <option key={enhet.enhetId} value={enhet.enhetId}>
-                                    {enhet.enhetNavn}
+                                <option key={enhet.enhetskode} value={enhet.enhetskode}>
+                                    {enhet.enhetsnavn}
                                 </option>
                             ))}
                         </Select>
