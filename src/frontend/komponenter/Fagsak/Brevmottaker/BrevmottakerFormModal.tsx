@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
 import * as React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 import { BrukerMedUtenlandskAdresse } from './Mottaker/BrukerMedUtenlandskAdresse';
@@ -49,8 +49,8 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
         resolver: zodResolver(brevmottakerFormDataInputSchema),
     });
 
-    const { handleSubmit, watch, setError, register, formState } = methods;
-    const mottakerType = watch('mottakerType');
+    const { handleSubmit, setError, register, formState } = methods;
+    const mottakerType = useWatch({ control: methods.control, name: 'mottakerType' });
 
     const handleSubmitForm = async (formData: BrevmottakerFormData): Promise<void> => {
         try {
