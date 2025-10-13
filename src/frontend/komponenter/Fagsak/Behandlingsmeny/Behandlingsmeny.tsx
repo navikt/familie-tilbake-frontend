@@ -81,10 +81,7 @@ export const Behandlingsmeny: React.FC = () => {
                                     ))}
 
                                 {fagsystem === Fagsystem.BA && ytelsestype && (
-                                    <EndreBehandlendeEnhet
-                                        ytelse={ytelsestype}
-                                        behandling={behandling.data}
-                                    />
+                                    <EndreBehandlendeEnhet behandling={behandling.data} />
                                 )}
 
                                 {behandling.data.støtterManuelleBrevmottakere && (
