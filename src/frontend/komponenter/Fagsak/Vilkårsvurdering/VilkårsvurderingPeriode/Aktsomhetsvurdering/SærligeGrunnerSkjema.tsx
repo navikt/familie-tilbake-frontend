@@ -15,19 +15,13 @@ type Props = {
 
 const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
-    const [nonUsedKey, settNonUsedKey] = React.useState<string>(Date.now().toString());
 
-    React.useEffect(() => {
-        // console.log('bør no trigge re-rendring');
-    }, [nonUsedKey]);
-
-    const onChanngeSærligeGrunner2 = (val: SærligeGrunner[]): void => {
+    const onChangeSærligeGrunner = (val: SærligeGrunner[]): void => {
         skjema.felter.særligeGrunner.validerOgSettFelt(val);
         if (val.indexOf(SærligeGrunner.Annet) > -1) {
             skjema.felter.særligeGrunnerAnnetBegrunnelse.nullstill();
         }
         settIkkePersistertKomponent(`vilkårsvurdering`);
-        settNonUsedKey(Date.now().toString());
     };
 
     return (
@@ -54,7 +48,7 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                         skjema.visFeilmeldinger
                     )}
                     legend="Særlige grunner som er vektlagt (4.ledd)"
-                    onChange={(val: SærligeGrunner[]) => onChanngeSærligeGrunner2(val)}
+                    onChange={(val: SærligeGrunner[]) => onChangeSærligeGrunner(val)}
                     value={skjema.felter.særligeGrunner.verdi}
                     readOnly={erLesevisning}
                 >
