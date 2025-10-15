@@ -1,37 +1,40 @@
-import type { Ytelsetype } from '../../../../../kodeverk';
 import type { Behandling } from '../../../../../typer/behandling';
-import type { Arbeidsfordelingsenhet } from '../../../../../typer/enhet';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
+import { useState } from 'react';
 
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { finnMuligeEnheter } from '../../../../../typer/enhet';
 import { RessursStatus } from '../../../../../typer/ressurs';
 import { hentFrontendFeilmelding } from '../../../../../utils/';
 import { BehandlingsMenyButton, Spacer8 } from '../../../../Felleskomponenter/Flytelementer';
 
-type Props = {
-    ytelse: Ytelsetype;
-    behandling: Behandling;
-    onListElementClick: () => void;
+type Arbeidsfordelingsenhet = {
+    enhetskode: Behandling['enhetskode'];
+    enhetsnavn: Behandling['enhetsnavn'];
 };
 
-const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElementClick }) => {
-    const [visModal, settVisModal] = React.useState<boolean>(false);
-    const [behandendeEnheter, settBehandendeEnheter] = React.useState<Arbeidsfordelingsenhet[]>([]);
+const behandlendeEnheter: Arbeidsfordelingsenhet[] = [
+    { enhetskode: '2103', enhetsnavn: 'Nav Vikafossen' },
+    { enhetskode: '4806', enhetsnavn: 'Nav Familie- og pensjonsytelser Drammen' },
+    { enhetskode: '4820', enhetsnavn: 'Nav Familie- og pensjonsytelser Vadsø' },
+    { enhetskode: '4833', enhetsnavn: 'Nav Familie- og pensjonsytelser Oslo 1' },
+    { enhetskode: '4842', enhetsnavn: 'Nav Familie- og pensjonsytelser Stord' },
+    { enhetskode: '4817', enhetsnavn: 'Nav Familie- og pensjonsytelser Steinkjer' },
+];
+
+type Props = {
+    behandling: Behandling;
+};
+
+export const EndreBehandlendeEnhet: React.FC<Props> = ({ behandling }) => {
+    const [visModal, settVisModal] = useState(false);
     const { behandlingILesemodus } = useBehandling();
     const { skjema, sendInn, nullstillSkjema } = useEndreBehandlendeEnhet(
         behandling.behandlingId,
-        () => {
-            settVisModal(false);
-        }
+        () => settVisModal(false)
     );
-
-    React.useEffect(() => {
-        settBehandendeEnheter(finnMuligeEnheter());
-    }, [ytelse]);
 
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
@@ -39,10 +42,7 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
         <>
             <BehandlingsMenyButton
                 variant="tertiary"
-                onClick={() => {
-                    settVisModal(true);
-                    onListElementClick();
-                }}
+                onClick={() => settVisModal(true)}
                 disabled={!behandling.kanEndres || behandlingILesemodus}
             >
                 Endre behandlende enhet
@@ -51,7 +51,7 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
                 <Modal
                     open
                     header={{ heading: 'Endre enhet for behandlingen', size: 'medium' }}
-                    portal={true}
+                    portal
                     onClose={() => {
                         nullstillSkjema();
                         settVisModal(false);
@@ -64,12 +64,12 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
                             name="enhet"
                             label="Velg ny enhet"
                         >
-                            <option value="" disabled={true}>
+                            <option value="" disabled>
                                 Velg ny enhet
                             </option>
-                            {behandendeEnheter.map(enhet => (
-                                <option key={enhet.enhetId} value={enhet.enhetId}>
-                                    {enhet.enhetNavn}
+                            {behandlendeEnheter.map(enhet => (
+                                <option key={enhet.enhetskode} value={enhet.enhetskode}>
+                                    {enhet.enhetsnavn}
                                 </option>
                             ))}
                         </Select>
@@ -93,10 +93,9 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
-                            variant="primary"
                             disabled={skjema.submitRessurs.status === RessursStatus.Henter}
                             key="bekreft"
-                            onClick={() => sendInn()}
+                            onClick={sendInn}
                             size="small"
                         >
                             Bekreft
@@ -104,9 +103,7 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
                         <Button
                             variant="tertiary"
                             key="avbryt"
-                            onClick={() => {
-                                settVisModal(false);
-                            }}
+                            onClick={() => settVisModal(false)}
                             size="small"
                         >
                             Avbryt
@@ -117,5 +114,3 @@ const EndreBehandlendeEnhet: React.FC<Props> = ({ ytelse, behandling, onListElem
         </>
     );
 };
-
-export default EndreBehandlendeEnhet;

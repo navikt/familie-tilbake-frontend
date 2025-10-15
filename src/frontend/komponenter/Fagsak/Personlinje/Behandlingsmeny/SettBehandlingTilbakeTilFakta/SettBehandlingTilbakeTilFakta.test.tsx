@@ -55,12 +55,23 @@ const mockBehandling: Behandling = {
     kanRevurderingOpprettes: true,
     erBehandlingPåVent: false,
     harVerge: false,
-    resultatstype: undefined,
+    resultatstype: null,
     kanHenleggeBehandling: true,
     erNyModell: false,
+    avsluttetDato: null,
+    endretTidspunkt: '',
+    vedtaksDato: null,
+    enhetskode: '',
+    enhetsnavn: '',
+    ansvarligSaksbehandler: '',
+    ansvarligBeslutter: null,
+    eksternFaksakId: '',
+    behandlingsårsakstype: null,
+    støtterManuelleBrevmottakere: false,
+    harManuelleBrevmottakere: false,
+    begrunnelseForTilbakekreving: null,
 };
 
-const mockOnListElementClick = jest.fn();
 const mockHentBehandling = jest.fn().mockResolvedValue(undefined);
 const mockNullstill = jest.fn();
 const mockUtførRedirect = jest.fn();
@@ -105,17 +116,10 @@ describe('SettBehandlingTilbakeTilFakta', () => {
             reset: jest.fn(),
         });
 
-        render(
-            <SettBehandlingTilbakeTilFakta
-                behandling={mockBehandling}
-                onListElementClick={mockOnListElementClick}
-            />
-        );
+        render(<SettBehandlingTilbakeTilFakta behandling={mockBehandling} />);
 
         const button = screen.getByText('Sett behandling tilbake til fakta');
         fireEvent.click(button);
-
-        expect(mockOnListElementClick).toHaveBeenCalledTimes(1);
 
         const fortsettKnapp = screen.getByText('Fortsett');
         fireEvent.click(fortsettKnapp);

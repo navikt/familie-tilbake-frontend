@@ -9,10 +9,9 @@ import { usePåVentBehandling } from '../../../../Felleskomponenter/Modal/PåVen
 
 type Props = {
     behandling: Behandling;
-    onListElementClick: () => void;
 };
 
-const GjennoptaBehandling: React.FC<Props> = ({ behandling, onListElementClick }) => {
+export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
 
@@ -27,10 +26,7 @@ const GjennoptaBehandling: React.FC<Props> = ({ behandling, onListElementClick }
         <>
             <BehandlingsMenyButton
                 variant="tertiary"
-                onClick={() => {
-                    settVisModal(true);
-                    onListElementClick();
-                }}
+                onClick={() => settVisModal(true)}
                 disabled={!behandling.kanEndres}
             >
                 Fortsett behandlingen
@@ -40,11 +36,9 @@ const GjennoptaBehandling: React.FC<Props> = ({ behandling, onListElementClick }
                 <Modal
                     open
                     header={{ heading: 'Ta behandlingen av vent?', size: 'medium' }}
-                    portal={true}
+                    portal
                     width="small"
-                    onClose={() => {
-                        settVisModal(false);
-                    }}
+                    onClose={() => settVisModal(false)}
                 >
                     <Modal.Body>
                         {feilmelding && feilmelding !== '' && (
@@ -55,7 +49,6 @@ const GjennoptaBehandling: React.FC<Props> = ({ behandling, onListElementClick }
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
-                            variant="primary"
                             key="bekreft"
                             onClick={() => onOkTaAvVent(behandling.behandlingId)}
                             size="small"
@@ -65,9 +58,7 @@ const GjennoptaBehandling: React.FC<Props> = ({ behandling, onListElementClick }
                         <Button
                             variant="tertiary"
                             key="avbryt"
-                            onClick={() => {
-                                settVisModal(false);
-                            }}
+                            onClick={() => settVisModal(false)}
                             size="small"
                         >
                             Avbryt
@@ -78,5 +69,3 @@ const GjennoptaBehandling: React.FC<Props> = ({ behandling, onListElementClick }
         </>
     );
 };
-
-export default GjennoptaBehandling;

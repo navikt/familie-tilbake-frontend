@@ -1,18 +1,15 @@
 import { ChevronDownIcon } from '@navikt/aksel-icons';
-import { Button, Popover } from '@navikt/ds-react';
-import { AFontSizeXlarge, AFontWeightBold } from '@navikt/ds-tokens/dist/tokens';
+import { Button, Dropdown } from '@navikt/ds-react';
 import * as React from 'react';
-import { useRef, useState } from 'react';
-import { styled } from 'styled-components';
 
-import EndreBehandlendeEnhet from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
-import GjennoptaBehandling from './GjennoptaBehandling/GjennoptaBehandling';
-import HenleggBehandling from './HenleggBehandling/HenleggBehandling';
-import HentOppdatertKravgrunnlag from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
-import HistoriskeVurderinger from './HistoriskeVurderinger/HistoriskeVurderinger';
-import LeggTilFjernBrevmottakere from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
-import OpprettBehandling from './OpprettBehandling/OpprettBehandling';
-import SettBehandlingPåVent from './SettBehandlingPåVent/SettBehandlingPåVent';
+import { EndreBehandlendeEnhet } from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
+import { GjennoptaBehandling } from './GjennoptaBehandling/GjennoptaBehandling';
+import { HenleggBehandling } from './HenleggBehandling/HenleggBehandling';
+import { HentOppdatertKravgrunnlag } from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
+import { HistoriskeVurderinger } from './HistoriskeVurderinger/HistoriskeVurderinger';
+import { LeggTilFjernBrevmottakere } from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
+import { OpprettBehandling } from './OpprettBehandling/OpprettBehandling';
+import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
 import { useApp } from '../../../../context/AppContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
@@ -23,23 +20,8 @@ import { useFagsakStore } from '../../../../stores/fagsakStore';
 import { Behandlingssteg, Behandlingstatus } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 
-const StyledList = styled.ul`
-    list-style-type: none;
-    padding: 0;
-    min-width: 210px;
-`;
-
-const StyledButton = styled(Button)`
-    & .navds-label {
-        font-size: ${AFontSizeXlarge};
-        font-weight: ${AFontWeightBold};
-    }
-`;
-
 const Behandlingsmeny: React.FC = () => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
-    const [visMeny, settVisMeny] = useState(false);
-    const buttonRef = useRef(null);
     const { fagsystem, ytelsestype } = useFagsakStore();
     const { innloggetSaksbehandler } = useApp();
     const erProd =
@@ -57,109 +39,81 @@ const Behandlingsmeny: React.FC = () => {
     const { toggles } = useToggles();
 
     return (
-        <>
-            <StyledButton
-                ref={buttonRef}
+        <Dropdown closeOnSelect>
+            <Button
+                as={Dropdown.Toggle}
                 id="behandlingsmeny-arialabel-knapp"
                 size="small"
                 variant="secondary"
-                onClick={() => settVisMeny(!visMeny)}
                 icon={<ChevronDownIcon fontSize="1.375rem" />}
                 iconPosition="right"
             >
                 Behandlingsmeny
-            </StyledButton>
+            </Button>
 
-            {buttonRef && (
-                <Popover
-                    open={visMeny}
-                    anchorEl={buttonRef.current}
-                    arrow={false}
-                    placement="bottom-end"
-                    onClose={() => settVisMeny(false)}
-                >
-                    <StyledList role="menu" aria-labelledby="behandlingsmeny-arialabel-knapp">
-                        {behandling?.status === RessursStatus.Suksess && (
-                            <li>
-                                <OpprettBehandling
-                                    behandling={behandling.data}
-                                    onListElementClick={() => settVisMeny(false)}
-                                />
-                            </li>
+            <Dropdown.Menu placement="bottom-end" aria-labelledby="behandlingsmeny-arialabel-knapp">
+                <Dropdown.Menu.List className="min-w-60 m-0">
+                    {behandling?.status === RessursStatus.Suksess && (
+                        <Dropdown.Menu.List.Item className="p-0">
+                            <OpprettBehandling behandling={behandling.data} />
+                        </Dropdown.Menu.List.Item>
+                    )}
+
+                    {behandling?.status === RessursStatus.Suksess &&
+                        behandling.data.status !== Behandlingstatus.Avsluttet &&
+                        !vedtakFattetEllerFattes &&
+                        behandling.data.kanEndres && (
+                            <>
+                                <Dropdown.Menu.List.Item className="p-0">
+                                    <HenleggBehandling behandling={behandling.data} />
+                                </Dropdown.Menu.List.Item>
+
+                                {erForvalter && (
+                                    <Dropdown.Menu.List.Item className="p-0">
+                                        <HentOppdatertKravgrunnlag behandling={behandling.data} />
+                                    </Dropdown.Menu.List.Item>
+                                )}
+
+                                {(toggles[ToggleName.SaksbehanderKanResettebehandling] ||
+                                    erForvalter) && (
+                                    <Dropdown.Menu.List.Item className="p-0">
+                                        <SettBehandlingTilbakeTilFakta
+                                            behandling={behandling.data}
+                                        />
+                                    </Dropdown.Menu.List.Item>
+                                )}
+
+                                {!venterPåKravgrunnlag &&
+                                    (behandling.data.erBehandlingPåVent || ventegrunn ? (
+                                        <Dropdown.Menu.List.Item className="p-0">
+                                            <GjennoptaBehandling behandling={behandling.data} />
+                                        </Dropdown.Menu.List.Item>
+                                    ) : (
+                                        <Dropdown.Menu.List.Item className="p-0">
+                                            <SettBehandlingPåVent behandling={behandling.data} />
+                                        </Dropdown.Menu.List.Item>
+                                    ))}
+
+                                {fagsystem === Fagsystem.BA && ytelsestype && (
+                                    <Dropdown.Menu.List.Item className="p-0">
+                                        <EndreBehandlendeEnhet behandling={behandling.data} />
+                                    </Dropdown.Menu.List.Item>
+                                )}
+
+                                {behandling.data.støtterManuelleBrevmottakere && (
+                                    <Dropdown.Menu.List.Item className="p-0">
+                                        <LeggTilFjernBrevmottakere behandling={behandling.data} />
+                                    </Dropdown.Menu.List.Item>
+                                )}
+
+                                <Dropdown.Menu.List.Item className="p-0">
+                                    <HistoriskeVurderinger behandling={behandling.data} />
+                                </Dropdown.Menu.List.Item>
+                            </>
                         )}
-                        {behandling?.status === RessursStatus.Suksess &&
-                            behandling.data.status !== Behandlingstatus.Avsluttet &&
-                            !vedtakFattetEllerFattes &&
-                            behandling.data.kanEndres && (
-                                <>
-                                    <li>
-                                        <HenleggBehandling
-                                            behandling={behandling.data}
-                                            onListElementClick={() => settVisMeny(false)}
-                                        />
-                                    </li>
-                                    {erForvalter && (
-                                        <li>
-                                            <HentOppdatertKravgrunnlag
-                                                behandling={behandling.data}
-                                                onListElementClick={() => settVisMeny(false)}
-                                            />
-                                        </li>
-                                    )}
-                                    {(toggles[ToggleName.SaksbehanderKanResettebehandling] ||
-                                        erForvalter) && (
-                                        <li>
-                                            <SettBehandlingTilbakeTilFakta
-                                                behandling={behandling.data}
-                                                onListElementClick={() => settVisMeny(false)}
-                                            />
-                                        </li>
-                                    )}
-                                    {!venterPåKravgrunnlag &&
-                                        (behandling.data.erBehandlingPåVent || ventegrunn ? (
-                                            <li>
-                                                <GjennoptaBehandling
-                                                    behandling={behandling.data}
-                                                    onListElementClick={() => settVisMeny(false)}
-                                                />
-                                            </li>
-                                        ) : (
-                                            <li>
-                                                <SettBehandlingPåVent
-                                                    behandling={behandling.data}
-                                                    onListElementClick={() => settVisMeny(false)}
-                                                />
-                                            </li>
-                                        ))}
-                                    {fagsystem === Fagsystem.BA && ytelsestype && (
-                                        <li>
-                                            <EndreBehandlendeEnhet
-                                                ytelse={ytelsestype}
-                                                behandling={behandling.data}
-                                                onListElementClick={() => settVisMeny(false)}
-                                            />
-                                        </li>
-                                    )}
-                                    {behandling.data.støtterManuelleBrevmottakere && (
-                                        <li>
-                                            <LeggTilFjernBrevmottakere
-                                                behandling={behandling.data}
-                                                onListElementClick={() => settVisMeny(false)}
-                                            />
-                                        </li>
-                                    )}
-                                    <li>
-                                        <HistoriskeVurderinger
-                                            behandling={behandling.data}
-                                            onListElementClick={() => settVisMeny(false)}
-                                        />
-                                    </li>
-                                </>
-                            )}
-                    </StyledList>
-                </Popover>
-            )}
-        </>
+                </Dropdown.Menu.List>
+            </Dropdown.Menu>
+        </Dropdown>
     );
 };
 

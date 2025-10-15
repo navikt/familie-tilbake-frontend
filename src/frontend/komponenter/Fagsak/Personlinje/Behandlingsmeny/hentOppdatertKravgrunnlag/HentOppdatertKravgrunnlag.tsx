@@ -13,10 +13,9 @@ import { AlertType, ToastTyper } from '../../../../Felleskomponenter/Toast/typer
 
 type Props = {
     behandling: Behandling;
-    onListElementClick: () => void;
 };
 
-const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling, onListElementClick }) => {
+export const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
     const { request } = useHttp();
     const { settToast } = useApp();
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
@@ -53,19 +52,12 @@ const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling, onListElementC
     };
 
     return (
-        <>
-            <BehandlingsMenyButton
-                variant="tertiary"
-                onClick={() => {
-                    hentKorrigertKravgrunnlag();
-                    onListElementClick();
-                }}
-                disabled={!behandling.kanEndres}
-            >
-                Hent korrigert kravgrunnlag
-            </BehandlingsMenyButton>
-        </>
+        <BehandlingsMenyButton
+            variant="tertiary"
+            onClick={hentKorrigertKravgrunnlag}
+            disabled={!behandling.kanEndres}
+        >
+            Hent korrigert kravgrunnlag
+        </BehandlingsMenyButton>
     );
 };
-
-export default HentOppdatertKravgrunnlag;

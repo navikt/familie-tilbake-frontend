@@ -14,13 +14,9 @@ import { FeilModal } from '../../../../Felleskomponenter/Modal/Feil/FeilModal';
 
 type Props = {
     behandling: Behandling;
-    onListElementClick: () => void;
 };
 
-export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
-    behandling,
-    onListElementClick,
-}) => {
+export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) => {
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { fagsystem, eksternFagsakId } = useFagsakStore();
@@ -48,10 +44,7 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({
         <>
             <BehandlingsMenyButton
                 variant="tertiary"
-                onClick={() => {
-                    setVisModal(true);
-                    onListElementClick();
-                }}
+                onClick={() => setVisModal(true)}
                 disabled={!behandling.kanSetteTilbakeTilFakta}
             >
                 Sett behandling tilbake til fakta
