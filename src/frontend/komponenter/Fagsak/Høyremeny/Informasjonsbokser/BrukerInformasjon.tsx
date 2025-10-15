@@ -5,12 +5,14 @@ import {
     BagdeIcon,
     Buildings2Icon,
     CandleIcon,
+    FigureCombinationIcon,
+    FigureOutwardIcon,
     FlowerPetalFallingIcon,
-    PersonCircleIcon,
 } from '@navikt/aksel-icons';
 import { Box, CopyButton, Heading, Tag } from '@navikt/ds-react';
 import React from 'react';
 
+import { Kjønn } from '../../../../typer/bruker';
 import { hentAlder } from '../../../../utils';
 
 const erDNummer = (personIdent: string): boolean => personIdent.charAt(0) > '3';
@@ -27,6 +29,18 @@ type Props = {
 };
 
 export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
+    const kjønnIkon =
+        bruker.kjønn === Kjønn.Kvinne ? (
+            <FigureOutwardIcon title="Kvinne ikon" fontSize="1em" className="text-icon-subtle" />
+        ) : bruker.kjønn === Kjønn.Mann ? (
+            <FigureOutwardIcon title="Mann ikon" fontSize="1em" className="text-icon-subtle" />
+        ) : (
+            <FigureCombinationIcon
+                title="Ukjent ikon"
+                fontSize="1em"
+                className="text-icon-subtle"
+            />
+        );
     return (
         <Box
             padding="4"
@@ -38,23 +52,23 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
 
             <dl className="grid grid-cols-[136px_1fr] xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    <PersonCircleIcon
-                        title="a11y-title"
-                        fontSize="1rem"
-                        className="text-icon-subtle"
-                    />
+                    {kjønnIkon}
                     Navn
                 </dt>
                 <dd className="text-medium">{bruker.navn}</dd>
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    <CandleIcon title="a11y-title" fontSize="1rem" className="text-icon-subtle" />
+                    <CandleIcon
+                        title="Lysestake ikon"
+                        fontSize="1rem"
+                        className="text-icon-subtle"
+                    />
                     Alder
                 </dt>
                 <dd className="text-medium">{hentAlder(bruker.fødselsdato, bruker.dødsdato)} år</dd>
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    <BagdeIcon title="a11y-title" fontSize="1rem" className="text-icon-subtle" />
+                    <BagdeIcon title="Skiltikon" fontSize="1rem" className="text-icon-subtle" />
                     {erDNummer(bruker.personIdent) ? ' D-nummer' : 'Fødselsnummer'}
                 </dt>
                 <dd className="text-medium flex flex-row gap-2 items-center">
@@ -66,7 +80,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                     <>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <FlowerPetalFallingIcon
-                                title="a11y-title"
+                                title="Fallende blomster ikon"
                                 fontSize="1rem"
                                 className="text-icon-subtle"
                             />
@@ -83,7 +97,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                     <>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <Buildings2Icon
-                                title="a11y-title"
+                                title="To bygninger ikon"
                                 fontSize="1rem"
                                 className="text-icon-subtle"
                             />
@@ -93,7 +107,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
 
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <Buildings2Icon
-                                title="a11y-title"
+                                title="To bygninger ikon"
                                 fontSize="1rem"
                                 className="text-icon-subtle"
                             />

@@ -47,7 +47,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                     <>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <FileResetIcon
-                                title="a11y-title"
+                                title="Filreset ikon"
                                 fontSize="1rem"
                                 className="text-icon-subtle"
                             />
@@ -66,7 +66,11 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                 {behandling.resultatstype && <ResultatTag resultat={behandling.resultatstype} />}
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    <CalendarIcon title="a11y-title" fontSize="1rem" className="text-icon-subtle" />
+                    <CalendarIcon
+                        title="Kalender ikon"
+                        fontSize="1rem"
+                        className="text-icon-subtle"
+                    />
                     Opprettet
                 </dt>
                 <dd className="text-medium items-center flex">
@@ -77,7 +81,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                     <>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <CalendarFillIcon
-                                title="a11y-title"
+                                title="Kalenderfyll ikon"
                                 fontSize="1rem"
                                 className="text-icon-subtle"
                             />
@@ -91,7 +95,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                     <Buildings3Icon
-                        title="a11y-title"
+                        title="Tre bygninger ikon"
                         fontSize="1rem"
                         className="text-icon-subtle"
                     />
@@ -139,7 +143,7 @@ const StatusTag: React.FC<{ status: Behandlingstatus }> = ({ status }) => {
     return (
         <>
             <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                <StatusIkon title="a11y-title" fontSize="1rem" className="text-icon-subtle" />
+                <StatusIkon title="Statusikon" fontSize="1rem" className="text-icon-subtle" />
                 Status
             </dt>
             <dd className="text-medium items-center flex">
@@ -166,7 +170,11 @@ const ResultatTag: React.FC<{ resultat: Behandlingresultat }> = ({ resultat }) =
     return (
         <>
             <dt className="shrink-0 text-medium font-bold flex flex-row gap-2 items-center">
-                <ClipboardIcon title="a11y-title" fontSize="1rem" className="text-icon-subtle" />
+                <ClipboardIcon
+                    title="Utklippstavle ikon"
+                    fontSize="1rem"
+                    className="text-icon-subtle"
+                />
                 Resultat
             </dt>
             <dd className="text-medium items-center flex">

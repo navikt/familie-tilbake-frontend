@@ -49,13 +49,14 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling, ref }) => {
             </aside>
 
             {/**
-             * 1. Ved bredere skjerm skal modalen falle bort og høyremenyen vises
+             * 1. Status
              * 2. CopyButton stor nok?
+             * 3. Historiske lenke
              */}
             <Modal
                 ref={ref}
                 aria-label="Informasjonspanel for tilbakekrevingen og bruker"
-                className="h-full mr-2 my-2"
+                className="h-full mr-2 my-2 lg:hidden"
                 onClick={handleKlikkUtenforModal}
             >
                 <Modal.Header />
