@@ -15,7 +15,7 @@ import {
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
 import { useDokumentApi } from '../../../api/dokument';
@@ -52,14 +52,18 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     });
 
     const {
-        watch,
         register,
         handleSubmit,
         control,
-        formState: { errors },
+        formState: { errors, isDirty: harEndringer },
     } = methods;
-    const skalSendesForhåndsvarsel = watch('skalSendesForhåndsvarsel');
+    const skalSendesForhåndsvarsel = useWatch({
+        control: methods.control,
+        name: 'skalSendesForhåndsvarsel',
+    });
+
     const maksAntallTegn = 2000;
+    const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
 
     const gåTilNeste = (): void => {
         navigate(
@@ -101,24 +105,17 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 fattes, slik at de får mulighet til å uttale seg."
                     error={errors.skalSendesForhåndsvarsel?.message}
                 >
-                    <Radio value="ja">Ja</Radio>
-                    <Radio value="nei">Nei</Radio>
-                    <Radio value="sendt">Forhåndsvarsel er allerede sendt</Radio>
+                    <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
+                    <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
+                    <Radio value={SkalSendesForhåndsvarsel.Sendt}>
+                        Forhåndsvarsel er allerede sendt
+                    </Radio>
                 </RadioGroup>
-                {skalSendesForhåndsvarsel === 'ja' && (
-                    <ExpansionCard
-                        aria-label={
-                            behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel'
-                        }
-                        defaultOpen={!behandling.varselSendt}
-                    >
+                {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && (
+                    <ExpansionCard aria-label={tittel} defaultOpen={!behandling.varselSendt}>
                         <ExpansionCard.Header>
                             <HStack>
-                                <ExpansionCard.Title size="small">
-                                    {behandling.varselSendt
-                                        ? 'Forhåndsvarsel'
-                                        : 'Opprett forhåndsvarsel'}
-                                </ExpansionCard.Title>
+                                <ExpansionCard.Title size="small">{tittel}</ExpansionCard.Title>
                             </HStack>
                         </ExpansionCard.Header>
                         <ExpansionCard.Content>
@@ -179,9 +176,9 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
             </VStack>
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
+                nesteTekst={harEndringer ? 'Send forhåndsvarsel' : 'Neste'}
                 forrigeAriaLabel={undefined}
-                nesteTekst="Neste"
-                nesteAriaLabel="Gå til foreldelsessteget"
+                nesteAriaLabel={harEndringer ? 'Send forhåndsvarsel' : 'Gå til foreldelsessteget'}
                 åpenHøyremeny={åpenHøyremeny}
                 onNeste={!behandling.varselSendt ? sendForhåndsvarsel : gåTilNeste}
                 onForrige={undefined}

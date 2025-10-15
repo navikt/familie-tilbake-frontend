@@ -1,7 +1,5 @@
 import type { DokumentApiHook } from '../../../api/dokument';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
@@ -9,6 +7,15 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
+import { Fagsystem, Ytelsetype } from '../../../kodeverk';
+import {
+    Behandlingstatus,
+    Behandlingstype,
+    Saksbehandlingstype,
+    type Behandling,
+} from '../../../typer/behandling';
+import { Målform, type Fagsak } from '../../../typer/fagsak';
+import { Kjønn } from '../../../typer/person';
 
 const mockUseBehandling = jest.fn();
 const mockUseDokumentlisting = jest.fn();
@@ -32,20 +39,66 @@ jest.mock('../Høyremeny/Dokumentlisting/DokumentlistingContext', () => ({
     useDokumentlisting: (): DokumentApiHook => mockUseDokumentlisting(),
 }));
 
-const createMockBehandling = {
-    behandlingId: '1',
-    eksternBrukId: '123',
-    varselSendt: false,
-} as unknown as Behandling;
+const defaultFagsakVerdier = {
+    eksternFagsakId: 'test-fagsak-id',
+    fagsystem: Fagsystem.BA,
+    ytelsestype: Ytelsetype.Barnetrygd,
+    språkkode: Målform.Nb,
+    institusjon: null,
+    bruker: {
+        personIdent: '12345678901',
+        navn: 'Test Bruker',
+        fødselsdato: '1990-01-01',
+        kjønn: Kjønn.Mann,
+    },
+    behandlinger: [],
+};
 
-const createMockFagsak = {
-    fagsystem: 'EF',
-    eksternFagsakId: '456',
-} as unknown as Fagsak;
+const defaultBehandlingVerdier = {
+    behandlingId: 'test-behandling-id',
+    eksternBrukId: 'test-ekstern-id',
+    opprettetDato: '2023-01-01',
+    status: Behandlingstatus.Utredes,
+    type: Behandlingstype.Tilbakekreving,
+    kanEndres: true,
+    kanSetteTilbakeTilFakta: false,
+    harVerge: false,
+    kanHenleggeBehandling: false,
+    kanRevurderingOpprettes: false,
+    varselSendt: false,
+    behandlingsstegsinfo: [],
+    fagsystemsbehandlingId: 'test-fagsystem-id',
+    støtterManuelleBrevmottakere: true,
+    manuelleBrevmottakere: [],
+    saksbehandlingstype: Saksbehandlingstype.Ordinær,
+    erNyModell: true,
+    erBehandlingHenlagt: false,
+    avsluttetDato: null,
+    endretTidspunkt: '',
+    vedtaksDato: null,
+    enhetskode: '',
+    enhetsnavn: '',
+    resultatstype: null,
+    ansvarligSaksbehandler: '',
+    ansvarligBeslutter: null,
+    erBehandlingPåVent: false,
+    eksternFaksakId: '',
+    behandlingsårsakstype: null,
+    harManuelleBrevmottakere: false,
+    begrunnelseForTilbakekreving: null,
+};
+
+const createMockBehandling: Behandling = {
+    ...defaultBehandlingVerdier,
+};
+
+const createMockFagsak: Fagsak = {
+    ...defaultFagsakVerdier,
+};
 
 const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
-        actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 5'),
+        actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 5'),
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
         åpenHøyremeny: jest.fn(),
     }));
@@ -56,11 +109,8 @@ const setupMock = (): void => {
     });
 };
 
-const renderForhåndsvarsel = (
-    behandling: Behandling = createMockBehandling,
-    fagsak: Fagsak = createMockFagsak
-): RenderResult => {
-    return render(<Forhåndsvarsel behandling={behandling} fagsak={fagsak} />);
+const renderForhåndsvarsel = (): RenderResult => {
+    return render(<Forhåndsvarsel behandling={createMockBehandling} fagsak={createMockFagsak} />);
 };
 
 describe('Forhåndsvarsel', () => {
