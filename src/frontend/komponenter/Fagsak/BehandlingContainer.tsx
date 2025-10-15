@@ -1,10 +1,11 @@
 import type { Behandling } from '../../typer/behandling';
 import type { Fagsak } from '../../typer/fagsak';
 
-import { BodyShort } from '@navikt/ds-react';
+import { SidebarRightIcon } from '@navikt/aksel-icons';
+import { BodyShort, Button } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
-import { Suspense } from 'react';
+import { Suspense, useRef } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
@@ -74,6 +75,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { toggles } = useToggles();
+    const ref = useRef<HTMLDialogElement>(null);
 
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
@@ -158,7 +160,19 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                 className="flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-170px)]"
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
-                <Stegflyt />
+                <div className="flex flex-row gap-2 lg:block justify-between">
+                    <Stegflyt />
+                    <Button
+                        variant="tertiary"
+                        icon={
+                            <SidebarRightIcon title="Åpne informasjonspanelet" fontSize="1.5rem" />
+                        }
+                        className="lg:hidden"
+                        onClick={() => ref.current?.showModal()}
+                    >
+                        Åpne
+                    </Button>
+                </div>
                 <section
                     className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
                     aria-label="Behandlingsinnhold"
@@ -237,7 +251,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                 </section>
             </section>
 
-            <Høyremeny fagsak={fagsak} behandling={behandling} />
+            <Høyremeny fagsak={fagsak} behandling={behandling} ref={ref} />
         </>
     ) : null;
 };

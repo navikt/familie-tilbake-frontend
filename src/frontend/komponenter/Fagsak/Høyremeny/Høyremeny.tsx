@@ -1,30 +1,37 @@
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
 
-import { ClockIcon, FolderIcon, PaperplaneIcon, PersonGavelIcon } from '@navikt/aksel-icons';
-import { Tabs } from '@navikt/ds-react';
+import { Modal } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Suspense } from 'react';
 
+import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
 import { BrukerInformasjon } from './Informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './Informasjonsbokser/Faktaboks';
-import Menykontainer, { Menysider } from './Menykontainer';
 import { useBehandling } from '../../../context/BehandlingContext';
 
 type Props = {
     fagsak: Fagsak;
     behandling: Behandling;
+    ref: React.RefObject<HTMLDialogElement | null>;
 };
 
-const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
+const Høyremeny: React.FC<Props> = ({ fagsak, behandling, ref }) => {
     const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandling();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
+
+    const handleKlikkUtenforModal: React.MouseEventHandler<HTMLDialogElement> = e => {
+        if (e.target === e.currentTarget) {
+            (e.currentTarget as HTMLDialogElement).close();
+        }
+    };
 
     return (
         <Suspense fallback="Høyremeny laster...">
             {/* Reduserer høyden med header(48)-høyde og padding(16+16)-høyde til fagsakcontainer */}
             <aside
+                aria-label="Informasjonspanel for tilbakekrevingen og bruker"
                 className={classNames(
                     'flex-col gap-4 bg-gray-50 hidden lg:flex max-h-[calc(100vh-80px)]',
                     { 'max-h-[calc(100vh-142px)]': !!ventegrunn }
@@ -33,84 +40,35 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling }) => {
                 <div className="gap-4 flex flex-col flex-1 min-h-0">
                     <Faktaboks behandling={behandling} ytelsestype={fagsak.ytelsestype} />
                     <BrukerInformasjon bruker={fagsak.bruker} institusjon={fagsak.institusjon} />
-                    <Tabs
-                        defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
-                        iconPosition="top"
-                        className="border border-border-divider rounded-2xl bg-white h-full flex flex-col min-h-0"
-                    >
-                        <div className="flex justify-center">
-                            {værtPåFatteVedtakSteget && (
-                                <Tabs.Tab
-                                    value="to-trinn"
-                                    label="Fatte vedtak"
-                                    icon={
-                                        <PersonGavelIcon
-                                            fontSize="1.5rem"
-                                            aria-label="Ikon fatte vedtak"
-                                        />
-                                    }
-                                />
-                            )}
-                            <Tabs.Tab
-                                value="logg"
-                                label="Historikk"
-                                icon={<ClockIcon fontSize="1.5rem" aria-label="Ikon historikk" />}
-                            />
-                            <Tabs.Tab
-                                value="dokumenter"
-                                label="Dokumenter"
-                                icon={<FolderIcon fontSize="1.5rem" aria-label="Ikon dokumenter" />}
-                            />
-                            {/* TODO: Rydde opp etter feature toggle */}
-                            {!behandling.erNyModell && (
-                                <Tabs.Tab
-                                    value="send-brev"
-                                    label="Send brev"
-                                    icon={
-                                        <PaperplaneIcon
-                                            fontSize="1.5rem"
-                                            aria-label="Ikon send brev"
-                                        />
-                                    }
-                                />
-                            )}
-                            {/* .. */}
-                        </div>
-                        <div className="px-2 mt-4 flex-1 min-h-0 overflow-y-auto scrollbar-stable">
-                            {værtPåFatteVedtakSteget && (
-                                <Tabs.Panel value="to-trinn">
-                                    <Menykontainer
-                                        valgtMenyside={Menysider.Totrinn}
-                                        behandling={behandling}
-                                        fagsak={fagsak}
-                                    />
-                                </Tabs.Panel>
-                            )}
-                            <Tabs.Panel value="logg">
-                                <Menykontainer
-                                    valgtMenyside={Menysider.Historikk}
-                                    behandling={behandling}
-                                    fagsak={fagsak}
-                                />
-                            </Tabs.Panel>
-                            <Tabs.Panel value="dokumenter">
-                                <Menykontainer
-                                    valgtMenyside={Menysider.Dokumenter}
-                                    behandling={behandling}
-                                    fagsak={fagsak}
-                                />
-                            </Tabs.Panel>
-                            <Tabs.Panel value="send-brev">
-                                <Menykontainer
-                                    valgtMenyside={Menysider.SendBrev}
-                                    behandling={behandling}
-                                    fagsak={fagsak}
-                                />
-                            </Tabs.Panel>
-                        </div>
-                    </Tabs>
+                    <HistorikkOgDokumenter
+                        værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}
+                        fagsak={fagsak}
+                        behandling={behandling}
+                    />
                 </div>
             </aside>
+
+            {/**
+             * 1. Ved bredere skjerm skal modalen falle bort og høyremenyen vises
+             * 2. CopyButton stor nok?
+             */}
+            <Modal
+                ref={ref}
+                aria-label="Informasjonspanel for tilbakekrevingen og bruker"
+                className="h-full mr-2 my-2"
+                onClick={handleKlikkUtenforModal}
+            >
+                <Modal.Header />
+                <Modal.Body className="flex flex-col gap-4">
+                    <Faktaboks behandling={behandling} ytelsestype={fagsak.ytelsestype} />
+                    <BrukerInformasjon bruker={fagsak.bruker} institusjon={fagsak.institusjon} />
+                    <HistorikkOgDokumenter
+                        værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}
+                        fagsak={fagsak}
+                        behandling={behandling}
+                    />
+                </Modal.Body>
+            </Modal>
         </Suspense>
     );
 };
