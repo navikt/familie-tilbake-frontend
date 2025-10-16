@@ -7,6 +7,7 @@ import * as React from 'react';
 import { Suspense } from 'react';
 
 import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
+import { HøyremenySkeleton } from './HøyremenySkeleton';
 import { BrukerInformasjon } from './Informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './Informasjonsbokser/Faktaboks';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -28,7 +29,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling, ref }) => {
     };
 
     return (
-        <Suspense fallback="Høyremeny laster...">
+        <Suspense fallback={<HøyremenySkeleton />}>
             {/* Reduserer høyden med header(48)-høyde og padding(16+16)-høyde til fagsakcontainer */}
             <aside
                 aria-label="Informasjonspanel for tilbakekrevingen og bruker"
@@ -48,11 +49,6 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling, ref }) => {
                 </div>
             </aside>
 
-            {/**
-             * 1. Status
-             * 2. CopyButton stor nok?
-             * 3. Historiske lenke
-             */}
             <Modal
                 ref={ref}
                 aria-label="Informasjonspanel for tilbakekrevingen og bruker"
