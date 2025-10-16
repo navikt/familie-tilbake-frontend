@@ -31,12 +31,23 @@ type Props = {
 export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
     const kjønnIkon =
         bruker.kjønn === Kjønn.Kvinne ? (
-            <FigureOutwardIcon title="Kvinne ikon" fontSize="1em" className="text-icon-subtle" />
+            <FigureOutwardIcon
+                title="Kvinne ikon"
+                aria-hidden
+                fontSize="1em"
+                className="text-icon-subtle"
+            />
         ) : bruker.kjønn === Kjønn.Mann ? (
-            <FigureOutwardIcon title="Mann ikon" fontSize="1em" className="text-icon-subtle" />
+            <FigureOutwardIcon
+                title="Mann ikon"
+                aria-hidden
+                fontSize="1em"
+                className="text-icon-subtle"
+            />
         ) : (
             <FigureCombinationIcon
                 title="Ukjent ikon"
+                aria-hidden
                 fontSize="1em"
                 className="text-icon-subtle"
             />
@@ -60,6 +71,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                     <CandleIcon
                         title="Lysestake ikon"
+                        aria-hidden
                         fontSize="1rem"
                         className="text-icon-subtle"
                     />
@@ -68,7 +80,12 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                 <dd className="text-medium">{hentAlder(bruker.fødselsdato, bruker.dødsdato)} år</dd>
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    <BagdeIcon title="Skiltikon" fontSize="1rem" className="text-icon-subtle" />
+                    <BagdeIcon
+                        title="Skiltikon"
+                        aria-hidden
+                        fontSize="1rem"
+                        className="text-icon-subtle"
+                    />
                     {erDNummer(bruker.personIdent) ? ' D-nummer' : 'Fødselsnummer'}
                 </dt>
                 <dd className="text-medium flex flex-row gap-2 items-center">
@@ -81,6 +98,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <FlowerPetalFallingIcon
                                 title="Fallende blomster ikon"
+                                aria-hidden
                                 fontSize="1rem"
                                 className="text-icon-subtle"
                             />
@@ -98,6 +116,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <Buildings2Icon
                                 title="To bygninger ikon"
+                                aria-hidden
                                 fontSize="1rem"
                                 className="text-icon-subtle"
                             />
@@ -108,6 +127,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <Buildings2Icon
                                 title="To bygninger ikon"
+                                aria-hidden
                                 fontSize="1rem"
                                 className="text-icon-subtle"
                             />

@@ -48,6 +48,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <FileResetIcon
                                 title="Filreset ikon"
+                                aria-hidden
                                 fontSize="1rem"
                                 className="text-icon-subtle"
                             />
@@ -68,6 +69,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                     <CalendarIcon
                         title="Kalender ikon"
+                        aria-hidden
                         fontSize="1rem"
                         className="text-icon-subtle"
                     />
@@ -82,6 +84,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                             <CalendarFillIcon
                                 title="Kalenderfyll ikon"
+                                aria-hidden
                                 fontSize="1rem"
                                 className="text-icon-subtle"
                             />
@@ -96,6 +99,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                     <Buildings3Icon
                         title="Tre bygninger ikon"
+                        aria-hidden
                         fontSize="1rem"
                         className="text-icon-subtle"
                     />
@@ -143,7 +147,12 @@ const StatusTag: React.FC<{ status: Behandlingstatus }> = ({ status }) => {
     return (
         <>
             <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                <StatusIkon title="Statusikon" fontSize="1rem" className="text-icon-subtle" />
+                <StatusIkon
+                    title="Statusikon"
+                    aria-hidden
+                    fontSize="1rem"
+                    className="text-icon-subtle"
+                />
                 Status
             </dt>
             <dd className="text-medium items-center flex">
@@ -172,6 +181,7 @@ const ResultatTag: React.FC<{ resultat: Behandlingresultat }> = ({ resultat }) =
             <dt className="shrink-0 text-medium font-bold flex flex-row gap-2 items-center">
                 <ClipboardIcon
                     title="Utklippstavle ikon"
+                    aria-hidden
                     fontSize="1rem"
                     className="text-icon-subtle"
                 />
