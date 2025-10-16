@@ -24,13 +24,10 @@ import {
 
 jest.setTimeout(10000);
 
-const mockUseLocation = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
-    useLocation: (): Location => mockUseLocation(),
 }));
-const locationMockValue = { pathname: '/fagsak/123/behandling/456/vilkaarsvurdering' };
 
 jest.mock('../../../../api/http/HttpProvider', () => {
     return {
@@ -89,7 +86,6 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
-        mockUseLocation.mockReturnValue(locationMockValue);
     });
     const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
     const fagsak = mock<Fagsak>({
