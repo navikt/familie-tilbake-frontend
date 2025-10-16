@@ -10,7 +10,7 @@ import { Menysider } from '../Menykontainer';
 
 type Props = {
     behandling: Behandling;
-    valgtMenyside: Menysider;
+    valgtMenyside: Menysider | null;
 };
 
 const [DokumentlistingProvider, useDokumentlisting] = createUseContext(

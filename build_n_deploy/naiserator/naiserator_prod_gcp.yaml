@@ -42,6 +42,9 @@ spec:
           - id: 6406aba2-b930-41d3-a85b-dd13731bc974 # 0000-GA-Enslig-Forsorger-Saksbehandler
           - id: 5fcc0e1d-a4c2-49f0-93dc-27c9fea41e54 # 0000-GA-Enslig-Forsorger-Beslutter
           - id: 31778fd8-3b71-4867-8db6-a81235fbe001 # 0000-GA-Enslig-Forsorger-Veileder
+          - id: 0f841c83-0d64-407c-80d5-4eb51dfaee1e # TS veileder
+          - id: c1e9edec-0c10-4df2-8c74-324ab9922220 # TS saksbehandler
+          - id: 224b5097-d0af-462c-8d8e-49c0e8a42661 # TS beslutter
           - id: 3d718ae5-f25e-47a4-b4b3-084a97604c1d # forvalterrolle 
       enabled: true
       replyURLs:
