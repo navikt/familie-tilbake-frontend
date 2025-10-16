@@ -14,6 +14,7 @@ import { FaktaProvider } from './Fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
 import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
 import { Forhåndsvarsel } from './Forhåndsvarsel/Forhåndsvarsel';
+import { HøyremenySkeleton } from './Høyremeny/HøyremenySkeleton';
 import { Stegflyt } from './Stegflyt/Stegflyt';
 import { VedtakProvider } from './Vedtak/VedtakContext';
 import { VergeProvider } from './Verge/VergeContext';
@@ -253,8 +254,9 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                     </Suspense>
                 </section>
             </section>
-
-            <Høyremeny fagsak={fagsak} behandling={behandling} ref={ref} />
+            <Suspense fallback={<HøyremenySkeleton />}>
+                <Høyremeny fagsak={fagsak} behandling={behandling} ref={ref} />
+            </Suspense>
         </>
     ) : null;
 };
