@@ -54,7 +54,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                             Revurderingsårsak
                         </dt>
                         <dd className="text-medium items-center flex">
-                            <Tag size="small" variant="neutral-moderate" className="border-0 px-2">
+                            <Tag size="small" variant="neutral-moderate">
                                 {behandlingårsaker[behandling.behandlingsårsakstype]}
                             </Tag>
                         </dd>
@@ -147,7 +147,7 @@ const StatusTag: React.FC<{ status: Behandlingstatus }> = ({ status }) => {
                 Status
             </dt>
             <dd className="text-medium items-center flex">
-                <Tag size="small" variant={variant} className="border-0 px-2">
+                <Tag size="small" variant={variant}>
                     {behandlingsstatuser[status]}
                 </Tag>
             </dd>
@@ -178,11 +178,7 @@ const ResultatTag: React.FC<{ resultat: Behandlingresultat }> = ({ resultat }) =
                 Resultat
             </dt>
             <dd className="text-medium items-center flex">
-                <Tag
-                    size="small"
-                    variant={RESULTAT_META[resultat].variant}
-                    className="border-0 px-2"
-                >
+                <Tag size="small" variant={RESULTAT_META[resultat].variant}>
                     {behandlingsresultater[resultat]}
                 </Tag>
             </dd>

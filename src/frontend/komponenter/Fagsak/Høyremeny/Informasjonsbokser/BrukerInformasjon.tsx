@@ -87,7 +87,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                             Dødsdato
                         </dt>
                         <dd className="text-medium">
-                            <Tag size="small" variant="neutral-filled" className="border-0 px-2">
+                            <Tag size="small" variant="neutral-filled">
                                 {bruker.dødsdato}
                             </Tag>
                         </dd>
