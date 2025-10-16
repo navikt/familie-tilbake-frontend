@@ -6,7 +6,7 @@ import React from 'react';
 export const HøyremenySkeleton: React.FC = () => {
     return (
         <aside
-            aria-label="Laster informasjon for tilbakekrevingen og bruker"
+            aria-label="Laster informasjon om tilbakekrevingen og bruker"
             className={classNames(
                 'flex-col gap-4 bg-gray-50 hidden lg:flex max-h-[calc(100vh-80px)]'
             )}

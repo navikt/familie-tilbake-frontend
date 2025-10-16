@@ -32,7 +32,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling, ref }) => {
         <Suspense fallback={<HøyremenySkeleton />}>
             {/* Reduserer høyden med header(48)-høyde og padding(16+16)-høyde til fagsakcontainer */}
             <aside
-                aria-label="Informasjonspanel for tilbakekrevingen og bruker"
+                aria-label="Informasjon om tilbakekrevingen og bruker"
                 className={classNames(
                     'flex-col gap-4 bg-gray-50 hidden lg:flex max-h-[calc(100vh-80px)]',
                     { 'max-h-[calc(100vh-142px)]': !!ventegrunn }
@@ -51,7 +51,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling, ref }) => {
 
             <Modal
                 ref={ref}
-                aria-label="Informasjonspanel for tilbakekrevingen og bruker"
+                aria-label="Informasjon om tilbakekrevingen og bruker"
                 className="h-full mr-2 my-2 lg:hidden"
                 onClick={handleKlikkUtenforModal}
             >
