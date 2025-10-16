@@ -156,7 +156,11 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const actionBarStegtekst = (valgtSteg: Behandlingssteg): string | undefined => {
         if (behandling?.status !== RessursStatus.Suksess) return undefined;
         const antallSynligeSteg = Object.values(SYNLIGE_STEG).filter(({ steg }) => {
-            if (steg === Behandlingssteg.Verge || steg === Behandlingssteg.Brevmottaker) {
+            if (
+                steg === Behandlingssteg.Verge ||
+                steg === Behandlingssteg.Brevmottaker ||
+                steg === Behandlingssteg.Forhåndsvarsel
+            ) {
                 return behandling.data.behandlingsstegsinfo.some(
                     ({ behandlingssteg }) => behandlingssteg === steg
                 );
