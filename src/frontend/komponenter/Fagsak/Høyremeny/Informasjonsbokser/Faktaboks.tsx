@@ -26,6 +26,7 @@ import {
     Behandlingresultat,
 } from '../../../../typer/behandling';
 import { formatterDatostring } from '../../../../utils';
+import { ICON_PROPS } from '../utils';
 
 type Props = {
     behandling: Behandling;
@@ -46,11 +47,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                 {behandling.behandlingsårsakstype && (
                     <>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                            <FileResetIcon
-                                aria-hidden
-                                fontSize="1rem"
-                                className="text-icon-subtle"
-                            />
+                            <FileResetIcon {...ICON_PROPS} />
                             Revurderingsårsak
                         </dt>
                         <dd className="text-medium items-center flex">
@@ -66,7 +63,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                 {behandling.resultatstype && <ResultatTag resultat={behandling.resultatstype} />}
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    <CalendarIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />
+                    <CalendarIcon {...ICON_PROPS} />
                     Opprettet
                 </dt>
                 <dd className="text-medium items-center flex">
@@ -76,11 +73,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                 {behandling.avsluttetDato && (
                     <>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                            <CalendarFillIcon
-                                aria-hidden
-                                fontSize="1rem"
-                                className="text-icon-subtle"
-                            />
+                            <CalendarFillIcon {...ICON_PROPS} />
                             Avsluttet
                         </dt>
                         <dd className="text-medium items-center flex">
@@ -90,7 +83,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                 )}
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    <Buildings3Icon aria-hidden fontSize="1rem" className="text-icon-subtle" />
+                    <Buildings3Icon {...ICON_PROPS} />
                     Enhet
                 </dt>
                 <dd className="text-medium items-center flex">
@@ -135,7 +128,7 @@ const StatusTag: React.FC<{ status: Behandlingstatus }> = ({ status }) => {
     return (
         <>
             <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                <StatusIkon aria-hidden fontSize="1rem" className="text-icon-subtle" />
+                <StatusIkon {...ICON_PROPS} />
                 Status
             </dt>
             <dd className="text-medium items-center flex">
@@ -162,7 +155,7 @@ const ResultatTag: React.FC<{ resultat: Behandlingresultat }> = ({ resultat }) =
     return (
         <>
             <dt className="shrink-0 text-medium font-bold flex flex-row gap-2 items-center">
-                <ClipboardIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />
+                <ClipboardIcon {...ICON_PROPS} />
                 Resultat
             </dt>
             <dd className="text-medium items-center flex">

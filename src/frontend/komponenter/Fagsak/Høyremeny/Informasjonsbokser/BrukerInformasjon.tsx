@@ -15,6 +15,7 @@ import React from 'react';
 
 import { Kjønn } from '../../../../typer/bruker';
 import { hentAlder } from '../../../../utils';
+import { ICON_PROPS } from '../utils';
 
 const erDNummer = (personIdent: string): boolean => personIdent.charAt(0) > '3';
 
@@ -27,13 +28,11 @@ const formatterOrgNummer = (orgNummer: string): string =>
 const kjønnIkon = (kjønn: Kjønn): React.ReactNode => {
     switch (kjønn) {
         case Kjønn.Kvinne:
-            return <FigureOutwardIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />;
+            return <FigureOutwardIcon {...ICON_PROPS} />;
         case Kjønn.Mann:
-            return <FigureInwardIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />;
+            return <FigureInwardIcon {...ICON_PROPS} />;
         default:
-            return (
-                <FigureCombinationIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />
-            );
+            return <FigureCombinationIcon {...ICON_PROPS} />;
     }
 };
 
@@ -60,13 +59,13 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                 <dd className="text-medium">{bruker.navn}</dd>
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    <CandleIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />
+                    <CandleIcon {...ICON_PROPS} />
                     Alder
                 </dt>
                 <dd className="text-medium">{hentAlder(bruker.fødselsdato, bruker.dødsdato)} år</dd>
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    <BagdeIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />
+                    <BagdeIcon {...ICON_PROPS} />
                     {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
                 </dt>
                 <dd className="text-medium flex flex-row gap-2 items-center">
@@ -77,11 +76,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                 {bruker.dødsdato && (
                     <>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                            <FlowerPetalFallingIcon
-                                aria-hidden
-                                fontSize="1rem"
-                                className="text-icon-subtle"
-                            />
+                            <FlowerPetalFallingIcon {...ICON_PROPS} />
                             Dødsdato
                         </dt>
                         <dd className="text-medium">
@@ -94,21 +89,13 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                 {institusjon && (
                     <>
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                            <Buildings2Icon
-                                aria-hidden
-                                fontSize="1rem"
-                                className="text-icon-subtle"
-                            />
+                            <Buildings2Icon {...ICON_PROPS} />
                             Institusjon
                         </dt>
                         <dd className="text-medium">{institusjon.navn}</dd>
 
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                            <Buildings2Icon
-                                aria-hidden
-                                fontSize="1rem"
-                                className="text-icon-subtle"
-                            />
+                            <Buildings2Icon {...ICON_PROPS} />
                             Org.nummer
                         </dt>
                         <dd className="text-medium flex flex-row gap-2 items-center">

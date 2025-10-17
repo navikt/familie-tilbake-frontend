@@ -3,6 +3,8 @@ import { Box, CopyButton, Heading, Skeleton } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
+import { ICON_PROPS } from './utils';
+
 export const HøyremenySkeleton: React.FC = () => {
     return (
         <aside
@@ -46,11 +48,7 @@ export const HøyremenySkeleton: React.FC = () => {
                         </dd>
 
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                            <CalendarIcon
-                                aria-hidden
-                                fontSize="1rem"
-                                className="text-icon-subtle"
-                            />
+                            <CalendarIcon {...ICON_PROPS} />
                             Opprettet
                         </dt>
                         <dd className="text-medium items-center flex">
@@ -63,11 +61,7 @@ export const HøyremenySkeleton: React.FC = () => {
                         </dd>
 
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                            <Buildings3Icon
-                                aria-hidden
-                                fontSize="1rem"
-                                className="text-icon-subtle"
-                            />
+                            <Buildings3Icon {...ICON_PROPS} />
                             Enhet
                         </dt>
                         <dd className="text-medium items-center flex">
@@ -108,7 +102,7 @@ export const HøyremenySkeleton: React.FC = () => {
                         </dd>
 
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                            <CandleIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />
+                            <CandleIcon {...ICON_PROPS} />
                             Alder
                         </dt>
                         <dd className="text-medium flex flex-row gap-2 items-center">
@@ -122,7 +116,7 @@ export const HøyremenySkeleton: React.FC = () => {
                         </dd>
 
                         <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                            <BagdeIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />
+                            <BagdeIcon {...ICON_PROPS} />
                             <Skeleton
                                 variant="rectangle"
                                 width={100}
