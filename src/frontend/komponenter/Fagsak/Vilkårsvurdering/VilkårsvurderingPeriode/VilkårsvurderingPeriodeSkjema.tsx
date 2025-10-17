@@ -157,9 +157,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         settIkkePersistertKomponent,
         harUlagredeData,
         nullstillIkkePersisterteKomponenter,
-        åpenHøyremeny,
         actionBarStegtekst,
-        harVærtPåFatteVedtakSteget,
     } = useBehandling();
 
     const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
@@ -521,10 +519,9 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                 stegtekst={actionBarStegtekst(Behandlingssteg.Vilkårsvurdering)}
                 forrigeAriaLabel="Gå tilbake til foreldelsessteget"
                 nesteAriaLabel="Gå videre til vedtakssteget"
-                åpenHøyremeny={åpenHøyremeny}
                 onNeste={() => handleNavigering(PeriodeHandling.GåTilNesteSteg)}
                 onForrige={() => handleNavigering(PeriodeHandling.GåTilForrigeSteg)}
-                harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
+                dobbeltNøstet
                 // Foreldede perioder blir ikke riktig validert, derfor de disables her. Opprettet bug i trello for dette.
                 // https://trello.com/c/CEfUALXj/369-ved-trykk-p%C3%A5-neste-steg-i-vilk%C3%A5rsvurderingen-ved-foreldet-steg-s%C3%A5-er-det-en-feil-i-valideringen-som-sier-at-perioden-mangler-vil
                 disableNeste={(!erAllePerioderBehandlet && !erSistePeriode) || periode.foreldet}

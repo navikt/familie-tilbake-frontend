@@ -1,10 +1,11 @@
 import type { Behandling } from '../../typer/behandling';
 import type { Fagsak } from '../../typer/fagsak';
 
-import { BodyShort } from '@navikt/ds-react';
-import { ABorderDefault, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
+import { SidebarRightIcon } from '@navikt/aksel-icons';
+import { BodyShort, Button } from '@navikt/ds-react';
+import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
-import { Suspense } from 'react';
+import { Suspense, useRef } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
@@ -13,6 +14,7 @@ import { FaktaProvider } from './Fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
 import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
 import { Forhåndsvarsel } from './Forhåndsvarsel/Forhåndsvarsel';
+import { HøyremenySkeleton } from './Høyremeny/HøyremenySkeleton';
 import { Stegflyt } from './Stegflyt/Stegflyt';
 import { VedtakProvider } from './Vedtak/VedtakContext';
 import { VergeProvider } from './Verge/VergeContext';
@@ -59,20 +61,9 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
-const StyledMainContainer = styled.main`
-    flex: 1;
-    overflow: auto;
-`;
-
 const HenlagtContainer = styled.div`
     padding: ${ASpacing3};
     text-align: center;
-`;
-
-const StyledHøyremenyContainer = styled.aside`
-    border-left: 1px solid ${ABorderDefault};
-    overflow-x: hidden;
-    overflow-y: scroll;
 `;
 
 type Props = {
@@ -85,6 +76,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { toggles } = useToggles();
+    const ref = useRef<HTMLDialogElement>(null);
 
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
@@ -112,29 +104,22 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
 
     return behandling.erBehandlingHenlagt ? (
         <>
-            <StyledMainContainer id="fagsak-main">
+            <div className="flex-1 overflow-auto">
                 <HenlagtContainer>
                     <BodyShort size="small">Behandlingen er henlagt</BodyShort>
                 </HenlagtContainer>
-            </StyledMainContainer>
-            <StyledHøyremenyContainer>
-                <Suspense fallback="Høyremeny for henlagt behandling laster...">
-                    <Høyremeny fagsak={fagsak} behandling={behandling} />
-                </Suspense>
-            </StyledHøyremenyContainer>
+            </div>
+
+            <Høyremeny fagsak={fagsak} behandling={behandling} />
         </>
     ) : !harKravgrunnlag ? (
         <>
-            <StyledMainContainer id="fagsak-main" />
-            <StyledHøyremenyContainer>
-                <Suspense fallback="Høyremeny for behandling uten kravgrunnlag laster...">
-                    <Høyremeny fagsak={fagsak} behandling={behandling} />
-                </Suspense>
-            </StyledHøyremenyContainer>
+            <div className="flex-1 overflow-auto" />
+            <Høyremeny fagsak={fagsak} behandling={behandling} />
         </>
     ) : erHistoriskeVerdier ? (
         <>
-            <StyledMainContainer id="fagsak-main">
+            <div className="flex-1 overflow-auto">
                 <Suspense fallback="Historiske vurderinger laster...">
                     <HistoriskeVurderingermeny behandling={behandling} fagsak={fagsak} />
                 </Suspense>
@@ -167,16 +152,32 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                     />
                     <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
                 </Routes>
-            </StyledMainContainer>
+            </div>
         </>
     ) : harKravgrunnlag ? (
         <>
-            <main
-                className="flex-1 pt-6 bg-gray-50 flex flex-col min-h-0"
-                aria-label="Behandling innhold"
+            <section
+                /* Trekker fra høyde fra header (48), padding (16+16 + 16) og action baren (74) */
+                className="flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-170px)]"
+                aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
-                <Stegflyt />
-                <section className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white m-4 scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 mb-25 min-w-141">
+                <div className="flex flex-row gap-2 lg:block justify-between">
+                    <Stegflyt />
+                    <Button
+                        variant="tertiary"
+                        icon={
+                            <SidebarRightIcon title="Åpne informasjonspanelet" fontSize="1.5rem" />
+                        }
+                        className="lg:hidden"
+                        onClick={() => ref.current?.showModal()}
+                    >
+                        Åpne
+                    </Button>
+                </div>
+                <section
+                    className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
+                    aria-label="Behandlingsinnhold"
+                >
                     <Suspense fallback={<BehandlingContainerSkeleton />}>
                         <Routes>
                             <Route
@@ -252,12 +253,10 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                         </Routes>
                     </Suspense>
                 </section>
-            </main>
-            <StyledHøyremenyContainer aria-label="Høyremeny med informasjon og handlinger for behandlingen">
-                <Suspense fallback="Høyremeny kravgrunnlag laster...">
-                    <Høyremeny fagsak={fagsak} behandling={behandling} />
-                </Suspense>
-            </StyledHøyremenyContainer>
+            </section>
+            <Suspense fallback={<HøyremenySkeleton />}>
+                <Høyremeny fagsak={fagsak} behandling={behandling} ref={ref} />
+            </Suspense>
         </>
     ) : null;
 };

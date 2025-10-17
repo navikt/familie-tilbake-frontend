@@ -47,12 +47,7 @@ const FaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning
         feilmeldinger,
         gåTilForrige,
     } = useFakta();
-    const {
-        settIkkePersistertKomponent,
-        åpenHøyremeny,
-        actionBarStegtekst,
-        harVærtPåFatteVedtakSteget,
-    } = useBehandling();
+    const { settIkkePersistertKomponent, actionBarStegtekst } = useBehandling();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
 
@@ -209,10 +204,8 @@ const FaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning
                 stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
                 forrigeAriaLabel={behandling.harVerge ? 'Gå tilbake til vergesteget' : undefined}
                 nesteAriaLabel="Gå videre til foreldelsessteget"
-                åpenHøyremeny={åpenHøyremeny}
                 onForrige={behandling.harVerge ? gåTilForrige : undefined}
                 onNeste={sendInnSkjema}
-                harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
                 isLoading={senderInn}
             />
         </HGrid>

@@ -12,8 +12,8 @@ import Brevmottakere from './Brevmottakere';
 import { Fagsystem, Ytelsetype } from '../../../kodeverk';
 import { Behandlingstatus, Behandlingstype, Saksbehandlingstype } from '../../../typer/behandling';
 import { MottakerType } from '../../../typer/Brevmottaker';
+import { Kjønn } from '../../../typer/bruker';
 import { Målform } from '../../../typer/fagsak';
-import { Kjønn } from '../../../typer/person';
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
@@ -72,6 +72,7 @@ const createMockFagsak = (): Fagsak => ({
         navn: 'Test Bruker',
         fødselsdato: '1990-01-01',
         kjønn: Kjønn.Mann,
+        dødsdato: null,
     },
     behandlinger: [],
 });
@@ -118,6 +119,7 @@ const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 5'),
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+        erStegBehandlet: jest.fn().mockReturnValue(false),
     }));
 };
 

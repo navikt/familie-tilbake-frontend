@@ -5,6 +5,7 @@ import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurder
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -22,6 +23,11 @@ import {
 } from '../../../../kodeverk';
 
 jest.setTimeout(10000);
+
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
+    useNavigate: (): NavigateFunction => jest.fn(),
+}));
 
 jest.mock('../../../../api/http/HttpProvider', () => {
     return {

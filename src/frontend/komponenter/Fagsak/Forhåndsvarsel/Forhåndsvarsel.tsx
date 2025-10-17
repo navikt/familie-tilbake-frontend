@@ -39,7 +39,7 @@ enum SkalSendesForhåndsvarsel {
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     const navigate = useNavigate();
 
-    const { actionBarStegtekst, harVærtPåFatteVedtakSteget, åpenHøyremeny } = useBehandling();
+    const { actionBarStegtekst } = useBehandling();
     const { bestillBrev, forhåndsvisBrev } = useDokumentApi();
 
     const methods = useForm({
@@ -179,10 +179,8 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 nesteTekst={harEndringer ? 'Send forhåndsvarsel' : 'Neste'}
                 forrigeAriaLabel={undefined}
                 nesteAriaLabel={harEndringer ? 'Send forhåndsvarsel' : 'Gå til foreldelsessteget'}
-                åpenHøyremeny={åpenHøyremeny}
                 onNeste={!behandling.varselSendt ? sendForhåndsvarsel : gåTilNeste}
                 onForrige={undefined}
-                harVærtPåFatteVedtakSteg={harVærtPåFatteVedtakSteget()}
             />
         </>
     );
