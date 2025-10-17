@@ -4,6 +4,7 @@ import type { Fagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { UserEvent } from '@testing-library/user-event';
+import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -22,6 +23,11 @@ import {
 
 jest.setTimeout(10000);
 
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
+    useNavigate: (): NavigateFunction => jest.fn(),
+}));
+
 jest.mock('../../../../api/http/HttpProvider', () => {
     return {
         useHttp: (): Http => ({
@@ -30,6 +36,7 @@ jest.mock('../../../../api/http/HttpProvider', () => {
         }),
     };
 });
+
 jest.mock('../VilkårsvurderingContext', () => {
     return {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({

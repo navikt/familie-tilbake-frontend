@@ -14,8 +14,8 @@ import {
     Saksbehandlingstype,
     type Behandling,
 } from '../../../typer/behandling';
+import { Kjønn } from '../../../typer/bruker';
 import { Målform, type Fagsak } from '../../../typer/fagsak';
-import { Kjønn } from '../../../typer/person';
 
 const mockUseBehandling = jest.fn();
 const mockUseDokumentlisting = jest.fn();
@@ -50,6 +50,7 @@ const defaultFagsakVerdier = {
         navn: 'Test Bruker',
         fødselsdato: '1990-01-01',
         kjønn: Kjønn.Mann,
+        dødsdato: null,
     },
     behandlinger: [],
 };
@@ -99,8 +100,7 @@ const createMockFagsak: Fagsak = {
 const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 5'),
-        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
-        åpenHøyremeny: jest.fn(),
+        erStegBehandlet: jest.fn().mockReturnValue(false),
     }));
 
     mockUseDokumentApi.mockReturnValue({
