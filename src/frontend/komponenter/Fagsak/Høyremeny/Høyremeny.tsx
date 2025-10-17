@@ -4,6 +4,7 @@ import type { Fagsak } from '../../../typer/fagsak';
 import { Modal } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
+import { useEffect } from 'react';
 
 import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
 import { BrukerInformasjon } from './Informasjonsbokser/BrukerInformasjon';
@@ -13,12 +14,24 @@ import { useBehandling } from '../../../context/BehandlingContext';
 type Props = {
     fagsak: Fagsak;
     behandling: Behandling;
-    ref: React.RefObject<HTMLDialogElement | null>;
+    dialogRef: React.RefObject<HTMLDialogElement | null>;
 };
 
-const Høyremeny: React.FC<Props> = ({ fagsak, behandling, ref }) => {
+const Høyremeny: React.FC<Props> = ({ fagsak, behandling, dialogRef }) => {
     const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandling();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
+
+    useEffect(() => {
+        const mq = window.matchMedia('(min-width: 1024px)');
+        const lukkModalenHvisStørreEnnLg = (): void => {
+            if (mq.matches && dialogRef.current?.open) {
+                dialogRef.current.close();
+            }
+        };
+        lukkModalenHvisStørreEnnLg();
+        mq.addEventListener('change', lukkModalenHvisStørreEnnLg);
+        return (): void => mq.removeEventListener('change', lukkModalenHvisStørreEnnLg);
+    }, [dialogRef]);
 
     const handleKlikkUtenforModal: React.MouseEventHandler<HTMLDialogElement> = e => {
         if (e.target === e.currentTarget) {
@@ -48,9 +61,9 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling, ref }) => {
             </aside>
 
             <Modal
-                ref={ref}
+                ref={dialogRef}
                 aria-label="Informasjon om tilbakekrevingen og bruker"
-                className="h-full mr-2 my-2 lg:hidden"
+                className="h-full mr-2 my-2"
                 onClick={handleKlikkUtenforModal}
             >
                 <Modal.Header />
