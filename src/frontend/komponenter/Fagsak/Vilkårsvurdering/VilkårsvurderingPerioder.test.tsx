@@ -50,19 +50,12 @@ jest.mock('@tanstack/react-query', () => {
             };
 
             return {
-                mutate: mutateAsync,
                 mutateAsync: mutateAsync,
-                isError: false,
-                error: null,
             };
         }),
-        useQueryClient: jest.fn(() => ({
-            invalidateQueries: jest.fn(),
-        })),
     };
 });
 
-// Testdata - deles på tvers av alle tester
 const perioder: VilkårsvurderingPeriode[] = [
     {
         feilutbetaltBeløp: 1333,
@@ -123,21 +116,14 @@ const setupMocks = (): void => {
         request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
-                data: mock<Behandling>({
-                    eksternBrukId: '1',
-                    behandlingsstegsinfo: [],
-                }),
+                data: mock<Behandling>({}),
             });
         },
     }));
 };
 
-const renderVilkårsvurderingPerioder = (
-    behandling: Behandling,
-    fagsak: Fagsak,
-    testPerioder: VilkårsvurderingPeriode[] = perioder
-): RenderResult => {
-    const skjemaData = testPerioder.map((periode, index) => ({
+const renderVilkårsvurderingPerioder = (behandling: Behandling, fagsak: Fagsak): RenderResult => {
+    const skjemaData = perioder.map((periode, index) => ({
         index: `idx_fpsd_${index}`,
         ...periode,
     }));
@@ -172,7 +158,7 @@ const findPeriodButton = (
     );
 };
 
-describe('Tester: VilkårsvurderingPerioder', () => {
+describe('VilkårsvurderingPerioder', () => {
     let user: UserEvent;
 
     beforeEach(() => {
@@ -182,7 +168,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         Element.prototype.scrollIntoView = jest.fn();
     });
 
-    test('skal bytte periode direkte når det ikke er ulagrede endringer', async () => {
+    test('Skal bytte periode direkte når det ikke er ulagrede endringer', async () => {
         const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
@@ -205,7 +191,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
     });
 
-    test('skal vise modal ved bytte av periode med ulagrede endringer', async () => {
+    test('Skal vise modal ved bytte av periode med ulagrede endringer', async () => {
         const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
@@ -238,7 +224,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         expect(getByRole('button', { name: 'Bytt uten å lagre' })).toBeInTheDocument();
     });
 
-    test('skal bytte uten å lagre når "Bytt uten å lagre" klikkes', async () => {
+    test('Skal bytte uten å lagre når "Bytt uten å lagre" klikkes', async () => {
         const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
@@ -277,7 +263,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         ).not.toBeInTheDocument();
     });
 
-    test('skal lagre og bytte når "Lagre og bytt periode" klikkes', async () => {
+    test('Skal lagre og bytte når "Lagre og bytt periode" klikkes', async () => {
         const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
@@ -328,7 +314,7 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         ).not.toBeInTheDocument();
     });
 
-    test('skal lukke modal og forbli på nåværende periode når "Lukk" klikkes', async () => {
+    test('Skal lukke modal og forbli på nåværende periode når "Lukk" klikkes', async () => {
         const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 

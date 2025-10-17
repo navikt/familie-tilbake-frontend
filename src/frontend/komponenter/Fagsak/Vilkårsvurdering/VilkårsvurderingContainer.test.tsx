@@ -96,25 +96,23 @@ const vilkårsvurdering: VilkårsvurderingResponse = {
     rettsgebyr: 1199,
 };
 
-const setupUseBehandlingApiMock = (vilkårsvurdering?: VilkårsvurderingResponse): void => {
-    if (vilkårsvurdering) {
-        mockUseBehandlingApi.mockImplementation(() => ({
-            gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
-                const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
-                    status: RessursStatus.Suksess,
-                    data: vilkårsvurdering,
-                });
-                return Promise.resolve(ressurs);
-            },
-            sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-    }
+const setupUseBehandlingApiMock = (vilkårsvurdering: VilkårsvurderingResponse): void => {
+    mockUseBehandlingApi.mockImplementation(() => ({
+        gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
+            const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
+                status: RessursStatus.Suksess,
+                data: vilkårsvurdering,
+            });
+            return Promise.resolve(ressurs);
+        },
+        sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
+            const ressurs = mock<Ressurs<string>>({
+                status: RessursStatus.Suksess,
+                data: 'suksess',
+            });
+            return Promise.resolve(ressurs);
+        },
+    }));
 };
 
 const setupHttpMock = (): void => {
@@ -122,10 +120,7 @@ const setupHttpMock = (): void => {
         request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
-                data: mock<Behandling>({
-                    eksternBrukId: '1',
-                    behandlingsstegsinfo: [],
-                }),
+                data: mock<Behandling>({}),
             });
         },
     }));
@@ -140,7 +135,7 @@ const renderVilkårsvurderingContainer = (behandling: Behandling, fagsak: Fagsak
         </BehandlingProvider>
     );
 
-describe('Tester: VilkårsvurderingContainer', () => {
+describe('VilkårsvurderingContainer', () => {
     let user: UserEvent;
 
     beforeEach(() => {
@@ -149,7 +144,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         setupHttpMock();
     });
 
-    test('- totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
+    test('Totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
         setupUseBehandlingApiMock(vilkårsvurdering);
         const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
@@ -322,7 +317,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         ).toBeInTheDocument();
     });
 
-    test('- vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
+    test('Vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
         setupUseBehandlingApiMock(vilkårsvurdering);
 
         const fagsak = mock<Fagsak>({
@@ -398,7 +393,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         );
     });
 
-    test('- vis utfylt - forstod/burde forstått - forsto', async () => {
+    test('Vis utfylt - forstod/burde forstått - forsto', async () => {
         setupUseBehandlingApiMock({
             perioder: [
                 {
@@ -542,7 +537,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         ).toBeEnabled();
     });
 
-    test('- vis utfylt - forstod/burde forstått - forsto - lesevisning', async () => {
+    test('Vis utfylt - forstod/burde forstått - forsto - lesevisning', async () => {
         setupUseBehandlingApiMock({
             perioder: [
                 {
@@ -732,7 +727,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         ).toBeEnabled();
     });
 
-    test('- periode med udefinert resultat er ikke behandlet', async () => {
+    test('Periode med udefinert resultat er ikke behandlet', async () => {
         setupUseBehandlingApiMock({
             perioder: [
                 {

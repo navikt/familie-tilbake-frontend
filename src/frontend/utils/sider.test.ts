@@ -34,7 +34,7 @@ const mockBehandling: Partial<Behandling> = {
     behandlingsstegsinfo: mockBehandlingsstegsinfo,
 };
 
-describe('sider', () => {
+describe('Sider', () => {
     test('visSide skal ikke vise brevmottaker dersom den informasjonen ikke er på behandlingen', () => {
         const result = visSide(Behandlingssteg.Brevmottaker, mockBehandling as Behandling, {});
         expect(result).toBe(false);

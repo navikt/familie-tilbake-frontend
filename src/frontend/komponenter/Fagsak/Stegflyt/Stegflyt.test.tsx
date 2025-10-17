@@ -94,10 +94,6 @@ describe('Stegflyt', () => {
 
         mockUseLocation.mockReturnValue({
             pathname: '/fagsystem/BA/fagsak/123/behandling/456/fakta',
-            search: '',
-            hash: '',
-            state: null,
-            key: 'default',
         });
     });
 
@@ -132,9 +128,8 @@ describe('Stegflyt', () => {
         test('skal ikke navigere til steget som allerede er aktivt', () => {
             const { getByText } = renderStegflyt();
 
-            // Fakta er aktivt steg (basert på mock location)
-            const faktaSteg = getByText('Fakta');
-            fireEvent.click(faktaSteg);
+            const aktivtSteg = getByText('Fakta');
+            fireEvent.click(aktivtSteg);
 
             expect(mockNavigate).not.toHaveBeenCalled();
         });
@@ -179,10 +174,6 @@ describe('Stegflyt', () => {
         test('skal returnere null når aktiv stegnummer er mindre enn 1', () => {
             mockUseLocation.mockReturnValue({
                 pathname: '/ugyldig-side',
-                search: '',
-                hash: '',
-                state: null,
-                key: 'default',
             });
 
             const { container } = renderStegflyt();

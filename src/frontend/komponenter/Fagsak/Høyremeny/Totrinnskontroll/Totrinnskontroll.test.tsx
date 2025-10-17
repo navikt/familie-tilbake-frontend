@@ -62,19 +62,17 @@ const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkontr
         visVenteModal: false,
         erBehandlingReturnertFraBeslutter: (): boolean => returnertFraBeslutter,
         hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-        settIkkePersistertKomponent: jest.fn(),
-        nullstillIkkePersisterteKomponenter: jest.fn(),
     }));
 };
 
-describe('Tester: Totrinnskontroll', () => {
+describe('Totrinnskontroll', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
 
-    test('- vis og fyll ut - godkjenner', async () => {
+    test('Vis og fyll ut - godkjenner', async () => {
         setupMock(false, {
             totrinnsstegsinfo: [
                 {
@@ -143,7 +141,7 @@ describe('Tester: Totrinnskontroll', () => {
         );
     });
 
-    test('- vis og fyll ut - sender tilbake', async () => {
+    test('Vis og fyll ut - sender tilbake', async () => {
         setupMock(false, {
             totrinnsstegsinfo: [
                 {
@@ -232,7 +230,7 @@ describe('Tester: Totrinnskontroll', () => {
         );
     });
 
-    test('- vis utfylt - sendt tilbake', async () => {
+    test('Vis utfylt - sendt tilbake', async () => {
         setupMock(true, {
             totrinnsstegsinfo: [
                 {
@@ -294,7 +292,7 @@ describe('Tester: Totrinnskontroll', () => {
         expect(getByText('Vedtaket må vurderes på nytt')).toBeInTheDocument();
     });
 
-    test('- vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
+    test('Vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
         setupMock(false, {
             totrinnsstegsinfo: [
                 {

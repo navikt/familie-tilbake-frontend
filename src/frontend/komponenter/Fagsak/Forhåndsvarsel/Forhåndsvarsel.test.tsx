@@ -119,7 +119,7 @@ describe('Forhåndsvarsel', () => {
         setupMock();
     });
 
-    it('viser alle alternativene', () => {
+    test('Viser alle alternativene', () => {
         renderForhåndsvarsel();
 
         expect(screen.getByLabelText('Ja')).toBeInTheDocument();
@@ -127,7 +127,7 @@ describe('Forhåndsvarsel', () => {
         expect(screen.getByLabelText('Forhåndsvarsel er allerede sendt')).toBeInTheDocument();
     });
 
-    it('viser flyt for Opprett forhåndsvarsel når man velger Ja', () => {
+    test('Viser flyt for Opprett forhåndsvarsel når man velger Ja', () => {
         renderForhåndsvarsel();
         expect(screen.queryByText(/Opprett forhåndsvarsel/)).not.toBeInTheDocument();
 
@@ -141,7 +141,7 @@ describe('Forhåndsvarsel', () => {
         ).toBeInTheDocument();
     });
 
-    it('viser fritekstfelt når bruker har valgt Ja', () => {
+    test('Viser fritekstfelt når bruker har valgt Ja', () => {
         renderForhåndsvarsel();
         fireEvent.click(screen.getByLabelText('Ja'));
 

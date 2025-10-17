@@ -10,7 +10,6 @@ import * as React from 'react';
 
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta';
 import { Feil } from '../../../../../api/feil';
-import { Fagsystem } from '../../../../../kodeverk';
 import {
     Behandlingstatus,
     Behandlingstype,
@@ -72,30 +71,24 @@ const mockBehandling: Behandling = {
     begrunnelseForTilbakekreving: null,
 };
 
-const mockHentBehandling = jest.fn().mockResolvedValue(undefined);
 const mockNullstill = jest.fn();
-const mockUtførRedirect = jest.fn();
 
 describe('SettBehandlingTilbakeTilFakta', () => {
     beforeEach(() => {
         jest.clearAllMocks();
 
         mockUseBehandling.mockReturnValue({
-            hentBehandlingMedBehandlingId: mockHentBehandling,
             nullstillIkkePersisterteKomponenter: mockNullstill,
         });
 
         mockUseFagsakStore.mockReturnValue({
             eksternFagsakId: '123',
-            fagsystem: Fagsystem.BA,
         });
 
-        mockUseRedirectEtterLagring.mockReturnValue({
-            utførRedirect: mockUtførRedirect,
-        });
+        mockUseRedirectEtterLagring.mockReturnValue(() => null);
     });
 
-    test('viser feilmodal når behandling tilbake til fakta feiler', async () => {
+    test('Viser feilmodal når behandling tilbake til fakta feiler', async () => {
         const mockMutate = jest.fn().mockImplementation((_, options) => {
             options.onError(
                 new Feil(
@@ -113,7 +106,6 @@ describe('SettBehandlingTilbakeTilFakta', () => {
                     'Du har rollen BESLUTTER og trenger rollen FORVALTER for å utføre denne handlingen',
                 status: 403,
             },
-            reset: jest.fn(),
         });
 
         render(<SettBehandlingTilbakeTilFakta behandling={mockBehandling} />);

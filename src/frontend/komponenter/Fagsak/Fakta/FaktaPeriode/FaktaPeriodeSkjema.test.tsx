@@ -70,7 +70,7 @@ beforeEach(() => {
 });
 
 describe('FaktaPeriodeSkjema', () => {
-    test('skal sette default verdi til HendelseType.Annet når det kun er ett element i hendelseTyper lista', () => {
+    test('Skal sette default verdi til HendelseType.Annet når det kun er ett element i hendelseTyper lista', () => {
         renderComponent(mockPeriode, [HendelseType.Annet]);
 
         const selectElement = screen.getByTestId('perioder.0.årsak');
@@ -78,7 +78,7 @@ describe('FaktaPeriodeSkjema', () => {
         expect(screen.getByText('Annet')).toBeInTheDocument();
     });
 
-    test('skal sette default verdi i underårsak-select når hendelsestype er valgt og det kun er én undertype', () => {
+    test('Skal sette default verdi i underårsak-select når hendelsestype er valgt og det kun er én undertype', () => {
         const periodeWithValue = {
             ...mockPeriode,
             hendelsestype: HendelseType.Annet,
@@ -90,7 +90,7 @@ describe('FaktaPeriodeSkjema', () => {
         expect(underSelectElement).toHaveValue('ANNET_FRITEKST');
     });
 
-    test('skal velge "-" som default når det er flere elementer i hendelseTyper lista', () => {
+    test('Skal velge "-" som default når det er flere elementer i hendelseTyper lista', () => {
         const multipleHendelseTyper = [HendelseType.Annet, HendelseType.Dødsfall];
         renderComponent(mockPeriode, multipleHendelseTyper);
 

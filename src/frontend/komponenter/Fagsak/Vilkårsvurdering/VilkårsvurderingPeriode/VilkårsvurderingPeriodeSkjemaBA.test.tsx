@@ -34,12 +34,7 @@ jest.mock('../../../../api/http/HttpProvider', () => {
 jest.mock('../VilkårsvurderingContext', () => {
     return {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({
-            kanIlleggeRenter: false,
             oppdaterPeriode: jest.fn(),
-            onSplitPeriode: jest.fn(),
-            nestePeriode: jest.fn(),
-            forrigePeriode: jest.fn(),
-            gåTilForrigeSteg: jest.fn(),
             gåTilNesteSteg: jest.fn(),
             sendInnSkjemaOgNaviger: jest.fn(),
             sendInnSkjemaMutation: {
@@ -48,7 +43,6 @@ jest.mock('../VilkårsvurderingContext', () => {
                 error: null,
                 reset: jest.fn(),
             },
-            hentBehandlingMedBehandlingId: jest.fn(),
         }),
     };
 });
@@ -75,28 +69,30 @@ const renderVilkårsvurderingPeriodeSkjema = (
             />
         </BehandlingProvider>
     );
-describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
+
+const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
+const fagsak = mock<Fagsak>({
+    ytelsestype: Ytelsetype.Barnetrygd,
+});
+const periode: VilkårsvurderingPeriodeSkjemaData = {
+    index: 'i2',
+    feilutbetaltBeløp: 2333,
+    hendelsestype: HendelseType.Annet,
+    foreldet: false,
+    periode: {
+        fom: '2021-01-01',
+        tom: '2021-04-30',
+    },
+};
+
+describe('VilkårsvurderingPeriodeSkjema', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
-    const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-    const fagsak = mock<Fagsak>({
-        ytelsestype: Ytelsetype.Barnetrygd,
-    });
-    const periode: VilkårsvurderingPeriodeSkjemaData = {
-        index: 'i2',
-        feilutbetaltBeløp: 2333,
-        hendelsestype: HendelseType.Annet,
-        foreldet: false,
-        periode: {
-            fom: '2021-01-01',
-            tom: '2021-04-30',
-        },
-    };
 
-    test('- god tro - beløp ikke i behold', async () => {
+    test('God tro - beløp ikke i behold', async () => {
         const vilkårsvurderingPeriode = {
             aktiviteter: [
                 {
@@ -234,7 +230,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- god tro - beløp i behold', async () => {
+    test('God tro - beløp i behold', async () => {
         const {
             getByLabelText,
             getByRole,
@@ -284,7 +280,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- forsto/burde forstått - forsto', async () => {
+    test('Forsto/burde forstått - forsto', async () => {
         const {
             getByLabelText,
             getByRole,
@@ -358,7 +354,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- forsto/burde forstått - må ha forstått - ingen grunn til reduksjon', async () => {
+    test('Forsto/burde forstått - må ha forstått - ingen grunn til reduksjon', async () => {
         const {
             getByLabelText,
             getByRole,
@@ -484,7 +480,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- feilaktig - forsto', async () => {
+    test('Feilaktig - forsto', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } =
             renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, false);
 
@@ -534,7 +530,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- feilaktige - grov uaktsomhet - ingen grunn til reduksjon', async () => {
+    test('Feilaktige - grov uaktsomhet - ingen grunn til reduksjon', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText, queryByTestId } =
             renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, false);
 
@@ -603,7 +599,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
     });
 
-    test('- feilaktige - grov uaktsomhet - grunn til reduksjon', async () => {
+    test('Feilaktige - grov uaktsomhet - grunn til reduksjon', async () => {
         const {
             getByLabelText,
             getByRole,
@@ -716,7 +712,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- feilaktige - grov uaktsomhet - grunn til reduksjon - egendefinert', async () => {
+    test('Feilaktige - grov uaktsomhet - grunn til reduksjon - egendefinert', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole, queryByText } =
             renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, false);
 
@@ -809,7 +805,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - grunn til reduksjon', async () => {
+    test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - grunn til reduksjon', async () => {
         const {
             getByLabelText,
             getByRole,
@@ -923,7 +919,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ingen grunn til reduksjon', async () => {
+    test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ingen grunn til reduksjon', async () => {
         const { getByLabelText, getByRole, getByText, getByTestId, queryAllByText, queryByText } =
             renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, true);
 
@@ -1007,7 +1003,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ikke tilbakekreves', async () => {
+    test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ikke tilbakekreves', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } =
             renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, true);
 
@@ -1067,7 +1063,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('- åpner vurdert periode - god tro - beløp i behold', async () => {
+    test('Åpner vurdert periode - god tro - beløp i behold', async () => {
         const { getByLabelText, getByText } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
@@ -1106,7 +1102,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByLabelText('Angi beløp som skal tilbakekreves')).toHaveValue('699');
     });
 
-    test('- åpner vurdert periode - mangelfulle - simpel uaktsomhet - under 4 rettsgebyr', async () => {
+    test('Åpner vurdert periode - mangelfulle - simpel uaktsomhet - under 4 rettsgebyr', async () => {
         const { getByLabelText, getByTestId, getByText } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
@@ -1180,7 +1176,7 @@ describe('Tester: VilkårsvurderingPeriodeSkjema', () => {
         expect(getByTestId('andelSomTilbakekrevesManuell')).toHaveValue('33');
     });
 
-    test('- validering vises når man forsøker å gå videre uten å fylle inn påkrevde felter', async () => {
+    test('Validering vises når man forsøker å gå videre uten å fylle inn påkrevde felter', async () => {
         const { getByRole, queryAllByText } = renderVilkårsvurderingPeriodeSkjema(
             behandling,
             fagsak,

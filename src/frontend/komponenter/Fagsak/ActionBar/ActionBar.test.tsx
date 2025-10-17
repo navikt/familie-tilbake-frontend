@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import { ActionBar } from './ActionBar';
 
 describe('ActionBar', () => {
-    it('kaller ikke onNeste eller onForrige når isLoading = true', () => {
+    test('Kaller ikke onNeste eller onForrige når isLoading = true', () => {
         const onNeste = jest.fn();
         const onForrige = jest.fn();
         render(

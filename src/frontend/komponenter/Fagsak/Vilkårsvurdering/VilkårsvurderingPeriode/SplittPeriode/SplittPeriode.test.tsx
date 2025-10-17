@@ -11,14 +11,14 @@ import SplittPeriode from './SplittPeriode';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
 import { HendelseType } from '../../../../../kodeverk';
 
-describe('Tester: SplittPeriode - Vilkårsvurdering', () => {
+describe('SplittPeriode - Vilkårsvurdering', () => {
     let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
-    test('Tester åpning av modal', async () => {
+    test('Åpning av modal', async () => {
         const periode: VilkårsvurderingPeriodeSkjemaData = {
             hendelsestype: HendelseType.Annet,
             index: 'i1',

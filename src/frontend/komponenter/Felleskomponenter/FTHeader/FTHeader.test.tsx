@@ -39,22 +39,22 @@ const renderHeader = (): RenderResult => {
     );
 };
 
+const setUpMocks = (): void => {
+    useBehandlingStore.setState({ personIdent: undefined });
+    mockHentBrukerlenkeBaseUrl.mockResolvedValue({
+        aInntektUrl: 'https://a-inntekt.nav.no',
+        gosysBaseUrl: 'https://gosys.nav.no',
+        modiaBaseUrl: 'https://modia.nav.no',
+    });
+    mockHentAInntektUrl.mockImplementation((_, personIdent: string | undefined) => {
+        return Promise.resolve(personIdent ? `https://a-inntekt.nav.no/mock=${personIdent}` : null);
+    });
+};
+
 describe('FTHeader', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        useBehandlingStore.setState({ personIdent: undefined });
-
-        mockHentBrukerlenkeBaseUrl.mockResolvedValue({
-            aInntektUrl: 'https://a-inntekt.nav.no',
-            gosysBaseUrl: 'https://gosys.nav.no',
-            modiaBaseUrl: 'https://modia.nav.no',
-        });
-
-        mockHentAInntektUrl.mockImplementation((_, personIdent: string | undefined) => {
-            return Promise.resolve(
-                personIdent ? `https://a-inntekt.nav.no/mock=${personIdent}` : null
-            );
-        });
+        setUpMocks();
     });
 
     test('hentBrukerlenkeBaseUrl blir kalt én gang ved rendering', () => {

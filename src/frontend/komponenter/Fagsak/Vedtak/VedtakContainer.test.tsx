@@ -64,113 +64,113 @@ const renderVedtakContainer = (behandling: Behandling, fagsak: Fagsak): RenderRe
         </VedtakProvider>
     );
 
-describe('Tester: VedtakContainer', () => {
+const perioder: BeregningsresultatPeriode[] = [
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-01-01',
+            tom: '2020-03-31',
+        },
+        vurdering: Vurdering.Forsett,
+        andelAvBeløp: 90,
+        renteprosent: 0,
+        tilbakekrevingsbeløp: 1222,
+        tilbakekrevesBeløpEtterSkatt: 1222,
+    },
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-05-01',
+            tom: '2020-06-30',
+        },
+        vurdering: Vurdering.SimpelUaktsomhet,
+        andelAvBeløp: 91,
+        renteprosent: 0,
+        tilbakekrevingsbeløp: 1223,
+        tilbakekrevesBeløpEtterSkatt: 1223,
+    },
+];
+const beregningsresultat: Beregningsresultat = {
+    beregningsresultatsperioder: perioder,
+    vedtaksresultat: Vedtaksresultat.DelvisTilbakebetaling,
+    vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.Nei },
+};
+const avsnitt: VedtaksbrevAvsnitt[] = [
+    {
+        avsnittstype: Avsnittstype.Oppsummering,
+        overskrift: 'Du må betale tilbake barnetrygden',
+        underavsnittsliste: [],
+    },
+    {
+        avsnittstype: Avsnittstype.Periode,
+        overskrift: 'Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020',
+        underavsnittsliste: [],
+        fom: '2020-01-01',
+        tom: '2020-03-31',
+    },
+    {
+        avsnittstype: Avsnittstype.Periode,
+        overskrift: 'Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020',
+        underavsnittsliste: [],
+        fom: '2020-05-01',
+        tom: '2020-06-30',
+    },
+];
+
+const setupMock = (
+    lesevisning: boolean,
+    avsnitt: VedtaksbrevAvsnitt[],
+    resultat: Beregningsresultat
+): void => {
+    mockUseBehandlingApi.mockImplementation(() => ({
+        gjerVedtaksbrevteksterKall: (): Promise<Ressurs<VedtaksbrevAvsnitt[]>> => {
+            const ressurs = mock<Ressurs<VedtaksbrevAvsnitt[]>>({
+                status: RessursStatus.Suksess,
+                data: avsnitt,
+            });
+            return Promise.resolve(ressurs);
+        },
+        gjerBeregningsresultatKall: (): Promise<Ressurs<Beregningsresultat>> => {
+            const ressurs = mock<Ressurs<Beregningsresultat>>({
+                status: RessursStatus.Suksess,
+                data: resultat,
+            });
+            return Promise.resolve(ressurs);
+        },
+        sendInnForeslåVedtak: (): Promise<Ressurs<string>> => {
+            const ressurs = mock<Ressurs<string>>({
+                status: RessursStatus.Suksess,
+                data: 'suksess',
+            });
+            return Promise.resolve(ressurs);
+        },
+    }));
+
+    mockUseSammenslåPerioder.mockImplementation(() => ({
+        hentErPerioderLike: (): Promise<boolean> => Promise.resolve(false),
+        hentErPerioderSammenslått: (): Promise<boolean> => Promise.resolve(false),
+    }));
+
+    mockUseBehandling.mockImplementation(() => ({
+        visVenteModal: false,
+        behandlingILesemodus: lesevisning,
+        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
+        settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
+        nullstillIkkePersisterteKomponenter: jest.fn(),
+        actionBarStegtekst: jest.fn().mockReturnValue('Steg 4 av 4'),
+        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+    }));
+};
+
+describe('VedtakContainer', () => {
     let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
-    const perioder: BeregningsresultatPeriode[] = [
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-01-01',
-                tom: '2020-03-31',
-            },
-            vurdering: Vurdering.Forsett,
-            andelAvBeløp: 90,
-            renteprosent: 0,
-            tilbakekrevingsbeløp: 1222,
-            tilbakekrevesBeløpEtterSkatt: 1222,
-        },
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-05-01',
-                tom: '2020-06-30',
-            },
-            vurdering: Vurdering.SimpelUaktsomhet,
-            andelAvBeløp: 91,
-            renteprosent: 0,
-            tilbakekrevingsbeløp: 1223,
-            tilbakekrevesBeløpEtterSkatt: 1223,
-        },
-    ];
-    const beregningsresultat: Beregningsresultat = {
-        beregningsresultatsperioder: perioder,
-        vedtaksresultat: Vedtaksresultat.DelvisTilbakebetaling,
-        vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.Nei },
-    };
-    const avsnitt: VedtaksbrevAvsnitt[] = [
-        {
-            avsnittstype: Avsnittstype.Oppsummering,
-            overskrift: 'Du må betale tilbake barnetrygden',
-            underavsnittsliste: [],
-        },
-        {
-            avsnittstype: Avsnittstype.Periode,
-            overskrift: 'Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020',
-            underavsnittsliste: [],
-            fom: '2020-01-01',
-            tom: '2020-03-31',
-        },
-        {
-            avsnittstype: Avsnittstype.Periode,
-            overskrift: 'Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020',
-            underavsnittsliste: [],
-            fom: '2020-05-01',
-            tom: '2020-06-30',
-        },
-    ];
 
-    const setupMock = (
-        lesevisning: boolean,
-        avsnitt: VedtaksbrevAvsnitt[],
-        resultat: Beregningsresultat
-    ): void => {
-        mockUseBehandlingApi.mockImplementation(() => ({
-            gjerVedtaksbrevteksterKall: (): Promise<Ressurs<VedtaksbrevAvsnitt[]>> => {
-                const ressurs = mock<Ressurs<VedtaksbrevAvsnitt[]>>({
-                    status: RessursStatus.Suksess,
-                    data: avsnitt,
-                });
-                return Promise.resolve(ressurs);
-            },
-            gjerBeregningsresultatKall: (): Promise<Ressurs<Beregningsresultat>> => {
-                const ressurs = mock<Ressurs<Beregningsresultat>>({
-                    status: RessursStatus.Suksess,
-                    data: resultat,
-                });
-                return Promise.resolve(ressurs);
-            },
-            sendInnForeslåVedtak: (): Promise<Ressurs<string>> => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-
-        mockUseSammenslåPerioder.mockImplementation(() => ({
-            hentErPerioderLike: (): Promise<boolean> => Promise.resolve(false),
-            hentErPerioderSammenslått: (): Promise<boolean> => Promise.resolve(false),
-            erPerioderLike: false,
-        }));
-
-        mockUseBehandling.mockImplementation(() => ({
-            visVenteModal: false,
-            behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-            settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
-            nullstillIkkePersisterteKomponenter: jest.fn(),
-            actionBarStegtekst: jest.fn().mockReturnValue('Steg 4 av 4'),
-            harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
-        }));
-    };
-
-    test('- vis og fyll ut - 1 fritekst påkrevet', async () => {
+    test('Vis og fyll ut - 1 fritekst påkrevet', async () => {
         setupMock(
             false,
             [
@@ -295,7 +295,7 @@ describe('Tester: VedtakContainer', () => {
         );
     });
 
-    test('- vis og fyll ut - 2 fritekst påkrevet - revurdering nye opplysninger', async () => {
+    test('Vis og fyll ut - 2 fritekst påkrevet - revurdering nye opplysninger', async () => {
         setupMock(
             false,
             [
@@ -419,7 +419,7 @@ describe('Tester: VedtakContainer', () => {
         );
     });
 
-    test('- vis og fyll ut - 2 fritekst påkrevet - revurdering klage KA', async () => {
+    test('Vis og fyll ut - 2 fritekst påkrevet - revurdering klage KA', async () => {
         setupMock(
             false,
             [
@@ -540,7 +540,7 @@ describe('Tester: VedtakContainer', () => {
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('vedtak');
     });
 
-    test('- vis og fyll ut - 1 fritekst påkrevet - fyller ut 1 ekstra fritekst - revurdering NFP', async () => {
+    test('Vis og fyll ut - 1 fritekst påkrevet - fyller ut 1 ekstra fritekst - revurdering NFP', async () => {
         setupMock(
             false,
             [
@@ -693,7 +693,7 @@ describe('Tester: VedtakContainer', () => {
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('vedtak');
     });
 
-    test('- vis utfylt - 1 fritekst påkrevet - 1 ekstra fritekst', async () => {
+    test('Vis utfylt - 1 fritekst påkrevet - 1 ekstra fritekst', async () => {
         setupMock(
             false,
             [
@@ -819,7 +819,7 @@ describe('Tester: VedtakContainer', () => {
         );
     });
 
-    test('- vis utfylt - lesevisning', async () => {
+    test('Vis utfylt - lesevisning', async () => {
         setupMock(
             true,
             [

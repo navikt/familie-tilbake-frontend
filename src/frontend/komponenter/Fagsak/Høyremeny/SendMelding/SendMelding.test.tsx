@@ -63,19 +63,17 @@ const setupMock = (behandlingILesemodus: boolean): void => {
     mockUseBehandling.mockImplementation(() => ({
         behandlingILesemodus: behandlingILesemodus,
         hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-        settIkkePersistertKomponent: jest.fn(),
-        nullstillIkkePersisterteKomponenter: jest.fn(),
     }));
 };
 
-describe('Tester: SendMelding', () => {
+describe('SendMelding', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
 
-    test('- fyller ut skjema og sender varsel', async () => {
+    test('Fyller ut skjema og sender varsel', async () => {
         setupMock(false);
         const behandling = mock<Behandling>({
             varselSendt: false,
@@ -140,7 +138,7 @@ describe('Tester: SendMelding', () => {
         );
     });
 
-    test('- fyller ut skjema og sender korrigert varsel', async () => {
+    test('Fyller ut skjema og sender korrigert varsel', async () => {
         setupMock(false);
         const behandling = mock<Behandling>({
             varselSendt: true,
@@ -189,7 +187,7 @@ describe('Tester: SendMelding', () => {
         );
     });
 
-    test('- fyller ut skjema og sender innhent dokumentasjon', async () => {
+    test('Fyller ut skjema og sender innhent dokumentasjon', async () => {
         setupMock(false);
         const behandling = mock<Behandling>({
             varselSendt: true,
@@ -234,7 +232,7 @@ describe('Tester: SendMelding', () => {
         );
     });
 
-    test('- lesevisning - venter på svar på manuelt brev', async () => {
+    test('Lesevisning - venter på svar på manuelt brev', async () => {
         setupMock(true);
         const behandling = mock<Behandling>({
             varselSendt: false,

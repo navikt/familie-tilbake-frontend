@@ -15,7 +15,6 @@ import * as React from 'react';
 
 import FaktaContainer from './FaktaContainer';
 import { FaktaProvider } from './FaktaContext';
-import { ToggleName } from '../../../context/toggles';
 import { Fagsystem, HendelseType, HendelseUndertype, Ytelsetype } from '../../../kodeverk';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg, Tilbakekrevingsvalg } from '../../../typer/tilbakekrevingstyper';
@@ -54,103 +53,102 @@ const renderFaktaContainer = (
     );
 };
 
-describe('Tester: FaktaContainer', () => {
-    let user: UserEvent;
+const perioder: FaktaPeriode[] = [
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-01-01',
+            tom: '2020-03-31',
+        },
+        hendelsestype: undefined,
+        hendelsesundertype: undefined,
+    },
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-05-01',
+            tom: '2020-07-31',
+        },
+        hendelsestype: undefined,
+        hendelsesundertype: undefined,
+    },
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-09-01',
+            tom: '2020-10-31',
+        },
+        hendelsestype: undefined,
+        hendelsesundertype: undefined,
+    },
+];
+const fakta: FaktaResponse = {
+    feilutbetaltePerioder: perioder,
+    revurderingsvedtaksdato: '2021-02-05',
+    totalFeilutbetaltPeriode: {
+        fom: '2020-01-01',
+        tom: '2020-10-31',
+    },
+    totaltFeilutbetaltBeløp: 3999,
+    varsletBeløp: 5200,
+    faktainfo: {
+        revurderingsårsak: 'Nye opplysninger',
+        revurderingsresultat: 'Opphør av ytelsen',
+        tilbakekrevingsvalg: Tilbakekrevingsvalg.OpprettTilbakekrevingMedVarsel,
+        konsekvensForYtelser: ['Reduksjon av ytelsen', 'Feilutbetaling'],
+    },
+    begrunnelse: undefined,
+    vurderingAvBrukersUttalelse: {
+        harBrukerUttaltSeg: HarBrukerUttaltSegValg.IkkeVurdert,
+    },
+    opprettetTid: '2020-01-01',
+};
+const fagsak = mock<Fagsak>({
+    institusjon: undefined,
+    fagsystem: Fagsystem.EF,
+    eksternFagsakId: '1',
+});
 
+const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: FaktaResponse): void => {
+    mockUseBehandlingApi.mockImplementation(() => ({
+        gjerFaktaKall: (): Promise<Ressurs<FaktaResponse>> => {
+            const ressurs = mock<Ressurs<FaktaResponse>>({
+                status: RessursStatus.Suksess,
+                data: fakta,
+            });
+            return Promise.resolve(ressurs);
+        },
+        sendInnFakta: (): Promise<Ressurs<string>> => {
+            const ressurs = mock<Ressurs<string>>({
+                status: RessursStatus.Suksess,
+                data: 'suksess',
+            });
+            return Promise.resolve(ressurs);
+        },
+    }));
+    mockUseBehandling.mockImplementation(() => ({
+        erStegBehandlet: (): boolean => behandlet,
+        visVenteModal: false,
+        behandlingILesemodus: lesemodus,
+        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
+        settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
+        nullstillIkkePersisterteKomponenter: jest.fn(),
+        actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 4'),
+        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+    }));
+    mockUseToggles.mockImplementation(() => ({
+        toggles: undefined,
+    }));
+};
+
+describe('FaktaContainer', () => {
+    let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
-    const perioder: FaktaPeriode[] = [
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-01-01',
-                tom: '2020-03-31',
-            },
-            hendelsestype: undefined,
-            hendelsesundertype: undefined,
-        },
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-05-01',
-                tom: '2020-07-31',
-            },
-            hendelsestype: undefined,
-            hendelsesundertype: undefined,
-        },
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-09-01',
-                tom: '2020-10-31',
-            },
-            hendelsestype: undefined,
-            hendelsesundertype: undefined,
-        },
-    ];
-    const fakta: FaktaResponse = {
-        feilutbetaltePerioder: perioder,
-        revurderingsvedtaksdato: '2021-02-05',
-        totalFeilutbetaltPeriode: {
-            fom: '2020-01-01',
-            tom: '2020-10-31',
-        },
-        totaltFeilutbetaltBeløp: 3999,
-        varsletBeløp: 5200,
-        faktainfo: {
-            revurderingsårsak: 'Nye opplysninger',
-            revurderingsresultat: 'Opphør av ytelsen',
-            tilbakekrevingsvalg: Tilbakekrevingsvalg.OpprettTilbakekrevingMedVarsel,
-            konsekvensForYtelser: ['Reduksjon av ytelsen', 'Feilutbetaling'],
-        },
-        begrunnelse: undefined,
-        vurderingAvBrukersUttalelse: {
-            harBrukerUttaltSeg: HarBrukerUttaltSegValg.IkkeVurdert,
-        },
-        opprettetTid: '2020-01-01',
-    };
-    const fagsak = mock<Fagsak>({
-        institusjon: undefined,
-        fagsystem: Fagsystem.EF,
-        eksternFagsakId: '1',
-    });
 
-    const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: FaktaResponse): void => {
-        mockUseBehandlingApi.mockImplementation(() => ({
-            gjerFaktaKall: (): Promise<Ressurs<FaktaResponse>> => {
-                const ressurs = mock<Ressurs<FaktaResponse>>({
-                    status: RessursStatus.Suksess,
-                    data: fakta,
-                });
-                return Promise.resolve(ressurs);
-            },
-            sendInnFakta: (): Promise<Ressurs<string>> => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-        mockUseBehandling.mockImplementation(() => ({
-            erStegBehandlet: (): boolean => behandlet,
-            visVenteModal: false,
-            behandlingILesemodus: lesemodus,
-            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-            settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
-            nullstillIkkePersisterteKomponenter: jest.fn(),
-            actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 4'),
-            harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
-        }));
-        mockUseToggles.mockImplementation(() => ({
-            toggles: { [ToggleName.Dummy]: true },
-            feilmelding: '',
-        }));
-    };
-
-    test('- vis og fyll ut skjema', async () => {
+    test('Vis og fyll ut skjema', async () => {
         setupMock(false, false, fakta);
         const behandling = mock<Behandling>({ eksternBrukId: '1' });
 
