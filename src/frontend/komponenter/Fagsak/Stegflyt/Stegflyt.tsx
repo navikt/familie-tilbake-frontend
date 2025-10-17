@@ -72,12 +72,11 @@ export const Stegflyt: React.FC = () => {
     if (aktivStegnummer < 1 || !stegsinfo) return null;
 
     return (
-        <nav aria-label="Behandlingssteg">
+        <nav aria-label="Behandlingssteg" className="pt-4 md:px-0 px-4 w-full">
             <Stepper
                 activeStep={aktivStegnummer}
                 onStepChange={gåTilSteg}
                 orientation="horizontal"
-                className="mx-4"
                 aria-label="Behandlingssteg"
             >
                 {stegsinfo.map(steg => {

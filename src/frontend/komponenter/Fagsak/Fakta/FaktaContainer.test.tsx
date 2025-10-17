@@ -61,6 +61,7 @@ describe('Tester: FaktaContainer', () => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
+
     const perioder: FaktaPeriode[] = [
         {
             feilutbetaltBeløp: 1333,
