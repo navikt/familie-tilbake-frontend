@@ -110,12 +110,12 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                 </HenlagtContainer>
             </div>
 
-            <Høyremeny fagsak={fagsak} behandling={behandling} />
+            <Høyremeny fagsak={fagsak} behandling={behandling} dialogRef={ref} />
         </>
     ) : !harKravgrunnlag ? (
         <>
             <div className="flex-1 overflow-auto" />
-            <Høyremeny fagsak={fagsak} behandling={behandling} />
+            <Høyremeny fagsak={fagsak} behandling={behandling} dialogRef={ref} />
         </>
     ) : erHistoriskeVerdier ? (
         <>
@@ -255,7 +255,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                 </section>
             </section>
             <Suspense fallback={<HøyremenySkeleton />}>
-                <Høyremeny fagsak={fagsak} behandling={behandling} ref={ref} />
+                <Høyremeny fagsak={fagsak} behandling={behandling} dialogRef={ref} />
             </Suspense>
         </>
     ) : null;
