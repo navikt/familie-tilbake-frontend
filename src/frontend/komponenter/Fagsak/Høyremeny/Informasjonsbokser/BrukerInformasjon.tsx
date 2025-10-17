@@ -6,6 +6,7 @@ import {
     Buildings2Icon,
     CandleIcon,
     FigureCombinationIcon,
+    FigureInwardIcon,
     FigureOutwardIcon,
     FlowerPetalFallingIcon,
 } from '@navikt/aksel-icons';
@@ -23,20 +24,25 @@ const formatterPersonIdent = (personIdent: string): string =>
 const formatterOrgNummer = (orgNummer: string): string =>
     orgNummer.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
 
+const kjønnIkon = (kjønn: Kjønn): React.ReactNode => {
+    switch (kjønn) {
+        case Kjønn.Kvinne:
+            return <FigureOutwardIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />;
+        case Kjønn.Mann:
+            return <FigureInwardIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />;
+        default:
+            return (
+                <FigureCombinationIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />
+            );
+    }
+};
+
 type Props = {
     bruker: Bruker;
     institusjon: Institusjon | null;
 };
 
 export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
-    const kjønnIkon =
-        bruker.kjønn === Kjønn.Kvinne ? (
-            <FigureOutwardIcon aria-hidden fontSize="1em" className="text-icon-subtle" />
-        ) : bruker.kjønn === Kjønn.Mann ? (
-            <FigureOutwardIcon aria-hidden fontSize="1em" className="text-icon-subtle" />
-        ) : (
-            <FigureCombinationIcon aria-hidden fontSize="1em" className="text-icon-subtle" />
-        );
     return (
         <Box
             padding="4"
@@ -48,7 +54,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
 
             <dl className="grid grid-cols-[136px_1fr] xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    {kjønnIkon}
+                    {kjønnIkon(bruker.kjønn)}
                     Navn
                 </dt>
                 <dd className="text-medium">{bruker.navn}</dd>
@@ -61,7 +67,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
                     <BagdeIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />
-                    {erDNummer(bruker.personIdent) ? ' D-nummer' : 'Fødselsnummer'}
+                    {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
                 </dt>
                 <dd className="text-medium flex flex-row gap-2 items-center">
                     {formatterPersonIdent(bruker.personIdent)}

@@ -83,10 +83,6 @@ const FagsakContainer: React.FC = () => {
     }
 
     if (fagsak?.status === RessursStatus.Suksess && behandling?.status === RessursStatus.Suksess) {
-        // TODO kanskje fjerne denne?
-        // const containerHøydeClassName = ventegrunn
-        //     ? 'h-[calc(100vh-110px)]' // 48px Header + 62px Alert
-        //     : 'h-[calc(100vh-48px)]'; // 48px Header
         return (
             <>
                 {ventegrunn && (
@@ -102,7 +98,6 @@ const FagsakContainer: React.FC = () => {
                 <div
                     className={classNames(
                         'grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-gray-50 min-h-screen',
-                        // containerHøydeClassName,
                         {
                             venter: !!ventegrunn,
                         }

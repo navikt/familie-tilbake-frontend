@@ -18,13 +18,13 @@ import { Box, Heading, Tag } from '@navikt/ds-react';
 import React from 'react';
 
 import { ytelsetype } from '../../../../kodeverk';
-import { Behandlingresultat } from '../../../../typer/behandling';
 import {
     behandlingsresultater,
     behandlingsstatuser,
     behandlingårsaker,
+    Behandlingstatus,
+    Behandlingresultat,
 } from '../../../../typer/behandling';
-import { Behandlingstatus } from '../../../../typer/behandling';
 import { formatterDatostring } from '../../../../utils';
 
 type Props = {
@@ -66,7 +66,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
                 {behandling.resultatstype && <ResultatTag resultat={behandling.resultatstype} />}
 
                 <dt className="text-medium font-bold flex flex-row gap-2 items-center">
-                    <CalendarIcon aria-hidden="true" fontSize="1rem" className="text-icon-subtle" />
+                    <CalendarIcon aria-hidden fontSize="1rem" className="text-icon-subtle" />
                     Opprettet
                 </dt>
                 <dd className="text-medium items-center flex">
