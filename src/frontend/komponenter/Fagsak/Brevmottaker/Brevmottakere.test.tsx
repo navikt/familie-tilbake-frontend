@@ -137,7 +137,7 @@ describe('Brevmottakere', () => {
     });
 
     describe('Default bruker brevmottaker', () => {
-        it('viser default bruker som brevmottaker med korrekt informasjon', () => {
+        test('viser default bruker som brevmottaker med korrekt informasjon', () => {
             renderBrevmottakere();
 
             expect(screen.getByText('Test Bruker')).toBeInTheDocument();
@@ -146,7 +146,7 @@ describe('Brevmottakere', () => {
     });
 
     describe('Manuelle brevmottakere', () => {
-        it('viser manuelle brevmottakere med korrekt informasjon', () => {
+        test('viser manuelle brevmottakere med korrekt informasjon', () => {
             const behandling = createMockBehandling(createMockManuelleBrevmottakere());
             renderBrevmottakere(behandling);
 
@@ -154,7 +154,7 @@ describe('Brevmottakere', () => {
             expect(screen.getByText('10987654321')).toBeInTheDocument();
         });
 
-        it('viser fjern og endre knapper for manuelle brevmottakere', () => {
+        test('viser fjern og endre knapper for manuelle brevmottakere', () => {
             const behandling = createMockBehandling(createMockManuelleBrevmottakere());
             renderBrevmottakere(behandling);
 
@@ -166,7 +166,7 @@ describe('Brevmottakere', () => {
     });
 
     describe('Legg til ny mottaker funksjonalitet', () => {
-        it('viser "Legg til ny mottaker" knapp når det er mulig', () => {
+        test('viser "Legg til ny mottaker" knapp når det er mulig', () => {
             renderBrevmottakere();
 
             expect(
@@ -174,7 +174,7 @@ describe('Brevmottakere', () => {
             ).toBeInTheDocument();
         });
 
-        it('viser ikke "Legg til ny mottaker" knapp når det allerede finnes manuelle mottakere', () => {
+        test('viser ikke "Legg til ny mottaker" knapp når det allerede finnes manuelle mottakere', () => {
             const behandling = createMockBehandling(createMockManuelleBrevmottakere());
             renderBrevmottakere(behandling);
 
@@ -183,7 +183,7 @@ describe('Brevmottakere', () => {
             ).not.toBeInTheDocument();
         });
 
-        it('viser ikke "Legg til ny mottaker" knapp når det finnes dødsbo mottaker', () => {
+        test('viser ikke "Legg til ny mottaker" knapp når det finnes dødsbo mottaker', () => {
             const behandling = createMockBehandling(createMockDødsboBrevmottaker());
             renderBrevmottakere(behandling);
 
@@ -194,7 +194,7 @@ describe('Brevmottakere', () => {
     });
 
     describe('Adresseinformasjon', () => {
-        it('viser manuell adresse informasjon korrekt', () => {
+        test('viser manuell adresse informasjon korrekt', () => {
             const behandling = createMockBehandling(createMockManuelleBrevmottakere());
             renderBrevmottakere(behandling);
 
@@ -203,7 +203,7 @@ describe('Brevmottakere', () => {
             expect(screen.getByText('Oslo')).toBeInTheDocument();
         });
 
-        it('viser organisasjonsinformasjon korrekt', () => {
+        test('viser organisasjonsinformasjon korrekt', () => {
             const behandling = createMockBehandling(createMockOrganisasjonsBrevmottaker());
             renderBrevmottakere(behandling);
 

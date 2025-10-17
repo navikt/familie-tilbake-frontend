@@ -33,12 +33,9 @@ const renderActionBar = (isLoading: boolean = false): RenderResult =>
 describe('ActionBar', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        mockUseBehandling.mockImplementation(() => ({
-            erStegBehandlet: jest.fn().mockReturnValue(false),
-        }));
     });
 
-    it('Kaller ikke onNeste eller onForrige når isLoading = true', () => {
+    test('Kaller ikke onNeste eller onForrige når isLoading = true', () => {
         const onNeste = jest.fn();
         const onForrige = jest.fn();
         render(

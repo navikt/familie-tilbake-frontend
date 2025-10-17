@@ -4,15 +4,11 @@ import React from 'react';
 import { FeilModal } from './FeilModal';
 import { Feil } from '../../../../api/feil';
 
+const mockSetVisFeilModal = jest.fn();
+
 describe('FeilModal', () => {
-    const mockSetVisFeilModal = jest.fn();
-
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     //#region 400 Bad Request feil
-    test('viser feil-modalen med 400 Bad Request riktig', () => {
+    test('Viser feil-modalen med 400 Bad Request riktig', () => {
         const feilMelding = 'Du mangler nødvendige data i forespørselen din.';
         const mockFeil = new Feil(feilMelding, 400);
         render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
@@ -32,7 +28,7 @@ describe('FeilModal', () => {
     //#endregion 400 Bad Request feil
 
     //#region 401 Unauthorized feil
-    test('viser feil-modalen med 401 Unauthorized riktig', () => {
+    test('Viser feil-modalen med 401 Unauthorized riktig', () => {
         const feilMelding = 'Tokenet ditt er ugyldig eller utløpt.';
         const mockFeil = new Feil(feilMelding, 401);
         render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
@@ -47,7 +43,7 @@ describe('FeilModal', () => {
     //#endregion 401 Unauthorized feil
 
     //#region 403 Forbidden feil
-    test('viser feil-modalen med 403 ingen tilgang riktig', () => {
+    test('Viser feil-modalen med 403 ingen tilgang riktig', () => {
         const feilMelding = 'Du har rollen BESLUTTER og trenger rollen FORVALTER.';
         const mockFeil = new Feil(feilMelding, 403);
 
@@ -63,7 +59,7 @@ describe('FeilModal', () => {
         expect(screen.queryByText('Meld feil i porten')).not.toBeInTheDocument();
     });
 
-    test('håndterer CSRF-token feil riktig', () => {
+    test('Håndterer CSRF-token feil riktig', () => {
         const mockFeil = new Feil('Ugyldig CSRF-token.', 403);
 
         render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
@@ -79,7 +75,7 @@ describe('FeilModal', () => {
     //#endregion 403 Forbidden feil
 
     //#region 404 Not Found feil
-    test('viser feil-modalen med 404 Not Found riktig', () => {
+    test('Viser feil-modalen med 404 Not Found riktig', () => {
         const feilMelding = 'Finner ikke endepunktet /resettBehandling.';
         const mockFeil = new Feil(feilMelding, 404);
         render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
@@ -96,7 +92,7 @@ describe('FeilModal', () => {
     //#endregion 404 Not Found feil
 
     //#region 500 Internal Server Error feil
-    test('viser feil-modalen med 500 Internal Server Error riktig', () => {
+    test('Viser feil-modalen med 500 Internal Server Error riktig', () => {
         const feilMelding = 'Dette er ikke din feil, det er en feil vi ikke greide å håndtere.';
         const mockFeil = new Feil(feilMelding, 500);
         render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
@@ -111,7 +107,7 @@ describe('FeilModal', () => {
     //#endregion 500 Internal Server Error feil
 
     //#region 502 Bad Gateway, 503 Service Unavailable, 504 Gateway Timeout feil
-    test('viser feil-modalen med 502 Bad Gateway riktig', () => {
+    test('Viser feil-modalen med 502 Bad Gateway riktig', () => {
         const feilMelding = 'Kallet mot Gosys feilet.';
         const mockFeil = new Feil(feilMelding, 502);
         render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
@@ -122,7 +118,7 @@ describe('FeilModal', () => {
         expect(screen.getByText('Meld feil i porten')).toBeInTheDocument();
     });
 
-    test('viser feil-modalen med 503 Service Unavailable riktig', () => {
+    test('Viser feil-modalen med 503 Service Unavailable riktig', () => {
         const feilMelding = 'Kallet mot Gosys feilet.';
         const mockFeil = new Feil(feilMelding, 503);
         render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
@@ -133,7 +129,7 @@ describe('FeilModal', () => {
         expect(screen.getByText('Meld feil i porten')).toBeInTheDocument();
     });
 
-    test('viser feil-modalen med 504 Gateway Timeout riktig', () => {
+    test('Viser feil-modalen med 504 Gateway Timeout riktig', () => {
         const feilMelding = 'Kallet mot Gosys feilet.';
         const mockFeil = new Feil(feilMelding, 504);
         render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
@@ -149,7 +145,7 @@ describe('FeilModal', () => {
     //#endregion 502 Bad Gateway, 503 Service Unavailable, 504 Gateway Timeout feil
 
     //#region Komponentens funksjonalitet
-    test('viser fagsakId og behandlingsId når de er tilgjengelige', () => {
+    test('Viser fagsakId og behandlingsId når de er tilgjengelige', () => {
         const mockFeil = new Feil('Du har rollen BESLUTTER og trenger rollen FORVALTER', 403);
         const fagsakId = '12345';
         const behandlingId = '6bc22b78-4ce4-4eed-9476-247f599cef95';
@@ -167,7 +163,7 @@ describe('FeilModal', () => {
         expect(screen.getByText(`Behandling ID: ${behandlingId}`)).toBeInTheDocument();
     });
 
-    test('viser ikke fagsakId og behandlingsId når de ikke er tilgjengelige', () => {
+    test('Viser ikke fagsakId og behandlingsId når de ikke er tilgjengelige', () => {
         const mockFeil = new Feil('Du har rollen BESLUTTER og trenger rollen FORVALTER', 403);
 
         render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
@@ -176,7 +172,7 @@ describe('FeilModal', () => {
         expect(screen.queryByText(/Behandling ID:/)).not.toBeInTheDocument();
     });
 
-    test('kaller på setVisFeilModal når lukkeknappen klikkes', () => {
+    test('Kaller på setVisFeilModal når lukkeknappen klikkes', () => {
         const mockFeil = new Feil('Du har rollen BESLUTTER og trenger rollen FORVALTER', 403);
 
         render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
@@ -187,7 +183,7 @@ describe('FeilModal', () => {
         expect(mockSetVisFeilModal).toHaveBeenCalled();
     });
 
-    test('viser default feil-objekt når feil er noe annet enn håndtert', () => {
+    test('Viser default feil-objekt når feil er noe annet enn håndtert', () => {
         const feilmelding = 'Vi vet ikke hva som gikk galt.';
         const mockFeil = new Feil(feilmelding, 520);
 

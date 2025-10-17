@@ -19,12 +19,12 @@ describe('brevmottakerSchema', () => {
         validNorgeData: BrevmottakerFormData,
         mottakerKey: keyof BrevmottakerFormData
     ): void => {
-        test('validerer gyldig norsk adresse', () => {
+        test('Validerer gyldig norsk adresse', () => {
             const result = brevmottakerFormDataInputSchema.safeParse(validNorgeData);
             expect(result.success).toBe(true);
         });
 
-        test('postnummer påkrevd og skal være 4 siffer', () => {
+        test('Postnummer påkrevd og skal være 4 siffer', () => {
             const mottakerData = validNorgeData[mottakerKey] as Record<string, unknown>;
             const invalidData = {
                 ...validNorgeData,
@@ -37,7 +37,7 @@ describe('brevmottakerSchema', () => {
             expectValidationError(result, 'Postnummer må være 4 siffer');
         });
 
-        test('avviser ugyldig postnummer format', () => {
+        test('Avviser ugyldig postnummer format', () => {
             const mottakerData = validNorgeData[mottakerKey] as Record<string, unknown>;
             const invalidData = {
                 ...validNorgeData,
@@ -50,7 +50,7 @@ describe('brevmottakerSchema', () => {
             expectValidationError(result, 'Postnummer må være 4 siffer');
         });
 
-        test('poststed påkrevd', () => {
+        test('Poststed påkrevd', () => {
             const mottakerData = validNorgeData[mottakerKey] as Record<string, unknown>;
             const invalidData = {
                 ...validNorgeData,
@@ -68,12 +68,12 @@ describe('brevmottakerSchema', () => {
         validPersonData: BrevmottakerFormData,
         mottakerKey: keyof BrevmottakerFormData
     ): void => {
-        test('validerer gyldig data', () => {
+        test('Validerer gyldig data', () => {
             const result = brevmottakerFormDataInputSchema.safeParse(validPersonData);
             expect(result.success).toBe(true);
         });
 
-        test('fødselsnummer påkrevd og må være 11 siffer', () => {
+        test('Fødselsnummer påkrevd og må være 11 siffer', () => {
             const mottakerData = validPersonData[mottakerKey] as Record<string, unknown>;
             const invalidData = {
                 ...validPersonData,
@@ -86,7 +86,7 @@ describe('brevmottakerSchema', () => {
             expectValidationError(result, 'Fødselsnummer må være 11 sammenhengende siffer');
         });
 
-        test('avviser ikke-numerisk fødselsnummer', () => {
+        test('Avviser ikke-numerisk fødselsnummer', () => {
             const mottakerData = validPersonData[mottakerKey] as Record<string, unknown>;
             const invalidData = {
                 ...validPersonData,
@@ -104,7 +104,7 @@ describe('brevmottakerSchema', () => {
         validData: BrevmottakerFormData,
         mottakerKey: keyof BrevmottakerFormData
     ): void => {
-        test('adresselinje 1 påkrevd', () => {
+        test('Adresselinje 1 påkrevd', () => {
             const mottakerData = validData[mottakerKey] as Record<string, unknown>;
             const invalidData = {
                 ...validData,
@@ -129,12 +129,12 @@ describe('brevmottakerSchema', () => {
             },
         };
 
-        test('validerer gyldig data', () => {
+        test('Validerer gyldig data', () => {
             const result = brevmottakerFormDataInputSchema.safeParse(validData);
             expect(result.success).toBe(true);
         });
 
-        test('avviser data uten adresse informasjon', () => {
+        test('Avviser data uten adresse informasjon', () => {
             const invalidData = {
                 mottakerType: MottakerType.BrukerMedUtenlandskAdresse,
             };
@@ -143,7 +143,7 @@ describe('brevmottakerSchema', () => {
             expectValidationError(result, 'Mangler data for valgt mottakertype');
         });
 
-        test('adresselinje 1 påkrevd', () => {
+        test('Adresselinje 1 påkrevd', () => {
             const invalidData = {
                 ...validData,
                 brukerMedUtenlandskAdresse: {
@@ -170,14 +170,14 @@ describe('brevmottakerSchema', () => {
                 },
             };
 
-            test('validerer gyldig data', () => {
+            test('Validerer gyldig data', () => {
                 const result = brevmottakerFormDataInputSchema.safeParse(validManuellData);
                 expect(result.success).toBe(true);
             });
 
             testAdresselinje1Påkrevd(validManuellData, 'fullmektig');
 
-            describe('hvis Norge valgt', () => {
+            describe('Hvis Norge valgt', () => {
                 const validNorgeData: BrevmottakerFormData = {
                     mottakerType: MottakerType.Fullmektig,
                     fullmektig: {
@@ -215,12 +215,12 @@ describe('brevmottakerSchema', () => {
                 },
             };
 
-            test('validerer gyldig data uten kontaktperson', () => {
+            test('Validerer gyldig data uten kontaktperson', () => {
                 const result = brevmottakerFormDataInputSchema.safeParse(validOrgData);
                 expect(result.success).toBe(true);
             });
 
-            test('validerer gyldig data med kontaktperson', () => {
+            test('Validerer gyldig data med kontaktperson', () => {
                 const dataWithContact = {
                     ...validOrgData,
                     fullmektig: {
@@ -233,7 +233,7 @@ describe('brevmottakerSchema', () => {
                 expect(result.success).toBe(true);
             });
 
-            test('organisasjonsnummer påkrevd og må være 9 siffer', () => {
+            test('Organisasjonsnummer påkrevd og må være 9 siffer', () => {
                 const invalidData = {
                     ...validOrgData,
                     fullmektig: {
@@ -264,14 +264,14 @@ describe('brevmottakerSchema', () => {
                 },
             };
 
-            test('validerer gyldig data', () => {
+            test('Validerer gyldig data', () => {
                 const result = brevmottakerFormDataInputSchema.safeParse(validManuellData);
                 expect(result.success).toBe(true);
             });
 
             testAdresselinje1Påkrevd(validManuellData, 'verge');
 
-            describe('hvis Norge valgt', () => {
+            describe('Hvis Norge valgt', () => {
                 const validNorgeData: BrevmottakerFormData = {
                     mottakerType: MottakerType.Verge,
                     verge: {
@@ -313,14 +313,14 @@ describe('brevmottakerSchema', () => {
                 },
             };
 
-            test('validerer gyldig data', () => {
+            test('Validerer gyldig data', () => {
                 const result = brevmottakerFormDataInputSchema.safeParse(validManuellData);
                 expect(result.success).toBe(true);
             });
 
             testAdresselinje1Påkrevd(validManuellData, 'dødsbo');
 
-            describe('hvis Norge valgt', () => {
+            describe('Hvis Norge valgt', () => {
                 const validNorgeData: BrevmottakerFormData = {
                     mottakerType: MottakerType.Dødsbo,
                     dødsbo: {

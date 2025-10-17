@@ -80,44 +80,36 @@ const vilkårsvurdering: VilkårsvurderingResponse = {
     rettsgebyr: 1199,
 };
 
-const setupMock = (
-    behandlet: boolean,
-    lesevisning: boolean,
-    autoutført: boolean,
-    vilkårsvurdering?: VilkårsvurderingResponse
-): void => {
-    if (vilkårsvurdering) {
-        mockUseBehandlingApi.mockImplementation(() => ({
-            gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
-                const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
-                    status: RessursStatus.Suksess,
-                    data: vilkårsvurdering,
-                });
-                return Promise.resolve(ressurs);
-            },
-            sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-    }
+const setupMock = (): void => {
+    mockUseBehandlingApi.mockImplementation(() => ({
+        gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
+            const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
+                status: RessursStatus.Suksess,
+                data: vilkårsvurdering,
+            });
+            return Promise.resolve(ressurs);
+        },
+        sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
+            const ressurs = mock<Ressurs<string>>({
+                status: RessursStatus.Suksess,
+                data: 'suksess',
+            });
+            return Promise.resolve(ressurs);
+        },
+    }));
+
     mockUseBehandling.mockImplementation(() => ({
-        erStegBehandlet: (): boolean => behandlet,
-        erStegAutoutført: (): boolean => autoutført,
-        visVenteModal: false,
-        behandlingILesemodus: lesevisning,
+        erStegBehandlet: (): boolean => false,
+        erStegAutoutført: (): boolean => true,
         hentBehandlingMedBehandlingId: jest.fn(),
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 3 av 4'),
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
     }));
 };
 
-describe('Tester: VilkårsvurderingContainer', () => {
-    test('- vis autoutført', async () => {
-        setupMock(false, false, true, vilkårsvurdering);
+describe('VilkårsvurderingContainer', () => {
+    test('Vis autoutført', async () => {
+        setupMock();
 
         const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
         const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });

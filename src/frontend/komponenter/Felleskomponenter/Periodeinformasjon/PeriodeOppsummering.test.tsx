@@ -20,15 +20,15 @@ const renderPeriodeOppsummering = (
         />
     );
 
-describe('Tester: PeriodeOppsummering', () => {
-    test('- uten hendelsetype', () => {
+describe('PeriodeOppsummering', () => {
+    test('Uten hendelsetype', () => {
         const { getByText } = renderPeriodeOppsummering('2021-05-31', 3333);
         expect(getByText('01.01.2021 - 31.05.2021')).toBeInTheDocument();
         expect(getByText('5 måneder')).toBeInTheDocument();
         expect(getByText('3 333')).toBeInTheDocument();
     });
 
-    test('- med hendelsetype', async () => {
+    test('Med hendelsetype', async () => {
         const { getByText } = renderPeriodeOppsummering('2021-04-30', 333, HendelseType.Annet);
         await waitFor(() => {
             expect(getByText('01.01.2021 - 30.04.2021')).toBeInTheDocument();

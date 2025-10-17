@@ -25,13 +25,9 @@ jest.mock('@tanstack/react-query', () => {
             return {
                 mutate: mutateAsync,
                 mutateAsync: mutateAsync,
-                isError: false,
-                error: null,
             };
         }),
-        useQueryClient: jest.fn(() => ({
-            invalidateQueries: jest.fn(),
-        })),
+        useQueryClient: jest.fn(() => null),
     };
 });
 
@@ -54,7 +50,7 @@ describe('useSettBehandlingTilbakeTilFakta', () => {
         jest.clearAllMocks();
     });
 
-    it('burde kaste Feil med status 400 når tom behandlingId er gitt', async () => {
+    test('Burde kaste Feil med status 400 når tom behandlingId er gitt', async () => {
         const { result } = renderHook(() => useSettBehandlingTilbakeTilFakta());
 
         await expect(result.current.mutate('')).rejects.toEqual(
@@ -62,7 +58,7 @@ describe('useSettBehandlingTilbakeTilFakta', () => {
         );
     });
 
-    it('burde håndtere tilbakestilling til fakta med status suksess', async () => {
+    test('Burde håndtere tilbakestilling til fakta med status suksess', async () => {
         mockRequest.mockResolvedValueOnce({
             status: RessursStatus.Suksess,
             data: 'Behandlingen ble tilbakestilt til fakta',
@@ -86,7 +82,7 @@ describe('useSettBehandlingTilbakeTilFakta', () => {
         expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: ['behandling'] });
     });
 
-    it('burde bruke forvaltning API når SaksbehanderKanResettebehandling er false', async () => {
+    test('Burde bruke forvaltning API når SaksbehanderKanResettebehandling er false', async () => {
         (TogglesContext.useToggles as jest.Mock).mockReturnValueOnce({
             toggles: {
                 'familie-tilbake-frontend.saksbehandler.kan.resette.behandling': false,
@@ -108,7 +104,7 @@ describe('useSettBehandlingTilbakeTilFakta', () => {
         });
     });
 
-    it('burde håndtere 403 Forbidden', async () => {
+    test('Burde håndtere 403 Forbidden', async () => {
         const mockFrontendFeilmelding =
             'Du har rollen BESLUTTER og trenger rollen FORVALTER for å utføre denne handlingen.';
         const httpStatusCode = 403;
@@ -127,7 +123,7 @@ describe('useSettBehandlingTilbakeTilFakta', () => {
         expect(mockRequest).toHaveBeenCalled();
     });
 
-    it('burde håndtere uten frontendFeilmelding og httpStatusCode', async () => {
+    test('Burde håndtere uten frontendFeilmelding og httpStatusCode', async () => {
         mockRequest.mockResolvedValueOnce({
             status: RessursStatus.Feilet,
             frontendFeilmelding: '',

@@ -8,16 +8,14 @@ import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
 import SplittPeriode from './SplittPeriode';
-import { HttpProvider } from '../../../../../api/http/HttpProvider';
 
-describe('Tester: SplittPeriode - Foreldelse', () => {
+describe('SplittPeriode - Foreldelse', () => {
     let user: UserEvent;
-
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
     });
-    test('Tester åpning av modal', async () => {
+
+    test('Åpning av modal', async () => {
         const periode: ForeldelsePeriodeSkjemeData = {
             index: 'i1',
             feilutbetaltBeløp: 1333,
@@ -36,9 +34,7 @@ describe('Tester: SplittPeriode - Foreldelse', () => {
             queryByAltText,
             queryByText,
         } = render(
-            <HttpProvider>
-                <SplittPeriode periode={periode} behandling={behandling} onBekreft={jest.fn()} />
-            </HttpProvider>
+            <SplittPeriode periode={periode} behandling={behandling} onBekreft={jest.fn()} />
         );
 
         expect(queryByAltText('Del opp perioden')).toBeInTheDocument();

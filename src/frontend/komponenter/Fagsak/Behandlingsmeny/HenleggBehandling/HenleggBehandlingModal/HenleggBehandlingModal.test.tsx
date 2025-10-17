@@ -46,31 +46,31 @@ const renderHenleggBehandlingModal = (
         />
     );
 
-describe('Tester: HenleggBehandlingModal', () => {
+const setupMocks = (): void => {
+    mockUseBehandlingApi.mockImplementation(() => ({
+        henleggBehandling: (): Promise<Ressurs<string>> => {
+            const ressurs = mock<Ressurs<string>>({
+                status: RessursStatus.Suksess,
+                data: 'suksess',
+            });
+            return Promise.resolve(ressurs);
+        },
+    }));
+    mockUseBehandling.mockImplementation(() => ({
+        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
+        nullstillIkkePersisterteKomponenter: jest.fn(),
+    }));
+};
+
+describe('HenleggBehandlingModal', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
+        setupMocks();
     });
 
-    beforeEach(() => {
-        mockUseBehandlingApi.mockImplementation(() => ({
-            henleggBehandling: (): Promise<Ressurs<string>> => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-        mockUseBehandling.mockImplementation(() => ({
-            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-            settIkkePersistertKomponent: jest.fn(),
-            nullstillIkkePersisterteKomponenter: jest.fn(),
-        }));
-    });
-
-    test('- henlegger behandling med varsel sendt', async () => {
+    test('Henlegger behandling med varsel sendt', async () => {
         const behandling = mock<Behandling>({
             type: Behandlingstype.Tilbakekreving,
             varselSendt: true,
@@ -109,7 +109,7 @@ describe('Tester: HenleggBehandlingModal', () => {
         );
     });
 
-    test('- henlegger behandling med varsel ikke sendt', async () => {
+    test('Henlegger behandling med varsel ikke sendt', async () => {
         const behandling = mock<Behandling>({
             type: Behandlingstype.Tilbakekreving,
             varselSendt: false,
@@ -148,7 +148,7 @@ describe('Tester: HenleggBehandlingModal', () => {
         );
     });
 
-    test('- henlegger revurdering, med brev', async () => {
+    test('Henlegger revurdering, med brev', async () => {
         const behandling = mock<Behandling>({
             type: Behandlingstype.RevurderingTilbakekreving,
         });
@@ -204,7 +204,7 @@ describe('Tester: HenleggBehandlingModal', () => {
         );
     });
 
-    test('- henlegger revurdering, uten brev', async () => {
+    test('Henlegger revurdering, uten brev', async () => {
         const behandling = mock<Behandling>({
             type: Behandlingstype.RevurderingTilbakekreving,
         });

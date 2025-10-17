@@ -52,80 +52,80 @@ const renderForeldelseContainer = (behandling: Behandling, fagsak: Fagsak): Rend
     );
 };
 
-describe('Tester: ForeldelseContainer', () => {
+const perioder: ForeldelsePeriode[] = [
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-01-01',
+            tom: '2020-03-31',
+        },
+        foreldelsesvurderingstype: undefined,
+        begrunnelse: undefined,
+        foreldelsesfrist: undefined,
+        oppdagelsesdato: undefined,
+    },
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-05-01',
+            tom: '2020-06-30',
+        },
+        foreldelsesvurderingstype: undefined,
+        begrunnelse: undefined,
+        foreldelsesfrist: undefined,
+        oppdagelsesdato: undefined,
+    },
+];
+
+const setupMock = (
+    behandlet: boolean,
+    lesevisning: boolean,
+    autoutført: boolean,
+    foreldelse?: ForeldelseResponse
+): void => {
+    if (foreldelse) {
+        mockUseBehandlingApi.mockImplementation(() => ({
+            gjerForeldelseKall: (): Promise<Ressurs<ForeldelseResponse>> => {
+                const ressurs = mock<Ressurs<ForeldelseResponse>>({
+                    status: RessursStatus.Suksess,
+                    data: foreldelse,
+                });
+                return Promise.resolve(ressurs);
+            },
+            sendInnForeldelse: (): Promise<Ressurs<string>> => {
+                const ressurs = mock<Ressurs<string>>({
+                    status: RessursStatus.Suksess,
+                    data: 'suksess',
+                });
+                return Promise.resolve(ressurs);
+            },
+        }));
+    }
+    mockUseBehandling.mockImplementation(() => ({
+        erStegBehandlet: (): boolean => behandlet,
+        erStegAutoutført: (): boolean => autoutført,
+        visVenteModal: false,
+        behandlingILesemodus: lesevisning,
+        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
+        settIkkePersistertKomponent: jest.fn(),
+        nullstillIkkePersisterteKomponenter: jest.fn(),
+        actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 4'),
+        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+    }));
+};
+
+describe('ForeldelseContainer', () => {
     let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
-    const perioder: ForeldelsePeriode[] = [
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-01-01',
-                tom: '2020-03-31',
-            },
-            foreldelsesvurderingstype: undefined,
-            begrunnelse: undefined,
-            foreldelsesfrist: undefined,
-            oppdagelsesdato: undefined,
-        },
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-05-01',
-                tom: '2020-06-30',
-            },
-            foreldelsesvurderingstype: undefined,
-            begrunnelse: undefined,
-            foreldelsesfrist: undefined,
-            oppdagelsesdato: undefined,
-        },
-    ];
 
-    const foreldelse: ForeldelseResponse = {
-        foreldetPerioder: perioder,
-    };
-
-    const setupMock = (
-        behandlet: boolean,
-        lesevisning: boolean,
-        autoutført: boolean,
-        foreldelse?: ForeldelseResponse
-    ): void => {
-        if (foreldelse) {
-            mockUseBehandlingApi.mockImplementation(() => ({
-                gjerForeldelseKall: (): Promise<Ressurs<ForeldelseResponse>> => {
-                    const ressurs = mock<Ressurs<ForeldelseResponse>>({
-                        status: RessursStatus.Suksess,
-                        data: foreldelse,
-                    });
-                    return Promise.resolve(ressurs);
-                },
-                sendInnForeldelse: (): Promise<Ressurs<string>> => {
-                    const ressurs = mock<Ressurs<string>>({
-                        status: RessursStatus.Suksess,
-                        data: 'suksess',
-                    });
-                    return Promise.resolve(ressurs);
-                },
-            }));
-        }
-        mockUseBehandling.mockImplementation(() => ({
-            erStegBehandlet: (): boolean => behandlet,
-            erStegAutoutført: (): boolean => autoutført,
-            visVenteModal: false,
-            behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-            settIkkePersistertKomponent: jest.fn(),
-            nullstillIkkePersisterteKomponenter: jest.fn(),
-            actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 4'),
-            harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
-        }));
-    };
-
-    test('- vis og fyll ut perioder og send inn', async () => {
+    test('Vis og fyll ut perioder og send inn', async () => {
+        const foreldelse: ForeldelseResponse = {
+            foreldetPerioder: perioder,
+        };
         setupMock(false, false, false, foreldelse);
         const fagsak = mock<Fagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
         const behandling = mock<Behandling>({ eksternBrukId: '1' });
@@ -213,7 +213,7 @@ describe('Tester: ForeldelseContainer', () => {
         );
     });
 
-    test('- vis utfylt', async () => {
+    test('Vis utfylt', async () => {
         setupMock(true, false, false, {
             foreldetPerioder: [
                 {
@@ -305,7 +305,7 @@ describe('Tester: ForeldelseContainer', () => {
         ).toBeEnabled();
     });
 
-    test('- vis utfylt - lesevisning', async () => {
+    test('Vis utfylt - lesevisning', async () => {
         setupMock(true, true, false, {
             foreldetPerioder: [
                 {
@@ -434,7 +434,7 @@ describe('Tester: ForeldelseContainer', () => {
         ).toBeEnabled();
     });
 
-    test('- vis autoutført', async () => {
+    test('Vis autoutført', async () => {
         setupMock(false, false, true);
 
         const behandling = mock<Behandling>();
