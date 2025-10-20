@@ -1,5 +1,4 @@
 /**
- * Fagsak x mange
  * Saksbehandler x 1
  * ManuelleBrevmottakere x mange
  * FaktaPeriode x1
@@ -31,8 +30,8 @@ import {
 export const lagBehandling = (overrides: Partial<Behandling> = {}): Behandling => ({
     behandlingId: 'uuid-1',
     eksternBrukId: 'uuid-2',
-    kanSetteTilbakeTilFakta: true,
-    kanEndres: true,
+    kanSetteTilbakeTilFakta: false,
+    kanEndres: false,
     behandlingsstegsinfo: [],
     status: Behandlingstatus.Opprettet,
     type: Behandlingstype.Tilbakekreving,
@@ -42,11 +41,11 @@ export const lagBehandling = (overrides: Partial<Behandling> = {}): Behandling =
     erBehandlingHenlagt: false,
     saksbehandlingstype: Saksbehandlingstype.Ordinær,
     manuelleBrevmottakere: [],
-    kanRevurderingOpprettes: true,
+    kanRevurderingOpprettes: false,
     erBehandlingPåVent: false,
     harVerge: false,
     resultatstype: null,
-    kanHenleggeBehandling: true,
+    kanHenleggeBehandling: false,
     erNyModell: false,
     avsluttetDato: null,
     endretTidspunkt: '',

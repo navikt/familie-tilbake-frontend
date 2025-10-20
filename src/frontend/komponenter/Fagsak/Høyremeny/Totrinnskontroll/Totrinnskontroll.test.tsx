@@ -96,7 +96,7 @@ describe('Totrinnskontroll', () => {
         });
 
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
-            lagBehandling(),
+            lagBehandling({ kanEndres: true }),
             lagFagsak()
         );
 
@@ -165,7 +165,7 @@ describe('Totrinnskontroll', () => {
             ],
         });
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
-            lagBehandling(),
+            lagBehandling({ kanEndres: true }),
             lagFagsak()
         );
 

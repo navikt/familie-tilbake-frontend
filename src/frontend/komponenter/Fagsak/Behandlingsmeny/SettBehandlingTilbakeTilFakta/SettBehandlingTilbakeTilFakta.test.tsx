@@ -69,7 +69,11 @@ describe('SettBehandlingTilbakeTilFakta', () => {
             },
         });
 
-        render(<SettBehandlingTilbakeTilFakta behandling={lagBehandling()} />);
+        render(
+            <SettBehandlingTilbakeTilFakta
+                behandling={lagBehandling({ kanSetteTilbakeTilFakta: true })}
+            />
+        );
 
         const button = screen.getByText('Sett behandling tilbake til fakta');
         fireEvent.click(button);
