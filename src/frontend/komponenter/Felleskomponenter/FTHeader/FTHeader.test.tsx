@@ -21,20 +21,20 @@ const queryClient = new QueryClient({
         },
     },
 });
+const mockSaksbehandler = {
+    displayName: 'Test Saksbehandler',
+    email: 'test@nav.no',
+    firstName: 'Test',
+    lastName: 'Saksbehandler',
+    identifier: '12345678901',
+    navIdent: 'TST123',
+    enhet: 'Test Enhet',
+};
 
 const renderHeader = (): RenderResult => {
-    const testSaksbehandler = {
-        displayName: 'Test Saksbehandler',
-        email: 'test@nav.no',
-        firstName: 'Test',
-        lastName: 'Saksbehandler',
-        identifier: '12345678901',
-        navIdent: 'TST123',
-        enhet: 'Test Enhet',
-    };
     return render(
         <QueryClientProvider client={queryClient}>
-            <FTHeader innloggetSaksbehandler={testSaksbehandler} />
+            <FTHeader innloggetSaksbehandler={mockSaksbehandler} />
         </QueryClientProvider>
     );
 };
