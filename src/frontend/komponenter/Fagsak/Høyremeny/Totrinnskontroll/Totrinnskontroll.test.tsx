@@ -17,7 +17,12 @@ import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import { Behandlingssteg } from '../../../../typer/behandling';
+import {
+    lagTotrinnskontrollFaktainfo,
+    lagTotrinnskontrollForeldelsesinfo,
+    lagTotrinnskontrollForeslåVedtaksinfo,
+    lagTotrinnskontrollVilkårsvurderingsinfo,
+} from '../../../../testdata/totrinnskontrollFactory';
 import { RessursStatus } from '../../../../typer/ressurs';
 
 const mockUseBehandling = jest.fn();
@@ -77,21 +82,9 @@ describe('Totrinnskontroll', () => {
     test('Vis og fyll ut - godkjenner', async () => {
         setupMocks(false, {
             totrinnsstegsinfo: [
-                {
-                    behandlingssteg: Behandlingssteg.Fakta,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
+                lagTotrinnskontrollFaktainfo(),
+                lagTotrinnskontrollVilkårsvurderingsinfo(),
+                lagTotrinnskontrollForeslåVedtaksinfo(),
             ],
         });
 
@@ -142,26 +135,10 @@ describe('Totrinnskontroll', () => {
     test('Vis og fyll ut - sender tilbake', async () => {
         setupMocks(false, {
             totrinnsstegsinfo: [
-                {
-                    behandlingssteg: Behandlingssteg.Fakta,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Foreldelse,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
+                lagTotrinnskontrollFaktainfo(),
+                lagTotrinnskontrollForeldelsesinfo(),
+                lagTotrinnskontrollVilkårsvurderingsinfo(),
+                lagTotrinnskontrollForeslåVedtaksinfo(),
             ],
         });
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
@@ -226,26 +203,10 @@ describe('Totrinnskontroll', () => {
     test('Vis utfylt - sendt tilbake', async () => {
         setupMocks(true, {
             totrinnsstegsinfo: [
-                {
-                    behandlingssteg: Behandlingssteg.Fakta,
-                    godkjent: true,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Foreldelse,
-                    godkjent: false,
-                    begrunnelse: 'Foreldelse må vurderes på nytt',
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
-                    godkjent: true,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
-                    godkjent: false,
-                    begrunnelse: 'Vedtaket må vurderes på nytt',
-                },
+                lagTotrinnskontrollFaktainfo(true),
+                lagTotrinnskontrollForeldelsesinfo(true, 'Foreldelse må vurderes på nytt'),
+                lagTotrinnskontrollVilkårsvurderingsinfo(true),
+                lagTotrinnskontrollForeslåVedtaksinfo(false, 'Vedtaket må vurderes på nytt'),
             ],
         });
 
@@ -284,26 +245,10 @@ describe('Totrinnskontroll', () => {
     test('Vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
         setupMocks(false, {
             totrinnsstegsinfo: [
-                {
-                    behandlingssteg: Behandlingssteg.Fakta,
-                    godkjent: true,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Foreldelse,
-                    godkjent: false,
-                    begrunnelse: 'Foreldelse må vurderes på nytt',
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
-                    godkjent: true,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
-                    godkjent: false,
-                    begrunnelse: 'Vedtaket må vurderes på nytt',
-                },
+                lagTotrinnskontrollFaktainfo(true),
+                lagTotrinnskontrollForeldelsesinfo(false, 'Foreldelse må vurderes på nytt'),
+                lagTotrinnskontrollVilkårsvurderingsinfo(true),
+                lagTotrinnskontrollForeslåVedtaksinfo(false, 'Vedtaket må vurderes på nytt'),
             ],
         });
 
