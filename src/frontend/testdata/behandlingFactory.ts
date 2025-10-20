@@ -1,21 +1,3 @@
-/**
- * Saksbehandler x 1
- * ManuelleBrevmottakere x mange
- * FaktaPeriode x1
- * FaktaResponse x1
- * VilkårsvuderingSkjema x1
- * BeregningsresultatPeriode[] x1
- * Beregningsresultat x1
- * VedtaksbrevAvsnitt[] x1
- * FaktaPeriodeSkjemaData x1
- * VilkårsvurderingsPeriode[] x1
- * ForeldelsePeriode[] x1
- * VilkårsvurderingResponse x2
- * VilkårsvurderingPeriodeSkjemaData x1
- * VilkårsvurderingPeriode x1
- * BrevmottakerFormData x1
- * ForeldelsePeriodeSkjemaData x1
- */
 import type { Behandlingsstegstilstand } from '../typer/behandling';
 
 import {
@@ -48,11 +30,11 @@ export const lagBehandling = (overrides: Partial<Behandling> = {}): Behandling =
     kanHenleggeBehandling: false,
     erNyModell: false,
     avsluttetDato: null,
-    endretTidspunkt: '',
+    endretTidspunkt: new Date().toISOString(),
     vedtaksDato: null,
-    enhetskode: '',
-    enhetsnavn: '',
-    ansvarligSaksbehandler: '',
+    enhetskode: '0001',
+    enhetsnavn: 'Oslo',
+    ansvarligSaksbehandler: 'test saksbehandler',
     ansvarligBeslutter: null,
     eksternFaksakId: 'id-2',
     behandlingsårsakstype: null,
