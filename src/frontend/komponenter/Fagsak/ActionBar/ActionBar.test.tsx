@@ -33,6 +33,9 @@ const renderActionBar = (isLoading: boolean = false): RenderResult =>
 describe('ActionBar', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        mockUseBehandling.mockImplementation(() => ({
+            erStegBehandlet: jest.fn().mockReturnValue(false),
+        }));
     });
 
     test('Kaller ikke onNeste eller onForrige når isLoading = true', () => {
@@ -58,7 +61,7 @@ describe('ActionBar', () => {
         expect(onForrige).not.toHaveBeenCalled();
     });
 
-    it('Har ikke knapp tilbake til Tilbakekrevingen når ikke på inaktiv side', () => {
+    test('Har ikke knapp tilbake til Tilbakekrevingen når ikke på inaktiv side', () => {
         renderActionBar(false);
         expect(screen.queryByRole('link', { name: /gå til behandling/i })).not.toBeInTheDocument();
     });

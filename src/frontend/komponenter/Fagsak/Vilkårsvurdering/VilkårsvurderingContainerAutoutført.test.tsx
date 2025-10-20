@@ -1,8 +1,6 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     VilkårsvurderingResponse,
@@ -17,7 +15,9 @@ import * as React from 'react';
 
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
-import { HendelseType, Ytelsetype } from '../../../kodeverk';
+import { HendelseType } from '../../../kodeverk';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { RessursStatus } from '../../../typer/ressurs';
 
 const queryClient = new QueryClient({
@@ -111,13 +111,10 @@ describe('VilkårsvurderingContainer', () => {
     test('Vis autoutført', async () => {
         setupMock();
 
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
-
         const { getByText, getByRole } = render(
             <QueryClientProvider client={queryClient}>
-                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                    <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
+                <VilkårsvurderingProvider behandling={lagBehandling()} fagsak={lagFagsak()}>
+                    <VilkårsvurderingContainer behandling={lagBehandling()} fagsak={lagFagsak()} />
                 </VilkårsvurderingProvider>
             </QueryClientProvider>
         );

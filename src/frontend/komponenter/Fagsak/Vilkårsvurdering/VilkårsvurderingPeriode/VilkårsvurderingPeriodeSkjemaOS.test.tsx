@@ -1,6 +1,4 @@
 import type { Http } from '../../../../api/http/HttpProvider';
-import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { UserEvent } from '@testing-library/user-event';
@@ -20,6 +18,8 @@ import {
     Vilkårsresultat,
     Ytelsetype,
 } from '../../../../kodeverk';
+import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 
 jest.setTimeout(10000);
 
@@ -54,10 +54,6 @@ jest.mock('../VilkårsvurderingContext', () => {
     };
 });
 
-const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-const fagsak = mock<Fagsak>({
-    ytelsestype: Ytelsetype.Overgangsstønad,
-});
 const periode: VilkårsvurderingPeriodeSkjemaData = {
     index: 'i2',
     feilutbetaltBeløp: 2333,
@@ -68,6 +64,7 @@ const periode: VilkårsvurderingPeriodeSkjemaData = {
         tom: '2021-04-30',
     },
 };
+const fagsak = lagFagsak({ ytelsestype: Ytelsetype.Overgangsstønad });
 
 describe('VilkårsvurderingPeriodeSkjema', () => {
     let user: UserEvent;
@@ -87,7 +84,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={{
                         aktiviteter: [
@@ -220,7 +217,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
@@ -302,7 +299,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
@@ -414,7 +411,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
@@ -568,7 +565,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
@@ -650,7 +647,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             render(
                 <BehandlingProvider>
                     <VilkårsvurderingPeriodeSkjema
-                        behandling={behandling}
+                        behandling={lagBehandling()}
                         fagsak={fagsak}
                         periode={periode}
                         behandletPerioder={[]}
@@ -756,7 +753,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
@@ -893,7 +890,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             render(
                 <BehandlingProvider>
                     <VilkårsvurderingPeriodeSkjema
-                        behandling={behandling}
+                        behandling={lagBehandling()}
                         fagsak={fagsak}
                         periode={periode}
                         behandletPerioder={[]}
@@ -1023,7 +1020,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
@@ -1161,7 +1158,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             render(
                 <BehandlingProvider>
                     <VilkårsvurderingPeriodeSkjema
-                        behandling={behandling}
+                        behandling={lagBehandling()}
                         fagsak={fagsak}
                         periode={periode}
                         behandletPerioder={[]}
@@ -1275,7 +1272,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
@@ -1365,7 +1362,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByLabelText, getByText } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={{
                         ...periode,
@@ -1406,7 +1403,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByLabelText, getByTestId, getByText } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={{
                         ...periode,
@@ -1479,7 +1476,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByRole, queryAllByText } = render(
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
+                    behandling={lagBehandling()}
                     fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}

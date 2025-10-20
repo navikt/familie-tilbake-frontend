@@ -1,13 +1,12 @@
-import type { Behandling } from '../../../../../typer/behandling';
 import type { ForeldelsePeriodeSkjemeData } from '../../typer/foreldelse';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
 import SplittPeriode from './SplittPeriode';
+import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 
 describe('SplittPeriode - Foreldelse', () => {
     let user: UserEvent;
@@ -24,7 +23,6 @@ describe('SplittPeriode - Foreldelse', () => {
                 tom: '2021-04-30',
             },
         };
-        const behandling = mock<Behandling>({});
 
         const {
             getByAltText,
@@ -34,7 +32,7 @@ describe('SplittPeriode - Foreldelse', () => {
             queryByAltText,
             queryByText,
         } = render(
-            <SplittPeriode periode={periode} behandling={behandling} onBekreft={jest.fn()} />
+            <SplittPeriode periode={periode} behandling={lagBehandling()} onBekreft={jest.fn()} />
         );
 
         expect(queryByAltText('Del opp perioden')).toBeInTheDocument();

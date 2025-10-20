@@ -21,8 +21,9 @@ import * as React from 'react';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
-import { Aktsomhet, Fagsystem, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
-import { Behandlingstatus } from '../../../typer/behandling';
+import { Aktsomhet, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { RessursStatus } from '../../../typer/ressurs';
 
 jest.setTimeout(25000);
@@ -69,10 +70,6 @@ jest.mock('@tanstack/react-query', () => {
             invalidateQueries: jest.fn(),
         })),
     };
-});
-
-beforeEach(() => {
-    Element.prototype.scrollIntoView = jest.fn();
 });
 
 const perioder: VilkårsvurderingPeriode[] = [
@@ -146,20 +143,18 @@ const renderVilkårsvurderingContainer = (behandling: Behandling, fagsak: Fagsak
 
 describe('VilkårsvurderingContainer', () => {
     let user: UserEvent;
-
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
         setupMocks();
+        Element.prototype.scrollIntoView = jest.fn();
     });
 
     test('Totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
         setupUseBehandlingApiMock(vilkårsvurdering);
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
-            renderVilkårsvurderingContainer(behandling, fagsak);
+            renderVilkårsvurderingContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Tilbakekreving')).toBeInTheDocument();
@@ -328,19 +323,8 @@ describe('VilkårsvurderingContainer', () => {
 
     test('Vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
         setupUseBehandlingApiMock(vilkårsvurdering);
-
-        const fagsak = mock<Fagsak>({
-            fagsystem: Fagsystem.EF,
-            eksternFagsakId: '1',
-            ytelsestype: Ytelsetype.Barnetilsyn,
-        });
-        const behandling = mock<Behandling>({
-            eksternBrukId: '1',
-            behandlingsstegsinfo: [],
-        });
-
         const { getByText, getByRole, getByLabelText, queryAllByText } =
-            renderVilkårsvurderingContainer(behandling, fagsak);
+            renderVilkårsvurderingContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Tilbakekreving')).toBeInTheDocument();
@@ -433,13 +417,11 @@ describe('VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({
-            ytelsestype: Ytelsetype.Barnetrygd,
-        });
-
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } =
-            renderVilkårsvurderingContainer(behandling, fagsak);
+            renderVilkårsvurderingContainer(
+                lagBehandling(),
+                lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd })
+            );
 
         await waitFor(() => {
             expect(getByText('Tilbakekreving')).toBeInTheDocument();
@@ -577,17 +559,10 @@ describe('VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        const behandling = mock<Behandling>({
-            status: Behandlingstatus.FatterVedtak,
-            behandlingsstegsinfo: [],
-        });
-        const fagsak = mock<Fagsak>({
-            ytelsestype: Ytelsetype.Barnetrygd,
-        });
 
         const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -767,14 +742,9 @@ describe('VilkårsvurderingContainer', () => {
             ],
             rettsgebyr: 1199,
         });
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({
-            ytelsestype: Ytelsetype.Overgangsstønad,
-        });
-
         const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {

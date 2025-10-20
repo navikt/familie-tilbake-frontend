@@ -4,6 +4,7 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { VergeDto } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
+import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -16,7 +17,9 @@ import * as React from 'react';
 import VergeContainer from './VergeContainer';
 import { VergeProvider } from './VergeContext';
 import { Vergetype } from '../../../kodeverk/verge';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
+import { RessursStatus } from '../../../typer/ressurs';
 
 jest.mock('../../../api/http/HttpProvider', () => {
     return {
@@ -91,14 +94,10 @@ describe('VergeContainer', () => {
 
     test('Fyller ut advokat', async () => {
         setupMock(false, false, false);
-        const behandling = mock<Behandling>({
-            harVerge: false,
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText, queryAllByText } = renderVergeContainer(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -137,13 +136,9 @@ describe('VergeContainer', () => {
 
     test('Fyller ut verge for barn', async () => {
         setupMock(false, false, false);
-        const behandling = mock<Behandling>({
-            harVerge: false,
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
-            renderVergeContainer(behandling, fagsak);
+            renderVergeContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Verge')).toBeInTheDocument();
@@ -196,14 +191,10 @@ describe('VergeContainer', () => {
             orgNr: 'DummyOrg',
             begrunnelse: '',
         });
-        const behandling = mock<Behandling>({
-            harVerge: true,
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText, queryByLabelText } = renderVergeContainer(
-            behandling,
-            fagsak
+            lagBehandling({ harVerge: true }),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -233,13 +224,8 @@ describe('VergeContainer', () => {
             ident: '27106903129',
             begrunnelse: 'Verge er opprettet',
         });
-        const behandling = mock<Behandling>({
-            harVerge: true,
-        });
-        const fagsak = mock<Fagsak>();
-
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } =
-            renderVergeContainer(behandling, fagsak);
+            renderVergeContainer(lagBehandling({ harVerge: true }), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Verge')).toBeInTheDocument();
@@ -267,14 +253,10 @@ describe('VergeContainer', () => {
             orgNr: 'DummyOrg',
             begrunnelse: 'Bruker har engasjert advokat',
         });
-        const behandling = mock<Behandling>({
-            harVerge: true,
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
-            behandling,
-            fagsak
+            lagBehandling({ harVerge: true }),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -303,14 +285,9 @@ describe('VergeContainer', () => {
             ident: '27106903129',
             begrunnelse: '',
         });
-        const behandling = mock<Behandling>({
-            harVerge: true,
-        });
-        const fagsak = mock<Fagsak>();
-
         const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
-            behandling,
-            fagsak
+            lagBehandling({ harVerge: true }),
+            lagFagsak()
         );
 
         await waitFor(() => {

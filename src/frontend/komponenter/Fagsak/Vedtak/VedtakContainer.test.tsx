@@ -22,6 +22,8 @@ import * as React from 'react';
 import VedtakContainer from './VedtakContainer';
 import { VedtakProvider } from './VedtakContext';
 import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
@@ -165,7 +167,6 @@ const setupMock = (
 
 describe('VedtakContainer', () => {
     let user: UserEvent;
-
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
@@ -210,13 +211,8 @@ describe('VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<Behandling>({
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
-
         const { getByText, getAllByText, getByRole, queryByRole, queryByText } =
-            renderVedtakContainer(behandling, fagsak);
+            renderVedtakContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -342,15 +338,14 @@ describe('VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<Behandling>({
-            type: Behandlingstype.RevurderingTilbakekreving,
-            behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
-
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole, queryByText } =
-            renderVedtakContainer(behandling, fagsak);
+            renderVedtakContainer(
+                lagBehandling({
+                    type: Behandlingstype.RevurderingTilbakekreving,
+                    behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
+                }),
+                lagFagsak()
+            );
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -466,15 +461,15 @@ describe('VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<Behandling>({
-            type: Behandlingstype.RevurderingTilbakekreving,
-            behandlingsårsakstype: Behandlingårsak.RevurderingKlageKa,
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } =
-            renderVedtakContainer(behandling, fagsak);
+            renderVedtakContainer(
+                lagBehandling({
+                    type: Behandlingstype.RevurderingTilbakekreving,
+                    behandlingsårsakstype: Behandlingårsak.RevurderingKlageKa,
+                }),
+                lagFagsak()
+            );
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -587,15 +582,15 @@ describe('VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<Behandling>({
-            type: Behandlingstype.RevurderingTilbakekreving,
-            behandlingsårsakstype: Behandlingårsak.RevurderingKlageNfp,
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByText, queryByRole } =
-            renderVedtakContainer(behandling, fagsak);
+            renderVedtakContainer(
+                lagBehandling({
+                    type: Behandlingstype.RevurderingTilbakekreving,
+                    behandlingsårsakstype: Behandlingårsak.RevurderingKlageNfp,
+                }),
+                lagFagsak()
+            );
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -735,14 +730,10 @@ describe('VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<Behandling>({
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByTestId, queryByRole } = renderVedtakContainer(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -861,12 +852,11 @@ describe('VedtakContainer', () => {
             ],
             beregningsresultat
         );
-        const behandling = mock<Behandling>({
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
 
-        const { getByText, getByRole, queryByRole } = renderVedtakContainer(behandling, fagsak);
+        const { getByText, getByRole, queryByRole } = renderVedtakContainer(
+            lagBehandling(),
+            lagFagsak()
+        );
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();

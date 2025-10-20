@@ -21,6 +21,8 @@ import {
     Vilkårsresultat,
     Ytelsetype,
 } from '../../../../kodeverk';
+import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 
 jest.setTimeout(10000);
 
@@ -76,10 +78,6 @@ const renderVilkårsvurderingPeriodeSkjema = (
         </BehandlingProvider>
     );
 
-const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-const fagsak = mock<Fagsak>({
-    ytelsestype: Ytelsetype.Barnetrygd,
-});
 const periode: VilkårsvurderingPeriodeSkjemaData = {
     index: 'i2',
     feilutbetaltBeløp: 2333,
@@ -129,8 +127,8 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = renderVilkårsvurderingPeriodeSkjema(
-            behandling,
-            fagsak,
+            lagBehandling(),
+            lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
             vilkårsvurderingPeriode,
             false,
             behandletPerioder
@@ -244,7 +242,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, false);
+        } = renderVilkårsvurderingPeriodeSkjema(
+            lagBehandling(),
+            lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+            periode,
+            false
+        );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Kopier vilkårsvurdering fra')).not.toBeInTheDocument();
@@ -294,7 +297,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, false);
+        } = renderVilkårsvurderingPeriodeSkjema(
+            lagBehandling(),
+            lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+            periode,
+            false
+        );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -369,7 +377,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByRole,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, false);
+        } = renderVilkårsvurderingPeriodeSkjema(
+            lagBehandling(),
+            lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+            periode,
+            false
+        );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -488,7 +501,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Feilaktig - forsto', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, false);
+            renderVilkårsvurderingPeriodeSkjema(
+                lagBehandling(),
+                lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+                periode,
+                false
+            );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -538,7 +556,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Feilaktige - grov uaktsomhet - ingen grunn til reduksjon', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText, queryByTestId } =
-            renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, false);
+            renderVilkårsvurderingPeriodeSkjema(
+                lagBehandling(),
+                lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+                periode,
+                false
+            );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -613,7 +636,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, false);
+        } = renderVilkårsvurderingPeriodeSkjema(
+            lagBehandling(),
+            lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+            periode,
+            false
+        );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -720,7 +748,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Feilaktige - grov uaktsomhet - grunn til reduksjon - egendefinert', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, false);
+            renderVilkårsvurderingPeriodeSkjema(
+                lagBehandling(),
+                lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+                periode,
+                false
+            );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -820,7 +853,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, true);
+        } = renderVilkårsvurderingPeriodeSkjema(
+            lagBehandling(),
+            lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+            periode,
+            true
+        );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -927,7 +965,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ingen grunn til reduksjon', async () => {
         const { getByLabelText, getByRole, getByText, getByTestId, queryAllByText, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, true);
+            renderVilkårsvurderingPeriodeSkjema(
+                lagBehandling(),
+                lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+                periode,
+                true
+            );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -1011,7 +1054,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ikke tilbakekreves', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema(behandling, fagsak, periode, true);
+            renderVilkårsvurderingPeriodeSkjema(
+                lagBehandling(),
+                lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+                periode,
+                true
+            );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -1070,32 +1118,24 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('Åpner vurdert periode - god tro - beløp i behold', async () => {
-        const { getByLabelText, getByText } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
-                    fagsak={fagsak}
-                    periode={{
-                        ...periode,
-                        begrunnelse: 'Gitt i god tro',
-                        vilkårsvurderingsresultatInfo: {
-                            vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
-                            godTro: {
-                                begrunnelse: 'Deler av beløpet er i behold',
-                                beløpErIBehold: true,
-                                beløpTilbakekreves: 699,
-                            },
-                        },
-                    }}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={true}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
-                />
-            </BehandlingProvider>
+        const { getByLabelText, getByText } = renderVilkårsvurderingPeriodeSkjema(
+            lagBehandling(),
+            lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+            {
+                ...periode,
+                begrunnelse: 'Gitt i god tro',
+                vilkårsvurderingsresultatInfo: {
+                    vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
+                    godTro: {
+                        begrunnelse: 'Deler av beløpet er i behold',
+                        beløpErIBehold: true,
+                        beløpTilbakekreves: 699,
+                    },
+                },
+            },
+            true
         );
+
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Gitt i god tro');
         expect(
@@ -1109,43 +1149,33 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('Åpner vurdert periode - mangelfulle - simpel uaktsomhet - under 4 rettsgebyr', async () => {
-        const { getByLabelText, getByTestId, getByText } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
-                    fagsak={fagsak}
-                    periode={{
-                        ...periode,
-                        begrunnelse: 'Gitt mangelfulle opplysninger',
-                        vilkårsvurderingsresultatInfo: {
-                            vilkårsvurderingsresultat:
-                                Vilkårsresultat.MangelfulleOpplysningerFraBruker,
-                            aktsomhet: {
-                                begrunnelse: 'Vurdert aktsomhet til simpel',
-                                aktsomhet: Aktsomhet.SimpelUaktsomhet,
-                                tilbakekrevSmåbeløp: true,
-                                særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
-                                særligeGrunner: [
-                                    { særligGrunn: SærligeGrunner.GradAvUaktsomhet },
-                                    { særligGrunn: SærligeGrunner.StørrelseBeløp },
-                                    {
-                                        særligGrunn: SærligeGrunner.Annet,
-                                        begrunnelse: 'Dette er en annen begrunnelse',
-                                    },
-                                ],
-                                særligeGrunnerTilReduksjon: true,
-                                andelTilbakekreves: 33,
+        const { getByLabelText, getByTestId, getByText } = renderVilkårsvurderingPeriodeSkjema(
+            lagBehandling(),
+            lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+            {
+                ...periode,
+                begrunnelse: 'Gitt mangelfulle opplysninger',
+                vilkårsvurderingsresultatInfo: {
+                    vilkårsvurderingsresultat: Vilkårsresultat.MangelfulleOpplysningerFraBruker,
+                    aktsomhet: {
+                        begrunnelse: 'Vurdert aktsomhet til simpel',
+                        aktsomhet: Aktsomhet.SimpelUaktsomhet,
+                        tilbakekrevSmåbeløp: true,
+                        særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
+                        særligeGrunner: [
+                            { særligGrunn: SærligeGrunner.GradAvUaktsomhet },
+                            { særligGrunn: SærligeGrunner.StørrelseBeløp },
+                            {
+                                særligGrunn: SærligeGrunner.Annet,
+                                begrunnelse: 'Dette er en annen begrunnelse',
                             },
-                        },
-                    }}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={true}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
-                />
-            </BehandlingProvider>
+                        ],
+                        særligeGrunnerTilReduksjon: true,
+                        andelTilbakekreves: 33,
+                    },
+                },
+            },
+            true
         );
 
         await waitFor(() => {
@@ -1184,8 +1214,8 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Validering vises når man forsøker å gå videre uten å fylle inn påkrevde felter', async () => {
         const { getByRole, queryAllByText } = renderVilkårsvurderingPeriodeSkjema(
-            behandling,
-            fagsak,
+            lagBehandling(),
+            lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
             periode,
             false
         );

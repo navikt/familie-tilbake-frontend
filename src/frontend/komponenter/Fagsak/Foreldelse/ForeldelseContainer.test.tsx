@@ -16,7 +16,9 @@ import * as React from 'react';
 
 import ForeldelseContainer from './ForeldelseContainer';
 import { ForeldelseProvider } from './ForeldelseContext';
-import { Fagsystem, Foreldelsevurdering } from '../../../kodeverk';
+import { Foreldelsevurdering } from '../../../kodeverk';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
@@ -116,7 +118,6 @@ const setupMock = (
 
 describe('ForeldelseContainer', () => {
     let user: UserEvent;
-
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
@@ -127,11 +128,8 @@ describe('ForeldelseContainer', () => {
             foreldetPerioder: perioder,
         };
         setupMock(false, false, false, foreldelse);
-        const fagsak = mock<Fagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
-        const behandling = mock<Behandling>({ eksternBrukId: '1' });
-
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
-            renderForeldelseContainer(behandling, fagsak);
+            renderForeldelseContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
@@ -231,12 +229,10 @@ describe('ForeldelseContainer', () => {
                 },
             ],
         });
-        const behandling = mock<Behandling>();
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText, queryByText } = renderForeldelseContainer(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -323,12 +319,10 @@ describe('ForeldelseContainer', () => {
                 },
             ],
         });
-        const behandling = mock<Behandling>({ status: Behandlingstatus.FatterVedtak });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText } = renderForeldelseContainer(
-            behandling,
-            fagsak
+            lagBehandling({ status: Behandlingstatus.FatterVedtak }),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -436,11 +430,7 @@ describe('ForeldelseContainer', () => {
 
     test('Vis autoutført', async () => {
         setupMock(false, false, true);
-
-        const behandling = mock<Behandling>();
-        const fagsak = mock<Fagsak>();
-
-        const { getByText, getByRole } = renderForeldelseContainer(behandling, fagsak);
+        const { getByText, getByRole } = renderForeldelseContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();

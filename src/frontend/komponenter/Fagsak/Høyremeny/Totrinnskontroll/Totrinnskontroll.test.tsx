@@ -15,6 +15,8 @@ import * as React from 'react';
 
 import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
+import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { Behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 
@@ -40,7 +42,7 @@ const renderTotrinnskontroll = (behandling: Behandling, fagsak: Fagsak): RenderR
         </TotrinnskontrollProvider>
     );
 
-const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkontroll): void => {
+const setupMocks = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkontroll): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerTotrinnkontrollKall: (): Promise<Ressurs<Totrinnkontroll>> => {
             const ressurs = mock<Ressurs<Totrinnkontroll>>({
@@ -73,7 +75,7 @@ describe('Totrinnskontroll', () => {
     });
 
     test('Vis og fyll ut - godkjenner', async () => {
-        setupMock(false, {
+        setupMocks(false, {
             totrinnsstegsinfo: [
                 {
                     behandlingssteg: Behandlingssteg.Fakta,
@@ -92,14 +94,10 @@ describe('Totrinnskontroll', () => {
                 },
             ],
         });
-        const behandling = mock<Behandling>({
-            kanEndres: true,
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -142,7 +140,7 @@ describe('Totrinnskontroll', () => {
     });
 
     test('Vis og fyll ut - sender tilbake', async () => {
-        setupMock(false, {
+        setupMocks(false, {
             totrinnsstegsinfo: [
                 {
                     behandlingssteg: Behandlingssteg.Fakta,
@@ -166,14 +164,9 @@ describe('Totrinnskontroll', () => {
                 },
             ],
         });
-        const behandling = mock<Behandling>({
-            kanEndres: true,
-        });
-        const fagsak = mock<Fagsak>();
-
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -231,7 +224,7 @@ describe('Totrinnskontroll', () => {
     });
 
     test('Vis utfylt - sendt tilbake', async () => {
-        setupMock(true, {
+        setupMocks(true, {
             totrinnsstegsinfo: [
                 {
                     behandlingssteg: Behandlingssteg.Fakta,
@@ -255,14 +248,10 @@ describe('Totrinnskontroll', () => {
                 },
             ],
         });
-        const behandling = mock<Behandling>({
-            kanEndres: true,
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -293,7 +282,7 @@ describe('Totrinnskontroll', () => {
     });
 
     test('Vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
-        setupMock(false, {
+        setupMocks(false, {
             totrinnsstegsinfo: [
                 {
                     behandlingssteg: Behandlingssteg.Fakta,
@@ -317,14 +306,10 @@ describe('Totrinnskontroll', () => {
                 },
             ],
         });
-        const behandling = mock<Behandling>({
-            kanEndres: false,
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
-            behandling,
-            fagsak
+            lagBehandling({ kanEndres: false }),
+            lagFagsak()
         );
 
         await waitFor(() => {

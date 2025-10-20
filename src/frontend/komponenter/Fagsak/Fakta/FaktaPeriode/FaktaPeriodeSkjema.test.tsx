@@ -1,18 +1,17 @@
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { HendelseUndertype } from '../../../../kodeverk';
-import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
 import { render, screen } from '@testing-library/react';
-import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
-import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
-import { Fagsystem, HendelseType } from '../../../../kodeverk';
 import { FaktaProvider } from '../FaktaContext';
+import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
+import { HendelseType } from '../../../../kodeverk';
+import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
@@ -24,19 +23,12 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const behandling = mock<Behandling>({ eksternBrukId: '1' });
-const fagsak = mock<Fagsak>({
-    institusjon: undefined,
-    fagsystem: Fagsystem.EF,
-    eksternFagsakId: '1',
-});
-
 const renderComponent = (
     periode: FaktaPeriodeSkjemaData,
     hendelseTyper: HendelseType[] | undefined
 ): RenderResult => {
     return render(
-        <FaktaProvider behandling={behandling} fagsak={fagsak}>
+        <FaktaProvider behandling={lagBehandling()} fagsak={lagFagsak()}>
             <table>
                 <tbody>
                     <FaktaPeriodeSkjema
