@@ -204,7 +204,7 @@ describe('Totrinnskontroll', () => {
         setupMocks(true, {
             totrinnsstegsinfo: [
                 lagTotrinnskontrollFaktainfo(true),
-                lagTotrinnskontrollForeldelsesinfo(true, 'Foreldelse må vurderes på nytt'),
+                lagTotrinnskontrollForeldelsesinfo(false, 'Foreldelse må vurderes på nytt'),
                 lagTotrinnskontrollVilkårsvurderingsinfo(true),
                 lagTotrinnskontrollForeslåVedtaksinfo(false, 'Vedtaket må vurderes på nytt'),
             ],
