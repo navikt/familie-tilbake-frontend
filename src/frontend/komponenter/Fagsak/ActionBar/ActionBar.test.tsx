@@ -18,15 +18,19 @@ jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-const renderActionBar = (isLoading: boolean = false): RenderResult =>
+const renderActionBar = (
+    onForrige: () => void,
+    onNeste: () => void,
+    isLoading: boolean = false
+): RenderResult =>
     render(
         <ActionBar
             stegtekst="Steg 2 av 5"
             forrigeAriaLabel="gå tilbake til faktasteget"
             nesteAriaLabel="gå videre til vilkårsvurderingssteget"
-            onNeste={jest.fn()}
+            onNeste={onNeste}
             isLoading={isLoading}
-            onForrige={undefined}
+            onForrige={onForrige}
         />
     );
 
@@ -41,16 +45,7 @@ describe('ActionBar', () => {
     test('Kaller ikke onNeste eller onForrige når isLoading = true', () => {
         const onNeste = jest.fn();
         const onForrige = jest.fn();
-        render(
-            <ActionBar
-                stegtekst="Steg 2 av 5"
-                forrigeAriaLabel="Gå tilbake til faktasteget"
-                nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
-                onNeste={onNeste}
-                onForrige={onForrige}
-                isLoading
-            />
-        );
+        renderActionBar(onForrige, onNeste, true);
 
         fireEvent.click(
             screen.getByRole('button', { name: /gå videre til vilkårsvurderingssteget/i })
@@ -62,7 +57,7 @@ describe('ActionBar', () => {
     });
 
     test('Har ikke knapp tilbake til Tilbakekrevingen når ikke på inaktiv side', () => {
-        renderActionBar(false);
+        renderActionBar(jest.fn(), jest.fn(), false);
         expect(screen.queryByRole('link', { name: /gå til behandling/i })).not.toBeInTheDocument();
     });
 });
