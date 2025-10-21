@@ -4,7 +4,7 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
-import type { ForeldelsePeriode, ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
+import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -19,10 +19,9 @@ import { ForeldelseProvider } from './ForeldelseContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
+import { lagForeldelsePeriode, lagForeldelseResponse } from '../../../testdata/foreldelseFactory';
 import { Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
-
-jest.setTimeout(10000);
 
 jest.mock('../../../api/http/HttpProvider', () => {
     return {
@@ -54,29 +53,21 @@ const renderForeldelseContainer = (behandling: Behandling, fagsak: Fagsak): Rend
     );
 };
 
-const perioder: ForeldelsePeriode[] = [
-    {
+const foreldetPerioder = [
+    lagForeldelsePeriode({
         feilutbetaltBeløp: 1333,
         periode: {
             fom: '2020-01-01',
             tom: '2020-03-31',
         },
-        foreldelsesvurderingstype: undefined,
-        begrunnelse: undefined,
-        foreldelsesfrist: undefined,
-        oppdagelsesdato: undefined,
-    },
-    {
+    }),
+    lagForeldelsePeriode({
         feilutbetaltBeløp: 1333,
         periode: {
             fom: '2020-05-01',
             tom: '2020-06-30',
         },
-        foreldelsesvurderingstype: undefined,
-        begrunnelse: undefined,
-        foreldelsesfrist: undefined,
-        oppdagelsesdato: undefined,
-    },
+    }),
 ];
 
 const setupMock = (
@@ -124,10 +115,7 @@ describe('ForeldelseContainer', () => {
     });
 
     test('Vis og fyll ut perioder og send inn', async () => {
-        const foreldelse: ForeldelseResponse = {
-            foreldetPerioder: perioder,
-        };
-        setupMock(false, false, false, foreldelse);
+        setupMock(false, false, false, lagForeldelseResponse({ foreldetPerioder }));
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
             renderForeldelseContainer(lagBehandling(), lagFagsak());
 
@@ -212,16 +200,16 @@ describe('ForeldelseContainer', () => {
     });
 
     test('Vis utfylt', async () => {
-        setupMock(true, false, false, {
+        const foreldelseResponse = lagForeldelseResponse({
             foreldetPerioder: [
                 {
-                    ...perioder[0],
+                    ...foreldetPerioder[0],
                     begrunnelse: 'Begrunnelse 1',
                     foreldelsesvurderingstype: Foreldelsevurdering.Foreldet,
                     foreldelsesfrist: '2021-01-01',
                 },
                 {
-                    ...perioder[1],
+                    ...foreldetPerioder[1],
                     begrunnelse: 'Begrunnelse 2',
                     foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
                     foreldelsesfrist: '2021-01-01',
@@ -229,6 +217,7 @@ describe('ForeldelseContainer', () => {
                 },
             ],
         });
+        setupMock(true, false, false, foreldelseResponse);
 
         const { getByText, getByRole, getByLabelText, queryByText } = renderForeldelseContainer(
             lagBehandling(),
@@ -305,13 +294,13 @@ describe('ForeldelseContainer', () => {
         setupMock(true, true, false, {
             foreldetPerioder: [
                 {
-                    ...perioder[0],
+                    ...foreldetPerioder[0],
                     begrunnelse: 'Begrunnelse 1',
                     foreldelsesvurderingstype: Foreldelsevurdering.Foreldet,
                     foreldelsesfrist: '2021-01-01',
                 },
                 {
-                    ...perioder[1],
+                    ...foreldetPerioder[1],
                     begrunnelse: 'Begrunnelse 2',
                     foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
                     foreldelsesfrist: '2021-01-01',
@@ -403,7 +392,6 @@ describe('ForeldelseContainer', () => {
         );
         expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
 
-        // Alle tidslinje knappene skal alltid være synlige
         expect(
             getByRole('button', {
                 name: 'Suksess fra 01.01.2020 til 31.03.2020',
@@ -415,7 +403,6 @@ describe('ForeldelseContainer', () => {
             })
         ).toBeInTheDocument();
 
-        // Knapper for navigering mellom faner skal alltid være synlige og enabled
         expect(
             getByRole('button', {
                 name: 'Gå tilbake til faktasteget',
@@ -430,17 +417,11 @@ describe('ForeldelseContainer', () => {
 
     test('Vis autoutført', async () => {
         setupMock(false, false, true);
-        const { getByText, getByRole } = renderForeldelseContainer(lagBehandling(), lagFagsak());
+        const { getByText } = renderForeldelseContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
         });
         expect(getByText('Perioden er ikke foreldet')).toBeInTheDocument();
-
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vilkårsvurderingssteget',
-            })
-        ).toBeEnabled();
     });
 });

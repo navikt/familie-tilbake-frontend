@@ -1,4 +1,3 @@
-import type { ForeldelsePeriodeSkjemeData } from '../../typer/foreldelse';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';
@@ -7,6 +6,7 @@ import * as React from 'react';
 
 import SplittPeriode from './SplittPeriode';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
+import { lagForeldelsePeriodeSkjemaData } from '../../../../../testdata/foreldelseFactory';
 
 describe('SplittPeriode - Foreldelse', () => {
     let user: UserEvent;
@@ -15,15 +15,6 @@ describe('SplittPeriode - Foreldelse', () => {
     });
 
     test('Åpning av modal', async () => {
-        const periode: ForeldelsePeriodeSkjemeData = {
-            index: 'i1',
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2021-01-01',
-                tom: '2021-04-30',
-            },
-        };
-
         const {
             getByAltText,
             getByLabelText,
@@ -32,7 +23,11 @@ describe('SplittPeriode - Foreldelse', () => {
             queryByAltText,
             queryByText,
         } = render(
-            <SplittPeriode periode={periode} behandling={lagBehandling()} onBekreft={jest.fn()} />
+            <SplittPeriode
+                periode={lagForeldelsePeriodeSkjemaData()}
+                behandling={lagBehandling()}
+                onBekreft={jest.fn()}
+            />
         );
 
         expect(queryByAltText('Del opp perioden')).toBeInTheDocument();

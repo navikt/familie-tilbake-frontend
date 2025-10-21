@@ -13,6 +13,7 @@ import * as React from 'react';
 import ForeldelsePeriodeSkjema from './ForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagForeldelsePeriodeSkjemaData } from '../../../../testdata/foreldelseFactory';
 
 jest.mock('../../../../api/http/HttpProvider', () => {
     return {
@@ -37,14 +38,6 @@ jest.mock('../../../../context/BehandlingContext', () => {
         }),
     };
 });
-const periode: ForeldelsePeriodeSkjemeData = {
-    index: 'i1',
-    feilutbetaltBeløp: 1333,
-    periode: {
-        fom: '2021-01-01',
-        tom: '2021-04-30',
-    },
-};
 
 const renderForeldelsePeriodeSkjema = (
     behandling: Behandling,
@@ -63,7 +56,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
     test('Vurderer periode ikke foreldet ', async () => {
         const { getByRole, getByText, getByLabelText, queryAllByText, queryByLabelText } =
-            renderForeldelsePeriodeSkjema(lagBehandling(), periode);
+            renderForeldelsePeriodeSkjema(lagBehandling(), lagForeldelsePeriodeSkjemaData());
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
@@ -98,7 +91,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
     test('Vurderer periode foreldet ', async () => {
         const { getByLabelText, getByRole, getByText, queryByLabelText, queryAllByText } =
-            renderForeldelsePeriodeSkjema(lagBehandling(), periode);
+            renderForeldelsePeriodeSkjema(lagBehandling(), lagForeldelsePeriodeSkjemaData());
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
@@ -140,7 +133,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
     test('Vurderer periode til å bruke tilleggsfrist ', async () => {
         const { getByText, getByRole, getByLabelText, queryByLabelText, queryAllByText } =
-            renderForeldelsePeriodeSkjema(lagBehandling(), periode);
+            renderForeldelsePeriodeSkjema(lagBehandling(), lagForeldelsePeriodeSkjemaData());
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
@@ -188,17 +181,14 @@ describe('ForeldelsePeriodeSkjema', () => {
     });
 
     test('Åpner vurdert periode med tilleggsfrist ', async () => {
-        const vurdertPeriode: ForeldelsePeriodeSkjemeData = {
-            ...periode,
-            foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
-            begrunnelse: 'Vurdert',
-            foreldelsesfrist: '2019-12-04',
-            oppdagelsesdato: '2019-09-18',
-        };
-
         const { getByLabelText, getByText, queryByLabelText } = renderForeldelsePeriodeSkjema(
             lagBehandling(),
-            vurdertPeriode
+            lagForeldelsePeriodeSkjemaData({
+                foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
+                begrunnelse: 'Vurdert',
+                foreldelsesfrist: '2019-12-04',
+                oppdagelsesdato: '2019-09-18',
+            })
         );
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
