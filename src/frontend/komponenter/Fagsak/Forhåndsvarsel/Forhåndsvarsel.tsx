@@ -14,12 +14,16 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
-import { useDokumentApi } from '../../../api/dokument';
 import { useBehandling } from '../../../context/BehandlingContext';
+import {
+    bestillBrevMutation,
+    forhåndsvisBrevMutation,
+} from '../../../generated/@tanstack/react-query.gen';
 import { DokumentMal } from '../../../kodeverk';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { SYNLIGE_STEG } from '../../../utils/sider';
@@ -40,7 +44,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     const navigate = useNavigate();
 
     const { actionBarStegtekst } = useBehandling();
-    const { bestillBrev, forhåndsvisBrev } = useDokumentApi();
+    const queryClient = useQueryClient();
 
     const methods = useForm({
         reValidateMode: 'onBlur',
@@ -71,19 +75,50 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         );
     };
 
+    const sendForhåndsvarselMutation = useMutation({
+        ...bestillBrevMutation(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['hentBehandling', behandling.behandlingId],
+            });
+            // Gå til neste steg etter vellykket sending
+            gåTilNeste();
+        },
+        onError: error => {
+            console.error('Feil ved sending av forhåndsvarsel:', error);
+            // Håndter feil (toast notification, etc.)
+        },
+    });
+
     const sendForhåndsvarsel = handleSubmit(data => {
-        bestillBrev({
-            behandlingId: behandling.behandlingId,
-            brevmalkode: DokumentMal.Varsel,
-            fritekst: data.fritekst,
+        sendForhåndsvarselMutation.mutate({
+            body: {
+                behandlingId: behandling.behandlingId,
+                brevmalkode: DokumentMal.Varsel,
+                fritekst: data.fritekst,
+            },
         });
     });
 
+    const seForhåndsvisningMutation = useMutation({
+        ...forhåndsvisBrevMutation(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['hentBehandling'],
+            });
+        },
+        onError: error => {
+            console.error('Feil ved forhåndsvisning av brev:', error);
+        },
+    });
+
     const seForhåndsvisning = (): void => {
-        forhåndsvisBrev({
-            behandlingId: behandling.behandlingId,
-            brevmalkode: DokumentMal.Varsel,
-            fritekst: methods.getValues('fritekst'),
+        seForhåndsvisningMutation.mutate({
+            body: {
+                behandlingId: behandling.behandlingId,
+                brevmalkode: DokumentMal.Varsel,
+                fritekst: methods.getValues('fritekst'),
+            },
         });
     };
 
