@@ -11,15 +11,10 @@ import * as React from 'react';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
 import { BehandlingProvider } from '../../../../context/BehandlingContext';
-import {
-    Aktsomhet,
-    HendelseType,
-    SærligeGrunner,
-    Vilkårsresultat,
-    Ytelsetype,
-} from '../../../../kodeverk';
+import { Aktsomhet, SærligeGrunner, Vilkårsresultat, Ytelsetype } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
+import { lagVilkårsvurderingsperiode } from '../../../../testdata/vilkårsvurderingFactory';
 
 jest.setTimeout(10000);
 
@@ -54,16 +49,7 @@ jest.mock('../VilkårsvurderingContext', () => {
     };
 });
 
-const periode: VilkårsvurderingPeriodeSkjemaData = {
-    index: 'i2',
-    feilutbetaltBeløp: 2333,
-    hendelsestype: HendelseType.Annet,
-    foreldet: false,
-    periode: {
-        fom: '2021-01-01',
-        tom: '2021-04-30',
-    },
-};
+const periode = lagVilkårsvurderingsperiode();
 const fagsak = lagFagsak({ ytelsestype: Ytelsetype.Overgangsstønad });
 
 describe('VilkårsvurderingPeriodeSkjema', () => {
@@ -1364,8 +1350,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
                     fagsak={fagsak}
-                    periode={{
-                        ...periode,
+                    periode={lagVilkårsvurderingsperiode({
                         begrunnelse: 'Gitt i god tro',
                         vilkårsvurderingsresultatInfo: {
                             vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
@@ -1375,7 +1360,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                                 beløpTilbakekreves: 699,
                             },
                         },
-                    }}
+                    })}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
@@ -1405,8 +1390,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
                     fagsak={fagsak}
-                    periode={{
-                        ...periode,
+                    periode={lagVilkårsvurderingsperiode({
                         begrunnelse: 'Gitt mangelfulle opplysninger',
                         vilkårsvurderingsresultatInfo: {
                             vilkårsvurderingsresultat:
@@ -1428,7 +1412,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                                 andelTilbakekreves: 33,
                             },
                         },
-                    }}
+                    })}
                     perioder={[periode]}
                     pendingPeriode={undefined}
                     settPendingPeriode={jest.fn()}

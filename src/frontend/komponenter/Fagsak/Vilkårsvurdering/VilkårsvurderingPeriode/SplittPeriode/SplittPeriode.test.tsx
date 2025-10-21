@@ -1,4 +1,3 @@
-import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/vilkårsvurdering';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';
@@ -7,8 +6,8 @@ import * as React from 'react';
 
 import SplittPeriode from './SplittPeriode';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
-import { HendelseType } from '../../../../../kodeverk';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
+import { lagVilkårsvurderingsperiode } from '../../../../../testdata/vilkårsvurderingFactory';
 
 describe('SplittPeriode - Vilkårsvurdering', () => {
     let user: UserEvent;
@@ -18,17 +17,6 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
     });
 
     test('Åpning av modal', async () => {
-        const periode: VilkårsvurderingPeriodeSkjemaData = {
-            hendelsestype: HendelseType.Annet,
-            index: 'i1',
-            foreldet: false,
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2021-01-01',
-                tom: '2021-04-30',
-            },
-        };
-
         const {
             getByAltText,
             getByLabelText,
@@ -39,7 +27,7 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
         } = render(
             <HttpProvider>
                 <SplittPeriode
-                    periode={periode}
+                    periode={lagVilkårsvurderingsperiode()}
                     behandling={lagBehandling()}
                     onBekreft={jest.fn()}
                 />
