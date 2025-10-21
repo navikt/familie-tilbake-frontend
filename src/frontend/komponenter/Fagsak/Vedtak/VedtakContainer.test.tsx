@@ -21,9 +21,15 @@ import * as React from 'react';
 
 import VedtakContainer from './VedtakContainer';
 import { VedtakProvider } from './VedtakContext';
-import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
+import { Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
+import {
+    lagOppsummeringAvsnitt,
+    lagPeriode2Avsnitt,
+    lagPeriodeAvsnitt,
+    lagVedaksbrevUnderavsnitt,
+} from '../../../testdata/vedtakFactory';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
@@ -97,27 +103,6 @@ const beregningsresultat: Beregningsresultat = {
     vedtaksresultat: Vedtaksresultat.DelvisTilbakebetaling,
     vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.Nei },
 };
-const avsnitt: VedtaksbrevAvsnitt[] = [
-    {
-        avsnittstype: Avsnittstype.Oppsummering,
-        overskrift: 'Du må betale tilbake barnetrygden',
-        underavsnittsliste: [],
-    },
-    {
-        avsnittstype: Avsnittstype.Periode,
-        overskrift: 'Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020',
-        underavsnittsliste: [],
-        fom: '2020-01-01',
-        tom: '2020-03-31',
-    },
-    {
-        avsnittstype: Avsnittstype.Periode,
-        overskrift: 'Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020',
-        underavsnittsliste: [],
-        fom: '2020-05-01',
-        tom: '2020-06-30',
-    },
-];
 
 const setupMock = (
     lesevisning: boolean,
@@ -173,44 +158,25 @@ describe('VedtakContainer', () => {
     });
 
     test('Vis og fyll ut - 1 fritekst påkrevet', async () => {
-        setupMock(
-            false,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                }),
+            ]),
+        ];
+        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getAllByText, getByRole, queryByRole, queryByText } =
             renderVedtakContainer(lagBehandling(), lagFagsak());
 
@@ -293,51 +259,31 @@ describe('VedtakContainer', () => {
     });
 
     test('Vis og fyll ut - 2 fritekst påkrevet - revurdering nye opplysninger', async () => {
-        setupMock(
-            false,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                        {
-                            underavsnittstype: Underavsnittstype.Vilkår,
-                            overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
-                            brødtekst: 'Dette er en tekst!',
-                            fritekstTillatt: false,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Vilkår,
+                    overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
+                    brødtekst: 'Dette er en tekst!',
+                }),
+            ]),
+        ];
+        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole, queryByText } =
             renderVedtakContainer(
                 lagBehandling({
@@ -416,51 +362,31 @@ describe('VedtakContainer', () => {
     });
 
     test('Vis og fyll ut - 2 fritekst påkrevet - revurdering klage KA', async () => {
-        setupMock(
-            false,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                        {
-                            underavsnittstype: Underavsnittstype.Vilkår,
-                            overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
-                            brødtekst: 'Dette er en tekst!',
-                            fritekstTillatt: false,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Vilkår,
+                    overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
+                    brødtekst: 'Dette er en tekst!',
+                }),
+            ]),
+        ];
+        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } =
             renderVedtakContainer(
@@ -537,52 +463,31 @@ describe('VedtakContainer', () => {
     });
 
     test('Vis og fyll ut - 1 fritekst påkrevet - fyller ut 1 ekstra fritekst - revurdering NFP', async () => {
-        setupMock(
-            false,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                        {
-                            underavsnittstype: Underavsnittstype.Vilkår,
-                            overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
-                            brødtekst: 'Dette er en tekst!',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
-
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                }),
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Vilkår,
+                    overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
+                    brødtekst: 'Dette er en tekst!',
+                    fritekstTillatt: true,
+                }),
+            ]),
+        ];
+        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getByRole, getAllByRole, getByTestId, queryByText, queryByRole } =
             renderVedtakContainer(
                 lagBehandling({
@@ -690,46 +595,27 @@ describe('VedtakContainer', () => {
     });
 
     test('Vis utfylt - 1 fritekst påkrevet - 1 ekstra fritekst', async () => {
-        setupMock(
-            false,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                            fritekst: 'Denne friteksten var påkrevet',
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                            fritekst: 'Denne friteksten var lagt til ekstra',
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                    fritekst: 'Denne friteksten var påkrevet',
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekst: 'Denne friteksten var lagt til ekstra',
+                }),
+            ]),
+        ];
+        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
 
         const { getByText, getByRole, getByTestId, queryByRole } = renderVedtakContainer(
             lagBehandling(),
@@ -812,46 +698,27 @@ describe('VedtakContainer', () => {
     });
 
     test('Vis utfylt - lesevisning', async () => {
-        setupMock(
-            true,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                            fritekst: 'Denne friteksten var påkrevet',
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                            fritekst: 'Denne friteksten var lagt til ekstra',
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                    fritekst: 'Denne friteksten var påkrevet',
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekst: 'Denne friteksten var lagt til ekstra',
+                }),
+            ]),
+        ];
+        setupMock(true, vedtaksbrevAvsnitt, beregningsresultat);
 
         const { getByText, getByRole, queryByRole } = renderVedtakContainer(
             lagBehandling(),
