@@ -3,7 +3,8 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { TogglesHook } from '../../../context/TogglesContext';
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
-import type { FaktaPeriode, FaktaResponse } from '../../../typer/tilbakekrevingstyper';
+import type { Ressurs } from '../../../typer/ressurs';
+import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -18,8 +19,8 @@ import { FaktaProvider } from './FaktaContext';
 import { HendelseType, HendelseUndertype, Ytelsetype } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
-import { HarBrukerUttaltSegValg, Tilbakekrevingsvalg } from '../../../typer/tilbakekrevingstyper';
+import { lagFaktaPeriode, lagFaktaResponse } from '../../../testdata/faktaFactory';
+import { RessursStatus } from '../../../typer/ressurs';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
@@ -55,56 +56,29 @@ const renderFaktaContainer = (
     );
 };
 
-const perioder: FaktaPeriode[] = [
-    {
-        feilutbetaltBeløp: 1333,
+const feilutbetaltePerioder = [
+    lagFaktaPeriode({
         periode: {
             fom: '2020-01-01',
             tom: '2020-03-31',
         },
-        hendelsestype: undefined,
-        hendelsesundertype: undefined,
-    },
-    {
         feilutbetaltBeløp: 1333,
+    }),
+    lagFaktaPeriode({
         periode: {
             fom: '2020-05-01',
             tom: '2020-07-31',
         },
-        hendelsestype: undefined,
-        hendelsesundertype: undefined,
-    },
-    {
         feilutbetaltBeløp: 1333,
+    }),
+    lagFaktaPeriode({
         periode: {
             fom: '2020-09-01',
             tom: '2020-10-31',
         },
-        hendelsestype: undefined,
-        hendelsesundertype: undefined,
-    },
+        feilutbetaltBeløp: 1333,
+    }),
 ];
-const fakta: FaktaResponse = {
-    feilutbetaltePerioder: perioder,
-    revurderingsvedtaksdato: '2021-02-05',
-    totalFeilutbetaltPeriode: {
-        fom: '2020-01-01',
-        tom: '2020-10-31',
-    },
-    totaltFeilutbetaltBeløp: 3999,
-    varsletBeløp: 5200,
-    faktainfo: {
-        revurderingsårsak: 'Nye opplysninger',
-        revurderingsresultat: 'Opphør av ytelsen',
-        tilbakekrevingsvalg: Tilbakekrevingsvalg.OpprettTilbakekrevingMedVarsel,
-        konsekvensForYtelser: ['Reduksjon av ytelsen', 'Feilutbetaling'],
-    },
-    begrunnelse: undefined,
-    vurderingAvBrukersUttalelse: {
-        harBrukerUttaltSeg: HarBrukerUttaltSegValg.IkkeVurdert,
-    },
-    opprettetTid: '2020-01-01',
-};
 
 const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: FaktaResponse): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
@@ -146,7 +120,7 @@ describe('FaktaContainer', () => {
     });
 
     test('Vis og fyll ut skjema', async () => {
-        setupMock(false, false, fakta);
+        setupMock(false, false, lagFaktaResponse({ feilutbetaltePerioder }));
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } =
             renderFaktaContainer(lagBehandling(), Ytelsetype.Barnetrygd, lagFagsak());
@@ -232,8 +206,8 @@ describe('FaktaContainer', () => {
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('fakta');
     });
 
-    test('- vis og fyll ut skjema - behandle perioder samlet', async () => {
-        setupMock(false, false, fakta);
+    test('Vis og fyll ut skjema - behandle perioder samlet', async () => {
+        setupMock(false, false, lagFaktaResponse({ feilutbetaltePerioder }));
 
         const { getByText, getByLabelText, getByRole, getAllByRole, getByTestId, queryAllByText } =
             renderFaktaContainer(lagBehandling(), Ytelsetype.Barnetrygd, lagFagsak());
@@ -298,28 +272,28 @@ describe('FaktaContainer', () => {
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('fakta');
     });
 
-    test('- vis utfylt skjema - Barnetrygd', async () => {
-        setupMock(true, false, {
-            ...fakta,
+    test('Vis utfylt skjema - Barnetrygd', async () => {
+        const faktaResponse = lagFaktaResponse({
+            begrunnelse: 'Dette er en test-begrunnelse',
             feilutbetaltePerioder: [
                 {
-                    ...perioder[0],
+                    ...feilutbetaltePerioder[0],
                     hendelsestype: HendelseType.BosattIRiket,
                     hendelsesundertype: HendelseUndertype.BrukerBorIkkeINorge,
                 },
                 {
-                    ...perioder[1],
+                    ...feilutbetaltePerioder[1],
                     hendelsestype: HendelseType.Annet,
                     hendelsesundertype: HendelseUndertype.AnnetFritekst,
                 },
                 {
-                    ...perioder[2],
+                    ...feilutbetaltePerioder[2],
                     hendelsestype: HendelseType.BarnsAlder,
                     hendelsesundertype: HendelseUndertype.BarnOver6År,
                 },
             ],
-            begrunnelse: 'Dette er en test-begrunnelse',
         });
+        setupMock(true, false, faktaResponse);
 
         const { getByText, getByLabelText, getByTestId, getByRole } = renderFaktaContainer(
             lagBehandling(),
@@ -353,28 +327,28 @@ describe('FaktaContainer', () => {
         ).toBeInTheDocument();
     });
 
-    test('- vis utfylt skjema - Overgangsstønad', async () => {
-        setupMock(true, false, {
-            ...fakta,
+    test('Vis utfylt skjema - Overgangsstønad', async () => {
+        const faktaResponse = lagFaktaResponse({
+            begrunnelse: 'Dette er en test-begrunnelse',
             feilutbetaltePerioder: [
                 {
-                    ...perioder[0],
+                    ...feilutbetaltePerioder[0],
                     hendelsestype: HendelseType.EnsligForsørger,
                     hendelsesundertype: HendelseUndertype.Ugift,
                 },
                 {
-                    ...perioder[1],
+                    ...feilutbetaltePerioder[1],
                     hendelsestype: HendelseType.Annet,
                     hendelsesundertype: HendelseUndertype.AnnetFritekst,
                 },
                 {
-                    ...perioder[2],
+                    ...feilutbetaltePerioder[2],
                     hendelsestype: HendelseType.YrkesrettetAktivitet,
                     hendelsesundertype: HendelseUndertype.Arbeid,
                 },
             ],
-            begrunnelse: 'Dette er en test-begrunnelse',
         });
+        setupMock(true, false, faktaResponse);
 
         const { getByText, getByLabelText, getByTestId, getByRole } = renderFaktaContainer(
             lagBehandling(),
@@ -406,28 +380,28 @@ describe('FaktaContainer', () => {
         ).toBeInTheDocument();
     });
 
-    test('- vis utfylt skjema - lesevisning - Barnetrygd', async () => {
-        setupMock(true, true, {
-            ...fakta,
+    test('Vis utfylt skjema - lesevisning - Barnetrygd', async () => {
+        const faktaResponse = lagFaktaResponse({
+            begrunnelse: 'Dette er en test-begrunnelse',
             feilutbetaltePerioder: [
                 {
-                    ...perioder[0],
+                    ...feilutbetaltePerioder[0],
                     hendelsestype: HendelseType.BosattIRiket,
                     hendelsesundertype: HendelseUndertype.BrukerBorIkkeINorge,
                 },
                 {
-                    ...perioder[1],
+                    ...feilutbetaltePerioder[1],
                     hendelsestype: HendelseType.Annet,
                     hendelsesundertype: HendelseUndertype.AnnetFritekst,
                 },
                 {
-                    ...perioder[2],
+                    ...feilutbetaltePerioder[2],
                     hendelsestype: HendelseType.BarnsAlder,
                     hendelsesundertype: HendelseUndertype.BarnOver6År,
                 },
             ],
-            begrunnelse: 'Dette er en test-begrunnelse',
         });
+        setupMock(true, true, faktaResponse);
 
         const { getByText, getByRole } = renderFaktaContainer(
             lagBehandling(),
@@ -456,28 +430,28 @@ describe('FaktaContainer', () => {
         ).toBeInTheDocument();
     });
 
-    test('- vis utfylt skjema - lesevisning - Overgangsstønad', async () => {
-        setupMock(true, true, {
-            ...fakta,
+    test('Vis utfylt skjema - lesevisning - Overgangsstønad', async () => {
+        const faktaResponse = lagFaktaResponse({
+            begrunnelse: 'Dette er en test-begrunnelse',
             feilutbetaltePerioder: [
                 {
-                    ...perioder[0],
+                    ...feilutbetaltePerioder[0],
                     hendelsestype: HendelseType.EnsligForsørger,
                     hendelsesundertype: HendelseUndertype.Ugift,
                 },
                 {
-                    ...perioder[1],
+                    ...feilutbetaltePerioder[1],
                     hendelsestype: HendelseType.Annet,
                     hendelsesundertype: HendelseUndertype.AnnetFritekst,
                 },
                 {
-                    ...perioder[2],
+                    ...feilutbetaltePerioder[2],
                     hendelsestype: HendelseType.YrkesrettetAktivitet,
                     hendelsesundertype: HendelseUndertype.Arbeid,
                 },
             ],
-            begrunnelse: 'Dette er en test-begrunnelse',
         });
+        setupMock(true, true, faktaResponse);
 
         const { getByText, getByRole } = renderFaktaContainer(
             lagBehandling(),
@@ -506,16 +480,12 @@ describe('FaktaContainer', () => {
         ).toBeInTheDocument();
     });
 
-    test('- velg hendelsesundertype automatisk ved kun ett valg', async () => {
-        setupMock(false, false, {
-            ...fakta,
-            feilutbetaltePerioder: [
-                {
-                    ...perioder[0],
-                },
-            ],
-            begrunnelse: 'Dette er en test-begrunnelse',
-        });
+    test('Velg hendelsesundertype automatisk ved kun ett valg', async () => {
+        setupMock(
+            false,
+            false,
+            lagFaktaResponse({ feilutbetaltePerioder: [feilutbetaltePerioder[0]] })
+        );
 
         const { getByTestId, getAllByRole } = renderFaktaContainer(
             lagBehandling(),

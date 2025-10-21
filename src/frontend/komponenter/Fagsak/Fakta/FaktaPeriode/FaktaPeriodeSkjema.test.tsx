@@ -1,5 +1,4 @@
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { HendelseUndertype } from '../../../../kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
@@ -9,9 +8,10 @@ import * as React from 'react';
 
 import { FaktaProvider } from '../FaktaContext';
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
-import { HendelseType } from '../../../../kodeverk';
+import { HendelseUndertype, HendelseType } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
+import { lagFaktaPeriode } from '../../../../testdata/faktaFactory';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
@@ -45,13 +45,7 @@ const renderComponent = (
 
 const mockPeriode: FaktaPeriodeSkjemaData = {
     index: 0,
-    feilutbetaltBeløp: 1000,
-    periode: {
-        fom: '2023-01-01',
-        tom: '2023-01-31',
-    },
-    hendelsestype: undefined,
-    hendelsesundertype: undefined,
+    ...lagFaktaPeriode(),
 };
 
 beforeEach(() => {
@@ -74,12 +68,12 @@ describe('FaktaPeriodeSkjema', () => {
         const periodeWithValue = {
             ...mockPeriode,
             hendelsestype: HendelseType.Annet,
-            hendelsesundertype: 'ANNET_FRITEKST' as HendelseUndertype,
+            hendelsesundertype: HendelseUndertype.AnnetFritekst,
         };
         renderComponent(periodeWithValue, [HendelseType.Annet]);
 
         const underSelectElement = screen.getByTestId('perioder.0.underårsak');
-        expect(underSelectElement).toHaveValue('ANNET_FRITEKST');
+        expect(underSelectElement).toHaveValue(HendelseUndertype.AnnetFritekst);
     });
 
     test('Skal velge "-" som default når det er flere elementer i hendelseTyper lista', () => {
