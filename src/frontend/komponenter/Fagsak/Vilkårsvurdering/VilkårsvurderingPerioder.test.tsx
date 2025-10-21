@@ -3,8 +3,8 @@ import type { Http } from '../../../api/http/HttpProvider';
 import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
-    VilkårsvurderingResponse,
     VilkårsvurderingPeriode,
+    VilkårsvurderingResponse,
 } from '../../../typer/tilbakekrevingstyper';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
@@ -19,9 +19,12 @@ import * as React from 'react';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
-import { HendelseType } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
+import {
+    lagVilkårsvurderingPeriode,
+    lagVilkårsvurderingResponse,
+} from '../../../testdata/vilkårsvurderingFactory';
 import { RessursStatus } from '../../../typer/ressurs';
 
 const mockUseHttp = jest.fn();
@@ -58,46 +61,32 @@ jest.mock('@tanstack/react-query', () => {
 });
 
 const perioder: VilkårsvurderingPeriode[] = [
-    {
-        feilutbetaltBeløp: 1333,
+    lagVilkårsvurderingPeriode({
         periode: {
             fom: '2020-01-01',
             tom: '2020-03-31',
         },
-        hendelsestype: HendelseType.BosattIRiket,
-        foreldet: false,
-    },
-    {
-        feilutbetaltBeløp: 2000,
+    }),
+    lagVilkårsvurderingPeriode({
         periode: {
             fom: '2020-05-01',
             tom: '2020-06-30',
         },
-        hendelsestype: HendelseType.BorMedSøker,
-        foreldet: false,
-    },
-    {
-        feilutbetaltBeløp: 1500,
+    }),
+    lagVilkårsvurderingPeriode({
         periode: {
             fom: '2020-07-01',
             tom: '2020-08-31',
         },
-        hendelsestype: HendelseType.BosattIRiket,
-        foreldet: false,
-    },
+    }),
 ];
 
 const setupMocks = (): void => {
-    const vilkårsvurdering: VilkårsvurderingResponse = {
-        perioder: perioder,
-        rettsgebyr: 1199,
-    };
-
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
             const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
                 status: RessursStatus.Suksess,
-                data: vilkårsvurdering,
+                data: lagVilkårsvurderingResponse({ perioder }),
             });
             return Promise.resolve(ressurs);
         },
@@ -158,7 +147,6 @@ const findPeriodButton = (
 
 const modalTekst =
     'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode';
-
 const førstePeriode = '01.01.2020 - 31.03.2020';
 const andrePeriode = '01.05.2020 - 30.06.2020';
 

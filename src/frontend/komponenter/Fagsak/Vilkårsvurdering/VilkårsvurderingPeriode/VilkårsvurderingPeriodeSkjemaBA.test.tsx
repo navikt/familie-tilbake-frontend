@@ -16,7 +16,7 @@ import { BehandlingProvider } from '../../../../context/BehandlingContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat, Ytelsetype } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import { lagVilkårsvurderingsperiode } from '../../../../testdata/vilkårsvurderingFactory';
+import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 
 jest.setTimeout(10000);
 
@@ -80,7 +80,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('God tro - beløp ikke i behold', async () => {
-        const vilkårsvurderingPeriode = lagVilkårsvurderingsperiode({
+        const vilkårsvurderingPeriode = lagVilkårsvurderingPeriodeSkjemaData({
             aktiviteter: [
                 {
                     aktivitet: 'Aktivitet 1',
@@ -92,7 +92,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 },
             ],
         });
-        const behandletPerioder = [lagVilkårsvurderingsperiode()];
+        const behandletPerioder = [lagVilkårsvurderingPeriodeSkjemaData()];
 
         const {
             getByLabelText,
@@ -220,7 +220,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = renderVilkårsvurderingPeriodeSkjema(
             lagBehandling(),
             lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-            lagVilkårsvurderingsperiode(),
+            lagVilkårsvurderingPeriodeSkjemaData(),
             false
         );
 
@@ -275,7 +275,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = renderVilkårsvurderingPeriodeSkjema(
             lagBehandling(),
             lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-            lagVilkårsvurderingsperiode(),
+            lagVilkårsvurderingPeriodeSkjemaData(),
             false
         );
 
@@ -355,7 +355,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = renderVilkårsvurderingPeriodeSkjema(
             lagBehandling(),
             lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-            lagVilkårsvurderingsperiode(),
+            lagVilkårsvurderingPeriodeSkjemaData(),
             false
         );
 
@@ -479,7 +479,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             renderVilkårsvurderingPeriodeSkjema(
                 lagBehandling(),
                 lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-                lagVilkårsvurderingsperiode(),
+                lagVilkårsvurderingPeriodeSkjemaData(),
                 false
             );
 
@@ -534,7 +534,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             renderVilkårsvurderingPeriodeSkjema(
                 lagBehandling(),
                 lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-                lagVilkårsvurderingsperiode(),
+                lagVilkårsvurderingPeriodeSkjemaData(),
                 false
             );
 
@@ -614,7 +614,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = renderVilkårsvurderingPeriodeSkjema(
             lagBehandling(),
             lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-            lagVilkårsvurderingsperiode(),
+            lagVilkårsvurderingPeriodeSkjemaData(),
             false
         );
 
@@ -726,7 +726,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             renderVilkårsvurderingPeriodeSkjema(
                 lagBehandling(),
                 lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-                lagVilkårsvurderingsperiode(),
+                lagVilkårsvurderingPeriodeSkjemaData(),
                 false
             );
 
@@ -831,7 +831,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = renderVilkårsvurderingPeriodeSkjema(
             lagBehandling(),
             lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-            lagVilkårsvurderingsperiode(),
+            lagVilkårsvurderingPeriodeSkjemaData(),
             true
         );
 
@@ -943,7 +943,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             renderVilkårsvurderingPeriodeSkjema(
                 lagBehandling(),
                 lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-                lagVilkårsvurderingsperiode(),
+                lagVilkårsvurderingPeriodeSkjemaData(),
                 true
             );
 
@@ -1032,7 +1032,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             renderVilkårsvurderingPeriodeSkjema(
                 lagBehandling(),
                 lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-                lagVilkårsvurderingsperiode(),
+                lagVilkårsvurderingPeriodeSkjemaData(),
                 true
             );
 
@@ -1096,7 +1096,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByLabelText, getByText } = renderVilkårsvurderingPeriodeSkjema(
             lagBehandling(),
             lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-            lagVilkårsvurderingsperiode({
+            lagVilkårsvurderingPeriodeSkjemaData({
                 begrunnelse: 'Gitt i god tro',
                 vilkårsvurderingsresultatInfo: {
                     vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
@@ -1126,7 +1126,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByLabelText, getByTestId, getByText } = renderVilkårsvurderingPeriodeSkjema(
             lagBehandling(),
             lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-            lagVilkårsvurderingsperiode({
+            lagVilkårsvurderingPeriodeSkjemaData({
                 begrunnelse: 'Gitt mangelfulle opplysninger',
                 vilkårsvurderingsresultatInfo: {
                     vilkårsvurderingsresultat: Vilkårsresultat.MangelfulleOpplysningerFraBruker,
@@ -1189,7 +1189,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByRole, queryAllByText } = renderVilkårsvurderingPeriodeSkjema(
             lagBehandling(),
             lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-            lagVilkårsvurderingsperiode(),
+            lagVilkårsvurderingPeriodeSkjemaData(),
             false
         );
 

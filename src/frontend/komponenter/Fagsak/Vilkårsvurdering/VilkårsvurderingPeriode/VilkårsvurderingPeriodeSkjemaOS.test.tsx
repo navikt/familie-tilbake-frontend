@@ -14,7 +14,7 @@ import { BehandlingProvider } from '../../../../context/BehandlingContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat, Ytelsetype } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import { lagVilkårsvurderingsperiode } from '../../../../testdata/vilkårsvurderingFactory';
+import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 
 jest.setTimeout(10000);
 
@@ -49,7 +49,7 @@ jest.mock('../VilkårsvurderingContext', () => {
     };
 });
 
-const periode = lagVilkårsvurderingsperiode();
+const periode = lagVilkårsvurderingPeriodeSkjemaData();
 const fagsak = lagFagsak({ ytelsestype: Ytelsetype.Overgangsstønad });
 
 describe('VilkårsvurderingPeriodeSkjema', () => {
@@ -1350,7 +1350,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
                     fagsak={fagsak}
-                    periode={lagVilkårsvurderingsperiode({
+                    periode={lagVilkårsvurderingPeriodeSkjemaData({
                         begrunnelse: 'Gitt i god tro',
                         vilkårsvurderingsresultatInfo: {
                             vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
@@ -1390,7 +1390,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
                     fagsak={fagsak}
-                    periode={lagVilkårsvurderingsperiode({
+                    periode={lagVilkårsvurderingPeriodeSkjemaData({
                         begrunnelse: 'Gitt mangelfulle opplysninger',
                         vilkårsvurderingsresultatInfo: {
                             vilkårsvurderingsresultat:

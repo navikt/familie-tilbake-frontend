@@ -7,7 +7,7 @@ import * as React from 'react';
 import SplittPeriode from './SplittPeriode';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
-import { lagVilkårsvurderingsperiode } from '../../../../../testdata/vilkårsvurderingFactory';
+import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../../testdata/vilkårsvurderingFactory';
 
 describe('SplittPeriode - Vilkårsvurdering', () => {
     let user: UserEvent;
@@ -27,7 +27,7 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
         } = render(
             <HttpProvider>
                 <SplittPeriode
-                    periode={lagVilkårsvurderingsperiode()}
+                    periode={lagVilkårsvurderingPeriodeSkjemaData()}
                     behandling={lagBehandling()}
                     onBekreft={jest.fn()}
                 />
