@@ -1,5 +1,5 @@
 import eslint from '@eslint/js';
-import { defineConfig } from 'eslint/config';
+import { defineConfig, globalIgnores } from 'eslint/config';
 import * as importPlugin from 'eslint-plugin-import';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
@@ -85,5 +85,6 @@ export default defineConfig(
                 version: 'detect',
             },
         },
-    }
+    },
+    [globalIgnores(['src/frontend/generated/'])]
 );
