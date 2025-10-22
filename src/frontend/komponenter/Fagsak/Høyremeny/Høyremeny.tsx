@@ -44,10 +44,9 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling, dialogRef }) => {
             {/* Reduserer høyden med header(48)-høyde og padding(16+16)-høyde til fagsakcontainer */}
             <aside
                 aria-label="Informasjon om tilbakekrevingen og bruker"
-                className={classNames(
-                    'flex-col gap-4 bg-ax-neutral-100 hidden ax-lg:flex max-h-[calc(100vh-80px)]',
-                    { 'max-h-[calc(100vh-142px)]': !!ventegrunn }
-                )}
+                className={classNames('flex-col gap-4 hidden ax-lg:flex max-h-[calc(100vh-80px)]', {
+                    'max-h-[calc(100vh-142px)]': !!ventegrunn,
+                })}
             >
                 <div className="gap-4 flex flex-col flex-1 min-h-0">
                     <Faktaboks behandling={behandling} ytelsestype={fagsak.ytelsestype} />
