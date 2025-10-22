@@ -3,12 +3,21 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: false,
+        },
+    },
+});
 
 const mockUseBehandling = jest.fn();
 const mockUseDokumentlisting = jest.fn();
@@ -45,7 +54,11 @@ const setupMock = (): void => {
 };
 
 const renderForhåndsvarsel = (): RenderResult =>
-    render(<Forhåndsvarsel behandling={lagBehandling()} fagsak={lagFagsak()} />);
+    render(
+        <QueryClientProvider client={queryClient}>
+            <Forhåndsvarsel behandling={lagBehandling()} fagsak={lagFagsak()} />
+        </QueryClientProvider>
+    );
 
 describe('Forhåndsvarsel', () => {
     beforeEach(() => {
