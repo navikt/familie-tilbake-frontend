@@ -40,7 +40,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
             className="border-1 rounded-xl border-border-divider flex flex-col gap-4 bg-white"
         >
             <Heading size="xsmall" level="2">
-                Tilbakekreving av {ytelsetype[ytelsestype]}
+                Tilbakekreving av {ytelsetype[ytelsestype].toLocaleLowerCase()}
             </Heading>
 
             <dl className="grid grid-cols-[136px_1fr] xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
