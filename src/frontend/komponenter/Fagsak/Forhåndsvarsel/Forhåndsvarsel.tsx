@@ -14,7 +14,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QueryClientProvider, useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
@@ -123,7 +123,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     };
 
     return (
-        <>
+        <QueryClientProvider client={queryClient}>
             <VStack gap="4">
                 <Heading level="1" size="small" spacing>
                     Forhåndsvarsel
@@ -217,6 +217,6 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 onNeste={!behandling.varselSendt ? sendForhåndsvarsel : gåTilNeste}
                 onForrige={undefined}
             />
-        </>
+        </QueryClientProvider>
     );
 };
