@@ -2,7 +2,6 @@ import type { SettBehandlingTilbakeTilFaktaHook } from './useSettBehandlingTilba
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { RedirectEtterLagringHook } from '../../../../hooks/useRedirectEtterLagring';
 import type { FagsakState } from '../../../../stores/fagsakStore';
-import type { Behandling } from '../../../../typer/behandling';
 import type { StoreApi, UseBoundStore } from 'zustand';
 
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
@@ -10,12 +9,7 @@ import * as React from 'react';
 
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta';
 import { Feil } from '../../../../api/feil';
-import { Fagsystem } from '../../../../kodeverk';
-import {
-    Behandlingstatus,
-    Behandlingstype,
-    Saksbehandlingstype,
-} from '../../../../typer/behandling';
+import { lagBehandling } from '../../../../testdata/behandlingFactory';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
@@ -38,64 +32,24 @@ jest.mock('./useSettBehandlingTilbakeTilFakta', () => ({
         mockUseSettBehandlingTilbakeTilFakta(),
 }));
 
-const mockBehandling: Behandling = {
-    behandlingId: '123',
-    eksternBrukId: 'ekstId123',
-    kanSetteTilbakeTilFakta: true,
-    kanEndres: true,
-    behandlingsstegsinfo: [],
-    status: Behandlingstatus.FatterVedtak,
-    type: Behandlingstype.Tilbakekreving,
-    opprettetDato: new Date().toISOString(),
-    varselSendt: false,
-    fagsystemsbehandlingId: 'fagsys123',
-    erBehandlingHenlagt: false,
-    saksbehandlingstype: Saksbehandlingstype.Ordinær,
-    manuelleBrevmottakere: [],
-    kanRevurderingOpprettes: true,
-    erBehandlingPåVent: false,
-    harVerge: false,
-    resultatstype: null,
-    kanHenleggeBehandling: true,
-    erNyModell: false,
-    avsluttetDato: null,
-    endretTidspunkt: '',
-    vedtaksDato: null,
-    enhetskode: '',
-    enhetsnavn: '',
-    ansvarligSaksbehandler: '',
-    ansvarligBeslutter: null,
-    eksternFaksakId: '',
-    behandlingsårsakstype: null,
-    støtterManuelleBrevmottakere: false,
-    harManuelleBrevmottakere: false,
-    begrunnelseForTilbakekreving: null,
-};
-
-const mockHentBehandling = jest.fn().mockResolvedValue(undefined);
 const mockNullstill = jest.fn();
-const mockUtførRedirect = jest.fn();
+const setupMocks = (): void => {
+    mockUseBehandling.mockReturnValue({
+        nullstillIkkePersisterteKomponenter: mockNullstill,
+    });
+    mockUseFagsakStore.mockReturnValue({
+        eksternFagsakId: '123',
+    });
+    mockUseRedirectEtterLagring.mockReturnValue(() => null);
+};
 
 describe('SettBehandlingTilbakeTilFakta', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-
-        mockUseBehandling.mockReturnValue({
-            hentBehandlingMedBehandlingId: mockHentBehandling,
-            nullstillIkkePersisterteKomponenter: mockNullstill,
-        });
-
-        mockUseFagsakStore.mockReturnValue({
-            eksternFagsakId: '123',
-            fagsystem: Fagsystem.BA,
-        });
-
-        mockUseRedirectEtterLagring.mockReturnValue({
-            utførRedirect: mockUtførRedirect,
-        });
+        setupMocks();
     });
 
-    test('viser feilmodal når behandling tilbake til fakta feiler', async () => {
+    test('Viser feilmodal når behandling tilbake til fakta feiler', async () => {
         const mockMutate = jest.fn().mockImplementation((_, options) => {
             options.onError(
                 new Feil(
@@ -113,10 +67,13 @@ describe('SettBehandlingTilbakeTilFakta', () => {
                     'Du har rollen BESLUTTER og trenger rollen FORVALTER for å utføre denne handlingen',
                 status: 403,
             },
-            reset: jest.fn(),
         });
 
-        render(<SettBehandlingTilbakeTilFakta behandling={mockBehandling} />);
+        render(
+            <SettBehandlingTilbakeTilFakta
+                behandling={lagBehandling({ kanSetteTilbakeTilFakta: true })}
+            />
+        );
 
         const button = screen.getByText('Sett behandling tilbake til fakta');
         fireEvent.click(button);
@@ -126,7 +83,7 @@ describe('SettBehandlingTilbakeTilFakta', () => {
 
         expect(mockNullstill).toHaveBeenCalledTimes(1);
 
-        expect(mockMutate).toHaveBeenCalledWith('123', expect.any(Object));
+        expect(mockMutate).toHaveBeenCalledWith('uuid-1', expect.any(Object));
 
         await waitFor(() => {
             const errorText = screen.getByText(/403 Forbidden/i);

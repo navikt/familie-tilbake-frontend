@@ -9,12 +9,13 @@ import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
 import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
-import { DokumentMal, Fagsystem } from '../../../../kodeverk';
+import { DokumentMal } from '../../../../kodeverk';
+import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { Målform } from '../../../../typer/fagsak';
 import { RessursStatus } from '../../../../typer/ressurs';
 
@@ -63,33 +64,21 @@ const setupMock = (behandlingILesemodus: boolean): void => {
     mockUseBehandling.mockImplementation(() => ({
         behandlingILesemodus: behandlingILesemodus,
         hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-        settIkkePersistertKomponent: jest.fn(),
-        nullstillIkkePersisterteKomponenter: jest.fn(),
     }));
 };
 
-describe('Tester: SendMelding', () => {
+describe('SendMelding', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
 
-    test('- fyller ut skjema og sender varsel', async () => {
+    test('Fyller ut skjema og sender varsel', async () => {
         setupMock(false);
-        const behandling = mock<Behandling>({
-            varselSendt: false,
-            manuelleBrevmottakere: [],
-            eksternBrukId: '1',
-        });
-        const fagsak = mock<Fagsak>({
-            språkkode: Målform.Nb,
-            fagsystem: Fagsystem.EF,
-            eksternFagsakId: '1',
-        });
 
         const { getByText, getByLabelText, getByRole, queryByRole, queryByText } =
-            renderSendMelding(fagsak, behandling);
+            renderSendMelding(lagFagsak(), lagBehandling({ varselSendt: false }));
 
         await waitFor(() => {
             expect(getByText('Mottaker')).toBeInTheDocument();
@@ -140,22 +129,12 @@ describe('Tester: SendMelding', () => {
         );
     });
 
-    test('- fyller ut skjema og sender korrigert varsel', async () => {
+    test('Fyller ut skjema og sender korrigert varsel', async () => {
         setupMock(false);
-        const behandling = mock<Behandling>({
-            varselSendt: true,
-            manuelleBrevmottakere: [],
-            eksternBrukId: '1',
-        });
-        const fagsak = mock<Fagsak>({
-            språkkode: Målform.Nn,
-            fagsystem: Fagsystem.EF,
-            eksternFagsakId: '1',
-        });
 
         const { getByText, getByLabelText, getByRole, queryByText } = renderSendMelding(
-            fagsak,
-            behandling
+            lagFagsak({ språkkode: Målform.Nn }),
+            lagBehandling({ varselSendt: true })
         );
 
         await waitFor(() => {
@@ -189,20 +168,13 @@ describe('Tester: SendMelding', () => {
         );
     });
 
-    test('- fyller ut skjema og sender innhent dokumentasjon', async () => {
+    test('Fyller ut skjema og sender innhent dokumentasjon', async () => {
         setupMock(false);
-        const behandling = mock<Behandling>({
-            varselSendt: true,
-            manuelleBrevmottakere: [],
-            eksternBrukId: '1',
-        });
-        const fagsak = mock<Fagsak>({
-            språkkode: Målform.Nb,
-            fagsystem: Fagsystem.EF,
-            eksternFagsakId: '1',
-        });
 
-        const { getByText, getByLabelText, getByRole } = renderSendMelding(fagsak, behandling);
+        const { getByText, getByLabelText, getByRole } = renderSendMelding(
+            lagFagsak(),
+            lagBehandling({ varselSendt: true })
+        );
 
         await waitFor(() => {
             expect(getByText('Mottaker')).toBeInTheDocument();
@@ -234,19 +206,13 @@ describe('Tester: SendMelding', () => {
         );
     });
 
-    test('- lesevisning - venter på svar på manuelt brev', async () => {
+    test('Lesevisning - venter på svar på manuelt brev', async () => {
         setupMock(true);
-        const behandling = mock<Behandling>({
-            varselSendt: false,
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>({
-            språkkode: Målform.Nb,
-            fagsystem: Fagsystem.EF,
-            eksternFagsakId: '1',
-        });
 
-        const { getByText, getByRole, queryByLabelText } = renderSendMelding(fagsak, behandling);
+        const { getByText, getByRole, queryByLabelText } = renderSendMelding(
+            lagFagsak(),
+            lagBehandling({ varselSendt: false })
+        );
 
         expect(getByText('Mottaker')).toBeInTheDocument();
 

@@ -1,7 +1,6 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { ManuellBrevmottakerResponseDto } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
@@ -9,11 +8,9 @@ import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 
 import Brevmottakere from './Brevmottakere';
-import { Fagsystem, Ytelsetype } from '../../../kodeverk';
-import { Behandlingstatus, Behandlingstype, Saksbehandlingstype } from '../../../typer/behandling';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { MottakerType } from '../../../typer/Brevmottaker';
-import { Kjønn } from '../../../typer/bruker';
-import { Målform } from '../../../typer/fagsak';
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
@@ -24,58 +21,6 @@ const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
-
-const createMockBehandling = (
-    manuelleBrevmottakere: ManuellBrevmottakerResponseDto[] = []
-): Behandling => ({
-    behandlingId: 'test-behandling-id',
-    eksternBrukId: 'test-ekstern-id',
-    opprettetDato: '2023-01-01',
-    status: Behandlingstatus.Utredes,
-    type: Behandlingstype.Tilbakekreving,
-    kanEndres: true,
-    kanSetteTilbakeTilFakta: false,
-    harVerge: false,
-    kanHenleggeBehandling: false,
-    kanRevurderingOpprettes: false,
-    varselSendt: false,
-    behandlingsstegsinfo: [],
-    fagsystemsbehandlingId: 'test-fagsystem-id',
-    støtterManuelleBrevmottakere: true,
-    manuelleBrevmottakere,
-    saksbehandlingstype: Saksbehandlingstype.Ordinær,
-    erNyModell: true,
-    erBehandlingHenlagt: false,
-    avsluttetDato: null,
-    endretTidspunkt: '',
-    vedtaksDato: null,
-    enhetskode: '',
-    enhetsnavn: '',
-    resultatstype: null,
-    ansvarligSaksbehandler: '',
-    ansvarligBeslutter: null,
-    erBehandlingPåVent: false,
-    eksternFaksakId: '',
-    behandlingsårsakstype: null,
-    harManuelleBrevmottakere: false,
-    begrunnelseForTilbakekreving: null,
-});
-
-const createMockFagsak = (): Fagsak => ({
-    eksternFagsakId: 'test-fagsak-id',
-    fagsystem: Fagsystem.BA,
-    ytelsestype: Ytelsetype.Barnetrygd,
-    språkkode: Målform.Nb,
-    institusjon: null,
-    bruker: {
-        personIdent: '12345678901',
-        navn: 'Test Bruker',
-        fødselsdato: '1990-01-01',
-        kjønn: Kjønn.Mann,
-        dødsdato: null,
-    },
-    behandlinger: [],
-});
 
 const createMockManuelleBrevmottakere = (): ManuellBrevmottakerResponseDto[] => [
     {
@@ -123,11 +68,8 @@ const setupMock = (): void => {
     }));
 };
 
-const renderBrevmottakere = (
-    behandling: Behandling = createMockBehandling(),
-    fagsak: Fagsak = createMockFagsak()
-): RenderResult => {
-    return render(<Brevmottakere behandling={behandling} fagsak={fagsak} />);
+const renderBrevmottakere = (behandling: Behandling): RenderResult => {
+    return render(<Brevmottakere behandling={behandling} fagsak={lagFagsak()} />);
 };
 
 describe('Brevmottakere', () => {
@@ -137,8 +79,8 @@ describe('Brevmottakere', () => {
     });
 
     describe('Default bruker brevmottaker', () => {
-        it('viser default bruker som brevmottaker med korrekt informasjon', () => {
-            renderBrevmottakere();
+        test('Viser default bruker som brevmottaker med korrekt informasjon', () => {
+            renderBrevmottakere(lagBehandling());
 
             expect(screen.getByText('Test Bruker')).toBeInTheDocument();
             expect(screen.getByText('12345678901')).toBeInTheDocument();
@@ -146,16 +88,20 @@ describe('Brevmottakere', () => {
     });
 
     describe('Manuelle brevmottakere', () => {
-        it('viser manuelle brevmottakere med korrekt informasjon', () => {
-            const behandling = createMockBehandling(createMockManuelleBrevmottakere());
+        test('Viser manuelle brevmottakere med korrekt informasjon', () => {
+            const behandling = lagBehandling({
+                manuelleBrevmottakere: createMockManuelleBrevmottakere(),
+            });
             renderBrevmottakere(behandling);
 
             expect(screen.getByText('Fullmektig Person')).toBeInTheDocument();
             expect(screen.getByText('10987654321')).toBeInTheDocument();
         });
 
-        it('viser fjern og endre knapper for manuelle brevmottakere', () => {
-            const behandling = createMockBehandling(createMockManuelleBrevmottakere());
+        test('Viser fjern og endre knapper for manuelle brevmottakere', () => {
+            const behandling = lagBehandling({
+                manuelleBrevmottakere: createMockManuelleBrevmottakere(),
+            });
             renderBrevmottakere(behandling);
 
             expect(screen.getByText('Fullmektig Person')).toBeInTheDocument();
@@ -166,16 +112,18 @@ describe('Brevmottakere', () => {
     });
 
     describe('Legg til ny mottaker funksjonalitet', () => {
-        it('viser "Legg til ny mottaker" knapp når det er mulig', () => {
-            renderBrevmottakere();
+        test('Viser "Legg til ny mottaker" knapp når det er mulig', () => {
+            renderBrevmottakere(lagBehandling());
 
             expect(
                 screen.getByRole('button', { name: /legg til ny mottaker/i })
             ).toBeInTheDocument();
         });
 
-        it('viser ikke "Legg til ny mottaker" knapp når det allerede finnes manuelle mottakere', () => {
-            const behandling = createMockBehandling(createMockManuelleBrevmottakere());
+        test('Viser ikke "Legg til ny mottaker" knapp når det allerede finnes manuelle mottakere', () => {
+            const behandling = lagBehandling({
+                manuelleBrevmottakere: createMockManuelleBrevmottakere(),
+            });
             renderBrevmottakere(behandling);
 
             expect(
@@ -183,8 +131,10 @@ describe('Brevmottakere', () => {
             ).not.toBeInTheDocument();
         });
 
-        it('viser ikke "Legg til ny mottaker" knapp når det finnes dødsbo mottaker', () => {
-            const behandling = createMockBehandling(createMockDødsboBrevmottaker());
+        test('Viser ikke "Legg til ny mottaker" knapp når det finnes dødsbo mottaker', () => {
+            const behandling = lagBehandling({
+                manuelleBrevmottakere: createMockDødsboBrevmottaker(),
+            });
             renderBrevmottakere(behandling);
 
             expect(
@@ -194,8 +144,10 @@ describe('Brevmottakere', () => {
     });
 
     describe('Adresseinformasjon', () => {
-        it('viser manuell adresse informasjon korrekt', () => {
-            const behandling = createMockBehandling(createMockManuelleBrevmottakere());
+        test('Viser manuell adresse informasjon korrekt', () => {
+            const behandling = lagBehandling({
+                manuelleBrevmottakere: createMockManuelleBrevmottakere(),
+            });
             renderBrevmottakere(behandling);
 
             expect(screen.getByText('Testveien 1')).toBeInTheDocument();
@@ -203,8 +155,10 @@ describe('Brevmottakere', () => {
             expect(screen.getByText('Oslo')).toBeInTheDocument();
         });
 
-        it('viser organisasjonsinformasjon korrekt', () => {
-            const behandling = createMockBehandling(createMockOrganisasjonsBrevmottaker());
+        test('Viser organisasjonsinformasjon korrekt', () => {
+            const behandling = lagBehandling({
+                manuelleBrevmottakere: createMockOrganisasjonsBrevmottaker(),
+            });
             renderBrevmottakere(behandling);
 
             expect(screen.getByText('Test Organisasjon')).toBeInTheDocument();

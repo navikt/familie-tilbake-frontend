@@ -46,8 +46,6 @@ const renderBrevmottakerFormModal = (
     props: {
         mode?: 'endre' | 'leggTil';
         visBrevmottakerModal?: boolean;
-        initialData?: object;
-        mottakerId?: string;
     } = {}
 ): RenderResult => {
     const defaultProps = {
@@ -71,19 +69,19 @@ describe('BrevmottakerFormModal', () => {
     });
 
     describe('Grunnleggende rendering', () => {
-        test('viser modal med riktig tittel for legg til modus', () => {
+        test('Viser modal med riktig tittel for legg til modus', () => {
             renderBrevmottakerFormModal({ mode: 'leggTil' });
             expect(screen.getByText('Legg til brevmottaker')).toBeInTheDocument();
             expect(screen.getByRole('button', { name: 'Legg til' })).toBeInTheDocument();
         });
 
-        test('viser modal med riktig tittel for endre modus', () => {
+        test('Viser modal med riktig tittel for endre modus', () => {
             renderBrevmottakerFormModal({ mode: 'endre' });
             expect(screen.getByText('Endre brevmottaker')).toBeInTheDocument();
             expect(screen.getByRole('button', { name: 'Lagre endringer' })).toBeInTheDocument();
         });
 
-        test('viser ikke modal når visBrevmottakerModal er false', () => {
+        test('Viser ikke modal når visBrevmottakerModal er false', () => {
             renderBrevmottakerFormModal({ visBrevmottakerModal: false });
             expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
         });
@@ -383,11 +381,11 @@ describe('BrevmottakerFormModal', () => {
                 await expectNavnfeltReadonly();
             });
 
-            test('skal vise Landevelger og Norge skal ikke være i listen', async () => {
+            test('Skal vise Landevelger og Norge skal ikke være i listen', async () => {
                 await expectLandvalgUtenNorge();
             });
 
-            test('når Land er valgt skal det finnes adresselinje felter', async () => {
+            test('Når Land er valgt skal det finnes adresselinje felter', async () => {
                 await expectAdresseFelterEtterLandvalg(user);
             });
         });
@@ -397,47 +395,47 @@ describe('BrevmottakerFormModal', () => {
                 await selectMottakerAndWaitForRender(user, MottakerType.Fullmektig);
             });
 
-            test('skal vise radiogruppe med korrekte valg', async () => {
+            test('Skal vise radiogruppe med korrekte valg', async () => {
                 await expectFullmektigRadiogruppe();
             });
 
-            test('manuell registrering skal vise navn og land felter', async () => {
+            test('Manuell registrering skal vise navn og land felter', async () => {
                 await testManuellRegistreringFelter(user);
             });
 
-            test('manuell registrering med utenlandsk adresse viser adressefelter', async () => {
+            test('Manuell registrering med utenlandsk adresse viser adressefelter', async () => {
                 await testManuellRegistreringMedUtenlandskAdresse(user);
             });
 
-            test('manuell registrering med Norge viser alle felter', async () => {
+            test('Manuell registrering med Norge viser alle felter', async () => {
                 await testManuellRegistreringMedNorsk(user);
             });
 
-            test('oppslag i personregister skal vise fødselsnummer felt', async () => {
+            test('Oppslag i personregister skal vise fødselsnummer felt', async () => {
                 await testOppslagIPersonregister(user);
             });
 
-            test('oppslag i organisasjonsregister viser org.nr og kontaktperson', async () => {
+            test('Oppslag i organisasjonsregister viser org.nr og kontaktperson', async () => {
                 await expectOrganisasjonsregisterFelter(user);
             });
 
-            test('trykker på submit uten å ha valgt radio, skal vise feilmelding', async () => {
+            test('Trykker på submit uten å ha valgt radio, skal vise feilmelding', async () => {
                 await testRadioValidering(user, mode);
             });
 
-            test('manuell registrering uten land skal vise feilmelding', async () => {
+            test('Manuell registrering uten land skal vise feilmelding', async () => {
                 await testManuellRegistreringUtenLand(user, mode);
             });
 
-            test('manuell registrering Norge skal validere postnummer', async () => {
+            test('Manuell registrering Norge skal validere postnummer', async () => {
                 await testPostnummerValidering(user, mode);
             });
 
-            test('oppslag personregister med ugyldig nummer skal vise feilmelding', async () => {
+            test('Oppslag personregister med ugyldig nummer skal vise feilmelding', async () => {
                 await testFødselsnummerValidering(user, mode);
             });
 
-            test.todo('oppslag personregister skal trimme mellomrom fra organisasjonsnummer');
+            test.todo('Oppslag personregister skal trimme mellomrom fra organisasjonsnummer');
         });
 
         describe('Verge', () => {
@@ -445,31 +443,31 @@ describe('BrevmottakerFormModal', () => {
                 await selectMottakerAndWaitForRender(user, MottakerType.Verge);
             });
 
-            test('skal vise radiogruppe uten organisasjonsregister valg', async () => {
+            test('Skal vise radiogruppe uten organisasjonsregister valg', async () => {
                 await expectVergeRadiogruppe();
             });
 
-            test('manuell registrering skal vise navn og land felter', async () => {
+            test('Manuell registrering skal vise navn og land felter', async () => {
                 await testManuellRegistreringFelter(user);
             });
 
-            test('manuell registrering med utenlandsk adresse viser adressefelter', async () => {
+            test('Manuell registrering med utenlandsk adresse viser adressefelter', async () => {
                 await testManuellRegistreringMedUtenlandskAdresse(user);
             });
 
-            test('manuell registrering med Norge viser alle felter', async () => {
+            test('Manuell registrering med Norge viser alle felter', async () => {
                 await testManuellRegistreringMedNorsk(user);
             });
 
-            test('oppslag i personregister skal vise fødselsnummer felt', async () => {
+            test('Oppslag i personregister skal vise fødselsnummer felt', async () => {
                 await testOppslagIPersonregister(user);
             });
 
-            test('ingen validering på radio-valg når man trykker submit', async () => {
+            test('Ingen validering på radio-valg når man trykker submit', async () => {
                 await testRadioValidering(user, mode);
             });
 
-            test('ved tomt land skal vise feilmelding', async () => {
+            test('Ved tomt land skal vise feilmelding', async () => {
                 await testManuellRegistreringUtenLand(user, mode, 'Test Verge');
             });
         });
@@ -479,19 +477,19 @@ describe('BrevmottakerFormModal', () => {
                 await selectMottakerAndWaitForRender(user, MottakerType.Dødsbo);
             });
 
-            test('navn felt er disabled med brukerens navn v/dødsbo', async () => {
+            test('Navn felt er disabled med brukerens navn v/dødsbo', async () => {
                 await expectDødsboNavnfelt();
             });
 
-            test('skal vise land felt', async () => {
+            test('Skal vise land felt', async () => {
                 await expectLandFelt();
             });
 
-            test('valg av Norge viser alle adressefelter', async () => {
+            test('Valg av Norge viser alle adressefelter', async () => {
                 await testLandvelgerMedNorge(user);
             });
 
-            test('ved tomt land skal vise feilmelding', async () => {
+            test('Ved tomt land skal vise feilmelding', async () => {
                 await testDødsboLandValidering(user, mode);
             });
         });

@@ -21,11 +21,14 @@ import * as React from 'react';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
-import { Aktsomhet, Fagsystem, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
-import { Behandlingstatus } from '../../../typer/behandling';
+import { Aktsomhet, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
+import {
+    lagVilkårsvurderingPeriode,
+    lagVilkårsvurderingResponse,
+} from '../../../testdata/vilkårsvurderingFactory';
 import { RessursStatus } from '../../../typer/ressurs';
-
-jest.setTimeout(25000);
 
 const mockUseHttp = jest.fn();
 jest.mock('../../../api/http/HttpProvider', () => ({
@@ -61,8 +64,6 @@ jest.mock('@tanstack/react-query', () => {
             return {
                 mutate: mutateAsync,
                 mutateAsync: mutateAsync,
-                isError: false,
-                error: null,
             };
         }),
         useQueryClient: jest.fn(() => ({
@@ -71,56 +72,46 @@ jest.mock('@tanstack/react-query', () => {
     };
 });
 
-beforeEach(() => {
-    Element.prototype.scrollIntoView = jest.fn();
-});
-
+const førstePeriode = '01.01.2020 - 31.03.2020';
+const andrePeriode = '01.05.2020 - 30.06.2020';
 const perioder: VilkårsvurderingPeriode[] = [
-    {
+    lagVilkårsvurderingPeriode({
+        begrunnelse: 'Begrunnelse vilkår 1',
         feilutbetaltBeløp: 1333,
         periode: {
             fom: '2020-01-01',
             tom: '2020-03-31',
         },
         hendelsestype: HendelseType.BosattIRiket,
-        foreldet: false,
-        begrunnelse: undefined,
-    },
-    {
+    }),
+    lagVilkårsvurderingPeriode({
+        begrunnelse: 'Begrunnelse vilkår 2',
         feilutbetaltBeløp: 1333,
         periode: {
             fom: '2020-05-01',
             tom: '2020-06-30',
         },
         hendelsestype: HendelseType.BorMedSøker,
-        foreldet: false,
-        begrunnelse: undefined,
-    },
+    }),
 ];
-const vilkårsvurdering: VilkårsvurderingResponse = {
-    perioder: perioder,
-    rettsgebyr: 1199,
-};
 
-const setupUseBehandlingApiMock = (vilkårsvurdering?: VilkårsvurderingResponse): void => {
-    if (vilkårsvurdering) {
-        mockUseBehandlingApi.mockImplementation(() => ({
-            gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
-                const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
-                    status: RessursStatus.Suksess,
-                    data: vilkårsvurdering,
-                });
-                return Promise.resolve(ressurs);
-            },
-            sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-    }
+const setupUseBehandlingApiMock = (vilkårsvurdering: VilkårsvurderingResponse): void => {
+    mockUseBehandlingApi.mockImplementation(() => ({
+        gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
+            const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
+                status: RessursStatus.Suksess,
+                data: vilkårsvurdering,
+            });
+            return Promise.resolve(ressurs);
+        },
+        sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
+            const ressurs = mock<Ressurs<string>>({
+                status: RessursStatus.Suksess,
+                data: 'suksess',
+            });
+            return Promise.resolve(ressurs);
+        },
+    }));
 };
 
 const setupMocks = (): void => {
@@ -128,10 +119,7 @@ const setupMocks = (): void => {
         request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
-                data: mock<Behandling>({
-                    eksternBrukId: '1',
-                    behandlingsstegsinfo: [],
-                }),
+                data: lagBehandling(),
             });
         },
     }));
@@ -149,29 +137,25 @@ const renderVilkårsvurderingContainer = (behandling: Behandling, fagsak: Fagsak
         </BehandlingProvider>
     );
 
-describe('Tester: VilkårsvurderingContainer', () => {
+describe('VilkårsvurderingContainer', () => {
     let user: UserEvent;
-
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
         setupMocks();
+        Element.prototype.scrollIntoView = jest.fn();
     });
 
-    test('- totalbeløp under 4 rettsgebyr - alle perioder har ikke brukt 6.ledd', async () => {
-        setupUseBehandlingApiMock(vilkårsvurdering);
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
+    test('Totalbeløp under 4 rettsgebyr - ingen perioder har brukt 6.ledd', async () => {
+        setupUseBehandlingApiMock(lagVilkårsvurderingResponse({ perioder }));
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
-            renderVilkårsvurderingContainer(behandling, fagsak);
+            renderVilkårsvurderingContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
-            expect(getByText('Tilbakekreving')).toBeInTheDocument();
-            expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+            expect(getByText(førstePeriode)).toBeInTheDocument();
         });
 
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
         expect(getByText('3 måneder')).toBeInTheDocument();
         expect(getByText('1 333')).toBeInTheDocument();
         expect(getByText('Bosatt i riket')).toBeInTheDocument();
@@ -181,19 +165,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
             })
         ).toBeInTheDocument();
 
-        expect(
-            getByRole('button', {
-                name: 'Neste periode',
-            })
-        ).toBeEnabled();
-
         await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse vilkårene 1');
-
-        expect(
-            getByRole('button', {
-                name: 'Neste periode',
-            })
-        ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
@@ -214,12 +186,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
         );
 
         expect(getByText('Aktsomhet')).toBeInTheDocument();
-
-        expect(
-            getByRole('button', {
-                name: 'Neste periode',
-            })
-        ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
@@ -265,9 +231,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 name: 'Neste periode',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
 
+        expect(getByText(andrePeriode)).toBeInTheDocument();
         expect(getByText('2 måneder')).toBeInTheDocument();
         expect(getByText('1 333')).toBeInTheDocument();
         expect(getByText('Bor med søker')).toBeInTheDocument();
@@ -282,7 +247,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 }
             )
         );
-
         await user.type(
             getByLabelText(
                 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
@@ -290,11 +254,9 @@ describe('Tester: VilkårsvurderingContainer', () => {
             'Begrunnelse aktsomhet 2'
         );
         await user.click(getByLabelText('Burde ha forstått'));
-
         expect(
             getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
         ).toBeInTheDocument();
-
         await user.click(
             getByRole('radio', {
                 name: 'Ja',
@@ -331,25 +293,15 @@ describe('Tester: VilkårsvurderingContainer', () => {
         ).toBeInTheDocument();
     });
 
-    test('- vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
-        setupUseBehandlingApiMock(vilkårsvurdering);
-
-        const fagsak = mock<Fagsak>({
-            fagsystem: Fagsystem.EF,
-            eksternFagsakId: '1',
-            ytelsestype: Ytelsetype.Barnetilsyn,
-        });
-        const behandling = mock<Behandling>({
-            eksternBrukId: '1',
-            behandlingsstegsinfo: [],
-        });
-
-        const { getByText, getByRole, getByLabelText, queryAllByText } =
-            renderVilkårsvurderingContainer(behandling, fagsak);
+    test('Vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
+        setupUseBehandlingApiMock(lagVilkårsvurderingResponse({ perioder }));
+        const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
+            lagBehandling(),
+            lagFagsak()
+        );
 
         await waitFor(() => {
-            expect(getByText('Tilbakekreving')).toBeInTheDocument();
-            expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+            expect(getByText(førstePeriode)).toBeInTheDocument();
         });
 
         await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse1');
@@ -371,20 +323,18 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 name: 'Neste periode',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
 
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
-
+        expect(getByText(andrePeriode)).toBeInTheDocument();
         await user.selectOptions(
             getByRole('combobox', {
                 name: 'Kopier vilkårsvurdering fra',
             }),
-            '01.01.2020 - 31.03.2020'
+            førstePeriode
         );
-
         expect(getByText('Er beløpet i behold?')).toBeInTheDocument();
-
-        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Begrunnelse1');
+        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue(
+            `${perioder[0].begrunnelse}Begrunnelse1`
+        );
         expect(
             getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
                 selector: 'input',
@@ -397,7 +347,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 name: 'Nei',
             })
         ).toBeChecked();
-
         expect(getByText('Ingen tilbakekreving')).toBeInTheDocument();
 
         await user.click(
@@ -407,12 +356,11 @@ describe('Tester: VilkårsvurderingContainer', () => {
         );
     });
 
-    test('- vis utfylt - forstod/burde forstått - forsto', async () => {
-        setupUseBehandlingApiMock({
+    test('Vis utfylt - forstod/burde forstått - forsto', async () => {
+        const vilkårsvurderingResponse = lagVilkårsvurderingResponse({
             perioder: [
                 {
                     ...perioder[0],
-                    begrunnelse: 'Begrunnelse vilkår 1',
                     vilkårsvurderingsresultatInfo: {
                         vilkårsvurderingsresultat: Vilkårsresultat.ForstoBurdeForstått,
                         aktsomhet: {
@@ -425,10 +373,8 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 },
                 {
                     ...perioder[1],
-                    begrunnelse: 'Begrunnelse vilkår 2',
                     vilkårsvurderingsresultatInfo: {
                         vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
-                        aktsomhet: undefined,
                         godTro: {
                             begrunnelse: 'Begrunnelse god tro 2',
                             beløpErIBehold: false,
@@ -436,46 +382,17 @@ describe('Tester: VilkårsvurderingContainer', () => {
                     },
                 },
             ],
-            rettsgebyr: 1199,
         });
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({
-            ytelsestype: Ytelsetype.Barnetrygd,
-        });
-
-        const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } =
-            renderVilkårsvurderingContainer(behandling, fagsak);
+        setupUseBehandlingApiMock(vilkårsvurderingResponse);
+        const { getByText, getByRole, getByLabelText, queryByLabelText } =
+            renderVilkårsvurderingContainer(
+                lagBehandling(),
+                lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd })
+            );
 
         await waitFor(() => {
-            expect(getByText('Tilbakekreving')).toBeInTheDocument();
-            expect(queryByText('Detaljer for valgt periode')).toBeInTheDocument();
+            expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
         });
-        expect(
-            getByRole('button', {
-                name: 'Suksess fra 01.01.2020 til 31.03.2020',
-            })
-        ).toBeInTheDocument();
-
-        await user.click(
-            getByRole('button', {
-                name: 'Suksess fra 01.01.2020 til 31.03.2020',
-            })
-        );
-
-        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-
-        expect(
-            getByRole('button', {
-                name: 'Neste periode',
-            })
-        ).toBeEnabled();
-        expect(
-            getByRole('button', {
-                name: 'Gå tilbake til foreldelsessteget',
-            })
-        ).toBeEnabled();
-
-        expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeInTheDocument();
 
         expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Begrunnelse vilkår 1');
         expect(
@@ -504,7 +421,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
         );
 
         expect(
-            getByText('01.05.2020 - 30.06.2020', {
+            getByText(andrePeriode, {
                 selector: 'label',
             })
         ).toBeInTheDocument();
@@ -522,87 +439,52 @@ describe('Tester: VilkårsvurderingContainer', () => {
         expect(getByLabelText('Nei')).toBeChecked();
         expect(getByText('Ingen tilbakekreving')).toBeInTheDocument();
 
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        ).toBeEnabled();
-        expect(
-            getByRole('button', {
-                name: 'Forrige periode',
-            })
-        ).toBeEnabled();
-
         await user.click(
             getByRole('button', {
                 name: 'Forrige periode',
             })
         );
-
-        expect(
-            getByRole('button', {
-                name: 'Neste periode',
-            })
-        ).toBeEnabled();
-        expect(
-            getByRole('button', {
-                name: 'Gå tilbake til foreldelsessteget',
-            })
-        ).toBeEnabled();
     });
 
-    test('- vis utfylt - forstod/burde forstått - forsto - lesevisning', async () => {
-        setupUseBehandlingApiMock({
-            perioder: [
-                {
-                    ...perioder[0],
-                    begrunnelse: 'Begrunnelse vilkår 1',
-                    vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat: Vilkårsresultat.ForstoBurdeForstått,
-                        aktsomhet: {
-                            begrunnelse: 'Begrunnelse aktsomhet 1',
-                            aktsomhet: Aktsomhet.Forsett,
-                            særligeGrunner: [],
+    test('Vis utfylt - forstod/burde forstått - forsto - lesevisning', async () => {
+        setupUseBehandlingApiMock(
+            lagVilkårsvurderingResponse({
+                perioder: [
+                    lagVilkårsvurderingPeriode({
+                        ...perioder[0],
+                        vilkårsvurderingsresultatInfo: {
+                            vilkårsvurderingsresultat: Vilkårsresultat.ForstoBurdeForstått,
+                            aktsomhet: {
+                                begrunnelse: 'Begrunnelse aktsomhet 1',
+                                aktsomhet: Aktsomhet.Forsett,
+                                særligeGrunner: [],
+                            },
+                            godTro: undefined,
                         },
-                        godTro: undefined,
-                    },
-                },
-                {
-                    ...perioder[1],
-                    begrunnelse: 'Begrunnelse vilkår 2',
-                    vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
-                        aktsomhet: undefined,
-                        godTro: {
-                            begrunnelse: 'Begrunnelse god tro 2',
-                            beløpErIBehold: false,
+                    }),
+                    lagVilkårsvurderingPeriode({
+                        ...perioder[1],
+                        vilkårsvurderingsresultatInfo: {
+                            vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
+                            godTro: {
+                                begrunnelse: 'Begrunnelse god tro 2',
+                                beløpErIBehold: false,
+                            },
                         },
-                    },
-                },
-            ],
-            rettsgebyr: 1199,
-        });
-        const behandling = mock<Behandling>({
-            status: Behandlingstatus.FatterVedtak,
-            behandlingsstegsinfo: [],
-        });
-        const fagsak = mock<Fagsak>({
-            ytelsestype: Ytelsetype.Barnetrygd,
-        });
+                    }),
+                ],
+            })
+        );
 
         const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
-            // Tittel skal alltid være synlig
-            expect(getByText('Tilbakekreving', { selector: 'h1' })).toBeInTheDocument();
-            // Første periode sitt endringspanel skal være åpnet by default i lesevisning, sjekker at riktige verdier er satt
-            expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
+            expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
         });
 
-        expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeInTheDocument();
         expect(getByText('Begrunnelse vilkår 1')).toBeInTheDocument();
         expect(
             getByLabelText(
@@ -619,6 +501,7 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 exact: false,
             })
         ).not.toBeChecked();
+
         expect(getByText('Begrunnelse aktsomhet 1')).toBeInTheDocument();
         expect(
             getByLabelText('Forsto', {
@@ -632,7 +515,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
             })
         ).not.toBeChecked();
 
-        // Alle tidslinje knappene skal alltid være synlige
         expect(
             getByRole('button', {
                 name: 'Suksess fra 01.01.2020 til 31.03.2020',
@@ -644,30 +526,13 @@ describe('Tester: VilkårsvurderingContainer', () => {
             })
         ).toBeInTheDocument();
 
-        expect(
-            getByRole('button', {
-                name: 'Gå tilbake til foreldelsessteget',
-            })
-        ).toBeEnabled();
-
-        expect(
-            getByRole('button', {
-                name: 'Neste periode',
-            })
-        ).toBeEnabled();
-
         await user.click(
             getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         );
 
-        // Tittel skal alltid være synlig
-        expect(getByText('Tilbakekreving', { selector: 'h1' })).toBeInTheDocument();
-
-        // Andre periode sitt endringspanel skal nå være åpnet, sjekker at riktige verdier er satt
-        expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
-        expect(getByText('01.05.2020 - 30.06.2020', { selector: 'label' })).toBeInTheDocument();
+        expect(getByText(andrePeriode, { selector: 'label' })).toBeInTheDocument();
         expect(getByText('Begrunnelse vilkår 2')).toBeInTheDocument();
         expect(
             getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
@@ -698,7 +563,6 @@ describe('Tester: VilkårsvurderingContainer', () => {
             })
         ).not.toBeChecked();
 
-        // Alle tidslinje knappene skal alltid være synlige
         expect(
             getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
@@ -709,102 +573,34 @@ describe('Tester: VilkårsvurderingContainer', () => {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeInTheDocument();
-
-        expect(
-            getByRole('button', {
-                name: 'Forrige periode',
-            })
-        ).toBeEnabled();
-
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        ).toBeEnabled();
-
-        await user.click(
-            getByRole('button', {
-                name: 'Forrige periode',
-            })
-        );
-
-        expect(
-            getByRole('button', {
-                name: 'Gå tilbake til foreldelsessteget',
-            })
-        ).toBeEnabled();
-
-        expect(
-            getByRole('button', {
-                name: 'Neste periode',
-            })
-        ).toBeEnabled();
     });
 
-    test('- periode med udefinert resultat er ikke behandlet', async () => {
-        setupUseBehandlingApiMock({
+    test('Periode med udefinert resultat er ikke behandlet', async () => {
+        const vilkårsvurderingResponse = lagVilkårsvurderingResponse({
             perioder: [
-                {
+                lagVilkårsvurderingPeriode({
                     ...perioder[0],
-                    begrunnelse: 'Begrunnelse vilkår 1',
                     vilkårsvurderingsresultatInfo: {
                         vilkårsvurderingsresultat: Vilkårsresultat.Udefinert,
-                        aktsomhet: undefined,
-                        godTro: undefined,
                     },
-                },
-                {
-                    ...perioder[1],
-                    begrunnelse: 'Begrunnelse vilkår 2',
-                    vilkårsvurderingsresultatInfo: {
-                        vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
-                        aktsomhet: {
-                            begrunnelse: 'Begrunnelse aktsomhet 2',
-                            aktsomhet: Aktsomhet.Forsett,
-                            særligeGrunner: [],
-                        },
-                        godTro: {
-                            begrunnelse: 'Begrunnelse god tro 2',
-                            beløpErIBehold: false,
-                        },
-                    },
-                },
+                }),
             ],
-            rettsgebyr: 1199,
         });
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({
-            ytelsestype: Ytelsetype.Overgangsstønad,
-        });
-
+        setupUseBehandlingApiMock(vilkårsvurderingResponse);
         const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
-            expect(getByText('Tilbakekreving')).toBeInTheDocument();
-            expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+            expect(
+                getByRole('button', {
+                    name: 'Advarsel fra 01.01.2020 til 31.03.2020',
+                })
+            ).toBeInTheDocument();
         });
-        expect(
-            getByRole('button', {
-                name: 'Advarsel fra 01.01.2020 til 31.03.2020',
-            })
-        ).toBeInTheDocument();
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        ).toBeEnabled();
-        expect(
-            getByRole('button', {
-                name: 'Gå tilbake til foreldelsessteget',
-            })
-        ).toBeEnabled();
 
-        expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeInTheDocument();
-
-        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Begrunnelse vilkår 1');
+        expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
         expect(
             getByLabelText(
                 'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',

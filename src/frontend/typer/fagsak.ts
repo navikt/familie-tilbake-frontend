@@ -18,7 +18,9 @@ export type Institusjon = {
 };
 
 type FagsakBehandling = {
+    /** UUID */
     behandlingId: string;
+    /** UUID */
     eksternBrukId: string;
     status: Behandlingstatus;
     type: Behandlingstype;

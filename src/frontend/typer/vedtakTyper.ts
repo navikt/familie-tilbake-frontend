@@ -15,7 +15,7 @@ export type Beregningsresultat = {
     vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelse;
 };
 
-type VedtaksbrevUnderavsnitt = {
+export type VedtaksbrevUnderavsnitt = {
     underavsnittstype?: Underavsnittstype;
     brødtekst?: string;
     fritekst?: string;
