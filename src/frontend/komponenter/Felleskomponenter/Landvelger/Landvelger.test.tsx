@@ -3,6 +3,7 @@ import React from 'react';
 
 import Landvelger from './Landvelger';
 
+const mockHåndterLandValgt = jest.fn();
 jest.mock('countries-list', () => ({
     countries: {
         NO: { name: 'Norge' },
@@ -13,9 +14,7 @@ jest.mock('countries-list', () => ({
 }));
 
 describe('Landvelger', () => {
-    const mockHåndterLandValgt = jest.fn();
-
-    test('vises uten å krasje', () => {
+    test('Vises uten å krasje', () => {
         render(
             <Landvelger
                 id="landvelger-test"
@@ -26,7 +25,7 @@ describe('Landvelger', () => {
         expect(screen.getByText('Land')).toBeInTheDocument();
     });
 
-    test('ekskluderer spesifiserte landkoder', async () => {
+    test('Ekskluderer spesifiserte landkoder', async () => {
         render(
             <Landvelger
                 id="landvelger-test"
@@ -45,7 +44,7 @@ describe('Landvelger', () => {
         expect(screen.queryByText('Sverige')).not.toBeInTheDocument();
     });
 
-    test('viser feilmelding når det finnes', () => {
+    test('Viser feilmelding når det finnes', () => {
         const errorMessage = 'Eksempel på feilmelding';
         render(
             <Landvelger

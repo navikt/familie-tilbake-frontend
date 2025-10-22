@@ -15,6 +15,9 @@ import * as React from 'react';
 
 import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
+import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
+import { lagTotrinnsStegInfo } from '../../../../testdata/totrinnskontrollFactory';
 import { Behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 
@@ -40,7 +43,7 @@ const renderTotrinnskontroll = (behandling: Behandling, fagsak: Fagsak): RenderR
         </TotrinnskontrollProvider>
     );
 
-const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkontroll): void => {
+const setupMocks = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkontroll): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerTotrinnkontrollKall: (): Promise<Ressurs<Totrinnkontroll>> => {
             const ressurs = mock<Ressurs<Totrinnkontroll>>({
@@ -62,46 +65,28 @@ const setupMock = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkontr
         visVenteModal: false,
         erBehandlingReturnertFraBeslutter: (): boolean => returnertFraBeslutter,
         hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-        settIkkePersistertKomponent: jest.fn(),
-        nullstillIkkePersisterteKomponenter: jest.fn(),
     }));
 };
 
-describe('Tester: Totrinnskontroll', () => {
+describe('Totrinnskontroll', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
 
-    test('- vis og fyll ut - godkjenner', async () => {
-        setupMock(false, {
+    test('Vis og fyll ut - godkjenner', async () => {
+        setupMocks(false, {
             totrinnsstegsinfo: [
-                {
-                    behandlingssteg: Behandlingssteg.Fakta,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
+                lagTotrinnsStegInfo(Behandlingssteg.Fakta),
+                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering),
+                lagTotrinnsStegInfo(Behandlingssteg.ForeslåVedtak),
             ],
         });
-        const behandling = mock<Behandling>({
-            kanEndres: true,
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
-            behandling,
-            fagsak
+            lagBehandling({ kanEndres: true }),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -143,39 +128,18 @@ describe('Tester: Totrinnskontroll', () => {
         );
     });
 
-    test('- vis og fyll ut - sender tilbake', async () => {
-        setupMock(false, {
+    test('Vis og fyll ut - sender tilbake', async () => {
+        setupMocks(false, {
             totrinnsstegsinfo: [
-                {
-                    behandlingssteg: Behandlingssteg.Fakta,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Foreldelse,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
-                    godkjent: undefined,
-                    begrunnelse: undefined,
-                },
+                lagTotrinnsStegInfo(Behandlingssteg.Fakta),
+                lagTotrinnsStegInfo(Behandlingssteg.Foreldelse),
+                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering),
+                lagTotrinnsStegInfo(Behandlingssteg.ForeslåVedtak),
             ],
         });
-        const behandling = mock<Behandling>({
-            kanEndres: true,
-        });
-        const fagsak = mock<Fagsak>();
-
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
-            behandling,
-            fagsak
+            lagBehandling({ kanEndres: true }),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -232,39 +196,27 @@ describe('Tester: Totrinnskontroll', () => {
         );
     });
 
-    test('- vis utfylt - sendt tilbake', async () => {
-        setupMock(true, {
+    test('Vis utfylt - sendt tilbake', async () => {
+        setupMocks(true, {
             totrinnsstegsinfo: [
-                {
-                    behandlingssteg: Behandlingssteg.Fakta,
-                    godkjent: true,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Foreldelse,
-                    godkjent: false,
-                    begrunnelse: 'Foreldelse må vurderes på nytt',
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
-                    godkjent: true,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
-                    godkjent: false,
-                    begrunnelse: 'Vedtaket må vurderes på nytt',
-                },
+                lagTotrinnsStegInfo(Behandlingssteg.Fakta, true),
+                lagTotrinnsStegInfo(
+                    Behandlingssteg.Foreldelse,
+                    false,
+                    'Foreldelse må vurderes på nytt'
+                ),
+                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering, true),
+                lagTotrinnsStegInfo(
+                    Behandlingssteg.ForeslåVedtak,
+                    false,
+                    'Vedtaket må vurderes på nytt'
+                ),
             ],
         });
-        const behandling = mock<Behandling>({
-            kanEndres: true,
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -294,39 +246,27 @@ describe('Tester: Totrinnskontroll', () => {
         expect(getByText('Vedtaket må vurderes på nytt')).toBeInTheDocument();
     });
 
-    test('- vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
-        setupMock(false, {
+    test('Vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
+        setupMocks(false, {
             totrinnsstegsinfo: [
-                {
-                    behandlingssteg: Behandlingssteg.Fakta,
-                    godkjent: true,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Foreldelse,
-                    godkjent: false,
-                    begrunnelse: 'Foreldelse må vurderes på nytt',
-                },
-                {
-                    behandlingssteg: Behandlingssteg.Vilkårsvurdering,
-                    godkjent: true,
-                    begrunnelse: undefined,
-                },
-                {
-                    behandlingssteg: Behandlingssteg.ForeslåVedtak,
-                    godkjent: false,
-                    begrunnelse: 'Vedtaket må vurderes på nytt',
-                },
+                lagTotrinnsStegInfo(Behandlingssteg.Fakta, true),
+                lagTotrinnsStegInfo(
+                    Behandlingssteg.Foreldelse,
+                    false,
+                    'Foreldelse må vurderes på nytt'
+                ),
+                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering, true),
+                lagTotrinnsStegInfo(
+                    Behandlingssteg.ForeslåVedtak,
+                    false,
+                    'Vedtaket må vurderes på nytt'
+                ),
             ],
         });
-        const behandling = mock<Behandling>({
-            kanEndres: false,
-        });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
-            behandling,
-            fagsak
+            lagBehandling({ kanEndres: false }),
+            lagFagsak()
         );
 
         await waitFor(() => {

@@ -1,11 +1,10 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
-    VilkårsvurderingResponse,
     VilkårsvurderingPeriode,
+    VilkårsvurderingResponse,
 } from '../../../typer/tilbakekrevingstyper';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
@@ -20,7 +19,12 @@ import * as React from 'react';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
-import { HendelseType, Ytelsetype } from '../../../kodeverk';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
+import {
+    lagVilkårsvurderingPeriode,
+    lagVilkårsvurderingResponse,
+} from '../../../testdata/vilkårsvurderingFactory';
 import { RessursStatus } from '../../../typer/ressurs';
 
 const mockUseHttp = jest.fn();
@@ -50,63 +54,39 @@ jest.mock('@tanstack/react-query', () => {
             };
 
             return {
-                mutate: mutateAsync,
-                mutateAsync: mutateAsync,
-                isError: false,
-                error: null,
+                mutateAsync,
             };
         }),
-        useQueryClient: jest.fn(() => ({
-            invalidateQueries: jest.fn(),
-        })),
     };
 });
 
-// Testdata - deles på tvers av alle tester
 const perioder: VilkårsvurderingPeriode[] = [
-    {
-        feilutbetaltBeløp: 1333,
+    lagVilkårsvurderingPeriode({
         periode: {
             fom: '2020-01-01',
             tom: '2020-03-31',
         },
-        hendelsestype: HendelseType.BosattIRiket,
-        foreldet: false,
-        begrunnelse: undefined,
-    },
-    {
-        feilutbetaltBeløp: 2000,
+    }),
+    lagVilkårsvurderingPeriode({
         periode: {
             fom: '2020-05-01',
             tom: '2020-06-30',
         },
-        hendelsestype: HendelseType.BorMedSøker,
-        foreldet: false,
-        begrunnelse: undefined,
-    },
-    {
-        feilutbetaltBeløp: 1500,
+    }),
+    lagVilkårsvurderingPeriode({
         periode: {
             fom: '2020-07-01',
             tom: '2020-08-31',
         },
-        hendelsestype: HendelseType.BosattIRiket,
-        foreldet: false,
-        begrunnelse: undefined,
-    },
+    }),
 ];
 
 const setupMocks = (): void => {
-    const vilkårsvurdering: VilkårsvurderingResponse = {
-        perioder: perioder,
-        rettsgebyr: 1199,
-    };
-
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
             const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
                 status: RessursStatus.Suksess,
-                data: vilkårsvurdering,
+                data: lagVilkårsvurderingResponse({ perioder }),
             });
             return Promise.resolve(ressurs);
         },
@@ -123,31 +103,24 @@ const setupMocks = (): void => {
         request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
-                data: mock<Behandling>({
-                    eksternBrukId: '1',
-                    behandlingsstegsinfo: [],
-                }),
+                data: mock<Behandling>({}),
             });
         },
     }));
 };
 
-const renderVilkårsvurderingPerioder = (
-    behandling: Behandling,
-    fagsak: Fagsak,
-    testPerioder: VilkårsvurderingPeriode[] = perioder
-): RenderResult => {
-    const skjemaData = testPerioder.map((periode, index) => ({
+const renderVilkårsvurderingPerioder = (): RenderResult => {
+    const skjemaData = perioder.map((periode, index) => ({
         index: `idx_fpsd_${index}`,
         ...periode,
     }));
 
     return render(
         <BehandlingProvider>
-            <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+            <VilkårsvurderingProvider behandling={lagBehandling()} fagsak={lagFagsak()}>
                 <VilkårsvurderingPerioder
-                    behandling={behandling}
-                    fagsak={fagsak}
+                    behandling={lagBehandling()}
+                    fagsak={lagFagsak()}
                     perioder={skjemaData}
                     erTotalbeløpUnder4Rettsgebyr={false}
                     erLesevisning={false}
@@ -172,9 +145,13 @@ const findPeriodButton = (
     );
 };
 
-describe('Tester: VilkårsvurderingPerioder', () => {
-    let user: UserEvent;
+const modalTekst =
+    'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode';
+const førstePeriode = '01.01.2020 - 31.03.2020';
+const andrePeriode = '01.05.2020 - 30.06.2020';
 
+describe('VilkårsvurderingPerioder', () => {
+    let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
@@ -182,43 +159,25 @@ describe('Tester: VilkårsvurderingPerioder', () => {
         Element.prototype.scrollIntoView = jest.fn();
     });
 
-    test('skal bytte periode direkte når det ikke er ulagrede endringer', async () => {
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
+    test('Skal bytte periode når det ikke er ulagrede endringer', async () => {
+        const { getByText, getAllByRole } = renderVilkårsvurderingPerioder();
 
-        const { getByText, getAllByRole } = renderVilkårsvurderingPerioder(behandling, fagsak);
-
-        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-
-        // Verifiser at første periode er valgt
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
-
-        // Klikk på andre periode
+        expect(getByText(førstePeriode)).toBeInTheDocument();
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
         if (!andrePeriodeButton) {
             throw new Error('Andre periode button ikke funnet');
         }
 
         await user.click(andrePeriodeButton);
-
-        // Verifiser at andre periode nå vises
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
+        expect(getByText(andrePeriode)).toBeInTheDocument();
     });
 
-    test('skal vise modal ved bytte av periode med ulagrede endringer', async () => {
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
+    test('Skal vise modal ved bytte av periode med ulagrede endringer', async () => {
+        const { getByText, getAllByRole, getByLabelText } = renderVilkårsvurderingPerioder();
 
-        const { getByText, getByRole, getAllByRole, getByLabelText } =
-            renderVilkårsvurderingPerioder(behandling, fagsak);
-
-        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-
-        // Legg til ulagrede endringer
         const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
         await user.type(begrunnelseInput, 'Test begrunnelse som ikke er lagret');
 
-        // Prøv å bytte periode
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
         if (!andrePeriodeButton) {
             throw new Error('Andre periode button ikke funnet');
@@ -226,67 +185,32 @@ describe('Tester: VilkårsvurderingPerioder', () => {
 
         await user.click(andrePeriodeButton);
 
-        // Verifiser at modal vises
-        expect(
-            getByText(
-                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-            )
-        ).toBeInTheDocument();
-
-        // Verifiser modal-knapper
-        expect(getByRole('button', { name: 'Lagre og bytt periode' })).toBeInTheDocument();
-        expect(getByRole('button', { name: 'Bytt uten å lagre' })).toBeInTheDocument();
+        expect(getByText(modalTekst)).toBeInTheDocument();
     });
 
-    test('skal bytte uten å lagre når "Bytt uten å lagre" klikkes', async () => {
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
-
+    test('Skal bytte uten å lagre når "Bytt uten å lagre" klikkes', async () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
-            renderVilkårsvurderingPerioder(behandling, fagsak);
+            renderVilkårsvurderingPerioder();
 
-        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-
-        // Legg til ulagrede endringer
         const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
         await user.type(begrunnelseInput, 'Test begrunnelse som ikke er lagret');
 
-        // Bytt periode
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
         if (andrePeriodeButton) {
             await user.click(andrePeriodeButton);
         }
 
-        // Vent på modal og klikk "Bytt uten å lagre"
-        expect(
-            getByText(
-                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-            )
-        ).toBeInTheDocument();
-
+        expect(getByText(modalTekst)).toBeInTheDocument();
         await user.click(getByRole('button', { name: 'Bytt uten å lagre' }));
 
-        // Verifiser at periode er byttet
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
-
-        // Verifiser at modal er borte
-        expect(
-            queryByText(
-                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-            )
-        ).not.toBeInTheDocument();
+        expect(getByText(andrePeriode)).toBeInTheDocument();
+        expect(queryByText(modalTekst)).not.toBeInTheDocument();
     });
 
-    test('skal lagre og bytte når "Lagre og bytt periode" klikkes', async () => {
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
-
+    test('Skal lagre og bytte når "Lagre og bytt periode" klikkes', async () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
-            renderVilkårsvurderingPerioder(behandling, fagsak);
+            renderVilkårsvurderingPerioder();
 
-        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-
-        // Fyll ut skjema for å gjøre det gyldig for lagring
         const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
         await user.type(begrunnelseInput, 'Gyldig begrunnelse');
 
@@ -302,72 +226,35 @@ describe('Tester: VilkårsvurderingPerioder', () => {
 
         await user.click(getByRole('radio', { name: 'Nei' }));
 
-        // Bytt periode
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
         if (andrePeriodeButton) {
             await user.click(andrePeriodeButton);
         }
 
-        // Klikk "Lagre og bytt periode"
-        expect(
-            getByText(
-                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-            )
-        ).toBeInTheDocument();
-
+        expect(getByText(modalTekst)).toBeInTheDocument();
         await user.click(getByRole('button', { name: 'Lagre og bytt periode' }));
 
-        // Verifiser at periode er byttet
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
-
-        // Verifiser at modal er borte
-        expect(
-            queryByText(
-                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-            )
-        ).not.toBeInTheDocument();
+        expect(getByText(andrePeriode)).toBeInTheDocument();
+        expect(queryByText(modalTekst)).not.toBeInTheDocument();
     });
 
-    test('skal lukke modal og forbli på nåværende periode når "Lukk" klikkes', async () => {
-        const behandling = mock<Behandling>({ behandlingsstegsinfo: [] });
-        const fagsak = mock<Fagsak>({ ytelsestype: Ytelsetype.Barnetilsyn });
-
+    test('Skal lukke modal og forbli på nåværende periode når "Lukk" klikkes', async () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
-            renderVilkårsvurderingPerioder(behandling, fagsak);
+            renderVilkårsvurderingPerioder();
 
-        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-
-        // Legg til ulagrede endringer
         const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
         await user.type(begrunnelseInput, 'Test begrunnelse');
 
-        // Prøv å bytte periode
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
         if (andrePeriodeButton) {
             await user.click(andrePeriodeButton);
         }
 
-        // Lukk modal
-        expect(
-            getByText(
-                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-            )
-        ).toBeInTheDocument();
+        expect(getByText(modalTekst)).toBeInTheDocument();
+        await user.click(getByRole('button', { name: 'Lukk' }));
 
-        const lukkButton = getByRole('button', { name: 'Lukk' });
-        await user.click(lukkButton);
-
-        // Verifiser at vi fortsatt er på første periode
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
-
-        // Verifiser at modal er borte
-        expect(
-            queryByText(
-                'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode'
-            )
-        ).not.toBeInTheDocument();
-
-        // Verifiser at ulagrede endringer er bevart
+        expect(getByText(førstePeriode)).toBeInTheDocument();
+        expect(queryByText(modalTekst)).not.toBeInTheDocument();
         expect(begrunnelseInput).toHaveValue('Test begrunnelse');
     });
 });

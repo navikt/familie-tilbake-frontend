@@ -21,40 +21,40 @@ const queryClient = new QueryClient({
         },
     },
 });
+const mockSaksbehandler = {
+    displayName: 'Test Saksbehandler',
+    email: 'test@nav.no',
+    firstName: 'Test',
+    lastName: 'Saksbehandler',
+    identifier: '12345678901',
+    navIdent: 'TST123',
+    enhet: 'Test Enhet',
+};
 
 const renderHeader = (): RenderResult => {
-    const testSaksbehandler = {
-        displayName: 'Test Saksbehandler',
-        email: 'test@nav.no',
-        firstName: 'Test',
-        lastName: 'Saksbehandler',
-        identifier: '12345678901',
-        navIdent: 'TST123',
-        enhet: 'Test Enhet',
-    };
     return render(
         <QueryClientProvider client={queryClient}>
-            <FTHeader innloggetSaksbehandler={testSaksbehandler} />
+            <FTHeader innloggetSaksbehandler={mockSaksbehandler} />
         </QueryClientProvider>
     );
+};
+
+const setUpMocks = (): void => {
+    useBehandlingStore.setState({ personIdent: undefined });
+    mockHentBrukerlenkeBaseUrl.mockResolvedValue({
+        aInntektUrl: 'https://a-inntekt.nav.no',
+        gosysBaseUrl: 'https://gosys.nav.no',
+        modiaBaseUrl: 'https://modia.nav.no',
+    });
+    mockHentAInntektUrl.mockImplementation((_, personIdent: string | undefined) => {
+        return Promise.resolve(personIdent ? `https://a-inntekt.nav.no/mock=${personIdent}` : null);
+    });
 };
 
 describe('FTHeader', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        useBehandlingStore.setState({ personIdent: undefined });
-
-        mockHentBrukerlenkeBaseUrl.mockResolvedValue({
-            aInntektUrl: 'https://a-inntekt.nav.no',
-            gosysBaseUrl: 'https://gosys.nav.no',
-            modiaBaseUrl: 'https://modia.nav.no',
-        });
-
-        mockHentAInntektUrl.mockImplementation((_, personIdent: string | undefined) => {
-            return Promise.resolve(
-                personIdent ? `https://a-inntekt.nav.no/mock=${personIdent}` : null
-            );
-        });
+        setUpMocks();
     });
 
     test('hentBrukerlenkeBaseUrl blir kalt én gang ved rendering', () => {
