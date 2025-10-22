@@ -17,12 +17,8 @@ import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import {
-    lagTotrinnskontrollFaktainfo,
-    lagTotrinnskontrollForeldelsesinfo,
-    lagTotrinnskontrollForeslåVedtaksinfo,
-    lagTotrinnskontrollVilkårsvurderingsinfo,
-} from '../../../../testdata/totrinnskontrollFactory';
+import { lagTotrinnsStegInfo } from '../../../../testdata/totrinnskontrollFactory';
+import { Behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 
 const mockUseBehandling = jest.fn();
@@ -82,9 +78,9 @@ describe('Totrinnskontroll', () => {
     test('Vis og fyll ut - godkjenner', async () => {
         setupMocks(false, {
             totrinnsstegsinfo: [
-                lagTotrinnskontrollFaktainfo(),
-                lagTotrinnskontrollVilkårsvurderingsinfo(),
-                lagTotrinnskontrollForeslåVedtaksinfo(),
+                lagTotrinnsStegInfo(Behandlingssteg.Fakta),
+                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering),
+                lagTotrinnsStegInfo(Behandlingssteg.ForeslåVedtak),
             ],
         });
 
@@ -135,10 +131,10 @@ describe('Totrinnskontroll', () => {
     test('Vis og fyll ut - sender tilbake', async () => {
         setupMocks(false, {
             totrinnsstegsinfo: [
-                lagTotrinnskontrollFaktainfo(),
-                lagTotrinnskontrollForeldelsesinfo(),
-                lagTotrinnskontrollVilkårsvurderingsinfo(),
-                lagTotrinnskontrollForeslåVedtaksinfo(),
+                lagTotrinnsStegInfo(Behandlingssteg.Fakta),
+                lagTotrinnsStegInfo(Behandlingssteg.Foreldelse),
+                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering),
+                lagTotrinnsStegInfo(Behandlingssteg.ForeslåVedtak),
             ],
         });
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
@@ -203,10 +199,18 @@ describe('Totrinnskontroll', () => {
     test('Vis utfylt - sendt tilbake', async () => {
         setupMocks(true, {
             totrinnsstegsinfo: [
-                lagTotrinnskontrollFaktainfo(true),
-                lagTotrinnskontrollForeldelsesinfo(false, 'Foreldelse må vurderes på nytt'),
-                lagTotrinnskontrollVilkårsvurderingsinfo(true),
-                lagTotrinnskontrollForeslåVedtaksinfo(false, 'Vedtaket må vurderes på nytt'),
+                lagTotrinnsStegInfo(Behandlingssteg.Fakta, true),
+                lagTotrinnsStegInfo(
+                    Behandlingssteg.Foreldelse,
+                    false,
+                    'Foreldelse må vurderes på nytt'
+                ),
+                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering, true),
+                lagTotrinnsStegInfo(
+                    Behandlingssteg.ForeslåVedtak,
+                    false,
+                    'Vedtaket må vurderes på nytt'
+                ),
             ],
         });
 
@@ -245,10 +249,18 @@ describe('Totrinnskontroll', () => {
     test('Vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
         setupMocks(false, {
             totrinnsstegsinfo: [
-                lagTotrinnskontrollFaktainfo(true),
-                lagTotrinnskontrollForeldelsesinfo(false, 'Foreldelse må vurderes på nytt'),
-                lagTotrinnskontrollVilkårsvurderingsinfo(true),
-                lagTotrinnskontrollForeslåVedtaksinfo(false, 'Vedtaket må vurderes på nytt'),
+                lagTotrinnsStegInfo(Behandlingssteg.Fakta, true),
+                lagTotrinnsStegInfo(
+                    Behandlingssteg.Foreldelse,
+                    false,
+                    'Foreldelse må vurderes på nytt'
+                ),
+                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering, true),
+                lagTotrinnsStegInfo(
+                    Behandlingssteg.ForeslåVedtak,
+                    false,
+                    'Vedtaket må vurderes på nytt'
+                ),
             ],
         });
 
