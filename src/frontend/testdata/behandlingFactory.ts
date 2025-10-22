@@ -1,4 +1,4 @@
-import type { Behandlingsstegstilstand } from '../typer/behandling';
+import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
 
 import {
     Behandlingssteg,
@@ -6,7 +6,6 @@ import {
     Behandlingstatus,
     Behandlingstype,
     Saksbehandlingstype,
-    type Behandling,
 } from '../typer/behandling';
 
 export const lagBehandling = (overrides: Partial<Behandling> = {}): Behandling => ({
