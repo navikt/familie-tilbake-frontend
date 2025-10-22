@@ -1,6 +1,6 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { FagsakState } from '../../../stores/fagsakStore';
-import type { Behandling, Behandlingsstegstilstand } from '../../../typer/behandling';
+import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { Location, NavigateFunction } from 'react-router';
@@ -11,7 +11,14 @@ import React from 'react';
 
 import { Stegflyt } from './Stegflyt';
 import { Fagsystem } from '../../../kodeverk';
-import { Behandlingssteg, Behandlingsstegstatus } from '../../../typer/behandling';
+import {
+    lagBehandling,
+    lagBrevmottakerSteg,
+    lagFaktaSteg,
+    lagForeldelseSteg,
+    lagVilkårsvurderingSteg,
+} from '../../../testdata/behandlingFactory';
+import { Behandlingsstegstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
 const mockNavigate = jest.fn();
@@ -26,79 +33,47 @@ jest.mock('react-router', () => ({
 
 jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
-    erStegUtført: (status: string): boolean => status === 'UTFØRT',
+    erStegUtført: (status: Behandlingsstegstatus): boolean =>
+        status === Behandlingsstegstatus.Utført,
 }));
 
 jest.mock('../../../stores/fagsakStore', () => ({
     useFagsakStore: (): UseBoundStore<StoreApi<FagsakState>> => mockUseFagsakStore(),
 }));
 
-const createMockBehandling = (props = {}): Ressurs<Partial<Behandling>> => ({
+const createMockRessursBehandling = (
+    overrides: Partial<Behandling> = {}
+): Ressurs<Partial<Behandling>> => ({
     status: RessursStatus.Suksess,
-    data: {
+    data: lagBehandling({
         eksternBrukId: '456',
         behandlingId: '123',
-        behandlingsstegsinfo: createMockStegInfo(),
-        ...props,
-    },
+        behandlingsstegsinfo: [lagFaktaSteg(), lagForeldelseSteg(), lagVilkårsvurderingSteg()],
+        ...overrides,
+    }),
 });
 
-const createMockStegInfo = (includeBrevmottaker = false): Behandlingsstegstilstand[] => {
-    const synligeSteg = [
-        {
-            behandlingssteg: Behandlingssteg.Fakta,
-            behandlingsstegstatus: Behandlingsstegstatus.Utført,
-            venteårsak: undefined,
-            tidsfrist: undefined,
-        },
-        {
-            behandlingssteg: Behandlingssteg.Foreldelse,
-            behandlingsstegstatus: Behandlingsstegstatus.Utført,
-            venteårsak: undefined,
-            tidsfrist: undefined,
-        },
-        {
-            behandlingssteg: Behandlingssteg.Vilkårsvurdering,
-            behandlingsstegstatus: Behandlingsstegstatus.Klar,
-            venteårsak: undefined,
-            tidsfrist: undefined,
-        },
-    ];
-
-    if (includeBrevmottaker) {
-        synligeSteg.splice(3, 0, {
-            behandlingssteg: Behandlingssteg.Brevmottaker,
-            behandlingsstegstatus: Behandlingsstegstatus.Klar,
-            venteårsak: undefined,
-            tidsfrist: undefined,
-        });
-    }
-
-    return synligeSteg;
-};
-
 const renderStegflyt = (): RenderResult => render(<Stegflyt />);
+
+const setupMocks = (): void => {
+    mockUseBehandling.mockReturnValue({
+        behandling: createMockRessursBehandling(),
+    });
+
+    mockUseFagsakStore.mockReturnValue({
+        eksternFagsakId: '123',
+        fagsystem: Fagsystem.BA,
+    });
+
+    mockUseLocation.mockReturnValue({
+        pathname: '/fagsystem/BA/fagsak/123/behandling/456/fakta',
+    });
+};
 
 describe('Stegflyt', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-
-        mockUseBehandling.mockReturnValue({
-            behandling: createMockBehandling(),
-        });
-
-        mockUseFagsakStore.mockReturnValue({
-            eksternFagsakId: '123',
-            fagsystem: Fagsystem.BA,
-        });
-
-        mockUseLocation.mockReturnValue({
-            pathname: '/fagsystem/BA/fagsak/123/behandling/456/fakta',
-            search: '',
-            hash: '',
-            state: null,
-            key: 'default',
-        });
+        setupMocks();
     });
 
     describe('Synlighet av steg', () => {
@@ -118,8 +93,13 @@ describe('Stegflyt', () => {
 
         test('skal vise Brevmottaker når det er i behandlingsstegsinfo og støttet', () => {
             mockUseBehandling.mockReturnValue({
-                behandling: createMockBehandling({
-                    behandlingsstegsinfo: createMockStegInfo(true),
+                behandling: createMockRessursBehandling({
+                    behandlingsstegsinfo: [
+                        lagFaktaSteg(),
+                        lagForeldelseSteg(),
+                        lagVilkårsvurderingSteg(),
+                        lagBrevmottakerSteg(),
+                    ],
                 }),
             });
             const { getByText } = renderStegflyt();
@@ -132,9 +112,8 @@ describe('Stegflyt', () => {
         test('skal ikke navigere til steget som allerede er aktivt', () => {
             const { getByText } = renderStegflyt();
 
-            // Fakta er aktivt steg (basert på mock location)
-            const faktaSteg = getByText('Fakta');
-            fireEvent.click(faktaSteg);
+            const aktivtSteg = getByText('Fakta');
+            fireEvent.click(aktivtSteg);
 
             expect(mockNavigate).not.toHaveBeenCalled();
         });
@@ -179,10 +158,6 @@ describe('Stegflyt', () => {
         test('skal returnere null når aktiv stegnummer er mindre enn 1', () => {
             mockUseLocation.mockReturnValue({
                 pathname: '/ugyldig-side',
-                search: '',
-                hash: '',
-                state: null,
-                key: 'default',
             });
 
             const { container } = renderStegflyt();

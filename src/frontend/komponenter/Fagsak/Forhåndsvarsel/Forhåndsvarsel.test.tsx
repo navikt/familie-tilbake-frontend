@@ -7,15 +7,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
-import { Fagsystem, Ytelsetype } from '../../../kodeverk';
-import {
-    Behandlingstatus,
-    Behandlingstype,
-    Saksbehandlingstype,
-    type Behandling,
-} from '../../../typer/behandling';
-import { Kjønn } from '../../../typer/bruker';
-import { Målform, type Fagsak } from '../../../typer/fagsak';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 
 const mockUseBehandling = jest.fn();
 const mockUseDokumentlisting = jest.fn();
@@ -39,64 +32,6 @@ jest.mock('../Høyremeny/Dokumentlisting/DokumentlistingContext', () => ({
     useDokumentlisting: (): DokumentApiHook => mockUseDokumentlisting(),
 }));
 
-const defaultFagsakVerdier = {
-    eksternFagsakId: 'test-fagsak-id',
-    fagsystem: Fagsystem.BA,
-    ytelsestype: Ytelsetype.Barnetrygd,
-    språkkode: Målform.Nb,
-    institusjon: null,
-    bruker: {
-        personIdent: '12345678901',
-        navn: 'Test Bruker',
-        fødselsdato: '1990-01-01',
-        kjønn: Kjønn.Mann,
-        dødsdato: null,
-    },
-    behandlinger: [],
-};
-
-const defaultBehandlingVerdier = {
-    behandlingId: 'test-behandling-id',
-    eksternBrukId: 'test-ekstern-id',
-    opprettetDato: '2023-01-01',
-    status: Behandlingstatus.Utredes,
-    type: Behandlingstype.Tilbakekreving,
-    kanEndres: true,
-    kanSetteTilbakeTilFakta: false,
-    harVerge: false,
-    kanHenleggeBehandling: false,
-    kanRevurderingOpprettes: false,
-    varselSendt: false,
-    behandlingsstegsinfo: [],
-    fagsystemsbehandlingId: 'test-fagsystem-id',
-    støtterManuelleBrevmottakere: true,
-    manuelleBrevmottakere: [],
-    saksbehandlingstype: Saksbehandlingstype.Ordinær,
-    erNyModell: true,
-    erBehandlingHenlagt: false,
-    avsluttetDato: null,
-    endretTidspunkt: '',
-    vedtaksDato: null,
-    enhetskode: '',
-    enhetsnavn: '',
-    resultatstype: null,
-    ansvarligSaksbehandler: '',
-    ansvarligBeslutter: null,
-    erBehandlingPåVent: false,
-    eksternFaksakId: '',
-    behandlingsårsakstype: null,
-    harManuelleBrevmottakere: false,
-    begrunnelseForTilbakekreving: null,
-};
-
-const createMockBehandling: Behandling = {
-    ...defaultBehandlingVerdier,
-};
-
-const createMockFagsak: Fagsak = {
-    ...defaultFagsakVerdier,
-};
-
 const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 5'),
@@ -109,9 +44,8 @@ const setupMock = (): void => {
     });
 };
 
-const renderForhåndsvarsel = (): RenderResult => {
-    return render(<Forhåndsvarsel behandling={createMockBehandling} fagsak={createMockFagsak} />);
-};
+const renderForhåndsvarsel = (): RenderResult =>
+    render(<Forhåndsvarsel behandling={lagBehandling()} fagsak={lagFagsak()} />);
 
 describe('Forhåndsvarsel', () => {
     beforeEach(() => {
@@ -119,7 +53,7 @@ describe('Forhåndsvarsel', () => {
         setupMock();
     });
 
-    it('viser alle alternativene', () => {
+    test('Viser alle alternativene', () => {
         renderForhåndsvarsel();
 
         expect(screen.getByLabelText('Ja')).toBeInTheDocument();
@@ -127,7 +61,7 @@ describe('Forhåndsvarsel', () => {
         expect(screen.getByLabelText('Forhåndsvarsel er allerede sendt')).toBeInTheDocument();
     });
 
-    it('viser flyt for Opprett forhåndsvarsel når man velger Ja', () => {
+    test('Viser flyt for Opprett forhåndsvarsel når man velger Ja', () => {
         renderForhåndsvarsel();
         expect(screen.queryByText(/Opprett forhåndsvarsel/)).not.toBeInTheDocument();
 
@@ -141,7 +75,7 @@ describe('Forhåndsvarsel', () => {
         ).toBeInTheDocument();
     });
 
-    it('viser fritekstfelt når bruker har valgt Ja', () => {
+    test('Viser fritekstfelt når bruker har valgt Ja', () => {
         renderForhåndsvarsel();
         fireEvent.click(screen.getByLabelText('Ja'));
 

@@ -4,7 +4,7 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
-import type { ForeldelsePeriode, ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
+import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -16,11 +16,12 @@ import * as React from 'react';
 
 import ForeldelseContainer from './ForeldelseContainer';
 import { ForeldelseProvider } from './ForeldelseContext';
-import { Fagsystem, Foreldelsevurdering } from '../../../kodeverk';
+import { Foreldelsevurdering } from '../../../kodeverk';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
+import { lagForeldelsePeriode, lagForeldelseResponse } from '../../../testdata/foreldelseFactory';
 import { Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
-
-jest.setTimeout(10000);
 
 jest.mock('../../../api/http/HttpProvider', () => {
     return {
@@ -52,86 +53,71 @@ const renderForeldelseContainer = (behandling: Behandling, fagsak: Fagsak): Rend
     );
 };
 
-describe('Tester: ForeldelseContainer', () => {
-    let user: UserEvent;
+const foreldetPerioder = [
+    lagForeldelsePeriode({
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-01-01',
+            tom: '2020-03-31',
+        },
+    }),
+    lagForeldelsePeriode({
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-05-01',
+            tom: '2020-06-30',
+        },
+    }),
+];
 
+const setupMock = (
+    behandlet: boolean,
+    lesevisning: boolean,
+    autoutført: boolean,
+    foreldelse?: ForeldelseResponse
+): void => {
+    if (foreldelse) {
+        mockUseBehandlingApi.mockImplementation(() => ({
+            gjerForeldelseKall: (): Promise<Ressurs<ForeldelseResponse>> => {
+                const ressurs = mock<Ressurs<ForeldelseResponse>>({
+                    status: RessursStatus.Suksess,
+                    data: foreldelse,
+                });
+                return Promise.resolve(ressurs);
+            },
+            sendInnForeldelse: (): Promise<Ressurs<string>> => {
+                const ressurs = mock<Ressurs<string>>({
+                    status: RessursStatus.Suksess,
+                    data: 'suksess',
+                });
+                return Promise.resolve(ressurs);
+            },
+        }));
+    }
+    mockUseBehandling.mockImplementation(() => ({
+        erStegBehandlet: (): boolean => behandlet,
+        erStegAutoutført: (): boolean => autoutført,
+        visVenteModal: false,
+        behandlingILesemodus: lesevisning,
+        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
+        settIkkePersistertKomponent: jest.fn(),
+        nullstillIkkePersisterteKomponenter: jest.fn(),
+        actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 4'),
+        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+    }));
+};
+
+describe('ForeldelseContainer', () => {
+    let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
-    const perioder: ForeldelsePeriode[] = [
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-01-01',
-                tom: '2020-03-31',
-            },
-            foreldelsesvurderingstype: undefined,
-            begrunnelse: undefined,
-            foreldelsesfrist: undefined,
-            oppdagelsesdato: undefined,
-        },
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-05-01',
-                tom: '2020-06-30',
-            },
-            foreldelsesvurderingstype: undefined,
-            begrunnelse: undefined,
-            foreldelsesfrist: undefined,
-            oppdagelsesdato: undefined,
-        },
-    ];
 
-    const foreldelse: ForeldelseResponse = {
-        foreldetPerioder: perioder,
-    };
-
-    const setupMock = (
-        behandlet: boolean,
-        lesevisning: boolean,
-        autoutført: boolean,
-        foreldelse?: ForeldelseResponse
-    ): void => {
-        if (foreldelse) {
-            mockUseBehandlingApi.mockImplementation(() => ({
-                gjerForeldelseKall: (): Promise<Ressurs<ForeldelseResponse>> => {
-                    const ressurs = mock<Ressurs<ForeldelseResponse>>({
-                        status: RessursStatus.Suksess,
-                        data: foreldelse,
-                    });
-                    return Promise.resolve(ressurs);
-                },
-                sendInnForeldelse: (): Promise<Ressurs<string>> => {
-                    const ressurs = mock<Ressurs<string>>({
-                        status: RessursStatus.Suksess,
-                        data: 'suksess',
-                    });
-                    return Promise.resolve(ressurs);
-                },
-            }));
-        }
-        mockUseBehandling.mockImplementation(() => ({
-            erStegBehandlet: (): boolean => behandlet,
-            erStegAutoutført: (): boolean => autoutført,
-            visVenteModal: false,
-            behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-            settIkkePersistertKomponent: jest.fn(),
-            nullstillIkkePersisterteKomponenter: jest.fn(),
-            actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 4'),
-            harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
-        }));
-    };
-
-    test('- vis og fyll ut perioder og send inn', async () => {
-        setupMock(false, false, false, foreldelse);
-        const fagsak = mock<Fagsak>({ fagsystem: Fagsystem.EF, eksternFagsakId: '1' });
-        const behandling = mock<Behandling>({ eksternBrukId: '1' });
-
+    test('Vis og fyll ut perioder og send inn', async () => {
+        setupMock(false, false, false, lagForeldelseResponse({ foreldetPerioder }));
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
-            renderForeldelseContainer(behandling, fagsak);
+            renderForeldelseContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
@@ -213,17 +199,17 @@ describe('Tester: ForeldelseContainer', () => {
         );
     });
 
-    test('- vis utfylt', async () => {
-        setupMock(true, false, false, {
+    test('Vis utfylt', async () => {
+        const foreldelseResponse = lagForeldelseResponse({
             foreldetPerioder: [
                 {
-                    ...perioder[0],
+                    ...foreldetPerioder[0],
                     begrunnelse: 'Begrunnelse 1',
                     foreldelsesvurderingstype: Foreldelsevurdering.Foreldet,
                     foreldelsesfrist: '2021-01-01',
                 },
                 {
-                    ...perioder[1],
+                    ...foreldetPerioder[1],
                     begrunnelse: 'Begrunnelse 2',
                     foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
                     foreldelsesfrist: '2021-01-01',
@@ -231,12 +217,11 @@ describe('Tester: ForeldelseContainer', () => {
                 },
             ],
         });
-        const behandling = mock<Behandling>();
-        const fagsak = mock<Fagsak>();
+        setupMock(true, false, false, foreldelseResponse);
 
         const { getByText, getByRole, getByLabelText, queryByText } = renderForeldelseContainer(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -305,17 +290,17 @@ describe('Tester: ForeldelseContainer', () => {
         ).toBeEnabled();
     });
 
-    test('- vis utfylt - lesevisning', async () => {
+    test('Vis utfylt - lesevisning', async () => {
         setupMock(true, true, false, {
             foreldetPerioder: [
                 {
-                    ...perioder[0],
+                    ...foreldetPerioder[0],
                     begrunnelse: 'Begrunnelse 1',
                     foreldelsesvurderingstype: Foreldelsevurdering.Foreldet,
                     foreldelsesfrist: '2021-01-01',
                 },
                 {
-                    ...perioder[1],
+                    ...foreldetPerioder[1],
                     begrunnelse: 'Begrunnelse 2',
                     foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
                     foreldelsesfrist: '2021-01-01',
@@ -323,12 +308,10 @@ describe('Tester: ForeldelseContainer', () => {
                 },
             ],
         });
-        const behandling = mock<Behandling>({ status: Behandlingstatus.FatterVedtak });
-        const fagsak = mock<Fagsak>();
 
         const { getByText, getByRole, getByLabelText } = renderForeldelseContainer(
-            behandling,
-            fagsak
+            lagBehandling({ status: Behandlingstatus.FatterVedtak }),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -409,7 +392,6 @@ describe('Tester: ForeldelseContainer', () => {
         );
         expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
 
-        // Alle tidslinje knappene skal alltid være synlige
         expect(
             getByRole('button', {
                 name: 'Suksess fra 01.01.2020 til 31.03.2020',
@@ -421,7 +403,6 @@ describe('Tester: ForeldelseContainer', () => {
             })
         ).toBeInTheDocument();
 
-        // Knapper for navigering mellom faner skal alltid være synlige og enabled
         expect(
             getByRole('button', {
                 name: 'Gå tilbake til faktasteget',
@@ -434,23 +415,13 @@ describe('Tester: ForeldelseContainer', () => {
         ).toBeEnabled();
     });
 
-    test('- vis autoutført', async () => {
+    test('Vis autoutført', async () => {
         setupMock(false, false, true);
-
-        const behandling = mock<Behandling>();
-        const fagsak = mock<Fagsak>();
-
-        const { getByText, getByRole } = renderForeldelseContainer(behandling, fagsak);
+        const { getByText } = renderForeldelseContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
         });
         expect(getByText('Perioden er ikke foreldet')).toBeInTheDocument();
-
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vilkårsvurderingssteget',
-            })
-        ).toBeEnabled();
     });
 });

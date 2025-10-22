@@ -85,5 +85,6 @@ export default defineConfig(
                 version: 'detect',
             },
         },
-    }[globalIgnores('src/frontend/generated/')]
+    },
+    [globalIgnores(['src/frontend/generated/'])]
 );

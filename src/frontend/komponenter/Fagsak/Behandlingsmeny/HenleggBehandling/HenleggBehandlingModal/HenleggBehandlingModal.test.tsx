@@ -12,6 +12,7 @@ import { mock } from 'jest-mock-extended';
 import * as React from 'react';
 
 import HenleggBehandlingModal from './HenleggBehandlingModal';
+import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { RessursStatus } from '../../../../../typer/ressurs';
 
@@ -46,38 +47,35 @@ const renderHenleggBehandlingModal = (
         />
     );
 
-describe('Tester: HenleggBehandlingModal', () => {
+const setupMocks = (): void => {
+    mockUseBehandlingApi.mockImplementation(() => ({
+        henleggBehandling: (): Promise<Ressurs<string>> => {
+            const ressurs = mock<Ressurs<string>>({
+                status: RessursStatus.Suksess,
+                data: 'suksess',
+            });
+            return Promise.resolve(ressurs);
+        },
+    }));
+    mockUseBehandling.mockImplementation(() => ({
+        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
+        nullstillIkkePersisterteKomponenter: jest.fn(),
+    }));
+};
+
+describe('HenleggBehandlingModal', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
+        setupMocks();
     });
 
-    beforeEach(() => {
-        mockUseBehandlingApi.mockImplementation(() => ({
-            henleggBehandling: (): Promise<Ressurs<string>> => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-        mockUseBehandling.mockImplementation(() => ({
-            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-            settIkkePersistertKomponent: jest.fn(),
-            nullstillIkkePersisterteKomponenter: jest.fn(),
-        }));
-    });
-
-    test('- henlegger behandling med varsel sendt', async () => {
-        const behandling = mock<Behandling>({
-            type: Behandlingstype.Tilbakekreving,
-            varselSendt: true,
-        });
-
+    test('Henlegger behandling med varsel sendt', async () => {
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
-            renderHenleggBehandlingModal(behandling, [Behandlingresultat.HenlagtFeilopprettet]);
+            renderHenleggBehandlingModal(lagBehandling({ varselSendt: true }), [
+                Behandlingresultat.HenlagtFeilopprettet,
+            ]);
 
         await waitFor(() => {
             expect(getByText('Behandlingen henlegges')).toBeInTheDocument();
@@ -109,14 +107,11 @@ describe('Tester: HenleggBehandlingModal', () => {
         );
     });
 
-    test('- henlegger behandling med varsel ikke sendt', async () => {
-        const behandling = mock<Behandling>({
-            type: Behandlingstype.Tilbakekreving,
-            varselSendt: false,
-        });
-
+    test('Henlegger behandling med varsel ikke sendt', async () => {
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
-            renderHenleggBehandlingModal(behandling, [Behandlingresultat.HenlagtFeilopprettet]);
+            renderHenleggBehandlingModal(lagBehandling(), [
+                Behandlingresultat.HenlagtFeilopprettet,
+            ]);
 
         await waitFor(() => {
             expect(getByText('Behandlingen henlegges')).toBeInTheDocument();
@@ -148,16 +143,15 @@ describe('Tester: HenleggBehandlingModal', () => {
         );
     });
 
-    test('- henlegger revurdering, med brev', async () => {
-        const behandling = mock<Behandling>({
-            type: Behandlingstype.RevurderingTilbakekreving,
-        });
-
+    test('Henlegger revurdering, med brev', async () => {
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
-            renderHenleggBehandlingModal(behandling, [
-                Behandlingresultat.HenlagtFeilopprettetMedBrev,
-                Behandlingresultat.HenlagtFeilopprettetUtenBrev,
-            ]);
+            renderHenleggBehandlingModal(
+                lagBehandling({ type: Behandlingstype.RevurderingTilbakekreving }),
+                [
+                    Behandlingresultat.HenlagtFeilopprettetMedBrev,
+                    Behandlingresultat.HenlagtFeilopprettetUtenBrev,
+                ]
+            );
 
         await waitFor(() => {
             expect(getByText('Behandlingen henlegges')).toBeInTheDocument();
@@ -204,16 +198,15 @@ describe('Tester: HenleggBehandlingModal', () => {
         );
     });
 
-    test('- henlegger revurdering, uten brev', async () => {
-        const behandling = mock<Behandling>({
-            type: Behandlingstype.RevurderingTilbakekreving,
-        });
-
+    test('Henlegger revurdering, uten brev', async () => {
         const { getByText, getByLabelText, getByRole, queryByText, queryByRole, queryAllByText } =
-            renderHenleggBehandlingModal(behandling, [
-                Behandlingresultat.HenlagtFeilopprettetMedBrev,
-                Behandlingresultat.HenlagtFeilopprettetUtenBrev,
-            ]);
+            renderHenleggBehandlingModal(
+                lagBehandling({ type: Behandlingstype.RevurderingTilbakekreving }),
+                [
+                    Behandlingresultat.HenlagtFeilopprettetMedBrev,
+                    Behandlingresultat.HenlagtFeilopprettetUtenBrev,
+                ]
+            );
 
         await waitFor(() => {
             expect(getByText('Behandlingen henlegges')).toBeInTheDocument();

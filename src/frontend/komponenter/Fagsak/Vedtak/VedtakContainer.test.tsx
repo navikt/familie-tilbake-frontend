@@ -21,7 +21,15 @@ import * as React from 'react';
 
 import VedtakContainer from './VedtakContainer';
 import { VedtakProvider } from './VedtakContext';
-import { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
+import { Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
+import {
+    lagOppsummeringAvsnitt,
+    lagPeriode2Avsnitt,
+    lagPeriodeAvsnitt,
+    lagVedaksbrevUnderavsnitt,
+} from '../../../testdata/vedtakFactory';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
@@ -64,160 +72,113 @@ const renderVedtakContainer = (behandling: Behandling, fagsak: Fagsak): RenderRe
         </VedtakProvider>
     );
 
-describe('Tester: VedtakContainer', () => {
-    let user: UserEvent;
+const perioder: BeregningsresultatPeriode[] = [
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-01-01',
+            tom: '2020-03-31',
+        },
+        vurdering: Vurdering.Forsett,
+        andelAvBeløp: 90,
+        renteprosent: 0,
+        tilbakekrevingsbeløp: 1222,
+        tilbakekrevesBeløpEtterSkatt: 1222,
+    },
+    {
+        feilutbetaltBeløp: 1333,
+        periode: {
+            fom: '2020-05-01',
+            tom: '2020-06-30',
+        },
+        vurdering: Vurdering.SimpelUaktsomhet,
+        andelAvBeløp: 91,
+        renteprosent: 0,
+        tilbakekrevingsbeløp: 1223,
+        tilbakekrevesBeløpEtterSkatt: 1223,
+    },
+];
+const beregningsresultat: Beregningsresultat = {
+    beregningsresultatsperioder: perioder,
+    vedtaksresultat: Vedtaksresultat.DelvisTilbakebetaling,
+    vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.Nei },
+};
 
+const setupMock = (
+    lesevisning: boolean,
+    avsnitt: VedtaksbrevAvsnitt[],
+    resultat: Beregningsresultat
+): void => {
+    mockUseBehandlingApi.mockImplementation(() => ({
+        gjerVedtaksbrevteksterKall: (): Promise<Ressurs<VedtaksbrevAvsnitt[]>> => {
+            const ressurs = mock<Ressurs<VedtaksbrevAvsnitt[]>>({
+                status: RessursStatus.Suksess,
+                data: avsnitt,
+            });
+            return Promise.resolve(ressurs);
+        },
+        gjerBeregningsresultatKall: (): Promise<Ressurs<Beregningsresultat>> => {
+            const ressurs = mock<Ressurs<Beregningsresultat>>({
+                status: RessursStatus.Suksess,
+                data: resultat,
+            });
+            return Promise.resolve(ressurs);
+        },
+        sendInnForeslåVedtak: (): Promise<Ressurs<string>> => {
+            const ressurs = mock<Ressurs<string>>({
+                status: RessursStatus.Suksess,
+                data: 'suksess',
+            });
+            return Promise.resolve(ressurs);
+        },
+    }));
+
+    mockUseSammenslåPerioder.mockImplementation(() => ({
+        hentErPerioderLike: (): Promise<boolean> => Promise.resolve(false),
+        hentErPerioderSammenslått: (): Promise<boolean> => Promise.resolve(false),
+    }));
+
+    mockUseBehandling.mockImplementation(() => ({
+        visVenteModal: false,
+        behandlingILesemodus: lesevisning,
+        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
+        settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
+        nullstillIkkePersisterteKomponenter: jest.fn(),
+        actionBarStegtekst: jest.fn().mockReturnValue('Steg 4 av 4'),
+        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+        erStegBehandlet: jest.fn().mockReturnValue(false),
+    }));
+};
+
+describe('VedtakContainer', () => {
+    let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
         jest.clearAllMocks();
     });
 
-    const perioder: BeregningsresultatPeriode[] = [
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-01-01',
-                tom: '2020-03-31',
-            },
-            vurdering: Vurdering.Forsett,
-            andelAvBeløp: 90,
-            renteprosent: 0,
-            tilbakekrevingsbeløp: 1222,
-            tilbakekrevesBeløpEtterSkatt: 1222,
-        },
-        {
-            feilutbetaltBeløp: 1333,
-            periode: {
-                fom: '2020-05-01',
-                tom: '2020-06-30',
-            },
-            vurdering: Vurdering.SimpelUaktsomhet,
-            andelAvBeløp: 91,
-            renteprosent: 0,
-            tilbakekrevingsbeløp: 1223,
-            tilbakekrevesBeløpEtterSkatt: 1223,
-        },
-    ];
-    const beregningsresultat: Beregningsresultat = {
-        beregningsresultatsperioder: perioder,
-        vedtaksresultat: Vedtaksresultat.DelvisTilbakebetaling,
-        vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.Nei },
-    };
-    const avsnitt: VedtaksbrevAvsnitt[] = [
-        {
-            avsnittstype: Avsnittstype.Oppsummering,
-            overskrift: 'Du må betale tilbake barnetrygden',
-            underavsnittsliste: [],
-        },
-        {
-            avsnittstype: Avsnittstype.Periode,
-            overskrift: 'Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020',
-            underavsnittsliste: [],
-            fom: '2020-01-01',
-            tom: '2020-03-31',
-        },
-        {
-            avsnittstype: Avsnittstype.Periode,
-            overskrift: 'Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020',
-            underavsnittsliste: [],
-            fom: '2020-05-01',
-            tom: '2020-06-30',
-        },
-    ];
-
-    const setupMock = (
-        lesevisning: boolean,
-        avsnitt: VedtaksbrevAvsnitt[],
-        resultat: Beregningsresultat
-    ): void => {
-        mockUseBehandlingApi.mockImplementation(() => ({
-            gjerVedtaksbrevteksterKall: (): Promise<Ressurs<VedtaksbrevAvsnitt[]>> => {
-                const ressurs = mock<Ressurs<VedtaksbrevAvsnitt[]>>({
-                    status: RessursStatus.Suksess,
-                    data: avsnitt,
-                });
-                return Promise.resolve(ressurs);
-            },
-            gjerBeregningsresultatKall: (): Promise<Ressurs<Beregningsresultat>> => {
-                const ressurs = mock<Ressurs<Beregningsresultat>>({
-                    status: RessursStatus.Suksess,
-                    data: resultat,
-                });
-                return Promise.resolve(ressurs);
-            },
-            sendInnForeslåVedtak: (): Promise<Ressurs<string>> => {
-                const ressurs = mock<Ressurs<string>>({
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                });
-                return Promise.resolve(ressurs);
-            },
-        }));
-
-        mockUseSammenslåPerioder.mockImplementation(() => ({
-            hentErPerioderLike: (): Promise<boolean> => Promise.resolve(false),
-            hentErPerioderSammenslått: (): Promise<boolean> => Promise.resolve(false),
-            erPerioderLike: false,
-        }));
-
-        mockUseBehandling.mockImplementation(() => ({
-            visVenteModal: false,
-            behandlingILesemodus: lesevisning,
-            hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-            settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
-            nullstillIkkePersisterteKomponenter: jest.fn(),
-            actionBarStegtekst: jest.fn().mockReturnValue('Steg 4 av 4'),
-            harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
-            erStegBehandlet: jest.fn().mockReturnValue(false),
-        }));
-    };
-
-    test('- vis og fyll ut - 1 fritekst påkrevet', async () => {
-        setupMock(
-            false,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
-        const behandling = mock<Behandling>({
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
-
+    test('Vis og fyll ut - 1 fritekst påkrevet', async () => {
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                }),
+            ]),
+        ];
+        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getAllByText, getByRole, queryByRole, queryByText } =
-            renderVedtakContainer(behandling, fagsak);
+            renderVedtakContainer(lagBehandling(), lagFagsak());
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -297,61 +258,40 @@ describe('Tester: VedtakContainer', () => {
         );
     });
 
-    test('- vis og fyll ut - 2 fritekst påkrevet - revurdering nye opplysninger', async () => {
-        setupMock(
-            false,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                        {
-                            underavsnittstype: Underavsnittstype.Vilkår,
-                            overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
-                            brødtekst: 'Dette er en tekst!',
-                            fritekstTillatt: false,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
-        const behandling = mock<Behandling>({
-            type: Behandlingstype.RevurderingTilbakekreving,
-            behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
-
+    test('Vis og fyll ut - 2 fritekst påkrevet - revurdering nye opplysninger', async () => {
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Vilkår,
+                    overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
+                    brødtekst: 'Dette er en tekst!',
+                }),
+            ]),
+        ];
+        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole, queryByText } =
-            renderVedtakContainer(behandling, fagsak);
+            renderVedtakContainer(
+                lagBehandling({
+                    type: Behandlingstype.RevurderingTilbakekreving,
+                    behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
+                }),
+                lagFagsak()
+            );
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -421,61 +361,41 @@ describe('Tester: VedtakContainer', () => {
         );
     });
 
-    test('- vis og fyll ut - 2 fritekst påkrevet - revurdering klage KA', async () => {
-        setupMock(
-            false,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                        {
-                            underavsnittstype: Underavsnittstype.Vilkår,
-                            overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
-                            brødtekst: 'Dette er en tekst!',
-                            fritekstTillatt: false,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
-        const behandling = mock<Behandling>({
-            type: Behandlingstype.RevurderingTilbakekreving,
-            behandlingsårsakstype: Behandlingårsak.RevurderingKlageKa,
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
+    test('Vis og fyll ut - 2 fritekst påkrevet - revurdering klage KA', async () => {
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Vilkår,
+                    overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
+                    brødtekst: 'Dette er en tekst!',
+                }),
+            ]),
+        ];
+        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } =
-            renderVedtakContainer(behandling, fagsak);
+            renderVedtakContainer(
+                lagBehandling({
+                    type: Behandlingstype.RevurderingTilbakekreving,
+                    behandlingsårsakstype: Behandlingårsak.RevurderingKlageKa,
+                }),
+                lagFagsak()
+            );
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -542,61 +462,40 @@ describe('Tester: VedtakContainer', () => {
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('vedtak');
     });
 
-    test('- vis og fyll ut - 1 fritekst påkrevet - fyller ut 1 ekstra fritekst - revurdering NFP', async () => {
-        setupMock(
-            false,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                        {
-                            underavsnittstype: Underavsnittstype.Vilkår,
-                            overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
-                            brødtekst: 'Dette er en tekst!',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
-        const behandling = mock<Behandling>({
-            type: Behandlingstype.RevurderingTilbakekreving,
-            behandlingsårsakstype: Behandlingårsak.RevurderingKlageNfp,
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
-
+    test('Vis og fyll ut - 1 fritekst påkrevet - fyller ut 1 ekstra fritekst - revurdering NFP', async () => {
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                }),
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Vilkår,
+                    overskrift: 'Hvordan har vi kommet fram til at du må betale tilbake?',
+                    brødtekst: 'Dette er en tekst!',
+                    fritekstTillatt: true,
+                }),
+            ]),
+        ];
+        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getByRole, getAllByRole, getByTestId, queryByText, queryByRole } =
-            renderVedtakContainer(behandling, fagsak);
+            renderVedtakContainer(
+                lagBehandling({
+                    type: Behandlingstype.RevurderingTilbakekreving,
+                    behandlingsårsakstype: Behandlingårsak.RevurderingKlageNfp,
+                }),
+                lagFagsak()
+            );
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -695,55 +594,32 @@ describe('Tester: VedtakContainer', () => {
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('vedtak');
     });
 
-    test('- vis utfylt - 1 fritekst påkrevet - 1 ekstra fritekst', async () => {
-        setupMock(
-            false,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                            fritekst: 'Denne friteksten var påkrevet',
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                            fritekst: 'Denne friteksten var lagt til ekstra',
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
-        const behandling = mock<Behandling>({
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
+    test('Vis utfylt - 1 fritekst påkrevet - 1 ekstra fritekst', async () => {
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                    fritekst: 'Denne friteksten var påkrevet',
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekst: 'Denne friteksten var lagt til ekstra',
+                }),
+            ]),
+        ];
+        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
 
         const { getByText, getByRole, getByTestId, queryByRole } = renderVedtakContainer(
-            behandling,
-            fagsak
+            lagBehandling(),
+            lagFagsak()
         );
 
         await waitFor(() => {
@@ -821,53 +697,33 @@ describe('Tester: VedtakContainer', () => {
         );
     });
 
-    test('- vis utfylt - lesevisning', async () => {
-        setupMock(
-            true,
-            [
-                {
-                    ...avsnitt[0],
-                    underavsnittsliste: [
-                        {
-                            brødtekst: `Barnetrygden din er endret. Endringen gjorde at du har fått utbetalt for mye. Du må betale tilbake 2 445 kroner, som er deler av det feilutbetalte beløpet.`,
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[1],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: true,
-                            fritekst: 'Denne friteksten var påkrevet',
-                        },
-                    ],
-                },
-                {
-                    ...avsnitt[2],
-                    underavsnittsliste: [
-                        {
-                            underavsnittstype: Underavsnittstype.Fakta,
-                            brødtekst: 'Du har fått 1 333 kroner for mye utbetalt. ',
-                            fritekstTillatt: true,
-                            fritekstPåkrevet: false,
-                            fritekst: 'Denne friteksten var lagt til ekstra',
-                        },
-                    ],
-                },
-            ],
-            beregningsresultat
-        );
-        const behandling = mock<Behandling>({
-            manuelleBrevmottakere: [],
-        });
-        const fagsak = mock<Fagsak>();
+    test('Vis utfylt - lesevisning', async () => {
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: true,
+                    fritekst: 'Denne friteksten var påkrevet',
+                }),
+            ]),
+            lagPeriode2Avsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekst: 'Denne friteksten var lagt til ekstra',
+                }),
+            ]),
+        ];
+        setupMock(true, vedtaksbrevAvsnitt, beregningsresultat);
 
-        const { getByText, getByRole, queryByRole } = renderVedtakContainer(behandling, fagsak);
+        const { getByText, getByRole, queryByRole } = renderVedtakContainer(
+            lagBehandling(),
+            lagFagsak()
+        );
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
