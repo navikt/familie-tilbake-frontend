@@ -1,5 +1,5 @@
 import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
-import { Button, Dropdown } from '@navikt/ds-react';
+import { ActionMenu, Button } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { EndreBehandlendeEnhet } from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
@@ -43,20 +43,23 @@ export const Behandlingsmeny: React.FC = () => {
     }
 
     return (
-        <Dropdown closeOnSelect>
-            <Button
-                as={Dropdown.Toggle}
-                id="behandlingsmeny-arialabel-knapp"
-                size="small"
-                variant="tertiary"
-                icon={<MenuElipsisHorizontalIcon fontSize="1.5rem" />}
-            >
-                Behandlingsmeny
-            </Button>
+        <ActionMenu>
+            <ActionMenu.Trigger>
+                <Button
+                    id="behandlingsmeny-knapp"
+                    size="small"
+                    variant="tertiary"
+                    icon={<MenuElipsisHorizontalIcon fontSize="1.5rem" />}
+                >
+                    Behandlingsmeny
+                </Button>
+            </ActionMenu.Trigger>
 
-            <Dropdown.Menu placement="top-start" aria-labelledby="behandlingsmeny-arialabel-knapp">
-                <Dropdown.Menu.List className="min-w-60 m-0">
-                    <OpprettBehandling behandling={behandling.data} />
+            <ActionMenu.Content aria-labelledby="behandlingsmeny-knapp">
+                <ActionMenu.Group className="m-2" aria-label="Behandlingsmenyvalg">
+                    {behandling.data.kanRevurderingOpprettes && (
+                        <OpprettBehandling behandlingId={behandling.data.behandlingId} />
+                    )}
 
                     {behandling.data.status !== Behandlingstatus.Avsluttet &&
                         !vedtakFattetEllerFattes &&
@@ -91,8 +94,8 @@ export const Behandlingsmeny: React.FC = () => {
                                 <HistoriskeVurderinger behandling={behandling.data} />
                             </>
                         )}
-                </Dropdown.Menu.List>
-            </Dropdown.Menu>
-        </Dropdown>
+                </ActionMenu.Group>
+            </ActionMenu.Content>
+        </ActionMenu>
     );
 };
