@@ -21,10 +21,7 @@ type OpprettBehandlingSkjemaHook = {
     nullstillSkjema: () => void;
 };
 
-const useOpprettBehandlingSkjema = (
-    behandlingId: string,
-    lukkModal: (_vis: boolean) => void
-): OpprettBehandlingSkjemaHook => {
+const useOpprettBehandlingSkjema = (behandlingId: string): OpprettBehandlingSkjemaHook => {
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { ytelsestype, eksternFagsakId, fagsystem } = useFagsakStore();
     const { utførRedirect } = useRedirectEtterLagring();
@@ -63,7 +60,6 @@ const useOpprettBehandlingSkjema = (
                 },
                 (response: Ressurs<string>) => {
                     if (response.status === RessursStatus.Suksess) {
-                        lukkModal(false);
                         utførRedirect(
                             `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${response.data}`
                         );
