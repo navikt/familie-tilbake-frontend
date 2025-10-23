@@ -24,7 +24,7 @@ import { useBehandling } from '../../context/BehandlingContext';
 import { ToggleName } from '../../context/toggles';
 import { useToggles } from '../../context/TogglesContext';
 import { Behandlingstatus } from '../../typer/behandling';
-import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from '../../utils/sider';
+import { erHistoriskSide, erSidenTilgjengelig, utledBehandlingSide } from '../../utils/sider';
 import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
 
 const BrevmottakerContainer = lazyImportMedRetry(
@@ -81,7 +81,8 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
     const erØnsketSideLovlig =
-        ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
+        ønsketSide &&
+        erSidenTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo, behandling.erNyModell);
     const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
     React.useEffect(() => {

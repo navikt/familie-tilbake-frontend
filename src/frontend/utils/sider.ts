@@ -75,6 +75,10 @@ const sjekkOmSidenErAktiv = (
 export const erSidenAktiv = (synligSteg: SynligSteg, behandling: Behandling): boolean => {
     if (!behandling.behandlingsstegsinfo) return true;
 
+    if (synligSteg === SYNLIGE_STEG.BREVMOTTAKER && behandling.erNyModell) {
+        return true;
+    }
+
     if (synligSteg === SYNLIGE_STEG.VERGE) {
         return (
             behandling.harVerge || sjekkOmSidenErAktiv(synligSteg, behandling.behandlingsstegsinfo)
@@ -89,7 +93,7 @@ export const visSide = (
     behandling: Behandling,
     aktiveToggles: Record<string, boolean>
 ): boolean => {
-    if (steg === Behandlingssteg.Brevmottaker) {
+    if (steg === Behandlingssteg.Brevmottaker && !behandling.erNyModell) {
         return behandling.behandlingsstegsinfo
             .filter(
                 ({ behandlingsstegstatus }) =>
@@ -134,13 +138,16 @@ export const erHistoriskSide = (side: string): boolean => {
     return historiskeSider.includes(side);
 };
 
-export const erØnsketSideTilgjengelig = (
-    ønsketSide: string,
-    behandlingssteginfo: Behandlingsstegstilstand[]
+export const erSidenTilgjengelig = (
+    ønsketSide: SynligSteg['href'],
+    behandlingssteginfo: Behandlingsstegstilstand[],
+    erNyModell: boolean
 ): boolean => {
     if (erHistoriskSide(ønsketSide)) return true;
 
     const funnetØnsketSide = Object.values(SYNLIGE_STEG).find(({ href }) => href === ønsketSide);
+
+    if (funnetØnsketSide?.steg === Behandlingssteg.Brevmottaker && erNyModell) return true;
 
     if (funnetØnsketSide && behandlingssteginfo) {
         const steg = behandlingssteginfo.find(

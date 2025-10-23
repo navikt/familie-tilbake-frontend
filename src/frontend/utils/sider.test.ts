@@ -1,6 +1,6 @@
 import type { Behandling } from '../typer/behandling';
 
-import { visSide } from './sider';
+import { erSidenAktiv, erSidenTilgjengelig, SYNLIGE_STEG, visSide } from './sider';
 import {
     lagBehandling,
     lagBrevmottakerSteg,
@@ -37,8 +37,38 @@ describe('Sider', () => {
 
     test('visSide skal vise de synlige stegene: Fakta, Foreldelse, Vilkårsvurdering, Vedtak', () => {
         mockBehandling.behandlingsstegsinfo?.forEach(stegInfo => {
-            const result = visSide(stegInfo.behandlingssteg, mockBehandling as Behandling, {});
+            const result = visSide(stegInfo.behandlingssteg, mockBehandling, {});
             expect(result).toBe(true);
+        });
+    });
+
+    describe('Brevmottakersteget i ny modell', () => {
+        const mockBehandlingNyModell = lagBehandling({
+            erNyModell: true,
+            behandlingsstegsinfo: [
+                lagFaktaSteg(),
+                lagForeldelseSteg(),
+                lagVilkårsvurderingSteg(),
+                lagForeslåVedtakSteg({ status: Behandlingsstegstatus.Startet }),
+            ],
+        });
+        test('Skal vises', () => {
+            const resultat = visSide(Behandlingssteg.Brevmottaker, mockBehandlingNyModell, {});
+            expect(resultat).toBe(true);
+        });
+
+        test('Skal være aktiv', () => {
+            const resultat = erSidenAktiv(SYNLIGE_STEG.BREVMOTTAKER, mockBehandlingNyModell);
+            expect(resultat).toBe(true);
+        });
+
+        test('Skal være tilgjengelig', () => {
+            const resultat = erSidenTilgjengelig(
+                SYNLIGE_STEG.BREVMOTTAKER.href,
+                mockBehandlingNyModell.behandlingsstegsinfo,
+                mockBehandlingNyModell.erNyModell
+            );
+            expect(resultat).toBe(true);
         });
     });
 });
