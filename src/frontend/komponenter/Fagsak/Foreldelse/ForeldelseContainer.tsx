@@ -125,7 +125,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                 <DataLastIkkeSuksess ressurser={[foreldelse]} />
             )}
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Foreldelse)}
+                stegtekst={actionBarStegtekst(Behandlingssteg.Foreldelse, behandling.erNyModell)}
                 forrigeAriaLabel="Gå tilbake til faktasteget"
                 nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
                 onForrige={gåTilForrigeSteg}

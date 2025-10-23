@@ -516,7 +516,10 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                 )}
             </HStack>
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Vilkårsvurdering)}
+                stegtekst={actionBarStegtekst(
+                    Behandlingssteg.Vilkårsvurdering,
+                    behandling.erNyModell
+                )}
                 forrigeAriaLabel="Gå tilbake til foreldelsessteget"
                 nesteAriaLabel="Gå videre til vedtakssteget"
                 onNeste={() => handleNavigering(PeriodeHandling.GåTilNesteSteg)}
