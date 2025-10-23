@@ -84,9 +84,10 @@ export const Behandlingsmeny: React.FC = () => {
                                     <EndreBehandlendeEnhet behandling={behandling.data} />
                                 )}
 
-                                {behandling.data.støtterManuelleBrevmottakere && (
-                                    <LeggTilFjernBrevmottakere behandling={behandling.data} />
-                                )}
+                                {behandling.data.støtterManuelleBrevmottakere &&
+                                    !behandling.data.erNyModell && (
+                                        <LeggTilFjernBrevmottakere behandling={behandling.data} />
+                                    )}
 
                                 <HistoriskeVurderinger behandling={behandling.data} />
                             </>
