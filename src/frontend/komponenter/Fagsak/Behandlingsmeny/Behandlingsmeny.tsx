@@ -1,6 +1,7 @@
 import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button } from '@navikt/ds-react';
 import * as React from 'react';
+import { useState } from 'react';
 
 import { EndreBehandlendeEnhet } from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import { GjennoptaBehandling } from './GjennoptaBehandling/GjennoptaBehandling';
@@ -8,7 +9,7 @@ import { HenleggBehandling } from './HenleggBehandling/HenleggBehandling';
 import { HentOppdatertKravgrunnlag } from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
 import { HistoriskeVurderinger } from './HistoriskeVurderinger/HistoriskeVurderinger';
 import { LeggTilFjernBrevmottakere } from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
-import { OpprettBehandling } from './OpprettBehandling/OpprettBehandling';
+import { OpprettRevurdering } from './OpprettRevurdering/OpprettRevurdering';
 import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
 import { useApp } from '../../../context/AppContext';
@@ -22,6 +23,7 @@ import { RessursStatus } from '../../../typer/ressurs';
 
 export const Behandlingsmeny: React.FC = () => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
+    const [holdMenyenÅpen, setHoldMenyenÅpen] = useState(false);
     const { fagsystem, ytelsestype } = useFagsakStore();
     const { innloggetSaksbehandler } = useApp();
     const erProd =
@@ -43,22 +45,25 @@ export const Behandlingsmeny: React.FC = () => {
     }
 
     return (
-        <ActionMenu>
+        <ActionMenu open={holdMenyenÅpen} onOpenChange={setHoldMenyenÅpen}>
             <ActionMenu.Trigger>
                 <Button
                     id="behandlingsmeny-knapp"
                     size="small"
                     variant="tertiary"
-                    icon={<MenuElipsisHorizontalIcon fontSize="1.5rem" />}
+                    icon={<MenuElipsisHorizontalIcon fontSize="1.5rem" aria-hidden />}
                 >
                     Behandlingsmeny
                 </Button>
             </ActionMenu.Trigger>
 
-            <ActionMenu.Content aria-labelledby="behandlingsmeny-knapp">
-                <ActionMenu.Group className="m-2" aria-label="Behandlingsmenyvalg">
+            <ActionMenu.Content
+                aria-labelledby="behandlingsmeny-knapp"
+                onClick={() => setHoldMenyenÅpen(true)}
+            >
+                <ActionMenu.Group aria-label="Behandlingsmenyvalg">
                     {behandling.data.kanRevurderingOpprettes && (
-                        <OpprettBehandling behandlingId={behandling.data.behandlingId} />
+                        <OpprettRevurdering behandlingId={behandling.data.behandlingId} />
                     )}
 
                     {behandling.data.status !== Behandlingstatus.Avsluttet &&
