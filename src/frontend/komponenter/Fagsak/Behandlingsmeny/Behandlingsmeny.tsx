@@ -1,7 +1,6 @@
 import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button } from '@navikt/ds-react';
 import * as React from 'react';
-import { useState } from 'react';
 
 import { EndreBehandlendeEnhet } from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import { GjennoptaBehandling } from './GjennoptaBehandling/GjennoptaBehandling';
@@ -23,7 +22,8 @@ import { RessursStatus } from '../../../typer/ressurs';
 
 export const Behandlingsmeny: React.FC = () => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
-    const [holdMenyenÅpen, setHoldMenyenÅpen] = useState(false);
+    const [holdMenyenÅpen, setHoldMenyenÅpen] = React.useState(false);
+    // const actionMenuRef = useRef<HTMLDivElement | null>(null);
     const { fagsystem, ytelsestype } = useFagsakStore();
     const { innloggetSaksbehandler } = useApp();
     const erProd =
@@ -59,6 +59,7 @@ export const Behandlingsmeny: React.FC = () => {
 
             <ActionMenu.Content
                 aria-labelledby="behandlingsmeny-knapp"
+                // ref={actionMenuRef}
                 onClick={() => setHoldMenyenÅpen(true)}
             >
                 <ActionMenu.Group aria-label="Behandlingsmenyvalg">
@@ -70,7 +71,10 @@ export const Behandlingsmeny: React.FC = () => {
                         !vedtakFattetEllerFattes &&
                         behandling.data.kanEndres && (
                             <>
-                                <HenleggBehandling behandling={behandling.data} />
+                                {behandling.data.kanHenleggeBehandling &&
+                                    behandling.data.kanEndres && (
+                                        <HenleggBehandling behandling={behandling.data} />
+                                    )}
 
                                 {erForvalter && (
                                     <HentOppdatertKravgrunnlag behandling={behandling.data} />
@@ -87,6 +91,8 @@ export const Behandlingsmeny: React.FC = () => {
                                     ) : (
                                         <SettBehandlingPåVent behandling={behandling.data} />
                                     ))}
+
+                                <ActionMenu.Divider />
 
                                 {fagsystem === Fagsystem.BA && ytelsestype && (
                                     <EndreBehandlendeEnhet behandling={behandling.data} />
