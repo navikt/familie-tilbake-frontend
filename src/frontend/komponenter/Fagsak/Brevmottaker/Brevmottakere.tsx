@@ -329,7 +329,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
             </VStack>
 
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Brevmottaker)}
+                stegtekst={actionBarStegtekst(Behandlingssteg.Brevmottaker, behandling.erNyModell)}
                 forrigeAriaLabel={undefined}
                 nesteAriaLabel="Gå til faktasteget"
                 onNeste={gåTilNeste}
