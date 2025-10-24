@@ -1,5 +1,6 @@
 import type { Skjema } from '../../../../hooks/skjema';
-import type { Behandlingårsak } from '../../../../typer/behandling';
+import type { Behandling, Behandlingårsak } from '../../../../typer/behandling';
+import type { RefObject } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFelt, useSkjema } from '../../../../hooks/skjema';
@@ -9,11 +10,11 @@ import { Behandlingstype } from '../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { erFeltetEmpty } from '../../../../utils';
 
-type OpprettBehandlingSkjemaHook = {
+type OpprettRevurderingSkjemaHook = {
     skjema: Skjema<
         {
             behandlingstype: Behandlingstype;
-            behandlingsårsak: Behandlingårsak | '';
+            behandlingsårsak: Behandlingårsak | undefined;
         },
         string
     >;
@@ -21,14 +22,17 @@ type OpprettBehandlingSkjemaHook = {
     nullstillSkjema: () => void;
 };
 
-const useOpprettBehandlingSkjema = (behandlingId: string): OpprettBehandlingSkjemaHook => {
+const useOpprettRevurderingSkjema = (
+    behandlingId: Behandling['behandlingId'],
+    dialogRef: RefObject<HTMLDialogElement | null>
+): OpprettRevurderingSkjemaHook => {
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { ytelsestype, eksternFagsakId, fagsystem } = useFagsakStore();
     const { utførRedirect } = useRedirectEtterLagring();
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
         {
             behandlingstype: Behandlingstype;
-            behandlingsårsak: Behandlingårsak | '';
+            behandlingsårsak: Behandlingårsak | undefined;
         },
         string
     >({
@@ -36,13 +40,13 @@ const useOpprettBehandlingSkjema = (behandlingId: string): OpprettBehandlingSkje
             behandlingstype: useFelt<Behandlingstype>({
                 verdi: Behandlingstype.RevurderingTilbakekreving,
             }),
-            behandlingsårsak: useFelt<Behandlingårsak | ''>({
+            behandlingsårsak: useFelt<Behandlingårsak | undefined>({
                 feltId: 'behandlingsårsak',
-                verdi: '',
+                verdi: undefined,
                 valideringsfunksjon: erFeltetEmpty,
             }),
         },
-        skjemanavn: 'opprettBehandling',
+        skjemanavn: 'opprettRevurdering',
     });
 
     const sendInn = (): void => {
@@ -63,6 +67,7 @@ const useOpprettBehandlingSkjema = (behandlingId: string): OpprettBehandlingSkje
                         utførRedirect(
                             `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${response.data}`
                         );
+                        dialogRef.current?.close();
                     }
                 }
             );
@@ -72,4 +77,4 @@ const useOpprettBehandlingSkjema = (behandlingId: string): OpprettBehandlingSkje
     return { skjema, sendInn, nullstillSkjema };
 };
 
-export { useOpprettBehandlingSkjema };
+export { useOpprettRevurderingSkjema };
