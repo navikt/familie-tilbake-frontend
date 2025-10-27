@@ -4,6 +4,7 @@ import type { RedirectEtterLagringHook } from '../../../../hooks/useRedirectEtte
 import type { FagsakState } from '../../../../stores/fagsakStore';
 import type { StoreApi, UseBoundStore } from 'zustand';
 
+import { ActionMenu } from '@navikt/ds-react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
@@ -70,13 +71,21 @@ describe('SettBehandlingTilbakeTilFakta', () => {
         });
 
         render(
-            <SettBehandlingTilbakeTilFakta
-                behandling={lagBehandling({ kanSetteTilbakeTilFakta: true })}
-            />
+            <ActionMenu open>
+                <ActionMenu.Trigger>
+                    <>Test kun for å rendre</>
+                </ActionMenu.Trigger>
+                <ActionMenu.Content>
+                    <SettBehandlingTilbakeTilFakta behandling={lagBehandling()} />
+                </ActionMenu.Content>
+            </ActionMenu>
         );
 
-        const button = screen.getByText('Sett behandling tilbake til fakta');
+        const button = screen.getByText('Start på nytt');
         fireEvent.click(button);
+
+        const dialog = document.querySelector('dialog') as HTMLDialogElement;
+        dialog?.showModal();
 
         const fortsettKnapp = screen.getByText('Fortsett');
         fireEvent.click(fortsettKnapp);
