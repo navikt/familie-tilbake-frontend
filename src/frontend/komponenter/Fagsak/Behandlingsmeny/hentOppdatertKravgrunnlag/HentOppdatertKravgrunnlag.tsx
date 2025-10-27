@@ -1,6 +1,7 @@
 import type { Behandling } from '../../../../typer/behandling';
 
-import { Dropdown } from '@navikt/ds-react';
+import { HddUpIcon } from '@navikt/aksel-icons';
+import { ActionMenu } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
@@ -52,11 +53,12 @@ export const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
     };
 
     return (
-        <Dropdown.Menu.List.Item
-            onClick={hentKorrigertKravgrunnlag}
-            disabled={!behandling.kanEndres}
+        <ActionMenu.Item
+            onSelect={hentKorrigertKravgrunnlag}
+            className="text-xl"
+            icon={<HddUpIcon aria-hidden />}
         >
             Hent korrigert kravgrunnlag
-        </Dropdown.Menu.List.Item>
+        </ActionMenu.Item>
     );
 };

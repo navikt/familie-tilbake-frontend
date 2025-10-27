@@ -1,6 +1,7 @@
 import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button } from '@navikt/ds-react';
 import * as React from 'react';
+import { useState } from 'react';
 
 import { EndreBehandlendeEnhet } from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import { GjennoptaBehandling } from './GjennoptaBehandling/GjennoptaBehandling';
@@ -10,6 +11,7 @@ import { HistoriskeVurderinger } from './HistoriskeVurderinger/HistoriskeVurderi
 import { LeggTilFjernBrevmottakere } from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
 import { OpprettRevurdering } from './OpprettRevurdering/OpprettRevurdering';
 import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
+// import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
 import { useApp } from '../../../context/AppContext';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -21,8 +23,9 @@ import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
 export const Behandlingsmeny: React.FC = () => {
-    const { behandling, ventegrunn, erStegBehandlet, aktivtSteg } = useBehandling();
-    const [holdMenyenÅpen, setHoldMenyenÅpen] = React.useState(false);
+    const { behandling, ventegrunn, erStegBehandlet, aktivtSteg, behandlingILesemodus } =
+        useBehandling();
+    const [holdMenyenÅpen, setHoldMenyenÅpen] = useState(false);
     // const actionMenuRef = useRef<HTMLDivElement | null>(null);
     const { fagsystem, ytelsestype } = useFagsakStore();
     const { innloggetSaksbehandler } = useApp();
@@ -71,20 +74,14 @@ export const Behandlingsmeny: React.FC = () => {
                         !vedtakFattetEllerFattes &&
                         behandling.data.kanEndres && (
                             <>
-                                {behandling.data.kanHenleggeBehandling &&
-                                    behandling.data.kanEndres && (
-                                        <HenleggBehandling behandling={behandling.data} />
-                                    )}
-
-                                {erForvalter && (
-                                    <HentOppdatertKravgrunnlag behandling={behandling.data} />
+                                {behandling.data.kanHenleggeBehandling && (
+                                    <HenleggBehandling behandling={behandling.data} />
                                 )}
 
                                 {(toggles[ToggleName.SaksbehanderKanResettebehandling] ||
                                     erForvalter) && (
                                     <SettBehandlingTilbakeTilFakta behandling={behandling.data} />
                                 )}
-
                                 {!venterPåKravgrunnlag &&
                                     (behandling.data.erBehandlingPåVent || ventegrunn ? (
                                         <GjennoptaBehandling behandling={behandling.data} />
@@ -92,17 +89,26 @@ export const Behandlingsmeny: React.FC = () => {
                                         <SettBehandlingPåVent behandling={behandling.data} />
                                     ))}
 
+                                {erForvalter && (
+                                    <HentOppdatertKravgrunnlag behandling={behandling.data} />
+                                )}
+
                                 <ActionMenu.Divider />
 
-                                {fagsystem === Fagsystem.BA && ytelsestype && (
-                                    <EndreBehandlendeEnhet behandling={behandling.data} />
-                                )}
+                                {behandling.data.støtterManuelleBrevmottakere &&
+                                    !behandlingILesemodus && (
+                                        <LeggTilFjernBrevmottakere behandling={behandling.data} />
+                                    )}
 
-                                {behandling.data.støtterManuelleBrevmottakere && (
-                                    <LeggTilFjernBrevmottakere behandling={behandling.data} />
-                                )}
+                                {fagsystem === Fagsystem.BA &&
+                                    ytelsestype &&
+                                    !behandlingILesemodus && (
+                                        <EndreBehandlendeEnhet behandling={behandling.data} />
+                                    )}
 
-                                <HistoriskeVurderinger behandling={behandling.data} />
+                                {!behandlingILesemodus && (
+                                    <HistoriskeVurderinger behandling={behandling.data} />
+                                )}
                             </>
                         )}
                 </ActionMenu.Group>

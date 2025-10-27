@@ -1,7 +1,9 @@
 import type { Behandling } from '../../../../typer/behandling';
 
-import { Button, Dropdown, ErrorMessage, Modal } from '@navikt/ds-react';
+import { TimerStartIcon } from '@navikt/aksel-icons';
+import { ActionMenu, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
+import { useState } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { usePåVentBehandling } from '../../../Felleskomponenter/Modal/PåVent/PåVentContext';
@@ -11,7 +13,7 @@ type Props = {
 };
 
 export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
-    const [visModal, settVisModal] = React.useState<boolean>(false);
+    const [visModal, settVisModal] = useState(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
 
     const lukkModalOgHentBehandling = (): void => {
@@ -20,11 +22,11 @@ export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
     };
 
     const { feilmelding, onOkTaAvVent } = usePåVentBehandling(lukkModalOgHentBehandling);
-
     return (
-        <Dropdown.Menu.List.Item
-            onClick={() => settVisModal(true)}
-            disabled={!behandling.kanEndres}
+        <ActionMenu.Item
+            onSelect={() => settVisModal(true)}
+            className="text-xl"
+            icon={<TimerStartIcon aria-hidden />}
         >
             Fortsett behandlingen
             {visModal && (
@@ -37,11 +39,10 @@ export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
                 >
                     <Modal.Body>
                         {feilmelding && feilmelding !== '' && (
-                            <div className="skjemaelement__feilmelding">
-                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                            </div>
+                            <ErrorMessage size="small">{feilmelding}</ErrorMessage>
                         )}
                     </Modal.Body>
+
                     <Modal.Footer>
                         <Button
                             key="bekreft"
@@ -61,6 +62,6 @@ export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
                     </Modal.Footer>
                 </Modal>
             )}
-        </Dropdown.Menu.List.Item>
+        </ActionMenu.Item>
     );
 };

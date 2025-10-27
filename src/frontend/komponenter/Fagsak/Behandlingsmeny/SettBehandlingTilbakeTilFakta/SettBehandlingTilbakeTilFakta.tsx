@@ -1,6 +1,7 @@
 import type { Behandling } from '../../../../typer/behandling';
 
-import { Dropdown } from '@navikt/ds-react';
+import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
+import { ActionMenu } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -41,11 +42,13 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) =
     };
 
     return (
-        <Dropdown.Menu.List.Item
-            onClick={() => setVisModal(true)}
+        <ActionMenu.Item
+            onSelect={() => setVisModal(true)}
             disabled={!behandling.kanSetteTilbakeTilFakta}
+            icon={<ArrowCirclepathReverseIcon aria-hidden />}
+            className="text-xl"
         >
-            Sett behandling tilbake til fakta
+            Start på nytt
             {visModal && (
                 <SettBehandlingTilbakeTilFaktaModal
                     onConfirm={handleResettBehandling}
@@ -60,6 +63,6 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) =
                     fagsakId={eksternFagsakId}
                 />
             )}
-        </Dropdown.Menu.List.Item>
+        </ActionMenu.Item>
     );
 };
