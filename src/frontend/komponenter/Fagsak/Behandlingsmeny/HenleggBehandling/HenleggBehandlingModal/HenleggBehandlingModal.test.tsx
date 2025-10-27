@@ -38,10 +38,19 @@ jest.mock('../../../../../api/behandling', () => ({
 const renderHenleggBehandlingModal = (
     behandling: Behandling,
     årsaker: Behandlingresultat[]
-): RenderResult =>
-    render(
-        <HenleggBehandlingModal behandling={behandling} dialogRef={createRef()} årsaker={årsaker} />
+): RenderResult => {
+    const mockDialogRef = createRef<HTMLDialogElement | null>();
+    const renderModal = render(
+        <HenleggBehandlingModal
+            behandling={behandling}
+            dialogRef={mockDialogRef}
+            årsaker={årsaker}
+        />
     );
+    mockDialogRef.current?.showModal();
+
+    return renderModal;
+};
 
 const setupMocks = (): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
