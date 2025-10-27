@@ -1,6 +1,7 @@
 import type { Behandling } from '../../../../typer/behandling';
 
-import { Button, Dropdown, ErrorMessage, Modal } from '@navikt/ds-react';
+import { PersonPlusIcon } from '@navikt/aksel-icons';
+import { ActionMenu, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -25,7 +26,6 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
     const [feilmelding, settFeilmelding] = useState('');
     const {
         hentBehandlingMedBehandlingId,
-        behandlingILesemodus,
         settVisBrevmottakerModal,
         nullstillIkkePersisterteKomponenter,
     } = useBehandling();
@@ -114,11 +114,14 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
     }, [feilmelding]);
 
     return (
-        <Dropdown.Menu.List.Item
-            onClick={opprettEllerFjernSteg}
-            disabled={!behandling.kanEndres || behandlingILesemodus}
-        >
-            {kanFjerneManuelleBrevmottakere ? 'Fjern brevmottaker(e)' : 'Legg til brevmottaker'}
+        <>
+            <ActionMenu.Item
+                onSelect={opprettEllerFjernSteg}
+                className="text-xl"
+                icon={<PersonPlusIcon aria-hidden />}
+            >
+                {kanFjerneManuelleBrevmottakere ? 'Fjern brevmottaker(e)' : 'Legg til brevmottaker'}
+            </ActionMenu.Item>
 
             {visFjernModal && (
                 <Modal
@@ -134,9 +137,7 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
                             steget &quot;Brevmottaker(e)&quot;.
                         </div>
                         {feilmelding !== '' && (
-                            <div className="skjemaelement__feilmelding">
-                                <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                            </div>
+                            <ErrorMessage size="small">{feilmelding}</ErrorMessage>
                         )}
                     </Modal.Body>
                     <Modal.Footer>
@@ -160,6 +161,6 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
                     </Modal.Footer>
                 </Modal>
             )}
-        </Dropdown.Menu.List.Item>
+        </>
     );
 };

@@ -33,7 +33,7 @@ export const HenleggBehandling: React.FC<Props> = ({ behandling }) => {
 
     return (
         <ActionMenu.Item
-            onClick={() => settVisModal(true)}
+            onSelect={() => settVisModal(true)}
             icon={<CircleSlashIcon aria-hidden />}
             className="text-xl"
         >

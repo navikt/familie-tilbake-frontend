@@ -1,16 +1,16 @@
 import type { Behandling } from '../../../../typer/behandling';
 
-import { Button, Dropdown, ErrorMessage, Modal, Select } from '@navikt/ds-react';
+import { TimerPauseIcon } from '@navikt/aksel-icons';
+import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
-import { useState } from 'react';
+import { useRef } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { Valideringsstatus } from '../../../../hooks/skjema/typer';
 import { manuelleVenteÅrsaker, venteårsaker } from '../../../../typer/behandling';
 import { dagensDato } from '../../../../utils/dato';
 import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
-import { Spacer20, Spacer8 } from '../../../Felleskomponenter/Flytelementer';
 import { usePåVentBehandling } from '../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 
 type Props = {
@@ -18,11 +18,11 @@ type Props = {
 };
 
 export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
-    const [visModal, settVisModal] = useState(false);
     const { hentBehandlingMedBehandlingId } = useBehandling();
+    const ref = useRef<HTMLDialogElement>(null);
 
     const lukkModalOgHentBehandling = (): void => {
-        settVisModal(false);
+        ref.current?.close();
         hentBehandlingMedBehandlingId(behandling.behandlingId);
     };
 
@@ -37,71 +37,64 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
 
     const lukkModal = (): void => {
         tilbakestillFelterTilDefault();
-        settVisModal(false);
+        ref.current?.close();
     };
 
     return (
-        <Dropdown.Menu.List.Item
-            onClick={() => settVisModal(true)}
-            disabled={!behandling.kanEndres}
+        <ActionMenu.Item
+            onSelect={() => ref.current?.showModal()}
+            icon={<TimerPauseIcon aria-hidden />}
+            className="text-xl"
         >
-            Sett behandling på vent
-            {visModal && (
-                <Modal
-                    open
-                    header={{
-                        heading: 'Sett behandlingen på vent',
-                        size: 'medium',
-                    }}
-                    portal
-                    width="small"
-                    onClose={lukkModal}
-                >
-                    <Modal.Body>
-                        <Datovelger
-                            felt={skjema.felter.tidsfrist}
-                            label="Frist"
-                            visFeilmeldinger={ugyldigDatoValgt}
-                            minDatoAvgrensning={addDays(dagensDato, 1)}
-                            maksDatoAvgrensning={addMonths(dagensDato, 3)}
-                        />
-                        <Spacer20 />
-                        <Select
-                            {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
-                            label="Årsak"
-                        >
-                            <option value="" disabled>
-                                Velg årsak
+            Sett på vent
+            <Modal
+                ref={ref}
+                header={{
+                    heading: 'Sett behandlingen på vent',
+                    size: 'medium',
+                }}
+                portal
+                width="small"
+            >
+                <Modal.Body className="flex flex-col gap-4">
+                    <Datovelger
+                        felt={skjema.felter.tidsfrist}
+                        label="Frist"
+                        visFeilmeldinger={ugyldigDatoValgt}
+                        minDatoAvgrensning={addDays(dagensDato, 1)}
+                        maksDatoAvgrensning={addMonths(dagensDato, 3)}
+                    />
+                    <Select
+                        {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
+                        label="Årsak"
+                    >
+                        <option value="" disabled>
+                            Velg årsak
+                        </option>
+                        {manuelleVenteÅrsaker.map((årsak, index) => (
+                            <option key={`årsak_${index}`} value={årsak}>
+                                {venteårsaker[årsak]}
                             </option>
-                            {manuelleVenteÅrsaker.map((årsak, index) => (
-                                <option key={`årsak_${index}`} value={årsak}>
-                                    {venteårsaker[årsak]}
-                                </option>
-                            ))}
-                        </Select>
-                        {feilmelding && feilmelding !== '' && (
-                            <>
-                                <Spacer8 />
-                                <div className="skjemaelement__feilmelding">
-                                    <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                                </div>
-                            </>
-                        )}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                            key="bekreft"
-                            onClick={() => onBekreft(behandling.behandlingId)}
-                            size="small"
-                        >
-                            Bekreft
-                        </Button>
-                        <Button variant="tertiary" key="avbryt" onClick={lukkModal} size="small">
-                            Avbryt
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            )}
-        </Dropdown.Menu.List.Item>
+                        ))}
+                    </Select>
+                    {feilmelding && feilmelding !== '' && (
+                        <ErrorMessage size="small">{feilmelding}</ErrorMessage>
+                    )}
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button
+                        key="bekreft"
+                        onClick={() => onBekreft(behandling.behandlingId)}
+                        size="small"
+                    >
+                        Bekreft
+                    </Button>
+                    <Button variant="tertiary" key="avbryt" onClick={lukkModal} size="small">
+                        Avbryt
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </ActionMenu.Item>
     );
 };

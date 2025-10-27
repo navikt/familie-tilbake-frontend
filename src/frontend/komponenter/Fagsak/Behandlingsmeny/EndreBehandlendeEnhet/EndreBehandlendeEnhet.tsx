@@ -1,11 +1,11 @@
 import type { Behandling } from '../../../../typer/behandling';
 
-import { Button, Dropdown, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
+import { Buildings3Icon } from '@navikt/aksel-icons';
+import { ActionMenu, Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 
 import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
-import { useBehandling } from '../../../../context/BehandlingContext';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { hentFrontendFeilmelding } from '../../../../utils/';
 import { Spacer8 } from '../../../Felleskomponenter/Flytelementer';
@@ -30,7 +30,6 @@ type Props = {
 
 export const EndreBehandlendeEnhet: React.FC<Props> = ({ behandling }) => {
     const [visModal, settVisModal] = useState(false);
-    const { behandlingILesemodus } = useBehandling();
     const { skjema, sendInn, nullstillSkjema } = useEndreBehandlendeEnhet(
         behandling.behandlingId,
         () => settVisModal(false)
@@ -39,9 +38,10 @@ export const EndreBehandlendeEnhet: React.FC<Props> = ({ behandling }) => {
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
     return (
-        <Dropdown.Menu.List.Item
-            onClick={() => settVisModal(true)}
-            disabled={!behandling.kanEndres || behandlingILesemodus}
+        <ActionMenu.Item
+            onSelect={() => settVisModal(true)}
+            className="text-xl"
+            icon={<Buildings3Icon aria-hidden />}
         >
             Endre behandlende enhet
             {visModal && (
@@ -79,14 +79,7 @@ export const EndreBehandlendeEnhet: React.FC<Props> = ({ behandling }) => {
                             readOnly={false}
                             maxLength={400}
                         />
-                        {feilmelding && (
-                            <>
-                                <Spacer8 />
-                                <div className="skjemaelement__feilmelding">
-                                    <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                                </div>
-                            </>
-                        )}
+                        {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
@@ -108,6 +101,6 @@ export const EndreBehandlendeEnhet: React.FC<Props> = ({ behandling }) => {
                     </Modal.Footer>
                 </Modal>
             )}
-        </Dropdown.Menu.List.Item>
+        </ActionMenu.Item>
     );
 };
