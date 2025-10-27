@@ -27,7 +27,7 @@ export const OpprettRevurdering: React.FC<Props> = ({ behandlingId }) => {
         <>
             <ActionMenu.Item
                 onSelect={() => ref.current?.showModal()}
-                className="text-xl"
+                className="text-xl cursor-pointer"
                 icon={<PlusIcon aria-hidden />}
             >
                 Opprett revurdering

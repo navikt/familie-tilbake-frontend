@@ -1,11 +1,10 @@
 import type { Behandling } from '../../../../typer/behandling';
 
 import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
-import { ActionMenu } from '@navikt/ds-react';
+import { ActionMenu, BodyShort, Button, Modal } from '@navikt/ds-react';
 import * as React from 'react';
-import { useState } from 'react';
+import { useRef } from 'react';
 
-import SettBehandlingTilbakeTilFaktaModal from './SettBehandlingTilbakeTilFaktaModal';
 import { useSettBehandlingTilbakeTilFakta } from './useSettBehandlingTilbakeTilFakta';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
@@ -18,10 +17,10 @@ type Props = {
 };
 
 export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) => {
+    const dialogRef = useRef<HTMLDialogElement>(null);
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { fagsystem, eksternFagsakId } = useFagsakStore();
-    const [visModal, setVisModal] = useState(false);
     const mutation = useSettBehandlingTilbakeTilFakta();
 
     const handleResettBehandling = (): void => {
@@ -37,24 +36,41 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) =
                     });
                 }
             },
-            onError: () => setVisModal(false),
+            onError: () => dialogRef.current?.close(),
         });
     };
 
     return (
-        <ActionMenu.Item
-            onSelect={() => setVisModal(true)}
-            disabled={!behandling.kanSetteTilbakeTilFakta}
-            icon={<ArrowCirclepathReverseIcon aria-hidden />}
-            className="text-xl"
-        >
-            Start på nytt
-            {visModal && (
-                <SettBehandlingTilbakeTilFaktaModal
-                    onConfirm={handleResettBehandling}
-                    onCancel={() => setVisModal(false)}
-                />
-            )}
+        <>
+            <ActionMenu.Item
+                onSelect={() => dialogRef.current?.showModal()}
+                disabled={!behandling.kanSetteTilbakeTilFakta}
+                icon={<ArrowCirclepathReverseIcon aria-hidden />}
+                className="text-xl cursor-pointer"
+            >
+                Start på nytt
+            </ActionMenu.Item>
+
+            <Modal ref={dialogRef} header={{ heading: 'Sett behandling tilbake til fakta' }}>
+                <Modal.Body>
+                    <BodyShort>
+                        Er du sikker på at du vil resette behandlingen tilbake til fakta?
+                    </BodyShort>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button type="button" onClick={handleResettBehandling}>
+                        Fortsett
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() => dialogRef.current?.close()}
+                    >
+                        Avbryt
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             {mutation.isError && eksternFagsakId && (
                 <FeilModal
                     feil={mutation.error}
@@ -63,6 +79,6 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) =
                     fagsakId={eksternFagsakId}
                 />
             )}
-        </ActionMenu.Item>
+        </>
     );
 };

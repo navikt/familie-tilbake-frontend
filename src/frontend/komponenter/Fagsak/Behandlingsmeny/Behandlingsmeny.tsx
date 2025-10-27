@@ -75,9 +75,6 @@ export const Behandlingsmeny: React.FC = () => {
                                     <HenleggBehandling behandling={behandling.data} />
                                 )}
 
-                                {erForvalter && (
-                                    <SettBehandlingTilbakeTilFakta behandling={behandling.data} />
-                                )}
                                 {!venterPåKravgrunnlag &&
                                     (behandling.data.erBehandlingPåVent || ventegrunn ? (
                                         <GjennoptaBehandling behandling={behandling.data} />
@@ -86,24 +83,31 @@ export const Behandlingsmeny: React.FC = () => {
                                     ))}
 
                                 {erForvalter && (
-                                    <HentOppdatertKravgrunnlag behandling={behandling.data} />
+                                    <>
+                                        <SettBehandlingTilbakeTilFakta
+                                            behandling={behandling.data}
+                                        />
+
+                                        <HentOppdatertKravgrunnlag behandling={behandling.data} />
+                                    </>
                                 )}
 
-                                <ActionMenu.Divider />
-
-                                {behandling.data.støtterManuelleBrevmottakere &&
-                                    !behandlingILesemodus && (
-                                        <LeggTilFjernBrevmottakere behandling={behandling.data} />
-                                    )}
-
-                                {fagsystem === Fagsystem.BA &&
-                                    ytelsestype &&
-                                    !behandlingILesemodus && (
-                                        <EndreBehandlendeEnhet behandling={behandling.data} />
-                                    )}
-
                                 {!behandlingILesemodus && (
-                                    <HistoriskeVurderinger behandling={behandling.data} />
+                                    <>
+                                        <ActionMenu.Divider />
+
+                                        {behandling.data.støtterManuelleBrevmottakere && (
+                                            <LeggTilFjernBrevmottakere
+                                                behandling={behandling.data}
+                                            />
+                                        )}
+
+                                        {fagsystem === Fagsystem.BA && ytelsestype && (
+                                            <EndreBehandlendeEnhet behandling={behandling.data} />
+                                        )}
+
+                                        <HistoriskeVurderinger behandling={behandling.data} />
+                                    </>
                                 )}
                             </>
                         )}

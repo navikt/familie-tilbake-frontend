@@ -55,7 +55,7 @@ export const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
     return (
         <ActionMenu.Item
             onSelect={hentKorrigertKravgrunnlag}
-            className="text-xl"
+            className="text-xl cursor-pointer"
             icon={<HddUpIcon aria-hidden />}
         >
             Hent korrigert kravgrunnlag

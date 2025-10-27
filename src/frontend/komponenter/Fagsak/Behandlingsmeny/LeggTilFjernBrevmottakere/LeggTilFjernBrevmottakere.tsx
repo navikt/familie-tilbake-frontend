@@ -3,7 +3,7 @@ import type { Behandling } from '../../../../typer/behandling';
 import { PersonPlusIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
-    const [visFjernModal, settVisFjernModal] = useState(false);
+    const dialogRef = useRef<HTMLDialogElement>(null);
     const [senderInn, settSenderInn] = useState(false);
     const [feilmelding, settFeilmelding] = useState('');
     const {
@@ -78,7 +78,7 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
         }).then((respons: Ressurs<string>) => {
             settSenderInn(false);
             if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
-                settVisFjernModal(false);
+                dialogRef.current?.close();
                 hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                     utførRedirect(
                         `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
@@ -96,7 +96,7 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
 
     const opprettEllerFjernSteg = (): void => {
         if (kanFjerneManuelleBrevmottakere) {
-            settVisFjernModal(true);
+            dialogRef.current?.showModal();
         } else {
             opprettBrevmottakerSteg();
         }
@@ -117,50 +117,44 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
         <>
             <ActionMenu.Item
                 onSelect={opprettEllerFjernSteg}
-                className="text-xl"
+                className="text-xl cursor-pointer"
                 icon={<PersonPlusIcon aria-hidden />}
             >
                 {kanFjerneManuelleBrevmottakere ? 'Fjern brevmottaker(e)' : 'Legg til brevmottaker'}
             </ActionMenu.Item>
 
-            {visFjernModal && (
-                <Modal
-                    open
-                    header={{ heading: 'Ønsker du å fjerne brevmottaker(e)?', size: 'medium' }}
-                    portal
-                    width="small"
-                    onClose={() => settVisFjernModal(false)}
-                >
-                    <Modal.Body>
-                        <div>
-                            Dette vil både fjerne eventuelt registrerte brevmottakere og fjerne
-                            steget &quot;Brevmottaker(e)&quot;.
-                        </div>
-                        {feilmelding !== '' && (
-                            <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                        )}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                            key="bekreft"
-                            disabled={senderInn}
-                            loading={senderInn}
-                            onClick={fjernBrevmottakerSteg}
-                            size="small"
-                        >
-                            Ja, fjern
-                        </Button>
-                        <Button
-                            variant="tertiary"
-                            key="avbryt"
-                            onClick={() => settVisFjernModal(false)}
-                            size="small"
-                        >
-                            Nei, behold
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            )}
+            <Modal
+                ref={dialogRef}
+                header={{ heading: 'Ønsker du å fjerne brevmottaker(e)?', size: 'medium' }}
+                width="small"
+            >
+                <Modal.Body>
+                    <div>
+                        Dette vil både fjerne eventuelt registrerte brevmottakere og fjerne steget
+                        &quot;Brevmottaker(e)&quot;.
+                    </div>
+                    {feilmelding !== '' && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        key="bekreft"
+                        disabled={senderInn}
+                        loading={senderInn}
+                        onClick={fjernBrevmottakerSteg}
+                        size="small"
+                    >
+                        Ja, fjern
+                    </Button>
+                    <Button
+                        variant="tertiary"
+                        key="avbryt"
+                        onClick={() => dialogRef.current?.close()}
+                        size="small"
+                    >
+                        Nei, behold
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

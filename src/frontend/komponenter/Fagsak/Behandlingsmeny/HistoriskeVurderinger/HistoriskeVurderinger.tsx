@@ -23,7 +23,7 @@ export const HistoriskeVurderinger: React.FC<Props> = ({ behandling }) => {
         fagsystem &&
         eksternFagsakId && (
             <ActionMenu.Item
-                className="text-xl"
+                className="text-xl cursor-pointer"
                 as="a"
                 href={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/inaktiv`}
                 icon={<ClockDashedIcon aria-hidden />}
