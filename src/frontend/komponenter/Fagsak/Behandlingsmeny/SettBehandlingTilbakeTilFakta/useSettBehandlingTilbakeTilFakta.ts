@@ -1,5 +1,4 @@
 import type { FamilieRequest } from '../../../../api/http/HttpProvider';
-import type { Toggles } from '../../../../context/toggles';
 import type { Ressurs } from '../../../../typer/ressurs';
 import type { UseMutationResult } from '@tanstack/react-query';
 
@@ -7,25 +6,18 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { Feil } from '../../../../api/feil';
 import { useHttp } from '../../../../api/http/HttpProvider';
-import { ToggleName } from '../../../../context/toggles';
-import { useToggles } from '../../../../context/TogglesContext';
 import { RessursStatus } from '../../../../typer/ressurs';
 
 const settBehandlingTilbakeTilFakta = async (
     request: FamilieRequest,
-    behandlingId: string,
-    toggles: Toggles
+    behandlingId: string
 ): Promise<Ressurs<string>> => {
     if (!behandlingId) {
         throw new Feil('Behandling id er påkrevd for å sette behandling tilbake til fakta.', 400);
     }
-    const resettUrl = toggles[ToggleName.SaksbehanderKanResettebehandling]
-        ? `/familie-tilbake/api/behandling/${behandlingId}/flytt-behandling-til-fakta`
-        : `/familie-tilbake/api/forvaltning/behandling/${behandlingId}/flytt-behandling/v1`;
-
     return await request<void, string>({
         method: 'PUT',
-        url: resettUrl,
+        url: `/familie-tilbake/api/behandling/${behandlingId}/flytt-behandling-til-fakta`,
     });
 };
 
@@ -38,12 +30,11 @@ export type SettBehandlingTilbakeTilFaktaHook = UseMutationResult<
 
 export const useSettBehandlingTilbakeTilFakta = (): SettBehandlingTilbakeTilFaktaHook => {
     const { request } = useHttp();
-    const { toggles } = useToggles();
     const queryClient = useQueryClient();
 
     return useMutation<Ressurs<string>, Feil, string>({
         mutationFn: async (behandlingId: string) => {
-            const response = await settBehandlingTilbakeTilFakta(request, behandlingId, toggles);
+            const response = await settBehandlingTilbakeTilFakta(request, behandlingId);
             if (response.status === RessursStatus.Suksess) {
                 return response;
             }
