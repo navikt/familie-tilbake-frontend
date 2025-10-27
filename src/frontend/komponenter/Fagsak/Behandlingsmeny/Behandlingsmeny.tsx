@@ -15,8 +15,6 @@ import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPå
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
 import { useApp } from '../../../context/AppContext';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { ToggleName } from '../../../context/toggles';
-import { useToggles } from '../../../context/TogglesContext';
 import { Fagsystem } from '../../../kodeverk';
 import { useFagsakStore } from '../../../stores/fagsakStore';
 import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
@@ -41,7 +39,6 @@ export const Behandlingsmeny: React.FC = () => {
     const vedtakFattetEllerFattes =
         erStegBehandlet(Behandlingssteg.FatteVedtak) ||
         aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak;
-    const { toggles } = useToggles();
 
     if (behandling?.status !== RessursStatus.Suksess) {
         return null;
@@ -78,8 +75,7 @@ export const Behandlingsmeny: React.FC = () => {
                                     <HenleggBehandling behandling={behandling.data} />
                                 )}
 
-                                {(toggles[ToggleName.SaksbehanderKanResettebehandling] ||
-                                    erForvalter) && (
+                                {erForvalter && (
                                     <SettBehandlingTilbakeTilFakta behandling={behandling.data} />
                                 )}
                                 {!venterPåKravgrunnlag &&
