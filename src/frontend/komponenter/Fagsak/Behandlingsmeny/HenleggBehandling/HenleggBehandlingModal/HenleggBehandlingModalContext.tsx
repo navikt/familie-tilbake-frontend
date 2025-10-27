@@ -24,20 +24,20 @@ export type HenleggelseSkjemaDefinisjon = {
 
 type Props = {
     behandling: Behandling;
-    settVisModal: (vis: boolean) => void;
+    lukkModal: () => void;
 };
 
 type HenleggBehandlingSkjemaHook = {
     skjema: Skjema<HenleggelseSkjemaDefinisjon, string>;
-    erVisFritekst: () => boolean;
+    visFritekst: () => boolean;
     onBekreft: () => void;
     nullstillSkjema: () => void;
-    erKanForhåndsvise: () => boolean;
+    kanForhåndsvise: () => boolean;
 };
 
 export const useHenleggBehandlingSkjema = ({
     behandling,
-    settVisModal,
+    lukkModal,
 }: Props): HenleggBehandlingSkjemaHook => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
     const { henleggBehandling } = useBehandlingApi();
@@ -94,7 +94,7 @@ export const useHenleggBehandlingSkjema = ({
             henleggBehandling(behandling.behandlingId, payload).then(
                 (response: Ressurs<string>) => {
                     if (response.status === RessursStatus.Suksess) {
-                        settVisModal(false);
+                        lukkModal();
                         hentBehandlingMedBehandlingId(behandling.behandlingId);
                     }
                 }
@@ -105,16 +105,16 @@ export const useHenleggBehandlingSkjema = ({
     const erÅrsakValgt = (): boolean =>
         skjema.felter.årsakkode.valideringsstatus === Valideringsstatus.Ok;
 
-    const erVisFritekst = (): boolean =>
+    const visFritekst = (): boolean =>
         erÅrsakValgt() &&
         skjema.felter.behandlingstype.verdi === Behandlingstype.RevurderingTilbakekreving &&
         skjema.felter.årsakkode.verdi === Behandlingresultat.HenlagtFeilopprettetMedBrev;
 
-    const erKanForhåndsvise = (): boolean => {
+    const kanForhåndsvise = (): boolean => {
         switch (skjema.felter.behandlingstype.verdi) {
             case Behandlingstype.RevurderingTilbakekreving:
                 return (
-                    erVisFritekst() &&
+                    visFritekst() &&
                     skjema.felter.fritekst.valideringsstatus === Valideringsstatus.Ok
                 );
             case Behandlingstype.Tilbakekreving:
@@ -125,9 +125,9 @@ export const useHenleggBehandlingSkjema = ({
 
     return {
         skjema,
-        erVisFritekst,
+        visFritekst,
         onBekreft,
         nullstillSkjema,
-        erKanForhåndsvise,
+        kanForhåndsvise,
     };
 };

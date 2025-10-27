@@ -19,7 +19,7 @@ type EndreBehandlendeEnhetHook = {
 
 const useEndreBehandlendeEnhet = (
     behandlingId: string,
-    lukkModal: (vis: boolean) => void
+    lukkModal: () => void
 ): EndreBehandlendeEnhetHook => {
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
 
@@ -61,7 +61,7 @@ const useEndreBehandlendeEnhet = (
                 },
                 (response: Ressurs<string>) => {
                     if (response.status === RessursStatus.Suksess) {
-                        lukkModal(true);
+                        lukkModal();
                         hentBehandlingMedBehandlingId(behandlingId);
                     }
                 }

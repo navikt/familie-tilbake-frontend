@@ -9,9 +9,10 @@ import type { UserEvent } from '@testing-library/user-event';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
+import { createRef } from 'react';
 import * as React from 'react';
 
-import HenleggBehandlingModal from './HenleggBehandlingModal';
+import { HenleggBehandlingModal } from './HenleggBehandlingModal';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { RessursStatus } from '../../../../../typer/ressurs';
@@ -39,12 +40,7 @@ const renderHenleggBehandlingModal = (
     årsaker: Behandlingresultat[]
 ): RenderResult =>
     render(
-        <HenleggBehandlingModal
-            behandling={behandling}
-            visModal
-            settVisModal={() => jest.fn()}
-            årsaker={årsaker}
-        />
+        <HenleggBehandlingModal behandling={behandling} dialogRef={createRef()} årsaker={årsaker} />
     );
 
 const setupMocks = (): void => {

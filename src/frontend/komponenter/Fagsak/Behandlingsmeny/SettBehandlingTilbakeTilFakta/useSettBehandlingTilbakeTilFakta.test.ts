@@ -5,7 +5,6 @@ import { renderHook } from '@testing-library/react';
 
 import { useSettBehandlingTilbakeTilFakta } from './useSettBehandlingTilbakeTilFakta';
 import { Feil } from '../../../../api/feil';
-import * as TogglesContext from '../../../../context/TogglesContext';
 import { RessursStatus } from '../../../../typer/ressurs';
 
 const mockRequest = jest.fn();
@@ -34,14 +33,6 @@ jest.mock('@tanstack/react-query', () => {
 jest.mock('../../../../api/http/HttpProvider', () => ({
     useHttp: jest.fn(() => ({
         request: mockRequest,
-    })),
-}));
-
-jest.mock('../../../../context/TogglesContext', () => ({
-    useToggles: jest.fn(() => ({
-        toggles: {
-            'familie-tilbake-frontend.saksbehandler.kan.resette.behandling': true,
-        },
     })),
 }));
 
@@ -80,28 +71,6 @@ describe('useSettBehandlingTilbakeTilFakta', () => {
         response.status === RessursStatus.Suksess &&
             expect(response.data).toBe('Behandlingen ble tilbakestilt til fakta');
         expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: ['behandling'] });
-    });
-
-    test('Burde bruke forvaltning API når SaksbehanderKanResettebehandling er false', async () => {
-        (TogglesContext.useToggles as jest.Mock).mockReturnValueOnce({
-            toggles: {
-                'familie-tilbake-frontend.saksbehandler.kan.resette.behandling': false,
-            },
-        });
-
-        mockRequest.mockResolvedValueOnce({
-            status: RessursStatus.Suksess,
-            data: 'Behandlingen ble tilbakestilt til fakta',
-        });
-
-        const { result } = renderHook(() => useSettBehandlingTilbakeTilFakta());
-
-        await result.current.mutateAsync(behandlingId);
-
-        expect(mockRequest).toHaveBeenCalledWith({
-            method: 'PUT',
-            url: `/familie-tilbake/api/forvaltning/behandling/${behandlingId}/flytt-behandling/v1`,
-        });
     });
 
     test('Burde håndtere 403 Forbidden', async () => {

@@ -19,10 +19,10 @@ type Props = {
 
 export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
-    const ref = useRef<HTMLDialogElement>(null);
+    const dialogRef = useRef<HTMLDialogElement>(null);
 
     const lukkModalOgHentBehandling = (): void => {
-        ref.current?.close();
+        dialogRef.current?.close();
         hentBehandlingMedBehandlingId(behandling.behandlingId);
     };
 
@@ -37,23 +37,25 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
 
     const lukkModal = (): void => {
         tilbakestillFelterTilDefault();
-        ref.current?.close();
+        dialogRef.current?.close();
     };
 
     return (
-        <ActionMenu.Item
-            onSelect={() => ref.current?.showModal()}
-            icon={<TimerPauseIcon aria-hidden />}
-            className="text-xl"
-        >
-            Sett på vent
+        <>
+            <ActionMenu.Item
+                onSelect={() => dialogRef.current?.showModal()}
+                icon={<TimerPauseIcon aria-hidden />}
+                className="text-xl cursor-pointer"
+            >
+                Sett på vent
+            </ActionMenu.Item>
+
             <Modal
-                ref={ref}
+                ref={dialogRef}
                 header={{
                     heading: 'Sett behandlingen på vent',
                     size: 'medium',
                 }}
-                portal
                 width="small"
             >
                 <Modal.Body className="flex flex-col gap-4">
@@ -95,6 +97,6 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </ActionMenu.Item>
+        </>
     );
 };
