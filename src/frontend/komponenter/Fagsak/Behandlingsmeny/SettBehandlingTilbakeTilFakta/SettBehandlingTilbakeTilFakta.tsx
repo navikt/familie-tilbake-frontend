@@ -51,15 +51,15 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) =
                 Start på nytt
             </ActionMenu.Item>
 
-            <Modal ref={dialogRef} header={{ heading: 'Sett behandling tilbake til fakta' }}>
+            <Modal ref={dialogRef} header={{ heading: 'Start på nytt' }}>
                 <Modal.Body>
                     <BodyShort>
-                        Er du sikker på at du vil resette behandlingen tilbake til fakta?
+                        Ønsker du å starte behandlingen på nytt? Handlingen kan ikke angres.
                     </BodyShort>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type="button" onClick={handleResettBehandling}>
-                        Fortsett
+                        Start på nytt
                     </Button>
                     <Button
                         type="button"
