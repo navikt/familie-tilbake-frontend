@@ -9,7 +9,7 @@ import { HenleggBehandling } from './HenleggBehandling/HenleggBehandling';
 import { HentOppdatertKravgrunnlag } from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
 import { HistoriskeVurderinger } from './HistoriskeVurderinger/HistoriskeVurderinger';
 import { LeggTilFjernBrevmottakere } from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
-import { OpprettRevurdering } from './OpprettRevurdering/OpprettRevurdering';
+import { Revurder } from './Revurder/Revurder';
 import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
 // import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
@@ -64,7 +64,7 @@ export const Behandlingsmeny: React.FC = () => {
             >
                 <ActionMenu.Group aria-label="Behandlingsmenyvalg">
                     {behandling.data.kanRevurderingOpprettes && (
-                        <OpprettRevurdering behandlingId={behandling.data.behandlingId} />
+                        <Revurder behandlingId={behandling.data.behandlingId} />
                     )}
 
                     {behandling.data.status !== Behandlingstatus.Avsluttet &&

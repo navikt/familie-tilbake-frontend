@@ -10,7 +10,7 @@ import { Behandlingstype } from '../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { erFeltetEmpty } from '../../../../utils';
 
-type OpprettRevurderingSkjemaHook = {
+type RevurderSkjemaHook = {
     skjema: Skjema<
         {
             behandlingstype: Behandlingstype;
@@ -22,13 +22,14 @@ type OpprettRevurderingSkjemaHook = {
     nullstillSkjema: () => void;
 };
 
-const useOpprettRevurderingSkjema = (
+const useRevurderSkjema = (
     behandlingId: Behandling['behandlingId'],
     dialogRef: RefObject<HTMLDialogElement | null>
-): OpprettRevurderingSkjemaHook => {
+): RevurderSkjemaHook => {
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { ytelsestype, eksternFagsakId, fagsystem } = useFagsakStore();
     const { utførRedirect } = useRedirectEtterLagring();
+
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
         {
             behandlingstype: Behandlingstype;
@@ -77,4 +78,4 @@ const useOpprettRevurderingSkjema = (
     return { skjema, sendInn, nullstillSkjema };
 };
 
-export { useOpprettRevurderingSkjema };
+export { useRevurderSkjema };
