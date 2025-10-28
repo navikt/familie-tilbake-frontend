@@ -12,8 +12,8 @@ importers:
         specifier: 1.19.0
         version: 1.19.0
       '@hey-api/openapi-ts':
-        specifier: 0.86.6
-        version: 0.86.6(typescript@5.9.3)
+        specifier: 0.86.7
+        version: 0.86.7(typescript@5.9.3)
       '@hookform/resolvers':
         specifier: 5.2.2
         version: 5.2.2(react-hook-form@7.65.0(react@19.2.0))
@@ -45,8 +45,8 @@ importers:
         specifier: 5.90.5
         version: 5.90.5(react@19.2.0)
       axios:
-        specifier: 1.12.2
-        version: 1.12.2
+        specifier: 1.13.0
+        version: 1.13.0
       classnames:
         specifier: 2.5.1
         version: 2.5.1
@@ -152,13 +152,13 @@ importers:
         version: 1.8.1
       '@types/cookie-parser':
         specifier: 1.4.10
-        version: 1.4.10(@types/express@5.0.4)
+        version: 1.4.10(@types/express@5.0.5)
       '@types/deep-equal':
         specifier: 1.0.4
         version: 1.0.4
       '@types/express':
-        specifier: 5.0.4
-        version: 5.0.4
+        specifier: 5.0.5
+        version: 5.0.5
       '@types/express-session':
         specifier: 1.18.2
         version: 1.18.2
@@ -813,8 +813,8 @@ packages:
     resolution: {integrity: sha512-inPeksRLq+j3ArnuGOzQPQE//YrhezQG0+9Y9yizScBN2qatJ78fIByhEgKdNAbtguDCn4RPxmEhcrePwHxs4A==}
     engines: {node: '>= 16'}
 
-  '@hey-api/openapi-ts@0.86.6':
-    resolution: {integrity: sha512-D+iv0mKMqQT2DbuGgPch4nCMb6oBbItvAnOc3glHUDABOe7xkSwdgNWjzeWBadNZsQ+n38QCgBTely9HOPmKjw==}
+  '@hey-api/openapi-ts@0.86.7':
+    resolution: {integrity: sha512-inXovHuofKR1QQ9jM26ikHNcqgAUcZoiRzVULczBwnbypQKwbHA5py9/RnHzRRhyc+TIfIhVVhuSA3oS/C1QcQ==}
     engines: {node: '>=20.19.0'}
     hasBin: true
     peerDependencies:
@@ -1565,8 +1565,8 @@ packages:
   '@types/express-session@1.18.2':
     resolution: {integrity: sha512-k+I0BxwVXsnEU2hV77cCobC08kIsn4y44C3gC0b46uxZVMaXA04lSPgRLR/bSL2w0t0ShJiG8o4jPzRG/nscFg==}
 
-  '@types/express@5.0.4':
-    resolution: {integrity: sha512-g64dbryHk7loCIrsa0R3shBnEu5p6LPJ09bu9NG58+jz+cRUjFrc3Bz0kNQ7j9bXeCsrRDvNET1G54P/GJkAyA==}
+  '@types/express@5.0.5':
+    resolution: {integrity: sha512-LuIQOcb6UmnF7C1PCFmEU1u2hmiHL43fgFQX67sN3H4Z+0Yk0Neo++mFsBjhOAuLzvlQeqAAkeDOZrJs9rzumQ==}
 
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
@@ -1955,8 +1955,8 @@ packages:
     resolution: {integrity: sha512-ilYanEU8vxxBexpJd8cWM4ElSQq4QctCLKih0TSfjIfCQTeyH/6zVrmIJfLPrKTKJRbiG+cfnZbQIjAlJmF1jQ==}
     engines: {node: '>=4'}
 
-  axios@1.12.2:
-    resolution: {integrity: sha512-vMJzPewAlRyOgxV2dU0Cuz2O8zzzx9VYtbJOaBgXFeLc4IV/Eg50n4LowmehOOR61S8ZMpc2K5Sa7g6A4jfkUw==}
+  axios@1.13.0:
+    resolution: {integrity: sha512-zt40Pz4zcRXra9CVV31KeyofwiNvAbJ5B6YPz9pMJ+yOSLikvPT4Yi5LjfgjRa9CawVYBaD1JQzIVcIvBejKeA==}
 
   axobject-query@4.1.0:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
@@ -5471,7 +5471,7 @@ snapshots:
       js-yaml: 4.1.0
       lodash: 4.17.21
 
-  '@hey-api/openapi-ts@0.86.6(typescript@5.9.3)':
+  '@hey-api/openapi-ts@0.86.7(typescript@5.9.3)':
     dependencies:
       '@hey-api/codegen-core': 0.3.1(typescript@5.9.3)
       '@hey-api/json-schema-ref-parser': 1.2.1
@@ -6275,16 +6275,16 @@ snapshots:
 
   '@types/compression@1.8.1':
     dependencies:
-      '@types/express': 5.0.4
+      '@types/express': 5.0.5
       '@types/node': 24.9.1
 
   '@types/connect@3.4.38':
     dependencies:
       '@types/node': 24.9.1
 
-  '@types/cookie-parser@1.4.10(@types/express@5.0.4)':
+  '@types/cookie-parser@1.4.10(@types/express@5.0.5)':
     dependencies:
-      '@types/express': 5.0.4
+      '@types/express': 5.0.5
 
   '@types/deep-equal@1.0.4': {}
 
@@ -6299,9 +6299,9 @@ snapshots:
 
   '@types/express-session@1.18.2':
     dependencies:
-      '@types/express': 5.0.4
+      '@types/express': 5.0.5
 
-  '@types/express@5.0.4':
+  '@types/express@5.0.5':
     dependencies:
       '@types/body-parser': 1.19.6
       '@types/express-serve-static-core': 5.1.0
@@ -6717,7 +6717,7 @@ snapshots:
 
   axe-core@4.11.0: {}
 
-  axios@1.12.2:
+  axios@1.13.0:
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.1)
       form-data: 4.0.4
