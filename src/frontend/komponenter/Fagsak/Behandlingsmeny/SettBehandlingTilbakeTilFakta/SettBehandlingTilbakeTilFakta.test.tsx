@@ -2,10 +2,12 @@ import type { SettBehandlingTilbakeTilFaktaHook } from './useSettBehandlingTilba
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { RedirectEtterLagringHook } from '../../../../hooks/useRedirectEtterLagring';
 import type { FagsakState } from '../../../../stores/fagsakStore';
+import type { UserEvent } from '@testing-library/user-event';
 import type { StoreApi, UseBoundStore } from 'zustand';
 
 import { ActionMenu } from '@navikt/ds-react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta';
@@ -45,8 +47,10 @@ const setupMocks = (): void => {
 };
 
 describe('SettBehandlingTilbakeTilFakta', () => {
+    let user: UserEvent;
     beforeEach(() => {
         jest.clearAllMocks();
+        user = userEvent.setup();
         setupMocks();
     });
 
@@ -81,14 +85,13 @@ describe('SettBehandlingTilbakeTilFakta', () => {
             </ActionMenu>
         );
 
-        const button = screen.getByText('Start på nytt');
-        fireEvent.click(button);
-
         const dialog = document.querySelector('dialog') as HTMLDialogElement;
         dialog?.showModal();
 
-        const fortsettKnapp = screen.getByText('Fortsett');
-        fireEvent.click(fortsettKnapp);
+        expect(mockNullstill).not.toHaveBeenCalled();
+
+        const startKnappModal = screen.getByRole('button', { name: /Start på nytt/i });
+        await user.click(startKnappModal);
 
         expect(mockNullstill).toHaveBeenCalledTimes(1);
 
