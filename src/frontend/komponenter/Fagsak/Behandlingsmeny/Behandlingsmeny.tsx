@@ -84,9 +84,11 @@ export const Behandlingsmeny: React.FC = () => {
 
                                 {erForvalter && (
                                     <>
-                                        <SettBehandlingTilbakeTilFakta
-                                            behandling={behandling.data}
-                                        />
+                                        {behandling.data.kanSetteTilbakeTilFakta && (
+                                            <SettBehandlingTilbakeTilFakta
+                                                behandling={behandling.data}
+                                            />
+                                        )}
 
                                         <HentOppdatertKravgrunnlag behandling={behandling.data} />
                                     </>

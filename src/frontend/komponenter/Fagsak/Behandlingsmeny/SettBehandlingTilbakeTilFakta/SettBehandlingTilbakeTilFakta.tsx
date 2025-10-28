@@ -44,28 +44,27 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) =
         <>
             <ActionMenu.Item
                 onSelect={() => dialogRef.current?.showModal()}
-                disabled={!behandling.kanSetteTilbakeTilFakta}
                 icon={<ArrowCirclepathReverseIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >
                 Start på nytt
             </ActionMenu.Item>
 
-            <Modal ref={dialogRef} header={{ heading: 'Start på nytt' }}>
+            <Modal
+                ref={dialogRef}
+                header={{
+                    heading: 'Start på nytt',
+                    icon: <ArrowCirclepathReverseIcon aria-hidden />,
+                }}
+            >
                 <Modal.Body>
                     <BodyShort>
                         Ønsker du å starte behandlingen på nytt? Handlingen kan ikke angres.
                     </BodyShort>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button type="button" onClick={handleResettBehandling}>
-                        Start på nytt
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        onClick={() => dialogRef.current?.close()}
-                    >
+                    <Button onClick={handleResettBehandling}>Start på nytt</Button>
+                    <Button variant="secondary" onClick={() => dialogRef.current?.close()}>
                         Avbryt
                     </Button>
                 </Modal.Footer>
