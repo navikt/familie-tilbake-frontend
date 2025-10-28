@@ -74,11 +74,6 @@ export enum Behandlingstype {
     RevurderingTilbakekreving = 'REVURDERING_TILBAKEKREVING',
 }
 
-export const behandlingstyper: Record<Behandlingstype, string> = {
-    [Behandlingstype.Tilbakekreving]: 'Tilbakekreving',
-    [Behandlingstype.RevurderingTilbakekreving]: 'Revurdering tilbakekreving',
-};
-
 export enum Behandlingssteg {
     Varsel = 'VARSEL',
     Grunnlag = 'GRUNNLAG',

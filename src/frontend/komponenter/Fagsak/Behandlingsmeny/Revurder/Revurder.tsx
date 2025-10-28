@@ -1,26 +1,21 @@
 import type { Behandling } from '../../../../typer/behandling';
 
-import { PlusIcon } from '@navikt/aksel-icons';
+import { FileResetIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import * as React from 'react';
 import { useRef } from 'react';
 
-import { useOpprettRevurderingSkjema } from './OpprettRevurderingSkjemaContext';
-import {
-    Behandlingstype,
-    behandlingstyper,
-    behandlingårsaker,
-    behandlingÅrsaker,
-} from '../../../../typer/behandling';
+import { useRevurderSkjema } from './RevurderSkjemaContext';
+import { behandlingårsaker, behandlingÅrsaker } from '../../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../../utils';
 
 type Props = {
     behandlingId: Behandling['behandlingId'];
 };
 
-export const OpprettRevurdering: React.FC<Props> = ({ behandlingId }) => {
+export const Revurder: React.FC<Props> = ({ behandlingId }) => {
     const ref = useRef<HTMLDialogElement>(null);
-    const { skjema, sendInn, nullstillSkjema } = useOpprettRevurderingSkjema(behandlingId, ref);
+    const { skjema, sendInn, nullstillSkjema } = useRevurderSkjema(behandlingId, ref);
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
     return (
@@ -28,40 +23,33 @@ export const OpprettRevurdering: React.FC<Props> = ({ behandlingId }) => {
             <ActionMenu.Item
                 onSelect={() => ref.current?.showModal()}
                 className="text-xl cursor-pointer"
-                icon={<PlusIcon aria-hidden />}
+                icon={<FileResetIcon aria-hidden />}
             >
-                Opprett revurdering
+                Revurder
             </ActionMenu.Item>
 
             <Modal
                 ref={ref}
-                header={{ heading: 'Opprett revurdering', size: 'medium' }}
-                aria-label="Opprett revurdering modal"
+                header={{
+                    heading: 'Revurder',
+                    size: 'medium',
+                    icon: <FileResetIcon aria-hidden />,
+                }}
+                onClose={nullstillSkjema}
             >
                 <Modal.Body className="flex flex-col gap-4">
-                    <Select
-                        readOnly
-                        name="Behandling"
-                        label="Type behandling"
-                        defaultValue={Behandlingstype.RevurderingTilbakekreving}
-                    >
-                        {Object.values(Behandlingstype).map(type => (
-                            <option key={type} value={type}>
-                                {behandlingstyper[type]}
-                            </option>
-                        ))}
-                    </Select>
-
                     <Select
                         {...skjema.felter.behandlingsårsak.hentNavBaseSkjemaProps(
                             skjema.visFeilmeldinger
                         )}
                         name="Behandling"
-                        label="Årsak til revuderingen"
-                        value={skjema.felter.behandlingsårsak.verdi}
+                        label="Årsak til revurderingen"
+                        value={skjema.felter.behandlingsårsak.verdi ?? 'default'}
                         onChange={event => skjema.felter.behandlingsårsak.onChange(event)}
                     >
-                        <option disabled>Velg årsak til revurderingen</option>
+                        <option value="default" disabled>
+                            Velg årsak
+                        </option>
                         {behandlingÅrsaker.map(årsak => (
                             <option key={årsak} value={årsak}>
                                 {behandlingårsaker[årsak]}
@@ -73,7 +61,7 @@ export const OpprettRevurdering: React.FC<Props> = ({ behandlingId }) => {
 
                 <Modal.Footer>
                     <Button key="bekreft" onClick={sendInn} size="small">
-                        Ok
+                        Revurder
                     </Button>
                     <Button
                         variant="tertiary"
