@@ -5,11 +5,11 @@ import { ActionMenu } from '@navikt/ds-react';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 
-import { HenleggBehandlingModal } from './HenleggBehandlingModal/HenleggBehandlingModal';
+import { HenleggModal } from './henleggModal/HenleggModal';
 import { Behandlingresultat, Behandlingstype } from '../../../../typer/behandling';
 
-const hentÅrsaker = (behandling: Behandling): Behandlingresultat[] => {
-    if (behandling.type === Behandlingstype.Tilbakekreving) {
+const hentÅrsaker = (behandlingstype: Behandlingstype): Behandlingresultat[] => {
+    if (behandlingstype === Behandlingstype.Tilbakekreving) {
         return [Behandlingresultat.HenlagtFeilopprettet];
     } else {
         return [
@@ -23,12 +23,12 @@ type Props = {
     behandling: Behandling;
 };
 
-export const HenleggBehandling: React.FC<Props> = ({ behandling }) => {
+export const Henlegg: React.FC<Props> = ({ behandling }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [årsaker, setÅrsaker] = useState<Behandlingresultat[]>([]);
 
     useEffect(() => {
-        setÅrsaker(hentÅrsaker(behandling));
+        setÅrsaker(hentÅrsaker(behandling.type));
     }, [behandling]);
 
     return (
@@ -41,11 +41,7 @@ export const HenleggBehandling: React.FC<Props> = ({ behandling }) => {
                 Henlegg
             </ActionMenu.Item>
 
-            <HenleggBehandlingModal
-                behandling={behandling}
-                dialogRef={dialogRef}
-                årsaker={årsaker}
-            />
+            <HenleggModal behandling={behandling} dialogRef={dialogRef} årsaker={årsaker} />
         </>
     );
 };

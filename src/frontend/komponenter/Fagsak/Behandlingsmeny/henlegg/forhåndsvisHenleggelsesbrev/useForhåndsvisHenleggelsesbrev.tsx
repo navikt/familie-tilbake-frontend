@@ -1,5 +1,5 @@
 import type { Behandling } from '../../../../../typer/behandling';
-import type { HenleggelseSkjemaDefinisjon } from '../HenleggBehandlingModal/HenleggBehandlingModalContext';
+import type { HenleggelseSkjemaDefinisjon } from '../henleggModal/HenleggModalContext';
 
 import * as React from 'react';
 

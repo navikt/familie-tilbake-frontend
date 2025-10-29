@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { EndreBehandlendeEnhet } from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
 import { GjennoptaBehandling } from './GjennoptaBehandling/GjennoptaBehandling';
-import { HenleggBehandling } from './HenleggBehandling/HenleggBehandling';
+import { Henlegg } from './henlegg/Henlegg';
 import { HentOppdatertKravgrunnlag } from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
 import { HistoriskeVurderinger } from './HistoriskeVurderinger/HistoriskeVurderinger';
 import { LeggTilFjernBrevmottakere } from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
@@ -71,8 +71,8 @@ export const Behandlingsmeny: React.FC = () => {
                         !vedtakFattetEllerFattes &&
                         behandling.data.kanEndres && (
                             <>
-                                {behandling.data.kanHenleggeBehandling && (
-                                    <HenleggBehandling behandling={behandling.data} />
+                                {!behandling.data.kanHenleggeBehandling && (
+                                    <Henlegg behandling={behandling.data} />
                                 )}
 
                                 {!venterPåKravgrunnlag &&

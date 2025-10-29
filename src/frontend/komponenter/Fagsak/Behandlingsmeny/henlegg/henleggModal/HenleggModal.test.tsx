@@ -12,7 +12,7 @@ import { mock } from 'jest-mock-extended';
 import { createRef } from 'react';
 import * as React from 'react';
 
-import { HenleggBehandlingModal } from './HenleggBehandlingModal';
+import { HenleggModal } from './HenleggModal';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { RessursStatus } from '../../../../../typer/ressurs';
@@ -35,17 +35,13 @@ jest.mock('../../../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-const renderHenleggBehandlingModal = (
+const renderHenleggModal = (
     behandling: Behandling,
     årsaker: Behandlingresultat[]
 ): RenderResult => {
     const mockDialogRef = createRef<HTMLDialogElement | null>();
     const renderModal = render(
-        <HenleggBehandlingModal
-            behandling={behandling}
-            dialogRef={mockDialogRef}
-            årsaker={årsaker}
-        />
+        <HenleggModal behandling={behandling} dialogRef={mockDialogRef} årsaker={årsaker} />
     );
     mockDialogRef.current?.showModal();
 
@@ -68,7 +64,7 @@ const setupMocks = (): void => {
     }));
 };
 
-describe('HenleggBehandlingModal', () => {
+describe('HenleggModal', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
@@ -77,49 +73,45 @@ describe('HenleggBehandlingModal', () => {
     });
 
     test('Henlegger behandling med varsel sendt', async () => {
-        const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
-            renderHenleggBehandlingModal(lagBehandling({ varselSendt: true }), [
-                Behandlingresultat.HenlagtFeilopprettet,
-            ]);
+        const { getByLabelText, getByRole, queryByText, queryAllByText } = renderHenleggModal(
+            lagBehandling({ varselSendt: true }),
+            [Behandlingresultat.HenlagtFeilopprettet]
+        );
 
         await waitFor(() => {
-            expect(getByText('Behandlingen henlegges')).toBeInTheDocument();
+            expect(
+                getByRole('heading', { name: 'Henlegg tilbakekrevingen', level: 1 })
+            ).toBeInTheDocument();
         });
 
-        expect(queryByText('Informer søker:')).not.toBeInTheDocument();
-        expect(queryByText('Forhåndsvis brev')).not.toBeInTheDocument();
+        expect(queryByText('Informer søker:')).toBeInTheDocument();
+        expect(queryByText('Forhåndsvis brev')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
-                name: 'Henlegg behandling',
+                name: 'Henlegg',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.selectOptions(
-            getByLabelText('Velg årsak'),
-            Behandlingresultat.HenlagtFeilopprettet
-        );
         await user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
-
-        expect(getByText('Informer søker:')).toBeInTheDocument();
-        expect(getByText('Forhåndsvis brev')).toBeInTheDocument();
-
         await user.click(
             getByRole('button', {
-                name: 'Henlegg behandling',
+                name: 'Henlegg',
             })
         );
     });
 
     test('Henlegger behandling med varsel ikke sendt', async () => {
-        const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
-            renderHenleggBehandlingModal(lagBehandling(), [
-                Behandlingresultat.HenlagtFeilopprettet,
-            ]);
+        const { getByLabelText, getByRole, queryByText, queryAllByText } = renderHenleggModal(
+            lagBehandling(),
+            [Behandlingresultat.HenlagtFeilopprettet]
+        );
 
         await waitFor(() => {
-            expect(getByText('Behandlingen henlegges')).toBeInTheDocument();
+            expect(
+                getByRole('heading', { name: 'Henlegg tilbakekrevingen', level: 1 })
+            ).toBeInTheDocument();
         });
 
         expect(queryByText('Informer søker:')).not.toBeInTheDocument();
@@ -127,39 +119,30 @@ describe('HenleggBehandlingModal', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Henlegg behandling',
+                name: 'Henlegg',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.selectOptions(
-            getByLabelText('Velg årsak'),
-            Behandlingresultat.HenlagtFeilopprettet
-        );
         await user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
-
-        expect(queryByText('Informer søker:')).not.toBeInTheDocument();
-        expect(queryByText('Forhåndsvis brev')).not.toBeInTheDocument();
-
         await user.click(
             getByRole('button', {
-                name: 'Henlegg behandling',
+                name: 'Henlegg',
             })
         );
     });
 
     test('Henlegger revurdering, med brev', async () => {
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
-            renderHenleggBehandlingModal(
-                lagBehandling({ type: Behandlingstype.RevurderingTilbakekreving }),
-                [
-                    Behandlingresultat.HenlagtFeilopprettetMedBrev,
-                    Behandlingresultat.HenlagtFeilopprettetUtenBrev,
-                ]
-            );
+            renderHenleggModal(lagBehandling({ type: Behandlingstype.RevurderingTilbakekreving }), [
+                Behandlingresultat.HenlagtFeilopprettetMedBrev,
+                Behandlingresultat.HenlagtFeilopprettetUtenBrev,
+            ]);
 
         await waitFor(() => {
-            expect(getByText('Behandlingen henlegges')).toBeInTheDocument();
+            expect(
+                getByRole('heading', { name: 'Henlegg tilbakekrevingen', level: 1 })
+            ).toBeInTheDocument();
         });
 
         expect(queryByText('Informer søker:')).not.toBeInTheDocument();
@@ -167,20 +150,20 @@ describe('HenleggBehandlingModal', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Henlegg behandling',
+                name: 'Henlegg',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.selectOptions(
-            getByLabelText('Velg årsak'),
+            getByLabelText('Årsak til henleggelse'),
             Behandlingresultat.HenlagtFeilopprettetMedBrev
         );
         await user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
 
         await user.click(
             getByRole('button', {
-                name: 'Henlegg behandling',
+                name: 'Henlegg',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
@@ -198,23 +181,22 @@ describe('HenleggBehandlingModal', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Henlegg behandling',
+                name: 'Henlegg',
             })
         );
     });
 
     test('Henlegger revurdering, uten brev', async () => {
-        const { getByText, getByLabelText, getByRole, queryByText, queryByRole, queryAllByText } =
-            renderHenleggBehandlingModal(
-                lagBehandling({ type: Behandlingstype.RevurderingTilbakekreving }),
-                [
-                    Behandlingresultat.HenlagtFeilopprettetMedBrev,
-                    Behandlingresultat.HenlagtFeilopprettetUtenBrev,
-                ]
-            );
+        const { getByLabelText, getByRole, queryByText, queryByRole, queryAllByText } =
+            renderHenleggModal(lagBehandling({ type: Behandlingstype.RevurderingTilbakekreving }), [
+                Behandlingresultat.HenlagtFeilopprettetMedBrev,
+                Behandlingresultat.HenlagtFeilopprettetUtenBrev,
+            ]);
 
         await waitFor(() => {
-            expect(getByText('Behandlingen henlegges')).toBeInTheDocument();
+            expect(
+                getByRole('heading', { name: 'Henlegg tilbakekrevingen', level: 1 })
+            ).toBeInTheDocument();
         });
 
         expect(queryByText('Informer søker:')).not.toBeInTheDocument();
@@ -222,13 +204,13 @@ describe('HenleggBehandlingModal', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Henlegg behandling',
+                name: 'Henlegg',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.selectOptions(
-            getByLabelText('Velg årsak'),
+            getByLabelText('Årsak til henleggelse'),
             Behandlingresultat.HenlagtFeilopprettetUtenBrev
         );
         await user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
@@ -239,7 +221,7 @@ describe('HenleggBehandlingModal', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Henlegg behandling',
+                name: 'Henlegg',
             })
         );
     });
