@@ -5,7 +5,7 @@ import { ActionMenu, BodyShort, Button, Modal } from '@navikt/ds-react';
 import * as React from 'react';
 import { useRef } from 'react';
 
-import { useSettBehandlingTilbakeTilFakta } from './useSettBehandlingTilbakeTilFakta';
+import { useStartPåNytt } from './useStartPåNytt';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
 import { useFagsakStore } from '../../../../stores/fagsakStore';
@@ -16,14 +16,14 @@ type Props = {
     behandling: Behandling;
 };
 
-export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) => {
+export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { fagsystem, eksternFagsakId } = useFagsakStore();
-    const mutation = useSettBehandlingTilbakeTilFakta();
+    const mutation = useStartPåNytt();
 
-    const handleResettBehandling = (): void => {
+    const handleNullstill = (): void => {
         nullstillIkkePersisterteKomponenter();
         mutation.mutate(behandling.behandlingId, {
             onSuccess: ressurs => {
@@ -53,17 +53,18 @@ export const SettBehandlingTilbakeTilFakta: React.FC<Props> = ({ behandling }) =
             <Modal
                 ref={dialogRef}
                 header={{
-                    heading: 'Start på nytt',
-                    icon: <ArrowCirclepathReverseIcon aria-hidden />,
+                    heading: 'Start behandlingen på nytt',
+                    icon: <ArrowCirclepathReverseIcon aria-hidden className="mr-2" />,
                 }}
             >
                 <Modal.Body>
                     <BodyShort>
-                        Ønsker du å starte behandlingen på nytt? Handlingen kan ikke angres.
+                        Dersom du starter på nytt, vil alt arbeid som er gjort i denne behandlingen
+                        bli slettet. Denne handlingen kan ikke angres.
                     </BodyShort>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={handleResettBehandling}>Start på nytt</Button>
+                    <Button onClick={handleNullstill}>Start på nytt</Button>
                     <Button variant="secondary" onClick={() => dialogRef.current?.close()}>
                         Avbryt
                     </Button>

@@ -3,7 +3,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 
-import { useSettBehandlingTilbakeTilFakta } from './useSettBehandlingTilbakeTilFakta';
+import { useStartPåNytt } from './useStartPåNytt';
 import { Feil } from '../../../../api/feil';
 import { RessursStatus } from '../../../../typer/ressurs';
 
@@ -36,16 +36,16 @@ jest.mock('../../../../api/http/HttpProvider', () => ({
     })),
 }));
 
-describe('useSettBehandlingTilbakeTilFakta', () => {
+describe('useStartPåNytt', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     test('Burde kaste Feil med status 400 når tom behandlingId er gitt', async () => {
-        const { result } = renderHook(() => useSettBehandlingTilbakeTilFakta());
+        const { result } = renderHook(() => useStartPåNytt());
 
         await expect(result.current.mutate('')).rejects.toEqual(
-            new Feil('Behandling id er påkrevd for å sette behandling tilbake til fakta.', 400)
+            new Feil('Behandling id er påkrevd for å starte på nytt.', 400)
         );
     });
 
@@ -59,7 +59,7 @@ describe('useSettBehandlingTilbakeTilFakta', () => {
             invalidateQueries: mockInvalidateQueries,
         });
 
-        const { result } = renderHook(() => useSettBehandlingTilbakeTilFakta());
+        const { result } = renderHook(() => useStartPåNytt());
 
         const response = await result.current.mutateAsync(behandlingId);
 
@@ -83,7 +83,7 @@ describe('useSettBehandlingTilbakeTilFakta', () => {
             httpStatusCode,
         });
 
-        const { result } = renderHook(() => useSettBehandlingTilbakeTilFakta());
+        const { result } = renderHook(() => useStartPåNytt());
 
         await expect(result.current.mutateAsync(behandlingId)).rejects.toEqual(
             new Feil(mockFrontendFeilmelding, httpStatusCode)
@@ -98,7 +98,7 @@ describe('useSettBehandlingTilbakeTilFakta', () => {
             frontendFeilmelding: '',
         });
 
-        const { result } = renderHook(() => useSettBehandlingTilbakeTilFakta());
+        const { result } = renderHook(() => useStartPåNytt());
 
         await expect(result.current.mutateAsync(behandlingId)).rejects.toEqual(
             new Feil('Ukjent feil ved å sette behandling tilbake til fakta.', 500)
