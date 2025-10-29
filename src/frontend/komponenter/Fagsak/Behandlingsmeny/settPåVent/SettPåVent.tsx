@@ -55,6 +55,7 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                 header={{
                     heading: 'Sett behandlingen på vent',
                     size: 'medium',
+                    icon: <TimerPauseIcon aria-hidden className="mr-2" />,
                 }}
                 width="small"
             >
@@ -68,13 +69,14 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                     />
                     <Select
                         {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
-                        label="Årsak"
+                        label="Årsaken til at behandlingen settes på vent"
+                        value={skjema.felter.årsak.verdi ?? 'default'}
                     >
-                        <option value="" disabled>
+                        <option value="default" disabled>
                             Velg årsak
                         </option>
-                        {manuelleVenteÅrsaker.map((årsak, index) => (
-                            <option key={`årsak_${index}`} value={årsak}>
+                        {manuelleVenteÅrsaker.map(årsak => (
+                            <option key={årsak} value={årsak}>
                                 {venteårsaker[årsak]}
                             </option>
                         ))}
@@ -90,7 +92,7 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                         onClick={() => onBekreft(behandling.behandlingId)}
                         size="small"
                     >
-                        Bekreft
+                        Sett på vent
                     </Button>
                     <Button variant="tertiary" key="avbryt" onClick={lukkModal} size="small">
                         Avbryt
