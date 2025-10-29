@@ -9,7 +9,7 @@ import { Henlegg } from './henlegg/Henlegg';
 import { HentOppdatertKravgrunnlag } from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
 import { HistoriskeVurderinger } from './HistoriskeVurderinger/HistoriskeVurderinger';
 import { LeggTilFjernBrevmottakere } from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
-import { Revurder } from './Revurder/Revurder';
+import { Revurder } from './revurder/Revurder';
 import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
 // import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
 import { StartPåNytt } from './startPåNytt/StartPåNytt';
