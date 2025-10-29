@@ -12,7 +12,7 @@ import { LeggTilFjernBrevmottakere } from './LeggTilFjernBrevmottakere/LeggTilFj
 import { Revurder } from './Revurder/Revurder';
 import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
 // import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
-import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta/SettBehandlingTilbakeTilFakta';
+import { StartPåNytt } from './startPåNytt/StartPåNytt';
 import { useApp } from '../../../context/AppContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Fagsystem } from '../../../kodeverk';
@@ -85,9 +85,7 @@ export const Behandlingsmeny: React.FC = () => {
                                 {erForvalter && (
                                     <>
                                         {behandling.data.kanSetteTilbakeTilFakta && (
-                                            <SettBehandlingTilbakeTilFakta
-                                                behandling={behandling.data}
-                                            />
+                                            <StartPåNytt behandling={behandling.data} />
                                         )}
 
                                         <HentOppdatertKravgrunnlag behandling={behandling.data} />

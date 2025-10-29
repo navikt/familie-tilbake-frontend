@@ -1,4 +1,4 @@
-import type { SettBehandlingTilbakeTilFaktaHook } from './useSettBehandlingTilbakeTilFakta';
+import type { StartPåNyttHook as StartPåNyttHook } from './useStartPåNytt';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { RedirectEtterLagringHook } from '../../../../hooks/useRedirectEtterLagring';
 import type { FagsakState } from '../../../../stores/fagsakStore';
@@ -10,7 +10,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { SettBehandlingTilbakeTilFakta } from './SettBehandlingTilbakeTilFakta';
+import { StartPåNytt } from './StartPåNytt';
 import { Feil } from '../../../../api/feil';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 
@@ -29,10 +29,9 @@ jest.mock('../../../../hooks/useRedirectEtterLagring', () => ({
     useRedirectEtterLagring: (): RedirectEtterLagringHook => mockUseRedirectEtterLagring(),
 }));
 
-const mockUseSettBehandlingTilbakeTilFakta = jest.fn();
-jest.mock('./useSettBehandlingTilbakeTilFakta', () => ({
-    useSettBehandlingTilbakeTilFakta: (): SettBehandlingTilbakeTilFaktaHook =>
-        mockUseSettBehandlingTilbakeTilFakta(),
+const mockUseStartPåNytt = jest.fn();
+jest.mock('./useStartPåNytt', () => ({
+    useStartPåNytt: (): StartPåNyttHook => mockUseStartPåNytt(),
 }));
 
 const mockNullstill = jest.fn();
@@ -46,7 +45,7 @@ const setupMocks = (): void => {
     mockUseRedirectEtterLagring.mockReturnValue(() => null);
 };
 
-describe('SettBehandlingTilbakeTilFakta', () => {
+describe('StartPåNytt', () => {
     let user: UserEvent;
     beforeEach(() => {
         jest.clearAllMocks();
@@ -64,7 +63,7 @@ describe('SettBehandlingTilbakeTilFakta', () => {
             );
         });
 
-        mockUseSettBehandlingTilbakeTilFakta.mockReturnValue({
+        mockUseStartPåNytt.mockReturnValue({
             mutate: mockMutate,
             isError: true,
             error: {
@@ -80,7 +79,7 @@ describe('SettBehandlingTilbakeTilFakta', () => {
                     <Button>Test kun for å rendre</Button>
                 </ActionMenu.Trigger>
                 <ActionMenu.Content>
-                    <SettBehandlingTilbakeTilFakta behandling={lagBehandling()} />
+                    <StartPåNytt behandling={lagBehandling()} />
                 </ActionMenu.Content>
             </ActionMenu>
         );

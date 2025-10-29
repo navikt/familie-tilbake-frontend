@@ -8,12 +8,12 @@ import { Feil } from '../../../../api/feil';
 import { useHttp } from '../../../../api/http/HttpProvider';
 import { RessursStatus } from '../../../../typer/ressurs';
 
-const settBehandlingTilbakeTilFakta = async (
+const startPåNytt = async (
     request: FamilieRequest,
     behandlingId: string
 ): Promise<Ressurs<string>> => {
     if (!behandlingId) {
-        throw new Feil('Behandling id er påkrevd for å sette behandling tilbake til fakta.', 400);
+        throw new Feil('Behandling id er påkrevd for å starte på nytt.', 400);
     }
     return await request<void, string>({
         method: 'PUT',
@@ -21,20 +21,15 @@ const settBehandlingTilbakeTilFakta = async (
     });
 };
 
-export type SettBehandlingTilbakeTilFaktaHook = UseMutationResult<
-    Ressurs<string>,
-    Feil,
-    string,
-    unknown
->;
+export type StartPåNyttHook = UseMutationResult<Ressurs<string>, Feil, string, unknown>;
 
-export const useSettBehandlingTilbakeTilFakta = (): SettBehandlingTilbakeTilFaktaHook => {
+export const useStartPåNytt = (): StartPåNyttHook => {
     const { request } = useHttp();
     const queryClient = useQueryClient();
 
     return useMutation<Ressurs<string>, Feil, string>({
         mutationFn: async (behandlingId: string) => {
-            const response = await settBehandlingTilbakeTilFakta(request, behandlingId);
+            const response = await startPåNytt(request, behandlingId);
             if (response.status === RessursStatus.Suksess) {
                 return response;
             }
