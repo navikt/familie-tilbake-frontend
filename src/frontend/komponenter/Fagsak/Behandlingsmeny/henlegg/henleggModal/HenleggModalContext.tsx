@@ -35,10 +35,7 @@ type HenleggBehandlingSkjemaHook = {
     kanForhåndsvise: () => boolean;
 };
 
-export const useHenleggBehandlingSkjema = ({
-    behandling,
-    lukkModal,
-}: Props): HenleggBehandlingSkjemaHook => {
+export const useHenleggSkjema = ({ behandling, lukkModal }: Props): HenleggBehandlingSkjemaHook => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
     const { henleggBehandling } = useBehandlingApi();
     const { nullstillIkkePersisterteKomponenter } = useBehandling();

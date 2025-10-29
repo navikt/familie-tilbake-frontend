@@ -5,7 +5,7 @@ import type { FagsakState } from '../../../../stores/fagsakStore';
 import type { UserEvent } from '@testing-library/user-event';
 import type { StoreApi, UseBoundStore } from 'zustand';
 
-import { ActionMenu } from '@navikt/ds-react';
+import { ActionMenu, Button } from '@navikt/ds-react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -77,7 +77,7 @@ describe('SettBehandlingTilbakeTilFakta', () => {
         render(
             <ActionMenu open>
                 <ActionMenu.Trigger>
-                    <>Test kun for å rendre</>
+                    <Button>Test kun for å rendre</Button>
                 </ActionMenu.Trigger>
                 <ActionMenu.Content>
                     <SettBehandlingTilbakeTilFakta behandling={lagBehandling()} />
