@@ -4,14 +4,13 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { EndreEnhet } from './endreEnhet/EndreEnhet';
-import { GjennoptaBehandling } from './gjenoppta/Gjenoppta';
+import { Gjennopta } from './gjenoppta/Gjenoppta';
 import { Henlegg } from './henlegg/Henlegg';
 import { HentKorrigertKravgrunnlag } from './hentKorrigertKravgrunnlag/HentKorrigertKravgrunnlag';
 import { HistoriskeVurderinger } from './historiskeVurderinger/HistoriskeVurderinger';
 import { LeggTilFjernBrevmottakere } from './leggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
 import { Revurder } from './revurder/Revurder';
-import { SettBehandlingPåVent } from './settPåVent/SettPåVent';
-// import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
+import { SettPåVent } from './settPåVent/SettPåVent';
 import { StartPåNytt } from './startPåNytt/StartPåNytt';
 import { useApp } from '../../../context/AppContext';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -24,7 +23,6 @@ export const Behandlingsmeny: React.FC = () => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg, behandlingILesemodus } =
         useBehandling();
     const [holdMenyenÅpen, setHoldMenyenÅpen] = useState(false);
-    // const actionMenuRef = useRef<HTMLDivElement | null>(null);
     const { fagsystem, ytelsestype } = useFagsakStore();
     const { innloggetSaksbehandler } = useApp();
     const erProd =
@@ -48,7 +46,6 @@ export const Behandlingsmeny: React.FC = () => {
         <ActionMenu open={holdMenyenÅpen} onOpenChange={setHoldMenyenÅpen}>
             <ActionMenu.Trigger>
                 <Button
-                    id="behandlingsmeny-knapp"
                     size="small"
                     variant="tertiary"
                     icon={<MenuElipsisHorizontalIcon fontSize="1.5rem" aria-hidden />}
@@ -57,13 +54,9 @@ export const Behandlingsmeny: React.FC = () => {
                 </Button>
             </ActionMenu.Trigger>
 
-            <ActionMenu.Content
-                aria-labelledby="behandlingsmeny-knapp"
-                // ref={actionMenuRef}
-                onClick={() => setHoldMenyenÅpen(true)}
-            >
-                <ActionMenu.Group aria-label="Behandlingsmenyvalg">
-                    {!behandling.data.kanRevurderingOpprettes && (
+            <ActionMenu.Content onClick={() => setHoldMenyenÅpen(true)}>
+                <ActionMenu.Group aria-label="Menyvalg">
+                    {behandling.data.kanRevurderingOpprettes && (
                         <Revurder behandlingId={behandling.data.behandlingId} />
                     )}
 
@@ -71,18 +64,18 @@ export const Behandlingsmeny: React.FC = () => {
                         !vedtakFattetEllerFattes &&
                         behandling.data.kanEndres && (
                             <>
-                                {!behandling.data.kanHenleggeBehandling && (
+                                {behandling.data.kanHenleggeBehandling && (
                                     <Henlegg behandling={behandling.data} />
                                 )}
 
                                 {!venterPåKravgrunnlag &&
                                     (behandling.data.erBehandlingPåVent || ventegrunn ? (
-                                        <GjennoptaBehandling behandling={behandling.data} />
+                                        <Gjennopta behandling={behandling.data} />
                                     ) : (
-                                        <SettBehandlingPåVent behandling={behandling.data} />
+                                        <SettPåVent behandling={behandling.data} />
                                     ))}
 
-                                {!erForvalter && (
+                                {erForvalter && (
                                     <>
                                         {behandling.data.kanSetteTilbakeTilFakta && (
                                             <StartPåNytt behandling={behandling.data} />
@@ -102,7 +95,7 @@ export const Behandlingsmeny: React.FC = () => {
                                             />
                                         )}
 
-                                        {fagsystem !== Fagsystem.BA && ytelsestype && (
+                                        {fagsystem === Fagsystem.BA && ytelsestype && (
                                             <EndreEnhet behandling={behandling.data} />
                                         )}
 

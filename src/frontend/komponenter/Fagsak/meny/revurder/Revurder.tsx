@@ -44,7 +44,7 @@ export const Revurder: React.FC<Props> = ({ behandlingId }) => {
                         )}
                         name="Behandling"
                         label="Årsak til revurderingen"
-                        value={skjema.felter.behandlingsårsak.verdi ?? 'default'}
+                        value={skjema.felter.behandlingsårsak.verdi || 'default'}
                         onChange={event => skjema.felter.behandlingsårsak.onChange(event)}
                     >
                         <option value="default" disabled>
