@@ -6,9 +6,9 @@ import { useState } from 'react';
 import { EndreEnhet } from './endreEnhet/EndreEnhet';
 import { GjennoptaBehandling } from './gjenoppta/Gjenoppta';
 import { Henlegg } from './henlegg/Henlegg';
-import { HentOppdatertKravgrunnlag } from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
-import { HistoriskeVurderinger } from './HistoriskeVurderinger/HistoriskeVurderinger';
-import { LeggTilFjernBrevmottakere } from './LeggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
+import { HentKorrigertKravgrunnlag } from './hentKorrigertKravgrunnlag/HentKorrigertKravgrunnlag';
+import { HistoriskeVurderinger } from './historiskeVurderinger/HistoriskeVurderinger';
+import { LeggTilFjernBrevmottakere } from './leggTilFjernBrevmottakere/LeggTilFjernBrevmottakere';
 import { Revurder } from './revurder/Revurder';
 import { SettBehandlingPåVent } from './settPåVent/SettPåVent';
 // import { SettBehandlingPåVent } from './SettBehandlingPåVent/SettBehandlingPåVent';
@@ -53,7 +53,7 @@ export const Behandlingsmeny: React.FC = () => {
                     variant="tertiary"
                     icon={<MenuElipsisHorizontalIcon fontSize="1.5rem" aria-hidden />}
                 >
-                    Behandlingsmeny
+                    Meny
                 </Button>
             </ActionMenu.Trigger>
 
@@ -63,7 +63,7 @@ export const Behandlingsmeny: React.FC = () => {
                 onClick={() => setHoldMenyenÅpen(true)}
             >
                 <ActionMenu.Group aria-label="Behandlingsmenyvalg">
-                    {behandling.data.kanRevurderingOpprettes && (
+                    {!behandling.data.kanRevurderingOpprettes && (
                         <Revurder behandlingId={behandling.data.behandlingId} />
                     )}
 
@@ -82,13 +82,13 @@ export const Behandlingsmeny: React.FC = () => {
                                         <SettBehandlingPåVent behandling={behandling.data} />
                                     ))}
 
-                                {erForvalter && (
+                                {!erForvalter && (
                                     <>
                                         {behandling.data.kanSetteTilbakeTilFakta && (
                                             <StartPåNytt behandling={behandling.data} />
                                         )}
 
-                                        <HentOppdatertKravgrunnlag behandling={behandling.data} />
+                                        <HentKorrigertKravgrunnlag behandling={behandling.data} />
                                     </>
                                 )}
 
@@ -102,7 +102,7 @@ export const Behandlingsmeny: React.FC = () => {
                                             />
                                         )}
 
-                                        {fagsystem === Fagsystem.BA && ytelsestype && (
+                                        {fagsystem !== Fagsystem.BA && ytelsestype && (
                                             <EndreEnhet behandling={behandling.data} />
                                         )}
 

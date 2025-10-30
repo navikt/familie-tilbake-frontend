@@ -42,7 +42,7 @@ export const EndreEnhet: React.FC<Props> = ({ behandling }) => {
                 className="text-xl cursor-pointer"
                 icon={<Buildings3Icon aria-hidden />}
             >
-                Endre enhet
+                <span className="ml-1">Endre enhet</span>
             </ActionMenu.Item>
 
             <Modal
@@ -53,6 +53,7 @@ export const EndreEnhet: React.FC<Props> = ({ behandling }) => {
                     icon: <Buildings3Icon aria-hidden className="mr-2" />,
                 }}
                 onClose={nullstillSkjema}
+                className="w-150"
             >
                 <Modal.Body className="flex flex-col gap-2">
                     <Select

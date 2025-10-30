@@ -25,17 +25,17 @@ export const Revurder: React.FC<Props> = ({ behandlingId }) => {
                 className="text-xl cursor-pointer"
                 icon={<FileResetIcon aria-hidden />}
             >
-                Revurder
+                <span className="ml-1">Revurder</span>
             </ActionMenu.Item>
 
             <Modal
                 ref={ref}
                 header={{
                     heading: 'Revurder tilbakekreving',
-                    size: 'medium',
                     icon: <FileResetIcon aria-hidden className="mr-2" />,
                 }}
                 onClose={nullstillSkjema}
+                className="w-150"
             >
                 <Modal.Body className="flex flex-col gap-4">
                     <Select
@@ -64,7 +64,7 @@ export const Revurder: React.FC<Props> = ({ behandlingId }) => {
                         Revurder
                     </Button>
                     <Button
-                        variant="tertiary"
+                        variant="secondary"
                         key="avbryt"
                         onClick={() => {
                             nullstillSkjema();

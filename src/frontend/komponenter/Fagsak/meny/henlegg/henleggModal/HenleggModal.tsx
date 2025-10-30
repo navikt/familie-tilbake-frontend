@@ -56,11 +56,10 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
             ref={dialogRef}
             header={{
                 heading: 'Henlegg tilbakekrevingen',
-                size: 'medium',
                 icon: <CircleSlashIcon aria-hidden className="mr-2" />,
             }}
-            width="small"
             onClose={nullstillSkjema}
+            className="w-150"
         >
             <Modal.Body className="flex flex-col gap-4">
                 {årsaker.length > 1 && (
@@ -121,7 +120,7 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
                     Henlegg
                 </Button>
                 <Button
-                    variant="tertiary"
+                    variant="secondary"
                     key="avbryt"
                     onClick={() => {
                         nullstillSkjema();

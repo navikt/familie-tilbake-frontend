@@ -1,7 +1,7 @@
 import type { Behandling } from '../../../../typer/behandling';
 
 import { PersonPlusIcon } from '@navikt/aksel-icons';
-import { ActionMenu, Button, ErrorMessage, Modal } from '@navikt/ds-react';
+import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -120,38 +120,41 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
                 className="text-xl cursor-pointer"
                 icon={<PersonPlusIcon aria-hidden />}
             >
-                {kanFjerneManuelleBrevmottakere ? 'Fjern brevmottaker(e)' : 'Legg til brevmottaker'}
+                <span className="ml-1">
+                    {kanFjerneManuelleBrevmottakere
+                        ? 'Fjern brevmottaker(e)'
+                        : 'Legg til brevmottaker'}
+                </span>
             </ActionMenu.Item>
 
             <Modal
                 ref={dialogRef}
-                header={{ heading: 'Ønsker du å fjerne brevmottaker(e)?', size: 'medium' }}
-                width="small"
+                header={{ heading: 'Ønsker du å fjerne brevmottaker(e)?' }}
+                className="w-150"
             >
                 <Modal.Body>
-                    <div>
-                        Dette vil både fjerne eventuelt registrerte brevmottakere og fjerne steget
+                    <BodyLong>
+                        Dette vil fjerne registrerte brevmottakere og steget
                         &quot;Brevmottaker(e)&quot;.
-                    </div>
+                    </BodyLong>
                     {feilmelding !== '' && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
                 </Modal.Body>
+
                 <Modal.Footer>
                     <Button
                         key="bekreft"
                         disabled={senderInn}
                         loading={senderInn}
                         onClick={fjernBrevmottakerSteg}
-                        size="small"
                     >
-                        Ja, fjern
+                        Fjern
                     </Button>
                     <Button
-                        variant="tertiary"
+                        variant="secondary"
                         key="avbryt"
                         onClick={() => dialogRef.current?.close()}
-                        size="small"
                     >
-                        Nei, behold
+                        Avbryt
                     </Button>
                 </Modal.Footer>
             </Modal>

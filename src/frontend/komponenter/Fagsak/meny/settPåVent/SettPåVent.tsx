@@ -47,7 +47,7 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                 icon={<TimerPauseIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >
-                Sett på vent
+                <span className="ml-1">Sett på vent</span>
             </ActionMenu.Item>
 
             <Modal
@@ -57,7 +57,8 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                     size: 'medium',
                     icon: <TimerPauseIcon aria-hidden className="mr-2" />,
                 }}
-                width="small"
+                className="w-150"
+                onClose={tilbakestillFelterTilDefault}
             >
                 <Modal.Body className="flex flex-col gap-4">
                     <Datovelger
@@ -70,7 +71,7 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                     <Select
                         {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
                         label="Årsaken til at behandlingen settes på vent"
-                        value={skjema.felter.årsak.verdi ?? 'default'}
+                        value={skjema.felter.årsak.verdi || 'default'}
                     >
                         <option value="default" disabled>
                             Velg årsak
@@ -90,7 +91,7 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                     <Button key="bekreft" onClick={() => onBekreft(behandling.behandlingId)}>
                         Sett på vent
                     </Button>
-                    <Button variant="tertiary" key="avbryt" onClick={lukkModal}>
+                    <Button variant="secondary" key="avbryt" onClick={lukkModal}>
                         Avbryt
                     </Button>
                 </Modal.Footer>
