@@ -60,7 +60,7 @@ export const Revurder: React.FC<Props> = ({ behandlingId }) => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button key="bekreft" onClick={sendInn} size="small">
+                    <Button key="bekreft" onClick={sendInn}>
                         Revurder
                     </Button>
                     <Button
@@ -70,7 +70,6 @@ export const Revurder: React.FC<Props> = ({ behandlingId }) => {
                             nullstillSkjema();
                             ref.current?.close();
                         }}
-                        size="small"
                     >
                         Avbryt
                     </Button>

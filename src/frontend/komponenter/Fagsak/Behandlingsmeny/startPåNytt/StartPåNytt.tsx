@@ -1,7 +1,7 @@
 import type { Behandling } from '../../../../typer/behandling';
 
 import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
-import { ActionMenu, BodyShort, Button, Modal } from '@navikt/ds-react';
+import { ActionMenu, BodyLong, Button, Modal } from '@navikt/ds-react';
 import * as React from 'react';
 import { useRef } from 'react';
 
@@ -58,10 +58,10 @@ export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
                 }}
             >
                 <Modal.Body>
-                    <BodyShort>
+                    <BodyLong>
                         Dersom du starter på nytt, vil alt arbeid som er gjort i denne behandlingen
                         bli slettet. Denne handlingen kan ikke angres.
-                    </BodyShort>
+                    </BodyLong>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={handleNullstill}>Start på nytt</Button>
