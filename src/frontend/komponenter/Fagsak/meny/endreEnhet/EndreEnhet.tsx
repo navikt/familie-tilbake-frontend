@@ -49,7 +49,6 @@ export const EndreEnhet: React.FC<Props> = ({ behandling }) => {
                 ref={dialogRef}
                 header={{
                     heading: 'Endre enhet',
-                    size: 'medium',
                     icon: <Buildings3Icon aria-hidden className="mr-2" />,
                 }}
                 onClose={nullstillSkjema}

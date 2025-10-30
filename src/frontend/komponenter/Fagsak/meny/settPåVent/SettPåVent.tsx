@@ -17,7 +17,7 @@ type Props = {
     behandling: Behandling;
 };
 
-export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
+export const SettPåVent: React.FC<Props> = ({ behandling }) => {
     const { hentBehandlingMedBehandlingId } = useBehandling();
     const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -54,7 +54,6 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                 ref={dialogRef}
                 header={{
                     heading: 'Sett behandlingen på vent',
-                    size: 'medium',
                     icon: <TimerPauseIcon aria-hidden className="mr-2" />,
                 }}
                 className="w-150"
