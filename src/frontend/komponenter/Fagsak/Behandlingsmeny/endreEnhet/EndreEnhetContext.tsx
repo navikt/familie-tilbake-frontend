@@ -5,7 +5,7 @@ import { useFelt, useSkjema } from '../../../../hooks/skjema';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../utils';
 
-type EndreBehandlendeEnhetHook = {
+type EndreEnhetHook = {
     skjema: Skjema<
         {
             enhet: string | '';
@@ -17,10 +17,7 @@ type EndreBehandlendeEnhetHook = {
     nullstillSkjema: () => void;
 };
 
-const useEndreBehandlendeEnhet = (
-    behandlingId: string,
-    lukkModal: () => void
-): EndreBehandlendeEnhetHook => {
+const useEndreEnhet = (behandlingId: string, lukkModal: () => void): EndreEnhetHook => {
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
 
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
@@ -44,7 +41,7 @@ const useEndreBehandlendeEnhet = (
                 },
             }),
         },
-        skjemanavn: 'endreEnhetBehandling',
+        skjemanavn: 'endreEnhet',
     });
 
     const sendInn = (): void => {
@@ -72,4 +69,4 @@ const useEndreBehandlendeEnhet = (
     return { skjema, sendInn, nullstillSkjema };
 };
 
-export { useEndreBehandlendeEnhet };
+export { useEndreEnhet };
