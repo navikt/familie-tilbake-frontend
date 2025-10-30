@@ -117,7 +117,7 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
                     skjema={skjema}
                     kanForhåndsvise={kanForhåndsvise()}
                 />
-                <Button key="bekreft" onClick={onBekreft} size="small">
+                <Button key="bekreft" onClick={onBekreft}>
                     Henlegg
                 </Button>
                 <Button
@@ -127,7 +127,6 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
                         nullstillSkjema();
                         dialogRef.current?.close();
                     }}
-                    size="small"
                 >
                     Avbryt
                 </Button>

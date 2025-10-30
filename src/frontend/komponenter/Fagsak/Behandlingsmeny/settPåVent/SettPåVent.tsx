@@ -87,14 +87,10 @@ export const SettBehandlingPåVent: React.FC<Props> = ({ behandling }) => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button
-                        key="bekreft"
-                        onClick={() => onBekreft(behandling.behandlingId)}
-                        size="small"
-                    >
+                    <Button key="bekreft" onClick={() => onBekreft(behandling.behandlingId)}>
                         Sett på vent
                     </Button>
-                    <Button variant="tertiary" key="avbryt" onClick={lukkModal} size="small">
+                    <Button variant="tertiary" key="avbryt" onClick={lukkModal}>
                         Avbryt
                     </Button>
                 </Modal.Footer>
