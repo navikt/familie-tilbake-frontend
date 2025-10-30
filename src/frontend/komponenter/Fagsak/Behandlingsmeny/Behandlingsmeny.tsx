@@ -3,7 +3,7 @@ import { ActionMenu, Button } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 
-import { EndreBehandlendeEnhet } from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
+import { EndreEnhet } from './endreEnhet/EndreEnhet';
 import { GjennoptaBehandling } from './gjenoppta/Gjenoppta';
 import { Henlegg } from './henlegg/Henlegg';
 import { HentOppdatertKravgrunnlag } from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
@@ -103,7 +103,7 @@ export const Behandlingsmeny: React.FC = () => {
                                         )}
 
                                         {fagsystem === Fagsystem.BA && ytelsestype && (
-                                            <EndreBehandlendeEnhet behandling={behandling.data} />
+                                            <EndreEnhet behandling={behandling.data} />
                                         )}
 
                                         <HistoriskeVurderinger behandling={behandling.data} />

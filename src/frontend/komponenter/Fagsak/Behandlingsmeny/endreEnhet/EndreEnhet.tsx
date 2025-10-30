@@ -5,16 +5,16 @@ import { ActionMenu, Button, ErrorMessage, Modal, Select, Textarea } from '@navi
 import * as React from 'react';
 import { useRef } from 'react';
 
-import { useEndreBehandlendeEnhet } from './EndreBehandlendeEnhetContext';
+import { useEndreEnhet } from './EndreEnhetContext';
 import { RessursStatus } from '../../../../typer/ressurs';
-import { hentFrontendFeilmelding } from '../../../../utils/';
+import { hentFrontendFeilmelding } from '../../../../utils';
 
 type Arbeidsfordelingsenhet = {
     enhetskode: Behandling['enhetskode'];
     enhetsnavn: Behandling['enhetsnavn'];
 };
 
-const behandlendeEnheter: Arbeidsfordelingsenhet[] = [
+const enheter: Arbeidsfordelingsenhet[] = [
     { enhetskode: '2103', enhetsnavn: 'Nav Vikafossen' },
     { enhetskode: '4806', enhetsnavn: 'Nav Familie- og pensjonsytelser Drammen' },
     { enhetskode: '4820', enhetsnavn: 'Nav Familie- og pensjonsytelser Vadsø' },
@@ -27,11 +27,10 @@ type Props = {
     behandling: Behandling;
 };
 
-export const EndreBehandlendeEnhet: React.FC<Props> = ({ behandling }) => {
+export const EndreEnhet: React.FC<Props> = ({ behandling }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const { skjema, sendInn, nullstillSkjema } = useEndreBehandlendeEnhet(
-        behandling.behandlingId,
-        () => dialogRef.current?.close()
+    const { skjema, sendInn, nullstillSkjema } = useEndreEnhet(behandling.behandlingId, () =>
+        dialogRef.current?.close()
     );
 
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
@@ -43,25 +42,30 @@ export const EndreBehandlendeEnhet: React.FC<Props> = ({ behandling }) => {
                 className="text-xl cursor-pointer"
                 icon={<Buildings3Icon aria-hidden />}
             >
-                Endre behandlende enhet
+                Endre enhet
             </ActionMenu.Item>
 
             <Modal
                 ref={dialogRef}
-                header={{ heading: 'Endre enhet for behandlingen', size: 'medium' }}
+                header={{
+                    heading: 'Endre enhet',
+                    size: 'medium',
+                    icon: <Buildings3Icon aria-hidden className="mr-2" />,
+                }}
                 onClose={nullstillSkjema}
             >
                 <Modal.Body className="flex flex-col gap-2">
                     <Select
                         {...skjema.felter.enhet.hentNavInputProps(skjema.visFeilmeldinger)}
+                        value={skjema.felter.enhet.verdi || 'default'}
                         readOnly={false}
                         name="enhet"
-                        label="Velg ny enhet"
+                        label="Velg en ny enhet"
                     >
-                        <option value="" disabled>
-                            Velg ny enhet
+                        <option value="default" disabled>
+                            Velg enhet
                         </option>
-                        {behandlendeEnheter.map(enhet => (
+                        {enheter.map(enhet => (
                             <option key={enhet.enhetskode} value={enhet.enhetskode}>
                                 {enhet.enhetsnavn}
                             </option>
@@ -80,18 +84,16 @@ export const EndreBehandlendeEnhet: React.FC<Props> = ({ behandling }) => {
                         disabled={skjema.submitRessurs.status === RessursStatus.Henter}
                         key="bekreft"
                         onClick={sendInn}
-                        size="small"
                     >
-                        Bekreft
+                        Endre
                     </Button>
                     <Button
-                        variant="tertiary"
+                        variant="secondary"
                         key="avbryt"
                         onClick={() => {
                             nullstillSkjema();
                             dialogRef.current?.close();
                         }}
-                        size="small"
                     >
                         Avbryt
                     </Button>
