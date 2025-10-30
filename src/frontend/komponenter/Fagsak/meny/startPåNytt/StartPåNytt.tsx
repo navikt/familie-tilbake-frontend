@@ -47,7 +47,7 @@ export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
                 icon={<ArrowCirclepathReverseIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >
-                Start på nytt
+                <span className="ml-1">Start på nytt</span>
             </ActionMenu.Item>
 
             <Modal
@@ -56,6 +56,7 @@ export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
                     heading: 'Start behandlingen på nytt',
                     icon: <ArrowCirclepathReverseIcon aria-hidden className="mr-2" />,
                 }}
+                className="w-150"
             >
                 <Modal.Body>
                     <BodyLong>

@@ -38,7 +38,7 @@ export const Henlegg: React.FC<Props> = ({ behandling }) => {
                 icon={<CircleSlashIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >
-                Henlegg
+                <span className="ml-1">Henlegg</span>
             </ActionMenu.Item>
 
             <HenleggModal behandling={behandling} dialogRef={dialogRef} årsaker={årsaker} />

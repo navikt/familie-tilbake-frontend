@@ -29,7 +29,7 @@ export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
                 className="text-xl cursor-pointer"
                 icon={<TimerStartIcon aria-hidden />}
             >
-                Gjenoppta
+                <span className="ml-1">Gjenoppta</span>
             </ActionMenu.Item>
 
             <Modal
@@ -39,7 +39,7 @@ export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
                     size: 'medium',
                     icon: <TimerStartIcon aria-hidden className="mr-2" />,
                 }}
-                width="small"
+                className="w-150"
             >
                 <Modal.Body className="flex flex-col gap-2">
                     <BodyLong>Ønsker du å gjenoppta behandlingen?</BodyLong>
@@ -53,7 +53,7 @@ export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
                         Gjenoppta
                     </Button>
                     <Button
-                        variant="tertiary"
+                        variant="secondary"
                         key="avbryt"
                         onClick={() => dialogRef.current?.close()}
                     >

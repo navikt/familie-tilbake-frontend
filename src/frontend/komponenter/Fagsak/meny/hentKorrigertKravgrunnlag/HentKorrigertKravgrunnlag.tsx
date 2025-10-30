@@ -16,7 +16,7 @@ type Props = {
     behandling: Behandling;
 };
 
-export const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
+export const HentKorrigertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
     const { request } = useHttp();
     const { settToast } = useApp();
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
@@ -58,7 +58,7 @@ export const HentOppdatertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
             className="text-xl cursor-pointer"
             icon={<HddUpIcon aria-hidden />}
         >
-            Hent korrigert kravgrunnlag
+            <span className="ml-1">Hent korrigert kravgrunnlag</span>
         </ActionMenu.Item>
     );
 };

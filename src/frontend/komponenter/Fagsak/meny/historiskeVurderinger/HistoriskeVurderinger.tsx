@@ -28,7 +28,7 @@ export const HistoriskeVurderinger: React.FC<Props> = ({ behandling }) => {
                 href={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/inaktiv`}
                 icon={<ClockDashedIcon aria-hidden />}
             >
-                Se historiske vurderinger
+                <span className="ml-1">Se historiske vurderinger</span>
             </ActionMenu.Item>
         )
     );

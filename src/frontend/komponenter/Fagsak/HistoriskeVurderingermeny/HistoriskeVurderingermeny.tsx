@@ -7,7 +7,7 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
-import { Behandlingsmeny } from '../Behandlingsmeny/Behandlingsmeny';
+import { Behandlingsmeny } from '../meny/Meny';
 
 const Container = styled.div`
     margin: 2rem;
