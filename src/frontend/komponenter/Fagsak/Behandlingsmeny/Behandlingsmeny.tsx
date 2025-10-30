@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { EndreBehandlendeEnhet } from './EndreBehandlendeEnhet/EndreBehandlendeEnhet';
-import { GjennoptaBehandling } from './GjennoptaBehandling/GjennoptaBehandling';
+import { GjennoptaBehandling } from './gjenoppta/Gjenoppta';
 import { Henlegg } from './henlegg/Henlegg';
 import { HentOppdatertKravgrunnlag } from './hentOppdatertKravgrunnlag/HentOppdatertKravgrunnlag';
 import { HistoriskeVurderinger } from './HistoriskeVurderinger/HistoriskeVurderinger';
