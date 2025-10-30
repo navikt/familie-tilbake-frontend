@@ -1,7 +1,7 @@
 import type { Behandling } from '../../../../typer/behandling';
 
 import { TimerStartIcon } from '@navikt/aksel-icons';
-import { ActionMenu, Button, ErrorMessage, Modal } from '@navikt/ds-react';
+import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import * as React from 'react';
 import { useRef } from 'react';
 
@@ -34,28 +34,28 @@ export const GjennoptaBehandling: React.FC<Props> = ({ behandling }) => {
 
             <Modal
                 ref={dialogRef}
-                header={{ heading: 'Gjenoppta behandlingen', size: 'medium' }}
+                header={{
+                    heading: 'Gjenoppta behandlingen',
+                    size: 'medium',
+                    icon: <TimerStartIcon aria-hidden className="mr-2" />,
+                }}
                 width="small"
             >
-                <Modal.Body>
+                <Modal.Body className="flex flex-col gap-2">
+                    <BodyLong>Ønsker du å gjenoppta behandlingen?</BodyLong>
                     {feilmelding && feilmelding !== '' && (
                         <ErrorMessage size="small">{feilmelding}</ErrorMessage>
                     )}
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button
-                        key="bekreft"
-                        onClick={() => onOkTaAvVent(behandling.behandlingId)}
-                        size="small"
-                    >
-                        Ok
+                    <Button key="bekreft" onClick={() => onOkTaAvVent(behandling.behandlingId)}>
+                        Gjenoppta
                     </Button>
                     <Button
                         variant="tertiary"
                         key="avbryt"
                         onClick={() => dialogRef.current?.close()}
-                        size="small"
                     >
                         Avbryt
                     </Button>
