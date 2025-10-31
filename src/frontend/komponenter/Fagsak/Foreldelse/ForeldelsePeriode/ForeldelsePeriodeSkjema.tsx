@@ -136,7 +136,7 @@ const ForeldelsePeriodeSkjema: React.FC<Props> = ({ behandling, periode, erLesev
     };
 
     return (
-        <div className="p-4 bg-white">
+        <div className="p-4">
             <StyledStack
                 justify="space-between"
                 align={{ md: 'start', lg: 'center' }}
