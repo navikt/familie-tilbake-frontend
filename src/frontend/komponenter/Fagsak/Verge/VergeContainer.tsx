@@ -137,7 +137,7 @@ const VergeContainer: React.FC = () => {
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
 
                     <ActionBar
-                        stegtekst={actionBarStegtekst(Behandlingssteg.Verge)}
+                        stegtekst={actionBarStegtekst(Behandlingssteg.Verge, false)}
                         forrigeAriaLabel={undefined}
                         nesteAriaLabel="Gå videre til faktasteget"
                         onNeste={sendInn}

@@ -210,7 +210,10 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 )}
             </VStack>
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
+                stegtekst={actionBarStegtekst(
+                    Behandlingssteg.Forhåndsvarsel,
+                    behandling.erNyModell
+                )}
                 nesteTekst={harEndringer ? 'Send forhåndsvarsel' : 'Neste'}
                 forrigeAriaLabel={undefined}
                 nesteAriaLabel={harEndringer ? 'Send forhåndsvarsel' : 'Gå til foreldelsessteget'}
