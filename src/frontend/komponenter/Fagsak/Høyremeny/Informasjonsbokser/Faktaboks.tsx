@@ -37,20 +37,20 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
     return (
         <Box
             padding="4"
-            className="border-1 rounded-xl border-border-divider flex flex-col gap-4 bg-white"
+            className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
         >
             <Heading size="xsmall" level="2">
                 Tilbakekreving av {ytelsetype[ytelsestype].toLocaleLowerCase()}
             </Heading>
 
-            <dl className="grid grid-cols-[136px_1fr] xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
+            <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
                 {behandling.behandlingsårsakstype && (
                     <>
-                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                             <FileResetIcon {...ICON_PROPS} />
                             Revurderingsårsak
                         </dt>
-                        <dd className="text-medium items-center flex">
+                        <dd className="text-ax-medium items-center flex">
                             <Tag size="small" variant="neutral-moderate">
                                 {behandlingårsaker[behandling.behandlingsårsakstype]}
                             </Tag>
@@ -62,31 +62,31 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
 
                 {behandling.resultatstype && <ResultatTag resultat={behandling.resultatstype} />}
 
-                <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                     <CalendarIcon {...ICON_PROPS} />
                     Opprettet
                 </dt>
-                <dd className="text-medium items-center flex">
+                <dd className="text-ax-medium items-center flex">
                     {formatterDatostring(behandling.opprettetDato)}
                 </dd>
 
                 {behandling.avsluttetDato && (
                     <>
-                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                             <CalendarFillIcon {...ICON_PROPS} />
                             Avsluttet
                         </dt>
-                        <dd className="text-medium items-center flex">
+                        <dd className="text-ax-medium items-center flex">
                             {formatterDatostring(behandling.avsluttetDato)}
                         </dd>
                     </>
                 )}
 
-                <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                     <Buildings3Icon {...ICON_PROPS} />
                     Enhet
                 </dt>
-                <dd className="text-medium items-center flex">
+                <dd className="text-ax-medium items-center flex">
                     {behandling.enhetskode} {behandling.enhetsnavn}
                 </dd>
             </dl>
@@ -127,11 +127,11 @@ const StatusTag: React.FC<{ status: Behandlingstatus }> = ({ status }) => {
     const { variant, icon: StatusIkon } = STATUS_META[status];
     return (
         <>
-            <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+            <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                 <StatusIkon {...ICON_PROPS} />
                 Status
             </dt>
-            <dd className="text-medium items-center flex">
+            <dd className="text-ax-medium items-center flex">
                 <Tag size="small" variant={variant}>
                     {behandlingsstatuser[status]}
                 </Tag>
@@ -154,11 +154,11 @@ const RESULTAT_META = {
 const ResultatTag: React.FC<{ resultat: Behandlingresultat }> = ({ resultat }) => {
     return (
         <>
-            <dt className="shrink-0 text-medium font-bold flex flex-row gap-2 items-center">
+            <dt className="shrink-0text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                 <ClipboardIcon {...ICON_PROPS} />
                 Resultat
             </dt>
-            <dd className="text-medium items-center flex">
+            <dd className="text-ax-medium items-center flex">
                 <Tag size="small" variant={RESULTAT_META[resultat].variant}>
                     {behandlingsresultater[resultat]}
                 </Tag>

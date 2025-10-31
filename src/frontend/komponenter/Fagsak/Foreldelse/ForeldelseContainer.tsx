@@ -51,7 +51,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                                     href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A72"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-text-action"
+                                    className="text-ax-text-accent-subtle"
                                 >
                                     § 2
                                 </Link>{' '}
@@ -60,7 +60,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                                     href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A73"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-text-action"
+                                    className="text-ax-text-accent-subtle"
                                 >
                                     § 3
                                 </Link>
@@ -92,7 +92,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                                         href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A72"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-text-action"
+                                        className="text-ax-text-accent-subtle"
                                     >
                                         § 2
                                     </Link>{' '}
@@ -101,7 +101,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
                                         href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A73"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-text-action"
+                                        className="text-ax-text-accent-subtle"
                                     >
                                         § 3
                                     </Link>{' '}

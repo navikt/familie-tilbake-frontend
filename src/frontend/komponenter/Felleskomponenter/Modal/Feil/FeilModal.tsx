@@ -27,7 +27,7 @@ export const FeilModal: React.FC<Props> = ({
         <Modal open onClose={lukkFeilModal} aria-labelledby="modal-heading" portal>
             <Modal.Header className="bg-[#FFE6E6]" closeButton={false}>
                 <Heading level="1" className="flex items-center flex-row gap-1" size="medium">
-                    <XMarkOctagonFillIcon aria-hidden color="var(--a-icon-danger)" />
+                    <XMarkOctagonFillIcon aria-hidden color="var(--ax-text-danger-decoration)" />
                     {feilObjekt.tittel}
                 </Heading>
             </Modal.Header>
