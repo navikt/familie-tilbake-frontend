@@ -1,4 +1,3 @@
-import '@navikt/ds-css/darkside';
 import type { Saksbehandler } from '../typer/saksbehandler';
 
 import { Theme } from '@navikt/ds-react';
