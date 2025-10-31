@@ -1,5 +1,7 @@
+import '@navikt/ds-css/darkside';
 import type { Saksbehandler } from '../typer/saksbehandler';
 
+import { Theme } from '@navikt/ds-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as React from 'react';
 import { Suspense } from 'react';
@@ -26,9 +28,11 @@ const App: React.FC = () => {
         <QueryClientProvider client={queryClient}>
             <ErrorBoundary autentisertSaksbehandler={autentisertSaksbehandler}>
                 <AppProvider autentisertSaksbehandler={autentisertSaksbehandler}>
-                    <Suspense fallback={<div>Container laster innhold...</div>}>
-                        <Container />
-                    </Suspense>
+                    <Theme>
+                        <Suspense fallback={<div>Container laster innhold...</div>}>
+                            <Container />
+                        </Suspense>
+                    </Theme>
                 </AppProvider>
             </ErrorBoundary>
         </QueryClientProvider>
