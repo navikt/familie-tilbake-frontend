@@ -97,7 +97,7 @@ const FagsakContainer: React.FC = () => {
                 )}
                 <div
                     className={classNames(
-                        'grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-gray-50 min-h-screen',
+                        'grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-ax-neutral-100 min-h-screen',
                         {
                             venter: !!ventegrunn,
                         }

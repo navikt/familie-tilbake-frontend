@@ -9,7 +9,7 @@ type Props = {
 
 const DokumentIkon: React.FC<Props> = ({ type }) => {
     return (
-        <div className="bg-grayalpha-300 w-[26px] h-[26px] rounded-full inline-flex items-center justify-center">
+        <div className="bg-ax-neutral-400A w-[26px] h-[26px] rounded-full inline-flex items-center justify-center">
             {type === Journalposttype.I && (
                 <ArrowRightIcon fontSize="1.2rem" aria-label="Innkommende" />
             )}

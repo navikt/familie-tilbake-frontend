@@ -40,14 +40,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
                 const begrunnelseAktsomhetGodTro = aktsomhet?.begrunnelse || godTro?.begrunnelse;
                 const særligeGrunner = aktsomhet?.særligeGrunner;
                 return (
-                    <Box
-                        key={skjema.index}
-                        borderColor="border-default"
-                        padding="4"
-                        borderWidth="1"
-                        borderRadius="small"
-                        shadow="xsmall"
-                    >
+                    <Box key={skjema.index} padding="4" borderWidth="1" borderRadius="small">
                         <HGrid columns={{ lg: 2, md: 1 }} gap="8">
                             <VStack gap="4">
                                 <Box>
