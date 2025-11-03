@@ -9,10 +9,7 @@ type ThemeContextValue = {
     toggleTheme: () => void;
 };
 
-const ThemeContext = createContext<{
-    theme: Themes;
-    toggleTheme: () => void;
-}>({
+const ThemeContext = createContext<ThemeContextValue>({
     theme: 'light',
     toggleTheme: () => {},
 });
@@ -20,7 +17,7 @@ const ThemeContext = createContext<{
 export const useTheme = (): ThemeContextValue => {
     const context = useContext(ThemeContext);
     if (!context) {
-        throw new Error('useTheme must be used within a ThemeProvider');
+        throw new Error('useTheme må være inne i en ThemeProvider');
     }
     return context;
 };
