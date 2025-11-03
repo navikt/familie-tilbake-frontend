@@ -45,7 +45,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling, dialogRef }) => {
             <aside
                 aria-label="Informasjon om tilbakekrevingen og bruker"
                 className={classNames(
-                    'flex-col gap-4 bg-gray-50 hidden lg:flex max-h-[calc(100vh-80px)]',
+                    'flex-col gap-4 bg-ax-neutral-100 hidden ax-lg:flex max-h-[calc(100vh-80px)]',
                     { 'max-h-[calc(100vh-142px)]': !!ventegrunn }
                 )}
             >

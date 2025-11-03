@@ -34,7 +34,7 @@ const ActionBar: React.FC<Props> = ({
         <HStack
             /* Hacker plasseringen til pga at den ikke er på behandlingcontainer nivå men nede i stegcontainerene som styrer hvor startposisjon er */
             className={classNames(
-                'fixed bottom-4 bg-white px-8 py-4 rounded-2xl border-border-divider border-1 justify-between z-10 flex-nowrap lg:w-[calc((100vw*2/3)-34px)] w-[calc(100vw-32px)]',
+                'fixed bottom-4 bg-ax-bg-default px-8 py-4 rounded-2xl border-ax-border-neutral-subtle border justify-between z-10 flex-nowrap ax-lg:w-[calc((100vw*2/3)-34px)] w-[calc(100vw-32px)]',
                 {
                     '-ml-6': !dobbeltNøstet,
                     '-ml-10': dobbeltNøstet,
@@ -45,7 +45,10 @@ const ActionBar: React.FC<Props> = ({
             <Behandlingsmeny />
 
             <HStack gap="8">
-                <BodyShort size="large" className="text-text-subtle flex items-center text-nowrap">
+                <BodyShort
+                    size="large"
+                    className="text-ax-text-neutral-subtle flex items-center text-nowrap"
+                >
                     {stegtekst}
                 </BodyShort>
                 <HStack gap="4" className="flex-nowrap">
@@ -54,14 +57,14 @@ const ActionBar: React.FC<Props> = ({
                             <Button
                                 variant="secondary"
                                 icon={<ChevronLeftIcon />}
-                                className="flex gap-0 lg:gap-2 text-nowrap py-2"
+                                className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
                                 size="small"
                                 onClick={() => {
                                     if (!isLoading) onForrige();
                                 }}
                                 aria-label={forrigeAriaLabel}
                             >
-                                <span className="hidden md:block">Forrige</span>
+                                <span className="hidden ax-md:block">Forrige</span>
                             </Button>
                         </Tooltip>
                     )}
@@ -70,7 +73,7 @@ const ActionBar: React.FC<Props> = ({
                             <Button
                                 icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
                                 iconPosition="right"
-                                className="flex gap-0 lg:gap-2 text-nowrap py-2"
+                                className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
                                 size="small"
                                 onClick={() => {
                                     if (!isLoading) onNeste();
@@ -78,7 +81,7 @@ const ActionBar: React.FC<Props> = ({
                                 aria-label={nesteAriaLabel}
                                 disabled={disableNeste}
                             >
-                                <span className="hidden md:block">{nesteTekst}</span>
+                                <span className="hidden ax-md:block">{nesteTekst}</span>
                             </Button>
                         </Tooltip>
                     )}

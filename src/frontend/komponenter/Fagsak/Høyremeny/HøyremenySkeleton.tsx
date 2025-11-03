@@ -10,13 +10,13 @@ export const HøyremenySkeleton: React.FC = () => {
         <aside
             aria-label="Laster informasjon om tilbakekrevingen og bruker"
             className={classNames(
-                'flex-col gap-4 bg-gray-50 hidden lg:flex max-h-[calc(100vh-80px)]'
+                'flex-col gap-4 bg-ax-neutral-100 hidden ax-lg:flex max-h-[calc(100vh-80px)]'
             )}
         >
             <div className="gap-4 flex flex-col flex-1 min-h-0">
                 <Box
                     padding="4"
-                    className="border-1 rounded-xl border-border-divider flex flex-col gap-4 bg-white"
+                    className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
                 >
                     <Heading size="xsmall" level="2" className="flex flex-row gap-2">
                         Tilbakekreving av
@@ -28,8 +28,8 @@ export const HøyremenySkeleton: React.FC = () => {
                         />
                     </Heading>
 
-                    <dl className="grid grid-cols-[136px_1fr] xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
-                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                    <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                             <Skeleton
                                 variant="circle"
                                 width={16}
@@ -38,7 +38,7 @@ export const HøyremenySkeleton: React.FC = () => {
                             />
                             Status
                         </dt>
-                        <dd className="text-medium items-center flex">
+                        <dd className="text-ax-medium items-center flex">
                             <Skeleton
                                 variant="rectangle"
                                 width={154}
@@ -47,11 +47,11 @@ export const HøyremenySkeleton: React.FC = () => {
                             />
                         </dd>
 
-                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                             <CalendarIcon {...ICON_PROPS} />
                             Opprettet
                         </dt>
-                        <dd className="text-medium items-center flex">
+                        <dd className="text-ax-medium items-center flex">
                             <Skeleton
                                 variant="rectangle"
                                 width={154}
@@ -60,11 +60,11 @@ export const HøyremenySkeleton: React.FC = () => {
                             />
                         </dd>
 
-                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                             <Buildings3Icon {...ICON_PROPS} />
                             Enhet
                         </dt>
-                        <dd className="text-medium items-center flex">
+                        <dd className="text-ax-medium items-center flex">
                             <Skeleton
                                 variant="rectangle"
                                 width={154}
@@ -76,14 +76,14 @@ export const HøyremenySkeleton: React.FC = () => {
                 </Box>
                 <Box
                     padding="4"
-                    className="border-1 rounded-xl border-border-divider flex flex-col gap-4 bg-white"
+                    className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
                 >
                     <Heading size="xsmall" level="2">
                         Bruker
                     </Heading>
 
-                    <dl className="grid grid-cols-[136px_1fr] xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
-                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                    <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                             <Skeleton
                                 variant="circle"
                                 width={16}
@@ -92,7 +92,7 @@ export const HøyremenySkeleton: React.FC = () => {
                             />
                             Navn
                         </dt>
-                        <dd className="text-medium">
+                        <dd className="text-ax-medium">
                             <Skeleton
                                 variant="rectangle"
                                 width={154}
@@ -101,11 +101,11 @@ export const HøyremenySkeleton: React.FC = () => {
                             />
                         </dd>
 
-                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                             <CandleIcon {...ICON_PROPS} />
                             Alder
                         </dt>
-                        <dd className="text-medium flex flex-row gap-2 items-center">
+                        <dd className="text-ax-medium flex flex-row gap-2 items-center">
                             <Skeleton
                                 variant="rectangle"
                                 width={100}
@@ -115,7 +115,7 @@ export const HøyremenySkeleton: React.FC = () => {
                             år
                         </dd>
 
-                        <dt className="text-medium font-bold flex flex-row gap-2 items-center">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                             <BagdeIcon {...ICON_PROPS} />
                             <Skeleton
                                 variant="rectangle"
@@ -124,7 +124,7 @@ export const HøyremenySkeleton: React.FC = () => {
                                 className="flex items-center"
                             />
                         </dt>
-                        <dd className="text-medium flex flex-row gap-2 items-center">
+                        <dd className="text-ax-medium flex flex-row gap-2 items-center">
                             <Skeleton
                                 variant="rectangle"
                                 width={100}

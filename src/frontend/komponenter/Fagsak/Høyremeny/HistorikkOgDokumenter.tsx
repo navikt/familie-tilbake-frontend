@@ -22,7 +22,7 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({
         <Tabs
             defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
             iconPosition="top"
-            className="border border-border-divider rounded-2xl bg-white h-full flex flex-col min-h-0"
+            className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0"
         >
             <div className="flex justify-center">
                 {værtPåFatteVedtakSteget && (
