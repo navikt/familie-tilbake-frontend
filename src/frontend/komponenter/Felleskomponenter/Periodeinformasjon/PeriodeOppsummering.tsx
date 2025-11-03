@@ -14,6 +14,7 @@ const StyledVStack = styled(VStack)`
     margin-top: ${ASpacing3};
     max-width: 30rem;
     width: 100%;
+    color: #000;
 `;
 
 const BodyShortDanger = styled(BodyShort)`
