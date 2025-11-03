@@ -8,7 +8,7 @@ export interface Auth {
      *
      * @default 'header'
      */
-    in?: 'cookie' | 'header' | 'query';
+    in?: 'header' | 'query' | 'cookie';
     /**
      * Header or query parameter name.
      *
@@ -21,7 +21,7 @@ export interface Auth {
 
 export const getAuthToken = async (
     auth: Auth,
-    callback: AuthToken | ((auth: Auth) => AuthToken | Promise<AuthToken>)
+    callback: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken
 ): Promise<string | undefined> => {
     const token = typeof callback === 'function' ? await callback(auth) : callback;
 
