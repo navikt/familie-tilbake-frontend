@@ -11,6 +11,7 @@ import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagri
 import { useFagsakStore } from '../../../../stores/fagsakStore';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
+import { MODAL_BREDDE } from '../utils';
 
 type Props = {
     behandling: Behandling;
@@ -56,7 +57,7 @@ export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
                     heading: 'Start behandlingen på nytt',
                     icon: <ArrowCirclepathReverseIcon aria-hidden className="mr-2" />,
                 }}
-                className="w-150"
+                className={MODAL_BREDDE}
             >
                 <Modal.Body>
                     <BodyLong>

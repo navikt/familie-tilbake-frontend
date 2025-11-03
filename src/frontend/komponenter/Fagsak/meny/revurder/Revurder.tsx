@@ -8,6 +8,7 @@ import { useRef } from 'react';
 import { useRevurderSkjema } from './RevurderSkjemaContext';
 import { Behandlingårsak, behandlingårsaker } from '../../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../../utils';
+import { MODAL_BREDDE } from '../utils';
 
 type Props = {
     behandlingId: Behandling['behandlingId'];
@@ -35,7 +36,7 @@ export const Revurder: React.FC<Props> = ({ behandlingId }) => {
                     icon: <FileResetIcon aria-hidden className="mr-2" />,
                 }}
                 onClose={nullstillSkjema}
-                className="w-150"
+                className={MODAL_BREDDE}
             >
                 <Modal.Body className="flex flex-col gap-4">
                     <Select

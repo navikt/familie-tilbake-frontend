@@ -7,6 +7,7 @@ import { useRef } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { usePåVentBehandling } from '../../../Felleskomponenter/Modal/PåVent/PåVentContext';
+import { MODAL_BREDDE } from '../utils';
 
 type Props = {
     behandling: Behandling;
@@ -38,7 +39,7 @@ export const Gjenoppta: React.FC<Props> = ({ behandling }) => {
                     heading: 'Gjenoppta behandlingen',
                     icon: <TimerStartIcon aria-hidden className="mr-2" />,
                 }}
-                className="w-150"
+                className={MODAL_BREDDE}
             >
                 <Modal.Body className="flex flex-col gap-2">
                     <BodyLong>Ønsker du å gjenoppta behandlingen?</BodyLong>

@@ -12,6 +12,7 @@ import { manuelleVenteÅrsaker, venteårsaker } from '../../../../typer/behandli
 import { dagensDato } from '../../../../utils/dato';
 import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
 import { usePåVentBehandling } from '../../../Felleskomponenter/Modal/PåVent/PåVentContext';
+import { MODAL_BREDDE } from '../utils';
 
 type Props = {
     behandling: Behandling;
@@ -51,7 +52,7 @@ export const SettPåVent: React.FC<Props> = ({ behandling }) => {
                     heading: 'Sett behandlingen på vent',
                     icon: <TimerPauseIcon aria-hidden className="mr-2" />,
                 }}
-                className="w-150"
+                className={MODAL_BREDDE}
                 onClose={tilbakestillFelterTilDefault}
             >
                 <Modal.Body className="flex flex-col gap-4">

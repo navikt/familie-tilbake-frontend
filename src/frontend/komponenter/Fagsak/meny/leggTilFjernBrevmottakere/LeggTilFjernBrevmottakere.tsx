@@ -15,6 +15,7 @@ import { Behandlingssteg, Behandlingsstegstatus } from '../../../../typer/behand
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { SYNLIGE_STEG } from '../../../../utils/sider';
 import { AlertType, ToastTyper } from '../../../Felleskomponenter/Toast/typer';
+import { MODAL_BREDDE } from '../utils';
 
 type Props = {
     behandling: Behandling;
@@ -130,7 +131,7 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
             <Modal
                 ref={dialogRef}
                 header={{ heading: 'Ønsker du å fjerne brevmottaker(e)?' }}
-                className="w-150"
+                className={MODAL_BREDDE}
             >
                 <Modal.Body>
                     <BodyLong>

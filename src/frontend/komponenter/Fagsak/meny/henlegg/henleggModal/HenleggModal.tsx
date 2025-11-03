@@ -15,6 +15,7 @@ import { behandlingsresultater } from '../../../../../typer/behandling';
 import { målform } from '../../../../../typer/fagsak';
 import { hentFrontendFeilmelding } from '../../../../../utils';
 import { LabelMedSpråk } from '../../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
+import { MODAL_BREDDE } from '../../utils';
 import ForhåndsvisHenleggelsesBrev from '../forhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 
 type Props = {
@@ -62,7 +63,7 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
                 icon: <CircleSlashIcon aria-hidden className="mr-2" />,
             }}
             onClose={nullstillSkjema}
-            className="w-150"
+            className={MODAL_BREDDE}
         >
             <Modal.Body className="flex flex-col gap-4">
                 {årsaker.length > 1 && (

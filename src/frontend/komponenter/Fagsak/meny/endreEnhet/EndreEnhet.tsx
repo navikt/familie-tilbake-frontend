@@ -8,6 +8,7 @@ import { useRef } from 'react';
 import { useEndreEnhet } from './EndreEnhetContext';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { hentFrontendFeilmelding } from '../../../../utils';
+import { MODAL_BREDDE } from '../utils';
 
 type Arbeidsfordelingsenhet = {
     enhetskode: Behandling['enhetskode'];
@@ -52,7 +53,7 @@ export const EndreEnhet: React.FC<Props> = ({ behandling }) => {
                     icon: <Buildings3Icon aria-hidden className="mr-2" />,
                 }}
                 onClose={nullstillSkjema}
-                className="w-150"
+                className={MODAL_BREDDE}
             >
                 <Modal.Body className="flex flex-col gap-2">
                     <Select
