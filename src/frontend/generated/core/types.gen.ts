@@ -20,9 +20,7 @@ export type Client<
     MethodFn = never,
     BuildUrlFn = never,
     SseFn = never,
-> = ([SseFn] extends [never] ? { sse?: never } : { sse: { [K in HttpMethod]: SseFn } }) & {
-    [K in HttpMethod]: MethodFn;
-} & {
+> = {
     /**
      * Returns the final request URL.
      */
@@ -30,14 +28,16 @@ export type Client<
     getConfig: () => Config;
     request: RequestFn;
     setConfig: (config: Config) => Config;
-};
+} & {
+    [K in HttpMethod]: MethodFn;
+} & ([SseFn] extends [never] ? { sse?: never } : { sse: { [K in HttpMethod]: SseFn } });
 
 export interface Config {
     /**
      * Auth token or a function returning auth token. The resolved value will be
      * added to the request payload as defined by its `security` array.
      */
-    auth?: AuthToken | ((auth: Auth) => AuthToken | Promise<AuthToken>);
+    auth?: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken;
     /**
      * A function for serializing request body parameter. By default,
      * {@link JSON.stringify()} will be used.
@@ -50,11 +50,11 @@ export interface Config {
      * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
      */
     headers?:
+        | RequestInit['headers']
         | Record<
               string,
-              (boolean | number | string)[] | boolean | number | string | unknown | null | undefined
-          >
-        | RequestInit['headers'];
+              string | number | boolean | (string | number | boolean)[] | null | undefined | unknown
+          >;
     /**
      * The request method.
      *
