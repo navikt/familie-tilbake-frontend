@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useRef } from 'react';
 
 import { useRevurderSkjema } from './RevurderSkjemaContext';
-import { behandlingårsaker, behandlingÅrsaker } from '../../../../typer/behandling';
+import { Behandlingårsak, behandlingårsaker } from '../../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../../utils';
 
 type Props = {
@@ -44,13 +44,13 @@ export const Revurder: React.FC<Props> = ({ behandlingId }) => {
                         )}
                         name="Behandling"
                         label="Årsak til revurderingen"
-                        value={skjema.felter.behandlingsårsak.verdi || 'default'}
-                        onChange={event => skjema.felter.behandlingsårsak.onChange(event)}
+                        value={skjema.felter.behandlingsårsak.verdi || ''}
+                        onChange={skjema.felter.behandlingsårsak.onChange}
                     >
-                        <option value="default" disabled>
+                        <option value="" disabled>
                             Velg årsak
                         </option>
-                        {behandlingÅrsaker.map(årsak => (
+                        {Object.values(Behandlingårsak).map(årsak => (
                             <option key={årsak} value={årsak}>
                                 {behandlingårsaker[årsak]}
                             </option>

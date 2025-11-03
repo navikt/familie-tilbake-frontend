@@ -35,11 +35,6 @@ export const SettPåVent: React.FC<Props> = ({ behandling }) => {
         skjema.visFeilmeldinger &&
         skjema.felter.tidsfrist.valideringsstatus === Valideringsstatus.Feil;
 
-    const lukkModal = (): void => {
-        tilbakestillFelterTilDefault();
-        dialogRef.current?.close();
-    };
-
     return (
         <>
             <ActionMenu.Item
@@ -90,7 +85,14 @@ export const SettPåVent: React.FC<Props> = ({ behandling }) => {
                     <Button key="bekreft" onClick={() => onBekreft(behandling.behandlingId)}>
                         Sett på vent
                     </Button>
-                    <Button variant="secondary" key="avbryt" onClick={lukkModal}>
+                    <Button
+                        variant="secondary"
+                        key="avbryt"
+                        onClick={() => {
+                            tilbakestillFelterTilDefault();
+                            dialogRef.current?.close();
+                        }}
+                    >
                         Avbryt
                     </Button>
                 </Modal.Footer>

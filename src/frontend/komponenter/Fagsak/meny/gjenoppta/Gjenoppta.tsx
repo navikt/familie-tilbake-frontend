@@ -12,7 +12,7 @@ type Props = {
     behandling: Behandling;
 };
 
-export const Gjennopta: React.FC<Props> = ({ behandling }) => {
+export const Gjenoppta: React.FC<Props> = ({ behandling }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const { hentBehandlingMedBehandlingId } = useBehandling();
 
@@ -42,9 +42,7 @@ export const Gjennopta: React.FC<Props> = ({ behandling }) => {
             >
                 <Modal.Body className="flex flex-col gap-2">
                     <BodyLong>Ønsker du å gjenoppta behandlingen?</BodyLong>
-                    {feilmelding && feilmelding !== '' && (
-                        <ErrorMessage size="small">{feilmelding}</ErrorMessage>
-                    )}
+                    {!!feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
                 </Modal.Body>
 
                 <Modal.Footer>

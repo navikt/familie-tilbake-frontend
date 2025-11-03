@@ -1,5 +1,8 @@
-import type { Behandling, Behandlingstype } from '../../../../../typer/behandling';
-import type { Behandlingresultat } from '../../../../../typer/behandling';
+import type {
+    Behandlingresultat,
+    Behandling,
+    Behandlingstype,
+} from '../../../../../typer/behandling';
 
 import { CircleSlashIcon } from '@navikt/aksel-icons';
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';

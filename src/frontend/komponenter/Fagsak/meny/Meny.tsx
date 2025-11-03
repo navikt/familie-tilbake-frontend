@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { EndreEnhet } from './endreEnhet/EndreEnhet';
-import { Gjennopta } from './gjenoppta/Gjenoppta';
+import { Gjenoppta } from './gjenoppta/Gjenoppta';
 import { Henlegg } from './henlegg/Henlegg';
 import { HentKorrigertKravgrunnlag } from './hentKorrigertKravgrunnlag/HentKorrigertKravgrunnlag';
 import { HistoriskeVurderinger } from './historiskeVurderinger/HistoriskeVurderinger';
@@ -25,12 +25,10 @@ export const Behandlingsmeny: React.FC = () => {
     const [holdMenyenÅpen, setHoldMenyenÅpen] = useState(false);
     const { fagsystem, ytelsestype } = useFagsakStore();
     const { innloggetSaksbehandler } = useApp();
-    const erProd =
-        !window.location.hostname.includes('dev') &&
-        !window.location.hostname.includes('localhost');
-    const forvalterGruppe = erProd
-        ? '3d718ae5-f25e-47a4-b4b3-084a97604c1d'
-        : 'c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b';
+    const forvalterGruppe =
+        process.env.NODE_ENV === 'production'
+            ? '3d718ae5-f25e-47a4-b4b3-084a97604c1d'
+            : 'c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b';
     const erForvalter = innloggetSaksbehandler?.groups?.some(group => group === forvalterGruppe);
 
     const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.Grunnlag;
@@ -70,7 +68,7 @@ export const Behandlingsmeny: React.FC = () => {
 
                                 {!venterPåKravgrunnlag &&
                                     (behandling.data.erBehandlingPåVent || ventegrunn ? (
-                                        <Gjennopta behandling={behandling.data} />
+                                        <Gjenoppta behandling={behandling.data} />
                                     ) : (
                                         <SettPåVent behandling={behandling.data} />
                                     ))}
