@@ -18,7 +18,7 @@ export const Navigering = styled.div`
 `;
 
 export const FTAlertStripe = styled(Alert)`
-    .navds-alert__wrapper {
+    .aksel-alert__wrapper {
         max-width: fit-content;
     }
 `;
