@@ -1,11 +1,15 @@
+import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
 import type { UseFormReturn } from 'react-hook-form/dist/types/form';
 
-import { VStack, RadioGroup, HStack, Radio, Textarea } from '@navikt/ds-react';
+import { VStack, RadioGroup, HStack, Radio, Textarea, Link } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
 
 type Props = {
-    methods: UseFormReturn<{ skalSendesForhåndsvarsel: string; fritekst: string }>;
+    methods: UseFormReturn<{
+        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel | undefined;
+        fritekst: string;
+    }>;
 };
 
 enum BegrunnelseUnntak {
@@ -30,14 +34,15 @@ export const Unntak: React.FC<Props> = ({ methods }) => {
                     <>
                         Varsling kan unnlates dersom det ikke er praktisk, urimelig ressurskrevende,
                         eller åpenbart unødvendig. Les mer om{' '}
-                        <a
+                        <Link
                             href="https://lovdata.no/lov/1967-02-10-10/§16a"
                             target="_blank"
                             rel="noreferrer"
                             aria-label="Les om Forvaltningsloven §16 på Lovdata.no"
+                            inlineText
                         >
                             Forvaltningsloven §16.
-                        </a>
+                        </Link>
                     </>
                 }
                 error={errors.skalSendesForhåndsvarsel?.message?.toString()}

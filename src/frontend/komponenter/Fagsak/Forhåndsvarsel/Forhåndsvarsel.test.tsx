@@ -56,7 +56,7 @@ const setupMock = (): void => {
 const renderForhåndsvarsel = (): RenderResult =>
     render(
         <QueryClientProvider client={queryClient}>
-            <Forhåndsvarsel behandling={{ ...lagBehandlingDto() }} fagsak={lagFagsakDto()} />
+            <Forhåndsvarsel behandling={lagBehandlingDto()} fagsak={lagFagsakDto()} />
         </QueryClientProvider>
     );
 
