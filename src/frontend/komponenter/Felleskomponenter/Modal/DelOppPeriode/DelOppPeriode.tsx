@@ -27,7 +27,7 @@ const TidslinjeContainer = styled.div`
         max-width: max-content;
     }
 
-    .navds-timeline__period {
+    .aksel-timeline__period {
         cursor: default;
     }
 `;
