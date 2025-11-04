@@ -39,7 +39,12 @@ export const Behandlingsmeny: React.FC = () => {
     if (behandling?.status !== RessursStatus.Suksess) {
         return null;
     }
-
+    const erBehandlingenAktiv =
+        behandling.data.status !== Behandlingstatus.Avsluttet &&
+        !vedtakFattetEllerFattes &&
+        behandling.data.kanEndres;
+    const erSattPåvent = behandling.data.erBehandlingPåVent || ventegrunn;
+    const kanEndreEnhet = fagsystem === Fagsystem.BA && ytelsestype;
     return (
         <ActionMenu open={holdMenyenÅpen} onOpenChange={setHoldMenyenÅpen}>
             <ActionMenu.Trigger>
@@ -58,50 +63,46 @@ export const Behandlingsmeny: React.FC = () => {
                         <Revurder behandlingId={behandling.data.behandlingId} />
                     )}
 
-                    {behandling.data.status !== Behandlingstatus.Avsluttet &&
-                        !vedtakFattetEllerFattes &&
-                        behandling.data.kanEndres && (
-                            <>
-                                {behandling.data.kanHenleggeBehandling && (
-                                    <Henlegg behandling={behandling.data} />
-                                )}
+                    {erBehandlingenAktiv && (
+                        <>
+                            {behandling.data.kanHenleggeBehandling && (
+                                <Henlegg behandling={behandling.data} />
+                            )}
 
-                                {!venterPåKravgrunnlag &&
-                                    (behandling.data.erBehandlingPåVent || ventegrunn ? (
-                                        <Gjenoppta behandling={behandling.data} />
-                                    ) : (
-                                        <SettPåVent behandling={behandling.data} />
-                                    ))}
+                            {!venterPåKravgrunnlag &&
+                                (erSattPåvent ? (
+                                    <Gjenoppta behandling={behandling.data} />
+                                ) : (
+                                    <SettPåVent behandling={behandling.data} />
+                                ))}
 
-                                {erForvalter && (
-                                    <>
-                                        {behandling.data.kanSetteTilbakeTilFakta && (
-                                            <StartPåNytt behandling={behandling.data} />
-                                        )}
+                            {erForvalter && (
+                                <>
+                                    {behandling.data.kanSetteTilbakeTilFakta && (
+                                        <StartPåNytt behandling={behandling.data} />
+                                    )}
 
-                                        <HentKorrigertKravgrunnlag behandling={behandling.data} />
-                                    </>
-                                )}
+                                    <HentKorrigertKravgrunnlag behandling={behandling.data} />
+                                </>
+                            )}
 
-                                {!behandlingILesemodus && (
-                                    <>
-                                        <ActionMenu.Divider />
+                            {!behandlingILesemodus && (
+                                <>
+                                    <ActionMenu.Divider />
 
-                                        {behandling.data.støtterManuelleBrevmottakere && (
-                                            <LeggTilFjernBrevmottakere
-                                                behandling={behandling.data}
-                                            />
-                                        )}
+                                    {behandling.data.støtterManuelleBrevmottakere && (
+                                        <LeggTilFjernBrevmottakere behandling={behandling.data} />
+                                    )}
 
-                                        {fagsystem === Fagsystem.BA && ytelsestype && (
-                                            <EndreEnhet behandling={behandling.data} />
-                                        )}
+                                    {kanEndreEnhet && (
+                                        <EndreEnhet behandlingsId={behandling.data.behandlingId} />
+                                    )}
 
-                                        <HistoriskeVurderinger behandling={behandling.data} />
-                                    </>
-                                )}
-                            </>
-                        )}
+                                    <HistoriskeVurderinger behandling={behandling.data} />
+                                </>
+                            )}
+                        </>
+                    )}
                 </ActionMenu.Group>
             </ActionMenu.Content>
         </ActionMenu>

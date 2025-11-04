@@ -25,12 +25,12 @@ const enheter: Arbeidsfordelingsenhet[] = [
 ];
 
 type Props = {
-    behandling: Behandling;
+    behandlingsId: Behandling['behandlingId'];
 };
 
-export const EndreEnhet: React.FC<Props> = ({ behandling }) => {
+export const EndreEnhet: React.FC<Props> = ({ behandlingsId }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const { skjema, sendInn, nullstillSkjema } = useEndreEnhet(behandling.behandlingId, () =>
+    const { skjema, sendInn, nullstillSkjema } = useEndreEnhet(behandlingsId, () =>
         dialogRef.current?.close()
     );
 
