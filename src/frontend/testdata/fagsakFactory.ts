@@ -1,3 +1,4 @@
+import type { FagsakDto } from '../generated';
 import type { Bruker } from '../typer/bruker';
 import type { Fagsak } from '../typer/fagsak';
 
@@ -24,3 +25,10 @@ const lagBruker = (overrides: Partial<Bruker> = {}): Bruker => ({
     kjønn: Kjønn.Kvinne,
     ...overrides,
 });
+
+//TODO: Skal fjernes når vi tar i bruk FagsakDto over
+export const lagFagsakDto = (overrides: Partial<FagsakDto> = {}): FagsakDto =>
+    ({
+        ...lagFagsak(),
+        ...overrides,
+    }) as FagsakDto;

@@ -1,3 +1,4 @@
+import type { BehandlingDto } from '../generated';
 import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
 
 import {
@@ -79,3 +80,10 @@ export const lagBrevmottakerSteg = (valg: StegValg = {}): Behandlingsstegstilsta
 /** Klar default steg */
 export const lagForeslåVedtakSteg = (valg: StegValg = {}): Behandlingsstegstilstand =>
     lagSteg(Behandlingssteg.ForeslåVedtak, Behandlingsstegstatus.Klar, valg);
+
+//TODO: Skal fjernes når vi tar i bruk BehandlingDto over
+export const lagBehandlingDto = (overrides: Partial<BehandlingDto> = {}): BehandlingDto =>
+    ({
+        ...lagBehandling(),
+        ...overrides,
+    }) as BehandlingDto;
