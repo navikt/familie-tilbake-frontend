@@ -3,21 +3,12 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
 import { lagBehandlingDto } from '../../../testdata/behandlingFactory';
 import { lagFagsakDto } from '../../../testdata/fagsakFactory';
-
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            retry: false,
-        },
-    },
-});
 
 const mockUseBehandling = jest.fn();
 const mockUseDokumentlisting = jest.fn();
@@ -54,11 +45,7 @@ const setupMock = (): void => {
 };
 
 const renderForhåndsvarsel = (): RenderResult =>
-    render(
-        <QueryClientProvider client={queryClient}>
-            <Forhåndsvarsel behandling={lagBehandlingDto()} fagsak={lagFagsakDto()} />
-        </QueryClientProvider>
-    );
+    render(<Forhåndsvarsel behandling={lagBehandlingDto()} fagsak={lagFagsakDto()} />);
 
 describe('Forhåndsvarsel', () => {
     beforeEach(() => {
@@ -75,6 +62,7 @@ describe('Forhåndsvarsel', () => {
 
     test('Viser flyt for Opprett forhåndsvarsel når man velger Ja', () => {
         renderForhåndsvarsel();
+
         expect(screen.queryByText(/Opprett forhåndsvarsel/)).not.toBeInTheDocument();
 
         fireEvent.click(screen.getByLabelText('Ja'));
