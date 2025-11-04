@@ -1,6 +1,5 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { TogglesHook } from '../../../context/TogglesContext';
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
@@ -38,11 +37,6 @@ jest.mock('../../../api/http/HttpProvider', () => ({
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
-}));
-
-const mockUseToggles = jest.fn();
-jest.mock('../../../context/TogglesContext', () => ({
-    useToggles: (): TogglesHook => mockUseToggles(),
 }));
 
 jest.mock('react-router', () => ({
@@ -122,9 +116,6 @@ const setupMocks = (): void => {
                 data: lagBehandling(),
             });
         },
-    }));
-    mockUseToggles.mockImplementation(() => ({
-        toggles: {},
     }));
 };
 
