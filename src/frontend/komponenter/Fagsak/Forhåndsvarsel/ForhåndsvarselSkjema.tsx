@@ -1,3 +1,4 @@
+import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
 import type { BehandlingDto } from '../../../generated';
 import type { UseFormReturn } from 'react-hook-form';
 
@@ -13,7 +14,7 @@ import {
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { useApp } from '../../../context/AppContext';
@@ -23,15 +24,18 @@ import { AlertType, ToastTyper } from '../../Felleskomponenter/Toast/typer';
 
 type Props = {
     behandling: BehandlingDto;
-    methods: UseFormReturn<{ skalSendesForhåndsvarsel: string; fritekst: string }>;
+    methods: UseFormReturn<{
+        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel | undefined;
+        fritekst: string;
+    }>;
 };
 
 export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) => {
     const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const queryClient = useQueryClient();
-    const maksAntallTegn = 4000;
-    const [expansionCardÅpen, setExpansionCardÅpen] = React.useState(!behandling.varselSendt);
     const { settToast } = useApp();
+    const maksAntallTegn = 4000;
+    const [expansionCardÅpen, setExpansionCardÅpen] = useState(!behandling.varselSendt);
 
     const {
         control,
@@ -84,7 +88,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
                         <Button
                             icon={<FilePdfIcon aria-hidden />}
                             variant="tertiary"
-                            size="medium"
                             onClick={seForhåndsvisning}
                         >
                             Forhåndsvisning

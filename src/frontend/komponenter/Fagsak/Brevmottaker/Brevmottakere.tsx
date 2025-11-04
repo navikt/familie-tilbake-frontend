@@ -273,7 +273,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
                         borderWidth="1"
                         borderRadius="xlarge"
                         padding="4"
-                        borderColor="border-divider"
+                        className="border-ax-border-neutral-subtle"
                         key={fagsak.bruker.personIdent}
                     >
                         <Brevmottaker
@@ -298,7 +298,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
                                 borderWidth="1"
                                 borderRadius="xlarge"
                                 padding="4"
-                                borderColor="border-divider"
+                                className="border-ax-border-neutral-subtle"
                                 key={brevmottakerRespons.id}
                             >
                                 <Brevmottaker

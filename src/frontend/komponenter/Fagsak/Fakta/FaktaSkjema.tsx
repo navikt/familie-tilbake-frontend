@@ -77,7 +77,7 @@ const FaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning
                     </div>
                     <div>
                         <Detail weight="semibold">Feilutbetalt beløp totalt</Detail>
-                        <BodyShort size="small" className="text-text-danger font-bold">
+                        <BodyShort size="small" className="text-ax-text-danger-subtle font-ax-bold">
                             {`${formatCurrencyNoKr(fakta.totaltFeilutbetaltBeløp)}`}
                         </BodyShort>
                     </div>

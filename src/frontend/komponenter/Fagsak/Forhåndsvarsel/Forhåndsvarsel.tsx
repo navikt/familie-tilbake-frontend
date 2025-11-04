@@ -2,7 +2,7 @@ import type { BehandlingDto, FagsakDto } from '../../../generated';
 
 import { Alert, Heading, Radio, RadioGroup, VStack } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import { QueryClientProvider, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
@@ -23,7 +23,7 @@ type Props = {
     fagsak: FagsakDto;
 };
 
-enum SkalSendesForhåndsvarsel {
+export enum SkalSendesForhåndsvarsel {
     //TODO: erstatte med kodeverk fra backend når det er på plass
     Ja = 'ja',
     Nei = 'nei',
@@ -33,16 +33,18 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     const navigate = useNavigate();
     const { settToast } = useApp();
     const [visForhåndsvarselSendt, setVisForhåndsvarselSendt] = useState(false);
-
-    const { actionBarStegtekst } = useBehandling();
     const queryClient = useQueryClient();
 
-    const getForhåndsvarselStatus = (behandling: BehandlingDto): string => {
+    const { actionBarStegtekst } = useBehandling();
+
+    const getForhåndsvarselStatus = (
+        behandling: BehandlingDto
+    ): SkalSendesForhåndsvarsel | undefined => {
         if (behandling.varselSendt) {
             return SkalSendesForhåndsvarsel.Ja;
         }
         // TODO: Denne må håndteres annereledes når vi har backend for de andre valgene
-        return '';
+        return undefined;
     };
 
     const methods = useForm({
@@ -98,7 +100,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     });
 
     return (
-        <QueryClientProvider client={queryClient}>
+        <>
             <VStack gap="4">
                 <VStack maxWidth={ATextWidthMax}>
                     <Heading level="1" size="small" spacing>
@@ -151,6 +153,6 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 onNeste={behandling.varselSendt ? gåTilNeste : sendForhåndsvarsel}
                 onForrige={undefined}
             />
-        </QueryClientProvider>
+        </>
     );
 };
