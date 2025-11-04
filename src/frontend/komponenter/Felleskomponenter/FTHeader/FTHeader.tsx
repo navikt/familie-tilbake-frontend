@@ -1,6 +1,6 @@
 import type { Saksbehandler } from '../../../typer/saksbehandler';
 
-import { ExternalLinkIcon, LeaveIcon, MenuGridIcon } from '@navikt/aksel-icons';
+import { ExternalLinkIcon, LeaveIcon, MenuGridIcon, MoonIcon, SunIcon } from '@navikt/aksel-icons';
 import { Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
@@ -8,6 +8,7 @@ import { useMemo } from 'react';
 
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
 import { useHttp } from '../../../api/http/HttpProvider';
+import { useTheme } from '../../../context/ThemeContext';
 import { Fagsystem } from '../../../kodeverk';
 import { useBehandlingStore } from '../../../stores/behandlingStore';
 import { useFagsakStore } from '../../../stores/fagsakStore';
@@ -69,6 +70,7 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
         }
         return `/redirect/fagsystem/${fagSystem}/fagsak/${fagsakId}/saksoversikt`;
     }, [erHistoriskVisning, fagSystem, fagsakId, behandlingsPath]);
+    const { theme, toggleTheme } = useTheme();
 
     return (
         <InternalHeader>
@@ -152,6 +154,9 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
                     </Dropdown.Menu.List>
                 </Dropdown.Menu>
             </Dropdown>
+            <InternalHeader.Button onClick={toggleTheme}>
+                {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+            </InternalHeader.Button>
         </InternalHeader>
     );
 };

@@ -161,7 +161,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                 className="flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-170px)]"
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
-                <div className="flex flex-row gap-2 lg:block justify-between">
+                <div className="flex flex-row gap-2 ax-lg:block justify-between">
                     <Stegflyt />
                     <Button
                         variant="tertiary"
@@ -175,7 +175,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                     </Button>
                 </div>
                 <section
-                    className="py-4 border-border-divider border-1 rounded-2xl px-6 bg-white scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
+                    className="py-4 border-ax-border-neutral-subtle border rounded-2xl px-6 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
                     aria-label="Behandlingsinnhold"
                 >
                     <Suspense fallback={<BehandlingContainerSkeleton />}>

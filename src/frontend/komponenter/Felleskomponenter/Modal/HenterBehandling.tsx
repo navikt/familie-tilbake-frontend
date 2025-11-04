@@ -10,10 +10,9 @@ const HenterBehandling: React.FC = () => {
     return (
         <VStack justify="center" align="center">
             <BoxMedMargin
-                background="surface-subtle"
                 padding="8"
                 borderRadius="large"
-                borderColor="border-default"
+                className="border border-ax-border-neutral-subtle"
             >
                 <Heading level="1" size="medium" spacing>
                     Henter behandling

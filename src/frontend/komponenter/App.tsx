@@ -6,6 +6,7 @@ import { Suspense } from 'react';
 
 import { hentInnloggetBruker } from '../api/saksbehandler';
 import { AppProvider } from '../context/AppContext';
+import { ThemeProvider } from '../context/ThemeContext';
 import ErrorBoundary from './Felleskomponenter/ErrorBoundary/ErrorBoundary';
 import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 const Container = lazyImportMedRetry(() => import('./Container'), 'Container');
@@ -26,9 +27,11 @@ const App: React.FC = () => {
         <QueryClientProvider client={queryClient}>
             <ErrorBoundary autentisertSaksbehandler={autentisertSaksbehandler}>
                 <AppProvider autentisertSaksbehandler={autentisertSaksbehandler}>
-                    <Suspense fallback={<div>Container laster innhold...</div>}>
-                        <Container />
-                    </Suspense>
+                    <ThemeProvider>
+                        <Suspense fallback={<div>Container laster innhold...</div>}>
+                            <Container />
+                        </Suspense>
+                    </ThemeProvider>
                 </AppProvider>
             </ErrorBoundary>
         </QueryClientProvider>
