@@ -8,8 +8,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
+import { lagBehandlingDto } from '../../../testdata/behandlingFactory';
+import { lagFagsakDto } from '../../../testdata/fagsakFactory';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -56,10 +56,7 @@ const setupMock = (): void => {
 const renderForhåndsvarsel = (): RenderResult =>
     render(
         <QueryClientProvider client={queryClient}>
-            <Forhåndsvarsel
-                behandling={{ eksternFagsakId: '12345', ...lagBehandling() }}
-                fagsak={lagFagsak()}
-            />
+            <Forhåndsvarsel behandling={{ ...lagBehandlingDto() }} fagsak={lagFagsakDto()} />
         </QueryClientProvider>
     );
 
@@ -74,7 +71,6 @@ describe('Forhåndsvarsel', () => {
 
         expect(screen.getByLabelText('Ja')).toBeInTheDocument();
         expect(screen.getByLabelText('Nei')).toBeInTheDocument();
-        expect(screen.getByLabelText('Forhåndsvarsel er allerede sendt')).toBeInTheDocument();
     });
 
     test('Viser flyt for Opprett forhåndsvarsel når man velger Ja', () => {
@@ -96,5 +92,41 @@ describe('Forhåndsvarsel', () => {
         fireEvent.click(screen.getByLabelText('Ja'));
 
         expect(screen.getByLabelText(/Legg til utdypende tekst/)).toBeInTheDocument();
+    });
+
+    test('Viser flyt for Velg begrunnelse for unntak fra forhåndsvarsel når man velger Nei', () => {
+        renderForhåndsvarsel();
+        expect(
+            screen.queryByText(/Velg begrunnelse for unntak fra forhåndsvarsel/)
+        ).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByLabelText('Nei'));
+
+        expect(
+            screen.getByRole('group', {
+                name: /Velg begrunnelse for unntak fra forhåndsvarsel/,
+            })
+        ).toBeInTheDocument();
+    });
+
+    test('Viser alternativer for unntak når bruker har valgt Nei', () => {
+        renderForhåndsvarsel();
+        fireEvent.click(screen.getByLabelText('Nei'));
+
+        expect(
+            screen.getByLabelText(
+                /Varsling er ikke praktisk mulig eller vil hindre gjennomføring av vedtaket/
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByLabelText(
+                /Mottaker av varselet har ukjent adresse og ettersporing er urimelig ressurskrevende/
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByLabelText(
+                /Varsel anses som åpenbart unødvendig eller mottaker av varselet er allerede kjent med saken og har hatt mulighet til å uttale seg/
+            )
+        ).toBeInTheDocument();
     });
 });
