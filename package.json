@@ -19,7 +19,7 @@
     "generate-types": "openapi-ts"
   },
    "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
+    "src/**/*.{js,jsx,ts,tsx},!src/frontend/generated/**": [
       "prettier --write",
       "eslint --fix src/ --max-warnings=0"
     ]

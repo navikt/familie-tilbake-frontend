@@ -4,12 +4,12 @@
  * JSON-friendly union that mirrors what Pinia Colada can hash.
  */
 export type JsonValue =
-    | JsonValue[]
-    | boolean
-    | number
+    | null
     | string
-    | { [key: string]: JsonValue }
-    | null;
+    | number
+    | boolean
+    | JsonValue[]
+    | { [key: string]: JsonValue };
 
 /**
  * Replacer that converts non-JSON values (bigint, Date, etc.) to safe substitutes.

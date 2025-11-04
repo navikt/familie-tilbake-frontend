@@ -15,11 +15,11 @@ export interface SerializerOptions<T> {
     style: T;
 }
 
-export type ArrayStyle = 'form' | 'pipeDelimited' | 'spaceDelimited';
+export type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
 export type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type MatrixStyle = 'label' | 'matrix' | 'simple';
-export type ObjectStyle = 'deepObject' | 'form';
-type ObjectSeparatorStyle = MatrixStyle | ObjectStyle;
+export type ObjectStyle = 'form' | 'deepObject';
+type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
 
 interface SerializePrimitiveParam extends SerializePrimitiveOptions {
     value: string;
@@ -132,7 +132,7 @@ export const serializeObjectParam = ({
     value,
     valueOnly,
 }: SerializeOptions<ObjectSeparatorStyle> & {
-    value: Date | Record<string, unknown>;
+    value: Record<string, unknown> | Date;
     valueOnly?: boolean;
 }) => {
     if (value instanceof Date) {

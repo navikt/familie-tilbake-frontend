@@ -11,12 +11,23 @@ export default defineConfig({
         filters: {
             deprecated: false,
         },
+        transforms: {
+            enums: 'root',
+        },
     },
     plugins: [
+        {
+            name: '@hey-api/typescript',
+            enums: 'typescript',
+        },
         '@tanstack/react-query',
         {
             name: 'zod',
             requests: true,
+        },
+        {
+            name: '@hey-api/client-axios',
+            baseUrl: '/familie-tilbake',
         },
     ],
 });
