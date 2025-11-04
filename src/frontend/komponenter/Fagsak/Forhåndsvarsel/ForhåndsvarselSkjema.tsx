@@ -12,11 +12,14 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { Controller } from 'react-hook-form';
 
-import { useDokumentApi } from '../../../api/dokument';
-import { DokumentMal } from '../../../kodeverk';
+import { useApp } from '../../../context/AppContext';
+import { BrevmalkodeEnum } from '../../../generated';
+import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
+import { AlertType, ToastTyper } from '../../Felleskomponenter/Toast/typer';
 
 type Props = {
     behandling: BehandlingDto;
@@ -25,47 +28,40 @@ type Props = {
 
 export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) => {
     const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
+    const queryClient = useQueryClient();
     const maksAntallTegn = 4000;
     const [expansionCardÅpen, setExpansionCardÅpen] = React.useState(!behandling.varselSendt);
-    const { forhåndsvisBrev } = useDokumentApi();
+    const { settToast } = useApp();
 
     const {
         control,
         formState: { errors },
     } = methods;
 
+    const seForhåndsvisningMutation = useMutation({
+        ...forhåndsvisBrevMutation(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['hentBehandling'],
+            });
+        },
+        onError: () => {
+            settToast(ToastTyper.BrevmottakerIkkeTillat, {
+                alertType: AlertType.Error,
+                tekst: 'Feil ved forhåndsvisning av brev.',
+            });
+        },
+    });
+
     const seForhåndsvisning = (): void => {
-        forhåndsvisBrev({
-            behandlingId: behandling.behandlingId,
-            brevmalkode: DokumentMal.Varsel,
-            fritekst: methods.getValues('fritekst'),
+        seForhåndsvisningMutation.mutate({
+            body: {
+                behandlingId: behandling.behandlingId,
+                brevmalkode: BrevmalkodeEnum.VARSEL,
+                fritekst: methods.getValues('fritekst'),
+            },
         });
     };
-
-    // const seForhåndsvisningMutation = useMutation({
-    //     ...forhåndsvisBrevMutation(),
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries({
-    //             queryKey: ['hentBehandling'],
-    //         });
-    //     },
-    //     onError: () => {
-    //         settToast(ToastTyper.BrevmottakerIkkeTillat, {
-    //             alertType: AlertType.Error,
-    //             tekst: 'Feil ved forhåndsvisning av brev.',
-    //         });
-    //     },
-    // });
-
-    // const seForhåndsvisning = (): void => {
-    //     seForhåndsvisningMutation.mutate({
-    //         body: {
-    //             behandlingId: behandling.behandlingId,
-    //             brevmalkode: BrevmalkodeEnum.VARSEL,
-    //             fritekst: methods.getValues('fritekst'),
-    //         },
-    //     });
-    // };
 
     return (
         <HStack gap="4">

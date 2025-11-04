@@ -2,18 +2,20 @@ import type { BehandlingDto, FagsakDto } from '../../../generated';
 
 import { Alert, Heading, Radio, RadioGroup, VStack } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import { QueryClientProvider, useQueryClient } from '@tanstack/react-query';
+import { QueryClientProvider, useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
 import { ForhåndsvarselSkjema } from './ForhåndsvarselSkjema';
 import { Unntak } from './Unntak';
-import { useDokumentApi } from '../../../api/dokument';
+import { useApp } from '../../../context/AppContext';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { DokumentMal } from '../../../kodeverk';
+import { BrevmalkodeEnum } from '../../../generated';
+import { bestillBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { SYNLIGE_STEG } from '../../../utils/sider';
+import { AlertType, ToastTyper } from '../../Felleskomponenter/Toast/typer';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
@@ -29,9 +31,8 @@ enum SkalSendesForhåndsvarsel {
 
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     const navigate = useNavigate();
+    const { settToast } = useApp();
     const [visForhåndsvarselSendt, setVisForhåndsvarselSendt] = useState(false);
-
-    const { bestillBrev } = useDokumentApi();
 
     const { actionBarStegtekst } = useBehandling();
     const queryClient = useQueryClient();
@@ -70,39 +71,31 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         );
     };
 
-    const sendForhåndsvarsel = handleSubmit(data => {
-        bestillBrev({
-            behandlingId: behandling.behandlingId,
-            brevmalkode: DokumentMal.Varsel,
-            fritekst: data.fritekst,
-        });
+    const sendForhåndsvarselMutation = useMutation({
+        ...bestillBrevMutation(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['hentBehandling', behandling.behandlingId],
+            });
+            setVisForhåndsvarselSendt(true);
+        },
+        onError: () => {
+            settToast(ToastTyper.BrevmottakerIkkeTillat, {
+                alertType: AlertType.Error,
+                tekst: 'Feil ved sending av forhåndsvarsel.',
+            });
+        },
     });
 
-    // const sendForhåndsvarselMutation = useMutation({
-    //     ...bestillBrevMutation(),
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries({
-    //             queryKey: ['hentBehandling', behandling.behandlingId],
-    //         });
-    //         setVisForhåndsvarselSendt(true);
-    //     },
-    //     onError: () => {
-    //         settToast(ToastTyper.BrevmottakerIkkeTillat, {
-    //             alertType: AlertType.Error,
-    //             tekst: 'Feil ved sending av forhåndsvarsel.',
-    //         });
-    //     },
-    // });
-
-    // const sendForhåndsvarsel = handleSubmit(data => {
-    //     sendForhåndsvarselMutation.mutate({
-    //         body: {
-    //             behandlingId: behandling.behandlingId,
-    //             brevmalkode: BrevmalkodeEnum.VARSEL,
-    //             fritekst: data.fritekst,
-    //         },
-    //     });
-    // });
+    const sendForhåndsvarsel = handleSubmit(data => {
+        sendForhåndsvarselMutation.mutate({
+            body: {
+                behandlingId: behandling.behandlingId,
+                brevmalkode: BrevmalkodeEnum.VARSEL,
+                fritekst: data.fritekst,
+            },
+        });
+    });
 
     return (
         <QueryClientProvider client={queryClient}>
