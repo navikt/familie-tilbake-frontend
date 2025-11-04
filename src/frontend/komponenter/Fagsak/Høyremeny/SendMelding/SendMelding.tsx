@@ -11,7 +11,7 @@ import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
 import { målform } from '../../../../typer/fagsak';
 import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
-import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer';
+import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
 
 const tekstfeltLabel = (mal: DokumentMal): string => {
     return mal === DokumentMal.InnhentDokumentasjon

@@ -10,7 +10,7 @@ import { useFagsakStore } from '../../../../../stores/fagsakStore';
 import { behandlingsresultater } from '../../../../../typer/behandling';
 import { målform } from '../../../../../typer/fagsak';
 import { Spacer20 } from '../../../../Felleskomponenter/Flytelementer';
-import { LabelMedSpråk } from '../../../../Felleskomponenter/Skjemaelementer';
+import { LabelMedSpråk } from '../../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
 import ForhåndsvisHenleggelsesBrev from '../ForhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 
 type Props = {
