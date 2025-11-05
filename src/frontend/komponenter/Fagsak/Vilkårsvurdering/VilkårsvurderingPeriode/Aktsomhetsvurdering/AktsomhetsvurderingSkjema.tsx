@@ -1,6 +1,6 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-import { Radio, VStack } from '@navikt/ds-react';
+import { Radio, RadioGroup, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import GradForsettSkjema from './GradForsettSkjema';
@@ -14,7 +14,6 @@ import {
     forstodBurdeForståttAktsomheter,
     Vilkårsresultat,
 } from '../../../../../kodeverk';
-import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
@@ -33,7 +32,7 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
 
     return (
         <VStack gap="1">
-            <HorisontalRadioGroup
+            <RadioGroup
                 id="handletUaktsomhetGrad"
                 readOnly={erLesevisning}
                 legend={
@@ -67,7 +66,7 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
                             : aktsomheter[type]}
                     </Radio>
                 ))}
-            </HorisontalRadioGroup>
+            </RadioGroup>
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&
                 (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsett ? (
                     <GradForsettSkjema skjema={skjema} erLesevisning={erLesevisning} />

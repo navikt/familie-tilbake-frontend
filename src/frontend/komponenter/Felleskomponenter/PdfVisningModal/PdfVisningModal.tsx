@@ -6,16 +6,15 @@ import { styled } from 'styled-components';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 const StyledModal = styled(Modal)`
-    width: 90%;
-    height: 90%;
+    height: 100%;
 
-    div.navds-modal__body {
+    div.aksel-modal__body {
         height: 100%;
         margin-right: ${ASpacing6};
         overflow: hidden;
     }
 
-    button.navds-modal__button {
+    button.aksel-modal__button {
         right: ${ASpacing1};
         top: ${ASpacing3};
         padding: ${ASpacing1};

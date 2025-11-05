@@ -9,7 +9,7 @@ const StyledDiv = styled.div`
 `;
 
 const StyledAlert = styled(Alert)`
-    & .navds-alert__wrapper {
+    & .aksel-alert__wrapper {
         max-width: 100%;
     }
 `;

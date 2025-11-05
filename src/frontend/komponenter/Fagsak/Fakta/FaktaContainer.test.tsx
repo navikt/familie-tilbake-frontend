@@ -1,6 +1,5 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { TogglesHook } from '../../../context/TogglesContext';
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
@@ -25,11 +24,6 @@ import { RessursStatus } from '../../../typer/ressurs';
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
-
-const mockUseToggles = jest.fn();
-jest.mock('../../../context/TogglesContext', () => ({
-    useToggles: (): TogglesHook => mockUseToggles(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
@@ -106,9 +100,6 @@ const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: FaktaResponse)
         nullstillIkkePersisterteKomponenter: jest.fn(),
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 4'),
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
-    }));
-    mockUseToggles.mockImplementation(() => ({
-        toggles: undefined,
     }));
 };
 

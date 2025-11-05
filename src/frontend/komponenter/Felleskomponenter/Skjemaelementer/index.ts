@@ -7,8 +7,8 @@ export * from './LabelMedSpråk';
 export const HorisontalRadioGroup = styled(RadioGroup)<{ marginbottom?: string }>`
     margin-bottom: ${({ marginbottom }): string => (marginbottom ? marginbottom : '12px')};
 
-    .navds-radio {
-        display: inline-block;
+    .aksel-radio {
+        display: inline-flex;
         margin-right: ${ASpacing3};
     }
 `;

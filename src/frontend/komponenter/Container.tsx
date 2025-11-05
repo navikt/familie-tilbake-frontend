@@ -30,7 +30,7 @@ const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
 
     return (
-        <main>
+        <main aria-label="Hovedinnhold">
             {autentisert ? (
                 <>
                     <Toasts />
