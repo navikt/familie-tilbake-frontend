@@ -3,6 +3,7 @@ import * as Sentry from '@sentry/browser';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
+import './api/http/configureHeyApi';
 
 import App from './komponenter/App';
 import ErrorBoundary from './komponenter/Felleskomponenter/ErrorBoundary/ErrorBoundary';
