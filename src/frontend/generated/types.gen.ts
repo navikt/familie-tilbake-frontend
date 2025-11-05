@@ -425,6 +425,14 @@ export type RessursMapStringBoolean = {
     stacktrace?: string;
 };
 
+export type RessursListString = {
+    data?: Array<string>;
+    status: StatusEnum;
+    melding: string;
+    frontendFeilmelding?: string;
+    stacktrace?: string;
+};
+
 export type RessursListKravgrunnlagsinfo = {
     data?: Array<Kravgrunnlagsinfo>;
     status: StatusEnum;
@@ -1802,6 +1810,23 @@ export type FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppg
      */
     200: unknown;
 };
+
+export type AlleSakerOver4RettsgebyrData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/forvaltning/alle-over-4-rettsgebyr';
+};
+
+export type AlleSakerOver4RettsgebyrResponses = {
+    /**
+     * OK
+     */
+    200: RessursListString;
+};
+
+export type AlleSakerOver4RettsgebyrResponse =
+    AlleSakerOver4RettsgebyrResponses[keyof AlleSakerOver4RettsgebyrResponses];
 
 export type FeatureTogglesData = {
     body?: never;

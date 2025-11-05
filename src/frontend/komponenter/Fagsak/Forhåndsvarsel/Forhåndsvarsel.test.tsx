@@ -1,4 +1,3 @@
-import type { DokumentApiHook } from '../../../api/dokument';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
@@ -20,8 +19,6 @@ const queryClient = new QueryClient({
 });
 
 const mockUseBehandling = jest.fn();
-const mockUseDokumentlisting = jest.fn();
-const mockUseDokumentApi = jest.fn();
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
@@ -31,14 +28,20 @@ jest.mock('react-router', () => ({
 jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
-jest.mock('../../../api/dokument', () => ({
-    useDokumentApi: (): DokumentApiHook =>
-        mockUseDokumentApi(
-            jest.fn().mockReturnValue({ bestillBrev: jest.fn(), forhåndsvisBrev: jest.fn() })
-        ),
+
+jest.mock('../../../generated/@tanstack/react-query.gen', () => ({
+    bestillBrevMutation: jest.fn().mockReturnValue({
+        mutationFn: jest.fn(),
+    }),
+    forhåndsvisBrevMutation: jest.fn().mockReturnValue({
+        mutationFn: jest.fn(),
+    }),
 }));
-jest.mock('../Høyremeny/Dokumentlisting/DokumentlistingContext', () => ({
-    useDokumentlisting: (): DokumentApiHook => mockUseDokumentlisting(),
+
+jest.mock('../../../generated', () => ({
+    BrevmalkodeEnum: {
+        VARSEL: 'VARSEL',
+    },
 }));
 
 const setupMock = (): void => {
@@ -46,11 +49,6 @@ const setupMock = (): void => {
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 5'),
         erStegBehandlet: jest.fn().mockReturnValue(false),
     }));
-
-    mockUseDokumentApi.mockReturnValue({
-        bestillBrev: jest.fn(),
-        forhåndsvisBrev: jest.fn(),
-    });
 };
 
 const renderForhåndsvarsel = (): RenderResult =>
