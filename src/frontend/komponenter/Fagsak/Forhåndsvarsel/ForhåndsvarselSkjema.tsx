@@ -136,7 +136,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
                 <Button
                     icon={<FilePdfIcon aria-hidden />}
                     variant="tertiary"
-                    size="medium"
                     onClick={seForhåndsvisning}
                 >
                     Forhåndsvisning

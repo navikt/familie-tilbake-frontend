@@ -132,7 +132,6 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 {visForhåndsvarselSendt && (
                     <Alert
                         variant="success"
-                        size="medium"
                         contentMaxWidth={false}
                         onClose={() => setVisForhåndsvarselSendt(false)}
                         closeButton
