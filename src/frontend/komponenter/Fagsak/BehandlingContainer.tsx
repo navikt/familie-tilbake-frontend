@@ -10,7 +10,8 @@ import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
 import { BehandlingContainerSkeleton } from './BehandlingContainerSkeleton';
-import { FaktaProvider } from './Fakta/FaktaContext';
+import { Fakta } from './Fakta/Fakta';
+// import { FaktaProvider } from './Fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
 import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
 import { Forhåndsvarsel } from './Forhåndsvarsel/Forhåndsvarsel';
@@ -31,7 +32,7 @@ const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./Brevmottaker/Brevmottakere'),
     'BrevmottakerContainer'
 );
-const FaktaContainer = lazyImportMedRetry(() => import('./Fakta/FaktaContainer'), 'FaktaContainer');
+// const FaktaContainer = lazyImportMedRetry(() => import('./Fakta/FaktaContainer'), 'FaktaContainer');
 const HistoriskFaktaContainer = lazyImportMedRetry(
     () => import('./Fakta/FaktaPeriode/historikk/HistoriskFaktaContainer'),
     'HistoriskFaktaContainer'
@@ -183,9 +184,10 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                                 element={
-                                    <FaktaProvider behandling={behandling} fagsak={fagsak}>
-                                        <FaktaContainer ytelse={fagsak.ytelsestype} />
-                                    </FaktaProvider>
+                                    <Fakta />
+                                    // <FaktaProvider behandling={behandling} fagsak={fagsak}>
+                                    //     <FaktaContainer ytelse={fagsak.ytelsestype} />
+                                    // </FaktaProvider>
                                 }
                             />
                             {/* TODO: Rydde opp etter feature toggle */}
