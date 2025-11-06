@@ -9,13 +9,11 @@ import { useNavigate } from 'react-router';
 
 import { ForhåndsvarselSkjema } from './ForhåndsvarselSkjema';
 import { Unntak } from './Unntak';
-import { useApp } from '../../../context/AppContext';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { BrevmalkodeEnum } from '../../../generated';
 import { bestillBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { SYNLIGE_STEG } from '../../../utils/sider';
-import { AlertType, ToastTyper } from '../../Felleskomponenter/Toast/typer';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
@@ -31,7 +29,6 @@ export enum SkalSendesForhåndsvarsel {
 
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     const navigate = useNavigate();
-    const { settToast } = useApp();
     const [visForhåndsvarselSendt, setVisForhåndsvarselSendt] = useState(false);
     const queryClient = useQueryClient();
 
@@ -82,10 +79,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
             setVisForhåndsvarselSendt(true);
         },
         onError: () => {
-            settToast(ToastTyper.BrevmottakerIkkeTillat, {
-                alertType: AlertType.Error,
-                tekst: 'Feil ved sending av forhåndsvarsel.',
-            });
+            //TODO: må håndteres bedre når vi har design
         },
     });
 

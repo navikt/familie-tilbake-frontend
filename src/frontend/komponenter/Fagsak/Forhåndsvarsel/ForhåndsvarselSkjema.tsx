@@ -17,10 +17,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import { useApp } from '../../../context/AppContext';
 import { BrevmalkodeEnum } from '../../../generated';
 import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
-import { AlertType, ToastTyper } from '../../Felleskomponenter/Toast/typer';
 
 type Props = {
     behandling: BehandlingDto;
@@ -33,7 +31,6 @@ type Props = {
 export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) => {
     const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const queryClient = useQueryClient();
-    const { settToast } = useApp();
     const maksAntallTegn = 4000;
     const [expansionCardÅpen, setExpansionCardÅpen] = useState(!behandling.varselSendt);
 
@@ -50,10 +47,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
             });
         },
         onError: () => {
-            settToast(ToastTyper.BrevmottakerIkkeTillat, {
-                alertType: AlertType.Error,
-                tekst: 'Feil ved forhåndsvisning av brev.',
-            });
+            //TODO. må håndteres bedre når vi har design
         },
     });
 
