@@ -23,7 +23,7 @@ import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-que
 type Props = {
     behandling: BehandlingDto;
     methods: UseFormReturn<{
-        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel | undefined;
+        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
         fritekst: string;
     }>;
 };

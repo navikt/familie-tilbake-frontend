@@ -42,12 +42,12 @@ jest.mock('../../../context/FagsakContext', () => ({
     })),
 }));
 
-const renderBrevmottakerFormModal = (
+const renderBrevmottakerFormModal = async (
     props: {
         mode?: 'endre' | 'leggTil';
         visBrevmottakerModal?: boolean;
     } = {}
-): RenderResult => {
+): Promise<RenderResult> => {
     const defaultProps = {
         behandlingId: 'test-behandling-id',
         visBrevmottakerModal: true,
@@ -57,7 +57,7 @@ const renderBrevmottakerFormModal = (
         ...props,
     };
 
-    return render(<BrevmottakerFormModal {...defaultProps} />);
+    return await waitFor(() => render(<BrevmottakerFormModal {...defaultProps} />));
 };
 
 describe('BrevmottakerFormModal', () => {
@@ -86,8 +86,8 @@ describe('BrevmottakerFormModal', () => {
             expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
         });
 
-        test('leggTil modus har ingen default valgt - bruker må velge', () => {
-            const { getByLabelText } = renderBrevmottakerFormModal({ mode: 'leggTil' });
+        test('leggTil modus har ingen default valgt - bruker må velge', async () => {
+            const { getByLabelText } = await renderBrevmottakerFormModal({ mode: 'leggTil' });
 
             const select = getByLabelText('Mottaker') as HTMLSelectElement;
 
