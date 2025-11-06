@@ -7,7 +7,7 @@ import React from 'react';
 
 type Props = {
     methods: UseFormReturn<{
-        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel | undefined;
+        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
         fritekst: string;
     }>;
 };

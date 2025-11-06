@@ -24,6 +24,7 @@ export enum SkalSendesForhåndsvarsel {
     //TODO: erstatte med kodeverk fra backend når det er på plass
     Ja = 'ja',
     Nei = 'nei',
+    IkkeValgt = '',
 }
 
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
@@ -34,14 +35,12 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
 
     const { actionBarStegtekst } = useBehandling();
 
-    const getForhåndsvarselStatus = (
-        behandling: BehandlingDto
-    ): SkalSendesForhåndsvarsel | undefined => {
+    const getForhåndsvarselStatus = (behandling: BehandlingDto): SkalSendesForhåndsvarsel => {
         if (behandling.varselSendt) {
             return SkalSendesForhåndsvarsel.Ja;
         }
         // TODO: Denne må håndteres annereledes når vi har backend for de andre valgene
-        return undefined;
+        return SkalSendesForhåndsvarsel.IkkeValgt;
     };
 
     const methods = useForm({
