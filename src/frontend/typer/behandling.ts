@@ -86,7 +86,6 @@ export enum Behandlingssteg {
     FatteVedtak = 'FATTE_VEDTAK',
     IverksettVedtak = 'IVERKSETT_VEDTAK',
     Avsluttet = 'AVSLUTTET',
-    Forhåndsvarsel = 'FORHÅNDSVARSEL',
 }
 
 export const behandlingssteg: Record<Behandlingssteg, string> = {
@@ -101,7 +100,6 @@ export const behandlingssteg: Record<Behandlingssteg, string> = {
     [Behandlingssteg.FatteVedtak]: 'Fatte vedtak',
     [Behandlingssteg.IverksettVedtak]: 'Iverksetter vedtak',
     [Behandlingssteg.Avsluttet]: 'Avsluttet',
-    [Behandlingssteg.Forhåndsvarsel]: 'Forhåndsvarsel',
 };
 
 export enum Behandlingsstegstatus {

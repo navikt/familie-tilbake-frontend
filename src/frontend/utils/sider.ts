@@ -14,7 +14,7 @@ type SynligeStegType =
     | Behandlingssteg.Fakta
     | Behandlingssteg.Foreldelse
     | Behandlingssteg.ForeslåVedtak
-    | Behandlingssteg.Forhåndsvarsel
+    | Behandlingssteg.Varsel
     | Behandlingssteg.Verge
     | Behandlingssteg.Vilkårsvurdering;
 
@@ -34,10 +34,10 @@ export const SYNLIGE_STEG: Record<SynligeStegType, SynligSteg> = {
         navn: 'Fakta',
         steg: Behandlingssteg.Fakta,
     },
-    [Behandlingssteg.Forhåndsvarsel]: {
+    [Behandlingssteg.Varsel]: {
         href: 'forhaandsvarsel',
         navn: 'Forhåndsvarsel',
-        steg: Behandlingssteg.Forhåndsvarsel,
+        steg: Behandlingssteg.Varsel,
     },
     [Behandlingssteg.Foreldelse]: {
         href: 'foreldelse',
@@ -100,11 +100,11 @@ export const visSide = (
     if (steg === Behandlingssteg.Verge) {
         return !behandling.støtterManuelleBrevmottakere;
     }
-    if (steg === Behandlingssteg.Forhåndsvarsel) {
-        const harForhåndsvarselSteg = behandling.behandlingsstegsinfo.some(
-            ({ behandlingssteg }) => behandlingssteg === Behandlingssteg.Forhåndsvarsel
+    if (steg === Behandlingssteg.Varsel) {
+        const harVarselSteg = behandling.behandlingsstegsinfo.some(
+            ({ behandlingssteg }) => behandlingssteg === Behandlingssteg.Varsel
         );
-        return harForhåndsvarselSteg && aktiveToggles[ToggleName.Forhåndsvarselsteg];
+        return harVarselSteg && aktiveToggles[ToggleName.Forhåndsvarselsteg];
     }
 
     return true;
