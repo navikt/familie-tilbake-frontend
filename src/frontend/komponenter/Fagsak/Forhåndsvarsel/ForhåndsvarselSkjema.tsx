@@ -36,12 +36,11 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
     const [varselbrevtekster, setVarselbrevtekster] = useState<Ressurs<any> | null>(null);
     const { forhåndsvisBrev } = useDokumentApi();
 
-    const varselBrevApiPrefix = '/familie-tilbake/api/varselbrevtekst';
+    const varselBrevApiPrefix = '/familie-tilbake/api/dokument/varselbrevtekst';
     const { request } = useHttp();
 
     const hentVarselbrevTekst = (): Promise<Ressurs<any>> => {
         const url = `${varselBrevApiPrefix}/${behandling.behandlingId}`;
-        console.log('🔗 Kaller API med URL:', url);
         return request<void, any>({
             method: 'GET',
             url: url,
