@@ -2,15 +2,16 @@ import type { BehandlingDto, FagsakDto } from '../../../generated';
 
 import { Alert, Heading, Radio, RadioGroup, VStack } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
 import { ForhåndsvarselSkjema } from './ForhåndsvarselSkjema';
 import { Unntak } from './Unntak';
-import { useDokumentApi } from '../../../api/dokument';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { DokumentMal } from '../../../kodeverk';
+import { BrevmalkodeEnum } from '../../../generated';
+import { bestillBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { SYNLIGE_STEG } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
@@ -30,8 +31,7 @@ export enum SkalSendesForhåndsvarsel {
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     const navigate = useNavigate();
     const [visForhåndsvarselSendt, setVisForhåndsvarselSendt] = useState(false);
-
-    const { bestillBrev } = useDokumentApi();
+    const queryClient = useQueryClient();
 
     const { actionBarStegtekst } = useBehandling();
 
@@ -69,11 +69,26 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         );
     };
 
+    const sendForhåndsvarselMutation = useMutation({
+        ...bestillBrevMutation(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['hentBehandling', behandling.behandlingId],
+            });
+            setVisForhåndsvarselSendt(true);
+        },
+        onError: () => {
+            //TODO: må håndteres bedre når vi har design
+        },
+    });
+
     const sendForhåndsvarsel = handleSubmit(data => {
-        bestillBrev({
-            behandlingId: behandling.behandlingId,
-            brevmalkode: DokumentMal.Varsel,
-            fritekst: data.fritekst,
+        sendForhåndsvarselMutation.mutate({
+            body: {
+                behandlingId: behandling.behandlingId,
+                brevmalkode: BrevmalkodeEnum.VARSEL,
+                fritekst: data.fritekst,
+            },
         });
     });
 

@@ -748,6 +748,14 @@ export const zRessursMapStringBoolean = z.object({
     stacktrace: z.optional(z.string()),
 });
 
+export const zRessursListString = z.object({
+    data: z.optional(z.array(z.string())),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.optional(z.string()),
+    stacktrace: z.optional(z.string()),
+});
+
 export const zKravgrunnlagsinfo = z.object({
     eksternKravgrunnlagId: z.int(),
     kravgrunnlagKravstatuskode: z.string(),
@@ -1490,6 +1498,17 @@ export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOp
         }),
         query: z.optional(z.never()),
     });
+
+export const zAlleSakerOver4RettsgebyrData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never()),
+});
+
+/**
+ * OK
+ */
+export const zAlleSakerOver4RettsgebyrResponse = zRessursListString;
 
 export const zFeatureTogglesData = z.object({
     body: z.optional(z.never()),

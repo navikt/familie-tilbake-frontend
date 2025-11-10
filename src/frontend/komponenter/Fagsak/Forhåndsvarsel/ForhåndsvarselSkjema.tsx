@@ -13,11 +13,12 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import { useDokumentApi } from '../../../api/dokument';
-import { DokumentMal } from '../../../kodeverk';
+import { BrevmalkodeEnum } from '../../../generated';
+import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 
 type Props = {
     behandling: BehandlingDto;
@@ -29,20 +30,34 @@ type Props = {
 
 export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) => {
     const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
+    const queryClient = useQueryClient();
     const maksAntallTegn = 4000;
     const [expansionCardÅpen, setExpansionCardÅpen] = useState(!behandling.varselSendt);
-    const { forhåndsvisBrev } = useDokumentApi();
 
     const {
         control,
         formState: { errors },
     } = methods;
 
+    const seForhåndsvisningMutation = useMutation({
+        ...forhåndsvisBrevMutation(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['hentBehandling'],
+            });
+        },
+        onError: () => {
+            //TODO. må håndteres bedre når vi har design
+        },
+    });
+
     const seForhåndsvisning = (): void => {
-        forhåndsvisBrev({
-            behandlingId: behandling.behandlingId,
-            brevmalkode: DokumentMal.Varsel,
-            fritekst: methods.getValues('fritekst'),
+        seForhåndsvisningMutation.mutate({
+            body: {
+                behandlingId: behandling.behandlingId,
+                brevmalkode: BrevmalkodeEnum.VARSEL,
+                fritekst: methods.getValues('fritekst'),
+            },
         });
     };
 
