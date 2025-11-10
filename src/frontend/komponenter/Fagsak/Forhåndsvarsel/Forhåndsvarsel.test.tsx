@@ -2,6 +2,7 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
@@ -43,7 +44,11 @@ const setupMock = (): void => {
 };
 
 const renderForhåndsvarsel = (): RenderResult =>
-    render(<Forhåndsvarsel behandling={lagBehandlingDto()} fagsak={lagFagsakDto()} />);
+    render(
+        <QueryClientProvider client={new QueryClient()}>
+            <Forhåndsvarsel behandling={lagBehandlingDto()} fagsak={lagFagsakDto()} />
+        </QueryClientProvider>
+    );
 
 describe('Forhåndsvarsel', () => {
     beforeEach(() => {
