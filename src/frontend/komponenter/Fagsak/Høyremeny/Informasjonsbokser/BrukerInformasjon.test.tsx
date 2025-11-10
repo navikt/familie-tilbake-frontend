@@ -72,7 +72,7 @@ describe('BrukerInformasjon', () => {
     test('Viser dødsdato-tag når satt', () => {
         renderBrukerInformasjon({ dødsdato: '2024-12-31' });
         expect(screen.getByText('Dødsdato')).toBeInTheDocument();
-        expect(screen.getByText('2024-12-31')).toBeInTheDocument();
+        expect(screen.getByText('31.12.2024')).toBeInTheDocument();
     });
 
     test('Skjuler dødsdato når ikke satt', () => {
