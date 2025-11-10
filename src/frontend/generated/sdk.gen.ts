@@ -3,6 +3,8 @@
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
 import type {
+    AlleSakerOver4RettsgebyrData,
+    AlleSakerOver4RettsgebyrResponses,
     AngreSammenslåingData,
     AngreSammenslåingResponses,
     AngreSendTilBeslutterData,
@@ -1102,6 +1104,28 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
             },
         ],
         url: '/api/forvaltning/finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgave/{fagsystem}',
+        ...options,
+    });
+};
+
+/**
+ * Finner saker over 4 rettsgebyr
+ */
+export const alleSakerOver4Rettsgebyr = <ThrowOnError extends boolean = false>(
+    options?: Options<AlleSakerOver4RettsgebyrData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        AlleSakerOver4RettsgebyrResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/forvaltning/alle-over-4-rettsgebyr',
         ...options,
     });
 };

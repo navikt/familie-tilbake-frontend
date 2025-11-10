@@ -14,7 +14,7 @@ import { Box, CopyButton, Heading, Tag } from '@navikt/ds-react';
 import React from 'react';
 
 import { Kjønn } from '../../../../typer/bruker';
-import { hentAlder } from '../../../../utils';
+import { formatterDatostring, hentAlder } from '../../../../utils';
 import { ICON_PROPS } from '../utils';
 
 const erDNummer = (personIdent: string): boolean => personIdent.charAt(0) > '3';
@@ -83,7 +83,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
                         </dt>
                         <dd className="text-ax-medium">
                             <Tag size="small" variant="neutral-filled">
-                                {bruker.dødsdato}
+                                {formatterDatostring(bruker.dødsdato)}
                             </Tag>
                         </dd>
                     </>

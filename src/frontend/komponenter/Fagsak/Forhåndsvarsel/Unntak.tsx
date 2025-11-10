@@ -24,8 +24,6 @@ export const Unntak: React.FC<Props> = ({ methods }) => {
         formState: { errors },
     } = methods;
 
-    const maksAntallTegn = 2000;
-
     return (
         <VStack maxWidth={ATextWidthMax} gap="4">
             <RadioGroup
@@ -69,7 +67,7 @@ export const Unntak: React.FC<Props> = ({ methods }) => {
             </RadioGroup>
             <Textarea
                 label="Forklar hvorfor forhåndsvarselet ikke skal bli sendt"
-                maxLength={maksAntallTegn}
+                maxLength={2000}
             />
         </VStack>
     );

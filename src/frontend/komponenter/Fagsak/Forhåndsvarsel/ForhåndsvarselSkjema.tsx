@@ -1,5 +1,5 @@
 import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
-import type { BehandlingDto } from '../../../generated';
+import type { BehandlingDto, Ressurs } from '../../../generated';
 import type { UseFormReturn } from 'react-hook-form';
 
 import { FilePdfIcon } from '@navikt/aksel-icons';
@@ -13,13 +13,12 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import React, { useEffect, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import { useDokumentApi } from '../../../api/dokument';
-import { useHttp } from '../../../api/http/HttpProvider';
-import { DokumentMal } from '../../../kodeverk';
-import { type Ressurs, byggDataRessurs } from '../../../typer/ressurs';
+import { BrevmalkodeEnum } from '../../../generated';
+import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 
 type Props = {
     behandling: BehandlingDto;
@@ -31,15 +30,15 @@ type Props = {
 
 export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) => {
     const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
+    const queryClient = useQueryClient();
     const maksAntallTegn = 4000;
     const [expansionCardÅpen, setExpansionCardÅpen] = useState(!behandling.varselSendt);
-    const [varselbrevtekster, setVarselbrevtekster] = useState<Ressurs<any> | null>(null);
-    const { forhåndsvisBrev } = useDokumentApi();
+    const [varselbrevtekster, setVarselbrevtekster] = useState<Ressurs | null>(null);
 
     const varselBrevApiPrefix = '/familie-tilbake/api/dokument/varselbrevtekst';
     const { request } = useHttp();
 
-    const hentVarselbrevTekst = (): Promise<Ressurs<any>> => {
+    const hentVarselbrevTekst = (): Promise<Ressurs> => {
         const url = `${varselBrevApiPrefix}/${behandling.behandlingId}`;
         return request<void, any>({
             method: 'GET',
@@ -93,11 +92,25 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
         formState: { errors },
     } = methods;
 
+    const seForhåndsvisningMutation = useMutation({
+        ...forhåndsvisBrevMutation(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['hentBehandling'],
+            });
+        },
+        onError: () => {
+            //TODO. må håndteres bedre når vi har design
+        },
+    });
+
     const seForhåndsvisning = (): void => {
-        forhåndsvisBrev({
-            behandlingId: behandling.behandlingId,
-            brevmalkode: DokumentMal.Varsel,
-            fritekst: methods.getValues('fritekst'),
+        seForhåndsvisningMutation.mutate({
+            body: {
+                behandlingId: behandling.behandlingId,
+                brevmalkode: BrevmalkodeEnum.VARSEL,
+                fritekst: methods.getValues('fritekst'),
+            },
         });
     };
 
