@@ -2,13 +2,15 @@ import type { Feil } from '../../../../api/feil';
 
 import { XMarkOctagonFillIcon } from '@navikt/aksel-icons';
 import { Button, Heading, Link, List, Modal, VStack } from '@navikt/ds-react';
+import { type AxiosError } from 'axios';
 import React from 'react';
 
 import { hentFeilObjekt } from './feilObjekt';
+import { hentStatus } from './hentStatus';
 
 type Props = {
     lukkFeilModal: () => void;
-    feil: Feil;
+    feil: AxiosError | Feil; //TODO: Typen Feil bør fjernes når alle feil er migrert til AxiosError
     beskjed?: string;
     behandlingId?: string;
     fagsakId?: string;
@@ -21,7 +23,7 @@ export const FeilModal: React.FC<Props> = ({
     behandlingId,
     fagsakId,
 }: Props) => {
-    const feilObjekt = hentFeilObjekt(feil.status);
+    const feilObjekt = hentFeilObjekt(hentStatus(feil));
     const innheholderCSRFTokenFeil = feil.message?.includes('CSRF-token');
     return (
         <Modal open onClose={lukkFeilModal} aria-labelledby="modal-heading" portal>
