@@ -16,6 +16,7 @@ import {
 } from '@navikt/ds-react';
 import * as React from 'react';
 
+import { FaktaSkeleton } from './FaktaSkeleton';
 import { useBehandling } from '../../../context/BehandlingContext';
 import {
     HarBrukerUttaltSegEnum,
@@ -33,11 +34,11 @@ export const Fakta: React.FC = () => {
         onDateChange: console.info,
     });
     const { actionBarStegtekst } = useBehandling();
+    const isLoading = false;
 
     const bestemmelser: HendelsestypeEnum[] = [HendelsestypeEnum.ANNET];
     const alleGrunnlag: HendelsesundertypeEnum[] = [HendelsesundertypeEnum.ANNET_FRITEKST];
     const tidligereVarsletBeløp = 13800;
-    const erNyModell = false;
     const fakta: FaktaFeilutbetalingDto = {
         begrunnelse: '',
         feilutbetaltePerioder: [
@@ -81,6 +82,7 @@ export const Fakta: React.FC = () => {
     };
     const tilbakekrevingsvalgText =
         tilbakekrevingsvalg[fakta.faktainfo.tilbakekrevingsvalg as unknown as Tilbakekrevingsvalg];
+    if (isLoading) return <FaktaSkeleton />;
     return (
         <>
             <div className="flex flex-col gap-8" aria-label="Fakta om feilutbetaling">
@@ -148,23 +150,7 @@ export const Fakta: React.FC = () => {
                                 <dt className="font-ax-bold text-ax-medium">Resultat</dt>
                                 <dd>{fakta.faktainfo.revurderingsresultat}</dd>
                             </div>
-                            {!erNyModell && (
-                                <div>
-                                    <dt className="font-ax-bold text-ax-medium">Konsekvens</dt>
-                                    <dd className="inline-flex gap-1">
-                                        {fakta.faktainfo.konsekvensForYtelser.map(konsekvens => (
-                                            <Tag
-                                                key={konsekvens}
-                                                variant="neutral-moderate"
-                                                size="small"
-                                            >
-                                                {konsekvens}
-                                            </Tag>
-                                        ))}
-                                    </dd>
-                                </div>
-                            )}
-                            <div className="col-span-2">
+                            <div className="col-span-1">
                                 <dt className="font-ax-bold text-ax-medium">Tilbakekrevingsvalg</dt>
                                 <dd>
                                     <Tag
@@ -190,12 +176,12 @@ export const Fakta: React.FC = () => {
                                     <Table.HeaderCell scope="col">
                                         <span className="ml-2">Periode</span>
                                     </Table.HeaderCell>
+                                    <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
+                                    <Table.HeaderCell scope="col">Grunnlag</Table.HeaderCell>
                                     <Table.HeaderCell scope="col" className="text-end">
                                         Feilutbetalt beløp
                                     </Table.HeaderCell>
-                                    <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
-                                    <Table.HeaderCell scope="col">Grunnlag</Table.HeaderCell>
-                                    <Table.HeaderCell scope="col" />
+                                    <Table.HeaderCell scope="col">Valg</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
@@ -206,9 +192,6 @@ export const Fakta: React.FC = () => {
                                                 {formatterDatostring(periode.periode.fom)}–
                                                 {formatterDatostring(periode.periode.tom)}
                                             </span>
-                                        </Table.DataCell>
-                                        <Table.DataCell className="text-end text-ax-text-danger-subtle">
-                                            {periode.feilutbetaltBeløp}
                                         </Table.DataCell>
                                         <Table.DataCell>
                                             <Select
@@ -245,6 +228,9 @@ export const Fakta: React.FC = () => {
                                                     </option>
                                                 ))}
                                             </Select>
+                                        </Table.DataCell>
+                                        <Table.DataCell className="text-end text-ax-text-danger-subtle">
+                                            {periode.feilutbetaltBeløp}
                                         </Table.DataCell>
                                         <Table.DataCell className="text-center">
                                             <Button

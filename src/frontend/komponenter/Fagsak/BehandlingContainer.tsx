@@ -6,12 +6,12 @@ import { BodyShort, Button } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { Suspense, useRef } from 'react';
-import { Route, Routes, useNavigate, useLocation } from 'react-router';
+import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import { styled } from 'styled-components';
 
 import { BehandlingContainerSkeleton } from './BehandlingContainerSkeleton';
 import { Fakta } from './Fakta/Fakta';
-// import { FaktaProvider } from './Fakta/FaktaContext';
+import { FaktaProvider } from './Fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
 import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
 import { Forhåndsvarsel } from './Forhåndsvarsel/Forhåndsvarsel';
@@ -32,7 +32,7 @@ const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./Brevmottaker/Brevmottakere'),
     'BrevmottakerContainer'
 );
-// const FaktaContainer = lazyImportMedRetry(() => import('./Fakta/FaktaContainer'), 'FaktaContainer');
+const FaktaContainer = lazyImportMedRetry(() => import('./Fakta/FaktaContainer'), 'FaktaContainer');
 const HistoriskFaktaContainer = lazyImportMedRetry(
     () => import('./Fakta/FaktaPeriode/historikk/HistoriskFaktaContainer'),
     'HistoriskFaktaContainer'
@@ -184,10 +184,13 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                                 element={
-                                    <Fakta />
-                                    // <FaktaProvider behandling={behandling} fagsak={fagsak}>
-                                    //     <FaktaContainer ytelse={fagsak.ytelsestype} />
-                                    // </FaktaProvider>
+                                    toggles[ToggleName.NyttFaktasteg] ? (
+                                        <Fakta />
+                                    ) : (
+                                        <FaktaProvider behandling={behandling} fagsak={fagsak}>
+                                            <FaktaContainer ytelse={fagsak.ytelsestype} />
+                                        </FaktaProvider>
+                                    )
                                 }
                             />
                             {/* TODO: Rydde opp etter feature toggle */}
