@@ -20,10 +20,6 @@ import { Navigering, Spacer20 } from '../../../Felleskomponenter/Flytelementer';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
-const StyledContainer = styled.div`
-    margin-top: 10px;
-`;
-
 const AngreSendTilBeslutterContainer = styled.div`
     margin: 1rem 0;
 `;
@@ -53,151 +49,137 @@ const Totrinnskontroll: React.FC = () => {
         // console.log('bør no trigge re-rendring');
     }, [nonUsedKey]);
 
-    switch (totrinnkontroll?.status) {
-        case RessursStatus.Suksess:
-            return (
-                <StyledContainer>
-                    {fatteVedtakRespons &&
-                        (fatteVedtakRespons.status === RessursStatus.Feilet ||
-                            fatteVedtakRespons.status === RessursStatus.FunksjonellFeil) && (
-                            <>
-                                <Alert variant="error">
-                                    {fatteVedtakRespons.frontendFeilmelding}
-                                </Alert>
-                                <Spacer20 />
-                            </>
-                        )}
-                    {!erLesevisning && (
-                        <>
-                            <Steginformasjon
-                                behandletSteg={stegErBehandlet}
-                                infotekst="Kontroller endrede opplysninger og faglige vurderinger"
-                            />
-                            <Spacer20 />
-                        </>
-                    )}
-                    {aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak &&
-                        erLesevisning && (
-                            <AngreSendTilBeslutterContainer>
-                                <Button
-                                    size="small"
-                                    variant="secondary"
-                                    onClick={angreSendTilBeslutter}
+    if (totrinnkontroll?.status !== RessursStatus.Suksess) {
+        return null;
+    }
+
+    return (
+        <>
+            {fatteVedtakRespons &&
+                (fatteVedtakRespons.status === RessursStatus.Feilet ||
+                    fatteVedtakRespons.status === RessursStatus.FunksjonellFeil) && (
+                    <>
+                        <Alert variant="error">{fatteVedtakRespons.frontendFeilmelding}</Alert>
+                        <Spacer20 />
+                    </>
+                )}
+            {!erLesevisning && (
+                <>
+                    <Steginformasjon
+                        behandletSteg={stegErBehandlet}
+                        infotekst="Kontroller endrede opplysninger og faglige vurderinger"
+                    />
+                    <Spacer20 />
+                </>
+            )}
+            {aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak && erLesevisning && (
+                <AngreSendTilBeslutterContainer>
+                    <Button size="small" variant="secondary" onClick={angreSendTilBeslutter}>
+                        Angre sendt til beslutter
+                    </Button>
+                    {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
+                </AngreSendTilBeslutterContainer>
+            )}
+            {skjemaData.map(totrinnSteg => {
+                const side = finnSideForSteg(totrinnSteg.behandlingssteg);
+                const vurdertIkkeGodkjent = totrinnSteg.godkjent === OptionIkkeGodkjent;
+                return (
+                    <React.Fragment key={totrinnSteg.behandlingssteg}>
+                        <div>
+                            <Label>
+                                <Link
+                                    href="#"
+                                    onMouseDown={(e: React.MouseEvent) => e.preventDefault()}
+                                    onClick={() => navigerTilSide(side as SynligSteg)}
                                 >
-                                    Angre sendt til beslutter
-                                </Button>
-                                {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
-                            </AngreSendTilBeslutterContainer>
-                        )}
-                    {skjemaData.map(totrinnSteg => {
-                        const side = finnSideForSteg(totrinnSteg.behandlingssteg);
-                        const vurdertIkkeGodkjent = totrinnSteg.godkjent === OptionIkkeGodkjent;
-                        return (
-                            <React.Fragment key={totrinnSteg.behandlingssteg}>
-                                <div>
-                                    <Label>
-                                        <Link
-                                            href="#"
-                                            onMouseDown={(e: React.MouseEvent) =>
-                                                e.preventDefault()
-                                            }
-                                            onClick={() => navigerTilSide(side as SynligSteg)}
+                                    {behandlingssteg[totrinnSteg.behandlingssteg]}
+                                </Link>
+                            </Label>
+                            {erLesevisning ? (
+                                <BodyShort spacing>
+                                    {totrinnSteg.godkjent === OptionGodkjent
+                                        ? 'Godkjent'
+                                        : totrinnSteg.godkjent === OptionIkkeGodkjent
+                                          ? 'Vurder på nytt'
+                                          : 'Ikke vurdert'}
+                                </BodyShort>
+                            ) : (
+                                <HorisontalRadioGroup
+                                    id={`stegetGodkjent_${totrinnSteg.index}`}
+                                    legend={`Vurder steget ${
+                                        behandlingssteg[totrinnSteg.behandlingssteg]
+                                    }`}
+                                    hideLegend
+                                    value={totrinnSteg.godkjent}
+                                    onChange={(val: TotrinnGodkjenningOption) =>
+                                        oppdaterGodkjenning(totrinnSteg.index, val)
+                                    }
+                                    error={totrinnSteg.feilmelding ? totrinnSteg.feilmelding : null}
+                                >
+                                    {totrinnGodkjenningOptions.map(opt => (
+                                        <Radio
+                                            key={opt.label}
+                                            name={`stegetGodkjent_${totrinnSteg.index}`}
+                                            data-testid={`stegetGodkjent_${totrinnSteg.index}-${opt.verdi}`}
+                                            value={opt}
                                         >
-                                            {behandlingssteg[totrinnSteg.behandlingssteg]}
-                                        </Link>
-                                    </Label>
-                                    {erLesevisning ? (
-                                        <BodyShort spacing>
-                                            {totrinnSteg.godkjent === OptionGodkjent
-                                                ? 'Godkjent'
-                                                : totrinnSteg.godkjent === OptionIkkeGodkjent
-                                                  ? 'Vurder på nytt'
-                                                  : 'Ikke vurdert'}
-                                        </BodyShort>
-                                    ) : (
-                                        <HorisontalRadioGroup
-                                            id={`stegetGodkjent_${totrinnSteg.index}`}
-                                            legend={`Vurder steget ${
-                                                behandlingssteg[totrinnSteg.behandlingssteg]
-                                            }`}
-                                            hideLegend
-                                            value={totrinnSteg.godkjent}
-                                            onChange={(val: TotrinnGodkjenningOption) =>
-                                                oppdaterGodkjenning(totrinnSteg.index, val)
+                                            {opt.label}
+                                        </Radio>
+                                    ))}
+                                </HorisontalRadioGroup>
+                            )}
+                            {vurdertIkkeGodkjent && (
+                                <>
+                                    <ArrowBox alignOffset={erLesevisning ? 5 : 125}>
+                                        <Textarea
+                                            name={`ikkeGodkjentBegrunnelse_${totrinnSteg.index}`}
+                                            label="Begrunnelse"
+                                            readOnly={erLesevisning}
+                                            value={totrinnSteg.begrunnelse || ''}
+                                            maxLength={2000}
+                                            onChange={event =>
+                                                oppdaterBegrunnelse(
+                                                    totrinnSteg.index,
+                                                    event.target.value
+                                                )
                                             }
                                             error={
-                                                totrinnSteg.feilmelding
-                                                    ? totrinnSteg.feilmelding
+                                                totrinnSteg.harFeilIBegrunnelse
+                                                    ? totrinnSteg.begrunnelseFeilmelding
                                                     : null
                                             }
-                                        >
-                                            {totrinnGodkjenningOptions.map(opt => (
-                                                <Radio
-                                                    key={opt.label}
-                                                    name={`stegetGodkjent_${totrinnSteg.index}`}
-                                                    data-testid={`stegetGodkjent_${totrinnSteg.index}-${opt.verdi}`}
-                                                    value={opt}
-                                                >
-                                                    {opt.label}
-                                                </Radio>
-                                            ))}
-                                        </HorisontalRadioGroup>
-                                    )}
-                                    {vurdertIkkeGodkjent && (
-                                        <>
-                                            <ArrowBox alignOffset={erLesevisning ? 5 : 125}>
-                                                <Textarea
-                                                    name={`ikkeGodkjentBegrunnelse_${totrinnSteg.index}`}
-                                                    label="Begrunnelse"
-                                                    readOnly={erLesevisning}
-                                                    value={totrinnSteg.begrunnelse || ''}
-                                                    maxLength={2000}
-                                                    onChange={event =>
-                                                        oppdaterBegrunnelse(
-                                                            totrinnSteg.index,
-                                                            event.target.value
-                                                        )
-                                                    }
-                                                    error={
-                                                        totrinnSteg.harFeilIBegrunnelse
-                                                            ? totrinnSteg.begrunnelseFeilmelding
-                                                            : null
-                                                    }
-                                                />
-                                            </ArrowBox>
-                                        </>
-                                    )}
-                                </div>
-                            </React.Fragment>
-                        );
-                    })}
-                    {!erLesevisning && (
-                        <Navigering>
-                            <Button
-                                size="small"
-                                variant="primary"
-                                onClick={sendInnSkjema}
-                                loading={senderInn}
-                                disabled={senderInn || disableBekreft || sendTilSaksbehandler}
-                            >
-                                Godkjenn vedtaket
-                            </Button>
-                            <Button
-                                size="small"
-                                variant="primary"
-                                onClick={sendInnSkjema}
-                                loading={senderInn}
-                                disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
-                            >
-                                Send til saksbehandler
-                            </Button>
-                        </Navigering>
-                    )}
-                </StyledContainer>
-            );
-        default:
-            return null;
-    }
+                                        />
+                                    </ArrowBox>
+                                </>
+                            )}
+                        </div>
+                    </React.Fragment>
+                );
+            })}
+            {!erLesevisning && (
+                <Navigering>
+                    <Button
+                        size="small"
+                        variant="primary"
+                        onClick={sendInnSkjema}
+                        loading={senderInn}
+                        disabled={senderInn || disableBekreft || sendTilSaksbehandler}
+                    >
+                        Godkjenn vedtaket
+                    </Button>
+                    <Button
+                        size="small"
+                        variant="primary"
+                        onClick={sendInnSkjema}
+                        loading={senderInn}
+                        disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
+                    >
+                        Send til saksbehandler
+                    </Button>
+                </Navigering>
+            )}
+        </>
+    );
 };
 
 export default Totrinnskontroll;

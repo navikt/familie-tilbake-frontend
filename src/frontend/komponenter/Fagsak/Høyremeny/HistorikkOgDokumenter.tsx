@@ -2,10 +2,11 @@ import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
 
 import { ClockIcon, FolderIcon, PaperplaneIcon, PersonGavelIcon } from '@navikt/aksel-icons';
-import { Tabs } from '@navikt/ds-react';
+import { ToggleGroup } from '@navikt/ds-react';
 import * as React from 'react';
+import { useState } from 'react';
 
-import Menykontainer, { Menysider } from './Menykontainer';
+import { Menysider, MenySideInnhold } from './Menykontainer';
 
 type Props = {
     værtPåFatteVedtakSteget: boolean;
@@ -18,72 +19,51 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({
     fagsak,
     behandling,
 }) => {
+    const [valgt, setValgt] = useState(værtPåFatteVedtakSteget ? 'to-trinn' : 'logg');
+
+    const menyMap: Record<string, Menysider> = {
+        'to-trinn': Menysider.Totrinn,
+        logg: Menysider.Historikk,
+        dokumenter: Menysider.Dokumenter,
+        'send-brev': Menysider.SendBrev,
+    };
+
     return (
-        <Tabs
-            defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
-            iconPosition="top"
-            className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0"
-        >
-            <div className="flex justify-center">
+        <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4">
+            <ToggleGroup
+                defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
+                onChange={setValgt}
+                variant="neutral"
+                size="small"
+                className="sticky top-0 z-10 bg-ax-bg-default"
+            >
                 {værtPåFatteVedtakSteget && (
-                    <Tabs.Tab
+                    <ToggleGroup.Item
                         value="to-trinn"
-                        label="Fatte vedtak"
-                        icon={<PersonGavelIcon fontSize="1.5rem" aria-label="Ikon fatte vedtak" />}
+                        className="px-10"
+                        icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
                     />
                 )}
-                <Tabs.Tab
+                <ToggleGroup.Item
                     value="logg"
-                    label="Historikk"
-                    icon={<ClockIcon fontSize="1.5rem" aria-label="Ikon historikk" />}
+                    icon={<ClockIcon fontSize="1.25rem" aria-label="Historikk" />}
                 />
-                <Tabs.Tab
+                <ToggleGroup.Item
                     value="dokumenter"
-                    label="Dokumenter"
-                    icon={<FolderIcon fontSize="1.5rem" aria-label="Ikon dokumenter" />}
+                    icon={<FolderIcon fontSize="1.25rem" aria-label="Dokumenter" />}
                 />
-                {/* TODO: Rydde opp etter feature toggle */}
                 {!behandling.erNyModell && (
-                    <Tabs.Tab
+                    <ToggleGroup.Item
                         value="send-brev"
-                        label="Send brev"
-                        icon={<PaperplaneIcon fontSize="1.5rem" aria-label="Ikon send brev" />}
+                        icon={<PaperplaneIcon fontSize="1.25rem" aria-label="Send brev" />}
                     />
                 )}
-                {/* .. */}
-            </div>
-            <div className="px-2 mt-4 flex-1 min-h-0 overflow-y-auto scrollbar-stable">
-                {værtPåFatteVedtakSteget && (
-                    <Tabs.Panel value="to-trinn">
-                        <Menykontainer
-                            valgtMenyside={Menysider.Totrinn}
-                            behandling={behandling}
-                            fagsak={fagsak}
-                        />
-                    </Tabs.Panel>
-                )}
-                <Tabs.Panel value="logg">
-                    <Menykontainer
-                        valgtMenyside={Menysider.Historikk}
-                        behandling={behandling}
-                        fagsak={fagsak}
-                    />
-                </Tabs.Panel>
-                <Tabs.Panel value="dokumenter">
-                    <Menykontainer
-                        valgtMenyside={Menysider.Dokumenter}
-                        behandling={behandling}
-                        fagsak={fagsak}
-                    />
-                </Tabs.Panel>
-                <Tabs.Panel value="send-brev">
-                    <Menykontainer
-                        valgtMenyside={Menysider.SendBrev}
-                        behandling={behandling}
-                        fagsak={fagsak}
-                    />
-                </Tabs.Panel>
-            </div>
-        </Tabs>
+            </ToggleGroup>
+            <MenySideInnhold
+                valgtMenyside={menyMap[valgt]}
+                behandling={behandling}
+                fagsak={fagsak}
+            />
+        </div>
     );
 };
