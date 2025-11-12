@@ -83,7 +83,7 @@ describe('Forhåndsvarsel', () => {
 
         fireEvent.click(screen.getByLabelText('Ja'));
 
-        expect(screen.getByText(/Opprett forhåndsvarsel/)).toBeInTheDocument();
+        expect(await screen.findByText(/Opprett forhåndsvarsel/)).toBeInTheDocument();
         expect(
             await screen.findByRole('heading', {
                 name: /Nav vurderer om du må betale tilbake overgangsstønad/i,
@@ -91,11 +91,11 @@ describe('Forhåndsvarsel', () => {
         ).toBeInTheDocument();
     });
 
-    test('Viser fritekstfelt når bruker har valgt Ja', () => {
+    test('Viser fritekstfelt når bruker har valgt Ja', async () => {
         renderForhåndsvarsel();
         fireEvent.click(screen.getByLabelText('Ja'));
 
-        expect(screen.getByLabelText(/Legg til utdypende tekst/)).toBeInTheDocument();
+        expect(await screen.findByLabelText(/Legg til utdypende tekst/)).toBeInTheDocument();
     });
 
     test('Viser flyt for Velg begrunnelse for unntak fra forhåndsvarsel når man velger Nei', () => {

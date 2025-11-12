@@ -1,5 +1,5 @@
 import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
-import type { BehandlingDto, Section } from '../../../generated';
+import type { BehandlingDto, Section, Varselbrevtekst } from '../../../generated';
 import type { UseFormReturn } from 'react-hook-form';
 
 import { FilePdfIcon } from '@navikt/aksel-icons';
@@ -13,11 +13,11 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import { BrevmalkodeEnum, hentForhåndsvarselTekst } from '../../../generated';
+import { BrevmalkodeEnum } from '../../../generated';
 import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 
 type Props = {
@@ -26,9 +26,14 @@ type Props = {
         skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
         fritekst: string;
     }>;
+    varselbrevtekster: Varselbrevtekst;
 };
 
-export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) => {
+export const ForhåndsvarselSkjema: React.FC<Props> = ({
+    behandling,
+    methods,
+    varselbrevtekster,
+}) => {
     const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const queryClient = useQueryClient();
     const maksAntallTegn = 4000;
@@ -38,18 +43,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
         control,
         formState: { errors },
     } = methods;
-
-    const { data: varselbrevtekster } = useQuery({
-        queryKey: ['hentForhåndsvarselTekst', behandling.behandlingId],
-        queryFn: () =>
-            hentForhåndsvarselTekst({
-                path: {
-                    behandlingId: behandling.behandlingId,
-                },
-            }),
-        enabled: !!behandling.behandlingId,
-        select: data => data.data?.data,
-    });
 
     const seForhåndsvisningMutation = useMutation({
         ...forhåndsvisBrevMutation(),
@@ -133,7 +126,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
                                 )}
                             />
                         </form>
-                        ...
                     </VStack>
                 </ExpansionCard.Content>
             </ExpansionCard>

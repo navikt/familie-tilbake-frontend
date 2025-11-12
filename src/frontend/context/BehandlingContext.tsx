@@ -159,7 +159,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
             if (
                 steg === Behandlingssteg.Verge ||
                 steg === Behandlingssteg.Brevmottaker ||
-                steg === Behandlingssteg.Varsel
+                steg === Behandlingssteg.Forhåndsvarsel
             ) {
                 return behandling.data.behandlingsstegsinfo.some(
                     ({ behandlingssteg }) => behandlingssteg === steg

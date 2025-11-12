@@ -14,7 +14,7 @@ type SynligeStegType =
     | Behandlingssteg.Fakta
     | Behandlingssteg.Foreldelse
     | Behandlingssteg.ForeslåVedtak
-    | Behandlingssteg.Varsel
+    | Behandlingssteg.Forhåndsvarsel
     | Behandlingssteg.Verge
     | Behandlingssteg.Vilkårsvurdering;
 
@@ -34,10 +34,10 @@ export const SYNLIGE_STEG: Record<SynligeStegType, SynligSteg> = {
         navn: 'Fakta',
         steg: Behandlingssteg.Fakta,
     },
-    [Behandlingssteg.Varsel]: {
+    [Behandlingssteg.Forhåndsvarsel]: {
         href: 'forhaandsvarsel',
         navn: 'Forhåndsvarsel',
-        steg: Behandlingssteg.Varsel,
+        steg: Behandlingssteg.Forhåndsvarsel,
     },
     [Behandlingssteg.Foreldelse]: {
         href: 'foreldelse',
