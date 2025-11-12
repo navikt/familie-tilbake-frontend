@@ -17,6 +17,7 @@ export enum Menysider {
     Historikk = 'HISTORIKK',
     SendBrev = 'SEND_BREV',
     Dokumenter = 'DOKUMENTER',
+    Brevmottakere = 'BREVMOTTAKERE',
 }
 
 type Props = {
