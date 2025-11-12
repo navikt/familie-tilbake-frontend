@@ -100,9 +100,9 @@ export const visSide = (
     if (steg === Behandlingssteg.Verge) {
         return !behandling.støtterManuelleBrevmottakere;
     }
-    if (steg === Behandlingssteg.Varsel) {
+    if (steg === Behandlingssteg.Forhåndsvarsel) {
         const harVarselSteg = behandling.behandlingsstegsinfo.some(
-            ({ behandlingssteg }) => behandlingssteg === Behandlingssteg.Varsel
+            ({ behandlingssteg }) => behandlingssteg === Behandlingssteg.Forhåndsvarsel
         );
         return harVarselSteg && aktiveToggles[ToggleName.Forhåndsvarselsteg];
     }

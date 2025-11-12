@@ -95,11 +95,9 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                     <VStack maxWidth={ATextWidthMax}>
                         {varselbrevtekster.avsnitter.map((avsnitt: Section, index: number) => (
                             <div key={`avsnitt-${avsnitt.title || index}`}>
-                                {avsnitt.title && (
-                                    <Heading size="xsmall" level="3" spacing>
-                                        {avsnitt.title}
-                                    </Heading>
-                                )}
+                                <Heading size="xsmall" level="3" spacing>
+                                    {avsnitt.title}
+                                </Heading>
                                 <BodyLong size="small" spacing>
                                     {avsnitt.body}
                                 </BodyLong>
