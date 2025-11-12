@@ -1,5 +1,5 @@
 import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
-import type { BehandlingDto } from '../../../generated';
+import type { BehandlingDto, Section, Varselbrevtekst } from '../../../generated';
 import type { UseFormReturn } from 'react-hook-form';
 
 import { FilePdfIcon } from '@navikt/aksel-icons';
@@ -26,9 +26,14 @@ type Props = {
         skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
         fritekst: string;
     }>;
+    varselbrevtekster: Varselbrevtekst;
 };
 
-export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) => {
+export const ForhåndsvarselSkjema: React.FC<Props> = ({
+    behandling,
+    methods,
+    varselbrevtekster,
+}) => {
     const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const queryClient = useQueryClient();
     const maksAntallTegn = 4000;
@@ -77,7 +82,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
                 <ExpansionCard.Content>
                     <HStack align="center" justify="space-between">
                         <Heading size="medium" level="2" spacing>
-                            Nav vurderer om du må betale tilbake overgangsstønad
+                            {varselbrevtekster.overskrift}
                         </Heading>
                         <Button
                             icon={<FilePdfIcon aria-hidden />}
@@ -88,19 +93,16 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
                         </Button>
                     </HStack>
                     <VStack maxWidth={ATextWidthMax}>
-                        <BodyLong size="small" spacing>
-                            Du har fått 42 000 kroner for mye utbetalt i overgangsstønad fra og med
-                            1. januar 2024 til og med 28. februar 2025. Dette er før skatt. Før vi
-                            avgjør om du skal betale tilbake, kan du uttale deg innen 19. september
-                            2025. Hvis du må betale tilbake, reduserer vi beløpet med trukket skatt
-                        </BodyLong>
-                        <Heading size="xsmall" level="3" spacing>
-                            Dette har skjedd
-                        </Heading>
-                        <BodyLong size="small" spacing>
-                            Overgangsstønaden din ble endret 5. september 2025, og endringen har
-                            ført til at du har fått utbetalt for mye.
-                        </BodyLong>
+                        {varselbrevtekster.avsnitter.map((avsnitt: Section, index: number) => (
+                            <div key={`avsnitt-${avsnitt.title || index}`}>
+                                <Heading size="xsmall" level="3" spacing>
+                                    {avsnitt.title}
+                                </Heading>
+                                <BodyLong size="small" spacing>
+                                    {avsnitt.body}
+                                </BodyLong>
+                            </div>
+                        ))}
                         <form>
                             <Controller
                                 name="fritekst"
@@ -122,7 +124,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
                                 )}
                             />
                         </form>
-                        ...
                     </VStack>
                 </ExpansionCard.Content>
             </ExpansionCard>

@@ -101,10 +101,10 @@ export const visSide = (
         return !behandling.støtterManuelleBrevmottakere;
     }
     if (steg === Behandlingssteg.Forhåndsvarsel) {
-        const harForhåndsvarselSteg = behandling.behandlingsstegsinfo.some(
+        const harVarselSteg = behandling.behandlingsstegsinfo.some(
             ({ behandlingssteg }) => behandlingssteg === Behandlingssteg.Forhåndsvarsel
         );
-        return harForhåndsvarselSteg && aktiveToggles[ToggleName.Forhåndsvarselsteg];
+        return harVarselSteg && aktiveToggles[ToggleName.Forhåndsvarselsteg];
     }
 
     return true;

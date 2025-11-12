@@ -15,7 +15,13 @@ const App: React.FC = () => {
     const [autentisertSaksbehandler, settAutentisertSaksbehandler] = React.useState<
         Saksbehandler | undefined
     >(undefined);
-    const queryClient = new QueryClient();
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                staleTime: 5 * 60 * 1000, // 5 minutter
+            },
+        },
+    });
 
     React.useEffect(() => {
         hentInnloggetBruker().then((innhentetInnloggetSaksbehandler: Saksbehandler) => {

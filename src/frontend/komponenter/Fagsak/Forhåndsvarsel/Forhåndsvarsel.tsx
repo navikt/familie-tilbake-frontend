@@ -2,7 +2,7 @@ import type { BehandlingDto, FagsakDto } from '../../../generated';
 
 import { Alert, Heading, Radio, RadioGroup, VStack } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router';
 import { ForhåndsvarselSkjema } from './ForhåndsvarselSkjema';
 import { Unntak } from './Unntak';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { BrevmalkodeEnum } from '../../../generated';
+import { BrevmalkodeEnum, hentForhåndsvarselTekst } from '../../../generated';
 import { bestillBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { SYNLIGE_STEG } from '../../../utils/sider';
@@ -69,6 +69,18 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         );
     };
 
+    const { data: varselbrevtekster } = useQuery({
+        queryKey: ['hentForhåndsvarselTekst', behandling.behandlingId],
+        queryFn: () =>
+            hentForhåndsvarselTekst({
+                path: {
+                    behandlingId: behandling.behandlingId,
+                },
+            }),
+        enabled: !!behandling.behandlingId,
+        select: data => data.data?.data,
+    });
+
     const sendForhåndsvarselMutation = useMutation({
         ...bestillBrevMutation(),
         onSuccess: () => {
@@ -76,9 +88,6 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 queryKey: ['hentBehandling', behandling.behandlingId],
             });
             setVisForhåndsvarselSendt(true);
-        },
-        onError: () => {
-            //TODO: må håndteres bedre når vi har design
         },
     });
 
@@ -116,8 +125,12 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                     </RadioGroup>
                 </VStack>
 
-                {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && (
-                    <ForhåndsvarselSkjema behandling={behandling} methods={methods} />
+                {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && varselbrevtekster && (
+                    <ForhåndsvarselSkjema
+                        behandling={behandling}
+                        methods={methods}
+                        varselbrevtekster={varselbrevtekster}
+                    />
                 )}
                 {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && (
                     <Unntak methods={methods} />
