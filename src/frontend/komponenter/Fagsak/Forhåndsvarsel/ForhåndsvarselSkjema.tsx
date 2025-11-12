@@ -1,5 +1,5 @@
 import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
-import type { BehandlingDto, Ressurs } from '../../../generated';
+import type { BehandlingDto, Section } from '../../../generated';
 import type { UseFormReturn } from 'react-hook-form';
 
 import { FilePdfIcon } from '@navikt/aksel-icons';
@@ -13,11 +13,11 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import { BrevmalkodeEnum } from '../../../generated';
+import { BrevmalkodeEnum, hentForhåndsvarselTekst } from '../../../generated';
 import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 
 type Props = {
@@ -33,64 +33,23 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
     const queryClient = useQueryClient();
     const maksAntallTegn = 4000;
     const [expansionCardÅpen, setExpansionCardÅpen] = useState(!behandling.varselSendt);
-    const [varselbrevtekster, setVarselbrevtekster] = useState<Ressurs | null>(null);
-
-    const varselBrevApiPrefix = '/familie-tilbake/api/dokument/varselbrevtekst';
-    const { request } = useHttp();
-
-    const hentVarselbrevTekst = (): Promise<Ressurs> => {
-        const url = `${varselBrevApiPrefix}/${behandling.behandlingId}`;
-        return request<void, any>({
-            method: 'GET',
-            url: url,
-        });
-    };
-
-    useEffect(() => {
-        const fetchData = async (): Promise<void> => {
-            try {
-                const respons = await hentVarselbrevTekst();
-
-                if (respons.status === 'SUKSESS') {
-                    setVarselbrevtekster(respons);
-                } else {
-                    console.error('', {
-                        status: respons.status,
-                        feilmelding: (respons as any).frontendFeilmelding,
-                        httpStatus: (respons as any).httpStatusCode,
-                    });
-
-                    const mockData = byggDataRessurs({
-                        overskrift: 'Nav vurderer om du må betale tilbake overgangsstønad',
-                        avsnitter: [
-                            {
-                                title: '',
-                                body: 'Du har fått 42 000 kroner for mye utbetalt i overgangsstønad fra og med 1. januar 2024 til og med 28. februar 2025. Dette er før skatt. Før vi avgjør om du skal betale tilbake, kan du uttale deg innen 19. september 2025. Hvis du må betale tilbake, reduserer vi beløpet med trukket skatt',
-                            },
-                            {
-                                title: 'Dette har skjedd',
-                                body: 'Overgangsstønaden din ble endret 5. september 2025, og endringen har ført til at du har fått utbetalt for mye.',
-                            },
-                            {
-                                title: 'Hva kan du gjøre',
-                                body: 'Du kan uttale deg om saken ved å sende inn dokumentasjon eller skriftlig forklaring. Vi vil vurdere ditt svar før vi tar en endelig beslutning.',
-                            },
-                        ],
-                    });
-                    setVarselbrevtekster(mockData);
-                }
-            } catch (error) {
-                console.error('💥 Network/parsing feil ved henting av varselbrevtekst:', error);
-            }
-        };
-
-        fetchData();
-    }, [behandling.behandlingId]);
 
     const {
         control,
         formState: { errors },
     } = methods;
+
+    const { data: varselbrevtekster } = useQuery({
+        queryKey: ['hentForhåndsvarselTekst', behandling.behandlingId],
+        queryFn: () =>
+            hentForhåndsvarselTekst({
+                path: {
+                    behandlingId: behandling.behandlingId,
+                },
+            }),
+        enabled: !!behandling.behandlingId,
+        select: data => data.data?.data,
+    });
 
     const seForhåndsvisningMutation = useMutation({
         ...forhåndsvisBrevMutation(),
@@ -130,9 +89,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
                 <ExpansionCard.Content>
                     <HStack align="center" justify="space-between">
                         <Heading size="medium" level="2" spacing>
-                            {varselbrevtekster?.status === 'SUKSESS'
-                                ? varselbrevtekster.data.overskrift
-                                : 'Nav vurderer om du må betale tilbake overgangsstønad'}
+                            {varselbrevtekster?.overskrift}
                         </Heading>
                         <Button
                             icon={<FilePdfIcon aria-hidden />}
@@ -143,19 +100,18 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({ behandling, methods }) 
                         </Button>
                     </HStack>
                     <VStack maxWidth={ATextWidthMax}>
-                        {varselbrevtekster?.status === 'SUKSESS' &&
-                            varselbrevtekster.data.avsnitter?.map((avsnitt: any, index: number) => (
-                                <div key={`avsnitt-${avsnitt.title || index}`}>
-                                    {avsnitt.title && (
-                                        <Heading size="xsmall" level="3" spacing>
-                                            {avsnitt.title}
-                                        </Heading>
-                                    )}
-                                    <BodyLong size="small" spacing>
-                                        {avsnitt.body}
-                                    </BodyLong>
-                                </div>
-                            ))}
+                        {varselbrevtekster?.avsnitter?.map((avsnitt: Section, index: number) => (
+                            <div key={`avsnitt-${avsnitt.title || index}`}>
+                                {avsnitt.title && (
+                                    <Heading size="xsmall" level="3" spacing>
+                                        {avsnitt.title}
+                                    </Heading>
+                                )}
+                                <BodyLong size="small" spacing>
+                                    {avsnitt.body}
+                                </BodyLong>
+                            </div>
+                        ))}
                         <form>
                             <Controller
                                 name="fritekst"

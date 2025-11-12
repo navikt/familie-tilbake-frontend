@@ -34,6 +34,7 @@ import {
     hentDokument,
     hentFagsak,
     hentFaktaomfeilutbetaling,
+    hentForhåndsvarselTekst,
     hentForvaltningsinfo,
     hentHistorikkinnslag,
     hentInaktivFaktaomfeilutbetaling,
@@ -112,6 +113,7 @@ import type {
     HentDokumentData,
     HentFagsakData,
     HentFaktaomfeilutbetalingData,
+    HentForhåndsvarselTekstData,
     HentForvaltningsinfoData,
     HentHistorikkinnslagData,
     HentInaktivFaktaomfeilutbetalingData,
@@ -1488,6 +1490,27 @@ export const hentVedtaksbrevtekstOptions = (options: Options<HentVedtaksbrevteks
             return data;
         },
         queryKey: hentVedtaksbrevtekstQueryKey(options),
+    });
+};
+
+export const hentForhåndsvarselTekstQueryKey = (options: Options<HentForhåndsvarselTekstData>) =>
+    createQueryKey('hentForhåndsvarselTekst', options);
+
+/**
+ * Henter varselbrevtekst
+ */
+export const hentForhåndsvarselTekstOptions = (options: Options<HentForhåndsvarselTekstData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await hentForhåndsvarselTekst({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: hentForhåndsvarselTekstQueryKey(options),
     });
 };
 

@@ -61,6 +61,8 @@ import type {
     HentFagsakResponses,
     HentFaktaomfeilutbetalingData,
     HentFaktaomfeilutbetalingResponses,
+    HentForhåndsvarselTekstData,
+    HentForhåndsvarselTekstResponses,
     HentForvaltningsinfoData,
     HentForvaltningsinfoResponses,
     HentHistorikkinnslagData,
@@ -1245,6 +1247,25 @@ export const hentVedtaksbrevtekst = <ThrowOnError extends boolean = false>(
             },
         ],
         url: '/api/dokument/vedtaksbrevtekst/{behandlingId}',
+        ...options,
+    });
+};
+
+/**
+ * Henter varselbrevtekst
+ */
+export const hentForhåndsvarselTekst = <ThrowOnError extends boolean = false>(
+    options: Options<HentForhåndsvarselTekstData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<HentForhåndsvarselTekstResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/dokument/varselbrevtekst/{behandlingId}',
         ...options,
     });
 };

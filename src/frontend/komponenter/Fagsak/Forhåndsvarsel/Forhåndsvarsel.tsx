@@ -77,9 +77,6 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
             });
             setVisForhåndsvarselSendt(true);
         },
-        onError: () => {
-            //TODO: må håndteres bedre når vi har design
-        },
     });
 
     const sendForhåndsvarsel = handleSubmit(data => {

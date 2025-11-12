@@ -304,6 +304,24 @@ export type PersonIdent = {
     ident: string;
 };
 
+export type Varselbrevtekst = {
+    overskrift: string;
+    avsnitter: Array<Section>;
+};
+
+export type Section = {
+    title: string;
+    body: string;
+};
+
+export type RessursVarselbrevtekst = {
+    data?: Varselbrevtekst;
+    status: StatusEnum;
+    melding: string;
+    frontendFeilmelding?: string;
+    stacktrace?: string;
+};
+
 export type Underavsnitt = {
     overskrift?: string;
     brødtekst?: string;
@@ -1941,6 +1959,25 @@ export type HentVedtaksbrevtekstResponses = {
 
 export type HentVedtaksbrevtekstResponse =
     HentVedtaksbrevtekstResponses[keyof HentVedtaksbrevtekstResponses];
+
+export type HentForhåndsvarselTekstData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/dokument/varselbrevtekst/{behandlingId}';
+};
+
+export type HentForhåndsvarselTekstResponses = {
+    /**
+     * OK
+     */
+    200: RessursVarselbrevtekst;
+};
+
+export type HentForhåndsvarselTekstResponse =
+    HentForhåndsvarselTekstResponses[keyof HentForhåndsvarselTekstResponses];
 
 export type HentUrlTilArbeidOgInntektData = {
     body?: never;
