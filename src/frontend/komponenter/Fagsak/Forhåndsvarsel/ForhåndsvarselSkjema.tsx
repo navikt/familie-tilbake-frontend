@@ -82,7 +82,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                 <ExpansionCard.Content>
                     <HStack align="center" justify="space-between">
                         <Heading size="medium" level="2" spacing>
-                            {varselbrevtekster?.overskrift}
+                            {varselbrevtekster.overskrift}
                         </Heading>
                         <Button
                             icon={<FilePdfIcon aria-hidden />}
@@ -93,7 +93,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                         </Button>
                     </HStack>
                     <VStack maxWidth={ATextWidthMax}>
-                        {varselbrevtekster?.avsnitter?.map((avsnitt: Section, index: number) => (
+                        {varselbrevtekster.avsnitter.map((avsnitt: Section, index: number) => (
                             <div key={`avsnitt-${avsnitt.title || index}`}>
                                 {avsnitt.title && (
                                     <Heading size="xsmall" level="3" spacing>
