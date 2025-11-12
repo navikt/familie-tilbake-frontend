@@ -34,6 +34,19 @@ jest.mock('../../../generated', () => ({
     BrevmalkodeEnum: {
         VARSEL: 'VARSEL',
     },
+    hentForhåndsvarselTekst: jest.fn().mockResolvedValue({
+        data: {
+            data: {
+                overskrift: 'Nav vurderer om du må betale tilbake overgangsstønad',
+                avsnitter: [
+                    {
+                        title: 'Test avsnitt',
+                        body: 'Test innhold',
+                    },
+                ],
+            },
+        },
+    }),
 }));
 
 const setupMock = (): void => {
@@ -63,7 +76,7 @@ describe('Forhåndsvarsel', () => {
         expect(screen.getByLabelText('Nei')).toBeInTheDocument();
     });
 
-    test('Viser flyt for Opprett forhåndsvarsel når man velger Ja', () => {
+    test('Viser flyt for Opprett forhåndsvarsel når man velger Ja', async () => {
         renderForhåndsvarsel();
 
         expect(screen.queryByText(/Opprett forhåndsvarsel/)).not.toBeInTheDocument();
@@ -72,7 +85,7 @@ describe('Forhåndsvarsel', () => {
 
         expect(screen.getByText(/Opprett forhåndsvarsel/)).toBeInTheDocument();
         expect(
-            screen.getByRole('heading', {
+            await screen.findByRole('heading', {
                 name: /Nav vurderer om du må betale tilbake overgangsstønad/i,
             })
         ).toBeInTheDocument();
