@@ -1,7 +1,12 @@
 import type { Behandling } from '../../../typer/behandling';
 import type { Fagsak } from '../../../typer/fagsak';
 
-import { ClockIcon, FolderIcon, PaperplaneIcon, PersonGavelIcon } from '@navikt/aksel-icons';
+import {
+    ClockDashedIcon,
+    FolderIcon,
+    PaperplaneIcon,
+    PersonEnvelopeIcon,
+} from '@navikt/aksel-icons';
 import { ToggleGroup } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
@@ -35,18 +40,18 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({
                 onChange={setValgt}
                 variant="neutral"
                 size="small"
-                className="sticky top-0 z-10 bg-ax-bg-default"
+                className="sticky top-0 z-10 bg-ax-bg-default "
             >
                 {værtPåFatteVedtakSteget && (
                     <ToggleGroup.Item
                         value="to-trinn"
                         className="px-10"
-                        icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
+                        icon={<PersonEnvelopeIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
                     />
                 )}
                 <ToggleGroup.Item
                     value="logg"
-                    icon={<ClockIcon fontSize="1.25rem" aria-label="Historikk" />}
+                    icon={<ClockDashedIcon fontSize="1.25rem" aria-label="Historikk" />}
                 />
                 <ToggleGroup.Item
                     value="dokumenter"
