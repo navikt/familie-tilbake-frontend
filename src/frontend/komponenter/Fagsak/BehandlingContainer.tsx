@@ -158,8 +158,8 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     ) : harKravgrunnlag ? (
         <>
             <section
-                /* Trekker fra høyde fra header (48), padding (16+16 + 16) og action baren (74) */
-                className="flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-170px)]"
+                /* Trekker fra høyde fra header (48), padding (16+16 + 16) og action baren (74) -90px for alert boksen */
+                className="flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-170px-70px)]"
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
                 <div className="flex flex-row gap-2 ax-lg:block justify-between">
