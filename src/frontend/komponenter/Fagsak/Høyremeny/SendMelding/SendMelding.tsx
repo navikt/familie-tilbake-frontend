@@ -1,7 +1,7 @@
 import type { Behandling } from '../../../../typer/behandling';
 import type { Fagsak } from '../../../../typer/fagsak';
 
-import { Button, Fieldset, Heading, Select, Textarea } from '@navikt/ds-react';
+import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
@@ -37,7 +37,7 @@ const SendMelding: React.FC<Props> = ({ fagsak, behandling }) => {
     const kanSende = skjema.felter.maltype.verdi !== '' && skjema.felter.fritekst.verdi !== '';
 
     return (
-        <Fieldset error={feilmelding} legend="Send brev" hideLegend>
+        <>
             <Heading size="small" level="2">
                 Send brev
             </Heading>
@@ -101,9 +101,10 @@ const SendMelding: React.FC<Props> = ({ fagsak, behandling }) => {
                         </Button>
                         {kanSende && <ForhåndsvisBrev />}
                     </Navigering>
+                    {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
                 </div>
             </div>
-        </Fieldset>
+        </>
     );
 };
 
