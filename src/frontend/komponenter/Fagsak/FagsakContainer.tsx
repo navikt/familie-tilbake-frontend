@@ -1,6 +1,5 @@
 import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
 
-import { Alert, BodyShort } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -86,14 +85,6 @@ const FagsakContainer: React.FC = () => {
     if (fagsak?.status === RessursStatus.Suksess && behandling?.status === RessursStatus.Suksess) {
         return (
             <>
-                <div className="bg-ax-neutral-100 p-1">
-                    <Alert variant="warning">
-                        <BodyShort>
-                            Det er en feil med sending av forhåndsvarsel. Vi ser på saken: 09:48
-                            torsdag 13.november.
-                        </BodyShort>
-                    </Alert>
-                </div>
                 {ventegrunn && (
                     <FTAlertStripe variant="info">{venteBeskjed(ventegrunn)}</FTAlertStripe>
                 )}

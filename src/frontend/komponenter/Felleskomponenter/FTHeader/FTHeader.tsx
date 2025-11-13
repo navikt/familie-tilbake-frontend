@@ -1,7 +1,7 @@
 import type { Saksbehandler } from '../../../typer/saksbehandler';
 
 import { ExternalLinkIcon, LeaveIcon, MenuGridIcon, MoonIcon, SunIcon } from '@navikt/aksel-icons';
-import { Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
+import { Alert, BodyShort, Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -77,6 +77,16 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
             <InternalHeader.Title href="/" className="text-nowrap">
                 Nav - Tilbakekreving
             </InternalHeader.Title>
+
+            <InternalHeader className="flex items-center ml-2">
+                <Alert variant="warning" size="small" inline>
+                    <BodyShort>
+                        Det er en feil med sending av forhåndsvarsel. Vi ser på saken: 09:48 torsdag
+                        13.november.
+                    </BodyShort>
+                </Alert>
+            </InternalHeader>
+
             <Spacer />
             {harGyldigLenke && (
                 <Dropdown>
