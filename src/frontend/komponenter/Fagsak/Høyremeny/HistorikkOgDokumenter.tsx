@@ -3,9 +3,9 @@ import type { Fagsak } from '../../../typer/fagsak';
 
 import {
     ClockDashedIcon,
-    FolderIcon,
-    PaperplaneIcon,
-    PersonEnvelopeIcon,
+    EnvelopeClosedIcon,
+    FolderFileIcon,
+    PersonGavelIcon,
 } from '@navikt/aksel-icons';
 import { ToggleGroup } from '@navikt/ds-react';
 import * as React from 'react';
@@ -32,7 +32,6 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({
         dokumenter: Menysider.Dokumenter,
         'send-brev': Menysider.SendBrev,
     };
-
     return (
         <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4">
             <ToggleGroup
@@ -40,27 +39,27 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({
                 onChange={setValgt}
                 variant="neutral"
                 size="small"
-                className="sticky top-0 z-10 bg-ax-bg-default "
+                fill
+                className="sticky top-0"
             >
-                {værtPåFatteVedtakSteget && (
-                    <ToggleGroup.Item
-                        value="to-trinn"
-                        className="px-10"
-                        icon={<PersonEnvelopeIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
-                    />
-                )}
                 <ToggleGroup.Item
                     value="logg"
                     icon={<ClockDashedIcon fontSize="1.25rem" aria-label="Historikk" />}
                 />
                 <ToggleGroup.Item
                     value="dokumenter"
-                    icon={<FolderIcon fontSize="1.25rem" aria-label="Dokumenter" />}
+                    icon={<FolderFileIcon fontSize="1.25rem" aria-label="Dokumenter" />}
                 />
                 {!behandling.erNyModell && (
                     <ToggleGroup.Item
                         value="send-brev"
-                        icon={<PaperplaneIcon fontSize="1.25rem" aria-label="Send brev" />}
+                        icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-label="Send brev" />}
+                    />
+                )}
+                {værtPåFatteVedtakSteget && (
+                    <ToggleGroup.Item
+                        value="to-trinn"
+                        icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
                     />
                 )}
             </ToggleGroup>
