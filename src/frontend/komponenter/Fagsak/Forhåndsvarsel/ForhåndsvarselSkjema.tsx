@@ -40,7 +40,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
     const queryClient = useQueryClient();
     const maksAntallTegn = 4000;
     const [expansionCardÅpen, setExpansionCardÅpen] = useState(!behandling.varselSendt);
-    const [visFeilmeldingForForhåndsvisning, setVisFeilmeldingForForhåndsvisning] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const [parentBounds, setParentBounds] = useState({ width: 'auto' });
 
@@ -55,9 +54,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
             queryClient.invalidateQueries({
                 queryKey: ['hentBehandling'],
             });
-        },
-        onError: () => {
-            setVisFeilmeldingForForhåndsvisning(true);
         },
     });
 
@@ -109,8 +105,8 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                             </Button>
                         </HStack>
                         <VStack maxWidth={ATextWidthMax}>
-                            {varselbrevtekster.avsnitter.map((avsnitt: Section, index: number) => (
-                                <div key={`avsnitt-${avsnitt.title || index}`}>
+                            {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
+                                <div key={avsnitt.title}>
                                     <Heading size="xsmall" level="3" spacing>
                                         {avsnitt.title}
                                     </Heading>
@@ -153,12 +149,12 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                     </Button>
                 )}
             </HStack>
-            {visFeilmeldingForForhåndsvisning && (
+            {seForhåndsvisningMutation.error && (
                 <FixedAlert
                     variant="error"
                     closeButton
                     width={parentBounds.width}
-                    onClose={() => setVisFeilmeldingForForhåndsvisning(false)}
+                    onClose={seForhåndsvisningMutation.reset}
                 >
                     <Heading spacing size="small" level="3">
                         Forhåndsvisning feilet
