@@ -114,7 +114,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
             >
                 <form onSubmit={handleSubmit(handleSubmitForm)}>
                     {/* Må ha en min høyde for at select dropdown ikke skal overlappe */}
-                    <Modal.Body style={{ minHeight: '700px' }}>
+                    <Modal.Body style={{ minHeight: '500px' }}>
                         <VStack gap="4">
                             <Fieldset legend={tekster.beskrivelse} hideLegend>
                                 <VStack gap="8">
