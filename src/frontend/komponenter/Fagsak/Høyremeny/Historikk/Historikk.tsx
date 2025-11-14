@@ -1,32 +1,15 @@
+import { Heading } from '@navikt/ds-react';
 import { parseISO } from 'date-fns';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { useHistorikk } from './HistorikkContext';
 import HistorikkInnslag from './HistorikkInnslag';
 import { RessursStatus } from '../../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
-const StyledContainer = styled.div`
-    margin-top: 10px;
-`;
-
 const Historikk: React.FC = () => {
     const { historikkInnslag } = useHistorikk();
-
-    if (historikkInnslag?.status === RessursStatus.Suksess) {
-        const innslag = historikkInnslag.data;
-        innslag.sort(
-            (a, b) => parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime()
-        );
-        return (
-            <StyledContainer>
-                {innslag.map((hi, index) => (
-                    <HistorikkInnslag key={`${hi.tittel}_${index}`} innslag={hi} />
-                ))}
-            </StyledContainer>
-        );
-    } else {
+    if (historikkInnslag?.status !== RessursStatus.Suksess) {
         return (
             <DataLastIkkeSuksess
                 ressurser={[historikkInnslag]}
@@ -35,6 +18,21 @@ const Historikk: React.FC = () => {
             />
         );
     }
+
+    const innslag = historikkInnslag.data;
+    innslag.sort((a, b) => parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime());
+    return (
+        <>
+            <Heading size="small" level="2">
+                Historikk
+            </Heading>
+            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
+                {innslag.map((hi, index) => (
+                    <HistorikkInnslag key={`${hi.tittel}_${index}`} innslag={hi} />
+                ))}
+            </div>
+        </>
+    );
 };
 
 export default Historikk;

@@ -3,7 +3,6 @@ import type { Bruker } from '../../../../typer/bruker';
 import type { Institusjon } from '../../../../typer/fagsak';
 
 import React from 'react';
-import { styled } from 'styled-components';
 
 import { MottakerType } from '../../../../typer/Brevmottaker';
 import { formaterIdent, lagPersonLabel } from '../../../../utils/formatter';
@@ -12,23 +11,9 @@ type Props = {
     bruker: Bruker;
     institusjon: Institusjon | null;
     brevmottakere: Brevmottaker[];
-    harMargin?: boolean;
 };
 
-type UlProps = {
-    harMargin: boolean;
-};
-
-const StyledUl = styled.ul<UlProps>`
-    ${(props: UlProps): string => (props.harMargin ? `` : `margin-top:0;margin-bottom:0;`)};
-`;
-
-const BrevmottakerListe: React.FC<Props> = ({
-    bruker,
-    institusjon,
-    brevmottakere,
-    harMargin = true,
-}) => {
+const BrevmottakerListe: React.FC<Props> = ({ bruker, institusjon, brevmottakere }) => {
     const skalViseInstitusjon = !!institusjon;
     const harUtenlandskAdresse = brevmottakere.some(
         mottaker => mottaker.type === MottakerType.BrukerMedUtenlandskAdresse
@@ -43,7 +28,7 @@ const BrevmottakerListe: React.FC<Props> = ({
         bruker && !institusjon && !harManuellDødsboadresse && !harUtenlandskAdresse;
 
     return (
-        <StyledUl harMargin={harMargin}>
+        <ul>
             {skalViseSøker && (
                 <li key="søker">{lagPersonLabel(bruker.personIdent || '', bruker)}</li>
             )}
@@ -78,7 +63,7 @@ const BrevmottakerListe: React.FC<Props> = ({
                     .map((mottaker, index) => (
                         <li key={`verge-${index}`}>{mottaker.navn} | Verge</li>
                     ))}
-        </StyledUl>
+        </ul>
     );
 };
 

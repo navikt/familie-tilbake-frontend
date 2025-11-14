@@ -3,7 +3,7 @@ import type { Fagsak } from '../../../typer/fagsak';
 
 import * as React from 'react';
 
-import Dokumentlisting from './Dokumentlisting/Dokumentlisting';
+import { Dokumentlisting } from './Dokumentlisting/Dokumentlisting';
 import { DokumentlistingProvider } from './Dokumentlisting/DokumentlistingContext';
 import Historikk from './Historikk/Historikk';
 import { HistorikkProvider } from './Historikk/HistorikkContext';
@@ -25,7 +25,7 @@ type Props = {
     behandling: Behandling;
 };
 
-const Menykontainer: React.FC<Props> = ({ valgtMenyside, fagsak, behandling }) => {
+export const MenySideInnhold: React.FC<Props> = ({ valgtMenyside, fagsak, behandling }) => {
     switch (valgtMenyside) {
         case Menysider.Totrinn:
             return (
@@ -58,5 +58,3 @@ const Menykontainer: React.FC<Props> = ({ valgtMenyside, fagsak, behandling }) =
             );
     }
 };
-
-export default Menykontainer;
