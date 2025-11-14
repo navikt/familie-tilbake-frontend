@@ -5,6 +5,7 @@ import {
     ClockDashedIcon,
     EnvelopeClosedIcon,
     FolderFileIcon,
+    PersonEnvelopeIcon,
     PersonGavelIcon,
 } from '@navikt/aksel-icons';
 import { ToggleGroup } from '@navikt/ds-react';
@@ -55,7 +56,7 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({
                 {behandling.erNyModell ? (
                     <ToggleGroup.Item
                         value={Menysider.Brevmottakere}
-                        icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-label="Brevmottakere" />}
+                        icon={<PersonEnvelopeIcon fontSize="1.25rem" aria-label="Brevmottakere" />}
                     />
                 ) : (
                     <ToggleGroup.Item
