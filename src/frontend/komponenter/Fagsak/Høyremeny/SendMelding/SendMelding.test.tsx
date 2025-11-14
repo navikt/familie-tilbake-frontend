@@ -81,7 +81,7 @@ describe('SendMelding', () => {
             renderSendMelding(lagFagsak(), lagBehandling({ varselSendt: false }));
 
         await waitFor(() => {
-            expect(getByText('Mottaker')).toBeInTheDocument();
+            expect(getByText('Brevmottaker')).toBeInTheDocument();
         });
 
         expect(getByLabelText('Mal')).toHaveLength(3);
@@ -138,7 +138,7 @@ describe('SendMelding', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Mottaker')).toBeInTheDocument();
+            expect(getByText('Brevmottaker')).toBeInTheDocument();
         });
 
         expect(getByLabelText('Mal')).toHaveLength(3);
@@ -177,7 +177,7 @@ describe('SendMelding', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Mottaker')).toBeInTheDocument();
+            expect(getByText('Brevmottaker')).toBeInTheDocument();
         });
         expect(
             getByRole('button', {
@@ -214,7 +214,7 @@ describe('SendMelding', () => {
             lagBehandling({ varselSendt: false })
         );
 
-        expect(getByText('Mottaker')).toBeInTheDocument();
+        expect(getByText('Brevmottaker')).toBeInTheDocument();
 
         expect(
             getByRole('button', {

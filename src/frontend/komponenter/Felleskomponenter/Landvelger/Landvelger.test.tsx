@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import Landvelger from './Landvelger';
@@ -26,6 +27,7 @@ describe('Landvelger', () => {
     });
 
     test('Ekskluderer spesifiserte landkoder', async () => {
+        const user = userEvent.setup();
         render(
             <Landvelger
                 id="landvelger-test"
@@ -36,7 +38,7 @@ describe('Landvelger', () => {
         );
 
         const combobox = screen.getByRole('combobox');
-        fireEvent.click(combobox);
+        await user.click(combobox);
 
         const danmarkValg = await screen.findByText('Danmark');
         expect(danmarkValg).toBeInTheDocument();

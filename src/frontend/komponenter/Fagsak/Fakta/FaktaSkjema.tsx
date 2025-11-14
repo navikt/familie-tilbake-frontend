@@ -98,7 +98,7 @@ const FaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning
                                 settBehandlePerioderSamlet(!behandlePerioderSamlet);
                             }}
                         >
-                            Behandle alle perioder samlet
+                            Velg rettslig grunnlag for periodene samlet
                         </Checkbox>
                     )}
                     {skjemaData.perioder.some(p => p.hendelsestype === HendelseType.Inntekt) && (
