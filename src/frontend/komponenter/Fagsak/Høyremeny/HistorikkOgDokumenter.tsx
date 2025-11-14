@@ -24,50 +24,42 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({
     fagsak,
     behandling,
 }) => {
-    const [valgt, setValgt] = useState(værtPåFatteVedtakSteget ? 'to-trinn' : 'logg');
+    const [valgtSide, setValgtSide] = useState(
+        værtPåFatteVedtakSteget ? Menysider.Totrinn : Menysider.Historikk
+    );
 
-    const menyMap: Record<string, Menysider> = {
-        'to-trinn': Menysider.Totrinn,
-        logg: Menysider.Historikk,
-        dokumenter: Menysider.Dokumenter,
-        'send-brev': Menysider.SendBrev,
-    };
     return (
         <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4">
             <ToggleGroup
-                defaultValue={værtPåFatteVedtakSteget ? 'to-trinn' : 'logg'}
-                onChange={setValgt}
+                value={valgtSide}
+                onChange={value => setValgtSide(value as Menysider)}
                 variant="neutral"
                 size="small"
                 fill
                 className="sticky top-0"
             >
                 <ToggleGroup.Item
-                    value="logg"
+                    value={Menysider.Historikk}
                     icon={<ClockDashedIcon fontSize="1.25rem" aria-label="Historikk" />}
                 />
                 <ToggleGroup.Item
-                    value="dokumenter"
+                    value={Menysider.Dokumenter}
                     icon={<FolderFileIcon fontSize="1.25rem" aria-label="Dokumenter" />}
                 />
                 {!behandling.erNyModell && (
                     <ToggleGroup.Item
-                        value="send-brev"
+                        value={Menysider.SendBrev}
                         icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-label="Send brev" />}
                     />
                 )}
                 {værtPåFatteVedtakSteget && (
                     <ToggleGroup.Item
-                        value="to-trinn"
+                        value={Menysider.Totrinn}
                         icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
                     />
                 )}
             </ToggleGroup>
-            <MenySideInnhold
-                valgtMenyside={menyMap[valgt]}
-                behandling={behandling}
-                fagsak={fagsak}
-            />
+            <MenySideInnhold valgtMenyside={valgtSide} behandling={behandling} fagsak={fagsak} />
         </div>
     );
 };
