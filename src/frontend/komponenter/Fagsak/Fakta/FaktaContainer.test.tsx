@@ -224,7 +224,7 @@ describe('FaktaContainer', () => {
 
         await user.click(
             getByRole('checkbox', {
-                name: 'Behandle alle perioder samlet',
+                name: 'Velg rettslig grunnlag for periodene samlet',
             })
         );
 
