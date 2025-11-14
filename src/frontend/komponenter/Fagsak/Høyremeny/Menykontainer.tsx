@@ -3,6 +3,7 @@ import type { Fagsak } from '../../../typer/fagsak';
 
 import * as React from 'react';
 
+import { Brevmottakere } from './Brevmottakere/Brevmottakere';
 import { Dokumentlisting } from './Dokumentlisting/Dokumentlisting';
 import { DokumentlistingProvider } from './Dokumentlisting/DokumentlistingContext';
 import Historikk from './Historikk/Historikk';
@@ -46,6 +47,8 @@ export const MenySideInnhold: React.FC<Props> = ({ valgtMenyside, fagsak, behand
                     <SendMelding fagsak={fagsak} behandling={behandling} />
                 </SendMeldingProvider>
             );
+        case Menysider.Brevmottakere:
+            return <Brevmottakere />;
         case Menysider.Historikk:
         default:
             return (
