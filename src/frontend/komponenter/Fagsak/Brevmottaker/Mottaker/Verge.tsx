@@ -1,3 +1,5 @@
+import type { BrevmottakerFormData } from '../schema/brevmottakerSchema';
+
 import { Radio, RadioGroup, TextField, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -6,7 +8,7 @@ import { AdresseKilde, MottakerType } from '../../../../typer/Brevmottaker';
 import { ManuellRegistrering } from '../Adressekilde/ManuellRegistrering';
 
 export const Verge: React.FC = () => {
-    const { register, watch, control } = useFormContext();
+    const { register, watch, control, formState } = useFormContext<BrevmottakerFormData>();
 
     const adresseKilde = watch('verge.adresseKilde');
 
@@ -33,7 +35,11 @@ export const Verge: React.FC = () => {
             )}
 
             {adresseKilde === AdresseKilde.OppslagRegister && (
-                <TextField label="Fødselsnummer" {...register('verge.fødselsnummer')} />
+                <TextField
+                    label="Fødselsnummer"
+                    {...register('verge.fødselsnummer')}
+                    error={formState.errors?.verge?.fødselsnummer?.message}
+                />
             )}
         </VStack>
     );
