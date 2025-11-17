@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@grafana/faro-web-sdk": "1.19.0",
-    "@hey-api/openapi-ts": "0.87.4",
+    "@hey-api/openapi-ts": "0.87.5",
     "@hookform/resolvers": "5.2.2",
     "@navikt/aksel-icons": "7.33.2",
     "@navikt/ds-css": "7.33.2",
@@ -36,7 +36,7 @@
     "@sentry/browser": "10.25.0",
     "@sentry/core": "10.25.0",
     "@tailwindcss/vite": "4.1.17",
-    "@tanstack/react-query": "5.90.8",
+    "@tanstack/react-query": "5.90.10",
     "axios": "1.13.2",
     "classnames": "2.5.1",
     "compression": "1.8.1",
