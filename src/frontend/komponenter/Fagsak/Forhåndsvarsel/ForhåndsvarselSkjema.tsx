@@ -149,19 +149,22 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                     </Button>
                 )}
             </HStack>
-            {seForhåndsvisningMutation.error && (
-                <FixedAlert
-                    variant="error"
-                    closeButton
-                    width={parentBounds.width}
-                    onClose={seForhåndsvisningMutation.reset}
-                >
-                    <Heading spacing size="small" level="3">
-                        Forhåndsvisning feilet
-                    </Heading>
-                    Kunne ikke forhåndsvise forhåndsvarselet. Prøv igjen senere.
-                </FixedAlert>
-            )}
+            <div aria-live="assertive">
+                Forhåndsvisning feilet
+                {seForhåndsvisningMutation.error && (
+                    <FixedAlert
+                        variant="error"
+                        closeButton
+                        width={parentBounds.width}
+                        onClose={seForhåndsvisningMutation.reset}
+                    >
+                        <Heading spacing size="small" level="3">
+                            Forhåndsvisning feilet
+                        </Heading>
+                        Kunne ikke forhåndsvise forhåndsvarselet. Prøv igjen senere.
+                    </FixedAlert>
+                )}
+            </div>
         </div>
     );
 };

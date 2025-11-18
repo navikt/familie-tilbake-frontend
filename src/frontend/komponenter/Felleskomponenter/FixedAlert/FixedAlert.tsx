@@ -9,8 +9,8 @@ type Props = AlertProps & {
 
 export const FixedAlert: React.FC<Props> = ({ width, children, ...props }) => {
     return (
-        <div className="fixed bottom-34" style={{ width }}>
-            <Alert {...props}>{children}</Alert>
-        </div>
+        <Alert className="fixed bottom-34" style={{ width }} {...props}>
+            {children}
+        </Alert>
     );
 };
