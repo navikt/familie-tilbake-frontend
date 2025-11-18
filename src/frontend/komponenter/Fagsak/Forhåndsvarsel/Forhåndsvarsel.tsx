@@ -14,6 +14,7 @@ import { BrevmalkodeEnum, hentForhåndsvarselTekst } from '../../../generated';
 import { bestillBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { SYNLIGE_STEG } from '../../../utils/sider';
+import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
@@ -158,6 +159,14 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 onNeste={behandling.varselSendt ? gåTilNeste : sendForhåndsvarsel}
                 onForrige={undefined}
             />
+            {sendForhåndsvarselMutation.isError && (
+                <FeilModal
+                    feil={sendForhåndsvarselMutation.error}
+                    lukkFeilModal={sendForhåndsvarselMutation.reset}
+                    behandlingId={behandling.behandlingId}
+                    fagsakId={fagsak.eksternFagsakId}
+                />
+            )}
         </>
     );
 };

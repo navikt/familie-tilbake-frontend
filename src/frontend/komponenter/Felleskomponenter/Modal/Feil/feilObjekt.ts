@@ -5,7 +5,7 @@ type FeilMelding = {
     httpStatus?: string;
 };
 
-export const hentFeilObjekt = (status: number): FeilMelding => {
+export const hentFeilObjekt = (status: number | undefined): FeilMelding => {
     switch (status) {
         case 400:
             return {
