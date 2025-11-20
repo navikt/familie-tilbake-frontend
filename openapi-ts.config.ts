@@ -8,9 +8,6 @@ export default defineConfig({
         lint: 'eslint',
     },
     parser: {
-        filters: {
-            deprecated: false,
-        },
         transforms: {
             enums: 'root',
         },
