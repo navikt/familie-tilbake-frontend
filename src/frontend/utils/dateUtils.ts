@@ -5,8 +5,10 @@ import type { Duration } from 'date-fns';
 import {
     add,
     differenceInCalendarYears,
+    differenceInDays,
     differenceInMilliseconds,
     differenceInMonths,
+    differenceInWeeks,
     endOfDay,
     endOfMonth,
     format,
@@ -153,4 +155,20 @@ export const hentDatoRegistrertSendt = (
 
 export const formatterDatoDDMMYYYY = (dato: Date): string => {
     return format(new Date(dato), 'dd.MM.yyyy');
+};
+
+export const formatterRelativTid = (dato: string): string => {
+    const target = new Date(dato);
+    const now = new Date();
+
+    const ukerSiden = differenceInWeeks(now, target);
+    const dagerSiden = differenceInDays(now, target);
+
+    if (ukerSiden >= 1) {
+        return `${ukerSiden} ${ukerSiden === 1 ? 'uke' : 'uker'} siden`;
+    } else if (dagerSiden >= 1) {
+        return `${dagerSiden} ${dagerSiden === 1 ? 'dag' : 'dager'} siden`;
+    } else {
+        return 'i dag';
+    }
 };

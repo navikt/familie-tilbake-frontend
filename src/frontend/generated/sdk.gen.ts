@@ -61,14 +61,24 @@ import type {
     HentFagsakResponses,
     HentFaktaomfeilutbetalingData,
     HentFaktaomfeilutbetalingResponses,
+    HentForhåndsvarselinfoData,
+    HentForhåndsvarselinfoResponses,
     HentForhåndsvarselTekstData,
     HentForhåndsvarselTekstResponses,
+    HentForhåndsvisningHenleggelsesbrevData,
+    HentForhåndsvisningHenleggelsesbrevResponses,
+    HentForhåndsvisningVarselbrevData,
+    HentForhåndsvisningVarselbrevResponses,
+    HentForhåndsvisningVedtaksbrevData,
+    HentForhåndsvisningVedtaksbrevResponses,
     HentForvaltningsinfoData,
     HentForvaltningsinfoResponses,
     HentHistorikkinnslagData,
     HentHistorikkinnslagResponses,
     HentInaktivFaktaomfeilutbetalingData,
     HentInaktivFaktaomfeilutbetalingResponses,
+    HentInaktivVilkårsvurderingData,
+    HentInaktivVilkårsvurderingResponses,
     HentInfoData,
     HentInfoResponses,
     HentJournalposterData,
@@ -89,6 +99,8 @@ import type {
     HentVergeResponses,
     HentVurdertForeldelseData,
     HentVurdertForeldelseResponses,
+    HentVurdertVilkårsvurderingData,
+    HentVurdertVilkårsvurderingResponses,
     KanBehandlingOpprettesManueltData,
     KanBehandlingOpprettesManueltResponses,
     KorrigerKravgrunnlag1Data,
@@ -97,6 +109,8 @@ import type {
     KorrigerKravgrunnlagResponses,
     LagOppdaterOppgaveTaskForBehandlingData,
     LagOppdaterOppgaveTaskForBehandlingResponses,
+    LagreBrukeruttalelseData,
+    LagreBrukeruttalelseResponses,
     LagreUtkastVedtaksbrevData,
     LagreUtkastVedtaksbrevResponses,
     LeggTilBrevmottakerData,
@@ -119,6 +133,8 @@ import type {
     SammenslåResponses,
     SendSisteTilstandForBehandlingerTilDvhData,
     SendSisteTilstandForBehandlingerTilDvhResponses,
+    SettBehandlingPåVentData,
+    SettBehandlingPåVentResponses,
     SettIverksettStegTilUtførtOgFortsettData,
     SettIverksettStegTilUtførtOgFortsettResponses,
     SimulerMottakAvKravgrunnlagData,
@@ -127,6 +143,8 @@ import type {
     TaBehandlingAvVentResponses,
     TvingHenleggBehandlingData,
     TvingHenleggBehandlingResponses,
+    UtførBehandlingsstegData,
+    UtførBehandlingsstegResponses,
 } from './types.gen';
 
 export type Options<
@@ -328,6 +346,29 @@ export const fjernBrevmottakerSteg = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/brevmottaker/manuell/{behandlingId}/deaktiver',
         ...options,
+    });
+};
+
+/**
+ * Sett behandling på vent
+ */
+export const settBehandlingPåVent = <ThrowOnError extends boolean = false>(
+    options: Options<SettBehandlingPåVentData, ThrowOnError>
+) => {
+    return (options.client ?? client).put<SettBehandlingPåVentResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/behandling/{behandlingId}/vent/v1',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
     });
 };
 
@@ -763,6 +804,29 @@ export const lagreUtkastVedtaksbrev = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Lagrer brukerens uttalelse
+ */
+export const lagreBrukeruttalelse = <ThrowOnError extends boolean = false>(
+    options: Options<LagreBrukeruttalelseData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<LagreBrukeruttalelseResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/dokument/forhåndsvarsel/{behandlingId}/uttalelse',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
  * Forhåndsvis brev
  */
 export const forhåndsvisBrev = <ThrowOnError extends boolean = false>(
@@ -776,6 +840,87 @@ export const forhåndsvisBrev = <ThrowOnError extends boolean = false>(
             },
         ],
         url: '/api/dokument/forhandsvis',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Forhåndsvis vedtaksbrev
+ */
+export const hentForhåndsvisningVedtaksbrev = <ThrowOnError extends boolean = false>(
+    options: Options<HentForhåndsvisningVedtaksbrevData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        HentForhåndsvisningVedtaksbrevResponses,
+        unknown,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/dokument/forhandsvis-vedtaksbrev',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Forhåndsvis varselbrev
+ */
+export const hentForhåndsvisningVarselbrev = <ThrowOnError extends boolean = false>(
+    options: Options<HentForhåndsvisningVarselbrevData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        HentForhåndsvisningVarselbrevResponses,
+        unknown,
+        ThrowOnError
+    >({
+        responseType: 'blob',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/dokument/forhandsvis-varselbrev',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Forhåndsvis henleggelsesbrev
+ */
+export const hentForhåndsvisningHenleggelsesbrev = <ThrowOnError extends boolean = false>(
+    options: Options<HentForhåndsvisningHenleggelsesbrevData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        HentForhåndsvisningHenleggelsesbrevResponses,
+        unknown,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/dokument/forhandsvis-henleggelsesbrev',
         ...options,
         headers: {
             'Content-Type': 'application/json',
@@ -868,6 +1013,29 @@ export const opprettBrevmottakerSteg = <ThrowOnError extends boolean = false>(
             ...options,
         }
     );
+};
+
+/**
+ * Utfør behandlingssteg og fortsett behandling til neste steg
+ */
+export const utførBehandlingssteg = <ThrowOnError extends boolean = false>(
+    options: Options<UtførBehandlingsstegData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<UtførBehandlingsstegResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/behandling/{behandlingId}/steg/v1',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
 };
 
 /**
@@ -1270,6 +1438,25 @@ export const hentForhåndsvarselTekst = <ThrowOnError extends boolean = false>(
     });
 };
 
+/**
+ * Hent forhåndsvarselinformasjon
+ */
+export const hentForhåndsvarselinfo = <ThrowOnError extends boolean = false>(
+    options: Options<HentForhåndsvarselinfoData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<HentForhåndsvarselinfoResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/dokument/forhåndsvarsel/{behandlingId}/v1',
+        ...options,
+    });
+};
+
 export const hentUrlTilArbeidOgInntekt = <ThrowOnError extends boolean = false>(
     options: Options<HentUrlTilArbeidOgInntektData, ThrowOnError>
 ) => {
@@ -1301,6 +1488,52 @@ export const hentHistorikkinnslag = <ThrowOnError extends boolean = false>(
             },
         ],
         url: '/api/behandlinger/{behandlingId}/historikk',
+        ...options,
+    });
+};
+
+/**
+ * Hent vilkårsvurdering
+ */
+export const hentVurdertVilkårsvurdering = <ThrowOnError extends boolean = false>(
+    options: Options<HentVurdertVilkårsvurderingData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        HentVurdertVilkårsvurderingResponses,
+        unknown,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/behandling/{behandlingId}/vilkarsvurdering/v1',
+        ...options,
+    });
+};
+
+/**
+ * Hent inaktive vilkårsvurderinger
+ */
+export const hentInaktivVilkårsvurdering = <ThrowOnError extends boolean = false>(
+    options: Options<HentInaktivVilkårsvurderingData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        HentInaktivVilkårsvurderingResponses,
+        unknown,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/behandling/{behandlingId}/vilkarsvurdering/inaktiv',
         ...options,
     });
 };

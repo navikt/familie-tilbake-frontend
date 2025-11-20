@@ -106,36 +106,41 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                         </HStack>
                         <VStack maxWidth={ATextWidthMax}>
                             {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
-                                <div key={avsnitt.title}>
-                                    <Heading size="xsmall" level="3" spacing>
-                                        {avsnitt.title}
-                                    </Heading>
-                                    <BodyLong size="small" spacing>
-                                        {avsnitt.body}
-                                    </BodyLong>
-                                </div>
-                            ))}
-                            <form>
-                                <Controller
-                                    name="fritekst"
-                                    control={control}
-                                    rules={{
-                                        required: 'Du må legge til en tekst',
-                                        maxLength: {
-                                            value: maksAntallTegn,
-                                            message: `Maks ${maksAntallTegn} tegn`,
-                                        },
-                                    }}
-                                    render={({ field }) => (
-                                        <Textarea
-                                            {...field}
-                                            label="Legg til utdypende tekst"
-                                            maxLength={maksAntallTegn}
-                                            error={errors.fritekst?.message?.toString()}
-                                        />
+                                <>
+                                    <div key={avsnitt.title}>
+                                        <Heading size="xsmall" level="3" spacing>
+                                            {avsnitt.title}
+                                        </Heading>
+                                        <BodyLong size="small" spacing>
+                                            {avsnitt.body}
+                                        </BodyLong>
+                                    </div>
+                                    {avsnitt.title === 'Dette har skjedd' && (
+                                        <form>
+                                            <Controller
+                                                name="fritekst"
+                                                control={control}
+                                                rules={{
+                                                    required: 'Du må legge til en tekst',
+                                                    maxLength: {
+                                                        value: maksAntallTegn,
+                                                        message: `Maks ${maksAntallTegn} tegn`,
+                                                    },
+                                                }}
+                                                render={({ field }) => (
+                                                    <Textarea
+                                                        {...field}
+                                                        label="Legg til utdypende tekst"
+                                                        maxLength={maksAntallTegn}
+                                                        error={errors.fritekst?.message?.toString()}
+                                                        className="mb-6"
+                                                    />
+                                                )}
+                                            />
+                                        </form>
                                     )}
-                                />
-                            </form>
+                                </>
+                            ))}
                         </VStack>
                     </ExpansionCard.Content>
                 </ExpansionCard>
@@ -150,7 +155,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                 )}
             </HStack>
             <div aria-live="assertive">
-                Forhåndsvisning feilet
                 {seForhåndsvisningMutation.error && (
                     <FixedAlert
                         variant="error"
