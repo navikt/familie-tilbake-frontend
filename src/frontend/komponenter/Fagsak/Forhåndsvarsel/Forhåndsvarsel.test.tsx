@@ -40,10 +40,21 @@ jest.mock('../../../generated', () => ({
                 overskrift: 'Nav vurderer om du må betale tilbake overgangsstønad',
                 avsnitter: [
                     {
-                        title: 'Test avsnitt',
+                        title: 'Dette har skjedd',
                         body: 'Test innhold',
                     },
                 ],
+            },
+        },
+    }),
+    hentForhåndsvarselinfo: jest.fn().mockResolvedValue({
+        data: {
+            data: {
+                varselbrevDto: {
+                    varselbrevSendtTid: null,
+                    uttalelsesfrist: null,
+                },
+                brukeruttalelse: null,
             },
         },
     }),
