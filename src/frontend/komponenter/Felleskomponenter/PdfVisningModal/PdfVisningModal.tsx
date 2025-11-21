@@ -1,9 +1,12 @@
+import type { RessursByte } from '../../../generated';
+
 import { Modal, Loader, Heading, Alert } from '@navikt/ds-react';
 import { ASpacing1, ASpacing3, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
+import { handlePdfData } from '../../../utils/pdfUtils';
 
 const StyledModal = styled(Modal)`
     height: 100%;
@@ -29,7 +32,7 @@ const IframePdfVisning = styled.iframe`
 
 type Props = {
     onRequestClose: () => void;
-    pdfdata: Ressurs<string>;
+    pdfdata: Ressurs<string> | RessursByte;
     åpen: boolean;
 };
 
@@ -49,7 +52,7 @@ const PdfVisningModal: React.FC<Props> = ({ onRequestClose, pdfdata, åpen }) =>
     );
 };
 
-const Dokument: React.FC<{ pdfdata: Ressurs<string> }> = ({ pdfdata }) => {
+const Dokument: React.FC<{ pdfdata: Ressurs<string> | RessursByte }> = ({ pdfdata }) => {
     switch (pdfdata.status) {
         case RessursStatus.Henter:
             return (
@@ -66,8 +69,10 @@ const Dokument: React.FC<{ pdfdata: Ressurs<string> }> = ({ pdfdata }) => {
                     />
                 </div>
             );
-        case RessursStatus.Suksess:
-            return <IframePdfVisning title="Dokument" src={pdfdata.data} />;
+        case RessursStatus.Suksess: {
+            const pdfSrc = handlePdfData(pdfdata.data || '');
+            return <IframePdfVisning title="Dokument" src={pdfSrc} allow="fullscreen" />;
+        }
         case RessursStatus.Feilet:
         case RessursStatus.FunksjonellFeil:
         case RessursStatus.IkkeTilgang:
