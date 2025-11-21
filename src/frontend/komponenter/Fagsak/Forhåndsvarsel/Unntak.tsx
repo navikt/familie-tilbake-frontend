@@ -28,6 +28,7 @@ export const Unntak: React.FC<Props> = ({ methods }) => {
         <VStack maxWidth={ATextWidthMax} gap="4">
             <RadioGroup
                 legend="Velg begrunnelse for unntak fra forhåndsvarsel"
+                size="small"
                 description={
                     <>
                         Varsling kan unnlates dersom det ikke er praktisk, urimelig ressurskrevende,

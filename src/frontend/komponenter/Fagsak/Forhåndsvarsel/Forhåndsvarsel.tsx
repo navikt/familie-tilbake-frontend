@@ -1,8 +1,10 @@
 import type { BehandlingDto, FagsakDto } from '../../../generated';
 
-import { Alert, Heading, Radio, RadioGroup, VStack } from '@navikt/ds-react';
+import { MegaphoneIcon } from '@navikt/aksel-icons';
+import { Alert, Heading, HStack, Radio, RadioGroup, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
@@ -10,9 +12,14 @@ import { useNavigate } from 'react-router';
 import { ForhåndsvarselSkjema } from './ForhåndsvarselSkjema';
 import { Unntak } from './Unntak';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { BrevmalkodeEnum, hentForhåndsvarselTekst } from '../../../generated';
+import {
+    BrevmalkodeEnum,
+    hentForhåndsvarselinfo,
+    hentForhåndsvarselTekst,
+} from '../../../generated';
 import { bestillBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
+import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { SYNLIGE_STEG } from '../../../utils/sider';
 import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
 import { ActionBar } from '../ActionBar/ActionBar';
@@ -22,12 +29,18 @@ type Props = {
     fagsak: FagsakDto;
 };
 
+type TagVariant = 'info-moderate' | 'success-moderate';
+
 export enum SkalSendesForhåndsvarsel {
-    //TODO: erstatte med kodeverk fra backend når det er på plass
     Ja = 'ja',
     Nei = 'nei',
     IkkeValgt = '',
 }
+
+const getTagVariant = (sendtTid: string): TagVariant => {
+    const ukerSiden = differenceInWeeks(new Date(), new Date(sendtTid));
+    return ukerSiden >= 3 ? 'success-moderate' : 'info-moderate';
+};
 
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     const navigate = useNavigate();
@@ -36,11 +49,31 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
 
     const { actionBarStegtekst } = useBehandling();
 
-    const getForhåndsvarselStatus = (behandling: BehandlingDto): SkalSendesForhåndsvarsel => {
-        if (behandling.varselSendt) {
+    const { data: forhåndsvarselInfo } = useQuery({
+        queryKey: ['hentForhåndsvarselInfo', behandling.behandlingId],
+        queryFn: () =>
+            hentForhåndsvarselinfo({
+                path: {
+                    behandlingId: behandling.behandlingId,
+                },
+            }),
+        enabled: !!behandling.behandlingId,
+        select: data => {
+            const info = data.data?.data;
+            return {
+                varselbrevSendtTid: info?.varselbrevDto?.varselbrevSendtTid,
+                uttalelsesfrist: info?.varselbrevDto?.uttalelsesfrist,
+                brukeruttalelse: info?.brukeruttalelse,
+            };
+        },
+    });
+
+    const varselErSendt = !!forhåndsvarselInfo?.varselbrevSendtTid;
+
+    const getForhåndsvarselStatus = (): SkalSendesForhåndsvarsel => {
+        if (varselErSendt) {
             return SkalSendesForhåndsvarsel.Ja;
         }
-        // TODO: Denne må håndteres annereledes når vi har backend for de andre valgene
         return SkalSendesForhåndsvarsel.IkkeValgt;
     };
 
@@ -48,7 +81,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         reValidateMode: 'onBlur',
         shouldFocusError: false,
         defaultValues: {
-            skalSendesForhåndsvarsel: getForhåndsvarselStatus(behandling),
+            skalSendesForhåndsvarsel: getForhåndsvarselStatus(),
             fritekst: '',
         },
     });
@@ -105,14 +138,32 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     return (
         <>
             <VStack gap="4">
-                <VStack maxWidth={ATextWidthMax}>
-                    <Heading level="1" size="small" spacing>
+                <HStack align="center" justify="space-between">
+                    <Heading level="1" size="small">
                         Forhåndsvarsel
                     </Heading>
+                    {forhåndsvarselInfo?.varselbrevSendtTid && (
+                        <Tooltip
+                            arrow={false}
+                            placement="bottom"
+                            content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                        >
+                            <Tag
+                                variant={getTagVariant(forhåndsvarselInfo.varselbrevSendtTid)}
+                                icon={<MegaphoneIcon aria-hidden />}
+                            >
+                                {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                            </Tag>
+                        </Tooltip>
+                    )}
+                </HStack>
+                <VStack maxWidth={ATextWidthMax}>
                     <RadioGroup
                         {...register('skalSendesForhåndsvarsel', {
                             required: 'Velg ett av alternativene over for å gå videre',
                         })}
+                        readOnly={behandling.varselSendt}
+                        size="small"
                         name="skalSendesForhåndsvarsel"
                         onChange={value => methods.setValue('skalSendesForhåndsvarsel', value)}
                         value={skalSendesForhåndsvarsel}
