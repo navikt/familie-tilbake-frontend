@@ -105,7 +105,7 @@ export const Fakta: React.FC = () => {
                             )}
                         >
                             <dt className="font-ax-bold text-ax-small">Feilutbetalt beløp</dt>
-                            <dd className="text-ax-text-danger font-ax-bold text-ax-xlarge">
+                            <dd className="text-ax-text-danger font-ax-bold text-ax-heading-medium">
                                 {fakta.totaltFeilutbetaltBeløp}
                             </dd>
                         </div>
@@ -114,14 +114,14 @@ export const Fakta: React.FC = () => {
                                 <dt className="font-ax-bold text-ax-small">
                                     Tidligere varslet beløp
                                 </dt>
-                                <dd className="font-ax-bold text-ax-xlarge">
+                                <dd className="font-ax-bold text-ax-heading-medium">
                                     {tidligereVarsletBeløp}
                                 </dd>
                             </div>
                         )}
                         <div className="col-span-2 p-4 h-22 border rounded-xl border-ax-border-neutral-subtle">
                             <dt className="font-ax-bold text-ax-small">Periode</dt>
-                            <dd className="font-ax-bold text-ax-xlarge">
+                            <dd className="font-ax-bold text-ax-heading-medium">
                                 {formatterDatostring(fakta.totalFeilutbetaltPeriode.fom)}–
                                 {formatterDatostring(fakta.totalFeilutbetaltPeriode.tom)}
                             </dd>
@@ -141,7 +141,7 @@ export const Fakta: React.FC = () => {
                                         key={fakta.faktainfo.revurderingsårsak}
                                         variant="neutral-moderate"
                                         size="small"
-                                        className="text-ax-small"
+                                        className="text-ax-medium"
                                     >
                                         {fakta.faktainfo.revurderingsårsak}
                                     </Tag>
@@ -151,13 +151,13 @@ export const Fakta: React.FC = () => {
                                 <dt className="font-ax-bold text-ax-medium">
                                     Dato for revurderingsvedtak
                                 </dt>
-                                <dd className="text-ax-small">
+                                <dd className="text-ax-medium">
                                     {formatterDatostring(fakta.revurderingsvedtaksdato)}
                                 </dd>
                             </div>
                             <div>
                                 <dt className="font-ax-bold text-ax-medium">Resultat</dt>
-                                <dd className="text-ax-small">
+                                <dd className="text-ax-medium">
                                     {fakta.faktainfo.revurderingsresultat}
                                 </dd>
                             </div>
@@ -228,7 +228,7 @@ export const Fakta: React.FC = () => {
                                                 ))}
                                             </Select>
                                         </Table.DataCell>
-                                        <Table.DataCell className="text-end text-ax-text-danger-subtle">
+                                        <Table.DataCell className="text-end text-ax-text-brand-magenta">
                                             {periode.feilutbetaltBeløp}
                                         </Table.DataCell>
                                         <Table.DataCell className="text-center">
@@ -274,7 +274,7 @@ export const Fakta: React.FC = () => {
                     <Textarea
                         label="Hvordan ble feilutbetalingen oppdaget?"
                         size="small"
-                        className="w-100"
+                        className="w-100 mb-6"
                         minRows={3}
                         resize
                         maxLength={3000}
