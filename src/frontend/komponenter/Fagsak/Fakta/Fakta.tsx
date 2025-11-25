@@ -104,14 +104,14 @@ export const Fakta: React.FC = () => {
                                 { 'col-span-2': !tidligereVarsletBeløp }
                             )}
                         >
-                            <dt className="font-ax-bold text-ax-small">Feilutbetalt beløp</dt>
+                            <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
                             <dd className="text-ax-text-danger font-ax-bold text-ax-heading-medium">
                                 {fakta.totaltFeilutbetaltBeløp}
                             </dd>
                         </div>
                         {tidligereVarsletBeløp && (
                             <div className="col-span-1 p-4 border rounded-xl border-ax-border-neutral-subtle">
-                                <dt className="font-ax-bold text-ax-small">
+                                <dt className="font-ax-bold text-ax-medium">
                                     Tidligere varslet beløp
                                 </dt>
                                 <dd className="font-ax-bold text-ax-heading-medium">
@@ -120,7 +120,7 @@ export const Fakta: React.FC = () => {
                             </div>
                         )}
                         <div className="col-span-2 p-4 h-22 border rounded-xl border-ax-border-neutral-subtle">
-                            <dt className="font-ax-bold text-ax-small">Periode</dt>
+                            <dt className="font-ax-bold text-ax-medium">Periode</dt>
                             <dd className="font-ax-bold text-ax-heading-medium">
                                 {formatterDatostring(fakta.totalFeilutbetaltPeriode.fom)}–
                                 {formatterDatostring(fakta.totalFeilutbetaltPeriode.tom)}
