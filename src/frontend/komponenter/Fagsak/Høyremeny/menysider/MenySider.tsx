@@ -1,5 +1,5 @@
-import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 
 import {
     ClockDashedIcon,
@@ -12,7 +12,7 @@ import { ToggleGroup } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 
-import { Menysider, MenySideInnhold } from './Menykontainer';
+import { Menysider, MenySideInnhold } from './MenySideInnhold';
 
 type Props = {
     værtPåFatteVedtakSteget: boolean;
@@ -20,11 +20,7 @@ type Props = {
     behandling: Behandling;
 };
 
-export const HistorikkOgDokumenter: React.FC<Props> = ({
-    værtPåFatteVedtakSteget,
-    fagsak,
-    behandling,
-}) => {
+export const MenySider: React.FC<Props> = ({ værtPåFatteVedtakSteget, fagsak, behandling }) => {
     const [valgtSide, setValgtSide] = useState(
         værtPåFatteVedtakSteget ? Menysider.Totrinn : Menysider.Historikk
     );

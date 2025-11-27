@@ -1,4 +1,4 @@
-import type { Bruker } from '../../../../typer/bruker';
+import type { Bruker } from '../../../../../typer/bruker';
 
 import {
     EarthIcon,
@@ -11,7 +11,7 @@ import {
 import { Button, Heading, HStack } from '@navikt/ds-react';
 import React from 'react';
 
-import { Kjønn } from '../../../../typer/bruker';
+import { Kjønn } from '../../../../../typer/bruker';
 
 export const Brevmottakere: React.FC = () => {
     const bruker: Bruker = {
@@ -33,7 +33,7 @@ export const Brevmottakere: React.FC = () => {
             </HStack>
             <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
                 <MottakerKort
-                    type="Verge"
+                    type="Hovedmottaker"
                     navn={bruker.navn}
                     addresse={{
                         gatenavn: 'Eksempelveien 1',

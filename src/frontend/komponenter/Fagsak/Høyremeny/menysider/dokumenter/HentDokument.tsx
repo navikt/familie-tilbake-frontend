@@ -1,9 +1,9 @@
-import type { HistorikkInnslag } from '../../../../typer/historikk';
+import type { DokumentInfo, Journalpost } from '../../../../../typer/journalføring';
 
 import * as React from 'react';
 
-import { useHistorikk } from './HistorikkContext';
-import { useHttp } from '../../../../api/http/HttpProvider';
+import { useDokumentlisting } from './DokumentlistingContext';
+import { useHttp } from '../../../../../api/http/HttpProvider';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -11,19 +11,20 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '../../../../typer/ressurs';
-import { base64ToArrayBuffer } from '../../../../utils';
-import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
+} from '../../../../../typer/ressurs';
+import { base64ToArrayBuffer } from '../../../../../utils';
+import PdfVisningModal from '../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 type Props = {
-    innslag: HistorikkInnslag;
+    journalpost: Journalpost;
+    dokument: DokumentInfo;
     onClose: () => void;
 };
 
-const HentDokument: React.FC<Props> = ({ innslag, onClose }) => {
+const HentDokument: React.FC<Props> = ({ journalpost, dokument, onClose }) => {
     const [hentetDokument, settHentetDokument] = React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
-    const { behandling } = useHistorikk();
+    const { behandling } = useDokumentlisting();
     const { request } = useHttp();
 
     React.useEffect(() => {
@@ -31,7 +32,7 @@ const HentDokument: React.FC<Props> = ({ innslag, onClose }) => {
         settHentetDokument(byggHenterRessurs());
         request<void, string>({
             method: 'GET',
-            url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/journalpost/${innslag.journalpostId}/dokument/${innslag.dokumentId}`,
+            url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/journalpost/${journalpost.journalpostId}/dokument/${dokument.dokumentInfoId}`,
         }).then((response: Ressurs<string>) => {
             if (response.status === RessursStatus.Suksess) {
                 const blob = new Blob([base64ToArrayBuffer(response.data)], {
@@ -51,7 +52,7 @@ const HentDokument: React.FC<Props> = ({ innslag, onClose }) => {
             }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [behandling, innslag]);
+    }, [behandling, journalpost, dokument]);
 
     const nullstillHentetDokument = (): void => {
         settHentetDokument(byggTomRessurs);

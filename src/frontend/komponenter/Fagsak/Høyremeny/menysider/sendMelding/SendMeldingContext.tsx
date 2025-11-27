@@ -1,13 +1,13 @@
-import type { BrevPayload } from '../../../../typer/api';
-import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
+import type { BrevPayload } from '../../../../../typer/api';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
 
 import createUseContext from 'constate';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 
-import { useDokumentApi } from '../../../../api/dokument';
-import { useBehandling } from '../../../../context/BehandlingContext';
+import { useDokumentApi } from '../../../../../api/dokument';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import {
     type Avhengigheter,
     type FeltState,
@@ -15,15 +15,15 @@ import {
     useFelt,
     useSkjema,
     Valideringsstatus,
-} from '../../../../hooks/skjema';
-import { DokumentMal } from '../../../../kodeverk';
-import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
+} from '../../../../../hooks/skjema';
+import { DokumentMal } from '../../../../../kodeverk';
+import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import {
     erFeltetEmpty,
     hentFrontendFeilmelding,
     validerTekstFeltMaksLengde,
-} from '../../../../utils';
-import { SYNLIGE_STEG } from '../../../../utils/sider';
+} from '../../../../../utils';
+import { SYNLIGE_STEG } from '../../../../../utils/sider';
 
 type Mottaker = {
     verdi: string;

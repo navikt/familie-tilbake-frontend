@@ -1,12 +1,12 @@
-import type { Behandling } from '../../../../typer/behandling';
-import type { Journalpost } from '../../../../typer/journalføring';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Journalpost } from '../../../../../typer/journalføring';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
 
-import { useHttp } from '../../../../api/http/HttpProvider';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
-import { Menysider } from '../Menykontainer';
+import { useHttp } from '../../../../../api/http/HttpProvider';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../../typer/ressurs';
+import { Menysider } from '../../menysider/MenySideInnhold';
 
 type Props = {
     behandling: Behandling;

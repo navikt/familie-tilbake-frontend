@@ -1,9 +1,9 @@
-import type { BehandlingApiHook } from '../../../../api/behandling';
-import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
-import type { Ressurs } from '../../../../typer/ressurs';
-import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
+import type { BehandlingApiHook } from '../../../../../api/behandling';
+import type { BehandlingHook } from '../../../../../context/BehandlingContext';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
+import type { Ressurs } from '../../../../../typer/ressurs';
+import type { Totrinnkontroll } from '../../../../../typer/totrinnTyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -15,19 +15,19 @@ import * as React from 'react';
 
 import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
-import { lagBehandling } from '../../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import { lagTotrinnsStegInfo } from '../../../../testdata/totrinnskontrollFactory';
-import { Behandlingssteg } from '../../../../typer/behandling';
-import { RessursStatus } from '../../../../typer/ressurs';
+import { lagBehandling } from '../../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../../testdata/fagsakFactory';
+import { lagTotrinnsStegInfo } from '../../../../../testdata/totrinnskontrollFactory';
+import { Behandlingssteg } from '../../../../../typer/behandling';
+import { RessursStatus } from '../../../../../typer/ressurs';
 
 const mockUseBehandling = jest.fn();
-jest.mock('../../../../context/BehandlingContext', () => ({
+jest.mock('../../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const mockUseBehandlingApi = jest.fn();
-jest.mock('../../../../api/behandling', () => ({
+jest.mock('../../../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
