@@ -1,7 +1,6 @@
 import type { Datoperiode, FaktaFeilutbetalingDto } from '../../../generated';
-import type { Tilbakekrevingsvalg } from '../../../typer/tilbakekrevingstyper';
 
-import { PlusIcon } from '@navikt/aksel-icons';
+import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import {
     Button,
     DatePicker,
@@ -14,18 +13,18 @@ import {
     Textarea,
     useDatepicker,
 } from '@navikt/ds-react';
+import classNames from 'classnames';
 import * as React from 'react';
 
 import { FaktaSkeleton } from './FaktaSkeleton';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { HarBrukerUttaltSegEnum2 } from '../../../generated';
 import {
-    HarBrukerUttaltSegEnum,
     HendelsestypeEnum,
     HendelsesundertypeEnum,
     TilbakekrevingsvalgEnum,
 } from '../../../generated';
 import { Behandlingssteg } from '../../../typer/behandling';
-import { tilbakekrevingsvalg } from '../../../typer/tilbakekrevingstyper';
 import { formatterDatostring } from '../../../utils';
 import { ActionBar } from '../ActionBar/ActionBar';
 
@@ -70,7 +69,7 @@ export const Fakta: React.FC = () => {
         } as Datoperiode,
         totaltFeilutbetaltBeløp: 13800,
         vurderingAvBrukersUttalelse: {
-            harBrukerUttaltSeg: HarBrukerUttaltSegEnum.NEI,
+            harBrukerUttaltSeg: HarBrukerUttaltSegEnum2.NEI,
             beskrivelse: undefined,
         },
         faktainfo: {
@@ -80,8 +79,7 @@ export const Fakta: React.FC = () => {
             tilbakekrevingsvalg: TilbakekrevingsvalgEnum.OPPRETT_TILBAKEKREVING_MED_VARSEL,
         },
     };
-    const tilbakekrevingsvalgText =
-        tilbakekrevingsvalg[fakta.faktainfo.tilbakekrevingsvalg as unknown as Tilbakekrevingsvalg];
+
     if (isLoading) return <FaktaSkeleton />;
     return (
         <>
@@ -90,36 +88,44 @@ export const Fakta: React.FC = () => {
                     Fakta om feilutbetalingen
                 </Heading>
                 <section
-                    className="flex md:flex-row flex-col flex-col-3 w-full gap-6"
+                    className={classNames('flex md:flex-row flex-col flex-col-3 w-full gap-6', {
+                        'flex-col-4': tidligereVarsletBeløp,
+                    })}
                     aria-label="Feilutbetaling og revurdering"
                 >
-                    <div className="flex flex-col flex-1 gap-4 p-4 bg-ax-bg-brand-blue-soft border rounded-xl border-ax-border-neutral-subtle">
-                        <Heading level="2" size="small">
-                            Feilutbetaling
-                        </Heading>
-                        <dl className="flex flex-col gap-4">
-                            <div>
-                                <dt className="font-ax-bold text-ax-medium">Periode</dt>
-                                <dd>
-                                    {formatterDatostring(fakta.totalFeilutbetaltPeriode.fom)}–
-                                    {formatterDatostring(fakta.totalFeilutbetaltPeriode.tom)}
-                                </dd>
-                            </div>
-                            <div>
-                                <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
-                                <dd className="text-ax-text-danger-subtle">
-                                    {fakta.totaltFeilutbetaltBeløp}
-                                </dd>
-                            </div>
-                            {tidligereVarsletBeløp && (
-                                <div>
-                                    <dt className="font-ax-bold text-ax-medium">
-                                        Tidligere varslet beløp
-                                    </dt>
-                                    <dd>{tidligereVarsletBeløp}</dd>
-                                </div>
+                    <div
+                        className={classNames('grid grid-cols-2 gap-4 flex-1', {
+                            'flex-2': tidligereVarsletBeløp,
+                        })}
+                    >
+                        <div
+                            className={classNames(
+                                'flex-1 p-4 bg-ax-bg-brand-magenta-soft border rounded-xl border-ax-border-brand-magenta-strong align-middle col-span-1',
+                                { 'col-span-2': !tidligereVarsletBeløp }
                             )}
-                        </dl>
+                        >
+                            <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
+                            <dd className="text-ax-text-danger font-ax-bold text-ax-heading-medium">
+                                {fakta.totaltFeilutbetaltBeløp}
+                            </dd>
+                        </div>
+                        {tidligereVarsletBeløp && (
+                            <div className="col-span-1 p-4 border rounded-xl border-ax-border-neutral-subtle">
+                                <dt className="font-ax-bold text-ax-medium">
+                                    Tidligere varslet beløp
+                                </dt>
+                                <dd className="font-ax-bold text-ax-heading-medium">
+                                    {tidligereVarsletBeløp}
+                                </dd>
+                            </div>
+                        )}
+                        <div className="col-span-2 p-4 h-22 border rounded-xl border-ax-border-neutral-subtle">
+                            <dt className="font-ax-bold text-ax-medium">Periode</dt>
+                            <dd className="font-ax-bold text-ax-heading-medium">
+                                {formatterDatostring(fakta.totalFeilutbetaltPeriode.fom)}–
+                                {formatterDatostring(fakta.totalFeilutbetaltPeriode.tom)}
+                            </dd>
+                        </div>
                     </div>
                     <div className="flex flex-col flex-2 gap-4 p-4 border rounded-xl border-ax-border-neutral-subtle">
                         <Heading level="2" size="small">
@@ -135,6 +141,7 @@ export const Fakta: React.FC = () => {
                                         key={fakta.faktainfo.revurderingsårsak}
                                         variant="neutral-moderate"
                                         size="small"
+                                        className="text-ax-medium"
                                     >
                                         {fakta.faktainfo.revurderingsårsak}
                                     </Tag>
@@ -144,22 +151,14 @@ export const Fakta: React.FC = () => {
                                 <dt className="font-ax-bold text-ax-medium">
                                     Dato for revurderingsvedtak
                                 </dt>
-                                <dd>{formatterDatostring(fakta.revurderingsvedtaksdato)}</dd>
+                                <dd className="text-ax-medium">
+                                    {formatterDatostring(fakta.revurderingsvedtaksdato)}
+                                </dd>
                             </div>
                             <div>
                                 <dt className="font-ax-bold text-ax-medium">Resultat</dt>
-                                <dd>{fakta.faktainfo.revurderingsresultat}</dd>
-                            </div>
-                            <div className="col-span-1">
-                                <dt className="font-ax-bold text-ax-medium">Tilbakekrevingsvalg</dt>
-                                <dd>
-                                    <Tag
-                                        key={tilbakekrevingsvalgText}
-                                        variant="neutral-moderate"
-                                        size="small"
-                                    >
-                                        {tilbakekrevingsvalgText}
-                                    </Tag>
+                                <dd className="text-ax-medium">
+                                    {fakta.faktainfo.revurderingsresultat}
                                 </dd>
                             </div>
                         </dl>
@@ -229,7 +228,7 @@ export const Fakta: React.FC = () => {
                                                 ))}
                                             </Select>
                                         </Table.DataCell>
-                                        <Table.DataCell className="text-end text-ax-text-danger-subtle">
+                                        <Table.DataCell className="text-end text-ax-text-brand-magenta">
                                             {periode.feilutbetaltBeløp}
                                         </Table.DataCell>
                                         <Table.DataCell className="text-center">
@@ -238,7 +237,7 @@ export const Fakta: React.FC = () => {
                                                 variant="tertiary"
                                                 className="align-middle"
                                                 icon={
-                                                    <PlusIcon title="Legg til rettslig grunnlag" />
+                                                    <MenuElipsisHorizontalIcon title="Legg til rettslig grunnlag" />
                                                 }
                                             />
                                         </Table.DataCell>
@@ -275,7 +274,7 @@ export const Fakta: React.FC = () => {
                     <Textarea
                         label="Hvordan ble feilutbetalingen oppdaget?"
                         size="small"
-                        className="w-100"
+                        className="w-100 mb-6"
                         minRows={3}
                         resize
                         maxLength={3000}
