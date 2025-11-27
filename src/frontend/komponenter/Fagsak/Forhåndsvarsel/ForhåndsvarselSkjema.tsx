@@ -14,7 +14,7 @@ import {
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { BrevmalkodeEnum } from '../../../generated';
@@ -107,7 +107,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                             </HStack>
                             <VStack maxWidth={ATextWidthMax}>
                                 {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
-                                    <>
+                                    <Fragment key={avsnitt.title}>
                                         <div key={avsnitt.title}>
                                             <Heading size="xsmall" level="3" spacing>
                                                 {avsnitt.title}
@@ -136,7 +136,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                                                 />
                                             </form>
                                         )}
-                                    </>
+                                    </Fragment>
                                 ))}
                             </VStack>
                         </ExpansionCard.Content>
