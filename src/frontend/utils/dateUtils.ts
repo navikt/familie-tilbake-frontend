@@ -165,10 +165,9 @@ export const formatterRelativTid = (dato: string): string => {
     const dagerSiden = differenceInDays(now, target);
     const månederSiden = differenceInMonths(now, target);
 
-    if (månederSiden >= 1) {
-        return `${månederSiden} ${månederSiden === 1 ? 'måned' : 'måneder'} siden`;
-    } else if (ukerSiden >= 4) {
-        return '1 måned siden';
+    if (månederSiden >= 1 || ukerSiden >= 4) {
+        const antallMåneder = Math.max(månederSiden, 1);
+        return `${antallMåneder} ${antallMåneder === 1 ? 'måned' : 'måneder'} siden`;
     } else if (ukerSiden >= 1) {
         return `${ukerSiden} ${ukerSiden === 1 ? 'uke' : 'uker'} siden`;
     } else if (dagerSiden >= 1) {

@@ -89,9 +89,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                         onToggle={setExpansionCardÅpen}
                     >
                         <ExpansionCard.Header>
-                            <HStack>
-                                <ExpansionCard.Title size="small">{tittel}</ExpansionCard.Title>
-                            </HStack>
+                            <ExpansionCard.Title size="small">{tittel}</ExpansionCard.Title>
                         </ExpansionCard.Header>
                         <ExpansionCard.Content>
                             <HStack align="center" justify="space-between">
@@ -125,10 +123,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                                                     control={control}
                                                     rules={{
                                                         required: 'Du må legge til en tekst',
-                                                        maxLength: {
-                                                            value: maksAntallTegn,
-                                                            message: `Maks ${maksAntallTegn} tegn`,
-                                                        },
                                                     }}
                                                     render={({ field }) => (
                                                         <Textarea
@@ -169,7 +163,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                             <Heading spacing size="small" level="3">
                                 Forhåndsvisning feilet
                             </Heading>
-                            Kunne ikke forhåndsvise forhåndsvarselet. Prøv igjen senere.
+                            {seForhåndsvisningMutation.error.message}
                         </FixedAlert>
                     )}
                 </div>
@@ -178,7 +172,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                 <PdfVisningModal
                     åpen={seForhåndsvisningMutation.isSuccess}
                     pdfdata={seForhåndsvisningMutation.data}
-                    onRequestClose={() => seForhåndsvisningMutation.reset()}
+                    onRequestClose={seForhåndsvisningMutation.reset}
                 />
             )}
         </>
