@@ -1,6 +1,7 @@
 import type { Skjema } from '../../../../hooks/skjema';
 import type { Behandling, Behandlingårsak } from '../../../../typer/behandling';
-import type { RefObject } from 'react';
+
+import { useState, type RefObject } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFelt, useSkjema } from '../../../../hooks/skjema';
@@ -18,6 +19,8 @@ type RevurderSkjemaHook = {
         },
         string
     >;
+    feilmelding: string | undefined;
+    setFeilmelding: (feilmelding: string | undefined) => void;
     sendInn: () => void;
     nullstillSkjema: () => void;
 };
@@ -29,6 +32,7 @@ const useRevurderSkjema = (
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { ytelsestype, eksternFagsakId, fagsystem } = useFagsakStore();
     const { utførRedirect } = useRedirectEtterLagring();
+    const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
 
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
         {
@@ -51,8 +55,9 @@ const useRevurderSkjema = (
     });
 
     const sendInn = (): void => {
-        if (kanSendeSkjema() && fagsystem && eksternFagsakId && ytelsestype) {
+        if (kanSendeSkjema() && ytelsestype) {
             nullstillIkkePersisterteKomponenter();
+            setFeilmelding(undefined);
             onSubmit(
                 {
                     method: 'POST',
@@ -64,18 +69,33 @@ const useRevurderSkjema = (
                     url: '/familie-tilbake/api/behandling/revurdering/v1',
                 },
                 (response: Ressurs<string>) => {
-                    if (response.status === RessursStatus.Suksess) {
+                    if (response.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
                         utførRedirect(
                             `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${response.data}`
                         );
                         dialogRef.current?.close();
+                    } else if (
+                        response.status === RessursStatus.Suksess &&
+                        (!fagsystem || !eksternFagsakId)
+                    ) {
+                        setFeilmelding(
+                            `Mangler ${!fagsystem ? 'fagsystemtype' : ''}${!eksternFagsakId ? 'eksternFagsakId' : ''} for å navigere til den nye opprettede behandlingen.`
+                        );
                     }
                 }
             );
+        } else if (!ytelsestype) {
+            setFeilmelding('Kan ikke opprette revurdering uten ytelsestype');
         }
     };
 
-    return { skjema, sendInn, nullstillSkjema };
+    return {
+        skjema,
+        sendInn,
+        nullstillSkjema,
+        feilmelding,
+        setFeilmelding,
+    };
 };
 
 export { useRevurderSkjema };

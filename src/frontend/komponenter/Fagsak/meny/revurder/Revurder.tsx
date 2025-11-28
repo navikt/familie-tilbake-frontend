@@ -16,8 +16,15 @@ type Props = {
 
 export const Revurder: React.FC<Props> = ({ behandlingId }) => {
     const ref = useRef<HTMLDialogElement>(null);
-    const { skjema, sendInn, nullstillSkjema } = useRevurderSkjema(behandlingId, ref);
-    const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
+    const {
+        skjema,
+        sendInn,
+        nullstillSkjema,
+        feilmelding: storeFeilmelding,
+        setFeilmelding,
+    } = useRevurderSkjema(behandlingId, ref);
+
+    const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs) || storeFeilmelding;
 
     return (
         <>
@@ -35,7 +42,10 @@ export const Revurder: React.FC<Props> = ({ behandlingId }) => {
                     heading: 'Revurder tilbakekreving',
                     icon: <FileResetIcon aria-hidden className="mr-2" />,
                 }}
-                onClose={nullstillSkjema}
+                onClose={() => {
+                    nullstillSkjema();
+                    setFeilmelding(undefined);
+                }}
                 className={MODAL_BREDDE}
             >
                 <Modal.Body className="flex flex-col gap-4">
@@ -69,6 +79,7 @@ export const Revurder: React.FC<Props> = ({ behandlingId }) => {
                         key="avbryt"
                         onClick={() => {
                             nullstillSkjema();
+                            setFeilmelding(undefined);
                             ref.current?.close();
                         }}
                     >
