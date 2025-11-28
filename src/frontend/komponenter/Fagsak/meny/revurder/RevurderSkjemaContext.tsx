@@ -57,6 +57,7 @@ const useRevurderSkjema = (
     const sendInn = (): void => {
         if (kanSendeSkjema() && ytelsestype) {
             nullstillIkkePersisterteKomponenter();
+            setFeilmelding(undefined);
             onSubmit(
                 {
                     method: 'POST',
