@@ -1,5 +1,4 @@
-import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
-import type { SynligSteg } from '../../../../utils/sider';
+import type { SynligSteg } from '../../../../../utils/sider';
 
 import { Alert, BodyShort, Button, Heading, Link, Radio, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -9,16 +8,17 @@ import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {
     OptionGodkjent,
     OptionIkkeGodkjent,
+    type TotrinnGodkjenningOption,
     totrinnGodkjenningOptions,
 } from './typer/totrinnSkjemaTyper';
-import { useBehandling } from '../../../../context/BehandlingContext';
-import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
-import { RessursStatus } from '../../../../typer/ressurs';
-import { finnSideForSteg } from '../../../../utils/sider';
-import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
-import { Navigering } from '../../../Felleskomponenter/Flytelementer';
-import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
-import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import { useBehandling } from '../../../../../context/BehandlingContext';
+import { Behandlingssteg, behandlingssteg } from '../../../../../typer/behandling';
+import { RessursStatus } from '../../../../../typer/ressurs';
+import { finnSideForSteg } from '../../../../../utils/sider';
+import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
+import { Navigering } from '../../../../Felleskomponenter/Flytelementer';
+import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
+import Steginformasjon from '../../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 const AngreSendTilBeslutterContainer = styled.div`
     margin: 1rem 0;

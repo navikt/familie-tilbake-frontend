@@ -6,9 +6,9 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
 import { BrukerInformasjon } from './Informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './Informasjonsbokser/Faktaboks';
+import { MenySider } from './menysider/MenySider';
 import { useBehandling } from '../../../context/BehandlingContext';
 
 type Props = {
@@ -51,7 +51,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling, dialogRef }) => {
                 <div className="gap-4 flex flex-col flex-1 min-h-0">
                     <Faktaboks behandling={behandling} ytelsestype={fagsak.ytelsestype} />
                     <BrukerInformasjon bruker={fagsak.bruker} institusjon={fagsak.institusjon} />
-                    <HistorikkOgDokumenter
+                    <MenySider
                         værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}
                         fagsak={fagsak}
                         behandling={behandling}
@@ -69,7 +69,7 @@ const Høyremeny: React.FC<Props> = ({ fagsak, behandling, dialogRef }) => {
                 <Modal.Body className="flex flex-col gap-4">
                     <Faktaboks behandling={behandling} ytelsestype={fagsak.ytelsestype} />
                     <BrukerInformasjon bruker={fagsak.bruker} institusjon={fagsak.institusjon} />
-                    <HistorikkOgDokumenter
+                    <MenySider
                         værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}
                         fagsak={fagsak}
                         behandling={behandling}

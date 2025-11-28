@@ -15,15 +15,7 @@ import React from 'react';
 
 import { Kjønn } from '../../../../typer/bruker';
 import { formatterDatostring, hentAlder } from '../../../../utils';
-import { ICON_PROPS } from '../utils';
-
-const erDNummer = (personIdent: string): boolean => personIdent.charAt(0) > '3';
-
-const formatterPersonIdent = (personIdent: string): string =>
-    personIdent.replace(/(\d{6})(\d{5})/, '$1 $2');
-
-const formatterOrgNummer = (orgNummer: string): string =>
-    orgNummer.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+import { erDNummer, formatterOrgNummer, formatterPersonIdent, ICON_PROPS } from '../utils';
 
 const kjønnIkon = (kjønn: Kjønn): React.ReactNode => {
     switch (kjønn) {

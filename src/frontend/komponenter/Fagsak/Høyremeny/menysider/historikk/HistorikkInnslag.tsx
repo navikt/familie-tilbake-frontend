@@ -1,5 +1,5 @@
-import type { Behandlingssteg } from '../../../../typer/behandling';
-import type { HistorikkInnslag } from '../../../../typer/historikk';
+import type { Behandlingssteg } from '../../../../../typer/behandling';
+import type { HistorikkInnslag } from '../../../../../typer/historikk';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
@@ -9,10 +9,14 @@ import { styled } from 'styled-components';
 
 import HentDokument from './HentDokument';
 import { useHistorikk } from './HistorikkContext';
-import { Aktør, aktører, Historikkinnslagstype } from '../../../../typer/historikk';
-import { formatterDatoOgTidstring } from '../../../../utils';
-import { finnSideForSteg } from '../../../../utils/sider';
-import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
+import { Aktør, aktører, Historikkinnslagstype } from '../../../../../typer/historikk';
+import { formatterDatoOgTidstring } from '../../../../../utils';
+import { finnSideForSteg } from '../../../../../utils/sider';
+import {
+    BeslutterIkon,
+    SaksbehandlerIkon,
+    SystemIkon,
+} from '../../../../Felleskomponenter/Ikoner/';
 
 const Innslag = styled.div`
     display: flex;
