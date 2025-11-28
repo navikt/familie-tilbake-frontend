@@ -1,6 +1,5 @@
 import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
 import type { BehandlingDto, RessursByte, Section, Varselbrevtekst } from '../../../generated';
-import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 
 import { FilePdfIcon } from '@navikt/aksel-icons';
@@ -22,7 +21,9 @@ import { BrevmalkodeEnum } from '../../../generated';
 import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 import { updateParentBounds } from '../../../utils/updateParentBounds';
 import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
-import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
+import PdfVisningModal, {
+    type PdfVisningModalHandle,
+} from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 type Props = {
     behandling: BehandlingDto;
@@ -31,24 +32,6 @@ type Props = {
         fritekst: string;
     }>;
     varselbrevtekster: Varselbrevtekst;
-};
-
-const renderModal = (
-    pdfData: RessursByte | undefined,
-    showModal: boolean,
-    setShowModal: Dispatch<SetStateAction<boolean>>
-): ReactNode => {
-    if (!showModal || !pdfData) return null;
-
-    return (
-        <PdfVisningModal
-            åpen={true}
-            pdfdata={pdfData}
-            onRequestClose={() => {
-                setShowModal(false);
-            }}
-        />
-    );
 };
 
 export const ForhåndsvarselSkjema: React.FC<Props> = ({
@@ -61,8 +44,8 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
     const maksAntallTegn = 4000;
     const [expansionCardÅpen, setExpansionCardÅpen] = useState(!behandling.varselSendt);
     const containerRef = useRef<HTMLDivElement>(null);
+    const modalRef = useRef<PdfVisningModalHandle>(null);
     const [parentBounds, setParentBounds] = useState({ width: 'auto' });
-    const [showModal, setShowModal] = useState(false);
     const fritekst = methods.watch('fritekst');
 
     const {
@@ -77,7 +60,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                 ['forhåndsvisBrev', behandling.behandlingId, BrevmalkodeEnum.VARSEL, fritekst],
                 data
             );
-            setShowModal(true);
+            modalRef.current?.showModal(data);
         },
     });
 
@@ -89,10 +72,10 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
             fritekst,
         ];
 
-        const cachedData = queryClient.getQueryData(currentQueryKey);
+        const cachedData: RessursByte | undefined = queryClient.getQueryData(currentQueryKey);
 
         if (cachedData) {
-            setShowModal(true);
+            modalRef.current?.showModal(cachedData);
         } else {
             seForhåndsvisningMutation.mutate({
                 body: {
@@ -102,18 +85,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                 },
             });
         }
-    };
-
-    const getPdfData = (): RessursByte | undefined => {
-        return (
-            seForhåndsvisningMutation.data ||
-            queryClient.getQueryData([
-                'forhåndsvisBrev',
-                behandling.behandlingId,
-                BrevmalkodeEnum.VARSEL,
-                fritekst,
-            ])
-        );
     };
 
     useLayoutEffect(() => {
@@ -215,7 +186,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                     </FixedAlert>
                 )}
             </div>
-            {renderModal(getPdfData(), showModal, setShowModal)}
+            <PdfVisningModal ref={modalRef} />
         </>
     );
 };
