@@ -1,10 +1,8 @@
 import type { RessursByte } from '../../../generated';
-import type { FC, Ref } from 'react';
 
 import { Modal, Loader, Heading, Alert } from '@navikt/ds-react';
 import { ASpacing1, ASpacing3, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
-import { useImperativeHandle, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
@@ -32,49 +30,23 @@ const IframePdfVisning = styled.iframe`
     width: 100%;
 `;
 
-export type PdfVisningModalHandle = {
-    showModal: (data: Ressurs<string> | RessursByte) => void;
-};
-
 type Props = {
-    ref?: Ref<PdfVisningModalHandle>;
-    åpen?: boolean;
-    pdfdata?: Ressurs<string> | RessursByte;
-    onRequestClose?: () => void;
+    onRequestClose: () => void;
+    pdfdata: Ressurs<string> | RessursByte;
+    åpen: boolean;
 };
 
-const PdfVisningModal: FC<Props> = ({ ref, åpen, pdfdata: propsPdfdata, onRequestClose }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [pdfdata, setPdfdata] = useState<Ressurs<string> | RessursByte>();
-
-    useImperativeHandle(ref, () => ({
-        showModal: (data: Ressurs<string> | RessursByte): void => {
-            setPdfdata(data);
-            setIsOpen(true);
-        },
-    }));
-
-    const handleClose = (): void => {
-        setIsOpen(false);
-        setPdfdata(undefined);
-        onRequestClose?.();
-    };
-
-    const modalIsOpen = åpen ?? isOpen;
-    const modalPdfdata = propsPdfdata ?? pdfdata;
-
-    if (!modalIsOpen || !modalPdfdata) return null;
-
+const PdfVisningModal: React.FC<Props> = ({ onRequestClose, pdfdata, åpen }) => {
     return (
         <StyledModal
-            open={modalIsOpen}
-            onClose={handleClose}
+            open={åpen}
+            onClose={onRequestClose}
             className="pdfvisning-modal"
             header={{ heading: '', closeButton: true }}
             width="100rem"
         >
             <Modal.Body>
-                <Dokument pdfdata={modalPdfdata} />
+                <Dokument pdfdata={pdfdata} />
             </Modal.Body>
         </StyledModal>
     );
