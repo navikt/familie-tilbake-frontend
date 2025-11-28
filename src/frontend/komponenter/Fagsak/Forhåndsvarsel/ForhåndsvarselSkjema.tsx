@@ -1,5 +1,6 @@
 import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
-import type { BehandlingDto, Section, Varselbrevtekst } from '../../../generated';
+import type { BehandlingDto, RessursByte, Section, Varselbrevtekst } from '../../../generated';
+import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 
 import { FilePdfIcon } from '@navikt/aksel-icons';
@@ -32,6 +33,24 @@ type Props = {
     varselbrevtekster: Varselbrevtekst;
 };
 
+const renderModal = (
+    pdfData: RessursByte | undefined,
+    showModal: boolean,
+    setShowModal: Dispatch<SetStateAction<boolean>>
+): ReactNode => {
+    if (!showModal || !pdfData) return null;
+
+    return (
+        <PdfVisningModal
+            åpen={true}
+            pdfdata={pdfData}
+            onRequestClose={() => {
+                setShowModal(false);
+            }}
+        />
+    );
+};
+
 export const ForhåndsvarselSkjema: React.FC<Props> = ({
     behandling,
     methods,
@@ -43,6 +62,8 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
     const [expansionCardÅpen, setExpansionCardÅpen] = useState(!behandling.varselSendt);
     const containerRef = useRef<HTMLDivElement>(null);
     const [parentBounds, setParentBounds] = useState({ width: 'auto' });
+    const [showModal, setShowModal] = useState(false);
+    const fritekst = methods.watch('fritekst');
 
     const {
         control,
@@ -51,21 +72,48 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
 
     const seForhåndsvisningMutation = useMutation({
         ...forhåndsvisBrevMutation(),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['hentBehandling'],
-            });
+        onSuccess: data => {
+            queryClient.setQueryData(
+                ['forhåndsvisBrev', behandling.behandlingId, BrevmalkodeEnum.VARSEL, fritekst],
+                data
+            );
+            setShowModal(true);
         },
     });
 
     const seForhåndsvisning = (): void => {
-        seForhåndsvisningMutation.mutate({
-            body: {
-                behandlingId: behandling.behandlingId,
-                brevmalkode: BrevmalkodeEnum.VARSEL,
-                fritekst: methods.getValues('fritekst'),
-            },
-        });
+        const currentQueryKey = [
+            'forhåndsvisBrev',
+            behandling.behandlingId,
+            BrevmalkodeEnum.VARSEL,
+            fritekst,
+        ];
+
+        const cachedData = queryClient.getQueryData(currentQueryKey);
+
+        if (cachedData) {
+            setShowModal(true);
+        } else {
+            seForhåndsvisningMutation.mutate({
+                body: {
+                    behandlingId: behandling.behandlingId,
+                    brevmalkode: BrevmalkodeEnum.VARSEL,
+                    fritekst,
+                },
+            });
+        }
+    };
+
+    const getPdfData = (): RessursByte | undefined => {
+        return (
+            seForhåndsvisningMutation.data ||
+            queryClient.getQueryData([
+                'forhåndsvisBrev',
+                behandling.behandlingId,
+                BrevmalkodeEnum.VARSEL,
+                fritekst,
+            ])
+        );
     };
 
     useLayoutEffect(() => {
@@ -152,29 +200,22 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                         </Button>
                     )}
                 </HStack>
-                <div aria-live="assertive">
-                    {seForhåndsvisningMutation.error && (
-                        <FixedAlert
-                            variant="error"
-                            closeButton
-                            width={parentBounds.width}
-                            onClose={seForhåndsvisningMutation.reset}
-                        >
-                            <Heading spacing size="small" level="3">
-                                Forhåndsvisning feilet
-                            </Heading>
-                            {seForhåndsvisningMutation.error.message}
-                        </FixedAlert>
-                    )}
-                </div>
+                {seForhåndsvisningMutation.error && (
+                    <FixedAlert
+                        aria-live="assertive"
+                        variant="error"
+                        closeButton
+                        width={parentBounds.width}
+                        onClose={seForhåndsvisningMutation.reset}
+                    >
+                        <Heading spacing size="small" level="3">
+                            Forhåndsvisning feilet
+                        </Heading>
+                        {seForhåndsvisningMutation.error.message}
+                    </FixedAlert>
+                )}
             </div>
-            {seForhåndsvisningMutation.isSuccess && (
-                <PdfVisningModal
-                    åpen={seForhåndsvisningMutation.isSuccess}
-                    pdfdata={seForhåndsvisningMutation.data}
-                    onRequestClose={seForhåndsvisningMutation.reset}
-                />
-            )}
+            {renderModal(getPdfData(), showModal, setShowModal)}
         </>
     );
 };
