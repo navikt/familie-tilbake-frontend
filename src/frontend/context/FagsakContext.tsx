@@ -35,15 +35,6 @@ const [FagsakProvider, useFagsak] = createUseContext(() => {
         })
             .then((hentetFagsak: Ressurs<Fagsak>) => {
                 if (hentetFagsak.status === RessursStatus.Suksess) {
-                    console.log(
-                        'Setter ytelsestype:',
-                        hentetFagsak.data.ytelsestype,
-                        'Setter fagsystem:',
-                        hentetFagsak.data.fagsystem,
-                        'Setter eksternfagsakId:',
-                        hentetFagsak.data.eksternFagsakId
-                    );
-
                     setEksternFagsakId(hentetFagsak.data.eksternFagsakId);
                     setYtelsestype(hentetFagsak.data.ytelsestype);
                     setFagSystem(hentetFagsak.data.fagsystem);
