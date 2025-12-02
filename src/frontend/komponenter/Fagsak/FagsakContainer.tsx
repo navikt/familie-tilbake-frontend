@@ -27,7 +27,10 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
 
 const FagsakContainer: React.FC = () => {
     const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
-    const fagsystem = Fagsystem[fagsystemParam as keyof typeof Fagsystem];
+    const fagsystem =
+        fagsystemParam == 'KS'
+            ? Fagsystem[fagsystemParam as keyof typeof Fagsystem]
+            : (fagsystemParam as Fagsystem);
 
     const location = useLocation();
     const behandlingId = location.pathname.split('/')[6];
@@ -53,8 +56,6 @@ const FagsakContainer: React.FC = () => {
             hentFagsak(fagsystem, eksternFagsakId);
         }
         return (): void => {
-            console.log('Resetter ytelsestype, fagsystem og eksternFagsakId');
-
             setEksternFagsakId(undefined);
             setYtelsestype(undefined);
             setFagSystem(undefined);
