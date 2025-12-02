@@ -55,6 +55,14 @@ const useRevurderSkjema = (
     });
 
     const sendInn = (): void => {
+        console.log(
+            'ytelsestype: ',
+            ytelsestype,
+            'eksternFagsakId',
+            eksternFagsakId,
+            'fagsystem: ',
+            fagsystem
+        );
         if (kanSendeSkjema() && ytelsestype) {
             nullstillIkkePersisterteKomponenter();
             setFeilmelding(undefined);

@@ -53,6 +53,8 @@ const FagsakContainer: React.FC = () => {
             hentFagsak(fagsystem, eksternFagsakId);
         }
         return (): void => {
+            console.log('Resetter ytelsestype, fagsystem og eksternFagsakId');
+
             setEksternFagsakId(undefined);
             setYtelsestype(undefined);
             setFagSystem(undefined);
