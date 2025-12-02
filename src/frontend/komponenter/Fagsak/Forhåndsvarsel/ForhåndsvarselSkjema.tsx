@@ -1,4 +1,4 @@
-import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
+import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
 import type { BehandlingDto, RessursByte, Section, Varselbrevtekst } from '../../../generated';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
@@ -16,7 +16,6 @@ import {
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useLayoutEffect, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
 
 import { BrevmalkodeEnum } from '../../../generated';
 import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
@@ -26,10 +25,7 @@ import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningM
 
 type Props = {
     behandling: BehandlingDto;
-    methods: UseFormReturn<{
-        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
-        fritekst: string;
-    }>;
+    methods: UseFormReturn<ForhåndsvarselFormData>;
     varselbrevtekster: Varselbrevtekst;
 };
 
@@ -40,15 +36,7 @@ const renderModal = (
 ): ReactNode => {
     if (!showModal || !pdfData) return null;
 
-    return (
-        <PdfVisningModal
-            åpen={true}
-            pdfdata={pdfData}
-            onRequestClose={() => {
-                setShowModal(false);
-            }}
-        />
-    );
+    return <PdfVisningModal åpen pdfdata={pdfData} onRequestClose={() => setShowModal(false)} />;
 };
 
 export const ForhåndsvarselSkjema: React.FC<Props> = ({
@@ -66,7 +54,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
     const fritekst = methods.watch('fritekst');
 
     const {
-        control,
         formState: { errors },
     } = methods;
 
@@ -165,24 +152,17 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                                             </BodyLong>
                                         </div>
                                         {avsnitt.title === 'Dette har skjedd' && (
-                                            <form>
-                                                <Controller
-                                                    name="fritekst"
-                                                    control={control}
-                                                    rules={{
-                                                        required: 'Du må legge til en tekst',
-                                                    }}
-                                                    render={({ field }) => (
-                                                        <Textarea
-                                                            {...field}
-                                                            label="Legg til utdypende tekst"
-                                                            maxLength={maksAntallTegn}
-                                                            error={errors.fritekst?.message?.toString()}
-                                                            className="mb-6"
-                                                        />
-                                                    )}
-                                                />
-                                            </form>
+                                            <Textarea
+                                                {...methods.register('fritekst')}
+                                                label="Legg til utdypende tekst"
+                                                maxLength={maksAntallTegn}
+                                                error={
+                                                    'fritekst' in errors
+                                                        ? errors.fritekst?.message?.toString()
+                                                        : undefined
+                                                }
+                                                className="mb-6"
+                                            />
                                         )}
                                     </Fragment>
                                 ))}

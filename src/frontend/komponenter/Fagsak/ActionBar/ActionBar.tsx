@@ -16,6 +16,7 @@ type Props = {
     isLoading?: boolean;
     skjulNeste?: boolean;
     disableNeste?: boolean;
+    erSubmit?: boolean;
 };
 
 const ActionBar: React.FC<Props> = ({
@@ -29,6 +30,7 @@ const ActionBar: React.FC<Props> = ({
     isLoading = false,
     skjulNeste = false,
     disableNeste = false,
+    erSubmit = false,
 }) => {
     return (
         <nav
@@ -74,6 +76,7 @@ const ActionBar: React.FC<Props> = ({
                                 icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
                                 iconPosition="right"
                                 className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
+                                type={erSubmit ? 'submit' : 'button'}
                                 size="small"
                                 onClick={() => {
                                     if (!isLoading) onNeste();
