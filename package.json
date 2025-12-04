@@ -47,7 +47,7 @@
     "date-fns": "4.1.0",
     "deep-equal": "2.2.3",
     "dotenv": "17.2.3",
-    "express": "5.1.0",
+    "express": "5.2.0",
     "express-session": "1.18.2",
     "http-proxy-middleware": "3.0.5",
     "prom-client": "15.1.3",
