@@ -53,15 +53,15 @@ const ActionBar: React.FC<Props> = ({
                 </BodyShort>
                 <HStack gap="4" className="flex-nowrap">
                     {forrigeAriaLabel && onForrige && (
-                        <Tooltip content={forrigeAriaLabel}>
+                        <Tooltip content={forrigeAriaLabel} aria-disabled={isLoading}>
                             <Button
                                 variant="secondary"
                                 icon={<ChevronLeftIcon />}
                                 className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
                                 size="small"
-                                onClick={() => {
-                                    if (!isLoading) onForrige();
-                                }}
+                                loading={isLoading}
+                                disabled={isLoading}
+                                onClick={onForrige}
                                 aria-label={forrigeAriaLabel}
                             >
                                 <span className="hidden ax-md:block">Forrige</span>
@@ -69,17 +69,16 @@ const ActionBar: React.FC<Props> = ({
                         </Tooltip>
                     )}
                     {!skjulNeste && (
-                        <Tooltip content={nesteAriaLabel} aria-disabled={disableNeste}>
+                        <Tooltip content={nesteAriaLabel} aria-disabled={isLoading || disableNeste}>
                             <Button
                                 icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
                                 iconPosition="right"
                                 className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
                                 size="small"
-                                onClick={() => {
-                                    if (!isLoading) onNeste();
-                                }}
+                                loading={isLoading}
+                                disabled={isLoading || disableNeste}
+                                onClick={onNeste}
                                 aria-label={nesteAriaLabel}
-                                disabled={disableNeste}
                             >
                                 <span className="hidden ax-md:block">{nesteTekst}</span>
                             </Button>
