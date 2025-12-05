@@ -45,6 +45,8 @@ import type {
     FlyttBehandlingTilFakta1Responses,
     FlyttBehandlingTilFaktaData,
     FlyttBehandlingTilFaktaResponses,
+    ForhåndsvarselUnntakData,
+    ForhåndsvarselUnntakResponses,
     ForhåndsvisBrevData,
     ForhåndsvisBrevResponses,
     HenleggBehandlingData,
@@ -117,6 +119,8 @@ import type {
     LeggTilBrevmottakerResponses,
     MigrerAlleSakerData,
     MigrerAlleSakerResponses,
+    OppdaterBehandlendeEnhetPåBehandlingData,
+    OppdaterBehandlendeEnhetPåBehandlingResponses,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponses,
     OpprettBehandlingData,
@@ -131,6 +135,8 @@ import type {
     OpprettVergeStegResponses,
     SammenslåData,
     SammenslåResponses,
+    SendPåminnelseTilAlleSakerITilstandData,
+    SendPåminnelseTilAlleSakerITilstandResponses,
     SendSisteTilstandForBehandlingerTilDvhData,
     SendSisteTilstandForBehandlingerTilDvhResponses,
     SettBehandlingPåVentData,
@@ -145,6 +151,8 @@ import type {
     TvingHenleggBehandlingResponses,
     UtførBehandlingsstegData,
     UtførBehandlingsstegResponses,
+    UtsettUttalelseFristData,
+    UtsettUttalelseFristResponses,
 } from './types.gen';
 
 export type Options<
@@ -412,6 +420,23 @@ export const fjernVerge = <ThrowOnError extends boolean = false>(
         ...options,
     });
 
+export const oppdaterBehandlendeEnhetPåBehandling = <ThrowOnError extends boolean = false>(
+    options: Options<OppdaterBehandlendeEnhetPåBehandlingData, ThrowOnError>
+) =>
+    (options.client ?? client).put<
+        OppdaterBehandlendeEnhetPåBehandlingResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/baks/portefoljejustering/oppdater-behandlende-enhet',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
 /**
  * Oppdatere skalSammenslåPerioder
  */
@@ -472,6 +497,22 @@ export const sendSisteTilstandForBehandlingerTilDvh = <ThrowOnError extends bool
             'Content-Type': 'application/json',
             ...options.headers,
         },
+    });
+
+/**
+ * Kjør en påminnelse for alle saker i tilstand selv om de ikke er
+ */
+export const sendPåminnelseTilAlleSakerITilstand = <ThrowOnError extends boolean = false>(
+    options: Options<SendPåminnelseTilAlleSakerITilstandData, ThrowOnError>
+) =>
+    (options.client ?? client).post<
+        SendPåminnelseTilAlleSakerITilstandResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/poke',
+        ...options,
     });
 
 /**
@@ -621,6 +662,40 @@ export const lagreBrukeruttalelse = <ThrowOnError extends boolean = false>(
         responseType: 'json',
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/dokument/forhåndsvarsel/{behandlingId}/uttalelse',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
+/**
+ * Skal utsette uttalelse frist
+ */
+export const utsettUttalelseFrist = <ThrowOnError extends boolean = false>(
+    options: Options<UtsettUttalelseFristData, ThrowOnError>
+) =>
+    (options.client ?? client).post<UtsettUttalelseFristResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/dokument/forhåndsvarsel/utsettelse',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
+/**
+ * Skal ikke sendes forhåndsvarsel
+ */
+export const forhåndsvarselUnntak = <ThrowOnError extends boolean = false>(
+    options: Options<ForhåndsvarselUnntakData, ThrowOnError>
+) =>
+    (options.client ?? client).post<ForhåndsvarselUnntakResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/dokument/forhåndsvarsel/unntak',
         ...options,
         headers: {
             'Content-Type': 'application/json',

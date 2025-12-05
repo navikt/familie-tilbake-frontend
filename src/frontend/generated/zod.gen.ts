@@ -15,6 +15,11 @@ export const zByttEnhetDto = z.object({
     begrunnelse: z.string().min(0).max(400),
 });
 
+export const zOppdaterBehandlendeEnhetRequest = z.object({
+    behandlingEksternBrukId: z.uuid(),
+    nyEnhet: z.string(),
+});
+
 export const zDatoperiode = z.object({
     fom: z.iso.date(),
     tom: z.iso.date(),
@@ -36,15 +41,15 @@ export const zFritekstavsnittDto = z.object({
     perioderMedTekst: z.array(zPeriodeMedTekstDto).min(0).max(100),
 });
 
-export const zFristUtsettelse = z.object({
-    nyFrist: z.iso.date(),
-    begrunnelse: z.string(),
-});
-
 export const zUttalelsesdetaljer = z.object({
     uttalelsesdato: z.iso.date(),
     hvorBrukerenUttalteSeg: z.string(),
     uttalelseBeskrivelse: z.string(),
+});
+
+export const zFristUtsettelseDto = z.object({
+    nyFrist: z.iso.date(),
+    begrunnelse: z.string(),
 });
 
 export const zHentForhåndvisningVedtaksbrevPdfDto = z.object({
@@ -221,9 +226,20 @@ export const zBeregningsresultatsperiodeDto = z.object({
     tilbakekrevesBeløpEtterSkatt: z.optional(z.number()),
 });
 
-export const zSchemaEnum = z.enum(['BA', 'EF', 'AAP', 'KONT', 'IT01', 'TS']);
+export const zSchemaEnum = z.enum([
+    'START',
+    'AVVENTER_KRAVGRUNNLAG',
+    'AVVENTER_FAGSYSTEMINFO',
+    'AVVENTER_BRUKERINFO',
+    'SEND_VARSELBREV',
+    'IVERKSETT_VEDTAK',
+    'TIL_BEHANDLING',
+    'AVSLUTTET',
+]);
 
-export const zSchemaEnum2 = z.enum([
+export const zSchemaEnum2 = z.enum(['BA', 'EF', 'AAP', 'KONT', 'IT01', 'TS']);
+
+export const zSchemaEnum3 = z.enum([
     'BARNETRYGD',
     'OVERGANGSSTØNAD',
     'BARNETILSYN',
@@ -231,7 +247,7 @@ export const zSchemaEnum2 = z.enum([
     'KONTANTSTØTTE',
 ]);
 
-export const zSchemaEnum3 = z.enum([
+export const zSchemaEnum4 = z.enum([
     'BARNETRYGD',
     'OVERGANGSSTØNAD',
     'BARNETILSYN',
@@ -244,7 +260,7 @@ export const zSchemaEnum3 = z.enum([
 
 export const zOpprettManueltTilbakekrevingRequest = z.object({
     eksternFagsakId: z.string(),
-    ytelsestype: zSchemaEnum3,
+    ytelsestype: zSchemaEnum4,
     eksternId: z.string(),
 });
 
@@ -466,18 +482,30 @@ export const zHenleggelsesbrevFritekstDto = z.object({
     fritekst: z.optional(z.string().min(0).max(1500)),
 });
 
-export const zHarBrukerUttaltSegEnum = z.enum(['JA', 'NEI', 'UTTSETT_FRIST']);
+export const zHarBrukerUttaltSegEnum = z.enum(['JA', 'NEI', 'ALLEREDE_UTTALET_SEG']);
 
 export const zBrukeruttalelseDto = z.object({
     harBrukerUttaltSeg: zHarBrukerUttaltSegEnum,
     uttalelsesdetaljer: z.optional(z.array(zUttalelsesdetaljer)),
-    utsettFrist: z.optional(z.array(zFristUtsettelse)),
     kommentar: z.optional(z.string()),
+});
+
+export const zBegrunnelseForUnntakEnum = z.enum([
+    'IKKE_PRAKTISK_MULIG',
+    'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING',
+    'ÅPENBART_UNØDVENDIG',
+]);
+
+export const zForhåndsvarselUnntakDto = z.object({
+    begrunnelseForUnntak: zBegrunnelseForUnntakEnum,
+    beskrivelse: z.string(),
 });
 
 export const zForhåndsvarselDto = z.object({
     varselbrevDto: z.optional(zVarselbrevDto),
     brukeruttalelse: z.optional(zBrukeruttalelseDto),
+    utsettUttalelseFrist: z.array(zFristUtsettelseDto),
+    forhåndsvarselUnntak: z.optional(zForhåndsvarselUnntakDto),
 });
 
 export const zRessursForhåndsvarselDto = z.object({
@@ -505,14 +533,14 @@ export const zSpråkkodeEnum = z.enum(['NB', 'NN']);
 
 export const zForhåndsvisVarselbrevRequest = z.object({
     varseltekst: z.optional(z.string().min(0).max(1500)),
-    ytelsestype: zSchemaEnum3,
+    ytelsestype: zSchemaEnum4,
     behandlendeEnhetId: z.optional(z.string()),
     behandlendeEnhetsNavn: z.string(),
     saksbehandlerIdent: z.optional(z.string()),
     språkkode: zSpråkkodeEnum,
     vedtaksdato: z.optional(z.iso.date()),
     feilutbetaltePerioderDto: zFeilutbetaltePerioderDto,
-    fagsystem: zSchemaEnum,
+    fagsystem: zSchemaEnum2,
     eksternFagsakId: z.string(),
     ident: z.string(),
     verge: z.optional(zVerge),
@@ -935,9 +963,9 @@ export const zRegelverkEnum = z.enum(['NASJONAL', 'EØS']);
 export const zBehandlingstypeEnum = z.enum(['TILBAKEKREVING', 'REVURDERING_TILBAKEKREVING']);
 
 export const zOpprettTilbakekrevingRequest = z.object({
-    fagsystem: zSchemaEnum,
+    fagsystem: zSchemaEnum2,
     regelverk: z.optional(zRegelverkEnum),
-    ytelsestype: zSchemaEnum3,
+    ytelsestype: zSchemaEnum4,
     eksternFagsakId: z.string(),
     personIdent: z.string().regex(/(^$|.{11})/),
     eksternId: z.string(),
@@ -965,7 +993,7 @@ export const zGetårsakstypeEnum = z.enum([
 ]);
 
 export const zOpprettRevurderingDto = z.object({
-    ytelsestype: zSchemaEnum3,
+    ytelsestype: zSchemaEnum4,
     originalBehandlingId: z.uuid(),
     getårsakstype: zGetårsakstypeEnum,
 });
@@ -1034,8 +1062,8 @@ export const zFrontendBrukerDto = z.object({
 
 export const zFagsakDto = z.object({
     eksternFagsakId: z.string(),
-    ytelsestype: zSchemaEnum3,
-    fagsystem: zSchemaEnum,
+    ytelsestype: zSchemaEnum4,
+    fagsystem: zSchemaEnum2,
     språkkode: zSpråkkodeEnum,
     bruker: zFrontendBrukerDto,
     behandlinger: z.array(zBehandlingsoppsummeringDto),
@@ -1499,6 +1527,17 @@ export const zFjernVergeData = z.object({
  */
 export const zFjernVergeResponse = zRessursString;
 
+export const zOppdaterBehandlendeEnhetPåBehandlingData = z.object({
+    body: zOppdaterBehandlendeEnhetRequest,
+    path: z.optional(z.never()),
+    query: z.optional(z.never()),
+});
+
+/**
+ * OK
+ */
+export const zOppdaterBehandlendeEnhetPåBehandlingResponse = zRessursString;
+
 export const zSammenslåData = z.object({
     body: z.optional(z.never()),
     path: z.object({
@@ -1540,6 +1579,14 @@ export const zSendSisteTilstandForBehandlingerTilDvhData = z.object({
     query: z.optional(z.never()),
 });
 
+export const zSendPåminnelseTilAlleSakerITilstandData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.object({
+        tilstand: zSchemaEnum,
+    }),
+});
+
 export const zMigrerAlleSakerData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
@@ -1555,7 +1602,7 @@ export const zLagOppdaterOppgaveTaskForBehandlingData = z.object({
 export const zFinnGamleÅpneBehandlingerUtenOppgaveData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        fagsystem: zSchemaEnum,
+        fagsystem: zSchemaEnum2,
     }),
     query: z.optional(z.never()),
 });
@@ -1613,6 +1660,28 @@ export const zLagreBrukeruttalelseData = z.object({
  * OK
  */
 export const zLagreBrukeruttalelseResponse = zRessurs;
+
+export const zUtsettUttalelseFristData = z.object({
+    body: zFristUtsettelseDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never()),
+});
+
+/**
+ * OK
+ */
+export const zUtsettUttalelseFristResponse = zRessurs;
+
+export const zForhåndsvarselUnntakData = z.object({
+    body: zForhåndsvarselUnntakDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never()),
+});
+
+/**
+ * OK
+ */
+export const zForhåndsvarselUnntakResponse = zRessurs;
 
 export const zForhåndsvisBrevData = z.object({
     body: zBestillBrevDto,
@@ -1778,7 +1847,7 @@ export const zOpprettBehandlingManuellTaskResponse = zRessursString;
 export const zKanBehandlingOpprettesManueltData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        ytelsestype: zSchemaEnum2,
+        ytelsestype: zSchemaEnum3,
         eksternFagsakId: z.string(),
     }),
     query: z.optional(z.never()),
@@ -1829,7 +1898,7 @@ export const zHentInfoResponse = zRessursInfo;
 export const zHentForvaltningsinfoData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        ytelsestype: zSchemaEnum3,
+        ytelsestype: zSchemaEnum4,
         eksternFagsakId: z.string(),
     }),
     query: z.optional(z.never()),
@@ -1843,7 +1912,7 @@ export const zHentForvaltningsinfoResponse = zRessursListBehandlingsinfo;
 export const zHentKravgrunnlagsinfoData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        ytelsestype: zSchemaEnum2,
+        ytelsestype: zSchemaEnum3,
         eksternFagsakId: z.string(),
     }),
     query: z.optional(z.never()),
@@ -1858,7 +1927,7 @@ export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOp
     z.object({
         body: z.optional(z.never()),
         path: z.object({
-            fagsystem: zSchemaEnum,
+            fagsystem: zSchemaEnum2,
         }),
         query: z.optional(z.never()),
     });
@@ -1888,7 +1957,7 @@ export const zFeatureTogglesResponse = zRessursMapStringBoolean;
 export const zHentVedtakForFagsystemData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        fagsystem: zSchemaEnum,
+        fagsystem: zSchemaEnum2,
         eksternFagsakId: z.string(),
     }),
     query: z.optional(z.never()),
@@ -1902,7 +1971,7 @@ export const zHentVedtakForFagsystemResponse = zRessursListFagsystemVedtak;
 export const zHentFagsakData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        fagsystem: zSchemaEnum,
+        fagsystem: zSchemaEnum2,
         eksternFagsakId: z.string(),
     }),
     query: z.optional(z.never()),
@@ -1916,7 +1985,7 @@ export const zHentFagsakResponse = zRessursFagsakDto;
 export const zFinnesÅpenTilbakekrevingsbehandlingData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        fagsystem: zSchemaEnum,
+        fagsystem: zSchemaEnum2,
         eksternFagsakId: z.string(),
     }),
     query: z.optional(z.never()),
@@ -1930,7 +1999,7 @@ export const zFinnesÅpenTilbakekrevingsbehandlingResponse = zRessursFinnesBehan
 export const zHentBehandlingerForFagsystemData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        fagsystem: zSchemaEnum,
+        fagsystem: zSchemaEnum2,
         eksternFagsakId: z.string(),
     }),
     query: z.optional(z.never()),
