@@ -1,26 +1,26 @@
 import type { BehandlingDto, FagsakDto } from '../../../generated';
 
 import { MegaphoneIcon } from '@navikt/aksel-icons';
-import { Alert, Heading, HStack, Radio, RadioGroup, Tag, Tooltip, VStack } from '@navikt/ds-react';
+import { Heading, HStack, Radio, RadioGroup, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router';
 
+import { SkalSendesForhåndsvarsel, HarBrukerUttaltSeg } from './Enums';
 import { ForhåndsvarselSkjema } from './ForhåndsvarselSkjema';
 import { Unntak } from './Unntak';
-import { useBehandling } from '../../../context/BehandlingContext';
 import {
-    BrevmalkodeEnum,
-    hentForhåndsvarselinfo,
-    hentForhåndsvarselTekst,
-} from '../../../generated';
-import { bestillBrevMutation } from '../../../generated/@tanstack/react-query.gen';
+    mapHarBrukerUttaltSegFraApiDto,
+    useForhåndsvarselMutations,
+    type ForhåndsvarselFormData,
+} from './useForhåndsvarselMutations';
+import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
-import { SYNLIGE_STEG } from '../../../utils/sider';
+import { updateParentBounds } from '../../../utils/updateParentBounds';
+import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
 import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
 import { ActionBar } from '../ActionBar/ActionBar';
 
@@ -31,60 +31,85 @@ type Props = {
 
 type TagVariant = 'info-moderate' | 'success-moderate';
 
-export enum SkalSendesForhåndsvarsel {
-    Ja = 'ja',
-    Nei = 'nei',
-    IkkeValgt = '',
-}
-
 const getTagVariant = (sendtTid: string): TagVariant => {
     const ukerSiden = differenceInWeeks(new Date(), new Date(sendtTid));
     return ukerSiden >= 3 ? 'success-moderate' : 'info-moderate';
 };
 
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
-    const navigate = useNavigate();
     const [visForhåndsvarselSendt, setVisForhåndsvarselSendt] = useState(false);
-    const queryClient = useQueryClient();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [parentBounds, setParentBounds] = useState({ width: 'auto' });
 
     const { actionBarStegtekst } = useBehandling();
 
-    const { data: forhåndsvarselInfo } = useQuery({
-        queryKey: ['hentForhåndsvarselInfo', behandling.behandlingId],
-        queryFn: () =>
-            hentForhåndsvarselinfo({
-                path: {
-                    behandlingId: behandling.behandlingId,
-                },
-            }),
-        enabled: !!behandling.behandlingId,
-        select: data => {
-            const info = data.data?.data;
-            return {
-                varselbrevSendtTid: info?.varselbrevDto?.varselbrevSendtTid,
-                uttalelsesfrist: info?.varselbrevDto?.uttalelsesfrist,
-                brukeruttalelse: info?.brukeruttalelse,
-            };
-        },
-    });
+    const {
+        sendForhåndsvarselMutation,
+        sendBrukeruttalelseMutation,
+        sendForhåndsvarsel,
+        sendBrukeruttalelse,
+        sendUtsettUttalelseFrist,
+        gåTilNeste,
+    } = useForhåndsvarselMutations(behandling, fagsak, () => setVisForhåndsvarselSendt(true));
+
+    const { forhåndsvarselInfo, varselbrevtekster } = useForhåndsvarselQueries(behandling);
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevSendtTid;
 
-    const getForhåndsvarselStatus = (): SkalSendesForhåndsvarsel => {
+    const getForhåndsvarselStatus = useCallback((): SkalSendesForhåndsvarsel => {
         if (varselErSendt) {
             return SkalSendesForhåndsvarsel.Ja;
         }
         return SkalSendesForhåndsvarsel.IkkeValgt;
-    };
+    }, [varselErSendt]);
 
-    const methods = useForm({
+    const methods = useForm<ForhåndsvarselFormData>({
         reValidateMode: 'onBlur',
         shouldFocusError: false,
         defaultValues: {
-            skalSendesForhåndsvarsel: getForhåndsvarselStatus(),
+            skalSendesForhåndsvarsel: getForhåndsvarselStatus().toString(),
             fritekst: '',
+            harBrukerUttaltSeg: mapHarBrukerUttaltSegFraApiDto(
+                forhåndsvarselInfo?.brukeruttalelse?.harBrukerUttaltSeg
+            ),
+            uttalelsesKommentar: forhåndsvarselInfo?.brukeruttalelse?.kommentar || '',
+            uttalelsesDetaljer: forhåndsvarselInfo?.brukeruttalelse?.uttalelsesdetaljer || '',
+            uttalelsesdato: '',
+            hvorBrukerenUttalteSeg: '',
+            uttalelseBeskrivelse: '',
+            nyFristDato: '',
+            begrunnelseUtsattFrist: '',
         },
     });
+
+    useEffect(() => {
+        if (forhåndsvarselInfo) {
+            methods.reset({
+                skalSendesForhåndsvarsel: getForhåndsvarselStatus().toString(),
+                fritekst: '',
+                harBrukerUttaltSeg: mapHarBrukerUttaltSegFraApiDto(
+                    forhåndsvarselInfo?.brukeruttalelse?.harBrukerUttaltSeg
+                ),
+                uttalelsesKommentar: forhåndsvarselInfo?.brukeruttalelse?.kommentar || '',
+                uttalelsesDetaljer: forhåndsvarselInfo?.brukeruttalelse?.uttalelsesdetaljer || '',
+                uttalelsesdato: '',
+                hvorBrukerenUttalteSeg: '',
+                uttalelseBeskrivelse: '',
+                nyFristDato: '',
+                begrunnelseUtsattFrist: '',
+            });
+        }
+    }, [forhåndsvarselInfo, methods, getForhåndsvarselStatus]);
+
+    useLayoutEffect(() => {
+        updateParentBounds(containerRef, setParentBounds);
+        window.addEventListener('resize', () => updateParentBounds(containerRef, setParentBounds));
+
+        return (): void =>
+            window.removeEventListener('resize', () =>
+                updateParentBounds(containerRef, setParentBounds)
+            );
+    }, []);
 
     const {
         register,
@@ -97,43 +122,35 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         name: 'skalSendesForhåndsvarsel',
     });
 
-    const gåTilNeste = (): void => {
-        navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
-        );
+    const harBrukerUttaltSeg = useWatch({
+        control: methods.control,
+        name: 'harBrukerUttaltSeg',
+    });
+
+    const handleNesteKnapp = (): void => {
+        if (
+            varselErSendt &&
+            (harBrukerUttaltSeg === HarBrukerUttaltSeg.Ja ||
+                harBrukerUttaltSeg === HarBrukerUttaltSeg.Nei)
+        ) {
+            handleSubmit(sendBrukeruttalelse)();
+        } else if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
+            handleSubmit(sendUtsettUttalelseFrist)();
+        } else if (!varselErSendt && harEndringer) {
+            handleSubmit(sendForhåndsvarsel)();
+        } else {
+            gåTilNeste();
+        }
     };
 
-    const { data: varselbrevtekster } = useQuery({
-        queryKey: ['hentForhåndsvarselTekst', behandling.behandlingId],
-        queryFn: () =>
-            hentForhåndsvarselTekst({
-                path: {
-                    behandlingId: behandling.behandlingId,
-                },
-            }),
-        enabled: !!behandling.behandlingId,
-        select: data => data.data?.data,
-    });
-
-    const sendForhåndsvarselMutation = useMutation({
-        ...bestillBrevMutation(),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['hentBehandling', behandling.behandlingId],
-            });
-            setVisForhåndsvarselSendt(true);
-        },
-    });
-
-    const sendForhåndsvarsel = handleSubmit(data => {
-        sendForhåndsvarselMutation.mutate({
-            body: {
-                behandlingId: behandling.behandlingId,
-                brevmalkode: BrevmalkodeEnum.VARSEL,
-                fritekst: data.fritekst,
-            },
-        });
-    });
+    const getNesteKnappTekst = (): string => {
+        if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
+            return 'Utsett frist';
+        } else if (!varselErSendt && harEndringer) {
+            return 'Send forhåndsvarsel';
+        }
+        return 'Neste';
+    };
 
     return (
         <>
@@ -157,12 +174,11 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                         </Tooltip>
                     )}
                 </HStack>
-                <VStack maxWidth={ATextWidthMax}>
+                <VStack maxWidth={ATextWidthMax} ref={containerRef}>
                     <RadioGroup
                         {...register('skalSendesForhåndsvarsel', {
                             required: 'Velg ett av alternativene over for å gå videre',
                         })}
-                        readOnly={behandling.varselSendt}
                         size="small"
                         name="skalSendesForhåndsvarsel"
                         onChange={value => methods.setValue('skalSendesForhåndsvarsel', value)}
@@ -170,6 +186,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                         legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
                         description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
                 fattes, slik at de får mulighet til å uttale seg."
+                        readOnly={varselErSendt}
                         error={errors.skalSendesForhåndsvarsel?.message}
                     >
                         <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
@@ -180,40 +197,55 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && varselbrevtekster && (
                     <ForhåndsvarselSkjema
                         behandling={behandling}
+                        fagsak={fagsak}
                         methods={methods}
                         varselbrevtekster={varselbrevtekster}
+                        varselErSendt={varselErSendt}
+                        parentBounds={parentBounds}
                     />
                 )}
                 {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && (
                     <Unntak methods={methods} />
                 )}
                 {visForhåndsvarselSendt && (
-                    <Alert
+                    <FixedAlert
+                        aria-live="polite"
                         variant="success"
-                        contentMaxWidth={false}
-                        onClose={() => setVisForhåndsvarselSendt(false)}
                         closeButton
+                        width={parentBounds.width}
+                        onClose={() => setVisForhåndsvarselSendt(false)}
                     >
                         <Heading spacing size="small" level="3">
                             Forhåndsvarsel er sendt
                         </Heading>
                         Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når
                         fristen for å uttale seg (3 uker) har gått ut.
-                    </Alert>
+                    </FixedAlert>
                 )}
             </VStack>
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
-                nesteTekst={harEndringer ? 'Send forhåndsvarsel' : 'Neste'}
+                nesteTekst={getNesteKnappTekst()}
+                isLoading={
+                    sendForhåndsvarselMutation.isPending || sendBrukeruttalelseMutation.isPending
+                }
                 forrigeAriaLabel={undefined}
-                nesteAriaLabel={harEndringer ? 'Send forhåndsvarsel' : 'Gå til foreldelsessteget'}
-                onNeste={behandling.varselSendt ? gåTilNeste : sendForhåndsvarsel}
+                nesteAriaLabel={getNesteKnappTekst()}
+                onNeste={handleNesteKnapp}
                 onForrige={undefined}
             />
             {sendForhåndsvarselMutation.isError && (
                 <FeilModal
                     feil={sendForhåndsvarselMutation.error}
                     lukkFeilModal={sendForhåndsvarselMutation.reset}
+                    behandlingId={behandling.behandlingId}
+                    fagsakId={fagsak.eksternFagsakId}
+                />
+            )}
+            {sendBrukeruttalelseMutation.isError && (
+                <FeilModal
+                    feil={sendBrukeruttalelseMutation.error}
+                    lukkFeilModal={sendBrukeruttalelseMutation.reset}
                     behandlingId={behandling.behandlingId}
                     fagsakId={fagsak.eksternFagsakId}
                 />

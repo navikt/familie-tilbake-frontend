@@ -1,5 +1,11 @@
-import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
-import type { BehandlingDto, RessursByte, Section, Varselbrevtekst } from '../../../generated';
+import type { ForhåndsvarselFormData } from './useForhåndsvarselMutations';
+import type {
+    BehandlingDto,
+    RessursByte,
+    Section,
+    Varselbrevtekst,
+    FagsakDto,
+} from '../../../generated';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 
@@ -14,23 +20,23 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import React, { Fragment, useLayoutEffect, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { useQueryClient } from '@tanstack/react-query';
+import React, { Fragment, useEffect, useEffectEvent, useState } from 'react';
+import { Controller, useWatch } from 'react-hook-form';
 
+import { Brukeruttalelse } from './Brukeruttalelse';
+import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { BrevmalkodeEnum } from '../../../generated';
-import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
-import { updateParentBounds } from '../../../utils/updateParentBounds';
 import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
 import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 type Props = {
     behandling: BehandlingDto;
-    methods: UseFormReturn<{
-        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
-        fritekst: string;
-    }>;
+    fagsak: FagsakDto;
+    methods: UseFormReturn<ForhåndsvarselFormData>;
     varselbrevtekster: Varselbrevtekst;
+    varselErSendt: boolean;
+    parentBounds: { width: string | undefined };
 };
 
 const renderModal = (
@@ -53,35 +59,58 @@ const renderModal = (
 
 export const ForhåndsvarselSkjema: React.FC<Props> = ({
     behandling,
+    fagsak,
     methods,
     varselbrevtekster,
+    varselErSendt,
+    parentBounds,
 }) => {
-    const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
+    const tittel = varselErSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const queryClient = useQueryClient();
     const maksAntallTegn = 4000;
-    const [expansionCardÅpen, setExpansionCardÅpen] = useState(!behandling.varselSendt);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [parentBounds, setParentBounds] = useState({ width: 'auto' });
+    const [expansionCardÅpen, setExpansionCardÅpen] = useState(!varselErSendt);
+
+    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling, fagsak);
+
     const [showModal, setShowModal] = useState(false);
-    const fritekst = methods.watch('fritekst');
+    const fritekst = useWatch({
+        control: methods.control,
+        name: 'fritekst',
+    });
 
     const {
         control,
         formState: { errors },
     } = methods;
 
-    const seForhåndsvisningMutation = useMutation({
-        ...forhåndsvisBrevMutation(),
-        onSuccess: data => {
-            queryClient.setQueryData(
-                ['forhåndsvisBrev', behandling.behandlingId, BrevmalkodeEnum.VARSEL, fritekst],
-                data
-            );
-            setShowModal(true);
-        },
+    const handleVarselChange = useEffectEvent(() => {
+        if (varselErSendt) {
+            setExpansionCardÅpen(false);
+        }
     });
 
-    const seForhåndsvisning = (): void => {
+    useEffect(() => {
+        handleVarselChange();
+    }, [varselErSendt]);
+
+    const handleMutationSuccess = useEffectEvent(() => {
+        if (forhåndsvisning.isSuccess && forhåndsvisning.data) {
+            const currentQueryKey = [
+                'forhåndsvisBrev',
+                behandling.behandlingId,
+                BrevmalkodeEnum.VARSEL,
+                fritekst,
+            ];
+            queryClient.setQueryData(currentQueryKey, forhåndsvisning.data);
+            setShowModal(true);
+        }
+    });
+
+    useEffect(() => {
+        handleMutationSuccess();
+    }, [forhåndsvisning.isSuccess, forhåndsvisning.data]);
+
+    const seForhåndsvisningWithModal = (): void => {
         const currentQueryKey = [
             'forhåndsvisBrev',
             behandling.behandlingId,
@@ -94,19 +123,13 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
         if (cachedData) {
             setShowModal(true);
         } else {
-            seForhåndsvisningMutation.mutate({
-                body: {
-                    behandlingId: behandling.behandlingId,
-                    brevmalkode: BrevmalkodeEnum.VARSEL,
-                    fritekst,
-                },
-            });
+            seForhåndsvisning(fritekst);
         }
     };
 
     const getPdfData = (): RessursByte | undefined => {
         return (
-            seForhåndsvisningMutation.data ||
+            forhåndsvisning.data ||
             queryClient.getQueryData([
                 'forhåndsvisBrev',
                 behandling.behandlingId,
@@ -116,19 +139,9 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
         );
     };
 
-    useLayoutEffect(() => {
-        updateParentBounds(containerRef, setParentBounds);
-        window.addEventListener('resize', () => updateParentBounds(containerRef, setParentBounds));
-
-        return (): void =>
-            window.removeEventListener('resize', () =>
-                updateParentBounds(containerRef, setParentBounds)
-            );
-    }, []);
-
     return (
         <>
-            <div ref={containerRef}>
+            <VStack gap="4">
                 <HStack gap="4">
                     <ExpansionCard
                         className="flex-1"
@@ -144,14 +157,16 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                                 <Heading size="medium" level="2" spacing>
                                     {varselbrevtekster.overskrift}
                                 </Heading>
-                                <Button
-                                    loading={seForhåndsvisningMutation.isPending}
-                                    icon={<FilePdfIcon aria-hidden />}
-                                    variant="tertiary"
-                                    onClick={seForhåndsvisning}
-                                >
-                                    Forhåndsvisning
-                                </Button>
+                                {!varselErSendt && (
+                                    <Button
+                                        loading={forhåndsvisning.isPending}
+                                        icon={<FilePdfIcon aria-hidden />}
+                                        variant="tertiary"
+                                        onClick={seForhåndsvisningWithModal}
+                                    >
+                                        Forhåndsvisning
+                                    </Button>
+                                )}
                             </HStack>
                             <VStack maxWidth={ATextWidthMax}>
                                 {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
@@ -170,7 +185,9 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                                                     name="fritekst"
                                                     control={control}
                                                     rules={{
-                                                        required: 'Du må legge til en tekst',
+                                                        required: varselErSendt
+                                                            ? false
+                                                            : 'Du må legge til en tekst',
                                                     }}
                                                     render={({ field }) => (
                                                         <Textarea
@@ -179,6 +196,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                                                             maxLength={maksAntallTegn}
                                                             error={errors.fritekst?.message?.toString()}
                                                             className="mb-6"
+                                                            readOnly={varselErSendt}
                                                         />
                                                     )}
                                                 />
@@ -189,32 +207,33 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                             </VStack>
                         </ExpansionCard.Content>
                     </ExpansionCard>
-                    {!expansionCardÅpen && (
+                    {!expansionCardÅpen && !varselErSendt && (
                         <Button
-                            loading={seForhåndsvisningMutation.isPending}
+                            loading={forhåndsvisning.isPending}
                             icon={<FilePdfIcon aria-hidden />}
                             variant="tertiary"
-                            onClick={seForhåndsvisning}
+                            onClick={() => seForhåndsvisning(fritekst)}
                         >
                             Forhåndsvisning
                         </Button>
                     )}
                 </HStack>
-                {seForhåndsvisningMutation.error && (
+                {varselErSendt && <Brukeruttalelse methods={methods} kanUtsetteFrist />}
+                {forhåndsvisning.error && (
                     <FixedAlert
                         aria-live="assertive"
                         variant="error"
                         closeButton
                         width={parentBounds.width}
-                        onClose={seForhåndsvisningMutation.reset}
+                        onClose={forhåndsvisning.reset}
                     >
                         <Heading spacing size="small" level="3">
                             Forhåndsvisning feilet
                         </Heading>
-                        {seForhåndsvisningMutation.error.message}
+                        {forhåndsvisning.error.message}
                     </FixedAlert>
                 )}
-            </div>
+            </VStack>
             {renderModal(getPdfData(), showModal, setShowModal)}
         </>
     );

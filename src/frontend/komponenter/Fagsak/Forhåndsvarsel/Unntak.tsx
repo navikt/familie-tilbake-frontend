@@ -1,4 +1,4 @@
-import type { SkalSendesForhåndsvarsel } from './Forhåndsvarsel';
+import type { ForhåndsvarselFormData } from './useForhåndsvarselMutations';
 import type { UseFormReturn } from 'react-hook-form/dist/types/form';
 
 import { VStack, RadioGroup, HStack, Radio, Textarea, Link } from '@navikt/ds-react';
@@ -6,10 +6,7 @@ import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
 
 type Props = {
-    methods: UseFormReturn<{
-        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
-        fritekst: string;
-    }>;
+    methods: UseFormReturn<ForhåndsvarselFormData>;
 };
 
 enum BegrunnelseUnntak {
