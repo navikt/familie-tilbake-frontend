@@ -4,8 +4,8 @@ import * as React from 'react';
 
 import { useHistorikk } from './HistorikkContext';
 import HistorikkInnslag from './HistorikkInnslag';
-import { RessursStatus } from '../../../../typer/ressurs';
-import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '../../../../../typer/ressurs';
+import DataLastIkkeSuksess from '../../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const Historikk: React.FC = () => {
     const { historikkInnslag } = useHistorikk();
