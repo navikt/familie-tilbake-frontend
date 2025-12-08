@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselFormData } from './validering';
 import type { BehandlingDto, RessursByte, Section, Varselbrevtekst } from '../../../generated';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
@@ -39,11 +39,7 @@ const renderModal = (
     return <PdfVisningModal åpen pdfdata={pdfData} onRequestClose={() => setShowModal(false)} />;
 };
 
-export const ForhåndsvarselSkjema: React.FC<Props> = ({
-    behandling,
-    methods,
-    varselbrevtekster,
-}) => {
+export const JaSkjema: React.FC<Props> = ({ behandling, methods, varselbrevtekster }) => {
     const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const queryClient = useQueryClient();
     const maksAntallTegn = 4000;
@@ -52,10 +48,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
     const [parentBounds, setParentBounds] = useState({ width: 'auto' });
     const [showModal, setShowModal] = useState(false);
     const fritekst = methods.watch('fritekst');
-
-    const {
-        formState: { errors },
-    } = methods;
+    const { errors } = methods.formState;
 
     const seForhåndsvisningMutation = useMutation({
         ...forhåndsvisBrevMutation(),
@@ -67,7 +60,6 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
             setShowModal(true);
         },
     });
-
     const seForhåndsvisning = (): void => {
         const currentQueryKey = [
             'forhåndsvisBrev',

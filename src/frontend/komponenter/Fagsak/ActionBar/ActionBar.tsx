@@ -9,14 +9,14 @@ type Props = {
     stegtekst: string | undefined;
     forrigeAriaLabel: string | undefined;
     nesteAriaLabel: string;
-    onNeste: () => void;
+    onNeste?: () => void;
     onForrige: (() => void) | undefined;
     dobbeltNøstet?: boolean;
     nesteTekst?: string;
     isLoading?: boolean;
     skjulNeste?: boolean;
     disableNeste?: boolean;
-    erSubmit?: boolean;
+    type?: 'button' | 'submit';
 };
 
 const ActionBar: React.FC<Props> = ({
@@ -30,7 +30,7 @@ const ActionBar: React.FC<Props> = ({
     isLoading = false,
     skjulNeste = false,
     disableNeste = false,
-    erSubmit = false,
+    type = 'button',
 }) => {
     return (
         <nav
@@ -61,9 +61,9 @@ const ActionBar: React.FC<Props> = ({
                                 icon={<ChevronLeftIcon />}
                                 className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
                                 size="small"
-                                onClick={() => {
-                                    if (!isLoading) onForrige();
-                                }}
+                                loading={isLoading}
+                                disabled={isLoading}
+                                onClick={onForrige}
                                 aria-label={forrigeAriaLabel}
                             >
                                 <span className="hidden ax-md:block">Forrige</span>
@@ -76,13 +76,14 @@ const ActionBar: React.FC<Props> = ({
                                 icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
                                 iconPosition="right"
                                 className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
-                                type={erSubmit ? 'submit' : 'button'}
+                                type={type}
                                 size="small"
+                                loading={isLoading || disableNeste}
                                 onClick={() => {
-                                    if (!isLoading) onNeste();
+                                    if (onNeste && type !== 'submit') onNeste();
                                 }}
                                 aria-label={nesteAriaLabel}
-                                disabled={disableNeste}
+                                disabled={isLoading || disableNeste}
                             >
                                 <span className="hidden ax-md:block">{nesteTekst}</span>
                             </Button>

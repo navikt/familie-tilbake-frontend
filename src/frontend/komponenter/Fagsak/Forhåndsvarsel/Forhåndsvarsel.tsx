@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselFormData } from './validering';
 import type { BehandlingDto, FagsakDto } from '../../../generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,12 +7,12 @@ import { Alert, Heading, HStack, Radio, RadioGroup, Tag, Tooltip, VStack } from 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
-import { forhåndsvarselSchema } from './forhåndsvarselSchema';
-import { ForhåndsvarselSkjema } from './ForhåndsvarselSkjema';
-import { Unntak } from './Unntak';
+import { JaSkjema } from './JaSkjema';
+import { NeiSkjema } from './NeiSkjema';
+import { forhåndsvarselSchema, SkalSendesForhåndsvarsel } from './validering';
 import { useBehandling } from '../../../context/BehandlingContext';
 import {
     BrevmalkodeEnum,
@@ -32,12 +32,6 @@ type Props = {
 };
 
 type TagVariant = 'info-moderate' | 'success-moderate';
-
-export enum SkalSendesForhåndsvarsel {
-    Ja = 'ja',
-    Nei = 'nei',
-    IkkeValgt = '',
-}
 
 const getTagVariant = (sendtTid: string): TagVariant => {
     const ukerSiden = differenceInWeeks(new Date(), new Date(sendtTid));
@@ -69,14 +63,19 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
             };
         },
     });
+
     const methods = useForm<ForhåndsvarselFormData>({
-        reValidateMode: 'onBlur',
         resolver: zodResolver(forhåndsvarselSchema),
+        mode: 'all',
         shouldFocusError: false,
+        defaultValues: {
+            skalSendesForhåndsvarsel: behandling.varselSendt
+                ? SkalSendesForhåndsvarsel.Ja
+                : SkalSendesForhåndsvarsel.IkkeValgt,
+        },
     });
 
     const {
-        register,
         handleSubmit,
         formState: { isDirty },
     } = methods;
@@ -85,12 +84,6 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         control: methods.control,
         name: 'skalSendesForhåndsvarsel',
     });
-
-    const gåTilNeste = (): void => {
-        navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
-        );
-    };
 
     const { data: varselbrevtekster } = useQuery({
         queryKey: ['hentForhåndsvarselTekst', behandling.behandlingId],
@@ -114,7 +107,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         },
     });
 
-    const sendForhåndsvarsel = handleSubmit(data => {
+    const sendForhåndsvarsel = (data: ForhåndsvarselFormData): void => {
         sendForhåndsvarselMutation.mutate({
             body: {
                 behandlingId: behandling.behandlingId,
@@ -122,11 +115,25 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 fritekst: 'fritekst' in data ? data.fritekst : '',
             },
         });
-    });
+    };
+
+    const skalSendeForhåndsvarsel = isDirty || !behandling.varselSendt;
+    const gåTilNeste = (): void => {
+        navigate(
+            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
+        );
+    };
+    const håndterSubmit = (data: ForhåndsvarselFormData): void => {
+        if (skalSendeForhåndsvarsel) {
+            sendForhåndsvarsel(data);
+            return;
+        }
+        gåTilNeste();
+    };
 
     return (
         <>
-            <VStack as="form" gap="4">
+            <VStack as="form" gap="4" onSubmit={handleSubmit(håndterSubmit)}>
                 <HStack align="center" justify="space-between">
                     <Heading size="medium">Forhåndsvarsel</Heading>
                     {forhåndsvarselInfo?.varselbrevSendtTid && (
@@ -145,25 +152,28 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                     )}
                 </HStack>
 
-                <RadioGroup
-                    {...register('skalSendesForhåndsvarsel')}
-                    className="max-w-xl"
-                    readOnly={behandling.varselSendt}
-                    size="small"
+                <Controller
+                    control={methods.control}
                     name="skalSendesForhåndsvarsel"
-                    onChange={value => methods.setValue('skalSendesForhåndsvarsel', value)}
-                    value={skalSendesForhåndsvarsel}
-                    legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
-                    description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
-                fattes, slik at de får mulighet til å uttale seg."
-                    error={methods.formState.errors.skalSendesForhåndsvarsel?.message}
-                >
-                    <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
-                    <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
-                </RadioGroup>
+                    render={({ field, fieldState }) => (
+                        <RadioGroup
+                            {...field}
+                            className="max-w-xl"
+                            readOnly={behandling.varselSendt}
+                            size="small"
+                            legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
+                            description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
+                        fattes, slik at de får mulighet til å uttale seg."
+                            error={fieldState.error?.message}
+                        >
+                            <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
+                            <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
+                        </RadioGroup>
+                    )}
+                />
 
                 {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && varselbrevtekster && (
-                    <ForhåndsvarselSkjema
+                    <JaSkjema
                         behandling={behandling}
                         methods={methods}
                         varselbrevtekster={varselbrevtekster}
@@ -171,7 +181,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                 )}
 
                 {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && (
-                    <Unntak methods={methods} />
+                    <NeiSkjema methods={methods} />
                 )}
 
                 {visForhåndsvarselSendt && (
@@ -188,14 +198,17 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                         fristen for å uttale seg (3 uker) har gått ut.
                     </Alert>
                 )}
+
                 <ActionBar
                     stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
-                    nesteTekst={isDirty ? 'Send forhåndsvarsel' : 'Neste'}
+                    nesteTekst={skalSendeForhåndsvarsel ? 'Send forhåndsvarsel' : 'Neste'}
                     forrigeAriaLabel={undefined}
-                    nesteAriaLabel={isDirty ? 'Send forhåndsvarsel' : 'Gå til foreldelsessteget'}
-                    onNeste={behandling.varselSendt ? gåTilNeste : sendForhåndsvarsel}
+                    nesteAriaLabel={
+                        skalSendeForhåndsvarsel ? 'Send forhåndsvarsel' : 'Gå til foreldelsessteget'
+                    }
                     onForrige={undefined}
-                    erSubmit
+                    onNeste={behandling.varselSendt ? gåTilNeste : undefined}
+                    type={behandling.varselSendt ? 'button' : 'submit'}
                 />
             </VStack>
 
