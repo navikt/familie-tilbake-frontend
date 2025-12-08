@@ -46,11 +46,16 @@ export type ByttEnhetDto = {
     begrunnelse: string;
 };
 
+export type OppdaterBehandlendeEnhetRequest = {
+    behandlingEksternBrukId: string;
+    nyEnhet: string;
+};
+
 export type Datoperiode = {
     fom: string;
     tom: string;
-    fomMåned: string;
     tomMåned: string;
+    fomMåned: string;
 };
 
 export type FritekstavsnittDto = {
@@ -70,13 +75,7 @@ export type PeriodeMedTekstDto = {
 export type BrukeruttalelseDto = {
     harBrukerUttaltSeg: HarBrukerUttaltSegEnum;
     uttalelsesdetaljer?: Array<Uttalelsesdetaljer>;
-    utsettFrist?: Array<FristUtsettelse>;
     kommentar?: string;
-};
-
-export type FristUtsettelse = {
-    nyFrist: string;
-    begrunnelse: string;
 };
 
 export type Uttalelsesdetaljer = {
@@ -91,6 +90,16 @@ export type Ressurs = {
     melding: string;
     frontendFeilmelding?: string;
     stacktrace?: string;
+};
+
+export type FristUtsettelseDto = {
+    nyFrist: string;
+    begrunnelse: string;
+};
+
+export type ForhåndsvarselUnntakDto = {
+    begrunnelseForUnntak: BegrunnelseForUnntakEnum;
+    beskrivelse: string;
 };
 
 export type BestillBrevDto = {
@@ -120,14 +129,14 @@ export type FeilutbetaltePerioderDto = {
 
 export type ForhåndsvisVarselbrevRequest = {
     varseltekst?: string;
-    ytelsestype: SchemaEnum3;
+    ytelsestype: SchemaEnum4;
     behandlendeEnhetId?: string;
     behandlendeEnhetsNavn: string;
     saksbehandlerIdent?: string;
     språkkode: SpråkkodeEnum;
     vedtaksdato?: string;
     feilutbetaltePerioderDto: FeilutbetaltePerioderDto;
-    fagsystem: SchemaEnum;
+    fagsystem: SchemaEnum2;
     eksternFagsakId: string;
     ident: string;
     verge?: Verge;
@@ -291,9 +300,9 @@ export type Faktainfo = {
 };
 
 export type OpprettTilbakekrevingRequest = {
-    fagsystem: SchemaEnum;
+    fagsystem: SchemaEnum2;
     regelverk?: RegelverkEnum;
-    ytelsestype: SchemaEnum3;
+    ytelsestype: SchemaEnum4;
     eksternFagsakId: string;
     personIdent: string;
     eksternId: string;
@@ -319,15 +328,93 @@ export type Varsel = {
 };
 
 export type OpprettRevurderingDto = {
-    ytelsestype: SchemaEnum3;
+    ytelsestype: SchemaEnum4;
     originalBehandlingId: string;
     getårsakstype: GetårsakstypeEnum;
 };
 
 export type OpprettManueltTilbakekrevingRequest = {
     eksternFagsakId: string;
-    ytelsestype: SchemaEnum3;
+    ytelsestype: SchemaEnum4;
     eksternId: string;
+};
+
+export type BestemmelseEllerGrunnlagDto = {
+    nøkkel: string;
+    beskrivelse: string;
+};
+
+export type FaktaOmFeilutbetalingDto = {
+    feilutbetaling: FeilutbetalingDto;
+    tidligereVarsletBeløp: number;
+    muligeRettsligGrunnlag: Array<MuligeRettsligGrunnlagDto>;
+    perioder: Array<FaktaPeriodeDto>;
+    vurdering: VurderingDto;
+};
+
+export type FaktaPeriodeDto = {
+    id: string;
+    fom: string;
+    tom: string;
+    feilutbetaltBeløp: number;
+    splittbarePerioder: Array<FaktaPeriodeSplittbarePerioderInnerDto>;
+    rettsligGrunnlag: Array<RettsligGrunnlagDto>;
+};
+
+export type FaktaPeriodeSplittbarePerioderInnerDto = {
+    id: string;
+    fom: string;
+    tom: string;
+    feilutbetaltBeløp: number;
+    rettsligGrunnlag: Array<RettsligGrunnlagDto>;
+};
+
+export type FeilutbetalingDto = {
+    beløp: number;
+    fom: string;
+    tom: string;
+    revurdering: RevurderingDto;
+};
+
+export type MuligeRettsligGrunnlagDto = {
+    bestemmelse: BestemmelseEllerGrunnlagDto;
+    grunnlag: Array<BestemmelseEllerGrunnlagDto>;
+};
+
+export type OppdagetDto = {
+    dato: string;
+    av: AvEnum;
+    beskrivelse: string;
+};
+
+export type RettsligGrunnlagDto = {
+    bestemmelse: string;
+    grunnlag: string;
+};
+
+export type RevurderingDto = {
+    årsak: string;
+    vedtaksdato: string;
+    resultat: ResultatEnum;
+};
+
+export type VurderingDto = {
+    årsak?: string;
+    oppdaget?: OppdagetDto;
+};
+
+export type ErrorDto = {
+    message: string;
+};
+
+export type OppdaterFaktaOmFeilutbetalingDto = {
+    perioder?: Array<OppdaterFaktaPeriodeDto>;
+    vurdering?: VurderingDto;
+};
+
+export type OppdaterFaktaPeriodeDto = {
+    id: string;
+    rettsligGrunnlag: Array<RettsligGrunnlagDto>;
 };
 
 export type KanBehandlingOpprettesManueltRespons = {
@@ -445,8 +532,8 @@ export type BehandlingsoppsummeringDto = {
 
 export type FagsakDto = {
     eksternFagsakId: string;
-    ytelsestype: SchemaEnum3;
-    fagsystem: SchemaEnum;
+    ytelsestype: SchemaEnum4;
+    fagsystem: SchemaEnum2;
     språkkode: SpråkkodeEnum;
     bruker: FrontendBrukerDto;
     behandlinger: Array<BehandlingsoppsummeringDto>;
@@ -494,7 +581,7 @@ export type Behandling = {
     type: BehandlingstypeEnum;
     status: BehandlingstatusEnum;
     vedtaksdato?: string;
-    resultat?: ResultatEnum;
+    resultat?: ResultatEnum2;
 };
 
 export type RessursListBehandling = {
@@ -551,6 +638,8 @@ export type Varselbrevtekst = {
 export type ForhåndsvarselDto = {
     varselbrevDto?: VarselbrevDto;
     brukeruttalelse?: BrukeruttalelseDto;
+    utsettUttalelseFrist: Array<FristUtsettelseDto>;
+    forhåndsvarselUnntak?: ForhåndsvarselUnntakDto;
 };
 
 export type RessursForhåndsvarselDto = {
@@ -895,6 +984,17 @@ export type RessursVergeDto = {
 };
 
 export enum SchemaEnum {
+    START = 'START',
+    AVVENTER_KRAVGRUNNLAG = 'AVVENTER_KRAVGRUNNLAG',
+    AVVENTER_FAGSYSTEMINFO = 'AVVENTER_FAGSYSTEMINFO',
+    AVVENTER_BRUKERINFO = 'AVVENTER_BRUKERINFO',
+    SEND_VARSELBREV = 'SEND_VARSELBREV',
+    IVERKSETT_VEDTAK = 'IVERKSETT_VEDTAK',
+    TIL_BEHANDLING = 'TIL_BEHANDLING',
+    AVSLUTTET = 'AVSLUTTET',
+}
+
+export enum SchemaEnum2 {
     BA = 'BA',
     EF = 'EF',
     AAP = 'AAP',
@@ -903,7 +1003,7 @@ export enum SchemaEnum {
     TS = 'TS',
 }
 
-export enum SchemaEnum2 {
+export enum SchemaEnum3 {
     BARNETRYGD = 'BARNETRYGD',
     OVERGANGSSTØNAD = 'OVERGANGSSTØNAD',
     BARNETILSYN = 'BARNETILSYN',
@@ -911,7 +1011,7 @@ export enum SchemaEnum2 {
     KONTANTSTØTTE = 'KONTANTSTØTTE',
 }
 
-export enum SchemaEnum3 {
+export enum SchemaEnum4 {
     BARNETRYGD = 'BARNETRYGD',
     OVERGANGSSTØNAD = 'OVERGANGSSTØNAD',
     BARNETILSYN = 'BARNETILSYN',
@@ -973,7 +1073,13 @@ export enum BehandlingsresultatstypeEnum {
 export enum HarBrukerUttaltSegEnum {
     JA = 'JA',
     NEI = 'NEI',
-    UTTSETT_FRIST = 'UTTSETT_FRIST',
+    ALLEREDE_UTTALET_SEG = 'ALLEREDE_UTTALET_SEG',
+}
+
+export enum BegrunnelseForUnntakEnum {
+    IKKE_PRAKTISK_MULIG = 'IKKE_PRAKTISK_MULIG',
+    UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING = 'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING',
+    ÅPENBART_UNØDVENDIG = 'ÅPENBART_UNØDVENDIG',
 }
 
 export enum BrevmalkodeEnum {
@@ -1210,6 +1316,17 @@ export enum GetårsakstypeEnum {
     REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT = 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
 }
 
+export enum AvEnum {
+    NAV = 'NAV',
+    BRUKER = 'BRUKER',
+    IKKE_VURDERT = 'IKKE_VURDERT',
+}
+
+export enum ResultatEnum {
+    INNVILGET = 'INNVILGET',
+    OPPHØRT = 'OPPHØRT',
+}
+
 export enum BehandlingstatusEnum {
     AVSLUTTET = 'AVSLUTTET',
     FATTER_VEDTAK = 'FATTER_VEDTAK',
@@ -1228,7 +1345,7 @@ export enum KjønnEnum {
     UKJENT = 'UKJENT',
 }
 
-export enum ResultatEnum {
+export enum ResultatEnum2 {
     INGEN_TILBAKEBETALING = 'INGEN_TILBAKEBETALING',
     DELVIS_TILBAKEBETALING = 'DELVIS_TILBAKEBETALING',
     FULL_TILBAKEBETALING = 'FULL_TILBAKEBETALING',
@@ -1645,6 +1762,23 @@ export type FjernVergeResponses = {
 
 export type FjernVergeResponse = FjernVergeResponses[keyof FjernVergeResponses];
 
+export type OppdaterBehandlendeEnhetPåBehandlingData = {
+    body: OppdaterBehandlendeEnhetRequest;
+    path?: never;
+    query?: never;
+    url: '/api/baks/portefoljejustering/oppdater-behandlende-enhet';
+};
+
+export type OppdaterBehandlendeEnhetPåBehandlingResponses = {
+    /**
+     * OK
+     */
+    200: RessursString;
+};
+
+export type OppdaterBehandlendeEnhetPåBehandlingResponse =
+    OppdaterBehandlendeEnhetPåBehandlingResponses[keyof OppdaterBehandlendeEnhetPåBehandlingResponses];
+
 export type SammenslåData = {
     body?: never;
     path: {
@@ -1713,6 +1847,22 @@ export type SendSisteTilstandForBehandlingerTilDvhResponses = {
     200: unknown;
 };
 
+export type SendPåminnelseTilAlleSakerITilstandData = {
+    body?: never;
+    path?: never;
+    query: {
+        tilstand: SchemaEnum;
+    };
+    url: '/api/forvaltning/poke';
+};
+
+export type SendPåminnelseTilAlleSakerITilstandResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
 export type MigrerAlleSakerData = {
     body?: never;
     path?: never;
@@ -1744,7 +1894,7 @@ export type LagOppdaterOppgaveTaskForBehandlingResponses = {
 export type FinnGamleÅpneBehandlingerUtenOppgaveData = {
     body?: never;
     path: {
-        fagsystem: SchemaEnum;
+        fagsystem: SchemaEnum2;
     };
     query?: never;
     url: '/api/forvaltning/hentBehandlingerUtenOppgave/fagsystem/{fagsystem}';
@@ -1844,6 +1994,40 @@ export type LagreBrukeruttalelseResponses = {
 
 export type LagreBrukeruttalelseResponse =
     LagreBrukeruttalelseResponses[keyof LagreBrukeruttalelseResponses];
+
+export type UtsettUttalelseFristData = {
+    body: FristUtsettelseDto;
+    path?: never;
+    query?: never;
+    url: '/api/dokument/forhåndsvarsel/utsettelse';
+};
+
+export type UtsettUttalelseFristResponses = {
+    /**
+     * OK
+     */
+    200: Ressurs;
+};
+
+export type UtsettUttalelseFristResponse =
+    UtsettUttalelseFristResponses[keyof UtsettUttalelseFristResponses];
+
+export type ForhåndsvarselUnntakData = {
+    body: ForhåndsvarselUnntakDto;
+    path?: never;
+    query?: never;
+    url: '/api/dokument/forhåndsvarsel/unntak';
+};
+
+export type ForhåndsvarselUnntakResponses = {
+    /**
+     * OK
+     */
+    200: Ressurs;
+};
+
+export type ForhåndsvarselUnntakResponse =
+    ForhåndsvarselUnntakResponses[keyof ForhåndsvarselUnntakResponses];
 
 export type ForhåndsvisBrevData = {
     body: BestillBrevDto;
@@ -2080,10 +2264,72 @@ export type OpprettBehandlingManuellTaskResponses = {
 export type OpprettBehandlingManuellTaskResponse =
     OpprettBehandlingManuellTaskResponses[keyof OpprettBehandlingManuellTaskResponses];
 
+export type FaktaData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/feilutbetaling';
+};
+
+export type FaktaErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorDto;
+    /**
+     * Server error
+     */
+    500: ErrorDto;
+};
+
+export type FaktaError = FaktaErrors[keyof FaktaErrors];
+
+export type FaktaResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: FaktaOmFeilutbetalingDto;
+};
+
+export type FaktaResponse = FaktaResponses[keyof FaktaResponses];
+
+export type OppdaterFaktaData = {
+    body: OppdaterFaktaOmFeilutbetalingDto;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/feilutbetaling';
+};
+
+export type OppdaterFaktaErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorDto;
+    /**
+     * Server error
+     */
+    500: ErrorDto;
+};
+
+export type OppdaterFaktaError = OppdaterFaktaErrors[keyof OppdaterFaktaErrors];
+
+export type OppdaterFaktaResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: FaktaOmFeilutbetalingDto;
+};
+
+export type OppdaterFaktaResponse = OppdaterFaktaResponses[keyof OppdaterFaktaResponses];
+
 export type KanBehandlingOpprettesManueltData = {
     body?: never;
     path: {
-        ytelsestype: SchemaEnum2;
+        ytelsestype: SchemaEnum3;
         eksternFagsakId: string;
     };
     query?: never;
@@ -2156,7 +2402,7 @@ export type HentInfoResponse = HentInfoResponses[keyof HentInfoResponses];
 export type HentForvaltningsinfoData = {
     body?: never;
     path: {
-        ytelsestype: SchemaEnum3;
+        ytelsestype: SchemaEnum4;
         eksternFagsakId: string;
     };
     query?: never;
@@ -2176,7 +2422,7 @@ export type HentForvaltningsinfoResponse =
 export type HentKravgrunnlagsinfoData = {
     body?: never;
     path: {
-        ytelsestype: SchemaEnum2;
+        ytelsestype: SchemaEnum3;
         eksternFagsakId: string;
     };
     query?: never;
@@ -2196,7 +2442,7 @@ export type HentKravgrunnlagsinfoResponse =
 export type FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData = {
     body?: never;
     path: {
-        fagsystem: SchemaEnum;
+        fagsystem: SchemaEnum2;
     };
     query?: never;
     url: '/api/forvaltning/finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgave/{fagsystem}';
@@ -2245,7 +2491,7 @@ export type FeatureTogglesResponse = FeatureTogglesResponses[keyof FeatureToggle
 export type HentVedtakForFagsystemData = {
     body?: never;
     path: {
-        fagsystem: SchemaEnum;
+        fagsystem: SchemaEnum2;
         eksternFagsakId: string;
     };
     query?: never;
@@ -2265,7 +2511,7 @@ export type HentVedtakForFagsystemResponse =
 export type HentFagsakData = {
     body?: never;
     path: {
-        fagsystem: SchemaEnum;
+        fagsystem: SchemaEnum2;
         eksternFagsakId: string;
     };
     query?: never;
@@ -2284,7 +2530,7 @@ export type HentFagsakResponse = HentFagsakResponses[keyof HentFagsakResponses];
 export type FinnesÅpenTilbakekrevingsbehandlingData = {
     body?: never;
     path: {
-        fagsystem: SchemaEnum;
+        fagsystem: SchemaEnum2;
         eksternFagsakId: string;
     };
     query?: never;
@@ -2304,7 +2550,7 @@ export type FinnesÅpenTilbakekrevingsbehandlingResponse =
 export type HentBehandlingerForFagsystemData = {
     body?: never;
     path: {
-        fagsystem: SchemaEnum;
+        fagsystem: SchemaEnum2;
         eksternFagsakId: string;
     };
     query?: never;
