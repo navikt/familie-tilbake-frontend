@@ -49,18 +49,26 @@ export const NeiSkjema: React.FC<Props> = ({ methods }) => {
                                 : undefined
                         }
                     >
-                        <Radio value={BegrunnelseUnntak.IkkePraktiskMulig}>
+                        <Radio
+                            value={BegrunnelseUnntak.IkkePraktiskMulig}
+                            description="Forvaltningsloven §16a"
+                        >
                             Varsling er ikke praktisk mulig eller vil hindre gjennomføring av
-                            vedtaket (Forvaltningsloven §16a)
+                            vedtaket
                         </Radio>
-                        <Radio value={BegrunnelseUnntak.UrimeligRessurskrevende}>
+                        <Radio
+                            value={BegrunnelseUnntak.UrimeligRessurskrevende}
+                            description="Forvaltningsloven §16b"
+                        >
                             Mottaker av varselet har ukjent adresse og ettersporing er urimelig
-                            ressurskrevende (Forvaltningsloven §16b)
+                            ressurskrevende
                         </Radio>
-                        <Radio value={BegrunnelseUnntak.ÅpenbartUnødvendig}>
+                        <Radio
+                            value={BegrunnelseUnntak.ÅpenbartUnødvendig}
+                            description="Forvaltningsloven §16c"
+                        >
                             Varsel anses som åpenbart unødvendig eller mottaker av varselet er
                             allerede kjent med saken og har hatt mulighet til å uttale seg
-                            (Forvaltningsloven §16c)
                         </Radio>
                     </RadioGroup>
                 )}
@@ -71,6 +79,7 @@ export const NeiSkjema: React.FC<Props> = ({ methods }) => {
                 label="Forklar hvorfor forhåndsvarselet ikke skal bli sendt"
                 maxLength={2000}
                 size="small"
+                className="max-w-xl"
                 error={
                     'beskrivelse' in methods.formState.errors
                         ? methods.formState.errors.beskrivelse?.message?.toString()

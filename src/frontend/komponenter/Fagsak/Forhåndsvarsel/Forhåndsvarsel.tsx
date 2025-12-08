@@ -133,7 +133,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
 
     return (
         <>
-            <VStack as="form" gap="4" onSubmit={handleSubmit(håndterSubmit)}>
+            <VStack as="form" gap="6" onSubmit={handleSubmit(håndterSubmit)}>
                 <HStack align="center" justify="space-between">
                     <Heading size="medium">Forhåndsvarsel</Heading>
                     {forhåndsvarselInfo?.varselbrevSendtTid && (
