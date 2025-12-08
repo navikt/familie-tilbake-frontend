@@ -1,4 +1,4 @@
-import type { Datoperiode, FaktaFeilutbetalingDto } from '../../../generated';
+import type { Behandling } from '../../../generated';
 
 import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import {
@@ -13,74 +13,41 @@ import {
     Textarea,
     useDatepicker,
 } from '@navikt/ds-react';
+import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import * as React from 'react';
 
 import { FaktaSkeleton } from './FaktaSkeleton';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { HarBrukerUttaltSegEnum2 } from '../../../generated';
-import {
-    HendelsestypeEnum,
-    HendelsesundertypeEnum,
-    TilbakekrevingsvalgEnum,
-} from '../../../generated';
+import { fakta, HendelsestypeEnum, HendelsesundertypeEnum } from '../../../generated';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring } from '../../../utils';
 import { ActionBar } from '../ActionBar/ActionBar';
 
-export const Fakta: React.FC = () => {
+type Props = {
+    behandlingId: Behandling['behandlingId'];
+};
+
+export const Fakta: React.FC<Props> = ({ behandlingId }: Props) => {
     const { datepickerProps, inputProps } = useDatepicker({
         onDateChange: console.info,
     });
     const { actionBarStegtekst } = useBehandling();
-    const isLoading = false;
 
+    const { data: faktaOmFeilutbetaling, isPending } = useQuery({
+        queryKey: ['hentFaktaOmFeilutbetaling'],
+        queryFn: () =>
+            fakta({
+                path: {
+                    behandlingId: behandlingId,
+                },
+            }),
+        select: data => data.data,
+    });
     const bestemmelser: HendelsestypeEnum[] = [HendelsestypeEnum.ANNET];
     const alleGrunnlag: HendelsesundertypeEnum[] = [HendelsesundertypeEnum.ANNET_FRITEKST];
-    const tidligereVarsletBeløp = 13800;
-    const fakta: FaktaFeilutbetalingDto = {
-        begrunnelse: '',
-        feilutbetaltePerioder: [
-            {
-                periode: {
-                    fom: '1969-04-20',
-                    tom: '1969-04-30',
-                } as Datoperiode,
-                hendelsestype: HendelsestypeEnum.ANNET,
-                hendelsesundertype: HendelsesundertypeEnum.ANNET_FRITEKST,
-                feilutbetaltBeløp: 6900,
-            },
-            {
-                periode: {
-                    fom: '1969-05-01',
-                    tom: '1969-05-31',
-                } as Datoperiode,
-                hendelsestype: HendelsestypeEnum.ANNET,
-                hendelsesundertype: HendelsesundertypeEnum.ANNET_FRITEKST,
-                feilutbetaltBeløp: 6900,
-            },
-        ],
-        gjelderDødsfall: false,
-        kravgrunnlagReferanse: '',
-        revurderingsvedtaksdato: '2025-01-31',
-        totalFeilutbetaltPeriode: {
-            fom: '1969-04-20',
-            tom: '1969-05-31',
-        } as Datoperiode,
-        totaltFeilutbetaltBeløp: 13800,
-        vurderingAvBrukersUttalelse: {
-            harBrukerUttaltSeg: HarBrukerUttaltSegEnum2.NEI,
-            beskrivelse: undefined,
-        },
-        faktainfo: {
-            konsekvensForYtelser: ['Feilutbetaling', 'Revurdering av ytelsen'],
-            revurderingsresultat: 'Innvilget',
-            revurderingsårsak: 'Nye opplysninger',
-            tilbakekrevingsvalg: TilbakekrevingsvalgEnum.OPPRETT_TILBAKEKREVING_MED_VARSEL,
-        },
-    };
 
-    if (isLoading) return <FaktaSkeleton />;
+    if (isPending || !faktaOmFeilutbetaling) return <FaktaSkeleton />;
     return (
         <>
             <div className="flex flex-col gap-8" aria-label="Fakta om feilutbetaling">
@@ -89,41 +56,41 @@ export const Fakta: React.FC = () => {
                 </Heading>
                 <section
                     className={classNames('flex md:flex-row flex-col flex-col-3 w-full gap-6', {
-                        'flex-col-4': tidligereVarsletBeløp,
+                        'flex-col-4': faktaOmFeilutbetaling.tidligereVarsletBeløp,
                     })}
                     aria-label="Feilutbetaling og revurdering"
                 >
                     <div
                         className={classNames('grid grid-cols-2 gap-4 flex-1', {
-                            'flex-2': tidligereVarsletBeløp,
+                            'flex-2': faktaOmFeilutbetaling.tidligereVarsletBeløp,
                         })}
                     >
                         <div
                             className={classNames(
                                 'flex-1 p-4 bg-ax-bg-brand-magenta-soft border rounded-xl border-ax-border-brand-magenta-strong align-middle col-span-1',
-                                { 'col-span-2': !tidligereVarsletBeløp }
+                                { 'col-span-2': !faktaOmFeilutbetaling.tidligereVarsletBeløp }
                             )}
                         >
                             <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
                             <dd className="text-ax-text-danger font-ax-bold text-ax-heading-medium">
-                                {fakta.totaltFeilutbetaltBeløp}
+                                {faktaOmFeilutbetaling.feilutbetaling.beløp}
                             </dd>
                         </div>
-                        {tidligereVarsletBeløp && (
+                        {faktaOmFeilutbetaling.tidligereVarsletBeløp && (
                             <div className="col-span-1 p-4 border rounded-xl border-ax-border-neutral-subtle">
                                 <dt className="font-ax-bold text-ax-medium">
                                     Tidligere varslet beløp
                                 </dt>
                                 <dd className="font-ax-bold text-ax-heading-medium">
-                                    {tidligereVarsletBeløp}
+                                    {faktaOmFeilutbetaling.tidligereVarsletBeløp}
                                 </dd>
                             </div>
                         )}
                         <div className="col-span-2 p-4 h-22 border rounded-xl border-ax-border-neutral-subtle">
                             <dt className="font-ax-bold text-ax-medium">Periode</dt>
                             <dd className="font-ax-bold text-ax-heading-medium">
-                                {formatterDatostring(fakta.totalFeilutbetaltPeriode.fom)}–
-                                {formatterDatostring(fakta.totalFeilutbetaltPeriode.tom)}
+                                {formatterDatostring(faktaOmFeilutbetaling.feilutbetaling.fom)}–
+                                {formatterDatostring(faktaOmFeilutbetaling.feilutbetaling.tom)}
                             </dd>
                         </div>
                     </div>
@@ -138,12 +105,12 @@ export const Fakta: React.FC = () => {
                                 </dt>
                                 <dd>
                                     <Tag
-                                        key={fakta.faktainfo.revurderingsårsak}
+                                        key={faktaOmFeilutbetaling.feilutbetaling.revurdering.årsak}
                                         variant="neutral-moderate"
                                         size="small"
                                         className="text-ax-medium"
                                     >
-                                        {fakta.faktainfo.revurderingsårsak}
+                                        {faktaOmFeilutbetaling.feilutbetaling.revurdering.årsak}
                                     </Tag>
                                 </dd>
                             </div>
@@ -152,13 +119,15 @@ export const Fakta: React.FC = () => {
                                     Dato for revurderingsvedtak
                                 </dt>
                                 <dd className="text-ax-medium">
-                                    {formatterDatostring(fakta.revurderingsvedtaksdato)}
+                                    {formatterDatostring(
+                                        faktaOmFeilutbetaling.feilutbetaling.revurdering.vedtaksdato
+                                    )}
                                 </dd>
                             </div>
                             <div>
                                 <dt className="font-ax-bold text-ax-medium">Resultat</dt>
                                 <dd className="text-ax-medium">
-                                    {fakta.faktainfo.revurderingsresultat}
+                                    {faktaOmFeilutbetaling.feilutbetaling.revurdering.resultat}
                                 </dd>
                             </div>
                         </dl>
@@ -184,12 +153,12 @@ export const Fakta: React.FC = () => {
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                                {fakta.feilutbetaltePerioder.map(periode => (
-                                    <Table.Row key={periode.periode.fom}>
+                                {faktaOmFeilutbetaling.perioder.map(periode => (
+                                    <Table.Row key={periode.fom}>
                                         <Table.DataCell>
                                             <span className="ml-2">
-                                                {formatterDatostring(periode.periode.fom)}–
-                                                {formatterDatostring(periode.periode.tom)}
+                                                {formatterDatostring(periode.fom)}–
+                                                {formatterDatostring(periode.tom)}
                                             </span>
                                         </Table.DataCell>
                                         <Table.DataCell>
@@ -267,7 +236,7 @@ export const Fakta: React.FC = () => {
                             label="Når ble feilutbetalingen oppdaget?"
                         />
                     </DatePicker>
-                    <RadioGroup size="small" legend="Hvem oppdaget feilutbetaling?">
+                    <RadioGroup size="small" legend="Hvem oppdaget feilutbetalingen?">
                         <Radio value="Bruker">Bruker</Radio>
                         <Radio value="Nav">Nav</Radio>
                     </RadioGroup>

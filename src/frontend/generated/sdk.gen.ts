@@ -23,6 +23,9 @@ import type {
     ErPerioderLikeResponses,
     ErPerioderSammenslåttData,
     ErPerioderSammenslåttResponses,
+    FaktaData,
+    FaktaErrors,
+    FaktaResponses,
     FeatureTogglesData,
     FeatureTogglesResponses,
     FerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveData,
@@ -45,6 +48,8 @@ import type {
     FlyttBehandlingTilFakta1Responses,
     FlyttBehandlingTilFaktaData,
     FlyttBehandlingTilFaktaResponses,
+    ForhåndsvarselUnntakData,
+    ForhåndsvarselUnntakResponses,
     ForhåndsvisBrevData,
     ForhåndsvisBrevResponses,
     HenleggBehandlingData,
@@ -117,6 +122,11 @@ import type {
     LeggTilBrevmottakerResponses,
     MigrerAlleSakerData,
     MigrerAlleSakerResponses,
+    OppdaterBehandlendeEnhetPåBehandlingData,
+    OppdaterBehandlendeEnhetPåBehandlingResponses,
+    OppdaterFaktaData,
+    OppdaterFaktaErrors,
+    OppdaterFaktaResponses,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponses,
     OpprettBehandlingData,
@@ -131,6 +141,8 @@ import type {
     OpprettVergeStegResponses,
     SammenslåData,
     SammenslåResponses,
+    SendPåminnelseTilAlleSakerITilstandData,
+    SendPåminnelseTilAlleSakerITilstandResponses,
     SendSisteTilstandForBehandlingerTilDvhData,
     SendSisteTilstandForBehandlingerTilDvhResponses,
     SettBehandlingPåVentData,
@@ -145,6 +157,8 @@ import type {
     TvingHenleggBehandlingResponses,
     UtførBehandlingsstegData,
     UtførBehandlingsstegResponses,
+    UtsettUttalelseFristData,
+    UtsettUttalelseFristResponses,
 } from './types.gen';
 
 export type Options<
@@ -412,6 +426,29 @@ export const fjernVerge = <ThrowOnError extends boolean = false>(
         ...options,
     });
 
+export const oppdaterBehandlendeEnhetPåBehandling = <ThrowOnError extends boolean = false>(
+    options: Options<OppdaterBehandlendeEnhetPåBehandlingData, ThrowOnError>
+) => {
+    return (options.client ?? client).put<
+        OppdaterBehandlendeEnhetPåBehandlingResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/baks/portefoljejustering/oppdater-behandlende-enhet',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
 /**
  * Oppdatere skalSammenslåPerioder
  */
@@ -473,6 +510,28 @@ export const sendSisteTilstandForBehandlingerTilDvh = <ThrowOnError extends bool
             ...options.headers,
         },
     });
+
+/**
+ * Kjør en påminnelse for alle saker i tilstand selv om de ikke er
+ */
+export const sendPåminnelseTilAlleSakerITilstand = <ThrowOnError extends boolean = false>(
+    options: Options<SendPåminnelseTilAlleSakerITilstandData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        SendPåminnelseTilAlleSakerITilstandResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/forvaltning/poke',
+        ...options,
+    });
+};
 
 /**
  * Tvinger en migrering av alle saker i ny modell
@@ -627,6 +686,52 @@ export const lagreBrukeruttalelse = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+
+/**
+ * Skal utsette uttalelse frist
+ */
+export const utsettUttalelseFrist = <ThrowOnError extends boolean = false>(
+    options: Options<UtsettUttalelseFristData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<UtsettUttalelseFristResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/dokument/forhåndsvarsel/utsettelse',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Skal ikke sendes forhåndsvarsel
+ */
+export const forhåndsvarselUnntak = <ThrowOnError extends boolean = false>(
+    options: Options<ForhåndsvarselUnntakData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<ForhåndsvarselUnntakResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/dokument/forhåndsvarsel/unntak',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
 
 /**
  * Forhåndsvis brev
@@ -843,6 +948,46 @@ export const opprettBehandlingManuellTask = <ThrowOnError extends boolean = fals
             ...options.headers,
         },
     });
+
+export const fakta = <ThrowOnError extends boolean = false>(
+    options: Options<FaktaData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<FaktaResponses, FaktaErrors, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/v1/behandling/{behandlingId}/feilutbetaling',
+        ...options,
+    });
+};
+
+export const oppdaterFakta = <ThrowOnError extends boolean = false>(
+    options: Options<OppdaterFaktaData, ThrowOnError>
+) => {
+    return (options.client ?? client).patch<
+        OppdaterFaktaResponses,
+        OppdaterFaktaErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
+        url: '/api/v1/behandling/{behandlingId}/feilutbetaling',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
 
 /**
  * Sjekk om det er mulig å opprette behandling manuelt
