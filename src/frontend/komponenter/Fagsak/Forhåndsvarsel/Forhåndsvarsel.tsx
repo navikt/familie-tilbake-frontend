@@ -4,7 +4,7 @@ import { MegaphoneIcon } from '@navikt/aksel-icons';
 import { Heading, HStack, Radio, RadioGroup, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 import { SkalSendesForhåndsvarsel, HarBrukerUttaltSeg } from './Enums';
@@ -63,10 +63,8 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         return SkalSendesForhåndsvarsel.IkkeValgt;
     }, [varselErSendt]);
 
-    const methods = useForm<ForhåndsvarselFormData>({
-        reValidateMode: 'onBlur',
-        shouldFocusError: false,
-        defaultValues: {
+    const defaultValues = useMemo(
+        () => ({
             skalSendesForhåndsvarsel: getForhåndsvarselStatus().toString(),
             fritekst: '',
             harBrukerUttaltSeg: mapHarBrukerUttaltSegFraApiDto(
@@ -79,27 +77,21 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
             uttalelseBeskrivelse: '',
             nyFristDato: '',
             begrunnelseUtsattFrist: '',
-        },
+        }),
+        [forhåndsvarselInfo, getForhåndsvarselStatus]
+    );
+
+    const methods = useForm<ForhåndsvarselFormData>({
+        reValidateMode: 'onBlur',
+        shouldFocusError: false,
+        defaultValues,
     });
 
     useEffect(() => {
         if (forhåndsvarselInfo) {
-            methods.reset({
-                skalSendesForhåndsvarsel: getForhåndsvarselStatus().toString(),
-                fritekst: '',
-                harBrukerUttaltSeg: mapHarBrukerUttaltSegFraApiDto(
-                    forhåndsvarselInfo?.brukeruttalelse?.harBrukerUttaltSeg
-                ),
-                uttalelsesKommentar: forhåndsvarselInfo?.brukeruttalelse?.kommentar || '',
-                uttalelsesDetaljer: forhåndsvarselInfo?.brukeruttalelse?.uttalelsesdetaljer || '',
-                uttalelsesdato: '',
-                hvorBrukerenUttalteSeg: '',
-                uttalelseBeskrivelse: '',
-                nyFristDato: '',
-                begrunnelseUtsattFrist: '',
-            });
+            methods.reset(defaultValues);
         }
-    }, [forhåndsvarselInfo, methods, getForhåndsvarselStatus]);
+    }, [forhåndsvarselInfo, methods, getForhåndsvarselStatus, defaultValues]);
 
     useLayoutEffect(() => {
         updateParentBounds(containerRef, setParentBounds);
