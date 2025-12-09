@@ -12,11 +12,11 @@ import {
     useDatepicker,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import { format } from 'date-fns/format';
 import React from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { HarBrukerUttaltSeg } from './Enums';
+import { dateTilIsoDatoString } from '../../../utils/dato';
 type Props = {
     methods: UseFormReturn<ForhåndsvarselFormData>;
     kanUtsetteFrist?: boolean;
@@ -34,17 +34,17 @@ export const Brukeruttalelse: React.FC<Props> = ({ methods, kanUtsetteFrist = fa
         name: 'harBrukerUttaltSeg',
     });
 
-    const uttalelsesdatoDatepicker = useDatepicker({
+    const uttalelsesDatepicker = useDatepicker({
         onDateChange: date => {
-            const dateString = date ? format(date, 'yyyy-MM-dd') : '';
+            const dateString = dateTilIsoDatoString(date);
             methods.setValue('uttalelsesdato', dateString);
             methods.trigger('uttalelsesdato');
         },
     });
 
-    const nyFristDatoDatepicker = useDatepicker({
+    const nyFristDatepicker = useDatepicker({
         onDateChange: date => {
-            const dateString = date ? format(date, 'yyyy-MM-dd') : '';
+            const dateString = dateTilIsoDatoString(date);
             methods.setValue('nyFristDato', dateString);
             methods.trigger('nyFristDato');
         },
@@ -92,9 +92,9 @@ export const Brukeruttalelse: React.FC<Props> = ({ methods, kanUtsetteFrist = fa
                             required: 'Du må legge til en dato',
                         }}
                         render={() => (
-                            <DatePicker {...uttalelsesdatoDatepicker.datepickerProps}>
+                            <DatePicker {...uttalelsesDatepicker.datepickerProps}>
                                 <DatePicker.Input
-                                    {...uttalelsesdatoDatepicker.inputProps}
+                                    {...uttalelsesDatepicker.inputProps}
                                     label="Når uttalte brukeren seg?"
                                     error={errors.uttalelsesdato?.message?.toString()}
                                 />
@@ -129,9 +129,9 @@ export const Brukeruttalelse: React.FC<Props> = ({ methods, kanUtsetteFrist = fa
                         name="nyFristDato"
                         control={control}
                         render={() => (
-                            <DatePicker {...nyFristDatoDatepicker.datepickerProps}>
+                            <DatePicker {...nyFristDatepicker.datepickerProps}>
                                 <DatePicker.Input
-                                    {...nyFristDatoDatepicker.inputProps}
+                                    {...nyFristDatepicker.inputProps}
                                     label="Sett ny dato for frist"
                                     error={errors.nyFristDato?.message?.toString()}
                                 />
