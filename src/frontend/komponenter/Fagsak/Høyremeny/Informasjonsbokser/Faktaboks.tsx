@@ -14,7 +14,7 @@ import {
     TasklistIcon,
     TasklistSendIcon,
 } from '@navikt/aksel-icons';
-import { Box, Heading, Tag } from '@navikt/ds-react';
+import { ExpansionCard, Tag } from '@navikt/ds-react';
 import React from 'react';
 
 import { ytelsetype } from '../../../../kodeverk';
@@ -35,62 +35,69 @@ type Props = {
 
 export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
     return (
-        <Box
-            padding="4"
-            className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
+        <ExpansionCard
+            size="small"
+            defaultOpen
+            aria-label="Tilbakekrevingsinformasjon"
+            className="border rounded-xl border-ax-border-neutral-subtle flex flex-col bg-ax-bg-default"
         >
-            <Heading size="xsmall" level="2">
-                Tilbakekreving av {ytelsetype[ytelsestype].toLocaleLowerCase()}
-            </Heading>
+            <ExpansionCard.Header>
+                <ExpansionCard.Title as="h2" size="small" className="text-lg">
+                    Tilbakekreving av {ytelsetype[ytelsestype].toLocaleLowerCase()}
+                </ExpansionCard.Title>
+            </ExpansionCard.Header>
+            <ExpansionCard.Content>
+                <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
+                    {behandling.behandlingsårsakstype && (
+                        <>
+                            <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                                <FileResetIcon {...ICON_PROPS} />
+                                Revurderingsårsak
+                            </dt>
+                            <dd className="text-ax-medium items-center flex">
+                                <Tag size="small" variant="neutral-moderate">
+                                    {behandlingårsaker[behandling.behandlingsårsakstype]}
+                                </Tag>
+                            </dd>
+                        </>
+                    )}
 
-            <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
-                {behandling.behandlingsårsakstype && (
-                    <>
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <FileResetIcon {...ICON_PROPS} />
-                            Revurderingsårsak
-                        </dt>
-                        <dd className="text-ax-medium items-center flex">
-                            <Tag size="small" variant="neutral-moderate">
-                                {behandlingårsaker[behandling.behandlingsårsakstype]}
-                            </Tag>
-                        </dd>
-                    </>
-                )}
+                    <StatusTag status={behandling.status} />
 
-                <StatusTag status={behandling.status} />
+                    {behandling.resultatstype && (
+                        <ResultatTag resultat={behandling.resultatstype} />
+                    )}
 
-                {behandling.resultatstype && <ResultatTag resultat={behandling.resultatstype} />}
+                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                        <CalendarIcon {...ICON_PROPS} />
+                        Opprettet
+                    </dt>
+                    <dd className="text-ax-medium items-center flex">
+                        {formatterDatostring(behandling.opprettetDato)}
+                    </dd>
 
-                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                    <CalendarIcon {...ICON_PROPS} />
-                    Opprettet
-                </dt>
-                <dd className="text-ax-medium items-center flex">
-                    {formatterDatostring(behandling.opprettetDato)}
-                </dd>
+                    {behandling.avsluttetDato && (
+                        <>
+                            <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                                <CalendarFillIcon {...ICON_PROPS} />
+                                Avsluttet
+                            </dt>
+                            <dd className="text-ax-medium items-center flex">
+                                {formatterDatostring(behandling.avsluttetDato)}
+                            </dd>
+                        </>
+                    )}
 
-                {behandling.avsluttetDato && (
-                    <>
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <CalendarFillIcon {...ICON_PROPS} />
-                            Avsluttet
-                        </dt>
-                        <dd className="text-ax-medium items-center flex">
-                            {formatterDatostring(behandling.avsluttetDato)}
-                        </dd>
-                    </>
-                )}
-
-                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                    <Buildings3Icon {...ICON_PROPS} />
-                    Enhet
-                </dt>
-                <dd className="text-ax-medium items-center flex">
-                    {behandling.enhetskode} {behandling.enhetsnavn}
-                </dd>
-            </dl>
-        </Box>
+                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                        <Buildings3Icon {...ICON_PROPS} />
+                        Enhet
+                    </dt>
+                    <dd className="text-ax-medium items-center flex">
+                        {behandling.enhetskode} {behandling.enhetsnavn}
+                    </dd>
+                </dl>
+            </ExpansionCard.Content>
+        </ExpansionCard>
     );
 };
 
