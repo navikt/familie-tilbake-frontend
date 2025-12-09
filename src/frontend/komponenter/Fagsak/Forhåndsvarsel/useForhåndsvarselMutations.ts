@@ -174,18 +174,13 @@ export const useForhåndsvarselMutations = (
             });
         },
         sendBrukeruttalelse: (formData: ForhåndsvarselFormData): void => {
-            try {
-                const transformedData = transformFormDataToBrukeruttalelse(formData);
-                sendBrukeruttalelseMutation.mutate({
-                    path: {
-                        behandlingId: behandling.behandlingId,
-                    },
-                    body: transformedData,
-                });
-            } catch (error) {
-                console.error('Feil ved transformering av brukeruttalelse:', error);
-                throw error;
-            }
+            const transformedData = transformFormDataToBrukeruttalelse(formData);
+            sendBrukeruttalelseMutation.mutate({
+                path: {
+                    behandlingId: behandling.behandlingId,
+                },
+                body: transformedData,
+            });
         },
         sendUtsettUttalelseFrist: (formData: ForhåndsvarselFormData): void => {
             const fristUtsettelseDto: FristUtsettelseDto = {
