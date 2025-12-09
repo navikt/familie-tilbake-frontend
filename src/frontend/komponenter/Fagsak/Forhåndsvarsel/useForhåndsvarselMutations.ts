@@ -44,7 +44,7 @@ export type ForhåndsvarselFormData = {
     begrunnelseUtsattFrist: string;
 };
 
-type UseForhåndsvarselMutationsReturn = {
+export type UseForhåndsvarselMutationsReturn = {
     readonly sendForhåndsvarselMutation: UseMutationResult<
         BestillBrevResponse,
         AxiosError<DefaultError>,

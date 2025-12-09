@@ -5,13 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 
 import { hentForhåndsvarselinfo, hentForhåndsvarselTekst } from '../../../generated';
 
-type ForhåndsvarselInfo = {
+export type ForhåndsvarselInfo = {
     varselbrevSendtTid: string | undefined;
     uttalelsesfrist: string | undefined;
     brukeruttalelse: BrukeruttalelseDto | undefined;
 };
 
-type UseForhåndsvarselQueriesReturn = {
+export type UseForhåndsvarselQueriesReturn = {
     readonly forhåndsvarselInfoQuery: UseQueryResult<ForhåndsvarselInfo | undefined>;
     readonly varselbrevteksterQuery: UseQueryResult<Varselbrevtekst | undefined>;
     readonly forhåndsvarselInfo: ForhåndsvarselInfo | undefined;
