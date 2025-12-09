@@ -4,7 +4,7 @@ import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
@@ -162,7 +162,8 @@ describe('Forhåndsvarsel', () => {
                 renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
 
                 fireEvent.click(screen.getByText('Ja'));
-                await waitFor(() => fireEvent.click(screen.getByText('Vis mer')));
+                const visMerKnapp = await screen.findByRole('button', { name: /Vis mer/ });
+                fireEvent.click(visMerKnapp);
                 fireEvent.click(screen.getByText('Send forhåndsvarsel'));
 
                 expect(

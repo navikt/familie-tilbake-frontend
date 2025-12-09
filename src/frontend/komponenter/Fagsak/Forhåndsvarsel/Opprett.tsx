@@ -1,7 +1,6 @@
-import type { ForhåndsvarselFormData } from './validering';
+import type { ForhåndsvarselFormData } from './schema';
 import type { BehandlingDto, RessursByte, Section, Varselbrevtekst } from '../../../generated';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
-import type { UseFormReturn } from 'react-hook-form';
 
 import { FilePdfIcon } from '@navikt/aksel-icons';
 import {
@@ -16,6 +15,7 @@ import {
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useLayoutEffect, useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { BrevmalkodeEnum } from '../../../generated';
 import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
@@ -25,7 +25,6 @@ import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningM
 
 type Props = {
     behandling: BehandlingDto;
-    methods: UseFormReturn<ForhåndsvarselFormData>;
     varselbrevtekster: Varselbrevtekst;
 };
 
@@ -39,7 +38,8 @@ const renderModal = (
     return <PdfVisningModal åpen pdfdata={pdfData} onRequestClose={() => setShowModal(false)} />;
 };
 
-export const JaSkjema: React.FC<Props> = ({ behandling, methods, varselbrevtekster }) => {
+export const Opprett: React.FC<Props> = ({ behandling, varselbrevtekster }) => {
+    const methods = useFormContext<ForhåndsvarselFormData>();
     const tittel = behandling.varselSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const queryClient = useQueryClient();
     const maksAntallTegn = 4000;

@@ -1,13 +1,8 @@
-import type { ForhåndsvarselFormData } from './validering';
-import type { UseFormReturn } from 'react-hook-form/dist/types/form';
+import type { ForhåndsvarselFormData } from './schema';
 
 import { RadioGroup, Radio, Textarea, Link } from '@navikt/ds-react';
 import React from 'react';
-import { Controller } from 'react-hook-form';
-
-type Props = {
-    methods: UseFormReturn<ForhåndsvarselFormData>;
-};
+import { Controller, useFormContext } from 'react-hook-form';
 
 enum BegrunnelseUnntak {
     //TODO: erstatte med kodeverk fra backend når det er på plass
@@ -16,7 +11,8 @@ enum BegrunnelseUnntak {
     ÅpenbartUnødvendig = 'ÅpenbartUnødvendig',
 }
 
-export const NeiSkjema: React.FC<Props> = ({ methods }) => {
+export const Unntak: React.FC = () => {
+    const methods = useFormContext<ForhåndsvarselFormData>();
     return (
         <>
             <Controller

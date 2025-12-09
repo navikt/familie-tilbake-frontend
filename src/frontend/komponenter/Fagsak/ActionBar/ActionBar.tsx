@@ -5,21 +5,29 @@ import React from 'react';
 
 import { Behandlingsmeny } from '../meny/Meny';
 
-type Props = {
+type BaseProps = {
     stegtekst: string | undefined;
     forrigeAriaLabel: string | undefined;
     nesteAriaLabel: string;
-    onNeste?: () => void;
     onForrige: (() => void) | undefined;
     dobbeltNøstet?: boolean;
     nesteTekst?: string;
     isLoading?: boolean;
     skjulNeste?: boolean;
     disableNeste?: boolean;
-    type?: 'button' | 'submit';
 };
 
-const ActionBar: React.FC<Props> = ({
+type ButtonProps = BaseProps & {
+    type?: 'button';
+    onNeste: () => void;
+};
+
+type SubmitProps = BaseProps & {
+    type: 'submit';
+    onNeste?: never;
+};
+
+const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
     stegtekst = '',
     forrigeAriaLabel,
     nesteAriaLabel,
