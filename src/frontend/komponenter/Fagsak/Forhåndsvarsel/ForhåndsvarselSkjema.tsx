@@ -93,21 +93,23 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
         handleVarselChange();
     }, [varselErSendt]);
 
-    const handleMutationSuccess = useEffectEvent(() => {
-        if (forhåndsvisning.isSuccess && forhåndsvisning.data) {
-            const currentQueryKey = [
-                'forhåndsvisBrev',
-                behandling.behandlingId,
-                BrevmalkodeEnum.VARSEL,
-                fritekst,
-            ];
-            queryClient.setQueryData(currentQueryKey, forhåndsvisning.data);
-            setShowModal(true);
+    const handleMutationSuccess = useEffectEvent(
+        (isSuccess: boolean, data: RessursByte | undefined) => {
+            if (isSuccess && data) {
+                const currentQueryKey = [
+                    'forhåndsvisBrev',
+                    behandling.behandlingId,
+                    BrevmalkodeEnum.VARSEL,
+                    fritekst,
+                ];
+                queryClient.setQueryData(currentQueryKey, data);
+                setShowModal(true);
+            }
         }
-    });
+    );
 
     useEffect(() => {
-        handleMutationSuccess();
+        handleMutationSuccess(forhåndsvisning.isSuccess, forhåndsvisning.data);
     }, [forhåndsvisning.isSuccess, forhåndsvisning.data]);
 
     const seForhåndsvisningWithModal = (): void => {
