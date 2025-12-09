@@ -60,6 +60,7 @@ export const Opprett: React.FC<Props> = ({ behandling, varselbrevtekster }) => {
             setShowModal(true);
         },
     });
+
     const seForhåndsvisning = (): void => {
         const currentQueryKey = [
             'forhåndsvisBrev',

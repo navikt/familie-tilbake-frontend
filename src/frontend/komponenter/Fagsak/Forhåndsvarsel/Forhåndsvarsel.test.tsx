@@ -172,7 +172,7 @@ describe('Forhåndsvarsel', () => {
             });
         });
 
-        describe('Når Nei er valgt', () => {
+        describe("Når 'Nei' er valgt", () => {
             test('Vises feilmelding dersom ingen begrunnelse er valgt', async () => {
                 renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
                 fireEvent.click(screen.getByText('Nei'));

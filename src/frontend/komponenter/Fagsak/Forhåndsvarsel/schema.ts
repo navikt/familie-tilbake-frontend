@@ -6,12 +6,12 @@ export enum SkalSendesForhåndsvarsel {
     IkkeValgt = 'ikkeValgt',
 }
 
-const jaSchema = z.object({
+const opprettSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Ja),
     fritekst: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
 });
 
-const neiSchema = z.object({
+const unntakSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
     begrunnelseForUnntak: z.enum(
         ['IkkePraktiskMulig', 'UrimeligRessurskrevende', 'ÅpenbartUnødvendig'],
@@ -25,7 +25,7 @@ const ikkeValgtSchema = z.object({
 });
 
 export const forhåndsvarselSchema = z
-    .discriminatedUnion('skalSendesForhåndsvarsel', [jaSchema, neiSchema, ikkeValgtSchema])
+    .discriminatedUnion('skalSendesForhåndsvarsel', [opprettSchema, unntakSchema, ikkeValgtSchema])
     .refine(data => data.skalSendesForhåndsvarsel !== SkalSendesForhåndsvarsel.IkkeValgt, {
         message: 'Du må velge om forhåndsvarselet skal sendes eller ikke',
         path: ['skalSendesForhåndsvarsel'],
