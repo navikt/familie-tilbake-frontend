@@ -67,18 +67,12 @@ export const Brukeruttalelse: React.FC<Props> = ({ methods, kanUtsetteFrist = fa
                         onChange={field.onChange}
                         error={errors.harBrukerUttaltSeg?.message?.toString()}
                     >
-                        <HStack align="center" wrap gap="0 2">
-                            <Radio value={HarBrukerUttaltSeg.Ja}>Ja</Radio>
-                        </HStack>
-                        <HStack align="center" wrap gap="0 2">
-                            <Radio value={HarBrukerUttaltSeg.Nei}>Nei</Radio>
-                        </HStack>
+                        <Radio value={HarBrukerUttaltSeg.Ja}>Ja</Radio>
+                        <Radio value={HarBrukerUttaltSeg.Nei}>Nei</Radio>
                         {kanUtsetteFrist && (
-                            <HStack align="center" gap="0 2">
-                                <Radio value={HarBrukerUttaltSeg.UtsettFrist}>
-                                    Utsett frist for å uttale seg
-                                </Radio>
-                            </HStack>
+                            <Radio value={HarBrukerUttaltSeg.UtsettFrist}>
+                                Utsett frist for å uttale seg
+                            </Radio>
                         )}
                     </RadioGroup>
                 )}
