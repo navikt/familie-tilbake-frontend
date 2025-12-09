@@ -12,7 +12,6 @@ export const FixedAlert: React.FC<Props> = ({ width, children, variant, ...props
 
     useEffect(() => {
         if (variant !== 'error') {
-            console.log('FixedAlert mounted');
             const textLength = typeof children === 'string' ? children.length : 100;
             const timer = setTimeout(() => setIsVisible(false), Math.max(textLength * 50, 7000));
 
