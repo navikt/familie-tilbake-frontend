@@ -10,6 +10,7 @@ import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenk
 import { useHttp } from '../../../api/http/HttpProvider';
 import { useTheme } from '../../../context/ThemeContext';
 import { Fagsystem } from '../../../kodeverk';
+import { Adventslys } from './høytidstema/jul/Adventslys';
 import { useBehandlingStore } from '../../../stores/behandlingStore';
 import { useFagsakStore } from '../../../stores/fagsakStore';
 import { erHistoriskSide } from '../../../utils/sider';
@@ -77,6 +78,9 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
             <InternalHeader.Title href="/" className="text-nowrap">
                 Nav - Tilbakekreving
             </InternalHeader.Title>
+
+            <Adventslys />
+
             <Spacer />
             {harGyldigLenke && (
                 <Dropdown>
