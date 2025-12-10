@@ -1,3 +1,4 @@
+import type { ForhåndsvarselFormData } from './schema';
 import type {
     BehandlingDto,
     FagsakDto,
@@ -7,7 +8,6 @@ import type {
     BestillBrevData,
     Options,
     BestillBrevResponse,
-    Uttalelsesdetaljer,
     LagreBrukeruttalelseData,
     LagreBrukeruttalelseResponse,
     UtsettUttalelseFristData,
@@ -30,19 +30,6 @@ import {
     utsettUttalelseFristMutation,
 } from '../../../generated/@tanstack/react-query.gen';
 import { SYNLIGE_STEG } from '../../../utils/sider';
-
-export type ForhåndsvarselFormData = {
-    skalSendesForhåndsvarsel: string;
-    fritekst: string;
-    harBrukerUttaltSeg: HarBrukerUttaltSeg;
-    uttalelsesKommentar: string;
-    uttalelsesDetaljer: Uttalelsesdetaljer[] | string;
-    uttalelsesdato: string;
-    hvorBrukerenUttalteSeg: string;
-    uttalelseBeskrivelse: string;
-    nyFristDato: string;
-    begrunnelseUtsattFrist: string;
-};
 
 export type UseForhåndsvarselMutationsReturn = {
     readonly sendForhåndsvarselMutation: UseMutationResult<

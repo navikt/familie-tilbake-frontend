@@ -1,3 +1,6 @@
+import type { HarBrukerUttaltSeg } from './Enums';
+import type { Uttalelsesdetaljer } from '../../../generated';
+
 import { z } from 'zod';
 
 export enum SkalSendesForhåndsvarsel {
@@ -6,12 +9,25 @@ export enum SkalSendesForhåndsvarsel {
     IkkeValgt = 'ikkeValgt',
 }
 
-const opprettSchema = z.object({
+const baseFields = z.object({
+    skalSendesForhåndsvarsel: z.string(),
+    fritekst: z.string(),
+    harBrukerUttaltSeg: z.custom<HarBrukerUttaltSeg>(),
+    uttalelsesKommentar: z.string(),
+    uttalelsesDetaljer: z.union([z.array(z.custom<Uttalelsesdetaljer>()), z.string()]),
+    uttalelsesdato: z.string(),
+    hvorBrukerenUttalteSeg: z.string(),
+    uttalelseBeskrivelse: z.string(),
+    nyFristDato: z.string(),
+    begrunnelseUtsattFrist: z.string(),
+});
+
+const opprettSchema = baseFields.extend({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Ja),
     fritekst: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
 });
 
-const unntakSchema = z.object({
+const unntakSchema = baseFields.extend({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
     begrunnelseForUnntak: z.enum(
         ['IkkePraktiskMulig', 'UrimeligRessurskrevende', 'ÅpenbartUnødvendig'],
@@ -20,7 +36,7 @@ const unntakSchema = z.object({
     beskrivelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(2000),
 });
 
-const ikkeValgtSchema = z.object({
+const ikkeValgtSchema = baseFields.extend({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.IkkeValgt),
 });
 

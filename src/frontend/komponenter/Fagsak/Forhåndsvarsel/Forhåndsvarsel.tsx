@@ -1,19 +1,20 @@
 import type { BehandlingDto, FagsakDto } from '../../../generated';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { MegaphoneIcon } from '@navikt/aksel-icons';
 import { Heading, HStack, Radio, RadioGroup, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { SkalSendesForhåndsvarsel, HarBrukerUttaltSeg } from './Enums';
+import { HarBrukerUttaltSeg } from './Enums';
 import { Opprett } from './Opprett';
+import { forhåndsvarselSchema, SkalSendesForhåndsvarsel } from './schema';
 import { Unntak } from './Unntak';
 import {
     mapHarBrukerUttaltSegFraApiDto,
     useForhåndsvarselMutations,
-    type ForhåndsvarselFormData,
 } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
@@ -61,26 +62,24 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         }
         return SkalSendesForhåndsvarsel.IkkeValgt;
     };
-
-    const defaultValues = {
-        skalSendesForhåndsvarsel: getForhåndsvarselStatus().toString(),
-        fritekst: '',
-        harBrukerUttaltSeg: mapHarBrukerUttaltSegFraApiDto(
-            forhåndsvarselInfo?.brukeruttalelse?.harBrukerUttaltSeg
-        ),
-        uttalelsesKommentar: forhåndsvarselInfo?.brukeruttalelse?.kommentar || '',
-        uttalelsesDetaljer: forhåndsvarselInfo?.brukeruttalelse?.uttalelsesdetaljer || '',
-        uttalelsesdato: '',
-        hvorBrukerenUttalteSeg: '',
-        uttalelseBeskrivelse: '',
-        nyFristDato: '',
-        begrunnelseUtsattFrist: '',
-    };
-
-    const methods = useForm<ForhåndsvarselFormData>({
-        reValidateMode: 'onBlur',
+    const methods = useForm({
+        resolver: zodResolver(forhåndsvarselSchema),
+        mode: 'onBlur',
         shouldFocusError: false,
-        values: defaultValues,
+        defaultValues: {
+            skalSendesForhåndsvarsel: getForhåndsvarselStatus(),
+            fritekst: '',
+            harBrukerUttaltSeg: mapHarBrukerUttaltSegFraApiDto(
+                forhåndsvarselInfo?.brukeruttalelse?.harBrukerUttaltSeg
+            ),
+            uttalelsesKommentar: forhåndsvarselInfo?.brukeruttalelse?.kommentar || '',
+            uttalelsesDetaljer: forhåndsvarselInfo?.brukeruttalelse?.uttalelsesdetaljer || '',
+            uttalelsesdato: '',
+            hvorBrukerenUttalteSeg: '',
+            uttalelseBeskrivelse: '',
+            nyFristDato: '',
+            begrunnelseUtsattFrist: '',
+        },
     });
 
     useLayoutEffect(() => {
@@ -94,9 +93,8 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     }, []);
 
     const {
-        register,
         handleSubmit,
-        formState: { errors, isDirty: harEndringer },
+        formState: { isDirty: harEndringer },
     } = methods;
 
     const skalSendesForhåndsvarsel = useWatch({
@@ -158,23 +156,24 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                         )}
                     </HStack>
                     <VStack maxWidth={ATextWidthMax} ref={containerRef}>
-                        <RadioGroup
-                            {...register('skalSendesForhåndsvarsel', {
-                                required: 'Velg ett av alternativene over for å gå videre',
-                            })}
-                            size="small"
+                        <Controller
+                            control={methods.control}
                             name="skalSendesForhåndsvarsel"
-                            onChange={value => methods.setValue('skalSendesForhåndsvarsel', value)}
-                            value={skalSendesForhåndsvarsel}
-                            legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
-                            description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
+                            render={({ field, fieldState }) => (
+                                <RadioGroup
+                                    {...field}
+                                    size="small"
+                                    legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
+                                    description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
                 fattes, slik at de får mulighet til å uttale seg."
-                            readOnly={varselErSendt}
-                            error={errors.skalSendesForhåndsvarsel?.message}
-                        >
-                            <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
-                            <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
-                        </RadioGroup>
+                                    readOnly={varselErSendt}
+                                    error={fieldState.error?.message}
+                                >
+                                    <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
+                                    <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
+                                </RadioGroup>
+                            )}
+                        />
                     </VStack>
 
                     {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja &&
