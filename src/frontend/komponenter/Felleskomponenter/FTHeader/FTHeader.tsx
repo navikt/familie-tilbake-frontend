@@ -6,11 +6,11 @@ import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { useMemo } from 'react';
 
+import { Høytidspynt } from './høytidstema/Høytidspynt';
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
 import { useHttp } from '../../../api/http/HttpProvider';
 import { useTheme } from '../../../context/ThemeContext';
 import { Fagsystem } from '../../../kodeverk';
-import { Adventslys } from './høytidstema/jul/Adventslys';
 import { useBehandlingStore } from '../../../stores/behandlingStore';
 import { useFagsakStore } from '../../../stores/fagsakStore';
 import { erHistoriskSide } from '../../../utils/sider';
@@ -78,9 +78,7 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
             <InternalHeader.Title href="/" className="text-nowrap">
                 Nav - Tilbakekreving
             </InternalHeader.Title>
-
-            <Adventslys />
-
+            <Høytidspynt />
             <Spacer />
             {harGyldigLenke && (
                 <Dropdown>

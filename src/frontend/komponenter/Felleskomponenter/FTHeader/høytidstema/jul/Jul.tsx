@@ -1,6 +1,7 @@
 import React from 'react';
 
 import christmasCandle from './christmasCandle.svg';
+import stars from './stars.svg';
 import Image from '../../../Image/Image';
 
 const beregnAntallAdventslys = (): number => {
@@ -33,16 +34,19 @@ const beregnAntallAdventslys = (): number => {
     return 4; // Etter 4. søndag i advent
 };
 
-export const Adventslys: React.FC = () => {
+export const Jul: React.FC = () => {
     const antallLys = beregnAntallAdventslys();
 
     if (antallLys === 0) return null;
 
     return (
-        <div className="ml-6 flex items-center gap-2">
+        <div className="ml-6 items-center gap-2 hidden md:flex">
+            <Image src={stars} altText="julestjerner" className="h-12 w-12" />
             {Array.from({ length: antallLys }).map((_, index) => (
                 <Image key={index} src={christmasCandle} altText={`adventslys ${index + 1}`} />
             ))}
+
+            <Image src={stars} altText="julestjerner" className="h-12 w-12" />
         </div>
     );
 };

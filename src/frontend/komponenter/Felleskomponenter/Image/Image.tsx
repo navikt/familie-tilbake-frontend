@@ -6,6 +6,7 @@ type Props = {
     altText: string;
     onClick?: (event: React.MouseEvent) => void;
     onKeyDown?: (event: React.KeyboardEvent) => void;
+    className?: string;
 };
 
 const Image: React.FC<Props> = ({
@@ -14,6 +15,7 @@ const Image: React.FC<Props> = ({
     altText,
     onClick = (): undefined => undefined,
     onKeyDown,
+    className,
 }) => {
     const [isHovering, setHoovering] = React.useState(false);
 
@@ -45,6 +47,7 @@ const Image: React.FC<Props> = ({
             onBlur={onBlur}
             onKeyDown={onKeyDownFn}
             onClick={onClick}
+            className={className}
         />
     );
     return image;
