@@ -10,7 +10,7 @@ import {
     FigureOutwardIcon,
     FlowerPetalFallingIcon,
 } from '@navikt/aksel-icons';
-import { Box, CopyButton, Heading, Tag } from '@navikt/ds-react';
+import { CopyButton, ExpansionCard, Tag } from '@navikt/ds-react';
 import React from 'react';
 
 import { Kjønn } from '../../../../typer/bruker';
@@ -43,73 +43,79 @@ type Props = {
 
 export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
     return (
-        <Box
-            padding="4"
-            className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
+        <ExpansionCard
+            size="small"
+            defaultOpen
+            aria-label="Brukers informasjon"
+            className="border rounded-xl border-ax-border-neutral-subtle flex flex-col bg-ax-bg-default"
         >
-            <Heading size="xsmall" level="2">
-                Bruker
-            </Heading>
+            <ExpansionCard.Header>
+                <ExpansionCard.Title as="h2" size="small" className="text-lg">
+                    Bruker
+                </ExpansionCard.Title>
+            </ExpansionCard.Header>
 
-            <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
-                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                    {kjønnIkon(bruker.kjønn)}
-                    Navn
-                </dt>
-                <dd className="text-ax-medium">{bruker.navn}</dd>
+            <ExpansionCard.Content>
+                <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
+                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                        {kjønnIkon(bruker.kjønn)}
+                        Navn
+                    </dt>
+                    <dd className="text-ax-medium">{bruker.navn}</dd>
 
-                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                    <CandleIcon {...ICON_PROPS} />
-                    Alder
-                </dt>
-                <dd className="text-ax-medium">
-                    {hentAlder(bruker.fødselsdato, bruker.dødsdato)} år
-                </dd>
+                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                        <CandleIcon {...ICON_PROPS} />
+                        Alder
+                    </dt>
+                    <dd className="text-ax-medium">
+                        {hentAlder(bruker.fødselsdato, bruker.dødsdato)} år
+                    </dd>
 
-                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                    <BagdeIcon {...ICON_PROPS} />
-                    {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
-                </dt>
-                <dd className="text-ax-medium flex flex-row gap-2 items-center">
-                    {formatterPersonIdent(bruker.personIdent)}
-                    <CopyButton copyText={bruker.personIdent} className="p-0" />
-                </dd>
+                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                        <BagdeIcon {...ICON_PROPS} />
+                        {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
+                    </dt>
+                    <dd className="text-ax-medium flex flex-row gap-2 items-center">
+                        {formatterPersonIdent(bruker.personIdent)}
+                        <CopyButton copyText={bruker.personIdent} className="p-0" />
+                    </dd>
 
-                {bruker.dødsdato && (
-                    <>
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <FlowerPetalFallingIcon {...ICON_PROPS} />
-                            Dødsdato
-                        </dt>
-                        <dd className="text-ax-medium">
-                            <Tag size="small" variant="neutral-filled">
-                                {formatterDatostring(bruker.dødsdato)}
-                            </Tag>
-                        </dd>
-                    </>
-                )}
-                {institusjon && (
-                    <>
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <Buildings2Icon {...ICON_PROPS} />
-                            Institusjon
-                        </dt>
-                        <dd className="text-ax-medium">{institusjon.navn}</dd>
+                    {bruker.dødsdato && (
+                        <>
+                            <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                                <FlowerPetalFallingIcon {...ICON_PROPS} />
+                                Dødsdato
+                            </dt>
+                            <dd className="text-ax-medium">
+                                <Tag size="small" variant="neutral-filled">
+                                    {formatterDatostring(bruker.dødsdato)}
+                                </Tag>
+                            </dd>
+                        </>
+                    )}
+                    {institusjon && (
+                        <>
+                            <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                                <Buildings2Icon {...ICON_PROPS} />
+                                Institusjon
+                            </dt>
+                            <dd className="text-ax-medium">{institusjon.navn}</dd>
 
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <Buildings2Icon {...ICON_PROPS} />
-                            Org.nummer
-                        </dt>
-                        <dd className="text-ax-medium flex flex-row gap-2 items-center">
-                            {formatterOrgNummer(institusjon.organisasjonsnummer)}
-                            <CopyButton
-                                copyText={institusjon.organisasjonsnummer}
-                                className="p-0"
-                            />
-                        </dd>
-                    </>
-                )}
-            </dl>
-        </Box>
+                            <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                                <Buildings2Icon {...ICON_PROPS} />
+                                Org.nummer
+                            </dt>
+                            <dd className="text-ax-medium flex flex-row gap-2 items-center">
+                                {formatterOrgNummer(institusjon.organisasjonsnummer)}
+                                <CopyButton
+                                    copyText={institusjon.organisasjonsnummer}
+                                    className="p-0"
+                                />
+                            </dd>
+                        </>
+                    )}
+                </dl>
+            </ExpansionCard.Content>
+        </ExpansionCard>
     );
 };
