@@ -1,13 +1,9 @@
 import type { ForhåndsvarselFormData } from './useForhåndsvarselMutations';
-import type { UseFormReturn } from 'react-hook-form/dist/types/form';
 
 import { VStack, RadioGroup, HStack, Radio, Textarea, Link } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
-
-type Props = {
-    methods: UseFormReturn<ForhåndsvarselFormData>;
-};
+import { useFormContext } from 'react-hook-form';
 
 enum BegrunnelseUnntak {
     //TODO: erstatte med kodeverk fra backend når det er på plass
@@ -16,10 +12,10 @@ enum BegrunnelseUnntak {
     ÅpenbartUnødvendig = 'ÅpenbartUnødvendig',
 }
 
-export const Unntak: React.FC<Props> = ({ methods }) => {
+export const Unntak: React.FC = () => {
     const {
         formState: { errors },
-    } = methods;
+    } = useFormContext<ForhåndsvarselFormData>();
 
     return (
         <VStack maxWidth={ATextWidthMax} gap="4">

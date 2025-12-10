@@ -5,7 +5,7 @@ import { Heading, HStack, Radio, RadioGroup, Tag, Tooltip, VStack } from '@navik
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { SkalSendesForhåndsvarsel, HarBrukerUttaltSeg } from './Enums';
 import { ForhåndsvarselSkjema } from './ForhåndsvarselSkjema';
@@ -37,7 +37,6 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 };
 
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
-    const [visForhåndsvarselSendt, setVisForhåndsvarselSendt] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const [parentBounds, setParentBounds] = useState({ width: 'auto' });
 
@@ -50,7 +49,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         sendBrukeruttalelse,
         sendUtsettUttalelseFrist,
         gåTilNeste,
-    } = useForhåndsvarselMutations(behandling, fagsak, () => setVisForhåndsvarselSendt(true));
+    } = useForhåndsvarselMutations(behandling, fagsak);
 
     const { forhåndsvarselInfo, varselbrevtekster } = useForhåndsvarselQueries(behandling);
 
@@ -137,75 +136,75 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
 
     return (
         <>
-            <VStack gap="4">
-                <HStack align="center" justify="space-between">
-                    <Heading level="1" size="small">
-                        Forhåndsvarsel
-                    </Heading>
-                    {forhåndsvarselInfo?.varselbrevSendtTid && (
-                        <Tooltip
-                            arrow={false}
-                            placement="bottom"
-                            content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevSendtTid)}`}
-                        >
-                            <Tag
-                                variant={getTagVariant(forhåndsvarselInfo.varselbrevSendtTid)}
-                                icon={<MegaphoneIcon aria-hidden />}
-                            >
-                                {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevSendtTid)}`}
-                            </Tag>
-                        </Tooltip>
-                    )}
-                </HStack>
-                <VStack maxWidth={ATextWidthMax} ref={containerRef}>
-                    <RadioGroup
-                        {...register('skalSendesForhåndsvarsel', {
-                            required: 'Velg ett av alternativene over for å gå videre',
-                        })}
-                        size="small"
-                        name="skalSendesForhåndsvarsel"
-                        onChange={value => methods.setValue('skalSendesForhåndsvarsel', value)}
-                        value={skalSendesForhåndsvarsel}
-                        legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
-                        description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
-                fattes, slik at de får mulighet til å uttale seg."
-                        readOnly={varselErSendt}
-                        error={errors.skalSendesForhåndsvarsel?.message}
-                    >
-                        <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
-                        <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
-                    </RadioGroup>
-                </VStack>
-
-                {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && varselbrevtekster && (
-                    <ForhåndsvarselSkjema
-                        behandling={behandling}
-                        fagsak={fagsak}
-                        methods={methods}
-                        varselbrevtekster={varselbrevtekster}
-                        varselErSendt={varselErSendt}
-                        parentBounds={parentBounds}
-                    />
-                )}
-                {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && (
-                    <Unntak methods={methods} />
-                )}
-                {visForhåndsvarselSendt && (
-                    <FixedAlert
-                        aria-live="polite"
-                        variant="success"
-                        closeButton
-                        width={parentBounds.width}
-                        onClose={() => setVisForhåndsvarselSendt(false)}
-                    >
-                        <Heading spacing size="small" level="3">
-                            Forhåndsvarsel er sendt
+            <FormProvider {...methods}>
+                <VStack gap="4">
+                    <HStack align="center" justify="space-between">
+                        <Heading level="1" size="small">
+                            Forhåndsvarsel
                         </Heading>
-                        Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når
-                        fristen for å uttale seg (3 uker) har gått ut.
-                    </FixedAlert>
-                )}
-            </VStack>
+                        {forhåndsvarselInfo?.varselbrevSendtTid && (
+                            <Tooltip
+                                arrow={false}
+                                placement="bottom"
+                                content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                            >
+                                <Tag
+                                    variant={getTagVariant(forhåndsvarselInfo.varselbrevSendtTid)}
+                                    icon={<MegaphoneIcon aria-hidden />}
+                                >
+                                    {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                                </Tag>
+                            </Tooltip>
+                        )}
+                    </HStack>
+                    <VStack maxWidth={ATextWidthMax} ref={containerRef}>
+                        <RadioGroup
+                            {...register('skalSendesForhåndsvarsel', {
+                                required: 'Velg ett av alternativene over for å gå videre',
+                            })}
+                            size="small"
+                            name="skalSendesForhåndsvarsel"
+                            onChange={value => methods.setValue('skalSendesForhåndsvarsel', value)}
+                            value={skalSendesForhåndsvarsel}
+                            legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
+                            description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
+                fattes, slik at de får mulighet til å uttale seg."
+                            readOnly={varselErSendt}
+                            error={errors.skalSendesForhåndsvarsel?.message}
+                        >
+                            <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
+                            <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
+                        </RadioGroup>
+                    </VStack>
+
+                    {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja &&
+                        varselbrevtekster && (
+                            <ForhåndsvarselSkjema
+                                behandling={behandling}
+                                fagsak={fagsak}
+                                varselbrevtekster={varselbrevtekster}
+                                varselErSendt={varselErSendt}
+                                parentBounds={parentBounds}
+                            />
+                        )}
+                    {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />}
+                    {sendForhåndsvarselMutation.isSuccess && (
+                        <FixedAlert
+                            aria-live="polite"
+                            variant="success"
+                            closeButton
+                            width={parentBounds.width}
+                            onClose={sendForhåndsvarselMutation.reset}
+                        >
+                            <Heading spacing size="small" level="3">
+                                Forhåndsvarsel er sendt
+                            </Heading>
+                            Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når
+                            fristen for å uttale seg (3 uker) har gått ut.
+                        </FixedAlert>
+                    )}
+                </VStack>
+            </FormProvider>
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
                 nesteTekst={getNesteKnappTekst()}

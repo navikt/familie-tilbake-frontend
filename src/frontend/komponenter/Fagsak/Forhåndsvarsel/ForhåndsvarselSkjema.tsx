@@ -7,7 +7,6 @@ import type {
     FagsakDto,
 } from '../../../generated';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
-import type { UseFormReturn } from 'react-hook-form';
 
 import { FilePdfIcon } from '@navikt/aksel-icons';
 import {
@@ -22,7 +21,7 @@ import {
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useEffect, useEffectEvent, useState } from 'react';
-import { Controller, useWatch } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Brukeruttalelse } from './Brukeruttalelse';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
@@ -33,7 +32,6 @@ import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningM
 type Props = {
     behandling: BehandlingDto;
     fagsak: FagsakDto;
-    methods: UseFormReturn<ForhåndsvarselFormData>;
     varselbrevtekster: Varselbrevtekst;
     varselErSendt: boolean;
     parentBounds: { width: string | undefined };
@@ -60,7 +58,6 @@ const renderModal = (
 export const ForhåndsvarselSkjema: React.FC<Props> = ({
     behandling,
     fagsak,
-    methods,
     varselbrevtekster,
     varselErSendt,
     parentBounds,
@@ -73,24 +70,24 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling, fagsak);
 
     const [showModal, setShowModal] = useState(false);
-    const fritekst = useWatch({
-        control: methods.control,
-        name: 'fritekst',
-    });
-
     const {
         control,
         formState: { errors },
-    } = methods;
+    } = useFormContext<ForhåndsvarselFormData>();
 
-    const handleVarselChange = useEffectEvent(() => {
+    const fritekst = useWatch({
+        control,
+        name: 'fritekst',
+    });
+
+    const handleVarselChange = useEffectEvent((varselErSendt: boolean) => {
         if (varselErSendt) {
             setExpansionCardÅpen(false);
         }
     });
 
     useEffect(() => {
-        handleVarselChange();
+        handleVarselChange(varselErSendt);
     }, [varselErSendt]);
 
     const handleMutationSuccess = useEffectEvent(
@@ -220,7 +217,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                         </Button>
                     )}
                 </HStack>
-                {varselErSendt && <Brukeruttalelse methods={methods} kanUtsetteFrist />}
+                {varselErSendt && <Brukeruttalelse kanUtsetteFrist />}
                 {forhåndsvisning.error && (
                     <FixedAlert
                         aria-live="assertive"

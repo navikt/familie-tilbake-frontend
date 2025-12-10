@@ -1,10 +1,8 @@
 import type { ForhåndsvarselFormData } from './useForhåndsvarselMutations';
-import type { UseFormReturn } from 'react-hook-form/dist/types/form';
 
 import {
     VStack,
     RadioGroup,
-    HStack,
     Radio,
     DatePicker,
     TextField,
@@ -13,40 +11,41 @@ import {
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
-import { Controller, useWatch } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { HarBrukerUttaltSeg } from './Enums';
 import { dateTilIsoDatoString } from '../../../utils/dato';
 type Props = {
-    methods: UseFormReturn<ForhåndsvarselFormData>;
     kanUtsetteFrist?: boolean;
 };
 
-export const Brukeruttalelse: React.FC<Props> = ({ methods, kanUtsetteFrist = false }) => {
+export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) => {
     const {
         register,
         control,
         formState: { errors },
-    } = methods;
+        setValue,
+        trigger,
+    } = useFormContext<ForhåndsvarselFormData>();
 
     const harBrukerUttaltSeg = useWatch({
-        control: methods.control,
+        control,
         name: 'harBrukerUttaltSeg',
     });
 
     const uttalelsesDatepicker = useDatepicker({
         onDateChange: date => {
             const dateString = dateTilIsoDatoString(date);
-            methods.setValue('uttalelsesdato', dateString);
-            methods.trigger('uttalelsesdato');
+            setValue('uttalelsesdato', dateString);
+            trigger('uttalelsesdato');
         },
     });
 
     const nyFristDatepicker = useDatepicker({
         onDateChange: date => {
             const dateString = dateTilIsoDatoString(date);
-            methods.setValue('nyFristDato', dateString);
-            methods.trigger('nyFristDato');
+            setValue('nyFristDato', dateString);
+            trigger('nyFristDato');
         },
     });
 
