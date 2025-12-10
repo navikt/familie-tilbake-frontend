@@ -4,7 +4,7 @@ import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
@@ -32,9 +32,6 @@ jest.mock('../../../generated/@tanstack/react-query.gen', () => ({
 }));
 
 jest.mock('../../../generated', () => ({
-    BrevmalkodeEnum: {
-        VARSEL: 'VARSEL',
-    },
     hentForhåndsvarselTekst: jest.fn().mockResolvedValue({
         data: {
             data: {

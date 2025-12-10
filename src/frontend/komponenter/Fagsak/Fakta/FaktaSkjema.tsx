@@ -1,215 +1,265 @@
-import type { FaktaSkjemaData } from './typer/fakta';
-import type { Ytelsetype } from '../../../kodeverk';
-import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
+import type {
+    BestemmelseEllerGrunnlagDto,
+    FaktaOmFeilutbetalingDto,
+    FaktaPeriodeDto,
+    MuligeRettsligGrunnlagDto,
+    OppdaterFaktaOmFeilutbetalingDto,
+    OppdaterFaktaPeriodeDto,
+} from '../../../generated';
+import type { SubmitErrorHandler, SubmitHandler } from 'react-hook-form';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import {
-    Alert,
-    BodyShort,
-    Checkbox,
-    Detail,
+    Button,
+    DatePicker,
     Heading,
-    HGrid,
     Radio,
     RadioGroup,
+    Select,
+    Table,
     Textarea,
+    useDatepicker,
     VStack,
 } from '@navikt/ds-react';
+import { formatISO, parseISO } from 'date-fns';
 import * as React from 'react';
+import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 
-import { useFakta } from './FaktaContext';
-import FaktaPerioder from './FaktaPeriode/FaktaPerioder';
-import FaktaRevurdering from './FaktaRevurdering';
+import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { HendelseType } from '../../../kodeverk';
 import { Behandlingssteg } from '../../../typer/behandling';
-import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
-import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
+import { formatterDatostring } from '../../../utils';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
-    ytelse: Ytelsetype;
-    erLesevisning: boolean;
-    skjemaData: FaktaSkjemaData;
-    fakta: FaktaResponse;
+    faktaOmFeilutbetaling: FaktaOmFeilutbetalingDto;
 };
 
-const FaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning }) => {
-    const {
-        behandling,
-        oppdaterBegrunnelse,
-        oppdaterBeskrivelseBrukerHarUttaltSeg,
-        oppdaterBrukerHarUttaltSeg,
-        behandlePerioderSamlet,
-        settBehandlePerioderSamlet,
-        sendInnSkjema,
-        senderInn,
-        visFeilmeldinger,
-        feilmeldinger,
-        gåTilForrige,
-    } = useFakta();
-    const { settIkkePersistertKomponent, actionBarStegtekst } = useBehandling();
-    const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
-        behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
+export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element => {
+    const { actionBarStegtekst } = useBehandling();
+    const methods = useForm({
+        resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
+        defaultValues: {
+            perioder: faktaOmFeilutbetaling.perioder,
+            vurdering: faktaOmFeilutbetaling.vurdering,
+        },
+        mode: 'all',
+    });
+    const perioder = useFieldArray({
+        control: methods.control,
+        name: 'perioder',
+    }).fields;
+    const { ...oppdagetDatoProps } = methods.register('vurdering.oppdaget.dato');
+    const { datepickerProps, inputProps } = useDatepicker({
+        onDateChange: date => {
+            date
+                ? methods.setValue(
+                      'vurdering.oppdaget.dato',
+                      formatISO(date, { representation: 'date' })
+                  )
+                : methods.resetField('vurdering.oppdaget.dato');
+        },
+        defaultSelected: faktaOmFeilutbetaling.vurdering.oppdaget?.dato
+            ? parseISO(faktaOmFeilutbetaling.vurdering.oppdaget.dato)
+            : undefined,
+    });
+    const dataForPeriode = (id: string): FaktaPeriodeDto =>
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        perioder.find(periode => periode.id == id)! as FaktaPeriodeDto;
+    const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetalingDto> = data =>
+        console.log(JSON.stringify(data));
+    const onError: SubmitErrorHandler<OppdaterFaktaOmFeilutbetalingDto> = errors =>
+        console.log(errors);
+
+    const { name: avRadioGroupName, ...radioProps } = methods.register('vurdering.oppdaget.av');
 
     return (
-        <HGrid columns={2} gap="10">
-            <VStack gap="7">
-                <Heading level="2" size="small">
-                    Feilutbetaling
-                </Heading>
-                {erKravgrunnlagKnyttetTilEnEnEldreRevurdering && (
-                    <div>
-                        <Alert variant="warning" size="small">
-                            Det finnes flere revurderinger knyttet til denne tilbakekrevingen.
-                            <br />
-                            Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
-                        </Alert>
+        <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(onSubmit, onError)}>
+                <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
+                    <Heading level="2" size="small">
+                        Rettslig grunnlag
+                    </Heading>
+                    <div className="border rounded-xl border-ax-border-neutral-subtle">
+                        <Table>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell scope="col">
+                                        <span className="ml-2">Periode</span>
+                                    </Table.HeaderCell>
+                                    <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
+                                    <Table.HeaderCell scope="col">Grunnlag</Table.HeaderCell>
+                                    <Table.HeaderCell scope="col" className="text-end">
+                                        Feilutbetalt beløp
+                                    </Table.HeaderCell>
+                                    <Table.HeaderCell scope="col">Valg</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {perioder.map((periode, periodeIndex) => (
+                                    <PeriodeRad
+                                        key={periode.id}
+                                        periode={periode}
+                                        periodeIndex={periodeIndex}
+                                        periodeInfo={dataForPeriode(periode.id)}
+                                        muligeRettsligGrunnlag={
+                                            faktaOmFeilutbetaling.muligeRettsligGrunnlag
+                                        }
+                                    />
+                                ))}
+                            </Table.Body>
+                        </Table>
                     </div>
-                )}
-                <HGrid columns={3} gap="1">
-                    <div>
-                        <Detail weight="semibold">Periode med feilutbetaling</Detail>
-                        <BodyShort size="small">
-                            {`${formatterDatostring(
-                                fakta.totalFeilutbetaltPeriode.fom
-                            )} - ${formatterDatostring(fakta.totalFeilutbetaltPeriode.tom)}`}
-                        </BodyShort>
-                    </div>
-                    <div>
-                        <Detail weight="semibold">Feilutbetalt beløp totalt</Detail>
-                        <BodyShort size="small" className="text-ax-text-danger-subtle font-ax-bold">
-                            {`${formatCurrencyNoKr(fakta.totaltFeilutbetaltBeløp)}`}
-                        </BodyShort>
-                    </div>
-                    <div>
-                        <Detail weight="semibold">Tidligere varslet beløp</Detail>
-                        <BodyShort size="small">
-                            {fakta.varsletBeløp ? `${formatCurrencyNoKr(fakta.varsletBeløp)}` : ''}
-                        </BodyShort>
-                    </div>
-                </HGrid>
-                <VStack gap="2">
-                    {!erLesevisning && (
-                        <Checkbox
+                </section>
+                <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
+                    <Heading level="2" size="small">
+                        Detaljer om feilutbetalingen
+                    </Heading>
+                    <Textarea
+                        label="Årsak til feilutbetalingen"
+                        {...methods.register('vurdering.årsak')}
+                        size="small"
+                        className="w-100"
+                        minRows={3}
+                        resize
+                        maxLength={3000}
+                        description="Beskriv hvorfor utbetalingen er feil, og hva som har ført til at brukeren har fått utbetalt for mye"
+                    />
+                    <DatePicker {...datepickerProps} dropdownCaption>
+                        <DatePicker.Input
                             size="small"
-                            checked={behandlePerioderSamlet === true}
-                            onChange={() => {
-                                settIkkePersistertKomponent('fakta');
-                                settBehandlePerioderSamlet(!behandlePerioderSamlet);
-                            }}
-                        >
-                            Velg rettslig grunnlag for periodene samlet
-                        </Checkbox>
-                    )}
-                    {skjemaData.perioder.some(p => p.hendelsestype === HendelseType.Inntekt) && (
-                        <Alert variant="warning" size="small">
-                            Husk å kontrollere faktisk inntekt den siste måneden i
-                            feilutbetalingsperioden
-                        </Alert>
-                    )}
-                    {skjemaData.perioder && (
-                        <FaktaPerioder
-                            ytelse={ytelse}
-                            erLesevisning={erLesevisning}
-                            perioder={skjemaData.perioder}
+                            {...oppdagetDatoProps}
+                            {...inputProps}
+                            label="Når ble feilutbetalingen oppdaget?"
                         />
-                    )}
-                </VStack>
-                <Textarea
-                    name="begrunnelse"
-                    label="Årsak til feilutbetalingen"
-                    description="Tekst som er her fra før, kommer fra fagsystemet. Legg gjerne til/rediger tekst."
-                    readOnly={erLesevisning}
-                    value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
-                    onChange={e => {
-                        settIkkePersistertKomponent('fakta');
-                        oppdaterBegrunnelse(e.target.value);
-                    }}
-                    maxLength={3000}
-                    className={erLesevisning ? 'lesevisning' : ''}
-                    error={
-                        visFeilmeldinger &&
-                        feilmeldinger?.find(meld => meld.gjelderBegrunnelse)?.melding
-                    }
-                />
-                <VStack gap="2">
+                    </DatePicker>
                     <RadioGroup
-                        id="brukerHarUttaltSeg"
-                        readOnly={erLesevisning}
-                        legend="Har bruker uttalt seg om feilutbetalingen?"
-                        value={skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg}
-                        error={
-                            visFeilmeldinger &&
-                            feilmeldinger?.find(meld => meld.gjelderBrukerHarUttaltSeg)?.melding
-                        }
-                        onChange={(val: HarBrukerUttaltSegValg) => {
-                            settIkkePersistertKomponent('fakta');
-                            oppdaterBrukerHarUttaltSeg(val);
-                        }}
+                        name={avRadioGroupName}
+                        size="small"
+                        legend="Hvem oppdaget feilutbetalingen?"
                     >
-                        <Radio
-                            key={HarBrukerUttaltSegValg.Ja}
-                            name="brukerHarUttaltSeg"
-                            value={HarBrukerUttaltSegValg.Ja}
-                            data-testid="brukerHarUttaltSeg.ja"
-                        >
-                            Ja
+                        <Radio value="BRUKER" name="BRUKER" {...radioProps}>
+                            Bruker
                         </Radio>
-                        <Radio
-                            key={HarBrukerUttaltSegValg.Nei}
-                            name="brukerHarUttaltSeg"
-                            value={HarBrukerUttaltSegValg.Nei}
-                            data-testid="brukerHarUttaltSeg.nei"
-                        >
-                            Nei
-                        </Radio>
-                        <Radio
-                            key={HarBrukerUttaltSegValg.IkkeAktuelt}
-                            name="brukerHarUttaltSeg"
-                            value={HarBrukerUttaltSegValg.IkkeAktuelt}
-                            data-testid="brukerHarUttaltSeg.ikke-aktuelt"
-                        >
-                            Ikke aktuelt
+                        <Radio value="NAV" name="NAV" {...radioProps}>
+                            Nav
                         </Radio>
                     </RadioGroup>
-                    {skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg ===
-                        HarBrukerUttaltSegValg.Ja && (
-                        <Textarea
-                            name="beskrivelseBrukersUttalelse"
-                            label="Beskriv når og hvor bruker har uttalt seg. Gi også en kort oppsummering av uttalelsen"
-                            readOnly={erLesevisning}
-                            value={
-                                skjemaData.vurderingAvBrukersUttalelse?.beskrivelse
-                                    ? skjemaData.vurderingAvBrukersUttalelse?.beskrivelse
-                                    : ''
-                            }
-                            onChange={e => {
-                                settIkkePersistertKomponent('fakta');
-                                oppdaterBeskrivelseBrukerHarUttaltSeg(e.target.value);
-                            }}
-                            maxLength={3000}
-                            className={erLesevisning ? 'lesevisning' : ''}
-                            error={
-                                visFeilmeldinger &&
-                                feilmeldinger?.find(
-                                    meld => meld.gjelderBeskrivelseBrukerHarUttaltSeg
-                                )?.melding
-                            }
-                        />
-                    )}
-                </VStack>
-            </VStack>
-            <FaktaRevurdering fakta={fakta} />
-            <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
-                forrigeAriaLabel={behandling.harVerge ? 'Gå tilbake til vergesteget' : undefined}
-                nesteAriaLabel="Gå videre til foreldelsessteget"
-                onForrige={behandling.harVerge ? gåTilForrige : undefined}
-                onNeste={sendInnSkjema}
-                isLoading={senderInn}
-            />
-        </HGrid>
+                    <Textarea
+                        label="Hvordan ble feilutbetalingen oppdaget?"
+                        {...methods.register('vurdering.oppdaget.beskrivelse')}
+                        size="small"
+                        className="w-100 mb-6"
+                        minRows={3}
+                        resize
+                        maxLength={3000}
+                    />
+                </section>
+                <ActionBar
+                    stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
+                    forrigeAriaLabel={undefined}
+                    nesteAriaLabel="Gå videre til foreldelsessteget"
+                    onForrige={undefined}
+                    onNeste={() => {}}
+                    isLoading={false}
+                />
+            </form>
+        </FormProvider>
     );
 };
 
-export default FaktaSkjema;
+const PeriodeRad = ({
+    periode,
+    periodeIndex,
+    periodeInfo,
+    muligeRettsligGrunnlag,
+}: {
+    periode: OppdaterFaktaPeriodeDto;
+    periodeIndex: number;
+    periodeInfo: FaktaPeriodeDto;
+    muligeRettsligGrunnlag: MuligeRettsligGrunnlagDto[];
+}): React.JSX.Element => {
+    const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlagDto[] =>
+        muligeRettsligGrunnlag.find(
+            muligGrunnlag => muligGrunnlag.bestemmelse.nøkkel == bestemmelse
+        )?.grunnlag ?? [];
+    const { register } = useFormContext<OppdaterFaktaOmFeilutbetalingDto>();
+    return (
+        <Table.Row>
+            <Table.DataCell>
+                <span className="ml-2">
+                    {formatterDatostring(periodeInfo.fom)}–{formatterDatostring(periodeInfo.tom)}
+                </span>
+            </Table.DataCell>
+            <Table.DataCell>
+                <VStack>
+                    {periode.rettsligGrunnlag.map((_, index) => (
+                        <Select
+                            label="Velg bestemmelse"
+                            hideLabel
+                            size="small"
+                            key={index}
+                            {...register(
+                                `perioder.${periodeIndex}.rettsligGrunnlag.${index}.bestemmelse`
+                            )}
+                            className="flex-1"
+                        >
+                            <option value="default" disabled>
+                                Velg bestemmelse
+                            </option>
+                            {muligeRettsligGrunnlag.map(grunnlag => (
+                                <option
+                                    key={grunnlag.bestemmelse.nøkkel}
+                                    value={grunnlag.bestemmelse.nøkkel}
+                                >
+                                    {grunnlag.bestemmelse.beskrivelse}
+                                </option>
+                            ))}
+                        </Select>
+                    ))}
+                </VStack>
+            </Table.DataCell>
+            <Table.DataCell>
+                <VStack>
+                    {periode.rettsligGrunnlag.map((rettsligGrunnlag, index) => (
+                        <Select
+                            label="Velg grunnlag"
+                            hideLabel
+                            size="small"
+                            key={index}
+                            {...register(
+                                `perioder.${periodeIndex}.rettsligGrunnlag.${index}.grunnlag`
+                            )}
+                            className="flex-1"
+                        >
+                            <>
+                                <option value="default" disabled>
+                                    Velg grunnlag
+                                </option>
+                                {tilgjengeligeGrunnlag(rettsligGrunnlag.bestemmelse).map(
+                                    grunnlag => (
+                                        <option key={grunnlag.nøkkel} value={grunnlag.nøkkel}>
+                                            {grunnlag.beskrivelse}
+                                        </option>
+                                    )
+                                )}
+                            </>
+                        </Select>
+                    ))}
+                </VStack>
+            </Table.DataCell>
+            <Table.DataCell className="text-end text-ax-text-brand-magenta">
+                {periodeInfo.feilutbetaltBeløp}
+            </Table.DataCell>
+            <Table.DataCell className="text-center">
+                <Button
+                    size="small"
+                    variant="tertiary"
+                    className="align-middle"
+                    icon={<MenuElipsisHorizontalIcon title="Legg til rettslig grunnlag" />}
+                />
+            </Table.DataCell>
+        </Table.Row>
+    );
+};

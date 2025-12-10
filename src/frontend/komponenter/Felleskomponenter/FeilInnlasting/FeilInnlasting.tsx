@@ -30,7 +30,8 @@ export const lazyImportMedRetry = <T,>(
         let forsøkAntall = 0;
         const maxForsøk = 2;
         const forsøkImport = async (): Promise<{ default: ComponentType<T> }> => {
-            return importFunksjon().catch(() => {
+            return importFunksjon().catch(e => {
+                console.error(e);
                 if (forsøkAntall < maxForsøk) {
                     forsøkAntall++;
                     return forsøkImport();

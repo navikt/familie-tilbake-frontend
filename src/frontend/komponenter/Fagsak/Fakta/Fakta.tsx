@@ -1,39 +1,20 @@
 import type { Behandling } from '../../../generated';
 
-import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
-import {
-    Button,
-    DatePicker,
-    Heading,
-    Radio,
-    RadioGroup,
-    Select,
-    Table,
-    Tag,
-    Textarea,
-    useDatepicker,
-} from '@navikt/ds-react';
+import { Heading, Tag } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import * as React from 'react';
 
 import { FaktaSkeleton } from './FaktaSkeleton';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { fakta, HendelsestypeEnum, HendelsesundertypeEnum } from '../../../generated';
-import { Behandlingssteg } from '../../../typer/behandling';
+import { FaktaSkjema } from './FaktaSkjema';
+import { fakta } from '../../../generated';
 import { formatterDatostring } from '../../../utils';
-import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
     behandlingId: Behandling['behandlingId'];
 };
 
-export const Fakta: React.FC<Props> = ({ behandlingId }: Props) => {
-    const { datepickerProps, inputProps } = useDatepicker({
-        onDateChange: console.info,
-    });
-    const { actionBarStegtekst } = useBehandling();
-
+export const Fakta: React.FC<Props> = ({ behandlingId }: Props): React.JSX.Element => {
     const { data: faktaOmFeilutbetaling, isPending } = useQuery({
         queryKey: ['hentFaktaOmFeilutbetaling'],
         queryFn: () =>
@@ -44,8 +25,6 @@ export const Fakta: React.FC<Props> = ({ behandlingId }: Props) => {
             }),
         select: data => data.data,
     });
-    const bestemmelser: HendelsestypeEnum[] = [HendelsestypeEnum.ANNET];
-    const alleGrunnlag: HendelsesundertypeEnum[] = [HendelsesundertypeEnum.ANNET_FRITEKST];
 
     if (isPending || !faktaOmFeilutbetaling) return <FaktaSkeleton />;
     return (
@@ -133,131 +112,8 @@ export const Fakta: React.FC<Props> = ({ behandlingId }: Props) => {
                         </dl>
                     </div>
                 </section>
-                <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
-                    <Heading level="2" size="small">
-                        Rettslig grunnlag
-                    </Heading>
-                    <div className="border rounded-xl border-ax-border-neutral-subtle">
-                        <Table>
-                            <Table.Header>
-                                <Table.Row>
-                                    <Table.HeaderCell scope="col">
-                                        <span className="ml-2">Periode</span>
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
-                                    <Table.HeaderCell scope="col">Grunnlag</Table.HeaderCell>
-                                    <Table.HeaderCell scope="col" className="text-end">
-                                        Feilutbetalt beløp
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell scope="col">Valg</Table.HeaderCell>
-                                </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                                {faktaOmFeilutbetaling.perioder.map(periode => (
-                                    <Table.Row key={periode.fom}>
-                                        <Table.DataCell>
-                                            <span className="ml-2">
-                                                {formatterDatostring(periode.fom)}–
-                                                {formatterDatostring(periode.tom)}
-                                            </span>
-                                        </Table.DataCell>
-                                        <Table.DataCell>
-                                            <Select
-                                                label="Velg bestemmelse"
-                                                hideLabel
-                                                size="small"
-                                                value="default"
-                                                className="flex-1"
-                                            >
-                                                <option value="default" disabled>
-                                                    Velg bestemmelse
-                                                </option>
-                                                {bestemmelser.map(bestemmelse => (
-                                                    <option key={bestemmelse} value={bestemmelse}>
-                                                        {bestemmelse}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                        </Table.DataCell>
-                                        <Table.DataCell>
-                                            <Select
-                                                label="Velg grunnlag"
-                                                hideLabel
-                                                size="small"
-                                                value="default"
-                                                className="flex-1"
-                                            >
-                                                <option value="default" disabled>
-                                                    Velg grunnlag
-                                                </option>
-                                                {alleGrunnlag.map(grunnlag => (
-                                                    <option key={grunnlag} value={grunnlag}>
-                                                        {grunnlag}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                        </Table.DataCell>
-                                        <Table.DataCell className="text-end text-ax-text-brand-magenta">
-                                            {periode.feilutbetaltBeløp}
-                                        </Table.DataCell>
-                                        <Table.DataCell className="text-center">
-                                            <Button
-                                                size="small"
-                                                variant="tertiary"
-                                                className="align-middle"
-                                                icon={
-                                                    <MenuElipsisHorizontalIcon title="Legg til rettslig grunnlag" />
-                                                }
-                                            />
-                                        </Table.DataCell>
-                                    </Table.Row>
-                                ))}
-                            </Table.Body>
-                        </Table>
-                    </div>
-                </section>
-                <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
-                    <Heading level="2" size="small">
-                        Detaljer om feilutbetalingen
-                    </Heading>
-                    <Textarea
-                        label="Årsak til feilutbetalingen"
-                        size="small"
-                        className="w-100"
-                        minRows={3}
-                        resize
-                        maxLength={3000}
-                        description="Beskriv hvorfor utbetalingen er feil, og hva som har ført til at brukeren har fått utbetalt for mye"
-                    />
-                    <DatePicker {...datepickerProps} dropdownCaption>
-                        <DatePicker.Input
-                            size="small"
-                            {...inputProps}
-                            label="Når ble feilutbetalingen oppdaget?"
-                        />
-                    </DatePicker>
-                    <RadioGroup size="small" legend="Hvem oppdaget feilutbetalingen?">
-                        <Radio value="Bruker">Bruker</Radio>
-                        <Radio value="Nav">Nav</Radio>
-                    </RadioGroup>
-                    <Textarea
-                        label="Hvordan ble feilutbetalingen oppdaget?"
-                        size="small"
-                        className="w-100 mb-6"
-                        minRows={3}
-                        resize
-                        maxLength={3000}
-                    />
-                </section>
+                <FaktaSkjema faktaOmFeilutbetaling={faktaOmFeilutbetaling} />
             </div>
-            <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
-                forrigeAriaLabel={undefined}
-                nesteAriaLabel="Gå videre til foreldelsessteget"
-                onForrige={undefined}
-                onNeste={() => {}}
-                isLoading={false}
-            />
         </>
     );
 };

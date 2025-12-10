@@ -183,100 +183,159 @@ export type Options<
  */
 export const tvingHenleggBehandling = <ThrowOnError extends boolean = false>(
     options: Options<TvingHenleggBehandlingData, ThrowOnError>
-) =>
-    (options.client ?? client).put<TvingHenleggBehandlingResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<TvingHenleggBehandlingResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/behandling/{behandlingId}/tving-henleggelse/v1',
         ...options,
     });
+};
 
 /**
  * Hent korrigert kravgrunnlag
  */
 export const korrigerKravgrunnlag = <ThrowOnError extends boolean = false>(
     options: Options<KorrigerKravgrunnlagData, ThrowOnError>
-) =>
-    (options.client ?? client).put<KorrigerKravgrunnlagResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<KorrigerKravgrunnlagResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/behandling/{behandlingId}/kravgrunnlag/{eksternKravgrunnlagId}/v1',
         ...options,
     });
+};
 
 /**
  * Hent korrigert kravgrunnlag
  */
 export const korrigerKravgrunnlag1 = <ThrowOnError extends boolean = false>(
     options: Options<KorrigerKravgrunnlag1Data, ThrowOnError>
-) =>
-    (options.client ?? client).put<KorrigerKravgrunnlag1Responses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<KorrigerKravgrunnlag1Responses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/behandling/{behandlingId}/kravgrunnlag/v1',
         ...options,
     });
+};
 
 /**
  * Flytt behandling tilbake til fakta
  */
 export const flyttBehandlingTilFakta = <ThrowOnError extends boolean = false>(
     options: Options<FlyttBehandlingTilFaktaData, ThrowOnError>
-) =>
-    (options.client ?? client).put<FlyttBehandlingTilFaktaResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<FlyttBehandlingTilFaktaResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/behandling/{behandlingId}/flytt-behandling/v1',
         ...options,
     });
+};
 
 /**
  * Arkiver mottatt kravgrunnlag
  */
 export const arkiverMottattKravgrunnlag = <ThrowOnError extends boolean = false>(
     options: Options<ArkiverMottattKravgrunnlagData, ThrowOnError>
-) =>
-    (options.client ?? client).put<ArkiverMottattKravgrunnlagResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<
+        ArkiverMottattKravgrunnlagResponses,
+        unknown,
+        ThrowOnError
+    >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/arkiver/kravgrunnlag/{mottattXmlId}/v1',
         ...options,
     });
+};
 
 /**
  * Annuler kravgrunnlag
  */
 export const annulerKravgrunnlag = <ThrowOnError extends boolean = false>(
     options: Options<AnnulerKravgrunnlagData, ThrowOnError>
-) =>
-    (options.client ?? client).put<AnnulerKravgrunnlagResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<AnnulerKravgrunnlagResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/annuler/kravgrunnlag/{eksternKravgrunnlagId}/v1',
         ...options,
     });
+};
 
 /**
  * Fjerner manuell brevmottaker
  */
 export const fjernManuellBrevmottaker = <ThrowOnError extends boolean = false>(
     options: Options<FjernManuellBrevmottakerData, ThrowOnError>
-) =>
-    (options.client ?? client).delete<FjernManuellBrevmottakerResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
+) => {
+    return (options.client ?? client).delete<
+        FjernManuellBrevmottakerResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/brevmottaker/manuell/{behandlingId}/{manuellBrevmottakerId}',
         ...options,
     });
+};
 
 /**
  * Oppdaterer manuell brevmottaker
  */
 export const oppdaterManuellBrevmottaker = <ThrowOnError extends boolean = false>(
     options: Options<OppdaterManuellBrevmottakerData, ThrowOnError>
-) =>
-    (options.client ?? client).put<OppdaterManuellBrevmottakerResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<
+        OppdaterManuellBrevmottakerResponses,
+        unknown,
+        ThrowOnError
+    >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/brevmottaker/manuell/{behandlingId}/{manuellBrevmottakerId}',
         ...options,
         headers: {
@@ -284,28 +343,40 @@ export const oppdaterManuellBrevmottaker = <ThrowOnError extends boolean = false
             ...options.headers,
         },
     });
+};
 
 /**
  * Fjern manuelle brevmottakere og deaktiver steg
  */
 export const fjernBrevmottakerSteg = <ThrowOnError extends boolean = false>(
     options: Options<FjernBrevmottakerStegData, ThrowOnError>
-) =>
-    (options.client ?? client).put<FjernBrevmottakerStegResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
+) => {
+    return (options.client ?? client).put<FjernBrevmottakerStegResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/brevmottaker/manuell/{behandlingId}/deaktiver',
         ...options,
     });
+};
 
 /**
  * Sett behandling på vent
  */
 export const settBehandlingPåVent = <ThrowOnError extends boolean = false>(
     options: Options<SettBehandlingPåVentData, ThrowOnError>
-) =>
-    (options.client ?? client).put<SettBehandlingPåVentResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<SettBehandlingPåVentResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/vent/v1',
         ...options,
         headers: {
@@ -313,16 +384,22 @@ export const settBehandlingPåVent = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Henlegg behandling
  */
 export const henleggBehandling = <ThrowOnError extends boolean = false>(
     options: Options<HenleggBehandlingData, ThrowOnError>
-) =>
-    (options.client ?? client).put<HenleggBehandlingResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<HenleggBehandlingResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/henlegg/v1',
         ...options,
         headers: {
@@ -330,42 +407,62 @@ export const henleggBehandling = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Ta behandling av vent
  */
 export const taBehandlingAvVent = <ThrowOnError extends boolean = false>(
     options: Options<TaBehandlingAvVentData, ThrowOnError>
-) =>
-    (options.client ?? client).put<TaBehandlingAvVentResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<TaBehandlingAvVentResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/gjenoppta/v1',
         ...options,
     });
+};
 
 /**
  * Flytt behandling tilbake til fakta
  */
 export const flyttBehandlingTilFakta1 = <ThrowOnError extends boolean = false>(
     options: Options<FlyttBehandlingTilFakta1Data, ThrowOnError>
-) =>
-    (options.client ?? client).put<FlyttBehandlingTilFakta1Responses, unknown, ThrowOnError>({
-        responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/behandling/{behandlingId}/flytt-behandling-til-fakta',
-        ...options,
-    });
+) => {
+    return (options.client ?? client).put<FlyttBehandlingTilFakta1Responses, unknown, ThrowOnError>(
+        {
+            responseType: 'json',
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http',
+                },
+            ],
+            url: '/api/behandling/{behandlingId}/flytt-behandling-til-fakta',
+            ...options,
+        }
+    );
+};
 
 /**
  * Bytt enhet
  */
 export const byttEnhet = <ThrowOnError extends boolean = false>(
     options: Options<ByttEnhetData, ThrowOnError>
-) =>
-    (options.client ?? client).put<ByttEnhetResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<ByttEnhetResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/bytt-enhet/v1',
         ...options,
         headers: {
@@ -373,58 +470,83 @@ export const byttEnhet = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Angre send til beslutter
  */
 export const angreSendTilBeslutter = <ThrowOnError extends boolean = false>(
     options: Options<AngreSendTilBeslutterData, ThrowOnError>
-) =>
-    (options.client ?? client).put<AngreSendTilBeslutterResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<AngreSendTilBeslutterResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/angre-send-til-beslutter',
         ...options,
     });
+};
 
 /**
  * Hent verge
  */
 export const hentVerge = <ThrowOnError extends boolean = false>(
     options: Options<HentVergeData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentVergeResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentVergeResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/v1/{behandlingId}/verge',
         ...options,
     });
+};
 
 /**
  * Opprett verge steg på behandling
  */
 export const opprettVergeSteg = <ThrowOnError extends boolean = false>(
     options: Options<OpprettVergeStegData, ThrowOnError>
-) =>
-    (options.client ?? client).post<OpprettVergeStegResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<OpprettVergeStegResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/v1/{behandlingId}/verge',
         ...options,
     });
+};
 
 /**
  * Fjern verge
  */
 export const fjernVerge = <ThrowOnError extends boolean = false>(
     options: Options<FjernVergeData, ThrowOnError>
-) =>
-    (options.client ?? client).put<FjernVergeResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).put<FjernVergeResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/v1/{behandlingId}/verge',
         ...options,
     });
+};
 
 export const oppdaterBehandlendeEnhetPåBehandling = <ThrowOnError extends boolean = false>(
     options: Options<OppdaterBehandlendeEnhetPåBehandlingData, ThrowOnError>
@@ -454,55 +576,78 @@ export const oppdaterBehandlendeEnhetPåBehandling = <ThrowOnError extends boole
  */
 export const sammenslå = <ThrowOnError extends boolean = false>(
     options: Options<SammenslåData, ThrowOnError>
-) =>
-    (options.client ?? client).post<SammenslåResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<SammenslåResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/perioder/sammensla/{behandlingId}',
         ...options,
     });
+};
 
 /**
  * Angre sammenslå av perioder
  */
 export const angreSammenslåing = <ThrowOnError extends boolean = false>(
     options: Options<AngreSammenslåingData, ThrowOnError>
-) =>
-    (options.client ?? client).post<AngreSammenslåingResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<AngreSammenslåingResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/perioder/angre-sammenslaing/{behandlingId}',
         ...options,
     });
+};
 
 /**
  * Manuellt ufører iverksettingssteget uten å sende til oppdrag
  */
 export const settIverksettStegTilUtførtOgFortsett = <ThrowOnError extends boolean = false>(
     options: Options<SettIverksettStegTilUtførtOgFortsettData, ThrowOnError>
-) =>
-    (options.client ?? client).post<
+) => {
+    return (options.client ?? client).post<
         SettIverksettStegTilUtførtOgFortsettResponses,
         unknown,
         ThrowOnError
     >({
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/settiverksettingTilUtfort/{taskId}/behandling/{behandlingId}',
         ...options,
     });
+};
 
 /**
  * Send siste tilstand for behandling til DVH
  */
 export const sendSisteTilstandForBehandlingerTilDvh = <ThrowOnError extends boolean = false>(
     options: Options<SendSisteTilstandForBehandlingerTilDvhData, ThrowOnError>
-) =>
-    (options.client ?? client).post<
+) => {
+    return (options.client ?? client).post<
         SendSisteTilstandForBehandlingerTilDvhResponses,
         unknown,
         ThrowOnError
     >({
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/sendTilstandTilDVH',
         ...options,
         headers: {
@@ -510,6 +655,7 @@ export const sendSisteTilstandForBehandlingerTilDvh = <ThrowOnError extends bool
             ...options.headers,
         },
     });
+};
 
 /**
  * Kjør en påminnelse for alle saker i tilstand selv om de ikke er
@@ -538,25 +684,36 @@ export const sendPåminnelseTilAlleSakerITilstand = <ThrowOnError extends boolea
  */
 export const migrerAlleSaker = <ThrowOnError extends boolean = false>(
     options?: Options<MigrerAlleSakerData, ThrowOnError>
-) =>
-    (options?.client ?? client).post<MigrerAlleSakerResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
+) => {
+    return (options?.client ?? client).post<MigrerAlleSakerResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/migrer-alle-saker',
         ...options,
     });
+};
 
 /**
  * Lag oppdaterOppgaveTask for behandling
  */
 export const lagOppdaterOppgaveTaskForBehandling = <ThrowOnError extends boolean = false>(
     options: Options<LagOppdaterOppgaveTaskForBehandlingData, ThrowOnError>
-) =>
-    (options.client ?? client).post<
+) => {
+    return (options.client ?? client).post<
         LagOppdaterOppgaveTaskForBehandlingResponses,
         unknown,
         ThrowOnError
     >({
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/lagOppdaterOppgaveTask',
         ...options,
         headers: {
@@ -564,38 +721,51 @@ export const lagOppdaterOppgaveTaskForBehandling = <ThrowOnError extends boolean
             ...options.headers,
         },
     });
+};
 
 /**
  * Oppretter FinnGammelBehandlingUtenOppgaveTask som logger ut gamle behandlinger uten åpen oppgave
  */
 export const finnGamleÅpneBehandlingerUtenOppgave = <ThrowOnError extends boolean = false>(
     options: Options<FinnGamleÅpneBehandlingerUtenOppgaveData, ThrowOnError>
-) =>
-    (options.client ?? client).post<
+) => {
+    return (options.client ?? client).post<
         FinnGamleÅpneBehandlingerUtenOppgaveResponses,
         unknown,
         ThrowOnError
     >({
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/hentBehandlingerUtenOppgave/fagsystem/{fagsystem}',
         ...options,
     });
+};
 
 /**
  * Ferdigstiller åpen oppgave som skulle vært lukket i en behandling
  */
 export const ferdigstillOppgaverForBehandling = <ThrowOnError extends boolean = false>(
     options: Options<FerdigstillOppgaverForBehandlingData, ThrowOnError>
-) =>
-    (options.client ?? client).post<
+) => {
+    return (options.client ?? client).post<
         FerdigstillOppgaverForBehandlingResponses,
         unknown,
         ThrowOnError
     >({
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/ferdigstillOppgaverForBehandling/{behandlingId}/{oppgaveType}',
         ...options,
     });
+};
 
 /**
  * Ferdigstiller åpen GodkjenneVedtak-oppgave og oppretter BehandleSak-oppgave for behandlinger
@@ -604,13 +774,18 @@ export const ferdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgave = <
     ThrowOnError extends boolean = false,
 >(
     options: Options<FerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveData, ThrowOnError>
-) =>
-    (options.client ?? client).post<
+) => {
+    return (options.client ?? client).post<
         FerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveResponses,
         unknown,
         ThrowOnError
     >({
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/ferdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgave',
         ...options,
         headers: {
@@ -618,6 +793,7 @@ export const ferdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgave = <
             ...options.headers,
         },
     });
+};
 
 /**
  * Legg inn test-kravgrunnlag - KUN PREPROD/DEV!
@@ -640,11 +816,20 @@ export const ferdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgave = <
  */
 export const simulerMottakAvKravgrunnlag = <ThrowOnError extends boolean = false>(
     options: Options<SimulerMottakAvKravgrunnlagData, ThrowOnError>
-) =>
-    (options.client ?? client).post<SimulerMottakAvKravgrunnlagResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<
+        SimulerMottakAvKravgrunnlagResponses,
+        unknown,
+        ThrowOnError
+    >({
         bodySerializer: null,
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/behandling/{behandlingId}/kravgrunnlag/testkravgrunnlag',
         ...options,
         headers: {
@@ -652,16 +837,22 @@ export const simulerMottakAvKravgrunnlag = <ThrowOnError extends boolean = false
             ...options.headers,
         },
     });
+};
 
 /**
  * Lagre utkast av vedtaksbrev
  */
 export const lagreUtkastVedtaksbrev = <ThrowOnError extends boolean = false>(
     options: Options<LagreUtkastVedtaksbrevData, ThrowOnError>
-) =>
-    (options.client ?? client).post<LagreUtkastVedtaksbrevResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<LagreUtkastVedtaksbrevResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/dokument/vedtaksbrevtekst/{behandlingId}/utkast',
         ...options,
         headers: {
@@ -669,16 +860,22 @@ export const lagreUtkastVedtaksbrev = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Lagrer brukerens uttalelse
  */
 export const lagreBrukeruttalelse = <ThrowOnError extends boolean = false>(
     options: Options<LagreBrukeruttalelseData, ThrowOnError>
-) =>
-    (options.client ?? client).post<LagreBrukeruttalelseResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<LagreBrukeruttalelseResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/dokument/forhåndsvarsel/{behandlingId}/uttalelse',
         ...options,
         headers: {
@@ -686,6 +883,7 @@ export const lagreBrukeruttalelse = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Skal utsette uttalelse frist
@@ -754,29 +952,46 @@ export const forhåndsvisBrev = <ThrowOnError extends boolean = false>(
  */
 export const hentForhåndsvisningVedtaksbrev = <ThrowOnError extends boolean = false>(
     options: Options<HentForhåndsvisningVedtaksbrevData, ThrowOnError>
-) =>
-    (options.client ?? client).post<HentForhåndsvisningVedtaksbrevResponses, unknown, ThrowOnError>(
-        {
-            responseType: 'json',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/dokument/forhandsvis-vedtaksbrev',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers,
+) => {
+    return (options.client ?? client).post<
+        HentForhåndsvisningVedtaksbrevResponses,
+        unknown,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
             },
-        }
-    );
+        ],
+        url: '/api/dokument/forhandsvis-vedtaksbrev',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
 
 /**
  * Forhåndsvis varselbrev
  */
 export const hentForhåndsvisningVarselbrev = <ThrowOnError extends boolean = false>(
     options: Options<HentForhåndsvisningVarselbrevData, ThrowOnError>
-) =>
-    (options.client ?? client).post<HentForhåndsvisningVarselbrevResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<
+        HentForhåndsvisningVarselbrevResponses,
+        unknown,
+        ThrowOnError
+    >({
         responseType: 'blob',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/dokument/forhandsvis-varselbrev',
         ...options,
         headers: {
@@ -784,20 +999,26 @@ export const hentForhåndsvisningVarselbrev = <ThrowOnError extends boolean = fa
             ...options.headers,
         },
     });
+};
 
 /**
  * Forhåndsvis henleggelsesbrev
  */
 export const hentForhåndsvisningHenleggelsesbrev = <ThrowOnError extends boolean = false>(
     options: Options<HentForhåndsvisningHenleggelsesbrevData, ThrowOnError>
-) =>
-    (options.client ?? client).post<
+) => {
+    return (options.client ?? client).post<
         HentForhåndsvisningHenleggelsesbrevResponses,
         unknown,
         ThrowOnError
     >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/dokument/forhandsvis-henleggelsesbrev',
         ...options,
         headers: {
@@ -805,15 +1026,21 @@ export const hentForhåndsvisningHenleggelsesbrev = <ThrowOnError extends boolea
             ...options.headers,
         },
     });
+};
 
 /**
  * Bestill brevsending
  */
 export const bestillBrev = <ThrowOnError extends boolean = false>(
     options: Options<BestillBrevData, ThrowOnError>
-) =>
-    (options.client ?? client).post<BestillBrevResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
+) => {
+    return (options.client ?? client).post<BestillBrevResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/dokument/bestill',
         ...options,
         headers: {
@@ -821,29 +1048,43 @@ export const bestillBrev = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Henter manuell brevmottakere
  */
 export const hentManuellBrevmottakere = <ThrowOnError extends boolean = false>(
     options: Options<HentManuellBrevmottakereData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentManuellBrevmottakereResponses, unknown, ThrowOnError>({
-        responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/brevmottaker/manuell/{behandlingId}',
-        ...options,
-    });
+) => {
+    return (options.client ?? client).get<HentManuellBrevmottakereResponses, unknown, ThrowOnError>(
+        {
+            responseType: 'json',
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http',
+                },
+            ],
+            url: '/api/brevmottaker/manuell/{behandlingId}',
+            ...options,
+        }
+    );
+};
 
 /**
  * Legger til brevmottaker manuelt
  */
 export const leggTilBrevmottaker = <ThrowOnError extends boolean = false>(
     options: Options<LeggTilBrevmottakerData, ThrowOnError>
-) =>
-    (options.client ?? client).post<LeggTilBrevmottakerResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<LeggTilBrevmottakerResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/brevmottaker/manuell/{behandlingId}',
         ...options,
         headers: {
@@ -851,28 +1092,42 @@ export const leggTilBrevmottaker = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Opprett og aktiver brevmottaker-steg på behandling
  */
 export const opprettBrevmottakerSteg = <ThrowOnError extends boolean = false>(
     options: Options<OpprettBrevmottakerStegData, ThrowOnError>
-) =>
-    (options.client ?? client).post<OpprettBrevmottakerStegResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/brevmottaker/manuell/{behandlingId}/aktiver',
-        ...options,
-    });
+) => {
+    return (options.client ?? client).post<OpprettBrevmottakerStegResponses, unknown, ThrowOnError>(
+        {
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http',
+                },
+            ],
+            url: '/api/brevmottaker/manuell/{behandlingId}/aktiver',
+            ...options,
+        }
+    );
+};
 
 /**
  * Utfør behandlingssteg og fortsett behandling til neste steg
  */
 export const utførBehandlingssteg = <ThrowOnError extends boolean = false>(
     options: Options<UtførBehandlingsstegData, ThrowOnError>
-) =>
-    (options.client ?? client).post<UtførBehandlingsstegResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<UtførBehandlingsstegResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/steg/v1',
         ...options,
         headers: {
@@ -880,16 +1135,22 @@ export const utførBehandlingssteg = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Beregn feilutbetalt beløp for nye delte perioder
  */
 export const beregnBeløp = <ThrowOnError extends boolean = false>(
     options: Options<BeregnBeløpData, ThrowOnError>
-) =>
-    (options.client ?? client).post<BeregnBeløpResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<BeregnBeløpResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/beregn/v1',
         ...options,
         headers: {
@@ -897,16 +1158,22 @@ export const beregnBeløp = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Opprett tilbakekrevingsbehandling automatisk, kan kalles av fagsystem, batch
  */
 export const opprettBehandling = <ThrowOnError extends boolean = false>(
     options: Options<OpprettBehandlingData, ThrowOnError>
-) =>
-    (options.client ?? client).post<OpprettBehandlingResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<OpprettBehandlingResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/v1',
         ...options,
         headers: {
@@ -914,16 +1181,22 @@ export const opprettBehandling = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Opprett tilbakekrevingsrevurdering
  */
 export const opprettRevurdering = <ThrowOnError extends boolean = false>(
     options: Options<OpprettRevurderingData, ThrowOnError>
-) =>
-    (options.client ?? client).post<OpprettRevurderingResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<OpprettRevurderingResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/revurdering/v1',
         ...options,
         headers: {
@@ -931,16 +1204,26 @@ export const opprettRevurdering = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Opprett tilbakekrevingsbehandling manuelt
  */
 export const opprettBehandlingManuellTask = <ThrowOnError extends boolean = false>(
     options: Options<OpprettBehandlingManuellTaskData, ThrowOnError>
-) =>
-    (options.client ?? client).post<OpprettBehandlingManuellTaskResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).post<
+        OpprettBehandlingManuellTaskResponses,
+        unknown,
+        ThrowOnError
+    >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/manuelt/task/v1',
         ...options,
         headers: {
@@ -948,6 +1231,7 @@ export const opprettBehandlingManuellTask = <ThrowOnError extends boolean = fals
             ...options.headers,
         },
     });
+};
 
 export const fakta = <ThrowOnError extends boolean = false>(
     options: Options<FaktaData, ThrowOnError>
@@ -994,77 +1278,117 @@ export const oppdaterFakta = <ThrowOnError extends boolean = false>(
  */
 export const kanBehandlingOpprettesManuelt = <ThrowOnError extends boolean = false>(
     options: Options<KanBehandlingOpprettesManueltData, ThrowOnError>
-) =>
-    (options.client ?? client).get<KanBehandlingOpprettesManueltResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<
+        KanBehandlingOpprettesManueltResponses,
+        unknown,
+        ThrowOnError
+    >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/ytelsestype/{ytelsestype}/fagsak/{eksternFagsakId}/kanBehandlingOpprettesManuelt/v1',
         ...options,
     });
+};
 
 /**
  * Sjekker om perioder er like - unntatt dato og beløp
  */
 export const erPerioderLike = <ThrowOnError extends boolean = false>(
     options: Options<ErPerioderLikeData, ThrowOnError>
-) =>
-    (options.client ?? client).get<ErPerioderLikeResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<ErPerioderLikeResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/perioder/sjekk-likhet/{behandlingId}',
         ...options,
     });
+};
 
 /**
  * Sjekker om perioder er sammenslått
  */
 export const erPerioderSammenslått = <ThrowOnError extends boolean = false>(
     options: Options<ErPerioderSammenslåttData, ThrowOnError>
-) =>
-    (options.client ?? client).get<ErPerioderSammenslåttResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<ErPerioderSammenslåttResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/perioder/hent-sammenslatt/{behandlingId}',
         ...options,
     });
+};
 
 /**
  * Hent applikasjonsinformasjon
  */
 export const hentInfo = <ThrowOnError extends boolean = false>(
     options?: Options<HentInfoData, ThrowOnError>
-) =>
-    (options?.client ?? client).get<HentInfoResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
+) => {
+    return (options?.client ?? client).get<HentInfoResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/info',
         ...options,
     });
+};
 
 /**
  * Hent informasjon som kreves for forvaltning
  */
 export const hentForvaltningsinfo = <ThrowOnError extends boolean = false>(
     options: Options<HentForvaltningsinfoData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentForvaltningsinfoResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentForvaltningsinfoResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/ytelsestype/{ytelsestype}/fagsak/{eksternFagsakId}/v1',
         ...options,
     });
+};
 
 /**
  * Hent ikke arkiverte kravgrunnlag
  */
 export const hentKravgrunnlagsinfo = <ThrowOnError extends boolean = false>(
     options: Options<HentKravgrunnlagsinfoData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentKravgrunnlagsinfoResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentKravgrunnlagsinfoResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/ytelsestype/{ytelsestype}/fagsak/{eksternFagsakId}/ikke-arkivert-kravgrunnlag',
         ...options,
     });
+};
 
 /**
  * Henter behandlinger med åpen GodkjennVedtak-oppgave eller ingen oppgave, som burde hatt åpen BehandleSak-oppgave
@@ -1076,281 +1400,437 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
         FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData,
         ThrowOnError
     >
-) =>
-    (options.client ?? client).get<
+) => {
+    return (options.client ?? client).get<
         FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveResponses,
         unknown,
         ThrowOnError
     >({
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgave/{fagsystem}',
         ...options,
     });
+};
 
 /**
  * Finner saker over 4 rettsgebyr
  */
 export const alleSakerOver4Rettsgebyr = <ThrowOnError extends boolean = false>(
     options?: Options<AlleSakerOver4RettsgebyrData, ThrowOnError>
-) =>
-    (options?.client ?? client).get<AlleSakerOver4RettsgebyrResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
+) => {
+    return (options?.client ?? client).get<
+        AlleSakerOver4RettsgebyrResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/forvaltning/alle-over-4-rettsgebyr',
         ...options,
     });
+};
 
 export const featureToggles = <ThrowOnError extends boolean = false>(
     options?: Options<FeatureTogglesData, ThrowOnError>
-) =>
-    (options?.client ?? client).get<FeatureTogglesResponses, unknown, ThrowOnError>({
+) => {
+    return (options?.client ?? client).get<FeatureTogglesResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/featuretoggle',
         ...options,
     });
+};
 
 /**
  * Hent behandlinger, kalles av fagsystem
  */
 export const hentVedtakForFagsystem = <ThrowOnError extends boolean = false>(
     options: Options<HentVedtakForFagsystemData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentVedtakForFagsystemResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentVedtakForFagsystemResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/fagsystem/{fagsystem}/fagsak/{eksternFagsakId}/vedtak/v1',
         ...options,
     });
+};
 
 /**
  * Hent fagsak informasjon med bruker og behandlinger
  */
 export const hentFagsak = <ThrowOnError extends boolean = false>(
     options: Options<HentFagsakData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentFagsakResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentFagsakResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/fagsystem/{fagsystem}/fagsak/{eksternFagsakId}/v1',
         ...options,
     });
+};
 
 /**
  * Sjekk om det finnes en åpen tilbakekrevingsbehandling
  */
 export const finnesÅpenTilbakekrevingsbehandling = <ThrowOnError extends boolean = false>(
     options: Options<FinnesÅpenTilbakekrevingsbehandlingData, ThrowOnError>
-) =>
-    (options.client ?? client).get<
+) => {
+    return (options.client ?? client).get<
         FinnesÅpenTilbakekrevingsbehandlingResponses,
         unknown,
         ThrowOnError
     >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/fagsystem/{fagsystem}/fagsak/{eksternFagsakId}/finnesApenBehandling/v1',
         ...options,
     });
+};
 
 /**
  * Hent behandlinger, kalles av fagsystem
  */
 export const hentBehandlingerForFagsystem = <ThrowOnError extends boolean = false>(
     options: Options<HentBehandlingerForFagsystemData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentBehandlingerForFagsystemResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<
+        HentBehandlingerForFagsystemResponses,
+        unknown,
+        ThrowOnError
+    >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/fagsystem/{fagsystem}/fagsak/{eksternFagsakId}/behandlinger/v1',
         ...options,
     });
+};
 
 /**
  * Hent vedtaksbrevtekst
  */
 export const hentVedtaksbrevtekst = <ThrowOnError extends boolean = false>(
     options: Options<HentVedtaksbrevtekstData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentVedtaksbrevtekstResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentVedtaksbrevtekstResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/dokument/vedtaksbrevtekst/{behandlingId}',
         ...options,
     });
+};
 
 /**
  * Henter varselbrevtekst
  */
 export const hentForhåndsvarselTekst = <ThrowOnError extends boolean = false>(
     options: Options<HentForhåndsvarselTekstData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentForhåndsvarselTekstResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentForhåndsvarselTekstResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/dokument/varselbrevtekst/{behandlingId}',
         ...options,
     });
+};
 
 /**
  * Hent forhåndsvarselinformasjon
  */
 export const hentForhåndsvarselinfo = <ThrowOnError extends boolean = false>(
     options: Options<HentForhåndsvarselinfoData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentForhåndsvarselinfoResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentForhåndsvarselinfoResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/dokument/forhåndsvarsel/{behandlingId}/v1',
         ...options,
     });
+};
 
 export const hentUrlTilArbeidOgInntekt = <ThrowOnError extends boolean = false>(
     options: Options<HentUrlTilArbeidOgInntektData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentUrlTilArbeidOgInntektResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
+) => {
+    return (options.client ?? client).get<
+        HentUrlTilArbeidOgInntektResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/brukerlenke',
         ...options,
     });
+};
 
 export const hentHistorikkinnslag = <ThrowOnError extends boolean = false>(
     options: Options<HentHistorikkinnslagData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentHistorikkinnslagResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentHistorikkinnslagResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandlinger/{behandlingId}/historikk',
         ...options,
     });
+};
 
 /**
  * Hent vilkårsvurdering
  */
 export const hentVurdertVilkårsvurdering = <ThrowOnError extends boolean = false>(
     options: Options<HentVurdertVilkårsvurderingData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentVurdertVilkårsvurderingResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<
+        HentVurdertVilkårsvurderingResponses,
+        unknown,
+        ThrowOnError
+    >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/vilkarsvurdering/v1',
         ...options,
     });
+};
 
 /**
  * Hent inaktive vilkårsvurderinger
  */
 export const hentInaktivVilkårsvurdering = <ThrowOnError extends boolean = false>(
     options: Options<HentInaktivVilkårsvurderingData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentInaktivVilkårsvurderingResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<
+        HentInaktivVilkårsvurderingResponses,
+        unknown,
+        ThrowOnError
+    >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/vilkarsvurdering/inaktiv',
         ...options,
     });
+};
 
 /**
  * Hent totrinnsvurderinger
  */
 export const hentTotrinnsvurderinger = <ThrowOnError extends boolean = false>(
     options: Options<HentTotrinnsvurderingerData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentTotrinnsvurderingerResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentTotrinnsvurderingerResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/totrinn/v1',
         ...options,
     });
+};
 
 /**
  * Hent journalpost informasjon
  */
 export const hentJournalposter = <ThrowOnError extends boolean = false>(
     options: Options<HentJournalposterData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentJournalposterResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
+) => {
+    return (options.client ?? client).get<HentJournalposterResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/journalposter',
         ...options,
     });
+};
 
 /**
  * Hent dokument fra journalføring
  */
 export const hentDokument = <ThrowOnError extends boolean = false>(
     options: Options<HentDokumentData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentDokumentResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
+) => {
+    return (options.client ?? client).get<HentDokumentResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/journalpost/{journalpostId}/dokument/{dokumentInfoId}',
         ...options,
     });
+};
 
 /**
  * Hent foreldelsesinformasjon
  */
 export const hentVurdertForeldelse = <ThrowOnError extends boolean = false>(
     options: Options<HentVurdertForeldelseData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentVurdertForeldelseResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentVurdertForeldelseResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/foreldelse/v1',
         ...options,
     });
+};
 
 /**
  * Hent fakta om feilutbetaling
  */
 export const hentFaktaomfeilutbetaling = <ThrowOnError extends boolean = false>(
     options: Options<HentFaktaomfeilutbetalingData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentFaktaomfeilutbetalingResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<
+        HentFaktaomfeilutbetalingResponses,
+        unknown,
+        ThrowOnError
+    >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/fakta/v1',
         ...options,
     });
+};
 
 /**
  * Hent inaktive fakta om feilutbetalinger
  */
 export const hentInaktivFaktaomfeilutbetaling = <ThrowOnError extends boolean = false>(
     options: Options<HentInaktivFaktaomfeilutbetalingData, ThrowOnError>
-) =>
-    (options.client ?? client).get<
+) => {
+    return (options.client ?? client).get<
         HentInaktivFaktaomfeilutbetalingResponses,
         unknown,
         ThrowOnError
     >({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/fakta/inaktiv',
         ...options,
     });
+};
 
 /**
  * Hent beregningsresultat
  */
 export const hentBeregningsresultat = <ThrowOnError extends boolean = false>(
     options: Options<HentBeregningsresultatData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentBeregningsresultatResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentBeregningsresultatResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/{behandlingId}/beregn/resultat/v1',
         ...options,
     });
+};
 
 /**
  * Hent behandling
  */
 export const hentBehandling = <ThrowOnError extends boolean = false>(
     options: Options<HentBehandlingData, ThrowOnError>
-) =>
-    (options.client ?? client).get<HentBehandlingResponses, unknown, ThrowOnError>({
+) => {
+    return (options.client ?? client).get<HentBehandlingResponses, unknown, ThrowOnError>({
         responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/behandling/v1/{behandlingId}',
         ...options,
     });
+};

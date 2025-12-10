@@ -4,7 +4,7 @@ import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useFakta } from './FaktaContext';
-import FaktaSkjema from './FaktaSkjema';
+import GammelFaktaSkjema from './GammelFaktaSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
@@ -35,7 +35,7 @@ const FaktaContainer: React.FC<Props> = ({ ytelse }) => {
                         <Spacer20 />
                     </>
                 )}
-                <FaktaSkjema
+                <GammelFaktaSkjema
                     skjemaData={skjemaData}
                     fakta={fakta.data}
                     ytelse={ytelse}

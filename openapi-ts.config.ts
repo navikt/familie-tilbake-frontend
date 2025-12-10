@@ -13,10 +13,7 @@ export default defineConfig({
         },
     },
     plugins: [
-        {
-            name: '@hey-api/typescript',
-            enums: 'typescript',
-        },
+        '@hey-api/typescript',
         '@tanstack/react-query',
         {
             name: 'zod',
