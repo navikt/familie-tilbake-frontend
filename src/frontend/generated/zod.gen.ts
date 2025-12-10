@@ -95,8 +95,8 @@ export const zOppdaterBehandlendeEnhetRequest = z.object({
 export const zDatoperiode = z.object({
     fom: z.iso.date(),
     tom: z.iso.date(),
-    tomMåned: z.string(),
     fomMåned: z.string(),
+    tomMåned: z.string(),
 });
 
 export const zPeriodeMedTekstDto = z.object({

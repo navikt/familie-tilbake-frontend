@@ -17,7 +17,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { BrevmalkodeEnum } from '../../../generated';
 import { forhåndsvisBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 import { updateParentBounds } from '../../../utils/updateParentBounds';
 import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
@@ -54,7 +53,7 @@ export const Opprett: React.FC<Props> = ({ behandling, varselbrevtekster }) => {
         ...forhåndsvisBrevMutation(),
         onSuccess: data => {
             queryClient.setQueryData(
-                ['forhåndsvisBrev', behandling.behandlingId, BrevmalkodeEnum.VARSEL, fritekst],
+                ['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst],
                 data
             );
             setShowModal(true);
@@ -62,12 +61,7 @@ export const Opprett: React.FC<Props> = ({ behandling, varselbrevtekster }) => {
     });
 
     const seForhåndsvisning = (): void => {
-        const currentQueryKey = [
-            'forhåndsvisBrev',
-            behandling.behandlingId,
-            BrevmalkodeEnum.VARSEL,
-            fritekst,
-        ];
+        const currentQueryKey = ['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst];
 
         const cachedData = queryClient.getQueryData(currentQueryKey);
 
@@ -77,7 +71,7 @@ export const Opprett: React.FC<Props> = ({ behandling, varselbrevtekster }) => {
             seForhåndsvisningMutation.mutate({
                 body: {
                     behandlingId: behandling.behandlingId,
-                    brevmalkode: BrevmalkodeEnum.VARSEL,
+                    brevmalkode: 'VARSEL',
                     fritekst,
                 },
             });
@@ -90,7 +84,7 @@ export const Opprett: React.FC<Props> = ({ behandling, varselbrevtekster }) => {
             queryClient.getQueryData([
                 'forhåndsvisBrev',
                 behandling.behandlingId,
-                BrevmalkodeEnum.VARSEL,
+                'VARSEL',
                 fritekst,
             ])
         );
