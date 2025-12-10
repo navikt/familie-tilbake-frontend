@@ -13,3 +13,4 @@ ci-tests/reports
 pnpm-debug.log
 .jest-cache
 coverage/
+instructions

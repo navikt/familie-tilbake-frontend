@@ -5,11 +5,10 @@ import React from 'react';
 
 import { Behandlingsmeny } from '../meny/Meny';
 
-type Props = {
+type BaseProps = {
     stegtekst: string | undefined;
     forrigeAriaLabel: string | undefined;
     nesteAriaLabel: string;
-    onNeste: () => void;
     onForrige: (() => void) | undefined;
     dobbeltNøstet?: boolean;
     nesteTekst?: string;
@@ -18,7 +17,17 @@ type Props = {
     disableNeste?: boolean;
 };
 
-const ActionBar: React.FC<Props> = ({
+type ButtonProps = BaseProps & {
+    type?: 'button';
+    onNeste: () => void;
+};
+
+type SubmitProps = BaseProps & {
+    type: 'submit';
+    onNeste?: never;
+};
+
+const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
     stegtekst = '',
     forrigeAriaLabel,
     nesteAriaLabel,
@@ -29,6 +38,7 @@ const ActionBar: React.FC<Props> = ({
     isLoading = false,
     skjulNeste = false,
     disableNeste = false,
+    type = 'button',
 }) => {
     return (
         <nav
@@ -74,11 +84,14 @@ const ActionBar: React.FC<Props> = ({
                                 icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
                                 iconPosition="right"
                                 className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
+                                type={type}
                                 size="small"
-                                loading={isLoading}
-                                disabled={isLoading || disableNeste}
-                                onClick={onNeste}
+                                loading={isLoading || disableNeste}
+                                onClick={() => {
+                                    if (onNeste && type !== 'submit') onNeste();
+                                }}
                                 aria-label={nesteAriaLabel}
+                                disabled={isLoading || disableNeste}
                             >
                                 <span className="hidden ax-md:block">{nesteTekst}</span>
                             </Button>

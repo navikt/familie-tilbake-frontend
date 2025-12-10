@@ -8,7 +8,7 @@ import React, { useLayoutEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { SkalSendesForhåndsvarsel, HarBrukerUttaltSeg } from './Enums';
-import { ForhåndsvarselSkjema } from './ForhåndsvarselSkjema';
+import { Opprett } from './Opprett';
 import { Unntak } from './Unntak';
 import {
     mapHarBrukerUttaltSegFraApiDto,
@@ -179,7 +179,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
 
                     {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja &&
                         varselbrevtekster && (
-                            <ForhåndsvarselSkjema
+                            <Opprett
                                 behandling={behandling}
                                 fagsak={fagsak}
                                 varselbrevtekster={varselbrevtekster}

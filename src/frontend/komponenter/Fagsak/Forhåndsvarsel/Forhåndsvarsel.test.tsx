@@ -1,4 +1,5 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { BehandlingDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
@@ -58,10 +59,10 @@ const setupMock = (): void => {
     }));
 };
 
-const renderForhåndsvarsel = (): RenderResult =>
+const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): RenderResult =>
     render(
         <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={lagBehandlingDto()} fagsak={lagFagsakDto()} />
+            <Forhåndsvarsel behandling={behandling} fagsak={lagFagsakDto()} />
         </QueryClientProvider>
     );
 
@@ -189,5 +190,47 @@ describe('Forhåndsvarsel', () => {
             name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
         });
         expect(radioGroup).toHaveClass('navds-fieldset--readonly');
+    });
+
+    describe('Validering', () => {
+        test('Skal vise feilmelding dersom ingen Skalsendeforhåndsvarsel-alternativ er valgt', async () => {
+            renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
+
+            fireEvent.click(screen.getByText('Send forhåndsvarsel'));
+
+            expect(
+                await screen.findByText('Du må velge om forhåndsvarselet skal sendes eller ikke')
+            ).toBeInTheDocument();
+        });
+
+        describe("Når 'Ja' er valgt", () => {
+            test('Vises feilmelding dersom fritekstfelt er tomt', async () => {
+                renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
+
+                fireEvent.click(screen.getByText('Ja'));
+                const visMerKnapp = await screen.findByRole('button', { name: /Vis mer/ });
+                fireEvent.click(visMerKnapp);
+                fireEvent.click(screen.getByText('Send forhåndsvarsel'));
+
+                expect(
+                    await screen.findByText('Du må legge inn minst tre tegn')
+                ).toBeInTheDocument();
+            });
+        });
+
+        describe("Når 'Nei' er valgt", () => {
+            test('Vises feilmelding dersom ingen begrunnelse er valgt', async () => {
+                renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
+                fireEvent.click(screen.getByText('Nei'));
+                fireEvent.click(screen.getByText('Send forhåndsvarsel'));
+
+                expect(
+                    await screen.findByText('Du må velge en begrunnelse for unntak')
+                ).toBeInTheDocument();
+                expect(
+                    await screen.findByText('Du må legge inn minst tre tegn')
+                ).toBeInTheDocument();
+            });
+        });
     });
 });

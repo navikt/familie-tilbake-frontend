@@ -55,7 +55,7 @@ const renderModal = (
     );
 };
 
-export const ForhåndsvarselSkjema: React.FC<Props> = ({
+export const Opprett: React.FC<Props> = ({
     behandling,
     fagsak,
     varselbrevtekster,

@@ -20,7 +20,7 @@ export type BehandlingHook = {
     hentBehandlingMedEksternBrukId: (fagsak: Fagsak, behandlingId: string) => void;
     hentBehandlingMedBehandlingId: (behandlingId: string) => Promise<void>;
     behandlingILesemodus: boolean | undefined;
-    actionBarStegtekst: string | undefined;
+    actionBarStegtekst: () => string | undefined;
     aktivtSteg: Behandlingsstegstilstand | undefined;
     ventegrunn: Behandlingsstegstilstand | undefined;
     visVenteModal: boolean;
