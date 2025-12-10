@@ -1,15 +1,15 @@
-import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
-import type { HistorikkInnslag } from '../../../../typer/historikk';
-import type { SynligSteg } from '../../../../utils/sider';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
+import type { HistorikkInnslag } from '../../../../../typer/historikk';
+import type { SynligSteg } from '../../../../../utils/sider';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
-import { useHttp } from '../../../../api/http/HttpProvider';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
-import { Menysider } from '../Menykontainer';
+import { useHttp } from '../../../../../api/http/HttpProvider';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../../typer/ressurs';
+import { Menysider } from '../../menysider/MenySideInnhold';
 
 type Props = {
     behandling: Behandling;

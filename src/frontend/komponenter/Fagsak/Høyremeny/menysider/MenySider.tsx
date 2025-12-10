@@ -1,17 +1,18 @@
-import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 
 import {
     ClockDashedIcon,
     EnvelopeClosedIcon,
     FolderFileIcon,
+    PersonEnvelopeIcon,
     PersonGavelIcon,
 } from '@navikt/aksel-icons';
 import { ToggleGroup } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 
-import { Menysider, MenySideInnhold } from './Menykontainer';
+import { Menysider, MenySideInnhold } from './MenySideInnhold';
 
 type Props = {
     værtPåFatteVedtakSteget: boolean;
@@ -19,11 +20,7 @@ type Props = {
     behandling: Behandling;
 };
 
-export const HistorikkOgDokumenter: React.FC<Props> = ({
-    værtPåFatteVedtakSteget,
-    fagsak,
-    behandling,
-}) => {
+export const MenySider: React.FC<Props> = ({ værtPåFatteVedtakSteget, fagsak, behandling }) => {
     const [valgtSide, setValgtSide] = useState(
         værtPåFatteVedtakSteget ? Menysider.Totrinn : Menysider.Historikk
     );
@@ -38,6 +35,12 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({
                 fill
                 className="sticky top-0"
             >
+                {værtPåFatteVedtakSteget && (
+                    <ToggleGroup.Item
+                        value={Menysider.Totrinn}
+                        icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
+                    />
+                )}
                 <ToggleGroup.Item
                     value={Menysider.Historikk}
                     icon={<ClockDashedIcon fontSize="1.25rem" aria-label="Historikk" />}
@@ -46,16 +49,15 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({
                     value={Menysider.Dokumenter}
                     icon={<FolderFileIcon fontSize="1.25rem" aria-label="Dokumenter" />}
                 />
-                {!behandling.erNyModell && (
+                {behandling.erNyModell ? (
+                    <ToggleGroup.Item
+                        value={Menysider.Brevmottakere}
+                        icon={<PersonEnvelopeIcon fontSize="1.25rem" aria-label="Brevmottakere" />}
+                    />
+                ) : (
                     <ToggleGroup.Item
                         value={Menysider.SendBrev}
                         icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-label="Send brev" />}
-                    />
-                )}
-                {værtPåFatteVedtakSteget && (
-                    <ToggleGroup.Item
-                        value={Menysider.Totrinn}
-                        icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
                     />
                 )}
             </ToggleGroup>
