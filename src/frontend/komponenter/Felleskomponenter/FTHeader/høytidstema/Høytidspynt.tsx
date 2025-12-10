@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Jul } from './jul/jul';
+import { Jul } from './jul/Jul';
 
 export const Høytidspynt: React.FC = () => {
     const måned = new Date().getMonth();
