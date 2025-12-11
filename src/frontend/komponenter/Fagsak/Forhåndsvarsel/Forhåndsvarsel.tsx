@@ -38,6 +38,30 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 };
 
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
+    const { forhåndsvarselInfo } = useForhåndsvarselQueries(behandling);
+
+    return (
+        <ForhåndsvarselSkjema
+            behandling={behandling}
+            fagsak={fagsak}
+            forhåndsvarselInfo={forhåndsvarselInfo}
+        />
+    );
+};
+
+type ForhåndsvarselSkjemaProps = {
+    behandling: BehandlingDto;
+    fagsak: FagsakDto;
+    forhåndsvarselInfo: NonNullable<
+        ReturnType<typeof useForhåndsvarselQueries>['forhåndsvarselInfo']
+    >;
+};
+
+export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
+    behandling,
+    fagsak,
+    forhåndsvarselInfo,
+}) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [parentBounds, setParentBounds] = useState({ width: 'auto' });
 
@@ -52,7 +76,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         gåTilNeste,
     } = useForhåndsvarselMutations(behandling, fagsak);
 
-    const { forhåndsvarselInfo, varselbrevtekster } = useForhåndsvarselQueries(behandling);
+    const { varselbrevtekster } = useForhåndsvarselQueries(behandling);
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevSendtTid;
 
