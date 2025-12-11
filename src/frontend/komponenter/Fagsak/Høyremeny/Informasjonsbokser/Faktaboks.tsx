@@ -39,7 +39,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
             size="small"
             defaultOpen
             aria-label="Tilbakekrevingsinformasjon"
-            className="border rounded-xl border-ax-border-neutral-subtle flex flex-col bg-ax-bg-default"
+            className="border-ax-border-neutral-subtle"
         >
             <ExpansionCard.Header>
                 <ExpansionCard.Title as="h2" size="small" className="text-lg">

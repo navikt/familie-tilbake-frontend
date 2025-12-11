@@ -47,11 +47,11 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
             size="small"
             defaultOpen
             aria-label="Brukers informasjon"
-            className="border rounded-xl border-ax-border-neutral-subtle flex flex-col bg-ax-bg-default"
+            className="border-ax-border-neutral-subtle"
         >
             <ExpansionCard.Header>
                 <ExpansionCard.Title as="h2" size="small" className="text-lg">
-                    Bruker
+                    Informasjon om bruker
                 </ExpansionCard.Title>
             </ExpansionCard.Header>
 
