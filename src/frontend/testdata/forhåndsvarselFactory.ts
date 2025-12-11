@@ -4,7 +4,7 @@ import type {
     ForhåndsvarselInfo,
     UseForhåndsvarselQueriesReturn,
 } from '../komponenter/Fagsak/Forhåndsvarsel/useForhåndsvarselQueries';
-import type { UseQueryResult } from '@tanstack/react-query';
+import type { UseQueryResult, UseSuspenseQueryResult } from '@tanstack/react-query';
 
 export const lagMockQuery = <T>(data?: T): UseQueryResult<T | undefined> =>
     ({
@@ -16,6 +16,17 @@ export const lagMockQuery = <T>(data?: T): UseQueryResult<T | undefined> =>
         isPending: false,
         refetch: jest.fn(),
     }) as unknown as UseQueryResult<T | undefined>;
+
+export const lagMockSuspenseQuery = <T>(data: T): UseSuspenseQueryResult<T, Error> =>
+    ({
+        data,
+        isLoading: false,
+        error: null,
+        isError: false,
+        isSuccess: true,
+        isPending: false,
+        refetch: jest.fn(),
+    }) as unknown as UseSuspenseQueryResult<T, Error>;
 
 export const lagForhåndsvarselQueries = (
     overrides: Partial<UseForhåndsvarselQueriesReturn> = {}
@@ -38,7 +49,11 @@ export const lagForhåndsvarselQueries = (
     varselbrevteksterLoading: false,
     forhåndsvarselInfoError: false,
     varselbrevteksterError: false,
-    forhåndsvarselInfoQuery: lagMockQuery<ForhåndsvarselInfo>(),
+    forhåndsvarselInfoQuery: lagMockSuspenseQuery<ForhåndsvarselInfo>({
+        varselbrevSendtTid: undefined,
+        uttalelsesfrist: undefined,
+        brukeruttalelse: undefined,
+    }),
     varselbrevteksterQuery: lagMockQuery<Varselbrevtekst>(),
     ...overrides,
 });
@@ -52,6 +67,11 @@ export const lagForhåndsvarselQueriesSendt = (
             uttalelsesfrist: undefined,
             brukeruttalelse: undefined,
         },
+        forhåndsvarselInfoQuery: lagMockSuspenseQuery<ForhåndsvarselInfo>({
+            varselbrevSendtTid: '2023-01-01T10:00:00Z',
+            uttalelsesfrist: undefined,
+            brukeruttalelse: undefined,
+        }),
         ...overrides,
     });
 
