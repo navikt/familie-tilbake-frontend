@@ -146,7 +146,11 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const getNesteKnappTekst = (): string => {
         if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
             return 'Utsett frist';
-        } else if (!varselErSendt && methods.formState.isDirty) {
+        } else if (
+            !varselErSendt &&
+            methods.formState.isDirty &&
+            skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja
+        ) {
             return 'Send forhåndsvarsel';
         }
         return 'Neste';

@@ -196,7 +196,7 @@ describe('Forhåndsvarsel', () => {
         test('Skal vise feilmelding dersom ingen Skalsendeforhåndsvarsel-alternativ er valgt', async () => {
             renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
 
-            fireEvent.click(screen.getByText('Send forhåndsvarsel'));
+            fireEvent.click(screen.getByRole('button', { name: 'Neste' }));
 
             expect(
                 await screen.findByText('Du må velge om forhåndsvarselet skal sendes eller ikke')
@@ -210,7 +210,7 @@ describe('Forhåndsvarsel', () => {
                 fireEvent.click(screen.getByText('Ja'));
                 const visMerKnapp = await screen.findByRole('button', { name: /Vis mer/ });
                 fireEvent.click(visMerKnapp);
-                fireEvent.click(screen.getByText('Send forhåndsvarsel'));
+                fireEvent.click(screen.getByRole('button', { name: 'Send forhåndsvarsel' }));
 
                 expect(
                     await screen.findByText('Du må legge inn minst tre tegn')
@@ -222,7 +222,7 @@ describe('Forhåndsvarsel', () => {
             test('Vises feilmelding dersom ingen begrunnelse er valgt', async () => {
                 renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
                 fireEvent.click(screen.getByText('Nei'));
-                fireEvent.click(screen.getByText('Send forhåndsvarsel'));
+                fireEvent.click(screen.getByRole('button', { name: 'Neste' }));
 
                 expect(
                     await screen.findByText('Du må velge en begrunnelse for unntak')
