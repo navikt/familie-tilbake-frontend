@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData } from './useForhåndsvarselMutations';
+import type { ForhåndsvarselFormData } from './schema';
 import type {
     BehandlingDto,
     RessursByte,
@@ -21,7 +21,7 @@ import {
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useEffect, useEffectEvent, useState } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Brukeruttalelse } from './Brukeruttalelse';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
@@ -44,15 +44,7 @@ const renderModal = (
 ): ReactNode => {
     if (!showModal || !pdfData) return null;
 
-    return (
-        <PdfVisningModal
-            åpen={true}
-            pdfdata={pdfData}
-            onRequestClose={() => {
-                setShowModal(false);
-            }}
-        />
-    );
+    return <PdfVisningModal åpen pdfdata={pdfData} onRequestClose={() => setShowModal(false)} />;
 };
 
 export const Opprett: React.FC<Props> = ({
@@ -70,13 +62,10 @@ export const Opprett: React.FC<Props> = ({
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling, fagsak);
 
     const [showModal, setShowModal] = useState(false);
-    const {
-        control,
-        formState: { errors },
-    } = useFormContext<ForhåndsvarselFormData>();
+    const methods = useFormContext<ForhåndsvarselFormData>();
 
     const fritekst = useWatch({
-        control,
+        control: methods.control,
         name: 'fritekst',
     });
 
@@ -179,27 +168,17 @@ export const Opprett: React.FC<Props> = ({
                                             </BodyLong>
                                         </div>
                                         {avsnitt.title === 'Dette har skjedd' && (
-                                            <form>
-                                                <Controller
-                                                    name="fritekst"
-                                                    control={control}
-                                                    rules={{
-                                                        required: varselErSendt
-                                                            ? false
-                                                            : 'Du må legge til en tekst',
-                                                    }}
-                                                    render={({ field }) => (
-                                                        <Textarea
-                                                            {...field}
-                                                            label="Legg til utdypende tekst"
-                                                            maxLength={maksAntallTegn}
-                                                            error={errors.fritekst?.message?.toString()}
-                                                            className="mb-6"
-                                                            readOnly={varselErSendt}
-                                                        />
-                                                    )}
-                                                />
-                                            </form>
+                                            <Textarea
+                                                {...methods.register('fritekst')}
+                                                label="Legg til utdypende tekst"
+                                                maxLength={maksAntallTegn}
+                                                error={
+                                                    'fritekst' in methods.formState.errors
+                                                        ? methods.formState.errors.fritekst?.message?.toString()
+                                                        : undefined
+                                                }
+                                                className="mb-6"
+                                            />
                                         )}
                                     </Fragment>
                                 ))}

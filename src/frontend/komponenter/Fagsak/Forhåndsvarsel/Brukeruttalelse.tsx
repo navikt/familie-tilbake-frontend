@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData } from './useForhåndsvarselMutations';
+import type { ForhåndsvarselFormData } from './schema';
 
 import {
     VStack,
@@ -20,32 +20,26 @@ type Props = {
 };
 
 export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) => {
-    const {
-        register,
-        control,
-        formState: { errors },
-        setValue,
-        trigger,
-    } = useFormContext<ForhåndsvarselFormData>();
+    const methods = useFormContext<ForhåndsvarselFormData>();
 
     const harBrukerUttaltSeg = useWatch({
-        control,
+        control: methods.control,
         name: 'harBrukerUttaltSeg',
     });
 
     const uttalelsesDatepicker = useDatepicker({
         onDateChange: date => {
             const dateString = dateTilIsoDatoString(date);
-            setValue('uttalelsesdato', dateString);
-            trigger('uttalelsesdato');
+            methods.setValue('uttalelsesdato', dateString);
+            methods.trigger('uttalelsesdato');
         },
     });
 
     const nyFristDatepicker = useDatepicker({
         onDateChange: date => {
             const dateString = dateTilIsoDatoString(date);
-            setValue('nyFristDato', dateString);
-            trigger('nyFristDato');
+            methods.setValue('nyFristDato', dateString);
+            methods.trigger('nyFristDato');
         },
     });
 
@@ -53,7 +47,7 @@ export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) =>
         <VStack maxWidth={ATextWidthMax} gap="4">
             <Controller
                 name="harBrukerUttaltSeg"
-                control={control}
+                control={methods.control}
                 rules={{
                     required: 'Velg ett av alternativene over for å gå videre',
                 }}
@@ -64,7 +58,7 @@ export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) =>
                         name={field.name}
                         value={field.value || ''}
                         onChange={field.onChange}
-                        error={errors.harBrukerUttaltSeg?.message?.toString()}
+                        error={methods.formState.errors.harBrukerUttaltSeg?.message?.toString()}
                     >
                         <Radio value={HarBrukerUttaltSeg.Ja}>Ja</Radio>
                         <Radio value={HarBrukerUttaltSeg.Nei}>Nei</Radio>
@@ -80,7 +74,7 @@ export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) =>
                 <>
                     <Controller
                         name="uttalelsesdato"
-                        control={control}
+                        control={methods.control}
                         rules={{
                             required: 'Du må legge til en dato',
                         }}
@@ -89,19 +83,19 @@ export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) =>
                                 <DatePicker.Input
                                     {...uttalelsesDatepicker.inputProps}
                                     label="Når uttalte brukeren seg?"
-                                    error={errors.uttalelsesdato?.message?.toString()}
+                                    error={methods.formState.errors.uttalelsesdato?.message?.toString()}
                                 />
                             </DatePicker>
                         )}
                     />
 
                     <TextField
-                        {...register('hvorBrukerenUttalteSeg')}
+                        {...methods.register('hvorBrukerenUttalteSeg')}
                         label="Hvordan uttalte brukeren seg?"
                         description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
                     />
                     <Textarea
-                        {...register('uttalelseBeskrivelse')}
+                        {...methods.register('uttalelseBeskrivelse')}
                         label="Beskriv hva brukeren har uttalt seg om"
                         maxLength={4000}
                         resize
@@ -110,7 +104,7 @@ export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) =>
             )}
             {harBrukerUttaltSeg === HarBrukerUttaltSeg.Nei && (
                 <Textarea
-                    {...register('uttalelsesKommentar')}
+                    {...methods.register('uttalelsesKommentar')}
                     label="Kommentar til valget over"
                     maxLength={4000}
                     resize
@@ -120,19 +114,19 @@ export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) =>
                 <>
                     <Controller
                         name="nyFristDato"
-                        control={control}
+                        control={methods.control}
                         render={() => (
                             <DatePicker {...nyFristDatepicker.datepickerProps}>
                                 <DatePicker.Input
                                     {...nyFristDatepicker.inputProps}
                                     label="Sett ny dato for frist"
-                                    error={errors.nyFristDato?.message?.toString()}
+                                    error={methods.formState.errors.nyFristDato?.message?.toString()}
                                 />
                             </DatePicker>
                         )}
                     />
                     <Textarea
-                        {...register('begrunnelseUtsattFrist')}
+                        {...methods.register('begrunnelseUtsattFrist')}
                         label="Begrunnelse for utsatt frist"
                         maxLength={4000}
                         resize

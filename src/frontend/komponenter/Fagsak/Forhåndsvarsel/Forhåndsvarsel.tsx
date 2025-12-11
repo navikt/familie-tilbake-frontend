@@ -64,7 +64,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     };
     const methods = useForm({
         resolver: zodResolver(forhåndsvarselSchema),
-        mode: 'onBlur',
+        mode: 'all',
         shouldFocusError: false,
         defaultValues: {
             skalSendesForhåndsvarsel: getForhåndsvarselStatus(),
@@ -92,11 +92,6 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
             );
     }, []);
 
-    const {
-        handleSubmit,
-        formState: { isDirty: harEndringer },
-    } = methods;
-
     const skalSendesForhåndsvarsel = useWatch({
         control: methods.control,
         name: 'skalSendesForhåndsvarsel',
@@ -113,11 +108,11 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
             (harBrukerUttaltSeg === HarBrukerUttaltSeg.Ja ||
                 harBrukerUttaltSeg === HarBrukerUttaltSeg.Nei)
         ) {
-            handleSubmit(sendBrukeruttalelse)();
+            methods.handleSubmit(sendBrukeruttalelse)();
         } else if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
-            handleSubmit(sendUtsettUttalelseFrist)();
-        } else if (!varselErSendt && harEndringer) {
-            handleSubmit(sendForhåndsvarsel)();
+            methods.handleSubmit(sendUtsettUttalelseFrist)();
+        } else if (!varselErSendt && methods.formState.isDirty) {
+            methods.handleSubmit(sendForhåndsvarsel)();
         } else {
             gåTilNeste();
         }
@@ -126,7 +121,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     const getNesteKnappTekst = (): string => {
         if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
             return 'Utsett frist';
-        } else if (!varselErSendt && harEndringer) {
+        } else if (!varselErSendt && methods.formState.isDirty) {
             return 'Send forhåndsvarsel';
         }
         return 'Neste';
