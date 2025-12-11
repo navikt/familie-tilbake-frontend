@@ -1,3 +1,4 @@
+import type { ForhåndsvarselFormData } from './schema';
 import type { BehandlingDto, FagsakDto } from '../../../generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -126,17 +127,17 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         name: 'harBrukerUttaltSeg',
     });
 
-    const handleNesteKnapp = (): void => {
+    const handleFormSubmit = (data: ForhåndsvarselFormData): void => {
         if (
             varselErSendt &&
             (harBrukerUttaltSeg === HarBrukerUttaltSeg.Ja ||
                 harBrukerUttaltSeg === HarBrukerUttaltSeg.Nei)
         ) {
-            methods.handleSubmit(sendBrukeruttalelse)();
+            sendBrukeruttalelse(data);
         } else if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
-            methods.handleSubmit(sendUtsettUttalelseFrist)();
+            sendUtsettUttalelseFrist(data);
         } else if (!varselErSendt && methods.formState.isDirty) {
-            methods.handleSubmit(sendForhåndsvarsel)();
+            sendForhåndsvarsel(data);
         } else {
             gåTilNeste();
         }
@@ -154,7 +155,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     return (
         <>
             <FormProvider {...methods}>
-                <VStack gap="4">
+                <VStack as="form" gap="6" onSubmit={methods.handleSubmit(handleFormSubmit)}>
                     <HStack align="center" justify="space-between">
                         <Heading level="1" size="small">
                             Forhåndsvarsel
@@ -230,9 +231,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     sendForhåndsvarselMutation.isPending || sendBrukeruttalelseMutation.isPending
                 }
                 forrigeAriaLabel={undefined}
-                nesteAriaLabel={getNesteKnappTekst()}
-                onNeste={handleNesteKnapp}
                 onForrige={undefined}
+                nesteAriaLabel={getNesteKnappTekst()}
+                type="submit"
             />
             {sendForhåndsvarselMutation.isError && (
                 <FeilModal
