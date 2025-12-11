@@ -222,19 +222,20 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                             fristen for å uttale seg (3 uker) har gått ut.
                         </FixedAlert>
                     )}
+                    <ActionBar
+                        stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
+                        nesteTekst={getNesteKnappTekst()}
+                        isLoading={
+                            sendForhåndsvarselMutation.isPending ||
+                            sendBrukeruttalelseMutation.isPending
+                        }
+                        forrigeAriaLabel={undefined}
+                        onForrige={undefined}
+                        nesteAriaLabel={getNesteKnappTekst()}
+                        type="submit"
+                    />
                 </VStack>
             </FormProvider>
-            <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
-                nesteTekst={getNesteKnappTekst()}
-                isLoading={
-                    sendForhåndsvarselMutation.isPending || sendBrukeruttalelseMutation.isPending
-                }
-                forrigeAriaLabel={undefined}
-                onForrige={undefined}
-                nesteAriaLabel={getNesteKnappTekst()}
-                type="submit"
-            />
             {sendForhåndsvarselMutation.isError && (
                 <FeilModal
                     feil={sendForhåndsvarselMutation.error}
