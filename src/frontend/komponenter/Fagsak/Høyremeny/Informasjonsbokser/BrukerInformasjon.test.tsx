@@ -42,7 +42,7 @@ const renderBrukerInformasjon = (
 describe('BrukerInformasjon', () => {
     test('Viser heading', () => {
         renderBrukerInformasjon();
-        expect(screen.getByRole('heading', { name: 'Bruker' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Informasjon om bruker' })).toBeInTheDocument();
     });
 
     test('Viser navn', () => {

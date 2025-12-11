@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { useMemo } from 'react';
 
+import { Høytidspynt } from './høytidstema/Høytidspynt';
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../../api/brukerlenker';
 import { useHttp } from '../../../api/http/HttpProvider';
 import { useTheme } from '../../../context/ThemeContext';
@@ -77,6 +78,7 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
             <InternalHeader.Title href="/" className="text-nowrap">
                 Nav - Tilbakekreving
             </InternalHeader.Title>
+            <Høytidspynt />
             <Spacer />
             {harGyldigLenke && (
                 <Dropdown>
