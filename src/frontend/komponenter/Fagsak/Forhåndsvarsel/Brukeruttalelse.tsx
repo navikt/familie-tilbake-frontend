@@ -43,7 +43,6 @@ export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) =>
             methods.trigger('harBrukerUttaltSeg.utsettUttalelseFrist.nyFrist');
         },
     });
-    console.log(methods.getValues('harBrukerUttaltSeg.harBrukerUttaltSeg'));
 
     return (
         <VStack maxWidth={ATextWidthMax} gap="4">

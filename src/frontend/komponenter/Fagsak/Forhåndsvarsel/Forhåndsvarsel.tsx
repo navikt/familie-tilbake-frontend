@@ -74,6 +74,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendForhåndsvarsel,
         sendBrukeruttalelse,
         sendUtsettUttalelseFrist,
+        sendUtsettUttalelseFristMutation,
         gåTilNeste,
     } = useForhåndsvarselMutations(behandling, fagsak);
 
@@ -252,7 +253,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         }
         return 'Neste';
     };
-    console.log(methods.formState);
 
     return (
         <>
@@ -352,6 +352,14 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 <FeilModal
                     feil={sendBrukeruttalelseMutation.error}
                     lukkFeilModal={sendBrukeruttalelseMutation.reset}
+                    behandlingId={behandling.behandlingId}
+                    fagsakId={fagsak.eksternFagsakId}
+                />
+            )}
+            {sendUtsettUttalelseFristMutation.isError && (
+                <FeilModal
+                    feil={sendUtsettUttalelseFristMutation.error}
+                    lukkFeilModal={sendUtsettUttalelseFristMutation.reset}
                     behandlingId={behandling.behandlingId}
                     fagsakId={fagsak.eksternFagsakId}
                 />

@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router';
 
 import { HarBrukerUttaltSeg } from './Enums';
 import { SkalSendesForhåndsvarsel } from './schema';
+import { Feil } from '../../../api/feil';
 import { BrevmalkodeEnum, HarBrukerUttaltSegEnum } from '../../../generated';
 import {
     bestillBrevMutation,
@@ -141,9 +142,19 @@ export const useForhåndsvarselMutations = (
 
     const sendUtsettUttalelseFristMutation = useMutation({
         ...utsettUttalelseFristMutation(),
-        onSuccess: () => {
-            invalidateQueries();
-            gåTilNeste();
+        onSuccess: response => {
+            if (response.status === 'SUKSESS') {
+                invalidateQueries();
+                gåTilNeste();
+            }
+            console.log(response);
+
+            throw new Feil(
+                response.frontendFeilmelding
+                    ? response.frontendFeilmelding
+                    : 'Ukjent feil ved utsettelse av frist.',
+                500
+            );
         },
     });
 
