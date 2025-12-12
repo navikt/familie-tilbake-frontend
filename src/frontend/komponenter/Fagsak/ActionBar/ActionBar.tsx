@@ -63,7 +63,7 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
                 </BodyShort>
                 <HStack gap="4" className="flex-nowrap">
                     {forrigeAriaLabel && onForrige && (
-                        <Tooltip content={forrigeAriaLabel}>
+                        <Tooltip content={forrigeAriaLabel} aria-disabled={isLoading}>
                             <Button
                                 variant="secondary"
                                 icon={<ChevronLeftIcon />}
@@ -79,7 +79,7 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
                         </Tooltip>
                     )}
                     {!skjulNeste && (
-                        <Tooltip content={nesteAriaLabel} aria-disabled={disableNeste}>
+                        <Tooltip content={nesteAriaLabel} aria-disabled={isLoading || disableNeste}>
                             <Button
                                 icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
                                 iconPosition="right"

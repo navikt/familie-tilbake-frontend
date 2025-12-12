@@ -26,6 +26,7 @@ import {
     fjernVerge,
     flyttBehandlingTilFakta,
     flyttBehandlingTilFakta1,
+    forhåndsvarselUnntak,
     forhåndsvisBrev,
     henleggBehandling,
     hentBehandling,
@@ -62,6 +63,7 @@ import {
     lagreUtkastVedtaksbrev,
     leggTilBrevmottaker,
     migrerAlleSaker,
+    oppdaterBehandlendeEnhetPåBehandling,
     oppdaterManuellBrevmottaker,
     opprettBehandling,
     opprettBehandlingManuellTask,
@@ -70,6 +72,7 @@ import {
     opprettVergeSteg,
     type Options,
     sammenslå,
+    sendPåminnelseTilAlleSakerITilstand,
     sendSisteTilstandForBehandlingerTilDvh,
     settBehandlingPåVent,
     settIverksettStegTilUtførtOgFortsett,
@@ -77,6 +80,7 @@ import {
     taBehandlingAvVent,
     tvingHenleggBehandling,
     utførBehandlingssteg,
+    utsettUttalelseFrist,
 } from '../sdk.gen';
 import type {
     AlleSakerOver4RettsgebyrData,
@@ -117,6 +121,8 @@ import type {
     FlyttBehandlingTilFakta1Response,
     FlyttBehandlingTilFaktaData,
     FlyttBehandlingTilFaktaResponse,
+    ForhåndsvarselUnntakData,
+    ForhåndsvarselUnntakResponse,
     ForhåndsvisBrevData,
     ForhåndsvisBrevResponse,
     HenleggBehandlingData,
@@ -187,6 +193,8 @@ import type {
     LeggTilBrevmottakerData,
     LeggTilBrevmottakerResponse,
     MigrerAlleSakerData,
+    OppdaterBehandlendeEnhetPåBehandlingData,
+    OppdaterBehandlendeEnhetPåBehandlingResponse,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponse,
     OpprettBehandlingData,
@@ -201,6 +209,7 @@ import type {
     OpprettVergeStegResponse,
     SammenslåData,
     SammenslåResponse,
+    SendPåminnelseTilAlleSakerITilstandData,
     SendSisteTilstandForBehandlingerTilDvhData,
     SettBehandlingPåVentData,
     SettBehandlingPåVentResponse,
@@ -213,6 +222,8 @@ import type {
     TvingHenleggBehandlingResponse,
     UtførBehandlingsstegData,
     UtførBehandlingsstegResponse,
+    UtsettUttalelseFristData,
+    UtsettUttalelseFristResponse,
 } from '../types.gen';
 
 /**
@@ -730,6 +741,30 @@ export const fjernVergeMutation = (
     return mutationOptions;
 };
 
+export const oppdaterBehandlendeEnhetPåBehandlingMutation = (
+    options?: Partial<Options<OppdaterBehandlendeEnhetPåBehandlingData>>
+): UseMutationOptions<
+    OppdaterBehandlendeEnhetPåBehandlingResponse,
+    AxiosError<DefaultError>,
+    Options<OppdaterBehandlendeEnhetPåBehandlingData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        OppdaterBehandlendeEnhetPåBehandlingResponse,
+        AxiosError<DefaultError>,
+        Options<OppdaterBehandlendeEnhetPåBehandlingData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await oppdaterBehandlendeEnhetPåBehandling({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
 /**
  * Oppdatere skalSammenslåPerioder
  */
@@ -824,6 +859,33 @@ export const sendSisteTilstandForBehandlingerTilDvhMutation = (
     > = {
         mutationFn: async fnOptions => {
             const { data } = await sendSisteTilstandForBehandlingerTilDvh({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+/**
+ * Kjør en påminnelse for alle saker i tilstand selv om de ikke er
+ */
+export const sendPåminnelseTilAlleSakerITilstandMutation = (
+    options?: Partial<Options<SendPåminnelseTilAlleSakerITilstandData>>
+): UseMutationOptions<
+    unknown,
+    AxiosError<DefaultError>,
+    Options<SendPåminnelseTilAlleSakerITilstandData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<DefaultError>,
+        Options<SendPåminnelseTilAlleSakerITilstandData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await sendPåminnelseTilAlleSakerITilstand({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,
@@ -1052,6 +1114,60 @@ export const lagreBrukeruttalelseMutation = (
     > = {
         mutationFn: async fnOptions => {
             const { data } = await lagreBrukeruttalelse({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+/**
+ * Skal utsette uttalelse frist
+ */
+export const utsettUttalelseFristMutation = (
+    options?: Partial<Options<UtsettUttalelseFristData>>
+): UseMutationOptions<
+    UtsettUttalelseFristResponse,
+    AxiosError<DefaultError>,
+    Options<UtsettUttalelseFristData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        UtsettUttalelseFristResponse,
+        AxiosError<DefaultError>,
+        Options<UtsettUttalelseFristData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await utsettUttalelseFrist({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+/**
+ * Skal ikke sendes forhåndsvarsel
+ */
+export const forhåndsvarselUnntakMutation = (
+    options?: Partial<Options<ForhåndsvarselUnntakData>>
+): UseMutationOptions<
+    ForhåndsvarselUnntakResponse,
+    AxiosError<DefaultError>,
+    Options<ForhåndsvarselUnntakData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        ForhåndsvarselUnntakResponse,
+        AxiosError<DefaultError>,
+        Options<ForhåndsvarselUnntakData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await forhåndsvarselUnntak({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,
