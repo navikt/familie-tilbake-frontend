@@ -14,11 +14,7 @@ import { Opprett } from './Opprett';
 import { forhåndsvarselSchema, SkalSendesForhåndsvarsel } from './schema';
 import { Unntak } from './Unntak';
 import { useBehandling } from '../../../context/BehandlingContext';
-import {
-    BrevmalkodeEnum,
-    hentForhåndsvarselinfo,
-    hentForhåndsvarselTekst,
-} from '../../../generated';
+import { hentForhåndsvarselinfo, hentForhåndsvarselTekst } from '../../../generated';
 import { bestillBrevMutation } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
@@ -111,7 +107,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         sendForhåndsvarselMutation.mutate({
             body: {
                 behandlingId: behandling.behandlingId,
-                brevmalkode: BrevmalkodeEnum.VARSEL,
+                brevmalkode: 'VARSEL',
                 fritekst:
                     data.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja
                         ? data.fritekst
