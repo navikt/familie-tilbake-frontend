@@ -178,6 +178,7 @@ export const Opprett: React.FC<Props> = ({
                                                         : undefined
                                                 }
                                                 className="mb-6"
+                                                readOnly={varselErSendt}
                                             />
                                         )}
                                     </Fragment>

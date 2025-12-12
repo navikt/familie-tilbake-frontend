@@ -1,5 +1,10 @@
-import type { BehandlingDto, BrukeruttalelseDto, Varselbrevtekst } from '../../../generated';
-import type { UseQueryResult, UseSuspenseQueryResult } from '@tanstack/react-query';
+import type {
+    BehandlingDto,
+    BrukeruttalelseDto,
+    FristUtsettelseDto,
+    Varselbrevtekst,
+} from '../../../generated';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
@@ -7,12 +12,11 @@ import { hentForhåndsvarselinfo, hentForhåndsvarselTekst } from '../../../gene
 
 export type ForhåndsvarselInfo = {
     varselbrevSendtTid: string | undefined;
-    uttalelsesfrist: string | undefined;
+    uttalelsesfrist: FristUtsettelseDto[];
     brukeruttalelse: BrukeruttalelseDto | undefined;
 };
 
 export type UseForhåndsvarselQueriesReturn = {
-    readonly forhåndsvarselInfoQuery: UseSuspenseQueryResult<Error | ForhåndsvarselInfo>;
     readonly varselbrevteksterQuery: UseQueryResult<Varselbrevtekst | undefined>;
     readonly forhåndsvarselInfo: ForhåndsvarselInfo;
     readonly varselbrevtekster: Varselbrevtekst | undefined;
@@ -37,7 +41,7 @@ export const useForhåndsvarselQueries = (
             const info = data.data?.data;
             return {
                 varselbrevSendtTid: info?.varselbrevDto?.varselbrevSendtTid,
-                uttalelsesfrist: info?.varselbrevDto?.uttalelsesfrist,
+                uttalelsesfrist: info?.utsettUttalelseFrist ?? [],
                 brukeruttalelse: info?.brukeruttalelse,
             };
         },
@@ -56,7 +60,6 @@ export const useForhåndsvarselQueries = (
     });
 
     return {
-        forhåndsvarselInfoQuery,
         varselbrevteksterQuery,
         forhåndsvarselInfo: forhåndsvarselInfoQuery.data,
         varselbrevtekster: varselbrevteksterQuery.data,

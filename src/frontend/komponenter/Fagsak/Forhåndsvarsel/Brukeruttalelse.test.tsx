@@ -87,7 +87,7 @@ describe('Brukeruttalelse', () => {
             lagForhåndsvarselQueries({
                 forhåndsvarselInfo: {
                     varselbrevSendtTid: '2023-01-01T10:00:00Z',
-                    uttalelsesfrist: '2023-01-22T10:00:00Z',
+                    uttalelsesfrist: [{ nyFrist: '2023-01-15', begrunnelse: 'Trenger mer tid' }],
                     brukeruttalelse: undefined,
                 },
             })

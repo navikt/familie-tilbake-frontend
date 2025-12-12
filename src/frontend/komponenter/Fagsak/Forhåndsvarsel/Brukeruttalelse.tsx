@@ -15,6 +15,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { HarBrukerUttaltSeg } from './Enums';
 import { dateTilIsoDatoString } from '../../../utils/dato';
+
 type Props = {
     kanUtsetteFrist?: boolean;
 };
@@ -24,41 +25,37 @@ export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) =>
 
     const harBrukerUttaltSeg = useWatch({
         control: methods.control,
-        name: 'harBrukerUttaltSeg',
+        name: 'harBrukerUttaltSeg.harBrukerUttaltSeg',
     });
 
     const uttalelsesDatepicker = useDatepicker({
         onDateChange: date => {
             const dateString = dateTilIsoDatoString(date);
-            methods.setValue('uttalelsesdato', dateString);
-            methods.trigger('uttalelsesdato');
+            methods.setValue('harBrukerUttaltSeg.uttalelsesDetaljer.0.uttalelsesdato', dateString);
+            methods.trigger('harBrukerUttaltSeg.uttalelsesDetaljer.0.uttalelsesdato');
         },
     });
 
     const nyFristDatepicker = useDatepicker({
         onDateChange: date => {
             const dateString = dateTilIsoDatoString(date);
-            methods.setValue('nyFristDato', dateString);
-            methods.trigger('nyFristDato');
+            methods.setValue('harBrukerUttaltSeg.utsettUttalelseFrist.nyFrist', dateString);
+            methods.trigger('harBrukerUttaltSeg.utsettUttalelseFrist.nyFrist');
         },
     });
+    console.log(methods.getValues('harBrukerUttaltSeg.harBrukerUttaltSeg'));
 
     return (
         <VStack maxWidth={ATextWidthMax} gap="4">
             <Controller
-                name="harBrukerUttaltSeg"
                 control={methods.control}
-                rules={{
-                    required: 'Velg ett av alternativene over for å gå videre',
-                }}
-                render={({ field }) => (
+                name="harBrukerUttaltSeg.harBrukerUttaltSeg"
+                render={({ field, fieldState }) => (
                     <RadioGroup
-                        legend="Har brukeren uttalt seg etter forhåndsvarselet?"
+                        {...field}
                         size="small"
-                        name={field.name}
-                        value={field.value || ''}
-                        onChange={field.onChange}
-                        error={methods.formState.errors.harBrukerUttaltSeg?.message?.toString()}
+                        legend="Har brukeren uttalt seg etter forhåndsvarselet?"
+                        error={fieldState.error?.message}
                     >
                         <Radio value={HarBrukerUttaltSeg.Ja}>Ja</Radio>
                         <Radio value={HarBrukerUttaltSeg.Nei}>Nei</Radio>
@@ -73,63 +70,83 @@ export const Brukeruttalelse: React.FC<Props> = ({ kanUtsetteFrist = false }) =>
             {harBrukerUttaltSeg === HarBrukerUttaltSeg.Ja && (
                 <>
                     <Controller
-                        name="uttalelsesdato"
+                        name="harBrukerUttaltSeg.uttalelsesDetaljer.0.uttalelsesdato"
                         control={methods.control}
-                        rules={{
-                            required: 'Du må legge til en dato',
-                        }}
-                        render={() => (
+                        render={({ field, fieldState }) => (
                             <DatePicker {...uttalelsesDatepicker.datepickerProps}>
                                 <DatePicker.Input
+                                    {...field}
                                     {...uttalelsesDatepicker.inputProps}
                                     label="Når uttalte brukeren seg?"
-                                    error={methods.formState.errors.uttalelsesdato?.message?.toString()}
+                                    error={fieldState.error?.message}
                                 />
                             </DatePicker>
                         )}
                     />
 
                     <TextField
-                        {...methods.register('hvorBrukerenUttalteSeg')}
+                        {...methods.register(
+                            'harBrukerUttaltSeg.uttalelsesDetaljer.0.hvorBrukerenUttalteSeg'
+                        )}
                         label="Hvordan uttalte brukeren seg?"
                         description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
+                        error={
+                            //@ts-expect-error Trenger å typeguarde error objektet
+                            methods.formState.errors.harBrukerUttaltSeg?.uttalelsesDetaljer?.[0]
+                                .hvorBrukerenUttalteSeg?.message
+                        }
                     />
                     <Textarea
-                        {...methods.register('uttalelseBeskrivelse')}
+                        {...methods.register(
+                            'harBrukerUttaltSeg.uttalelsesDetaljer.0.uttalelseBeskrivelse'
+                        )}
                         label="Beskriv hva brukeren har uttalt seg om"
                         maxLength={4000}
                         resize
+                        error={
+                            //@ts-expect-error Trenger å typeguarde error objektet
+                            methods.formState.errors.harBrukerUttaltSeg?.uttalelsesDetaljer?.[0]
+                                .uttalelseBeskrivelse?.message
+                        }
                     />
                 </>
             )}
             {harBrukerUttaltSeg === HarBrukerUttaltSeg.Nei && (
                 <Textarea
-                    {...methods.register('uttalelsesKommentar')}
+                    {...methods.register('harBrukerUttaltSeg.kommentar')}
                     label="Kommentar til valget over"
                     maxLength={4000}
                     resize
+                    //@ts-expect-error Trenger å typeguarde error objektet
+                    error={methods.formState.errors.harBrukerUttaltSeg?.kommentar?.message}
                 />
             )}
             {harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist && (
                 <>
                     <Controller
-                        name="nyFristDato"
+                        name="harBrukerUttaltSeg.utsettUttalelseFrist.nyFrist"
                         control={methods.control}
-                        render={() => (
+                        render={({ field, fieldState }) => (
                             <DatePicker {...nyFristDatepicker.datepickerProps}>
                                 <DatePicker.Input
                                     {...nyFristDatepicker.inputProps}
                                     label="Sett ny dato for frist"
-                                    error={methods.formState.errors.nyFristDato?.message?.toString()}
+                                    name={field.name}
+                                    error={fieldState.error?.message}
                                 />
                             </DatePicker>
                         )}
                     />
                     <Textarea
-                        {...methods.register('begrunnelseUtsattFrist')}
+                        {...methods.register('harBrukerUttaltSeg.utsettUttalelseFrist.begrunnelse')}
                         label="Begrunnelse for utsatt frist"
                         maxLength={4000}
                         resize
+                        error={
+                            //@ts-expect-error Trenger å typeguarde error objektet
+                            methods.formState.errors.harBrukerUttaltSeg?.utsettUttalelseFrist
+                                ?.begrunnelse?.message
+                        }
                     />
                 </>
             )}

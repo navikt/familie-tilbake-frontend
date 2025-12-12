@@ -8,4 +8,5 @@ export enum HarBrukerUttaltSeg {
     Ja = 'ja',
     Nei = 'nei',
     UtsettFrist = 'utsett_frist',
+    IkkeValgt = '',
 }

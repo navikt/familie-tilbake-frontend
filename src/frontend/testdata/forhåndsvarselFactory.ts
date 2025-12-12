@@ -1,9 +1,6 @@
 import type { Varselbrevtekst } from '../generated';
 import type { UseForhåndsvarselMutationsReturn } from '../komponenter/Fagsak/Forhåndsvarsel/useForhåndsvarselMutations';
-import type {
-    ForhåndsvarselInfo,
-    UseForhåndsvarselQueriesReturn,
-} from '../komponenter/Fagsak/Forhåndsvarsel/useForhåndsvarselQueries';
+import type { UseForhåndsvarselQueriesReturn } from '../komponenter/Fagsak/Forhåndsvarsel/useForhåndsvarselQueries';
 import type { UseQueryResult, UseSuspenseQueryResult } from '@tanstack/react-query';
 
 export const lagMockQuery = <T>(data?: T): UseQueryResult<T | undefined> =>
@@ -33,7 +30,7 @@ export const lagForhåndsvarselQueries = (
 ): UseForhåndsvarselQueriesReturn => ({
     forhåndsvarselInfo: {
         varselbrevSendtTid: undefined,
-        uttalelsesfrist: undefined,
+        uttalelsesfrist: [],
         brukeruttalelse: undefined,
     },
     varselbrevtekster: {
@@ -49,11 +46,6 @@ export const lagForhåndsvarselQueries = (
     varselbrevteksterLoading: false,
     forhåndsvarselInfoError: false,
     varselbrevteksterError: false,
-    forhåndsvarselInfoQuery: lagMockSuspenseQuery<ForhåndsvarselInfo>({
-        varselbrevSendtTid: undefined,
-        uttalelsesfrist: undefined,
-        brukeruttalelse: undefined,
-    }),
     varselbrevteksterQuery: lagMockQuery<Varselbrevtekst>(),
     ...overrides,
 });
@@ -64,14 +56,9 @@ export const lagForhåndsvarselQueriesSendt = (
     lagForhåndsvarselQueries({
         forhåndsvarselInfo: {
             varselbrevSendtTid: '2023-01-01T10:00:00Z',
-            uttalelsesfrist: undefined,
+            uttalelsesfrist: [],
             brukeruttalelse: undefined,
         },
-        forhåndsvarselInfoQuery: lagMockSuspenseQuery<ForhåndsvarselInfo>({
-            varselbrevSendtTid: '2023-01-01T10:00:00Z',
-            uttalelsesfrist: undefined,
-            brukeruttalelse: undefined,
-        }),
         ...overrides,
     });
 

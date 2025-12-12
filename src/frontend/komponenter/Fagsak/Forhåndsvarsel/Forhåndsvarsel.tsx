@@ -12,7 +12,7 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { HarBrukerUttaltSeg } from './Enums';
 import { Opprett } from './Opprett';
 import { forhåndsvarselSchema, SkalSendesForhåndsvarsel } from './schema';
-import { Unntak } from './Unntak';
+// import { Unntak } from './Unntak';
 import {
     mapHarBrukerUttaltSegFraApiDto,
     useForhåndsvarselMutations,
@@ -85,26 +85,123 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         if (varselErSendt) {
             return SkalSendesForhåndsvarsel.Ja;
         }
+        /* if (unntak !== undefined) {
+            return SkalSendesForhåndsvarsel.Nei;
+        } */
         return SkalSendesForhåndsvarsel.IkkeValgt;
     };
-    const methods = useForm({
+
+    const getOpprettValues = (): ForhåndsvarselFormData => {
+        const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
+        const harBrukerUttaltSegVerdi = brukerUttalelse?.harBrukerUttaltSeg;
+        const utsettelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
+            ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
+            : [];
+        if (harBrukerUttaltSegVerdi) {
+            const brukerUttalelse = mapHarBrukerUttaltSegFraApiDto(harBrukerUttaltSegVerdi);
+            if (brukerUttalelse === HarBrukerUttaltSeg.Ja) {
+                return {
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
+                    fritekst: forhåndsvarselInfo.varselbrevSendtTid ? '123' : '', // TODO få inn verdi fra api.
+                    harBrukerUttaltSeg: {
+                        harBrukerUttaltSeg: HarBrukerUttaltSeg.Ja,
+                        uttalelsesDetaljer: utsettelsesdetaljer,
+                    },
+                };
+            } else if (brukerUttalelse === HarBrukerUttaltSeg.Nei) {
+                return {
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
+                    fritekst: forhåndsvarselInfo.varselbrevSendtTid ? '123' : '', // TODO få inn verdi fra api.
+                    harBrukerUttaltSeg: {
+                        harBrukerUttaltSeg: HarBrukerUttaltSeg.Nei,
+                        kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
+                    },
+                };
+            } else if (brukerUttalelse === HarBrukerUttaltSeg.UtsettFrist) {
+                return {
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
+                    fritekst: forhåndsvarselInfo.varselbrevSendtTid ? '123' : '', // TODO få inn verdi fra api.
+                    harBrukerUttaltSeg: {
+                        harBrukerUttaltSeg: HarBrukerUttaltSeg.UtsettFrist,
+                        utsettUttalelseFrist: {
+                            nyFrist:
+                                forhåndsvarselInfo.uttalelsesfrist[
+                                    forhåndsvarselInfo.uttalelsesfrist.length - 1
+                                ]?.nyFrist ?? '',
+                            begrunnelse:
+                                forhåndsvarselInfo.uttalelsesfrist[
+                                    forhåndsvarselInfo.uttalelsesfrist.length - 1
+                                ]?.begrunnelse ?? '',
+                        },
+                    },
+                };
+            }
+        }
+
+        return {
+            skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
+            fritekst: forhåndsvarselInfo.varselbrevSendtTid ? '123' : '',
+            harBrukerUttaltSeg: {
+                harBrukerUttaltSeg: HarBrukerUttaltSeg.IkkeValgt,
+            },
+        };
+    };
+
+    const getUnntakValues = (): ForhåndsvarselFormData => {
+        const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
+        const harBrukerUttaltSegVerdi = brukerUttalelse?.harBrukerUttaltSeg;
+        const utsettelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
+            ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
+            : [];
+        if (harBrukerUttaltSegVerdi) {
+            const brukerUttalelse = mapHarBrukerUttaltSegFraApiDto(harBrukerUttaltSegVerdi);
+            if (brukerUttalelse === HarBrukerUttaltSeg.Ja) {
+                return {
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+                    harBrukerUttaltSeg: {
+                        harBrukerUttaltSeg: HarBrukerUttaltSeg.Ja,
+                        uttalelsesDetaljer: utsettelsesdetaljer,
+                    },
+                };
+            } else if (brukerUttalelse === HarBrukerUttaltSeg.Nei) {
+                return {
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+                    harBrukerUttaltSeg: {
+                        harBrukerUttaltSeg: HarBrukerUttaltSeg.Nei,
+                        kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
+                    },
+                };
+            }
+        }
+
+        return {
+            skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+            harBrukerUttaltSeg: {
+                harBrukerUttaltSeg: HarBrukerUttaltSeg.IkkeValgt,
+            },
+        };
+    };
+
+    const getDefaultValues = (): ForhåndsvarselFormData => {
+        const status = getForhåndsvarselStatus();
+        if (status === SkalSendesForhåndsvarsel.Ja) {
+            return getOpprettValues();
+        }
+
+        if (status === SkalSendesForhåndsvarsel.Nei) {
+            return getUnntakValues();
+        }
+
+        return {
+            skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.IkkeValgt,
+        };
+    };
+
+    const methods = useForm<ForhåndsvarselFormData>({
         resolver: zodResolver(forhåndsvarselSchema),
         mode: 'all',
         shouldFocusError: false,
-        defaultValues: {
-            skalSendesForhåndsvarsel: getForhåndsvarselStatus(),
-            fritekst: '',
-            harBrukerUttaltSeg: mapHarBrukerUttaltSegFraApiDto(
-                forhåndsvarselInfo?.brukeruttalelse?.harBrukerUttaltSeg
-            ),
-            uttalelsesKommentar: forhåndsvarselInfo?.brukeruttalelse?.kommentar || '',
-            uttalelsesDetaljer: forhåndsvarselInfo?.brukeruttalelse?.uttalelsesdetaljer || '',
-            uttalelsesdato: '',
-            hvorBrukerenUttalteSeg: '',
-            uttalelseBeskrivelse: '',
-            nyFristDato: '',
-            begrunnelseUtsattFrist: '',
-        },
+        defaultValues: getDefaultValues(),
     });
 
     useLayoutEffect(() => {
@@ -124,7 +221,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const harBrukerUttaltSeg = useWatch({
         control: methods.control,
-        name: 'harBrukerUttaltSeg',
+        name: 'harBrukerUttaltSeg.harBrukerUttaltSeg',
     });
 
     const handleFormSubmit = (data: ForhåndsvarselFormData): void => {
@@ -155,6 +252,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         }
         return 'Neste';
     };
+    console.log(methods.formState);
 
     return (
         <>
@@ -210,7 +308,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                                 parentBounds={parentBounds}
                             />
                         )}
-                    {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />}
+
+                    {/* {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />} */}
+
                     {sendForhåndsvarselMutation.isSuccess && (
                         <FixedAlert
                             aria-live="polite"

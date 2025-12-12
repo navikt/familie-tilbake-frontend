@@ -106,10 +106,15 @@ describe('ForhåndsvarselSkjema', () => {
         jest.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
     });
 
-    test('Viser riktig tittel når varsel ikke er sendt', () => {
+    test('Viser riktig tittel når varsel ikke er sendt', async () => {
         renderForhåndsvarselSkjema();
 
-        expect(screen.getByText('Opprett forhåndsvarsel')).toBeInTheDocument();
+        expect(
+            await screen.findByRole('heading', {
+                name: 'Opprett forhåndsvarsel',
+                level: 3,
+            })
+        ).toBeInTheDocument();
     });
 
     test('Viser riktig tittel når varsel er sendt', async () => {
@@ -120,17 +125,17 @@ describe('ForhåndsvarselSkjema', () => {
         ).toBeInTheDocument();
     });
 
-    test('Viser brevinnhold og fritekstfelt', () => {
+    test('Viser brevinnhold og fritekstfelt', async () => {
         renderForhåndsvarselSkjema();
 
-        expect(screen.getByText('Dette har skjedd')).toBeInTheDocument();
-        expect(screen.getByLabelText('Legg til utdypende tekst')).toBeInTheDocument();
+        expect(await screen.findByText('Dette har skjedd')).toBeInTheDocument();
+        expect(screen.getByText('Legg til utdypende tekst')).toBeInTheDocument();
     });
 
-    test('Viser forhåndsvisning knapp når varsel ikke er sendt', () => {
+    test('Viser forhåndsvisning knapp når varsel ikke er sendt', async () => {
         renderForhåndsvarselSkjema();
 
-        expect(screen.getByRole('button', { name: 'Forhåndsvisning' })).toBeInTheDocument();
+        expect(await screen.findByRole('button', { name: 'Forhåndsvisning' })).toBeInTheDocument();
     });
 
     test('Viser Brukeruttalelse når varsel er sendt', async () => {

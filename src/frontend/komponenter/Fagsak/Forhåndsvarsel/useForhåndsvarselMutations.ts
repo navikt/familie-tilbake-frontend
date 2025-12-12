@@ -22,6 +22,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
 import { HarBrukerUttaltSeg } from './Enums';
+import { SkalSendesForhåndsvarsel } from './schema';
 import { BrevmalkodeEnum, HarBrukerUttaltSegEnum } from '../../../generated';
 import {
     bestillBrevMutation,
@@ -72,6 +73,9 @@ const HarBrukerUttaltSegFraApiDto = {
 export const mapHarBrukerUttaltSegFraApiDto = (
     backendVerdi: string | undefined
 ): HarBrukerUttaltSeg => {
+    if (!backendVerdi || !(backendVerdi in HarBrukerUttaltSegFraApiDto)) {
+        return HarBrukerUttaltSeg.IkkeValgt;
+    }
     return HarBrukerUttaltSegFraApiDto[backendVerdi as keyof typeof HarBrukerUttaltSegFraApiDto];
 };
 
@@ -83,11 +87,15 @@ const mapHarBrukerUttaltSegTilApiDto = (
 
 const transformFormDataToBrukeruttalelse = (
     formData: ForhåndsvarselFormData
-): BrukeruttalelseDto => {
-    return {
-        ...formData,
-        harBrukerUttaltSeg: mapHarBrukerUttaltSegTilApiDto(formData.harBrukerUttaltSeg),
-    };
+): BrukeruttalelseDto | undefined => {
+    if (formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
+        return {
+            ...formData,
+            harBrukerUttaltSeg: mapHarBrukerUttaltSegTilApiDto(
+                formData.harBrukerUttaltSeg.harBrukerUttaltSeg
+            ),
+        };
+    }
 };
 
 export const useForhåndsvarselMutations = (
@@ -150,6 +158,8 @@ export const useForhåndsvarselMutations = (
         forhåndsvisning: seForhåndsvisningMutation,
 
         sendForhåndsvarsel: (formData: ForhåndsvarselFormData): void => {
+            if (formData.skalSendesForhåndsvarsel !== SkalSendesForhåndsvarsel.Ja) return;
+
             const bestillBrevDto: BestillBrevDto = {
                 behandlingId: behandling.behandlingId,
                 brevmalkode: BrevmalkodeEnum.VARSEL,
@@ -162,6 +172,7 @@ export const useForhåndsvarselMutations = (
         },
         sendBrukeruttalelse: (formData: ForhåndsvarselFormData): void => {
             const transformedData = transformFormDataToBrukeruttalelse(formData);
+            if (!transformedData) return;
             sendBrukeruttalelseMutation.mutate({
                 path: {
                     behandlingId: behandling.behandlingId,
@@ -170,14 +181,20 @@ export const useForhåndsvarselMutations = (
             });
         },
         sendUtsettUttalelseFrist: (formData: ForhåndsvarselFormData): void => {
-            const fristUtsettelseDto: FristUtsettelseDto = {
-                nyFrist: formData.nyFristDato,
-                begrunnelse: formData.begrunnelseUtsattFrist,
-            };
+            if (
+                formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja &&
+                formData.harBrukerUttaltSeg.harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist
+            ) {
+                const fristUtsettelseDto: FristUtsettelseDto = {
+                    nyFrist: formData.harBrukerUttaltSeg.utsettUttalelseFrist.nyFrist,
+                    begrunnelse: formData.harBrukerUttaltSeg.utsettUttalelseFrist.begrunnelse,
+                };
 
-            sendUtsettUttalelseFristMutation.mutate({
-                body: fristUtsettelseDto,
-            });
+                sendUtsettUttalelseFristMutation.mutate({
+                    body: fristUtsettelseDto,
+                });
+            }
+            return;
         },
         seForhåndsvisning: (fritekst: string): void => {
             seForhåndsvisningMutation.mutate({

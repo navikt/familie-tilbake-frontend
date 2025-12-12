@@ -1,5 +1,3 @@
-import type { Uttalelsesdetaljer } from '../../../generated';
-
 import { z } from 'zod';
 
 import { HarBrukerUttaltSeg } from './Enums';
@@ -10,79 +8,76 @@ export enum SkalSendesForhåndsvarsel {
     IkkeValgt = 'ikkeValgt',
 }
 
-const baseFields = z.object({
-    skalSendesForhåndsvarsel: z.string(),
-    fritekst: z.string(),
-    harBrukerUttaltSeg: z.string(),
-    uttalelsesKommentar: z.string(),
-    uttalelsesDetaljer: z.union([z.array(z.custom<Uttalelsesdetaljer>()), z.string()]),
-    uttalelsesdato: z.string(),
-    hvorBrukerenUttalteSeg: z.string(),
-    uttalelseBeskrivelse: z.string(),
-    nyFristDato: z.string(),
-    begrunnelseUtsattFrist: z.string(),
-});
-
-const brukerharIkkeUttaltSegSchema = baseFields.extend({
+const brukerHarIkkeUttaltSegSchema = z.object({
     harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.Nei),
-    uttalelsesKommentar: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
+    kommentar: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
 });
 
-const brukerharUttaltSegSchema = baseFields.extend({
-    harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.Ja),
-    uttalelsesdato: z.string(),
-    hvorBrukerenUttalteSeg: z.string(),
+const uttalelsesDetaljerSchema = z.object({
+    uttalelsesdato: z.iso.date({ error: 'Du må legge inn en gyldig dato' }),
+    hvorBrukerenUttalteSeg: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
     uttalelseBeskrivelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
 });
 
-const utsettFristSchema = baseFields.extend({
+const brukerHarUttaltSegSchema = z.object({
+    harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.Ja),
+    uttalelsesDetaljer: z.array(uttalelsesDetaljerSchema),
+});
+
+const utsettUttalelseFristSchema = z.object({
+    nyFrist: z.iso.date({ error: 'Du må legge inn en gyldig dato' }),
+    begrunnelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
+});
+
+const utsettFristSchema = z.object({
     harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.UtsettFrist),
-    nyFristDato: z.string(),
-    begrunnelseUtsattFrist: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
+    utsettUttalelseFrist: utsettUttalelseFristSchema,
+});
+
+const ikkeValgtBrukerUttalelseSchema = z.object({
+    harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.IkkeValgt),
 });
 
 const harBrukerUttaltSegSchema = z
-    .unknown()
-    .refine(data => data !== undefined && data !== null, {
+    .discriminatedUnion('harBrukerUttaltSeg', [
+        brukerHarIkkeUttaltSegSchema,
+        brukerHarUttaltSegSchema,
+        utsettFristSchema,
+        ikkeValgtBrukerUttalelseSchema,
+    ])
+    .refine(data => data.harBrukerUttaltSeg !== HarBrukerUttaltSeg.IkkeValgt, {
         message: 'Du må velge om brukeren har uttalt seg eller om fristen skal utsettes',
-    })
-    .pipe(
-        z.discriminatedUnion('harBrukerUttaltSeg', [
-            brukerharIkkeUttaltSegSchema,
-            brukerharUttaltSegSchema,
-            utsettFristSchema,
-        ])
-    );
+        path: ['harBrukerUttaltSeg'],
+    });
 
 const harBrukerUttaltSegUtenUtsettFristSchema = z
-    .unknown()
-    .refine(data => data !== undefined && data !== null, {
+    .discriminatedUnion('harBrukerUttaltSeg', [
+        brukerHarIkkeUttaltSegSchema,
+        brukerHarUttaltSegSchema,
+        ikkeValgtBrukerUttalelseSchema,
+    ])
+    .refine(data => data.harBrukerUttaltSeg !== HarBrukerUttaltSeg.IkkeValgt, {
         message: 'Du må velge om brukeren har uttalt seg eller ikke',
-    })
-    .pipe(
-        z.discriminatedUnion('harBrukerUttaltSeg', [
-            brukerharIkkeUttaltSegSchema,
-            brukerharUttaltSegSchema,
-        ])
-    );
+        path: ['harBrukerUttaltSeg'],
+    });
 
-const opprettSchema = baseFields.extend({
+const opprettSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Ja),
     fritekst: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
     harBrukerUttaltSeg: harBrukerUttaltSegSchema,
 });
 
-const unntakSchema = baseFields.extend({
+const unntakSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
-    begrunnelseForUnntak: z.enum(
-        ['IkkePraktiskMulig', 'UrimeligRessurskrevende', 'ÅpenbartUnødvendig'],
-        { error: 'Du må velge en begrunnelse for unntak' }
-    ),
-    beskrivelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(2000),
+    // begrunnelseForUnntak: z.enum(
+    //     ['IkkePraktiskMulig', 'UrimeligRessurskrevende', 'ÅpenbartUnødvendig'],
+    //     { error: 'Du må velge en begrunnelse for unntak' }
+    // ),
+    // beskrivelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(2000),
     harBrukerUttaltSeg: harBrukerUttaltSegUtenUtsettFristSchema,
 });
 
-const ikkeValgtSchema = baseFields.extend({
+const ikkeValgtSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.IkkeValgt),
 });
 
