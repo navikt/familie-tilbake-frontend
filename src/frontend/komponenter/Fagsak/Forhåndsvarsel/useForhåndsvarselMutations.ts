@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData } from './schema';
+import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
 import type {
     BehandlingDto,
     FagsakDto,
@@ -21,8 +21,7 @@ import type { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
-import { HarBrukerUttaltSeg } from './Enums';
-import { SkalSendesForhåndsvarsel } from './schema';
+import { HarBrukerUttaltSeg, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
 import { Feil } from '../../../api/feil';
 import { BrevmalkodeEnum, HarBrukerUttaltSegEnum } from '../../../generated';
 import {

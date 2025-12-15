@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData } from './schema';
+import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
 
 import {
     VStack,
@@ -13,7 +13,7 @@ import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { HarBrukerUttaltSeg } from './Enums';
+import { HarBrukerUttaltSeg } from './forhåndsvarselSchema';
 import { dateTilIsoDatoString } from '../../../utils/dato';
 
 type Props = {

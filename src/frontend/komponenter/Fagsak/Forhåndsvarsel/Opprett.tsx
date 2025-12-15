@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData } from './schema';
+import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
 import type {
     BehandlingDto,
     RessursByte,

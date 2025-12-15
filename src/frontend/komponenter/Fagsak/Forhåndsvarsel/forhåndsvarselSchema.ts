@@ -1,22 +1,36 @@
 import { z } from 'zod';
 
-import { HarBrukerUttaltSeg } from './Enums';
-
 export enum SkalSendesForhåndsvarsel {
     Ja = 'ja',
     Nei = 'nei',
-    IkkeValgt = 'ikkeValgt',
+    IkkeValgt = '',
+}
+
+export enum HarBrukerUttaltSeg {
+    Ja = 'ja',
+    Nei = 'nei',
+    UtsettFrist = 'utsett_frist',
+    IkkeValgt = '',
 }
 
 const brukerHarIkkeUttaltSegSchema = z.object({
     harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.Nei),
-    kommentar: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
+    kommentar: z
+        .string()
+        .min(3, 'Du må legge inn minst tre tegn')
+        .max(4000, 'Maksimalt 4000 tegn tillatt'),
 });
 
 const uttalelsesDetaljerSchema = z.object({
     uttalelsesdato: z.iso.date({ error: 'Du må legge inn en gyldig dato' }),
-    hvorBrukerenUttalteSeg: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
-    uttalelseBeskrivelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
+    hvorBrukerenUttalteSeg: z
+        .string()
+        .min(3, 'Du må legge inn minst tre tegn')
+        .max(4000, 'Maksimalt 4000 tegn tillatt'),
+    uttalelseBeskrivelse: z
+        .string()
+        .min(3, 'Du må legge inn minst tre tegn')
+        .max(4000, 'Maksimalt 4000 tegn tillatt'),
 });
 
 const brukerHarUttaltSegSchema = z.object({
@@ -26,7 +40,10 @@ const brukerHarUttaltSegSchema = z.object({
 
 const utsettUttalelseFristSchema = z.object({
     nyFrist: z.iso.date({ error: 'Du må legge inn en gyldig dato' }),
-    begrunnelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
+    begrunnelse: z
+        .string()
+        .min(3, 'Du må legge inn minst tre tegn')
+        .max(4000, 'Maksimalt 4000 tegn tillatt'),
 });
 
 const utsettFristSchema = z.object({
@@ -63,7 +80,10 @@ const harBrukerUttaltSegUtenUtsettFristSchema = z
 
 const opprettSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Ja),
-    fritekst: z.string().min(3, 'Du må legge inn minst tre tegn').max(4000),
+    fritekst: z
+        .string()
+        .min(3, 'Du må legge inn minst tre tegn')
+        .max(4000, 'Maksimalt 4000 tegn tillatt'),
     harBrukerUttaltSeg: harBrukerUttaltSegSchema,
 });
 
@@ -73,7 +93,7 @@ const unntakSchema = z.object({
     //     ['IkkePraktiskMulig', 'UrimeligRessurskrevende', 'ÅpenbartUnødvendig'],
     //     { error: 'Du må velge en begrunnelse for unntak' }
     // ),
-    // beskrivelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(2000),
+    // beskrivelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(2000, 'Maksimalt 2000 tegn tillatt'),
     harBrukerUttaltSeg: harBrukerUttaltSegUtenUtsettFristSchema,
 });
 

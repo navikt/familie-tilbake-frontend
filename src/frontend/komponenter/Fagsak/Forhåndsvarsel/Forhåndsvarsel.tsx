@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData } from './schema';
+import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
 import type { BehandlingDto, FagsakDto } from '../../../generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,9 +9,12 @@ import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { HarBrukerUttaltSeg } from './Enums';
+import {
+    forhåndsvarselSchema,
+    SkalSendesForhåndsvarsel,
+    HarBrukerUttaltSeg,
+} from './forhåndsvarselSchema';
 import { Opprett } from './Opprett';
-import { forhåndsvarselSchema, SkalSendesForhåndsvarsel } from './schema';
 // import { Unntak } from './Unntak';
 import {
     mapHarBrukerUttaltSegFraApiDto,
