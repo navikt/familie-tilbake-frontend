@@ -12,25 +12,20 @@ export enum HarBrukerUttaltSeg {
     UtsettFrist = 'utsett_frist',
     IkkeValgt = '',
 }
+const fritekstSchema = z
+    .string()
+    .min(3, 'Du må legge inn minst tre tegn')
+    .max(4000, 'Maksimalt 4000 tegn tillatt');
 
 const brukerHarIkkeUttaltSegSchema = z.object({
     harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.Nei),
-    kommentar: z
-        .string()
-        .min(3, 'Du må legge inn minst tre tegn')
-        .max(4000, 'Maksimalt 4000 tegn tillatt'),
+    kommentar: fritekstSchema,
 });
 
 const uttalelsesDetaljerSchema = z.object({
     uttalelsesdato: z.iso.date({ error: 'Du må legge inn en gyldig dato' }),
-    hvorBrukerenUttalteSeg: z
-        .string()
-        .min(3, 'Du må legge inn minst tre tegn')
-        .max(4000, 'Maksimalt 4000 tegn tillatt'),
-    uttalelseBeskrivelse: z
-        .string()
-        .min(3, 'Du må legge inn minst tre tegn')
-        .max(4000, 'Maksimalt 4000 tegn tillatt'),
+    hvorBrukerenUttalteSeg: fritekstSchema,
+    uttalelseBeskrivelse: fritekstSchema,
 });
 
 const brukerHarUttaltSegSchema = z.object({
@@ -40,10 +35,7 @@ const brukerHarUttaltSegSchema = z.object({
 
 const utsettUttalelseFristSchema = z.object({
     nyFrist: z.iso.date({ error: 'Du må legge inn en gyldig dato' }),
-    begrunnelse: z
-        .string()
-        .min(3, 'Du må legge inn minst tre tegn')
-        .max(4000, 'Maksimalt 4000 tegn tillatt'),
+    begrunnelse: fritekstSchema,
 });
 
 const utsettFristSchema = z.object({
@@ -80,10 +72,7 @@ const harBrukerUttaltSegUtenUtsettFristSchema = z
 
 const opprettSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Ja),
-    fritekst: z
-        .string()
-        .min(3, 'Du må legge inn minst tre tegn')
-        .max(4000, 'Maksimalt 4000 tegn tillatt'),
+    fritekst: fritekstSchema,
     harBrukerUttaltSeg: harBrukerUttaltSegSchema,
 });
 
