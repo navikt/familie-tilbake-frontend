@@ -18,6 +18,7 @@ import {
 import { Opprett } from './Opprett';
 // import { Unntak } from './Unntak';
 import {
+    extractErrorFromMutationError,
     mapHarBrukerUttaltSegFraApiDto,
     useForhåndsvarselMutations,
 } from './useForhåndsvarselMutations';
@@ -81,6 +82,12 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendUtsettUttalelseFristMutation,
         gåTilNeste,
     } = useForhåndsvarselMutations(behandling, fagsak);
+
+    const mutations = [
+        { key: 'forhåndsvarsel', mutation: sendForhåndsvarselMutation },
+        { key: 'brukeruttalelse', mutation: sendBrukeruttalelseMutation },
+        { key: 'utsettFrist', mutation: sendUtsettUttalelseFristMutation },
+    ] as const;
 
     const { varselbrevtekster } = useForhåndsvarselQueries(behandling);
 
@@ -346,30 +353,21 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     />
                 </VStack>
             </FormProvider>
-            {sendForhåndsvarselMutation.isError && (
-                <FeilModal
-                    feil={sendForhåndsvarselMutation.error}
-                    lukkFeilModal={sendForhåndsvarselMutation.reset}
-                    behandlingId={behandling.behandlingId}
-                    fagsakId={fagsak.eksternFagsakId}
-                />
-            )}
-            {sendBrukeruttalelseMutation.isError && (
-                <FeilModal
-                    feil={sendBrukeruttalelseMutation.error}
-                    lukkFeilModal={sendBrukeruttalelseMutation.reset}
-                    behandlingId={behandling.behandlingId}
-                    fagsakId={fagsak.eksternFagsakId}
-                />
-            )}
-            {sendUtsettUttalelseFristMutation.isError && (
-                <FeilModal
-                    feil={sendUtsettUttalelseFristMutation.error}
-                    lukkFeilModal={sendUtsettUttalelseFristMutation.reset}
-                    behandlingId={behandling.behandlingId}
-                    fagsakId={fagsak.eksternFagsakId}
-                />
-            )}
+            {mutations.map(({ key, mutation }) => {
+                if (mutation.isError) {
+                    const feil = extractErrorFromMutationError(mutation.error);
+                    return (
+                        <FeilModal
+                            key={key}
+                            feil={feil}
+                            lukkFeilModal={mutation.reset}
+                            behandlingId={behandling.behandlingId}
+                            fagsakId={fagsak.eksternFagsakId}
+                        />
+                    );
+                }
+                return null;
+            })}
         </>
     );
 };

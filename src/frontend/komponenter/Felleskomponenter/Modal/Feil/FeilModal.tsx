@@ -2,7 +2,6 @@ import type { Feil } from '../../../../api/feil';
 
 import { XMarkOctagonFillIcon } from '@navikt/aksel-icons';
 import { Button, Heading, Link, List, Modal, VStack } from '@navikt/ds-react';
-import { type AxiosError } from 'axios';
 import React from 'react';
 
 import { hentFeilObjekt } from './feilObjekt';
@@ -10,7 +9,7 @@ import { hentStatus } from './hentStatus';
 
 type Props = {
     lukkFeilModal: () => void;
-    feil: AxiosError | Feil; //TODO: Typen Feil bør fjernes når alle feil er migrert til AxiosError
+    feil: Feil;
     beskjed?: string;
     behandlingId?: string;
     fagsakId?: string;

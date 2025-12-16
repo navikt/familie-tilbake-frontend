@@ -15,6 +15,7 @@ import type {
     ForhåndsvisBrevData,
     ForhåndsvisBrevResponse,
 } from '../../../generated';
+import type { Ressurs } from '../../../typer/ressurs';
 import type { DefaultError, UseMutationResult } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 
@@ -113,6 +114,20 @@ const transformFormDataToBrukeruttalelse = (
     }
 };
 
+export const extractErrorFromMutationError = (error: unknown): Feil => {
+    const axiosError = error as AxiosError<Ressurs<unknown>>;
+    const responseData = axiosError.response?.data;
+
+    const frontendFeilmelding =
+        responseData &&
+        'frontendFeilmelding' in responseData &&
+        typeof responseData.frontendFeilmelding === 'string'
+            ? responseData.frontendFeilmelding
+            : (axiosError.message ?? 'Ukjent feil');
+
+    return new Feil(frontendFeilmelding, axiosError.response?.status ?? 500);
+};
+
 export const useForhåndsvarselMutations = (
     behandling: BehandlingDto,
     fagsak: FagsakDto,
@@ -156,19 +171,9 @@ export const useForhåndsvarselMutations = (
 
     const sendUtsettUttalelseFristMutation = useMutation({
         ...utsettUttalelseFristMutation(),
-        onSuccess: response => {
-            if (response.status === 'SUKSESS') {
-                invalidateQueries();
-                gåTilNeste();
-            }
-            console.log(response);
-
-            throw new Feil(
-                response.frontendFeilmelding
-                    ? response.frontendFeilmelding
-                    : 'Ukjent feil ved utsettelse av frist.',
-                500
-            );
+        onSuccess: () => {
+            invalidateQueries();
+            gåTilNeste();
         },
     });
 
@@ -219,7 +224,6 @@ export const useForhåndsvarselMutations = (
                     body: fristUtsettelseDto,
                 });
             }
-            return;
         },
         seForhåndsvisning: (fritekst: string): void => {
             seForhåndsvisningMutation.mutate({
