@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselFormData, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
 import type {
     BehandlingDto,
     RessursByte,
@@ -7,6 +7,7 @@ import type {
     FagsakDto,
 } from '../../../generated';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
+import type { FieldErrors } from 'react-hook-form';
 
 import { FilePdfIcon } from '@navikt/aksel-icons';
 import {
@@ -62,10 +63,18 @@ export const Opprett: React.FC<Props> = ({
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling, fagsak);
 
     const [showModal, setShowModal] = useState(false);
-    const methods = useFormContext<ForhåndsvarselFormData>();
+    const {
+        control,
+        register,
+        formState: { errors },
+    } = useFormContext<ForhåndsvarselFormData>();
+
+    const fieldError: FieldErrors<
+        Extract<ForhåndsvarselFormData, { skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja }>
+    > = errors;
 
     const fritekst = useWatch({
-        control: methods.control,
+        control: control,
         name: 'fritekst',
     });
 
@@ -169,14 +178,10 @@ export const Opprett: React.FC<Props> = ({
                                         </div>
                                         {avsnitt.title === 'Dette har skjedd' && (
                                             <Textarea
-                                                {...methods.register('fritekst')}
+                                                {...register('fritekst')}
                                                 label="Legg til utdypende tekst"
                                                 maxLength={maksAntallTegn}
-                                                error={
-                                                    'fritekst' in methods.formState.errors
-                                                        ? methods.formState.errors.fritekst?.message?.toString()
-                                                        : undefined
-                                                }
+                                                error={fieldError.fritekst?.message?.toString()}
                                                 className="mb-6"
                                                 readOnly={varselErSendt}
                                             />
