@@ -1,5 +1,6 @@
 import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
 import type { BehandlingDto, FagsakDto } from '../../../generated';
+import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MegaphoneIcon } from '@navikt/aksel-icons';
@@ -228,7 +229,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         name: 'harBrukerUttaltSeg.harBrukerUttaltSeg',
     });
 
-    const handleFormSubmit = (data: ForhåndsvarselFormData): void => {
+    const handleFormSubmit: SubmitHandler<ForhåndsvarselFormData> = (
+        data: ForhåndsvarselFormData
+    ): void => {
         if (
             varselErSendt &&
             (harBrukerUttaltSeg === HarBrukerUttaltSeg.Ja ||
