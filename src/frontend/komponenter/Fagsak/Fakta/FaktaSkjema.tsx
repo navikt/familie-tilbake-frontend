@@ -1,3 +1,4 @@
+import type { OppdaterFaktaOmFeilutbetalingSchemaDto } from './schema';
 import type {
     BestemmelseEllerGrunnlagDto,
     FaktaOmFeilutbetalingDto,
@@ -6,7 +7,7 @@ import type {
     OppdaterFaktaOmFeilutbetalingDto,
     OppdaterFaktaPeriodeDto,
 } from '../../../generated';
-import type { SubmitErrorHandler, SubmitHandler } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
@@ -38,7 +39,7 @@ type Props = {
 
 export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element => {
     const { actionBarStegtekst } = useBehandling();
-    const methods = useForm({
+    const methods = useForm<OppdaterFaktaOmFeilutbetalingSchemaDto>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
         defaultValues: {
             perioder: faktaOmFeilutbetaling.perioder,
@@ -65,18 +66,17 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
             : undefined,
     });
     const dataForPeriode = (id: string): FaktaPeriodeDto =>
+        // Siden disse kommer fra samme kall skal det ikke være mulig å ende opp med tomt svar
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        perioder.find(periode => periode.id == id)! as FaktaPeriodeDto;
+        perioder.find(periode => periode.id === id)! as FaktaPeriodeDto;
     const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetalingDto> = data =>
         console.log(JSON.stringify(data));
-    const onError: SubmitErrorHandler<OppdaterFaktaOmFeilutbetalingDto> = errors =>
-        console.log(errors);
 
     const { name: avRadioGroupName, ...radioProps } = methods.register('vurdering.oppdaget.av');
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit, onError)}>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
                     <Heading level="2" size="small">
                         Rettslig grunnlag
@@ -182,9 +182,9 @@ const PeriodeRad = ({
 }): React.JSX.Element => {
     const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlagDto[] =>
         muligeRettsligGrunnlag.find(
-            muligGrunnlag => muligGrunnlag.bestemmelse.nøkkel == bestemmelse
+            muligGrunnlag => muligGrunnlag.bestemmelse.nøkkel === bestemmelse
         )?.grunnlag ?? [];
-    const { register } = useFormContext<OppdaterFaktaOmFeilutbetalingDto>();
+    const { register } = useFormContext<OppdaterFaktaOmFeilutbetalingSchemaDto>();
     return (
         <Table.Row>
             <Table.DataCell>
@@ -194,12 +194,12 @@ const PeriodeRad = ({
             </Table.DataCell>
             <Table.DataCell>
                 <VStack>
-                    {periode.rettsligGrunnlag.map((_, index) => (
+                    {periode.rettsligGrunnlag.map((rettsligGrunnlag, index) => (
                         <Select
                             label="Velg bestemmelse"
                             hideLabel
                             size="small"
-                            key={index}
+                            key={`${rettsligGrunnlag.bestemmelse}${index}`}
                             {...register(
                                 `perioder.${periodeIndex}.rettsligGrunnlag.${index}.bestemmelse`
                             )}
@@ -208,12 +208,9 @@ const PeriodeRad = ({
                             <option value="default" disabled>
                                 Velg bestemmelse
                             </option>
-                            {muligeRettsligGrunnlag.map(grunnlag => (
-                                <option
-                                    key={grunnlag.bestemmelse.nøkkel}
-                                    value={grunnlag.bestemmelse.nøkkel}
-                                >
-                                    {grunnlag.bestemmelse.beskrivelse}
+                            {muligeRettsligGrunnlag.map(({ bestemmelse }) => (
+                                <option key={bestemmelse.nøkkel} value={bestemmelse.nøkkel}>
+                                    {bestemmelse.beskrivelse}
                                 </option>
                             ))}
                         </Select>
@@ -227,7 +224,7 @@ const PeriodeRad = ({
                             label="Velg grunnlag"
                             hideLabel
                             size="small"
-                            key={index}
+                            key={`${rettsligGrunnlag.grunnlag}${index}`}
                             {...register(
                                 `perioder.${periodeIndex}.rettsligGrunnlag.${index}.grunnlag`
                             )}

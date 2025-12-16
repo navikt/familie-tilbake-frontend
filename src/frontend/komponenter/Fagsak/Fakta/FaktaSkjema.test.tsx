@@ -14,8 +14,8 @@ jest.mock('react-router', () => ({
 }));
 
 const mockUseBehandling = jest.fn(() => ({
-    actionBarStegtekst: () => 'Mocked!!',
-    erStegBehandlet: () => false,
+    actionBarStegtekst: (): string => 'Mocked!!',
+    erStegBehandlet: (): boolean => false,
 }));
 
 jest.mock('../../../context/BehandlingContext', () => ({

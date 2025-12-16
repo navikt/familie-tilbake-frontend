@@ -9,3 +9,7 @@ export const oppdaterFaktaOmFeilutbetalingSchema = z.object({
         oppdaget: zOppdagetDto,
     }),
 });
+
+export type OppdaterFaktaOmFeilutbetalingSchemaDto = z.infer<
+    typeof oppdaterFaktaOmFeilutbetalingSchema
+>;
