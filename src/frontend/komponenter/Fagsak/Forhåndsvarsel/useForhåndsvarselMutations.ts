@@ -89,12 +89,27 @@ const transformFormDataToBrukeruttalelse = (
     formData: ForhåndsvarselFormData
 ): BrukeruttalelseDto | undefined => {
     if (formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
-        return {
-            ...formData,
-            harBrukerUttaltSeg: mapHarBrukerUttaltSegTilApiDto(
-                formData.harBrukerUttaltSeg.harBrukerUttaltSeg
-            ),
+        const { harBrukerUttaltSeg } = formData.harBrukerUttaltSeg;
+
+        const brukeruttalelseDto: BrukeruttalelseDto = {
+            harBrukerUttaltSeg: mapHarBrukerUttaltSegTilApiDto(harBrukerUttaltSeg),
         };
+
+        if (
+            harBrukerUttaltSeg === HarBrukerUttaltSeg.Ja &&
+            'uttalelsesDetaljer' in formData.harBrukerUttaltSeg
+        ) {
+            brukeruttalelseDto.uttalelsesdetaljer = formData.harBrukerUttaltSeg.uttalelsesDetaljer;
+        }
+
+        if (
+            harBrukerUttaltSeg === HarBrukerUttaltSeg.Nei &&
+            'kommentar' in formData.harBrukerUttaltSeg
+        ) {
+            brukeruttalelseDto.kommentar = formData.harBrukerUttaltSeg.kommentar;
+        }
+
+        return brukeruttalelseDto;
     }
 };
 
