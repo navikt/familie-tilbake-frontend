@@ -103,7 +103,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         return SkalSendesForhåndsvarsel.IkkeValgt;
     };
 
-    const getOpprettValues = (): ForhåndsvarselFormData => {
+    const getUttalelseValues = (): ForhåndsvarselFormData => {
         const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
         const harBrukerUttaltSegVerdi = brukerUttalelse?.harBrukerUttaltSeg;
         const utsettelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
@@ -113,8 +113,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             const brukerUttalelse = mapHarBrukerUttaltSegFraApiDto(harBrukerUttaltSegVerdi);
             if (brukerUttalelse === HarBrukerUttaltSeg.Ja) {
                 return {
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
-                    fritekst: forhåndsvarselInfo.varselbrevSendtTid ? '123' : '', // TODO få inn verdi fra api.
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
                     harBrukerUttaltSeg: {
                         harBrukerUttaltSeg: HarBrukerUttaltSeg.Ja,
                         uttalelsesDetaljer: utsettelsesdetaljer,
@@ -122,8 +121,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 };
             } else if (brukerUttalelse === HarBrukerUttaltSeg.Nei) {
                 return {
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
-                    fritekst: forhåndsvarselInfo.varselbrevSendtTid ? '123' : '', // TODO få inn verdi fra api.
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
                     harBrukerUttaltSeg: {
                         harBrukerUttaltSeg: HarBrukerUttaltSeg.Nei,
                         kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
@@ -131,8 +129,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 };
             } else if (brukerUttalelse === HarBrukerUttaltSeg.UtsettFrist) {
                 return {
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
-                    fritekst: forhåndsvarselInfo.varselbrevSendtTid ? '123' : '', // TODO få inn verdi fra api.
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
                     harBrukerUttaltSeg: {
                         harBrukerUttaltSeg: HarBrukerUttaltSeg.UtsettFrist,
                         utsettUttalelseFrist: {
@@ -149,13 +146,18 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 };
             }
         }
-
         return {
-            skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
-            fritekst: forhåndsvarselInfo.varselbrevSendtTid ? '123' : '',
+            skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
             harBrukerUttaltSeg: {
                 harBrukerUttaltSeg: HarBrukerUttaltSeg.IkkeValgt,
             },
+        };
+    };
+
+    const getOpprettValues = (): ForhåndsvarselFormData => {
+        return {
+            skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
+            fritekst: '',
         };
     };
 
@@ -195,18 +197,18 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     };
 
     const getDefaultValues = (): ForhåndsvarselFormData => {
-        const status = getForhåndsvarselStatus();
-        if (status === SkalSendesForhåndsvarsel.Ja) {
-            return getOpprettValues();
+        switch (getForhåndsvarselStatus()) {
+            case SkalSendesForhåndsvarsel.Sendt:
+                return getUttalelseValues();
+            case SkalSendesForhåndsvarsel.Ja:
+                return getOpprettValues();
+            case SkalSendesForhåndsvarsel.Nei:
+                return getUnntakValues();
+            default:
+                return {
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.IkkeValgt,
+                };
         }
-
-        if (status === SkalSendesForhåndsvarsel.Nei) {
-            return getUnntakValues();
-        }
-
-        return {
-            skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.IkkeValgt,
-        };
     };
 
     const methods = useForm<ForhåndsvarselFormData>({

@@ -86,10 +86,10 @@ const mapHarBrukerUttaltSegTilApiDto = (
     return HarBrukerUttaltSegTilApiDto[frontendVerdi as keyof typeof HarBrukerUttaltSegTilApiDto];
 };
 
-const transformFormDataToBrukeruttalelse = (
+const brukerUttalelsePayload = (
     formData: ForhåndsvarselFormData
 ): BrukeruttalelseDto | undefined => {
-    if (formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
+    if (formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Sendt) {
         const { harBrukerUttaltSeg } = formData.harBrukerUttaltSeg;
 
         const brukeruttalelseDto: BrukeruttalelseDto = {
@@ -190,38 +190,38 @@ export const useForhåndsvarselMutations = (
         sendForhåndsvarsel: (formData: ForhåndsvarselFormData): void => {
             if (formData.skalSendesForhåndsvarsel !== SkalSendesForhåndsvarsel.Ja) return;
 
-            const bestillBrevDto: BestillBrevDto = {
+            const payload: BestillBrevDto = {
                 behandlingId: behandling.behandlingId,
                 brevmalkode: BrevmalkodeEnum.VARSEL,
                 fritekst: formData.fritekst,
             };
 
             sendForhåndsvarselMutation.mutate({
-                body: bestillBrevDto,
+                body: payload,
             });
         },
         sendBrukeruttalelse: (formData: ForhåndsvarselFormData): void => {
-            const transformedData = transformFormDataToBrukeruttalelse(formData);
-            if (!transformedData) return;
+            const payload = brukerUttalelsePayload(formData);
+            if (!payload) return;
             sendBrukeruttalelseMutation.mutate({
                 path: {
                     behandlingId: behandling.behandlingId,
                 },
-                body: transformedData,
+                body: payload,
             });
         },
         sendUtsettUttalelseFrist: (formData: ForhåndsvarselFormData): void => {
             if (
-                formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja &&
+                formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Sendt &&
                 formData.harBrukerUttaltSeg.harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist
             ) {
-                const fristUtsettelseDto: FristUtsettelseDto = {
+                const payload: FristUtsettelseDto = {
                     nyFrist: formData.harBrukerUttaltSeg.utsettUttalelseFrist.nyFrist,
                     begrunnelse: formData.harBrukerUttaltSeg.utsettUttalelseFrist.begrunnelse,
                 };
 
                 sendUtsettUttalelseFristMutation.mutate({
-                    body: fristUtsettelseDto,
+                    body: payload,
                 });
             }
         },

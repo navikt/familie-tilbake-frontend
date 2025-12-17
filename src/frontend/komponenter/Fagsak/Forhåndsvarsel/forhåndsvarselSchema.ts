@@ -3,6 +3,7 @@ import { z } from 'zod';
 export enum SkalSendesForhåndsvarsel {
     Ja = 'ja',
     Nei = 'nei',
+    Sendt = 'sendt',
     IkkeValgt = '',
 }
 
@@ -73,6 +74,10 @@ const harBrukerUttaltSegUtenUtsettFristSchema = z
 const opprettSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Ja),
     fritekst: fritekstSchema,
+});
+
+const uttalelseSchema = z.object({
+    skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Sendt),
     harBrukerUttaltSeg: harBrukerUttaltSegSchema,
 });
 
@@ -91,7 +96,12 @@ const ikkeValgtSchema = z.object({
 });
 
 export const forhåndsvarselSchema = z
-    .discriminatedUnion('skalSendesForhåndsvarsel', [opprettSchema, unntakSchema, ikkeValgtSchema])
+    .discriminatedUnion('skalSendesForhåndsvarsel', [
+        opprettSchema,
+        uttalelseSchema,
+        unntakSchema,
+        ikkeValgtSchema,
+    ])
     .refine(data => data.skalSendesForhåndsvarsel !== SkalSendesForhåndsvarsel.IkkeValgt, {
         message: 'Du må velge om forhåndsvarselet skal sendes eller ikke',
         path: ['skalSendesForhåndsvarsel'],
