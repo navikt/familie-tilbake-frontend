@@ -231,20 +231,20 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         name: 'skalSendesForhåndsvarsel',
     });
 
-    const handleFormSubmit: SubmitHandler<ForhåndsvarselFormData | UttalelseMedFristFormData> = (
-        data: ForhåndsvarselFormData | UttalelseMedFristFormData
+    const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
+        data: ForhåndsvarselFormData
     ): void => {
-        if (varselErSendt) {
-            sendBrukeruttalelse(data as UttalelseMedFristFormData);
-        }
-        // else if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
-        //     sendUtsettUttalelseFrist(data);
-        // }
-        else if (!varselErSendt && methods.formState.isDirty) {
-            sendForhåndsvarsel(data as ForhåndsvarselFormData);
+        if (!varselErSendt && methods.formState.isDirty) {
+            sendForhåndsvarsel(data);
         } else {
             gåTilNeste();
         }
+    };
+
+    const handleUttalelseSubmit: SubmitHandler<UttalelseMedFristFormData> = (
+        data: UttalelseMedFristFormData
+    ): void => {
+        sendBrukeruttalelse(data);
     };
 
     const getNesteKnappTekst = (): string => {
@@ -264,7 +264,12 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     return (
         <>
             <FormProvider {...methods}>
-                <VStack as="form" gap="6" onSubmit={methods.handleSubmit(handleFormSubmit)}>
+                <VStack
+                    as="form"
+                    gap="6"
+                    onSubmit={methods.handleSubmit(handleForhåndsvarselSubmit)}
+                    id="opprettForm"
+                >
                     <HStack align="center" justify="space-between">
                         <Heading level="1" size="small">
                             Forhåndsvarsel
@@ -315,27 +320,34 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                             />
                         )}
                     {/* {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />} */}
-
-                    <ActionBar
-                        stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
-                        nesteTekst={getNesteKnappTekst()}
-                        isLoading={
-                            sendForhåndsvarselMutation.isPending ||
-                            sendBrukeruttalelseMutation.isPending
-                        }
-                        forrigeAriaLabel={undefined}
-                        onForrige={undefined}
-                        nesteAriaLabel={getNesteKnappTekst()}
-                        type="submit"
-                    />
                 </VStack>
             </FormProvider>
 
             {varselErSendt && (
                 <FormProvider {...uttalelseMethods}>
-                    <Brukeruttalelse behandling={behandling} fagsak={fagsak} kanUtsetteFrist />
+                    <VStack
+                        as="form"
+                        gap="6"
+                        onSubmit={uttalelseMethods.handleSubmit(handleUttalelseSubmit)}
+                        id="uttalelseForm"
+                    >
+                        <Brukeruttalelse behandling={behandling} fagsak={fagsak} kanUtsetteFrist />
+                    </VStack>
                 </FormProvider>
             )}
+
+            <ActionBar
+                stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
+                nesteTekst={getNesteKnappTekst()}
+                isLoading={
+                    sendForhåndsvarselMutation.isPending || sendBrukeruttalelseMutation.isPending
+                }
+                forrigeAriaLabel={undefined}
+                onForrige={undefined}
+                nesteAriaLabel={getNesteKnappTekst()}
+                type="submit"
+                formId={varselErSendt ? 'uttalelseForm' : 'opprettForm'}
+            />
 
             {sendForhåndsvarselMutation.isSuccess && (
                 <FixedAlert
