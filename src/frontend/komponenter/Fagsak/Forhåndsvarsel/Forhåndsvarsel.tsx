@@ -1,5 +1,4 @@
-import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
-import type { BehandlingDto, FagsakDto } from '../../../generated';
+import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,20 +9,22 @@ import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
+import { Brukeruttalelse } from './Brukeruttalelse';
 import {
     forhåndsvarselSchema,
+    HarUttaltSeg,
     SkalSendesForhåndsvarsel,
-    HarBrukerUttaltSeg,
+    uttalelseMedFristSchema,
 } from './forhåndsvarselSchema';
 import { Opprett } from './Opprett';
 // import { Unntak } from './Unntak';
 import {
     extractErrorFromMutationError,
-    mapHarBrukerUttaltSegFraApiDto,
     useForhåndsvarselMutations,
 } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { HarBrukerUttaltSegEnum, type BehandlingDto, type FagsakDto } from '../../../generated';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { updateParentBounds } from '../../../utils/updateParentBounds';
@@ -78,7 +79,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendBrukeruttalelseMutation,
         sendForhåndsvarsel,
         sendBrukeruttalelse,
-        sendUtsettUttalelseFrist,
         sendUtsettUttalelseFristMutation,
         gåTilNeste,
     } = useForhåndsvarselMutations(behandling, fagsak);
@@ -103,54 +103,51 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         return SkalSendesForhåndsvarsel.IkkeValgt;
     };
 
-    const getUttalelseValues = (): ForhåndsvarselFormData => {
+    const getUttalelseValues = (): UttalelseMedFristFormData => {
+        const utsettUttalelseFrist = forhåndsvarselInfo?.utsettUttalelseFrist;
+        if (utsettUttalelseFrist.length > 0) {
+            return {
+                harUttaltSeg: HarUttaltSeg.UtsettFrist,
+                utsettUttalelseFrist: {
+                    nyFrist:
+                        forhåndsvarselInfo.utsettUttalelseFrist[
+                            forhåndsvarselInfo.utsettUttalelseFrist.length - 1
+                        ]?.nyFrist ?? '',
+                    begrunnelse:
+                        forhåndsvarselInfo.utsettUttalelseFrist[
+                            forhåndsvarselInfo.utsettUttalelseFrist.length - 1
+                        ]?.begrunnelse ?? '',
+                },
+            };
+        }
         const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
-        const harBrukerUttaltSegVerdi = brukerUttalelse?.harBrukerUttaltSeg;
-        const utsettelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
+        const uttalelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
             ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
             : [];
-        if (harBrukerUttaltSegVerdi) {
-            const brukerUttalelse = mapHarBrukerUttaltSegFraApiDto(harBrukerUttaltSegVerdi);
-            if (brukerUttalelse === HarBrukerUttaltSeg.Ja) {
-                return {
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarBrukerUttaltSeg.Ja,
-                        uttalelsesDetaljer: utsettelsesdetaljer,
-                    },
-                };
-            } else if (brukerUttalelse === HarBrukerUttaltSeg.Nei) {
-                return {
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarBrukerUttaltSeg.Nei,
+
+        if (brukerUttalelse?.harBrukerUttaltSeg) {
+            switch (brukerUttalelse?.harBrukerUttaltSeg) {
+                case HarBrukerUttaltSegEnum.JA:
+                    return {
+                        harUttaltSeg: HarUttaltSeg.Ja,
+                        uttalelsesDetaljer: uttalelsesdetaljer ?? [
+                            {
+                                hvorBrukerenUttalteSeg: '',
+                                uttalelseBeskrivelse: '',
+                                uttalelsesdato: '',
+                            },
+                        ],
+                    };
+                case HarBrukerUttaltSegEnum.NEI:
+                    return {
+                        harUttaltSeg: HarUttaltSeg.Nei,
                         kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
-                    },
-                };
-            } else if (brukerUttalelse === HarBrukerUttaltSeg.UtsettFrist) {
-                return {
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarBrukerUttaltSeg.UtsettFrist,
-                        utsettUttalelseFrist: {
-                            nyFrist:
-                                forhåndsvarselInfo.uttalelsesfrist[
-                                    forhåndsvarselInfo.uttalelsesfrist.length - 1
-                                ]?.nyFrist ?? '',
-                            begrunnelse:
-                                forhåndsvarselInfo.uttalelsesfrist[
-                                    forhåndsvarselInfo.uttalelsesfrist.length - 1
-                                ]?.begrunnelse ?? '',
-                        },
-                    },
-                };
+                    };
             }
         }
+
         return {
-            skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-            harBrukerUttaltSeg: {
-                harBrukerUttaltSeg: HarBrukerUttaltSeg.IkkeValgt,
-            },
+            harUttaltSeg: HarUttaltSeg.IkkeValgt,
         };
     };
 
@@ -162,44 +159,39 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     };
 
     const getUnntakValues = (): ForhåndsvarselFormData => {
-        const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
-        const harBrukerUttaltSegVerdi = brukerUttalelse?.harBrukerUttaltSeg;
-        const utsettelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
-            ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
-            : [];
-        if (harBrukerUttaltSegVerdi) {
-            const brukerUttalelse = mapHarBrukerUttaltSegFraApiDto(harBrukerUttaltSegVerdi);
-            if (brukerUttalelse === HarBrukerUttaltSeg.Ja) {
-                return {
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarBrukerUttaltSeg.Ja,
-                        uttalelsesDetaljer: utsettelsesdetaljer,
-                    },
-                };
-            } else if (brukerUttalelse === HarBrukerUttaltSeg.Nei) {
-                return {
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarBrukerUttaltSeg.Nei,
-                        kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
-                    },
-                };
-            }
-        }
+        // const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
+        // const harBrukerUttaltSegVerdi = brukerUttalelse?.harBrukerUttaltSeg;
+        // const utsettelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
+        //     ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
+        //     : [];
+        // if (harBrukerUttaltSegVerdi) {
+        //     const brukerUttalelse = mapHarBrukerUttaltSegFraApiDto(harBrukerUttaltSegVerdi);
+        //     if (brukerUttalelse === HarBrukerUttaltSeg.Ja) {
+        //         return {
+        //             skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+        //             harBrukerUttaltSeg: {
+        //                 harBrukerUttaltSeg: HarBrukerUttaltSeg.Ja,
+        //                 uttalelsesDetaljer: utsettelsesdetaljer,
+        //             },
+        //         };
+        //     } else if (brukerUttalelse === HarBrukerUttaltSeg.Nei) {
+        //         return {
+        //             skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+        //             harBrukerUttaltSeg: {
+        //                 harBrukerUttaltSeg: HarBrukerUttaltSeg.Nei,
+        //                 kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
+        //             },
+        //         };
+        //     }
+        // }
 
         return {
             skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
-            harBrukerUttaltSeg: {
-                harBrukerUttaltSeg: HarBrukerUttaltSeg.IkkeValgt,
-            },
         };
     };
 
     const getDefaultValues = (): ForhåndsvarselFormData => {
         switch (getForhåndsvarselStatus()) {
-            case SkalSendesForhåndsvarsel.Sendt:
-                return getUttalelseValues();
             case SkalSendesForhåndsvarsel.Ja:
                 return getOpprettValues();
             case SkalSendesForhåndsvarsel.Nei:
@@ -217,6 +209,12 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         shouldFocusError: false,
         defaultValues: getDefaultValues(),
     });
+    const uttalelseMethods = useForm<UttalelseMedFristFormData>({
+        resolver: zodResolver(uttalelseMedFristSchema),
+        mode: 'all',
+        shouldFocusError: false,
+        defaultValues: getUttalelseValues(),
+    });
 
     useLayoutEffect(() => {
         updateParentBounds(containerRef, setParentBounds);
@@ -233,33 +231,27 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         name: 'skalSendesForhåndsvarsel',
     });
 
-    const harBrukerUttaltSeg = useWatch({
-        control: methods.control,
-        name: 'harBrukerUttaltSeg.harBrukerUttaltSeg',
-    });
-
-    const handleFormSubmit: SubmitHandler<ForhåndsvarselFormData> = (
-        data: ForhåndsvarselFormData
+    const handleFormSubmit: SubmitHandler<ForhåndsvarselFormData | UttalelseMedFristFormData> = (
+        data: ForhåndsvarselFormData | UttalelseMedFristFormData
     ): void => {
-        if (
-            varselErSendt &&
-            (harBrukerUttaltSeg === HarBrukerUttaltSeg.Ja ||
-                harBrukerUttaltSeg === HarBrukerUttaltSeg.Nei)
-        ) {
-            sendBrukeruttalelse(data);
-        } else if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
-            sendUtsettUttalelseFrist(data);
-        } else if (!varselErSendt && methods.formState.isDirty) {
-            sendForhåndsvarsel(data);
+        if (varselErSendt) {
+            sendBrukeruttalelse(data as UttalelseMedFristFormData);
+        }
+        // else if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
+        //     sendUtsettUttalelseFrist(data);
+        // }
+        else if (!varselErSendt && methods.formState.isDirty) {
+            sendForhåndsvarsel(data as ForhåndsvarselFormData);
         } else {
             gåTilNeste();
         }
     };
 
     const getNesteKnappTekst = (): string => {
-        if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
-            return 'Utsett frist';
-        } else if (
+        // if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
+        //     return 'Utsett frist';
+        // } else
+        if (
             !varselErSendt &&
             methods.formState.isDirty &&
             skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja
@@ -312,7 +304,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                             )}
                         />
                     </VStack>
-
                     {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja &&
                         varselbrevtekster && (
                             <Opprett
@@ -323,24 +314,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                                 parentBounds={parentBounds}
                             />
                         )}
-
                     {/* {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />} */}
 
-                    {sendForhåndsvarselMutation.isSuccess && (
-                        <FixedAlert
-                            aria-live="polite"
-                            variant="success"
-                            closeButton
-                            width={parentBounds.width}
-                            onClose={sendForhåndsvarselMutation.reset}
-                        >
-                            <Heading spacing size="small" level="3">
-                                Forhåndsvarsel er sendt
-                            </Heading>
-                            Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når
-                            fristen for å uttale seg (3 uker) har gått ut.
-                        </FixedAlert>
-                    )}
                     <ActionBar
                         stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
                         nesteTekst={getNesteKnappTekst()}
@@ -355,6 +330,29 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     />
                 </VStack>
             </FormProvider>
+
+            {varselErSendt && (
+                <FormProvider {...uttalelseMethods}>
+                    <Brukeruttalelse behandling={behandling} fagsak={fagsak} kanUtsetteFrist />
+                </FormProvider>
+            )}
+
+            {sendForhåndsvarselMutation.isSuccess && (
+                <FixedAlert
+                    aria-live="polite"
+                    variant="success"
+                    closeButton
+                    width={parentBounds.width}
+                    onClose={sendForhåndsvarselMutation.reset}
+                >
+                    <Heading spacing size="small" level="3">
+                        Forhåndsvarsel er sendt
+                    </Heading>
+                    Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når fristen
+                    for å uttale seg (3 uker) har gått ut.
+                </FixedAlert>
+            )}
+
             {mutations.map(({ key, mutation }) => {
                 if (mutation.isError) {
                     const feil = extractErrorFromMutationError(mutation.error);

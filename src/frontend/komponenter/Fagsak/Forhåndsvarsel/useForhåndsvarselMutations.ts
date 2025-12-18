@@ -1,10 +1,9 @@
-import type { ForhåndsvarselFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
 import type {
     BehandlingDto,
     FagsakDto,
     BestillBrevDto,
     BrukeruttalelseDto,
-    FristUtsettelseDto,
     BestillBrevData,
     Options,
     BestillBrevResponse,
@@ -22,7 +21,7 @@ import type { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
-import { HarBrukerUttaltSeg, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
+import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
 import { Feil } from '../../../api/feil';
 import { BrevmalkodeEnum, HarBrukerUttaltSegEnum } from '../../../generated';
 import {
@@ -55,63 +54,30 @@ export type UseForhåndsvarselMutationsReturn = {
         Options<ForhåndsvisBrevData>
     >;
     readonly sendForhåndsvarsel: (formData: ForhåndsvarselFormData) => void;
-    readonly sendBrukeruttalelse: (formData: ForhåndsvarselFormData) => void;
+    readonly sendBrukeruttalelse: (formData: UttalelseMedFristFormData) => void;
     readonly sendUtsettUttalelseFrist: (formData: ForhåndsvarselFormData) => void;
     readonly seForhåndsvisning: (fritekst: string) => void;
     readonly gåTilNeste: () => void;
 };
 
-const HarBrukerUttaltSegTilApiDto = {
-    [HarBrukerUttaltSeg.Ja]: HarBrukerUttaltSegEnum.JA,
-    [HarBrukerUttaltSeg.Nei]: HarBrukerUttaltSegEnum.NEI,
-} as const;
-
-const HarBrukerUttaltSegFraApiDto = {
-    [HarBrukerUttaltSegEnum.JA]: HarBrukerUttaltSeg.Ja,
-    [HarBrukerUttaltSegEnum.NEI]: HarBrukerUttaltSeg.Nei,
-} as const;
-
-export const mapHarBrukerUttaltSegFraApiDto = (
-    backendVerdi: string | undefined
-): HarBrukerUttaltSeg => {
-    if (!backendVerdi || !(backendVerdi in HarBrukerUttaltSegFraApiDto)) {
-        return HarBrukerUttaltSeg.IkkeValgt;
-    }
-    return HarBrukerUttaltSegFraApiDto[backendVerdi as keyof typeof HarBrukerUttaltSegFraApiDto];
-};
-
-const mapHarBrukerUttaltSegTilApiDto = (
-    frontendVerdi: string | undefined
-): HarBrukerUttaltSegEnum => {
-    return HarBrukerUttaltSegTilApiDto[frontendVerdi as keyof typeof HarBrukerUttaltSegTilApiDto];
-};
-
 const brukerUttalelsePayload = (
-    formData: ForhåndsvarselFormData
+    formData: UttalelseMedFristFormData
 ): BrukeruttalelseDto | undefined => {
-    if (formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Sendt) {
-        const { harBrukerUttaltSeg } = formData.harBrukerUttaltSeg;
-
-        const brukeruttalelseDto: BrukeruttalelseDto = {
-            harBrukerUttaltSeg: mapHarBrukerUttaltSegTilApiDto(harBrukerUttaltSeg),
+    if (formData.harUttaltSeg === HarUttaltSeg.Ja && 'uttalelsesDetaljer' in formData) {
+        return {
+            harBrukerUttaltSeg: HarBrukerUttaltSegEnum.JA,
+            uttalelsesdetaljer: formData.uttalelsesDetaljer,
         };
-
-        if (
-            harBrukerUttaltSeg === HarBrukerUttaltSeg.Ja &&
-            'uttalelsesDetaljer' in formData.harBrukerUttaltSeg
-        ) {
-            brukeruttalelseDto.uttalelsesdetaljer = formData.harBrukerUttaltSeg.uttalelsesDetaljer;
-        }
-
-        if (
-            harBrukerUttaltSeg === HarBrukerUttaltSeg.Nei &&
-            'kommentar' in formData.harBrukerUttaltSeg
-        ) {
-            brukeruttalelseDto.kommentar = formData.harBrukerUttaltSeg.kommentar;
-        }
-
-        return brukeruttalelseDto;
     }
+
+    if (formData.harUttaltSeg === HarUttaltSeg.Nei && 'kommentar' in formData) {
+        return {
+            harBrukerUttaltSeg: HarBrukerUttaltSegEnum.NEI,
+            kommentar: formData.kommentar,
+        };
+    }
+
+    return undefined;
 };
 
 export const extractErrorFromMutationError = (error: unknown): Feil => {
@@ -200,7 +166,7 @@ export const useForhåndsvarselMutations = (
                 body: payload,
             });
         },
-        sendBrukeruttalelse: (formData: ForhåndsvarselFormData): void => {
+        sendBrukeruttalelse: (formData: UttalelseMedFristFormData): void => {
             const payload = brukerUttalelsePayload(formData);
             if (!payload) return;
             sendBrukeruttalelseMutation.mutate({
@@ -210,20 +176,19 @@ export const useForhåndsvarselMutations = (
                 body: payload,
             });
         },
-        sendUtsettUttalelseFrist: (formData: ForhåndsvarselFormData): void => {
-            if (
-                formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Sendt &&
-                formData.harBrukerUttaltSeg.harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist
-            ) {
-                const payload: FristUtsettelseDto = {
-                    nyFrist: formData.harBrukerUttaltSeg.utsettUttalelseFrist.nyFrist,
-                    begrunnelse: formData.harBrukerUttaltSeg.utsettUttalelseFrist.begrunnelse,
-                };
-
-                sendUtsettUttalelseFristMutation.mutate({
-                    body: payload,
-                });
-            }
+        sendUtsettUttalelseFrist: (/* formData: ForhåndsvarselFormData */): void => {
+            // if (
+            //     formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Sendt &&
+            //     formData.harBrukerUttaltSeg.harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist
+            // ) {
+            //     const payload: FristUtsettelseDto = {
+            //         nyFrist: formData.harBrukerUttaltSeg.utsettUttalelseFrist.nyFrist,
+            //         begrunnelse: formData.harBrukerUttaltSeg.utsettUttalelseFrist.begrunnelse,
+            //     };
+            //     sendUtsettUttalelseFristMutation.mutate({
+            //         body: payload,
+            //     });
+            // }
         },
         seForhåndsvisning: (fritekst: string): void => {
             seForhåndsvisningMutation.mutate({

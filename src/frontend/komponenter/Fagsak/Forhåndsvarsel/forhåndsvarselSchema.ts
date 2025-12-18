@@ -7,7 +7,7 @@ export enum SkalSendesForhåndsvarsel {
     IkkeValgt = '',
 }
 
-export enum HarBrukerUttaltSeg {
+export enum HarUttaltSeg {
     Ja = 'ja',
     Nei = 'nei',
     UtsettFrist = 'utsett_frist',
@@ -18,20 +18,20 @@ const fritekstSchema = z
     .min(3, 'Du må legge inn minst tre tegn')
     .max(4000, 'Maksimalt 4000 tegn tillatt');
 
-const brukerHarIkkeUttaltSegSchema = z.object({
-    harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.Nei),
-    kommentar: fritekstSchema,
-});
-
 const uttalelsesDetaljerSchema = z.object({
     uttalelsesdato: z.iso.date({ error: 'Du må legge inn en gyldig dato' }),
     hvorBrukerenUttalteSeg: fritekstSchema,
     uttalelseBeskrivelse: fritekstSchema,
 });
 
-const brukerHarUttaltSegSchema = z.object({
-    harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.Ja),
+const harUttaltSegSchema = z.object({
+    harUttaltSeg: z.literal(HarUttaltSeg.Ja),
     uttalelsesDetaljer: z.array(uttalelsesDetaljerSchema),
+});
+
+const harIkkeUttaltSegSchema = z.object({
+    harUttaltSeg: z.literal(HarUttaltSeg.Nei),
+    kommentar: fritekstSchema,
 });
 
 const utsettUttalelseFristSchema = z.object({
@@ -40,45 +40,40 @@ const utsettUttalelseFristSchema = z.object({
 });
 
 const utsettFristSchema = z.object({
-    harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.UtsettFrist),
+    harUttaltSeg: z.literal(HarUttaltSeg.UtsettFrist),
     utsettUttalelseFrist: utsettUttalelseFristSchema,
 });
 
-const ikkeValgtBrukerUttalelseSchema = z.object({
-    harBrukerUttaltSeg: z.literal(HarBrukerUttaltSeg.IkkeValgt),
+const ikkeValgtUttalelseSchema = z.object({
+    harUttaltSeg: z.literal(HarUttaltSeg.IkkeValgt),
 });
 
-const harBrukerUttaltSegSchema = z
-    .discriminatedUnion('harBrukerUttaltSeg', [
-        brukerHarIkkeUttaltSegSchema,
-        brukerHarUttaltSegSchema,
+export const uttalelseMedFristSchema = z
+    .discriminatedUnion('harUttaltSeg', [
+        harUttaltSegSchema,
+        harIkkeUttaltSegSchema,
         utsettFristSchema,
-        ikkeValgtBrukerUttalelseSchema,
+        ikkeValgtUttalelseSchema,
     ])
-    .refine(data => data.harBrukerUttaltSeg !== HarBrukerUttaltSeg.IkkeValgt, {
+    .refine(data => data.harUttaltSeg !== HarUttaltSeg.IkkeValgt, {
         message: 'Du må velge om brukeren har uttalt seg eller om fristen skal utsettes',
-        path: ['harBrukerUttaltSeg'],
+        path: ['harUttaltSeg'],
     });
 
-const harBrukerUttaltSegUtenUtsettFristSchema = z
-    .discriminatedUnion('harBrukerUttaltSeg', [
-        brukerHarIkkeUttaltSegSchema,
-        brukerHarUttaltSegSchema,
-        ikkeValgtBrukerUttalelseSchema,
+export const uttalelseSchema = z
+    .discriminatedUnion('harUttaltSeg', [
+        harIkkeUttaltSegSchema,
+        harUttaltSegSchema,
+        ikkeValgtUttalelseSchema,
     ])
-    .refine(data => data.harBrukerUttaltSeg !== HarBrukerUttaltSeg.IkkeValgt, {
+    .refine(data => data.harUttaltSeg !== HarUttaltSeg.IkkeValgt, {
         message: 'Du må velge om brukeren har uttalt seg eller ikke',
-        path: ['harBrukerUttaltSeg'],
+        path: ['harUttaltSeg'],
     });
 
-const opprettSchema = z.object({
+export const opprettSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Ja),
     fritekst: fritekstSchema,
-});
-
-const uttalelseSchema = z.object({
-    skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Sendt),
-    harBrukerUttaltSeg: harBrukerUttaltSegSchema,
 });
 
 const unntakSchema = z.object({
@@ -88,7 +83,6 @@ const unntakSchema = z.object({
     //     { error: 'Du må velge en begrunnelse for unntak' }
     // ),
     // beskrivelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(2000, 'Maksimalt 2000 tegn tillatt'),
-    harBrukerUttaltSeg: harBrukerUttaltSegUtenUtsettFristSchema,
 });
 
 const ikkeValgtSchema = z.object({
@@ -96,15 +90,12 @@ const ikkeValgtSchema = z.object({
 });
 
 export const forhåndsvarselSchema = z
-    .discriminatedUnion('skalSendesForhåndsvarsel', [
-        opprettSchema,
-        uttalelseSchema,
-        unntakSchema,
-        ikkeValgtSchema,
-    ])
+    .discriminatedUnion('skalSendesForhåndsvarsel', [opprettSchema, unntakSchema, ikkeValgtSchema])
     .refine(data => data.skalSendesForhåndsvarsel !== SkalSendesForhåndsvarsel.IkkeValgt, {
         message: 'Du må velge om forhåndsvarselet skal sendes eller ikke',
         path: ['skalSendesForhåndsvarsel'],
     });
 
 export type ForhåndsvarselFormData = z.infer<typeof forhåndsvarselSchema>;
+export type UttalelseMedFristFormData = z.infer<typeof uttalelseMedFristSchema>;
+export type UttalelseFormData = z.infer<typeof uttalelseSchema>;

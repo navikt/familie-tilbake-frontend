@@ -12,7 +12,7 @@ import { hentForhåndsvarselinfo, hentForhåndsvarselTekst } from '../../../gene
 
 export type ForhåndsvarselInfo = {
     varselbrevSendtTid: string | undefined;
-    uttalelsesfrist: FristUtsettelseDto[];
+    utsettUttalelseFrist: FristUtsettelseDto[];
     brukeruttalelse: BrukeruttalelseDto | undefined;
 };
 
@@ -41,7 +41,7 @@ export const useForhåndsvarselQueries = (
             const info = data.data?.data;
             return {
                 varselbrevSendtTid: info?.varselbrevDto?.varselbrevSendtTid,
-                uttalelsesfrist: info?.utsettUttalelseFrist ?? [],
+                utsettUttalelseFrist: info?.utsettUttalelseFrist ?? [],
                 brukeruttalelse: info?.brukeruttalelse,
             };
         },

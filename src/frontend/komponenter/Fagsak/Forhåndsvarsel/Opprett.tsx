@@ -24,7 +24,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useEffect, useEffectEvent, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { Brukeruttalelse } from './Brukeruttalelse';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { BrevmalkodeEnum } from '../../../generated';
 import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
@@ -202,7 +201,7 @@ export const Opprett: React.FC<Props> = ({
                         </Button>
                     )}
                 </HStack>
-                {varselErSendt && <Brukeruttalelse kanUtsetteFrist />}
+
                 {forhåndsvisning.error && (
                     <FixedAlert
                         aria-live="assertive"
