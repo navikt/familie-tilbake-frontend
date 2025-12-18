@@ -1,4 +1,8 @@
+import type { ForhåndsvarselInfo } from './useForhåndsvarselQueries';
+
 import { z } from 'zod';
+
+import { HarBrukerUttaltSegEnum } from '../../../generated';
 
 export enum SkalSendesForhåndsvarsel {
     Ja = 'ja',
@@ -60,6 +64,56 @@ export const uttalelseMedFristSchema = z
         path: ['harUttaltSeg'],
     });
 
+export const getUttalelseValues = (
+    forhåndsvarselInfo: ForhåndsvarselInfo
+): UttalelseMedFristFormData => {
+    const utsettUttalelseFrist = forhåndsvarselInfo?.utsettUttalelseFrist;
+    if (utsettUttalelseFrist.length > 0) {
+        return {
+            harUttaltSeg: HarUttaltSeg.UtsettFrist,
+            utsettUttalelseFrist: {
+                nyFrist:
+                    forhåndsvarselInfo.utsettUttalelseFrist[
+                        forhåndsvarselInfo.utsettUttalelseFrist.length - 1
+                    ]?.nyFrist ?? '',
+                begrunnelse:
+                    forhåndsvarselInfo.utsettUttalelseFrist[
+                        forhåndsvarselInfo.utsettUttalelseFrist.length - 1
+                    ]?.begrunnelse ?? '',
+            },
+        };
+    }
+    const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
+    const uttalelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
+        ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
+        : [];
+
+    if (brukerUttalelse?.harBrukerUttaltSeg) {
+        switch (brukerUttalelse?.harBrukerUttaltSeg) {
+            case HarBrukerUttaltSegEnum.JA:
+                return {
+                    harUttaltSeg: HarUttaltSeg.Ja,
+                    uttalelsesDetaljer: uttalelsesdetaljer ?? [
+                        {
+                            hvorBrukerenUttalteSeg: '',
+                            uttalelseBeskrivelse: '',
+                            uttalelsesdato: '',
+                        },
+                    ],
+                };
+            case HarBrukerUttaltSegEnum.NEI:
+                return {
+                    harUttaltSeg: HarUttaltSeg.Nei,
+                    kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
+                };
+        }
+    }
+
+    return {
+        harUttaltSeg: HarUttaltSeg.IkkeValgt,
+    };
+};
+
 export const uttalelseSchema = z
     .discriminatedUnion('harUttaltSeg', [
         harIkkeUttaltSegSchema,
@@ -76,6 +130,13 @@ export const opprettSchema = z.object({
     fritekst: fritekstSchema,
 });
 
+export const getOpprettValues = (): ForhåndsvarselFormData => {
+    return {
+        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
+        fritekst: '',
+    };
+};
+
 const unntakSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
     // begrunnelseForUnntak: z.enum(
@@ -85,9 +146,64 @@ const unntakSchema = z.object({
     // beskrivelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(2000, 'Maksimalt 2000 tegn tillatt'),
 });
 
+const getUnntakValues = (): ForhåndsvarselFormData => {
+    // const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
+    // const harBrukerUttaltSegVerdi = brukerUttalelse?.harBrukerUttaltSeg;
+    // const utsettelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
+    //     ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
+    //     : [];
+    // if (harBrukerUttaltSegVerdi) {
+    //     const brukerUttalelse = mapHarBrukerUttaltSegFraApiDto(harBrukerUttaltSegVerdi);
+    //     if (brukerUttalelse === HarBrukerUttaltSeg.Ja) {
+    //         return {
+    //             skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+    //             harBrukerUttaltSeg: {
+    //                 harBrukerUttaltSeg: HarBrukerUttaltSeg.Ja,
+    //                 uttalelsesDetaljer: utsettelsesdetaljer,
+    //             },
+    //         };
+    //     } else if (brukerUttalelse === HarBrukerUttaltSeg.Nei) {
+    //         return {
+    //             skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+    //             harBrukerUttaltSeg: {
+    //                 harBrukerUttaltSeg: HarBrukerUttaltSeg.Nei,
+    //                 kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
+    //             },
+    //         };
+    //     }
+    // }
+
+    return {
+        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+    };
+};
+
 const ikkeValgtSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.IkkeValgt),
 });
+
+const getForhåndsvarselStatus = (varselErSendt: boolean): SkalSendesForhåndsvarsel => {
+    if (varselErSendt) {
+        return SkalSendesForhåndsvarsel.Ja;
+    }
+    /* if (unntak !== undefined) {
+            return SkalSendesForhåndsvarsel.Nei;
+        } */
+    return SkalSendesForhåndsvarsel.IkkeValgt;
+};
+
+export const getDefaultValues = (varselErSendt: boolean): ForhåndsvarselFormData => {
+    switch (getForhåndsvarselStatus(varselErSendt)) {
+        case SkalSendesForhåndsvarsel.Ja:
+            return getOpprettValues();
+        case SkalSendesForhåndsvarsel.Nei:
+            return getUnntakValues();
+        default:
+            return {
+                skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.IkkeValgt,
+            };
+    }
+};
 
 export const forhåndsvarselSchema = z
     .discriminatedUnion('skalSendesForhåndsvarsel', [opprettSchema, unntakSchema, ikkeValgtSchema])

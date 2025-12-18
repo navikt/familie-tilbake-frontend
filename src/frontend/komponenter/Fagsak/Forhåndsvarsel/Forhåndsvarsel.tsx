@@ -12,9 +12,11 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { Brukeruttalelse } from './Brukeruttalelse';
 import {
     forhåndsvarselSchema,
+    getDefaultValues,
     HarUttaltSeg,
     SkalSendesForhåndsvarsel,
     uttalelseMedFristSchema,
+    getUttalelseValues,
 } from './forhåndsvarselSchema';
 import { Opprett } from './Opprett';
 // import { Unntak } from './Unntak';
@@ -24,7 +26,7 @@ import {
 } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { HarBrukerUttaltSegEnum, type BehandlingDto, type FagsakDto } from '../../../generated';
+import { type BehandlingDto, type FagsakDto } from '../../../generated';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { updateParentBounds } from '../../../utils/updateParentBounds';
@@ -94,127 +96,17 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevSendtTid;
 
-    const getForhåndsvarselStatus = (): SkalSendesForhåndsvarsel => {
-        if (varselErSendt) {
-            return SkalSendesForhåndsvarsel.Ja;
-        }
-        /* if (unntak !== undefined) {
-            return SkalSendesForhåndsvarsel.Nei;
-        } */
-        return SkalSendesForhåndsvarsel.IkkeValgt;
-    };
-
-    const getUttalelseValues = (): UttalelseMedFristFormData => {
-        const utsettUttalelseFrist = forhåndsvarselInfo?.utsettUttalelseFrist;
-        if (utsettUttalelseFrist.length > 0) {
-            return {
-                harUttaltSeg: HarUttaltSeg.UtsettFrist,
-                utsettUttalelseFrist: {
-                    nyFrist:
-                        forhåndsvarselInfo.utsettUttalelseFrist[
-                            forhåndsvarselInfo.utsettUttalelseFrist.length - 1
-                        ]?.nyFrist ?? '',
-                    begrunnelse:
-                        forhåndsvarselInfo.utsettUttalelseFrist[
-                            forhåndsvarselInfo.utsettUttalelseFrist.length - 1
-                        ]?.begrunnelse ?? '',
-                },
-            };
-        }
-        const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
-        const uttalelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
-            ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
-            : [];
-
-        if (brukerUttalelse?.harBrukerUttaltSeg) {
-            switch (brukerUttalelse?.harBrukerUttaltSeg) {
-                case HarBrukerUttaltSegEnum.JA:
-                    return {
-                        harUttaltSeg: HarUttaltSeg.Ja,
-                        uttalelsesDetaljer: uttalelsesdetaljer ?? [
-                            {
-                                hvorBrukerenUttalteSeg: '',
-                                uttalelseBeskrivelse: '',
-                                uttalelsesdato: '',
-                            },
-                        ],
-                    };
-                case HarBrukerUttaltSegEnum.NEI:
-                    return {
-                        harUttaltSeg: HarUttaltSeg.Nei,
-                        kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
-                    };
-            }
-        }
-
-        return {
-            harUttaltSeg: HarUttaltSeg.IkkeValgt,
-        };
-    };
-
-    const getOpprettValues = (): ForhåndsvarselFormData => {
-        return {
-            skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
-            fritekst: '',
-        };
-    };
-
-    const getUnntakValues = (): ForhåndsvarselFormData => {
-        // const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
-        // const harBrukerUttaltSegVerdi = brukerUttalelse?.harBrukerUttaltSeg;
-        // const utsettelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
-        //     ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
-        //     : [];
-        // if (harBrukerUttaltSegVerdi) {
-        //     const brukerUttalelse = mapHarBrukerUttaltSegFraApiDto(harBrukerUttaltSegVerdi);
-        //     if (brukerUttalelse === HarBrukerUttaltSeg.Ja) {
-        //         return {
-        //             skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
-        //             harBrukerUttaltSeg: {
-        //                 harBrukerUttaltSeg: HarBrukerUttaltSeg.Ja,
-        //                 uttalelsesDetaljer: utsettelsesdetaljer,
-        //             },
-        //         };
-        //     } else if (brukerUttalelse === HarBrukerUttaltSeg.Nei) {
-        //         return {
-        //             skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
-        //             harBrukerUttaltSeg: {
-        //                 harBrukerUttaltSeg: HarBrukerUttaltSeg.Nei,
-        //                 kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
-        //             },
-        //         };
-        //     }
-        // }
-
-        return {
-            skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
-        };
-    };
-
-    const getDefaultValues = (): ForhåndsvarselFormData => {
-        switch (getForhåndsvarselStatus()) {
-            case SkalSendesForhåndsvarsel.Ja:
-                return getOpprettValues();
-            case SkalSendesForhåndsvarsel.Nei:
-                return getUnntakValues();
-            default:
-                return {
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.IkkeValgt,
-                };
-        }
-    };
-
     const methods = useForm<ForhåndsvarselFormData>({
         resolver: zodResolver(forhåndsvarselSchema),
         mode: 'all',
         shouldFocusError: false,
-        defaultValues: getDefaultValues(),
+        defaultValues: getDefaultValues(varselErSendt),
     });
     const uttalelseMethods = useForm<UttalelseMedFristFormData>({
         resolver: zodResolver(uttalelseMedFristSchema),
         mode: 'all',
         shouldFocusError: false,
-        defaultValues: getUttalelseValues(),
+        defaultValues: getUttalelseValues(forhåndsvarselInfo),
     });
 
     const harUttaltSeg = useWatch({
