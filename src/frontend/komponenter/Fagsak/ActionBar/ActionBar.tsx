@@ -19,11 +19,13 @@ type BaseProps = {
 
 type ButtonProps = BaseProps & {
     type?: 'button';
+    formId?: never;
     onNeste: () => void;
 };
 
 type SubmitProps = BaseProps & {
     type: 'submit';
+    formId: string;
     onNeste?: never;
 };
 
@@ -33,6 +35,7 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
     nesteAriaLabel,
     onNeste,
     onForrige,
+    formId,
     dobbeltNøstet = false,
     nesteTekst = 'Neste',
     isLoading = false,
@@ -86,6 +89,7 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
                                 className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
                                 type={type}
                                 size="small"
+                                form={formId}
                                 loading={isLoading || disableNeste}
                                 onClick={() => {
                                     if (onNeste && type !== 'submit') onNeste();

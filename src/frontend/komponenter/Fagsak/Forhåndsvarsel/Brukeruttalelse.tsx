@@ -10,7 +10,6 @@ import {
     TextField,
     Textarea,
     useDatepicker,
-    Button,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
@@ -188,7 +187,6 @@ export const Brukeruttalelse: React.FC<Props> = ({
                         />
                     </>
                 )}
-            <Button type="submit">Lagre uttalelse</Button>
         </VStack>
     );
 };
