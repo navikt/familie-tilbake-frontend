@@ -55,7 +55,7 @@ export type UseForhåndsvarselMutationsReturn = {
     >;
     readonly sendForhåndsvarsel: (formData: ForhåndsvarselFormData) => void;
     readonly sendBrukeruttalelse: (formData: UttalelseMedFristFormData) => void;
-    readonly sendUtsettUttalelseFrist: (formData: ForhåndsvarselFormData) => void;
+    readonly sendUtsettUttalelseFrist: (formData: UttalelseMedFristFormData) => void;
     readonly seForhåndsvisning: (fritekst: string) => void;
     readonly gåTilNeste: () => void;
 };
@@ -131,7 +131,6 @@ export const useForhåndsvarselMutations = (
         ...lagreBrukeruttalelseMutation(),
         onSuccess: () => {
             invalidateQueries();
-            gåTilNeste();
         },
     });
 

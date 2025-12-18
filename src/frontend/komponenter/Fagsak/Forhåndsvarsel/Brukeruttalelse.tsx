@@ -1,4 +1,4 @@
-import type { UttalelseFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
+import type { UttalelseMedFristFormData } from './forhåndsvarselSchema';
 import type { BehandlingDto, FagsakDto } from '../../../generated';
 import type { FieldErrors } from 'react-hook-form';
 
@@ -26,6 +26,37 @@ type Props = {
     kanUtsetteFrist?: boolean;
 };
 
+type UttalelseJaErrors = FieldErrors<
+    Extract<UttalelseMedFristFormData, { harUttaltSeg: HarUttaltSeg.Ja }>
+>;
+type UttalelseNeiErrors = FieldErrors<
+    Extract<UttalelseMedFristFormData, { harUttaltSeg: HarUttaltSeg.Nei }>
+>;
+type UtsettFristErrors = FieldErrors<
+    Extract<UttalelseMedFristFormData, { harUttaltSeg: HarUttaltSeg.UtsettFrist }>
+>;
+
+function isUttalelseJaErrors(
+    errors: FieldErrors<UttalelseMedFristFormData>,
+    harUttaltSeg: HarUttaltSeg | undefined
+): errors is UttalelseJaErrors {
+    return harUttaltSeg === HarUttaltSeg.Ja;
+}
+
+function isUttalelseNeiErrors(
+    errors: FieldErrors<UttalelseMedFristFormData>,
+    harUttaltSeg: HarUttaltSeg | undefined
+): errors is UttalelseNeiErrors {
+    return harUttaltSeg === HarUttaltSeg.Nei;
+}
+
+function isUtsettFristErrors(
+    errors: FieldErrors<UttalelseMedFristFormData>,
+    harUttaltSeg: HarUttaltSeg | undefined
+): errors is UtsettFristErrors {
+    return harUttaltSeg === HarUttaltSeg.UtsettFrist;
+}
+
 export const Brukeruttalelse: React.FC<Props> = ({
     behandling,
     fagsak,
@@ -39,13 +70,12 @@ export const Brukeruttalelse: React.FC<Props> = ({
     //     name: 'uttalelsesDetaljer',
     // });
 
-    const fieldErrors: FieldErrors<Extract<UttalelseFormData, { harUttaltSeg: HarUttaltSeg.Nei }>> =
-        methods.formState.errors;
-
     const harUttaltSeg = useWatch({
         control: methods.control,
         name: 'harUttaltSeg',
     });
+
+    const errors = methods.formState.errors;
 
     const uttalelsesDatepicker = useDatepicker({
         onDateChange: date => {
@@ -90,7 +120,7 @@ export const Brukeruttalelse: React.FC<Props> = ({
                     </RadioGroup>
                 )}
             />
-            {harUttaltSeg === HarUttaltSeg.Ja && (
+            {harUttaltSeg === HarUttaltSeg.Ja && isUttalelseJaErrors(errors, harUttaltSeg) && (
                 <>
                     <Controller
                         name={`uttalelsesDetaljer.${0}.uttalelsesdato`}
@@ -111,63 +141,53 @@ export const Brukeruttalelse: React.FC<Props> = ({
                         {...methods.register(`uttalelsesDetaljer.${0}.hvorBrukerenUttalteSeg`)}
                         label="Hvordan uttalte brukeren seg?"
                         description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
-                        error={
-                            //@ts-expect-error Trenger å typeguarde error objektet
-                            methods.formState.errors.harUttaltSeg.uttalelsesDetaljer?.[0]
-                                .hvorBrukerenUttalteSeg?.message
-                        }
+                        error={errors.uttalelsesDetaljer?.[0]?.hvorBrukerenUttalteSeg?.message}
                     />
                     <Textarea
                         {...methods.register(`uttalelsesDetaljer.${0}.uttalelseBeskrivelse`)}
                         label="Beskriv hva brukeren har uttalt seg om"
                         maxLength={4000}
                         resize
-                        error={
-                            //@ts-expect-error Trenger å typeguarde error objektet
-
-                            fieldErrors.uttalelsesDetaljer?.[0].uttalelseBeskrivelse?.message
-                        }
+                        error={errors.uttalelsesDetaljer?.[0]?.uttalelseBeskrivelse?.message}
                     />
                 </>
             )}
 
-            {harUttaltSeg === HarUttaltSeg.Nei && (
+            {harUttaltSeg === HarUttaltSeg.Nei && isUttalelseNeiErrors(errors, harUttaltSeg) && (
                 <Textarea
                     {...methods.register('kommentar')}
                     label="Kommentar til valget over"
                     maxLength={4000}
                     resize
-                    error={fieldErrors.kommentar?.message}
+                    error={errors.kommentar?.message}
                 />
             )}
-            {harUttaltSeg === HarUttaltSeg.UtsettFrist && (
-                <>
-                    <Controller
-                        name="utsettUttalelseFrist.nyFrist"
-                        control={methods.control}
-                        render={({ field, fieldState }) => (
-                            <DatePicker {...nyFristDatepicker.datepickerProps}>
-                                <DatePicker.Input
-                                    {...nyFristDatepicker.inputProps}
-                                    label="Sett ny dato for frist"
-                                    name={field.name}
-                                    error={fieldState.error?.message}
-                                />
-                            </DatePicker>
-                        )}
-                    />
-                    <Textarea
-                        {...methods.register('utsettUttalelseFrist.begrunnelse')}
-                        label="Begrunnelse for utsatt frist"
-                        maxLength={4000}
-                        resize
-                        error={
-                            //@ts-expect-error Trenger å typeguarde error objektet
-                            methods.formState.errors.utsettUttalelseFrist?.begrunnelse?.message
-                        }
-                    />
-                </>
-            )}
+            {harUttaltSeg === HarUttaltSeg.UtsettFrist &&
+                isUtsettFristErrors(errors, harUttaltSeg) && (
+                    <>
+                        <Controller
+                            name="utsettUttalelseFrist.nyFrist"
+                            control={methods.control}
+                            render={({ field, fieldState }) => (
+                                <DatePicker {...nyFristDatepicker.datepickerProps}>
+                                    <DatePicker.Input
+                                        {...nyFristDatepicker.inputProps}
+                                        label="Sett ny dato for frist"
+                                        name={field.name}
+                                        error={fieldState.error?.message}
+                                    />
+                                </DatePicker>
+                            )}
+                        />
+                        <Textarea
+                            {...methods.register('utsettUttalelseFrist.begrunnelse')}
+                            label="Begrunnelse for utsatt frist"
+                            maxLength={4000}
+                            resize
+                            error={errors.utsettUttalelseFrist?.begrunnelse?.message}
+                        />
+                    </>
+                )}
             <Button type="submit">Lagre uttalelse</Button>
         </VStack>
     );

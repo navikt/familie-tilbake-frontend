@@ -79,6 +79,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendBrukeruttalelseMutation,
         sendForhåndsvarsel,
         sendBrukeruttalelse,
+        sendUtsettUttalelseFrist,
         sendUtsettUttalelseFristMutation,
         gåTilNeste,
     } = useForhåndsvarselMutations(behandling, fagsak);
@@ -231,16 +232,22 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         name: 'skalSendesForhåndsvarsel',
     });
 
+    const harUttaltSeg = useWatch({
+        control: uttalelseMethods.control,
+        name: 'harUttaltSeg',
+    });
+
     const handleFormSubmit: SubmitHandler<ForhåndsvarselFormData | UttalelseMedFristFormData> = (
         data: ForhåndsvarselFormData | UttalelseMedFristFormData
     ): void => {
-        if (varselErSendt) {
+        if (
+            varselErSendt &&
+            (harUttaltSeg === HarUttaltSeg.Ja || harUttaltSeg === HarUttaltSeg.Nei)
+        ) {
             sendBrukeruttalelse(data as UttalelseMedFristFormData);
-        }
-        // else if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
-        //     sendUtsettUttalelseFrist(data);
-        // }
-        else if (!varselErSendt && methods.formState.isDirty) {
+        } else if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
+            sendUtsettUttalelseFrist(data as UttalelseMedFristFormData);
+        } else if (!varselErSendt && methods.formState.isDirty) {
             sendForhåndsvarsel(data as ForhåndsvarselFormData);
         } else {
             gåTilNeste();
@@ -248,10 +255,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     };
 
     const getNesteKnappTekst = (): string => {
-        // if (harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist) {
-        //     return 'Utsett frist';
-        // } else
-        if (
+        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
+            return 'Utsett frist';
+        } else if (
             !varselErSendt &&
             methods.formState.isDirty &&
             skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja

@@ -98,4 +98,3 @@ export const forhåndsvarselSchema = z
 
 export type ForhåndsvarselFormData = z.infer<typeof forhåndsvarselSchema>;
 export type UttalelseMedFristFormData = z.infer<typeof uttalelseMedFristSchema>;
-export type UttalelseFormData = z.infer<typeof uttalelseSchema>;
