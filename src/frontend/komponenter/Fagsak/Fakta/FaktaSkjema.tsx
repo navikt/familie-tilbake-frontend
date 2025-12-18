@@ -4,9 +4,14 @@ import type {
     FaktaOmFeilutbetalingDto,
     FaktaPeriodeDto,
     MuligeRettsligGrunnlagDto,
+    OppdaterFaktaData,
+    OppdaterFaktaError,
     OppdaterFaktaOmFeilutbetalingDto,
     OppdaterFaktaPeriodeDto,
+    OppdaterFaktaResponse,
+    Options,
 } from '../../../generated';
+import type { AxiosError } from 'axios';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,6 +28,7 @@ import {
     useDatepicker,
     VStack,
 } from '@navikt/ds-react';
+import { useMutation } from '@tanstack/react-query';
 import { formatISO, parseISO } from 'date-fns';
 import * as React from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
@@ -31,14 +37,22 @@ import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring } from '../../../utils';
+import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
+    behandlingId: string;
+    behandlingUrl: string;
     faktaOmFeilutbetaling: FaktaOmFeilutbetalingDto;
 };
 
-export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element => {
+export const FaktaSkjema = ({
+    faktaOmFeilutbetaling,
+    behandlingId,
+    behandlingUrl,
+}: Props): React.JSX.Element => {
     const { actionBarStegtekst } = useBehandling();
+    const navigerTilNeste = useStegNavigering(behandlingUrl, Behandlingssteg.Forhåndsvarsel);
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchemaDto>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
         defaultValues: {
@@ -54,23 +68,35 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
     const { ...oppdagetDatoProps } = methods.register('vurdering.oppdaget.dato');
     const { datepickerProps, inputProps } = useDatepicker({
         onDateChange: date => {
-            date
-                ? methods.setValue(
-                      'vurdering.oppdaget.dato',
-                      formatISO(date, { representation: 'date' })
-                  )
-                : methods.resetField('vurdering.oppdaget.dato');
+            if (date) {
+                methods.setValue(
+                    'vurdering.oppdaget.dato',
+                    formatISO(date, { representation: 'date' }),
+                    { shouldDirty: true }
+                );
+            } else {
+                methods.setValue('vurdering.oppdaget.dato', '', { shouldDirty: true });
+            }
         },
         defaultSelected: faktaOmFeilutbetaling.vurdering.oppdaget?.dato
             ? parseISO(faktaOmFeilutbetaling.vurdering.oppdaget.dato)
             : undefined,
     });
+    const oppdaterMutation = useMutation<
+        OppdaterFaktaResponse,
+        AxiosError<OppdaterFaktaError>,
+        Options<OppdaterFaktaData>
+    >({
+        mutationKey: ['oppdaterFakta'],
+    });
+
     const dataForPeriode = (id: string): FaktaPeriodeDto =>
         // Siden disse kommer fra samme kall skal det ikke være mulig å ende opp med tomt svar
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         perioder.find(periode => periode.id === id)! as FaktaPeriodeDto;
-    const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetalingDto> = data =>
-        console.log(JSON.stringify(data));
+    const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetalingDto> = data => {
+        oppdaterMutation.mutate({ body: data, path: { behandlingId: behandlingId } });
+    };
 
     const { name: avRadioGroupName, ...radioProps } = methods.register('vurdering.oppdaget.av');
 
@@ -161,8 +187,10 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                     forrigeAriaLabel={undefined}
                     nesteAriaLabel="Gå videre til foreldelsessteget"
                     onForrige={undefined}
-                    onNeste={() => {}}
                     isLoading={false}
+                    {...(methods.formState.isDirty
+                        ? { type: 'submit', nesteTekst: 'Lagre' }
+                        : { type: 'button', onNeste: navigerTilNeste })}
                 />
             </form>
         </FormProvider>

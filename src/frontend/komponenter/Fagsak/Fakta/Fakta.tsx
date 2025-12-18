@@ -1,29 +1,45 @@
 import type { Behandling } from '../../../generated';
 
 import { Heading, Tag } from '@navikt/ds-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
 import * as React from 'react';
 
 import { FaktaSkeleton } from './FaktaSkeleton';
 import { FaktaSkjema } from './FaktaSkjema';
 import { fakta } from '../../../generated';
+import { oppdaterFaktaMutation } from '../../../generated/@tanstack/react-query.gen';
 import { formatterDatostring } from '../../../utils';
 
 type Props = {
     behandlingId: Behandling['behandlingId'];
+    behandlingUrl: string;
 };
 
-export const Fakta: React.FC<Props> = ({ behandlingId }: Props): React.JSX.Element => {
-    const { data: faktaOmFeilutbetaling, isPending } = useQuery({
-        queryKey: ['hentFaktaOmFeilutbetaling'],
-        queryFn: () =>
-            fakta({
-                path: {
-                    behandlingId: behandlingId,
-                },
-            }),
-        select: data => data.data,
+export const Fakta: React.FC<Props> = ({
+    behandlingId,
+    behandlingUrl,
+}: Props): React.JSX.Element => {
+    const queryClient = useQueryClient();
+    const { data: faktaOmFeilutbetaling, isPending } = useQuery(
+        {
+            queryKey: ['hentFaktaOmFeilutbetaling'],
+            queryFn: () =>
+                fakta({
+                    path: {
+                        behandlingId: behandlingId,
+                    },
+                }),
+            select: data => data.data,
+        },
+        queryClient
+    );
+
+    queryClient.setMutationDefaults(['oppdaterFakta'], {
+        ...oppdaterFaktaMutation(),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['hentFaktaOmFeilutbetaling'] });
+        },
     });
 
     if (isPending || !faktaOmFeilutbetaling) return <FaktaSkeleton />;
@@ -112,7 +128,11 @@ export const Fakta: React.FC<Props> = ({ behandlingId }: Props): React.JSX.Eleme
                         </dl>
                     </div>
                 </section>
-                <FaktaSkjema faktaOmFeilutbetaling={faktaOmFeilutbetaling} />
+                <FaktaSkjema
+                    faktaOmFeilutbetaling={faktaOmFeilutbetaling}
+                    behandlingUrl={behandlingUrl}
+                    behandlingId={behandlingId}
+                />
             </div>
         </>
     );

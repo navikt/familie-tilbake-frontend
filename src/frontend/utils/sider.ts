@@ -1,5 +1,7 @@
 import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
 
+import { useNavigate } from 'react-router';
+
 import { ToggleName } from '../context/toggles';
 import { Behandlingssteg, Behandlingsstegstatus } from '../typer/behandling';
 
@@ -62,6 +64,14 @@ const aktiveBehandlingstegstatuser = [
     Behandlingsstegstatus.Klar,
     Behandlingsstegstatus.Venter,
 ];
+
+export const useStegNavigering = (
+    behandlingUrl: string,
+    steg: SynligeStegType
+): (() => Promise<void> | void) => {
+    const navigate = useNavigate();
+    return () => navigate(`${behandlingUrl}/${SYNLIGE_STEG[steg].href}`);
+};
 
 const sjekkOmSidenErAktiv = (
     side: SynligSteg,
