@@ -17,6 +17,7 @@ export enum HarUttaltSeg {
     UtsettFrist = 'utsett_frist',
     IkkeValgt = '',
 }
+
 const fritekstSchema = z
     .string()
     .min(3, 'Du må legge inn minst tre tegn')

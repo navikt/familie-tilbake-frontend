@@ -3,13 +3,11 @@ import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MegaphoneIcon } from '@navikt/aksel-icons';
-import { Heading, HStack, Radio, RadioGroup, Tag, Tooltip, VStack } from '@navikt/ds-react';
-import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
+import { Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { Brukeruttalelse } from './Brukeruttalelse';
 import {
     forhåndsvarselSchema,
     getDefaultValues,
@@ -18,7 +16,8 @@ import {
     uttalelseMedFristSchema,
     getUttalelseValues,
 } from './forhåndsvarselSchema';
-import { Opprett } from './Opprett';
+import { OpprettSkjema } from './skjema/OpprettSkjema';
+import { Brukeruttalelse } from './skjema/UttalelseSkjema';
 // import { Unntak } from './Unntak';
 import {
     extractErrorFromMutationError,
@@ -26,6 +25,8 @@ import {
 } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { ToggleName } from '../../../context/toggles';
+import { useToggles } from '../../../context/TogglesContext';
 import { type BehandlingDto, type FagsakDto } from '../../../generated';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
@@ -50,11 +51,30 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
     const { forhåndsvarselInfo } = useForhåndsvarselQueries(behandling);
 
     return (
-        <ForhåndsvarselSkjema
-            behandling={behandling}
-            fagsak={fagsak}
-            forhåndsvarselInfo={forhåndsvarselInfo}
-        />
+        <VStack gap="4">
+            <HStack align="center" justify="space-between">
+                <Heading size="small">Forhåndsvarsel</Heading>
+                {forhåndsvarselInfo?.varselbrevSendtTid && (
+                    <Tooltip
+                        arrow={false}
+                        placement="bottom"
+                        content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                    >
+                        <Tag
+                            variant={getTagVariant(forhåndsvarselInfo.varselbrevSendtTid)}
+                            icon={<MegaphoneIcon aria-hidden />}
+                        >
+                            {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                        </Tag>
+                    </Tooltip>
+                )}
+            </HStack>
+            <ForhåndsvarselSkjema
+                behandling={behandling}
+                fagsak={fagsak}
+                forhåndsvarselInfo={forhåndsvarselInfo}
+            />
+        </VStack>
     );
 };
 
@@ -72,6 +92,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     forhåndsvarselInfo,
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const { toggles } = useToggles();
     const [parentBounds, setParentBounds] = useState({ width: 'auto' });
 
     const { actionBarStegtekst } = useBehandling();
@@ -79,10 +100,10 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const {
         sendForhåndsvarselMutation,
         sendBrukeruttalelseMutation,
-        sendForhåndsvarsel,
-        sendBrukeruttalelse,
-        sendUtsettUttalelseFrist,
         sendUtsettUttalelseFristMutation,
+        sendUtsettUttalelseFrist,
+        sendBrukeruttalelse,
+        sendForhåndsvarsel,
         gåTilNeste,
     } = useForhåndsvarselMutations(behandling, fagsak);
 
@@ -129,25 +150,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         name: 'skalSendesForhåndsvarsel',
     });
 
-    const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
-        data: ForhåndsvarselFormData
-    ): void => {
-        if (!varselErSendt && methods.formState.isDirty) {
-            sendForhåndsvarsel(data);
-        } else {
-            gåTilNeste();
-        }
-    };
-
-    const handleUttalelseSubmit: SubmitHandler<UttalelseMedFristFormData> = (
-        data: UttalelseMedFristFormData
-    ): void => {
-        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
-            sendUtsettUttalelseFrist(data as UttalelseMedFristFormData);
-        }
-        sendBrukeruttalelse(data);
-    };
-
     const getNesteKnappTekst = (): string => {
         if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
             return 'Utsett frist';
@@ -161,78 +163,45 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         return 'Neste';
     };
 
+    const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
+        data: ForhåndsvarselFormData
+    ): void => {
+        if (!varselErSendt) {
+            sendForhåndsvarsel(data);
+        } else {
+            gåTilNeste();
+        }
+    };
+
+    const handleUttalelseSubmit: SubmitHandler<UttalelseMedFristFormData> = (
+        data: UttalelseMedFristFormData
+    ): void => {
+        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
+            sendUtsettUttalelseFrist(data);
+        }
+        sendBrukeruttalelse(data);
+    };
+
     return (
         <>
             <FormProvider {...methods}>
-                <VStack
-                    as="form"
-                    gap="6"
-                    onSubmit={methods.handleSubmit(handleForhåndsvarselSubmit)}
-                    id="opprettForm"
-                >
-                    <HStack align="center" justify="space-between">
-                        <Heading level="1" size="small">
-                            Forhåndsvarsel
-                        </Heading>
-                        {forhåndsvarselInfo?.varselbrevSendtTid && (
-                            <Tooltip
-                                arrow={false}
-                                placement="bottom"
-                                content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevSendtTid)}`}
-                            >
-                                <Tag
-                                    variant={getTagVariant(forhåndsvarselInfo.varselbrevSendtTid)}
-                                    icon={<MegaphoneIcon aria-hidden />}
-                                >
-                                    {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevSendtTid)}`}
-                                </Tag>
-                            </Tooltip>
-                        )}
-                    </HStack>
-                    <VStack maxWidth={ATextWidthMax} ref={containerRef}>
-                        <Controller
-                            control={methods.control}
-                            name="skalSendesForhåndsvarsel"
-                            render={({ field, fieldState }) => (
-                                <RadioGroup
-                                    {...field}
-                                    size="small"
-                                    legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
-                                    description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
-                fattes, slik at de får mulighet til å uttale seg."
-                                    readOnly={varselErSendt}
-                                    error={fieldState.error?.message}
-                                >
-                                    <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
-                                    <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
-                                </RadioGroup>
-                            )}
-                        />
-                    </VStack>
-                    {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja &&
-                        varselbrevtekster && (
-                            <Opprett
-                                behandling={behandling}
-                                fagsak={fagsak}
-                                varselbrevtekster={varselbrevtekster}
-                                varselErSendt={varselErSendt}
-                                parentBounds={parentBounds}
-                            />
-                        )}
-                    {/* {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />} */}
-                </VStack>
+                <OpprettSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    varselbrevtekster={varselbrevtekster}
+                    varselErSendt={varselErSendt}
+                    parentBounds={parentBounds}
+                    handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
+                />
+                {/* {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />} */}
             </FormProvider>
 
-            {varselErSendt && (
+            {toggles[ToggleName.Forhåndsvarselsteg] && varselErSendt && (
                 <FormProvider {...uttalelseMethods}>
-                    <VStack
-                        as="form"
-                        gap="6"
-                        onSubmit={uttalelseMethods.handleSubmit(handleUttalelseSubmit)}
-                        id="uttalelseForm"
-                    >
-                        <Brukeruttalelse behandling={behandling} fagsak={fagsak} kanUtsetteFrist />
-                    </VStack>
+                    <Brukeruttalelse
+                        handleUttalelseSubmit={handleUttalelseSubmit}
+                        kanUtsetteFrist
+                    />
                 </FormProvider>
             )}
 

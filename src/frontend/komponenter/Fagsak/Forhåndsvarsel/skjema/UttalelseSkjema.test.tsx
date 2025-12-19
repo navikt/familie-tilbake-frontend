@@ -1,4 +1,4 @@
-import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
@@ -6,15 +6,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import React from 'react';
 
-import { Forhåndsvarsel } from './Forhåndsvarsel';
-import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
-import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
-import { lagBehandlingDto } from '../../../testdata/behandlingFactory';
-import { lagFagsakDto } from '../../../testdata/fagsakFactory';
+import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
+import { lagFagsakDto } from '../../../../testdata/fagsakFactory';
 import {
     lagForhåndsvarselQueries,
     lagForhåndsvarselMutations,
-} from '../../../testdata/forhåndsvarselFactory';
+} from '../../../../testdata/forhåndsvarselFactory';
+import { Forhåndsvarsel } from '../Forhåndsvarsel';
+import { useForhåndsvarselMutations } from '../useForhåndsvarselMutations';
+import { useForhåndsvarselQueries } from '../useForhåndsvarselQueries';
 
 const mockUseBehandling = jest.fn();
 
@@ -23,11 +23,11 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-jest.mock('../../../context/BehandlingContext', () => ({
+jest.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-jest.mock('../../../generated/@tanstack/react-query.gen', () => ({
+jest.mock('../../../../generated/@tanstack/react-query.gen', () => ({
     bestillBrevMutation: jest.fn().mockReturnValue({
         mutationFn: jest.fn(),
     }),
@@ -36,16 +36,16 @@ jest.mock('../../../generated/@tanstack/react-query.gen', () => ({
     }),
 }));
 
-jest.mock('./useForhåndsvarselQueries', () => ({
+jest.mock('../useForhåndsvarselQueries', () => ({
     useForhåndsvarselQueries: jest.fn(),
 }));
 
-jest.mock('./useForhåndsvarselMutations', () => ({
+jest.mock('../useForhåndsvarselMutations', () => ({
     useForhåndsvarselMutations: jest.fn(),
     mapHarBrukerUttaltSegFraApiDto: jest.fn(),
 }));
 
-jest.mock('../../../generated', () => ({
+jest.mock('../../../../generated', () => ({
     BrevmalkodeEnum: {
         VARSEL: 'VARSEL',
     },
@@ -87,7 +87,9 @@ describe('Brukeruttalelse', () => {
             lagForhåndsvarselQueries({
                 forhåndsvarselInfo: {
                     varselbrevSendtTid: '2023-01-01T10:00:00Z',
-                    uttalelsesfrist: [{ nyFrist: '2023-01-15', begrunnelse: 'Trenger mer tid' }],
+                    utsettUttalelseFrist: [
+                        { nyFrist: '2023-01-15', begrunnelse: 'Trenger mer tid' },
+                    ],
                     brukeruttalelse: undefined,
                 },
             })

@@ -1,6 +1,5 @@
-import type { UttalelseMedFristFormData } from './forhåndsvarselSchema';
-import type { BehandlingDto, FagsakDto } from '../../../generated';
-import type { FieldErrors } from 'react-hook-form';
+import type { UttalelseMedFristFormData } from '../forhåndsvarselSchema';
+import type { FieldErrors, SubmitHandler } from 'react-hook-form';
 
 import {
     VStack,
@@ -15,13 +14,11 @@ import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { HarUttaltSeg } from './forhåndsvarselSchema';
-import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
-import { dateTilIsoDatoString } from '../../../utils/dato';
+import { dateTilIsoDatoString } from '../../../../utils/dato';
+import { HarUttaltSeg } from '../forhåndsvarselSchema';
 
 type Props = {
-    behandling: BehandlingDto;
-    fagsak: FagsakDto;
+    handleUttalelseSubmit: SubmitHandler<UttalelseMedFristFormData>;
     kanUtsetteFrist?: boolean;
 };
 
@@ -57,17 +54,10 @@ const isUtsettFristErrors = (
 };
 
 export const Brukeruttalelse: React.FC<Props> = ({
-    behandling,
-    fagsak,
+    handleUttalelseSubmit,
     kanUtsetteFrist = false,
 }) => {
     const methods = useFormContext<UttalelseMedFristFormData>();
-    const { sendBrukeruttalelse } = useForhåndsvarselMutations(behandling, fagsak);
-
-    // const { fields, append } = useFieldArray({
-    //     control: methods.control,
-    //     name: 'uttalelsesDetaljer',
-    // });
 
     const harUttaltSeg = useWatch({
         control: methods.control,
@@ -97,7 +87,8 @@ export const Brukeruttalelse: React.FC<Props> = ({
             as="form"
             maxWidth={ATextWidthMax}
             gap="4"
-            onSubmit={methods.handleSubmit(sendBrukeruttalelse)}
+            onSubmit={methods.handleSubmit(handleUttalelseSubmit)}
+            id="uttalelseForm"
         >
             <Controller
                 control={methods.control}
