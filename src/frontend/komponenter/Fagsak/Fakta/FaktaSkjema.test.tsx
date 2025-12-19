@@ -8,6 +8,7 @@ import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
 import { FaktaSkjema } from './FaktaSkjema';
+import { configureZod } from '../../../utils/zodConfig';
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
@@ -97,6 +98,11 @@ const renderFakta = (
         mutationBody,
     };
 };
+
+beforeAll(() => {
+    configureZod();
+});
+
 describe('Fakta om feilutbetaling', () => {
     describe('Rettslig grunnlag', () => {
         test('Forhåndsutfylt rettslig grunnlag fra backend', async () => {
@@ -247,6 +253,104 @@ describe('Fakta om feilutbetaling', () => {
                 name: 'Gå videre til foreldelsessteget',
             });
             expect(submitKnapp).toHaveAttribute('type', 'submit');
+        });
+
+        test('Bytting av bestemmelse i rettslig grunnlag', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta({
+                muligeRettsligGrunnlag: [
+                    {
+                        bestemmelse: { nøkkel: 'B1', beskrivelse: 'ok' },
+                        grunnlag: [{ nøkkel: 'G1', beskrivelse: 'ok' }],
+                    },
+                    {
+                        bestemmelse: { nøkkel: 'B2', beskrivelse: 'ok' },
+                        grunnlag: [
+                            { nøkkel: 'G2', beskrivelse: 'ok' },
+                            { nøkkel: 'G3', beskrivelse: 'ok' },
+                        ],
+                    },
+                ],
+                perioder: [
+                    {
+                        id: 'unik',
+                        fom: '2025-04-01',
+                        tom: '2025-04-30',
+                        feilutbetaltBeløp: 0,
+                        splittbarePerioder: [],
+                        rettsligGrunnlag: [{ bestemmelse: 'B1', grunnlag: 'G1' }],
+                    },
+                ],
+            });
+
+            expect(await findByRole('combobox', { name: 'Velg grunnlag' })).toHaveValue('G1');
+
+            fireEvent.change(await findByRole('combobox', { name: 'Velg bestemmelse' }), {
+                target: { value: 'B2' },
+            });
+            expect(await findByRole('combobox', { name: 'Velg grunnlag' })).not.toHaveValue();
+        });
+
+        test('Ingen forhåndsutfylt rettslig grunnlag', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta({
+                muligeRettsligGrunnlag: [
+                    {
+                        bestemmelse: { nøkkel: 'B1', beskrivelse: 'ok' },
+                        grunnlag: [{ nøkkel: 'G1', beskrivelse: 'ok' }],
+                    },
+                    {
+                        bestemmelse: { nøkkel: 'B2', beskrivelse: 'ok' },
+                        grunnlag: [{ nøkkel: 'G2', beskrivelse: 'ok' }],
+                    },
+                ],
+                perioder: [
+                    {
+                        id: 'unik',
+                        fom: '2025-04-01',
+                        tom: '2025-04-30',
+                        feilutbetaltBeløp: 0,
+                        splittbarePerioder: [],
+                        rettsligGrunnlag: [],
+                    },
+                ],
+                vurdering: {
+                    årsak: 'en tekst',
+                    oppdaget: {
+                        av: 'NAV',
+                        dato: '2020-04-20',
+                        beskrivelse: 'VI OPPDAGET EN FEIL!!!!',
+                    },
+                },
+            });
+
+            // Tving en endring for å få opp lagre-knappen(ikke nødvendig etter backend-endring)
+            fireEvent.change(await findByRole('textbox', { name: 'Årsak til feilutbetalingen' }), {
+                target: { value: 'Ny årsak' },
+            });
+
+            fireEvent.blur(await findByRole('combobox', { name: 'Velg bestemmelse' }));
+            const bestemmelseDropdown = await findByRole('combobox', {
+                name: 'Velg bestemmelse',
+            });
+            expect(bestemmelseDropdown).not.toHaveValue();
+            expect(bestemmelseDropdown).toBeInvalid();
+            expect(bestemmelseDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
+
+            fireEvent.change(
+                await findByRole('combobox', {
+                    name: 'Velg bestemmelse',
+                }),
+                { target: { value: 'B1' } }
+            );
+
+            fireEvent.blur(await findByRole('combobox', { name: 'Velg grunnlag' }));
+            const grunnlagDropdown = await findByRole('combobox', { name: 'Velg grunnlag' });
+            expect(grunnlagDropdown).not.toHaveValue();
+            expect(grunnlagDropdown).toBeInvalid();
+            expect(grunnlagDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
         });
     });
 });

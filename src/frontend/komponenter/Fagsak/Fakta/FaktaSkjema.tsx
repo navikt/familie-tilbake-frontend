@@ -56,8 +56,28 @@ export const FaktaSkjema = ({
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchemaDto>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
         defaultValues: {
-            perioder: faktaOmFeilutbetaling.perioder,
-            vurdering: faktaOmFeilutbetaling.vurdering,
+            perioder: faktaOmFeilutbetaling.perioder.map(periode => ({
+                ...periode,
+                rettsligGrunnlag:
+                    periode.rettsligGrunnlag.length > 0
+                        ? periode.rettsligGrunnlag
+                        : [
+                              {
+                                  bestemmelse: '',
+                                  grunnlag: '',
+                              },
+                          ],
+            })),
+            vurdering: {
+                ...faktaOmFeilutbetaling.vurdering,
+                oppdaget: {
+                    ...faktaOmFeilutbetaling.vurdering.oppdaget,
+                    av:
+                        faktaOmFeilutbetaling.vurdering.oppdaget?.av === 'IKKE_VURDERT'
+                            ? undefined
+                            : faktaOmFeilutbetaling.vurdering.oppdaget?.av,
+                },
+            },
         },
         mode: 'all',
     });
@@ -145,6 +165,7 @@ export const FaktaSkjema = ({
                     <Textarea
                         label="Årsak til feilutbetalingen"
                         {...methods.register('vurdering.årsak')}
+                        error={methods.formState.errors.vurdering?.årsak?.message}
                         size="small"
                         className="w-100"
                         minRows={3}
@@ -158,12 +179,14 @@ export const FaktaSkjema = ({
                             {...oppdagetDatoProps}
                             {...inputProps}
                             label="Når ble feilutbetalingen oppdaget?"
+                            error={methods.formState.errors.vurdering?.oppdaget?.dato?.message}
                         />
                     </DatePicker>
                     <RadioGroup
                         name={avRadioGroupName}
                         size="small"
                         legend="Hvem oppdaget feilutbetalingen?"
+                        error={methods.formState.errors.vurdering?.oppdaget?.av?.message}
                     >
                         <Radio value="BRUKER" name="BRUKER" {...radioProps}>
                             Bruker
@@ -175,6 +198,7 @@ export const FaktaSkjema = ({
                     <Textarea
                         label="Hvordan ble feilutbetalingen oppdaget?"
                         {...methods.register('vurdering.oppdaget.beskrivelse')}
+                        error={methods.formState.errors.vurdering?.oppdaget?.beskrivelse?.message}
                         size="small"
                         className="w-100 mb-6"
                         minRows={3}
@@ -215,7 +239,13 @@ const PeriodeRad = ({
         muligeRettsligGrunnlag.find(
             muligGrunnlag => muligGrunnlag.bestemmelse.nøkkel === bestemmelse
         )?.grunnlag ?? [];
-    const { register } = useFormContext<OppdaterFaktaOmFeilutbetalingSchemaDto>();
+    const { register, setValue, formState } =
+        useFormContext<OppdaterFaktaOmFeilutbetalingSchemaDto>();
+    const nullstillBestemmelse = (index: number) => {
+        setValue(`perioder.${periodeIndex}.rettsligGrunnlag.${index}.grunnlag`, '', {
+            shouldDirty: true,
+        });
+    };
     return (
         <Table.Row>
             <Table.DataCell>
@@ -231,12 +261,18 @@ const PeriodeRad = ({
                             hideLabel
                             size="small"
                             key={`${rettsligGrunnlag.bestemmelse}${index}`}
+                            error={
+                                formState.errors.perioder
+                                    ?.at?.(periodeIndex)
+                                    ?.rettsligGrunnlag?.at?.(index)?.bestemmelse?.message
+                            }
                             {...register(
-                                `perioder.${periodeIndex}.rettsligGrunnlag.${index}.bestemmelse`
+                                `perioder.${periodeIndex}.rettsligGrunnlag.${index}.bestemmelse`,
+                                { onChange: () => nullstillBestemmelse(index) }
                             )}
                             className="flex-1"
                         >
-                            <option value="default" disabled>
+                            <option value="" disabled>
                                 Velg bestemmelse
                             </option>
                             {muligeRettsligGrunnlag.map(({ bestemmelse }) => (
@@ -256,13 +292,18 @@ const PeriodeRad = ({
                             hideLabel
                             size="small"
                             key={`${rettsligGrunnlag.grunnlag}${index}`}
+                            error={
+                                formState.errors.perioder
+                                    ?.at?.(periodeIndex)
+                                    ?.rettsligGrunnlag?.at?.(index)?.grunnlag?.message
+                            }
                             {...register(
                                 `perioder.${periodeIndex}.rettsligGrunnlag.${index}.grunnlag`
                             )}
                             className="flex-1"
                         >
                             <>
-                                <option value="default" disabled>
+                                <option value="" disabled>
                                     Velg grunnlag
                                 </option>
                                 {tilgjengeligeGrunnlag(rettsligGrunnlag.bestemmelse).map(

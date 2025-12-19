@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import { hentInnloggetBruker } from '../api/saksbehandler';
 import { AppProvider } from '../context/AppContext';
 import { ThemeProvider } from '../context/ThemeContext';
+import { configureZod } from '../utils/zodConfig';
 import ErrorBoundary from './Felleskomponenter/ErrorBoundary/ErrorBoundary';
 import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 const Container = lazyImportMedRetry(() => import('./Container'), 'Container');
@@ -22,6 +23,8 @@ const App: React.FC = () => {
             },
         },
     });
+
+    configureZod();
 
     React.useEffect(() => {
         hentInnloggetBruker().then((innhentetInnloggetSaksbehandler: Saksbehandler) => {
