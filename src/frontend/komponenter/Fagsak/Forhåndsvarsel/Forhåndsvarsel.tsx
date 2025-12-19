@@ -23,7 +23,7 @@ import {
     extractErrorFromMutationError,
     useForhåndsvarselMutations,
 } from './useForhåndsvarselMutations';
-import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
+import { ForhåndsvarselInfo, useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { ToggleName } from '../../../context/toggles';
 import { useToggles } from '../../../context/TogglesContext';
@@ -81,9 +81,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
 type ForhåndsvarselSkjemaProps = {
     behandling: BehandlingDto;
     fagsak: FagsakDto;
-    forhåndsvarselInfo: NonNullable<
-        ReturnType<typeof useForhåndsvarselQueries>['forhåndsvarselInfo']
-    >;
+    forhåndsvarselInfo: ForhåndsvarselInfo;
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
@@ -153,11 +151,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const getNesteKnappTekst = (): string => {
         if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
             return 'Utsett frist';
-        } else if (
-            !varselErSendt &&
-            methods.formState.isDirty &&
-            skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja
-        ) {
+        } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
         }
         return 'Neste';

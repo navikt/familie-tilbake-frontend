@@ -55,7 +55,6 @@ export const useForhåndsvarselQueries = (
                     behandlingId: behandling.behandlingId,
                 },
             }),
-        enabled: !!behandling.behandlingId,
         select: data => data.data?.data,
     });
 
