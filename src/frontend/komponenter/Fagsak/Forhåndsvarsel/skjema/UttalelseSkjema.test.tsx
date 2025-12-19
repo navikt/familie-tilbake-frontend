@@ -1,4 +1,5 @@
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
+import type { Toggles } from '../../../../context/toggles';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
@@ -6,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import React from 'react';
 
+import { ToggleName } from '../../../../context/toggles';
 import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
 import { lagFagsakDto } from '../../../../testdata/fagsakFactory';
 import {
@@ -17,10 +19,15 @@ import { useForhåndsvarselMutations } from '../useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from '../useForhåndsvarselQueries';
 
 const mockUseBehandling = jest.fn();
+const mockUseToggles = jest.fn();
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+}));
+
+jest.mock('../../../../context/TogglesContext', () => ({
+    useToggles: (): Toggles => mockUseToggles(),
 }));
 
 jest.mock('../../../../context/BehandlingContext', () => ({
@@ -56,6 +63,11 @@ const setupMock = (): void => {
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 5'),
         erStegBehandlet: jest.fn().mockReturnValue(false),
     }));
+    mockUseToggles.mockImplementation(() => ({
+        toggles: {
+            [ToggleName.Forhåndsvarselsteg]: true,
+        },
+    }));
 };
 
 const renderBrukeruttalelse = (): RenderResult => {
@@ -80,7 +92,7 @@ describe('Brukeruttalelse', () => {
                 forhåndsvarselInfo: {
                     varselbrevSendtTid: '2023-01-01T10:00:00Z',
                     utsettUttalelseFrist: [
-                        { nyFrist: '2023-01-15', begrunnelse: 'Trenger mer tid' },
+                        // { nyFrist: '2023-01-15', begrunnelse: 'Trenger mer tid' },
                     ],
                     brukeruttalelse: undefined,
                 },

@@ -53,10 +53,7 @@ const isUtsettFristErrors = (
     return harUttaltSeg === HarUttaltSeg.UtsettFrist;
 };
 
-export const Brukeruttalelse: React.FC<Props> = ({
-    handleUttalelseSubmit,
-    kanUtsetteFrist = false,
-}) => {
+export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFrist = false }) => {
     const methods = useFormContext<UttalelseMedFristFormData>();
 
     const harUttaltSeg = useWatch({

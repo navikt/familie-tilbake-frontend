@@ -17,7 +17,7 @@ import {
     getUttalelseValues,
 } from './forhåndsvarselSchema';
 import { OpprettSkjema } from './skjema/OpprettSkjema';
-import { Brukeruttalelse } from './skjema/UttalelseSkjema';
+import { Uttalelse } from './skjema/UttalelseSkjema';
 // import { Unntak } from './Unntak';
 import {
     extractErrorFromMutationError,
@@ -198,10 +198,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
             {toggles[ToggleName.Forhåndsvarselsteg] && varselErSendt && (
                 <FormProvider {...uttalelseMethods}>
-                    <Brukeruttalelse
-                        handleUttalelseSubmit={handleUttalelseSubmit}
-                        kanUtsetteFrist
-                    />
+                    <Uttalelse handleUttalelseSubmit={handleUttalelseSubmit} kanUtsetteFrist />
                 </FormProvider>
             )}
 

@@ -1,4 +1,5 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { Toggles } from '../../../context/toggles';
 import type { BehandlingDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
@@ -10,6 +11,7 @@ import React from 'react';
 import { Forhåndsvarsel } from './Forhåndsvarsel';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
+import { ToggleName } from '../../../context/toggles';
 import { lagBehandlingDto } from '../../../testdata/behandlingFactory';
 import { lagFagsakDto } from '../../../testdata/fagsakFactory';
 import {
@@ -18,10 +20,15 @@ import {
 } from '../../../testdata/forhåndsvarselFactory';
 
 const mockUseBehandling = jest.fn();
+const mockUseToggles = jest.fn();
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+}));
+
+jest.mock('../../../context/TogglesContext', () => ({
+    useToggles: (): Toggles => mockUseToggles(),
 }));
 
 jest.mock('../../../context/BehandlingContext', () => ({
@@ -56,6 +63,11 @@ const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 5'),
         erStegBehandlet: jest.fn().mockReturnValue(false),
+    }));
+    mockUseToggles.mockImplementation(() => ({
+        toggles: {
+            [ToggleName.Forhåndsvarselsteg]: true,
+        },
     }));
 };
 
