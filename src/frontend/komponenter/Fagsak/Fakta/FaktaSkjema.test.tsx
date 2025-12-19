@@ -207,7 +207,7 @@ describe('Fakta om feilutbetaling', () => {
             const nesteKnapp = await findByRole('button', {
                 name: 'Gå videre til foreldelsessteget',
             });
-            expect(nesteKnapp).toHaveAttribute('type', 'button');
+            expect(nesteKnapp).toHaveAttribute('type', 'submit');
 
             const oppdagetDato = await findByRole('textbox', {
                 name: 'Når ble feilutbetalingen oppdaget?',
@@ -236,7 +236,7 @@ describe('Fakta om feilutbetaling', () => {
             const nesteKnapp = await findByRole('button', {
                 name: 'Gå videre til foreldelsessteget',
             });
-            expect(nesteKnapp).toHaveAttribute('type', 'button');
+            expect(nesteKnapp).toHaveAttribute('type', 'submit');
 
             const oppdagetDato = await findByRole('textbox', {
                 name: 'Når ble feilutbetalingen oppdaget?',
