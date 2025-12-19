@@ -1,22 +1,24 @@
-import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
+import type { Behandling } from '../../../../typer/behandling';
+import type { Fagsak } from '../../../../typer/fagsak';
 
 import * as React from 'react';
 
-import { Dokumentlisting } from './Dokumentlisting/Dokumentlisting';
-import { DokumentlistingProvider } from './Dokumentlisting/DokumentlistingContext';
-import Historikk from './Historikk/Historikk';
-import { HistorikkProvider } from './Historikk/HistorikkContext';
-import SendMelding from './SendMelding/SendMelding';
-import { SendMeldingProvider } from './SendMelding/SendMeldingContext';
-import Totrinnskontroll from './Totrinnskontroll/Totrinnskontroll';
-import { TotrinnskontrollProvider } from './Totrinnskontroll/TotrinnskontrollContext';
+import { Brevmottakere } from './brevmottakere/Brevmottakere';
+import { Dokumentlisting } from './dokumenter/Dokumentlisting';
+import { DokumentlistingProvider } from './dokumenter/DokumentlistingContext';
+import Historikk from './historikk/Historikk';
+import { HistorikkProvider } from './historikk/HistorikkContext';
+import SendMelding from './sendMelding/SendMelding';
+import { SendMeldingProvider } from './sendMelding/SendMeldingContext';
+import Totrinnskontroll from './totrinnskontroll/Totrinnskontroll';
+import { TotrinnskontrollProvider } from './totrinnskontroll/TotrinnskontrollContext';
 
 export enum Menysider {
     Totrinn = `TOTRINN`,
     Historikk = 'HISTORIKK',
     SendBrev = 'SEND_BREV',
     Dokumenter = 'DOKUMENTER',
+    Brevmottakere = 'BREVMOTTAKERE',
 }
 
 type Props = {
@@ -45,6 +47,8 @@ export const MenySideInnhold: React.FC<Props> = ({ valgtMenyside, fagsak, behand
                     <SendMelding fagsak={fagsak} behandling={behandling} />
                 </SendMeldingProvider>
             );
+        case Menysider.Brevmottakere:
+            return <Brevmottakere />;
         case Menysider.Historikk:
         default:
             return (

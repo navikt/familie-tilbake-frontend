@@ -1,8 +1,8 @@
-import type { DokumentApiHook } from '../../../../api/dokument';
-import type { Http } from '../../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
+import type { DokumentApiHook } from '../../../../../api/dokument';
+import type { Http } from '../../../../../api/http/HttpProvider';
+import type { BehandlingHook } from '../../../../../context/BehandlingContext';
+import type { Behandling } from '../../../../../typer/behandling';
+import type { Fagsak } from '../../../../../typer/fagsak';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -13,13 +13,13 @@ import * as React from 'react';
 
 import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
-import { DokumentMal } from '../../../../kodeverk';
-import { lagBehandling } from '../../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import { Målform } from '../../../../typer/fagsak';
-import { RessursStatus } from '../../../../typer/ressurs';
+import { DokumentMal } from '../../../../../kodeverk';
+import { lagBehandling } from '../../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../../testdata/fagsakFactory';
+import { Målform } from '../../../../../typer/fagsak';
+import { RessursStatus } from '../../../../../typer/ressurs';
 
-jest.mock('../../../../api/http/HttpProvider', () => {
+jest.mock('../../../../../api/http/HttpProvider', () => {
     return {
         useHttp: (): Http => ({
             systemetLaster: () => false,
@@ -29,12 +29,12 @@ jest.mock('../../../../api/http/HttpProvider', () => {
 });
 
 const mockUseBehandling = jest.fn();
-jest.mock('../../../../context/BehandlingContext', () => ({
+jest.mock('../../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 const mockUseDokumentApi = jest.fn();
-jest.mock('../../../../api/dokument', () => ({
+jest.mock('../../../../../api/dokument', () => ({
     useDokumentApi: (): DokumentApiHook => mockUseDokumentApi(),
 }));
 

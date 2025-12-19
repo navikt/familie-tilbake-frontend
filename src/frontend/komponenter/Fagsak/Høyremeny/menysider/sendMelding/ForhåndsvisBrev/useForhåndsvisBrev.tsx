@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useDokumentApi } from '../../../../../api/dokument';
+import { useDokumentApi } from '../../../../../../api/dokument';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -8,8 +8,8 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '../../../../../typer/ressurs';
-import { base64ToArrayBuffer } from '../../../../../utils';
+} from '../../../../../../typer/ressurs';
+import { base64ToArrayBuffer } from '../../../../../../utils';
 import { useSendMelding } from '../SendMeldingContext';
 
 type ForhåndsvisBrevHook = {
