@@ -58,22 +58,14 @@ const setupMock = (): void => {
     }));
 };
 
-const renderBrukeruttalelse = (behandlingOverrides = {}, fagsakOverrides = {}): RenderResult => {
+const renderBrukeruttalelse = (): RenderResult => {
     const behandling = lagBehandlingDto({
-        behandlingId: 'test-behandling-id',
-        eksternBrukId: 'test-ekstern-bruk-id',
         varselSendt: true,
-        ...behandlingOverrides,
-    });
-
-    const fagsak = lagFagsakDto({
-        eksternFagsakId: 'test-fagsak-id',
-        ...fagsakOverrides,
     });
 
     return render(
         <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={behandling} fagsak={fagsak} />
+            <Forhåndsvarsel behandling={behandling} fagsak={lagFagsakDto()} />
         </QueryClientProvider>
     );
 };

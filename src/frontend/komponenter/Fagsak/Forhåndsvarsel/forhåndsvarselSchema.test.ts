@@ -1,5 +1,6 @@
 import {
     forhåndsvarselSchema,
+    uttalelseMedFristSchema,
     HarUttaltSeg,
     SkalSendesForhåndsvarsel,
 } from './forhåndsvarselSchema';
@@ -20,10 +21,6 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             const result = forhåndsvarselSchema.safeParse({
                 skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
                 fritekst: 'Dette er en gyldig fritekst',
-                harBrukerUttaltSeg: {
-                    harBrukerUttaltSeg: HarUttaltSeg.Nei,
-                    kommentar: 'Bruker har ikke uttalt seg',
-                },
             });
 
             expect(result.success).toBe(true);
@@ -32,10 +29,6 @@ describe('Validering av forhåndsvarsel-skjema', () => {
         test('Nei: gyldig path', () => {
             const result = forhåndsvarselSchema.safeParse({
                 skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
-                harBrukerUttaltSeg: {
-                    harBrukerUttaltSeg: HarUttaltSeg.Nei,
-                    kommentar: 'Bruker har ikke uttalt seg',
-                },
             });
 
             expect(result.success).toBe(true);
@@ -48,10 +41,6 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                 const result = forhåndsvarselSchema.safeParse({
                     skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
                     fritekst: '',
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarUttaltSeg.Nei,
-                        kommentar: 'Test',
-                    },
                 });
 
                 expect(result.error?.issues[0].message).toBe('Du må legge inn minst tre tegn');
@@ -61,10 +50,6 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                 const result = forhåndsvarselSchema.safeParse({
                     skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
                     fritekst: 'a'.repeat(4001),
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarUttaltSeg.Nei,
-                        kommentar: 'Test',
-                    },
                 });
 
                 expect(result.error?.issues[0].message).toBe('Maksimalt 4000 tegn tillatt');
@@ -74,11 +59,8 @@ describe('Validering av forhåndsvarsel-skjema', () => {
     describe('Uttalelse', () => {
         describe('harUttaltSeg', () => {
             test('IkkeValgt, gir feilmelding', () => {
-                const result = forhåndsvarselSchema.safeParse({
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarUttaltSeg.IkkeValgt,
-                    },
+                const result = uttalelseMedFristSchema.safeParse({
+                    harUttaltSeg: HarUttaltSeg.IkkeValgt,
                 });
 
                 const error = result.error?.issues.find(i => i.path.includes('harUttaltSeg'));
@@ -88,24 +70,18 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Nei, gyldig validering', () => {
-                const result = forhåndsvarselSchema.safeParse({
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarUttaltSeg.Nei,
-                        kommentar: 'Bruker har ikke uttalt seg',
-                    },
+                const result = uttalelseMedFristSchema.safeParse({
+                    harUttaltSeg: HarUttaltSeg.Nei,
+                    kommentar: 'Bruker har ikke uttalt seg',
                 });
 
                 expect(result.success).toBe(true);
             });
 
             test('Nei, feiler med manglende kommentar', () => {
-                const result = forhåndsvarselSchema.safeParse({
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarUttaltSeg.Nei,
-                        kommentar: '',
-                    },
+                const result = uttalelseMedFristSchema.safeParse({
+                    harUttaltSeg: HarUttaltSeg.Nei,
+                    kommentar: '',
                 });
 
                 const error = result.error?.issues.find(i => i.path.includes('kommentar'));
@@ -113,36 +89,30 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Ja, gyldig validering', () => {
-                const result = forhåndsvarselSchema.safeParse({
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarUttaltSeg.Ja,
-                        uttalelsesDetaljer: [
-                            {
-                                uttalelsesdato: '2024-01-15',
-                                hvorBrukerenUttalteSeg: 'Telefon',
-                                uttalelseBeskrivelse: 'Bruker bekrefter mottatt varsel',
-                            },
-                        ],
-                    },
+                const result = uttalelseMedFristSchema.safeParse({
+                    harUttaltSeg: HarUttaltSeg.Ja,
+                    uttalelsesDetaljer: [
+                        {
+                            uttalelsesdato: '2024-01-15',
+                            hvorBrukerenUttalteSeg: 'Telefon',
+                            uttalelseBeskrivelse: 'Bruker bekrefter mottatt varsel',
+                        },
+                    ],
                 });
 
                 expect(result.success).toBe(true);
             });
 
             test('Ja, feiler med ugyldig dato', () => {
-                const result = forhåndsvarselSchema.safeParse({
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarUttaltSeg.Ja,
-                        uttalelsesDetaljer: [
-                            {
-                                uttalelsesdato: 'ugyldig-dato',
-                                hvorBrukerenUttalteSeg: 'Modia',
-                                uttalelseBeskrivelse: 'Test',
-                            },
-                        ],
-                    },
+                const result = uttalelseMedFristSchema.safeParse({
+                    harUttaltSeg: HarUttaltSeg.Ja,
+                    uttalelsesDetaljer: [
+                        {
+                            uttalelsesdato: 'ugyldig-dato',
+                            hvorBrukerenUttalteSeg: 'Modia',
+                            uttalelseBeskrivelse: 'Test',
+                        },
+                    ],
                 });
 
                 const error = result.error?.issues.find(i => i.path.includes('uttalelsesdato'));
@@ -150,14 +120,11 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Utsett frist, gyldig validering', () => {
-                const result = forhåndsvarselSchema.safeParse({
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarUttaltSeg.UtsettFrist,
-                        utsettUttalelseFrist: {
-                            nyFrist: '2024-02-15',
-                            begrunnelse: 'Bruker trenger mer tid til å skaffe dokumentasjon',
-                        },
+                const result = uttalelseMedFristSchema.safeParse({
+                    harUttaltSeg: HarUttaltSeg.UtsettFrist,
+                    utsettUttalelseFrist: {
+                        nyFrist: '2024-02-15',
+                        begrunnelse: 'Bruker trenger mer tid til å skaffe dokumentasjon',
                     },
                 });
 
@@ -165,14 +132,11 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Utsett frist, feiler med ugyldig dato', () => {
-                const result = forhåndsvarselSchema.safeParse({
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarUttaltSeg.UtsettFrist,
-                        utsettUttalelseFrist: {
-                            nyFrist: 'ikke-en-dato',
-                            begrunnelse: 'Test begrunnelse',
-                        },
+                const result = uttalelseMedFristSchema.safeParse({
+                    harUttaltSeg: HarUttaltSeg.UtsettFrist,
+                    utsettUttalelseFrist: {
+                        nyFrist: 'ikke-en-dato',
+                        begrunnelse: 'Test begrunnelse',
                     },
                 });
 
@@ -181,14 +145,11 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Utsett frist, feiler uten begrunnelse', () => {
-                const result = forhåndsvarselSchema.safeParse({
-                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Sendt,
-                    harBrukerUttaltSeg: {
-                        harBrukerUttaltSeg: HarUttaltSeg.UtsettFrist,
-                        utsettUttalelseFrist: {
-                            nyFrist: '2024-02-15',
-                            begrunnelse: '',
-                        },
+                const result = uttalelseMedFristSchema.safeParse({
+                    harUttaltSeg: HarUttaltSeg.UtsettFrist,
+                    utsettUttalelseFrist: {
+                        nyFrist: '2024-02-15',
+                        begrunnelse: '',
                     },
                 });
 
