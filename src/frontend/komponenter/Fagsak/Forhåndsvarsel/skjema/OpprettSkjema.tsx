@@ -166,6 +166,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                                     </Heading>
                                     {/* {!varselErSendt && ( */}
                                     <Button
+                                        type="button"
                                         loading={forhåndsvisning.isPending}
                                         icon={<FilePdfIcon aria-hidden />}
                                         variant="tertiary"
