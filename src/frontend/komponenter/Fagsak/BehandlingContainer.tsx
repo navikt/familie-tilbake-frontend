@@ -25,6 +25,8 @@ import { useBehandling } from '../../context/BehandlingContext';
 import { ToggleName } from '../../context/toggles';
 import { useToggles } from '../../context/TogglesContext';
 import { Behandlingstatus } from '../../typer/behandling';
+import { tilBehandlingDto } from '../../utils/behandlingMapper';
+import { tilFagsakDto } from '../../utils/fagsakMapper';
 import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from '../../utils/sider';
 import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
 
@@ -119,42 +121,37 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
             <Høyremeny fagsak={fagsak} behandling={behandling} dialogRef={ref} />
         </>
     ) : erHistoriskeVerdier ? (
-        <>
-            <div className="flex-1 overflow-auto">
-                <Suspense fallback="Historiske vurderinger laster...">
-                    <HistoriskeVurderingermeny behandling={behandling} fagsak={fagsak} />
-                </Suspense>
-                <Routes>
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
-                        element={
-                            <HistoriskFaktaProvider behandling={behandling}>
-                                <Suspense fallback="Historisk fakta laster...">
-                                    <HistoriskFaktaContainer
-                                        behandling={behandling}
-                                        fagsak={fagsak}
-                                    />
-                                </Suspense>
-                            </HistoriskFaktaProvider>
-                        }
-                    />
-                    <Route
-                        path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
-                        element={
-                            <HistoriskVilkårsvurderingProvider behandling={behandling}>
-                                <Suspense fallback="Historisk vilkårsvurdering laster...">
-                                    <HistoriskVilkårsvurderingContainer
-                                        behandling={behandling}
-                                        fagsak={fagsak}
-                                    />
-                                </Suspense>
-                            </HistoriskVilkårsvurderingProvider>
-                        }
-                    />
-                    <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
-                </Routes>
-            </div>
-        </>
+        <div className="flex-1 overflow-auto">
+            <Suspense fallback="Historiske vurderinger laster...">
+                <HistoriskeVurderingermeny behandling={behandling} fagsak={fagsak} />
+            </Suspense>
+            <Routes>
+                <Route
+                    path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
+                    element={
+                        <HistoriskFaktaProvider behandling={behandling}>
+                            <Suspense fallback="Historisk fakta laster...">
+                                <HistoriskFaktaContainer behandling={behandling} fagsak={fagsak} />
+                            </Suspense>
+                        </HistoriskFaktaProvider>
+                    }
+                />
+                <Route
+                    path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
+                    element={
+                        <HistoriskVilkårsvurderingProvider behandling={behandling}>
+                            <Suspense fallback="Historisk vilkårsvurdering laster...">
+                                <HistoriskVilkårsvurderingContainer
+                                    behandling={behandling}
+                                    fagsak={fagsak}
+                                />
+                            </Suspense>
+                        </HistoriskVilkårsvurderingProvider>
+                    }
+                />
+                <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
+            </Routes>
+        </div>
     ) : harKravgrunnlag ? (
         <>
             <section
@@ -200,8 +197,8 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                                     element={
                                         <Suspense fallback="Fakta laster...">
                                             <Forhåndsvarsel
-                                                behandling={behandling}
-                                                fagsak={fagsak}
+                                                behandling={tilBehandlingDto(behandling, fagsak)}
+                                                fagsak={tilFagsakDto(fagsak)}
                                             />
                                         </Suspense>
                                     }
