@@ -135,7 +135,7 @@ describe('Forhåndsvarsel', () => {
         mockQueries.mockReturnValue({
             forhåndsvarselInfo: {
                 varselbrevSendtTid: '2023-01-01T10:00:00Z',
-                uttalelsesfrist: [],
+                utsettUttalelseFrist: [],
                 brukeruttalelse: undefined,
             },
             varselbrevtekster: {
@@ -162,7 +162,7 @@ describe('Forhåndsvarsel', () => {
         mockQueries.mockReturnValue({
             forhåndsvarselInfo: {
                 varselbrevSendtTid: '2023-01-01T10:00:00Z',
-                uttalelsesfrist: [],
+                utsettUttalelseFrist: [],
                 brukeruttalelse: undefined,
             },
             varselbrevtekster: {

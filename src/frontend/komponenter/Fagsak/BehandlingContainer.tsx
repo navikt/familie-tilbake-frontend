@@ -193,21 +193,14 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                                     )
                                 }
                             />
-                            {/* TODO: Rydde opp etter feature toggle */}
-                            {toggles[ToggleName.Forhåndsvarselsteg] && (
-                                <Route
-                                    path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
-                                    element={
-                                        <Suspense fallback="Fakta laster...">
-                                            <Forhåndsvarsel
-                                                behandling={behandling}
-                                                fagsak={fagsak}
-                                            />
-                                        </Suspense>
-                                    }
-                                />
-                            )}
-                            {/* ... */}
+                            <Route
+                                path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
+                                element={
+                                    <Suspense fallback="Forhåndsvarsel laster...">
+                                        <Forhåndsvarsel behandling={behandling} fagsak={fagsak} />
+                                    </Suspense>
+                                }
+                            />
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
                                 element={
