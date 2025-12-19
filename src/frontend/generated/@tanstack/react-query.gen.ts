@@ -86,7 +86,6 @@ import {
 } from '../sdk.gen';
 import type {
     AlleSakerOver4RettsgebyrData,
-    AlleSakerOver4RettsgebyrResponse,
     AngreSammenslåingData,
     AngreSammenslåingResponse,
     AngreSendTilBeslutterData,
@@ -102,19 +101,13 @@ import type {
     ByttEnhetData,
     ByttEnhetResponse,
     ErPerioderLikeData,
-    ErPerioderLikeResponse,
     ErPerioderSammenslåttData,
-    ErPerioderSammenslåttResponse,
     FaktaData,
-    FaktaError,
-    FaktaResponse,
     FeatureTogglesData,
-    FeatureTogglesResponse,
     FerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveData,
     FerdigstillOppgaverForBehandlingData,
     FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData,
     FinnesÅpenTilbakekrevingsbehandlingData,
-    FinnesÅpenTilbakekrevingsbehandlingResponse,
     FinnGamleÅpneBehandlingerUtenOppgaveData,
     FjernBrevmottakerStegData,
     FjernBrevmottakerStegResponse,
@@ -134,20 +127,12 @@ import type {
     HenleggBehandlingResponse,
     HentBehandlingData,
     HentBehandlingerForFagsystemData,
-    HentBehandlingerForFagsystemResponse,
-    HentBehandlingResponse,
     HentBeregningsresultatData,
-    HentBeregningsresultatResponse,
     HentDokumentData,
-    HentDokumentResponse,
     HentFagsakData,
-    HentFagsakResponse,
     HentFaktaomfeilutbetalingData,
-    HentFaktaomfeilutbetalingResponse,
     HentForhåndsvarselinfoData,
-    HentForhåndsvarselinfoResponse,
     HentForhåndsvarselTekstData,
-    HentForhåndsvarselTekstResponse,
     HentForhåndsvisningHenleggelsesbrevData,
     HentForhåndsvisningHenleggelsesbrevResponse,
     HentForhåndsvisningVarselbrevData,
@@ -155,37 +140,21 @@ import type {
     HentForhåndsvisningVedtaksbrevData,
     HentForhåndsvisningVedtaksbrevResponse,
     HentForvaltningsinfoData,
-    HentForvaltningsinfoResponse,
     HentHistorikkinnslagData,
-    HentHistorikkinnslagResponse,
     HentInaktivFaktaomfeilutbetalingData,
-    HentInaktivFaktaomfeilutbetalingResponse,
     HentInaktivVilkårsvurderingData,
-    HentInaktivVilkårsvurderingResponse,
     HentInfoData,
-    HentInfoResponse,
     HentJournalposterData,
-    HentJournalposterResponse,
     HentKravgrunnlagsinfoData,
-    HentKravgrunnlagsinfoResponse,
     HentManuellBrevmottakereData,
-    HentManuellBrevmottakereResponse,
     HentTotrinnsvurderingerData,
-    HentTotrinnsvurderingerResponse,
     HentUrlTilArbeidOgInntektData,
-    HentUrlTilArbeidOgInntektResponse,
     HentVedtakForFagsystemData,
-    HentVedtakForFagsystemResponse,
     HentVedtaksbrevtekstData,
-    HentVedtaksbrevtekstResponse,
     HentVergeData,
-    HentVergeResponse,
     HentVurdertForeldelseData,
-    HentVurdertForeldelseResponse,
     HentVurdertVilkårsvurderingData,
-    HentVurdertVilkårsvurderingResponse,
     KanBehandlingOpprettesManueltData,
-    KanBehandlingOpprettesManueltResponse,
     KorrigerKravgrunnlag1Data,
     KorrigerKravgrunnlag1Response,
     KorrigerKravgrunnlagData,
@@ -680,13 +649,8 @@ export const hentVergeQueryKey = (options: Options<HentVergeData>) =>
 /**
  * Hent verge
  */
-export const hentVergeOptions = (options: Options<HentVergeData>) =>
-    queryOptions<
-        HentVergeResponse,
-        AxiosError<DefaultError>,
-        HentVergeResponse,
-        ReturnType<typeof hentVergeQueryKey>
-    >({
+export const hentVergeOptions = (options: Options<HentVergeData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentVerge({
                 ...options,
@@ -698,6 +662,7 @@ export const hentVergeOptions = (options: Options<HentVergeData>) =>
         },
         queryKey: hentVergeQueryKey(options),
     });
+};
 
 /**
  * Opprett verge steg på behandling
@@ -1323,13 +1288,8 @@ export const hentManuellBrevmottakereQueryKey = (options: Options<HentManuellBre
 /**
  * Henter manuell brevmottakere
  */
-export const hentManuellBrevmottakereOptions = (options: Options<HentManuellBrevmottakereData>) =>
-    queryOptions<
-        HentManuellBrevmottakereResponse,
-        AxiosError<DefaultError>,
-        HentManuellBrevmottakereResponse,
-        ReturnType<typeof hentManuellBrevmottakereQueryKey>
-    >({
+export const hentManuellBrevmottakereOptions = (options: Options<HentManuellBrevmottakereData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentManuellBrevmottakere({
                 ...options,
@@ -1341,6 +1301,7 @@ export const hentManuellBrevmottakereOptions = (options: Options<HentManuellBrev
         },
         queryKey: hentManuellBrevmottakereQueryKey(options),
     });
+};
 
 /**
  * Legger til brevmottaker manuelt
@@ -1529,13 +1490,8 @@ export const opprettBehandlingManuellTaskMutation = (
 
 export const faktaQueryKey = (options: Options<FaktaData>) => createQueryKey('fakta', options);
 
-export const faktaOptions = (options: Options<FaktaData>) =>
-    queryOptions<
-        FaktaResponse,
-        AxiosError<FaktaError>,
-        FaktaResponse,
-        ReturnType<typeof faktaQueryKey>
-    >({
+export const faktaOptions = (options: Options<FaktaData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await fakta({
                 ...options,
@@ -1547,6 +1503,7 @@ export const faktaOptions = (options: Options<FaktaData>) =>
         },
         queryKey: faktaQueryKey(options),
     });
+};
 
 export const oppdaterFaktaMutation = (
     options?: Partial<Options<OppdaterFaktaData>>
@@ -1581,13 +1538,8 @@ export const kanBehandlingOpprettesManueltQueryKey = (
  */
 export const kanBehandlingOpprettesManueltOptions = (
     options: Options<KanBehandlingOpprettesManueltData>
-) =>
-    queryOptions<
-        KanBehandlingOpprettesManueltResponse,
-        AxiosError<DefaultError>,
-        KanBehandlingOpprettesManueltResponse,
-        ReturnType<typeof kanBehandlingOpprettesManueltQueryKey>
-    >({
+) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await kanBehandlingOpprettesManuelt({
                 ...options,
@@ -1599,6 +1551,7 @@ export const kanBehandlingOpprettesManueltOptions = (
         },
         queryKey: kanBehandlingOpprettesManueltQueryKey(options),
     });
+};
 
 export const erPerioderLikeQueryKey = (options: Options<ErPerioderLikeData>) =>
     createQueryKey('erPerioderLike', options);
@@ -1606,13 +1559,8 @@ export const erPerioderLikeQueryKey = (options: Options<ErPerioderLikeData>) =>
 /**
  * Sjekker om perioder er like - unntatt dato og beløp
  */
-export const erPerioderLikeOptions = (options: Options<ErPerioderLikeData>) =>
-    queryOptions<
-        ErPerioderLikeResponse,
-        AxiosError<DefaultError>,
-        ErPerioderLikeResponse,
-        ReturnType<typeof erPerioderLikeQueryKey>
-    >({
+export const erPerioderLikeOptions = (options: Options<ErPerioderLikeData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await erPerioderLike({
                 ...options,
@@ -1624,6 +1572,7 @@ export const erPerioderLikeOptions = (options: Options<ErPerioderLikeData>) =>
         },
         queryKey: erPerioderLikeQueryKey(options),
     });
+};
 
 export const erPerioderSammenslåttQueryKey = (options: Options<ErPerioderSammenslåttData>) =>
     createQueryKey('erPerioderSammenslått', options);
@@ -1631,13 +1580,8 @@ export const erPerioderSammenslåttQueryKey = (options: Options<ErPerioderSammen
 /**
  * Sjekker om perioder er sammenslått
  */
-export const erPerioderSammenslåttOptions = (options: Options<ErPerioderSammenslåttData>) =>
-    queryOptions<
-        ErPerioderSammenslåttResponse,
-        AxiosError<DefaultError>,
-        ErPerioderSammenslåttResponse,
-        ReturnType<typeof erPerioderSammenslåttQueryKey>
-    >({
+export const erPerioderSammenslåttOptions = (options: Options<ErPerioderSammenslåttData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await erPerioderSammenslått({
                 ...options,
@@ -1649,6 +1593,7 @@ export const erPerioderSammenslåttOptions = (options: Options<ErPerioderSammens
         },
         queryKey: erPerioderSammenslåttQueryKey(options),
     });
+};
 
 export const hentInfoQueryKey = (options?: Options<HentInfoData>) =>
     createQueryKey('hentInfo', options);
@@ -1656,13 +1601,8 @@ export const hentInfoQueryKey = (options?: Options<HentInfoData>) =>
 /**
  * Hent applikasjonsinformasjon
  */
-export const hentInfoOptions = (options?: Options<HentInfoData>) =>
-    queryOptions<
-        HentInfoResponse,
-        AxiosError<DefaultError>,
-        HentInfoResponse,
-        ReturnType<typeof hentInfoQueryKey>
-    >({
+export const hentInfoOptions = (options?: Options<HentInfoData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentInfo({
                 ...options,
@@ -1674,6 +1614,7 @@ export const hentInfoOptions = (options?: Options<HentInfoData>) =>
         },
         queryKey: hentInfoQueryKey(options),
     });
+};
 
 export const hentForvaltningsinfoQueryKey = (options: Options<HentForvaltningsinfoData>) =>
     createQueryKey('hentForvaltningsinfo', options);
@@ -1681,13 +1622,8 @@ export const hentForvaltningsinfoQueryKey = (options: Options<HentForvaltningsin
 /**
  * Hent informasjon som kreves for forvaltning
  */
-export const hentForvaltningsinfoOptions = (options: Options<HentForvaltningsinfoData>) =>
-    queryOptions<
-        HentForvaltningsinfoResponse,
-        AxiosError<DefaultError>,
-        HentForvaltningsinfoResponse,
-        ReturnType<typeof hentForvaltningsinfoQueryKey>
-    >({
+export const hentForvaltningsinfoOptions = (options: Options<HentForvaltningsinfoData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentForvaltningsinfo({
                 ...options,
@@ -1699,6 +1635,7 @@ export const hentForvaltningsinfoOptions = (options: Options<HentForvaltningsinf
         },
         queryKey: hentForvaltningsinfoQueryKey(options),
     });
+};
 
 export const hentKravgrunnlagsinfoQueryKey = (options: Options<HentKravgrunnlagsinfoData>) =>
     createQueryKey('hentKravgrunnlagsinfo', options);
@@ -1706,13 +1643,8 @@ export const hentKravgrunnlagsinfoQueryKey = (options: Options<HentKravgrunnlags
 /**
  * Hent ikke arkiverte kravgrunnlag
  */
-export const hentKravgrunnlagsinfoOptions = (options: Options<HentKravgrunnlagsinfoData>) =>
-    queryOptions<
-        HentKravgrunnlagsinfoResponse,
-        AxiosError<DefaultError>,
-        HentKravgrunnlagsinfoResponse,
-        ReturnType<typeof hentKravgrunnlagsinfoQueryKey>
-    >({
+export const hentKravgrunnlagsinfoOptions = (options: Options<HentKravgrunnlagsinfoData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentKravgrunnlagsinfo({
                 ...options,
@@ -1724,6 +1656,7 @@ export const hentKravgrunnlagsinfoOptions = (options: Options<HentKravgrunnlagsi
         },
         queryKey: hentKravgrunnlagsinfoQueryKey(options),
     });
+};
 
 export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveQueryKey = (
     options: Options<FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData>
@@ -1738,15 +1671,8 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
  */
 export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveOptions = (
     options: Options<FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData>
-) =>
-    queryOptions<
-        unknown,
-        AxiosError<DefaultError>,
-        unknown,
-        ReturnType<
-            typeof finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveQueryKey
-        >
-    >({
+) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } =
                 await finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgave({
@@ -1762,6 +1688,7 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
                 options
             ),
     });
+};
 
 export const alleSakerOver4RettsgebyrQueryKey = (options?: Options<AlleSakerOver4RettsgebyrData>) =>
     createQueryKey('alleSakerOver4Rettsgebyr', options);
@@ -1769,13 +1696,10 @@ export const alleSakerOver4RettsgebyrQueryKey = (options?: Options<AlleSakerOver
 /**
  * Finner saker over 4 rettsgebyr
  */
-export const alleSakerOver4RettsgebyrOptions = (options?: Options<AlleSakerOver4RettsgebyrData>) =>
-    queryOptions<
-        AlleSakerOver4RettsgebyrResponse,
-        AxiosError<DefaultError>,
-        AlleSakerOver4RettsgebyrResponse,
-        ReturnType<typeof alleSakerOver4RettsgebyrQueryKey>
-    >({
+export const alleSakerOver4RettsgebyrOptions = (
+    options?: Options<AlleSakerOver4RettsgebyrData>
+) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await alleSakerOver4Rettsgebyr({
                 ...options,
@@ -1787,17 +1711,13 @@ export const alleSakerOver4RettsgebyrOptions = (options?: Options<AlleSakerOver4
         },
         queryKey: alleSakerOver4RettsgebyrQueryKey(options),
     });
+};
 
 export const featureTogglesQueryKey = (options?: Options<FeatureTogglesData>) =>
     createQueryKey('featureToggles', options);
 
-export const featureTogglesOptions = (options?: Options<FeatureTogglesData>) =>
-    queryOptions<
-        FeatureTogglesResponse,
-        AxiosError<DefaultError>,
-        FeatureTogglesResponse,
-        ReturnType<typeof featureTogglesQueryKey>
-    >({
+export const featureTogglesOptions = (options?: Options<FeatureTogglesData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await featureToggles({
                 ...options,
@@ -1809,6 +1729,7 @@ export const featureTogglesOptions = (options?: Options<FeatureTogglesData>) =>
         },
         queryKey: featureTogglesQueryKey(options),
     });
+};
 
 export const hentVedtakForFagsystemQueryKey = (options: Options<HentVedtakForFagsystemData>) =>
     createQueryKey('hentVedtakForFagsystem', options);
@@ -1816,13 +1737,8 @@ export const hentVedtakForFagsystemQueryKey = (options: Options<HentVedtakForFag
 /**
  * Hent behandlinger, kalles av fagsystem
  */
-export const hentVedtakForFagsystemOptions = (options: Options<HentVedtakForFagsystemData>) =>
-    queryOptions<
-        HentVedtakForFagsystemResponse,
-        AxiosError<DefaultError>,
-        HentVedtakForFagsystemResponse,
-        ReturnType<typeof hentVedtakForFagsystemQueryKey>
-    >({
+export const hentVedtakForFagsystemOptions = (options: Options<HentVedtakForFagsystemData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentVedtakForFagsystem({
                 ...options,
@@ -1834,6 +1750,7 @@ export const hentVedtakForFagsystemOptions = (options: Options<HentVedtakForFags
         },
         queryKey: hentVedtakForFagsystemQueryKey(options),
     });
+};
 
 export const hentFagsakQueryKey = (options: Options<HentFagsakData>) =>
     createQueryKey('hentFagsak', options);
@@ -1841,13 +1758,8 @@ export const hentFagsakQueryKey = (options: Options<HentFagsakData>) =>
 /**
  * Hent fagsak informasjon med bruker og behandlinger
  */
-export const hentFagsakOptions = (options: Options<HentFagsakData>) =>
-    queryOptions<
-        HentFagsakResponse,
-        AxiosError<DefaultError>,
-        HentFagsakResponse,
-        ReturnType<typeof hentFagsakQueryKey>
-    >({
+export const hentFagsakOptions = (options: Options<HentFagsakData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentFagsak({
                 ...options,
@@ -1859,6 +1771,7 @@ export const hentFagsakOptions = (options: Options<HentFagsakData>) =>
         },
         queryKey: hentFagsakQueryKey(options),
     });
+};
 
 export const finnesÅpenTilbakekrevingsbehandlingQueryKey = (
     options: Options<FinnesÅpenTilbakekrevingsbehandlingData>
@@ -1869,13 +1782,8 @@ export const finnesÅpenTilbakekrevingsbehandlingQueryKey = (
  */
 export const finnesÅpenTilbakekrevingsbehandlingOptions = (
     options: Options<FinnesÅpenTilbakekrevingsbehandlingData>
-) =>
-    queryOptions<
-        FinnesÅpenTilbakekrevingsbehandlingResponse,
-        AxiosError<DefaultError>,
-        FinnesÅpenTilbakekrevingsbehandlingResponse,
-        ReturnType<typeof finnesÅpenTilbakekrevingsbehandlingQueryKey>
-    >({
+) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await finnesÅpenTilbakekrevingsbehandling({
                 ...options,
@@ -1887,6 +1795,7 @@ export const finnesÅpenTilbakekrevingsbehandlingOptions = (
         },
         queryKey: finnesÅpenTilbakekrevingsbehandlingQueryKey(options),
     });
+};
 
 export const hentBehandlingerForFagsystemQueryKey = (
     options: Options<HentBehandlingerForFagsystemData>
@@ -1897,13 +1806,8 @@ export const hentBehandlingerForFagsystemQueryKey = (
  */
 export const hentBehandlingerForFagsystemOptions = (
     options: Options<HentBehandlingerForFagsystemData>
-) =>
-    queryOptions<
-        HentBehandlingerForFagsystemResponse,
-        AxiosError<DefaultError>,
-        HentBehandlingerForFagsystemResponse,
-        ReturnType<typeof hentBehandlingerForFagsystemQueryKey>
-    >({
+) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentBehandlingerForFagsystem({
                 ...options,
@@ -1915,6 +1819,7 @@ export const hentBehandlingerForFagsystemOptions = (
         },
         queryKey: hentBehandlingerForFagsystemQueryKey(options),
     });
+};
 
 export const hentVedtaksbrevtekstQueryKey = (options: Options<HentVedtaksbrevtekstData>) =>
     createQueryKey('hentVedtaksbrevtekst', options);
@@ -1922,13 +1827,8 @@ export const hentVedtaksbrevtekstQueryKey = (options: Options<HentVedtaksbrevtek
 /**
  * Hent vedtaksbrevtekst
  */
-export const hentVedtaksbrevtekstOptions = (options: Options<HentVedtaksbrevtekstData>) =>
-    queryOptions<
-        HentVedtaksbrevtekstResponse,
-        AxiosError<DefaultError>,
-        HentVedtaksbrevtekstResponse,
-        ReturnType<typeof hentVedtaksbrevtekstQueryKey>
-    >({
+export const hentVedtaksbrevtekstOptions = (options: Options<HentVedtaksbrevtekstData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentVedtaksbrevtekst({
                 ...options,
@@ -1940,6 +1840,7 @@ export const hentVedtaksbrevtekstOptions = (options: Options<HentVedtaksbrevteks
         },
         queryKey: hentVedtaksbrevtekstQueryKey(options),
     });
+};
 
 export const hentForhåndsvarselTekstQueryKey = (options: Options<HentForhåndsvarselTekstData>) =>
     createQueryKey('hentForhåndsvarselTekst', options);
@@ -1947,13 +1848,8 @@ export const hentForhåndsvarselTekstQueryKey = (options: Options<HentForhåndsv
 /**
  * Henter varselbrevtekst
  */
-export const hentForhåndsvarselTekstOptions = (options: Options<HentForhåndsvarselTekstData>) =>
-    queryOptions<
-        HentForhåndsvarselTekstResponse,
-        AxiosError<DefaultError>,
-        HentForhåndsvarselTekstResponse,
-        ReturnType<typeof hentForhåndsvarselTekstQueryKey>
-    >({
+export const hentForhåndsvarselTekstOptions = (options: Options<HentForhåndsvarselTekstData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentForhåndsvarselTekst({
                 ...options,
@@ -1965,6 +1861,7 @@ export const hentForhåndsvarselTekstOptions = (options: Options<HentForhåndsva
         },
         queryKey: hentForhåndsvarselTekstQueryKey(options),
     });
+};
 
 export const hentForhåndsvarselinfoQueryKey = (options: Options<HentForhåndsvarselinfoData>) =>
     createQueryKey('hentForhåndsvarselinfo', options);
@@ -1972,13 +1869,8 @@ export const hentForhåndsvarselinfoQueryKey = (options: Options<HentForhåndsva
 /**
  * Hent forhåndsvarselinformasjon
  */
-export const hentForhåndsvarselinfoOptions = (options: Options<HentForhåndsvarselinfoData>) =>
-    queryOptions<
-        HentForhåndsvarselinfoResponse,
-        AxiosError<DefaultError>,
-        HentForhåndsvarselinfoResponse,
-        ReturnType<typeof hentForhåndsvarselinfoQueryKey>
-    >({
+export const hentForhåndsvarselinfoOptions = (options: Options<HentForhåndsvarselinfoData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentForhåndsvarselinfo({
                 ...options,
@@ -1990,18 +1882,16 @@ export const hentForhåndsvarselinfoOptions = (options: Options<HentForhåndsvar
         },
         queryKey: hentForhåndsvarselinfoQueryKey(options),
     });
+};
 
 export const hentUrlTilArbeidOgInntektQueryKey = (
     options: Options<HentUrlTilArbeidOgInntektData>
 ) => createQueryKey('hentUrlTilArbeidOgInntekt', options);
 
-export const hentUrlTilArbeidOgInntektOptions = (options: Options<HentUrlTilArbeidOgInntektData>) =>
-    queryOptions<
-        HentUrlTilArbeidOgInntektResponse,
-        AxiosError<DefaultError>,
-        HentUrlTilArbeidOgInntektResponse,
-        ReturnType<typeof hentUrlTilArbeidOgInntektQueryKey>
-    >({
+export const hentUrlTilArbeidOgInntektOptions = (
+    options: Options<HentUrlTilArbeidOgInntektData>
+) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentUrlTilArbeidOgInntekt({
                 ...options,
@@ -2013,17 +1903,13 @@ export const hentUrlTilArbeidOgInntektOptions = (options: Options<HentUrlTilArbe
         },
         queryKey: hentUrlTilArbeidOgInntektQueryKey(options),
     });
+};
 
 export const hentHistorikkinnslagQueryKey = (options: Options<HentHistorikkinnslagData>) =>
     createQueryKey('hentHistorikkinnslag', options);
 
-export const hentHistorikkinnslagOptions = (options: Options<HentHistorikkinnslagData>) =>
-    queryOptions<
-        HentHistorikkinnslagResponse,
-        AxiosError<DefaultError>,
-        HentHistorikkinnslagResponse,
-        ReturnType<typeof hentHistorikkinnslagQueryKey>
-    >({
+export const hentHistorikkinnslagOptions = (options: Options<HentHistorikkinnslagData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentHistorikkinnslag({
                 ...options,
@@ -2035,6 +1921,7 @@ export const hentHistorikkinnslagOptions = (options: Options<HentHistorikkinnsla
         },
         queryKey: hentHistorikkinnslagQueryKey(options),
     });
+};
 
 export const hentVurdertVilkårsvurderingQueryKey = (
     options: Options<HentVurdertVilkårsvurderingData>
@@ -2045,13 +1932,8 @@ export const hentVurdertVilkårsvurderingQueryKey = (
  */
 export const hentVurdertVilkårsvurderingOptions = (
     options: Options<HentVurdertVilkårsvurderingData>
-) =>
-    queryOptions<
-        HentVurdertVilkårsvurderingResponse,
-        AxiosError<DefaultError>,
-        HentVurdertVilkårsvurderingResponse,
-        ReturnType<typeof hentVurdertVilkårsvurderingQueryKey>
-    >({
+) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentVurdertVilkårsvurdering({
                 ...options,
@@ -2063,6 +1945,7 @@ export const hentVurdertVilkårsvurderingOptions = (
         },
         queryKey: hentVurdertVilkårsvurderingQueryKey(options),
     });
+};
 
 export const hentInaktivVilkårsvurderingQueryKey = (
     options: Options<HentInaktivVilkårsvurderingData>
@@ -2073,13 +1956,8 @@ export const hentInaktivVilkårsvurderingQueryKey = (
  */
 export const hentInaktivVilkårsvurderingOptions = (
     options: Options<HentInaktivVilkårsvurderingData>
-) =>
-    queryOptions<
-        HentInaktivVilkårsvurderingResponse,
-        AxiosError<DefaultError>,
-        HentInaktivVilkårsvurderingResponse,
-        ReturnType<typeof hentInaktivVilkårsvurderingQueryKey>
-    >({
+) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentInaktivVilkårsvurdering({
                 ...options,
@@ -2091,6 +1969,7 @@ export const hentInaktivVilkårsvurderingOptions = (
         },
         queryKey: hentInaktivVilkårsvurderingQueryKey(options),
     });
+};
 
 export const hentTotrinnsvurderingerQueryKey = (options: Options<HentTotrinnsvurderingerData>) =>
     createQueryKey('hentTotrinnsvurderinger', options);
@@ -2098,13 +1977,8 @@ export const hentTotrinnsvurderingerQueryKey = (options: Options<HentTotrinnsvur
 /**
  * Hent totrinnsvurderinger
  */
-export const hentTotrinnsvurderingerOptions = (options: Options<HentTotrinnsvurderingerData>) =>
-    queryOptions<
-        HentTotrinnsvurderingerResponse,
-        AxiosError<DefaultError>,
-        HentTotrinnsvurderingerResponse,
-        ReturnType<typeof hentTotrinnsvurderingerQueryKey>
-    >({
+export const hentTotrinnsvurderingerOptions = (options: Options<HentTotrinnsvurderingerData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentTotrinnsvurderinger({
                 ...options,
@@ -2116,6 +1990,7 @@ export const hentTotrinnsvurderingerOptions = (options: Options<HentTotrinnsvurd
         },
         queryKey: hentTotrinnsvurderingerQueryKey(options),
     });
+};
 
 export const hentJournalposterQueryKey = (options: Options<HentJournalposterData>) =>
     createQueryKey('hentJournalposter', options);
@@ -2123,13 +1998,8 @@ export const hentJournalposterQueryKey = (options: Options<HentJournalposterData
 /**
  * Hent journalpost informasjon
  */
-export const hentJournalposterOptions = (options: Options<HentJournalposterData>) =>
-    queryOptions<
-        HentJournalposterResponse,
-        AxiosError<DefaultError>,
-        HentJournalposterResponse,
-        ReturnType<typeof hentJournalposterQueryKey>
-    >({
+export const hentJournalposterOptions = (options: Options<HentJournalposterData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentJournalposter({
                 ...options,
@@ -2141,6 +2011,7 @@ export const hentJournalposterOptions = (options: Options<HentJournalposterData>
         },
         queryKey: hentJournalposterQueryKey(options),
     });
+};
 
 export const hentDokumentQueryKey = (options: Options<HentDokumentData>) =>
     createQueryKey('hentDokument', options);
@@ -2148,13 +2019,8 @@ export const hentDokumentQueryKey = (options: Options<HentDokumentData>) =>
 /**
  * Hent dokument fra journalføring
  */
-export const hentDokumentOptions = (options: Options<HentDokumentData>) =>
-    queryOptions<
-        HentDokumentResponse,
-        AxiosError<DefaultError>,
-        HentDokumentResponse,
-        ReturnType<typeof hentDokumentQueryKey>
-    >({
+export const hentDokumentOptions = (options: Options<HentDokumentData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentDokument({
                 ...options,
@@ -2166,6 +2032,7 @@ export const hentDokumentOptions = (options: Options<HentDokumentData>) =>
         },
         queryKey: hentDokumentQueryKey(options),
     });
+};
 
 export const hentVurdertForeldelseQueryKey = (options: Options<HentVurdertForeldelseData>) =>
     createQueryKey('hentVurdertForeldelse', options);
@@ -2173,13 +2040,8 @@ export const hentVurdertForeldelseQueryKey = (options: Options<HentVurdertForeld
 /**
  * Hent foreldelsesinformasjon
  */
-export const hentVurdertForeldelseOptions = (options: Options<HentVurdertForeldelseData>) =>
-    queryOptions<
-        HentVurdertForeldelseResponse,
-        AxiosError<DefaultError>,
-        HentVurdertForeldelseResponse,
-        ReturnType<typeof hentVurdertForeldelseQueryKey>
-    >({
+export const hentVurdertForeldelseOptions = (options: Options<HentVurdertForeldelseData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentVurdertForeldelse({
                 ...options,
@@ -2191,6 +2053,7 @@ export const hentVurdertForeldelseOptions = (options: Options<HentVurdertForelde
         },
         queryKey: hentVurdertForeldelseQueryKey(options),
     });
+};
 
 export const hentFaktaomfeilutbetalingQueryKey = (
     options: Options<HentFaktaomfeilutbetalingData>
@@ -2199,13 +2062,10 @@ export const hentFaktaomfeilutbetalingQueryKey = (
 /**
  * Hent fakta om feilutbetaling
  */
-export const hentFaktaomfeilutbetalingOptions = (options: Options<HentFaktaomfeilutbetalingData>) =>
-    queryOptions<
-        HentFaktaomfeilutbetalingResponse,
-        AxiosError<DefaultError>,
-        HentFaktaomfeilutbetalingResponse,
-        ReturnType<typeof hentFaktaomfeilutbetalingQueryKey>
-    >({
+export const hentFaktaomfeilutbetalingOptions = (
+    options: Options<HentFaktaomfeilutbetalingData>
+) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentFaktaomfeilutbetaling({
                 ...options,
@@ -2217,6 +2077,7 @@ export const hentFaktaomfeilutbetalingOptions = (options: Options<HentFaktaomfei
         },
         queryKey: hentFaktaomfeilutbetalingQueryKey(options),
     });
+};
 
 export const hentInaktivFaktaomfeilutbetalingQueryKey = (
     options: Options<HentInaktivFaktaomfeilutbetalingData>
@@ -2227,13 +2088,8 @@ export const hentInaktivFaktaomfeilutbetalingQueryKey = (
  */
 export const hentInaktivFaktaomfeilutbetalingOptions = (
     options: Options<HentInaktivFaktaomfeilutbetalingData>
-) =>
-    queryOptions<
-        HentInaktivFaktaomfeilutbetalingResponse,
-        AxiosError<DefaultError>,
-        HentInaktivFaktaomfeilutbetalingResponse,
-        ReturnType<typeof hentInaktivFaktaomfeilutbetalingQueryKey>
-    >({
+) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentInaktivFaktaomfeilutbetaling({
                 ...options,
@@ -2245,6 +2101,7 @@ export const hentInaktivFaktaomfeilutbetalingOptions = (
         },
         queryKey: hentInaktivFaktaomfeilutbetalingQueryKey(options),
     });
+};
 
 export const hentBeregningsresultatQueryKey = (options: Options<HentBeregningsresultatData>) =>
     createQueryKey('hentBeregningsresultat', options);
@@ -2252,13 +2109,8 @@ export const hentBeregningsresultatQueryKey = (options: Options<HentBeregningsre
 /**
  * Hent beregningsresultat
  */
-export const hentBeregningsresultatOptions = (options: Options<HentBeregningsresultatData>) =>
-    queryOptions<
-        HentBeregningsresultatResponse,
-        AxiosError<DefaultError>,
-        HentBeregningsresultatResponse,
-        ReturnType<typeof hentBeregningsresultatQueryKey>
-    >({
+export const hentBeregningsresultatOptions = (options: Options<HentBeregningsresultatData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentBeregningsresultat({
                 ...options,
@@ -2270,6 +2122,7 @@ export const hentBeregningsresultatOptions = (options: Options<HentBeregningsres
         },
         queryKey: hentBeregningsresultatQueryKey(options),
     });
+};
 
 export const hentBehandlingQueryKey = (options: Options<HentBehandlingData>) =>
     createQueryKey('hentBehandling', options);
@@ -2277,13 +2130,8 @@ export const hentBehandlingQueryKey = (options: Options<HentBehandlingData>) =>
 /**
  * Hent behandling
  */
-export const hentBehandlingOptions = (options: Options<HentBehandlingData>) =>
-    queryOptions<
-        HentBehandlingResponse,
-        AxiosError<DefaultError>,
-        HentBehandlingResponse,
-        ReturnType<typeof hentBehandlingQueryKey>
-    >({
+export const hentBehandlingOptions = (options: Options<HentBehandlingData>) => {
+    return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await hentBehandling({
                 ...options,
@@ -2295,3 +2143,4 @@ export const hentBehandlingOptions = (options: Options<HentBehandlingData>) =>
         },
         queryKey: hentBehandlingQueryKey(options),
     });
+};
