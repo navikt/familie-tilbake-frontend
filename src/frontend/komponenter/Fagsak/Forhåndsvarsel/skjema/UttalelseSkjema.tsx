@@ -33,23 +33,23 @@ type UtsettFristErrors = FieldErrors<
 >;
 
 const isUttalelseJaErrors = (
-    errors: FieldErrors<UttalelseMedFristFormData>,
+    _errors: FieldErrors<UttalelseMedFristFormData>,
     harUttaltSeg: HarUttaltSeg | undefined
-): errors is UttalelseJaErrors => {
+): _errors is UttalelseJaErrors => {
     return harUttaltSeg === HarUttaltSeg.Ja;
 };
 
 const isUttalelseNeiErrors = (
-    errors: FieldErrors<UttalelseMedFristFormData>,
+    _errors: FieldErrors<UttalelseMedFristFormData>,
     harUttaltSeg: HarUttaltSeg | undefined
-): errors is UttalelseNeiErrors => {
+): _errors is UttalelseNeiErrors => {
     return harUttaltSeg === HarUttaltSeg.Nei;
 };
 
 const isUtsettFristErrors = (
-    errors: FieldErrors<UttalelseMedFristFormData>,
+    _errors: FieldErrors<UttalelseMedFristFormData>,
     harUttaltSeg: HarUttaltSeg | undefined
-): errors is UtsettFristErrors => {
+): _errors is UtsettFristErrors => {
     return harUttaltSeg === HarUttaltSeg.UtsettFrist;
 };
 
