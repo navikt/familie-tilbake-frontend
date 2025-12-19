@@ -936,9 +936,14 @@ export const forhåndsvarselUnntak = <ThrowOnError extends boolean = false>(
  */
 export const forhåndsvisBrev = <ThrowOnError extends boolean = false>(
     options: Options<ForhåndsvisBrevData, ThrowOnError>
-) =>
-    (options.client ?? client).post<ForhåndsvisBrevResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
+) => {
+    return (options.client ?? client).post<ForhåndsvisBrevResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http',
+            },
+        ],
         url: '/api/dokument/forhandsvis',
         ...options,
         headers: {
@@ -946,6 +951,7 @@ export const forhåndsvisBrev = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+};
 
 /**
  * Forhåndsvis vedtaksbrev

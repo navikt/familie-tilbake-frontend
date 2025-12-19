@@ -102,7 +102,7 @@ export const FaktaSkjema = ({
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <form onSubmit={methods.handleSubmit(onSubmit)} id="fakta-skjema">
                 <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
                     <Heading level="2" size="small">
                         Rettslig grunnlag
@@ -183,14 +183,17 @@ export const FaktaSkjema = ({
                     />
                 </section>
                 <ActionBar
+                    {...(methods.formState.isDirty
+                        ? { type: 'submit', nesteTekst: 'Lagre' }
+                        : { type: 'button', onNeste: navigerTilNeste })}
+                    type="submit"
+                    formId="fakta-skjema"
                     stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
                     forrigeAriaLabel={undefined}
                     nesteAriaLabel="Gå videre til foreldelsessteget"
                     onForrige={undefined}
+                    onNeste={undefined}
                     isLoading={false}
-                    {...(methods.formState.isDirty
-                        ? { type: 'submit', nesteTekst: 'Lagre' }
-                        : { type: 'button', onNeste: navigerTilNeste })}
                 />
             </form>
         </FormProvider>

@@ -19,11 +19,13 @@ type BaseProps = {
 
 type ButtonProps = BaseProps & {
     type?: 'button';
+    formId?: never;
     onNeste: () => void;
 };
 
 type SubmitProps = BaseProps & {
     type: 'submit';
+    formId: string;
     onNeste?: never;
 };
 
@@ -33,6 +35,7 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
     nesteAriaLabel,
     onNeste,
     onForrige,
+    formId,
     dobbeltNøstet = false,
     nesteTekst = 'Neste',
     isLoading = false,
@@ -63,7 +66,7 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
                 </BodyShort>
                 <HStack gap="4" className="flex-nowrap">
                     {forrigeAriaLabel && onForrige && (
-                        <Tooltip content={forrigeAriaLabel}>
+                        <Tooltip content={forrigeAriaLabel} aria-disabled={isLoading}>
                             <Button
                                 variant="secondary"
                                 icon={<ChevronLeftIcon />}
@@ -79,13 +82,14 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
                         </Tooltip>
                     )}
                     {!skjulNeste && (
-                        <Tooltip content={nesteAriaLabel} aria-disabled={disableNeste}>
+                        <Tooltip content={nesteAriaLabel} aria-disabled={isLoading || disableNeste}>
                             <Button
                                 icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
                                 iconPosition="right"
                                 className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
                                 type={type}
                                 size="small"
+                                form={formId}
                                 loading={isLoading || disableNeste}
                                 onClick={() => {
                                     if (onNeste && type !== 'submit') onNeste();

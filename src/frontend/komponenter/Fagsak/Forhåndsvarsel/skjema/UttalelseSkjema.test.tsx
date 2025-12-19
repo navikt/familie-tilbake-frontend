@@ -1,0 +1,184 @@
+import type { BehandlingHook } from '../../../../context/BehandlingContext';
+import type { Toggles } from '../../../../context/toggles';
+import type { RenderResult } from '@testing-library/react';
+import type { NavigateFunction } from 'react-router';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, fireEvent, within } from '@testing-library/react';
+import React from 'react';
+
+import { ToggleName } from '../../../../context/toggles';
+import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
+import { lagFagsakDto } from '../../../../testdata/fagsakFactory';
+import {
+    lagForhåndsvarselQueries,
+    lagForhåndsvarselMutations,
+} from '../../../../testdata/forhåndsvarselFactory';
+import { Forhåndsvarsel } from '../Forhåndsvarsel';
+import { useForhåndsvarselMutations } from '../useForhåndsvarselMutations';
+import { useForhåndsvarselQueries } from '../useForhåndsvarselQueries';
+
+const mockUseBehandling = jest.fn();
+const mockUseToggles = jest.fn();
+
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
+    useNavigate: (): NavigateFunction => jest.fn(),
+}));
+
+jest.mock('../../../../context/TogglesContext', () => ({
+    useToggles: (): Toggles => mockUseToggles(),
+}));
+
+jest.mock('../../../../context/BehandlingContext', () => ({
+    useBehandling: (): BehandlingHook => mockUseBehandling(),
+}));
+
+jest.mock('../../../../generated/@tanstack/react-query.gen', () => ({
+    bestillBrevMutation: jest.fn().mockReturnValue({
+        mutationFn: jest.fn(),
+    }),
+    forhåndsvisBrevMutation: jest.fn().mockReturnValue({
+        mutationFn: jest.fn(),
+    }),
+}));
+
+jest.mock('../useForhåndsvarselQueries', () => ({
+    useForhåndsvarselQueries: jest.fn(),
+}));
+
+jest.mock('../useForhåndsvarselMutations', () => ({
+    useForhåndsvarselMutations: jest.fn(),
+    mapHarBrukerUttaltSegFraApiDto: jest.fn(),
+}));
+
+jest.mock('../../../../generated', () => ({
+    BrevmalkodeEnum: {
+        VARSEL: 'VARSEL',
+    },
+}));
+
+const setupMock = (): void => {
+    mockUseBehandling.mockImplementation(() => ({
+        actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 5'),
+        erStegBehandlet: jest.fn().mockReturnValue(false),
+    }));
+    mockUseToggles.mockImplementation(() => ({
+        toggles: {
+            [ToggleName.Forhåndsvarselsteg]: true,
+        },
+    }));
+};
+
+const renderBrukeruttalelse = (): RenderResult => {
+    const behandling = lagBehandlingDto({
+        varselSendt: true,
+    });
+
+    return render(
+        <QueryClientProvider client={new QueryClient()}>
+            <Forhåndsvarsel behandling={behandling} fagsak={lagFagsakDto()} />
+        </QueryClientProvider>
+    );
+};
+
+describe('Brukeruttalelse', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        setupMock();
+
+        jest.mocked(useForhåndsvarselQueries).mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: {
+                    varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                    utsettUttalelseFrist: [
+                        // { nyFrist: '2023-01-15', begrunnelse: 'Trenger mer tid' },
+                    ],
+                    brukeruttalelse: undefined,
+                },
+            })
+        );
+
+        jest.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
+    });
+
+    test('Viser Ja og Nei alternativer', () => {
+        renderBrukeruttalelse();
+
+        expect(
+            screen.getByText('Har brukeren uttalt seg etter forhåndsvarselet?')
+        ).toBeInTheDocument();
+
+        const jaOptions = screen.getAllByLabelText('Ja');
+        expect(jaOptions).toHaveLength(2);
+
+        const neiOptions = screen.getAllByLabelText('Nei');
+        expect(neiOptions).toHaveLength(2);
+    });
+
+    test('Viser "Utsett frist" alternativ hvis varsel er sendt', () => {
+        renderBrukeruttalelse();
+
+        expect(screen.getByLabelText('Utsett frist for å uttale seg')).toBeInTheDocument();
+    });
+
+    test('Viser uttalelsesfelter når Ja er valgt', async () => {
+        renderBrukeruttalelse();
+
+        expect(screen.queryByLabelText('Når uttalte brukeren seg?')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('Hvordan uttalte brukeren seg?')).not.toBeInTheDocument();
+        expect(
+            screen.queryByLabelText('Beskriv hva brukeren har uttalt seg om')
+        ).not.toBeInTheDocument();
+
+        const brukeruttalelseFieldset = screen.getByRole('group', {
+            name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+        });
+        const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
+        fireEvent.click(jaRadio);
+
+        expect(await screen.findByLabelText('Når uttalte brukeren seg?')).toBeInTheDocument();
+        expect(screen.getByLabelText('Hvordan uttalte brukeren seg?')).toBeInTheDocument();
+        expect(screen.getByLabelText('Beskriv hva brukeren har uttalt seg om')).toBeInTheDocument();
+    });
+
+    test('Viser beskrivelse for "Hvordan uttalte brukeren seg?" feltet', async () => {
+        renderBrukeruttalelse();
+
+        const brukeruttalelseFieldset = screen.getByRole('group', {
+            name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+        });
+        const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
+        fireEvent.click(jaRadio);
+
+        expect(
+            await screen.findByText('For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss')
+        ).toBeInTheDocument();
+    });
+
+    test('Viser kommentarfelt når Nei er valgt', async () => {
+        renderBrukeruttalelse();
+
+        expect(screen.queryByLabelText('Kommentar til valget over')).not.toBeInTheDocument();
+
+        const brukeruttalelseFieldset = screen.getByRole('group', {
+            name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+        });
+        const neiRadio = within(brukeruttalelseFieldset).getByLabelText('Nei');
+        fireEvent.click(neiRadio);
+
+        expect(await screen.findByLabelText('Kommentar til valget over')).toBeInTheDocument();
+    });
+
+    test('Viser utsettelsesfelter når "Utsett frist" er valgt', async () => {
+        renderBrukeruttalelse();
+
+        expect(screen.queryByLabelText('Sett ny dato for frist')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('Begrunnelse for utsatt frist')).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByLabelText('Utsett frist for å uttale seg'));
+
+        expect(await screen.findByLabelText('Sett ny dato for frist')).toBeInTheDocument();
+        expect(screen.getByLabelText('Begrunnelse for utsatt frist')).toBeInTheDocument();
+    });
+});

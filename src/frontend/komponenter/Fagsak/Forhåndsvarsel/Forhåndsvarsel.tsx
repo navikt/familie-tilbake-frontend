@@ -1,24 +1,38 @@
-import type { ForhåndsvarselFormData } from './schema';
-import type { BehandlingDto, FagsakDto } from '../../../generated';
+import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselInfo } from './useForhåndsvarselQueries';
+import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MegaphoneIcon } from '@navikt/aksel-icons';
-import { Alert, Heading, HStack, Radio, RadioGroup, Tag, Tooltip, VStack } from '@navikt/ds-react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
-import React, { useState } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import React, { useLayoutEffect, useRef, useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { Opprett } from './Opprett';
-import { forhåndsvarselSchema, SkalSendesForhåndsvarsel } from './schema';
-import { Unntak } from './Unntak';
+import {
+    forhåndsvarselSchema,
+    getDefaultValues,
+    HarUttaltSeg,
+    SkalSendesForhåndsvarsel,
+    uttalelseMedFristSchema,
+    getUttalelseValues,
+} from './forhåndsvarselSchema';
+import { OpprettSkjema } from './skjema/OpprettSkjema';
+import { Uttalelse } from './skjema/UttalelseSkjema';
+// import { Unntak } from './Unntak';
+import {
+    extractErrorFromMutationError,
+    useForhåndsvarselMutations,
+} from './useForhåndsvarselMutations';
+import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { hentForhåndsvarselinfo, hentForhåndsvarselTekst } from '../../../generated';
-import { bestillBrevMutation } from '../../../generated/@tanstack/react-query.gen';
+import { ToggleName } from '../../../context/toggles';
+import { useToggles } from '../../../context/TogglesContext';
+import { type BehandlingDto, type FagsakDto } from '../../../generated';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
-import { SYNLIGE_STEG } from '../../../utils/sider';
+import { updateParentBounds } from '../../../utils/updateParentBounds';
+import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
 import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
 import { ActionBar } from '../ActionBar/ActionBar';
 
@@ -35,197 +49,198 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 };
 
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
-    const navigate = useNavigate();
-    const [visForhåndsvarselSendt, setVisForhåndsvarselSendt] = useState(false);
-    const queryClient = useQueryClient();
+    const { forhåndsvarselInfo } = useForhåndsvarselQueries(behandling);
+
+    return (
+        <VStack gap="4">
+            <HStack align="center" justify="space-between">
+                <Heading size="small">Forhåndsvarsel</Heading>
+                {forhåndsvarselInfo?.varselbrevSendtTid && (
+                    <Tooltip
+                        arrow={false}
+                        placement="bottom"
+                        content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                    >
+                        <Tag
+                            variant={getTagVariant(forhåndsvarselInfo.varselbrevSendtTid)}
+                            icon={<MegaphoneIcon aria-hidden />}
+                        >
+                            {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                        </Tag>
+                    </Tooltip>
+                )}
+            </HStack>
+            <ForhåndsvarselSkjema
+                behandling={behandling}
+                fagsak={fagsak}
+                forhåndsvarselInfo={forhåndsvarselInfo}
+            />
+        </VStack>
+    );
+};
+
+type ForhåndsvarselSkjemaProps = {
+    behandling: BehandlingDto;
+    fagsak: FagsakDto;
+    forhåndsvarselInfo: ForhåndsvarselInfo;
+};
+
+export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
+    behandling,
+    fagsak,
+    forhåndsvarselInfo,
+}) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { toggles } = useToggles();
+    const [parentBounds, setParentBounds] = useState({ width: 'auto' });
 
     const { actionBarStegtekst } = useBehandling();
 
-    const { data: forhåndsvarselInfo } = useQuery({
-        queryKey: ['hentForhåndsvarselInfo', behandling.behandlingId],
-        queryFn: () =>
-            hentForhåndsvarselinfo({
-                path: {
-                    behandlingId: behandling.behandlingId,
-                },
-            }),
-        enabled: !!behandling.behandlingId,
-        select: data => {
-            const info = data.data?.data;
-            return {
-                varselbrevSendtTid: info?.varselbrevDto?.varselbrevSendtTid,
-                uttalelsesfrist: info?.varselbrevDto?.uttalelsesfrist,
-                brukeruttalelse: info?.brukeruttalelse,
-            };
-        },
-    });
+    const {
+        sendForhåndsvarselMutation,
+        sendBrukeruttalelseMutation,
+        sendUtsettUttalelseFristMutation,
+        sendUtsettUttalelseFrist,
+        sendBrukeruttalelse,
+        sendForhåndsvarsel,
+        gåTilNeste,
+    } = useForhåndsvarselMutations(behandling, fagsak);
+
+    const mutations = [
+        { key: 'forhåndsvarsel', mutation: sendForhåndsvarselMutation },
+        { key: 'brukeruttalelse', mutation: sendBrukeruttalelseMutation },
+        { key: 'utsettFrist', mutation: sendUtsettUttalelseFristMutation },
+    ] as const;
+
+    const { varselbrevtekster } = useForhåndsvarselQueries(behandling);
+
+    const varselErSendt = !!forhåndsvarselInfo?.varselbrevSendtTid;
 
     const methods = useForm<ForhåndsvarselFormData>({
         resolver: zodResolver(forhåndsvarselSchema),
         mode: 'all',
         shouldFocusError: false,
-        defaultValues: {
-            skalSendesForhåndsvarsel: behandling.varselSendt
-                ? SkalSendesForhåndsvarsel.Ja
-                : SkalSendesForhåndsvarsel.IkkeValgt,
-        },
+        defaultValues: getDefaultValues(varselErSendt),
+    });
+    const uttalelseMethods = useForm<UttalelseMedFristFormData>({
+        resolver: zodResolver(uttalelseMedFristSchema),
+        mode: 'all',
+        shouldFocusError: false,
+        defaultValues: getUttalelseValues(forhåndsvarselInfo),
     });
 
-    const {
-        handleSubmit,
-        formState: { isDirty },
-    } = methods;
+    const harUttaltSeg = useWatch({
+        control: uttalelseMethods.control,
+        name: 'harUttaltSeg',
+    });
+
+    useLayoutEffect(() => {
+        updateParentBounds(containerRef, setParentBounds);
+        window.addEventListener('resize', () => updateParentBounds(containerRef, setParentBounds));
+
+        return (): void =>
+            window.removeEventListener('resize', () =>
+                updateParentBounds(containerRef, setParentBounds)
+            );
+    }, []);
 
     const skalSendesForhåndsvarsel = useWatch({
         control: methods.control,
         name: 'skalSendesForhåndsvarsel',
     });
 
-    const { data: varselbrevtekster } = useQuery({
-        queryKey: ['hentForhåndsvarselTekst', behandling.behandlingId],
-        queryFn: () =>
-            hentForhåndsvarselTekst({
-                path: {
-                    behandlingId: behandling.behandlingId,
-                },
-            }),
-        enabled: !!behandling.behandlingId,
-        select: data => data.data?.data,
-    });
-
-    const sendForhåndsvarselMutation = useMutation({
-        ...bestillBrevMutation(),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['hentBehandling', behandling.behandlingId],
-            });
-            setVisForhåndsvarselSendt(true);
-        },
-    });
-
-    const sendForhåndsvarsel = (data: ForhåndsvarselFormData): void => {
-        sendForhåndsvarselMutation.mutate({
-            body: {
-                behandlingId: behandling.behandlingId,
-                brevmalkode: 'VARSEL',
-                fritekst:
-                    data.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja
-                        ? data.fritekst
-                        : '',
-            },
-        });
-    };
-
-    const skalSendeForhåndsvarsel = isDirty || !behandling.varselSendt;
-    const gåTilNeste = (): void => {
-        navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
-        );
-    };
-    const sendForhåndsvarselEllerGåTilNeste = (data: ForhåndsvarselFormData): void => {
-        if (skalSendeForhåndsvarsel) {
-            sendForhåndsvarsel(data);
-            return;
+    const getNesteKnappTekst = (): string => {
+        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
+            return 'Utsett frist';
+        } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
+            return 'Send forhåndsvarsel';
         }
-        gåTilNeste();
+        return 'Neste';
+    };
+
+    const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
+        data: ForhåndsvarselFormData
+    ): void => {
+        if (!varselErSendt) {
+            sendForhåndsvarsel(data);
+        } else {
+            gåTilNeste();
+        }
+    };
+
+    const handleUttalelseSubmit: SubmitHandler<UttalelseMedFristFormData> = (
+        data: UttalelseMedFristFormData
+    ): void => {
+        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
+            sendUtsettUttalelseFrist(data);
+        }
+        sendBrukeruttalelse(data);
     };
 
     return (
         <>
             <FormProvider {...methods}>
-                <VStack
-                    as="form"
-                    gap="6"
-                    onSubmit={handleSubmit(sendForhåndsvarselEllerGåTilNeste)}
-                >
-                    <HStack align="center" justify="space-between">
-                        <Heading size="medium">Forhåndsvarsel</Heading>
-                        {forhåndsvarselInfo?.varselbrevSendtTid && (
-                            <Tooltip
-                                arrow={false}
-                                placement="bottom"
-                                content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevSendtTid)}`}
-                            >
-                                <Tag
-                                    variant={getTagVariant(forhåndsvarselInfo.varselbrevSendtTid)}
-                                    icon={<MegaphoneIcon aria-hidden />}
-                                >
-                                    {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevSendtTid)}`}
-                                </Tag>
-                            </Tooltip>
-                        )}
-                    </HStack>
-
-                    <Controller
-                        control={methods.control}
-                        name="skalSendesForhåndsvarsel"
-                        render={({ field, fieldState }) => (
-                            <RadioGroup
-                                {...field}
-                                className="max-w-xl"
-                                readOnly={behandling.varselSendt}
-                                size="small"
-                                legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
-                                description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
-                        fattes, slik at de får mulighet til å uttale seg."
-                                error={fieldState.error?.message}
-                            >
-                                <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
-                                <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
-                            </RadioGroup>
-                        )}
-                    />
-
-                    {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja &&
-                        varselbrevtekster && (
-                            <Opprett
-                                behandling={behandling}
-                                varselbrevtekster={varselbrevtekster}
-                            />
-                        )}
-
-                    {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />}
-
-                    {visForhåndsvarselSendt && (
-                        <Alert
-                            variant="success"
-                            contentMaxWidth={false}
-                            onClose={() => setVisForhåndsvarselSendt(false)}
-                            closeButton
-                        >
-                            <Heading spacing size="small" level="3">
-                                Forhåndsvarsel er sendt
-                            </Heading>
-                            Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når
-                            fristen for å uttale seg (3 uker) har gått ut.
-                        </Alert>
-                    )}
-
-                    <ActionBar
-                        stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
-                        nesteTekst={skalSendeForhåndsvarsel ? 'Send forhåndsvarsel' : 'Neste'}
-                        forrigeAriaLabel={undefined}
-                        nesteAriaLabel={
-                            skalSendeForhåndsvarsel
-                                ? 'Send forhåndsvarsel'
-                                : 'Gå til foreldelsessteget'
-                        }
-                        onForrige={undefined}
-                        {...(behandling.varselSendt
-                            ? { type: 'button' as const, onNeste: gåTilNeste }
-                            : { type: 'submit' as const })}
-                    />
-                </VStack>
+                <OpprettSkjema
+                    behandling={behandling}
+                    fagsak={fagsak}
+                    varselbrevtekster={varselbrevtekster}
+                    varselErSendt={varselErSendt}
+                    parentBounds={parentBounds}
+                    handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
+                />
+                {/* {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />} */}
             </FormProvider>
 
-            {sendForhåndsvarselMutation.isError && (
-                <FeilModal
-                    feil={sendForhåndsvarselMutation.error}
-                    lukkFeilModal={sendForhåndsvarselMutation.reset}
-                    behandlingId={behandling.behandlingId}
-                    fagsakId={fagsak.eksternFagsakId}
-                />
+            {toggles[ToggleName.Forhåndsvarselsteg] && varselErSendt && (
+                <FormProvider {...uttalelseMethods}>
+                    <Uttalelse handleUttalelseSubmit={handleUttalelseSubmit} kanUtsetteFrist />
+                </FormProvider>
             )}
+
+            <ActionBar
+                stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
+                nesteTekst={getNesteKnappTekst()}
+                isLoading={
+                    sendForhåndsvarselMutation.isPending || sendBrukeruttalelseMutation.isPending
+                }
+                forrigeAriaLabel={undefined}
+                onForrige={undefined}
+                nesteAriaLabel={getNesteKnappTekst()}
+                type="submit"
+                formId={varselErSendt ? 'uttalelseForm' : 'opprettForm'}
+            />
+
+            {sendForhåndsvarselMutation.isSuccess && (
+                <FixedAlert
+                    aria-live="polite"
+                    variant="success"
+                    closeButton
+                    width={parentBounds.width}
+                    onClose={sendForhåndsvarselMutation.reset}
+                >
+                    <Heading spacing size="small" level="3">
+                        Forhåndsvarsel er sendt
+                    </Heading>
+                    Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når fristen
+                    for å uttale seg (3 uker) har gått ut.
+                </FixedAlert>
+            )}
+
+            {mutations.map(({ key, mutation }) => {
+                if (mutation.isError) {
+                    const feil = extractErrorFromMutationError(mutation.error);
+                    return (
+                        <FeilModal
+                            key={key}
+                            feil={feil}
+                            lukkFeilModal={mutation.reset}
+                            behandlingId={behandling.behandlingId}
+                            fagsakId={fagsak.eksternFagsakId}
+                        />
+                    );
+                }
+                return null;
+            })}
         </>
     );
 };
