@@ -13,7 +13,8 @@ const Dashboard: React.FC = () => (
         </Heading>
         <BodyLong size="small">
             Velkommen til felles saksbehandlingsløsning for tilbakekreving. Dette gjelder ytelsene
-            barnetrygd, kontantstøtte og enslig forsørger. Flere ytelser vil komme senere.
+            barnetrygd, kontantstøtte, enslig forsørger, tilleggsstønader og
+            arbeidsavklaringspenger. Flere ytelser vil komme senere.
         </BodyLong>
     </StyledContainer>
 );

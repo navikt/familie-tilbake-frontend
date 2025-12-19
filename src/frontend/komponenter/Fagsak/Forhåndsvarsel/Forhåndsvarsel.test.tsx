@@ -5,7 +5,7 @@ import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';

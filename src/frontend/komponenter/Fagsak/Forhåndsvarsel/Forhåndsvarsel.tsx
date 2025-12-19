@@ -1,4 +1,5 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselInfo } from './useForhåndsvarselQueries';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,7 +24,7 @@ import {
     extractErrorFromMutationError,
     useForhåndsvarselMutations,
 } from './useForhåndsvarselMutations';
-import { ForhåndsvarselInfo, useForhåndsvarselQueries } from './useForhåndsvarselQueries';
+import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { ToggleName } from '../../../context/toggles';
 import { useToggles } from '../../../context/TogglesContext';

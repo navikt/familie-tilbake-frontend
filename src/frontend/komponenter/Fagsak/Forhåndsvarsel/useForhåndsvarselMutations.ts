@@ -23,7 +23,6 @@ import { useNavigate } from 'react-router';
 
 import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
 import { Feil } from '../../../api/feil';
-import { BrevmalkodeEnum, HarBrukerUttaltSegEnum } from '../../../generated';
 import {
     bestillBrevMutation,
     forhåndsvisBrevMutation,
@@ -65,14 +64,14 @@ const brukerUttalelsePayload = (
 ): BrukeruttalelseDto | undefined => {
     if (formData.harUttaltSeg === HarUttaltSeg.Ja && 'uttalelsesDetaljer' in formData) {
         return {
-            harBrukerUttaltSeg: HarBrukerUttaltSegEnum.JA,
+            harBrukerUttaltSeg: 'JA',
             uttalelsesdetaljer: formData.uttalelsesDetaljer,
         };
     }
 
     if (formData.harUttaltSeg === HarUttaltSeg.Nei && 'kommentar' in formData) {
         return {
-            harBrukerUttaltSeg: HarBrukerUttaltSegEnum.NEI,
+            harBrukerUttaltSeg: 'NEI',
             kommentar: formData.kommentar,
         };
     }
@@ -157,7 +156,7 @@ export const useForhåndsvarselMutations = (
 
             const payload: BestillBrevDto = {
                 behandlingId: behandling.behandlingId,
-                brevmalkode: BrevmalkodeEnum.VARSEL,
+                brevmalkode: 'VARSEL',
                 fritekst: formData.fritekst,
             };
 
@@ -193,7 +192,7 @@ export const useForhåndsvarselMutations = (
             seForhåndsvisningMutation.mutate({
                 body: {
                     behandlingId: behandling.behandlingId,
-                    brevmalkode: BrevmalkodeEnum.VARSEL,
+                    brevmalkode: 'VARSEL',
                     fritekst,
                 },
             });

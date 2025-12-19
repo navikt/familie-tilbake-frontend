@@ -25,7 +25,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useEffect, useEffectEvent, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { BrevmalkodeEnum } from '../../../../generated';
 import { FixedAlert } from '../../../Felleskomponenter/FixedAlert/FixedAlert';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { SkalSendesForhåndsvarsel } from '../forhåndsvarselSchema';
@@ -88,7 +87,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                 const currentQueryKey = [
                     'forhåndsvisBrev',
                     behandling.behandlingId,
-                    BrevmalkodeEnum.VARSEL,
+                    'VARSEL',
                     fritekst,
                 ];
                 queryClient.setQueryData(currentQueryKey, data);
@@ -102,12 +101,7 @@ export const OpprettSkjema: React.FC<Props> = ({
     }, [forhåndsvisning.isSuccess, forhåndsvisning.data]);
 
     const seForhåndsvisningWithModal = (): void => {
-        const currentQueryKey = [
-            'forhåndsvisBrev',
-            behandling.behandlingId,
-            BrevmalkodeEnum.VARSEL,
-            fritekst,
-        ];
+        const currentQueryKey = ['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst];
 
         const cachedData = queryClient.getQueryData(currentQueryKey);
 
@@ -120,12 +114,7 @@ export const OpprettSkjema: React.FC<Props> = ({
 
     const pdfData =
         forhåndsvisning.data ||
-        queryClient.getQueryData([
-            'forhåndsvisBrev',
-            behandling.behandlingId,
-            BrevmalkodeEnum.VARSEL,
-            fritekst,
-        ]);
+        queryClient.getQueryData(['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst]);
 
     const skalSendesForhåndsvarsel = useWatch({
         control: control,

@@ -70,7 +70,9 @@ const Dokument: React.FC<{ pdfdata: Ressurs<string> | RessursByte }> = ({ pdfdat
                 </div>
             );
         case RessursStatus.Suksess: {
-            const pdfSrc = handlePdfData(pdfdata.data);
+            // backend skal aldri svare med null som data for kall som har status suksess
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const pdfSrc = handlePdfData(pdfdata.data!);
             return <IframePdfVisning title="Dokument" src={pdfSrc} allow="fullscreen" />;
         }
         case RessursStatus.Feilet:

@@ -2,8 +2,6 @@ import type { ForhåndsvarselInfo } from './useForhåndsvarselQueries';
 
 import { z } from 'zod';
 
-import { HarBrukerUttaltSegEnum } from '../../../generated';
-
 export enum SkalSendesForhåndsvarsel {
     Ja = 'ja',
     Nei = 'nei',
@@ -91,7 +89,7 @@ export const getUttalelseValues = (
 
     if (brukerUttalelse?.harBrukerUttaltSeg) {
         switch (brukerUttalelse?.harBrukerUttaltSeg) {
-            case HarBrukerUttaltSegEnum.JA:
+            case 'JA':
                 return {
                     harUttaltSeg: HarUttaltSeg.Ja,
                     uttalelsesDetaljer: uttalelsesdetaljer ?? [
@@ -102,7 +100,7 @@ export const getUttalelseValues = (
                         },
                     ],
                 };
-            case HarBrukerUttaltSegEnum.NEI:
+            case 'NEI':
                 return {
                     harUttaltSeg: HarUttaltSeg.Nei,
                     kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
