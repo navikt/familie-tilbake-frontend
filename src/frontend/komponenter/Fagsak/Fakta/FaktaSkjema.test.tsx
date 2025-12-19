@@ -1,9 +1,10 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { FaktaOmFeilutbetalingDto } from '../../../generated';
+import type { FaktaOmFeilutbetalingDto, OppdaterFaktaData } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
-import { render } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
 import { FaktaSkjema } from './FaktaSkjema';
@@ -72,13 +73,36 @@ const faktaOmFeilutbetaling = (
     ...overrides,
 });
 
-const renderFakta = (overrides?: Partial<FaktaOmFeilutbetalingDto>): RenderResult => {
-    return render(<FaktaSkjema faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)} />);
+const renderFakta = (
+    overrides?: Partial<FaktaOmFeilutbetalingDto>
+): { result: RenderResult; mutationBody: Promise<OppdaterFaktaData> } => {
+    const client = new QueryClient();
+    const mutationBody = new Promise<OppdaterFaktaData>(resolve => {
+        client.setMutationDefaults(['oppdaterFakta'], {
+            mutationFn: async (fakta: OppdaterFaktaData) => {
+                resolve(fakta);
+            },
+        });
+    });
+    return {
+        result: render(
+            <QueryClientProvider client={client}>
+                <FaktaSkjema
+                    faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
+                    behandlingId="unik"
+                    behandlingUrl="https://tilbakekreving"
+                />
+            </QueryClientProvider>
+        ),
+        mutationBody,
+    };
 };
 describe('Fakta om feilutbetaling', () => {
     describe('Rettslig grunnlag', () => {
         test('Forhåndsutfylt rettslig grunnlag fra backend', async () => {
-            const { findByRole } = renderFakta();
+            const {
+                result: { findByRole },
+            } = renderFakta();
 
             const bestemmelse = await findByRole('combobox', { name: 'Velg bestemmelse' });
             expect(bestemmelse).toHaveTextContent('Annet');
@@ -90,7 +114,9 @@ describe('Fakta om feilutbetaling', () => {
         });
 
         test('Defaults hentes fra input objekt', async () => {
-            const { findByRole } = renderFakta({
+            const {
+                result: { findByRole },
+            } = renderFakta({
                 vurdering: {
                     årsak: 'Svindel',
                     oppdaget: {
@@ -117,6 +143,110 @@ describe('Fakta om feilutbetaling', () => {
                 name: 'Hvordan ble feilutbetalingen oppdaget?',
             });
             expect(oppdagetBeskrivelse).toHaveValue('Fant et dokument under bordet.');
+        });
+
+        test('Submit form with all values', async () => {
+            const {
+                result: { findByRole },
+                mutationBody,
+            } = renderFakta({});
+
+            fireEvent.change(await findByRole('textbox', { name: 'Årsak til feilutbetalingen' }), {
+                target: { value: 'årsak' },
+            });
+
+            const oppdagetDato = await findByRole('textbox', {
+                name: 'Når ble feilutbetalingen oppdaget?',
+            });
+            fireEvent.change(oppdagetDato, { target: { value: '20.04.2020' } });
+            fireEvent.click(await findByRole('radio', { name: 'Nav' }));
+
+            fireEvent.change(
+                await findByRole('textbox', { name: 'Hvordan ble feilutbetalingen oppdaget?' }),
+                {
+                    target: { value: 'hvordan' },
+                }
+            );
+
+            fireEvent.click(
+                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+            );
+            await expect(mutationBody).resolves.toEqual({
+                path: {
+                    behandlingId: 'unik',
+                },
+                body: {
+                    perioder: [
+                        {
+                            id: 'unik',
+                            rettsligGrunnlag: [
+                                {
+                                    bestemmelse: 'ANNET',
+                                    grunnlag: 'ANNET_FRITEKST',
+                                },
+                            ],
+                        },
+                    ],
+                    vurdering: {
+                        årsak: 'årsak',
+                        oppdaget: {
+                            av: 'NAV',
+                            beskrivelse: 'hvordan',
+                            dato: '2020-04-20',
+                        },
+                    },
+                },
+            });
+        });
+
+        test('bytter til submit knapp når dato endres', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta({});
+
+            const nesteKnapp = await findByRole('button', {
+                name: 'Gå videre til foreldelsessteget',
+            });
+            expect(nesteKnapp).toHaveAttribute('type', 'button');
+
+            const oppdagetDato = await findByRole('textbox', {
+                name: 'Når ble feilutbetalingen oppdaget?',
+            });
+
+            fireEvent.change(oppdagetDato, { target: { value: '20.04.2020' } });
+            const submitKnapp = await findByRole('button', {
+                name: 'Gå videre til foreldelsessteget',
+            });
+            expect(submitKnapp).toHaveAttribute('type', 'submit');
+        });
+
+        test('bytter til submit knapp ', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta({
+                vurdering: {
+                    oppdaget: {
+                        av: 'NAV',
+                        dato: '2020-04-20',
+                        beskrivelse: 'VI OPPDAGET EN FEIL!!!!',
+                    },
+                },
+            });
+
+            const nesteKnapp = await findByRole('button', {
+                name: 'Gå videre til foreldelsessteget',
+            });
+            expect(nesteKnapp).toHaveAttribute('type', 'button');
+
+            const oppdagetDato = await findByRole('textbox', {
+                name: 'Når ble feilutbetalingen oppdaget?',
+            });
+            fireEvent.change(oppdagetDato, { target: { value: '' } });
+
+            const submitKnapp = await findByRole('button', {
+                name: 'Gå videre til foreldelsessteget',
+            });
+            expect(submitKnapp).toHaveAttribute('type', 'submit');
         });
     });
 });

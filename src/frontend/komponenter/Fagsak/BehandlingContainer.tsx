@@ -182,7 +182,10 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                                 element={
                                     toggles[ToggleName.NyttFaktasteg] ? (
-                                        <Fakta behandlingId={behandling.behandlingId} />
+                                        <Fakta
+                                            behandlingId={behandling.behandlingId}
+                                            behandlingUrl={behandlingUrl}
+                                        />
                                     ) : (
                                         <FaktaProvider behandling={behandling} fagsak={fagsak}>
                                             <FaktaContainer ytelse={fagsak.ytelsestype} />
