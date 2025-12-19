@@ -86,6 +86,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                                 <DatePicker.Input
                                     {...field}
                                     {...uttalelsesDatepicker.inputProps}
+                                    size="small"
                                     label="Når uttalte brukeren seg?"
                                     error={fieldState.error?.message}
                                 />
@@ -98,6 +99,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                         render={({ field, fieldState }) => (
                             <TextField
                                 {...field}
+                                size="small"
                                 label="Hvordan uttalte brukeren seg?"
                                 description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
                                 error={fieldState.error?.message}
@@ -110,6 +112,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                         render={({ field, fieldState }) => (
                             <Textarea
                                 {...field}
+                                size="small"
                                 label="Beskriv hva brukeren har uttalt seg om"
                                 maxLength={4000}
                                 resize
@@ -123,6 +126,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
             {harUttaltSeg === HarUttaltSeg.Nei && (
                 <Textarea
                     {...methods.register('kommentar')}
+                    size="small"
                     label="Kommentar til valget over"
                     maxLength={4000}
                     resize
@@ -138,6 +142,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                             <DatePicker {...nyFristDatepicker.datepickerProps}>
                                 <DatePicker.Input
                                     {...nyFristDatepicker.inputProps}
+                                    size="small"
                                     label="Sett ny dato for frist"
                                     name={field.name}
                                     error={fieldState.error?.message}
@@ -147,6 +152,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                     />
                     <Textarea
                         {...methods.register('utsettUttalelseFrist.begrunnelse')}
+                        size="small"
                         label="Begrunnelse for utsatt frist"
                         maxLength={4000}
                         resize

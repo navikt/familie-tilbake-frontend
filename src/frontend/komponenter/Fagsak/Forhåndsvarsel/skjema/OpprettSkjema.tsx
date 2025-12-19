@@ -193,6 +193,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                                                     error={fieldError.fritekst?.message?.toString()}
                                                     className="mb-6"
                                                     readOnly={varselErSendt}
+                                                    resize
                                                 />
                                             )}
                                         </Fragment>
