@@ -35,26 +35,26 @@ type UtsettFristErrors = FieldErrors<
     Extract<UttalelseMedFristFormData, { harUttaltSeg: HarUttaltSeg.UtsettFrist }>
 >;
 
-function isUttalelseJaErrors(
+const isUttalelseJaErrors = (
     errors: FieldErrors<UttalelseMedFristFormData>,
     harUttaltSeg: HarUttaltSeg | undefined
-): errors is UttalelseJaErrors {
+): errors is UttalelseJaErrors => {
     return harUttaltSeg === HarUttaltSeg.Ja;
-}
+};
 
-function isUttalelseNeiErrors(
+const isUttalelseNeiErrors = (
     errors: FieldErrors<UttalelseMedFristFormData>,
     harUttaltSeg: HarUttaltSeg | undefined
-): errors is UttalelseNeiErrors {
+): errors is UttalelseNeiErrors => {
     return harUttaltSeg === HarUttaltSeg.Nei;
-}
+};
 
-function isUtsettFristErrors(
+const isUtsettFristErrors = (
     errors: FieldErrors<UttalelseMedFristFormData>,
     harUttaltSeg: HarUttaltSeg | undefined
-): errors is UtsettFristErrors {
+): errors is UtsettFristErrors => {
     return harUttaltSeg === HarUttaltSeg.UtsettFrist;
-}
+};
 
 export const Brukeruttalelse: React.FC<Props> = ({
     behandling,
