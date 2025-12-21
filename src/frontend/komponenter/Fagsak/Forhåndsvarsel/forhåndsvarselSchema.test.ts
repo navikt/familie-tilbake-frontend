@@ -29,6 +29,8 @@ describe('Validering av forhåndsvarsel-skjema', () => {
         test('Nei: gyldig path', () => {
             const result = forhåndsvarselSchema.safeParse({
                 skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+                begrunnelseForUnntak: 'IKKE_PRAKTISK_MULIG',
+                beskrivelse: 'Dette er en gyldig begrunnelse',
             });
 
             expect(result.success).toBe(true);

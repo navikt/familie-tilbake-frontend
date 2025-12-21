@@ -90,7 +90,7 @@ describe('Brukeruttalelse', () => {
         jest.mocked(useForhåndsvarselQueries).mockReturnValue(
             lagForhåndsvarselQueries({
                 forhåndsvarselInfo: {
-                    varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                    varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
                     utsettUttalelseFrist: [
                         // { nyFrist: '2023-01-15', begrunnelse: 'Trenger mer tid' },
                     ],

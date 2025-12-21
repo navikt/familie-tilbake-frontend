@@ -146,7 +146,7 @@ describe('Forhåndsvarsel', () => {
         const mockQueries = jest.mocked(useForhåndsvarselQueries);
         mockQueries.mockReturnValue({
             forhåndsvarselInfo: {
-                varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
                 utsettUttalelseFrist: [],
                 brukeruttalelse: undefined,
             },
@@ -173,7 +173,7 @@ describe('Forhåndsvarsel', () => {
         const mockQueries = jest.mocked(useForhåndsvarselQueries);
         mockQueries.mockReturnValue({
             forhåndsvarselInfo: {
-                varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
                 utsettUttalelseFrist: [],
                 brukeruttalelse: undefined,
             },

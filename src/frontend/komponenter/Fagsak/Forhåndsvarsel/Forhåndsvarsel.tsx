@@ -1,5 +1,4 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
-import type { ForhåndsvarselInfo } from './useForhåndsvarselQueries';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,7 +18,6 @@ import {
 } from './forhåndsvarselSchema';
 import { OpprettSkjema } from './skjema/OpprettSkjema';
 import { Uttalelse } from './skjema/UttalelseSkjema';
-// import { Unntak } from './Unntak';
 import {
     extractErrorFromMutationError,
     useForhåndsvarselMutations,
@@ -28,13 +26,14 @@ import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { ToggleName } from '../../../context/toggles';
 import { useToggles } from '../../../context/TogglesContext';
-import { type BehandlingDto, type FagsakDto } from '../../../generated';
+import { ForhåndsvarselDto, type BehandlingDto, type FagsakDto } from '../../../generated';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { updateParentBounds } from '../../../utils/updateParentBounds';
 import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
 import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
 import { ActionBar } from '../ActionBar/ActionBar';
+import { Unntak } from './skjema/UnntakSkjema';
 
 type Props = {
     behandling: BehandlingDto;
@@ -55,17 +54,19 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         <VStack gap="4">
             <HStack align="center" justify="space-between">
                 <Heading size="small">Forhåndsvarsel</Heading>
-                {forhåndsvarselInfo?.varselbrevSendtTid && (
+                {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
                     <Tooltip
                         arrow={false}
                         placement="bottom"
-                        content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                        content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
                     >
                         <Tag
-                            variant={getTagVariant(forhåndsvarselInfo.varselbrevSendtTid)}
+                            variant={getTagVariant(
+                                forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid
+                            )}
                             icon={<MegaphoneIcon aria-hidden />}
                         >
-                            {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                            {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
                         </Tag>
                     </Tooltip>
                 )}
@@ -82,7 +83,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
 type ForhåndsvarselSkjemaProps = {
     behandling: BehandlingDto;
     fagsak: FagsakDto;
-    forhåndsvarselInfo: ForhåndsvarselInfo;
+    forhåndsvarselInfo: ForhåndsvarselDto | undefined;
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
@@ -114,18 +115,16 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const { varselbrevtekster } = useForhåndsvarselQueries(behandling);
 
-    const varselErSendt = !!forhåndsvarselInfo?.varselbrevSendtTid;
+    const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
 
     const methods = useForm<ForhåndsvarselFormData>({
         resolver: zodResolver(forhåndsvarselSchema),
         mode: 'all',
-        shouldFocusError: false,
-        defaultValues: getDefaultValues(varselErSendt),
+        defaultValues: getDefaultValues(varselErSendt, forhåndsvarselInfo),
     });
     const uttalelseMethods = useForm<UttalelseMedFristFormData>({
         resolver: zodResolver(uttalelseMedFristSchema),
         mode: 'all',
-        shouldFocusError: false,
         defaultValues: getUttalelseValues(forhåndsvarselInfo),
     });
 
@@ -188,7 +187,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     parentBounds={parentBounds}
                     handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
                 />
-                {/* {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />} */}
+                {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />}
             </FormProvider>
 
             {toggles[ToggleName.Forhåndsvarselsteg] && varselErSendt && (
