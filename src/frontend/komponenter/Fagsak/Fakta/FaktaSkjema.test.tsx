@@ -4,7 +4,7 @@ import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { FaktaSkjema } from './FaktaSkjema';
@@ -157,26 +157,32 @@ describe('Fakta om feilutbetaling', () => {
                 mutationBody,
             } = renderFakta({});
 
-            fireEvent.change(await findByRole('textbox', { name: 'Årsak til feilutbetalingen' }), {
-                target: { value: 'årsak' },
+            await waitFor(async () => {
+                fireEvent.change(
+                    await findByRole('textbox', { name: 'Årsak til feilutbetalingen' }),
+                    {
+                        target: { value: 'årsak' },
+                    }
+                );
             });
 
             const oppdagetDato = await findByRole('textbox', {
                 name: 'Når ble feilutbetalingen oppdaget?',
             });
             fireEvent.change(oppdagetDato, { target: { value: '20.04.2020' } });
-            fireEvent.click(await findByRole('radio', { name: 'Nav' }));
 
+            fireEvent.click(await findByRole('radio', { name: 'Nav' }));
             fireEvent.change(
                 await findByRole('textbox', { name: 'Hvordan ble feilutbetalingen oppdaget?' }),
                 {
                     target: { value: 'hvordan' },
                 }
             );
-
-            fireEvent.click(
-                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
-            );
+            await waitFor(async () => {
+                fireEvent.click(
+                    await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+                );
+            });
             await expect(mutationBody).resolves.toEqual({
                 path: {
                     behandlingId: 'unik',
