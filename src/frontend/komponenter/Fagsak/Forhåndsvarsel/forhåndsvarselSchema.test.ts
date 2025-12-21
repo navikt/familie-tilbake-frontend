@@ -45,7 +45,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                     fritekst: '',
                 });
 
-                expect(result.error?.issues[0].message).toBe('Du må legge inn minst tre tegn');
+                expect(result.error?.issues[0].message).toBe('Du må fylle inn en verdi');
             });
 
             test('skal feile når fritekst er for lang', () => {
@@ -87,7 +87,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                 });
 
                 const error = result.error?.issues.find(i => i.path.includes('kommentar'));
-                expect(error?.message).toBe('Du må legge inn minst tre tegn');
+                expect(error?.message).toBe('Du må fylle inn en verdi');
             });
 
             test('Ja, gyldig validering', () => {
@@ -156,7 +156,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                 });
 
                 const error = result.error?.issues.find(i => i.path.includes('begrunnelse'));
-                expect(error?.message).toBe('Du må legge inn minst tre tegn');
+                expect(error?.message).toBe('Du må fylle inn en verdi');
             });
         });
     });

@@ -20,7 +20,7 @@ export enum HarUttaltSeg {
 
 const fritekstSchema = z
     .string()
-    .min(3, 'Du må legge inn minst tre tegn')
+    .min(1, 'Du må fylle inn en verdi')
     .max(4000, 'Maksimalt 4000 tegn tillatt');
 
 const uttalelsesDetaljerSchema = z.object({
@@ -141,11 +141,11 @@ export const getOpprettValues = (): ForhåndsvarselFormData => {
 export const unntakSchema = z
     .object({
         skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
-        begrunnelseForUnntak: z.union([zBegrunnelseForUnntakEnum, z.literal('')]),
-        beskrivelse: z.string().min(3).max(2000),
+        begrunnelseForUnntak: zBegrunnelseForUnntakEnum.optional(),
+        beskrivelse: z.string().min(1, 'Du må fylle inn en verdi').max(2000),
     })
-    .refine(data => data.begrunnelseForUnntak !== undefined && data.begrunnelseForUnntak !== '', {
-        message: 'Du må velge en begrunnelse for unntak',
+    .refine(data => data.begrunnelseForUnntak !== undefined, {
+        message: 'Du må velge en begrunnelse for unntak fra forhåndsvarsel',
         path: ['begrunnelseForUnntak'],
     });
 

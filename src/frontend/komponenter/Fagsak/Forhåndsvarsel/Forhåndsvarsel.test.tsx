@@ -218,25 +218,8 @@ describe('Forhåndsvarsel', () => {
                 fireEvent.click(visMerKnapp);
                 fireEvent.click(screen.getByRole('button', { name: 'Send forhåndsvarsel' }));
 
-                expect(
-                    await screen.findByText('Du må legge inn minst tre tegn')
-                ).toBeInTheDocument();
+                expect(await screen.findByText('Du må fylle inn en verdi')).toBeInTheDocument();
             });
         });
-
-        // describe("Når 'Nei' er valgt", () => {
-        //     test('Vises feilmelding dersom ingen begrunnelse er valgt', async () => {
-        //         renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
-        //         fireEvent.click(screen.getByText('Nei'));
-        //         fireEvent.click(screen.getByRole('button', { name: 'Neste' }));
-
-        //         expect(
-        //             await screen.findByText('Du må velge en begrunnelse for unntak')
-        //         ).toBeInTheDocument();
-        //         expect(
-        //             await screen.findByText('Du må legge inn minst tre tegn')
-        //         ).toBeInTheDocument();
-        //     });
-        // });
     });
 });

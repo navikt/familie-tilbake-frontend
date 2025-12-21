@@ -89,6 +89,7 @@ describe('Unntak', () => {
         jest.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueries());
         jest.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
     });
+
     test('Viser alle tre unntaksalternativer', () => {
         renderUnntak();
 
@@ -110,7 +111,19 @@ describe('Unntak', () => {
             )
         ).toBeInTheDocument();
     });
-});
-test('placeholder', () => {
-    expect(true).toBe(true);
+
+    test('Viser feilmeldinger ved ingen valg av unntak eller begrunnelse', async () => {
+        renderUnntak();
+
+        const nesteKnapp = screen.getByRole('button', { name: 'Neste' });
+        fireEvent.click(nesteKnapp);
+
+        const unntakFeilmelding = await screen.findByText(
+            'Du må velge en begrunnelse for unntak fra forhåndsvarsel'
+        );
+        expect(unntakFeilmelding).toBeInTheDocument();
+
+        const beskrivelseFeilmelding = await screen.findByText('Du må fylle inn en verdi');
+        expect(beskrivelseFeilmelding).toBeInTheDocument();
+    });
 });

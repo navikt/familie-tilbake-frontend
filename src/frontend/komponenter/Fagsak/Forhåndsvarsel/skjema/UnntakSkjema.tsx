@@ -16,6 +16,7 @@ export const Unntak: React.FC = () => {
                         {...field}
                         legend="Velg begrunnelse for unntak fra forhåndsvarsel"
                         size="small"
+                        value={field.value ?? ''}
                         className="max-w-xl"
                         description={
                             <>
