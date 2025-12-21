@@ -208,7 +208,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 isLoading={
                     sendForhåndsvarselMutation.isPending ||
                     sendBrukeruttalelseMutation.isPending ||
-                    sendUnntakMutation.isPending
+                    sendUnntakMutation?.isPending
                 }
                 forrigeAriaLabel={undefined}
                 onForrige={undefined}
