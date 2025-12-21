@@ -1,4 +1,5 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselDto } from '../../../generated';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,14 +27,13 @@ import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { ToggleName } from '../../../context/toggles';
 import { useToggles } from '../../../context/TogglesContext';
-import { ForhåndsvarselDto, type BehandlingDto, type FagsakDto } from '../../../generated';
+import { type BehandlingDto, type FagsakDto } from '../../../generated';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { updateParentBounds } from '../../../utils/updateParentBounds';
 import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
 import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
 import { ActionBar } from '../ActionBar/ActionBar';
-import { Unntak } from './skjema/UnntakSkjema';
 
 type Props = {
     behandling: BehandlingDto;
@@ -104,6 +104,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendUtsettUttalelseFrist,
         sendBrukeruttalelse,
         sendForhåndsvarsel,
+        sendUnntakMutation,
+        sendUnntak,
         gåTilNeste,
     } = useForhåndsvarselMutations(behandling, fagsak);
 
@@ -111,6 +113,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         { key: 'forhåndsvarsel', mutation: sendForhåndsvarselMutation },
         { key: 'brukeruttalelse', mutation: sendBrukeruttalelseMutation },
         { key: 'utsettFrist', mutation: sendUtsettUttalelseFristMutation },
+        { key: 'unntak', mutation: sendUnntakMutation },
     ] as const;
 
     const { varselbrevtekster } = useForhåndsvarselQueries(behandling);
@@ -153,6 +156,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'Utsett frist';
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
+        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei) {
+            return 'Send inn unntak';
         }
         return 'Neste';
     };
@@ -160,8 +165,10 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
         data: ForhåndsvarselFormData
     ): void => {
-        if (!varselErSendt) {
+        if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt) {
             sendForhåndsvarsel(data);
+        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei) {
+            sendUnntak(data);
         } else {
             gåTilNeste();
         }
@@ -187,7 +194,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     parentBounds={parentBounds}
                     handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
                 />
-                {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />}
             </FormProvider>
 
             {toggles[ToggleName.Forhåndsvarselsteg] && varselErSendt && (
@@ -200,7 +206,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
                 nesteTekst={getNesteKnappTekst()}
                 isLoading={
-                    sendForhåndsvarselMutation.isPending || sendBrukeruttalelseMutation.isPending
+                    sendForhåndsvarselMutation.isPending ||
+                    sendBrukeruttalelseMutation.isPending ||
+                    sendUnntakMutation.isPending
                 }
                 forrigeAriaLabel={undefined}
                 onForrige={undefined}
@@ -226,7 +234,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             )}
 
             {mutations.map(({ key, mutation }) => {
-                if (mutation.isError) {
+                if (mutation?.isError) {
                     const feil = extractErrorFromMutationError(mutation.error);
                     return (
                         <FeilModal

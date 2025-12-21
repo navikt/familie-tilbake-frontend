@@ -13,6 +13,9 @@ import type {
     UtsettUttalelseFristResponse,
     ForhåndsvisBrevData,
     ForhåndsvisBrevResponse,
+    ForhåndsvarselUnntakDto,
+    ForhåndsvarselUnntakData,
+    ForhåndsvarselUnntakResponse,
 } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { DefaultError, UseMutationResult } from '@tanstack/react-query';
@@ -28,6 +31,7 @@ import {
     forhåndsvisBrevMutation,
     lagreBrukeruttalelseMutation,
     utsettUttalelseFristMutation,
+    forhåndsvarselUnntakMutation,
 } from '../../../generated/@tanstack/react-query.gen';
 import { SYNLIGE_STEG } from '../../../utils/sider';
 
@@ -52,8 +56,14 @@ export type UseForhåndsvarselMutationsReturn = {
         AxiosError<DefaultError>,
         Options<ForhåndsvisBrevData>
     >;
+    readonly sendUnntakMutation: UseMutationResult<
+        ForhåndsvarselUnntakResponse,
+        AxiosError<DefaultError>,
+        Options<ForhåndsvarselUnntakData>
+    >;
     readonly sendForhåndsvarsel: (formData: ForhåndsvarselFormData) => void;
     readonly sendBrukeruttalelse: (formData: UttalelseMedFristFormData) => void;
+    readonly sendUnntak: (formData: ForhåndsvarselFormData) => void;
     readonly sendUtsettUttalelseFrist: (formData: UttalelseMedFristFormData) => void;
     readonly seForhåndsvisning: (fritekst: string) => void;
     readonly gåTilNeste: () => void;
@@ -145,10 +155,18 @@ export const useForhåndsvarselMutations = (
         ...forhåndsvisBrevMutation(),
     });
 
+    const sendUnntakMutation = useMutation({
+        ...forhåndsvarselUnntakMutation(),
+        onSuccess: () => {
+            invalidateQueries();
+        },
+    });
+
     return {
         sendForhåndsvarselMutation,
         sendBrukeruttalelseMutation,
         sendUtsettUttalelseFristMutation,
+        sendUnntakMutation,
         forhåndsvisning: seForhåndsvisningMutation,
 
         sendForhåndsvarsel: (formData: ForhåndsvarselFormData): void => {
@@ -171,6 +189,25 @@ export const useForhåndsvarselMutations = (
                 path: {
                     behandlingId: behandling.behandlingId,
                 },
+                body: payload,
+            });
+        },
+        sendUnntak: (formData: ForhåndsvarselFormData): void => {
+            if (
+                formData.skalSendesForhåndsvarsel !== SkalSendesForhåndsvarsel.Nei ||
+                formData.begrunnelseForUnntak === undefined
+            )
+                return;
+
+            const payload: ForhåndsvarselUnntakDto = {
+                begrunnelseForUnntak: formData.begrunnelseForUnntak,
+                beskrivelse: formData.beskrivelse,
+            };
+
+            sendUnntakMutation.mutate({
+                // path: {
+                //     behandlingId: behandling.behandlingId,
+                // },
                 body: payload,
             });
         },
