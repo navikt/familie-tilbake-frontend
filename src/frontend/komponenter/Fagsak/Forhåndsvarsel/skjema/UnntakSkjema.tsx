@@ -64,6 +64,7 @@ export const Unntak: React.FC = () => {
                 maxLength={2000}
                 size="small"
                 className="max-w-xl"
+                resize
                 error={
                     'beskrivelse' in methods.formState.errors
                         ? methods.formState.errors.beskrivelse?.message?.toString()
