@@ -89,6 +89,9 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                                     size="small"
                                     label="Når uttalte brukeren seg?"
                                     error={fieldState.error?.message}
+                                    onBlur={() =>
+                                        methods.trigger('uttalelsesDetaljer.0.uttalelsesdato')
+                                    }
                                 />
                             </DatePicker>
                         )}

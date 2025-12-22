@@ -154,6 +154,42 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                 expect(error?.message).toBe('Du må legge inn en gyldig dato');
             });
 
+            test('Ja, feiler med manglende beskrivelse', () => {
+                const result = uttalelseMedFristSchema.safeParse({
+                    harUttaltSeg: HarUttaltSeg.Ja,
+                    uttalelsesDetaljer: [
+                        {
+                            uttalelsesdato: '2024-01-15',
+                            hvorBrukerenUttalteSeg: 'Modia',
+                            uttalelseBeskrivelse: '',
+                        },
+                    ],
+                });
+
+                const error = result.error?.issues.find(i =>
+                    i.path.includes('uttalelseBeskrivelse')
+                );
+                expect(error?.message).toBe('Du må fylle inn en verdi');
+            });
+
+            test('Ja, feiler med manglende hvorBrukerenUttalteSeg', () => {
+                const result = uttalelseMedFristSchema.safeParse({
+                    harUttaltSeg: HarUttaltSeg.Ja,
+                    uttalelsesDetaljer: [
+                        {
+                            uttalelsesdato: '2024-01-15',
+                            hvorBrukerenUttalteSeg: '',
+                            uttalelseBeskrivelse: 'Gyldig beskrivelse',
+                        },
+                    ],
+                });
+
+                const error = result.error?.issues.find(i =>
+                    i.path.includes('hvorBrukerenUttalteSeg')
+                );
+                expect(error?.message).toBe('Du må fylle inn en verdi');
+            });
+
             test('Utsett frist, gyldig validering', () => {
                 const result = uttalelseMedFristSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.UtsettFrist,

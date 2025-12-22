@@ -20,6 +20,7 @@ export enum HarUttaltSeg {
 
 const fritekstSchema = z
     .string()
+    .trim()
     .min(1, 'Du må fylle inn en verdi')
     .max(4000, 'Maksimalt 4000 tegn tillatt');
 
@@ -87,20 +88,20 @@ export const getUttalelseValues = (
     const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
     const uttalelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
         ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
-        : [];
+        : [
+              {
+                  hvorBrukerenUttalteSeg: '',
+                  uttalelseBeskrivelse: '',
+                  uttalelsesdato: '',
+              },
+          ];
 
     if (brukerUttalelse?.harBrukerUttaltSeg) {
         switch (brukerUttalelse?.harBrukerUttaltSeg) {
             case 'JA':
                 return {
                     harUttaltSeg: HarUttaltSeg.Ja,
-                    uttalelsesDetaljer: uttalelsesdetaljer ?? [
-                        {
-                            hvorBrukerenUttalteSeg: '',
-                            uttalelseBeskrivelse: '',
-                            uttalelsesdato: '',
-                        },
-                    ],
+                    uttalelsesDetaljer: uttalelsesdetaljer,
                 };
             case 'NEI':
                 return {

@@ -181,4 +181,53 @@ describe('Brukeruttalelse', () => {
         expect(await screen.findByLabelText('Sett ny dato for frist')).toBeInTheDocument();
         expect(screen.getByLabelText('Begrunnelse for utsatt frist')).toBeInTheDocument();
     });
+
+    describe('Validering', () => {
+        test('skal vise feilmelding når ingen alternativ er valgt', async () => {
+            renderBrukeruttalelse();
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
+            fireEvent.click(nesteKnapp);
+
+            const brukeruttalelseFieldset = screen.getByRole('group', {
+                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+            });
+
+            expect(
+                await within(brukeruttalelseFieldset).findByText(
+                    'Du må velge om brukeren har uttalt seg eller om fristen skal utsettes'
+                )
+            ).toBeInTheDocument();
+        });
+
+        test('skal vise dato-feilmelding når Ja er valgt uten fylt dato-felt', async () => {
+            renderBrukeruttalelse();
+
+            const brukeruttalelseFieldset = screen.getByRole('group', {
+                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+            });
+            const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
+            fireEvent.click(jaRadio);
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
+            fireEvent.click(nesteKnapp);
+
+            expect(await screen.findByText('Du må legge inn en gyldig dato')).toBeInTheDocument();
+        });
+
+        test('skal vise dato-feilmelding når Ja er valgt uten fylt dato-felt på blur', async () => {
+            renderBrukeruttalelse();
+
+            const brukeruttalelseFieldset = screen.getByRole('group', {
+                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+            });
+            const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
+            fireEvent.click(jaRadio);
+
+            const datoInput = await screen.findByLabelText('Når uttalte brukeren seg?');
+            fireEvent.blur(datoInput);
+
+            expect(await screen.findByText('Du må legge inn en gyldig dato')).toBeInTheDocument();
+        });
+    });
 });
