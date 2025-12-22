@@ -12,7 +12,7 @@ import {
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import React from 'react';
-import { Controller, get, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { dateTilIsoDatoString } from '../../../../utils/dato';
 import { HarUttaltSeg } from '../forhåndsvarselSchema';
@@ -47,6 +47,10 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
             methods.trigger('utsettUttalelseFrist.nyFrist');
         },
     });
+    const { fields } = useFieldArray({
+        control: methods.control,
+        name: 'uttalelsesDetaljer',
+    });
 
     return (
         <VStack
@@ -76,56 +80,56 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                     </RadioGroup>
                 )}
             />
-            {harUttaltSeg === HarUttaltSeg.Ja && (
-                <>
-                    <Controller
-                        name="uttalelsesDetaljer.0.uttalelsesdato"
-                        control={methods.control}
-                        render={({ field, fieldState }) => (
-                            <DatePicker {...uttalelsesDatepicker.datepickerProps}>
-                                <DatePicker.Input
-                                    {...field}
-                                    {...uttalelsesDatepicker.inputProps}
-                                    size="small"
-                                    label="Når uttalte brukeren seg?"
-                                    error={fieldState.error?.message}
-                                    onBlur={() =>
-                                        methods.trigger('uttalelsesDetaljer.0.uttalelsesdato')
-                                    }
-                                />
-                            </DatePicker>
-                        )}
-                    />
-                    <Controller
-                        name="uttalelsesDetaljer.0.hvorBrukerenUttalteSeg"
-                        control={methods.control}
-                        render={({ field, fieldState }) => (
-                            <TextField
-                                {...field}
-                                size="small"
-                                label="Hvordan uttalte brukeren seg?"
-                                description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
-                                error={fieldState.error?.message}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="uttalelsesDetaljer.0.uttalelseBeskrivelse"
-                        control={methods.control}
-                        render={({ field, fieldState }) => (
-                            <Textarea
-                                {...field}
-                                size="small"
-                                label="Beskriv hva brukeren har uttalt seg om"
-                                maxLength={4000}
-                                resize
-                                error={fieldState.error?.message}
-                            />
-                        )}
-                    />
-                </>
-            )}
-
+            {harUttaltSeg === HarUttaltSeg.Ja &&
+                fields.map((fieldItem, index) => (
+                    <React.Fragment key={fieldItem.id}>
+                        <Controller
+                            name={`uttalelsesDetaljer.${index}.uttalelsesdato`}
+                            control={methods.control}
+                            render={({ field, fieldState }) => (
+                                <DatePicker {...uttalelsesDatepicker.datepickerProps}>
+                                    <DatePicker.Input
+                                        {...field}
+                                        {...uttalelsesDatepicker.inputProps}
+                                        size="small"
+                                        label="Når uttalte brukeren seg?"
+                                        error={fieldState.error?.message}
+                                        onBlur={() =>
+                                            methods.trigger(
+                                                `uttalelsesDetaljer.${index}.uttalelsesdato`
+                                            )
+                                        }
+                                    />
+                                </DatePicker>
+                            )}
+                        />
+                        <TextField
+                            {...methods.register(
+                                `uttalelsesDetaljer.${index}.hvorBrukerenUttalteSeg`
+                            )}
+                            size="small"
+                            label="Hvordan uttalte brukeren seg?"
+                            description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
+                            error={get(
+                                errors,
+                                `uttalelsesDetaljer.${index}.hvorBrukerenUttalteSeg.message`
+                            )}
+                        />
+                        <Textarea
+                            {...methods.register(
+                                `uttalelsesDetaljer.${index}.uttalelseBeskrivelse`
+                            )}
+                            size="small"
+                            label="Beskriv hva brukeren har uttalt seg om"
+                            maxLength={4000}
+                            resize
+                            error={get(
+                                errors,
+                                `uttalelsesDetaljer.${index}.uttalelseBeskrivelse.message`
+                            )}
+                        />
+                    </React.Fragment>
+                ))}
             {harUttaltSeg === HarUttaltSeg.Nei && (
                 <Textarea
                     {...methods.register('kommentar')}

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { MegaphoneIcon } from '@navikt/aksel-icons';
 import { Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import {
@@ -16,6 +16,7 @@ import {
     SkalSendesForhåndsvarsel,
     uttalelseMedFristSchema,
     getUttalelseValues,
+    getUttalelseValuesBasertPåValg,
 } from './forhåndsvarselSchema';
 import { OpprettSkjema } from './skjema/OpprettSkjema';
 import { Uttalelse } from './skjema/UttalelseSkjema';
@@ -135,6 +136,18 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         control: uttalelseMethods.control,
         name: 'harUttaltSeg',
     });
+
+    const getOppdatertUttalelseValues = useEffectEvent((harUttaltSeg: HarUttaltSeg) => {
+        if (harUttaltSeg) {
+            uttalelseMethods.reset(
+                getUttalelseValuesBasertPåValg(harUttaltSeg, forhåndsvarselInfo)
+            );
+        }
+    });
+
+    useEffect(() => {
+        getOppdatertUttalelseValues(harUttaltSeg);
+    }, [harUttaltSeg]);
 
     useLayoutEffect(() => {
         updateParentBounds(containerRef, setParentBounds);

@@ -200,34 +200,55 @@ describe('Brukeruttalelse', () => {
             ).toBeInTheDocument();
         });
 
-        test('skal vise dato-feilmelding når Ja er valgt uten fylt dato-felt', async () => {
-            renderBrukeruttalelse();
+        describe('Når Ja er valgt', () => {
+            test('skal vise dato-feilmelding når Ja er valgt uten fylt dato-felt', async () => {
+                renderBrukeruttalelse();
 
-            const brukeruttalelseFieldset = screen.getByRole('group', {
-                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                const brukeruttalelseFieldset = screen.getByRole('group', {
+                    name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                });
+                const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
+                fireEvent.click(jaRadio);
+
+                const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
+                fireEvent.click(nesteKnapp);
+
+                expect(
+                    await screen.findByText('Du må legge inn en gyldig dato')
+                ).toBeInTheDocument();
             });
-            const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
-            fireEvent.click(jaRadio);
 
-            const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
-            fireEvent.click(nesteKnapp);
+            test('skal vise dato-feilmelding når Ja er valgt uten fylt dato-felt på blur', async () => {
+                renderBrukeruttalelse();
 
-            expect(await screen.findByText('Du må legge inn en gyldig dato')).toBeInTheDocument();
-        });
+                const brukeruttalelseFieldset = screen.getByRole('group', {
+                    name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                });
+                const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
+                fireEvent.click(jaRadio);
 
-        test('skal vise dato-feilmelding når Ja er valgt uten fylt dato-felt på blur', async () => {
-            renderBrukeruttalelse();
+                const datoInput = await screen.findByLabelText('Når uttalte brukeren seg?');
+                fireEvent.blur(datoInput);
 
-            const brukeruttalelseFieldset = screen.getByRole('group', {
-                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                expect(
+                    await screen.findByText('Du må legge inn en gyldig dato')
+                ).toBeInTheDocument();
             });
-            const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
-            fireEvent.click(jaRadio);
 
-            const datoInput = await screen.findByLabelText('Når uttalte brukeren seg?');
-            fireEvent.blur(datoInput);
+            test('skal vise riktig hvorUttalteBrukerenSeg og beskrivelse feilmelding ved tomme felt', async () => {
+                renderBrukeruttalelse();
 
-            expect(await screen.findByText('Du må legge inn en gyldig dato')).toBeInTheDocument();
+                const brukeruttalelseFieldset = screen.getByRole('group', {
+                    name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                });
+                const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
+                fireEvent.click(jaRadio);
+
+                const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
+                fireEvent.click(nesteKnapp);
+
+                expect(await screen.findAllByText('Du må fylle inn en verdi')).toHaveLength(2);
+            });
         });
     });
 });

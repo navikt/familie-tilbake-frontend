@@ -1,4 +1,10 @@
-import type { ForhåndsvarselDto, ForhåndsvarselUnntakDto } from '../../../generated';
+import type {
+    BrukeruttalelseDto,
+    ForhåndsvarselDto,
+    ForhåndsvarselUnntakDto,
+    FristUtsettelseDto,
+    Uttalelsesdetaljer,
+} from '../../../generated';
 
 import { z } from 'zod';
 
@@ -66,49 +72,78 @@ export const uttalelseMedFristSchema = z
         path: ['harUttaltSeg'],
     });
 
+const getJaUttalelseValues = (
+    uttalelse: BrukeruttalelseDto | undefined
+): UttalelseMedFristFormData => {
+    return {
+        harUttaltSeg: HarUttaltSeg.Ja,
+        uttalelsesDetaljer: uttalelse?.uttalelsesdetaljer?.map((uttalelse: Uttalelsesdetaljer) => ({
+            uttalelsesdato: uttalelse.uttalelsesdato,
+            hvorBrukerenUttalteSeg: uttalelse.hvorBrukerenUttalteSeg,
+            uttalelseBeskrivelse: uttalelse.uttalelseBeskrivelse,
+        })) || [
+            {
+                hvorBrukerenUttalteSeg: '',
+                uttalelsesdato: '',
+                uttalelseBeskrivelse: '',
+            },
+        ],
+    };
+};
+
+const getNeiUttalelseValues = (
+    uttalelse: BrukeruttalelseDto | undefined
+): UttalelseMedFristFormData => {
+    return {
+        harUttaltSeg: HarUttaltSeg.Nei,
+        kommentar: uttalelse?.kommentar || '',
+    };
+};
+
+const getUtsettUttalelseValues = (
+    utsettelser: FristUtsettelseDto[] | undefined
+): UttalelseMedFristFormData => {
+    const utsettelse = utsettelser?.[0];
+    return {
+        harUttaltSeg: HarUttaltSeg.UtsettFrist,
+        utsettUttalelseFrist: {
+            nyFrist: utsettelse?.nyFrist ?? '',
+            begrunnelse: utsettelse?.begrunnelse ?? '',
+        },
+    };
+};
+
+export const getUttalelseValuesBasertPåValg = (
+    harUttaltSeg: HarUttaltSeg,
+    forhåndsvarselInfo: ForhåndsvarselDto | undefined
+): UttalelseMedFristFormData => {
+    switch (harUttaltSeg) {
+        case HarUttaltSeg.Ja:
+            return getJaUttalelseValues(forhåndsvarselInfo?.brukeruttalelse);
+        case HarUttaltSeg.Nei:
+            return getNeiUttalelseValues(forhåndsvarselInfo?.brukeruttalelse);
+        case HarUttaltSeg.UtsettFrist:
+            return getUtsettUttalelseValues(forhåndsvarselInfo?.utsettUttalelseFrist);
+        default:
+            return {
+                harUttaltSeg: HarUttaltSeg.IkkeValgt,
+            };
+    }
+};
+
 export const getUttalelseValues = (
     forhåndsvarselInfo: ForhåndsvarselDto | undefined
 ): UttalelseMedFristFormData => {
-    const utsettUttalelseFrist = forhåndsvarselInfo?.utsettUttalelseFrist;
-    if (utsettUttalelseFrist?.length) {
-        return {
-            harUttaltSeg: HarUttaltSeg.UtsettFrist,
-            utsettUttalelseFrist: {
-                nyFrist:
-                    forhåndsvarselInfo?.utsettUttalelseFrist[
-                        forhåndsvarselInfo.utsettUttalelseFrist.length - 1
-                    ]?.nyFrist ?? '',
-                begrunnelse:
-                    forhåndsvarselInfo?.utsettUttalelseFrist[
-                        forhåndsvarselInfo.utsettUttalelseFrist.length - 1
-                    ]?.begrunnelse ?? '',
-            },
-        };
+    if (forhåndsvarselInfo?.brukeruttalelse?.uttalelsesdetaljer?.length) {
+        return getJaUttalelseValues(forhåndsvarselInfo.brukeruttalelse);
     }
-    const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
-    const uttalelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
-        ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
-        : [
-              {
-                  hvorBrukerenUttalteSeg: '',
-                  uttalelseBeskrivelse: '',
-                  uttalelsesdato: '',
-              },
-          ];
 
-    if (brukerUttalelse?.harBrukerUttaltSeg) {
-        switch (brukerUttalelse?.harBrukerUttaltSeg) {
-            case 'JA':
-                return {
-                    harUttaltSeg: HarUttaltSeg.Ja,
-                    uttalelsesDetaljer: uttalelsesdetaljer,
-                };
-            case 'NEI':
-                return {
-                    harUttaltSeg: HarUttaltSeg.Nei,
-                    kommentar: forhåndsvarselInfo?.brukeruttalelse?.kommentar ?? '',
-                };
-        }
+    if (forhåndsvarselInfo?.brukeruttalelse?.kommentar) {
+        return getNeiUttalelseValues(forhåndsvarselInfo.brukeruttalelse);
+    }
+
+    if (forhåndsvarselInfo?.utsettUttalelseFrist?.length) {
+        return getUtsettUttalelseValues(forhåndsvarselInfo.utsettUttalelseFrist);
     }
 
     return {
