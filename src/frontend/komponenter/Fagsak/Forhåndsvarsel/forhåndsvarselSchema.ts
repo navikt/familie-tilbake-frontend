@@ -1,6 +1,8 @@
-import type { ForhåndsvarselInfo } from './useForhåndsvarselQueries';
+import type { ForhåndsvarselDto, ForhåndsvarselUnntakDto } from '../../../generated';
 
 import { z } from 'zod';
+
+import { zBegrunnelseForUnntakEnum } from '../../../generated/zod.gen';
 
 export enum SkalSendesForhåndsvarsel {
     Ja = 'ja',
@@ -18,7 +20,7 @@ export enum HarUttaltSeg {
 
 const fritekstSchema = z
     .string()
-    .min(3, 'Du må legge inn minst tre tegn')
+    .min(1, 'Du må fylle inn en verdi')
     .max(4000, 'Maksimalt 4000 tegn tillatt');
 
 const uttalelsesDetaljerSchema = z.object({
@@ -64,19 +66,19 @@ export const uttalelseMedFristSchema = z
     });
 
 export const getUttalelseValues = (
-    forhåndsvarselInfo: ForhåndsvarselInfo
+    forhåndsvarselInfo: ForhåndsvarselDto | undefined
 ): UttalelseMedFristFormData => {
     const utsettUttalelseFrist = forhåndsvarselInfo?.utsettUttalelseFrist;
-    if (utsettUttalelseFrist.length > 0) {
+    if (utsettUttalelseFrist?.length) {
         return {
             harUttaltSeg: HarUttaltSeg.UtsettFrist,
             utsettUttalelseFrist: {
                 nyFrist:
-                    forhåndsvarselInfo.utsettUttalelseFrist[
+                    forhåndsvarselInfo?.utsettUttalelseFrist[
                         forhåndsvarselInfo.utsettUttalelseFrist.length - 1
                     ]?.nyFrist ?? '',
                 begrunnelse:
-                    forhåndsvarselInfo.utsettUttalelseFrist[
+                    forhåndsvarselInfo?.utsettUttalelseFrist[
                         forhåndsvarselInfo.utsettUttalelseFrist.length - 1
                     ]?.begrunnelse ?? '',
             },
@@ -103,7 +105,7 @@ export const getUttalelseValues = (
             case 'NEI':
                 return {
                     harUttaltSeg: HarUttaltSeg.Nei,
-                    kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
+                    kommentar: forhåndsvarselInfo?.brukeruttalelse?.kommentar ?? '',
                 };
         }
     }
@@ -136,44 +138,24 @@ export const getOpprettValues = (): ForhåndsvarselFormData => {
     };
 };
 
-const unntakSchema = z.object({
-    skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
-    // begrunnelseForUnntak: z.enum(
-    //     ['IkkePraktiskMulig', 'UrimeligRessurskrevende', 'ÅpenbartUnødvendig'],
-    //     { error: 'Du må velge en begrunnelse for unntak' }
-    // ),
-    // beskrivelse: z.string().min(3, 'Du må legge inn minst tre tegn').max(2000, 'Maksimalt 2000 tegn tillatt'),
-});
+export const unntakSchema = z
+    .object({
+        skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
+        begrunnelseForUnntak: zBegrunnelseForUnntakEnum.optional(),
+        beskrivelse: z.string().min(1, 'Du må fylle inn en verdi').max(2000),
+    })
+    .refine(data => data.begrunnelseForUnntak !== undefined, {
+        message: 'Du må velge en begrunnelse for unntak fra forhåndsvarsel',
+        path: ['begrunnelseForUnntak'],
+    });
 
-const getUnntakValues = (): ForhåndsvarselFormData => {
-    // const brukerUttalelse = forhåndsvarselInfo?.brukeruttalelse;
-    // const harBrukerUttaltSegVerdi = brukerUttalelse?.harBrukerUttaltSeg;
-    // const utsettelsesdetaljer = brukerUttalelse?.uttalelsesdetaljer
-    //     ? [brukerUttalelse.uttalelsesdetaljer[brukerUttalelse.uttalelsesdetaljer.length - 1]]
-    //     : [];
-    // if (harBrukerUttaltSegVerdi) {
-    //     const brukerUttalelse = mapHarBrukerUttaltSegFraApiDto(harBrukerUttaltSegVerdi);
-    //     if (brukerUttalelse === HarBrukerUttaltSeg.Ja) {
-    //         return {
-    //             skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
-    //             harBrukerUttaltSeg: {
-    //                 harBrukerUttaltSeg: HarBrukerUttaltSeg.Ja,
-    //                 uttalelsesDetaljer: utsettelsesdetaljer,
-    //             },
-    //         };
-    //     } else if (brukerUttalelse === HarBrukerUttaltSeg.Nei) {
-    //         return {
-    //             skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
-    //             harBrukerUttaltSeg: {
-    //                 harBrukerUttaltSeg: HarBrukerUttaltSeg.Nei,
-    //                 kommentar: forhåndsvarselInfo.brukeruttalelse?.kommentar ?? '',
-    //             },
-    //         };
-    //     }
-    // }
-
+export const getUnntakValues = (
+    forhåndsvarselUnntak: ForhåndsvarselUnntakDto
+): ForhåndsvarselFormData => {
     return {
         skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+        begrunnelseForUnntak: forhåndsvarselUnntak.begrunnelseForUnntak,
+        beskrivelse: forhåndsvarselUnntak.beskrivelse,
     };
 };
 
@@ -181,27 +163,22 @@ const ikkeValgtSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.IkkeValgt),
 });
 
-const getForhåndsvarselStatus = (varselErSendt: boolean): SkalSendesForhåndsvarsel => {
+export const getDefaultValues = (
+    varselErSendt: boolean,
+    forhåndsvarselInfo: ForhåndsvarselDto | undefined
+): ForhåndsvarselFormData => {
     if (varselErSendt) {
-        return SkalSendesForhåndsvarsel.Ja;
+        return getOpprettValues();
     }
-    /* if (unntak !== undefined) {
-            return SkalSendesForhåndsvarsel.Nei;
-        } */
-    return SkalSendesForhåndsvarsel.IkkeValgt;
-};
 
-export const getDefaultValues = (varselErSendt: boolean): ForhåndsvarselFormData => {
-    switch (getForhåndsvarselStatus(varselErSendt)) {
-        case SkalSendesForhåndsvarsel.Ja:
-            return getOpprettValues();
-        case SkalSendesForhåndsvarsel.Nei:
-            return getUnntakValues();
-        default:
-            return {
-                skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.IkkeValgt,
-            };
+    const forhåndsvarselUnntak = forhåndsvarselInfo?.forhåndsvarselUnntak;
+    if (forhåndsvarselUnntak) {
+        return getUnntakValues(forhåndsvarselUnntak);
     }
+
+    return {
+        skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.IkkeValgt,
+    };
 };
 
 export const forhåndsvarselSchema = z
@@ -213,3 +190,4 @@ export const forhåndsvarselSchema = z
 
 export type ForhåndsvarselFormData = z.infer<typeof forhåndsvarselSchema>;
 export type UttalelseMedFristFormData = z.infer<typeof uttalelseMedFristSchema>;
+export type UnntakFormData = z.infer<typeof unntakSchema>;

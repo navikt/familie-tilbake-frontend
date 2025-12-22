@@ -29,6 +29,7 @@ import { FixedAlert } from '../../../Felleskomponenter/FixedAlert/FixedAlert';
 import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { SkalSendesForhåndsvarsel } from '../forhåndsvarselSchema';
 import { useForhåndsvarselMutations } from '../useForhåndsvarselMutations';
+import { Unntak } from './UnntakSkjema';
 
 type Props = {
     behandling: BehandlingDto;
@@ -230,6 +231,8 @@ export const OpprettSkjema: React.FC<Props> = ({
                     )}
                 </VStack>
             )}
+
+            {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />}
 
             {showModal && pdfData && (
                 <PdfVisningModal

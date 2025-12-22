@@ -29,6 +29,8 @@ describe('Validering av forhåndsvarsel-skjema', () => {
         test('Nei: gyldig path', () => {
             const result = forhåndsvarselSchema.safeParse({
                 skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+                begrunnelseForUnntak: 'IKKE_PRAKTISK_MULIG',
+                beskrivelse: 'Dette er en gyldig begrunnelse',
             });
 
             expect(result.success).toBe(true);
@@ -43,7 +45,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                     fritekst: '',
                 });
 
-                expect(result.error?.issues[0].message).toBe('Du må legge inn minst tre tegn');
+                expect(result.error?.issues[0].message).toBe('Du må fylle inn en verdi');
             });
 
             test('skal feile når fritekst er for lang', () => {
@@ -56,6 +58,39 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
         });
     });
+
+    describe('Nei', () => {
+        describe('begrunnelseForUnntak', () => {
+            test('skal feile når begrunnelseForUnntak mangler', () => {
+                const result = forhåndsvarselSchema.safeParse({
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+                    begrunnelseForUnntak: undefined,
+                    beskrivelse: 'Gyldig beskrivelse',
+                });
+
+                const error = result.error?.issues.find(i =>
+                    i.path.includes('begrunnelseForUnntak')
+                );
+                expect(error?.message).toBe(
+                    'Du må velge en begrunnelse for unntak fra forhåndsvarsel'
+                );
+            });
+        });
+
+        describe('beskrivelse', () => {
+            test('skal feile når beskrivelse mangler', () => {
+                const result = forhåndsvarselSchema.safeParse({
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+                    begrunnelseForUnntak: 'IKKE_PRAKTISK_MULIG',
+                    beskrivelse: '',
+                });
+
+                const error = result.error?.issues.find(i => i.path.includes('beskrivelse'));
+                expect(error?.message).toBe('Du må fylle inn en verdi');
+            });
+        });
+    });
+
     describe('Uttalelse', () => {
         describe('harUttaltSeg', () => {
             test('IkkeValgt, gir feilmelding', () => {
@@ -85,7 +120,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                 });
 
                 const error = result.error?.issues.find(i => i.path.includes('kommentar'));
-                expect(error?.message).toBe('Du må legge inn minst tre tegn');
+                expect(error?.message).toBe('Du må fylle inn en verdi');
             });
 
             test('Ja, gyldig validering', () => {
@@ -154,7 +189,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                 });
 
                 const error = result.error?.issues.find(i => i.path.includes('begrunnelse'));
-                expect(error?.message).toBe('Du må legge inn minst tre tegn');
+                expect(error?.message).toBe('Du må fylle inn en verdi');
             });
         });
     });
