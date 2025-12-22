@@ -56,7 +56,7 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
             </ExpansionCard.Header>
 
             <ExpansionCard.Content>
-                <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
+                <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4 text-ax-text-neutral">
                     <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                         {kjønnIkon(bruker.kjønn)}
                         Navn
