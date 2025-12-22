@@ -47,7 +47,7 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
         <nav
             /* Hacker plasseringen til pga at den ikke er på behandlingcontainer nivå men nede i stegcontainerene som styrer hvor startposisjon er */
             className={classNames(
-                'flex flex-row fixed bottom-4 bg-ax-bg-default px-8 py-4 rounded-2xl border-ax-border-neutral-subtle border justify-between z-10 flex-nowrap ax-lg:w-[calc((100vw*2/3)-34px)] w-[calc(100vw-32px)] min-w-96',
+                'flex flex-row fixed bottom-4 bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between z-10 flex-nowrap ax-lg:w-[calc((100vw*2/3)-34px)] w-[calc(100vw-32px)] min-w-96',
                 {
                     '-ml-6': !dobbeltNøstet,
                     '-ml-10': dobbeltNøstet,
@@ -59,8 +59,8 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
 
             <HStack gap="8">
                 <BodyShort
-                    size="large"
-                    className="text-ax-text-neutral-subtle flex items-center text-nowrap"
+                    size="small"
+                    className="text-ax-text-neutral-subtle font-ax-bold flex items-center text-nowrap"
                 >
                     {stegtekst}
                 </BodyShort>
