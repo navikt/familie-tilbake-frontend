@@ -32,6 +32,7 @@ export const lagForhåndsvarselQueries = (
         varselbrevDto: { varselbrevSendtTid: undefined },
         utsettUttalelseFrist: [],
         brukeruttalelse: undefined,
+        forhåndsvarselUnntak: undefined,
     },
     varselbrevtekster: {
         overskrift: 'Nav vurderer om du må betale tilbake overgangsstønad',

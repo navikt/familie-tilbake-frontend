@@ -58,6 +58,39 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
         });
     });
+
+    describe('Nei', () => {
+        describe('begrunnelseForUnntak', () => {
+            test('skal feile når begrunnelseForUnntak mangler', () => {
+                const result = forhåndsvarselSchema.safeParse({
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+                    begrunnelseForUnntak: undefined,
+                    beskrivelse: 'Gyldig beskrivelse',
+                });
+
+                const error = result.error?.issues.find(i =>
+                    i.path.includes('begrunnelseForUnntak')
+                );
+                expect(error?.message).toBe(
+                    'Du må velge en begrunnelse for unntak fra forhåndsvarsel'
+                );
+            });
+        });
+
+        describe('beskrivelse', () => {
+            test('skal feile når beskrivelse mangler', () => {
+                const result = forhåndsvarselSchema.safeParse({
+                    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Nei,
+                    begrunnelseForUnntak: 'IKKE_PRAKTISK_MULIG',
+                    beskrivelse: '',
+                });
+
+                const error = result.error?.issues.find(i => i.path.includes('beskrivelse'));
+                expect(error?.message).toBe('Du må fylle inn en verdi');
+            });
+        });
+    });
+
     describe('Uttalelse', () => {
         describe('harUttaltSeg', () => {
             test('IkkeValgt, gir feilmelding', () => {

@@ -1,6 +1,6 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { Toggles } from '../../../context/toggles';
-import type { BehandlingDto } from '../../../generated';
+import type { BehandlingDto, ForhåndsvarselDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
@@ -59,6 +59,13 @@ jest.mock('../../../generated', () => ({
     },
 }));
 
+const lagForhåndsvarselInfo = (overrides?: Partial<ForhåndsvarselDto>): ForhåndsvarselDto => ({
+    varselbrevDto: { varselbrevSendtTid: undefined },
+    utsettUttalelseFrist: [],
+    brukeruttalelse: undefined,
+    ...overrides,
+});
+
 const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 5'),
@@ -116,19 +123,19 @@ describe('Forhåndsvarsel', () => {
         expect(await screen.findByText(/Opprett forhåndsvarsel/)).toBeInTheDocument();
     });
 
-    // test('Viser skjema for unntak når Nei er valgt', () => {
-    //     renderForhåndsvarsel();
+    test('Viser skjema for unntak når Nei er valgt', () => {
+        renderForhåndsvarsel();
 
-    //     expect(screen.queryByText(/Velg begrunnelse for unntak/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Velg begrunnelse for unntak/)).not.toBeInTheDocument();
 
-    //     fireEvent.click(screen.getByLabelText('Nei'));
+        fireEvent.click(screen.getByLabelText('Nei'));
 
-    //     expect(
-    //         screen.getByRole('group', {
-    //             name: /Velg begrunnelse for unntak fra forhåndsvarsel/,
-    //         })
-    //     ).toBeInTheDocument();
-    // });
+        expect(
+            screen.getByRole('group', {
+                name: /Velg begrunnelse for unntak fra forhåndsvarsel/,
+            })
+        ).toBeInTheDocument();
+    });
 
     test('Viser ActionBar med riktig stegtekst', () => {
         renderForhåndsvarsel();
@@ -144,24 +151,13 @@ describe('Forhåndsvarsel', () => {
 
     test('Viser tag med sendt informasjon når forhåndsvarsel er sendt', async () => {
         const mockQueries = jest.mocked(useForhåndsvarselQueries);
-        mockQueries.mockReturnValue({
-            forhåndsvarselInfo: {
-                varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                utsettUttalelseFrist: [],
-                brukeruttalelse: undefined,
-            },
-            varselbrevtekster: {
-                overskrift: 'Nav vurderer om du må betale tilbake overgangsstønad',
-                avsnitter: [{ title: 'Dette har skjedd', body: 'Test innhold' }],
-            },
-            forhåndsvarselInfoLoading: false,
-            varselbrevteksterLoading: false,
-            forhåndsvarselInfoError: false,
-            varselbrevteksterError: false,
-            varselbrevteksterQuery: {} as ReturnType<
-                typeof useForhåndsvarselQueries
-            >['varselbrevteksterQuery'],
-        });
+        mockQueries.mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: lagForhåndsvarselInfo({
+                    varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                }),
+            })
+        );
 
         renderForhåndsvarsel();
 
@@ -171,24 +167,13 @@ describe('Forhåndsvarsel', () => {
 
     test('Låser valg når varsel er sendt', async () => {
         const mockQueries = jest.mocked(useForhåndsvarselQueries);
-        mockQueries.mockReturnValue({
-            forhåndsvarselInfo: {
-                varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                utsettUttalelseFrist: [],
-                brukeruttalelse: undefined,
-            },
-            varselbrevtekster: {
-                overskrift: 'Nav vurderer om du må betale tilbake overgangsstønad',
-                avsnitter: [{ title: 'Dette har skjedd', body: 'Test innhold' }],
-            },
-            forhåndsvarselInfoLoading: false,
-            varselbrevteksterLoading: false,
-            forhåndsvarselInfoError: false,
-            varselbrevteksterError: false,
-            varselbrevteksterQuery: {} as ReturnType<
-                typeof useForhåndsvarselQueries
-            >['varselbrevteksterQuery'],
-        });
+        mockQueries.mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: lagForhåndsvarselInfo({
+                    varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                }),
+            })
+        );
 
         renderForhåndsvarsel();
 
@@ -196,6 +181,34 @@ describe('Forhåndsvarsel', () => {
             name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
         });
         expect(radioGroup).toHaveClass('navds-fieldset--readonly');
+    });
+
+    describe('Viser "nei"-valg og default values når unntak er sendt inn', () => {
+        test('IKKE_PRAKTISK_MULIG', async () => {
+            const mockQueries = jest.mocked(useForhåndsvarselQueries);
+            mockQueries.mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'IKKE_PRAKTISK_MULIG',
+                            beskrivelse: 'Dette er en beskrivelse',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            expect(await screen.findByRole('radio', { name: 'Nei' })).toBeChecked();
+            expect(
+                screen.getByRole('radio', {
+                    name: /Varsling er ikke praktisk mulig eller vil hindre gjennomføring av vedtaket/,
+                })
+            ).toBeChecked();
+            expect(
+                screen.getByLabelText(/Forklar hvorfor forhåndsvarselet ikke skal bli sendt/)
+            ).toHaveValue('Dette er en beskrivelse');
+        });
     });
 
     describe('Validering', () => {
