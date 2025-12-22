@@ -1,5 +1,5 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
-import type { ForhåndsvarselInfo } from './useForhåndsvarselQueries';
+import type { ForhåndsvarselDto } from '../../../generated';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,7 +19,6 @@ import {
 } from './forhåndsvarselSchema';
 import { OpprettSkjema } from './skjema/OpprettSkjema';
 import { Uttalelse } from './skjema/UttalelseSkjema';
-// import { Unntak } from './Unntak';
 import {
     extractErrorFromMutationError,
     useForhåndsvarselMutations,
@@ -55,17 +54,19 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
         <VStack gap="4">
             <HStack align="center" justify="space-between">
                 <Heading size="small">Forhåndsvarsel</Heading>
-                {forhåndsvarselInfo?.varselbrevSendtTid && (
+                {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
                     <Tooltip
                         arrow={false}
                         placement="bottom"
-                        content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                        content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
                     >
                         <Tag
-                            variant={getTagVariant(forhåndsvarselInfo.varselbrevSendtTid)}
+                            variant={getTagVariant(
+                                forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid
+                            )}
                             icon={<MegaphoneIcon aria-hidden />}
                         >
-                            {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevSendtTid)}`}
+                            {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
                         </Tag>
                     </Tooltip>
                 )}
@@ -82,7 +83,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
 type ForhåndsvarselSkjemaProps = {
     behandling: BehandlingDto;
     fagsak: FagsakDto;
-    forhåndsvarselInfo: ForhåndsvarselInfo;
+    forhåndsvarselInfo: ForhåndsvarselDto | undefined;
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
@@ -103,6 +104,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendUtsettUttalelseFrist,
         sendBrukeruttalelse,
         sendForhåndsvarsel,
+        sendUnntakMutation,
+        sendUnntak,
         gåTilNeste,
     } = useForhåndsvarselMutations(behandling, fagsak);
 
@@ -110,22 +113,21 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         { key: 'forhåndsvarsel', mutation: sendForhåndsvarselMutation },
         { key: 'brukeruttalelse', mutation: sendBrukeruttalelseMutation },
         { key: 'utsettFrist', mutation: sendUtsettUttalelseFristMutation },
+        { key: 'unntak', mutation: sendUnntakMutation },
     ] as const;
 
     const { varselbrevtekster } = useForhåndsvarselQueries(behandling);
 
-    const varselErSendt = !!forhåndsvarselInfo?.varselbrevSendtTid;
+    const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
 
     const methods = useForm<ForhåndsvarselFormData>({
         resolver: zodResolver(forhåndsvarselSchema),
         mode: 'all',
-        shouldFocusError: false,
-        defaultValues: getDefaultValues(varselErSendt),
+        defaultValues: getDefaultValues(varselErSendt, forhåndsvarselInfo),
     });
     const uttalelseMethods = useForm<UttalelseMedFristFormData>({
         resolver: zodResolver(uttalelseMedFristSchema),
         mode: 'all',
-        shouldFocusError: false,
         defaultValues: getUttalelseValues(forhåndsvarselInfo),
     });
 
@@ -154,6 +156,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'Utsett frist';
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
+        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei) {
+            return 'Send inn unntak';
         }
         return 'Neste';
     };
@@ -161,8 +165,10 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
         data: ForhåndsvarselFormData
     ): void => {
-        if (!varselErSendt) {
+        if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt) {
             sendForhåndsvarsel(data);
+        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei) {
+            sendUnntak(data);
         } else {
             gåTilNeste();
         }
@@ -188,7 +194,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     parentBounds={parentBounds}
                     handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
                 />
-                {/* {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />} */}
             </FormProvider>
 
             {toggles[ToggleName.Forhåndsvarselsteg] && varselErSendt && (
@@ -201,7 +206,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
                 nesteTekst={getNesteKnappTekst()}
                 isLoading={
-                    sendForhåndsvarselMutation.isPending || sendBrukeruttalelseMutation.isPending
+                    sendForhåndsvarselMutation.isPending ||
+                    sendBrukeruttalelseMutation.isPending ||
+                    sendUnntakMutation?.isPending
                 }
                 forrigeAriaLabel={undefined}
                 onForrige={undefined}
@@ -227,7 +234,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             )}
 
             {mutations.map(({ key, mutation }) => {
-                if (mutation.isError) {
+                if (mutation?.isError) {
                     const feil = extractErrorFromMutationError(mutation.error);
                     return (
                         <FeilModal

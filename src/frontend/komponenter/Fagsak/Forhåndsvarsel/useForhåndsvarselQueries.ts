@@ -1,24 +1,13 @@
-import type {
-    BehandlingDto,
-    BrukeruttalelseDto,
-    FristUtsettelseDto,
-    Varselbrevtekst,
-} from '../../../generated';
+import type { BehandlingDto, ForhåndsvarselDto, Varselbrevtekst } from '../../../generated';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { hentForhåndsvarselinfo, hentForhåndsvarselTekst } from '../../../generated';
 
-export type ForhåndsvarselInfo = {
-    varselbrevSendtTid: string | undefined;
-    utsettUttalelseFrist: FristUtsettelseDto[];
-    brukeruttalelse: BrukeruttalelseDto | undefined;
-};
-
 export type UseForhåndsvarselQueriesReturn = {
     readonly varselbrevteksterQuery: UseQueryResult<Varselbrevtekst | undefined>;
-    readonly forhåndsvarselInfo: ForhåndsvarselInfo;
+    readonly forhåndsvarselInfo: ForhåndsvarselDto | undefined;
     readonly varselbrevtekster: Varselbrevtekst | undefined;
     readonly forhåndsvarselInfoLoading: boolean;
     readonly varselbrevteksterLoading: boolean;
@@ -37,14 +26,7 @@ export const useForhåndsvarselQueries = (
                     behandlingId: behandling.behandlingId,
                 },
             }),
-        select: data => {
-            const info = data.data?.data;
-            return {
-                varselbrevSendtTid: info?.varselbrevDto?.varselbrevSendtTid,
-                utsettUttalelseFrist: info?.utsettUttalelseFrist ?? [],
-                brukeruttalelse: info?.brukeruttalelse,
-            };
-        },
+        select: data => data.data?.data,
     });
 
     const varselbrevteksterQuery = useQuery({
@@ -59,7 +41,7 @@ export const useForhåndsvarselQueries = (
     });
 
     return {
-        varselbrevteksterQuery,
+        varselbrevteksterQuery: varselbrevteksterQuery,
         forhåndsvarselInfo: forhåndsvarselInfoQuery.data,
         varselbrevtekster: varselbrevteksterQuery.data,
         forhåndsvarselInfoLoading: forhåndsvarselInfoQuery.isLoading,
