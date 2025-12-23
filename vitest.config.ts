@@ -4,6 +4,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
     plugins: [react()],
+    cacheDir: '.vitest-cache',
     test: {
         globals: true,
         environment: 'jsdom',
@@ -13,6 +14,30 @@ export default defineConfig({
             provider: 'v8',
             reporter: ['text', 'json', 'html'],
         },
+        pool: 'threads',
+        isolate: true,
+        includeSource: ['src/**/*.{js,ts,jsx,tsx}'],
+        exclude: [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/cypress/**',
+            '**/.{idea,git,cache,output,temp}/**',
+            '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*',
+        ],
+        deps: {
+            optimizer: {
+                web: {
+                    enabled: true,
+                    include: [
+                        'react',
+                        'react-dom',
+                        '@testing-library/react',
+                        '@testing-library/user-event',
+                        '@testing-library/dom',
+                    ],
+                },
+            },
+        },
     },
     resolve: {
         alias: {
@@ -20,7 +45,6 @@ export default defineConfig({
                 __dirname,
                 'src/frontend/__mocks__/@navikt/ds-tokens/dist/tokens.ts'
             ),
-            '\\.svg$': resolve(__dirname, 'src/frontend/__mocks__/fileMock.ts'),
         },
     },
 });
