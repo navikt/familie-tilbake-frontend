@@ -14,8 +14,8 @@ import { SettPåVent } from './settPåVent/SettPåVent';
 import { StartPåNytt } from './startPåNytt/StartPåNytt';
 import { useApp } from '../../../context/AppContext';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { Fagsystem } from '../../../kodeverk';
-import { useFagsakStore } from '../../../stores/fagsakStore';
 import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
@@ -23,7 +23,7 @@ export const Behandlingsmeny: React.FC = () => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg, behandlingILesemodus } =
         useBehandling();
     const [holdMenyenÅpen, setHoldMenyenÅpen] = useState(false);
-    const { fagsystem, ytelsestype } = useFagsakStore();
+    const { fagsak } = useFagsak();
     const { innloggetSaksbehandler } = useApp();
     const forvalterGruppe =
         process.env.NODE_ENV === 'production'
@@ -44,7 +44,7 @@ export const Behandlingsmeny: React.FC = () => {
         !vedtakFattetEllerFattes &&
         behandling.data.kanEndres;
     const erSattPåvent = behandling.data.erBehandlingPåVent || ventegrunn;
-    const kanEndreEnhet = fagsystem === Fagsystem.BA && ytelsestype;
+    const kanEndreEnhet = fagsak?.fagsystem === Fagsystem.BA && fagsak?.ytelsestype;
     return (
         <ActionMenu open={holdMenyenÅpen} onOpenChange={setHoldMenyenÅpen}>
             <ActionMenu.Trigger>

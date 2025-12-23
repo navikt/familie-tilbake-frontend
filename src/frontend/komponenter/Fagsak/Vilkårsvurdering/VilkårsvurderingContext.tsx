@@ -1,8 +1,8 @@
 import type { PeriodeHandling } from './typer/periodeHandling';
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
+import type { FagsakDto } from '../../../generated';
 import type { VilkårdsvurderingStegPayload } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type {
     VilkårsvurderingResponse,
     VilkårsvurderingPeriode,
@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router';
 import { useBehandlingApi } from '../../../api/behandling';
 import { Feil } from '../../../api/feil';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { Aktsomhet, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
+import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
 import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
@@ -83,7 +83,7 @@ export const erTotalbeløpUnder4Rettsgebyr = (vurdering: VilkårsvurderingRespon
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
 };
 
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
@@ -109,9 +109,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         } = useBehandling();
         const { gjerVilkårsvurderingKall, sendInnVilkårsvurdering } = useBehandlingApi();
         const navigate = useNavigate();
-        const kanIleggeRenter = ![Ytelsetype.Barnetrygd, Ytelsetype.Kontantstøtte].includes(
-            fagsak.ytelsestype
-        );
+        const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(fagsak.ytelsestype);
         const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
         useEffect(() => {

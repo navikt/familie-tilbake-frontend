@@ -1,6 +1,5 @@
+import type { FrontendBrukerDto, InstitusjonDto } from '../../../../generated';
 import type { Brevmottaker } from '../../../../typer/Brevmottaker';
-import type { Bruker } from '../../../../typer/bruker';
-import type { Institusjon } from '../../../../typer/fagsak';
 
 import React from 'react';
 
@@ -8,8 +7,8 @@ import { MottakerType } from '../../../../typer/Brevmottaker';
 import { formaterIdent, lagPersonLabel } from '../../../../utils/formatter';
 
 type Props = {
-    bruker: Bruker;
-    institusjon: Institusjon | null;
+    bruker: FrontendBrukerDto;
+    institusjon: InstitusjonDto | undefined;
     brevmottakere: Brevmottaker[];
 };
 

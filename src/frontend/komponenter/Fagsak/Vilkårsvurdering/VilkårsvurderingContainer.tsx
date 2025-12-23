@@ -1,5 +1,5 @@
+import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
@@ -8,17 +8,15 @@ import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './Vilkårsv
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
 import {
-    Ytelsetype,
     vilkårsvurderingStegInfotekst,
-    vilkårsvurderingStegInfotekstKontantstøtte,
-    vilkårsvurderingStegInfotekstBarnetrygd,
+    vilkårsvurderingStegInfotekstForYtelsestype,
 } from '../../../kodeverk';
 import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 type Props = {
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
     behandling: Behandling;
 };
 
@@ -33,15 +31,9 @@ const VilkårsvurderingContainer: React.FC<Props> = ({ fagsak, behandling }) => 
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
-    const stegInfotekst = {
-        [Ytelsetype.Barnetrygd]: vilkårsvurderingStegInfotekstBarnetrygd,
-        [Ytelsetype.Kontantstøtte]: vilkårsvurderingStegInfotekstKontantstøtte,
-        [Ytelsetype.Barnetilsyn]: vilkårsvurderingStegInfotekst,
-        [Ytelsetype.Overgangsstønad]: vilkårsvurderingStegInfotekst,
-        [Ytelsetype.Skolepenger]: vilkårsvurderingStegInfotekst,
-        [Ytelsetype.Tilleggsstønad]: vilkårsvurderingStegInfotekst,
-        [Ytelsetype.Arbeidsavklaringspenger]: vilkårsvurderingStegInfotekst,
-    }[fagsak.ytelsestype];
+    const stegInfotekst =
+        vilkårsvurderingStegInfotekstForYtelsestype[fagsak.ytelsestype] ??
+        vilkårsvurderingStegInfotekst;
 
     if (vilkårsvurdering?.status === RessursStatus.Suksess) {
         const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data);

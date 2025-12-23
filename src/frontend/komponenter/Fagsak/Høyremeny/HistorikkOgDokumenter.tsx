@@ -1,5 +1,5 @@
+import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import {
     ClockDashedIcon,
@@ -15,7 +15,7 @@ import { Menysider, MenySideInnhold } from './Menykontainer';
 
 type Props = {
     værtPåFatteVedtakSteget: boolean;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
     behandling: Behandling;
 };
 

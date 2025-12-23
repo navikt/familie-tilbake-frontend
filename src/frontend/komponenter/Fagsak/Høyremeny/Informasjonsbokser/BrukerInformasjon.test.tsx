@@ -1,5 +1,5 @@
-import type { Bruker } from '../../../../typer/bruker';
-import type { Institusjon } from '../../../../typer/fagsak';
+import type { InstitusjonDto } from '../../../../generated';
+import type { FrontendBrukerDto } from '../../../../generated';
 import type { RenderResult } from '@testing-library/react';
 
 import { render, screen } from '@testing-library/react';
@@ -13,29 +13,29 @@ jest.mock('../../../../utils', () => ({
     hentAlder: jest.fn(() => 42),
 }));
 
-const baseBruker = (override: Partial<Bruker> = {}): Bruker => ({
+const baseBruker = (override: Partial<FrontendBrukerDto> = {}): FrontendBrukerDto => ({
     navn: 'Ola Nordmann',
     fødselsdato: '1990-05-17',
-    dødsdato: null,
+    dødsdato: undefined,
     kjønn: Kjønn.Mann,
     personIdent: '01020312345',
     ...override,
 });
 
-const baseInstitusjon = (override: Partial<Institusjon> = {}): Institusjon => ({
+const baseInstitusjon = (override: Partial<InstitusjonDto> = {}): InstitusjonDto => ({
     navn: 'Solgløtt Omsorg',
     organisasjonsnummer: '123456789',
     ...override,
 });
 
 const renderBrukerInformasjon = (
-    bruker: Partial<Bruker> = {},
-    institusjon: Partial<Institusjon> | null = null
+    bruker: Partial<FrontendBrukerDto> = {},
+    institusjon: Partial<InstitusjonDto> | null = null
 ): RenderResult =>
     render(
         <BrukerInformasjon
             bruker={baseBruker(bruker)}
-            institusjon={institusjon ? baseInstitusjon(institusjon) : null}
+            institusjon={institusjon ? baseInstitusjon(institusjon) : undefined}
         />
     );
 
@@ -76,7 +76,7 @@ describe('BrukerInformasjon', () => {
     });
 
     test('Skjuler dødsdato når ikke satt', () => {
-        renderBrukerInformasjon({ dødsdato: null });
+        renderBrukerInformasjon({ dødsdato: undefined });
         expect(screen.queryByText('Dødsdato')).not.toBeInTheDocument();
     });
 

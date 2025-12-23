@@ -32,6 +32,16 @@ jest.mock('../../../../api/http/HttpProvider', () => {
     };
 });
 
+jest.mock('../../../../context/FagsakContext', () => {
+    return {
+        useFagsak: jest.fn(() => ({
+            fagsak: undefined,
+            isLoading: false,
+            error: undefined,
+        })),
+    };
+});
+
 jest.mock('../VilkårsvurderingContext', () => {
     return {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({

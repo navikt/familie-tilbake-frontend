@@ -1,3 +1,5 @@
+import type { SchemaEnum4 } from '../generated';
+
 import { HendelseType } from './rettsligGrunnlag';
 
 export enum Fagsystem {
@@ -18,17 +20,17 @@ export enum Ytelsetype {
     Arbeidsavklaringspenger = 'ARBEIDSAVKLARINGSPENGER',
 }
 
-export const ytelsetype: Record<Ytelsetype, string> = {
-    [Ytelsetype.Barnetrygd]: 'Barnetrygd',
-    [Ytelsetype.Overgangsstønad]: 'Overgangsstønad',
-    [Ytelsetype.Barnetilsyn]: 'Barnetilsyn',
-    [Ytelsetype.Skolepenger]: 'Skolepenger',
-    [Ytelsetype.Kontantstøtte]: 'Kontantstøtte',
-    [Ytelsetype.Tilleggsstønad]: 'Tilleggsstønad',
-    [Ytelsetype.Arbeidsavklaringspenger]: 'Arbeidsavklaringspenger',
+export const ytelsetype: Record<string, string> = {
+    BARNETRYGD: 'Barnetrygd',
+    OVERGANGSSTØNAD: 'Overgangsstønad',
+    BARNETILSYN: 'Barnetilsyn',
+    SKOLEPENGER: 'Skolepenger',
+    KONTANTSTØTTE: 'Kontantstøtte',
+    TILLEGGSSTØNAD: 'Tilleggsstønad',
+    ARBEIDSAVKLARINGSPENGER: 'Arbeidsavklaringspenger',
 };
 
-const hendelseTyperForYtelse = {
+const hendelseTyperForYtelse: Record<string, HendelseType[]> = {
     BARNETRYGD: [
         HendelseType.BorMedSøker,
         HendelseType.BosattIRiket,
@@ -82,7 +84,7 @@ const hendelseTyperForYtelse = {
     ],
 };
 
-export const hentHendelseTyper = (ytelse: Ytelsetype, erInstitusjon: boolean): HendelseType[] => {
+export const hentHendelseTyper = (ytelse: SchemaEnum4, erInstitusjon: boolean): HendelseType[] => {
     if (
         (erInstitusjon && ytelse === Ytelsetype.Barnetrygd) ||
         ytelse === Ytelsetype.Tilleggsstønad ||

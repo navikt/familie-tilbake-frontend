@@ -1,5 +1,5 @@
+import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import { LeaveIcon } from '@navikt/aksel-icons';
 import { BodyLong, Heading, HStack, Link } from '@navikt/ds-react';
@@ -12,7 +12,7 @@ import { Behandlingsmeny } from '../meny/Meny';
 const Container = styled.div`
     margin: 2rem;
 `;
-const HistoriskeVurderingermeny: React.FC<{ fagsak: Fagsak; behandling: Behandling }> = ({
+const HistoriskeVurderingermeny: React.FC<{ fagsak: FagsakDto; behandling: Behandling }> = ({
     fagsak,
     behandling,
 }) => {

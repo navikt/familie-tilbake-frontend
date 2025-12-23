@@ -9,7 +9,7 @@ import { BrevmottakerFormModal } from './BrevmottakerFormModal';
 import { Fagsystem, Ytelsetype } from '../../../kodeverk';
 import { MottakerType } from '../../../typer/Brevmottaker';
 import { Kjønn } from '../../../typer/bruker';
-import { Målform } from '../../../typer/fagsak';
+import { Målform } from '../../../typer/målform';
 import { RessursStatus } from '../../../typer/ressurs';
 
 jest.mock('../../../hooks/useBrevmottakerApi', () => ({

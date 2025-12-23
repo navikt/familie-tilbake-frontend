@@ -1,4 +1,4 @@
-import type { Ytelsetype } from '../../../kodeverk';
+import type { SchemaEnum4 } from '../../../generated';
 
 import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
@@ -12,7 +12,7 @@ import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 type Props = {
-    ytelse: Ytelsetype;
+    ytelse: SchemaEnum4;
 };
 
 const FaktaContainer: React.FC<Props> = ({ ytelse }) => {

@@ -1,5 +1,5 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
-import type { Fagsak } from '../../../typer/fagsak';
+import type { FagsakDto } from '../../../generated';
 
 import { BodyShort, VStack, type TimelinePeriodProps } from '@navikt/ds-react';
 import * as React from 'react';
@@ -60,7 +60,7 @@ const finnClassNamePeriodeStatus = (
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;

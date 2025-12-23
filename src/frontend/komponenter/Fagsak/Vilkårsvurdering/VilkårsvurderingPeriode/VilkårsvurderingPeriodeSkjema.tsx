@@ -1,5 +1,5 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
-import type { Fagsak } from '../../../../typer/fagsak';
+import type { FagsakDto } from '../../../../generated';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { ChangeEvent, FC } from 'react';
 
@@ -112,7 +112,7 @@ const settSkjemadataFraPeriode = (
 };
 
 type Props = {
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
     behandling: Behandling;
     periode: VilkårsvurderingPeriodeSkjemaData;
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];

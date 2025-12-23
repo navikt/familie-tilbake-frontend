@@ -1,5 +1,5 @@
+import type { FagsakDto } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 import type { HistorikkInnslag } from '../../../../typer/historikk';
 import type { SynligSteg } from '../../../../utils/sider';
 
@@ -13,7 +13,7 @@ import { Menysider } from '../Menykontainer';
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
     valgtMenyside: Menysider;
 };
 

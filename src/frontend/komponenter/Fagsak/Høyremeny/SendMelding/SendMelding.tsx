@@ -1,5 +1,5 @@
+import type { FagsakDto } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -8,7 +8,7 @@ import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
-import { målform } from '../../../../typer/fagsak';
+import { målform } from '../../../../typer/målform';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
@@ -20,7 +20,7 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
 };
 
 type Props = {
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
     behandling: Behandling;
 };
 

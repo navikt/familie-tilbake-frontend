@@ -1,4 +1,5 @@
-import type { HendelseType, Ytelsetype } from '../../../../kodeverk';
+import type { SchemaEnum4 } from '../../../../generated';
+import type { HendelseType } from '../../../../kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
 import { Table } from '@navikt/ds-react';
@@ -20,7 +21,7 @@ const StyledPeriodeTable = styled(Table)`
 `;
 
 type Props = {
-    ytelse: Ytelsetype;
+    ytelse: SchemaEnum4;
     perioder: FaktaPeriodeSkjemaData[];
     erLesevisning: boolean;
 };

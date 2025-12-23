@@ -1,57 +1,77 @@
-import type { Fagsystem } from '../kodeverk';
-import type { Fagsak } from '../typer/fagsak';
-import type { AxiosError } from 'axios';
+import type { FagsakDto } from '../generated';
+import type { ReactNode } from 'react';
 
-import createUseContext from 'constate';
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import React, { createContext, useContext } from 'react';
+import { useParams } from 'react-router';
 
-import { useHttp } from '../api/http/HttpProvider';
-import { useFagsakStore } from '../stores/fagsakStore';
-import {
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    RessursStatus,
-    type Ressurs,
-} from '../typer/ressurs';
+import { hentFagsak } from '../generated/sdk.gen';
+import { Fagsystem } from '../kodeverk';
 
 export type FagsakHook = {
-    fagsak: Ressurs<Fagsak> | undefined;
-    hentFagsak: (fagsystem: Fagsystem, eksternFagsakId: string) => void;
+    fagsak: FagsakDto | undefined;
+    isLoading: boolean;
+    error: string | undefined;
 };
 
-const [FagsakProvider, useFagsak] = createUseContext(() => {
-    const [fagsak, settFagsak] = useState<Ressurs<Fagsak> | undefined>();
-    const setEksternFagsakId = useFagsakStore(state => state.setEksternFagsakId);
-    const setYtelsestype = useFagsakStore(state => state.setYtelsestype);
-    const setFagSystem = useFagsakStore(state => state.setFagsystem);
-    const setSpråkkode = useFagsakStore(state => state.setSpråkkode);
-    const { request } = useHttp();
+type FagsakContextType = {
+    fagsak: FagsakDto | undefined;
+    isLoading: boolean;
+    error: string | undefined;
+};
 
-    const hentFagsak = (fagsystem: Fagsystem, eksternFagsakId: string): void => {
-        settFagsak(byggHenterRessurs());
-        request<void, Fagsak>({
-            method: 'GET',
-            url: `/familie-tilbake/api/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/v1`,
-        })
-            .then((hentetFagsak: Ressurs<Fagsak>) => {
-                if (hentetFagsak.status === RessursStatus.Suksess) {
-                    setEksternFagsakId(hentetFagsak.data.eksternFagsakId);
-                    setYtelsestype(hentetFagsak.data.ytelsestype);
-                    setFagSystem(hentetFagsak.data.fagsystem);
-                    setSpråkkode(hentetFagsak.data.språkkode);
-                }
-                settFagsak(hentetFagsak);
-            })
+const FagsakContext = createContext<FagsakContextType | undefined>(undefined);
 
-            .catch((error: AxiosError) => {
-                settFagsak(byggFeiletRessurs('Ukjent feil ved henting av fagsak', error.status));
+type FagsakProviderProps = {
+    children: ReactNode;
+};
+
+export const FagsakProvider = ({ children }: FagsakProviderProps): React.ReactElement => {
+    const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
+    const fagsystem =
+        fagsystemParam == 'KS'
+            ? Fagsystem[fagsystemParam as keyof typeof Fagsystem]
+            : (fagsystemParam as Fagsystem);
+
+    const {
+        data: fagsak,
+        isLoading,
+        isError,
+        error,
+    } = useQuery({
+        queryKey: ['fagsak', fagsystem, eksternFagsakId],
+        queryFn: async () => {
+            const result = await hentFagsak({
+                path: {
+                    fagsystem: fagsystem,
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    eksternFagsakId: eksternFagsakId!,
+                },
             });
+
+            return result.data?.data;
+        },
+        enabled: !!fagsystem && !!eksternFagsakId,
+    });
+
+    const value = {
+        fagsak,
+        isLoading,
+        error: isError ? error?.message : undefined,
     };
+
+    return <FagsakContext.Provider value={value}>{children}</FagsakContext.Provider>;
+};
+
+export const useFagsak = (): FagsakHook => {
+    const context = useContext(FagsakContext);
+    if (!context) {
+        throw new Error('useFagsak must be used within FagsakProvider');
+    }
 
     return {
-        fagsak,
-        hentFagsak,
+        fagsak: context.fagsak,
+        isLoading: context.isLoading,
+        error: context.error,
     };
-});
-
-export { FagsakProvider, useFagsak };
+};

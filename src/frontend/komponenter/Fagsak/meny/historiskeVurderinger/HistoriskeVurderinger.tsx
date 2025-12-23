@@ -5,14 +5,16 @@ import { ActionMenu } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useApp } from '../../../../context/AppContext';
-import { useFagsakStore } from '../../../../stores/fagsakStore';
+import { useFagsak } from '../../../../context/FagsakContext';
 
 type Props = {
     behandling: Behandling;
 };
 
 export const HistoriskeVurderinger: React.FC<Props> = ({ behandling }) => {
-    const { fagsystem, eksternFagsakId } = useFagsakStore();
+    const { fagsak } = useFagsak();
+    const fagsystem = fagsak?.fagsystem;
+    const eksternFagsakId = fagsak?.eksternFagsakId;
 
     const { innloggetSaksbehandler } = useApp();
     const harTilgang =

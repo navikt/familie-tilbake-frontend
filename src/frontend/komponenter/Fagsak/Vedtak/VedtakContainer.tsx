@@ -1,5 +1,5 @@
+import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -37,7 +37,7 @@ const VarselbrevInfo = styled(BodyShort)`
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
 };
 
 const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {

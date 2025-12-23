@@ -1,7 +1,7 @@
 import type { TotrinnGodkjenningOption, TotrinnStegSkjemaData } from './typer/totrinnSkjemaTyper';
+import type { FagsakDto } from '../../../../generated';
 import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer/api';
 import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
 import type { SynligSteg } from '../../../../utils/sider';
 
@@ -37,7 +37,7 @@ const stegRekkefølge = [
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
 };
 
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(

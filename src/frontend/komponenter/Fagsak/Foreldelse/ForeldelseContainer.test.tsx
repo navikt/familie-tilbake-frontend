@@ -1,8 +1,8 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
@@ -45,7 +45,7 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderForeldelseContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult => {
+const renderForeldelseContainer = (behandling: Behandling, fagsak: FagsakDto): RenderResult => {
     return render(
         <ForeldelseProvider behandling={behandling} fagsak={fagsak}>
             <ForeldelseContainer behandling={behandling} />
