@@ -1,20 +1,10 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { RenderResult } from '@testing-library/react';
-import type { NavigateFunction } from 'react-router';
 
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { ActionBar } from './ActionBar';
-
-vi.mock('react-router', async () => {
-    const actual = await vi.importActual('react-router');
-    return {
-        ...actual,
-        useNavigate: (): NavigateFunction => vi.fn(),
-    };
-});
-
 const mockUseBehandling = vi.fn();
 vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),

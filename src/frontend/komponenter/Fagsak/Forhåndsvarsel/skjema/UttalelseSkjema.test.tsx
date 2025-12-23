@@ -1,7 +1,6 @@
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { Toggles } from '../../../../context/toggles';
 import type { RenderResult } from '@testing-library/react';
-import type { NavigateFunction } from 'react-router';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent, within } from '@testing-library/react';
@@ -25,7 +24,7 @@ vi.mock('react-router', async () => {
     const actual = await vi.importActual('react-router');
     return {
         ...actual,
-        useNavigate: (): NavigateFunction => vi.fn(),
+        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
     };
 });
 

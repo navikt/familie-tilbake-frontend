@@ -7,7 +7,6 @@ import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
-import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -44,7 +43,7 @@ vi.mock('react-router', async () => {
     const actual = await vi.importActual('react-router');
     return {
         ...actual,
-        useNavigate: (): NavigateFunction => vi.fn(),
+        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
     };
 });
 
