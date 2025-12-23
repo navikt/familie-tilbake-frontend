@@ -26,14 +26,15 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
     });
     const { aInntektUrl: reserveAInntektUrl, modiaBaseUrl, gosysBaseUrl } = brukerlenker || {};
     const personIdent = useBehandlingStore(state => state.personIdent);
-    const fagsakId = useFagsakStore(state => state.eksternFagsakId);
     const behandlingId = useBehandlingStore(state => state.behandlingId);
+    const eksternFagsakId = useFagsakStore(state => state.eksternFagsakId);
     const fagSystem = useFagsakStore(state => state.fagsystem);
 
     const { request } = useHttp();
     const { data: personligAInntektUrl } = useQuery({
         queryKey: ['hentAInntektUrl', personIdent],
-        queryFn: () => hentAInntektUrl(request, personIdent, fagsakId, behandlingId),
+        queryFn: () => hentAInntektUrl(request, personIdent, eksternFagsakId, behandlingId),
+        enabled: !!personIdent && !!eksternFagsakId && !!behandlingId,
         retry: 1,
     });
 
@@ -67,10 +68,10 @@ export const FTHeader: React.FC<Props> = ({ innloggetSaksbehandler }) => {
             return `${location.pathname.replace(behandlingsPath, '')}`;
         }
         if (fagSystem === Fagsystem.TS) {
-            return `/redirect/fagsystem/${fagSystem}/ekstern/person/${fagsakId}`;
+            return `/redirect/fagsystem/${fagSystem}/ekstern/person/${eksternFagsakId}`;
         }
-        return `/redirect/fagsystem/${fagSystem}/fagsak/${fagsakId}/saksoversikt`;
-    }, [erHistoriskVisning, fagSystem, fagsakId, behandlingsPath]);
+        return `/redirect/fagsystem/${fagSystem}/fagsak/${eksternFagsakId}/saksoversikt`;
+    }, [erHistoriskVisning, fagSystem, eksternFagsakId, behandlingsPath]);
     const { theme, toggleTheme } = useTheme();
 
     return (

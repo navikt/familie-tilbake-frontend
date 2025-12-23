@@ -1,5 +1,5 @@
+import type { FagsakDto } from '../../generated/types.gen';
 import type { Behandling } from '../../typer/behandling';
-import type { Fagsak } from '../../typer/fagsak';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button } from '@navikt/ds-react';
@@ -26,7 +26,6 @@ import { ToggleName } from '../../context/toggles';
 import { useToggles } from '../../context/TogglesContext';
 import { Behandlingstatus } from '../../typer/behandling';
 import { tilBehandlingDto } from '../../utils/behandlingMapper';
-import { tilFagsakDto } from '../../utils/fagsakMapper';
 import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from '../../utils/sider';
 import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
 
@@ -70,7 +69,7 @@ const HenlagtContainer = styled.div`
 `;
 
 type Props = {
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
     behandling: Behandling;
 };
 
@@ -85,7 +84,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
     const erØnsketSideLovlig =
         ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
-    const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+    const behandlingUrl = `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
     React.useEffect(() => {
         if (visVenteModal === false) {
@@ -199,7 +198,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                                     <Suspense fallback="Forhåndsvarsel laster...">
                                         <Forhåndsvarsel
                                             behandling={tilBehandlingDto(behandling, fagsak)}
-                                            fagsak={tilFagsakDto(fagsak)}
+                                            fagsak={fagsak}
                                         />
                                     </Suspense>
                                 }

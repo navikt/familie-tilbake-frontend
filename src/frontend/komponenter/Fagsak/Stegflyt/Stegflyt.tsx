@@ -6,8 +6,8 @@ import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { erStegUtført, useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { useToggles } from '../../../context/TogglesContext';
-import { useFagsakStore } from '../../../stores/fagsakStore';
 import { type Behandling, type Behandlingsstegstilstand } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { erSidenAktiv, SYNLIGE_STEG, visSide } from '../../../utils/sider';
@@ -43,7 +43,9 @@ export const Stegflyt: React.FC = () => {
     const { behandling } = useBehandling();
     const location = useLocation();
     const navigate = useNavigate();
-    const { eksternFagsakId, fagsystem } = useFagsakStore();
+    const { fagsak } = useFagsak();
+    const eksternFagsakId = fagsak?.eksternFagsakId;
+    const fagsystem = fagsak?.fagsystem;
     const { toggles: aktiveToggles } = useToggles();
 
     const stegsinfo = mapStegTilStepperSteg(

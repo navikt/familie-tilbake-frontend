@@ -1,4 +1,5 @@
 import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
+import type { FagsakDto } from '../../../generated';
 import type {
     ForeslåVedtakStegPayload,
     ForhåndsvisVedtaksbrev,
@@ -6,7 +7,6 @@ import type {
     PeriodeMedTekst,
 } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Beregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
 
 import createUseContext from 'constate';
@@ -82,7 +82,7 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
 };
 
 const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: Props) => {

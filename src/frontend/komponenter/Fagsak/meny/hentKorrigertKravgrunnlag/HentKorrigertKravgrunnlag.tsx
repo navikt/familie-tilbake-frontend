@@ -7,8 +7,8 @@ import * as React from 'react';
 import { useHttp } from '../../../../api/http/HttpProvider';
 import { useApp } from '../../../../context/AppContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useFagsak } from '../../../../context/FagsakContext';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
-import { useFagsakStore } from '../../../../stores/fagsakStore';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { AlertType, ToastTyper } from '../../../Felleskomponenter/Toast/typer';
 
@@ -21,7 +21,9 @@ export const HentKorrigertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
     const { settToast } = useApp();
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
-    const { fagsystem, eksternFagsakId } = useFagsakStore();
+    const { fagsak } = useFagsak();
+    const fagsystem = fagsak?.fagsystem;
+    const eksternFagsakId = fagsak?.eksternFagsakId;
 
     const hentKorrigertKravgrunnlag = (): void => {
         nullstillIkkePersisterteKomponenter();

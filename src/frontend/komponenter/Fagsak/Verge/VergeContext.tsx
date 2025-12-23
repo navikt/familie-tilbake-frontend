@@ -1,6 +1,6 @@
+import type { FagsakDto } from '../../../generated';
 import type { VergeDto, VergeStegPayload } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import createUseContext from 'constate';
 import * as React from 'react';
@@ -36,7 +36,7 @@ const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
 };
 
 const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: Props) => {

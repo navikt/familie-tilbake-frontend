@@ -1,4 +1,4 @@
-import type { Bruker } from '../typer/bruker';
+import type { FrontendBrukerDto } from '../generated';
 
 import { differenceInMilliseconds } from 'date-fns';
 
@@ -6,8 +6,8 @@ import { dagensDato, isoStringTilDate } from './dato';
 
 const millisekunderIEttÅr = 3.15576e10;
 
-const hentAlder = (fødselsdato: string): number => {
-    return fødselsdato !== ''
+const hentAlder = (fødselsdato: string | undefined): number => {
+    return fødselsdato
         ? Math.floor(
               differenceInMilliseconds(dagensDato, isoStringTilDate(fødselsdato)) /
                   millisekunderIEttÅr
@@ -39,19 +39,11 @@ export const formaterIdent = (personIdent: string, ukjentTekst = 'Ukjent id'): s
           : ukjentTekst;
 };
 
-const formaterNavnAlderOgIdent = (person: {
-    personIdent: string;
-    navn: string;
-    fødselsdato: string;
-}): string => {
-    return `${person.navn} (${hentAlder(person.fødselsdato)} år) ${formaterIdent(
-        person.personIdent
-    )}`;
-};
-
-export const lagPersonLabel = (ident: string, bruker: Bruker): string => {
+export const lagPersonLabel = (ident: string, bruker: FrontendBrukerDto): string => {
     if (bruker) {
-        return formaterNavnAlderOgIdent({ ...bruker });
+        return `${bruker.navn} (${hentAlder(bruker.fødselsdato)} år) ${formaterIdent(
+            bruker.personIdent
+        )}`;
     } else {
         return ident;
     }

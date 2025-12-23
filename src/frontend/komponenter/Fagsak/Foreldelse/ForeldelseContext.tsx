@@ -1,7 +1,7 @@
 import type { ForeldelsePeriodeSkjemeData } from './typer/foreldelse';
+import type { FagsakDto } from '../../../generated';
 import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 
 import createUseContext from 'constate';
@@ -44,7 +44,7 @@ const utledValgtPeriode = (
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
 };
 
 export type ForeldelseHook = {

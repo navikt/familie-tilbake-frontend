@@ -1,6 +1,5 @@
+import type { FrontendBrukerDto, InstitusjonDto } from '../../../generated';
 import type { Brevmottaker } from '../../../typer/Brevmottaker';
-import type { Bruker } from '../../../typer/bruker';
-import type { Institusjon } from '../../../typer/fagsak';
 
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Alert, Button } from '@navikt/ds-react';
@@ -16,8 +15,8 @@ const StyledAlert = styled(Alert)`
 
 type Props = {
     brevmottakere: Brevmottaker[];
-    institusjon: Institusjon | null;
-    bruker: Bruker;
+    institusjon: InstitusjonDto | undefined;
+    bruker: FrontendBrukerDto;
     linkTilBrevmottakerSteg: string;
 };
 

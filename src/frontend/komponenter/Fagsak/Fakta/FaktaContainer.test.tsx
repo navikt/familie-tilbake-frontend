@@ -1,7 +1,7 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
@@ -41,7 +41,7 @@ const mockedSettIkkePersistertKomponent = jest.fn();
 const renderFaktaContainer = (
     behandling: Behandling,
     ytelse: Ytelsetype,
-    fagsak: Fagsak
+    fagsak: FagsakDto
 ): RenderResult => {
     return render(
         <FaktaProvider behandling={behandling} fagsak={fagsak}>

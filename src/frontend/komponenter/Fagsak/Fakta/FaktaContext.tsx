@@ -1,8 +1,8 @@
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/fakta';
+import type { FagsakDto } from '../../../generated';
 import type { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type {
     FaktaResponse,
     VurderingAvBrukersUttalelse,
@@ -35,7 +35,7 @@ const _validerTekst3000 = validerTekstMaksLengde(3000);
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
 };
 
 const [FaktaProvider, useFakta] = createUseContext(({ behandling, fagsak }: Props) => {

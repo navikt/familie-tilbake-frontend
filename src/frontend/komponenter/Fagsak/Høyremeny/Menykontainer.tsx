@@ -1,5 +1,5 @@
+import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import * as React from 'react';
 
@@ -21,7 +21,7 @@ export enum Menysider {
 
 type Props = {
     valgtMenyside: Menysider;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
     behandling: Behandling;
 };
 

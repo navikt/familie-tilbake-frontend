@@ -7,10 +7,7 @@ import { ManuellRegistrering } from '../Adressekilde/ManuellRegistrering';
 export const Dødsbo: React.FC = () => {
     const { fagsak } = useFagsak();
 
-    const dødsboNavn =
-        fagsak?.status === 'SUKSESS' && fagsak.data?.bruker?.navn
-            ? `${fagsak.data.bruker.navn} v/dødsbo`
-            : '';
+    const dødsboNavn = fagsak?.bruker?.navn ? `${fagsak.bruker.navn} v/dødsbo` : '';
 
     return (
         <ManuellRegistrering

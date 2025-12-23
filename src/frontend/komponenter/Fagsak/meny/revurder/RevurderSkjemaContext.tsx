@@ -4,9 +4,9 @@ import type { Behandling, Behandlingårsak } from '../../../../typer/behandling'
 import { useState, type RefObject } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useFagsak } from '../../../../context/FagsakContext';
 import { useFelt, useSkjema } from '../../../../hooks/skjema';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
-import { useFagsakStore } from '../../../../stores/fagsakStore';
 import { Behandlingstype } from '../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { erFeltetEmpty } from '../../../../utils';
@@ -30,7 +30,10 @@ const useRevurderSkjema = (
     dialogRef: RefObject<HTMLDialogElement | null>
 ): RevurderSkjemaHook => {
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
-    const { ytelsestype, eksternFagsakId, fagsystem } = useFagsakStore();
+    const { fagsak } = useFagsak();
+    const ytelsestype = fagsak?.ytelsestype;
+    const eksternFagsakId = fagsak?.eksternFagsakId;
+    const fagsystem = fagsak?.fagsystem;
     const { utførRedirect } = useRedirectEtterLagring();
     const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
 

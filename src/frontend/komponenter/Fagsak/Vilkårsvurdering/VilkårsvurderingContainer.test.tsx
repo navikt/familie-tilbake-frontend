@@ -1,7 +1,7 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
+import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     VilkårsvurderingResponse,
@@ -46,6 +46,12 @@ jest.mock('react-router', () => ({
 
 jest.mock('@tanstack/react-query', () => {
     return {
+        useQuery: jest.fn(() => ({
+            data: undefined,
+            isLoading: false,
+            isError: false,
+            error: null,
+        })),
         useMutation: jest.fn(({ mutationFn, onSuccess }) => {
             const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
                 const result = await mutationFn(behandlingId);
@@ -119,7 +125,7 @@ const setupMocks = (): void => {
     }));
 };
 
-const renderVilkårsvurderingContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
+const renderVilkårsvurderingContainer = (behandling: Behandling, fagsak: FagsakDto): RenderResult =>
     render(
         <BehandlingProvider>
             <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>

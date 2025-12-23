@@ -1,8 +1,7 @@
-import type { BehandlingDto } from '../generated/types.gen';
+import type { BehandlingDto, FagsakDto } from '../generated/types.gen';
 import type { Behandling } from '../typer/behandling';
-import type { Fagsak } from '../typer/fagsak';
 
-export const tilBehandlingDto = (behandling: Behandling, fagsak: Fagsak): BehandlingDto => {
+export const tilBehandlingDto = (behandling: Behandling, fagsak: FagsakDto): BehandlingDto => {
     return {
         ...behandling,
         eksternFagsakId: fagsak.eksternFagsakId,

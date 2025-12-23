@@ -1,9 +1,9 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { FagsakDto } from '../../../generated';
 import type { VergeDto } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -45,7 +45,7 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderVergeContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
+const renderVergeContainer = (behandling: Behandling, fagsak: FagsakDto): RenderResult =>
     render(
         <VergeProvider behandling={behandling} fagsak={fagsak}>
             <VergeContainer />

@@ -1,5 +1,5 @@
+import type { FagsakDto } from '../generated/types.gen';
 import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
-import type { Fagsak } from '../typer/fagsak';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
@@ -17,7 +17,7 @@ import { SYNLIGE_STEG } from '../utils/sider';
 
 export type BehandlingHook = {
     behandling: Ressurs<Behandling> | undefined;
-    hentBehandlingMedEksternBrukId: (fagsak: Fagsak, behandlingId: string) => void;
+    hentBehandlingMedEksternBrukId: (fagsak: FagsakDto, behandlingId: string) => void;
     hentBehandlingMedBehandlingId: (behandlingId: string) => Promise<void>;
     behandlingILesemodus: boolean | undefined;
     actionBarStegtekst: (valgtSteg: Behandlingssteg) => string | undefined;
@@ -82,7 +82,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         }
     };
 
-    const hentBehandlingMedEksternBrukId = (fagsak: Fagsak, behandlingId: string): void => {
+    const hentBehandlingMedEksternBrukId = (fagsak: FagsakDto, behandlingId: string): void => {
         const fagsakBehandling = fagsak.behandlinger.find(
             behandling => behandling.eksternBrukId === behandlingId
         );
@@ -219,9 +219,8 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     };
 
     const lagLenkeTilRevurdering = (): string => {
-        return fagsak?.status === RessursStatus.Suksess &&
-            behandling?.status === RessursStatus.Suksess
-            ? `/redirect/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/${behandling.data.fagsystemsbehandlingId}`
+        return fagsak && behandling?.status === RessursStatus.Suksess
+            ? `/redirect/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/${behandling.data.fagsystemsbehandlingId}`
             : '#';
     };
 

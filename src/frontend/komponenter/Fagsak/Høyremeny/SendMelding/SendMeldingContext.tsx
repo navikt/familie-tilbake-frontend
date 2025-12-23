@@ -1,6 +1,6 @@
+import type { FagsakDto } from '../../../../generated';
 import type { BrevPayload } from '../../../../typer/api';
 import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 
 import createUseContext from 'constate';
 import * as React from 'react';
@@ -48,7 +48,7 @@ const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean 
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
 };
 
 const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fagsak }: Props) => {

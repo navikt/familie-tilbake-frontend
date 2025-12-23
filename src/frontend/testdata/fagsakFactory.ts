@@ -1,34 +1,27 @@
-import type { FagsakDto } from '../generated';
-import type { Bruker } from '../typer/bruker';
-import type { Fagsak } from '../typer/fagsak';
+import type { FagsakDto, FrontendBrukerDto } from '../generated';
 
 import { Fagsystem, Ytelsetype } from '../kodeverk';
 import { Kjønn } from '../typer/bruker';
-import { Målform } from '../typer/fagsak';
+import { Målform } from '../typer/målform';
 
-export const lagFagsak = (overrides: Partial<Fagsak> = {}): Fagsak => ({
+export const lagFagsak = (overrides: Partial<FagsakDto> = {}): FagsakDto => ({
     eksternFagsakId: 'id-1',
     ytelsestype: Ytelsetype.Overgangsstønad,
     fagsystem: Fagsystem.EF,
     språkkode: Målform.Nb,
     bruker: lagBruker(),
     behandlinger: [],
-    institusjon: null,
+    institusjon: undefined,
     ...overrides,
 });
 
-const lagBruker = (overrides: Partial<Bruker> = {}): Bruker => ({
+const lagBruker = (overrides: Partial<FrontendBrukerDto> = {}): FrontendBrukerDto => ({
     navn: 'Test Bruker',
     personIdent: '12345678901',
-    dødsdato: null,
+    dødsdato: undefined,
     fødselsdato: '1990-01-01',
     kjønn: Kjønn.Kvinne,
     ...overrides,
 });
 
-//TODO: Skal fjernes når vi tar i bruk FagsakDto over
-export const lagFagsakDto = (overrides: Partial<FagsakDto> = {}): FagsakDto =>
-    ({
-        ...lagFagsak(),
-        ...overrides,
-    }) as FagsakDto;
+export const lagFagsakDto = lagFagsak;

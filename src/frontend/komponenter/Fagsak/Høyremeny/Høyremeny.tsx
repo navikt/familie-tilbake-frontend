@@ -1,5 +1,5 @@
+import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import { Modal } from '@navikt/ds-react';
 import classNames from 'classnames';
@@ -12,7 +12,7 @@ import { Faktaboks } from './Informasjonsbokser/Faktaboks';
 import { useBehandling } from '../../../context/BehandlingContext';
 
 type Props = {
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
     behandling: Behandling;
     dialogRef: React.RefObject<HTMLDialogElement | null>;
 };

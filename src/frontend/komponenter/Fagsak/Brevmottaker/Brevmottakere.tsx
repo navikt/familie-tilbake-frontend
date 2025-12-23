@@ -1,6 +1,6 @@
+import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
 import type { Brevmottaker } from '../../../typer/Brevmottaker';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
@@ -221,7 +221,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
 
 type BrevmottakereProps = {
     behandling: Behandling;
-    fagsak: Fagsak;
+    fagsak: FagsakDto;
 };
 
 const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => {

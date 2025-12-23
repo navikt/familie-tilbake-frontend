@@ -1,8 +1,8 @@
 import type { DokumentApiHook } from '../../../../api/dokument';
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
+import type { FagsakDto } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
@@ -16,7 +16,7 @@ import { SendMeldingProvider } from './SendMeldingContext';
 import { DokumentMal } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import { Målform } from '../../../../typer/fagsak';
+import { Målform } from '../../../../typer/målform';
 import { RessursStatus } from '../../../../typer/ressurs';
 
 jest.mock('../../../../api/http/HttpProvider', () => {
@@ -43,7 +43,7 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderSendMelding = (fagsak: Fagsak, behandling: Behandling): RenderResult =>
+const renderSendMelding = (fagsak: FagsakDto, behandling: Behandling): RenderResult =>
     render(
         <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
             <SendMelding fagsak={fagsak} behandling={behandling} />

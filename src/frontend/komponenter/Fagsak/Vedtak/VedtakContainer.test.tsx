@@ -1,9 +1,9 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { FagsakDto } from '../../../generated';
 import type { SammenslåttPeriodeHook } from '../../../hooks/useSammenslåPerioder';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     BeregningsresultatPeriode,
@@ -65,7 +65,7 @@ jest.mock('../../../hooks/useSammenslåPerioder', () => ({
 
 const mockedSettIkkePersistertKomponent = jest.fn();
 
-const renderVedtakContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
+const renderVedtakContainer = (behandling: Behandling, fagsak: FagsakDto): RenderResult =>
     render(
         <VedtakProvider behandling={behandling} fagsak={fagsak}>
             <VedtakContainer behandling={behandling} fagsak={fagsak} />

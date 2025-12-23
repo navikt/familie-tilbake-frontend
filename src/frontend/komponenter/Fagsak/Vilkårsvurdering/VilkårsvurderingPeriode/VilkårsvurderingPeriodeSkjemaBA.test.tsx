@@ -1,6 +1,6 @@
 import type { Http } from '../../../../api/http/HttpProvider';
+import type { FagsakDto } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { RenderResult } from '@testing-library/react';
@@ -33,6 +33,17 @@ jest.mock('../../../../api/http/HttpProvider', () => {
         }),
     };
 });
+
+jest.mock('../../../../context/FagsakContext', () => {
+    return {
+        useFagsak: jest.fn(() => ({
+            fagsak: undefined,
+            isLoading: false,
+            error: undefined,
+        })),
+    };
+});
+
 jest.mock('../VilkårsvurderingContext', () => {
     return {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({
@@ -51,7 +62,7 @@ jest.mock('../VilkårsvurderingContext', () => {
 
 const renderVilkårsvurderingPeriodeSkjema = (
     behandling: Behandling,
-    fagsak: Fagsak,
+    fagsak: FagsakDto,
     periode: VilkårsvurderingPeriodeSkjemaData,
     erTotalbeløpUnder4Rettsgebyr: boolean,
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[] = []

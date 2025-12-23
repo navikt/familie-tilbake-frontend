@@ -1,5 +1,5 @@
 import type { FaktaSkjemaData } from './typer/fakta';
-import type { Ytelsetype } from '../../../kodeverk';
+import type { SchemaEnum4 } from '../../../generated';
 import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 
 import {
@@ -27,7 +27,7 @@ import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
-    ytelse: Ytelsetype;
+    ytelse: SchemaEnum4;
     erLesevisning: boolean;
     skjemaData: FaktaSkjemaData;
     fakta: FaktaResponse;
