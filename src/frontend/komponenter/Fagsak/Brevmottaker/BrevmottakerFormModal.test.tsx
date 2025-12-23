@@ -12,17 +12,17 @@ import { Kjønn } from '../../../typer/bruker';
 import { Målform } from '../../../typer/fagsak';
 import { RessursStatus } from '../../../typer/ressurs';
 
-jest.mock('../../../hooks/useBrevmottakerApi', () => ({
-    useBrevmottakerApi: jest.fn(() => ({
-        lagreBrevmottaker: jest.fn().mockResolvedValue({
+vi.mock('../../../hooks/useBrevmottakerApi', () => ({
+    useBrevmottakerApi: vi.fn(() => ({
+        lagreBrevmottaker: vi.fn().mockResolvedValue({
             status: RessursStatus.Suksess,
             data: 'success',
         }),
     })),
 }));
 
-jest.mock('../../../context/FagsakContext', () => ({
-    useFagsak: jest.fn(() => ({
+vi.mock('../../../context/FagsakContext', () => ({
+    useFagsak: vi.fn(() => ({
         fagsak: {
             status: RessursStatus.Suksess,
             data: {
@@ -51,8 +51,8 @@ const renderBrevmottakerFormModal = async (
     const defaultProps = {
         behandlingId: 'test-behandling-id',
         visBrevmottakerModal: true,
-        settVisBrevmottakerModal: jest.fn(),
-        settBrevmottakerIdTilEndring: jest.fn(),
+        settVisBrevmottakerModal: vi.fn(),
+        settBrevmottakerIdTilEndring: vi.fn(),
         mode: 'leggTil' as const,
         ...props,
     };
@@ -65,7 +65,7 @@ describe('BrevmottakerFormModal', () => {
 
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe('Grunnleggende rendering', () => {

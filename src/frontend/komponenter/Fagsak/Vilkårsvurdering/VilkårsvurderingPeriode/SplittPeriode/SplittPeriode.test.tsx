@@ -13,7 +13,7 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('Åpning av modal', async () => {
@@ -29,7 +29,7 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
                 <SplittPeriode
                     periode={lagVilkårsvurderingPeriodeSkjemaData()}
                     behandling={lagBehandling()}
-                    onBekreft={jest.fn()}
+                    onBekreft={vi.fn()}
                 />
             </HttpProvider>
         );

@@ -3,6 +3,8 @@ import type { UseForhåndsvarselMutationsReturn } from '../komponenter/Fagsak/Fo
 import type { UseForhåndsvarselQueriesReturn } from '../komponenter/Fagsak/Forhåndsvarsel/useForhåndsvarselQueries';
 import type { UseQueryResult, UseSuspenseQueryResult } from '@tanstack/react-query';
 
+import { vi } from 'vitest';
+
 export const lagMockQuery = <T>(data?: T): UseQueryResult<T | undefined> =>
     ({
         data,
@@ -11,7 +13,7 @@ export const lagMockQuery = <T>(data?: T): UseQueryResult<T | undefined> =>
         isError: false,
         isSuccess: true,
         isPending: false,
-        refetch: jest.fn(),
+        refetch: vi.fn(),
     }) as unknown as UseQueryResult<T | undefined>;
 
 export const lagMockSuspenseQuery = <T>(data: T): UseSuspenseQueryResult<T, Error> =>
@@ -22,7 +24,7 @@ export const lagMockSuspenseQuery = <T>(data: T): UseSuspenseQueryResult<T, Erro
         isError: false,
         isSuccess: true,
         isPending: false,
-        refetch: jest.fn(),
+        refetch: vi.fn(),
     }) as unknown as UseSuspenseQueryResult<T, Error>;
 
 export const lagForhåndsvarselQueries = (
@@ -73,11 +75,11 @@ export type PreNoticeMutations = Omit<
 
 export const lagForhåndsvarselMutations = (): UseForhåndsvarselMutationsReturn =>
     ({
-        sendForhåndsvarsel: jest.fn(),
-        sendBrukeruttalelse: jest.fn(),
-        sendUtsettUttalelseFrist: jest.fn(),
-        seForhåndsvisning: jest.fn(),
-        gåTilNeste: jest.fn(),
+        sendForhåndsvarsel: vi.fn(),
+        sendBrukeruttalelse: vi.fn(),
+        sendUtsettUttalelseFrist: vi.fn(),
+        seForhåndsvisning: vi.fn(),
+        gåTilNeste: vi.fn(),
         sendForhåndsvarselMutation: lagMockQuery(),
         sendBrukeruttalelseMutation: lagMockQuery(),
         sendUtsettUttalelseFristMutation: lagMockQuery(),

@@ -4,7 +4,7 @@ import React from 'react';
 import { FeilModal } from './FeilModal';
 import { Feil } from '../../../../api/feil';
 
-const mockSetVisFeilModal = jest.fn();
+const mockSetVisFeilModal = vi.fn();
 
 describe('FeilModal', () => {
     //#region 400 Bad Request feil

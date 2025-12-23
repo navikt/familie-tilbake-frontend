@@ -5,7 +5,6 @@ import type { Behandling } from '../../../../typer/behandling';
 import type { Fagsak } from '../../../../typer/fagsak';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
-import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -19,29 +18,32 @@ import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { Målform } from '../../../../typer/fagsak';
 import { RessursStatus } from '../../../../typer/ressurs';
 
-jest.mock('../../../../api/http/HttpProvider', () => {
+vi.mock('../../../../api/http/HttpProvider', () => {
     return {
         useHttp: (): Http => ({
             systemetLaster: () => false,
-            request: jest.fn(),
+            request: vi.fn(),
         }),
     };
 });
 
-const mockUseBehandling = jest.fn();
-jest.mock('../../../../context/BehandlingContext', () => ({
+const mockUseBehandling = vi.fn();
+vi.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-const mockUseDokumentApi = jest.fn();
-jest.mock('../../../../api/dokument', () => ({
+const mockUseDokumentApi = vi.fn();
+vi.mock('../../../../api/dokument', () => ({
     useDokumentApi: (): DokumentApiHook => mockUseDokumentApi(),
 }));
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
+    };
+});
 
 const renderSendMelding = (fagsak: Fagsak, behandling: Behandling): RenderResult =>
     render(
@@ -71,7 +73,7 @@ describe('SendMelding', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('Fyller ut skjema og sender varsel', async () => {

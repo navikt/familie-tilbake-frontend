@@ -4,8 +4,8 @@ import React from 'react';
 
 import Landvelger from './Landvelger';
 
-const mockHåndterLandValgt = jest.fn();
-jest.mock('countries-list', () => ({
+const mockHåndterLandValgt = vi.fn();
+vi.mock('countries-list', () => ({
     countries: {
         NO: { name: 'Norge' },
         SE: { name: 'Sverige' },

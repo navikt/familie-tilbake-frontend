@@ -1,7 +1,6 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { FaktaOmFeilutbetalingDto, OppdaterFaktaData } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
-import type { NavigateFunction } from 'react-router';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
@@ -10,17 +9,20 @@ import React from 'react';
 import { FaktaSkjema } from './FaktaSkjema';
 import { configureZod } from '../../../utils/zodConfig';
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
+    };
+});
 
-const mockUseBehandling = jest.fn(() => ({
+const mockUseBehandling = vi.fn(() => ({
     actionBarStegtekst: (): string => 'Mocked!!',
     erStegBehandlet: (): boolean => false,
 }));
 
-jest.mock('../../../context/BehandlingContext', () => ({
+vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): Partial<BehandlingHook> => mockUseBehandling(),
 }));
 

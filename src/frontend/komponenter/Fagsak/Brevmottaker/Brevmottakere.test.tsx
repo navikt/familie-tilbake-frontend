@@ -2,7 +2,6 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { ManuellBrevmottakerResponseDto } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
 import type { RenderResult } from '@testing-library/react';
-import type { NavigateFunction } from 'react-router';
 
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
@@ -12,13 +11,16 @@ import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { MottakerType } from '../../../typer/Brevmottaker';
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
+    };
+});
 
-const mockUseBehandling = jest.fn();
-jest.mock('../../../context/BehandlingContext', () => ({
+const mockUseBehandling = vi.fn();
+vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
@@ -62,9 +64,9 @@ const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponseDto[] => [
 
 const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
-        actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 5'),
-        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
-        erStegBehandlet: jest.fn().mockReturnValue(false),
+        actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
+        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
+        erStegBehandlet: vi.fn().mockReturnValue(false),
     }));
 };
 
@@ -74,7 +76,7 @@ const renderBrevmottakere = (behandling: Behandling): RenderResult => {
 
 describe('Brevmottakere', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         setupMock();
     });
 
