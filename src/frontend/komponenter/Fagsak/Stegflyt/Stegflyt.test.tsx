@@ -21,23 +21,23 @@ import {
 import { Behandlingsstegstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
-const mockNavigate = jest.fn();
-const mockUseLocation = jest.fn();
-const mockUseBehandling = jest.fn();
-const mockUseFagsakStore = jest.fn();
+const mockNavigate = vi.fn();
+const mockUseLocation = vi.fn();
+const mockUseBehandling = vi.fn();
+const mockUseFagsakStore = vi.fn();
 
-jest.mock('react-router', () => ({
+vi.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => mockNavigate,
     useLocation: (): Location => mockUseLocation(),
 }));
 
-jest.mock('../../../context/BehandlingContext', () => ({
+vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
     erStegUtført: (status: Behandlingsstegstatus): boolean =>
         status === Behandlingsstegstatus.Utført,
 }));
 
-jest.mock('../../../stores/fagsakStore', () => ({
+vi.mock('../../../stores/fagsakStore', () => ({
     useFagsakStore: (): UseBoundStore<StoreApi<FagsakState>> => mockUseFagsakStore(),
 }));
 
@@ -72,7 +72,7 @@ const setupMocks = (): void => {
 
 describe('Stegflyt', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         setupMocks();
     });
 

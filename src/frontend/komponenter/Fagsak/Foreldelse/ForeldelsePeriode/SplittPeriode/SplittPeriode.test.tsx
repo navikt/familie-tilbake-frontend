@@ -26,7 +26,7 @@ describe('SplittPeriode - Foreldelse', () => {
             <SplittPeriode
                 periode={lagForeldelsePeriodeSkjemaData()}
                 behandling={lagBehandling()}
-                onBekreft={jest.fn()}
+                onBekreft={vi.fn()}
             />
         );
 

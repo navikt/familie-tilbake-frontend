@@ -14,27 +14,27 @@ import { StartPåNytt } from './StartPåNytt';
 import { Feil } from '../../../../api/feil';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 
-const mockUseBehandling = jest.fn();
-jest.mock('../../../../context/BehandlingContext', () => ({
+const mockUseBehandling = vi.fn();
+vi.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-const mockUseFagsakStore = jest.fn();
-jest.mock('../../../../stores/fagsakStore', () => ({
+const mockUseFagsakStore = vi.fn();
+vi.mock('../../../../stores/fagsakStore', () => ({
     useFagsakStore: (): UseBoundStore<StoreApi<FagsakState>> => mockUseFagsakStore(),
 }));
 
-const mockUseRedirectEtterLagring = jest.fn();
-jest.mock('../../../../hooks/useRedirectEtterLagring', () => ({
+const mockUseRedirectEtterLagring = vi.fn();
+vi.mock('../../../../hooks/useRedirectEtterLagring', () => ({
     useRedirectEtterLagring: (): RedirectEtterLagringHook => mockUseRedirectEtterLagring(),
 }));
 
-const mockUseStartPåNytt = jest.fn();
-jest.mock('./useStartPåNytt', () => ({
+const mockUseStartPåNytt = vi.fn();
+vi.mock('./useStartPåNytt', () => ({
     useStartPåNytt: (): StartPåNyttHook => mockUseStartPåNytt(),
 }));
 
-const mockNullstill = jest.fn();
+const mockNullstill = vi.fn();
 const setupMocks = (): void => {
     mockUseBehandling.mockReturnValue({
         nullstillIkkePersisterteKomponenter: mockNullstill,
@@ -48,13 +48,13 @@ const setupMocks = (): void => {
 describe('StartPåNytt', () => {
     let user: UserEvent;
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         user = userEvent.setup();
         setupMocks();
     });
 
     test('Viser feilmodal når behandling tilbake til fakta feiler', async () => {
-        const mockMutate = jest.fn().mockImplementation((_, options) => {
+        const mockMutate = vi.fn().mockImplementation((_, options) => {
             options.onError(
                 new Feil(
                     'Du har rollen BESLUTTER og trenger rollen FORVALTER for å utføre denne handlingen',

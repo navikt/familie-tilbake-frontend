@@ -7,12 +7,12 @@ import { useStartPåNytt } from './useStartPåNytt';
 import { Feil } from '../../../../api/feil';
 import { RessursStatus } from '../../../../typer/ressurs';
 
-const mockRequest = jest.fn();
+const mockRequest = vi.fn();
 const behandlingId = '123';
 
-jest.mock('@tanstack/react-query', () => {
+vi.mock('@tanstack/react-query', () => {
     return {
-        useMutation: jest.fn(({ mutationFn, onSuccess }) => {
+        useMutation: vi.fn(({ mutationFn, onSuccess }) => {
             const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
                 const result = await mutationFn(behandlingId);
                 if (onSuccess && result.status === RessursStatus.Suksess) {
@@ -26,19 +26,19 @@ jest.mock('@tanstack/react-query', () => {
                 mutateAsync: mutateAsync,
             };
         }),
-        useQueryClient: jest.fn(() => null),
+        useQueryClient: vi.fn(() => null),
     };
 });
 
-jest.mock('../../../../api/http/HttpProvider', () => ({
-    useHttp: jest.fn(() => ({
+vi.mock('../../../../api/http/HttpProvider', () => ({
+    useHttp: vi.fn(() => ({
         request: mockRequest,
     })),
 }));
 
 describe('useStartPåNytt', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('Burde kaste Feil med status 400 når tom behandlingId er gitt', async () => {
@@ -54,8 +54,8 @@ describe('useStartPåNytt', () => {
             status: RessursStatus.Suksess,
             data: 'Behandlingen ble tilbakestilt til fakta',
         });
-        const mockInvalidateQueries = jest.fn();
-        (useQueryClient as jest.Mock).mockReturnValue({
+        const mockInvalidateQueries = vi.fn();
+        (useQueryClient as ReturnType<typeof vi.fn>).mockReturnValue({
             invalidateQueries: mockInvalidateQueries,
         });
 

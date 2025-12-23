@@ -1,13 +1,12 @@
 import type { Http } from '../../../../api/http/HttpProvider';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { UserEvent } from '@testing-library/user-event';
 import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { mock } from 'jest-mock-extended';
 import * as React from 'react';
+import { vi } from 'vitest';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
 import { BehandlingProvider } from '../../../../context/BehandlingContext';
@@ -16,34 +15,37 @@ import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 
-jest.setTimeout(10000);
+vi.setConfig({ testTimeout: 10000 });
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
 
-jest.mock('../../../../api/http/HttpProvider', () => {
+vi.mock('../../../../api/http/HttpProvider', () => {
     return {
         useHttp: (): Http => ({
             systemetLaster: () => false,
-            request: jest.fn(),
+            request: vi.fn(),
         }),
     };
 });
 
-jest.mock('../VilkårsvurderingContext', () => {
+vi.mock('../VilkårsvurderingContext', () => {
     return {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({
             kanIlleggeRenter: true,
-            oppdaterPeriode: jest.fn(),
-            gåTilNesteSteg: jest.fn(),
-            sendInnSkjemaOgNaviger: jest.fn(),
+            oppdaterPeriode: vi.fn(),
+            gåTilNesteSteg: vi.fn(),
+            sendInnSkjemaOgNaviger: vi.fn(),
             sendInnSkjemaMutation: {
                 isPending: false,
                 isError: false,
                 error: null,
-                reset: jest.fn(),
+                reset: vi.fn(),
             },
         }),
     };
@@ -56,7 +58,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('God tro - beløp ikke i behold', async () => {
@@ -86,8 +88,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                         ...periode,
                     }}
                     behandletPerioder={[
-                        mock<VilkårsvurderingPeriodeSkjemaData>({
-                            index: 'i1',
+                        lagVilkårsvurderingPeriodeSkjemaData({
                             periode: {
                                 fom: '2020-10-01',
                                 tom: '2020-11-30',
@@ -98,7 +99,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         );
@@ -211,7 +212,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         );
@@ -293,7 +294,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         );
@@ -405,7 +406,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         );
@@ -559,7 +560,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         );
@@ -641,7 +642,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                         erLesevisning={false}
                         perioder={[periode]}
                         pendingPeriode={undefined}
-                        settPendingPeriode={jest.fn()}
+                        settPendingPeriode={vi.fn()}
                     />
                 </BehandlingProvider>
             );
@@ -747,7 +748,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         );
@@ -884,7 +885,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                         erLesevisning={false}
                         perioder={[periode]}
                         pendingPeriode={undefined}
-                        settPendingPeriode={jest.fn()}
+                        settPendingPeriode={vi.fn()}
                     />
                 </BehandlingProvider>
             );
@@ -1014,7 +1015,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         );
@@ -1152,7 +1153,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                         erLesevisning={false}
                         perioder={[periode]}
                         pendingPeriode={undefined}
-                        settPendingPeriode={jest.fn()}
+                        settPendingPeriode={vi.fn()}
                     />
                 </BehandlingProvider>
             );
@@ -1266,7 +1267,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         );
@@ -1366,7 +1367,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         );
@@ -1415,7 +1416,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     })}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
                     erLesevisning={false}
@@ -1468,7 +1469,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         );

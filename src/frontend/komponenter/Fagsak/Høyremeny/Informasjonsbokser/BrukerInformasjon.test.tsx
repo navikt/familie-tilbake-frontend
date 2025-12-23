@@ -8,10 +8,13 @@ import React from 'react';
 import { BrukerInformasjon } from './BrukerInformasjon';
 import { Kjønn } from '../../../../typer/bruker';
 
-jest.mock('../../../../utils', () => ({
-    ...jest.requireActual('../../../../utils'),
-    hentAlder: jest.fn(() => 42),
-}));
+vi.mock('../../../../utils', async () => {
+    const actual = await vi.importActual('../../../../utils');
+    return {
+        ...actual,
+        hentAlder: vi.fn(() => 42),
+    };
+});
 
 const baseBruker = (override: Partial<Bruker> = {}): Bruker => ({
     navn: 'Ola Nordmann',
