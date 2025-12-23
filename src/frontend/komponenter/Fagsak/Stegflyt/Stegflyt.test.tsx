@@ -2,7 +2,7 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
-import type { Location, NavigateFunction } from 'react-router';
+import type { Location } from 'react-router';
 
 import { render, fireEvent } from '@testing-library/react';
 import React from 'react';
@@ -26,7 +26,7 @@ const mockUseLocation = vi.fn();
 const mockUseBehandling = vi.fn();
 
 vi.mock('react-router', () => ({
-    useNavigate: (): NavigateFunction => mockNavigate,
+    useNavigate: (): ReturnType<typeof vi.fn> => mockNavigate,
     useLocation: (): Location => mockUseLocation(),
 }));
 
