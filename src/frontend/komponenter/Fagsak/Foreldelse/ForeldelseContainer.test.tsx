@@ -10,8 +10,8 @@ import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { mock } from 'jest-mock-extended';
 import * as React from 'react';
+import { vi } from 'vitest';
 
 import ForeldelseContainer from './ForeldelseContainer';
 import { ForeldelseProvider } from './ForeldelseContext';
@@ -23,27 +23,30 @@ import { lagForeldelsePeriode, lagForeldelseResponse } from '../../../testdata/f
 import { Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
-jest.mock('../../../api/http/HttpProvider', () => {
+vi.mock('../../../api/http/HttpProvider', () => {
     return {
         useHttp: (): Http => ({
             systemetLaster: () => false,
-            request: jest.fn(),
+            request: vi.fn(),
         }),
     };
 });
-const mockUseBehandling = jest.fn();
-jest.mock('../../../context/BehandlingContext', () => ({
+const mockUseBehandling = vi.fn();
+vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
-const mockUseBehandlingApi = jest.fn();
-jest.mock('../../../api/behandling', () => ({
+const mockUseBehandlingApi = vi.fn();
+vi.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
 
 const renderForeldelseContainer = (behandling: Behandling): RenderResult => {
     return render(
@@ -81,17 +84,17 @@ const setupMock = (
     if (foreldelse) {
         mockUseBehandlingApi.mockImplementation(() => ({
             gjerForeldelseKall: (): Promise<Ressurs<ForeldelseResponse>> => {
-                const ressurs = mock<Ressurs<ForeldelseResponse>>({
+                const ressurs: Ressurs<ForeldelseResponse> = {
                     status: RessursStatus.Suksess,
                     data: foreldelse,
-                });
+                };
                 return Promise.resolve(ressurs);
             },
             sendInnForeldelse: (): Promise<Ressurs<string>> => {
-                const ressurs = mock<Ressurs<string>>({
+                const ressurs: Ressurs<string> = {
                     status: RessursStatus.Suksess,
                     data: 'suksess',
-                });
+                };
                 return Promise.resolve(ressurs);
             },
         }));
@@ -102,10 +105,10 @@ const setupMock = (
         visVenteModal: false,
         behandlingILesemodus: lesevisning,
         hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-        settIkkePersistertKomponent: jest.fn(),
-        nullstillIkkePersisterteKomponenter: jest.fn(),
-        actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 4'),
-        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+        settIkkePersistertKomponent: vi.fn(),
+        nullstillIkkePersisterteKomponenter: vi.fn(),
+        actionBarStegtekst: vi.fn().mockReturnValue('Steg 2 av 4'),
+        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
     }));
 };
 
@@ -113,7 +116,7 @@ describe('ForeldelseContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('Vis og fyll ut perioder og send inn', async () => {

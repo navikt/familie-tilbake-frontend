@@ -10,8 +10,8 @@ import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { mock } from 'jest-mock-extended';
 import * as React from 'react';
+import { vi } from 'vitest';
 
 import VergeContainer from './VergeContainer';
 import { VergeProvider } from './VergeContext';
@@ -21,29 +21,32 @@ import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { RessursStatus } from '../../../typer/ressurs';
 
-jest.mock('../../../api/http/HttpProvider', () => {
+vi.mock('../../../api/http/HttpProvider', () => {
     return {
         useHttp: (): Http => ({
             systemetLaster: () => false,
-            request: jest.fn(),
+            request: vi.fn(),
         }),
     };
 });
 
-const mockUseBehandling = jest.fn();
-jest.mock('../../../context/BehandlingContext', () => ({
+const mockUseBehandling = vi.fn();
+vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-const mockUseBehandlingApi = jest.fn();
-jest.mock('../../../api/behandling', () => ({
+const mockUseBehandlingApi = vi.fn();
+vi.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
 
 const renderVergeContainer = (behandling: Behandling): RenderResult => {
     return render(
@@ -62,18 +65,21 @@ const setupMock = (
     verge?: VergeDto
 ): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
-        gjerVergeKall: (): Promise<Ressurs<VergeDto>> => {
-            const ressurs = mock<Ressurs<VergeDto>>({
+        gjerVergeKall: (): Promise<Ressurs<VergeDto>> | undefined => {
+            if (!verge) {
+                return undefined;
+            }
+            const ressurs: Ressurs<VergeDto> = {
                 status: RessursStatus.Suksess,
                 data: verge,
-            });
+            };
             return Promise.resolve(ressurs);
         },
         sendInnVerge: (): Promise<Ressurs<string>> => {
-            const ressurs = mock<Ressurs<string>>({
+            const ressurs: Ressurs<string> = {
                 status: RessursStatus.Suksess,
                 data: 'suksess',
-            });
+            };
             return Promise.resolve(ressurs);
         },
     }));
@@ -82,9 +88,9 @@ const setupMock = (
         erStegAutoutført: (): boolean => autoutført,
         behandlingILesemodus: lesevisning,
         hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-        settIkkePersistertKomponent: jest.fn(),
-        actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 5'),
-        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
+        settIkkePersistertKomponent: vi.fn(),
+        actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
+        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
     }));
 };
 
@@ -92,7 +98,7 @@ describe('VergeContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('Fyller ut advokat', async () => {

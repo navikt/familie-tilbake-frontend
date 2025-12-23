@@ -4,19 +4,21 @@ import type { NavigateFunction } from 'react-router';
 
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
-import '@testing-library/jest-dom';
 
 import { ActionBar } from './ActionBar';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
 
-const mockUseBehandling = jest.fn();
-jest.mock('../../../context/BehandlingContext', () => ({
+const mockUseBehandling = vi.fn();
+vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
@@ -41,15 +43,15 @@ const renderActionBar = (
 
 describe('ActionBar', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         mockUseBehandling.mockImplementation(() => ({
-            erStegBehandlet: jest.fn().mockReturnValue(false),
+            erStegBehandlet: vi.fn().mockReturnValue(false),
         }));
     });
 
     test('Kaller ikke onNeste eller onForrige når isLoading = true', () => {
-        const onNeste = jest.fn();
-        const onForrige = jest.fn();
+        const onNeste = vi.fn();
+        const onForrige = vi.fn();
         renderActionBar(onForrige, onNeste, true);
 
         fireEvent.click(
@@ -62,7 +64,7 @@ describe('ActionBar', () => {
     });
 
     test('Har ikke knapp tilbake til Tilbakekrevingen når ikke på inaktiv side', () => {
-        renderActionBar(jest.fn(), jest.fn(), false);
+        renderActionBar(vi.fn(), vi.fn(), false);
         expect(screen.queryByRole('link', { name: /gå til behandling/i })).not.toBeInTheDocument();
     });
 });

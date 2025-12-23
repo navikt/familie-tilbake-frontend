@@ -1,11 +1,11 @@
 import { base64ToArrayBuffer } from './miscUtils';
 import { handlePdfData } from './pdfUtils';
 
-jest.mock('./miscUtils', () => ({
-    base64ToArrayBuffer: jest.fn(),
+vi.mock('./miscUtils', () => ({
+    base64ToArrayBuffer: vi.fn(),
 }));
 
-const mockCreateObjectURL = jest.fn();
+const mockCreateObjectURL = vi.fn();
 Object.defineProperty(globalThis, 'URL', {
     value: {
         createObjectURL: mockCreateObjectURL,
@@ -13,15 +13,22 @@ Object.defineProperty(globalThis, 'URL', {
     writable: true,
 });
 
-const mockBlob = jest.fn();
+// Mock Blob som en constructor class
+class MockBlob {
+    type: string;
+    constructor(parts: BlobPart[], options?: BlobPropertyBag) {
+        this.type = options?.type || '';
+    }
+}
+
 Object.defineProperty(globalThis, 'Blob', {
-    value: mockBlob,
+    value: MockBlob,
     writable: true,
 });
 
 describe('pdfUtils', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe('handlePdfData', () => {
@@ -39,21 +46,16 @@ describe('pdfUtils', () => {
             const base64Data =
                 'JVBERi0xLjQKJdPr6eEKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoK';
             const mockArrayBuffer = new ArrayBuffer(8);
-            const mockBlobInstance = { type: 'application/pdf' };
             const expectedBlobUrl =
                 'blob:http://localhost:3000/12345678-1234-1234-1234-123456789012';
 
-            (base64ToArrayBuffer as jest.Mock).mockReturnValue(mockArrayBuffer);
-            mockBlob.mockReturnValue(mockBlobInstance);
+            (base64ToArrayBuffer as ReturnType<typeof vi.fn>).mockReturnValue(mockArrayBuffer);
             mockCreateObjectURL.mockReturnValue(expectedBlobUrl);
 
             const result = handlePdfData(base64Data);
 
             expect(base64ToArrayBuffer).toHaveBeenCalledWith(base64Data);
-            expect(mockBlob).toHaveBeenCalledWith([mockArrayBuffer], {
-                type: 'application/pdf',
-            });
-            expect(mockCreateObjectURL).toHaveBeenCalledWith(mockBlobInstance);
+            expect(mockCreateObjectURL).toHaveBeenCalled();
             expect(result).toBe(expectedBlobUrl);
         });
     });

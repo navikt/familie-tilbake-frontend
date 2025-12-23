@@ -10,10 +10,13 @@ import { FagsakContext } from '../../../../context/FagsakContext';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { Kjønn } from '../../../../typer/bruker';
 
-jest.mock('../../../../utils', () => ({
-    ...jest.requireActual('../../../../utils'),
-    hentAlder: jest.fn(() => 42),
-}));
+vi.mock('../../../../utils', async () => {
+    const actual = await vi.importActual('../../../../utils');
+    return {
+        ...actual,
+        hentAlder: vi.fn(() => 42),
+    };
+});
 
 const baseBruker = (override: Partial<FrontendBrukerDto> = {}): FrontendBrukerDto => ({
     navn: 'Ola Nordmann',
@@ -48,7 +51,7 @@ const renderBrukerInformasjon = (
 
 describe('BrukerInformasjon', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('Viser heading', () => {

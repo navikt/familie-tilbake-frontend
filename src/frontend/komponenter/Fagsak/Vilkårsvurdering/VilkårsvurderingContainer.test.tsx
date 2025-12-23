@@ -13,8 +13,8 @@ import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { mock } from 'jest-mock-extended';
 import * as React from 'react';
+import { vi } from 'vitest';
 
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
@@ -29,24 +29,27 @@ import {
 } from '../../../testdata/vilkårsvurderingFactory';
 import { RessursStatus } from '../../../typer/ressurs';
 
-const mockUseHttp = jest.fn();
-jest.mock('../../../api/http/HttpProvider', () => ({
+const mockUseHttp = vi.fn();
+vi.mock('../../../api/http/HttpProvider', () => ({
     useHttp: (): Http => mockUseHttp(),
 }));
 
-const mockUseBehandlingApi = jest.fn();
-jest.mock('../../../api/behandling', () => ({
+const mockUseBehandlingApi = vi.fn();
+vi.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
-
-jest.mock('@tanstack/react-query', () => {
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
     return {
-        useMutation: jest.fn(({ mutationFn, onSuccess }) => {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
+
+vi.mock('@tanstack/react-query', () => {
+    return {
+        useMutation: vi.fn(({ mutationFn, onSuccess }) => {
             const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
                 const result = await mutationFn(behandlingId);
                 if (onSuccess && result?.status === RessursStatus.Suksess) {
@@ -60,8 +63,8 @@ jest.mock('@tanstack/react-query', () => {
                 mutateAsync: mutateAsync,
             };
         }),
-        useQueryClient: jest.fn(() => ({
-            invalidateQueries: jest.fn(),
+        useQueryClient: vi.fn(() => ({
+            invalidateQueries: vi.fn(),
         })),
     };
 });
@@ -92,17 +95,17 @@ const perioder: VilkårsvurderingPeriode[] = [
 const setupUseBehandlingApiMock = (vilkårsvurdering: VilkårsvurderingResponse): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
-            const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
+            const ressurs: Ressurs<VilkårsvurderingResponse> = {
                 status: RessursStatus.Suksess,
                 data: vilkårsvurdering,
-            });
+            };
             return Promise.resolve(ressurs);
         },
         sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
-            const ressurs = mock<Ressurs<string>>({
+            const ressurs: Ressurs<string> = {
                 status: RessursStatus.Suksess,
                 data: 'suksess',
-            });
+            };
             return Promise.resolve(ressurs);
         },
     }));
@@ -135,9 +138,9 @@ describe('VilkårsvurderingContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         setupMocks();
-        Element.prototype.scrollIntoView = jest.fn();
+        Element.prototype.scrollIntoView = vi.fn();
     });
 
     test('Totalbeløp under 4 rettsgebyr - ingen perioder har brukt 6.ledd', async () => {

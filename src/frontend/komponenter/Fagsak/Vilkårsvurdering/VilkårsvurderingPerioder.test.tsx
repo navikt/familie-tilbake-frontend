@@ -13,8 +13,8 @@ import type { NavigateFunction } from 'react-router';
 
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { mock } from 'jest-mock-extended';
 import * as React from 'react';
+import { vi } from 'vitest';
 
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
@@ -28,24 +28,27 @@ import {
 } from '../../../testdata/vilkårsvurderingFactory';
 import { RessursStatus } from '../../../typer/ressurs';
 
-const mockUseHttp = jest.fn();
-jest.mock('../../../api/http/HttpProvider', () => ({
+const mockUseHttp = vi.fn();
+vi.mock('../../../api/http/HttpProvider', () => ({
     useHttp: (): Http => mockUseHttp(),
 }));
 
-const mockUseBehandlingApi = jest.fn();
-jest.mock('../../../api/behandling', () => ({
+const mockUseBehandlingApi = vi.fn();
+vi.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
-
-jest.mock('@tanstack/react-query', () => {
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
     return {
-        useMutation: jest.fn(({ mutationFn, onSuccess }) => {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
+
+vi.mock('@tanstack/react-query', () => {
+    return {
+        useMutation: vi.fn(({ mutationFn, onSuccess }) => {
             const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
                 const result = await mutationFn(behandlingId);
                 if (onSuccess && result?.status === RessursStatus.Suksess) {
@@ -85,17 +88,17 @@ const perioder: VilkårsvurderingPeriode[] = [
 const setupMocks = (): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
-            const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
+            const ressurs: Ressurs<VilkårsvurderingResponse> = {
                 status: RessursStatus.Suksess,
                 data: lagVilkårsvurderingResponse({ perioder }),
-            });
+            };
             return Promise.resolve(ressurs);
         },
         sendInnVilkårsvurdering: (): Promise<Ressurs<string>> => {
-            const ressurs = mock<Ressurs<string>>({
+            const ressurs: Ressurs<string> = {
                 status: RessursStatus.Suksess,
                 data: 'suksess',
-            });
+            };
             return Promise.resolve(ressurs);
         },
     }));
@@ -104,7 +107,7 @@ const setupMocks = (): void => {
         request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
-                data: mock<Behandling>({}),
+                data: lagBehandling(),
             });
         },
     }));
@@ -156,9 +159,9 @@ describe('VilkårsvurderingPerioder', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         setupMocks();
-        Element.prototype.scrollIntoView = jest.fn();
+        Element.prototype.scrollIntoView = vi.fn();
     });
 
     test('Skal bytte periode når det ikke er ulagrede endringer', async () => {

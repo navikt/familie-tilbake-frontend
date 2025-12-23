@@ -18,41 +18,44 @@ import { Forhåndsvarsel } from '../Forhåndsvarsel';
 import { useForhåndsvarselMutations } from '../useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from '../useForhåndsvarselQueries';
 
-const mockUseBehandling = jest.fn();
-const mockUseToggles = jest.fn();
+const mockUseBehandling = vi.fn();
+const mockUseToggles = vi.fn();
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
 
-jest.mock('../../../../context/TogglesContext', () => ({
+vi.mock('../../../../context/TogglesContext', () => ({
     useToggles: (): Toggles => mockUseToggles(),
 }));
 
-jest.mock('../../../../context/BehandlingContext', () => ({
+vi.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-jest.mock('../../../../generated/@tanstack/react-query.gen', () => ({
-    bestillBrevMutation: jest.fn().mockReturnValue({
-        mutationFn: jest.fn(),
+vi.mock('../../../../generated/@tanstack/react-query.gen', () => ({
+    bestillBrevMutation: vi.fn().mockReturnValue({
+        mutationFn: vi.fn(),
     }),
-    forhåndsvisBrevMutation: jest.fn().mockReturnValue({
-        mutationFn: jest.fn(),
+    forhåndsvisBrevMutation: vi.fn().mockReturnValue({
+        mutationFn: vi.fn(),
     }),
 }));
 
-jest.mock('../useForhåndsvarselQueries', () => ({
-    useForhåndsvarselQueries: jest.fn(),
+vi.mock('../useForhåndsvarselQueries', () => ({
+    useForhåndsvarselQueries: vi.fn(),
 }));
 
-jest.mock('../useForhåndsvarselMutations', () => ({
-    useForhåndsvarselMutations: jest.fn(),
-    mapHarBrukerUttaltSegFraApiDto: jest.fn(),
+vi.mock('../useForhåndsvarselMutations', () => ({
+    useForhåndsvarselMutations: vi.fn(),
+    mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
 
-jest.mock('../../../../generated', () => ({
+vi.mock('../../../../generated', () => ({
     BrevmalkodeEnum: {
         VARSEL: 'VARSEL',
     },
@@ -60,8 +63,8 @@ jest.mock('../../../../generated', () => ({
 
 const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
-        actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 5'),
-        erStegBehandlet: jest.fn().mockReturnValue(false),
+        actionBarStegtekst: vi.fn().mockReturnValue('Steg 2 av 5'),
+        erStegBehandlet: vi.fn().mockReturnValue(false),
     }));
     mockUseToggles.mockImplementation(() => ({
         toggles: {
@@ -86,11 +89,11 @@ const renderUnntak = (): RenderResult => {
 
 describe('Unntak', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         setupMock();
 
-        jest.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueries());
-        jest.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
+        vi.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueries());
+        vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
     });
 
     test('Viser alle tre unntaksalternativer', () => {

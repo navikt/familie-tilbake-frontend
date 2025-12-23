@@ -20,41 +20,44 @@ import {
     lagForhåndsvarselMutations,
 } from '../../../testdata/forhåndsvarselFactory';
 
-const mockUseBehandling = jest.fn();
-const mockUseToggles = jest.fn();
+const mockUseBehandling = vi.fn();
+const mockUseToggles = vi.fn();
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
 
-jest.mock('../../../context/TogglesContext', () => ({
+vi.mock('../../../context/TogglesContext', () => ({
     useToggles: (): Toggles => mockUseToggles(),
 }));
 
-jest.mock('../../../context/BehandlingContext', () => ({
+vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-jest.mock('../../../generated/@tanstack/react-query.gen', () => ({
-    bestillBrevMutation: jest.fn().mockReturnValue({
-        mutationFn: jest.fn(),
+vi.mock('../../../generated/@tanstack/react-query.gen', () => ({
+    bestillBrevMutation: vi.fn().mockReturnValue({
+        mutationFn: vi.fn(),
     }),
-    forhåndsvisBrevMutation: jest.fn().mockReturnValue({
-        mutationFn: jest.fn(),
+    forhåndsvisBrevMutation: vi.fn().mockReturnValue({
+        mutationFn: vi.fn(),
     }),
 }));
 
-jest.mock('./useForhåndsvarselQueries', () => ({
-    useForhåndsvarselQueries: jest.fn(),
+vi.mock('./useForhåndsvarselQueries', () => ({
+    useForhåndsvarselQueries: vi.fn(),
 }));
 
-jest.mock('./useForhåndsvarselMutations', () => ({
-    useForhåndsvarselMutations: jest.fn(),
-    mapHarBrukerUttaltSegFraApiDto: jest.fn(),
+vi.mock('./useForhåndsvarselMutations', () => ({
+    useForhåndsvarselMutations: vi.fn(),
+    mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
 
-jest.mock('../../../generated', () => ({
+vi.mock('../../../generated', () => ({
     BrevmalkodeEnum: {
         VARSEL: 'VARSEL',
     },
@@ -69,8 +72,8 @@ const lagForhåndsvarselInfo = (overrides?: Partial<ForhåndsvarselDto>): Forhå
 
 const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
-        actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 5'),
-        erStegBehandlet: jest.fn().mockReturnValue(false),
+        actionBarStegtekst: vi.fn().mockReturnValue('Steg 2 av 5'),
+        erStegBehandlet: vi.fn().mockReturnValue(false),
     }));
     mockUseToggles.mockImplementation(() => ({
         toggles: {
@@ -91,11 +94,11 @@ const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): 
 
 describe('Forhåndsvarsel', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         setupMock();
 
-        jest.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueries());
-        jest.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
+        vi.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueries());
+        vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
     });
 
     test('Viser radiogruppe med riktig spørsmål og beskrivelse', () => {
@@ -154,7 +157,7 @@ describe('Forhåndsvarsel', () => {
     });
 
     test('Viser tag med sendt informasjon når forhåndsvarsel er sendt', async () => {
-        const mockQueries = jest.mocked(useForhåndsvarselQueries);
+        const mockQueries = vi.mocked(useForhåndsvarselQueries);
         mockQueries.mockReturnValue(
             lagForhåndsvarselQueries({
                 forhåndsvarselInfo: lagForhåndsvarselInfo({
@@ -170,7 +173,7 @@ describe('Forhåndsvarsel', () => {
     });
 
     test('Låser valg når varsel er sendt', async () => {
-        const mockQueries = jest.mocked(useForhåndsvarselQueries);
+        const mockQueries = vi.mocked(useForhåndsvarselQueries);
         mockQueries.mockReturnValue(
             lagForhåndsvarselQueries({
                 forhåndsvarselInfo: lagForhåndsvarselInfo({
@@ -189,7 +192,7 @@ describe('Forhåndsvarsel', () => {
 
     describe('Viser "nei"-valg og default values når unntak er sendt inn', () => {
         test('IKKE_PRAKTISK_MULIG', async () => {
-            const mockQueries = jest.mocked(useForhåndsvarselQueries);
+            const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
                 lagForhåndsvarselQueries({
                     forhåndsvarselInfo: lagForhåndsvarselInfo({

@@ -15,8 +15,8 @@ import type { NavigateFunction } from 'react-router';
 
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { mock } from 'jest-mock-extended';
 import * as React from 'react';
+import { vi } from 'vitest';
 
 import VedtakContainer from './VedtakContainer';
 import { VedtakProvider } from './VedtakContext';
@@ -34,36 +34,39 @@ import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 
-jest.mock('../../../api/http/HttpProvider', () => {
+vi.mock('../../../api/http/HttpProvider', () => {
     return {
         useHttp: (): Http => ({
             systemetLaster: () => false,
-            request: jest.fn(),
+            request: vi.fn(),
         }),
     };
 });
 
-const mockUseBehandling = jest.fn();
-jest.mock('../../../context/BehandlingContext', () => ({
+const mockUseBehandling = vi.fn();
+vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-const mockUseBehandlingApi = jest.fn();
-jest.mock('../../../api/behandling', () => ({
+const mockUseBehandlingApi = vi.fn();
+vi.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
 
-const mockUseSammenslåPerioder = jest.fn();
-jest.mock('../../../hooks/useSammenslåPerioder', () => ({
+const mockUseSammenslåPerioder = vi.fn();
+vi.mock('../../../hooks/useSammenslåPerioder', () => ({
     useSammenslåPerioder: (): SammenslåttPeriodeHook => mockUseSammenslåPerioder(),
 }));
 
-const mockedSettIkkePersistertKomponent = jest.fn();
+const mockedSettIkkePersistertKomponent = vi.fn();
 
 const renderVedtakContainer = (behandling: Behandling): RenderResult => {
     return render(
@@ -114,24 +117,24 @@ const setupMock = (
 ): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVedtaksbrevteksterKall: (): Promise<Ressurs<VedtaksbrevAvsnitt[]>> => {
-            const ressurs = mock<Ressurs<VedtaksbrevAvsnitt[]>>({
+            const ressurs: Ressurs<VedtaksbrevAvsnitt[]> = {
                 status: RessursStatus.Suksess,
                 data: avsnitt,
-            });
+            };
             return Promise.resolve(ressurs);
         },
         gjerBeregningsresultatKall: (): Promise<Ressurs<Beregningsresultat>> => {
-            const ressurs = mock<Ressurs<Beregningsresultat>>({
+            const ressurs: Ressurs<Beregningsresultat> = {
                 status: RessursStatus.Suksess,
                 data: resultat,
-            });
+            };
             return Promise.resolve(ressurs);
         },
         sendInnForeslåVedtak: (): Promise<Ressurs<string>> => {
-            const ressurs = mock<Ressurs<string>>({
+            const ressurs: Ressurs<string> = {
                 status: RessursStatus.Suksess,
                 data: 'suksess',
-            });
+            };
             return Promise.resolve(ressurs);
         },
     }));
@@ -146,10 +149,10 @@ const setupMock = (
         behandlingILesemodus: lesevisning,
         hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
         settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
-        nullstillIkkePersisterteKomponenter: jest.fn(),
-        actionBarStegtekst: jest.fn().mockReturnValue('Steg 4 av 4'),
-        harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
-        erStegBehandlet: jest.fn().mockReturnValue(false),
+        nullstillIkkePersisterteKomponenter: vi.fn(),
+        actionBarStegtekst: vi.fn().mockReturnValue('Steg 4 av 4'),
+        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
+        erStegBehandlet: vi.fn().mockReturnValue(false),
     }));
 };
 
@@ -157,7 +160,7 @@ describe('VedtakContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('Vis og fyll ut - 1 fritekst påkrevet', async () => {

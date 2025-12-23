@@ -1,16 +1,17 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 import { Crypto } from '@peculiar/webcrypto';
 import { TextEncoder } from 'util';
+import { vi } from 'vitest';
 
 global.console = {
     ...console,
     // uncomment to ignore a specific log level
-    log: jest.fn(),
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    // error: jest.fn(),
+    log: vi.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    // error: vi.fn(),
 };
 
 Object.assign(global, { TextEncoder });

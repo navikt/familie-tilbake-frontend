@@ -8,7 +8,7 @@ import { Feil } from '../../../../api/feil';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 
-const mockSetVisFeilModal = jest.fn();
+const mockSetVisFeilModal = vi.fn();
 
 const renderFeilModal = (
     feil: Feil,
@@ -28,7 +28,7 @@ const renderFeilModal = (
 
 describe('FeilModal', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
     test('Viser feil-modalen med 400 Bad Request riktig', () => {
         const feilMelding = 'Du mangler nødvendige data i forespørselen din.';

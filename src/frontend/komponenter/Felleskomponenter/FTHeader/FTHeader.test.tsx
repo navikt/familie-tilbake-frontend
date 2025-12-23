@@ -5,15 +5,15 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-jest.mock('../../../api/brukerlenker');
+vi.mock('../../../api/brukerlenker');
 
 import { FTHeader } from './FTHeader';
 import { hentBrukerlenkeBaseUrl, hentAInntektUrl } from '../../../api/brukerlenker';
 import { useBehandlingStore } from '../../../stores/behandlingStore';
 import { useFagsakStore } from '../../../stores/fagsakStore';
 
-const mockHentBrukerlenkeBaseUrl = jest.mocked(hentBrukerlenkeBaseUrl);
-const mockHentAInntektUrl = jest.mocked(hentAInntektUrl);
+const mockHentBrukerlenkeBaseUrl = vi.mocked(hentBrukerlenkeBaseUrl);
+const mockHentAInntektUrl = vi.mocked(hentAInntektUrl);
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -59,7 +59,7 @@ const setUpMocks = (): void => {
 
 describe('FTHeader', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         setUpMocks();
     });
 

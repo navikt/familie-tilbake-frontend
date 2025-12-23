@@ -12,13 +12,14 @@
     "build:client": "vite build --config src/frontend/vite.config.js",
     "build:server": "tsc --project tsconfig.json",
     "build:prod": "pnpm build:server && pnpm build:client",
-    "test": "jest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint './src/**/*.{js,jsx,ts,tsx}' --fix",
     "prepare": "husky",
     "generate-types": "openapi-ts"
   },
-   "lint-staged": {
+  "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx},!src/frontend/generated/**": [
       "prettier --write",
       "eslint --fix src/ --max-warnings=0"
@@ -65,7 +66,6 @@
   "devDependencies": {
     "@axe-core/react": "4.11.0",
     "@eslint/js": "9.39.2",
-    "@jest/types": "30.2.0",
     "@peculiar/webcrypto": "1.5.0",
     "@sentry/vite-plugin": "4.6.1",
     "@tailwindcss/typography": "0.5.19",
@@ -78,7 +78,6 @@
     "@types/deep-equal": "1.0.4",
     "@types/express": "5.0.6",
     "@types/express-session": "1.18.2",
-    "@types/jest": "30.0.0",
     "@types/node": "25.0.3",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
@@ -93,9 +92,7 @@
     "express-static-gzip": "3.0.0",
     "husky": "9.1.7",
     "identity-obj-proxy": "3.0.0",
-    "jest": "30.2.0",
-    "jest-environment-jsdom": "30.2.0",
-    "jest-mock-extended": "4.0.0",
+    "jsdom": "27.3.0",
     "lint-staged": "16.2.7",
     "lodash": "4.17.21",
     "lodash.throttle": "4.1.1",
@@ -103,13 +100,13 @@
     "rc-tooltip": "6.4.0",
     "react-refresh": "0.18.0",
     "react-select": "5.10.2",
-    "ts-jest": "29.4.6",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
     "typescript": "5.9.3",
     "typescript-eslint": "8.52.0",
     "vite": "7.3.1",
-    "vite-plugin-compression": "0.5.1"
+    "vite-plugin-compression": "0.5.1",
+    "vitest": "4.0.16"
   },
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
 }

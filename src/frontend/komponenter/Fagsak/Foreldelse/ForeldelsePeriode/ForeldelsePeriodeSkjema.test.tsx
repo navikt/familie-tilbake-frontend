@@ -15,26 +15,26 @@ import { Foreldelsevurdering } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagForeldelsePeriodeSkjemaData } from '../../../../testdata/foreldelseFactory';
 
-jest.mock('../../../../api/http/HttpProvider', () => {
+vi.mock('../../../../api/http/HttpProvider', () => {
     return {
         useHttp: (): Http => ({
             systemetLaster: () => false,
-            request: jest.fn(),
+            request: vi.fn(),
         }),
     };
 });
-jest.mock('../ForeldelseContext', () => {
+vi.mock('../ForeldelseContext', () => {
     return {
         useForeldelse: (): Partial<ForeldelseHook> => ({
-            oppdaterPeriode: jest.fn(),
+            oppdaterPeriode: vi.fn(),
         }),
     };
 });
 
-jest.mock('../../../../context/BehandlingContext', () => {
+vi.mock('../../../../context/BehandlingContext', () => {
     return {
         useBehandling: (): Partial<BehandlingHook> => ({
-            settIkkePersistertKomponent: jest.fn(),
+            settIkkePersistertKomponent: vi.fn(),
         }),
     };
 });
@@ -51,7 +51,7 @@ describe('ForeldelsePeriodeSkjema', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('Vurderer periode ikke foreldet ', async () => {

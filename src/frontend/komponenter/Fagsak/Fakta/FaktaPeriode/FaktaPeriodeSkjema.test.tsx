@@ -14,15 +14,18 @@ import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagFaktaPeriode } from '../../../../testdata/faktaFactory';
 
-const mockUseBehandling = jest.fn();
-jest.mock('../../../../context/BehandlingContext', () => ({
+const mockUseBehandling = vi.fn();
+vi.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
 
 const renderComponent = (
     periode: FaktaPeriodeSkjemaData,
@@ -52,9 +55,9 @@ const mockPeriode: FaktaPeriodeSkjemaData = {
 };
 
 beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockUseBehandling.mockImplementation(() => ({
-        settIkkePersistertKomponent: jest.fn(),
+        settIkkePersistertKomponent: vi.fn(),
     }));
 });
 

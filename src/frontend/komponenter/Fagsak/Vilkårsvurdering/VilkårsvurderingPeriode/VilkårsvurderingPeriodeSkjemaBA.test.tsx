@@ -18,33 +18,35 @@ import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 
-jest.setTimeout(10000);
+vi.setConfig({ testTimeout: 10000 });
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
-
-jest.mock('../../../../api/http/HttpProvider', () => {
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
     return {
-        useHttp: (): Http => ({
-            systemetLaster: () => false,
-            request: jest.fn(),
-        }),
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
     };
 });
 
-jest.mock('../VilkårsvurderingContext', () => {
+vi.mock('../../../../api/http/HttpProvider', () => {
+    return {
+        useHttp: (): Http => ({
+            systemetLaster: () => false,
+            request: vi.fn(),
+        }),
+    };
+});
+vi.mock('../VilkårsvurderingContext', () => {
     return {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({
-            oppdaterPeriode: jest.fn(),
-            gåTilNesteSteg: jest.fn(),
-            sendInnSkjemaOgNaviger: jest.fn(),
+            oppdaterPeriode: vi.fn(),
+            gåTilNesteSteg: vi.fn(),
+            sendInnSkjemaOgNaviger: vi.fn(),
             sendInnSkjemaMutation: {
                 isPending: false,
                 isError: false,
                 error: null,
-                reset: jest.fn(),
+                reset: vi.fn(),
             },
         }),
     };
@@ -67,7 +69,7 @@ const renderVilkårsvurderingPeriodeSkjema = (
                     erLesevisning={false}
                     perioder={[periode]}
                     pendingPeriode={undefined}
-                    settPendingPeriode={jest.fn()}
+                    settPendingPeriode={vi.fn()}
                 />
             </BehandlingProvider>
         </FagsakContext.Provider>
@@ -77,7 +79,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('God tro - beløp ikke i behold', async () => {

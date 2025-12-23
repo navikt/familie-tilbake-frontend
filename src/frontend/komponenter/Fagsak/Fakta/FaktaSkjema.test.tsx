@@ -12,18 +12,21 @@ import { FagsakContext } from '../../../context/FagsakContext';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { configureZod } from '../../../utils/zodConfig';
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useNavigate: (): NavigateFunction => jest.fn(),
-}));
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): NavigateFunction => vi.fn(),
+    };
+});
 
-const mockUseBehandling = jest.fn(() => ({
+const mockUseBehandling = vi.fn(() => ({
     actionBarStegtekst: (): string => 'Mocked!!',
     erStegBehandlet: (): boolean => false,
     hentBehandlingMedBehandlingId: async (): Promise<void> => Promise.resolve(),
 }));
 
-jest.mock('../../../context/BehandlingContext', () => ({
+vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): Partial<BehandlingHook> => mockUseBehandling(),
 }));
 
