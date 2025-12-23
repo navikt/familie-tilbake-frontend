@@ -37,15 +37,6 @@ vi.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-vi.mock('../../../../generated/@tanstack/react-query.gen', () => ({
-    bestillBrevMutation: vi.fn().mockReturnValue({
-        mutationFn: vi.fn(),
-    }),
-    forhåndsvisBrevMutation: vi.fn().mockReturnValue({
-        mutationFn: vi.fn(),
-    }),
-}));
-
 vi.mock('../useForhåndsvarselQueries', () => ({
     useForhåndsvarselQueries: vi.fn(),
 }));
@@ -53,12 +44,6 @@ vi.mock('../useForhåndsvarselQueries', () => ({
 vi.mock('../useForhåndsvarselMutations', () => ({
     useForhåndsvarselMutations: vi.fn(),
     mapHarBrukerUttaltSegFraApiDto: vi.fn(),
-}));
-
-vi.mock('../../../../generated', () => ({
-    BrevmalkodeEnum: {
-        VARSEL: 'VARSEL',
-    },
 }));
 
 const setupMock = (): void => {
