@@ -11,6 +11,6 @@ ci-tests/reports
 *.iml
 .pnpm-store/
 pnpm-debug.log
-.jest-cache
+.vitest-cache
 coverage/
 instructions
