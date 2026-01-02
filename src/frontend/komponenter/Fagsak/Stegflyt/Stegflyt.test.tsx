@@ -22,7 +22,7 @@ import { RessursStatus } from '../../../typer/ressurs';
 const mockNavigate = jest.fn();
 const mockUseLocation = jest.fn();
 const mockUseBehandling = jest.fn();
-const mockUseFagsakStore = jest.fn();
+const mockUseFagsak = jest.fn();
 
 jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => mockNavigate,
@@ -35,8 +35,8 @@ jest.mock('../../../context/BehandlingContext', () => ({
         status === Behandlingsstegstatus.Utført,
 }));
 
-jest.mock('../../../stores/fagsakStore', () => ({
-    useFagsakStore: (): { eksternFagsakId: string; fagsystem: Fagsystem } => mockUseFagsakStore(),
+jest.mock('../../../context/FagsakContext', () => ({
+    useFagsak: (): { eksternFagsakId: string; fagsystem: Fagsystem } => mockUseFagsak(),
 }));
 
 const createMockRessursBehandling = (
@@ -58,9 +58,11 @@ const setupMocks = (): void => {
         behandling: createMockRessursBehandling(),
     });
 
-    mockUseFagsakStore.mockReturnValue({
-        eksternFagsakId: '123',
-        fagsystem: Fagsystem.BA,
+    mockUseFagsak.mockReturnValue({
+        fagsak: {
+            eksternFagsakId: '123',
+            fagsystem: Fagsystem.BA,
+        },
     });
 
     mockUseLocation.mockReturnValue({

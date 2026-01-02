@@ -17,9 +17,9 @@ jest.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-const mockUseFagsakStore = jest.fn();
-jest.mock('../../../../stores/fagsakStore', () => ({
-    useFagsakStore: (): { eksternFagsakId: string } => mockUseFagsakStore(),
+const mockUseFagsak = jest.fn();
+jest.mock('../../../../context/FagsakContext', () => ({
+    useFagsak: (): { eksternFagsakId: string } => mockUseFagsak(),
 }));
 
 const mockUseRedirectEtterLagring = jest.fn();
@@ -37,8 +37,10 @@ const setupMocks = (): void => {
     mockUseBehandling.mockReturnValue({
         nullstillIkkePersisterteKomponenter: mockNullstill,
     });
-    mockUseFagsakStore.mockReturnValue({
-        eksternFagsakId: '123',
+    mockUseFagsak.mockReturnValue({
+        fagsak: {
+            eksternFagsakId: '123',
+        },
     });
     mockUseRedirectEtterLagring.mockReturnValue(() => null);
 };
