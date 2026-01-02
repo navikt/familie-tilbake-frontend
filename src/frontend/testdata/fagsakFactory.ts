@@ -23,5 +23,3 @@ const lagBruker = (overrides: Partial<FrontendBrukerDto> = {}): FrontendBrukerDt
     kjønn: Kjønn.Kvinne,
     ...overrides,
 });
-
-export const lagFagsakDto = lagFagsak;
