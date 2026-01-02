@@ -10,6 +10,7 @@ jest.mock('../../../api/brukerlenker');
 import { FTHeader } from './FTHeader';
 import { hentBrukerlenkeBaseUrl, hentAInntektUrl } from '../../../api/brukerlenker';
 import { useBehandlingStore } from '../../../stores/behandlingStore';
+import { useFagsakStore } from '../../../stores/fagsakStore';
 
 const mockHentBrukerlenkeBaseUrl = jest.mocked(hentBrukerlenkeBaseUrl);
 const mockHentAInntektUrl = jest.mocked(hentAInntektUrl);
@@ -40,7 +41,8 @@ const renderHeader = (): RenderResult => {
 };
 
 const setUpMocks = (): void => {
-    useBehandlingStore.setState({ personIdent: undefined });
+    useBehandlingStore.setState({ personIdent: undefined, behandlingId: undefined });
+    useFagsakStore.setState({ eksternFagsakId: undefined, fagsystem: undefined });
     mockHentBrukerlenkeBaseUrl.mockResolvedValue({
         aInntektUrl: 'https://a-inntekt.nav.no',
         gosysBaseUrl: 'https://gosys.nav.no',
@@ -74,7 +76,8 @@ describe('FTHeader', () => {
 
     test('Har riktig lenke til A-inntekt, Gosys og Modia når personIdent er satt', async () => {
         const personIdent = '12345678910';
-        useBehandlingStore.setState({ personIdent });
+        useBehandlingStore.setState({ personIdent, behandlingId: 'test-behandling-id' });
+        useFagsakStore.setState({ eksternFagsakId: 'test-fagsak-id', fagsystem: 'BA' });
         renderHeader();
 
         await waitFor(() => {

@@ -1,9 +1,7 @@
 import type { StartPåNyttHook as StartPåNyttHook } from './useStartPåNytt';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { RedirectEtterLagringHook } from '../../../../hooks/useRedirectEtterLagring';
-import type { FagsakState } from '../../../../stores/fagsakStore';
 import type { UserEvent } from '@testing-library/user-event';
-import type { StoreApi, UseBoundStore } from 'zustand';
 
 import { ActionMenu, Button } from '@navikt/ds-react';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -21,7 +19,7 @@ jest.mock('../../../../context/BehandlingContext', () => ({
 
 const mockUseFagsakStore = jest.fn();
 jest.mock('../../../../stores/fagsakStore', () => ({
-    useFagsakStore: (): UseBoundStore<StoreApi<FagsakState>> => mockUseFagsakStore(),
+    useFagsakStore: (): { eksternFagsakId: string } => mockUseFagsakStore(),
 }));
 
 const mockUseRedirectEtterLagring = jest.fn();

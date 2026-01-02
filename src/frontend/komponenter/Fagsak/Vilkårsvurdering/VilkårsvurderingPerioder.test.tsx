@@ -19,6 +19,7 @@ import * as React from 'react';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
+import { FagsakProvider } from '../../../context/FagsakContext';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
@@ -37,9 +38,11 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
+const mockUseParams = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useParams: (): { fagsystem: string; fagsakId: string } => mockUseParams(),
 }));
 
 jest.mock('@tanstack/react-query', () => {
@@ -88,6 +91,11 @@ const perioder: VilkårsvurderingPeriode[] = [
 ];
 
 const setupMocks = (): void => {
+    mockUseParams.mockReturnValue({
+        fagsystem: 'BA',
+        fagsakId: '123456',
+    });
+
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
             const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
@@ -122,17 +130,19 @@ const renderVilkårsvurderingPerioder = (): RenderResult => {
     }));
 
     return render(
-        <BehandlingProvider>
-            <VilkårsvurderingProvider behandling={lagBehandling()} fagsak={lagFagsak()}>
-                <VilkårsvurderingPerioder
-                    behandling={lagBehandling()}
-                    fagsak={lagFagsak()}
-                    perioder={skjemaData}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                />
-            </VilkårsvurderingProvider>
-        </BehandlingProvider>
+        <FagsakProvider>
+            <BehandlingProvider>
+                <VilkårsvurderingProvider behandling={lagBehandling()} fagsak={lagFagsak()}>
+                    <VilkårsvurderingPerioder
+                        behandling={lagBehandling()}
+                        fagsak={lagFagsak()}
+                        perioder={skjemaData}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                    />
+                </VilkårsvurderingProvider>
+            </BehandlingProvider>
+        </FagsakProvider>
     );
 };
 

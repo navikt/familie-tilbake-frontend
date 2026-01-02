@@ -66,7 +66,11 @@ export const FagsakProvider = ({ children }: FagsakProviderProps): React.ReactEl
 export const useFagsak = (): FagsakHook => {
     const context = useContext(FagsakContext);
     if (!context) {
-        throw new Error('useFagsak must be used within FagsakProvider');
+        return {
+            fagsak: undefined,
+            isLoading: false,
+            error: undefined,
+        };
     }
 
     return {

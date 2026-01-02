@@ -20,6 +20,7 @@ import * as React from 'react';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
+import { FagsakProvider } from '../../../context/FagsakContext';
 import { Aktsomhet, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
@@ -39,9 +40,11 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
+const mockUseParams = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
+    useParams: (): { fagsystem: string; fagsakId: string } => mockUseParams(),
 }));
 
 jest.mock('@tanstack/react-query', () => {
@@ -115,6 +118,11 @@ const setupUseBehandlingApiMock = (vilkårsvurdering: VilkårsvurderingResponse)
 };
 
 const setupMocks = (): void => {
+    mockUseParams.mockReturnValue({
+        fagsystem: 'BA',
+        fagsakId: '123456',
+    });
+
     mockUseHttp.mockImplementation(() => ({
         request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
@@ -127,11 +135,13 @@ const setupMocks = (): void => {
 
 const renderVilkårsvurderingContainer = (behandling: Behandling, fagsak: FagsakDto): RenderResult =>
     render(
-        <BehandlingProvider>
-            <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-            </VilkårsvurderingProvider>
-        </BehandlingProvider>
+        <FagsakProvider>
+            <BehandlingProvider>
+                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
+                    <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
+                </VilkårsvurderingProvider>
+            </BehandlingProvider>
+        </FagsakProvider>
     );
 
 describe('VilkårsvurderingContainer', () => {

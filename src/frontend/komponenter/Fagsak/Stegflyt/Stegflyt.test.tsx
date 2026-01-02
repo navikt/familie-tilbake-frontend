@@ -1,10 +1,8 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { FagsakState } from '../../../stores/fagsakStore';
 import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { Location, NavigateFunction } from 'react-router';
-import type { StoreApi, UseBoundStore } from 'zustand';
 
 import { render, fireEvent } from '@testing-library/react';
 import React from 'react';
@@ -38,7 +36,7 @@ jest.mock('../../../context/BehandlingContext', () => ({
 }));
 
 jest.mock('../../../stores/fagsakStore', () => ({
-    useFagsakStore: (): UseBoundStore<StoreApi<FagsakState>> => mockUseFagsakStore(),
+    useFagsakStore: (): { eksternFagsakId: string; fagsystem: Fagsystem } => mockUseFagsakStore(),
 }));
 
 const createMockRessursBehandling = (
