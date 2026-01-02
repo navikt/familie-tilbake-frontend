@@ -24,20 +24,17 @@ jest.mock('../../../hooks/useBrevmottakerApi', () => ({
 jest.mock('../../../context/FagsakContext', () => ({
     useFagsak: jest.fn(() => ({
         fagsak: {
-            status: RessursStatus.Suksess,
-            data: {
-                fagsystem: Fagsystem.EF,
-                eksternFagsakId: 'test-fagsak-id',
-                ytelsestype: Ytelsetype.Barnetilsyn,
-                språkkode: Målform.Nb,
-                bruker: {
-                    navn: 'Test Bruker',
-                    personIdent: '12345678901',
-                    fødselsdato: '1990-01-01',
-                    kjønn: Kjønn.Mann,
-                },
-                behandlinger: [],
+            fagsystem: Fagsystem.EF,
+            eksternFagsakId: 'test-fagsak-id',
+            ytelsestype: Ytelsetype.Barnetilsyn,
+            språkkode: Målform.Nb,
+            bruker: {
+                navn: 'Test Bruker',
+                personIdent: '12345678901',
+                fødselsdato: '1990-01-01',
+                kjønn: Kjønn.Mann,
             },
+            behandlinger: [],
         },
     })),
 }));
