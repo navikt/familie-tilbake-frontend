@@ -35,13 +35,8 @@ const Container: React.FC = () => {
                 <>
                     <Toasts />
                     <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
-                    <TogglesProvider>
-                        <FagsakProvider>
-                            <BehandlingProvider>
-                                <AppRoutes />
-                            </BehandlingProvider>
-                        </FagsakProvider>
-                    </TogglesProvider>
+
+                    <AppRoutes />
                 </>
             ) : (
                 <UgyldigSesjon />
@@ -53,7 +48,7 @@ const Container: React.FC = () => {
 const AppRoutes: React.FC = () => {
     const router = createBrowserRouter(
         createRoutesFromElements(
-            <Route path="/" element={<UlagretDataModalContainer />}>
+            <Route path="/" element={<ProvidersWrapper />}>
                 <Route path="/fagsystem/:fagsystem/fagsak/:fagsakId/">
                     <Route
                         path="*"
@@ -87,11 +82,15 @@ const AppRoutes: React.FC = () => {
     return <RouterProvider router={router} />;
 };
 
-const UlagretDataModalContainer: React.FC = () => (
-    <>
-        <Outlet />
-        <UlagretDataModal />
-    </>
+const ProvidersWrapper: React.FC = () => (
+    <TogglesProvider>
+        <FagsakProvider>
+            <BehandlingProvider>
+                <Outlet />
+                <UlagretDataModal />
+            </BehandlingProvider>
+        </FagsakProvider>
+    </TogglesProvider>
 );
 
 export default Container;
