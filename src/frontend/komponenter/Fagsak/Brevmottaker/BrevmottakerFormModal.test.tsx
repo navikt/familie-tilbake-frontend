@@ -6,10 +6,9 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { BrevmottakerFormModal } from './BrevmottakerFormModal';
-import { Fagsystem, Ytelsetype } from '../../../kodeverk';
+import { Ytelsetype } from '../../../kodeverk';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { MottakerType } from '../../../typer/Brevmottaker';
-import { Kjønn } from '../../../typer/bruker';
-import { Målform } from '../../../typer/målform';
 import { RessursStatus } from '../../../typer/ressurs';
 
 jest.mock('../../../hooks/useBrevmottakerApi', () => ({
@@ -23,19 +22,7 @@ jest.mock('../../../hooks/useBrevmottakerApi', () => ({
 
 jest.mock('../../../context/FagsakContext', () => ({
     useFagsak: jest.fn(() => ({
-        fagsak: {
-            fagsystem: Fagsystem.EF,
-            eksternFagsakId: 'test-fagsak-id',
-            ytelsestype: Ytelsetype.Barnetilsyn,
-            språkkode: Målform.Nb,
-            bruker: {
-                navn: 'Test Bruker',
-                personIdent: '12345678901',
-                fødselsdato: '1990-01-01',
-                kjønn: Kjønn.Mann,
-            },
-            behandlinger: [],
-        },
+        fagsak: lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn }),
     })),
 }));
 

@@ -1,4 +1,4 @@
-import type { FrontendBrukerDto, InstitusjonDto } from '../../../../generated';
+import type { FrontendBrukerDto, InstitusjonDto, KjønnEnum } from '../../../../generated';
 
 import {
     BagdeIcon,
@@ -12,7 +12,6 @@ import {
 import { CopyButton, ExpansionCard, Tag } from '@navikt/ds-react';
 import React from 'react';
 
-import { Kjønn } from '../../../../typer/bruker';
 import { formatterDatostring, hentAlder } from '../../../../utils';
 import { ICON_PROPS } from '../utils';
 
@@ -24,11 +23,11 @@ const formatterPersonIdent = (personIdent: string): string =>
 const formatterOrgNummer = (orgNummer: string): string =>
     orgNummer.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
 
-const kjønnIkon = (kjønn: Kjønn): React.ReactNode => {
+const kjønnIkon = (kjønn: KjønnEnum): React.ReactNode => {
     switch (kjønn) {
-        case Kjønn.Kvinne:
+        case 'KVINNE':
             return <FigureOutwardIcon {...ICON_PROPS} />;
-        case Kjønn.Mann:
+        case 'MANN':
             return <FigureInwardIcon {...ICON_PROPS} />;
         default:
             return <FigureCombinationIcon {...ICON_PROPS} />;
@@ -57,18 +56,22 @@ export const BrukerInformasjon: React.FC<Props> = ({ bruker, institusjon }) => {
             <ExpansionCard.Content>
                 <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4 text-ax-text-neutral">
                     <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                        {kjønnIkon(bruker.kjønn as Kjønn)}
+                        {kjønnIkon(bruker.kjønn)}
                         Navn
                     </dt>
                     <dd className="text-ax-medium">{bruker.navn}</dd>
 
-                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                        <CandleIcon {...ICON_PROPS} />
-                        Alder
-                    </dt>
-                    <dd className="text-ax-medium">
-                        {hentAlder(bruker.fødselsdato ?? '', bruker.dødsdato)} år
-                    </dd>
+                    {bruker.fødselsdato && (
+                        <>
+                            <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                                <CandleIcon {...ICON_PROPS} />
+                                Alder
+                            </dt>
+                            <dd className="text-ax-medium">
+                                {hentAlder(bruker.fødselsdato, bruker.dødsdato)} år
+                            </dd>
+                        </>
+                    )}
 
                     <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                         <BagdeIcon {...ICON_PROPS} />
