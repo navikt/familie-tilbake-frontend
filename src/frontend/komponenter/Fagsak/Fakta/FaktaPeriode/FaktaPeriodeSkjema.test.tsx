@@ -10,7 +10,6 @@ import { FaktaProvider } from '../FaktaContext';
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
 import { HendelseUndertype, HendelseType } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagFaktaPeriode } from '../../../../testdata/faktaFactory';
 
 const mockUseBehandling = jest.fn();
@@ -28,7 +27,7 @@ const renderComponent = (
     hendelseTyper: HendelseType[] | undefined
 ): RenderResult => {
     return render(
-        <FaktaProvider behandling={lagBehandling()} fagsak={lagFagsak()}>
+        <FaktaProvider behandling={lagBehandling()}>
             <table>
                 <tbody>
                     <FaktaPeriodeSkjema

@@ -75,12 +75,11 @@ export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
                 </Modal.Footer>
             </Modal>
 
-            {mutation.isError && eksternFagsakId && (
+            {mutation.isError && (
                 <FeilModal
                     feil={mutation.error}
                     lukkFeilModal={mutation.reset}
                     behandlingId={behandling.behandlingId}
-                    fagsakId={eksternFagsakId}
                 />
             )}
         </>

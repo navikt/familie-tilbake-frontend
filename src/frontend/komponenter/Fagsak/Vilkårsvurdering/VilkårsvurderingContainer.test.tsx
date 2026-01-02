@@ -1,6 +1,5 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
@@ -20,8 +19,7 @@ import * as React from 'react';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
-import { FagsakProvider } from '../../../context/FagsakContext';
-import { Aktsomhet, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
+import { Aktsomhet, HendelseType, Vilkårsresultat } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
@@ -40,11 +38,14 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-const mockUseParams = jest.fn();
+const mockUseFagsak = jest.fn();
+jest.mock('../../../context/FagsakContext', () => ({
+    useFagsak: (): ReturnType<typeof lagFagsak> => mockUseFagsak(),
+}));
+
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
-    useParams: (): { fagsystem: string; fagsakId: string } => mockUseParams(),
 }));
 
 jest.mock('@tanstack/react-query', () => {
@@ -118,11 +119,9 @@ const setupUseBehandlingApiMock = (vilkårsvurdering: VilkårsvurderingResponse)
 };
 
 const setupMocks = (): void => {
-    mockUseParams.mockReturnValue({
-        fagsystem: 'BA',
-        fagsakId: '123456',
+    mockUseFagsak.mockReturnValue({
+        fagsak: lagFagsak({ ytelsestype: 'BARNETRYGD' }),
     });
-
     mockUseHttp.mockImplementation(() => ({
         request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
@@ -133,15 +132,13 @@ const setupMocks = (): void => {
     }));
 };
 
-const renderVilkårsvurderingContainer = (behandling: Behandling, fagsak: FagsakDto): RenderResult =>
+const renderVilkårsvurderingContainer = (behandling: Behandling): RenderResult =>
     render(
-        <FagsakProvider>
-            <BehandlingProvider>
-                <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                    <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-                </VilkårsvurderingProvider>
-            </BehandlingProvider>
-        </FagsakProvider>
+        <BehandlingProvider>
+            <VilkårsvurderingProvider behandling={behandling}>
+                <VilkårsvurderingContainer behandling={behandling} />
+            </VilkårsvurderingProvider>
+        </BehandlingProvider>
     );
 
 describe('VilkårsvurderingContainer', () => {
@@ -157,7 +154,7 @@ describe('VilkårsvurderingContainer', () => {
         setupUseBehandlingApiMock(lagVilkårsvurderingResponse({ perioder }));
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
-            renderVilkårsvurderingContainer(lagBehandling(), lagFagsak());
+            renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText(førstePeriode)).toBeInTheDocument();
@@ -302,10 +299,8 @@ describe('VilkårsvurderingContainer', () => {
 
     test('Vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
         setupUseBehandlingApiMock(lagVilkårsvurderingResponse({ perioder }));
-        const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByLabelText } =
+            renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText(førstePeriode)).toBeInTheDocument();
@@ -392,10 +387,7 @@ describe('VilkårsvurderingContainer', () => {
         });
         setupUseBehandlingApiMock(vilkårsvurderingResponse);
         const { getByText, getByRole, getByLabelText, queryByLabelText } =
-            renderVilkårsvurderingContainer(
-                lagBehandling(),
-                lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd })
-            );
+            renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
@@ -483,10 +475,8 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByLabelText } =
+            renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
@@ -594,10 +584,8 @@ describe('VilkårsvurderingContainer', () => {
             ],
         });
         setupUseBehandlingApiMock(vilkårsvurderingResponse);
-        const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByLabelText } =
+            renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(

@@ -1,4 +1,3 @@
-import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
 import type { Brevmottaker } from '../../../typer/Brevmottaker';
 
@@ -11,6 +10,7 @@ import { useNavigate } from 'react-router';
 import { BrevmottakerModal } from './BrevmottakerModal';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
@@ -221,11 +221,11 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
 
 type BrevmottakereProps = {
     behandling: Behandling;
-    fagsak: FagsakDto;
 };
 
-const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => {
+const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
     const { behandlingILesemodus, actionBarStegtekst } = useBehandling();
+    const { fagsak } = useFagsak();
     const navigate = useNavigate();
 
     const [visBrevmottakerModal, setVisBrevmottakerModal] = useState(false);
@@ -241,7 +241,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
 
     const gåTilNeste = (): void => {
         navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
+            `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
         );
     };
 
@@ -274,16 +274,16 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling, fagsak }) => 
                         borderRadius="xlarge"
                         padding="4"
                         className="border-ax-border-neutral-subtle"
-                        key={fagsak.bruker.personIdent}
+                        key={fagsak?.bruker.personIdent}
                     >
                         <Brevmottaker
                             brevmottaker={{
                                 type: MottakerType.Bruker,
-                                navn: fagsak.bruker.navn,
-                                personIdent: fagsak.bruker.personIdent,
+                                navn: fagsak?.bruker.navn ?? 'Ukjent navn',
+                                personIdent: fagsak?.bruker.personIdent,
                             }}
                             erStandardMottaker
-                            brevmottakerId={fagsak.bruker.personIdent}
+                            brevmottakerId={fagsak?.bruker.personIdent ?? 'Ukjent personIdent'}
                             behandlingId={behandling.behandlingId}
                             erLesevisning={erLesevisning}
                             antallBrevmottakere={antallBrevmottakere}

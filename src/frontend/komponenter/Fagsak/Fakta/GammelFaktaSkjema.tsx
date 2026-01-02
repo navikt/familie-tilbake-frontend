@@ -1,5 +1,4 @@
 import type { FaktaSkjemaData } from './typer/fakta';
-import type { SchemaEnum4 } from '../../../generated';
 import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 
 import {
@@ -27,13 +26,12 @@ import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
-    ytelse: SchemaEnum4;
     erLesevisning: boolean;
     skjemaData: FaktaSkjemaData;
     fakta: FaktaResponse;
 };
 
-const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning }) => {
+const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }) => {
     const {
         behandling,
         oppdaterBegrunnelse,
@@ -109,7 +107,6 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesev
                     )}
                     {skjemaData.perioder && (
                         <FaktaPerioder
-                            ytelse={ytelse}
                             erLesevisning={erLesevisning}
                             perioder={skjemaData.perioder}
                         />

@@ -3,10 +3,21 @@ import React from 'react';
 
 import { FeilModal } from './FeilModal';
 import { Feil } from '../../../../api/feil';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 
+const mockUseFagsak = jest.fn();
+jest.mock('../../../../context/FagsakContext', () => ({
+    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
+}));
 const mockSetVisFeilModal = jest.fn();
 
 describe('FeilModal', () => {
+    beforeEach(() => {
+        mockUseFagsak.mockReturnValue({
+            fagsak: undefined,
+        });
+    });
+
     //#region 400 Bad Request feil
     test('Viser feil-modalen med 400 Bad Request riktig', () => {
         const feilMelding = 'Du mangler nødvendige data i forespørselen din.';
@@ -150,11 +161,14 @@ describe('FeilModal', () => {
         const fagsakId = '12345';
         const behandlingId = '6bc22b78-4ce4-4eed-9476-247f599cef95';
 
+        mockUseFagsak.mockImplementation(() => ({
+            fagsak: lagFagsak({ eksternFagsakId: fagsakId }),
+        }));
+
         render(
             <FeilModal
                 feil={mockFeil}
                 lukkFeilModal={mockSetVisFeilModal}
-                fagsakId={fagsakId}
                 behandlingId={behandlingId}
             />
         );

@@ -1,7 +1,6 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
 import type {
     BehandlingDto,
-    FagsakDto,
     BestillBrevDto,
     BrukeruttalelseDto,
     BestillBrevData,
@@ -26,6 +25,7 @@ import { useNavigate } from 'react-router';
 
 import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
 import { Feil } from '../../../api/feil';
+import { useFagsak } from '../../../context/FagsakContext';
 import {
     bestillBrevMutation,
     forhåndsvisBrevMutation,
@@ -105,12 +105,11 @@ export const extractErrorFromMutationError = (error: unknown): Feil => {
 
 export const useForhåndsvarselMutations = (
     behandling: BehandlingDto,
-    fagsak: FagsakDto,
     onForhåndsvarselSent?: () => void
 ): UseForhåndsvarselMutationsReturn => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-
+    const { fagsak } = useFagsak();
     const invalidateQueries = (): void => {
         queryClient.invalidateQueries({
             queryKey: ['hentBehandling', behandling.behandlingId],
@@ -122,7 +121,7 @@ export const useForhåndsvarselMutations = (
 
     const gåTilNeste = (): void => {
         navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
+            `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
         );
     };
 

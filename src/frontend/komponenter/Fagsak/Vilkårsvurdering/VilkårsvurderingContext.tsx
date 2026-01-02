@@ -1,6 +1,5 @@
 import type { PeriodeHandling } from './typer/periodeHandling';
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
-import type { FagsakDto } from '../../../generated';
 import type { VilkårdsvurderingStegPayload } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
 import type {
@@ -17,6 +16,7 @@ import { useNavigate } from 'react-router';
 import { useBehandlingApi } from '../../../api/behandling';
 import { Feil } from '../../../api/feil';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
 import { Behandlingssteg } from '../../../typer/behandling';
 import {
@@ -83,11 +83,11 @@ export const erTotalbeløpUnder4Rettsgebyr = (vurdering: VilkårsvurderingRespon
 
 type Props = {
     behandling: Behandling;
-    fagsak: FagsakDto;
 };
 
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
-    ({ behandling, fagsak }: Props) => {
+    ({ behandling }: Props) => {
+        const { fagsak } = useFagsak();
         const containerRef = useRef<HTMLDivElement>(null);
         const [vilkårsvurdering, setVilkårsvurdering] =
             useState<Ressurs<VilkårsvurderingResponse>>();
@@ -109,8 +109,10 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         } = useBehandling();
         const { gjerVilkårsvurderingKall, sendInnVilkårsvurdering } = useBehandlingApi();
         const navigate = useNavigate();
-        const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(fagsak.ytelsestype);
-        const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+        const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(
+            fagsak?.ytelsestype ?? ''
+        );
+        const behandlingUrl = `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
         useEffect(() => {
             if (!visVenteModal) {

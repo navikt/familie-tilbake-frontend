@@ -1,18 +1,20 @@
-import type { FrontendBrukerDto, InstitusjonDto } from '../../../../generated';
 import type { Brevmottaker } from '../../../../typer/Brevmottaker';
 
 import React from 'react';
 
+import { useFagsak } from '../../../../context/FagsakContext';
 import { MottakerType } from '../../../../typer/Brevmottaker';
 import { formaterIdent, lagPersonLabel } from '../../../../utils/formatter';
 
 type Props = {
-    bruker: FrontendBrukerDto;
-    institusjon: InstitusjonDto | undefined;
     brevmottakere: Brevmottaker[];
 };
 
-const BrevmottakerListe: React.FC<Props> = ({ bruker, institusjon, brevmottakere }) => {
+const BrevmottakerListe: React.FC<Props> = ({ brevmottakere }) => {
+    const { fagsak } = useFagsak();
+    const institusjon = fagsak?.institusjon;
+    const bruker = fagsak?.bruker;
+
     const skalViseInstitusjon = !!institusjon;
     const harUtenlandskAdresse = brevmottakere.some(
         mottaker => mottaker.type === MottakerType.BrukerMedUtenlandskAdresse

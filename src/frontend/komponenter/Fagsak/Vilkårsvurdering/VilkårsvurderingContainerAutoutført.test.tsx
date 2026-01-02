@@ -13,7 +13,6 @@ import * as React from 'react';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingResponse } from '../../../testdata/vilkårsvurderingFactory';
 import { RessursStatus } from '../../../typer/ressurs';
 
@@ -82,8 +81,8 @@ describe('VilkårsvurderingContainer', () => {
 
         const { getByText } = render(
             <QueryClientProvider client={queryClient}>
-                <VilkårsvurderingProvider behandling={lagBehandling()} fagsak={lagFagsak()}>
-                    <VilkårsvurderingContainer behandling={lagBehandling()} fagsak={lagFagsak()} />
+                <VilkårsvurderingProvider behandling={lagBehandling()}>
+                    <VilkårsvurderingContainer behandling={lagBehandling()} />
                 </VilkårsvurderingProvider>
             </QueryClientProvider>
         );

@@ -1,4 +1,3 @@
-import type { FagsakDto } from '../../../../generated';
 import type { BrevPayload } from '../../../../typer/api';
 import type { Behandling } from '../../../../typer/behandling';
 
@@ -8,6 +7,7 @@ import { useNavigate } from 'react-router';
 
 import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useFagsak } from '../../../../context/FagsakContext';
 import {
     type Avhengigheter,
     type FeltState,
@@ -48,10 +48,10 @@ const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean 
 
 type Props = {
     behandling: Behandling;
-    fagsak: FagsakDto;
 };
 
-const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fagsak }: Props) => {
+const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: Props) => {
+    const { fagsak } = useFagsak();
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string | undefined>();
     const { hentBehandlingMedBehandlingId } = useBehandling();
@@ -113,7 +113,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling, fa
                     nullstillSkjema();
                     hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                         navigate(
-                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
+                            `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
                         );
                     });
                 } else {

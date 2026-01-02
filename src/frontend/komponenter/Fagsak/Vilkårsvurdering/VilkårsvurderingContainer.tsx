@@ -1,4 +1,3 @@
-import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
 
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
@@ -7,6 +6,7 @@ import * as React from 'react';
 import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import {
     vilkårsvurderingStegInfotekst,
     vilkårsvurderingStegInfotekstForYtelsestype,
@@ -16,11 +16,11 @@ import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSu
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 type Props = {
-    fagsak: FagsakDto;
     behandling: Behandling;
 };
 
-const VilkårsvurderingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
+const VilkårsvurderingContainer: React.FC<Props> = ({ behandling }) => {
+    const { fagsak } = useFagsak();
     const {
         containerRef,
         vilkårsvurdering: vilkårsvurdering,
@@ -31,9 +31,9 @@ const VilkårsvurderingContainer: React.FC<Props> = ({ fagsak, behandling }) => 
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
-    const stegInfotekst =
-        vilkårsvurderingStegInfotekstForYtelsestype[fagsak.ytelsestype] ??
-        vilkårsvurderingStegInfotekst;
+    const stegInfotekst = fagsak?.ytelsestype
+        ? vilkårsvurderingStegInfotekstForYtelsestype[fagsak.ytelsestype]
+        : vilkårsvurderingStegInfotekst;
 
     if (vilkårsvurdering?.status === RessursStatus.Suksess) {
         const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data);
@@ -61,7 +61,6 @@ const VilkårsvurderingContainer: React.FC<Props> = ({ fagsak, behandling }) => 
                             perioder={skjemaData}
                             erTotalbeløpUnder4Rettsgebyr={totalbeløpErUnder4Rettsgebyr}
                             erLesevisning={erLesevisning}
-                            fagsak={fagsak}
                         />
                     )}
                 </VStack>

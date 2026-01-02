@@ -1,4 +1,3 @@
-import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
 
 import * as React from 'react';
@@ -21,15 +20,14 @@ export enum Menysider {
 
 type Props = {
     valgtMenyside: Menysider;
-    fagsak: FagsakDto;
     behandling: Behandling;
 };
 
-export const MenySideInnhold: React.FC<Props> = ({ valgtMenyside, fagsak, behandling }) => {
+export const MenySideInnhold: React.FC<Props> = ({ valgtMenyside, behandling }) => {
     switch (valgtMenyside) {
         case Menysider.Totrinn:
             return (
-                <TotrinnskontrollProvider fagsak={fagsak} behandling={behandling}>
+                <TotrinnskontrollProvider behandling={behandling}>
                     <Totrinnskontroll />
                 </TotrinnskontrollProvider>
             );
@@ -41,18 +39,14 @@ export const MenySideInnhold: React.FC<Props> = ({ valgtMenyside, fagsak, behand
             );
         case Menysider.SendBrev:
             return (
-                <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
-                    <SendMelding fagsak={fagsak} behandling={behandling} />
+                <SendMeldingProvider behandling={behandling}>
+                    <SendMelding behandling={behandling} />
                 </SendMeldingProvider>
             );
         case Menysider.Historikk:
         default:
             return (
-                <HistorikkProvider
-                    fagsak={fagsak}
-                    behandling={behandling}
-                    valgtMenyside={valgtMenyside}
-                >
+                <HistorikkProvider behandling={behandling} valgtMenyside={valgtMenyside}>
                     <Historikk />
                 </HistorikkProvider>
             );

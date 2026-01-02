@@ -1,4 +1,3 @@
-import type { FagsakDto } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
 import type { HistorikkInnslag } from '../../../../typer/historikk';
 import type { SynligSteg } from '../../../../utils/sider';
@@ -8,17 +7,18 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
+import { useFagsak } from '../../../../context/FagsakContext';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
 import { Menysider } from '../Menykontainer';
 
 type Props = {
     behandling: Behandling;
-    fagsak: FagsakDto;
     valgtMenyside: Menysider;
 };
 
 const [HistorikkProvider, useHistorikk] = createUseContext(
-    ({ fagsak, behandling, valgtMenyside }: Props) => {
+    ({ behandling, valgtMenyside }: Props) => {
+        const { fagsak } = useFagsak();
         const [historikkInnslag, settHistorikkInnslag] = useState<Ressurs<HistorikkInnslag[]>>();
         const navigate = useNavigate();
         const { request } = useHttp();
@@ -48,7 +48,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
 
         const navigerTilSide = (side: SynligSteg): void => {
             navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
+                `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );
         };
 

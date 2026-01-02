@@ -13,7 +13,6 @@ import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { ToggleName } from '../../../context/toggles';
 import { lagBehandlingDto } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
     lagForhåndsvarselQueries,
     lagForhåndsvarselMutations,
@@ -81,7 +80,7 @@ const setupMock = (): void => {
 const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): RenderResult =>
     render(
         <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={behandling} fagsak={lagFagsak()} />
+            <Forhåndsvarsel behandling={behandling} />
         </QueryClientProvider>
     );
 

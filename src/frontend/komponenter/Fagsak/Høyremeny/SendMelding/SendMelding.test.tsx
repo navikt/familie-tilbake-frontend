@@ -1,7 +1,8 @@
 import type { DokumentApiHook } from '../../../../api/dokument';
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { FagsakDto } from '../../../../generated';
+import type { FagsakHook } from '../../../../context/FagsakContext';
+import type { SpråkkodeEnum } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -16,7 +17,6 @@ import { SendMeldingProvider } from './SendMeldingContext';
 import { DokumentMal } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import { Målform } from '../../../../typer/målform';
 import { RessursStatus } from '../../../../typer/ressurs';
 
 jest.mock('../../../../api/http/HttpProvider', () => {
@@ -27,15 +27,18 @@ jest.mock('../../../../api/http/HttpProvider', () => {
         }),
     };
 });
+const mockUseDokumentApi = jest.fn();
+jest.mock('../../../../api/dokument', () => ({
+    useDokumentApi: (): DokumentApiHook => mockUseDokumentApi(),
+}));
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
-
-const mockUseDokumentApi = jest.fn();
-jest.mock('../../../../api/dokument', () => ({
-    useDokumentApi: (): DokumentApiHook => mockUseDokumentApi(),
+const mockUseFagsak = jest.fn();
+jest.mock('../../../../context/FagsakContext', () => ({
+    useFagsak: (): FagsakHook => mockUseFagsak(),
 }));
 
 jest.mock('react-router', () => ({
@@ -43,14 +46,14 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderSendMelding = (fagsak: FagsakDto, behandling: Behandling): RenderResult =>
+const renderSendMelding = (behandling: Behandling): RenderResult =>
     render(
-        <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
-            <SendMelding fagsak={fagsak} behandling={behandling} />
+        <SendMeldingProvider behandling={behandling}>
+            <SendMelding behandling={behandling} />
         </SendMeldingProvider>
     );
 
-const setupMock = (behandlingILesemodus: boolean): void => {
+const setupMock = (behandlingILesemodus: boolean, språkkode?: SpråkkodeEnum): void => {
     mockUseDokumentApi.mockImplementation(() => ({
         bestillBrev: (): Promise<{
             status: RessursStatus;
@@ -65,6 +68,9 @@ const setupMock = (behandlingILesemodus: boolean): void => {
         behandlingILesemodus: behandlingILesemodus,
         hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
     }));
+    mockUseFagsak.mockImplementation(() => ({
+        fagsak: lagFagsak({ språkkode: språkkode ?? 'NB' }),
+    }));
 };
 
 describe('SendMelding', () => {
@@ -78,7 +84,7 @@ describe('SendMelding', () => {
         setupMock(false);
 
         const { getByText, getByLabelText, getByRole, queryByRole, queryByText } =
-            renderSendMelding(lagFagsak(), lagBehandling({ varselSendt: false }));
+            renderSendMelding(lagBehandling({ varselSendt: false }));
 
         await waitFor(() => {
             expect(getByText('Brevmottaker')).toBeInTheDocument();
@@ -130,10 +136,9 @@ describe('SendMelding', () => {
     });
 
     test('Fyller ut skjema og sender korrigert varsel', async () => {
-        setupMock(false);
+        setupMock(false, 'NN');
 
         const { getByText, getByLabelText, getByRole, queryByText } = renderSendMelding(
-            lagFagsak({ språkkode: Målform.Nn }),
             lagBehandling({ varselSendt: true })
         );
 
@@ -172,7 +177,6 @@ describe('SendMelding', () => {
         setupMock(false);
 
         const { getByText, getByLabelText, getByRole } = renderSendMelding(
-            lagFagsak(),
             lagBehandling({ varselSendt: true })
         );
 
@@ -210,7 +214,6 @@ describe('SendMelding', () => {
         setupMock(true);
 
         const { getByText, getByRole, queryByLabelText } = renderSendMelding(
-            lagFagsak(),
             lagBehandling({ varselSendt: false })
         );
 

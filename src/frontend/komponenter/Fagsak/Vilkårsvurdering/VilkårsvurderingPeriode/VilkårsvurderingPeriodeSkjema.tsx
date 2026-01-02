@@ -1,5 +1,4 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
-import type { FagsakDto } from '../../../../generated';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { ChangeEvent, FC } from 'react';
 
@@ -112,7 +111,6 @@ const settSkjemadataFraPeriode = (
 };
 
 type Props = {
-    fagsak: FagsakDto;
     behandling: Behandling;
     periode: VilkårsvurderingPeriodeSkjemaData;
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
@@ -129,7 +127,6 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     behandletPerioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
-    fagsak,
     perioder,
     pendingPeriode,
     settPendingPeriode,
@@ -533,7 +530,6 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     lukkFeilModal={sendInnSkjemaMutation.reset}
                     beskjed="Du kunne ikke lagre vilkårsvurderingen"
                     behandlingId={behandling.behandlingId}
-                    fagsakId={fagsak.eksternFagsakId}
                 />
             )}
 

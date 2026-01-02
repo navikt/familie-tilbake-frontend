@@ -1,5 +1,4 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
-import type { FagsakDto } from '../../../generated';
 
 import { BodyShort, VStack, type TimelinePeriodProps } from '@navikt/ds-react';
 import * as React from 'react';
@@ -60,7 +59,6 @@ const finnClassNamePeriodeStatus = (
 
 type Props = {
     behandling: Behandling;
-    fagsak: FagsakDto;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
@@ -71,7 +69,6 @@ const VilkårsvurderingPerioder: React.FC<Props> = ({
     perioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
-    fagsak,
 }) => {
     const { valgtPeriode, settValgtPeriode, behandletPerioder, valideringsFeilmelding } =
         useVilkårsvurdering();
@@ -112,7 +109,6 @@ const VilkårsvurderingPerioder: React.FC<Props> = ({
                     behandletPerioder={behandletPerioder}
                     erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
                     erLesevisning={erLesevisning}
-                    fagsak={fagsak}
                     pendingPeriode={pendingPeriode}
                     settPendingPeriode={settPendingPeriode}
                     perioder={perioder}

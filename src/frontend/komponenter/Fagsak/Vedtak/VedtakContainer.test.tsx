@@ -1,7 +1,6 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { FagsakDto } from '../../../generated';
 import type { SammenslåttPeriodeHook } from '../../../hooks/useSammenslåPerioder';
 import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
@@ -23,7 +22,6 @@ import VedtakContainer from './VedtakContainer';
 import { VedtakProvider } from './VedtakContext';
 import { Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
     lagOppsummeringAvsnitt,
     lagPeriode2Avsnitt,
@@ -65,10 +63,10 @@ jest.mock('../../../hooks/useSammenslåPerioder', () => ({
 
 const mockedSettIkkePersistertKomponent = jest.fn();
 
-const renderVedtakContainer = (behandling: Behandling, fagsak: FagsakDto): RenderResult =>
+const renderVedtakContainer = (behandling: Behandling): RenderResult =>
     render(
-        <VedtakProvider behandling={behandling} fagsak={fagsak}>
-            <VedtakContainer behandling={behandling} fagsak={fagsak} />
+        <VedtakProvider behandling={behandling}>
+            <VedtakContainer behandling={behandling} />
         </VedtakProvider>
     );
 
@@ -178,7 +176,7 @@ describe('VedtakContainer', () => {
         ];
         setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getAllByText, getByRole, queryByRole, queryByText } =
-            renderVedtakContainer(lagBehandling(), lagFagsak());
+            renderVedtakContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -289,8 +287,7 @@ describe('VedtakContainer', () => {
                 lagBehandling({
                     type: Behandlingstype.RevurderingTilbakekreving,
                     behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
-                }),
-                lagFagsak()
+                })
             );
 
         await waitFor(() => {
@@ -393,8 +390,7 @@ describe('VedtakContainer', () => {
                 lagBehandling({
                     type: Behandlingstype.RevurderingTilbakekreving,
                     behandlingsårsakstype: Behandlingårsak.RevurderingKlageKa,
-                }),
-                lagFagsak()
+                })
             );
 
         await waitFor(() => {
@@ -493,8 +489,7 @@ describe('VedtakContainer', () => {
                 lagBehandling({
                     type: Behandlingstype.RevurderingTilbakekreving,
                     behandlingsårsakstype: Behandlingårsak.RevurderingKlageNfp,
-                }),
-                lagFagsak()
+                })
             );
 
         await waitFor(() => {
@@ -617,10 +612,8 @@ describe('VedtakContainer', () => {
         ];
         setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
 
-        const { getByText, getByRole, getByTestId, queryByRole } = renderVedtakContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByTestId, queryByRole } =
+            renderVedtakContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -720,10 +713,7 @@ describe('VedtakContainer', () => {
         ];
         setupMock(true, vedtaksbrevAvsnitt, beregningsresultat);
 
-        const { getByText, getByRole, queryByRole } = renderVedtakContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, queryByRole } = renderVedtakContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();

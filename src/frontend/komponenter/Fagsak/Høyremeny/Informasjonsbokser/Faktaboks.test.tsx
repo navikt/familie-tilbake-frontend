@@ -6,6 +6,7 @@ import React from 'react';
 
 import { Faktaboks } from './Faktaboks';
 import { ytelsetype, Ytelsetype } from '../../../../kodeverk';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
     Behandlingstatus,
     Behandlingresultat,
@@ -51,17 +52,19 @@ const baseBehandling = (override: Partial<Behandling> = {}): Behandling => ({
     erNyModell: true,
     ...override,
 });
+const mockUseFagsak = jest.fn();
+jest.mock('../../../../context/FagsakContext', () => ({
+    useFagsak: (): { fagsak: { ytelsestype: Ytelsetype } } => mockUseFagsak(),
+}));
 
 const renderFaktaboks = (delvisBehandling: Partial<Behandling> = {}): RenderResult =>
-    render(
-        <Faktaboks
-            behandling={baseBehandling(delvisBehandling)}
-            ytelsestype={Ytelsetype.Barnetrygd}
-        />
-    );
+    render(<Faktaboks behandling={baseBehandling(delvisBehandling)} />);
 
 describe('Faktaboks', () => {
     test('Viser heading med ytelsestype', () => {
+        mockUseFagsak.mockReturnValue({
+            fagsak: lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
+        });
         renderFaktaboks();
         expect(
             screen.getByRole('heading', {

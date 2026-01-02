@@ -1,4 +1,3 @@
-import type { FagsakDto } from '../../../generated';
 import type { VergeDto, VergeStegPayload } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
 
@@ -8,6 +7,7 @@ import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import {
     type Avhengigheter,
     type FeltState,
@@ -36,10 +36,10 @@ const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
 
 type Props = {
     behandling: Behandling;
-    fagsak: FagsakDto;
 };
 
-const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: Props) => {
+const [VergeProvider, useVerge] = createUseContext(({ behandling }: Props) => {
+    const { fagsak } = useFagsak();
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
     const [erAutoutført, settErAutoutført] = React.useState<boolean>();
     const [verge, settVerge] = React.useState<VergeDto>();
@@ -170,7 +170,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: Prop
         if (stegErBehandlet && !harEndretOpplysninger()) {
             nullstillIkkePersisterteKomponenter();
             utførRedirect(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
+                `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
             );
         } else if (kanSendeSkjema()) {
             settSenderInn(true);
@@ -199,7 +199,7 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling, fagsak }: Prop
                         nullstillIkkePersisterteKomponenter();
                         hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                             navigate(
-                                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                                `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                             );
                         });
                     } else {

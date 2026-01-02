@@ -1,4 +1,5 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { lagFagsak } from '../../../testdata/fagsakFactory';
 import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
@@ -36,7 +37,7 @@ jest.mock('../../../context/BehandlingContext', () => ({
 }));
 
 jest.mock('../../../context/FagsakContext', () => ({
-    useFagsak: (): { eksternFagsakId: string; fagsystem: Fagsystem } => mockUseFagsak(),
+    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
 }));
 
 const createMockRessursBehandling = (

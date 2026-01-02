@@ -1,4 +1,3 @@
-import type { SchemaEnum4 } from '../../../../generated';
 import type { HendelseType } from '../../../../kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
@@ -7,8 +6,8 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
+import { useFagsak } from '../../../../context/FagsakContext';
 import { hentHendelseTyper } from '../../../../kodeverk';
-import { useFakta } from '../FaktaContext';
 
 const StyledPeriodeTable = styled(Table)`
     td {
@@ -21,19 +20,19 @@ const StyledPeriodeTable = styled(Table)`
 `;
 
 type Props = {
-    ytelse: SchemaEnum4;
     perioder: FaktaPeriodeSkjemaData[];
     erLesevisning: boolean;
 };
 
-const FaktaPerioder: React.FC<Props> = ({ ytelse, perioder, erLesevisning }) => {
+const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
     const [hendelseTyper, settHendelseTyper] = React.useState<HendelseType[]>();
-    const { fagsak } = useFakta();
+    const { fagsak } = useFagsak();
 
     React.useEffect(() => {
-        settHendelseTyper(hentHendelseTyper(ytelse, !!fagsak.institusjon));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ytelse]);
+        if (fagsak?.ytelsestype) {
+            settHendelseTyper(hentHendelseTyper(fagsak.ytelsestype, !!fagsak.institusjon));
+        }
+    }, [fagsak?.ytelsestype, fagsak?.institusjon]);
 
     return (
         <StyledPeriodeTable size="small">

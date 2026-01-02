@@ -1,4 +1,3 @@
-import type { FrontendBrukerDto, InstitusjonDto } from '../../../generated';
 import type { Brevmottaker } from '../../../typer/Brevmottaker';
 
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
@@ -15,17 +14,10 @@ const StyledAlert = styled(Alert)`
 
 type Props = {
     brevmottakere: Brevmottaker[];
-    institusjon: InstitusjonDto | undefined;
-    bruker: FrontendBrukerDto;
     linkTilBrevmottakerSteg: string;
 };
 
-export const BrevmottakereAlert: React.FC<Props> = ({
-    brevmottakere,
-    institusjon,
-    bruker,
-    linkTilBrevmottakerSteg,
-}) => {
+export const BrevmottakereAlert: React.FC<Props> = ({ brevmottakere, linkTilBrevmottakerSteg }) => {
     const navigate = useNavigate();
 
     return (
@@ -33,11 +25,7 @@ export const BrevmottakereAlert: React.FC<Props> = ({
             {brevmottakere && brevmottakere.length !== 0 && (
                 <StyledAlert variant="info">
                     Brevmottaker(e) er endret, og vedtak sendes til:
-                    <BrevmottakerListe
-                        brevmottakere={brevmottakere}
-                        institusjon={institusjon}
-                        bruker={bruker}
-                    />
+                    <BrevmottakerListe brevmottakere={brevmottakere} />
                     <Button
                         variant="tertiary"
                         onClick={() => navigate(linkTilBrevmottakerSteg)}

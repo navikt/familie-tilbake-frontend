@@ -1,4 +1,3 @@
-import type { FagsakDto } from '../../generated/types.gen';
 import type { Behandling } from '../../typer/behandling';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
@@ -22,6 +21,7 @@ import { VergeProvider } from './Verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
 import { useBehandling } from '../../context/BehandlingContext';
+import { useFagsak } from '../../context/FagsakContext';
 import { ToggleName } from '../../context/toggles';
 import { useToggles } from '../../context/TogglesContext';
 import { Behandlingstatus } from '../../typer/behandling';
@@ -69,11 +69,11 @@ const HenlagtContainer = styled.div`
 `;
 
 type Props = {
-    fagsak: FagsakDto;
     behandling: Behandling;
 };
 
-const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
+const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
+    const { fagsak } = useFagsak();
     const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
     const navigate = useNavigate();
     const location = useLocation();
@@ -84,7 +84,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
     const erØnsketSideLovlig =
         ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
-    const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+    const behandlingUrl = `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
     React.useEffect(() => {
         if (visVenteModal === false) {
@@ -112,17 +112,17 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                 </HenlagtContainer>
             </div>
 
-            <Høyremeny fagsak={fagsak} behandling={behandling} dialogRef={ref} />
+            <Høyremeny behandling={behandling} dialogRef={ref} />
         </>
     ) : !harKravgrunnlag ? (
         <>
             <div className="flex-1 overflow-auto" />
-            <Høyremeny fagsak={fagsak} behandling={behandling} dialogRef={ref} />
+            <Høyremeny behandling={behandling} dialogRef={ref} />
         </>
     ) : erHistoriskeVerdier ? (
         <div className="flex-1 overflow-auto">
             <Suspense fallback="Historiske vurderinger laster...">
-                <HistoriskeVurderingermeny behandling={behandling} fagsak={fagsak} />
+                <HistoriskeVurderingermeny behandling={behandling} />
             </Suspense>
             <Routes>
                 <Route
@@ -130,7 +130,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                     element={
                         <HistoriskFaktaProvider behandling={behandling}>
                             <Suspense fallback="Historisk fakta laster...">
-                                <HistoriskFaktaContainer behandling={behandling} fagsak={fagsak} />
+                                <HistoriskFaktaContainer behandling={behandling} />
                             </Suspense>
                         </HistoriskFaktaProvider>
                     }
@@ -140,10 +140,7 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                     element={
                         <HistoriskVilkårsvurderingProvider behandling={behandling}>
                             <Suspense fallback="Historisk vilkårsvurdering laster...">
-                                <HistoriskVilkårsvurderingContainer
-                                    behandling={behandling}
-                                    fagsak={fagsak}
-                                />
+                                <HistoriskVilkårsvurderingContainer behandling={behandling} />
                             </Suspense>
                         </HistoriskVilkårsvurderingProvider>
                     }
@@ -186,8 +183,8 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                                             behandlingUrl={behandlingUrl}
                                         />
                                     ) : (
-                                        <FaktaProvider behandling={behandling} fagsak={fagsak}>
-                                            <FaktaContainer ytelse={fagsak.ytelsestype} />
+                                        <FaktaProvider behandling={behandling}>
+                                            <FaktaContainer />
                                         </FaktaProvider>
                                     )
                                 }
@@ -196,17 +193,14 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
                                 element={
                                     <Suspense fallback="Forhåndsvarsel laster...">
-                                        <Forhåndsvarsel
-                                            behandling={tilBehandlingDto(behandling, fagsak)}
-                                            fagsak={fagsak}
-                                        />
+                                        <Forhåndsvarsel behandling={tilBehandlingDto(behandling)} />
                                     </Suspense>
                                 }
                             />
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
                                 element={
-                                    <ForeldelseProvider behandling={behandling} fagsak={fagsak}>
+                                    <ForeldelseProvider behandling={behandling}>
                                         <ForeldelseContainer behandling={behandling} />
                                     </ForeldelseProvider>
                                 }
@@ -214,48 +208,37 @@ const BehandlingContainer: React.FC<Props> = ({ fagsak, behandling }) => {
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
                                 element={
-                                    <VilkårsvurderingProvider
-                                        behandling={behandling}
-                                        fagsak={fagsak}
-                                    >
-                                        <VilkårsvurderingContainer
-                                            behandling={behandling}
-                                            fagsak={fagsak}
-                                        />
+                                    <VilkårsvurderingProvider behandling={behandling}>
+                                        <VilkårsvurderingContainer behandling={behandling} />
                                     </VilkårsvurderingProvider>
                                 }
                             />
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                                 element={
-                                    <VedtakProvider behandling={behandling} fagsak={fagsak}>
-                                        <VedtakContainer behandling={behandling} fagsak={fagsak} />
+                                    <VedtakProvider behandling={behandling}>
+                                        <VedtakContainer behandling={behandling} />
                                     </VedtakProvider>
                                 }
                             />
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/verge'}
                                 element={
-                                    <VergeProvider behandling={behandling} fagsak={fagsak}>
+                                    <VergeProvider behandling={behandling}>
                                         <VergeContainer />
                                     </VergeProvider>
                                 }
                             />
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
-                                element={
-                                    <BrevmottakerContainer
-                                        fagsak={fagsak}
-                                        behandling={behandling}
-                                    />
-                                }
+                                element={<BrevmottakerContainer behandling={behandling} />}
                             />
                         </Routes>
                     </Suspense>
                 </section>
             </section>
             <Suspense fallback={<HøyremenySkeleton />}>
-                <Høyremeny fagsak={fagsak} behandling={behandling} dialogRef={ref} />
+                <Høyremeny behandling={behandling} dialogRef={ref} />
             </Suspense>
         </>
     ) : null;

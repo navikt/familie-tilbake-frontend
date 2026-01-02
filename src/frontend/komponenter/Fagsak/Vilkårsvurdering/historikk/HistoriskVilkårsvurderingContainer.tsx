@@ -1,4 +1,3 @@
-import type { FagsakDto } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
 
 import { Alert, Heading, VStack } from '@navikt/ds-react';
@@ -17,7 +16,6 @@ const Container = styled.div`
 `;
 
 type Props = {
-    fagsak: FagsakDto;
     behandling: Behandling;
 };
 

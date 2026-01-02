@@ -1,6 +1,5 @@
 import type { BehandlingApiHook } from '../../../../api/behandling';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { FagsakDto } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
 import type { Ressurs } from '../../../../typer/ressurs';
 import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
@@ -16,7 +15,6 @@ import * as React from 'react';
 import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagTotrinnsStegInfo } from '../../../../testdata/totrinnskontrollFactory';
 import { Behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
@@ -36,9 +34,9 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderTotrinnskontroll = (behandling: Behandling, fagsak: FagsakDto): RenderResult =>
+const renderTotrinnskontroll = (behandling: Behandling): RenderResult =>
     render(
-        <TotrinnskontrollProvider behandling={behandling} fagsak={fagsak}>
+        <TotrinnskontrollProvider behandling={behandling}>
             <Totrinnskontroll />
         </TotrinnskontrollProvider>
     );
@@ -85,8 +83,7 @@ describe('Totrinnskontroll', () => {
         });
 
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
-            lagBehandling({ kanEndres: true }),
-            lagFagsak()
+            lagBehandling({ kanEndres: true })
         );
 
         await waitFor(() => {
@@ -138,8 +135,7 @@ describe('Totrinnskontroll', () => {
             ],
         });
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
-            lagBehandling({ kanEndres: true }),
-            lagFagsak()
+            lagBehandling({ kanEndres: true })
         );
 
         await waitFor(() => {
@@ -214,10 +210,8 @@ describe('Totrinnskontroll', () => {
             ],
         });
 
-        const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getAllByText, getAllByRole, queryByRole } =
+            renderTotrinnskontroll(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
@@ -265,8 +259,7 @@ describe('Totrinnskontroll', () => {
         });
 
         const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
-            lagBehandling({ kanEndres: false }),
-            lagFagsak()
+            lagBehandling({ kanEndres: false })
         );
 
         await waitFor(() => {

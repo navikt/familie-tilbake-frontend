@@ -93,7 +93,7 @@ const FagsakContainer: React.FC = () => {
                         }
                     )}
                 >
-                    <BehandlingContainer fagsak={fagsak} behandling={behandling.data} />
+                    <BehandlingContainer behandling={behandling.data} />
                 </div>
             </>
         );

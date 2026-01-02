@@ -6,11 +6,17 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { BrukerInformasjon } from './BrukerInformasjon';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { Kjønn } from '../../../../typer/bruker';
 
 jest.mock('../../../../utils', () => ({
     ...jest.requireActual('../../../../utils'),
     hentAlder: jest.fn(() => 42),
+}));
+
+const mockUseFagsak = jest.fn();
+jest.mock('../../../../context/FagsakContext', () => ({
+    useFagsak: (): ReturnType<typeof lagFagsak> => mockUseFagsak(),
 }));
 
 const baseBruker = (override: Partial<FrontendBrukerDto> = {}): FrontendBrukerDto => ({
@@ -29,17 +35,23 @@ const baseInstitusjon = (override: Partial<InstitusjonDto> = {}): InstitusjonDto
 });
 
 const renderBrukerInformasjon = (
-    bruker: Partial<FrontendBrukerDto> = {},
+    bruker: Partial<FrontendBrukerDto> | null = null,
     institusjon: Partial<InstitusjonDto> | null = null
-): RenderResult =>
-    render(
-        <BrukerInformasjon
-            bruker={baseBruker(bruker)}
-            institusjon={institusjon ? baseInstitusjon(institusjon) : undefined}
-        />
-    );
+): RenderResult => {
+    mockUseFagsak.mockReturnValue({
+        fagsak: lagFagsak({
+            bruker: bruker ? baseBruker(bruker) : undefined,
+            institusjon: institusjon ? baseInstitusjon(institusjon) : undefined,
+        }),
+    });
+    return render(<BrukerInformasjon />);
+};
 
 describe('BrukerInformasjon', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
     test('Viser heading', () => {
         renderBrukerInformasjon();
         expect(screen.getByRole('heading', { name: 'Informasjon om bruker' })).toBeInTheDocument();
@@ -51,7 +63,7 @@ describe('BrukerInformasjon', () => {
     });
 
     test('Viser alder', () => {
-        renderBrukerInformasjon();
+        renderBrukerInformasjon({});
         expect(screen.getByText(/42 år/)).toBeInTheDocument();
     });
 

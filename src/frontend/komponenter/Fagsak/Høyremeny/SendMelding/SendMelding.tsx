@@ -1,4 +1,3 @@
-import type { FagsakDto } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
 
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
@@ -7,6 +6,7 @@ import * as React from 'react';
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useFagsak } from '../../../../context/FagsakContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
 import { målform } from '../../../../typer/målform';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
@@ -20,11 +20,11 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
 };
 
 type Props = {
-    fagsak: FagsakDto;
     behandling: Behandling;
 };
 
-const SendMelding: React.FC<Props> = ({ fagsak, behandling }) => {
+const SendMelding: React.FC<Props> = ({ behandling }) => {
+    const { fagsak } = useFagsak();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -51,8 +51,6 @@ const SendMelding: React.FC<Props> = ({ fagsak, behandling }) => {
                         brevmottakere={behandling.manuelleBrevmottakere.map(
                             ({ brevmottaker }) => brevmottaker
                         )}
-                        institusjon={fagsak.institusjon}
-                        bruker={fagsak.bruker}
                     />
 
                     <Select
@@ -78,7 +76,7 @@ const SendMelding: React.FC<Props> = ({ fagsak, behandling }) => {
                             label={
                                 <LabelMedSpråk
                                     label={tekstfeltLabel(skjema.felter.maltype.verdi)}
-                                    språk={målform[fagsak.språkkode]}
+                                    språk={målform[fagsak?.språkkode ?? 'NB']}
                                 />
                             }
                             aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}

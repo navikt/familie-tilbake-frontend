@@ -22,6 +22,11 @@ jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
+const mockUseFagsak = jest.fn();
+jest.mock('../../../context/FagsakContext', () => ({
+    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
+}));
+
 const createMockManuelleBrevmottakere = (): ManuellBrevmottakerResponseDto[] => [
     {
         id: 'mottaker-1',
@@ -66,10 +71,13 @@ const setupMock = (): void => {
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
         erStegBehandlet: jest.fn().mockReturnValue(false),
     }));
+    mockUseFagsak.mockReturnValue({
+        fagsak: lagFagsak(),
+    });
 };
 
 const renderBrevmottakere = (behandling: Behandling): RenderResult => {
-    return render(<Brevmottakere behandling={behandling} fagsak={lagFagsak()} />);
+    return render(<Brevmottakere behandling={behandling} />);
 };
 
 describe('Brevmottakere', () => {

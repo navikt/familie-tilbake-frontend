@@ -1,5 +1,6 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
 import type { ForhåndsvarselDto } from '../../../generated';
+import type { BehandlingDto } from '../../../generated';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,7 +29,6 @@ import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { ToggleName } from '../../../context/toggles';
 import { useToggles } from '../../../context/TogglesContext';
-import { type BehandlingDto, type FagsakDto } from '../../../generated';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { updateParentBounds } from '../../../utils/updateParentBounds';
@@ -38,7 +38,6 @@ import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
     behandling: BehandlingDto;
-    fagsak: FagsakDto;
 };
 
 type TagVariant = 'info-moderate' | 'success-moderate';
@@ -48,7 +47,7 @@ const getTagVariant = (sendtTid: string): TagVariant => {
     return ukerSiden >= 3 ? 'success-moderate' : 'info-moderate';
 };
 
-export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
+export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
     const { forhåndsvarselInfo } = useForhåndsvarselQueries(behandling);
 
     return (
@@ -72,24 +71,18 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                     </Tooltip>
                 )}
             </HStack>
-            <ForhåndsvarselSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                forhåndsvarselInfo={forhåndsvarselInfo}
-            />
+            <ForhåndsvarselSkjema behandling={behandling} forhåndsvarselInfo={forhåndsvarselInfo} />
         </VStack>
     );
 };
 
 type ForhåndsvarselSkjemaProps = {
     behandling: BehandlingDto;
-    fagsak: FagsakDto;
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     behandling,
-    fagsak,
     forhåndsvarselInfo,
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -108,7 +101,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendUnntakMutation,
         sendUnntak,
         gåTilNeste,
-    } = useForhåndsvarselMutations(behandling, fagsak);
+    } = useForhåndsvarselMutations(behandling);
 
     const mutations = [
         { key: 'forhåndsvarsel', mutation: sendForhåndsvarselMutation },
@@ -201,7 +194,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             <FormProvider {...methods}>
                 <OpprettSkjema
                     behandling={behandling}
-                    fagsak={fagsak}
                     varselbrevtekster={varselbrevtekster}
                     varselErSendt={varselErSendt}
                     parentBounds={parentBounds}
@@ -256,7 +248,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                             feil={feil}
                             lukkFeilModal={mutation.reset}
                             behandlingId={behandling.behandlingId}
-                            fagsakId={fagsak.eksternFagsakId}
                         />
                     );
                 }

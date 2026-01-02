@@ -1,4 +1,3 @@
-import type { FagsakDto } from '../../../generated';
 import type { Behandling } from '../../../typer/behandling';
 
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
@@ -12,6 +11,7 @@ import { useVedtak } from './VedtakContext';
 import VedtakPerioder from './VedtakPerioder';
 import VedtakSkjema from './VedtakSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
 import { Behandlingssteg, Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
@@ -37,10 +37,10 @@ const VarselbrevInfo = styled(BodyShort)`
 
 type Props = {
     behandling: Behandling;
-    fagsak: FagsakDto;
 };
 
-const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
+const VedtakContainer: React.FC<Props> = ({ behandling }) => {
+    const { fagsak } = useFagsak();
     const {
         vedtaksbrevavsnitt,
         beregningsresultat,
@@ -132,14 +132,12 @@ const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
                     </>
                 )}
 
-                {behandling.manuelleBrevmottakere.length > 0 && (
+                {behandling.manuelleBrevmottakere.length > 0 && fagsak && (
                     <>
                         <BrevmottakereAlert
                             brevmottakere={behandling.manuelleBrevmottakere.map(
                                 brevmottakerDto => brevmottakerDto.brevmottaker
                             )}
-                            institusjon={fagsak.institusjon}
-                            bruker={fagsak.bruker}
                             linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
                         />
                         <Spacer20 />

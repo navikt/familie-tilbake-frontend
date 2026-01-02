@@ -1,5 +1,4 @@
 import type { ForeldelsePeriodeSkjemeData } from './typer/foreldelse';
-import type { FagsakDto } from '../../../generated';
 import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
 import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
@@ -10,6 +9,7 @@ import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Foreldelsevurdering } from '../../../kodeverk';
 import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
@@ -44,7 +44,6 @@ const utledValgtPeriode = (
 
 type Props = {
     behandling: Behandling;
-    fagsak: FagsakDto;
 };
 
 export type ForeldelseHook = {
@@ -68,7 +67,8 @@ export type ForeldelseHook = {
     ) => void;
 };
 
-const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling, fagsak }: Props) => {
+const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling }: Props) => {
+    const { fagsak } = useFagsak();
     const [foreldelse, setForeldelse] = useState<Ressurs<ForeldelseResponse>>();
     const [skjemaData, settSkjemaData] = useState<ForeldelsePeriodeSkjemeData[]>([]);
     const [erAutoutført, settErAutoutført] = useState<boolean>();
@@ -86,7 +86,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling, fags
     const { utførRedirect } = useRedirectEtterLagring();
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
     const navigate = useNavigate();
-    const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+    const behandlingUrl = `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
     useEffect(() => {
         if (visVenteModal === false) {
@@ -231,7 +231,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling, fags
                 if (respons.status === RessursStatus.Suksess) {
                     hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                         navigate(
-                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                            `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                         );
                     });
                 }

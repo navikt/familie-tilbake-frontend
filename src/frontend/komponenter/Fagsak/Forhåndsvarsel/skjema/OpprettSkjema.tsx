@@ -1,10 +1,4 @@
-import type {
-    BehandlingDto,
-    RessursByte,
-    Section,
-    Varselbrevtekst,
-    FagsakDto,
-} from '../../../../generated';
+import type { BehandlingDto, RessursByte, Section, Varselbrevtekst } from '../../../../generated';
 import type { ForhåndsvarselFormData } from '../forhåndsvarselSchema';
 import type { FieldErrors, SubmitHandler } from 'react-hook-form';
 
@@ -33,7 +27,6 @@ import { Unntak } from './UnntakSkjema';
 
 type Props = {
     behandling: BehandlingDto;
-    fagsak: FagsakDto;
     varselbrevtekster: Varselbrevtekst | undefined;
     varselErSendt: boolean;
     parentBounds: { width: string | undefined };
@@ -43,7 +36,6 @@ type Props = {
 
 export const OpprettSkjema: React.FC<Props> = ({
     behandling,
-    fagsak,
     varselbrevtekster,
     varselErSendt,
     parentBounds,
@@ -55,7 +47,7 @@ export const OpprettSkjema: React.FC<Props> = ({
     const maksAntallTegn = 4000;
     const [expansionCardÅpen, setExpansionCardÅpen] = useState(!varselErSendt);
 
-    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling, fagsak);
+    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling);
 
     const [showModal, setShowModal] = useState(false);
     const {

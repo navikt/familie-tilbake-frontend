@@ -21,7 +21,6 @@ import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
 import { FagsakProvider } from '../../../context/FagsakContext';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
     lagVilkårsvurderingPeriode,
     lagVilkårsvurderingResponse,
@@ -132,10 +131,9 @@ const renderVilkårsvurderingPerioder = (): RenderResult => {
     return render(
         <FagsakProvider>
             <BehandlingProvider>
-                <VilkårsvurderingProvider behandling={lagBehandling()} fagsak={lagFagsak()}>
+                <VilkårsvurderingProvider behandling={lagBehandling()}>
                     <VilkårsvurderingPerioder
                         behandling={lagBehandling()}
-                        fagsak={lagFagsak()}
                         perioder={skjemaData}
                         erTotalbeløpUnder4Rettsgebyr={false}
                         erLesevisning={false}

@@ -11,9 +11,8 @@ import * as React from 'react';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
 import { BehandlingProvider } from '../../../../context/BehandlingContext';
-import { Aktsomhet, SærligeGrunner, Vilkårsresultat, Ytelsetype } from '../../../../kodeverk';
+import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 
 jest.setTimeout(10000);
@@ -60,7 +59,6 @@ jest.mock('../VilkårsvurderingContext', () => {
 });
 
 const periode = lagVilkårsvurderingPeriodeSkjemaData();
-const fagsak = lagFagsak({ ytelsestype: Ytelsetype.Overgangsstønad });
 
 describe('VilkårsvurderingPeriodeSkjema', () => {
     let user: UserEvent;
@@ -81,7 +79,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={{
                         aktiviteter: [
                             {
@@ -214,7 +211,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
@@ -296,7 +292,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
@@ -408,7 +403,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
@@ -562,7 +556,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
@@ -644,7 +637,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 <BehandlingProvider>
                     <VilkårsvurderingPeriodeSkjema
                         behandling={lagBehandling()}
-                        fagsak={fagsak}
                         periode={periode}
                         behandletPerioder={[]}
                         erTotalbeløpUnder4Rettsgebyr={false}
@@ -750,7 +742,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
@@ -887,7 +878,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 <BehandlingProvider>
                     <VilkårsvurderingPeriodeSkjema
                         behandling={lagBehandling()}
-                        fagsak={fagsak}
                         periode={periode}
                         behandletPerioder={[]}
                         erTotalbeløpUnder4Rettsgebyr={false}
@@ -1017,7 +1007,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
@@ -1155,7 +1144,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 <BehandlingProvider>
                     <VilkårsvurderingPeriodeSkjema
                         behandling={lagBehandling()}
-                        fagsak={fagsak}
                         periode={periode}
                         behandletPerioder={[]}
                         erTotalbeløpUnder4Rettsgebyr={true}
@@ -1269,7 +1257,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
@@ -1359,7 +1346,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={lagVilkårsvurderingPeriodeSkjemaData({
                         begrunnelse: 'Gitt i god tro',
                         vilkårsvurderingsresultatInfo: {
@@ -1399,7 +1385,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={lagVilkårsvurderingPeriodeSkjemaData({
                         begrunnelse: 'Gitt mangelfulle opplysninger',
                         vilkårsvurderingsresultatInfo: {
@@ -1471,7 +1456,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             <BehandlingProvider>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={lagBehandling()}
-                    fagsak={fagsak}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}

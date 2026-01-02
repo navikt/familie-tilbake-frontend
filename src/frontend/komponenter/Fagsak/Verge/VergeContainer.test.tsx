@@ -1,7 +1,6 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { FagsakDto } from '../../../generated';
 import type { VergeDto } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
@@ -35,6 +34,11 @@ jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
+const mockUseFagsak = jest.fn();
+jest.mock('../../../context/FagsakContext', () => ({
+    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
+}));
+
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
@@ -45,9 +49,9 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderVergeContainer = (behandling: Behandling, fagsak: FagsakDto): RenderResult =>
+const renderVergeContainer = (behandling: Behandling): RenderResult =>
     render(
-        <VergeProvider behandling={behandling} fagsak={fagsak}>
+        <VergeProvider behandling={behandling}>
             <VergeContainer />
         </VergeProvider>
     );
@@ -58,6 +62,9 @@ const setupMock = (
     autoutført: boolean,
     verge?: VergeDto
 ): void => {
+    mockUseFagsak.mockReturnValue({
+        fagsak: lagFagsak(),
+    });
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVergeKall: (): Promise<Ressurs<VergeDto>> => {
             const ressurs = mock<Ressurs<VergeDto>>({
@@ -95,10 +102,8 @@ describe('VergeContainer', () => {
     test('Fyller ut advokat', async () => {
         setupMock(false, false, false);
 
-        const { getByText, getByRole, getByLabelText, queryAllByText } = renderVergeContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByLabelText, queryAllByText } =
+            renderVergeContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Verge')).toBeInTheDocument();
@@ -138,7 +143,7 @@ describe('VergeContainer', () => {
         setupMock(false, false, false);
 
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
-            renderVergeContainer(lagBehandling(), lagFagsak());
+            renderVergeContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Verge')).toBeInTheDocument();
@@ -193,8 +198,7 @@ describe('VergeContainer', () => {
         });
 
         const { getByText, getByRole, getByLabelText, queryByLabelText } = renderVergeContainer(
-            lagBehandling({ harVerge: true }),
-            lagFagsak()
+            lagBehandling({ harVerge: true })
         );
 
         await waitFor(() => {
@@ -225,7 +229,7 @@ describe('VergeContainer', () => {
             begrunnelse: 'Verge er opprettet',
         });
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } =
-            renderVergeContainer(lagBehandling({ harVerge: true }), lagFagsak());
+            renderVergeContainer(lagBehandling({ harVerge: true }));
 
         await waitFor(() => {
             expect(getByText('Verge')).toBeInTheDocument();
@@ -255,8 +259,7 @@ describe('VergeContainer', () => {
         });
 
         const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
-            lagBehandling({ harVerge: true }),
-            lagFagsak()
+            lagBehandling({ harVerge: true })
         );
 
         await waitFor(() => {
@@ -286,8 +289,7 @@ describe('VergeContainer', () => {
             begrunnelse: '',
         });
         const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
-            lagBehandling({ harVerge: true }),
-            lagFagsak()
+            lagBehandling({ harVerge: true })
         );
 
         await waitFor(() => {

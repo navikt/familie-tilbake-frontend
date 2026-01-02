@@ -9,7 +9,6 @@ import React from 'react';
 
 import { ToggleName } from '../../../../context/toggles';
 import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
     lagForhåndsvarselQueries,
     lagForhåndsvarselQueriesSendt,
@@ -74,7 +73,7 @@ const setupMock = (): void => {
 const renderForhåndsvarselSkjema = (): RenderResult => {
     const result = render(
         <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={lagBehandlingDto()} fagsak={lagFagsak()} />
+            <Forhåndsvarsel behandling={lagBehandlingDto()} />
         </QueryClientProvider>
     );
 
@@ -94,7 +93,7 @@ const renderForhåndsvarselSkjemaSendt = (): RenderResult => {
 
     const result = render(
         <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={lagBehandlingDto()} fagsak={lagFagsak()} />
+            <Forhåndsvarsel behandling={lagBehandlingDto()} />
         </QueryClientProvider>
     );
 

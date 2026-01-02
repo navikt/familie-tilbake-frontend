@@ -1,6 +1,7 @@
 import type { StartPåNyttHook as StartPåNyttHook } from './useStartPåNytt';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { RedirectEtterLagringHook } from '../../../../hooks/useRedirectEtterLagring';
+import type { lagFagsak } from '../../../../testdata/fagsakFactory';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { ActionMenu, Button } from '@navikt/ds-react';
@@ -19,7 +20,7 @@ jest.mock('../../../../context/BehandlingContext', () => ({
 
 const mockUseFagsak = jest.fn();
 jest.mock('../../../../context/FagsakContext', () => ({
-    useFagsak: (): { eksternFagsakId: string } => mockUseFagsak(),
+    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
 }));
 
 const mockUseRedirectEtterLagring = jest.fn();
