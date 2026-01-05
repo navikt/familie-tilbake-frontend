@@ -38,6 +38,7 @@ type Props = {
     varselErSendt: boolean;
     parentBounds: { width: string | undefined };
     handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData>;
+    readOnly: boolean;
 };
 
 export const OpprettSkjema: React.FC<Props> = ({
@@ -47,6 +48,7 @@ export const OpprettSkjema: React.FC<Props> = ({
     varselErSendt,
     parentBounds,
     handleForhåndsvarselSubmit,
+    readOnly,
 }) => {
     const tittel = varselErSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const queryClient = useQueryClient();
@@ -232,7 +234,9 @@ export const OpprettSkjema: React.FC<Props> = ({
                 </VStack>
             )}
 
-            {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />}
+            {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && (
+                <Unntak readOnly={readOnly} />
+            )}
 
             {showModal && pdfData && (
                 <PdfVisningModal
