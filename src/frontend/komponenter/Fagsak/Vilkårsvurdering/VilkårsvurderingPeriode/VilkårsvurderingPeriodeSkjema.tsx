@@ -300,7 +300,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         <Box padding="4" className="min-w-[20rem]">
             <HGrid columns="1fr 4rem">
                 <Stack
-                    className="max-w-[30rem] w-full"
+                    className="max-w-120 w-full"
                     justify="space-between"
                     align={{ md: 'start', lg: 'center' }}
                     direction={{ md: 'column', lg: 'row' }}
@@ -331,7 +331,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     behandletPerioder &&
                     behandletPerioder.length > 0 && (
                         <Select
-                            className="pb-8 w-[15rem]"
+                            className="pb-8 w-60"
                             name="perioderForKopi"
                             onChange={(event: ChangeEvent<HTMLSelectElement>) =>
                                 onKopierPeriode(event)
@@ -549,7 +549,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         },
                     }}
                 >
-                    Hvis du forlater siden nå, mister du endringene dine. Vil du lagre før du
+                    Hvis du bytter periode nå, mister du endringene dine. Vil du lagre før du
                     fortsetter?
                 </ModalWrapper>
             )}
