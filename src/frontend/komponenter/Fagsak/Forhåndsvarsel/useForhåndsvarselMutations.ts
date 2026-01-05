@@ -205,9 +205,9 @@ export const useForhåndsvarselMutations = (
             };
 
             sendUnntakMutation.mutate({
-                // path: {
-                //     behandlingId: behandling.behandlingId,
-                // },
+                path: {
+                    behandlingId: behandling.behandlingId,
+                },
                 body: payload,
             });
         },
@@ -221,12 +221,16 @@ export const useForhåndsvarselMutations = (
             //         begrunnelse: formData.harBrukerUttaltSeg.utsettUttalelseFrist.begrunnelse,
             //     };
             //     sendUtsettUttalelseFristMutation.mutate({
+            //         path: { behandlingId: behandling.behandlingId },
             //         body: payload,
             //     });
             // }
         },
         seForhåndsvisning: (fritekst: string): void => {
             seForhåndsvisningMutation.mutate({
+                path: {
+                    behandlingId: behandling.behandlingId,
+                },
                 body: {
                     behandlingId: behandling.behandlingId,
                     brevmalkode: 'VARSEL',

@@ -1893,7 +1893,7 @@ export type LagreBrukeruttalelseData = {
         behandlingId: string;
     };
     query?: never;
-    url: '/api/dokument/forhåndsvarsel/{behandlingId}/uttalelse';
+    url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/uttalelse';
 };
 
 export type LagreBrukeruttalelseResponses = {
@@ -1908,9 +1908,11 @@ export type LagreBrukeruttalelseResponse =
 
 export type UtsettUttalelseFristData = {
     body: FristUtsettelseDto;
-    path?: never;
+    path: {
+        behandlingId: string;
+    };
     query?: never;
-    url: '/api/dokument/forhåndsvarsel/utsettelse';
+    url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/utsettelse';
 };
 
 export type UtsettUttalelseFristResponses = {
@@ -1925,9 +1927,11 @@ export type UtsettUttalelseFristResponse =
 
 export type ForhåndsvarselUnntakData = {
     body: ForhåndsvarselUnntakDto;
-    path?: never;
+    path: {
+        behandlingId: string;
+    };
     query?: never;
-    url: '/api/dokument/forhåndsvarsel/unntak';
+    url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/unntak';
 };
 
 export type ForhåndsvarselUnntakResponses = {
@@ -1942,9 +1946,11 @@ export type ForhåndsvarselUnntakResponse =
 
 export type ForhåndsvisBrevData = {
     body: BestillBrevDto;
-    path?: never;
+    path: {
+        behandlingId: string;
+    };
     query?: never;
-    url: '/api/dokument/forhandsvis';
+    url: '/api/dokument/forhandsvis/behandling/{behandlingId}';
 };
 
 export type ForhåndsvisBrevResponses = {
@@ -2522,7 +2528,7 @@ export type HentForhåndsvarselinfoData = {
         behandlingId: string;
     };
     query?: never;
-    url: '/api/dokument/forhåndsvarsel/{behandlingId}/v1';
+    url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/v1';
 };
 
 export type HentForhåndsvarselinfoResponses = {
