@@ -36,7 +36,7 @@ const useDokumentApi = (): DokumentApiHook => {
     const forhåndsvisBrev = (payload: BrevPayload): Promise<Ressurs<string>> => {
         return request<BrevPayload, string>({
             method: 'POST',
-            url: `${dokumentApiPrefix}/forhandsvis`,
+            url: `${dokumentApiPrefix}/forhandsvis/behandling/${payload.behandlingId}`,
             data: payload,
         });
     };
