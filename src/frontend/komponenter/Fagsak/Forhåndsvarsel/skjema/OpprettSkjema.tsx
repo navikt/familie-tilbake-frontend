@@ -141,7 +141,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                         legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
                         description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
                         fattes, slik at de får mulighet til å uttale seg."
-                        readOnly={varselErSendt}
+                        readOnly={varselErSendt || readOnly}
                         error={fieldState.error?.message}
                     >
                         <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
