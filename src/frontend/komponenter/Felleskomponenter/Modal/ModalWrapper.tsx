@@ -27,10 +27,10 @@ export const ModalWrapper: React.FC<Props> = ({
         visModal && (
             <Modal
                 open={visModal}
-                className="w-[1/2]"
                 onClose={onClose}
                 aria-label={tittel}
                 header={{ heading: tittel, closeButton: !!onClose }}
+                className="w-150"
             >
                 <Modal.Body>{children}</Modal.Body>
                 <Modal.Footer>
