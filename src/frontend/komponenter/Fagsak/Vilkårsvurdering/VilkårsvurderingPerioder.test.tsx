@@ -148,7 +148,7 @@ const findPeriodButton = (
 };
 
 const modalTekst =
-    'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode';
+    'Hvis du forlater siden nå, mister du endringene dine. Vil du lagre før du fortsetter?';
 const førstePeriode = '01.01.2020 - 31.03.2020';
 const andrePeriode = '01.05.2020 - 30.06.2020';
 

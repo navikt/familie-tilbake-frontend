@@ -535,7 +535,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
             {visUlagretDataModal && (
                 <ModalWrapper
-                    tittel="Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode"
+                    tittel="Du har ulagrede endringer"
                     visModal
                     onClose={handleAvbryt}
                     aksjonsknapper={{
@@ -547,9 +547,11 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                             onClick: handleForlatUtenÅLagre,
                             tekst: 'Bytt uten å lagre',
                         },
-                        marginTop: 4,
                     }}
-                />
+                >
+                    Hvis du forlater siden nå, mister du endringene dine. Vil du lagre før du
+                    fortsetter?
+                </ModalWrapper>
             )}
         </Box>
     );
