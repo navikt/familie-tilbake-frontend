@@ -76,9 +76,8 @@ const renderBrukeruttalelse = (): RenderResult => {
         varselSendt: true,
     });
 
-    const fagsakValue = { fagsak: lagFagsak() };
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <QueryClientProvider client={new QueryClient()}>
                 <Forhåndsvarsel behandling={behandling} />
             </QueryClientProvider>

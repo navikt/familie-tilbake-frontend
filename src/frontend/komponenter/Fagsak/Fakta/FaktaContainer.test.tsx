@@ -43,12 +43,8 @@ const renderFaktaContainer = (
     behandling: Behandling,
     ytelsestype: SchemaEnum4 = 'BARNETRYGD'
 ): RenderResult => {
-    const fagsakValue = {
-        fagsak: lagFagsak({ ytelsestype }),
-    };
-
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak({ ytelsestype })}>
             <FaktaProvider behandling={behandling}>
                 <FaktaContainer />
             </FaktaProvider>

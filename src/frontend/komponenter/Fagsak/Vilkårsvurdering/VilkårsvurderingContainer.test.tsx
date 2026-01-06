@@ -125,12 +125,8 @@ const setupMocks = (): void => {
 };
 
 const renderVilkårsvurderingContainer = (behandling: Behandling): RenderResult => {
-    const fagsakValue = {
-        fagsak: lagFagsak({ ytelsestype: 'BARNETRYGD' }),
-    };
-
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
             <BehandlingProvider>
                 <VilkårsvurderingProvider behandling={behandling}>
                     <VilkårsvurderingContainer behandling={behandling} />

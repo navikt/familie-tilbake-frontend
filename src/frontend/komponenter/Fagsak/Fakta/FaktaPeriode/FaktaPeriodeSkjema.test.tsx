@@ -28,9 +28,8 @@ const renderComponent = (
     periode: FaktaPeriodeSkjemaData,
     hendelseTyper: HendelseType[] | undefined
 ): RenderResult => {
-    const fagsakValue = { fagsak: lagFagsak() };
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <FaktaProvider behandling={lagBehandling()}>
                 <table>
                     <tbody>

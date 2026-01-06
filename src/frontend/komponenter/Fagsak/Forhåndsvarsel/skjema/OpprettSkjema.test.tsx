@@ -73,9 +73,8 @@ const setupMock = (): void => {
 };
 
 const renderForhåndsvarselSkjema = (): RenderResult => {
-    const fagsakValue = { fagsak: lagFagsak() };
     const result = render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <QueryClientProvider client={new QueryClient()}>
                 <Forhåndsvarsel behandling={lagBehandlingDto()} />
             </QueryClientProvider>
@@ -96,9 +95,8 @@ const renderForhåndsvarselSkjema = (): RenderResult => {
 const renderForhåndsvarselSkjemaSendt = (): RenderResult => {
     jest.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueriesSendt());
 
-    const fagsakValue = { fagsak: lagFagsak() };
     const result = render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <QueryClientProvider client={new QueryClient()}>
                 <Forhåndsvarsel behandling={lagBehandlingDto()} />
             </QueryClientProvider>

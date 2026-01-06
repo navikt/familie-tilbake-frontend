@@ -25,12 +25,8 @@ const renderActionBar = (
     onNeste: () => void,
     isLoading: boolean = false
 ): RenderResult => {
-    const fagsakValue = {
-        fagsak: lagFagsak(),
-    };
-
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <ActionBar
                 stegtekst="Steg 2 av 5"
                 forrigeAriaLabel="gå tilbake til faktasteget"

@@ -80,9 +80,8 @@ const setupMock = (): void => {
 };
 
 const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): RenderResult => {
-    const fagsakValue = { fagsak: lagFagsak() };
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <QueryClientProvider client={new QueryClient()}>
                 <Forhåndsvarsel behandling={behandling} />
             </QueryClientProvider>

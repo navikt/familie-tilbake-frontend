@@ -66,9 +66,8 @@ jest.mock('../../../hooks/useSammenslåPerioder', () => ({
 const mockedSettIkkePersistertKomponent = jest.fn();
 
 const renderVedtakContainer = (behandling: Behandling): RenderResult => {
-    const fagsakValue = { fagsak: lagFagsak() };
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <VedtakProvider behandling={behandling}>
                 <VedtakContainer behandling={behandling} />
             </VedtakProvider>

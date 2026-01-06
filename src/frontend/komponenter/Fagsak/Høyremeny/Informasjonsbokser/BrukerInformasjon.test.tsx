@@ -34,15 +34,13 @@ const renderBrukerInformasjon = (
     bruker: Partial<FrontendBrukerDto> | null = null,
     institusjon: Partial<InstitusjonDto> | null = null
 ): RenderResult => {
-    const fagsakValue = {
-        fagsak: lagFagsak({
-            bruker: bruker ? baseBruker(bruker) : undefined,
-            institusjon: institusjon ? baseInstitusjon(institusjon) : undefined,
-        }),
-    };
-
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider
+            value={lagFagsak({
+                bruker: bruker ? baseBruker(bruker) : undefined,
+                institusjon: institusjon ? baseInstitusjon(institusjon) : undefined,
+            })}
+        >
             <BrukerInformasjon />
         </FagsakContext.Provider>
     );

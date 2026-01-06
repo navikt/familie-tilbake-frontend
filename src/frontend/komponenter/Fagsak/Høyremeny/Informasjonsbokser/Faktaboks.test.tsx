@@ -58,12 +58,8 @@ const renderFaktaboks = (
     delvisBehandling: Partial<Behandling> = {},
     ytelsestypeOverride: Ytelsetype = Ytelsetype.Barnetrygd
 ): RenderResult => {
-    const fagsakValue = {
-        fagsak: lagFagsak({ ytelsestype: ytelsestypeOverride }),
-    };
-
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak({ ytelsestype: ytelsestypeOverride })}>
             <Faktaboks behandling={baseBehandling(delvisBehandling)} />
         </FagsakContext.Provider>
     );

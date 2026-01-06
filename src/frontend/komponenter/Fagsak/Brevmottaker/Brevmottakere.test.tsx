@@ -68,12 +68,8 @@ const renderBrevmottakere = (behandling: Behandling): RenderResult => {
         erStegBehandlet: jest.fn().mockReturnValue(false),
     }));
 
-    const fagsakValue = {
-        fagsak: lagFagsak(),
-    };
-
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <Brevmottakere behandling={behandling} />
         </FagsakContext.Provider>
     );

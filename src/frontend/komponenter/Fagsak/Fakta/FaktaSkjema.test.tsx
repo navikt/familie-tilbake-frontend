@@ -88,13 +88,9 @@ const renderFakta = (
         });
     });
 
-    const fagsakValue = {
-        fagsak: lagFagsak(),
-    };
-
     return {
         result: render(
-            <FagsakContext.Provider value={fagsakValue}>
+            <FagsakContext.Provider value={lagFagsak()}>
                 <QueryClientProvider client={client}>
                     <FaktaSkjema
                         faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}

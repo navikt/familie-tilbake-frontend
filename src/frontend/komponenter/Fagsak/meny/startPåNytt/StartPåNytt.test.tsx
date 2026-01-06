@@ -65,12 +65,8 @@ describe('StartPåNytt', () => {
             },
         });
 
-        const fagsakValue = {
-            fagsak: lagFagsak({ eksternFagsakId: '123' }),
-        };
-
         render(
-            <FagsakContext.Provider value={fagsakValue}>
+            <FagsakContext.Provider value={lagFagsak({ eksternFagsakId: '123' })}>
                 <ActionMenu open>
                     <ActionMenu.Trigger>
                         <Button>Test kun for å rendre</Button>

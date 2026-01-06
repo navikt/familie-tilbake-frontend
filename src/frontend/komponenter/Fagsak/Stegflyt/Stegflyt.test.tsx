@@ -49,15 +49,13 @@ const createMockRessursBehandling = (
 });
 
 const renderStegflyt = (): RenderResult => {
-    const fagsakValue = {
-        fagsak: lagFagsak({
-            eksternFagsakId: '123',
-            fagsystem: Fagsystem.BA,
-        }),
-    };
-
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider
+            value={lagFagsak({
+                eksternFagsakId: '123',
+                fagsystem: Fagsystem.BA,
+            })}
+        >
             <Stegflyt />
         </FagsakContext.Provider>
     );

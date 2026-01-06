@@ -46,9 +46,8 @@ jest.mock('react-router', () => ({
 }));
 
 const renderForeldelseContainer = (behandling: Behandling): RenderResult => {
-    const fagsakValue = { fagsak: lagFagsak() };
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <ForeldelseProvider behandling={behandling}>
                 <ForeldelseContainer behandling={behandling} />
             </ForeldelseProvider>

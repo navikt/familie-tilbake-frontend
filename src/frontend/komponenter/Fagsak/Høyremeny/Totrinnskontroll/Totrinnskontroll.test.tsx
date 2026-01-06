@@ -37,9 +37,8 @@ jest.mock('react-router', () => ({
 }));
 
 const renderTotrinnskontroll = (behandling: Behandling): RenderResult => {
-    const fagsakValue = { fagsak: lagFagsak() };
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <TotrinnskontrollProvider behandling={behandling}>
                 <Totrinnskontroll />
             </TotrinnskontrollProvider>

@@ -128,9 +128,8 @@ const renderVilkårsvurderingPerioder = (): RenderResult => {
         ...periode,
     }));
 
-    const fagsakValue = { fagsak: lagFagsak() };
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <BehandlingProvider>
                 <VilkårsvurderingProvider behandling={lagBehandling()}>
                     <VilkårsvurderingPerioder

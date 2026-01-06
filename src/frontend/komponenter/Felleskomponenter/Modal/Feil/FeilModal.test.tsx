@@ -15,12 +15,8 @@ const renderFeilModal = (
     behandlingId?: string,
     fagsakOverride?: ReturnType<typeof lagFagsak>
 ): RenderResult => {
-    const fagsakValue = {
-        fagsak: fagsakOverride ?? lagFagsak(),
-    };
-
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={fagsakOverride ?? lagFagsak()}>
             <FeilModal
                 feil={feil}
                 lukkFeilModal={mockSetVisFeilModal}

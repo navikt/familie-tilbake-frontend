@@ -71,9 +71,8 @@ const setupMock = (): void => {
 };
 
 const renderUnntak = (): RenderResult => {
-    const fagsakValue = { fagsak: lagFagsak() };
     const result = render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <QueryClientProvider client={new QueryClient()}>
                 <Forhåndsvarsel behandling={lagBehandlingDto()} />
             </QueryClientProvider>

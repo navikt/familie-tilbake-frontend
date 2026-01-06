@@ -46,12 +46,8 @@ const renderSendMelding = (
     behandling: Behandling,
     språkkode: SpråkkodeEnum = 'NB'
 ): RenderResult => {
-    const fagsakValue = {
-        fagsak: lagFagsak({ språkkode }),
-    };
-
     return render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak({ språkkode })}>
             <SendMeldingProvider behandling={behandling}>
                 <SendMelding behandling={behandling} />
             </SendMeldingProvider>

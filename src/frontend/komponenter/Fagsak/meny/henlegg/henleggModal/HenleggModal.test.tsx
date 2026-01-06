@@ -42,9 +42,8 @@ const renderHenleggModal = (
     årsaker: Behandlingresultat[]
 ): RenderResult => {
     const mockDialogRef = createRef<HTMLDialogElement | null>();
-    const fagsakValue = { fagsak: lagFagsak() };
     const renderModal = render(
-        <FagsakContext.Provider value={fagsakValue}>
+        <FagsakContext.Provider value={lagFagsak()}>
             <HenleggModal behandling={behandling} dialogRef={mockDialogRef} årsaker={årsaker} />
         </FagsakContext.Provider>
     );

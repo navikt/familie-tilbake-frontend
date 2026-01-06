@@ -81,9 +81,8 @@ describe('VilkårsvurderingContainer', () => {
     test('Vis autoutført', async () => {
         setupMock();
 
-        const fagsakValue = { fagsak: lagFagsak() };
         const { getByText } = render(
-            <FagsakContext.Provider value={fagsakValue}>
+            <FagsakContext.Provider value={lagFagsak()}>
                 <QueryClientProvider client={queryClient}>
                     <VilkårsvurderingProvider behandling={lagBehandling()}>
                         <VilkårsvurderingContainer behandling={lagBehandling()} />
