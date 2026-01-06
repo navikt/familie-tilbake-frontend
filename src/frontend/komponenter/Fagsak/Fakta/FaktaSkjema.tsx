@@ -247,7 +247,7 @@ const PeriodeRad = ({
         )?.grunnlag ?? [];
     const { register, setValue, formState } =
         useFormContext<OppdaterFaktaOmFeilutbetalingSchemaDto>();
-    const nullstillBestemmelse = (index: number) => {
+    const nullstillBestemmelse = (index: number): void => {
         setValue(`perioder.${periodeIndex}.rettsligGrunnlag.${index}.grunnlag`, '', {
             shouldDirty: true,
         });
