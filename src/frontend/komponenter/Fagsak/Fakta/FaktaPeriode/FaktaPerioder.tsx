@@ -1,4 +1,3 @@
-import type { HendelseType } from '../../../../kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
 import { Table } from '@navikt/ds-react';
@@ -25,14 +24,10 @@ type Props = {
 };
 
 const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
-    const [hendelseTyper, settHendelseTyper] = React.useState<HendelseType[]>();
     const { fagsak } = useFagsak();
-
-    React.useEffect(() => {
-        if (fagsak?.ytelsestype) {
-            settHendelseTyper(hentHendelseTyper(fagsak.ytelsestype, !!fagsak.institusjon));
-        }
-    }, [fagsak?.ytelsestype, fagsak?.institusjon]);
+    const hendelsestyper = fagsak?.ytelsestype
+        ? hentHendelseTyper(fagsak.ytelsestype, !!fagsak.institusjon)
+        : [];
 
     return (
         <StyledPeriodeTable size="small">
@@ -49,7 +44,7 @@ const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
                 {perioder.map(periode => {
                     return (
                         <FaktaPeriodeSkjema
-                            hendelseTyper={hendelseTyper}
+                            hendelseTyper={hendelsestyper}
                             periode={periode}
                             key={`formIndex${periode.index + 1}`}
                             index={periode.index}
