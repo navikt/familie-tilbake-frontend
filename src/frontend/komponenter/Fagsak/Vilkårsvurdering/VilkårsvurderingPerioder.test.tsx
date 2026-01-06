@@ -38,7 +38,6 @@ jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-const mockUseParams = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
@@ -84,11 +83,6 @@ const perioder: VilkårsvurderingPeriode[] = [
 ];
 
 const setupMocks = (): void => {
-    mockUseParams.mockReturnValue({
-        fagsystem: 'BA',
-        fagsakId: '123456',
-    });
-
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
             const ressurs = mock<Ressurs<VilkårsvurderingResponse>>({
