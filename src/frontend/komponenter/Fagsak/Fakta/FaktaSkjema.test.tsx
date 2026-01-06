@@ -358,5 +358,26 @@ describe('Fakta om feilutbetaling', () => {
             expect(grunnlagDropdown).toBeInvalid();
             expect(grunnlagDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
         });
+
+        test('dato felt valideres ved unblur', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta();
+
+            fireEvent.change(await findByRole('textbox', { name: 'Årsak til feilutbetalingen' }), {
+                target: { value: 'Ny årsak' },
+            });
+
+            fireEvent.blur(
+                await findByRole('textbox', {
+                    name: 'Når ble feilutbetalingen oppdaget?',
+                })
+            );
+            const oppdagetDato = await findByRole('textbox', {
+                name: 'Når ble feilutbetalingen oppdaget?',
+            });
+            expect(oppdagetDato).toBeInvalid();
+            expect(oppdagetDato).toHaveAccessibleDescription('Ugyldig datoformat');
+        });
     });
 });

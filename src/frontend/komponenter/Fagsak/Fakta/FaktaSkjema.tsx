@@ -85,8 +85,10 @@ export const FaktaSkjema = ({
         control: methods.control,
         name: 'perioder',
     }).fields;
-    const { ...oppdagetDatoProps } = methods.register('vurdering.oppdaget.dato');
-    const { datepickerProps, inputProps } = useDatepicker({
+    const {
+        datepickerProps,
+        inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
+    } = useDatepicker({
         onDateChange: date => {
             if (date) {
                 methods.setValue(
@@ -176,8 +178,12 @@ export const FaktaSkjema = ({
                     <DatePicker {...datepickerProps} dropdownCaption>
                         <DatePicker.Input
                             size="small"
-                            {...oppdagetDatoProps}
-                            {...inputProps}
+                            {...methods.register('vurdering.oppdaget.dato')}
+                            {...datepickerInputProps}
+                            onBlur={async event => {
+                                datepickerOnBlur?.(event);
+                                await methods.trigger('vurdering.oppdaget.dato');
+                            }}
                             label="Når ble feilutbetalingen oppdaget?"
                             error={methods.formState.errors.vurdering?.oppdaget?.dato?.message}
                         />
