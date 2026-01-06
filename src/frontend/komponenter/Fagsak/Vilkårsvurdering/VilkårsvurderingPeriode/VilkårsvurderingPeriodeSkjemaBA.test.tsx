@@ -12,8 +12,10 @@ import * as React from 'react';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
 import { BehandlingProvider } from '../../../../context/BehandlingContext';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 
 jest.setTimeout(10000);
@@ -29,14 +31,6 @@ jest.mock('../../../../api/http/HttpProvider', () => {
             systemetLaster: () => false,
             request: jest.fn(),
         }),
-    };
-});
-
-jest.mock('../../../../context/FagsakContext', () => {
-    return {
-        useFagsak: jest.fn(() => ({
-            fagsak: undefined,
-        })),
     };
 });
 
@@ -63,18 +57,20 @@ const renderVilkårsvurderingPeriodeSkjema = (
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[] = []
 ): RenderResult =>
     render(
-        <BehandlingProvider>
-            <VilkårsvurderingPeriodeSkjema
-                behandling={behandling}
-                periode={periode}
-                behandletPerioder={behandletPerioder}
-                erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
-                erLesevisning={false}
-                perioder={[periode]}
-                pendingPeriode={undefined}
-                settPendingPeriode={jest.fn()}
-            />
-        </BehandlingProvider>
+        <FagsakContext.Provider value={lagFagsak()}>
+            <BehandlingProvider>
+                <VilkårsvurderingPeriodeSkjema
+                    behandling={behandling}
+                    periode={periode}
+                    behandletPerioder={behandletPerioder}
+                    erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
+                    erLesevisning={false}
+                    perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={jest.fn()}
+                />
+            </BehandlingProvider>
+        </FagsakContext.Provider>
     );
 
 describe('VilkårsvurderingPeriodeSkjema', () => {

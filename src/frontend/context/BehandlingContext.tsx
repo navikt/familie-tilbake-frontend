@@ -1,4 +1,4 @@
-import type { FagsakDto } from '../generated/types.gen';
+import type { BehandlingsoppsummeringDto, FagsakDto } from '../generated/types.gen';
 import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
 
 import createUseContext from 'constate';
@@ -82,8 +82,11 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         }
     };
 
-    const hentBehandlingMedEksternBrukId = (fagsak: FagsakDto, behandlingId: string): void => {
-        const fagsakBehandling = fagsak.behandlinger.find(
+    const hentBehandlingMedEksternBrukId = (
+        behandlinger: BehandlingsoppsummeringDto[],
+        behandlingId: string
+    ): void => {
+        const fagsakBehandling = behandlinger.find(
             behandling => behandling.eksternBrukId === behandlingId
         );
         if (fagsakBehandling) {

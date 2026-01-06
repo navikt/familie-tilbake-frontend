@@ -41,8 +41,12 @@ const renderHeader = (): RenderResult => {
 };
 
 const setUpMocks = (): void => {
-    useBehandlingStore.setState({ personIdent: undefined, behandlingId: undefined });
-    useFagsakStore.setState({ eksternFagsakId: undefined, fagsystem: undefined });
+    useBehandlingStore.setState({ behandlingId: undefined });
+    useFagsakStore.setState({
+        eksternFagsakId: undefined,
+        fagsystem: undefined,
+        personIdent: undefined,
+    });
     mockHentBrukerlenkeBaseUrl.mockResolvedValue({
         aInntektUrl: 'https://a-inntekt.nav.no',
         gosysBaseUrl: 'https://gosys.nav.no',
@@ -76,8 +80,12 @@ describe('FTHeader', () => {
 
     test('Har riktig lenke til A-inntekt, Gosys og Modia når personIdent er satt', async () => {
         const personIdent = '12345678910';
-        useBehandlingStore.setState({ personIdent, behandlingId: 'test-behandling-id' });
-        useFagsakStore.setState({ eksternFagsakId: 'test-fagsak-id', fagsystem: 'BA' });
+        useBehandlingStore.setState({ behandlingId: 'test-behandling-id' });
+        useFagsakStore.setState({
+            eksternFagsakId: 'test-fagsak-id',
+            fagsystem: 'BA',
+            personIdent,
+        });
         renderHeader();
 
         await waitFor(() => {

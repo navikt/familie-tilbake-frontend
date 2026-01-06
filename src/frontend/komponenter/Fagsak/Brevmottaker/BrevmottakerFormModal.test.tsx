@@ -6,6 +6,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { BrevmottakerFormModal } from './BrevmottakerFormModal';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { Ytelsetype } from '../../../kodeverk';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { MottakerType } from '../../../typer/Brevmottaker';
@@ -17,12 +18,6 @@ jest.mock('../../../hooks/useBrevmottakerApi', () => ({
             status: RessursStatus.Suksess,
             data: 'success',
         }),
-    })),
-}));
-
-jest.mock('../../../context/FagsakContext', () => ({
-    useFagsak: jest.fn(() => ({
-        fagsak: lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn }),
     })),
 }));
 
@@ -41,7 +36,13 @@ const renderBrevmottakerFormModal = async (
         ...props,
     };
 
-    return await waitFor(() => render(<BrevmottakerFormModal {...defaultProps} />));
+    return await waitFor(() =>
+        render(
+            <FagsakContext.Provider value={lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn })}>
+                <BrevmottakerFormModal {...defaultProps} />
+            </FagsakContext.Provider>
+        )
+    );
 };
 
 describe('BrevmottakerFormModal', () => {

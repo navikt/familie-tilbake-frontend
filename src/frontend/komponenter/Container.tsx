@@ -50,53 +50,63 @@ const Container: React.FC = () => {
 const AppRoutes: React.FC = () => {
     const router = createBrowserRouter(
         createRoutesFromElements(
-            <Route path="/" element={<ProvidersWrapper />}>
-                <Route path="/fagsystem/:fagsystem/fagsak/:fagsakId/">
+            <>
+                <Route
+                    path="/"
+                    element={
+                        <TogglesProvider>
+                            <Outlet />
+                        </TogglesProvider>
+                    }
+                >
                     <Route
-                        path="*"
+                        path="/fagsystem/:fagsystem/fagsak/:fagsakId/"
+                        element={<FagsakProvidersWrapper />}
+                    >
+                        <Route
+                            path="*"
+                            element={
+                                <Suspense fallback={<StegflytSkeleton />}>
+                                    <FagsakContainer />
+                                </Suspense>
+                            }
+                        />
+                    </Route>
+                    <Route
+                        path="/"
                         element={
-                            <Suspense fallback={<StegflytSkeleton />}>
-                                <FagsakContainer />
+                            <Suspense fallback={<div>Dashboard laster...</div>}>
+                                <Dashboard />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/*"
+                        element={
+                            <Suspense fallback={<div>Feilmelding laster...</div>}>
+                                <IkkeFunnet />
                             </Suspense>
                         }
                     />
                 </Route>
-                <Route
-                    path="/"
-                    element={
-                        <Suspense fallback={<div>Dashboard laster...</div>}>
-                            <Dashboard />
-                        </Suspense>
-                    }
-                />
-                <Route
-                    path="/*"
-                    element={
-                        <Suspense fallback={<div>Feilmelding laster...</div>}>
-                            <IkkeFunnet />
-                        </Suspense>
-                    }
-                />
-            </Route>
+            </>
         )
     );
 
     return <RouterProvider router={router} />;
 };
 
-const ProvidersWrapper: React.FC = () => (
-    <TogglesProvider>
-        <Suspense fallback={<FagsakLoadingSkeleton />}>
-            <FagsakErrorBoundary>
-                <FagsakProvider>
-                    <BehandlingProvider>
-                        <Outlet />
-                        <UlagretDataModal />
-                    </BehandlingProvider>
-                </FagsakProvider>
-            </FagsakErrorBoundary>
-        </Suspense>
-    </TogglesProvider>
+const FagsakProvidersWrapper: React.FC = () => (
+    <Suspense fallback={<FagsakLoadingSkeleton />}>
+        <FagsakErrorBoundary>
+            <FagsakProvider>
+                <BehandlingProvider>
+                    <Outlet />
+                    <UlagretDataModal />
+                </BehandlingProvider>
+            </FagsakProvider>
+        </FagsakErrorBoundary>
+    </Suspense>
 );
 
 export default Container;

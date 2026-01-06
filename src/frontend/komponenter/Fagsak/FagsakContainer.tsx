@@ -3,7 +3,7 @@ import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandli
 import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { useLocation, useParams } from 'react-router';
+import { useLocation } from 'react-router';
 
 import BehandlingContainer from './BehandlingContainer';
 import { useBehandling } from '../../context/BehandlingContext';
@@ -25,11 +25,10 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
 };
 
 const FagsakContainer: React.FC = () => {
-    const { fagsakId: eksternFagsakId } = useParams();
     const location = useLocation();
     const behandlingId = location.pathname.split('/')[6];
 
-    const { fagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId, bruker, behandlinger } = useFagsak();
     const {
         behandling,
         hentBehandlingMedEksternBrukId,
@@ -38,27 +37,18 @@ const FagsakContainer: React.FC = () => {
         settVisVenteModal,
     } = useBehandling();
 
-    const setPersonIdent = useBehandlingStore(state => state.setPersonIdent);
-    const setBehandlingId = useBehandlingStore(state => state.setBehandlingId);
-    const { setEksternFagsakId, setFagsystem, resetFagsak } = useFagsakStore();
+    const { setBehandlingId } = useBehandlingStore();
+    const { setEksternFagsakId, setFagsystem, setPersonIdent, resetFagsak } = useFagsakStore();
 
     useEffect(() => {
-        if (fagsak && behandlingId) {
-            hentBehandlingMedEksternBrukId(fagsak, behandlingId);
+        if (behandlingId) {
+            hentBehandlingMedEksternBrukId(behandlinger, behandlingId);
             setBehandlingId(behandlingId);
         }
 
-        if (fagsak.bruker.personIdent) {
-            setPersonIdent(fagsak.bruker.personIdent);
-        }
-
-        if (fagsak.eksternFagsakId) {
-            setEksternFagsakId(fagsak.eksternFagsakId);
-        }
-
-        if (fagsak.fagsystem) {
-            setFagsystem(fagsak.fagsystem);
-        }
+        setPersonIdent(bruker.personIdent);
+        setEksternFagsakId(eksternFagsakId);
+        setFagsystem(fagsystem);
 
         return (): void => {
             setBehandlingId(undefined);
@@ -66,7 +56,7 @@ const FagsakContainer: React.FC = () => {
             resetFagsak();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fagsak, behandlingId]);
+    }, [fagsystem, eksternFagsakId, bruker.personIdent, behandlingId]);
 
     if (behandling?.status === RessursStatus.Henter) {
         return <HenterBehandling />;
