@@ -42,16 +42,10 @@ const mockUseParams = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
-    useParams: (): { fagsystem: string; fagsakId: string } => mockUseParams(),
 }));
 
 jest.mock('@tanstack/react-query', () => {
     return {
-        useQuery: jest.fn(() => ({
-            data: undefined,
-            isError: false,
-            error: null,
-        })),
         useMutation: jest.fn(({ mutationFn, onSuccess }) => {
             const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
                 const result = await mutationFn(behandlingId);
