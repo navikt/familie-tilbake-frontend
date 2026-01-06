@@ -1,7 +1,6 @@
 import type { DokumentApiHook } from '../../../../api/dokument';
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { FagsakHook } from '../../../../context/FagsakContext';
 import type { SpråkkodeEnum } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
 import type { RenderResult } from '@testing-library/react';
@@ -14,6 +13,7 @@ import * as React from 'react';
 
 import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { DokumentMal } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
@@ -36,24 +36,32 @@ const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
-const mockUseFagsak = jest.fn();
-jest.mock('../../../../context/FagsakContext', () => ({
-    useFagsak: (): FagsakHook => mockUseFagsak(),
-}));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderSendMelding = (behandling: Behandling): RenderResult =>
-    render(
-        <SendMeldingProvider behandling={behandling}>
-            <SendMelding behandling={behandling} />
-        </SendMeldingProvider>
-    );
+const renderSendMelding = (
+    behandling: Behandling,
+    språkkode: SpråkkodeEnum = 'NB'
+): RenderResult => {
+    const fagsakValue = {
+        fagsak: lagFagsak({ språkkode }),
+        isLoading: false,
+        error: undefined,
+    };
 
-const setupMock = (behandlingILesemodus: boolean, språkkode?: SpråkkodeEnum): void => {
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <SendMeldingProvider behandling={behandling}>
+                <SendMelding behandling={behandling} />
+            </SendMeldingProvider>
+        </FagsakContext.Provider>
+    );
+};
+
+const setupMock = (behandlingILesemodus: boolean): void => {
     mockUseDokumentApi.mockImplementation(() => ({
         bestillBrev: (): Promise<{
             status: RessursStatus;
@@ -67,9 +75,6 @@ const setupMock = (behandlingILesemodus: boolean, språkkode?: SpråkkodeEnum): 
     mockUseBehandling.mockImplementation(() => ({
         behandlingILesemodus: behandlingILesemodus,
         hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-    }));
-    mockUseFagsak.mockImplementation(() => ({
-        fagsak: lagFagsak({ språkkode: språkkode ?? 'NB' }),
     }));
 };
 
@@ -136,10 +141,11 @@ describe('SendMelding', () => {
     });
 
     test('Fyller ut skjema og sender korrigert varsel', async () => {
-        setupMock(false, 'NN');
+        setupMock(false);
 
         const { getByText, getByLabelText, getByRole, queryByText } = renderSendMelding(
-            lagBehandling({ varselSendt: true })
+            lagBehandling({ varselSendt: true }),
+            'NN'
         );
 
         await waitFor(() => {

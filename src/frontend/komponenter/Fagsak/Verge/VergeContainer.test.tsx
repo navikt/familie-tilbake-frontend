@@ -15,6 +15,7 @@ import * as React from 'react';
 
 import VergeContainer from './VergeContainer';
 import { VergeProvider } from './VergeContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { Vergetype } from '../../../kodeverk/verge';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
@@ -34,11 +35,6 @@ jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-const mockUseFagsak = jest.fn();
-jest.mock('../../../context/FagsakContext', () => ({
-    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
-}));
-
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
@@ -49,12 +45,21 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderVergeContainer = (behandling: Behandling): RenderResult =>
-    render(
-        <VergeProvider behandling={behandling}>
-            <VergeContainer />
-        </VergeProvider>
+const renderVergeContainer = (behandling: Behandling): RenderResult => {
+    const fagsakValue = {
+        fagsak: lagFagsak(),
+        isLoading: false,
+        error: undefined,
+    };
+
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <VergeProvider behandling={behandling}>
+                <VergeContainer />
+            </VergeProvider>
+        </FagsakContext.Provider>
     );
+};
 
 const setupMock = (
     behandlet: boolean,
@@ -62,9 +67,6 @@ const setupMock = (
     autoutført: boolean,
     verge?: VergeDto
 ): void => {
-    mockUseFagsak.mockReturnValue({
-        fagsak: lagFagsak(),
-    });
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVergeKall: (): Promise<Ressurs<VergeDto>> => {
             const ressurs = mock<Ressurs<VergeDto>>({

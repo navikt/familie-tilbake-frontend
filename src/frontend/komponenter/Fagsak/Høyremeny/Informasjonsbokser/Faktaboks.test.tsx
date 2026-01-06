@@ -5,6 +5,7 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { Faktaboks } from './Faktaboks';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { ytelsetype, Ytelsetype } from '../../../../kodeverk';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
@@ -52,20 +53,27 @@ const baseBehandling = (override: Partial<Behandling> = {}): Behandling => ({
     erNyModell: true,
     ...override,
 });
-const mockUseFagsak = jest.fn();
-jest.mock('../../../../context/FagsakContext', () => ({
-    useFagsak: (): { fagsak: { ytelsestype: Ytelsetype } } => mockUseFagsak(),
-}));
 
-const renderFaktaboks = (delvisBehandling: Partial<Behandling> = {}): RenderResult =>
-    render(<Faktaboks behandling={baseBehandling(delvisBehandling)} />);
+const renderFaktaboks = (
+    delvisBehandling: Partial<Behandling> = {},
+    ytelsestypeOverride: Ytelsetype = Ytelsetype.Barnetrygd
+): RenderResult => {
+    const fagsakValue = {
+        fagsak: lagFagsak({ ytelsestype: ytelsestypeOverride }),
+        isLoading: false,
+        error: undefined,
+    };
+
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <Faktaboks behandling={baseBehandling(delvisBehandling)} />
+        </FagsakContext.Provider>
+    );
+};
 
 describe('Faktaboks', () => {
     test('Viser heading med ytelsestype', () => {
-        mockUseFagsak.mockReturnValue({
-            fagsak: lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd }),
-        });
-        renderFaktaboks();
+        renderFaktaboks({}, Ytelsetype.Barnetrygd);
         expect(
             screen.getByRole('heading', {
                 name: `Tilbakekreving av ${ytelsetype[Ytelsetype.Barnetrygd].toLocaleLowerCase()}`,

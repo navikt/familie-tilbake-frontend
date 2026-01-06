@@ -19,6 +19,7 @@ import * as React from 'react';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { Aktsomhet, HendelseType, Vilkårsresultat } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
@@ -36,11 +37,6 @@ jest.mock('../../../api/http/HttpProvider', () => ({
 const mockUseBehandlingApi = jest.fn();
 jest.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
-}));
-
-const mockUseFagsak = jest.fn();
-jest.mock('../../../context/FagsakContext', () => ({
-    useFagsak: (): ReturnType<typeof lagFagsak> => mockUseFagsak(),
 }));
 
 jest.mock('react-router', () => ({
@@ -119,9 +115,6 @@ const setupUseBehandlingApiMock = (vilkårsvurdering: VilkårsvurderingResponse)
 };
 
 const setupMocks = (): void => {
-    mockUseFagsak.mockReturnValue({
-        fagsak: lagFagsak({ ytelsestype: 'BARNETRYGD' }),
-    });
     mockUseHttp.mockImplementation(() => ({
         request: (): Promise<Ressurs<Behandling>> => {
             return Promise.resolve({
@@ -132,14 +125,23 @@ const setupMocks = (): void => {
     }));
 };
 
-const renderVilkårsvurderingContainer = (behandling: Behandling): RenderResult =>
-    render(
-        <BehandlingProvider>
-            <VilkårsvurderingProvider behandling={behandling}>
-                <VilkårsvurderingContainer behandling={behandling} />
-            </VilkårsvurderingProvider>
-        </BehandlingProvider>
+const renderVilkårsvurderingContainer = (behandling: Behandling): RenderResult => {
+    const fagsakValue = {
+        fagsak: lagFagsak({ ytelsestype: 'BARNETRYGD' }),
+        isLoading: false,
+        error: undefined,
+    };
+
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <BehandlingProvider>
+                <VilkårsvurderingProvider behandling={behandling}>
+                    <VilkårsvurderingContainer behandling={behandling} />
+                </VilkårsvurderingProvider>
+            </BehandlingProvider>
+        </FagsakContext.Provider>
     );
+};
 
 describe('VilkårsvurderingContainer', () => {
     let user: UserEvent;

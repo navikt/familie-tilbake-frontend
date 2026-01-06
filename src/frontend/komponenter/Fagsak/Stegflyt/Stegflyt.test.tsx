@@ -1,5 +1,4 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { lagFagsak } from '../../../testdata/fagsakFactory';
 import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
@@ -9,6 +8,7 @@ import { render, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { Stegflyt } from './Stegflyt';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { Fagsystem } from '../../../kodeverk';
 import {
     lagBehandling,
@@ -17,13 +17,13 @@ import {
     lagForeldelseSteg,
     lagVilkårsvurderingSteg,
 } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { Behandlingsstegstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
 const mockNavigate = jest.fn();
 const mockUseLocation = jest.fn();
 const mockUseBehandling = jest.fn();
-const mockUseFagsak = jest.fn();
 
 jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => mockNavigate,
@@ -34,10 +34,6 @@ jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
     erStegUtført: (status: Behandlingsstegstatus): boolean =>
         status === Behandlingsstegstatus.Utført,
-}));
-
-jest.mock('../../../context/FagsakContext', () => ({
-    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
 }));
 
 const createMockRessursBehandling = (
@@ -52,18 +48,26 @@ const createMockRessursBehandling = (
     }),
 });
 
-const renderStegflyt = (): RenderResult => render(<Stegflyt />);
+const renderStegflyt = (): RenderResult => {
+    const fagsakValue = {
+        fagsak: lagFagsak({
+            eksternFagsakId: '123',
+            fagsystem: Fagsystem.BA,
+        }),
+        isLoading: false,
+        error: undefined,
+    };
+
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <Stegflyt />
+        </FagsakContext.Provider>
+    );
+};
 
 const setupMocks = (): void => {
     mockUseBehandling.mockReturnValue({
         behandling: createMockRessursBehandling(),
-    });
-
-    mockUseFagsak.mockReturnValue({
-        fagsak: {
-            eksternFagsakId: '123',
-            fagsystem: Fagsystem.BA,
-        },
     });
 
     mockUseLocation.mockReturnValue({

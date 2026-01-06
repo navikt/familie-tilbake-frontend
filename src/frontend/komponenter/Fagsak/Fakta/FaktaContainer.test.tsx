@@ -15,6 +15,7 @@ import * as React from 'react';
 
 import FaktaContainer from './FaktaContainer';
 import { FaktaProvider } from './FaktaContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
@@ -35,18 +36,25 @@ jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
-const mockUseFagsak = jest.fn();
-jest.mock('../../../context/FagsakContext', () => ({
-    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
-}));
 
 const mockedSettIkkePersistertKomponent = jest.fn();
 
-const renderFaktaContainer = (behandling: Behandling): RenderResult => {
+const renderFaktaContainer = (
+    behandling: Behandling,
+    ytelsestype: SchemaEnum4 = 'BARNETRYGD'
+): RenderResult => {
+    const fagsakValue = {
+        fagsak: lagFagsak({ ytelsestype }),
+        isLoading: false,
+        error: undefined,
+    };
+
     return render(
-        <FaktaProvider behandling={behandling}>
-            <FaktaContainer />
-        </FaktaProvider>
+        <FagsakContext.Provider value={fagsakValue}>
+            <FaktaProvider behandling={behandling}>
+                <FaktaContainer />
+            </FaktaProvider>
+        </FagsakContext.Provider>
     );
 };
 
@@ -74,15 +82,7 @@ const feilutbetaltePerioder = [
     }),
 ];
 
-const setupMock = (
-    ytelsestype: SchemaEnum4,
-    behandlet: boolean,
-    lesemodus: boolean,
-    fakta: FaktaResponse
-): void => {
-    mockUseFagsak.mockReturnValue({
-        fagsak: lagFagsak({ ytelsestype }),
-    });
+const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: FaktaResponse): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerFaktaKall: (): Promise<Ressurs<FaktaResponse>> => {
             const ressurs = mock<Ressurs<FaktaResponse>>({
@@ -119,10 +119,10 @@ describe('FaktaContainer', () => {
     });
 
     test('Vis og fyll ut skjema', async () => {
-        setupMock('BARNETRYGD', false, false, lagFaktaResponse({ feilutbetaltePerioder }));
+        setupMock(false, false, lagFaktaResponse({ feilutbetaltePerioder }));
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } =
-            renderFaktaContainer(lagBehandling());
+            renderFaktaContainer(lagBehandling(), 'BARNETRYGD');
         await waitFor(() => {
             expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
         });
@@ -206,10 +206,10 @@ describe('FaktaContainer', () => {
     });
 
     test('Vis og fyll ut skjema - behandle perioder samlet', async () => {
-        setupMock('BARNETRYGD', false, false, lagFaktaResponse({ feilutbetaltePerioder }));
+        setupMock(false, false, lagFaktaResponse({ feilutbetaltePerioder }));
 
         const { getByText, getByLabelText, getByRole, getAllByRole, getByTestId, queryAllByText } =
-            renderFaktaContainer(lagBehandling());
+            renderFaktaContainer(lagBehandling(), 'BARNETRYGD');
 
         await waitFor(() => {
             expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
@@ -292,10 +292,12 @@ describe('FaktaContainer', () => {
                 },
             ],
         });
-        setupMock('BARNETRYGD', true, false, faktaResponse);
+        setupMock(true, false, faktaResponse);
 
-        const { getByText, getByLabelText, getByTestId, getByRole } =
-            renderFaktaContainer(lagBehandling());
+        const { getByText, getByLabelText, getByTestId, getByRole } = renderFaktaContainer(
+            lagBehandling(),
+            'BARNETRYGD'
+        );
 
         await waitFor(() => {
             expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
@@ -344,10 +346,12 @@ describe('FaktaContainer', () => {
                 },
             ],
         });
-        setupMock('OVERGANGSSTØNAD', true, false, faktaResponse);
+        setupMock(true, false, faktaResponse);
 
-        const { getByText, getByLabelText, getByTestId, getByRole } =
-            renderFaktaContainer(lagBehandling());
+        const { getByText, getByLabelText, getByTestId, getByRole } = renderFaktaContainer(
+            lagBehandling(),
+            'OVERGANGSSTØNAD'
+        );
 
         await waitFor(() => {
             expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
@@ -394,9 +398,9 @@ describe('FaktaContainer', () => {
                 },
             ],
         });
-        setupMock('BARNETRYGD', true, true, faktaResponse);
+        setupMock(true, true, faktaResponse);
 
-        const { getByText, getByRole } = renderFaktaContainer(lagBehandling());
+        const { getByText, getByRole } = renderFaktaContainer(lagBehandling(), 'BARNETRYGD');
 
         await waitFor(() => {
             expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
@@ -440,9 +444,9 @@ describe('FaktaContainer', () => {
                 },
             ],
         });
-        setupMock('OVERGANGSSTØNAD', true, true, faktaResponse);
+        setupMock(true, true, faktaResponse);
 
-        const { getByText, getByRole } = renderFaktaContainer(lagBehandling());
+        const { getByText, getByRole } = renderFaktaContainer(lagBehandling(), 'OVERGANGSSTØNAD');
 
         await waitFor(() => {
             expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
@@ -467,13 +471,15 @@ describe('FaktaContainer', () => {
 
     test('Velg hendelsesundertype automatisk ved kun ett valg', async () => {
         setupMock(
-            'OVERGANGSSTØNAD',
             false,
             false,
             lagFaktaResponse({ feilutbetaltePerioder: [feilutbetaltePerioder[0]] })
         );
 
-        const { getByTestId, getAllByRole } = renderFaktaContainer(lagBehandling());
+        const { getByTestId, getAllByRole } = renderFaktaContainer(
+            lagBehandling(),
+            'OVERGANGSSTØNAD'
+        );
 
         await waitFor(() => {
             user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.Overgangsstønad);

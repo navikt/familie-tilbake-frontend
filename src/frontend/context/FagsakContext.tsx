@@ -20,7 +20,7 @@ type FagsakContextType = {
     error: string | undefined;
 };
 
-const FagsakContext = createContext<FagsakContextType | undefined>(undefined);
+export const FagsakContext = createContext<FagsakContextType | undefined>(undefined);
 
 type FagsakProviderProps = {
     children: ReactNode;

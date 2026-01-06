@@ -6,17 +6,13 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { BrukerInformasjon } from './BrukerInformasjon';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { Kjønn } from '../../../../typer/bruker';
 
 jest.mock('../../../../utils', () => ({
     ...jest.requireActual('../../../../utils'),
     hentAlder: jest.fn(() => 42),
-}));
-
-const mockUseFagsak = jest.fn();
-jest.mock('../../../../context/FagsakContext', () => ({
-    useFagsak: (): ReturnType<typeof lagFagsak> => mockUseFagsak(),
 }));
 
 const baseBruker = (override: Partial<FrontendBrukerDto> = {}): FrontendBrukerDto => ({
@@ -38,13 +34,20 @@ const renderBrukerInformasjon = (
     bruker: Partial<FrontendBrukerDto> | null = null,
     institusjon: Partial<InstitusjonDto> | null = null
 ): RenderResult => {
-    mockUseFagsak.mockReturnValue({
+    const fagsakValue = {
         fagsak: lagFagsak({
             bruker: bruker ? baseBruker(bruker) : undefined,
             institusjon: institusjon ? baseInstitusjon(institusjon) : undefined,
         }),
-    });
-    return render(<BrukerInformasjon />);
+        isLoading: false,
+        error: undefined,
+    };
+
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <BrukerInformasjon />
+        </FagsakContext.Provider>
+    );
 };
 
 describe('BrukerInformasjon', () => {

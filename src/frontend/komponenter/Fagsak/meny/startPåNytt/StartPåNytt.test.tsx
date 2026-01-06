@@ -1,7 +1,6 @@
 import type { StartPåNyttHook as StartPåNyttHook } from './useStartPåNytt';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { RedirectEtterLagringHook } from '../../../../hooks/useRedirectEtterLagring';
-import type { lagFagsak } from '../../../../testdata/fagsakFactory';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { ActionMenu, Button } from '@navikt/ds-react';
@@ -11,16 +10,13 @@ import * as React from 'react';
 
 import { StartPåNytt } from './StartPåNytt';
 import { Feil } from '../../../../api/feil';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 
 const mockUseBehandling = jest.fn();
 jest.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
-
-const mockUseFagsak = jest.fn();
-jest.mock('../../../../context/FagsakContext', () => ({
-    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
 }));
 
 const mockUseRedirectEtterLagring = jest.fn();
@@ -37,11 +33,6 @@ const mockNullstill = jest.fn();
 const setupMocks = (): void => {
     mockUseBehandling.mockReturnValue({
         nullstillIkkePersisterteKomponenter: mockNullstill,
-    });
-    mockUseFagsak.mockReturnValue({
-        fagsak: {
-            eksternFagsakId: '123',
-        },
     });
     mockUseRedirectEtterLagring.mockReturnValue(() => null);
 };
@@ -74,15 +65,23 @@ describe('StartPåNytt', () => {
             },
         });
 
+        const fagsakValue = {
+            fagsak: lagFagsak({ eksternFagsakId: '123' }),
+            isLoading: false,
+            error: undefined,
+        };
+
         render(
-            <ActionMenu open>
-                <ActionMenu.Trigger>
-                    <Button>Test kun for å rendre</Button>
-                </ActionMenu.Trigger>
-                <ActionMenu.Content>
-                    <StartPåNytt behandling={lagBehandling()} />
-                </ActionMenu.Content>
-            </ActionMenu>
+            <FagsakContext.Provider value={fagsakValue}>
+                <ActionMenu open>
+                    <ActionMenu.Trigger>
+                        <Button>Test kun for å rendre</Button>
+                    </ActionMenu.Trigger>
+                    <ActionMenu.Content>
+                        <StartPåNytt behandling={lagBehandling()} />
+                    </ActionMenu.Content>
+                </ActionMenu>
+            </FagsakContext.Provider>
         );
 
         const dialog = document.querySelector('dialog') as HTMLDialogElement;

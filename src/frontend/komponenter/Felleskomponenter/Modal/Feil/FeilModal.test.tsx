@@ -1,28 +1,45 @@
+import type { RenderResult } from '@testing-library/react';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { FeilModal } from './FeilModal';
 import { Feil } from '../../../../api/feil';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 
-const mockUseFagsak = jest.fn();
-jest.mock('../../../../context/FagsakContext', () => ({
-    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
-}));
 const mockSetVisFeilModal = jest.fn();
+
+const renderFeilModal = (
+    feil: Feil,
+    behandlingId?: string,
+    fagsakOverride?: ReturnType<typeof lagFagsak>
+): RenderResult => {
+    const fagsakValue = {
+        fagsak: fagsakOverride,
+        isLoading: false,
+        error: undefined,
+    };
+
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <FeilModal
+                feil={feil}
+                lukkFeilModal={mockSetVisFeilModal}
+                behandlingId={behandlingId}
+            />
+        </FagsakContext.Provider>
+    );
+};
 
 describe('FeilModal', () => {
     beforeEach(() => {
-        mockUseFagsak.mockReturnValue({
-            fagsak: undefined,
-        });
+        jest.clearAllMocks();
     });
-
-    //#region 400 Bad Request feil
     test('Viser feil-modalen med 400 Bad Request riktig', () => {
         const feilMelding = 'Du mangler nødvendige data i forespørselen din.';
         const mockFeil = new Feil(feilMelding, 400);
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
         expect(screen.getByText('Ugyldig forespørsel')).toBeInTheDocument();
         expect(screen.getByText('Forespørselen din er ugyldig')).toBeInTheDocument();
         expect(screen.getByText('400 Bad Request')).toBeInTheDocument();
@@ -42,7 +59,7 @@ describe('FeilModal', () => {
     test('Viser feil-modalen med 401 Unauthorized riktig', () => {
         const feilMelding = 'Tokenet ditt er ugyldig eller utløpt.';
         const mockFeil = new Feil(feilMelding, 401);
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
         expect(screen.getByText('Uautorisert')).toBeInTheDocument();
         expect(screen.getByText('401 Unauthorized')).toBeInTheDocument();
         expect(screen.getByText('Du er ikke autorisert til å gjøre dette')).toBeInTheDocument();
@@ -58,7 +75,7 @@ describe('FeilModal', () => {
         const feilMelding = 'Du har rollen BESLUTTER og trenger rollen FORVALTER.';
         const mockFeil = new Feil(feilMelding, 403);
 
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
 
         expect(screen.getByText('Ingen tilgang')).toBeInTheDocument();
         expect(screen.getByText('403 Forbidden')).toBeInTheDocument();
@@ -73,7 +90,7 @@ describe('FeilModal', () => {
     test('Håndterer CSRF-token feil riktig', () => {
         const mockFeil = new Feil('Ugyldig CSRF-token.', 403);
 
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
 
         expect(
             screen.getByText('Lagre det du holder på med, og last siden på nytt')
@@ -89,7 +106,7 @@ describe('FeilModal', () => {
     test('Viser feil-modalen med 404 Not Found riktig', () => {
         const feilMelding = 'Finner ikke endepunktet /resettBehandling.';
         const mockFeil = new Feil(feilMelding, 404);
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
         expect(screen.getByText('Ikke funnet')).toBeInTheDocument();
         expect(screen.getByText('404 Not Found')).toBeInTheDocument();
         expect(screen.getByText('Ressursen du prøver å nå finnes ikke')).toBeInTheDocument();
@@ -106,7 +123,7 @@ describe('FeilModal', () => {
     test('Viser feil-modalen med 500 Internal Server Error riktig', () => {
         const feilMelding = 'Dette er ikke din feil, det er en feil vi ikke greide å håndtere.';
         const mockFeil = new Feil(feilMelding, 500);
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
         expect(screen.getByText('Intern feil')).toBeInTheDocument();
         expect(screen.getByText('500 Internal Server Error')).toBeInTheDocument();
         expect(screen.getByText('Oi, dette fungerte vist ikke')).toBeInTheDocument();
@@ -121,7 +138,7 @@ describe('FeilModal', () => {
     test('Viser feil-modalen med 502 Bad Gateway riktig', () => {
         const feilMelding = 'Kallet mot Gosys feilet.';
         const mockFeil = new Feil(feilMelding, 502);
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
         expect(screen.getByText('Feil hos noen andre')).toBeInTheDocument();
         expect(screen.getByText('502 Bad Gateway')).toBeInTheDocument();
         expect(screen.getByText(feilMelding)).toBeInTheDocument();
@@ -132,7 +149,7 @@ describe('FeilModal', () => {
     test('Viser feil-modalen med 503 Service Unavailable riktig', () => {
         const feilMelding = 'Kallet mot Gosys feilet.';
         const mockFeil = new Feil(feilMelding, 503);
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
         expect(screen.getByText('Feil hos noen andre')).toBeInTheDocument();
         expect(screen.getByText('503 Service Unavailable')).toBeInTheDocument();
         expect(screen.getByText(feilMelding)).toBeInTheDocument();
@@ -143,7 +160,7 @@ describe('FeilModal', () => {
     test('Viser feil-modalen med 504 Gateway Timeout riktig', () => {
         const feilMelding = 'Kallet mot Gosys feilet.';
         const mockFeil = new Feil(feilMelding, 504);
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
         expect(screen.getByText('Feil hos noen andre')).toBeInTheDocument();
         expect(screen.getByText('504 Gateway Timeout')).toBeInTheDocument();
         expect(
@@ -161,17 +178,7 @@ describe('FeilModal', () => {
         const fagsakId = '12345';
         const behandlingId = '6bc22b78-4ce4-4eed-9476-247f599cef95';
 
-        mockUseFagsak.mockImplementation(() => ({
-            fagsak: lagFagsak({ eksternFagsakId: fagsakId }),
-        }));
-
-        render(
-            <FeilModal
-                feil={mockFeil}
-                lukkFeilModal={mockSetVisFeilModal}
-                behandlingId={behandlingId}
-            />
-        );
+        renderFeilModal(mockFeil, behandlingId, lagFagsak({ eksternFagsakId: fagsakId }));
 
         expect(screen.getByText(`Fagsak ID: ${fagsakId}`)).toBeInTheDocument();
         expect(screen.getByText(`Behandling ID: ${behandlingId}`)).toBeInTheDocument();
@@ -180,7 +187,7 @@ describe('FeilModal', () => {
     test('Viser ikke fagsakId og behandlingsId når de ikke er tilgjengelige', () => {
         const mockFeil = new Feil('Du har rollen BESLUTTER og trenger rollen FORVALTER', 403);
 
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
 
         expect(screen.queryByText(/Fagsak ID:/)).not.toBeInTheDocument();
         expect(screen.queryByText(/Behandling ID:/)).not.toBeInTheDocument();
@@ -189,7 +196,7 @@ describe('FeilModal', () => {
     test('Kaller på setVisFeilModal når lukkeknappen klikkes', () => {
         const mockFeil = new Feil('Du har rollen BESLUTTER og trenger rollen FORVALTER', 403);
 
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
 
         const okKnapp = screen.getByText('Ok');
         fireEvent.click(okKnapp);
@@ -201,7 +208,7 @@ describe('FeilModal', () => {
         const feilmelding = 'Vi vet ikke hva som gikk galt.';
         const mockFeil = new Feil(feilmelding, 520);
 
-        render(<FeilModal feil={mockFeil} lukkFeilModal={mockSetVisFeilModal} />);
+        renderFeilModal(mockFeil);
 
         expect(screen.getByText('Ukjent feil')).toBeInTheDocument();
         expect(

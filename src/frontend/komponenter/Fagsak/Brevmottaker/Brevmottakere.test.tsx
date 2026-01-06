@@ -8,6 +8,7 @@ import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 
 import Brevmottakere from './Brevmottakere';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { MottakerType } from '../../../typer/Brevmottaker';
@@ -20,11 +21,6 @@ jest.mock('react-router', () => ({
 const mockUseBehandling = jest.fn();
 jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
-
-const mockUseFagsak = jest.fn();
-jest.mock('../../../context/FagsakContext', () => ({
-    useFagsak: (): { fagsak: ReturnType<typeof lagFagsak> } => mockUseFagsak(),
 }));
 
 const createMockManuelleBrevmottakere = (): ManuellBrevmottakerResponseDto[] => [
@@ -65,25 +61,29 @@ const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponseDto[] => [
     },
 ];
 
-const setupMock = (): void => {
+const renderBrevmottakere = (behandling: Behandling): RenderResult => {
     mockUseBehandling.mockImplementation(() => ({
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 5'),
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
         erStegBehandlet: jest.fn().mockReturnValue(false),
     }));
-    mockUseFagsak.mockReturnValue({
-        fagsak: lagFagsak(),
-    });
-};
 
-const renderBrevmottakere = (behandling: Behandling): RenderResult => {
-    return render(<Brevmottakere behandling={behandling} />);
+    const fagsakValue = {
+        fagsak: lagFagsak(),
+        isLoading: false,
+        error: undefined,
+    };
+
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <Brevmottakere behandling={behandling} />
+        </FagsakContext.Provider>
+    );
 };
 
 describe('Brevmottakere', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        setupMock();
     });
 
     describe('Default bruker brevmottaker', () => {
