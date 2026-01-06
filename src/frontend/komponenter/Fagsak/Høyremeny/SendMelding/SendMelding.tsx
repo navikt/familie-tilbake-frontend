@@ -24,7 +24,7 @@ type Props = {
 };
 
 const SendMelding: React.FC<Props> = ({ behandling }) => {
-    const { fagsak } = useFagsak();
+    const { språkkode } = useFagsak();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -76,7 +76,7 @@ const SendMelding: React.FC<Props> = ({ behandling }) => {
                             label={
                                 <LabelMedSpråk
                                     label={tekstfeltLabel(skjema.felter.maltype.verdi)}
-                                    språk={målform[fagsak.språkkode ?? 'NB']}
+                                    språk={målform[språkkode]}
                                 />
                             }
                             aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}

@@ -85,7 +85,7 @@ type Props = {
 };
 
 const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => {
-    const { fagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
     const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
     const [skjemaData, settSkjemaData] = useState<AvsnittSkjemaData[]>([]);
@@ -175,7 +175,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => 
 
     const gåTilForrige = (): void => {
         navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VILKÅRSVURDERING.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VILKÅRSVURDERING.href}`
         );
     };
 
@@ -264,7 +264,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => 
                     if (respons.status === RessursStatus.Suksess) {
                         hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                             navigate(
-                                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                             );
                         });
                     } else if (
@@ -294,7 +294,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => 
                     if (respons.status === RessursStatus.Suksess) {
                         hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                             navigate(
-                                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                             );
                         });
                     } else if (

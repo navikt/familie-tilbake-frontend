@@ -5,14 +5,12 @@ import { MottakerType } from '../../../../typer/Brevmottaker';
 import { ManuellRegistrering } from '../Adressekilde/ManuellRegistrering';
 
 export const BrukerMedUtenlandskAdresse: React.FC = () => {
-    const { fagsak } = useFagsak();
-
-    const brukerNavn = fagsak.bruker?.navn ? fagsak.bruker.navn : '';
+    const { bruker } = useFagsak();
 
     return (
         <ManuellRegistrering
             prefix="brukerMedUtenlandskAdresse"
-            preutfyltNavn={brukerNavn}
+            preutfyltNavn={bruker.navn}
             mottakerType={MottakerType.BrukerMedUtenlandskAdresse}
         />
     );

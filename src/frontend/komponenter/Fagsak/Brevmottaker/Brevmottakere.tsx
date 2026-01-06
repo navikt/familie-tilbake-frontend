@@ -225,7 +225,7 @@ type BrevmottakereProps = {
 
 const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
     const { behandlingILesemodus, actionBarStegtekst } = useBehandling();
-    const { fagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId, bruker } = useFagsak();
     const navigate = useNavigate();
 
     const [visBrevmottakerModal, setVisBrevmottakerModal] = useState(false);
@@ -241,7 +241,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
 
     const gåTilNeste = (): void => {
         navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
         );
     };
 
@@ -274,16 +274,16 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
                         borderRadius="xlarge"
                         padding="4"
                         className="border-ax-border-neutral-subtle"
-                        key={fagsak.bruker.personIdent}
+                        key={bruker.personIdent}
                     >
                         <Brevmottaker
                             brevmottaker={{
                                 type: MottakerType.Bruker,
-                                navn: fagsak.bruker.navn ?? 'Ukjent navn',
-                                personIdent: fagsak.bruker.personIdent,
+                                navn: bruker.navn,
+                                personIdent: bruker.personIdent,
                             }}
                             erStandardMottaker
-                            brevmottakerId={fagsak.bruker.personIdent ?? 'Ukjent personIdent'}
+                            brevmottakerId={bruker.personIdent}
                             behandlingId={behandling.behandlingId}
                             erLesevisning={erLesevisning}
                             antallBrevmottakere={antallBrevmottakere}

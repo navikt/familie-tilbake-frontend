@@ -33,7 +33,7 @@ type Props = {
 };
 
 export const Faktaboks: React.FC<Props> = ({ behandling }) => {
-    const { fagsak } = useFagsak();
+    const { ytelsestype } = useFagsak();
 
     return (
         <ExpansionCard
@@ -45,8 +45,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling }) => {
             <ExpansionCard.Header>
                 <ExpansionCard.Title as="h2" size="small" className="text-lg">
                     Tilbakekreving{' '}
-                    {fagsak.ytelsestype &&
-                        ` av ${ytelsetyper[fagsak.ytelsestype]?.toLocaleLowerCase()}`}
+                    {ytelsestype && ` av ${ytelsetyper[ytelsestype]?.toLocaleLowerCase()}`}
                 </ExpansionCard.Title>
             </ExpansionCard.Header>
             <ExpansionCard.Content>

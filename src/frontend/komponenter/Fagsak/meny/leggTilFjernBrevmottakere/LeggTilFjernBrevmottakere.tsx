@@ -31,9 +31,7 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
         nullstillIkkePersisterteKomponenter,
     } = useBehandling();
 
-    const { fagsak } = useFagsak();
-    const fagsystem = fagsak.fagsystem;
-    const eksternFagsakId = fagsak.eksternFagsakId;
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const { utførRedirect } = useRedirectEtterLagring();
     const { request } = useHttp();
     const { settToast } = useApp();

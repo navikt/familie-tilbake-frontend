@@ -51,7 +51,7 @@ type Props = {
 };
 
 const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: Props) => {
-    const { fagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string | undefined>();
     const { hentBehandlingMedBehandlingId } = useBehandling();
@@ -113,7 +113,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: 
                     nullstillSkjema();
                     hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                         navigate(
-                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
+                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
                         );
                     });
                 } else {

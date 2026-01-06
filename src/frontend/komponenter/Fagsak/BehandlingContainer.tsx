@@ -73,7 +73,7 @@ type Props = {
 };
 
 const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
-    const { fagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
     const navigate = useNavigate();
     const location = useLocation();
@@ -84,7 +84,7 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
     const erØnsketSideLovlig =
         ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
-    const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
     React.useEffect(() => {
         if (visVenteModal === false) {

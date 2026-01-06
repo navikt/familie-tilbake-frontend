@@ -7,10 +7,7 @@ import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './Vilkårsv
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
-import {
-    vilkårsvurderingStegInfotekst,
-    vilkårsvurderingStegInfotekstForYtelsestype,
-} from '../../../kodeverk';
+import { vilkårsvurderingStegInfotekstForYtelsestype } from '../../../kodeverk';
 import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
@@ -20,7 +17,7 @@ type Props = {
 };
 
 const VilkårsvurderingContainer: React.FC<Props> = ({ behandling }) => {
-    const { fagsak } = useFagsak();
+    const { ytelsestype } = useFagsak();
     const {
         containerRef,
         vilkårsvurdering: vilkårsvurdering,
@@ -31,9 +28,7 @@ const VilkårsvurderingContainer: React.FC<Props> = ({ behandling }) => {
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
-    const stegInfotekst = fagsak.ytelsestype
-        ? vilkårsvurderingStegInfotekstForYtelsestype[fagsak.ytelsestype]
-        : vilkårsvurderingStegInfotekst;
+    const stegInfotekst = vilkårsvurderingStegInfotekstForYtelsestype[ytelsestype];
 
     if (vilkårsvurdering?.status === RessursStatus.Suksess) {
         const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data);

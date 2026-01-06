@@ -87,7 +87,7 @@ type Props = {
 
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
     ({ behandling }: Props) => {
-        const { fagsak } = useFagsak();
+        const { fagsystem, eksternFagsakId, ytelsestype } = useFagsak();
         const containerRef = useRef<HTMLDivElement>(null);
         const [vilkårsvurdering, setVilkårsvurdering] =
             useState<Ressurs<VilkårsvurderingResponse>>();
@@ -109,8 +109,8 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         } = useBehandling();
         const { gjerVilkårsvurderingKall, sendInnVilkårsvurdering } = useBehandlingApi();
         const navigate = useNavigate();
-        const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(fagsak.ytelsestype ?? '');
-        const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+        const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(ytelsestype);
+        const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
         useEffect(() => {
             if (!visVenteModal) {

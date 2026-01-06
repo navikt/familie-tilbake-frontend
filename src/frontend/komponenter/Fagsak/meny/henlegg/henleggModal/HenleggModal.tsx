@@ -12,7 +12,7 @@ import { useEffect, useEffectEvent } from 'react';
 import { useHenleggSkjema } from './HenleggModalContext';
 import { useFagsak } from '../../../../../context/FagsakContext';
 import { behandlingsresultater } from '../../../../../typer/behandling';
-import { målform, Målform } from '../../../../../typer/målform';
+import { målform } from '../../../../../typer/målform';
 import { hentFrontendFeilmelding } from '../../../../../utils';
 import { LabelMedSpråk } from '../../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
 import { MODAL_BREDDE } from '../../utils';
@@ -29,7 +29,7 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
         behandling,
         lukkModal: () => dialogRef.current?.close(),
     });
-    const { fagsak } = useFagsak();
+    const { språkkode } = useFagsak();
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
     const oppdaterBehandlingstype = useEffectEvent((behandlingstype: Behandlingstype) => {
@@ -87,10 +87,7 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
                     <Textarea
                         {...skjema.felter.fritekst.hentNavInputProps(skjema.visFeilmeldinger)}
                         label={
-                            <LabelMedSpråk
-                                label="Fritekst til brev"
-                                språk={målform[fagsak.språkkode ?? Målform.Nb]}
-                            />
+                            <LabelMedSpråk label="Fritekst til brev" språk={målform[språkkode]} />
                         }
                         aria-label="Fritekst til brev"
                         value={skjema.felter.fritekst.verdi}

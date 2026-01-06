@@ -40,7 +40,7 @@ type Props = {
 };
 
 const VedtakContainer: React.FC<Props> = ({ behandling }) => {
-    const { fagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const {
         vedtaksbrevavsnitt,
         beregningsresultat,
@@ -132,13 +132,13 @@ const VedtakContainer: React.FC<Props> = ({ behandling }) => {
                     </>
                 )}
 
-                {behandling.manuelleBrevmottakere.length > 0 && fagsak && (
+                {behandling.manuelleBrevmottakere.length > 0 && (
                     <>
                         <BrevmottakereAlert
                             brevmottakere={behandling.manuelleBrevmottakere.map(
                                 brevmottakerDto => brevmottakerDto.brevmottaker
                             )}
-                            linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
+                            linkTilBrevmottakerSteg={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
                         />
                         <Spacer20 />
                     </>

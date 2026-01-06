@@ -63,7 +63,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [harUlagredeData, settHarUlagredeData] = useState<boolean>(
         ikkePersisterteKomponenter.size > 0
     );
-    const { fagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const { request } = useHttp();
 
     useEffect(
@@ -219,8 +219,8 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     };
 
     const lagLenkeTilRevurdering = (): string => {
-        return fagsak && behandling?.status === RessursStatus.Suksess
-            ? `/redirect/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/${behandling.data.fagsystemsbehandlingId}`
+        return behandling?.status === RessursStatus.Suksess
+            ? `/redirect/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/${behandling.data.fagsystemsbehandlingId}`
             : '#';
     };
 

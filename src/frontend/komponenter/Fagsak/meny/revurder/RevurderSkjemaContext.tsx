@@ -30,10 +30,7 @@ const useRevurderSkjema = (
     dialogRef: RefObject<HTMLDialogElement | null>
 ): RevurderSkjemaHook => {
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
-    const { fagsak } = useFagsak();
-    const ytelsestype = fagsak.ytelsestype;
-    const eksternFagsakId = fagsak.eksternFagsakId;
-    const fagsystem = fagsak.fagsystem;
+    const { fagsystem, eksternFagsakId, ytelsestype } = useFagsak();
     const { utførRedirect } = useRedirectEtterLagring();
     const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
 

@@ -23,7 +23,7 @@ export const Behandlingsmeny: React.FC = () => {
     const { behandling, ventegrunn, erStegBehandlet, aktivtSteg, behandlingILesemodus } =
         useBehandling();
     const [holdMenyenÅpen, setHoldMenyenÅpen] = useState(false);
-    const { fagsak } = useFagsak();
+    const { fagsystem, ytelsestype } = useFagsak();
     const { innloggetSaksbehandler } = useApp();
     const forvalterGruppe =
         process.env.NODE_ENV === 'production'
@@ -44,7 +44,7 @@ export const Behandlingsmeny: React.FC = () => {
         !vedtakFattetEllerFattes &&
         behandling.data.kanEndres;
     const erSattPåvent = behandling.data.erBehandlingPåVent || ventegrunn;
-    const kanEndreEnhet = fagsak.fagsystem === Fagsystem.BA && fagsak.ytelsestype;
+    const kanEndreEnhet = fagsystem === Fagsystem.BA && ytelsestype;
     return (
         <ActionMenu open={holdMenyenÅpen} onOpenChange={setHoldMenyenÅpen}>
             <ActionMenu.Trigger>

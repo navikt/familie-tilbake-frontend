@@ -41,7 +41,7 @@ type Props = {
 
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
     ({ behandling }: Props) => {
-        const { fagsak } = useFagsak();
+        const { fagsystem, eksternFagsakId } = useFagsak();
         const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
         const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
         const [erLesevisning, settErLesevisning] = useState<boolean>(false);
@@ -245,7 +245,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
         const navigerTilSide = (side: SynligSteg): void => {
             navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
+                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );
         };
 

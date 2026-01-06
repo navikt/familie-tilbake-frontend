@@ -109,7 +109,7 @@ export const useForhåndsvarselMutations = (
 ): UseForhåndsvarselMutationsReturn => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { fagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const invalidateQueries = (): void => {
         queryClient.invalidateQueries({
             queryKey: ['hentBehandling', behandling.behandlingId],
@@ -121,7 +121,7 @@ export const useForhåndsvarselMutations = (
 
     const gåTilNeste = (): void => {
         navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
         );
     };
 

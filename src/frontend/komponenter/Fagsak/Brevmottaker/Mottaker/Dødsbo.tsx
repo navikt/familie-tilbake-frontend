@@ -5,9 +5,9 @@ import { MottakerType } from '../../../../typer/Brevmottaker';
 import { ManuellRegistrering } from '../Adressekilde/ManuellRegistrering';
 
 export const Dødsbo: React.FC = () => {
-    const { fagsak } = useFagsak();
+    const { bruker } = useFagsak();
 
-    const dødsboNavn = fagsak.bruker?.navn ? `${fagsak.bruker.navn} v/dødsbo` : '';
+    const dødsboNavn = `${bruker.navn} v/dødsbo`;
 
     return (
         <ManuellRegistrering

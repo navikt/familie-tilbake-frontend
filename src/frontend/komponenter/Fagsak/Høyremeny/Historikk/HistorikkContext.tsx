@@ -18,7 +18,7 @@ type Props = {
 
 const [HistorikkProvider, useHistorikk] = createUseContext(
     ({ behandling, valgtMenyside }: Props) => {
-        const { fagsak } = useFagsak();
+        const { fagsystem, eksternFagsakId } = useFagsak();
         const [historikkInnslag, settHistorikkInnslag] = useState<Ressurs<HistorikkInnslag[]>>();
         const navigate = useNavigate();
         const { request } = useHttp();
@@ -48,7 +48,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
 
         const navigerTilSide = (side: SynligSteg): void => {
             navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
+                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );
         };
 

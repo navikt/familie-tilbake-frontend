@@ -21,9 +21,7 @@ export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
-    const { fagsak } = useFagsak();
-    const fagsystem = fagsak.fagsystem;
-    const eksternFagsakId = fagsak.eksternFagsakId;
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const mutation = useStartPåNytt();
 
     const handleNullstill = (): void => {

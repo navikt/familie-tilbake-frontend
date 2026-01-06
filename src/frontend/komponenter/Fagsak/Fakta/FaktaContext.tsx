@@ -38,7 +38,7 @@ type Props = {
 };
 
 const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
-    const { fagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const [fakta, setFakta] = useState<Ressurs<FaktaResponse>>();
     const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({
         perioder: [],
@@ -311,7 +311,7 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
         if (stegErBehandlet && !harEndretOpplysninger()) {
             nullstillIkkePersisterteKomponenter();
             utførRedirect(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
+                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
             );
         } else {
             const feilmeldinger = validerForInnsending();
@@ -344,7 +344,7 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
                     if (respons.status === RessursStatus.Suksess) {
                         hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                             navigate(
-                                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                             );
                         });
                     }
@@ -355,7 +355,7 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
 
     const gåTilForrige = (): void => {
         navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
         );
     };
 

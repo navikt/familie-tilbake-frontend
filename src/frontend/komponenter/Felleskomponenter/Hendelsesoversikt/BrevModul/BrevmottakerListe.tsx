@@ -11,10 +11,7 @@ type Props = {
 };
 
 const BrevmottakerListe: React.FC<Props> = ({ brevmottakere }) => {
-    const { fagsak } = useFagsak();
-    const institusjon = fagsak.institusjon;
-    const bruker = fagsak.bruker;
-
+    const { institusjon, bruker } = useFagsak();
     const skalViseInstitusjon = !!institusjon;
     const harUtenlandskAdresse = brevmottakere.some(
         mottaker => mottaker.type === MottakerType.BrukerMedUtenlandskAdresse

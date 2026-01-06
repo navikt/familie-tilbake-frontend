@@ -8,11 +8,7 @@ import { useParams } from 'react-router';
 import { hentFagsak } from '../generated/sdk.gen';
 import { Fagsystem } from '../kodeverk';
 
-type FagsakContextType = {
-    fagsak: FagsakDto;
-};
-
-export const FagsakContext = createContext<FagsakContextType | undefined>(undefined);
+export const FagsakContext = createContext<FagsakDto | undefined>(undefined);
 
 type Props = {
     children: ReactNode;
@@ -55,20 +51,14 @@ export const FagsakProvider = ({ children }: Props): React.ReactElement => {
         },
     });
 
-    const value: FagsakContextType = {
-        fagsak,
-    };
-
-    return <FagsakContext.Provider value={value}>{children}</FagsakContext.Provider>;
+    return <FagsakContext.Provider value={fagsak}>{children}</FagsakContext.Provider>;
 };
 
-export const useFagsak = (): FagsakContextType => {
+export const useFagsak = (): FagsakDto => {
     const context = useContext(FagsakContext);
     if (!context) {
         throw new Error('useFagsak må brukes innenfor FagsakProvider');
     }
 
-    return {
-        fagsak: context.fagsak,
-    };
+    return context;
 };
