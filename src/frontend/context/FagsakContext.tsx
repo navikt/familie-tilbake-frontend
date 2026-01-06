@@ -28,19 +28,30 @@ export const FagsakProvider = ({ children }: Props): React.ReactElement => {
     const { data: fagsak } = useSuspenseQuery({
         queryKey: ['fagsak', fagsystem, eksternFagsakId],
         queryFn: async () => {
-            const result = await hentFagsak({
-                path: {
-                    fagsystem: fagsystem,
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    eksternFagsakId: eksternFagsakId!,
-                },
-            });
+            try {
+                const result = await hentFagsak({
+                    path: {
+                        fagsystem: fagsystem,
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        eksternFagsakId: eksternFagsakId!,
+                    },
+                });
 
-            if (!result.data?.data) {
-                throw new Error('Kunne ikke laste fagsak');
+                if (!result.data?.data) {
+                    throw new Error(
+                        `Kunne ikke laste fagsak for ${fagsystem}/${eksternFagsakId}. Fagsaken finnes ikke eller du har ikke tilgang.`
+                    );
+                }
+
+                return result.data.data;
+            } catch (error) {
+                if (error instanceof Error) {
+                    throw error;
+                }
+                throw new Error(
+                    `Kunne ikke laste fagsak for ${fagsystem}/${eksternFagsakId}. Fagsaken finnes ikke eller du har ikke tilgang.`
+                );
             }
-
-            return result.data.data;
         },
     });
 

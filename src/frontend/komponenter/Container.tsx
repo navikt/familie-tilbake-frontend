@@ -13,6 +13,8 @@ import { BehandlingProvider } from '../context/BehandlingContext';
 import { FagsakProvider } from '../context/FagsakContext';
 import { TogglesProvider } from '../context/TogglesContext';
 import { StegflytSkeleton } from './Fagsak/Stegflyt/StegflytSkeleton';
+import { FagsakLoadingSkeleton } from './Felleskomponenter/Datalast/FagsakLoadingSkeleton';
+import FagsakErrorBoundary from './Felleskomponenter/ErrorBoundary/FagsakErrorBoundary';
 import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import { FTHeader } from './Felleskomponenter/FTHeader/FTHeader';
 import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
@@ -84,13 +86,15 @@ const AppRoutes: React.FC = () => {
 
 const ProvidersWrapper: React.FC = () => (
     <TogglesProvider>
-        <Suspense fallback={<div>Laster fagsak...</div>}>
-            <FagsakProvider>
-                <BehandlingProvider>
-                    <Outlet />
-                    <UlagretDataModal />
-                </BehandlingProvider>
-            </FagsakProvider>
+        <Suspense fallback={<FagsakLoadingSkeleton />}>
+            <FagsakErrorBoundary>
+                <FagsakProvider>
+                    <BehandlingProvider>
+                        <Outlet />
+                        <UlagretDataModal />
+                    </BehandlingProvider>
+                </FagsakProvider>
+            </FagsakErrorBoundary>
         </Suspense>
     </TogglesProvider>
 );
