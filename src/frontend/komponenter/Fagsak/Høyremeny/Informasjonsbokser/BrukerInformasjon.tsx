@@ -37,8 +37,8 @@ const kjønnIkon = (kjønn: KjønnEnum): React.ReactNode => {
 
 export const BrukerInformasjon: React.FC = () => {
     const { fagsak } = useFagsak();
-    const bruker = fagsak?.bruker;
-    const institusjon = fagsak?.institusjon;
+    const bruker = fagsak.bruker;
+    const institusjon = fagsak.institusjon;
     return (
         <ExpansionCard
             size="small"

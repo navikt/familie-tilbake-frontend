@@ -241,7 +241,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
 
     const gåTilNeste = (): void => {
         navigate(
-            `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
+            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
         );
     };
 
@@ -274,16 +274,16 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
                         borderRadius="xlarge"
                         padding="4"
                         className="border-ax-border-neutral-subtle"
-                        key={fagsak?.bruker.personIdent}
+                        key={fagsak.bruker.personIdent}
                     >
                         <Brevmottaker
                             brevmottaker={{
                                 type: MottakerType.Bruker,
-                                navn: fagsak?.bruker.navn ?? 'Ukjent navn',
-                                personIdent: fagsak?.bruker.personIdent,
+                                navn: fagsak.bruker.navn ?? 'Ukjent navn',
+                                personIdent: fagsak.bruker.personIdent,
                             }}
                             erStandardMottaker
-                            brevmottakerId={fagsak?.bruker.personIdent ?? 'Ukjent personIdent'}
+                            brevmottakerId={fagsak.bruker.personIdent ?? 'Ukjent personIdent'}
                             behandlingId={behandling.behandlingId}
                             erLesevisning={erLesevisning}
                             antallBrevmottakere={antallBrevmottakere}

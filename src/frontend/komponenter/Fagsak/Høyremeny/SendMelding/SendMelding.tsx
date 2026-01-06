@@ -76,7 +76,7 @@ const SendMelding: React.FC<Props> = ({ behandling }) => {
                             label={
                                 <LabelMedSpråk
                                     label={tekstfeltLabel(skjema.felter.maltype.verdi)}
-                                    språk={målform[fagsak?.språkkode ?? 'NB']}
+                                    språk={målform[fagsak.språkkode ?? 'NB']}
                                 />
                             }
                             aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}

@@ -31,9 +31,9 @@ const useRevurderSkjema = (
 ): RevurderSkjemaHook => {
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { fagsak } = useFagsak();
-    const ytelsestype = fagsak?.ytelsestype;
-    const eksternFagsakId = fagsak?.eksternFagsakId;
-    const fagsystem = fagsak?.fagsystem;
+    const ytelsestype = fagsak.ytelsestype;
+    const eksternFagsakId = fagsak.eksternFagsakId;
+    const fagsystem = fagsak.fagsystem;
     const { utførRedirect } = useRedirectEtterLagring();
     const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
 

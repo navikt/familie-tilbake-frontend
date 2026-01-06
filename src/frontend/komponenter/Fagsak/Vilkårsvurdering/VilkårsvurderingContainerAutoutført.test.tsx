@@ -12,7 +12,9 @@ import * as React from 'react';
 
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingResponse } from '../../../testdata/vilkårsvurderingFactory';
 import { RessursStatus } from '../../../typer/ressurs';
 
@@ -79,12 +81,15 @@ describe('VilkårsvurderingContainer', () => {
     test('Vis autoutført', async () => {
         setupMock();
 
+        const fagsakValue = { fagsak: lagFagsak() };
         const { getByText } = render(
-            <QueryClientProvider client={queryClient}>
-                <VilkårsvurderingProvider behandling={lagBehandling()}>
-                    <VilkårsvurderingContainer behandling={lagBehandling()} />
-                </VilkårsvurderingProvider>
-            </QueryClientProvider>
+            <FagsakContext.Provider value={fagsakValue}>
+                <QueryClientProvider client={queryClient}>
+                    <VilkårsvurderingProvider behandling={lagBehandling()}>
+                        <VilkårsvurderingContainer behandling={lagBehandling()} />
+                    </VilkårsvurderingProvider>
+                </QueryClientProvider>
+            </FagsakContext.Provider>
         );
 
         await waitFor(() => {

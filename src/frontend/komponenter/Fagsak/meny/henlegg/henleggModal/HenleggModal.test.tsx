@@ -13,7 +13,9 @@ import { createRef } from 'react';
 import * as React from 'react';
 
 import { HenleggModal } from './HenleggModal';
+import { FagsakContext } from '../../../../../context/FagsakContext';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../../testdata/fagsakFactory';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { RessursStatus } from '../../../../../typer/ressurs';
 
@@ -40,8 +42,11 @@ const renderHenleggModal = (
     årsaker: Behandlingresultat[]
 ): RenderResult => {
     const mockDialogRef = createRef<HTMLDialogElement | null>();
+    const fagsakValue = { fagsak: lagFagsak() };
     const renderModal = render(
-        <HenleggModal behandling={behandling} dialogRef={mockDialogRef} årsaker={årsaker} />
+        <FagsakContext.Provider value={fagsakValue}>
+            <HenleggModal behandling={behandling} dialogRef={mockDialogRef} årsaker={årsaker} />
+        </FagsakContext.Provider>
     );
     mockDialogRef.current?.showModal();
 

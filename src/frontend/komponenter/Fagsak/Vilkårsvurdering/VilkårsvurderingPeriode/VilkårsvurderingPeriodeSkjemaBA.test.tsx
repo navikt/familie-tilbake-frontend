@@ -36,8 +36,6 @@ jest.mock('../../../../context/FagsakContext', () => {
     return {
         useFagsak: jest.fn(() => ({
             fagsak: undefined,
-            isLoading: false,
-            error: undefined,
         })),
     };
 });

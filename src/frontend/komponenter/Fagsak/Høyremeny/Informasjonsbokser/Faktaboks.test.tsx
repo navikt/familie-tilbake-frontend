@@ -60,8 +60,6 @@ const renderFaktaboks = (
 ): RenderResult => {
     const fagsakValue = {
         fagsak: lagFagsak({ ytelsestype: ytelsestypeOverride }),
-        isLoading: false,
-        error: undefined,
     };
 
     return render(

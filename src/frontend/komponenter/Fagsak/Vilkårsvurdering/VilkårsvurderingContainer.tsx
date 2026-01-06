@@ -31,7 +31,7 @@ const VilkårsvurderingContainer: React.FC<Props> = ({ behandling }) => {
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
-    const stegInfotekst = fagsak?.ytelsestype
+    const stegInfotekst = fagsak.ytelsestype
         ? vilkårsvurderingStegInfotekstForYtelsestype[fagsak.ytelsestype]
         : vilkårsvurderingStegInfotekst;
 

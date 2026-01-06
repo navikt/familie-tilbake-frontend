@@ -7,8 +7,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { ToggleName } from '../../../../context/toggles';
 import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
     lagForhåndsvarselQueries,
     lagForhåndsvarselQueriesSendt,
@@ -71,10 +73,13 @@ const setupMock = (): void => {
 };
 
 const renderForhåndsvarselSkjema = (): RenderResult => {
+    const fagsakValue = { fagsak: lagFagsak() };
     const result = render(
-        <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={lagBehandlingDto()} />
-        </QueryClientProvider>
+        <FagsakContext.Provider value={fagsakValue}>
+            <QueryClientProvider client={new QueryClient()}>
+                <Forhåndsvarsel behandling={lagBehandlingDto()} />
+            </QueryClientProvider>
+        </FagsakContext.Provider>
     );
 
     const sendForhåndsvarselFieldset = screen
@@ -91,10 +96,13 @@ const renderForhåndsvarselSkjema = (): RenderResult => {
 const renderForhåndsvarselSkjemaSendt = (): RenderResult => {
     jest.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueriesSendt());
 
+    const fagsakValue = { fagsak: lagFagsak() };
     const result = render(
-        <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={lagBehandlingDto()} />
-        </QueryClientProvider>
+        <FagsakContext.Provider value={fagsakValue}>
+            <QueryClientProvider client={new QueryClient()}>
+                <Forhåndsvarsel behandling={lagBehandlingDto()} />
+            </QueryClientProvider>
+        </FagsakContext.Provider>
     );
 
     const sendForhåndsvarselFieldset = screen

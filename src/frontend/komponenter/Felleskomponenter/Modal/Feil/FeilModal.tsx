@@ -22,7 +22,7 @@ export const FeilModal: React.FC<Props> = ({
     behandlingId,
 }: Props) => {
     const { fagsak } = useFagsak();
-    const eksternFagsakId = fagsak?.eksternFagsakId;
+    const eksternFagsakId = fagsak.eksternFagsakId;
     const feilObjekt = hentFeilObjekt(hentStatus(feil));
     const innheholderCSRFTokenFeil = feil.message?.includes('CSRF-token');
     return (

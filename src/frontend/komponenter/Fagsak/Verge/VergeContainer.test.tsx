@@ -48,8 +48,6 @@ jest.mock('react-router', () => ({
 const renderVergeContainer = (behandling: Behandling): RenderResult => {
     const fagsakValue = {
         fagsak: lagFagsak(),
-        isLoading: false,
-        error: undefined,
     };
 
     return render(

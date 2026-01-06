@@ -6,8 +6,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { ToggleName, type Toggles } from '../../../../context/toggles';
 import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
     lagForhåndsvarselQueries,
     lagForhåndsvarselMutations,
@@ -69,10 +71,13 @@ const setupMock = (): void => {
 };
 
 const renderUnntak = (): RenderResult => {
+    const fagsakValue = { fagsak: lagFagsak() };
     const result = render(
-        <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={lagBehandlingDto()} />
-        </QueryClientProvider>
+        <FagsakContext.Provider value={fagsakValue}>
+            <QueryClientProvider client={new QueryClient()}>
+                <Forhåndsvarsel behandling={lagBehandlingDto()} />
+            </QueryClientProvider>
+        </FagsakContext.Provider>
     );
 
     fireEvent.click(screen.getByLabelText('Nei'));

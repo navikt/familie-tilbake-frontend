@@ -44,8 +44,8 @@ export const Stegflyt: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { fagsak } = useFagsak();
-    const eksternFagsakId = fagsak?.eksternFagsakId;
-    const fagsystem = fagsak?.fagsystem;
+    const eksternFagsakId = fagsak.eksternFagsakId;
+    const fagsystem = fagsak.fagsystem;
     const { toggles: aktiveToggles } = useToggles();
 
     const stegsinfo = mapStegTilStepperSteg(

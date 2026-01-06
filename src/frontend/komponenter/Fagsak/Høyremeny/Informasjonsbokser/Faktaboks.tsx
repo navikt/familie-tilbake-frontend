@@ -45,7 +45,7 @@ export const Faktaboks: React.FC<Props> = ({ behandling }) => {
             <ExpansionCard.Header>
                 <ExpansionCard.Title as="h2" size="small" className="text-lg">
                     Tilbakekreving{' '}
-                    {fagsak?.ytelsestype &&
+                    {fagsak.ytelsestype &&
                         ` av ${ytelsetyper[fagsak.ytelsestype]?.toLocaleLowerCase()}`}
                 </ExpansionCard.Title>
             </ExpansionCard.Header>

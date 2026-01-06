@@ -19,8 +19,9 @@ import * as React from 'react';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
-import { FagsakProvider } from '../../../context/FagsakContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
     lagVilkårsvurderingPeriode,
     lagVilkårsvurderingResponse,
@@ -48,7 +49,6 @@ jest.mock('@tanstack/react-query', () => {
     return {
         useQuery: jest.fn(() => ({
             data: undefined,
-            isLoading: false,
             isError: false,
             error: null,
         })),
@@ -128,8 +128,9 @@ const renderVilkårsvurderingPerioder = (): RenderResult => {
         ...periode,
     }));
 
+    const fagsakValue = { fagsak: lagFagsak() };
     return render(
-        <FagsakProvider>
+        <FagsakContext.Provider value={fagsakValue}>
             <BehandlingProvider>
                 <VilkårsvurderingProvider behandling={lagBehandling()}>
                     <VilkårsvurderingPerioder
@@ -140,7 +141,7 @@ const renderVilkårsvurderingPerioder = (): RenderResult => {
                     />
                 </VilkårsvurderingProvider>
             </BehandlingProvider>
-        </FagsakProvider>
+        </FagsakContext.Provider>
     );
 };
 

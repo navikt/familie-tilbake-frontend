@@ -20,8 +20,10 @@ import * as React from 'react';
 
 import VedtakContainer from './VedtakContainer';
 import { VedtakProvider } from './VedtakContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
     lagOppsummeringAvsnitt,
     lagPeriode2Avsnitt,
@@ -63,12 +65,16 @@ jest.mock('../../../hooks/useSammenslåPerioder', () => ({
 
 const mockedSettIkkePersistertKomponent = jest.fn();
 
-const renderVedtakContainer = (behandling: Behandling): RenderResult =>
-    render(
-        <VedtakProvider behandling={behandling}>
-            <VedtakContainer behandling={behandling} />
-        </VedtakProvider>
+const renderVedtakContainer = (behandling: Behandling): RenderResult => {
+    const fagsakValue = { fagsak: lagFagsak() };
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <VedtakProvider behandling={behandling}>
+                <VedtakContainer behandling={behandling} />
+            </VedtakProvider>
+        </FagsakContext.Provider>
     );
+};
 
 const perioder: BeregningsresultatPeriode[] = [
     {

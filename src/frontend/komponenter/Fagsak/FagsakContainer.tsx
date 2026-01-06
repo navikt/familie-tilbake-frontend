@@ -29,7 +29,7 @@ const FagsakContainer: React.FC = () => {
     const location = useLocation();
     const behandlingId = location.pathname.split('/')[6];
 
-    const { fagsak, isLoading } = useFagsak();
+    const { fagsak } = useFagsak();
     const {
         behandling,
         hentBehandlingMedEksternBrukId,
@@ -48,15 +48,15 @@ const FagsakContainer: React.FC = () => {
             setBehandlingId(behandlingId);
         }
 
-        if (fagsak?.bruker.personIdent) {
+        if (fagsak.bruker.personIdent) {
             setPersonIdent(fagsak.bruker.personIdent);
         }
 
-        if (fagsak?.eksternFagsakId) {
+        if (fagsak.eksternFagsakId) {
             setEksternFagsakId(fagsak.eksternFagsakId);
         }
 
-        if (fagsak?.fagsystem) {
+        if (fagsak.fagsystem) {
             setFagsystem(fagsak.fagsystem);
         }
 
@@ -68,11 +68,11 @@ const FagsakContainer: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsak, behandlingId]);
 
-    if (isLoading || behandling?.status === RessursStatus.Henter) {
+    if (behandling?.status === RessursStatus.Henter) {
         return <HenterBehandling />;
     }
 
-    if (fagsak && behandling?.status === RessursStatus.Suksess) {
+    if (behandling?.status === RessursStatus.Suksess) {
         return (
             <>
                 {ventegrunn && (

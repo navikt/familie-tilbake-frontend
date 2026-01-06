@@ -13,8 +13,8 @@ type Props = {
 
 export const HistoriskeVurderinger: React.FC<Props> = ({ behandling }) => {
     const { fagsak } = useFagsak();
-    const fagsystem = fagsak?.fagsystem;
-    const eksternFagsakId = fagsak?.eksternFagsakId;
+    const fagsystem = fagsak.fagsystem;
+    const eksternFagsakId = fagsak.eksternFagsakId;
 
     const { innloggetSaksbehandler } = useApp();
     const harTilgang =

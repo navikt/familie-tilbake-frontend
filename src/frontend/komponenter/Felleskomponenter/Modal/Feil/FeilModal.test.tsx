@@ -16,9 +16,7 @@ const renderFeilModal = (
     fagsakOverride?: ReturnType<typeof lagFagsak>
 ): RenderResult => {
     const fagsakValue = {
-        fagsak: fagsakOverride,
-        isLoading: false,
-        error: undefined,
+        fagsak: fagsakOverride ?? lagFagsak(),
     };
 
     return render(
@@ -184,12 +182,12 @@ describe('FeilModal', () => {
         expect(screen.getByText(`Behandling ID: ${behandlingId}`)).toBeInTheDocument();
     });
 
-    test('Viser ikke fagsakId og behandlingsId når de ikke er tilgjengelige', () => {
+    test('Viser fagsakId men ikke behandlingsId når behandling ikke er tilgjengelig', () => {
         const mockFeil = new Feil('Du har rollen BESLUTTER og trenger rollen FORVALTER', 403);
 
         renderFeilModal(mockFeil);
 
-        expect(screen.queryByText(/Fagsak ID:/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Fagsak ID:/)).toBeInTheDocument();
         expect(screen.queryByText(/Behandling ID:/)).not.toBeInTheDocument();
     });
 

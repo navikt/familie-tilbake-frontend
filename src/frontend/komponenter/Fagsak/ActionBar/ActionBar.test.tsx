@@ -7,6 +7,8 @@ import React from 'react';
 import '@testing-library/jest-dom';
 
 import { ActionBar } from './ActionBar';
+import { FagsakContext } from '../../../context/FagsakContext';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
@@ -22,17 +24,24 @@ const renderActionBar = (
     onForrige: () => void,
     onNeste: () => void,
     isLoading: boolean = false
-): RenderResult =>
-    render(
-        <ActionBar
-            stegtekst="Steg 2 av 5"
-            forrigeAriaLabel="gå tilbake til faktasteget"
-            nesteAriaLabel="gå videre til vilkårsvurderingssteget"
-            onNeste={onNeste}
-            isLoading={isLoading}
-            onForrige={onForrige}
-        />
+): RenderResult => {
+    const fagsakValue = {
+        fagsak: lagFagsak(),
+    };
+
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <ActionBar
+                stegtekst="Steg 2 av 5"
+                forrigeAriaLabel="gå tilbake til faktasteget"
+                nesteAriaLabel="gå videre til vilkårsvurderingssteget"
+                onNeste={onNeste}
+                isLoading={isLoading}
+                onForrige={onForrige}
+            />
+        </FagsakContext.Provider>
     );
+};
 
 describe('ActionBar', () => {
     beforeEach(() => {

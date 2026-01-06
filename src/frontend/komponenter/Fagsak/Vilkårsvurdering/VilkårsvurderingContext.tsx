@@ -109,10 +109,8 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
         } = useBehandling();
         const { gjerVilkårsvurderingKall, sendInnVilkårsvurdering } = useBehandlingApi();
         const navigate = useNavigate();
-        const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(
-            fagsak?.ytelsestype ?? ''
-        );
-        const behandlingUrl = `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+        const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(fagsak.ytelsestype ?? '');
+        const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
         useEffect(() => {
             if (!visVenteModal) {

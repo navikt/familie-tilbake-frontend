@@ -86,7 +86,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling }: Pr
     const { utførRedirect } = useRedirectEtterLagring();
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
     const navigate = useNavigate();
-    const behandlingUrl = `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+    const behandlingUrl = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
     useEffect(() => {
         if (visVenteModal === false) {
@@ -231,7 +231,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling }: Pr
                 if (respons.status === RessursStatus.Suksess) {
                     hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                         navigate(
-                            `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                         );
                     });
                 }

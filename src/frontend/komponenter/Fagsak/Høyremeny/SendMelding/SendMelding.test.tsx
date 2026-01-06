@@ -48,8 +48,6 @@ const renderSendMelding = (
 ): RenderResult => {
     const fagsakValue = {
         fagsak: lagFagsak({ språkkode }),
-        isLoading: false,
-        error: undefined,
     };
 
     return render(

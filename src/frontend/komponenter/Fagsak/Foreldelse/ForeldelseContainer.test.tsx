@@ -15,8 +15,10 @@ import * as React from 'react';
 
 import ForeldelseContainer from './ForeldelseContainer';
 import { ForeldelseProvider } from './ForeldelseContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagForeldelsePeriode, lagForeldelseResponse } from '../../../testdata/foreldelseFactory';
 import { Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
@@ -44,10 +46,13 @@ jest.mock('react-router', () => ({
 }));
 
 const renderForeldelseContainer = (behandling: Behandling): RenderResult => {
+    const fagsakValue = { fagsak: lagFagsak() };
     return render(
-        <ForeldelseProvider behandling={behandling}>
-            <ForeldelseContainer behandling={behandling} />
-        </ForeldelseProvider>
+        <FagsakContext.Provider value={fagsakValue}>
+            <ForeldelseProvider behandling={behandling}>
+                <ForeldelseContainer behandling={behandling} />
+            </ForeldelseProvider>
+        </FagsakContext.Provider>
     );
 };
 

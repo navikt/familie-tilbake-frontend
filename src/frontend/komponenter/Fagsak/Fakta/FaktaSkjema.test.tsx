@@ -8,6 +8,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { FaktaSkjema } from './FaktaSkjema';
+import { FagsakContext } from '../../../context/FagsakContext';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { configureZod } from '../../../utils/zodConfig';
 
 jest.mock('react-router', () => ({
@@ -85,15 +87,22 @@ const renderFakta = (
             },
         });
     });
+
+    const fagsakValue = {
+        fagsak: lagFagsak(),
+    };
+
     return {
         result: render(
-            <QueryClientProvider client={client}>
-                <FaktaSkjema
-                    faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
-                    behandlingId="unik"
-                    behandlingUrl="https://tilbakekreving"
-                />
-            </QueryClientProvider>
+            <FagsakContext.Provider value={fagsakValue}>
+                <QueryClientProvider client={client}>
+                    <FaktaSkjema
+                        faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
+                        behandlingId="unik"
+                        behandlingUrl="https://tilbakekreving"
+                    />
+                </QueryClientProvider>
+            </FagsakContext.Provider>
         ),
         mutationBody,
     };

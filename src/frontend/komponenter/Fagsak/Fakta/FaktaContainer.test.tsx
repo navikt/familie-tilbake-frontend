@@ -45,8 +45,6 @@ const renderFaktaContainer = (
 ): RenderResult => {
     const fagsakValue = {
         fagsak: lagFagsak({ ytelsestype }),
-        isLoading: false,
-        error: undefined,
     };
 
     return render(

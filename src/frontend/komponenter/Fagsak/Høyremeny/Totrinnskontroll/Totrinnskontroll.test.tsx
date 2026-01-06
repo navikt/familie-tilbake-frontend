@@ -14,7 +14,9 @@ import * as React from 'react';
 
 import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagTotrinnsStegInfo } from '../../../../testdata/totrinnskontrollFactory';
 import { Behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
@@ -34,12 +36,16 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderTotrinnskontroll = (behandling: Behandling): RenderResult =>
-    render(
-        <TotrinnskontrollProvider behandling={behandling}>
-            <Totrinnskontroll />
-        </TotrinnskontrollProvider>
+const renderTotrinnskontroll = (behandling: Behandling): RenderResult => {
+    const fagsakValue = { fagsak: lagFagsak() };
+    return render(
+        <FagsakContext.Provider value={fagsakValue}>
+            <TotrinnskontrollProvider behandling={behandling}>
+                <Totrinnskontroll />
+            </TotrinnskontrollProvider>
+        </FagsakContext.Provider>
     );
+};
 
 const setupMocks = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkontroll): void => {
     mockUseBehandlingApi.mockImplementation(() => ({

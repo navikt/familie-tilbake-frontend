@@ -1,44 +1,31 @@
 import type { FagsakDto } from '../generated';
 import type { ReactNode } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import React, { createContext, useContext } from 'react';
 import { useParams } from 'react-router';
 
 import { hentFagsak } from '../generated/sdk.gen';
 import { Fagsystem } from '../kodeverk';
 
-export type FagsakHook = {
-    fagsak: FagsakDto | undefined;
-    isLoading: boolean;
-    error: string | undefined;
-};
-
 type FagsakContextType = {
-    fagsak: FagsakDto | undefined;
-    isLoading: boolean;
-    error: string | undefined;
+    fagsak: FagsakDto;
 };
 
 export const FagsakContext = createContext<FagsakContextType | undefined>(undefined);
 
-type FagsakProviderProps = {
+type Props = {
     children: ReactNode;
 };
 
-export const FagsakProvider = ({ children }: FagsakProviderProps): React.ReactElement => {
+export const FagsakProvider = ({ children }: Props): React.ReactElement => {
     const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
     const fagsystem =
         fagsystemParam == 'KS'
             ? Fagsystem[fagsystemParam as keyof typeof Fagsystem]
             : (fagsystemParam as Fagsystem);
 
-    const {
-        data: fagsak,
-        isLoading,
-        isError,
-        error,
-    } = useQuery({
+    const { data: fagsak } = useSuspenseQuery({
         queryKey: ['fagsak', fagsystem, eksternFagsakId],
         queryFn: async () => {
             const result = await hentFagsak({
@@ -49,33 +36,28 @@ export const FagsakProvider = ({ children }: FagsakProviderProps): React.ReactEl
                 },
             });
 
-            return result.data?.data;
+            if (!result.data?.data) {
+                throw new Error('Kunne ikke laste fagsak');
+            }
+
+            return result.data.data;
         },
-        enabled: !!fagsystem && !!eksternFagsakId,
     });
 
-    const value = {
+    const value: FagsakContextType = {
         fagsak,
-        isLoading,
-        error: isError ? error?.message : undefined,
     };
 
     return <FagsakContext.Provider value={value}>{children}</FagsakContext.Provider>;
 };
 
-export const useFagsak = (): FagsakHook => {
+export const useFagsak = (): FagsakContextType => {
     const context = useContext(FagsakContext);
     if (!context) {
-        return {
-            fagsak: undefined,
-            isLoading: false,
-            error: undefined,
-        };
+        throw new Error('useFagsak må brukes innenfor FagsakProvider');
     }
 
     return {
         fagsak: context.fagsak,
-        isLoading: context.isLoading,
-        error: context.error,
     };
 };

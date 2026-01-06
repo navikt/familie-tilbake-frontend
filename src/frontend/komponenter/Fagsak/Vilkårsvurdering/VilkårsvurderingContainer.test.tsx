@@ -48,7 +48,6 @@ jest.mock('@tanstack/react-query', () => {
     return {
         useQuery: jest.fn(() => ({
             data: undefined,
-            isLoading: false,
             isError: false,
             error: null,
         })),
@@ -128,8 +127,6 @@ const setupMocks = (): void => {
 const renderVilkårsvurderingContainer = (behandling: Behandling): RenderResult => {
     const fagsakValue = {
         fagsak: lagFagsak({ ytelsestype: 'BARNETRYGD' }),
-        isLoading: false,
-        error: undefined,
     };
 
     return render(

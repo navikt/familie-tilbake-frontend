@@ -70,8 +70,6 @@ const renderBrevmottakere = (behandling: Behandling): RenderResult => {
 
     const fagsakValue = {
         fagsak: lagFagsak(),
-        isLoading: false,
-        error: undefined,
     };
 
     return render(

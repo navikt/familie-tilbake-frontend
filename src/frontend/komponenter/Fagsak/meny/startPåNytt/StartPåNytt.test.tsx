@@ -67,8 +67,6 @@ describe('StartPåNytt', () => {
 
         const fagsakValue = {
             fagsak: lagFagsak({ eksternFagsakId: '123' }),
-            isLoading: false,
-            error: undefined,
         };
 
         render(

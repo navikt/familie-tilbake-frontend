@@ -89,7 +89,7 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
                         label={
                             <LabelMedSpråk
                                 label="Fritekst til brev"
-                                språk={målform[fagsak?.språkkode ?? Målform.Nb]}
+                                språk={målform[fagsak.språkkode ?? Målform.Nb]}
                             />
                         }
                         aria-label="Fritekst til brev"

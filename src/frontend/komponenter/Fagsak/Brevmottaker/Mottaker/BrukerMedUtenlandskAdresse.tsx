@@ -7,7 +7,7 @@ import { ManuellRegistrering } from '../Adressekilde/ManuellRegistrering';
 export const BrukerMedUtenlandskAdresse: React.FC = () => {
     const { fagsak } = useFagsak();
 
-    const brukerNavn = fagsak?.bruker?.navn ? fagsak.bruker.navn : '';
+    const brukerNavn = fagsak.bruker?.navn ? fagsak.bruker.navn : '';
 
     return (
         <ManuellRegistrering

@@ -39,8 +39,6 @@ const renderBrukerInformasjon = (
             bruker: bruker ? baseBruker(bruker) : undefined,
             institusjon: institusjon ? baseInstitusjon(institusjon) : undefined,
         }),
-        isLoading: false,
-        error: undefined,
     };
 
     return render(

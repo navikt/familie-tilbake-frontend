@@ -54,8 +54,6 @@ const renderStegflyt = (): RenderResult => {
             eksternFagsakId: '123',
             fagsystem: Fagsystem.BA,
         }),
-        isLoading: false,
-        error: undefined,
     };
 
     return render(

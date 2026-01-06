@@ -48,7 +48,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(
 
         const navigerTilSide = (side: SynligSteg): void => {
             navigate(
-                `/fagsystem/${fagsak?.fagsystem}/fagsak/${fagsak?.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
+                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );
         };
 

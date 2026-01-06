@@ -8,8 +8,10 @@ import * as React from 'react';
 
 import { FaktaProvider } from '../FaktaContext';
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { HendelseUndertype, HendelseType } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagFaktaPeriode } from '../../../../testdata/faktaFactory';
 
 const mockUseBehandling = jest.fn();
@@ -26,19 +28,22 @@ const renderComponent = (
     periode: FaktaPeriodeSkjemaData,
     hendelseTyper: HendelseType[] | undefined
 ): RenderResult => {
+    const fagsakValue = { fagsak: lagFagsak() };
     return render(
-        <FaktaProvider behandling={lagBehandling()}>
-            <table>
-                <tbody>
-                    <FaktaPeriodeSkjema
-                        periode={periode}
-                        hendelseTyper={hendelseTyper}
-                        index={0}
-                        erLesevisning={false}
-                    />
-                </tbody>
-            </table>
-        </FaktaProvider>
+        <FagsakContext.Provider value={fagsakValue}>
+            <FaktaProvider behandling={lagBehandling()}>
+                <table>
+                    <tbody>
+                        <FaktaPeriodeSkjema
+                            periode={periode}
+                            hendelseTyper={hendelseTyper}
+                            index={0}
+                            erLesevisning={false}
+                        />
+                    </tbody>
+                </table>
+            </FaktaProvider>
+        </FagsakContext.Provider>
     );
 };
 

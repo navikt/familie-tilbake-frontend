@@ -84,12 +84,14 @@ const AppRoutes: React.FC = () => {
 
 const ProvidersWrapper: React.FC = () => (
     <TogglesProvider>
-        <FagsakProvider>
-            <BehandlingProvider>
-                <Outlet />
-                <UlagretDataModal />
-            </BehandlingProvider>
-        </FagsakProvider>
+        <Suspense fallback={<div>Laster fagsak...</div>}>
+            <FagsakProvider>
+                <BehandlingProvider>
+                    <Outlet />
+                    <UlagretDataModal />
+                </BehandlingProvider>
+            </FagsakProvider>
+        </Suspense>
     </TogglesProvider>
 );
 

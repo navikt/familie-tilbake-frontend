@@ -25,7 +25,7 @@ type Props = {
 
 const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
     const { fagsak } = useFagsak();
-    const hendelsestyper = fagsak?.ytelsestype
+    const hendelsestyper = fagsak.ytelsestype
         ? hentHendelseTyper(fagsak.ytelsestype, !!fagsak.institusjon)
         : [];
 

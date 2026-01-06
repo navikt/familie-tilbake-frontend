@@ -44,7 +44,7 @@ export const Behandlingsmeny: React.FC = () => {
         !vedtakFattetEllerFattes &&
         behandling.data.kanEndres;
     const erSattPåvent = behandling.data.erBehandlingPåVent || ventegrunn;
-    const kanEndreEnhet = fagsak?.fagsystem === Fagsystem.BA && fagsak?.ytelsestype;
+    const kanEndreEnhet = fagsak.fagsystem === Fagsystem.BA && fagsak.ytelsestype;
     return (
         <ActionMenu open={holdMenyenÅpen} onOpenChange={setHoldMenyenÅpen}>
             <ActionMenu.Trigger>

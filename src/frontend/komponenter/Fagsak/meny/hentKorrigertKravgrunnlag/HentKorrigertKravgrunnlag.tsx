@@ -22,8 +22,8 @@ export const HentKorrigertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { fagsak } = useFagsak();
-    const fagsystem = fagsak?.fagsystem;
-    const eksternFagsakId = fagsak?.eksternFagsakId;
+    const fagsystem = fagsak.fagsystem;
+    const eksternFagsakId = fagsak.eksternFagsakId;
 
     const hentKorrigertKravgrunnlag = (): void => {
         nullstillIkkePersisterteKomponenter();
