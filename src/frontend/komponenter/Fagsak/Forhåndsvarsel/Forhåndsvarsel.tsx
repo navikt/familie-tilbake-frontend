@@ -204,7 +204,14 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
             {toggles[ToggleName.Forhåndsvarselsteg] && varselErSendt && (
                 <FormProvider {...uttalelseMethods}>
-                    <Uttalelse handleUttalelseSubmit={handleUttalelseSubmit} kanUtsetteFrist />
+                    <Uttalelse
+                        handleUttalelseSubmit={handleUttalelseSubmit}
+                        readOnly={
+                            !!forhåndsvarselInfo.brukeruttalelse ||
+                            forhåndsvarselInfo.utsettUttalelseFrist.length > 0
+                        }
+                        kanUtsetteFrist
+                    />
                 </FormProvider>
             )}
 
