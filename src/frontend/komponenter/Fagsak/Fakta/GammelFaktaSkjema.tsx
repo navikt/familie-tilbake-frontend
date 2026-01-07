@@ -200,7 +200,13 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
                 forrigeAriaLabel={behandling.harVerge ? 'Gå tilbake til vergesteget' : undefined}
-                nesteAriaLabel="Gå videre til foreldelsessteget"
+                nesteAriaLabel={
+                    behandling.behandlingsstegsinfo.some(
+                        steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+                    )
+                        ? 'Gå videre til forhåndsvarselsteget'
+                        : 'Gå videre til foreldelsessteget'
+                }
                 onForrige={behandling.harVerge ? gåTilForrige : undefined}
                 onNeste={sendInnSkjema}
                 isLoading={senderInn}

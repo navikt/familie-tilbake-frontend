@@ -157,7 +157,15 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling }: Pr
     };
 
     const gåTilForrigeSteg = (): void => {
-        navigate(`${behandlingUrl}/${SYNLIGE_STEG.FAKTA.href}`);
+        navigate(
+            `${behandlingUrl}/${
+                behandling.behandlingsstegsinfo.some(
+                    steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+                )
+                    ? SYNLIGE_STEG.FORHÅNDSVARSEL.href
+                    : SYNLIGE_STEG.FAKTA.href
+            }`
+        );
     };
 
     const oppdaterPeriode = (periode: ForeldelsePeriodeSkjemeData): void => {

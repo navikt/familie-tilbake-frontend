@@ -88,7 +88,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const containerRef = useRef<HTMLDivElement>(null);
     const { toggles } = useToggles();
     const [parentBounds, setParentBounds] = useState({ width: 'auto' });
-
     const { actionBarStegtekst } = useBehandling();
 
     const {
@@ -101,6 +100,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendUnntakMutation,
         sendUnntak,
         gåTilNeste,
+        gåTilForrige,
     } = useForhåndsvarselMutations(behandling);
 
     const mutations = [
@@ -162,18 +162,21 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'Utsett frist';
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
-        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei) {
-            return 'Send inn unntak';
         }
         return 'Neste';
     };
 
+    const skalSendeForhåndsvarsel =
+        skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt;
+    const skalSendeUnntak =
+        skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
+        !forhåndsvarselInfo?.forhåndsvarselUnntak;
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
         data: ForhåndsvarselFormData
     ): void => {
-        if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt) {
+        if (skalSendeForhåndsvarsel) {
             sendForhåndsvarsel(data);
-        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei) {
+        } else if (skalSendeUnntak) {
             sendUnntak(data);
         } else {
             gåTilNeste();
@@ -188,6 +191,14 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         }
         sendBrukeruttalelse(data);
     };
+
+    const formId = !varselErSendt
+        ? 'opprettForm'
+        : varselErSendt && !forhåndsvarselInfo?.brukeruttalelse
+          ? 'uttalelseForm'
+          : skalSendeUnntak
+            ? 'unntakForm'
+            : undefined; // 'uttalelseUtenUtsettForm'; undefined hvis bare "Neste"
 
     return (
         <>
@@ -223,11 +234,18 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     sendBrukeruttalelseMutation.isPending ||
                     sendUnntakMutation?.isPending
                 }
-                forrigeAriaLabel={undefined}
-                onForrige={undefined}
+                forrigeAriaLabel="Gå til fakta om feilutbetaling"
+                onForrige={gåTilForrige}
                 nesteAriaLabel={getNesteKnappTekst()}
-                type="submit"
-                formId={varselErSendt ? 'uttalelseForm' : 'opprettForm'}
+                {...(formId
+                    ? {
+                          type: 'submit' as const,
+                          formId: formId,
+                      }
+                    : {
+                          type: 'button' as const,
+                          onNeste: gåTilNeste,
+                      })}
             />
 
             {sendForhåndsvarselMutation.isSuccess && (

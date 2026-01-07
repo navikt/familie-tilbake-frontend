@@ -67,6 +67,7 @@ export type UseForhåndsvarselMutationsReturn = {
     readonly sendUtsettUttalelseFrist: (formData: UttalelseMedFristFormData) => void;
     readonly seForhåndsvisning: (fritekst: string) => void;
     readonly gåTilNeste: () => void;
+    readonly gåTilForrige: () => void;
 };
 
 const brukerUttalelsePayload = (
@@ -122,6 +123,12 @@ export const useForhåndsvarselMutations = (
     const gåTilNeste = (): void => {
         navigate(
             `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
+        );
+    };
+
+    const gåTilForrige = (): void => {
+        navigate(
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
         );
     };
 
@@ -238,5 +245,6 @@ export const useForhåndsvarselMutations = (
             });
         },
         gåTilNeste,
+        gåTilForrige,
     };
 };

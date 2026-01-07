@@ -310,8 +310,11 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
     const sendInnSkjema = (): void => {
         if (stegErBehandlet && !harEndretOpplysninger()) {
             nullstillIkkePersisterteKomponenter();
+            const harForhåndsvarselSteg = behandling.behandlingsstegsinfo.some(
+                steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+            );
             utførRedirect(
-                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
+                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${harForhåndsvarselSteg ? SYNLIGE_STEG.FORHÅNDSVARSEL.href : SYNLIGE_STEG.FORELDELSE.href}`
             );
         } else {
             const feilmeldinger = validerForInnsending();
