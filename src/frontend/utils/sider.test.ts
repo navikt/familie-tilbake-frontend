@@ -22,7 +22,7 @@ const mockBehandling = lagBehandling({
 
 describe('Sider', () => {
     test('visSide skal ikke vise brevmottaker dersom den informasjonen ikke er på behandlingen', () => {
-        const result = visSide(Behandlingssteg.Brevmottaker, mockBehandling, {});
+        const result = visSide(Behandlingssteg.Brevmottaker, mockBehandling);
         expect(result).toBe(false);
     });
 
@@ -31,13 +31,13 @@ describe('Sider', () => {
             ...mockBehandling,
             behandlingsstegsinfo: [...mockBehandling.behandlingsstegsinfo, lagBrevmottakerSteg()],
         };
-        const result = visSide(Behandlingssteg.Brevmottaker, mockBehandlingMedBrevmottakerSteg, {});
+        const result = visSide(Behandlingssteg.Brevmottaker, mockBehandlingMedBrevmottakerSteg);
         expect(result).toBe(true);
     });
 
     test('visSide skal vise de synlige stegene: Fakta, Foreldelse, Vilkårsvurdering, Vedtak', () => {
         mockBehandling.behandlingsstegsinfo?.forEach(stegInfo => {
-            const result = visSide(stegInfo.behandlingssteg, mockBehandling as Behandling, {});
+            const result = visSide(stegInfo.behandlingssteg, mockBehandling as Behandling);
             expect(result).toBe(true);
         });
     });
