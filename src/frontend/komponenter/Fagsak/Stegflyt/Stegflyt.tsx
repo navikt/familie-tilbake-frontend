@@ -7,7 +7,6 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { erStegUtført, useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
-import { useToggles } from '../../../context/TogglesContext';
 import { type Behandling, type Behandlingsstegstilstand } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { erSidenAktiv, SYNLIGE_STEG, visSide } from '../../../utils/sider';
@@ -19,12 +18,11 @@ interface StepperSteg extends SynligSteg {
 
 const mapStegTilStepperSteg = (
     stegsinfo: Behandlingsstegstilstand[],
-    behandling: Ressurs<Behandling> | undefined,
-    aktiveToggles: Record<string, boolean>
+    behandling: Ressurs<Behandling> | undefined
 ): StepperSteg[] | undefined => {
     if (behandling?.status !== RessursStatus.Suksess) return undefined;
     return Object.values(SYNLIGE_STEG)
-        .filter(({ steg }) => visSide(steg, behandling.data, aktiveToggles))
+        .filter(({ steg }) => visSide(steg, behandling.data))
         .map(synligSteg => {
             const { behandlingsstegstatus } =
                 stegsinfo.find(({ behandlingssteg }) => behandlingssteg === synligSteg.steg) || {};
@@ -44,12 +42,10 @@ export const Stegflyt: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { fagsystem, eksternFagsakId } = useFagsak();
-    const { toggles: aktiveToggles } = useToggles();
 
     const stegsinfo = mapStegTilStepperSteg(
         behandling?.status === RessursStatus.Suksess ? behandling.data.behandlingsstegsinfo : [],
-        behandling,
-        aktiveToggles
+        behandling
     );
 
     const aktivStegindeks =
