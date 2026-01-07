@@ -2,11 +2,9 @@ import type { Behandling } from '../../typer/behandling';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button } from '@navikt/ds-react';
-import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { Suspense, useRef } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
-import { styled } from 'styled-components';
 
 import { BehandlingContainerSkeleton } from './BehandlingContainerSkeleton';
 import { Fakta } from './Fakta/Fakta';
@@ -16,6 +14,7 @@ import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
 import { Forhåndsvarsel } from './Forhåndsvarsel/Forhåndsvarsel';
 import { HøyremenySkeleton } from './Høyremeny/HøyremenySkeleton';
 import { Stegflyt } from './Stegflyt/Stegflyt';
+import { UfullstendigSakContainer } from './UfullstendigSakContainer/UfullstendigSakContainer';
 import { VedtakProvider } from './Vedtak/VedtakContext';
 import { VergeProvider } from './Verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
@@ -63,11 +62,6 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
-const HenlagtContainer = styled.div`
-    padding: ${ASpacing3};
-    text-align: center;
-`;
-
 type Props = {
     behandling: Behandling;
 };
@@ -107,16 +101,19 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
     return behandling.erBehandlingHenlagt ? (
         <>
             <div className="flex-1 overflow-auto">
-                <HenlagtContainer>
+                <UfullstendigSakContainer containerAriaLabel="Behandlingen er henlagt">
                     <BodyShort size="small">Behandlingen er henlagt</BodyShort>
-                </HenlagtContainer>
+                </UfullstendigSakContainer>
             </div>
 
             <Høyremeny behandling={behandling} dialogRef={ref} />
         </>
     ) : !harKravgrunnlag ? (
         <>
-            <div className="flex-1 overflow-auto" />
+            <div className="flex-1 overflow-auto">
+                <UfullstendigSakContainer containerAriaLabel="Venter på kravgrunnlag" />
+            </div>
+
             <Høyremeny behandling={behandling} dialogRef={ref} />
         </>
     ) : erHistoriskeVerdier ? (
