@@ -198,7 +198,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     varselErSendt={varselErSendt}
                     parentBounds={parentBounds}
                     handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
-                    readOnly={forhåndsvarselInfo?.forhåndsvarselUnntak !== undefined}
+                    readOnly={!!forhåndsvarselInfo?.forhåndsvarselUnntak}
                 />
             </FormProvider>
 
