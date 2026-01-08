@@ -22,8 +22,6 @@ import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historik
 import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
-import { ToggleName } from '../../context/toggles';
-import { useToggles } from '../../context/TogglesContext';
 import { Behandlingstatus } from '../../typer/behandling';
 import { tilBehandlingDto } from '../../utils/behandlingMapper';
 import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from '../../utils/sider';
@@ -71,7 +69,6 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
     const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
     const navigate = useNavigate();
     const location = useLocation();
-    const { toggles } = useToggles();
     const ref = useRef<HTMLDialogElement>(null);
 
     const ønsketSide = location.pathname.split('/')[7];
@@ -183,7 +180,7 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                                 element={
-                                    toggles[ToggleName.NyttFaktasteg] ? (
+                                    behandling.erNyModell ? (
                                         <Fakta
                                             behandlingId={behandling.behandlingId}
                                             behandlingUrl={behandlingUrl}
