@@ -85,6 +85,9 @@ const renderFakta = (
         client.setMutationDefaults(['oppdaterFakta'], {
             mutationFn: async (fakta: OppdaterFaktaData) => {
                 resolve(fakta);
+                return faktaOmFeilutbetaling({
+                    ferdigvurdert: true,
+                });
             },
         });
     });
