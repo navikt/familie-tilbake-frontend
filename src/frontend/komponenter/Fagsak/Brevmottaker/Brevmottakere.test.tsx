@@ -1,6 +1,5 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { ManuellBrevmottakerResponseDto } from '../../../typer/api';
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto, ManuellBrevmottakerResponsDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 import type { NavigateFunction } from 'react-router';
 
@@ -23,7 +22,7 @@ jest.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
-const createMockManuelleBrevmottakere = (): ManuellBrevmottakerResponseDto[] => [
+const createMockManuelleBrevmottakere = (): ManuellBrevmottakerResponsDto[] => [
     {
         id: 'mottaker-1',
         brevmottaker: {
@@ -40,7 +39,7 @@ const createMockManuelleBrevmottakere = (): ManuellBrevmottakerResponseDto[] => 
     },
 ];
 
-const createMockOrganisasjonsBrevmottaker = (): ManuellBrevmottakerResponseDto[] => [
+const createMockOrganisasjonsBrevmottaker = (): ManuellBrevmottakerResponsDto[] => [
     {
         id: 'org-mottaker-1',
         brevmottaker: {
@@ -51,7 +50,7 @@ const createMockOrganisasjonsBrevmottaker = (): ManuellBrevmottakerResponseDto[]
     },
 ];
 
-const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponseDto[] => [
+const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponsDto[] => [
     {
         id: 'dodsbo-mottaker-1',
         brevmottaker: {
@@ -61,7 +60,7 @@ const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponseDto[] => [
     },
 ];
 
-const renderBrevmottakere = (behandling: Behandling): RenderResult => {
+const renderBrevmottakere = (behandling: BehandlingDto): RenderResult => {
     mockUseBehandling.mockImplementation(() => ({
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 5'),
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),

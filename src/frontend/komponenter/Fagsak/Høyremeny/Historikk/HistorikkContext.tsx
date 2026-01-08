@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 import type { HistorikkInnslag } from '../../../../typer/historikk';
 import type { SynligSteg } from '../../../../utils/sider';
 
@@ -12,7 +12,7 @@ import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../
 import { Menysider } from '../Menykontainer';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
     valgtMenyside: Menysider;
 };
 

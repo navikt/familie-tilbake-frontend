@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 import type { ForeldelsePeriode } from '../../../../typer/tilbakekrevingstyper';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
@@ -51,7 +51,7 @@ const genererRader = (
 };
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
     perioder: ForeldelsePeriodeSkjemeData[];
     erLesevisning: boolean;
 };

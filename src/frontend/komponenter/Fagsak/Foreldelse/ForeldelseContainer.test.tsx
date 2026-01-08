@@ -1,7 +1,7 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
@@ -45,7 +45,7 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderForeldelseContainer = (behandling: Behandling): RenderResult => {
+const renderForeldelseContainer = (behandling: BehandlingDto): RenderResult => {
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
             <ForeldelseProvider behandling={behandling}>
@@ -101,7 +101,6 @@ const setupMock = (
         erStegAutoutført: (): boolean => autoutført,
         visVenteModal: false,
         behandlingILesemodus: lesevisning,
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
         settIkkePersistertKomponent: jest.fn(),
         nullstillIkkePersisterteKomponenter: jest.fn(),
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 2 av 4'),

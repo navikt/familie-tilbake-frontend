@@ -1,7 +1,6 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { SchemaEnum4 } from '../../../generated';
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto, SchemaEnum4 } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
@@ -40,7 +39,7 @@ jest.mock('react-router', () => ({
 const mockedSettIkkePersistertKomponent = jest.fn();
 
 const renderFaktaContainer = (
-    behandling: Behandling,
+    behandling: BehandlingDto,
     ytelsestype: SchemaEnum4 = 'BARNETRYGD'
 ): RenderResult => {
     return render(
@@ -97,7 +96,6 @@ const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: FaktaResponse)
         erStegBehandlet: (): boolean => behandlet,
         visVenteModal: false,
         behandlingILesemodus: lesemodus,
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
         settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
         nullstillIkkePersisterteKomponenter: jest.fn(),
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 1 av 4'),

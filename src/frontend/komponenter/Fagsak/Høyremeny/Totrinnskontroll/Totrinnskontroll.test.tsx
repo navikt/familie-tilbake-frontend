@@ -1,6 +1,6 @@
 import type { BehandlingApiHook } from '../../../../api/behandling';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 import type { Ressurs } from '../../../../typer/ressurs';
 import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
 import type { RenderResult } from '@testing-library/react';
@@ -36,7 +36,7 @@ jest.mock('react-router', () => ({
     useNavigate: (): NavigateFunction => jest.fn(),
 }));
 
-const renderTotrinnskontroll = (behandling: Behandling): RenderResult => {
+const renderTotrinnskontroll = (behandling: BehandlingDto): RenderResult => {
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
             <TotrinnskontrollProvider behandling={behandling}>
@@ -67,7 +67,6 @@ const setupMocks = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkont
         erStegBehandlet: (): boolean => false,
         visVenteModal: false,
         erBehandlingReturnertFraBeslutter: (): boolean => returnertFraBeslutter,
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
     }));
 };
 

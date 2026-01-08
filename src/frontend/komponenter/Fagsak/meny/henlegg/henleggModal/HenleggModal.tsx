@@ -1,8 +1,5 @@
-import type {
-    Behandlingresultat,
-    Behandling,
-    Behandlingstype,
-} from '../../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../../generated';
+import type { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 
 import { CircleSlashIcon } from '@navikt/aksel-icons';
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
@@ -19,7 +16,7 @@ import { MODAL_BREDDE } from '../../utils';
 import ForhåndsvisHenleggelsesBrev from '../forhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
     dialogRef: React.RefObject<HTMLDialogElement | null>;
     årsaker: Behandlingresultat[];
 };
@@ -37,7 +34,7 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
     });
 
     useEffect(() => {
-        oppdaterBehandlingstype(behandling.type);
+        oppdaterBehandlingstype(behandling.type as Behandlingstype);
     }, [behandling.type]);
 
     const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>): void => {

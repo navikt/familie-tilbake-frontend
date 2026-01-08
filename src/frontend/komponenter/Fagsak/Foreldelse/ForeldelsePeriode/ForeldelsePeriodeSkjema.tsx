@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { ReactNode } from 'react';
 
@@ -44,7 +44,7 @@ const StyledStack = styled(Stack)`
 `;
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
     periode: ForeldelsePeriodeSkjemeData;
     erLesevisning: boolean;
 };

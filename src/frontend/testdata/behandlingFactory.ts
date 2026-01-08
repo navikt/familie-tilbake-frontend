@@ -1,5 +1,5 @@
 import type { BehandlingDto } from '../generated';
-import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
+import type { Behandlingsstegstilstand } from '../typer/behandling';
 
 import {
     Behandlingssteg,
@@ -9,7 +9,7 @@ import {
     Saksbehandlingstype,
 } from '../typer/behandling';
 
-export const lagBehandling = (overrides: Partial<Behandling> = {}): Behandling => ({
+export const lagBehandling = (overrides: Partial<BehandlingDto> = {}): BehandlingDto => ({
     behandlingId: 'uuid-1',
     eksternBrukId: 'uuid-2',
     kanSetteTilbakeTilFakta: false,
@@ -26,21 +26,21 @@ export const lagBehandling = (overrides: Partial<Behandling> = {}): Behandling =
     kanRevurderingOpprettes: false,
     erBehandlingPåVent: false,
     harVerge: false,
-    resultatstype: null,
+    resultatstype: undefined,
     kanHenleggeBehandling: false,
     erNyModell: false,
-    avsluttetDato: null,
+    avsluttetDato: undefined,
     endretTidspunkt: new Date().toISOString(),
-    vedtaksDato: null,
+    vedtaksdato: undefined,
     enhetskode: '0001',
     enhetsnavn: 'Oslo',
     ansvarligSaksbehandler: 'test saksbehandler',
-    ansvarligBeslutter: null,
-    eksternFaksakId: 'id-2',
-    behandlingsårsakstype: null,
+    ansvarligBeslutter: undefined,
+    eksternFagsakId: 'id-2',
+    behandlingsårsakstype: undefined,
     støtterManuelleBrevmottakere: false,
     harManuelleBrevmottakere: false,
-    begrunnelseForTilbakekreving: null,
+    begrunnelseForTilbakekreving: undefined,
     ...overrides,
 });
 
@@ -82,8 +82,7 @@ export const lagForeslåVedtakSteg = (valg: StegValg = {}): Behandlingsstegstils
     lagSteg(Behandlingssteg.ForeslåVedtak, Behandlingsstegstatus.Klar, valg);
 
 //TODO: Skal fjernes når vi tar i bruk BehandlingDto over
-export const lagBehandlingDto = (overrides: Partial<BehandlingDto> = {}): BehandlingDto =>
-    ({
-        ...lagBehandling(),
-        ...overrides,
-    }) as BehandlingDto;
+export const lagBehandlingDto = (overrides: Partial<BehandlingDto> = {}): BehandlingDto => ({
+    ...lagBehandling(),
+    ...overrides,
+});

@@ -1,10 +1,10 @@
+import type { ManuellBrevmottakerResponsDto } from '../generated';
 import type {
     FaktaStegPayload,
     FatteVedtakStegPayload,
     ForeldelseStegPayload,
     ForeslåVedtakStegPayload,
     HenleggBehandlingPaylod,
-    ManuellBrevmottakerResponseDto,
     VergeDto,
     VergeStegPayload,
     VilkårdsvurderingStegPayload,
@@ -57,7 +57,7 @@ export type BehandlingApiHook = {
     ) => Promise<Ressurs<string>>;
     hentManuelleBrevmottakere: (
         behandlingId: string
-    ) => Promise<Ressurs<ManuellBrevmottakerResponseDto[]>>;
+    ) => Promise<Ressurs<ManuellBrevmottakerResponsDto[]>>;
     kallAngreSendTilBeslutter: (behandlingId: string) => Promise<Ressurs<string>>;
     gjerInaktiveVilkårsvurderingerKall: (
         behandlingId: string
@@ -206,8 +206,8 @@ const useBehandlingApi = (): BehandlingApiHook => {
 
     const hentManuelleBrevmottakere = (
         behandlingId: string
-    ): Promise<Ressurs<ManuellBrevmottakerResponseDto[]>> => {
-        return request<void, ManuellBrevmottakerResponseDto[]>({
+    ): Promise<Ressurs<ManuellBrevmottakerResponsDto[]>> => {
+        return request<void, ManuellBrevmottakerResponsDto[]>({
             method: 'GET',
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}`,
         });

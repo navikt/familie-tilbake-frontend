@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -20,7 +20,7 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
 };
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const SendMelding: React.FC<Props> = ({ behandling }) => {

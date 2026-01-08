@@ -1,5 +1,7 @@
 import type { FeltState, Skjema } from '../../../../hooks/skjema';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFelt, useSkjema } from '../../../../hooks/skjema';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
@@ -18,7 +20,8 @@ type EndreEnhetHook = {
 };
 
 const useEndreEnhet = (behandlingId: string, lukkModal: () => void): EndreEnhetHook => {
-    const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandling();
+    const queryClient = useQueryClient();
 
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
         {
@@ -59,7 +62,9 @@ const useEndreEnhet = (behandlingId: string, lukkModal: () => void): EndreEnhetH
                 (response: Ressurs<string>) => {
                     if (response.status === RessursStatus.Suksess) {
                         lukkModal();
-                        hentBehandlingMedBehandlingId(behandlingId);
+                        queryClient.invalidateQueries({
+                            queryKey: ['hentBehandling', { path: { behandlingId } }],
+                        });
                     }
                 }
             );

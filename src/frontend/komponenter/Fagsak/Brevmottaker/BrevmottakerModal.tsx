@@ -1,5 +1,4 @@
-import type { ManuellBrevmottakerResponseDto } from '../../../typer/api';
-import type { Brevmottaker } from '../../../typer/Brevmottaker';
+import type { Brevmottaker, ManuellBrevmottakerResponsDto } from '../../../generated';
 
 import React from 'react';
 
@@ -8,7 +7,7 @@ import { mapBrevmottakerToFormData } from './schema/brevmottakerSchema';
 
 const hentEksisterendeBrevmottaker = (
     brevmottakerIdTilEndring: string,
-    brevmottakere: ManuellBrevmottakerResponseDto[]
+    brevmottakere: ManuellBrevmottakerResponsDto[]
 ): Brevmottaker | undefined => {
     const manuellMottaker = brevmottakere.find(({ id }) => id === brevmottakerIdTilEndring);
 
@@ -19,7 +18,7 @@ type BrevmottakerModalProps = {
     visBrevmottakerModal: boolean;
     brevmottakerIdTilEndring: string | undefined;
     behandlingId: string;
-    brevmottakere: ManuellBrevmottakerResponseDto[];
+    brevmottakere: ManuellBrevmottakerResponsDto[];
     settVisBrevmottakerModal: (vis: boolean) => void;
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
 };

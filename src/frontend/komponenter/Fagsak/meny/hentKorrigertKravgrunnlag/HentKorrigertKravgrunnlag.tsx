@@ -1,7 +1,8 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 
 import { HddUpIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
@@ -13,13 +14,14 @@ import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { AlertType, ToastTyper } from '../../../Felleskomponenter/Toast/typer';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 export const HentKorrigertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
     const { request } = useHttp();
     const { settToast } = useApp();
-    const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
+    const queryClient = useQueryClient();
+    const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { fagsystem, eksternFagsakId } = useFagsak();
 
@@ -34,11 +36,13 @@ export const HentKorrigertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
                     alertType: AlertType.Info,
                     tekst: 'Hentet korrigert kravgrunnlag',
                 });
-                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                    utførRedirect(
-                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                    );
+
+                queryClient.invalidateQueries({
+                    queryKey: ['behandling', behandling.behandlingId],
                 });
+                utførRedirect(
+                    `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                );
             } else if (
                 respons.status === RessursStatus.Feilet ||
                 respons.status === RessursStatus.FunksjonellFeil ||

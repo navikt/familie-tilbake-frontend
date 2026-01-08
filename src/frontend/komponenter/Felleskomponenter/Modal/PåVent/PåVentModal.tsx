@@ -1,13 +1,14 @@
-import type { Behandling, Behandlingsstegstilstand } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
+import type { Behandlingsstegstilstand } from '../../../../typer/behandling';
 
 import { Alert, BodyLong, Button, Heading, Modal, Select } from '@navikt/ds-react';
 import { ASpacing8, ATextDanger } from '@navikt/ds-tokens/dist/tokens';
+import { useQueryClient } from '@tanstack/react-query';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { usePåVentBehandling } from './PåVentContext';
-import { useBehandling } from '../../../../context/BehandlingContext';
 import { Valideringsstatus } from '../../../../hooks/skjema';
 import {
     Behandlingssteg,
@@ -33,17 +34,19 @@ const FeilContainer = styled.div`
 `;
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
     ventegrunn: Behandlingsstegstilstand;
     onClose: () => void;
 };
 
 const PåVentModal: React.FC<Props> = ({ behandling, ventegrunn, onClose }) => {
-    const { hentBehandlingMedBehandlingId } = useBehandling();
+    const queryClient = useQueryClient();
 
     const lukkModalOgHentBehandling = (): void => {
         onClose();
-        hentBehandlingMedBehandlingId(behandling.behandlingId);
+        queryClient.invalidateQueries({
+            queryKey: ['hentBehandling', { path: { behandlingId: behandling.behandlingId } }],
+        });
     };
 
     const { skjema, onBekreft, onOkTaAvVent, tilbakestillFelterTilDefault, feilmelding } =

@@ -29,6 +29,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { formatISO, parseISO } from 'date-fns';
 import * as React from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
@@ -51,7 +52,8 @@ export const FaktaSkjema = ({
     behandlingId,
     behandlingUrl,
 }: Props): React.JSX.Element => {
-    const { actionBarStegtekst, hentBehandlingMedBehandlingId } = useBehandling();
+    const { actionBarStegtekst } = useBehandling();
+    const queryClient = useQueryClient();
     const navigerTilNeste = useStegNavigering(behandlingUrl, Behandlingssteg.Forhåndsvarsel);
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchemaDto>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
@@ -122,7 +124,14 @@ export const FaktaSkjema = ({
             {
                 onSuccess: data => {
                     if (data.ferdigvurdert) {
-                        hentBehandlingMedBehandlingId(behandlingId).then(navigerTilNeste);
+                        queryClient
+                            .invalidateQueries({
+                                queryKey: [
+                                    'hentBehandling',
+                                    { path: { behandlingId: behandlingId } },
+                                ],
+                            })
+                            .then(navigerTilNeste);
                     }
                 },
             }
@@ -227,7 +236,7 @@ export const FaktaSkjema = ({
                         : { type: 'button', onNeste: navigerTilNeste })}
                     type="submit"
                     formId="fakta-skjema"
-                    stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
+                    stegtekst={actionBarStegtekst('FAKTA')}
                     forrigeAriaLabel={undefined}
                     nesteAriaLabel="Gå videre til foreldelsessteget"
                     onForrige={undefined}

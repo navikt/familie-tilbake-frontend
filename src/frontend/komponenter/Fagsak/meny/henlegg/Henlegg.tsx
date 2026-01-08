@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto, BehandlingstypeEnum } from '../../../../generated';
 
 import { CircleSlashIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
@@ -6,10 +6,10 @@ import * as React from 'react';
 import { useRef } from 'react';
 
 import { HenleggModal } from './henleggModal/HenleggModal';
-import { Behandlingresultat, Behandlingstype } from '../../../../typer/behandling';
+import { Behandlingresultat } from '../../../../typer/behandling';
 
-const hentÅrsaker = (behandlingstype: Behandlingstype): Behandlingresultat[] => {
-    if (behandlingstype === Behandlingstype.Tilbakekreving) {
+const hentÅrsaker = (behandlingstype: BehandlingstypeEnum): Behandlingresultat[] => {
+    if (behandlingstype === 'TILBAKEKREVING') {
         return [Behandlingresultat.HenlagtFeilopprettet];
     } else {
         return [
@@ -20,7 +20,7 @@ const hentÅrsaker = (behandlingstype: Behandlingstype): Behandlingresultat[] =>
 };
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 export const Henlegg: React.FC<Props> = ({ behandling }) => {

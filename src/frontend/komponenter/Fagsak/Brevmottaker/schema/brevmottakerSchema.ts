@@ -1,10 +1,17 @@
-import type { Brevmottaker } from '../../../../typer/Brevmottaker';
+import type { Brevmottaker, TypeEnum } from '../../../../generated';
 
 import { z } from 'zod';
 
 import { Vergetype as VergetypeEnum } from '../../../../kodeverk/verge';
 import { AdresseKilde, MottakerType } from '../../../../typer/Brevmottaker';
 import { isNumeric } from '../../../../utils';
+
+const TYPE_ENUM_VALUES: TypeEnum[] = [
+    'BRUKER_MED_UTENLANDSK_ADRESSE',
+    'FULLMEKTIG',
+    'VERGE',
+    'DØDSBO',
+];
 
 const BACKEND_PLACEHOLDERS = {
     DEFAULT_NAVN: ' ',
@@ -280,10 +287,10 @@ export const brevmottakerFormDataInputSchema = z
             .string()
             .min(1, 'Det må velges en mottakertype')
             .refine(
-                val => Object.values(MottakerType).includes(val as MottakerType),
+                val => TYPE_ENUM_VALUES.includes(val as TypeEnum),
                 'Det må velges en gyldig mottakertype'
             )
-            .transform(val => val as MottakerType),
+            .transform(val => val as TypeEnum),
         brukerMedUtenlandskAdresse: brukerMedUtenlandskAdresseSchema.optional(),
         fullmektig: fullmektigSchema.optional(),
         verge: vergeSchema.optional(),
@@ -404,7 +411,7 @@ const getManuellAdresseInfo = (
 const flattenFormData = (
     data: z.infer<typeof brevmottakerFormDataInputSchema>
 ): {
-    type: MottakerType;
+    type: TypeEnum;
     adresseData: AdresseDataUnion;
 } => {
     const { mottakerType, ...adresseFields } = data;
@@ -419,7 +426,7 @@ const flattenFormData = (
 
 const mapFormDataToBrevmottaker = (
     data: z.infer<typeof brevmottakerFormDataInputSchema>,
-    type: MottakerType
+    type: TypeEnum
 ): Brevmottaker => {
     const { adresseData } = flattenFormData(data);
 

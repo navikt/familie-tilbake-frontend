@@ -71,7 +71,6 @@ const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
         erStegBehandlet: (): boolean => false,
         erStegAutoutført: (): boolean => true,
-        hentBehandlingMedBehandlingId: jest.fn(),
         actionBarStegtekst: jest.fn().mockReturnValue('Steg 3 av 4'),
         harVærtPåFatteVedtakSteget: jest.fn().mockReturnValue(false),
     }));

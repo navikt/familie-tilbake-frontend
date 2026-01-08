@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 
 import { Buildings3Icon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
@@ -11,8 +11,8 @@ import { hentFrontendFeilmelding } from '../../../../utils';
 import { MODAL_BREDDE } from '../utils';
 
 type Arbeidsfordelingsenhet = {
-    enhetskode: Behandling['enhetskode'];
-    enhetsnavn: Behandling['enhetsnavn'];
+    enhetskode: BehandlingDto['enhetskode'];
+    enhetsnavn: BehandlingDto['enhetsnavn'];
 };
 
 const enheter: Arbeidsfordelingsenhet[] = [
@@ -25,7 +25,7 @@ const enheter: Arbeidsfordelingsenhet[] = [
 ];
 
 type Props = {
-    behandlingsId: Behandling['behandlingId'];
+    behandlingsId: BehandlingDto['behandlingId'];
 };
 
 export const EndreEnhet: React.FC<Props> = ({ behandlingsId }) => {

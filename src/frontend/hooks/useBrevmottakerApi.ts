@@ -1,9 +1,9 @@
 import type { Brevmottaker } from '../typer/Brevmottaker';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { useHttp } from '../api/http/HttpProvider';
-import { useBehandling } from '../context/BehandlingContext';
 import { RessursStatus } from '../typer/ressurs';
 
 export const useBrevmottakerApi = (): {
@@ -17,9 +17,9 @@ export const useBrevmottakerApi = (): {
     error: string | null;
     clearError: () => void;
 } => {
+    const queryClient = useQueryClient();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { hentBehandlingMedBehandlingId } = useBehandling();
     const { request } = useHttp();
 
     const lagreBrevmottaker = async (
@@ -53,7 +53,7 @@ export const useBrevmottakerApi = (): {
                 return { success: false, error: errorMessage };
             }
 
-            await hentBehandlingMedBehandlingId(behandlingId);
+            await queryClient.invalidateQueries({ queryKey: ['behandling', behandlingId] });
             return { success: true };
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Ukjent feil ved lagring';
@@ -86,7 +86,7 @@ export const useBrevmottakerApi = (): {
                 return false;
             }
 
-            await hentBehandlingMedBehandlingId(behandlingId);
+            await queryClient.invalidateQueries({ queryKey: ['behandling', behandlingId] });
             return true;
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Ukjent feil ved sletting';

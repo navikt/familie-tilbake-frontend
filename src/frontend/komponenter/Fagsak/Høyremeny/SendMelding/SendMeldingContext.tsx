@@ -1,12 +1,12 @@
+import type { BehandlingDto } from '../../../../generated';
 import type { BrevPayload } from '../../../../typer/api';
-import type { Behandling } from '../../../../typer/behandling';
 
+import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 
 import { useDokumentApi } from '../../../../api/dokument';
-import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import {
     type Avhengigheter,
@@ -47,14 +47,14 @@ const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean 
     avhengigheter?.maltype.valideringsstatus === Valideringsstatus.Ok;
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: Props) => {
     const { fagsystem, eksternFagsakId } = useFagsak();
+    const queryClient = useQueryClient();
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string | undefined>();
-    const { hentBehandlingMedBehandlingId } = useBehandling();
     const { bestillBrev } = useDokumentApi();
     const navigate = useNavigate();
 
@@ -111,11 +111,15 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: 
                 settFeilmelding(undefined);
                 if (respons.status === RessursStatus.Suksess) {
                     nullstillSkjema();
-                    hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                        navigate(
-                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
-                        );
+                    queryClient.invalidateQueries({
+                        queryKey: [
+                            'hentBehandling',
+                            { path: { behandlingId: behandling.behandlingId } },
+                        ],
                     });
+                    navigate(
+                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
+                    );
                 } else {
                     settFeilmelding(hentFrontendFeilmelding(respons));
                 }

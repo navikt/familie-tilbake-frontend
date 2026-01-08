@@ -1,4 +1,4 @@
-import type { ManuellBrevmottakerResponseDto } from './api';
+import type { BehandlingsresultatstypeEnum } from '../generated';
 
 export enum Behandlingårsak {
     RevurderingKlageNfp = 'REVURDERING_KLAGE_NFP',
@@ -52,15 +52,18 @@ export enum Behandlingresultat {
     IkkeFastsatt = 'IKKE_FASTSATT',
 }
 
-export const behandlingsresultater: Record<Behandlingresultat, string> = {
-    [Behandlingresultat.IngenTilbakebetaling]: 'Ingen tilbakekreving',
-    [Behandlingresultat.DelvisTilbakebetaling]: 'Delvis tilbakekreving',
-    [Behandlingresultat.FullTilbakebetaling]: 'Full tilbakebetaling',
-    [Behandlingresultat.Henlagt]: 'Henlagt',
-    [Behandlingresultat.HenlagtFeilopprettet]: 'Henlagt (feilaktig opprettet)',
-    [Behandlingresultat.HenlagtFeilopprettetMedBrev]: 'Henlagt (feilaktig opprettet), med brev',
-    [Behandlingresultat.HenlagtFeilopprettetUtenBrev]: 'Henlagt (feilaktig opprettet)',
-    [Behandlingresultat.IkkeFastsatt]: 'Ikke fastsatt',
+export const behandlingsresultater: Record<BehandlingsresultatstypeEnum, string> = {
+    INGEN_TILBAKEBETALING: 'Ingen tilbakekreving',
+    DELVIS_TILBAKEBETALING: 'Delvis tilbakekreving',
+    FULL_TILBAKEBETALING: 'Full tilbakebetaling',
+    HENLAGT: 'Henlagt',
+    HENLAGT_FEILOPPRETTET: 'Henlagt (feilaktig opprettet)',
+    HENLAGT_FEILOPPRETTET_MED_BREV: 'Henlagt (feilaktig opprettet), med brev',
+    HENLAGT_FEILOPPRETTET_UTEN_BREV: 'Henlagt (feilaktig opprettet)',
+    HENLAGT_KRAVGRUNNLAG_NULLSTILT: 'Henlagt (kravgrunnlag nullstilt)',
+    HENLAGT_TEKNISK_VEDLIKEHOLD: 'Henlagt (teknisk vedlikehold)',
+    HENLAGT_MANGLENDE_KRAVGRUNNLAG: 'Henlagt (manglende kravgrunnlag)',
+    IKKE_FASTSATT: 'Ikke fastsatt',
 };
 
 export enum Saksbehandlingstype {
@@ -105,7 +108,6 @@ export const behandlingssteg: Record<Behandlingssteg, string> = {
 };
 
 export enum Behandlingsstegstatus {
-    Startet = 'STARTET',
     Venter = 'VENTER',
     Klar = 'KLAR',
     Utført = 'UTFØRT',
@@ -144,45 +146,4 @@ export type Behandlingsstegstilstand = {
     behandlingsstegstatus: Behandlingsstegstatus;
     venteårsak?: Venteårsak;
     tidsfrist?: string;
-};
-
-export type Behandling = {
-    /** UUID */
-    eksternBrukId: string;
-    /** UUID */
-    behandlingId: string;
-    erBehandlingHenlagt: boolean;
-    type: Behandlingstype;
-    status: Behandlingstatus;
-    opprettetDato: string;
-    avsluttetDato: string | null;
-    /** Ikke i bruk */
-    endretTidspunkt: string;
-    /** Ikke i bruk */
-    vedtaksDato: string | null;
-    enhetskode: string;
-    enhetsnavn: string;
-    resultatstype: Behandlingresultat | null;
-    ansvarligSaksbehandler: string;
-    /** Ikke i bruk */
-    ansvarligBeslutter: string | null;
-    erBehandlingPåVent: boolean;
-    kanHenleggeBehandling: boolean;
-    kanRevurderingOpprettes: boolean;
-    harVerge: boolean;
-    kanEndres: boolean;
-    kanSetteTilbakeTilFakta: boolean;
-    varselSendt: boolean;
-    behandlingsstegsinfo: Behandlingsstegstilstand[];
-    fagsystemsbehandlingId: string;
-    /** Ikke i bruk */
-    eksternFaksakId: string;
-    behandlingsårsakstype: Behandlingårsak | null;
-    støtterManuelleBrevmottakere: boolean;
-    /** Ikke i bruk */
-    harManuelleBrevmottakere: boolean;
-    manuelleBrevmottakere: ManuellBrevmottakerResponseDto[];
-    begrunnelseForTilbakekreving: string | null;
-    saksbehandlingstype: Saksbehandlingstype;
-    erNyModell: boolean;
 };

@@ -1,6 +1,7 @@
+import type { BehandlingDto } from '../../../generated';
 import type { VergeDto, VergeStegPayload } from '../../../typer/api';
-import type { Behandling } from '../../../typer/behandling';
 
+import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
@@ -35,11 +36,12 @@ const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
     erVergetypeOppfylt(avhengigheter) && avhengigheter?.vergetype.verdi === Vergetype.Advokat;
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const [VergeProvider, useVerge] = createUseContext(({ behandling }: Props) => {
     const { fagsystem, eksternFagsakId } = useFagsak();
+    const queryClient = useQueryClient();
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
     const [erAutoutført, settErAutoutført] = React.useState<boolean>();
     const [verge, settVerge] = React.useState<VergeDto>();
@@ -47,12 +49,8 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling }: Props) => {
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [vergeRespons, settVergeRepons] = React.useState<Ressurs<string>>();
     const { gjerVergeKall, sendInnVerge } = useBehandlingApi();
-    const {
-        erStegBehandlet,
-        erStegAutoutført,
-        hentBehandlingMedBehandlingId,
-        nullstillIkkePersisterteKomponenter,
-    } = useBehandling();
+    const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
+        useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const navigate = useNavigate();
 
@@ -197,11 +195,15 @@ const [VergeProvider, useVerge] = createUseContext(({ behandling }: Props) => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
                         nullstillIkkePersisterteKomponenter();
-                        hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                            navigate(
-                                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                            );
+                        queryClient.invalidateQueries({
+                            queryKey: [
+                                'hentBehandling',
+                                { path: { behandlingId: behandling.behandlingId } },
+                            ],
                         });
+                        navigate(
+                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                        );
                     } else {
                         settVergeRepons(respons);
                     }

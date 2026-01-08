@@ -1,8 +1,9 @@
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 import type { Brevmottaker } from '../../../typer/Brevmottaker';
 
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -39,7 +40,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
 }) => {
-    const { hentBehandlingMedBehandlingId } = useBehandling();
+    const queryClient = useQueryClient();
     const { fjernManuellBrevmottaker } = useBehandlingApi();
 
     const landnavn = brevmottaker.manuellAdresseInfo
@@ -50,7 +51,9 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     const fjernBrevMottakerOgOppdaterState = (mottakerId: string): void => {
         fjernManuellBrevmottaker(behandlingId, mottakerId).then((respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.Suksess) {
-                hentBehandlingMedBehandlingId(behandlingId);
+                queryClient.invalidateQueries({
+                    queryKey: ['hentBehandling', { path: { behandlingId } }],
+                });
             }
         });
     };
@@ -220,7 +223,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
 };
 
 type BrevmottakereProps = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
@@ -302,7 +305,7 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
                                 key={brevmottakerRespons.id}
                             >
                                 <Brevmottaker
-                                    brevmottaker={brevmottakerRespons.brevmottaker}
+                                    brevmottaker={brevmottakerRespons.brevmottaker as Brevmottaker}
                                     brevmottakerId={brevmottakerRespons.id}
                                     behandlingId={behandling.behandlingId}
                                     erLesevisning={erLesevisning}

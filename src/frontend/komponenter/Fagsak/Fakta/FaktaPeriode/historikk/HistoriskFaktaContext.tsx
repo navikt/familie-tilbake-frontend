@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../../generated';
 import type { FaktaResponse } from '../../../../../typer/tilbakekrevingstyper';
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData } from '../../typer/fakta';
 
@@ -15,7 +15,7 @@ import {
 import { sorterFeilutbetaltePerioder } from '../../../../../utils';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandling }: Props) => {

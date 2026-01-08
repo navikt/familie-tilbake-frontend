@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 
 import * as React from 'react';
 
@@ -20,7 +20,7 @@ export enum Menysider {
 
 type Props = {
     valgtMenyside: Menysider;
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 export const MenySideInnhold: React.FC<Props> = ({ valgtMenyside, behandling }) => {
