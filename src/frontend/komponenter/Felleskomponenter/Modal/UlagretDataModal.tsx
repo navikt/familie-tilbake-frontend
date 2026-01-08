@@ -53,7 +53,7 @@ const UlagretDataModal: FC = () => {
                 aksjonsknapper={{
                     hovedKnapp: {
                         onClick: onAvbryt,
-                        tekst: 'Avbryt for å lagre',
+                        tekst: 'Lukk',
                     },
                     lukkKnapp: {
                         onClick: () => {
@@ -64,8 +64,8 @@ const UlagretDataModal: FC = () => {
                     },
                 }}
             >
-                Hvis du forlater siden nå, mister du endringene dine. Vil du lagre før du
-                fortsetter?
+                Hvis du forlater siden nå, mister du endringene dine. Lukk dialogen og klikk på
+                «Neste» for å lagre endringene dine.
             </ModalWrapper>
         )
     );

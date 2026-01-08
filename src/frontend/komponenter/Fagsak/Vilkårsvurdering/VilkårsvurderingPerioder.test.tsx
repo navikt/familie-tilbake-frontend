@@ -190,7 +190,7 @@ describe('VilkårsvurderingPerioder', () => {
         expect(getByText(modalTekst)).toBeInTheDocument();
     });
 
-    test('Skal bytte uten å lagre når "Bytt uten å lagre" klikkes', async () => {
+    test('Skal bytte uten å lagre når "Fortsett uten å lagre" klikkes', async () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder();
 
@@ -203,7 +203,7 @@ describe('VilkårsvurderingPerioder', () => {
         }
 
         expect(getByText(modalTekst)).toBeInTheDocument();
-        await user.click(getByRole('button', { name: 'Bytt uten å lagre' }));
+        await user.click(getByRole('button', { name: 'Fortsett uten å lagre' }));
 
         expect(getByText(andrePeriode)).toBeInTheDocument();
         expect(queryByText(modalTekst)).not.toBeInTheDocument();

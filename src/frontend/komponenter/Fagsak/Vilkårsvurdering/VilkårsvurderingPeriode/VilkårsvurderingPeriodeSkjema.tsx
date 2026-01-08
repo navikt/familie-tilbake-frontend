@@ -545,7 +545,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         },
                         lukkKnapp: {
                             onClick: handleForlatUtenÅLagre,
-                            tekst: 'Bytt uten å lagre',
+                            tekst: 'Fortsett uten å lagre',
                         },
                     }}
                 >
