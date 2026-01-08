@@ -60,17 +60,20 @@ const ikkeValgtUttalelseSchema = z.object({
     harUttaltSeg: z.literal(HarUttaltSeg.IkkeValgt),
 });
 
-export const uttalelseMedFristSchema = z
-    .discriminatedUnion('harUttaltSeg', [
-        harUttaltSegSchema,
-        harIkkeUttaltSegSchema,
-        utsettFristSchema,
-        ikkeValgtUttalelseSchema,
-    ])
-    .refine(data => data.harUttaltSeg !== HarUttaltSeg.IkkeValgt, {
+const uttalelseMedFristSchemaBase = z.discriminatedUnion('harUttaltSeg', [
+    harUttaltSegSchema,
+    harIkkeUttaltSegSchema,
+    utsettFristSchema,
+    ikkeValgtUttalelseSchema,
+]);
+
+export const uttalelseMedFristSchema = uttalelseMedFristSchemaBase.refine(
+    data => data.harUttaltSeg !== HarUttaltSeg.IkkeValgt,
+    {
         message: 'Du må velge om brukeren har uttalt seg eller om fristen skal utsettes',
         path: ['harUttaltSeg'],
-    });
+    }
+);
 
 const getJaUttalelseValues = (
     uttalelse: BrukeruttalelseDto | undefined
@@ -217,13 +220,29 @@ export const getDefaultValues = (
     };
 };
 
-export const forhåndsvarselSchema = z
-    .discriminatedUnion('skalSendesForhåndsvarsel', [opprettSchema, unntakSchema, ikkeValgtSchema])
-    .refine(data => data.skalSendesForhåndsvarsel !== SkalSendesForhåndsvarsel.IkkeValgt, {
+const forhåndsvarselSchemaBase = z.discriminatedUnion('skalSendesForhåndsvarsel', [
+    opprettSchema,
+    unntakSchema,
+    ikkeValgtSchema,
+]);
+
+export const forhåndsvarselSchema = forhåndsvarselSchemaBase.refine(
+    data => data.skalSendesForhåndsvarsel !== SkalSendesForhåndsvarsel.IkkeValgt,
+    {
         message: 'Du må velge om forhåndsvarselet skal sendes eller ikke',
         path: ['skalSendesForhåndsvarsel'],
-    });
+    }
+);
 
-export type ForhåndsvarselFormData = z.infer<typeof forhåndsvarselSchema>;
-export type UttalelseMedFristFormData = z.infer<typeof uttalelseMedFristSchema>;
+export type ForhåndsvarselFormData =
+    | z.infer<typeof opprettSchema>
+    | z.infer<typeof unntakSchema>
+    | { skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.IkkeValgt };
+
+export type UttalelseMedFristFormData =
+    | z.infer<typeof harIkkeUttaltSegSchema>
+    | z.infer<typeof harUttaltSegSchema>
+    | z.infer<typeof utsettFristSchema>
+    | { harUttaltSeg: HarUttaltSeg.IkkeValgt };
+
 export type UnntakFormData = z.infer<typeof unntakSchema>;
