@@ -5,7 +5,7 @@
         "module": "esnext",
         "allowSyntheticDefaultImports": true,
         "typeRoots": ["../../node_modules/@types", "../../node_modules", "./@types"],
-        "types": ["@testing-library/jest-dom"]
+        "types": ["@testing-library/jest-dom", "node"]
     },
     "exclude": [
         "../../node_modules"
