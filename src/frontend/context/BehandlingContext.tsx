@@ -4,7 +4,6 @@ import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
 
-import { useFagsak } from './FagsakContext';
 import { useHttp } from '../api/http/HttpProvider';
 import { Behandlingssteg, Behandlingsstegstatus, Behandlingstatus } from '../typer/behandling';
 import {
@@ -51,19 +50,16 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [behandling, settBehandling] = useState<Ressurs<Behandling>>();
     const [aktivtSteg, settAktivtSteg] = useState<Behandlingsstegstilstand>();
     const [ventegrunn, settVentegrunn] = useState<Behandlingsstegstilstand>();
-    const [visVenteModal, settVisVenteModal] = useState<boolean>(false);
-    const [visBrevmottakerModal, settVisBrevmottakerModal] = useState<boolean>(false);
-    const [brevmottakerIdTilEndring, settBrevmottakerIdTilEndring] = useState<string | undefined>();
-    const [harKravgrunnlag, settHarKravgrunnlag] = useState<boolean>();
-    const [behandlingILesemodus, settBehandlingILesemodus] = useState<boolean>();
-    const [åpenHøyremeny, settÅpenHøyremeny] = useState(true);
+    const [visVenteModal, settVisVenteModal] = useState(false);
+    const [harKravgrunnlag, settHarKravgrunnlag] = useState(false);
+    const [behandlingILesemodus, settBehandlingILesemodus] = useState(false);
+    const [visBrevmottakerModal, settVisBrevmottakerModal] = useState(false);
     const [ikkePersisterteKomponenter, settIkkePersisterteKomponenter] = useState<Set<string>>(
         new Set()
     );
     const [harUlagredeData, settHarUlagredeData] = useState<boolean>(
         ikkePersisterteKomponenter.size > 0
     );
-    const { fagsystem, eksternFagsakId } = useFagsak();
     const { request } = useHttp();
 
     useEffect(
@@ -99,8 +95,8 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const hentBehandlingMedBehandlingId = (behandlingId: string): Promise<void> => {
         settBehandling(byggHenterRessurs());
         settAktivtSteg(undefined);
-        settHarKravgrunnlag(undefined);
-        settBehandlingILesemodus(undefined);
+        settHarKravgrunnlag(false);
+        settBehandlingILesemodus(false);
         settVentegrunn(undefined);
         settVisVenteModal(false);
         return request<void, Behandling>({
@@ -221,17 +217,6 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         );
     };
 
-    const lagLenkeTilRevurdering = (): string => {
-        return behandling?.status === RessursStatus.Suksess
-            ? `/redirect/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/${behandling.data.fagsystemsbehandlingId}`
-            : '#';
-    };
-
-    const lukkBrevmottakerModal = (): void => {
-        settVisBrevmottakerModal(false);
-        settBrevmottakerIdTilEndring(undefined);
-    };
-
     return {
         behandling,
         hentBehandlingMedEksternBrukId,
@@ -247,15 +232,9 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         erBehandlingReturnertFraBeslutter,
         harVærtPåFatteVedtakSteget,
         harKravgrunnlag,
-        lagLenkeTilRevurdering,
-        åpenHøyremeny,
         harUlagredeData,
-        settÅpenHøyremeny,
         visBrevmottakerModal,
         settVisBrevmottakerModal,
-        brevmottakerIdTilEndring,
-        settBrevmottakerIdTilEndring,
-        lukkBrevmottakerModal,
         settIkkePersistertKomponent,
         nullstillIkkePersisterteKomponenter,
     };
