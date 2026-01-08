@@ -1,4 +1,4 @@
-import type { BehandlingsoppsummeringDto, FagsakDto } from '../generated/types.gen';
+import type { BehandlingsoppsummeringDto } from '../generated/types.gen';
 import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
 
 import createUseContext from 'constate';
@@ -16,7 +16,10 @@ import { SYNLIGE_STEG } from '../utils/sider';
 
 export type BehandlingHook = {
     behandling: Ressurs<Behandling> | undefined;
-    hentBehandlingMedEksternBrukId: (fagsak: FagsakDto, behandlingId: string) => void;
+    hentBehandlingMedEksternBrukId: (
+        behandlinger: BehandlingsoppsummeringDto[],
+        behandlingId: string
+    ) => void;
     hentBehandlingMedBehandlingId: (behandlingId: string) => Promise<void>;
     behandlingILesemodus: boolean | undefined;
     actionBarStegtekst: (valgtSteg: Behandlingssteg) => string | undefined;
@@ -29,15 +32,9 @@ export type BehandlingHook = {
     erBehandlingReturnertFraBeslutter: () => boolean;
     harVærtPåFatteVedtakSteget: () => boolean;
     harKravgrunnlag: boolean | undefined;
-    lagLenkeTilRevurdering: () => string;
-    åpenHøyremeny: boolean;
     harUlagredeData: boolean;
-    settÅpenHøyremeny: (åpenHøyremeny: boolean) => void;
     visBrevmottakerModal: boolean;
     settVisBrevmottakerModal: (visBrevmottakerModal: boolean) => void;
-    brevmottakerIdTilEndring?: string;
-    settBrevmottakerIdTilEndring: (brevmottakerId?: string) => void;
-    lukkBrevmottakerModal: () => void;
     settIkkePersistertKomponent: (komponentId: string) => void;
     nullstillIkkePersisterteKomponenter: () => void;
 };
@@ -46,7 +43,7 @@ export const erStegUtført = (status: Behandlingsstegstatus): boolean => {
     return status === Behandlingsstegstatus.Utført || status === Behandlingsstegstatus.Autoutført;
 };
 
-const [BehandlingProvider, useBehandling] = createUseContext(() => {
+const [BehandlingProvider, useBehandling] = createUseContext((): BehandlingHook => {
     const [behandling, settBehandling] = useState<Ressurs<Behandling>>();
     const [aktivtSteg, settAktivtSteg] = useState<Behandlingsstegstilstand>();
     const [ventegrunn, settVentegrunn] = useState<Behandlingsstegstilstand>();
@@ -57,9 +54,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [ikkePersisterteKomponenter, settIkkePersisterteKomponenter] = useState<Set<string>>(
         new Set()
     );
-    const [harUlagredeData, settHarUlagredeData] = useState<boolean>(
-        ikkePersisterteKomponenter.size > 0
-    );
+    const [harUlagredeData, settHarUlagredeData] = useState(ikkePersisterteKomponenter.size > 0);
     const { request } = useHttp();
 
     useEffect(
@@ -83,7 +78,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         behandlingId: string
     ): void => {
         const fagsakBehandling = behandlinger.find(
-            behandling => behandling.eksternBrukId === behandlingId
+            ({ eksternBrukId }) => eksternBrukId === behandlingId
         );
         if (fagsakBehandling) {
             hentBehandlingMedBehandlingId(fagsakBehandling.behandlingId);
