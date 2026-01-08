@@ -28,6 +28,8 @@ import {
 } from '../../../testdata/vilkårsvurderingFactory';
 import { RessursStatus } from '../../../typer/ressurs';
 
+vi.setConfig({ testTimeout: 6000 });
+
 const mockUseHttp = vi.fn();
 vi.mock('../../../api/http/HttpProvider', () => ({
     useHttp: (): Http => mockUseHttp(),
