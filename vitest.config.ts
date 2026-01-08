@@ -9,13 +9,14 @@ export default defineConfig({
         globals: true,
         environment: 'jsdom',
         setupFiles: ['./src/vitest-setup.ts'],
-        css: true,
+        css: false,
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html'],
         },
-        pool: 'threads',
+        pool: 'vmThreads',
         isolate: true,
+        maxConcurrency: 10,
         includeSource: ['src/**/*.{js,ts,jsx,tsx}'],
         exclude: [
             '**/node_modules/**',
