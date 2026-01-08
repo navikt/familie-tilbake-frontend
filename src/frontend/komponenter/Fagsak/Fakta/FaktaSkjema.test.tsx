@@ -7,6 +7,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { FaktaSkjema } from './FaktaSkjema';
+import { FagsakContext } from '../../../context/FagsakContext';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { configureZod } from '../../../utils/zodConfig';
 
 vi.mock('react-router', async () => {
@@ -69,6 +71,7 @@ const faktaOmFeilutbetaling = (
             ],
         },
     ],
+    ferdigvurdert: false,
     vurdering: {
         årsak: undefined,
         oppdaget: undefined,
@@ -84,18 +87,24 @@ const renderFakta = (
         client.setMutationDefaults(['oppdaterFakta'], {
             mutationFn: async (fakta: OppdaterFaktaData) => {
                 resolve(fakta);
+                return faktaOmFeilutbetaling({
+                    ferdigvurdert: true,
+                });
             },
         });
     });
+
     return {
         result: render(
-            <QueryClientProvider client={client}>
-                <FaktaSkjema
-                    faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
-                    behandlingId="unik"
-                    behandlingUrl="https://tilbakekreving"
-                />
-            </QueryClientProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <QueryClientProvider client={client}>
+                    <FaktaSkjema
+                        faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
+                        behandlingId="unik"
+                        behandlingUrl="https://tilbakekreving"
+                    />
+                </QueryClientProvider>
+            </FagsakContext.Provider>
         ),
         mutationBody,
     };
@@ -359,6 +368,55 @@ describe('Fakta om feilutbetaling', () => {
             expect(grunnlagDropdown).not.toHaveValue();
             expect(grunnlagDropdown).toBeInvalid();
             expect(grunnlagDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
+        });
+
+        test('dato felt valideres ved unblur', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta();
+
+            fireEvent.change(await findByRole('textbox', { name: 'Årsak til feilutbetalingen' }), {
+                target: { value: 'Ny årsak' },
+            });
+
+            fireEvent.blur(
+                await findByRole('textbox', {
+                    name: 'Når ble feilutbetalingen oppdaget?',
+                })
+            );
+            const oppdagetDato = await findByRole('textbox', {
+                name: 'Når ble feilutbetalingen oppdaget?',
+            });
+            expect(oppdagetDato).toBeInvalid();
+            expect(oppdagetDato).toHaveAccessibleDescription('Ugyldig datoformat');
+        });
+
+        test('Viser lagreknapp dersom fakta ikke er ferdigvurdert, men uendret', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta({
+                ferdigvurdert: false,
+            });
+
+            const submitKnapp = await findByRole('button', {
+                name: 'Gå videre til foreldelsessteget',
+            });
+            expect(submitKnapp).toHaveAttribute('type', 'submit');
+            expect(submitKnapp).toHaveTextContent('Lagre');
+        });
+
+        test('Viser nesteknapp dersom fakta er ferdigvurdert og uendret', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta({
+                ferdigvurdert: true,
+            });
+
+            const submitKnapp = await findByRole('button', {
+                name: 'Gå videre til foreldelsessteget',
+            });
+            expect(submitKnapp).toHaveAttribute('type', 'submit');
+            expect(submitKnapp).toHaveTextContent('Neste');
         });
     });
 });

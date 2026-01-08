@@ -6,9 +6,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import React from 'react';
 
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { ToggleName } from '../../../../context/toggles';
 import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
-import { lagFagsakDto } from '../../../../testdata/fagsakFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
     lagForhåndsvarselQueries,
     lagForhåndsvarselMutations,
@@ -63,9 +64,11 @@ const renderBrukeruttalelse = (): RenderResult => {
     });
 
     return render(
-        <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={behandling} fagsak={lagFagsakDto()} />
-        </QueryClientProvider>
+        <FagsakContext.Provider value={lagFagsak()}>
+            <QueryClientProvider client={new QueryClient()}>
+                <Forhåndsvarsel behandling={behandling} />
+            </QueryClientProvider>
+        </FagsakContext.Provider>
     );
 };
 

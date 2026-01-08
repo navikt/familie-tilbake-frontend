@@ -6,13 +6,13 @@ import React from 'react';
 
 import { hentFeilObjekt } from './feilObjekt';
 import { hentStatus } from './hentStatus';
+import { useFagsak } from '../../../../context/FagsakContext';
 
 type Props = {
-    lukkFeilModal: () => void;
     feil: Feil;
+    lukkFeilModal: () => void;
     beskjed?: string;
     behandlingId?: string;
-    fagsakId?: string;
 };
 
 export const FeilModal: React.FC<Props> = ({
@@ -20,8 +20,8 @@ export const FeilModal: React.FC<Props> = ({
     lukkFeilModal,
     beskjed,
     behandlingId,
-    fagsakId,
 }: Props) => {
+    const { eksternFagsakId } = useFagsak();
     const feilObjekt = hentFeilObjekt(hentStatus(feil));
     const innheholderCSRFTokenFeil = feil.message?.includes('CSRF-token');
     return (
@@ -65,9 +65,9 @@ export const FeilModal: React.FC<Props> = ({
                             </List>
                         </VStack>
                     </VStack>
-                    {(fagsakId || behandlingId) && (
+                    {(eksternFagsakId || behandlingId) && (
                         <VStack gap="1" className="text-sm text-[#010B18AD]">
-                            {fagsakId && <span>Fagsak ID: {fagsakId}</span>}
+                            {eksternFagsakId && <span>Fagsak ID: {eksternFagsakId}</span>}
                             {behandlingId && <span>Behandling ID: {behandlingId}</span>}
                         </VStack>
                     )}

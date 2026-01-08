@@ -13,7 +13,9 @@ import * as React from 'react';
 import { vi } from 'vitest';
 
 import { HenleggModal } from './HenleggModal';
+import { FagsakContext } from '../../../../../context/FagsakContext';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../../testdata/fagsakFactory';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { RessursStatus } from '../../../../../typer/ressurs';
 
@@ -41,7 +43,9 @@ const renderHenleggModal = (
 ): RenderResult => {
     const mockDialogRef = createRef<HTMLDialogElement | null>();
     const renderModal = render(
-        <HenleggModal behandling={behandling} dialogRef={mockDialogRef} årsaker={årsaker} />
+        <FagsakContext.Provider value={lagFagsak()}>
+            <HenleggModal behandling={behandling} dialogRef={mockDialogRef} årsaker={årsaker} />
+        </FagsakContext.Provider>
     );
     mockDialogRef.current?.showModal();
 

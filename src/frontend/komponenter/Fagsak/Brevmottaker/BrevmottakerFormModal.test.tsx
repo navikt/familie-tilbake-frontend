@@ -6,10 +6,10 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { BrevmottakerFormModal } from './BrevmottakerFormModal';
-import { Fagsystem, Ytelsetype } from '../../../kodeverk';
+import { FagsakContext } from '../../../context/FagsakContext';
+import { Ytelsetype } from '../../../kodeverk';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { MottakerType } from '../../../typer/Brevmottaker';
-import { Kjønn } from '../../../typer/bruker';
-import { Målform } from '../../../typer/fagsak';
 import { RessursStatus } from '../../../typer/ressurs';
 
 vi.mock('../../../hooks/useBrevmottakerApi', () => ({
@@ -18,27 +18,6 @@ vi.mock('../../../hooks/useBrevmottakerApi', () => ({
             status: RessursStatus.Suksess,
             data: 'success',
         }),
-    })),
-}));
-
-vi.mock('../../../context/FagsakContext', () => ({
-    useFagsak: vi.fn(() => ({
-        fagsak: {
-            status: RessursStatus.Suksess,
-            data: {
-                fagsystem: Fagsystem.EF,
-                eksternFagsakId: 'test-fagsak-id',
-                ytelsestype: Ytelsetype.Barnetilsyn,
-                språkkode: Målform.Nb,
-                bruker: {
-                    navn: 'Test Bruker',
-                    personIdent: '12345678901',
-                    fødselsdato: '1990-01-01',
-                    kjønn: Kjønn.Mann,
-                },
-                behandlinger: [],
-            },
-        },
     })),
 }));
 
@@ -57,7 +36,13 @@ const renderBrevmottakerFormModal = async (
         ...props,
     };
 
-    return await waitFor(() => render(<BrevmottakerFormModal {...defaultProps} />));
+    return await waitFor(() =>
+        render(
+            <FagsakContext.Provider value={lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn })}>
+                <BrevmottakerFormModal {...defaultProps} />
+            </FagsakContext.Provider>
+        )
+    );
 };
 
 describe('BrevmottakerFormModal', () => {

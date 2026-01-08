@@ -1,5 +1,4 @@
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import {
     ClockDashedIcon,
@@ -15,15 +14,10 @@ import { Menysider, MenySideInnhold } from './Menykontainer';
 
 type Props = {
     værtPåFatteVedtakSteget: boolean;
-    fagsak: Fagsak;
     behandling: Behandling;
 };
 
-export const HistorikkOgDokumenter: React.FC<Props> = ({
-    værtPåFatteVedtakSteget,
-    fagsak,
-    behandling,
-}) => {
+export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteget, behandling }) => {
     const [valgtSide, setValgtSide] = useState(
         værtPåFatteVedtakSteget ? Menysider.Totrinn : Menysider.Historikk
     );
@@ -59,7 +53,7 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({
                     />
                 )}
             </ToggleGroup>
-            <MenySideInnhold valgtMenyside={valgtSide} behandling={behandling} fagsak={fagsak} />
+            <MenySideInnhold valgtMenyside={valgtSide} behandling={behandling} />
         </div>
     );
 };

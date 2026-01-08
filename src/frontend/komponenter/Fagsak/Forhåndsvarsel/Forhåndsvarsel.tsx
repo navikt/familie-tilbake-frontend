@@ -1,5 +1,6 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
 import type { ForhåndsvarselDto } from '../../../generated';
+import type { BehandlingDto } from '../../../generated';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,7 +29,6 @@ import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { ToggleName } from '../../../context/toggles';
 import { useToggles } from '../../../context/TogglesContext';
-import { type BehandlingDto, type FagsakDto } from '../../../generated';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { updateParentBounds } from '../../../utils/updateParentBounds';
@@ -38,7 +38,6 @@ import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
     behandling: BehandlingDto;
-    fagsak: FagsakDto;
 };
 
 type TagVariant = 'info-moderate' | 'success-moderate';
@@ -48,7 +47,7 @@ const getTagVariant = (sendtTid: string): TagVariant => {
     return ukerSiden >= 3 ? 'success-moderate' : 'info-moderate';
 };
 
-export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
+export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
     const { forhåndsvarselInfo } = useForhåndsvarselQueries(behandling);
 
     return (
@@ -72,30 +71,23 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling, fagsak }) => {
                     </Tooltip>
                 )}
             </HStack>
-            <ForhåndsvarselSkjema
-                behandling={behandling}
-                fagsak={fagsak}
-                forhåndsvarselInfo={forhåndsvarselInfo}
-            />
+            <ForhåndsvarselSkjema behandling={behandling} forhåndsvarselInfo={forhåndsvarselInfo} />
         </VStack>
     );
 };
 
 type ForhåndsvarselSkjemaProps = {
     behandling: BehandlingDto;
-    fagsak: FagsakDto;
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     behandling,
-    fagsak,
     forhåndsvarselInfo,
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { toggles } = useToggles();
     const [parentBounds, setParentBounds] = useState({ width: 'auto' });
-
     const { actionBarStegtekst } = useBehandling();
 
     const {
@@ -108,7 +100,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendUnntakMutation,
         sendUnntak,
         gåTilNeste,
-    } = useForhåndsvarselMutations(behandling, fagsak);
+        gåTilForrige,
+    } = useForhåndsvarselMutations(behandling);
 
     const mutations = [
         { key: 'forhåndsvarsel', mutation: sendForhåndsvarselMutation },
@@ -169,18 +162,21 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'Utsett frist';
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
-        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei) {
-            return 'Send inn unntak';
         }
         return 'Neste';
     };
 
+    const skalSendeForhåndsvarsel =
+        skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt;
+    const skalSendeUnntak =
+        skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
+        !forhåndsvarselInfo?.forhåndsvarselUnntak;
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
         data: ForhåndsvarselFormData
     ): void => {
-        if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt) {
+        if (skalSendeForhåndsvarsel) {
             sendForhåndsvarsel(data);
-        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei) {
+        } else if (skalSendeUnntak) {
             sendUnntak(data);
         } else {
             gåTilNeste();
@@ -196,22 +192,37 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendBrukeruttalelse(data);
     };
 
+    const formId = !varselErSendt
+        ? 'opprettForm'
+        : varselErSendt && !forhåndsvarselInfo?.brukeruttalelse
+          ? 'uttalelseForm'
+          : skalSendeUnntak
+            ? 'unntakForm'
+            : undefined; // 'uttalelseUtenUtsettForm'; undefined hvis bare "Neste"
+
     return (
         <>
             <FormProvider {...methods}>
                 <OpprettSkjema
                     behandling={behandling}
-                    fagsak={fagsak}
                     varselbrevtekster={varselbrevtekster}
                     varselErSendt={varselErSendt}
                     parentBounds={parentBounds}
                     handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
+                    readOnly={!!forhåndsvarselInfo?.forhåndsvarselUnntak}
                 />
             </FormProvider>
 
             {toggles[ToggleName.Forhåndsvarselsteg] && varselErSendt && (
                 <FormProvider {...uttalelseMethods}>
-                    <Uttalelse handleUttalelseSubmit={handleUttalelseSubmit} kanUtsetteFrist />
+                    <Uttalelse
+                        handleUttalelseSubmit={handleUttalelseSubmit}
+                        readOnly={
+                            !!forhåndsvarselInfo.brukeruttalelse ||
+                            forhåndsvarselInfo.utsettUttalelseFrist.length > 0
+                        }
+                        kanUtsetteFrist
+                    />
                 </FormProvider>
             )}
 
@@ -223,11 +234,18 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     sendBrukeruttalelseMutation.isPending ||
                     sendUnntakMutation?.isPending
                 }
-                forrigeAriaLabel={undefined}
-                onForrige={undefined}
+                forrigeAriaLabel="Gå til fakta om feilutbetaling"
+                onForrige={gåTilForrige}
                 nesteAriaLabel={getNesteKnappTekst()}
-                type="submit"
-                formId={varselErSendt ? 'uttalelseForm' : 'opprettForm'}
+                {...(formId
+                    ? {
+                          type: 'submit' as const,
+                          formId: formId,
+                      }
+                    : {
+                          type: 'button' as const,
+                          onNeste: gåTilNeste,
+                      })}
             />
 
             {sendForhåndsvarselMutation.isSuccess && (
@@ -255,7 +273,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                             feil={feil}
                             lukkFeilModal={mutation.reset}
                             behandlingId={behandling.behandlingId}
-                            fagsakId={fagsak.eksternFagsakId}
                         />
                     );
                 }

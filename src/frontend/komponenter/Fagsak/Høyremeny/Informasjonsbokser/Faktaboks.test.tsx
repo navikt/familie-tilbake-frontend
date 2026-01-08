@@ -5,7 +5,9 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { Faktaboks } from './Faktaboks';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { ytelsetype, Ytelsetype } from '../../../../kodeverk';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
     Behandlingstatus,
     Behandlingresultat,
@@ -52,17 +54,20 @@ const baseBehandling = (override: Partial<Behandling> = {}): Behandling => ({
     ...override,
 });
 
-const renderFaktaboks = (delvisBehandling: Partial<Behandling> = {}): RenderResult =>
-    render(
-        <Faktaboks
-            behandling={baseBehandling(delvisBehandling)}
-            ytelsestype={Ytelsetype.Barnetrygd}
-        />
+const renderFaktaboks = (
+    delvisBehandling: Partial<Behandling> = {},
+    ytelsestypeOverride: Ytelsetype = Ytelsetype.Barnetrygd
+): RenderResult => {
+    return render(
+        <FagsakContext.Provider value={lagFagsak({ ytelsestype: ytelsestypeOverride })}>
+            <Faktaboks behandling={baseBehandling(delvisBehandling)} />
+        </FagsakContext.Provider>
     );
+};
 
 describe('Faktaboks', () => {
     test('Viser heading med ytelsestype', () => {
-        renderFaktaboks();
+        renderFaktaboks({}, Ytelsetype.Barnetrygd);
         expect(
             screen.getByRole('heading', {
                 name: `Tilbakekreving av ${ytelsetype[Ytelsetype.Barnetrygd].toLocaleLowerCase()}`,

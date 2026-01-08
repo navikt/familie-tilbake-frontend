@@ -9,7 +9,8 @@ import { vi } from 'vitest';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
 import { BehandlingProvider } from '../../../../context/BehandlingContext';
-import { Aktsomhet, SærligeGrunner, Vilkårsresultat, Ytelsetype } from '../../../../kodeverk';
+import { FagsakContext } from '../../../../context/FagsakContext';
+import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
@@ -51,7 +52,6 @@ vi.mock('../VilkårsvurderingContext', () => {
 });
 
 const periode = lagVilkårsvurderingPeriodeSkjemaData();
-const fagsak = lagFagsak({ ytelsestype: Ytelsetype.Overgangsstønad });
 
 describe('VilkårsvurderingPeriodeSkjema', () => {
     let user: UserEvent;
@@ -69,38 +69,39 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={{
-                        aktiviteter: [
-                            {
-                                aktivitet: 'Aktivitet 1',
-                                beløp: 1333,
-                            },
-                            {
-                                aktivitet: 'Aktivitet 2',
-                                beløp: 1000,
-                            },
-                        ],
-                        ...periode,
-                    }}
-                    behandletPerioder={[
-                        lagVilkårsvurderingPeriodeSkjemaData({
-                            periode: {
-                                fom: '2020-10-01',
-                                tom: '2020-11-30',
-                            },
-                        }),
-                    ]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </BehandlingProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={{
+                            aktiviteter: [
+                                {
+                                    aktivitet: 'Aktivitet 1',
+                                    beløp: 1333,
+                                },
+                                {
+                                    aktivitet: 'Aktivitet 2',
+                                    beløp: 1000,
+                                },
+                            ],
+                            ...periode,
+                        }}
+                        behandletPerioder={[
+                            lagVilkårsvurderingPeriodeSkjemaData({
+                                periode: {
+                                    fom: '2020-10-01',
+                                    tom: '2020-11-30',
+                                },
+                            }),
+                        ]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -201,19 +202,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </BehandlingProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -283,19 +285,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </BehandlingProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -395,19 +398,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryByRole,
             queryByText,
         } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </BehandlingProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -549,19 +553,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Feilaktig - forsto', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </BehandlingProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -631,19 +636,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     test('Feilaktige - grov uaktsomhet - ingen grunn til reduksjon', async () => {
         const { getByLabelText, getByRole, getByTestId, getByText, queryAllByText, queryByText } =
             render(
-                <BehandlingProvider>
-                    <VilkårsvurderingPeriodeSkjema
-                        behandling={lagBehandling()}
-                        fagsak={fagsak}
-                        periode={periode}
-                        behandletPerioder={[]}
-                        erTotalbeløpUnder4Rettsgebyr={false}
-                        erLesevisning={false}
-                        perioder={[periode]}
-                        pendingPeriode={undefined}
-                        settPendingPeriode={vi.fn()}
-                    />
-                </BehandlingProvider>
+                <FagsakContext.Provider value={lagFagsak()}>
+                    <BehandlingProvider>
+                        <VilkårsvurderingPeriodeSkjema
+                            behandling={lagBehandling()}
+                            periode={periode}
+                            behandletPerioder={[]}
+                            erTotalbeløpUnder4Rettsgebyr={false}
+                            erLesevisning={false}
+                            perioder={[periode]}
+                            pendingPeriode={undefined}
+                            settPendingPeriode={vi.fn()}
+                        />
+                    </BehandlingProvider>
+                </FagsakContext.Provider>
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -737,19 +743,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </BehandlingProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -874,19 +881,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     test('Feilaktige - grov uaktsomhet - grunn til reduksjon - egendefinert', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole, queryByText } =
             render(
-                <BehandlingProvider>
-                    <VilkårsvurderingPeriodeSkjema
-                        behandling={lagBehandling()}
-                        fagsak={fagsak}
-                        periode={periode}
-                        behandletPerioder={[]}
-                        erTotalbeløpUnder4Rettsgebyr={false}
-                        erLesevisning={false}
-                        perioder={[periode]}
-                        pendingPeriode={undefined}
-                        settPendingPeriode={vi.fn()}
-                    />
-                </BehandlingProvider>
+                <FagsakContext.Provider value={lagFagsak()}>
+                    <BehandlingProvider>
+                        <VilkårsvurderingPeriodeSkjema
+                            behandling={lagBehandling()}
+                            periode={periode}
+                            behandletPerioder={[]}
+                            erTotalbeløpUnder4Rettsgebyr={false}
+                            erLesevisning={false}
+                            perioder={[periode]}
+                            pendingPeriode={undefined}
+                            settPendingPeriode={vi.fn()}
+                        />
+                    </BehandlingProvider>
+                </FagsakContext.Provider>
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -1004,19 +1012,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByText,
         } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={true}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </BehandlingProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={true}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -1142,19 +1151,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ingen grunn til reduksjon', async () => {
         const { getByLabelText, getByRole, getByText, getByTestId, queryAllByText, queryByText } =
             render(
-                <BehandlingProvider>
-                    <VilkårsvurderingPeriodeSkjema
-                        behandling={lagBehandling()}
-                        fagsak={fagsak}
-                        periode={periode}
-                        behandletPerioder={[]}
-                        erTotalbeløpUnder4Rettsgebyr={true}
-                        erLesevisning={false}
-                        perioder={[periode]}
-                        pendingPeriode={undefined}
-                        settPendingPeriode={vi.fn()}
-                    />
-                </BehandlingProvider>
+                <FagsakContext.Provider value={lagFagsak()}>
+                    <BehandlingProvider>
+                        <VilkårsvurderingPeriodeSkjema
+                            behandling={lagBehandling()}
+                            periode={periode}
+                            behandletPerioder={[]}
+                            erTotalbeløpUnder4Rettsgebyr={true}
+                            erLesevisning={false}
+                            perioder={[periode]}
+                            pendingPeriode={undefined}
+                            settPendingPeriode={vi.fn()}
+                        />
+                    </BehandlingProvider>
+                </FagsakContext.Provider>
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -1256,19 +1266,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ikke tilbakekreves', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={true}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </BehandlingProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={true}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -1346,29 +1357,30 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Åpner vurdert periode - god tro - beløp i behold', async () => {
         const { getByLabelText, getByText } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={lagVilkårsvurderingPeriodeSkjemaData({
-                        begrunnelse: 'Gitt i god tro',
-                        vilkårsvurderingsresultatInfo: {
-                            vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
-                            godTro: {
-                                begrunnelse: 'Deler av beløpet er i behold',
-                                beløpErIBehold: true,
-                                beløpTilbakekreves: 699,
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={lagVilkårsvurderingPeriodeSkjemaData({
+                            begrunnelse: 'Gitt i god tro',
+                            vilkårsvurderingsresultatInfo: {
+                                vilkårsvurderingsresultat: Vilkårsresultat.GodTro,
+                                godTro: {
+                                    begrunnelse: 'Deler av beløpet er i behold',
+                                    beløpErIBehold: true,
+                                    beløpTilbakekreves: 699,
+                                },
                             },
-                        },
-                    })}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={true}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </BehandlingProvider>
+                        })}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={true}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
         await waitFor(() => {
             expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -1386,41 +1398,42 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Åpner vurdert periode - mangelfulle - simpel uaktsomhet - under 4 rettsgebyr', async () => {
         const { getByLabelText, getByTestId, getByText } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={lagVilkårsvurderingPeriodeSkjemaData({
-                        begrunnelse: 'Gitt mangelfulle opplysninger',
-                        vilkårsvurderingsresultatInfo: {
-                            vilkårsvurderingsresultat:
-                                Vilkårsresultat.MangelfulleOpplysningerFraBruker,
-                            aktsomhet: {
-                                begrunnelse: 'Vurdert aktsomhet til simpel',
-                                aktsomhet: Aktsomhet.SimpelUaktsomhet,
-                                tilbakekrevSmåbeløp: true,
-                                særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
-                                særligeGrunner: [
-                                    { særligGrunn: SærligeGrunner.GradAvUaktsomhet },
-                                    { særligGrunn: SærligeGrunner.StørrelseBeløp },
-                                    {
-                                        særligGrunn: SærligeGrunner.Annet,
-                                        begrunnelse: 'Dette er en annen begrunnelse',
-                                    },
-                                ],
-                                særligeGrunnerTilReduksjon: true,
-                                andelTilbakekreves: 33,
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={lagVilkårsvurderingPeriodeSkjemaData({
+                            begrunnelse: 'Gitt mangelfulle opplysninger',
+                            vilkårsvurderingsresultatInfo: {
+                                vilkårsvurderingsresultat:
+                                    Vilkårsresultat.MangelfulleOpplysningerFraBruker,
+                                aktsomhet: {
+                                    begrunnelse: 'Vurdert aktsomhet til simpel',
+                                    aktsomhet: Aktsomhet.SimpelUaktsomhet,
+                                    tilbakekrevSmåbeløp: true,
+                                    særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
+                                    særligeGrunner: [
+                                        { særligGrunn: SærligeGrunner.GradAvUaktsomhet },
+                                        { særligGrunn: SærligeGrunner.StørrelseBeløp },
+                                        {
+                                            særligGrunn: SærligeGrunner.Annet,
+                                            begrunnelse: 'Dette er en annen begrunnelse',
+                                        },
+                                    ],
+                                    særligeGrunnerTilReduksjon: true,
+                                    andelTilbakekreves: 33,
+                                },
                             },
-                        },
-                    })}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={true}
-                    erLesevisning={false}
-                />
-            </BehandlingProvider>
+                        })}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={true}
+                        erLesevisning={false}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
         await waitFor(() => {
             expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
@@ -1458,19 +1471,20 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Validering vises når man forsøker å gå videre uten å fylle inn påkrevde felter', async () => {
         const { getByRole, queryAllByText } = render(
-            <BehandlingProvider>
-                <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
-                    fagsak={fagsak}
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </BehandlingProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingProvider>
+                    <VilkårsvurderingPeriodeSkjema
+                        behandling={lagBehandling()}
+                        periode={periode}
+                        behandletPerioder={[]}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingProvider>
+            </FagsakContext.Provider>
         );
 
         // Sjekk at det ikke er noen feilmeldinger fra start

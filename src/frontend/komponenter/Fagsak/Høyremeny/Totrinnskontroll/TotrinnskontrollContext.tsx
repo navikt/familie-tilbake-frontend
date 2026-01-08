@@ -1,7 +1,6 @@
 import type { TotrinnGodkjenningOption, TotrinnStegSkjemaData } from './typer/totrinnSkjemaTyper';
 import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer/api';
 import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
 import type { SynligSteg } from '../../../../utils/sider';
 
@@ -12,6 +11,7 @@ import { useNavigate } from 'react-router';
 import { OptionIkkeGodkjent, totrinnGodkjenningOptions } from './typer/totrinnSkjemaTyper';
 import { useBehandlingApi } from '../../../../api/behandling';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useFagsak } from '../../../../context/FagsakContext';
 import { behandlingssteg, Behandlingssteg } from '../../../../typer/behandling';
 import {
     byggFeiletRessurs,
@@ -37,11 +37,11 @@ const stegRekkefølge = [
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
 };
 
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
-    ({ fagsak, behandling }: Props) => {
+    ({ behandling }: Props) => {
+        const { fagsystem, eksternFagsakId } = useFagsak();
         const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
         const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
         const [erLesevisning, settErLesevisning] = useState<boolean>(false);
@@ -245,7 +245,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
 
         const navigerTilSide = (side: SynligSteg): void => {
             navigate(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
+                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
             );
         };
 

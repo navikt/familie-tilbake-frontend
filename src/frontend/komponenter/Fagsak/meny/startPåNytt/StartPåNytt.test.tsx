@@ -1,9 +1,7 @@
 import type { StartPåNyttHook as StartPåNyttHook } from './useStartPåNytt';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { RedirectEtterLagringHook } from '../../../../hooks/useRedirectEtterLagring';
-import type { FagsakState } from '../../../../stores/fagsakStore';
 import type { UserEvent } from '@testing-library/user-event';
-import type { StoreApi, UseBoundStore } from 'zustand';
 
 import { ActionMenu, Button } from '@navikt/ds-react';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -12,16 +10,13 @@ import * as React from 'react';
 
 import { StartPåNytt } from './StartPåNytt';
 import { Feil } from '../../../../api/feil';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 
 const mockUseBehandling = vi.fn();
 vi.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
-
-const mockUseFagsakStore = vi.fn();
-vi.mock('../../../../stores/fagsakStore', () => ({
-    useFagsakStore: (): UseBoundStore<StoreApi<FagsakState>> => mockUseFagsakStore(),
 }));
 
 const mockUseRedirectEtterLagring = vi.fn();
@@ -38,9 +33,6 @@ const mockNullstill = vi.fn();
 const setupMocks = (): void => {
     mockUseBehandling.mockReturnValue({
         nullstillIkkePersisterteKomponenter: mockNullstill,
-    });
-    mockUseFagsakStore.mockReturnValue({
-        eksternFagsakId: '123',
     });
     mockUseRedirectEtterLagring.mockReturnValue(() => null);
 };
@@ -74,14 +66,16 @@ describe('StartPåNytt', () => {
         });
 
         render(
-            <ActionMenu open>
-                <ActionMenu.Trigger>
-                    <Button>Test kun for å rendre</Button>
-                </ActionMenu.Trigger>
-                <ActionMenu.Content>
-                    <StartPåNytt behandling={lagBehandling()} />
-                </ActionMenu.Content>
-            </ActionMenu>
+            <FagsakContext.Provider value={lagFagsak({ eksternFagsakId: '123' })}>
+                <ActionMenu open>
+                    <ActionMenu.Trigger>
+                        <Button>Test kun for å rendre</Button>
+                    </ActionMenu.Trigger>
+                    <ActionMenu.Content>
+                        <StartPåNytt behandling={lagBehandling()} />
+                    </ActionMenu.Content>
+                </ActionMenu>
+            </FagsakContext.Provider>
         );
 
         const dialog = document.querySelector('dialog') as HTMLDialogElement;

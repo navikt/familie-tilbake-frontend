@@ -2,7 +2,6 @@ import type { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typ
 import type { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type {
     FaktaResponse,
     VurderingAvBrukersUttalelse,
@@ -14,6 +13,7 @@ import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Behandlingssteg } from '../../../typer/behandling';
 import {
@@ -35,10 +35,10 @@ const _validerTekst3000 = validerTekstMaksLengde(3000);
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
 };
 
-const [FaktaProvider, useFakta] = createUseContext(({ behandling, fagsak }: Props) => {
+const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const [fakta, setFakta] = useState<Ressurs<FaktaResponse>>();
     const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({
         perioder: [],
@@ -310,8 +310,11 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling, fagsak }: Prop
     const sendInnSkjema = (): void => {
         if (stegErBehandlet && !harEndretOpplysninger()) {
             nullstillIkkePersisterteKomponenter();
+            const harForhåndsvarselSteg = behandling.behandlingsstegsinfo.some(
+                steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+            );
             utførRedirect(
-                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
+                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${harForhåndsvarselSteg ? SYNLIGE_STEG.FORHÅNDSVARSEL.href : SYNLIGE_STEG.FORELDELSE.href}`
             );
         } else {
             const feilmeldinger = validerForInnsending();
@@ -344,7 +347,7 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling, fagsak }: Prop
                     if (respons.status === RessursStatus.Suksess) {
                         hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                             navigate(
-                                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                             );
                         });
                     }
@@ -355,7 +358,7 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling, fagsak }: Prop
 
     const gåTilForrige = (): void => {
         navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
         );
     };
 
@@ -377,7 +380,6 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling, fagsak }: Prop
         feilmeldinger,
         senderInn,
         gåTilForrige,
-        fagsak,
     };
 });
 

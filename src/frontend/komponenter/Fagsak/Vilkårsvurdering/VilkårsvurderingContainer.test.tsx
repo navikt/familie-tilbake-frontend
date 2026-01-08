@@ -1,7 +1,6 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     VilkårsvurderingResponse,
@@ -19,7 +18,8 @@ import { vi } from 'vitest';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
-import { Aktsomhet, HendelseType, Vilkårsresultat, Ytelsetype } from '../../../kodeverk';
+import { FagsakContext } from '../../../context/FagsakContext';
+import { Aktsomhet, HendelseType, Vilkårsresultat } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
@@ -121,14 +121,17 @@ const setupMocks = (): void => {
     }));
 };
 
-const renderVilkårsvurderingContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
-    render(
-        <BehandlingProvider>
-            <VilkårsvurderingProvider behandling={behandling} fagsak={fagsak}>
-                <VilkårsvurderingContainer behandling={behandling} fagsak={fagsak} />
-            </VilkårsvurderingProvider>
-        </BehandlingProvider>
+const renderVilkårsvurderingContainer = (behandling: Behandling): RenderResult => {
+    return render(
+        <FagsakContext.Provider value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
+            <BehandlingProvider>
+                <VilkårsvurderingProvider behandling={behandling}>
+                    <VilkårsvurderingContainer behandling={behandling} />
+                </VilkårsvurderingProvider>
+            </BehandlingProvider>
+        </FagsakContext.Provider>
     );
+};
 
 describe('VilkårsvurderingContainer', () => {
     let user: UserEvent;
@@ -143,7 +146,7 @@ describe('VilkårsvurderingContainer', () => {
         setupUseBehandlingApiMock(lagVilkårsvurderingResponse({ perioder }));
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
-            renderVilkårsvurderingContainer(lagBehandling(), lagFagsak());
+            renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText(førstePeriode)).toBeInTheDocument();
@@ -288,10 +291,8 @@ describe('VilkårsvurderingContainer', () => {
 
     test('Vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
         setupUseBehandlingApiMock(lagVilkårsvurderingResponse({ perioder }));
-        const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByLabelText } =
+            renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText(førstePeriode)).toBeInTheDocument();
@@ -378,10 +379,7 @@ describe('VilkårsvurderingContainer', () => {
         });
         setupUseBehandlingApiMock(vilkårsvurderingResponse);
         const { getByText, getByRole, getByLabelText, queryByLabelText } =
-            renderVilkårsvurderingContainer(
-                lagBehandling(),
-                lagFagsak({ ytelsestype: Ytelsetype.Barnetrygd })
-            );
+            renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
@@ -469,10 +467,8 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByLabelText } =
+            renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
@@ -580,10 +576,8 @@ describe('VilkårsvurderingContainer', () => {
             ],
         });
         setupUseBehandlingApiMock(vilkårsvurderingResponse);
-        const { getByText, getByRole, getByLabelText } = renderVilkårsvurderingContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByLabelText } =
+            renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(

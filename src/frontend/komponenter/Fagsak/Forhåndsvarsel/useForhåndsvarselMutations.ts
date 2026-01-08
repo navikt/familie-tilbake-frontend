@@ -1,7 +1,6 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
 import type {
     BehandlingDto,
-    FagsakDto,
     BestillBrevDto,
     BrukeruttalelseDto,
     BestillBrevData,
@@ -26,6 +25,7 @@ import { useNavigate } from 'react-router';
 
 import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
 import { Feil } from '../../../api/feil';
+import { useFagsak } from '../../../context/FagsakContext';
 import {
     bestillBrevMutation,
     forhåndsvisBrevMutation,
@@ -67,6 +67,7 @@ export type UseForhåndsvarselMutationsReturn = {
     readonly sendUtsettUttalelseFrist: (formData: UttalelseMedFristFormData) => void;
     readonly seForhåndsvisning: (fritekst: string) => void;
     readonly gåTilNeste: () => void;
+    readonly gåTilForrige: () => void;
 };
 
 const brukerUttalelsePayload = (
@@ -105,12 +106,11 @@ export const extractErrorFromMutationError = (error: unknown): Feil => {
 
 export const useForhåndsvarselMutations = (
     behandling: BehandlingDto,
-    fagsak: FagsakDto,
     onForhåndsvarselSent?: () => void
 ): UseForhåndsvarselMutationsReturn => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const invalidateQueries = (): void => {
         queryClient.invalidateQueries({
             queryKey: ['hentBehandling', behandling.behandlingId],
@@ -122,7 +122,13 @@ export const useForhåndsvarselMutations = (
 
     const gåTilNeste = (): void => {
         navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
+        );
+    };
+
+    const gåTilForrige = (): void => {
+        navigate(
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
         );
     };
 
@@ -205,9 +211,9 @@ export const useForhåndsvarselMutations = (
             };
 
             sendUnntakMutation.mutate({
-                // path: {
-                //     behandlingId: behandling.behandlingId,
-                // },
+                path: {
+                    behandlingId: behandling.behandlingId,
+                },
                 body: payload,
             });
         },
@@ -221,12 +227,16 @@ export const useForhåndsvarselMutations = (
             //         begrunnelse: formData.harBrukerUttaltSeg.utsettUttalelseFrist.begrunnelse,
             //     };
             //     sendUtsettUttalelseFristMutation.mutate({
+            //         path: { behandlingId: behandling.behandlingId },
             //         body: payload,
             //     });
             // }
         },
         seForhåndsvisning: (fritekst: string): void => {
             seForhåndsvisningMutation.mutate({
+                path: {
+                    behandlingId: behandling.behandlingId,
+                },
                 body: {
                     behandlingId: behandling.behandlingId,
                     brevmalkode: 'VARSEL',
@@ -235,5 +245,6 @@ export const useForhåndsvarselMutations = (
             });
         },
         gåTilNeste,
+        gåTilForrige,
     };
 };

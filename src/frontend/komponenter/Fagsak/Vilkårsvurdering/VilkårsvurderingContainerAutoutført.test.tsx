@@ -11,6 +11,7 @@ import { vi } from 'vitest';
 
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingResponse } from '../../../testdata/vilkårsvurderingFactory';
@@ -83,11 +84,13 @@ describe('VilkårsvurderingContainer', () => {
         setupMock();
 
         const { getByText } = render(
-            <QueryClientProvider client={queryClient}>
-                <VilkårsvurderingProvider behandling={lagBehandling()} fagsak={lagFagsak()}>
-                    <VilkårsvurderingContainer behandling={lagBehandling()} fagsak={lagFagsak()} />
-                </VilkårsvurderingProvider>
-            </QueryClientProvider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <QueryClientProvider client={queryClient}>
+                    <VilkårsvurderingProvider behandling={lagBehandling()}>
+                        <VilkårsvurderingContainer behandling={lagBehandling()} />
+                    </VilkårsvurderingProvider>
+                </QueryClientProvider>
+            </FagsakContext.Provider>
         );
 
         await waitFor(() => {

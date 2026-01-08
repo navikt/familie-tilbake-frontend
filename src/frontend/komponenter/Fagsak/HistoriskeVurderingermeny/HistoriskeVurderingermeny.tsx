@@ -1,5 +1,4 @@
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import { LeaveIcon } from '@navikt/aksel-icons';
 import { BodyLong, Heading, HStack, Link } from '@navikt/ds-react';
@@ -7,16 +6,15 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import { styled } from 'styled-components';
 
+import { useFagsak } from '../../../context/FagsakContext';
 import { Behandlingsmeny } from '../meny/Meny';
 
 const Container = styled.div`
     margin: 2rem;
 `;
-const HistoriskeVurderingermeny: React.FC<{ fagsak: Fagsak; behandling: Behandling }> = ({
-    fagsak,
-    behandling,
-}) => {
-    const basePath = `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+const HistoriskeVurderingermeny: React.FC<{ behandling: Behandling }> = ({ behandling }) => {
+    const { fagsystem, eksternFagsakId } = useFagsak();
+    const basePath = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
     const location = useLocation();
     const behandlingsPath = location.pathname.split('/').at(-1);
 

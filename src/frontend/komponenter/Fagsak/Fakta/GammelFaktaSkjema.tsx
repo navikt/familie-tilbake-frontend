@@ -1,5 +1,4 @@
 import type { FaktaSkjemaData } from './typer/fakta';
-import type { Ytelsetype } from '../../../kodeverk';
 import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 
 import {
@@ -27,13 +26,12 @@ import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
-    ytelse: Ytelsetype;
     erLesevisning: boolean;
     skjemaData: FaktaSkjemaData;
     fakta: FaktaResponse;
 };
 
-const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesevisning }) => {
+const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }) => {
     const {
         behandling,
         oppdaterBegrunnelse,
@@ -109,7 +107,6 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesev
                     )}
                     {skjemaData.perioder && (
                         <FaktaPerioder
-                            ytelse={ytelse}
                             erLesevisning={erLesevisning}
                             perioder={skjemaData.perioder}
                         />
@@ -203,7 +200,13 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, ytelse, erLesev
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
                 forrigeAriaLabel={behandling.harVerge ? 'Gå tilbake til vergesteget' : undefined}
-                nesteAriaLabel="Gå videre til foreldelsessteget"
+                nesteAriaLabel={
+                    behandling.behandlingsstegsinfo.some(
+                        steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+                    )
+                        ? 'Gå videre til forhåndsvarselsteget'
+                        : 'Gå videre til foreldelsessteget'
+                }
                 onForrige={behandling.harVerge ? gåTilForrige : undefined}
                 onNeste={sendInnSkjema}
                 isLoading={senderInn}

@@ -1,11 +1,13 @@
-import type { Bruker } from '../../../../typer/bruker';
-import type { Institusjon } from '../../../../typer/fagsak';
+import type { InstitusjonDto } from '../../../../generated';
+import type { FrontendBrukerDto } from '../../../../generated';
 import type { RenderResult } from '@testing-library/react';
 
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { BrukerInformasjon } from './BrukerInformasjon';
+import { FagsakContext } from '../../../../context/FagsakContext';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { Kjønn } from '../../../../typer/bruker';
 
 vi.mock('../../../../utils', async () => {
@@ -16,33 +18,42 @@ vi.mock('../../../../utils', async () => {
     };
 });
 
-const baseBruker = (override: Partial<Bruker> = {}): Bruker => ({
+const baseBruker = (override: Partial<FrontendBrukerDto> = {}): FrontendBrukerDto => ({
     navn: 'Ola Nordmann',
     fødselsdato: '1990-05-17',
-    dødsdato: null,
+    dødsdato: undefined,
     kjønn: Kjønn.Mann,
     personIdent: '01020312345',
     ...override,
 });
 
-const baseInstitusjon = (override: Partial<Institusjon> = {}): Institusjon => ({
+const baseInstitusjon = (override: Partial<InstitusjonDto> = {}): InstitusjonDto => ({
     navn: 'Solgløtt Omsorg',
     organisasjonsnummer: '123456789',
     ...override,
 });
 
 const renderBrukerInformasjon = (
-    bruker: Partial<Bruker> = {},
-    institusjon: Partial<Institusjon> | null = null
-): RenderResult =>
-    render(
-        <BrukerInformasjon
-            bruker={baseBruker(bruker)}
-            institusjon={institusjon ? baseInstitusjon(institusjon) : null}
-        />
+    bruker: Partial<FrontendBrukerDto> | null = null,
+    institusjon: Partial<InstitusjonDto> | null = null
+): RenderResult => {
+    return render(
+        <FagsakContext.Provider
+            value={lagFagsak({
+                bruker: bruker ? baseBruker(bruker) : undefined,
+                institusjon: institusjon ? baseInstitusjon(institusjon) : undefined,
+            })}
+        >
+            <BrukerInformasjon />
+        </FagsakContext.Provider>
     );
+};
 
 describe('BrukerInformasjon', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
     test('Viser heading', () => {
         renderBrukerInformasjon();
         expect(screen.getByRole('heading', { name: 'Informasjon om bruker' })).toBeInTheDocument();
@@ -54,7 +65,7 @@ describe('BrukerInformasjon', () => {
     });
 
     test('Viser alder', () => {
-        renderBrukerInformasjon();
+        renderBrukerInformasjon({});
         expect(screen.getByText(/42 år/)).toBeInTheDocument();
     });
 
@@ -79,7 +90,7 @@ describe('BrukerInformasjon', () => {
     });
 
     test('Skjuler dødsdato når ikke satt', () => {
-        renderBrukerInformasjon({ dødsdato: null });
+        renderBrukerInformasjon({ dødsdato: undefined });
         expect(screen.queryByText('Dødsdato')).not.toBeInTheDocument();
     });
 

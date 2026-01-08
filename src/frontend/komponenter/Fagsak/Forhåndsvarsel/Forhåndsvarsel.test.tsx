@@ -10,9 +10,10 @@ import React from 'react';
 import { Forhåndsvarsel } from './Forhåndsvarsel';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { ToggleName } from '../../../context/toggles';
 import { lagBehandlingDto } from '../../../testdata/behandlingFactory';
-import { lagFagsakDto } from '../../../testdata/fagsakFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
     lagForhåndsvarselQueries,
     lagForhåndsvarselMutations,
@@ -80,12 +81,15 @@ const setupMock = (): void => {
     }));
 };
 
-const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): RenderResult =>
-    render(
-        <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={behandling} fagsak={lagFagsakDto()} />
-        </QueryClientProvider>
+const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): RenderResult => {
+    return render(
+        <FagsakContext.Provider value={lagFagsak()}>
+            <QueryClientProvider client={new QueryClient()}>
+                <Forhåndsvarsel behandling={behandling} />
+            </QueryClientProvider>
+        </FagsakContext.Provider>
     );
+};
 
 describe('Forhåndsvarsel', () => {
     beforeEach(() => {

@@ -19,10 +19,15 @@ import { HarUttaltSeg } from '../forhåndsvarselSchema';
 
 type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseMedFristFormData>;
+    readOnly: boolean;
     kanUtsetteFrist?: boolean;
 };
 
-export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFrist = false }) => {
+export const Uttalelse: React.FC<Props> = ({
+    handleUttalelseSubmit,
+    readOnly,
+    kanUtsetteFrist = false,
+}) => {
     const methods = useFormContext<UttalelseMedFristFormData>();
 
     const harUttaltSeg = useWatch({
@@ -67,6 +72,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                     <RadioGroup
                         {...field}
                         size="small"
+                        readOnly={readOnly}
                         legend="Har brukeren uttalt seg etter forhåndsvarselet?"
                         error={fieldState.error?.message}
                     >
@@ -92,6 +98,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                                         {...field}
                                         {...uttalelsesDatepicker.inputProps}
                                         size="small"
+                                        readOnly={readOnly}
                                         label="Når uttalte brukeren seg?"
                                         error={fieldState.error?.message}
                                         onBlur={() =>
@@ -108,6 +115,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                                 `uttalelsesDetaljer.${index}.hvorBrukerenUttalteSeg`
                             )}
                             size="small"
+                            readOnly={readOnly}
                             label="Hvordan uttalte brukeren seg?"
                             description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
                             error={get(
@@ -120,6 +128,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                                 `uttalelsesDetaljer.${index}.uttalelseBeskrivelse`
                             )}
                             size="small"
+                            readOnly={readOnly}
                             label="Beskriv hva brukeren har uttalt seg om"
                             maxLength={4000}
                             resize
@@ -134,6 +143,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                 <Textarea
                     {...methods.register('kommentar')}
                     size="small"
+                    readOnly={readOnly}
                     label="Kommentar til valget over"
                     maxLength={4000}
                     resize
@@ -150,6 +160,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                                 <DatePicker.Input
                                     {...nyFristDatepicker.inputProps}
                                     size="small"
+                                    readOnly={readOnly}
                                     label="Sett ny dato for frist"
                                     name={field.name}
                                     error={fieldState.error?.message}
@@ -160,6 +171,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                     <Textarea
                         {...methods.register('utsettUttalelseFrist.begrunnelse')}
                         size="small"
+                        readOnly={readOnly}
                         label="Begrunnelse for utsatt frist"
                         maxLength={4000}
                         resize

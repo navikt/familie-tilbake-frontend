@@ -9,8 +9,8 @@ import { useNavigate } from 'react-router';
 import { useHttp } from '../../../../api/http/HttpProvider';
 import { useApp } from '../../../../context/AppContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useFagsak } from '../../../../context/FagsakContext';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
-import { useFagsakStore } from '../../../../stores/fagsakStore';
 import { Behandlingssteg, Behandlingsstegstatus } from '../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { SYNLIGE_STEG } from '../../../../utils/sider';
@@ -31,7 +31,7 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
         nullstillIkkePersisterteKomponenter,
     } = useBehandling();
 
-    const { fagsystem, eksternFagsakId } = useFagsakStore();
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const { utførRedirect } = useRedirectEtterLagring();
     const { request } = useHttp();
     const { settToast } = useApp();

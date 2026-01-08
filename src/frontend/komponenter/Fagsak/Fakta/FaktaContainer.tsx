@@ -1,5 +1,3 @@
-import type { Ytelsetype } from '../../../kodeverk';
-
 import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
 
@@ -11,11 +9,7 @@ import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSu
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
-type Props = {
-    ytelse: Ytelsetype;
-};
-
-const FaktaContainer: React.FC<Props> = ({ ytelse }) => {
+const FaktaContainer: React.FC = () => {
     const { stegErBehandlet, skjemaData, fakta } = useFakta();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -38,7 +32,6 @@ const FaktaContainer: React.FC<Props> = ({ ytelse }) => {
                 <GammelFaktaSkjema
                     skjemaData={skjemaData}
                     fakta={fakta.data}
-                    ytelse={ytelse}
                     erLesevisning={erLesevisning}
                 />
             </>

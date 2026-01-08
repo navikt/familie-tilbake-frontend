@@ -7,8 +7,8 @@ import { useRef } from 'react';
 
 import { useStartPåNytt } from './useStartPåNytt';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useFagsak } from '../../../../context/FagsakContext';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
-import { useFagsakStore } from '../../../../stores/fagsakStore';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { MODAL_BREDDE } from '../utils';
@@ -21,7 +21,7 @@ export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
-    const { fagsystem, eksternFagsakId } = useFagsakStore();
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const mutation = useStartPåNytt();
 
     const handleNullstill = (): void => {
@@ -73,12 +73,11 @@ export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
                 </Modal.Footer>
             </Modal>
 
-            {mutation.isError && eksternFagsakId && (
+            {mutation.isError && (
                 <FeilModal
                     feil={mutation.error}
                     lukkFeilModal={mutation.reset}
                     behandlingId={behandling.behandlingId}
-                    fagsakId={eksternFagsakId}
                 />
             )}
         </>

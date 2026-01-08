@@ -1,5 +1,4 @@
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -12,6 +11,7 @@ import { useVedtak } from './VedtakContext';
 import VedtakPerioder from './VedtakPerioder';
 import VedtakSkjema from './VedtakSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
 import { Behandlingssteg, Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
@@ -37,10 +37,10 @@ const VarselbrevInfo = styled(BodyShort)`
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
 };
 
-const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
+const VedtakContainer: React.FC<Props> = ({ behandling }) => {
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const {
         vedtaksbrevavsnitt,
         beregningsresultat,
@@ -138,9 +138,7 @@ const VedtakContainer: React.FC<Props> = ({ behandling, fagsak }) => {
                             brevmottakere={behandling.manuelleBrevmottakere.map(
                                 brevmottakerDto => brevmottakerDto.brevmottaker
                             )}
-                            institusjon={fagsak.institusjon}
-                            bruker={fagsak.bruker}
-                            linkTilBrevmottakerSteg={`/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
+                            linkTilBrevmottakerSteg={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
                         />
                         <Spacer20 />
                     </>

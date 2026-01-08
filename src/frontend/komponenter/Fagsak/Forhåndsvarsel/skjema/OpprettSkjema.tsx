@@ -1,10 +1,4 @@
-import type {
-    BehandlingDto,
-    RessursByte,
-    Section,
-    Varselbrevtekst,
-    FagsakDto,
-} from '../../../../generated';
+import type { BehandlingDto, RessursByte, Section, Varselbrevtekst } from '../../../../generated';
 import type { ForhåndsvarselFormData } from '../forhåndsvarselSchema';
 import type { FieldErrors, SubmitHandler } from 'react-hook-form';
 
@@ -33,27 +27,27 @@ import { Unntak } from './UnntakSkjema';
 
 type Props = {
     behandling: BehandlingDto;
-    fagsak: FagsakDto;
     varselbrevtekster: Varselbrevtekst | undefined;
     varselErSendt: boolean;
     parentBounds: { width: string | undefined };
     handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData>;
+    readOnly: boolean;
 };
 
 export const OpprettSkjema: React.FC<Props> = ({
     behandling,
-    fagsak,
     varselbrevtekster,
     varselErSendt,
     parentBounds,
     handleForhåndsvarselSubmit,
+    readOnly,
 }) => {
     const tittel = varselErSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const queryClient = useQueryClient();
     const maksAntallTegn = 4000;
     const [expansionCardÅpen, setExpansionCardÅpen] = useState(!varselErSendt);
 
-    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling, fagsak);
+    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling);
 
     const [showModal, setShowModal] = useState(false);
     const {
@@ -139,7 +133,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                         legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
                         description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
                         fattes, slik at de får mulighet til å uttale seg."
-                        readOnly={varselErSendt}
+                        readOnly={varselErSendt || readOnly}
                         error={fieldState.error?.message}
                     >
                         <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
@@ -232,7 +226,9 @@ export const OpprettSkjema: React.FC<Props> = ({
                 </VStack>
             )}
 
-            {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />}
+            {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && (
+                <Unntak readOnly={readOnly} />
+            )}
 
             {showModal && pdfData && (
                 <PdfVisningModal

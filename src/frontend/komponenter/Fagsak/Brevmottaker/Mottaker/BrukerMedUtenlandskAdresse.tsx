@@ -2,21 +2,15 @@ import React from 'react';
 
 import { useFagsak } from '../../../../context/FagsakContext';
 import { MottakerType } from '../../../../typer/Brevmottaker';
-import { RessursStatus } from '../../../../typer/ressurs';
 import { ManuellRegistrering } from '../Adressekilde/ManuellRegistrering';
 
 export const BrukerMedUtenlandskAdresse: React.FC = () => {
-    const { fagsak } = useFagsak();
-
-    const brukerNavn =
-        fagsak?.status === RessursStatus.Suksess && fagsak.data?.bruker?.navn
-            ? fagsak.data.bruker.navn
-            : '';
+    const { bruker } = useFagsak();
 
     return (
         <ManuellRegistrering
             prefix="brukerMedUtenlandskAdresse"
-            preutfyltNavn={brukerNavn}
+            preutfyltNavn={bruker.navn}
             mottakerType={MottakerType.BrukerMedUtenlandskAdresse}
         />
     );

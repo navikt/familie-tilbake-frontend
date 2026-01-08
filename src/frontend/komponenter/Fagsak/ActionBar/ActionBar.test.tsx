@@ -5,6 +5,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { ActionBar } from './ActionBar';
+import { FagsakContext } from '../../../context/FagsakContext';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 const mockUseBehandling = vi.fn();
 vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
@@ -14,17 +16,20 @@ const renderActionBar = (
     onForrige: () => void,
     onNeste: () => void,
     isLoading: boolean = false
-): RenderResult =>
-    render(
-        <ActionBar
-            stegtekst="Steg 2 av 5"
-            forrigeAriaLabel="gå tilbake til faktasteget"
-            nesteAriaLabel="gå videre til vilkårsvurderingssteget"
-            onNeste={onNeste}
-            isLoading={isLoading}
-            onForrige={onForrige}
-        />
+): RenderResult => {
+    return render(
+        <FagsakContext.Provider value={lagFagsak()}>
+            <ActionBar
+                stegtekst="Steg 2 av 5"
+                forrigeAriaLabel="gå tilbake til faktasteget"
+                nesteAriaLabel="gå videre til vilkårsvurderingssteget"
+                onNeste={onNeste}
+                isLoading={isLoading}
+                onForrige={onForrige}
+            />
+        </FagsakContext.Provider>
     );
+};
 
 describe('ActionBar', () => {
     beforeEach(() => {

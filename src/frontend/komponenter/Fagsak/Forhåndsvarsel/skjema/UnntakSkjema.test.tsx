@@ -5,9 +5,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { ToggleName, type Toggles } from '../../../../context/toggles';
 import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
-import { lagFagsakDto } from '../../../../testdata/fagsakFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
     lagForhåndsvarselQueries,
     lagForhåndsvarselMutations,
@@ -73,9 +74,11 @@ const setupMock = (): void => {
 
 const renderUnntak = (): RenderResult => {
     const result = render(
-        <QueryClientProvider client={new QueryClient()}>
-            <Forhåndsvarsel behandling={lagBehandlingDto()} fagsak={lagFagsakDto()} />
-        </QueryClientProvider>
+        <FagsakContext.Provider value={lagFagsak()}>
+            <QueryClientProvider client={new QueryClient()}>
+                <Forhåndsvarsel behandling={lagBehandlingDto()} />
+            </QueryClientProvider>
+        </FagsakContext.Provider>
     );
 
     fireEvent.click(screen.getByLabelText('Nei'));
@@ -117,7 +120,7 @@ describe('Unntak', () => {
     test('Viser feilmeldinger ved ingen valg av unntak eller begrunnelse', async () => {
         renderUnntak();
 
-        const nesteKnapp = screen.getByRole('button', { name: 'Send inn unntak' });
+        const nesteKnapp = screen.getByRole('button', { name: 'Neste' });
         fireEvent.click(nesteKnapp);
 
         const unntakFeilmelding = await screen.findByText(

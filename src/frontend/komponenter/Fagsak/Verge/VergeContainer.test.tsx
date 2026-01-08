@@ -3,7 +3,6 @@ import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { VergeDto } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -15,6 +14,7 @@ import { vi } from 'vitest';
 
 import VergeContainer from './VergeContainer';
 import { VergeProvider } from './VergeContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { Vergetype } from '../../../kodeverk/verge';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
@@ -47,12 +47,15 @@ vi.mock('react-router', async () => {
     };
 });
 
-const renderVergeContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
-    render(
-        <VergeProvider behandling={behandling} fagsak={fagsak}>
-            <VergeContainer />
-        </VergeProvider>
+const renderVergeContainer = (behandling: Behandling): RenderResult => {
+    return render(
+        <FagsakContext.Provider value={lagFagsak()}>
+            <VergeProvider behandling={behandling}>
+                <VergeContainer />
+            </VergeProvider>
+        </FagsakContext.Provider>
     );
+};
 
 const setupMock = (
     behandlet: boolean,
@@ -100,10 +103,8 @@ describe('VergeContainer', () => {
     test('Fyller ut advokat', async () => {
         setupMock(false, false, false);
 
-        const { getByText, getByRole, getByLabelText, queryAllByText } = renderVergeContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByLabelText, queryAllByText } =
+            renderVergeContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Verge')).toBeInTheDocument();
@@ -143,7 +144,7 @@ describe('VergeContainer', () => {
         setupMock(false, false, false);
 
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
-            renderVergeContainer(lagBehandling(), lagFagsak());
+            renderVergeContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Verge')).toBeInTheDocument();
@@ -198,8 +199,7 @@ describe('VergeContainer', () => {
         });
 
         const { getByText, getByRole, getByLabelText, queryByLabelText } = renderVergeContainer(
-            lagBehandling({ harVerge: true }),
-            lagFagsak()
+            lagBehandling({ harVerge: true })
         );
 
         await waitFor(() => {
@@ -230,7 +230,7 @@ describe('VergeContainer', () => {
             begrunnelse: 'Verge er opprettet',
         });
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } =
-            renderVergeContainer(lagBehandling({ harVerge: true }), lagFagsak());
+            renderVergeContainer(lagBehandling({ harVerge: true }));
 
         await waitFor(() => {
             expect(getByText('Verge')).toBeInTheDocument();
@@ -260,8 +260,7 @@ describe('VergeContainer', () => {
         });
 
         const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
-            lagBehandling({ harVerge: true }),
-            lagFagsak()
+            lagBehandling({ harVerge: true })
         );
 
         await waitFor(() => {
@@ -291,8 +290,7 @@ describe('VergeContainer', () => {
             begrunnelse: '',
         });
         const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
-            lagBehandling({ harVerge: true }),
-            lagFagsak()
+            lagBehandling({ harVerge: true })
         );
 
         await waitFor(() => {

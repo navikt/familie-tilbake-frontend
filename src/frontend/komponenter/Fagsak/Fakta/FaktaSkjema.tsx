@@ -85,8 +85,10 @@ export const FaktaSkjema = ({
         control: methods.control,
         name: 'perioder',
     }).fields;
-    const { ...oppdagetDatoProps } = methods.register('vurdering.oppdaget.dato');
-    const { datepickerProps, inputProps } = useDatepicker({
+    const {
+        datepickerProps,
+        inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
+    } = useDatepicker({
         onDateChange: date => {
             if (date) {
                 methods.setValue(
@@ -115,7 +117,16 @@ export const FaktaSkjema = ({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         perioder.find(periode => periode.id === id)! as FaktaPeriodeDto;
     const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetalingDto> = data => {
-        oppdaterMutation.mutate({ body: data, path: { behandlingId: behandlingId } });
+        oppdaterMutation.mutate(
+            { body: data, path: { behandlingId: behandlingId } },
+            {
+                onSuccess: data => {
+                    if (data.ferdigvurdert) {
+                        navigerTilNeste();
+                    }
+                },
+            }
+        );
     };
 
     const { name: avRadioGroupName, ...radioProps } = methods.register('vurdering.oppdaget.av');
@@ -176,8 +187,12 @@ export const FaktaSkjema = ({
                     <DatePicker {...datepickerProps} dropdownCaption>
                         <DatePicker.Input
                             size="small"
-                            {...oppdagetDatoProps}
-                            {...inputProps}
+                            {...methods.register('vurdering.oppdaget.dato')}
+                            {...datepickerInputProps}
+                            onBlur={async event => {
+                                datepickerOnBlur?.(event);
+                                await methods.trigger('vurdering.oppdaget.dato');
+                            }}
                             label="Når ble feilutbetalingen oppdaget?"
                             error={methods.formState.errors.vurdering?.oppdaget?.dato?.message}
                         />
@@ -207,7 +222,7 @@ export const FaktaSkjema = ({
                     />
                 </section>
                 <ActionBar
-                    {...(methods.formState.isDirty
+                    {...(methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert
                         ? { type: 'submit', nesteTekst: 'Lagre' }
                         : { type: 'button', onNeste: navigerTilNeste })}
                     type="submit"

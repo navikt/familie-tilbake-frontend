@@ -6,7 +6,6 @@ import type {
     PeriodeMedTekst,
 } from '../../../typer/api';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Beregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
 
 import createUseContext from 'constate';
@@ -17,6 +16,7 @@ import { useNavigate } from 'react-router';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useDokumentApi } from '../../../api/dokument';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import {
@@ -82,10 +82,10 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
 
 type Props = {
     behandling: Behandling;
-    fagsak: Fagsak;
 };
 
-const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: Props) => {
+const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => {
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
     const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
     const [skjemaData, settSkjemaData] = useState<AvsnittSkjemaData[]>([]);
@@ -175,7 +175,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: Pr
 
     const gåTilForrige = (): void => {
         navigate(
-            `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VILKÅRSVURDERING.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VILKÅRSVURDERING.href}`
         );
     };
 
@@ -264,7 +264,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: Pr
                     if (respons.status === RessursStatus.Suksess) {
                         hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                             navigate(
-                                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                             );
                         });
                     } else if (
@@ -294,7 +294,7 @@ const [VedtakProvider, useVedtak] = createUseContext(({ fagsak, behandling }: Pr
                     if (respons.status === RessursStatus.Suksess) {
                         hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
                             navigate(
-                                `/fagsystem/${fagsak.fagsystem}/fagsak/${fagsak.eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
                             );
                         });
                     } else if (

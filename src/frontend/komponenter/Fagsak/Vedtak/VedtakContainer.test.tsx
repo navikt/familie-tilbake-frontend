@@ -3,7 +3,6 @@ import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { SammenslåttPeriodeHook } from '../../../hooks/useSammenslåPerioder';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     BeregningsresultatPeriode,
@@ -20,6 +19,7 @@ import { vi } from 'vitest';
 
 import VedtakContainer from './VedtakContainer';
 import { VedtakProvider } from './VedtakContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
@@ -67,12 +67,15 @@ vi.mock('../../../hooks/useSammenslåPerioder', () => ({
 
 const mockedSettIkkePersistertKomponent = vi.fn();
 
-const renderVedtakContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult =>
-    render(
-        <VedtakProvider behandling={behandling} fagsak={fagsak}>
-            <VedtakContainer behandling={behandling} fagsak={fagsak} />
-        </VedtakProvider>
+const renderVedtakContainer = (behandling: Behandling): RenderResult => {
+    return render(
+        <FagsakContext.Provider value={lagFagsak()}>
+            <VedtakProvider behandling={behandling}>
+                <VedtakContainer behandling={behandling} />
+            </VedtakProvider>
+        </FagsakContext.Provider>
     );
+};
 
 const perioder: BeregningsresultatPeriode[] = [
     {
@@ -180,7 +183,7 @@ describe('VedtakContainer', () => {
         ];
         setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getAllByText, getByRole, queryByRole, queryByText } =
-            renderVedtakContainer(lagBehandling(), lagFagsak());
+            renderVedtakContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -291,8 +294,7 @@ describe('VedtakContainer', () => {
                 lagBehandling({
                     type: Behandlingstype.RevurderingTilbakekreving,
                     behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
-                }),
-                lagFagsak()
+                })
             );
 
         await waitFor(() => {
@@ -395,8 +397,7 @@ describe('VedtakContainer', () => {
                 lagBehandling({
                     type: Behandlingstype.RevurderingTilbakekreving,
                     behandlingsårsakstype: Behandlingårsak.RevurderingKlageKa,
-                }),
-                lagFagsak()
+                })
             );
 
         await waitFor(() => {
@@ -495,8 +496,7 @@ describe('VedtakContainer', () => {
                 lagBehandling({
                     type: Behandlingstype.RevurderingTilbakekreving,
                     behandlingsårsakstype: Behandlingårsak.RevurderingKlageNfp,
-                }),
-                lagFagsak()
+                })
             );
 
         await waitFor(() => {
@@ -619,10 +619,8 @@ describe('VedtakContainer', () => {
         ];
         setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
 
-        const { getByText, getByRole, getByTestId, queryByRole } = renderVedtakContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByTestId, queryByRole } =
+            renderVedtakContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();
@@ -722,10 +720,7 @@ describe('VedtakContainer', () => {
         ];
         setupMock(true, vedtaksbrevAvsnitt, beregningsresultat);
 
-        const { getByText, getByRole, queryByRole } = renderVedtakContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, queryByRole } = renderVedtakContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();

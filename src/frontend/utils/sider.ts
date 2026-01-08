@@ -2,7 +2,6 @@ import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
 
 import { useNavigate } from 'react-router';
 
-import { ToggleName } from '../context/toggles';
 import { Behandlingssteg, Behandlingsstegstatus } from '../typer/behandling';
 
 export type SynligSteg = {
@@ -94,11 +93,7 @@ export const erSidenAktiv = (synligSteg: SynligSteg, behandling: Behandling): bo
     return sjekkOmSidenErAktiv(synligSteg, behandling.behandlingsstegsinfo);
 };
 
-export const visSide = (
-    steg: Behandlingssteg,
-    behandling: Behandling,
-    aktiveToggles: Record<string, boolean>
-): boolean => {
+export const visSide = (steg: Behandlingssteg, behandling: Behandling): boolean => {
     if (steg === Behandlingssteg.Brevmottaker) {
         return behandling.behandlingsstegsinfo
             .filter(
@@ -114,7 +109,7 @@ export const visSide = (
         const harVarselSteg = behandling.behandlingsstegsinfo.some(
             ({ behandlingssteg }) => behandlingssteg === Behandlingssteg.Forhåndsvarsel
         );
-        return harVarselSteg && aktiveToggles[ToggleName.Forhåndsvarselsteg];
+        return harVarselSteg;
     }
 
     return true;

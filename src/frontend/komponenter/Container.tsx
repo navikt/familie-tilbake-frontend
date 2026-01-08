@@ -13,6 +13,8 @@ import { BehandlingProvider } from '../context/BehandlingContext';
 import { FagsakProvider } from '../context/FagsakContext';
 import { TogglesProvider } from '../context/TogglesContext';
 import { StegflytSkeleton } from './Fagsak/Stegflyt/StegflytSkeleton';
+import { FagsakLoadingSkeleton } from './Felleskomponenter/Datalast/FagsakLoadingSkeleton';
+import FagsakErrorBoundary from './Felleskomponenter/ErrorBoundary/FagsakErrorBoundary';
 import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import { FTHeader } from './Felleskomponenter/FTHeader/FTHeader';
 import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
@@ -35,13 +37,8 @@ const Container: React.FC = () => {
                 <>
                     <Toasts />
                     <FTHeader innloggetSaksbehandler={innloggetSaksbehandler} />
-                    <TogglesProvider>
-                        <FagsakProvider>
-                            <BehandlingProvider>
-                                <AppRoutes />
-                            </BehandlingProvider>
-                        </FagsakProvider>
-                    </TogglesProvider>
+
+                    <AppRoutes />
                 </>
             ) : (
                 <UgyldigSesjon />
@@ -53,45 +50,63 @@ const Container: React.FC = () => {
 const AppRoutes: React.FC = () => {
     const router = createBrowserRouter(
         createRoutesFromElements(
-            <Route path="/" element={<UlagretDataModalContainer />}>
-                <Route path="/fagsystem/:fagsystem/fagsak/:fagsakId/">
+            <>
+                <Route
+                    path="/"
+                    element={
+                        <TogglesProvider>
+                            <Outlet />
+                        </TogglesProvider>
+                    }
+                >
                     <Route
-                        path="*"
+                        path="/fagsystem/:fagsystem/fagsak/:fagsakId/"
+                        element={<FagsakProvidersWrapper />}
+                    >
+                        <Route
+                            path="*"
+                            element={
+                                <Suspense fallback={<StegflytSkeleton />}>
+                                    <FagsakContainer />
+                                </Suspense>
+                            }
+                        />
+                    </Route>
+                    <Route
+                        path="/"
                         element={
-                            <Suspense fallback={<StegflytSkeleton />}>
-                                <FagsakContainer />
+                            <Suspense fallback={<div>Dashboard laster...</div>}>
+                                <Dashboard />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/*"
+                        element={
+                            <Suspense fallback={<div>Feilmelding laster...</div>}>
+                                <IkkeFunnet />
                             </Suspense>
                         }
                     />
                 </Route>
-                <Route
-                    path="/"
-                    element={
-                        <Suspense fallback={<div>Dashboard laster...</div>}>
-                            <Dashboard />
-                        </Suspense>
-                    }
-                />
-                <Route
-                    path="/*"
-                    element={
-                        <Suspense fallback={<div>Feilmelding laster...</div>}>
-                            <IkkeFunnet />
-                        </Suspense>
-                    }
-                />
-            </Route>
+            </>
         )
     );
 
     return <RouterProvider router={router} />;
 };
 
-const UlagretDataModalContainer: React.FC = () => (
-    <>
-        <Outlet />
-        <UlagretDataModal />
-    </>
+const FagsakProvidersWrapper: React.FC = () => (
+    <Suspense fallback={<FagsakLoadingSkeleton />}>
+        <FagsakErrorBoundary>
+            <FagsakProvider>
+                <BehandlingProvider>
+                    <Outlet />
+                    <UlagretDataModal />
+                </BehandlingProvider>
+            </FagsakProvider>
+        </FagsakErrorBoundary>
+    </Suspense>
 );
 
 export default Container;

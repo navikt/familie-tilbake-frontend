@@ -4,5 +4,4 @@ export type Toggles = {
 
 export enum ToggleName {
     Forhåndsvarselsteg = 'familie-tilbake-frontend.forhaandsvarselsteg',
-    NyttFaktasteg = 'tilbakekreving-frontend.nytt-faktasteg',
 }

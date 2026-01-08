@@ -2,7 +2,6 @@ import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { Behandling } from '../../../typer/behandling';
-import type { Fagsak } from '../../../typer/fagsak';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
@@ -15,6 +14,7 @@ import { vi } from 'vitest';
 
 import ForeldelseContainer from './ForeldelseContainer';
 import { ForeldelseProvider } from './ForeldelseContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
@@ -47,11 +47,13 @@ vi.mock('react-router', async () => {
     };
 });
 
-const renderForeldelseContainer = (behandling: Behandling, fagsak: Fagsak): RenderResult => {
+const renderForeldelseContainer = (behandling: Behandling): RenderResult => {
     return render(
-        <ForeldelseProvider behandling={behandling} fagsak={fagsak}>
-            <ForeldelseContainer behandling={behandling} />
-        </ForeldelseProvider>
+        <FagsakContext.Provider value={lagFagsak()}>
+            <ForeldelseProvider behandling={behandling}>
+                <ForeldelseContainer behandling={behandling} />
+            </ForeldelseProvider>
+        </FagsakContext.Provider>
     );
 };
 
@@ -119,7 +121,7 @@ describe('ForeldelseContainer', () => {
     test('Vis og fyll ut perioder og send inn', async () => {
         setupMock(false, false, false, lagForeldelseResponse({ foreldetPerioder }));
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
-            renderForeldelseContainer(lagBehandling(), lagFagsak());
+            renderForeldelseContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
@@ -221,10 +223,8 @@ describe('ForeldelseContainer', () => {
         });
         setupMock(true, false, false, foreldelseResponse);
 
-        const { getByText, getByRole, getByLabelText, queryByText } = renderForeldelseContainer(
-            lagBehandling(),
-            lagFagsak()
-        );
+        const { getByText, getByRole, getByLabelText, queryByText } =
+            renderForeldelseContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
@@ -312,8 +312,7 @@ describe('ForeldelseContainer', () => {
         });
 
         const { getByText, getByRole, getByLabelText } = renderForeldelseContainer(
-            lagBehandling({ status: Behandlingstatus.FatterVedtak }),
-            lagFagsak()
+            lagBehandling({ status: Behandlingstatus.FatterVedtak })
         );
 
         await waitFor(() => {
@@ -419,7 +418,7 @@ describe('ForeldelseContainer', () => {
 
     test('Vis autoutført', async () => {
         setupMock(false, false, true);
-        const { getByText } = renderForeldelseContainer(lagBehandling(), lagFagsak());
+        const { getByText } = renderForeldelseContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();

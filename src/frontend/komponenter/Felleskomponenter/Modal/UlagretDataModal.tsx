@@ -47,24 +47,26 @@ const UlagretDataModal: FC = () => {
     return (
         blocker.state === 'blocked' && (
             <ModalWrapper
-                tittel="Du har ikke lagret dine siste endringer og vil miste disse om du forlater siden"
+                tittel="Du har ulagrede endringer"
                 visModal={true}
                 onClose={onAvbryt}
                 aksjonsknapper={{
                     hovedKnapp: {
                         onClick: onAvbryt,
-                        tekst: 'Gå tilbake for å lagre',
+                        tekst: 'Lukk',
                     },
                     lukkKnapp: {
                         onClick: () => {
                             onForlatSiden();
                             setTimeout(nullstillIkkePersisterteKomponenter, 10);
                         },
-                        tekst: 'Forlat siden',
+                        tekst: 'Fortsett uten å lagre',
                     },
-                    marginTop: 4,
                 }}
-            />
+            >
+                Hvis du forlater siden nå, mister du endringene dine. Lukk dialogen og klikk på
+                «Neste» for å lagre endringene dine.
+            </ModalWrapper>
         )
     );
 };

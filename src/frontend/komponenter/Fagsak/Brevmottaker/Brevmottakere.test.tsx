@@ -7,6 +7,7 @@ import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 
 import Brevmottakere from './Brevmottakere';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { MottakerType } from '../../../typer/Brevmottaker';
@@ -62,22 +63,23 @@ const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponseDto[] => [
     },
 ];
 
-const setupMock = (): void => {
+const renderBrevmottakere = (behandling: Behandling): RenderResult => {
     mockUseBehandling.mockImplementation(() => ({
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
         harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
         erStegBehandlet: vi.fn().mockReturnValue(false),
     }));
-};
 
-const renderBrevmottakere = (behandling: Behandling): RenderResult => {
-    return render(<Brevmottakere behandling={behandling} fagsak={lagFagsak()} />);
+    return render(
+        <FagsakContext.Provider value={lagFagsak()}>
+            <Brevmottakere behandling={behandling} />
+        </FagsakContext.Provider>
+    );
 };
 
 describe('Brevmottakere', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        setupMock();
     });
 
     describe('Default bruker brevmottaker', () => {

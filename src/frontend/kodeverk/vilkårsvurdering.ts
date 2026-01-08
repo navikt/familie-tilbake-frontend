@@ -15,6 +15,16 @@ export const vilkårsvurderingStegInfotekstBarnetrygd =
 export const vilkårsvurderingStegInfotekstKontantstøtte =
     'Fastsett tilbakekreving etter kontantstøtteloven § 11 og folketrygdloven § 22-15. Del opp perioden ved behov for ulik vurdering.';
 
+export const vilkårsvurderingStegInfotekstForYtelsestype: Record<string, string> = {
+    BARNETRYGD: vilkårsvurderingStegInfotekstBarnetrygd,
+    KONTANTSTØTTE: vilkårsvurderingStegInfotekstKontantstøtte,
+    OVERGANGSSTØNAD: vilkårsvurderingStegInfotekst,
+    BARNETILSYN: vilkårsvurderingStegInfotekst,
+    SKOLEPENGER: vilkårsvurderingStegInfotekst,
+    TILLEGGSSTØNAD: vilkårsvurderingStegInfotekst,
+    ARBEIDSAVKLARINGSPENGER: vilkårsvurderingStegInfotekst,
+};
+
 export const vilkårsresultatTyper = [
     Vilkårsresultat.ForstoBurdeForstått,
     Vilkårsresultat.FeilOpplysningerFraBruker,

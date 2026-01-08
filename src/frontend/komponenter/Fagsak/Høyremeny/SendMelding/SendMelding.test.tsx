@@ -1,8 +1,8 @@
 import type { DokumentApiHook } from '../../../../api/dokument';
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
+import type { SpråkkodeEnum } from '../../../../generated';
 import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -12,10 +12,10 @@ import * as React from 'react';
 
 import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
+import { FagsakContext } from '../../../../context/FagsakContext';
 import { DokumentMal } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import { Målform } from '../../../../typer/fagsak';
 import { RessursStatus } from '../../../../typer/ressurs';
 
 vi.mock('../../../../api/http/HttpProvider', () => {
@@ -45,12 +45,18 @@ vi.mock('react-router', async () => {
     };
 });
 
-const renderSendMelding = (fagsak: Fagsak, behandling: Behandling): RenderResult =>
-    render(
-        <SendMeldingProvider behandling={behandling} fagsak={fagsak}>
-            <SendMelding fagsak={fagsak} behandling={behandling} />
-        </SendMeldingProvider>
+const renderSendMelding = (
+    behandling: Behandling,
+    språkkode: SpråkkodeEnum = 'NB'
+): RenderResult => {
+    return render(
+        <FagsakContext.Provider value={lagFagsak({ språkkode })}>
+            <SendMeldingProvider behandling={behandling}>
+                <SendMelding behandling={behandling} />
+            </SendMeldingProvider>
+        </FagsakContext.Provider>
     );
+};
 
 const setupMock = (behandlingILesemodus: boolean): void => {
     mockUseDokumentApi.mockImplementation(() => ({
@@ -80,7 +86,7 @@ describe('SendMelding', () => {
         setupMock(false);
 
         const { getByText, getByLabelText, getByRole, queryByRole, queryByText } =
-            renderSendMelding(lagFagsak(), lagBehandling({ varselSendt: false }));
+            renderSendMelding(lagBehandling({ varselSendt: false }));
 
         await waitFor(() => {
             expect(getByText('Brevmottaker')).toBeInTheDocument();
@@ -135,8 +141,8 @@ describe('SendMelding', () => {
         setupMock(false);
 
         const { getByText, getByLabelText, getByRole, queryByText } = renderSendMelding(
-            lagFagsak({ språkkode: Målform.Nn }),
-            lagBehandling({ varselSendt: true })
+            lagBehandling({ varselSendt: true }),
+            'NN'
         );
 
         await waitFor(() => {
@@ -174,7 +180,6 @@ describe('SendMelding', () => {
         setupMock(false);
 
         const { getByText, getByLabelText, getByRole } = renderSendMelding(
-            lagFagsak(),
             lagBehandling({ varselSendt: true })
         );
 
@@ -212,7 +217,6 @@ describe('SendMelding', () => {
         setupMock(true);
 
         const { getByText, getByRole, queryByLabelText } = renderSendMelding(
-            lagFagsak(),
             lagBehandling({ varselSendt: false })
         );
 

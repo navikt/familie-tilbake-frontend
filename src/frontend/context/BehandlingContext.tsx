@@ -1,5 +1,5 @@
+import type { BehandlingsoppsummeringDto, FagsakDto } from '../generated/types.gen';
 import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
-import type { Fagsak } from '../typer/fagsak';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
@@ -17,7 +17,7 @@ import { SYNLIGE_STEG } from '../utils/sider';
 
 export type BehandlingHook = {
     behandling: Ressurs<Behandling> | undefined;
-    hentBehandlingMedEksternBrukId: (fagsak: Fagsak, behandlingId: string) => void;
+    hentBehandlingMedEksternBrukId: (fagsak: FagsakDto, behandlingId: string) => void;
     hentBehandlingMedBehandlingId: (behandlingId: string) => Promise<void>;
     behandlingILesemodus: boolean | undefined;
     actionBarStegtekst: (valgtSteg: Behandlingssteg) => string | undefined;
@@ -63,7 +63,7 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     const [harUlagredeData, settHarUlagredeData] = useState<boolean>(
         ikkePersisterteKomponenter.size > 0
     );
-    const { fagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const { request } = useHttp();
 
     useEffect(
@@ -82,8 +82,11 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
         }
     };
 
-    const hentBehandlingMedEksternBrukId = (fagsak: Fagsak, behandlingId: string): void => {
-        const fagsakBehandling = fagsak.behandlinger.find(
+    const hentBehandlingMedEksternBrukId = (
+        behandlinger: BehandlingsoppsummeringDto[],
+        behandlingId: string
+    ): void => {
+        const fagsakBehandling = behandlinger.find(
             behandling => behandling.eksternBrukId === behandlingId
         );
         if (fagsakBehandling) {
@@ -219,9 +222,8 @@ const [BehandlingProvider, useBehandling] = createUseContext(() => {
     };
 
     const lagLenkeTilRevurdering = (): string => {
-        return fagsak?.status === RessursStatus.Suksess &&
-            behandling?.status === RessursStatus.Suksess
-            ? `/redirect/fagsystem/${fagsak.data.fagsystem}/fagsak/${fagsak.data.eksternFagsakId}/${behandling.data.fagsystemsbehandlingId}`
+        return behandling?.status === RessursStatus.Suksess
+            ? `/redirect/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/${behandling.data.fagsystemsbehandlingId}`
             : '#';
     };
 

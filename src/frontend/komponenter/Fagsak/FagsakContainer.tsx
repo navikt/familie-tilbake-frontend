@@ -3,12 +3,11 @@ import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandli
 import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { useLocation, useParams } from 'react-router';
+import { useLocation } from 'react-router';
 
 import BehandlingContainer from './BehandlingContainer';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
-import { Fagsystem } from '../../kodeverk';
 import { useBehandlingStore } from '../../stores/behandlingStore';
 import { useFagsakStore } from '../../stores/fagsakStore';
 import { venteårsaker } from '../../typer/behandling';
@@ -26,16 +25,10 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
 };
 
 const FagsakContainer: React.FC = () => {
-    const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
-    const fagsystem =
-        fagsystemParam == 'KS'
-            ? Fagsystem[fagsystemParam as keyof typeof Fagsystem]
-            : (fagsystemParam as Fagsystem);
-
     const location = useLocation();
     const behandlingId = location.pathname.split('/')[6];
 
-    const { fagsak, hentFagsak } = useFagsak();
+    const { fagsystem, eksternFagsakId, bruker, behandlinger } = useFagsak();
     const {
         behandling,
         hentBehandlingMedEksternBrukId,
@@ -44,48 +37,32 @@ const FagsakContainer: React.FC = () => {
         settVisVenteModal,
     } = useBehandling();
 
-    const setPersonIdent = useBehandlingStore(state => state.setPersonIdent);
-    const setBehandlingId = useBehandlingStore(state => state.setBehandlingId);
-    const setEksternFagsakId = useFagsakStore(state => state.setEksternFagsakId);
-    const setFagSystem = useFagsakStore(state => state.setFagsystem);
-    const setYtelsestype = useFagsakStore(state => state.setYtelsestype);
-    const setSpråkkode = useFagsakStore(state => state.setSpråkkode);
+    const { setBehandlingId } = useBehandlingStore();
+    const { setEksternFagsakId, setFagsystem, setPersonIdent, resetFagsak } = useFagsakStore();
 
     useEffect(() => {
-        if (!!fagsystem && !!eksternFagsakId) {
-            hentFagsak(fagsystem, eksternFagsakId);
-        }
-        return (): void => {
-            setEksternFagsakId(undefined);
-            setYtelsestype(undefined);
-            setFagSystem(undefined);
-            setSpråkkode(undefined);
-        };
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fagsystem, eksternFagsakId]);
-
-    useEffect(() => {
-        if (fagsak?.status === RessursStatus.Suksess && behandlingId) {
-            hentBehandlingMedEksternBrukId(fagsak.data, behandlingId);
+        if (behandlingId) {
+            hentBehandlingMedEksternBrukId(behandlinger, behandlingId);
             setBehandlingId(behandlingId);
         }
 
-        if (fagsak?.status === RessursStatus.Suksess && fagsak?.data?.bruker.personIdent) {
-            setPersonIdent(fagsak.data.bruker.personIdent);
-        }
+        setPersonIdent(bruker.personIdent);
+        setEksternFagsakId(eksternFagsakId);
+        setFagsystem(fagsystem);
+
         return (): void => {
             setBehandlingId(undefined);
             setPersonIdent(undefined);
+            resetFagsak();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fagsak, behandlingId]);
+    }, [fagsystem, eksternFagsakId, bruker.personIdent, behandlingId]);
 
-    if (fagsak?.status === RessursStatus.Henter || behandling?.status === RessursStatus.Henter) {
+    if (behandling?.status === RessursStatus.Henter) {
         return <HenterBehandling />;
     }
 
-    if (fagsak?.status === RessursStatus.Suksess && behandling?.status === RessursStatus.Suksess) {
+    if (behandling?.status === RessursStatus.Suksess) {
         return (
             <>
                 {ventegrunn && (
@@ -106,14 +83,14 @@ const FagsakContainer: React.FC = () => {
                         }
                     )}
                 >
-                    <BehandlingContainer fagsak={fagsak.data} behandling={behandling.data} />
+                    <BehandlingContainer behandling={behandling.data} />
                 </div>
             </>
         );
     } else {
         return (
             <DataLastIkkeSuksess
-                ressurser={[behandling, fagsak]}
+                ressurser={[behandling]}
                 behandlingId={behandlingId}
                 eksternFagsakId={eksternFagsakId}
                 visFeilSide

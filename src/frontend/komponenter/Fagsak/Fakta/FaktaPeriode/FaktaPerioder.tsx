@@ -1,4 +1,3 @@
-import type { HendelseType, Ytelsetype } from '../../../../kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
 import { Table } from '@navikt/ds-react';
@@ -6,8 +5,8 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
+import { useFagsak } from '../../../../context/FagsakContext';
 import { hentHendelseTyper } from '../../../../kodeverk';
-import { useFakta } from '../FaktaContext';
 
 const StyledPeriodeTable = styled(Table)`
     td {
@@ -20,19 +19,13 @@ const StyledPeriodeTable = styled(Table)`
 `;
 
 type Props = {
-    ytelse: Ytelsetype;
     perioder: FaktaPeriodeSkjemaData[];
     erLesevisning: boolean;
 };
 
-const FaktaPerioder: React.FC<Props> = ({ ytelse, perioder, erLesevisning }) => {
-    const [hendelseTyper, settHendelseTyper] = React.useState<HendelseType[]>();
-    const { fagsak } = useFakta();
-
-    React.useEffect(() => {
-        settHendelseTyper(hentHendelseTyper(ytelse, !!fagsak.institusjon));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ytelse]);
+const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
+    const { ytelsestype, institusjon } = useFagsak();
+    const hendelsestyper = hentHendelseTyper(ytelsestype, !!institusjon);
 
     return (
         <StyledPeriodeTable size="small">
@@ -49,7 +42,7 @@ const FaktaPerioder: React.FC<Props> = ({ ytelse, perioder, erLesevisning }) => 
                 {perioder.map(periode => {
                     return (
                         <FaktaPeriodeSkjema
-                            hendelseTyper={hendelseTyper}
+                            hendelseTyper={hendelsestyper}
                             periode={periode}
                             key={`formIndex${periode.index + 1}`}
                             index={periode.index}

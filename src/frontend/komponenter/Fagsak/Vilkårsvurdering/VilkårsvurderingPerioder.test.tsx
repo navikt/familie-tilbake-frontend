@@ -18,6 +18,7 @@ import { vi } from 'vitest';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
@@ -118,17 +119,18 @@ const renderVilkårsvurderingPerioder = (): RenderResult => {
     }));
 
     return render(
-        <BehandlingProvider>
-            <VilkårsvurderingProvider behandling={lagBehandling()} fagsak={lagFagsak()}>
-                <VilkårsvurderingPerioder
-                    behandling={lagBehandling()}
-                    fagsak={lagFagsak()}
-                    perioder={skjemaData}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    erLesevisning={false}
-                />
-            </VilkårsvurderingProvider>
-        </BehandlingProvider>
+        <FagsakContext.Provider value={lagFagsak()}>
+            <BehandlingProvider>
+                <VilkårsvurderingProvider behandling={lagBehandling()}>
+                    <VilkårsvurderingPerioder
+                        behandling={lagBehandling()}
+                        perioder={skjemaData}
+                        erTotalbeløpUnder4Rettsgebyr={false}
+                        erLesevisning={false}
+                    />
+                </VilkårsvurderingProvider>
+            </BehandlingProvider>
+        </FagsakContext.Provider>
     );
 };
 
@@ -148,7 +150,7 @@ const findPeriodButton = (
 };
 
 const modalTekst =
-    'Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode';
+    'Hvis du bytter periode nå, mister du endringene dine. Vil du lagre før du fortsetter?';
 const førstePeriode = '01.01.2020 - 31.03.2020';
 const andrePeriode = '01.05.2020 - 30.06.2020';
 
@@ -190,7 +192,7 @@ describe('VilkårsvurderingPerioder', () => {
         expect(getByText(modalTekst)).toBeInTheDocument();
     });
 
-    test('Skal bytte uten å lagre når "Bytt uten å lagre" klikkes', async () => {
+    test('Skal bytte uten å lagre når "Fortsett uten å lagre" klikkes', async () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder();
 
@@ -203,7 +205,7 @@ describe('VilkårsvurderingPerioder', () => {
         }
 
         expect(getByText(modalTekst)).toBeInTheDocument();
-        await user.click(getByRole('button', { name: 'Bytt uten å lagre' }));
+        await user.click(getByRole('button', { name: 'Fortsett uten å lagre' }));
 
         expect(getByText(andrePeriode)).toBeInTheDocument();
         expect(queryByText(modalTekst)).not.toBeInTheDocument();

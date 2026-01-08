@@ -126,7 +126,13 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
             )}
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Foreldelse)}
-                forrigeAriaLabel="Gå tilbake til faktasteget"
+                forrigeAriaLabel={
+                    behandling.behandlingsstegsinfo.some(
+                        steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+                    )
+                        ? 'Gå tilbake til forhåndsvarselsteget'
+                        : 'Gå tilbake til faktasteget'
+                }
                 nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
                 onForrige={gåTilForrigeSteg}
                 onNeste={navigerEllerLagreOgNaviger}

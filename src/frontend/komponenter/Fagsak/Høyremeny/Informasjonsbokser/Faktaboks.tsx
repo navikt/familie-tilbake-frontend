@@ -1,5 +1,4 @@
 import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 import type { TagProps } from '@navikt/ds-react';
 
 import {
@@ -17,7 +16,8 @@ import {
 import { ExpansionCard, Tag } from '@navikt/ds-react';
 import React from 'react';
 
-import { ytelsetype } from '../../../../kodeverk';
+import { useFagsak } from '../../../../context/FagsakContext';
+import { ytelsetype as ytelsetyper } from '../../../../kodeverk';
 import {
     behandlingsresultater,
     behandlingsstatuser,
@@ -30,10 +30,11 @@ import { ICON_PROPS } from '../utils';
 
 type Props = {
     behandling: Behandling;
-    ytelsestype: Fagsak['ytelsestype'];
 };
 
-export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
+export const Faktaboks: React.FC<Props> = ({ behandling }) => {
+    const { ytelsestype } = useFagsak();
+
     return (
         <ExpansionCard
             size="small"
@@ -43,7 +44,8 @@ export const Faktaboks: React.FC<Props> = ({ behandling, ytelsestype }) => {
         >
             <ExpansionCard.Header>
                 <ExpansionCard.Title as="h2" size="small" className="text-lg">
-                    Tilbakekreving av {ytelsetype[ytelsestype].toLocaleLowerCase()}
+                    Tilbakekreving{' '}
+                    {ytelsestype && ` av ${ytelsetyper[ytelsestype]?.toLocaleLowerCase()}`}
                 </ExpansionCard.Title>
             </ExpansionCard.Header>
             <ExpansionCard.Content>

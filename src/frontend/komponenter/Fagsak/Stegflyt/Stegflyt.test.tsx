@@ -1,14 +1,14 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { FagsakState } from '../../../stores/fagsakStore';
 import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
-import type { StoreApi, UseBoundStore } from 'zustand';
+import type { Location } from 'react-router';
 
 import { render, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { Stegflyt } from './Stegflyt';
+import { FagsakContext } from '../../../context/FagsakContext';
 import { Fagsystem } from '../../../kodeverk';
 import {
     lagBehandling,
@@ -17,13 +17,13 @@ import {
     lagForeldelseSteg,
     lagVilkårsvurderingSteg,
 } from '../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { Behandlingsstegstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
 const mockNavigate = vi.fn();
 const mockUseLocation = vi.fn();
 const mockUseBehandling = vi.fn();
-const mockUseFagsakStore = vi.fn();
 
 vi.mock('react-router', () => ({
     useNavigate: (): ReturnType<typeof vi.fn> => mockNavigate,
@@ -34,10 +34,6 @@ vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
     erStegUtført: (status: Behandlingsstegstatus): boolean =>
         status === Behandlingsstegstatus.Utført,
-}));
-
-vi.mock('../../../stores/fagsakStore', () => ({
-    useFagsakStore: (): UseBoundStore<StoreApi<FagsakState>> => mockUseFagsakStore(),
 }));
 
 const createMockRessursBehandling = (
@@ -52,16 +48,22 @@ const createMockRessursBehandling = (
     }),
 });
 
-const renderStegflyt = (): RenderResult => render(<Stegflyt />);
+const renderStegflyt = (): RenderResult => {
+    return render(
+        <FagsakContext.Provider
+            value={lagFagsak({
+                eksternFagsakId: '123',
+                fagsystem: Fagsystem.BA,
+            })}
+        >
+            <Stegflyt />
+        </FagsakContext.Provider>
+    );
+};
 
 const setupMocks = (): void => {
     mockUseBehandling.mockReturnValue({
         behandling: createMockRessursBehandling(),
-    });
-
-    mockUseFagsakStore.mockReturnValue({
-        eksternFagsakId: '123',
-        fagsystem: Fagsystem.BA,
     });
 
     mockUseLocation.mockReturnValue({

@@ -1,5 +1,4 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
-import type { Fagsak } from '../../../../typer/fagsak';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { ChangeEvent, FC } from 'react';
 
@@ -112,7 +111,6 @@ const settSkjemadataFraPeriode = (
 };
 
 type Props = {
-    fagsak: Fagsak;
     behandling: Behandling;
     periode: VilkårsvurderingPeriodeSkjemaData;
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
@@ -129,7 +127,6 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     behandletPerioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
-    fagsak,
     perioder,
     pendingPeriode,
     settPendingPeriode,
@@ -303,7 +300,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         <Box padding="4" className="min-w-[20rem]">
             <HGrid columns="1fr 4rem">
                 <Stack
-                    className="max-w-[30rem] w-full"
+                    className="max-w-120 w-full"
                     justify="space-between"
                     align={{ md: 'start', lg: 'center' }}
                     direction={{ md: 'column', lg: 'row' }}
@@ -334,7 +331,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     behandletPerioder &&
                     behandletPerioder.length > 0 && (
                         <Select
-                            className="pb-8 w-[15rem]"
+                            className="pb-8 w-60"
                             name="perioderForKopi"
                             onChange={(event: ChangeEvent<HTMLSelectElement>) =>
                                 onKopierPeriode(event)
@@ -533,13 +530,12 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     lukkFeilModal={sendInnSkjemaMutation.reset}
                     beskjed="Du kunne ikke lagre vilkårsvurderingen"
                     behandlingId={behandling.behandlingId}
-                    fagsakId={fagsak.eksternFagsakId}
                 />
             )}
 
             {visUlagretDataModal && (
                 <ModalWrapper
-                    tittel="Du har ikke lagret dine siste endringer og vil miste disse om du bytter periode"
+                    tittel="Du har ulagrede endringer"
                     visModal
                     onClose={handleAvbryt}
                     aksjonsknapper={{
@@ -549,11 +545,13 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         },
                         lukkKnapp: {
                             onClick: handleForlatUtenÅLagre,
-                            tekst: 'Bytt uten å lagre',
+                            tekst: 'Fortsett uten å lagre',
                         },
-                        marginTop: 4,
                     }}
-                />
+                >
+                    Hvis du bytter periode nå, mister du endringene dine. Vil du lagre før du
+                    fortsetter?
+                </ModalWrapper>
             )}
         </Box>
     );

@@ -1,5 +1,4 @@
 import type { Behandling } from '../../../../typer/behandling';
-import type { Fagsak } from '../../../../typer/fagsak';
 
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -7,8 +6,9 @@ import * as React from 'react';
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useFagsak } from '../../../../context/FagsakContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
-import { målform } from '../../../../typer/fagsak';
+import { målform } from '../../../../typer/målform';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
@@ -20,11 +20,11 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
 };
 
 type Props = {
-    fagsak: Fagsak;
     behandling: Behandling;
 };
 
-const SendMelding: React.FC<Props> = ({ fagsak, behandling }) => {
+const SendMelding: React.FC<Props> = ({ behandling }) => {
+    const { språkkode } = useFagsak();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
     const { behandlingILesemodus } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
@@ -51,8 +51,6 @@ const SendMelding: React.FC<Props> = ({ fagsak, behandling }) => {
                         brevmottakere={behandling.manuelleBrevmottakere.map(
                             ({ brevmottaker }) => brevmottaker
                         )}
-                        institusjon={fagsak.institusjon}
-                        bruker={fagsak.bruker}
                     />
 
                     <Select
@@ -78,7 +76,7 @@ const SendMelding: React.FC<Props> = ({ fagsak, behandling }) => {
                             label={
                                 <LabelMedSpråk
                                     label={tekstfeltLabel(skjema.felter.maltype.verdi)}
-                                    språk={målform[fagsak.språkkode]}
+                                    språk={målform[språkkode]}
                                 />
                             }
                             aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}
