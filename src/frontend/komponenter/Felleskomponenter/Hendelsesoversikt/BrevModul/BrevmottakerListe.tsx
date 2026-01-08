@@ -1,4 +1,4 @@
-import type { Brevmottaker } from '../../../../typer/Brevmottaker';
+import type { Brevmottaker } from '../../../../generated';
 
 import React from 'react';
 

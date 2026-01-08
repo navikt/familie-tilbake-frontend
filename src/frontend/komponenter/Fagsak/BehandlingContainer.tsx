@@ -1,4 +1,4 @@
-import type { Behandling } from '../../typer/behandling';
+import type { BehandlingDto } from '../../generated';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button } from '@navikt/ds-react';
@@ -23,7 +23,6 @@ import { VilkårsvurderingProvider } from './Vilkårsvurdering/Vilkårsvurdering
 import { useBehandling } from '../../context/BehandlingContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { Behandlingstatus } from '../../typer/behandling';
-import { tilBehandlingDto } from '../../utils/behandlingMapper';
 import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from '../../utils/sider';
 
 const BrevmottakerContainer = lazyImportMedRetry(
@@ -61,12 +60,12 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
     const { fagsystem, eksternFagsakId } = useFagsak();
-    const { visVenteModal, harKravgrunnlag, aktivtSteg } = useBehandling();
+    const { harKravgrunnlag, aktivtSteg } = useBehandling();
     const navigate = useNavigate();
     const location = useLocation();
     const ref = useRef<HTMLDialogElement>(null);
@@ -78,22 +77,20 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
     const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
     React.useEffect(() => {
-        if (visVenteModal === false) {
-            if (!erØnsketSideLovlig && aktivtSteg) {
-                const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
-                if (aktivSide) {
-                    navigate(`${behandlingUrl}/${aktivSide?.href}`);
-                }
-            } else if (!erØnsketSideLovlig) {
-                if (behandling.status === Behandlingstatus.Avsluttet) {
-                    navigate(`${behandlingUrl}/vedtak`);
-                } else {
-                    navigate(`${behandlingUrl}`);
-                }
+        if (!erØnsketSideLovlig && aktivtSteg) {
+            const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
+            if (aktivSide) {
+                navigate(`${behandlingUrl}/${aktivSide?.href}`);
+            }
+        } else if (!erØnsketSideLovlig) {
+            if (behandling.status === Behandlingstatus.Avsluttet) {
+                navigate(`${behandlingUrl}/vedtak`);
+            } else {
+                navigate(`${behandlingUrl}`);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [visVenteModal, aktivtSteg, ønsketSide]);
+    }, [aktivtSteg, ønsketSide]);
 
     return behandling.erBehandlingHenlagt ? (
         <>
@@ -196,7 +193,7 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
                                 element={
                                     <Suspense fallback="Forhåndsvarsel laster...">
-                                        <Forhåndsvarsel behandling={tilBehandlingDto(behandling)} />
+                                        <Forhåndsvarsel behandling={behandling} />
                                     </Suspense>
                                 }
                             />

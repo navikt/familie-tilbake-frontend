@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 import type { VilkårsvurderingResponse } from '../../../../typer/tilbakekrevingstyper';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
@@ -15,7 +15,7 @@ import {
 import { sorterFeilutbetaltePerioder } from '../../../../utils';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = createUseContext(

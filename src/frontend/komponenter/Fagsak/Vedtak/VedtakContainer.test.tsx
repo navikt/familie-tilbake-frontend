@@ -1,8 +1,8 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { BehandlingDto } from '../../../generated';
 import type { SammenslåttPeriodeHook } from '../../../hooks/useSammenslåPerioder';
-import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     BeregningsresultatPeriode,
@@ -67,7 +67,7 @@ vi.mock('../../../hooks/useSammenslåPerioder', () => ({
 
 const mockedSettIkkePersistertKomponent = vi.fn();
 
-const renderVedtakContainer = (behandling: Behandling): RenderResult => {
+const renderVedtakContainer = (behandling: BehandlingDto): RenderResult => {
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
             <VedtakProvider behandling={behandling}>
@@ -146,7 +146,6 @@ const setupMock = (
     mockUseBehandling.mockImplementation(() => ({
         visVenteModal: false,
         behandlingILesemodus: lesevisning,
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
         settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
         nullstillIkkePersisterteKomponenter: vi.fn(),
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 4 av 4'),

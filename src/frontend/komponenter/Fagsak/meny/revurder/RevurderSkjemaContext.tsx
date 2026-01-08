@@ -1,5 +1,6 @@
+import type { BehandlingDto } from '../../../../generated';
 import type { Skjema } from '../../../../hooks/skjema';
-import type { Behandling, Behandlingårsak } from '../../../../typer/behandling';
+import type { Behandlingårsak } from '../../../../typer/behandling';
 
 import { useState, type RefObject } from 'react';
 
@@ -26,7 +27,7 @@ type RevurderSkjemaHook = {
 };
 
 const useRevurderSkjema = (
-    behandlingId: Behandling['behandlingId'],
+    behandlingId: BehandlingDto['behandlingId'],
     dialogRef: RefObject<HTMLDialogElement | null>
 ): RevurderSkjemaHook => {
     const { nullstillIkkePersisterteKomponenter } = useBehandling();

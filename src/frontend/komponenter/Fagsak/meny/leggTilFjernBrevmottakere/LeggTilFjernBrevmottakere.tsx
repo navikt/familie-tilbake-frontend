@@ -1,7 +1,8 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 
 import { PersonPlusIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-react';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -18,19 +19,16 @@ import { AlertType, ToastTyper } from '../../../Felleskomponenter/Toast/typer';
 import { MODAL_BREDDE } from '../utils';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [senderInn, settSenderInn] = useState(false);
     const [feilmelding, settFeilmelding] = useState('');
-    const {
-        hentBehandlingMedBehandlingId,
-        settVisBrevmottakerModal,
-        nullstillIkkePersisterteKomponenter,
-    } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandling();
 
+    const queryClient = useQueryClient();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const { utførRedirect } = useRedirectEtterLagring();
     const { request } = useHttp();
@@ -54,12 +52,15 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
         }).then((respons: Ressurs<string>) => {
             settSenderInn(false);
             if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
-                settVisBrevmottakerModal(true);
-                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                    navigate(
-                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`
-                    );
+                queryClient.invalidateQueries({
+                    queryKey: [
+                        'hentBehandling',
+                        { path: { behandlingId: behandling.behandlingId } },
+                    ],
                 });
+                navigate(
+                    `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`
+                );
             } else if (
                 respons.status === RessursStatus.Feilet ||
                 respons.status === RessursStatus.FunksjonellFeil ||
@@ -80,11 +81,15 @@ export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
             settSenderInn(false);
             if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
                 dialogRef.current?.close();
-                hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                    utførRedirect(
-                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                    );
+                queryClient.invalidateQueries({
+                    queryKey: [
+                        'hentBehandling',
+                        { path: { behandlingId: behandling.behandlingId } },
+                    ],
                 });
+                utførRedirect(
+                    `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                );
             } else if (
                 respons.status === RessursStatus.Feilet ||
                 respons.status === RessursStatus.FunksjonellFeil ||

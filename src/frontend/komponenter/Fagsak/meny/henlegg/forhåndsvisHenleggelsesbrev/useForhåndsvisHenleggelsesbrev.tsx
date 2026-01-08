@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../../generated';
 import type { HenleggelseSkjemaDefinisjon } from '../henleggModal/HenleggModalContext';
 
 import * as React from 'react';
@@ -19,7 +19,7 @@ type ForhåndsvisHenleggelsesbrevHook = {
     visModal: boolean;
     settVisModal: React.Dispatch<React.SetStateAction<boolean>>;
     hentetForhåndsvisning: Ressurs<string>;
-    hentBrev: (behandling: Behandling) => void;
+    hentBrev: (behandling: BehandlingDto) => void;
     nullstillHentetForhåndsvisning: () => void;
 };
 
@@ -39,7 +39,7 @@ export const useForhåndsvisHenleggelsesbrev = ({
         settHentetForhåndsvisning(byggTomRessurs);
     };
 
-    const hentBrev = (behandling: Behandling): void => {
+    const hentBrev = (behandling: BehandlingDto): void => {
         settHentetForhåndsvisning(byggHenterRessurs());
 
         forhåndsvisHenleggelsesbrev({

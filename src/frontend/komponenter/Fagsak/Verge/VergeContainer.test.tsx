@@ -1,12 +1,13 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { BehandlingDto } from '../../../generated';
 import type { VergeDto } from '../../../typer/api';
-import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -47,12 +48,16 @@ vi.mock('react-router', async () => {
     };
 });
 
-const renderVergeContainer = (behandling: Behandling): RenderResult => {
+const renderVergeContainer = (behandling: BehandlingDto): RenderResult => {
+    const client = new QueryClient();
+
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
-            <VergeProvider behandling={behandling}>
-                <VergeContainer />
-            </VergeProvider>
+            <QueryClientProvider client={client}>
+                <VergeProvider behandling={behandling}>
+                    <VergeContainer />
+                </VergeProvider>
+            </QueryClientProvider>
         </FagsakContext.Provider>
     );
 };
@@ -86,7 +91,6 @@ const setupMock = (
         erStegBehandlet: (): boolean => behandlet,
         erStegAutoutført: (): boolean => autoutført,
         behandlingILesemodus: lesevisning,
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
         settIkkePersistertKomponent: vi.fn(),
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
         harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),

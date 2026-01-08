@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 
 import { LeaveIcon } from '@navikt/aksel-icons';
 import { BodyLong, Heading, HStack, Link } from '@navikt/ds-react';
@@ -12,7 +12,7 @@ import { Behandlingsmeny } from '../meny/Meny';
 const Container = styled.div`
     margin: 2rem;
 `;
-const HistoriskeVurderingermeny: React.FC<{ behandling: Behandling }> = ({ behandling }) => {
+const HistoriskeVurderingermeny: React.FC<{ behandling: BehandlingDto }> = ({ behandling }) => {
     const { fagsystem, eksternFagsakId } = useFagsak();
     const basePath = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
     const location = useLocation();

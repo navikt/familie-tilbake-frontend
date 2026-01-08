@@ -1,4 +1,9 @@
-import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
+import type {
+    BehandlingDto,
+    BehandlingsstegEnum,
+    BehandlingsstegsinfoDto,
+    BehandlingsstegstatusEnum,
+} from '../generated';
 
 import { useNavigate } from 'react-router';
 
@@ -57,11 +62,11 @@ export const SYNLIGE_STEG: Record<SynligeStegType, SynligSteg> = {
     },
 };
 
-const aktiveBehandlingstegstatuser = [
-    Behandlingsstegstatus.Utført,
-    Behandlingsstegstatus.Autoutført,
-    Behandlingsstegstatus.Klar,
-    Behandlingsstegstatus.Venter,
+const aktiveBehandlingstegstatuser: BehandlingsstegstatusEnum[] = [
+    'UTFØRT',
+    'AUTOUTFØRT',
+    'KLAR',
+    'VENTER',
 ];
 
 export const useStegNavigering = (
@@ -74,14 +79,14 @@ export const useStegNavigering = (
 
 const sjekkOmSidenErAktiv = (
     side: SynligSteg,
-    behandlingsstegsinfo: Behandlingsstegstilstand[]
+    behandlingsstegsinfo: BehandlingsstegsinfoDto[]
 ): boolean => {
     return behandlingsstegsinfo
         .filter(stegInfo => aktiveBehandlingstegstatuser.includes(stegInfo.behandlingsstegstatus))
         .some(stegInfo => stegInfo.behandlingssteg === side.steg);
 };
 
-export const erSidenAktiv = (synligSteg: SynligSteg, behandling: Behandling): boolean => {
+export const erSidenAktiv = (synligSteg: SynligSteg, behandling: BehandlingDto): boolean => {
     if (!behandling.behandlingsstegsinfo) return true;
 
     if (synligSteg === SYNLIGE_STEG.VERGE) {
@@ -93,7 +98,7 @@ export const erSidenAktiv = (synligSteg: SynligSteg, behandling: Behandling): bo
     return sjekkOmSidenErAktiv(synligSteg, behandling.behandlingsstegsinfo);
 };
 
-export const visSide = (steg: Behandlingssteg, behandling: Behandling): boolean => {
+export const visSide = (steg: BehandlingsstegEnum, behandling: BehandlingDto): boolean => {
     if (steg === Behandlingssteg.Brevmottaker) {
         return behandling.behandlingsstegsinfo
             .filter(
@@ -138,7 +143,7 @@ export const erHistoriskSide = (side: string): boolean => {
 
 export const erØnsketSideTilgjengelig = (
     ønsketSide: string,
-    behandlingssteginfo: Behandlingsstegstilstand[]
+    behandlingssteginfo: BehandlingsstegsinfoDto[]
 ): boolean => {
     if (erHistoriskSide(ønsketSide)) return true;
 

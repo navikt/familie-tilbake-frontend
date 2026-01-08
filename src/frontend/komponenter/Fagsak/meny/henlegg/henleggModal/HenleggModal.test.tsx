@@ -1,7 +1,7 @@
 import type { BehandlingApiHook } from '../../../../../api/behandling';
 import type { Http } from '../../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../../context/BehandlingContext';
-import type { Behandling } from '../../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../../generated';
 import type { Ressurs } from '../../../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -38,7 +38,7 @@ vi.mock('../../../../../api/behandling', () => ({
 }));
 
 const renderHenleggModal = (
-    behandling: Behandling,
+    behandling: BehandlingDto,
     årsaker: Behandlingresultat[]
 ): RenderResult => {
     const mockDialogRef = createRef<HTMLDialogElement | null>();
@@ -63,7 +63,6 @@ const setupMocks = (): void => {
         },
     }));
     mockUseBehandling.mockImplementation(() => ({
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
         nullstillIkkePersisterteKomponenter: vi.fn(),
     }));
 };

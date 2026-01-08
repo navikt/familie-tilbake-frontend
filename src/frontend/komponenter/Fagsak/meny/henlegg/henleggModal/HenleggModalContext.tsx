@@ -1,6 +1,8 @@
+import type { BehandlingDto } from '../../../../../generated';
 import type { Avhengigheter, FeltState, Skjema } from '../../../../../hooks/skjema';
 import type { HenleggBehandlingPaylod } from '../../../../../typer/api';
-import type { Behandling } from '../../../../../typer/behandling';
+
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useBehandlingApi } from '../../../../../api/behandling';
 import { useBehandling } from '../../../../../context/BehandlingContext';
@@ -23,7 +25,7 @@ export type HenleggelseSkjemaDefinisjon = {
 };
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
     lukkModal: () => void;
 };
 
@@ -36,7 +38,7 @@ type HenleggBehandlingSkjemaHook = {
 };
 
 export const useHenleggSkjema = ({ behandling, lukkModal }: Props): HenleggBehandlingSkjemaHook => {
-    const { hentBehandlingMedBehandlingId } = useBehandling();
+    const queryClient = useQueryClient();
     const { henleggBehandling } = useBehandlingApi();
     const { nullstillIkkePersisterteKomponenter } = useBehandling();
 
@@ -92,7 +94,9 @@ export const useHenleggSkjema = ({ behandling, lukkModal }: Props): HenleggBehan
                 (response: Ressurs<string>) => {
                     if (response.status === RessursStatus.Suksess) {
                         lukkModal();
-                        hentBehandlingMedBehandlingId(behandling.behandlingId);
+                        queryClient.invalidateQueries({
+                            queryKey: ['behandling', behandling.behandlingId],
+                        });
                     }
                 }
             );

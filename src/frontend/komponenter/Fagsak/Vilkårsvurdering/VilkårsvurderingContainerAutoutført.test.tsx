@@ -73,7 +73,6 @@ const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
         erStegBehandlet: (): boolean => false,
         erStegAutoutført: (): boolean => true,
-        hentBehandlingMedBehandlingId: vi.fn(),
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 3 av 4'),
         harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
     }));

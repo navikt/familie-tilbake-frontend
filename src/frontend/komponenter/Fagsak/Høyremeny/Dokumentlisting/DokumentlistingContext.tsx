@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 import type { Journalpost } from '../../../../typer/journalføring';
 
 import createUseContext from 'constate';
@@ -9,7 +9,7 @@ import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../
 import { Menysider } from '../Menykontainer';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
     valgtMenyside: Menysider | null;
 };
 

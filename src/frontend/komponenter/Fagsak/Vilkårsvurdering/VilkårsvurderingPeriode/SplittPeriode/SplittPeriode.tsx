@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../../generated';
 import type {
     BeregnSplittetPeriodeRespons,
     Periode,
@@ -27,7 +27,7 @@ const konverterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): Timeline
 
 type Props = {
     periode: VilkårsvurderingPeriodeSkjemaData;
-    behandling: Behandling;
+    behandling: BehandlingDto;
     onBekreft: (
         periode: VilkårsvurderingPeriodeSkjemaData,
         nyePerioder: VilkårsvurderingPeriodeSkjemaData[]

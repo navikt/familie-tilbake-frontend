@@ -1,4 +1,4 @@
-import type { Brevmottaker } from '../../../typer/Brevmottaker';
+import type { Brevmottaker } from '../../../generated';
 
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Alert, Button } from '@navikt/ds-react';

@@ -22,7 +22,6 @@ vi.mock('react-router', async () => {
 const mockUseBehandling = vi.fn(() => ({
     actionBarStegtekst: (): string => 'Mocked!!',
     erStegBehandlet: (): boolean => false,
-    hentBehandlingMedBehandlingId: async (): Promise<void> => Promise.resolve(),
 }));
 
 vi.mock('../../../context/BehandlingContext', () => ({

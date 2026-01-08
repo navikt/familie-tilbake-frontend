@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../../generated';
 
 import { Alert, Heading, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -16,7 +16,7 @@ const Container = styled.div`
 `;
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const HistoriskFaktaContainer: React.FC<Props> = () => {

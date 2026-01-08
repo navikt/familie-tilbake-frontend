@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../../generated';
 import type { HenleggelseSkjemaDefinisjon } from '../henleggModal/HenleggModalContext';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
@@ -16,7 +16,7 @@ const StyledContainer = styled.div`
 `;
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
     skjema: Skjema<HenleggelseSkjemaDefinisjon, string>;
     kanForhåndsvise: boolean;
 };

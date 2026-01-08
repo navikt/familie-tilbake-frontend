@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 
 import {
     ClockDashedIcon,
@@ -14,7 +14,7 @@ import { Menysider, MenySideInnhold } from './Menykontainer';
 
 type Props = {
     værtPåFatteVedtakSteget: boolean;
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteget, behandling }) => {

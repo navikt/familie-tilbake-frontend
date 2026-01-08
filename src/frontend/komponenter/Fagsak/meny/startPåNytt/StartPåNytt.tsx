@@ -1,7 +1,8 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 
 import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, Modal } from '@navikt/ds-react';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useRef } from 'react';
 
@@ -14,12 +15,13 @@ import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { MODAL_BREDDE } from '../utils';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
+    const queryClient = useQueryClient();
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const mutation = useStartPåNytt();
@@ -29,12 +31,13 @@ export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
         mutation.mutate(behandling.behandlingId, {
             onSuccess: ressurs => {
                 if (ressurs.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
-                    hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                        utførRedirect(
-                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                        );
-                        window.location.reload();
+                    queryClient.invalidateQueries({
+                        queryKey: ['behandling', behandling.behandlingId],
                     });
+                    utførRedirect(
+                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                    );
+                    window.location.reload();
                 }
             },
             onError: () => dialogRef.current?.close(),

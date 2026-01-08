@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
@@ -14,7 +14,6 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
-import { Behandlingssteg, Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { SYNLIGE_STEG } from '../../../utils/sider';
@@ -36,7 +35,7 @@ const VarselbrevInfo = styled(BodyShort)`
 `;
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const VedtakContainer: React.FC<Props> = ({ behandling }) => {
@@ -56,12 +55,11 @@ const VedtakContainer: React.FC<Props> = ({ behandling }) => {
     } = useVedtak();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
-    const erRevurderingKlageKA =
-        behandling.behandlingsårsakstype === Behandlingårsak.RevurderingKlageKa;
+    const erRevurderingKlageKA = behandling.behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
     const erRevurderingBortfaltBeløp =
-        behandling.type === Behandlingstype.RevurderingTilbakekreving &&
+        behandling.type === 'REVURDERING_TILBAKEKREVING' &&
         behandling.behandlingsårsakstype ===
-            Behandlingårsak.RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt;
+            'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
     const [erPerioderSammenslått, settErPerioderSammenslått] = useState<boolean>(false);
 
     const {
@@ -108,8 +106,7 @@ const VedtakContainer: React.FC<Props> = ({ behandling }) => {
 
     const kanViseForhåndsvisning =
         (!erLesevisning ||
-            (behandling.kanEndres &&
-                aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak)) &&
+            (behandling.kanEndres && aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK')) &&
         !erRevurderingKlageKA;
 
     if (
@@ -203,7 +200,7 @@ const VedtakContainer: React.FC<Props> = ({ behandling }) => {
                 <ActionBar
                     disableNeste={senderInn || disableBekreft || harValideringsFeil}
                     skjulNeste={erLesevisning}
-                    stegtekst={actionBarStegtekst(Behandlingssteg.ForeslåVedtak)}
+                    stegtekst={actionBarStegtekst('FORESLÅ_VEDTAK')}
                     nesteTekst="Send til godkjenning"
                     forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
                     nesteAriaLabel="Send til godkjenning hos beslutter"

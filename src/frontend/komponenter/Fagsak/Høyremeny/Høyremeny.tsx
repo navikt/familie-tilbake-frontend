@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 
 import { Modal } from '@navikt/ds-react';
 import classNames from 'classnames';
@@ -11,7 +11,7 @@ import { Faktaboks } from './Informasjonsbokser/Faktaboks';
 import { useBehandling } from '../../../context/BehandlingContext';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
     dialogRef: React.RefObject<HTMLDialogElement | null>;
 };
 

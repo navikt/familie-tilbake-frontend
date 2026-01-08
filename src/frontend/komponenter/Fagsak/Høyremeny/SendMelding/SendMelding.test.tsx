@@ -1,8 +1,7 @@
 import type { DokumentApiHook } from '../../../../api/dokument';
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { SpråkkodeEnum } from '../../../../generated';
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto, SpråkkodeEnum } from '../../../../generated';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -46,7 +45,7 @@ vi.mock('react-router', async () => {
 });
 
 const renderSendMelding = (
-    behandling: Behandling,
+    behandling: BehandlingDto,
     språkkode: SpråkkodeEnum = 'NB'
 ): RenderResult => {
     return render(
@@ -71,7 +70,6 @@ const setupMock = (behandlingILesemodus: boolean): void => {
     }));
     mockUseBehandling.mockImplementation(() => ({
         behandlingILesemodus: behandlingILesemodus,
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
     }));
 };
 

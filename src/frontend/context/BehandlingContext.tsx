@@ -1,165 +1,120 @@
-import type { BehandlingsoppsummeringDto } from '../generated/types.gen';
-import type { Behandling, Behandlingsstegstilstand } from '../typer/behandling';
+import type {
+    BehandlingsoppsummeringDto,
+    BehandlingDto,
+    BehandlingsstegEnum,
+} from '../generated/types.gen';
+import type { Behandlingsstegstilstand } from '../typer/behandling';
+import type { ReactNode } from 'react';
 
-import createUseContext from 'constate';
-import { useEffect, useState } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import * as React from 'react';
+import { createContext, useContext, useMemo } from 'react';
 
-import { useHttp } from '../api/http/HttpProvider';
-import { Behandlingssteg, Behandlingsstegstatus, Behandlingstatus } from '../typer/behandling';
-import {
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    type Ressurs,
-    RessursStatus,
-} from '../typer/ressurs';
+import { hentBehandlingOptions } from '../generated/@tanstack/react-query.gen';
+import { useUnsavedChanges, type UseUnsavedChangesReturn } from '../hooks/useUnsavedChanges';
 import { SYNLIGE_STEG } from '../utils/sider';
 
-export type BehandlingHook = {
-    behandling: Ressurs<Behandling> | undefined;
-    hentBehandlingMedEksternBrukId: (
-        behandlinger: BehandlingsoppsummeringDto[],
-        behandlingId: string
-    ) => void;
-    hentBehandlingMedBehandlingId: (behandlingId: string) => Promise<void>;
-    behandlingILesemodus: boolean | undefined;
-    actionBarStegtekst: (valgtSteg: Behandlingssteg) => string | undefined;
+/**
+ * Hjelper-funksjon for å finne behandlingId fra eksternBrukId
+ */
+export const finnBehandlingId = (
+    behandlinger: BehandlingsoppsummeringDto[],
+    eksternBrukId: string
+): string | undefined => {
+    const behandling = behandlinger.find(b => b.eksternBrukId === eksternBrukId);
+    return behandling?.behandlingId;
+};
+
+export type BehandlingContextType = UseUnsavedChangesReturn & {
+    behandling: BehandlingDto;
+    behandlingILesemodus: boolean;
     aktivtSteg: Behandlingsstegstilstand | undefined;
     ventegrunn: Behandlingsstegstilstand | undefined;
-    visVenteModal: boolean;
-    settVisVenteModal: (visVenteModal: boolean) => void;
-    erStegBehandlet: (steg: Behandlingssteg) => boolean;
-    erStegAutoutført: (steg: Behandlingssteg) => boolean;
+    harKravgrunnlag: boolean;
+    actionBarStegtekst: (valgtSteg: BehandlingsstegEnum) => string | undefined;
+    erStegBehandlet: (steg: BehandlingsstegEnum) => boolean;
+    erStegAutoutført: (steg: BehandlingsstegEnum) => boolean;
     erBehandlingReturnertFraBeslutter: () => boolean;
     harVærtPåFatteVedtakSteget: () => boolean;
-    harKravgrunnlag: boolean | undefined;
-    harUlagredeData: boolean;
-    visBrevmottakerModal: boolean;
-    settVisBrevmottakerModal: (visBrevmottakerModal: boolean) => void;
-    settIkkePersistertKomponent: (komponentId: string) => void;
-    nullstillIkkePersisterteKomponenter: () => void;
 };
 
-export const erStegUtført = (status: Behandlingsstegstatus): boolean => {
-    return status === Behandlingsstegstatus.Utført || status === Behandlingsstegstatus.Autoutført;
+export const BehandlingContext = createContext<BehandlingContextType | undefined>(undefined);
+
+export const erStegUtført = (status: string): boolean => {
+    return status === 'UTFØRT' || status === 'AUTOUTFØRT';
 };
 
-const [BehandlingProvider, useBehandling] = createUseContext((): BehandlingHook => {
-    const [behandling, settBehandling] = useState<Ressurs<Behandling>>();
-    const [aktivtSteg, settAktivtSteg] = useState<Behandlingsstegstilstand>();
-    const [ventegrunn, settVentegrunn] = useState<Behandlingsstegstilstand>();
-    const [visVenteModal, settVisVenteModal] = useState(false);
-    const [harKravgrunnlag, settHarKravgrunnlag] = useState(false);
-    const [behandlingILesemodus, settBehandlingILesemodus] = useState(false);
-    const [visBrevmottakerModal, settVisBrevmottakerModal] = useState(false);
-    const [ikkePersisterteKomponenter, settIkkePersisterteKomponenter] = useState<Set<string>>(
-        new Set()
-    );
-    const [harUlagredeData, settHarUlagredeData] = useState(ikkePersisterteKomponenter.size > 0);
-    const { request } = useHttp();
+type Props = {
+    behandlingId: string;
+    children: ReactNode;
+};
 
-    useEffect(
-        () => settHarUlagredeData(ikkePersisterteKomponenter.size > 0),
-        [ikkePersisterteKomponenter]
-    );
-
-    const settIkkePersistertKomponent = (komponentId: string): void => {
-        if (ikkePersisterteKomponenter.has(komponentId)) return;
-        settIkkePersisterteKomponenter(new Set(ikkePersisterteKomponenter).add(komponentId));
-    };
-
-    const nullstillIkkePersisterteKomponenter = (): void => {
-        if (ikkePersisterteKomponenter.size > 0) {
-            settIkkePersisterteKomponenter(new Set());
-        }
-    };
-
-    const hentBehandlingMedEksternBrukId = (
-        behandlinger: BehandlingsoppsummeringDto[],
-        behandlingId: string
-    ): void => {
-        const fagsakBehandling = behandlinger.find(
-            ({ eksternBrukId }) => eksternBrukId === behandlingId
-        );
-        if (fagsakBehandling) {
-            hentBehandlingMedBehandlingId(fagsakBehandling.behandlingId);
-        } else {
-            settBehandling(byggFeiletRessurs('Fann ikke behandling'));
-        }
-    };
-
-    const hentBehandlingMedBehandlingId = (behandlingId: string): Promise<void> => {
-        settBehandling(byggHenterRessurs());
-        settAktivtSteg(undefined);
-        settHarKravgrunnlag(false);
-        settBehandlingILesemodus(false);
-        settVentegrunn(undefined);
-        settVisVenteModal(false);
-        return request<void, Behandling>({
-            method: 'GET',
-            url: `/familie-tilbake/api/behandling/v1/${behandlingId}`,
+export const BehandlingProvider = ({ behandlingId, children }: Props): React.ReactElement => {
+    const { data: behandlingResponse } = useSuspenseQuery(
+        hentBehandlingOptions({
+            path: {
+                behandlingId,
+            },
         })
-            .then((hentetBehandling: Ressurs<Behandling>) => {
-                if (hentetBehandling.status === RessursStatus.Suksess) {
-                    const erILeseModus =
-                        hentetBehandling.data.status === Behandlingstatus.Avsluttet ||
-                        hentetBehandling.data.erBehandlingPåVent ||
-                        hentetBehandling.data.kanEndres === false ||
-                        hentetBehandling.data.behandlingsstegsinfo.some(
-                            stegInfo =>
-                                stegInfo.behandlingssteg === Behandlingssteg.Avsluttet ||
-                                (stegInfo.behandlingssteg === Behandlingssteg.IverksettVedtak &&
-                                    stegInfo.behandlingsstegstatus !==
-                                        Behandlingsstegstatus.Tilbakeført) ||
-                                (stegInfo.behandlingssteg === Behandlingssteg.FatteVedtak &&
-                                    stegInfo.behandlingsstegstatus === Behandlingsstegstatus.Klar)
-                        );
-                    settBehandlingILesemodus(erILeseModus);
+    );
 
-                    const harFåttKravgrunnlag = hentetBehandling.data.behandlingsstegsinfo.some(
-                        stegInfo => stegInfo.behandlingssteg === Behandlingssteg.Fakta
-                    );
-                    settHarKravgrunnlag(harFåttKravgrunnlag);
+    const unsavedChanges = useUnsavedChanges();
 
-                    const funnetAktivtsteg =
-                        hentetBehandling.data.status === Behandlingstatus.Avsluttet
-                            ? null
-                            : hentetBehandling.data.behandlingsstegsinfo.find(
-                                  stegInfo =>
-                                      stegInfo.behandlingsstegstatus ===
-                                          Behandlingsstegstatus.Klar ||
-                                      stegInfo.behandlingsstegstatus ===
-                                          Behandlingsstegstatus.Venter
-                              );
-                    if (funnetAktivtsteg) {
-                        settAktivtSteg(funnetAktivtsteg);
-                        if (
-                            funnetAktivtsteg.behandlingsstegstatus === Behandlingsstegstatus.Venter
-                        ) {
-                            settVentegrunn(funnetAktivtsteg);
-                            settVisVenteModal(true);
-                        }
-                    }
-                }
-                settBehandling(hentetBehandling);
-            })
-            .catch(() => {
-                settBehandling(byggFeiletRessurs('Ukjent feil ved henting av behandling'));
-            });
-    };
+    const behandling = useMemo((): BehandlingDto => {
+        if (!behandlingResponse?.data) {
+            throw new Error('Kunne ikke laste behandling');
+        }
+        return behandlingResponse.data;
+    }, [behandlingResponse]);
 
-    const actionBarStegtekst = (valgtSteg: Behandlingssteg): string | undefined => {
-        if (behandling?.status !== RessursStatus.Suksess) return undefined;
+    const behandlingILesemodus = useMemo((): boolean => {
+        return (
+            behandling.status === 'AVSLUTTET' ||
+            behandling.erBehandlingPåVent ||
+            behandling.kanEndres === false ||
+            behandling.behandlingsstegsinfo.some(
+                stegInfo =>
+                    stegInfo.behandlingssteg === 'AVSLUTTET' ||
+                    (stegInfo.behandlingssteg === 'IVERKSETT_VEDTAK' &&
+                        stegInfo.behandlingsstegstatus !== 'TILBAKEFØRT') ||
+                    (stegInfo.behandlingssteg === 'FATTE_VEDTAK' &&
+                        stegInfo.behandlingsstegstatus === 'KLAR')
+            )
+        );
+    }, [behandling]);
+
+    const harKravgrunnlag = useMemo((): boolean => {
+        return behandling.behandlingsstegsinfo.some(
+            stegInfo => stegInfo.behandlingssteg === 'FAKTA'
+        );
+    }, [behandling]);
+
+    const aktivtSteg = useMemo((): Behandlingsstegstilstand | undefined => {
+        if (behandling.status === 'AVSLUTTET') {
+            return undefined;
+        }
+        const steg = behandling.behandlingsstegsinfo.find(
+            stegInfo =>
+                stegInfo.behandlingsstegstatus === 'KLAR' ||
+                stegInfo.behandlingsstegstatus === 'VENTER'
+        );
+        return steg as Behandlingsstegstilstand | undefined;
+    }, [behandling]);
+
+    const ventegrunn = useMemo((): Behandlingsstegstilstand | undefined => {
+        const steg = behandling.behandlingsstegsinfo.find(
+            stegInfo => stegInfo.behandlingsstegstatus === 'VENTER'
+        );
+        return steg as Behandlingsstegstilstand | undefined;
+    }, [behandling]);
+
+    const actionBarStegtekst = (valgtSteg: BehandlingsstegEnum): string | undefined => {
         const antallSynligeSteg = Object.values(SYNLIGE_STEG).filter(({ steg }) => {
-            if (
-                steg === Behandlingssteg.Verge ||
-                steg === Behandlingssteg.Brevmottaker ||
-                steg === Behandlingssteg.Forhåndsvarsel
-            ) {
-                return behandling.data.behandlingsstegsinfo.some(
+            if (steg === 'VERGE' || steg === 'BREVMOTTAKER' || steg === 'FORHÅNDSVARSEL') {
+                return behandling.behandlingsstegsinfo.some(
                     ({ behandlingssteg }) => behandlingssteg === steg
                 );
             }
-
             return true;
         });
         const aktivtStegnummer = antallSynligeSteg.findIndex(({ steg }) => steg === valgtSteg) + 1;
@@ -167,72 +122,57 @@ const [BehandlingProvider, useBehandling] = createUseContext((): BehandlingHook 
         return `Steg ${aktivtStegnummer} av ${antallSynligeSteg.length}`;
     };
 
-    const erStegBehandlet = (steg: Behandlingssteg): boolean => {
-        if (behandling?.status === RessursStatus.Suksess) {
-            return behandling.data.behandlingsstegsinfo.some(
-                stegInfo =>
-                    stegInfo.behandlingssteg === steg &&
-                    erStegUtført(stegInfo.behandlingsstegstatus)
-            );
-        }
-        return false;
-    };
-
-    const erBehandlingReturnertFraBeslutter = (): boolean => {
-        if (behandling?.status === RessursStatus.Suksess) {
-            return behandling.data.behandlingsstegsinfo.some(
-                stegInfo =>
-                    stegInfo.behandlingssteg === Behandlingssteg.FatteVedtak &&
-                    (stegInfo.behandlingsstegstatus === Behandlingsstegstatus.Avbrutt ||
-                        stegInfo.behandlingsstegstatus === Behandlingsstegstatus.Tilbakeført)
-            );
-        }
-        return false;
-    };
-
-    const erStegAutoutført = (steg: Behandlingssteg): boolean => {
-        if (behandling?.status === RessursStatus.Suksess) {
-            const behandlingSteg = behandling.data.behandlingsstegsinfo?.find(
-                stegInfo => stegInfo.behandlingssteg === steg
-            );
-            return (
-                !!behandlingSteg &&
-                behandlingSteg.behandlingsstegstatus === Behandlingsstegstatus.Autoutført
-            );
-        }
-        return false;
-    };
-
-    const harVærtPåFatteVedtakSteget = (): boolean => {
-        return (
-            behandling?.status === RessursStatus.Suksess &&
-            behandling.data.behandlingsstegsinfo.some(
-                bsi => bsi.behandlingssteg === Behandlingssteg.FatteVedtak
-            )
+    const erStegBehandlet = (steg: BehandlingsstegEnum): boolean => {
+        return behandling.behandlingsstegsinfo.some(
+            stegInfo =>
+                stegInfo.behandlingssteg === steg && erStegUtført(stegInfo.behandlingsstegstatus)
         );
     };
 
-    return {
+    const erBehandlingReturnertFraBeslutter = (): boolean => {
+        return behandling.behandlingsstegsinfo.some(
+            stegInfo =>
+                stegInfo.behandlingssteg === 'FATTE_VEDTAK' &&
+                (stegInfo.behandlingsstegstatus === 'AVBRUTT' ||
+                    stegInfo.behandlingsstegstatus === 'TILBAKEFØRT')
+        );
+    };
+
+    const erStegAutoutført = (steg: BehandlingsstegEnum): boolean => {
+        const behandlingSteg = behandling.behandlingsstegsinfo?.find(
+            stegInfo => stegInfo.behandlingssteg === steg
+        );
+        return !!behandlingSteg && behandlingSteg.behandlingsstegstatus === 'AUTOUTFØRT';
+    };
+
+    const harVærtPåFatteVedtakSteget = (): boolean => {
+        return behandling.behandlingsstegsinfo.some(bsi => bsi.behandlingssteg === 'FATTE_VEDTAK');
+    };
+
+    const contextValue: BehandlingContextType = {
         behandling,
-        hentBehandlingMedEksternBrukId,
-        hentBehandlingMedBehandlingId,
         behandlingILesemodus,
-        actionBarStegtekst,
         aktivtSteg,
         ventegrunn,
-        visVenteModal,
-        settVisVenteModal,
+        harKravgrunnlag,
+        actionBarStegtekst,
         erStegBehandlet,
         erStegAutoutført,
         erBehandlingReturnertFraBeslutter,
         harVærtPåFatteVedtakSteget,
-        harKravgrunnlag,
-        harUlagredeData,
-        visBrevmottakerModal,
-        settVisBrevmottakerModal,
-        settIkkePersistertKomponent,
-        nullstillIkkePersisterteKomponenter,
+        ...unsavedChanges,
     };
-});
 
-export { BehandlingProvider, useBehandling };
+    return <BehandlingContext.Provider value={contextValue}>{children}</BehandlingContext.Provider>;
+};
+
+export const useBehandling = (): BehandlingContextType => {
+    const context = useContext(BehandlingContext);
+    if (!context) {
+        throw new Error('useBehandling må brukes innenfor BehandlingProvider');
+    }
+    return context;
+};
+
+// Export type alias for backwards compatibility with tests
+export type BehandlingHook = BehandlingContextType;

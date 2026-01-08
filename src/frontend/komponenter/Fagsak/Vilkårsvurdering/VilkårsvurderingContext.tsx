@@ -1,7 +1,7 @@
 import type { PeriodeHandling } from './typer/periodeHandling';
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
+import type { BehandlingDto } from '../../../generated';
 import type { VilkårdsvurderingStegPayload } from '../../../typer/api';
-import type { Behandling } from '../../../typer/behandling';
 import type {
     VilkårsvurderingResponse,
     VilkårsvurderingPeriode,
@@ -18,7 +18,6 @@ import { Feil } from '../../../api/feil';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
-import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -52,7 +51,6 @@ export type VilkårsvurderingHook = {
     onSplitPeriode: (periode: VilkårsvurderingPeriodeSkjemaData) => void;
     nestePeriode: (periode: VilkårsvurderingPeriodeSkjemaData) => void;
     forrigePeriode: (periode: VilkårsvurderingPeriodeSkjemaData) => void;
-    hentBehandlingMedBehandlingId: (behandlingId: string) => void;
 };
 
 const erBehandlet = (periode: VilkårsvurderingPeriodeSkjemaData): boolean => {
@@ -82,7 +80,7 @@ export const erTotalbeløpUnder4Rettsgebyr = (vurdering: VilkårsvurderingRespon
 };
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
@@ -100,27 +98,20 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             VilkårsvurderingPeriodeSkjemaData[]
         >([]);
         const [valideringsFeilmelding, settValideringsFeilmelding] = useState<string>();
-        const {
-            erStegBehandlet,
-            erStegAutoutført,
-            visVenteModal,
-            hentBehandlingMedBehandlingId,
-            nullstillIkkePersisterteKomponenter,
-        } = useBehandling();
+        const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
+            useBehandling();
         const { gjerVilkårsvurderingKall, sendInnVilkårsvurdering } = useBehandlingApi();
         const navigate = useNavigate();
         const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(ytelsestype);
         const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
         useEffect(() => {
-            if (!visVenteModal) {
-                settStegErBehandlet(erStegBehandlet(Behandlingssteg.Vilkårsvurdering));
-                settErAutoutført(erStegAutoutført(Behandlingssteg.Vilkårsvurdering));
-                hentVilkårsvurdering();
-                settKanIlleggeRenter(kanIleggeRenter);
-            }
+            settStegErBehandlet(erStegBehandlet('VILKÅRSVURDERING'));
+            settErAutoutført(erStegAutoutført('VILKÅRSVURDERING'));
+            hentVilkårsvurdering();
+            settKanIlleggeRenter(kanIleggeRenter);
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [behandling, visVenteModal]);
+        }, [behandling]);
 
         useEffect(() => {
             if (vilkårsvurdering?.status === RessursStatus.Suksess) {
@@ -333,7 +324,6 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(
             onSplitPeriode,
             nestePeriode,
             forrigePeriode,
-            hentBehandlingMedBehandlingId,
             erAllePerioderBehandlet,
         };
     }

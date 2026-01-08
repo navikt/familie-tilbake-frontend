@@ -1,4 +1,4 @@
-import type { Ressurs } from '../../../typer/ressurs';
+import type { BehandlingDto } from '../../../generated';
 import type { SynligSteg } from '../../../utils/sider';
 
 import { Stepper } from '@navikt/ds-react';
@@ -7,8 +7,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { erStegUtført, useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
-import { type Behandling, type Behandlingsstegstilstand } from '../../../typer/behandling';
-import { RessursStatus } from '../../../typer/ressurs';
+import { type Behandlingsstegstilstand } from '../../../typer/behandling';
 import { erSidenAktiv, SYNLIGE_STEG, visSide } from '../../../utils/sider';
 
 interface StepperSteg extends SynligSteg {
@@ -18,11 +17,11 @@ interface StepperSteg extends SynligSteg {
 
 const mapStegTilStepperSteg = (
     stegsinfo: Behandlingsstegstilstand[],
-    behandling: Ressurs<Behandling> | undefined
+    behandling: BehandlingDto | undefined
 ): StepperSteg[] | undefined => {
-    if (behandling?.status !== RessursStatus.Suksess) return undefined;
+    if (!behandling) return undefined;
     return Object.values(SYNLIGE_STEG)
-        .filter(({ steg }) => visSide(steg, behandling.data))
+        .filter(({ steg }) => visSide(steg, behandling))
         .map(synligSteg => {
             const { behandlingsstegstatus } =
                 stegsinfo.find(({ behandlingssteg }) => behandlingssteg === synligSteg.steg) || {};
@@ -32,7 +31,7 @@ const mapStegTilStepperSteg = (
                 navn: synligSteg.navn,
                 href: synligSteg.href,
                 erUtført: behandlingsstegstatus ? erStegUtført(behandlingsstegstatus) : false,
-                erAktiv: erSidenAktiv(synligSteg, behandling.data),
+                erAktiv: erSidenAktiv(synligSteg, behandling),
             };
         });
 };
@@ -44,7 +43,7 @@ export const Stegflyt: React.FC = () => {
     const { fagsystem, eksternFagsakId } = useFagsak();
 
     const stegsinfo = mapStegTilStepperSteg(
-        behandling?.status === RessursStatus.Suksess ? behandling.data.behandlingsstegsinfo : [],
+        (behandling?.behandlingsstegsinfo as Behandlingsstegstilstand[]) || [],
         behandling
     );
 
@@ -53,8 +52,8 @@ export const Stegflyt: React.FC = () => {
     const aktivStegnummer = aktivStegindeks > -1 ? aktivStegindeks + 1 : 0;
 
     const fagsakPath = (sideHref: string): string | null => {
-        if (behandling?.status === RessursStatus.Suksess && fagsystem && eksternFagsakId)
-            return `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.data.eksternBrukId}/${sideHref}`;
+        if (behandling && fagsystem && eksternFagsakId)
+            return `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sideHref}`;
         else return null;
     };
 

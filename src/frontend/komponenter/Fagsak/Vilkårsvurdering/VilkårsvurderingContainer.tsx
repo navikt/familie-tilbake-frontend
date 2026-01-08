@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
@@ -13,7 +13,7 @@ import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSu
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const VilkårsvurderingContainer: React.FC<Props> = ({ behandling }) => {

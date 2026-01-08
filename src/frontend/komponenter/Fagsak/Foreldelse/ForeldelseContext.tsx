@@ -1,8 +1,9 @@
 import type { ForeldelsePeriodeSkjemeData } from './typer/foreldelse';
+import type { BehandlingDto, BehandlingstatusEnum } from '../../../generated';
 import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../../typer/api';
-import type { Behandling } from '../../../typer/behandling';
 import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 
+import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -24,7 +25,7 @@ import { SYNLIGE_STEG } from '../../../utils/sider';
 
 const utledValgtPeriode = (
     skjemaPerioder: ForeldelsePeriodeSkjemeData[],
-    behandlingStatus: Behandlingstatus
+    behandlingStatus: BehandlingstatusEnum
 ): ForeldelsePeriodeSkjemeData | undefined => {
     const førsteUbehandletPeriode = skjemaPerioder.find(
         periode => !periode.foreldelsesvurderingstype
@@ -43,7 +44,7 @@ const utledValgtPeriode = (
 };
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 export type ForeldelseHook = {
@@ -69,6 +70,7 @@ export type ForeldelseHook = {
 
 const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling }: Props) => {
     const { fagsystem, eksternFagsakId } = useFagsak();
+    const queryClient = useQueryClient();
     const [foreldelse, setForeldelse] = useState<Ressurs<ForeldelseResponse>>();
     const [skjemaData, settSkjemaData] = useState<ForeldelsePeriodeSkjemeData[]>([]);
     const [erAutoutført, settErAutoutført] = useState<boolean>();
@@ -76,29 +78,22 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling }: Pr
     const [valgtPeriode, settValgtPeriode] = useState<ForeldelsePeriodeSkjemeData>();
     const [allePerioderBehandlet, settAllePerioderBehandlet] = useState<boolean>(false);
     const [senderInn, settSenderInn] = useState<boolean>(false);
-    const {
-        erStegBehandlet,
-        erStegAutoutført,
-        visVenteModal,
-        hentBehandlingMedBehandlingId,
-        nullstillIkkePersisterteKomponenter,
-    } = useBehandling();
+    const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
+        useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
     const navigate = useNavigate();
     const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
 
     useEffect(() => {
-        if (visVenteModal === false) {
-            settStegErBehandlet(erStegBehandlet(Behandlingssteg.Foreldelse));
-            const autoutført = erStegAutoutført(Behandlingssteg.Foreldelse);
-            settErAutoutført(autoutført);
-            if (!autoutført) {
-                hentForeldelse();
-            }
+        settStegErBehandlet(erStegBehandlet(Behandlingssteg.Foreldelse));
+        const autoutført = erStegAutoutført(Behandlingssteg.Foreldelse);
+        settErAutoutført(autoutført);
+        if (!autoutført) {
+            hentForeldelse();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [behandling, visVenteModal]);
+    }, [behandling]);
 
     useEffect(() => {
         if (foreldelse?.status === RessursStatus.Suksess) {
@@ -237,11 +232,15 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling }: Pr
             sendInnForeldelse(behandling.behandlingId, payload).then((respons: Ressurs<string>) => {
                 settSenderInn(false);
                 if (respons.status === RessursStatus.Suksess) {
-                    hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                        navigate(
-                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                        );
+                    queryClient.invalidateQueries({
+                        queryKey: [
+                            'hentBehandling',
+                            { path: { behandlingId: behandling.behandlingId } },
+                        ],
                     });
+                    navigate(
+                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                    );
                 }
             });
         }

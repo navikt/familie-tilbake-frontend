@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 
 import { ClockDashedIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
@@ -8,7 +8,7 @@ import { useApp } from '../../../../context/AppContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 export const HistoriskeVurderinger: React.FC<Props> = ({ behandling }) => {

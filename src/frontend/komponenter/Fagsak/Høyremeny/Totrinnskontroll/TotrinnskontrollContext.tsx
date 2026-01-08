@@ -1,9 +1,10 @@
 import type { TotrinnGodkjenningOption, TotrinnStegSkjemaData } from './typer/totrinnSkjemaTyper';
+import type { BehandlingDto, BehandlingsstegEnum } from '../../../../generated';
 import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '../../../../typer/api';
-import type { Behandling } from '../../../../typer/behandling';
 import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
 import type { SynligSteg } from '../../../../utils/sider';
 
+import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
@@ -12,7 +13,7 @@ import { OptionIkkeGodkjent, totrinnGodkjenningOptions } from './typer/totrinnSk
 import { useBehandlingApi } from '../../../../api/behandling';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../context/FagsakContext';
-import { behandlingssteg, Behandlingssteg } from '../../../../typer/behandling';
+import { behandlingssteg } from '../../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -28,20 +29,21 @@ const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption
 
 const validerTekst2000 = validerTekstMaksLengde(2000);
 
-const stegRekkefølge = [
-    Behandlingssteg.Fakta,
-    Behandlingssteg.Foreldelse,
-    Behandlingssteg.Vilkårsvurdering,
-    Behandlingssteg.ForeslåVedtak,
+const stegRekkefølge: BehandlingsstegEnum[] = [
+    'FAKTA',
+    'FORELDELSE',
+    'VILKÅRSVURDERING',
+    'FORESLÅ_VEDTAK',
 ];
 
 type Props = {
-    behandling: Behandling;
+    behandling: BehandlingDto;
 };
 
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
     ({ behandling }: Props) => {
         const { fagsystem, eksternFagsakId } = useFagsak();
+        const queryClient = useQueryClient();
         const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
         const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
         const [erLesevisning, settErLesevisning] = useState<boolean>(false);
@@ -51,12 +53,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
         const [fatteVedtakRespons, settFatteVedtakRespons] = useState<Ressurs<string>>();
         const [disableBekreft, settDisableBekreft] = useState<boolean>(true);
         const [sendTilSaksbehandler, settSendTilSaksbehandler] = useState<boolean>(true);
-        const {
-            visVenteModal,
-            erStegBehandlet,
-            erBehandlingReturnertFraBeslutter,
-            hentBehandlingMedBehandlingId,
-        } = useBehandling();
+        const { erStegBehandlet, erBehandlingReturnertFraBeslutter } = useBehandling();
         const { gjerTotrinnkontrollKall, sendInnFatteVedtak, kallAngreSendTilBeslutter } =
             useBehandlingApi();
         const navigate = useNavigate();
@@ -64,11 +61,9 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
         const [laster, settLaster] = useState(false);
 
         useEffect(() => {
-            if (visVenteModal === false) {
-                settStegErBehandlet(erStegBehandlet(Behandlingssteg.FatteVedtak));
-                settErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
-                hentTotrinnkontroll();
-            }
+            settStegErBehandlet(erStegBehandlet('FATTE_VEDTAK'));
+            settErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
+            hentTotrinnkontroll();
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [behandling]);
 
@@ -82,7 +77,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                             const stegInfo = totrinn.find(tt => tt.behandlingssteg === steg);
                             return {
                                 index: `idx_steg_${index}`,
-                                behandlingssteg: stegInfo?.behandlingssteg as Behandlingssteg,
+                                behandlingssteg: stegInfo?.behandlingssteg as BehandlingsstegEnum,
                                 godkjent: finnTotrinnGodkjenningOption(stegInfo?.godkjent),
                                 begrunnelse: stegInfo?.begrunnelse,
                             };
@@ -188,7 +183,12 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
             kallAngreSendTilBeslutter(behandling.behandlingId)
                 .then((res: Ressurs<string>) => {
                     if (res.status === RessursStatus.Suksess) {
-                        hentBehandlingMedBehandlingId(behandling.behandlingId);
+                        queryClient.invalidateQueries({
+                            queryKey: [
+                                'hentBehandling',
+                                { path: { behandlingId: behandling.behandlingId } },
+                            ],
+                        });
                     } else {
                         settFeilmelding(
                             hentFrontendFeilmelding(res) ??
@@ -224,7 +224,12 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(
                 sendInnFatteVedtak(behandling.behandlingId, payload)
                     .then((respons: Ressurs<string>) => {
                         if (respons.status === RessursStatus.Suksess) {
-                            hentBehandlingMedBehandlingId(behandling.behandlingId);
+                            queryClient.invalidateQueries({
+                                queryKey: [
+                                    'hentBehandling',
+                                    { path: { behandlingId: behandling.behandlingId } },
+                                ],
+                            });
                         } else if (
                             respons.status === RessursStatus.Feilet ||
                             respons.status === RessursStatus.FunksjonellFeil
