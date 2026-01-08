@@ -20,6 +20,7 @@ jest.mock('react-router', () => ({
 const mockUseBehandling = jest.fn(() => ({
     actionBarStegtekst: (): string => 'Mocked!!',
     erStegBehandlet: (): boolean => false,
+    hentBehandlingMedBehandlingId: async (): Promise<void> => Promise.resolve(),
 }));
 
 jest.mock('../../../context/BehandlingContext', () => ({
