@@ -51,7 +51,7 @@ export const FaktaSkjema = ({
     behandlingId,
     behandlingUrl,
 }: Props): React.JSX.Element => {
-    const { actionBarStegtekst } = useBehandling();
+    const { actionBarStegtekst, hentBehandlingMedBehandlingId } = useBehandling();
     const navigerTilNeste = useStegNavigering(behandlingUrl, Behandlingssteg.Forhåndsvarsel);
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchemaDto>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
@@ -122,7 +122,7 @@ export const FaktaSkjema = ({
             {
                 onSuccess: data => {
                     if (data.ferdigvurdert) {
-                        navigerTilNeste();
+                        hentBehandlingMedBehandlingId(behandlingId).then(navigerTilNeste);
                     }
                 },
             }
