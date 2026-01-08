@@ -69,6 +69,7 @@ const faktaOmFeilutbetaling = (
             ],
         },
     ],
+    ferdigvurdert: false,
     vurdering: {
         årsak: undefined,
         oppdaget: undefined,
@@ -383,6 +384,34 @@ describe('Fakta om feilutbetaling', () => {
             });
             expect(oppdagetDato).toBeInvalid();
             expect(oppdagetDato).toHaveAccessibleDescription('Ugyldig datoformat');
+        });
+
+        test('Viser lagreknapp dersom fakta ikke er ferdigvurdert, men uendret', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta({
+                ferdigvurdert: false,
+            });
+
+            const submitKnapp = await findByRole('button', {
+                name: 'Gå videre til foreldelsessteget',
+            });
+            expect(submitKnapp).toHaveAttribute('type', 'submit');
+            expect(submitKnapp).toHaveTextContent('Lagre');
+        });
+
+        test('Viser nesteknapp dersom fakta er ferdigvurdert og uendret', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta({
+                ferdigvurdert: true,
+            });
+
+            const submitKnapp = await findByRole('button', {
+                name: 'Gå videre til foreldelsessteget',
+            });
+            expect(submitKnapp).toHaveAttribute('type', 'submit');
+            expect(submitKnapp).toHaveTextContent('Neste');
         });
     });
 });

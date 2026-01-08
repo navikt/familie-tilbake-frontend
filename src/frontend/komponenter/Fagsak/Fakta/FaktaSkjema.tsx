@@ -117,7 +117,16 @@ export const FaktaSkjema = ({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         perioder.find(periode => periode.id === id)! as FaktaPeriodeDto;
     const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetalingDto> = data => {
-        oppdaterMutation.mutate({ body: data, path: { behandlingId: behandlingId } });
+        oppdaterMutation.mutate(
+            { body: data, path: { behandlingId: behandlingId } },
+            {
+                onSuccess: data => {
+                    if (data.ferdigvurdert) {
+                        navigerTilNeste();
+                    }
+                },
+            }
+        );
     };
 
     const { name: avRadioGroupName, ...radioProps } = methods.register('vurdering.oppdaget.av');
@@ -213,7 +222,7 @@ export const FaktaSkjema = ({
                     />
                 </section>
                 <ActionBar
-                    {...(methods.formState.isDirty
+                    {...(methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert
                         ? { type: 'submit', nesteTekst: 'Lagre' }
                         : { type: 'button', onNeste: navigerTilNeste })}
                     type="submit"

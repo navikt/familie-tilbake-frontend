@@ -350,6 +350,7 @@ export type FaktaOmFeilutbetalingDto = {
     muligeRettsligGrunnlag: Array<MuligeRettsligGrunnlagDto>;
     perioder: Array<FaktaPeriodeDto>;
     vurdering: VurderingDto;
+    ferdigvurdert: boolean;
 };
 
 export type FaktaPeriodeDto = {

@@ -156,7 +156,7 @@ export const zErrorDto = z.object({
 
 export const zOppdaterFaktaPeriodeDto = z.object({
     id: z.string(),
-    rettsligGrunnlag: z.array(zRettsligGrunnlagDto),
+    rettsligGrunnlag: z.array(zRettsligGrunnlagDto).min(1).max(2147483647),
 });
 
 export const zKanBehandlingOpprettesManueltRespons = z.object({
@@ -1048,7 +1048,7 @@ export const zOppdagetDto = z.object({
 });
 
 export const zVurderingDto = z.object({
-    årsak: z.optional(z.string()),
+    årsak: z.optional(z.string().min(3).max(3000)),
     oppdaget: z.optional(zOppdagetDto),
 });
 
@@ -1078,6 +1078,7 @@ export const zFaktaOmFeilutbetalingDto = z.object({
     muligeRettsligGrunnlag: z.array(zMuligeRettsligGrunnlagDto),
     perioder: z.array(zFaktaPeriodeDto),
     vurdering: zVurderingDto,
+    ferdigvurdert: z.boolean(),
 });
 
 export const zBehandlingstatusEnum = z.enum([

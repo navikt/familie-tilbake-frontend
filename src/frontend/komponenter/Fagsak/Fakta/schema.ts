@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { zOppdagetDto, zOppdaterFaktaPeriodeDto } from '../../../generated/zod.gen';
+import { zOppdagetDto, zOppdaterFaktaPeriodeDto, zVurderingDto } from '../../../generated/zod.gen';
 
 export const oppdaterFaktaOmFeilutbetalingSchema = z.object({
     // TODO: Fjern dette etter skjema er oppdatert
@@ -16,13 +16,12 @@ export const oppdaterFaktaOmFeilutbetalingSchema = z.object({
         })
     ),
     vurdering: z.object({
-        årsak: z.string(),
+        ...zVurderingDto.shape,
         oppdaget: z.object({
             ...zOppdagetDto.shape,
             av: z.enum(['BRUKER', 'NAV'], {
                 error: 'Du må enten velge Bruker eller Nav',
             }),
-            beskrivelse: z.string().min(3).max(3000),
         }),
     }),
 });
