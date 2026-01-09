@@ -223,15 +223,12 @@ export const FaktaSkjema = ({
                 </section>
                 <ActionBar
                     {...(methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert
-                        ? { type: 'submit', nesteTekst: 'Lagre' }
+                        ? { type: 'submit', nesteTekst: 'Lagre', formId: 'fakta-skjema' }
                         : { type: 'button', onNeste: navigerTilNeste })}
-                    type="submit"
-                    formId="fakta-skjema"
                     stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
                     forrigeAriaLabel={undefined}
                     nesteAriaLabel="Gå videre til foreldelsessteget"
                     onForrige={undefined}
-                    onNeste={undefined}
                     isLoading={false}
                 />
             </form>
