@@ -153,13 +153,11 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText('3 måneder')).toBeInTheDocument();
         expect(getByText('1 333')).toBeInTheDocument();
         expect(getByText('Bosatt i riket')).toBeInTheDocument();
-        expect(
-            getByText('Vilkårene for tilbakekreving', {
-                selector: 'h2',
-            })
-        ).toBeInTheDocument();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse vilkårene 1');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'Begrunnelse vilkårene 1'
+        );
 
         await user.click(
             getByRole('button', {
@@ -171,7 +169,7 @@ describe('VilkårsvurderingContainer', () => {
 
         await user.click(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -231,10 +229,13 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText('1 333')).toBeInTheDocument();
         expect(getByText('Bor med søker')).toBeInTheDocument();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse vilkårene 2');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'Begrunnelse vilkårene 2'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -296,9 +297,12 @@ describe('VilkårsvurderingContainer', () => {
             expect(getByText(førstePeriode)).toBeInTheDocument();
         });
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse1');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'Begrunnelse1'
+        );
         await user.click(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -324,11 +328,11 @@ describe('VilkårsvurderingContainer', () => {
             førstePeriode
         );
         expect(getByText('Er beløpet i behold?')).toBeInTheDocument();
-        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue(
+        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
             `${perioder[0].begrunnelse}Begrunnelse1`
         );
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -383,10 +387,12 @@ describe('VilkårsvurderingContainer', () => {
             expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
         });
 
-        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Begrunnelse vilkår 1');
+        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
+            'Begrunnelse vilkår 1'
+        );
         expect(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -415,9 +421,11 @@ describe('VilkårsvurderingContainer', () => {
             })
         ).toBeInTheDocument();
 
-        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Begrunnelse vilkår 2');
+        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
+            'Begrunnelse vilkår 2'
+        );
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -475,7 +483,7 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText('Begrunnelse vilkår 1')).toBeInTheDocument();
         expect(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -483,7 +491,7 @@ describe('VilkårsvurderingContainer', () => {
             )
         ).toBeChecked();
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -522,14 +530,14 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText(andrePeriode, { selector: 'label' })).toBeInTheDocument();
         expect(getByText('Begrunnelse vilkår 2')).toBeInTheDocument();
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i god tro', {
                 selector: 'input',
                 exact: false,
             })
         ).toBeChecked();
         expect(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -588,7 +596,7 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
         expect(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -597,7 +605,7 @@ describe('VilkårsvurderingContainer', () => {
         ).not.toBeChecked();
         expect(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -606,7 +614,7 @@ describe('VilkårsvurderingContainer', () => {
         ).not.toBeChecked();
         expect(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -614,7 +622,7 @@ describe('VilkårsvurderingContainer', () => {
             )
         ).not.toBeChecked();
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i god tro', {
                 selector: 'input',
                 exact: false,
             })

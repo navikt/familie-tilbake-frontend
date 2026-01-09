@@ -150,9 +150,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -235,9 +238,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -324,10 +330,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -437,10 +446,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -584,10 +596,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -666,10 +681,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -778,10 +796,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -910,10 +931,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -1042,10 +1066,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -1181,10 +1208,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -1296,10 +1326,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'begrunnelse');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -1385,9 +1418,11 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await waitFor(() => {
             expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         });
-        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Gitt i god tro');
+        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
+            'Gitt i god tro'
+        );
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -1438,12 +1473,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await waitFor(() => {
             expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         });
-        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue(
+        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
             'Gitt mangelfulle opplysninger'
         );
         expect(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
                 {
                     selector: 'input',
                     exact: false,

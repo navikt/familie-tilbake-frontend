@@ -367,30 +367,10 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                 {!periode.foreldet && (
                     <HGrid columns={{ lg: 2, md: 1 }} gap="8">
                         <VStack gap="5">
-                            <Heading size="small" level="2">
-                                Vilkårene for tilbakekreving
-                            </Heading>
-                            <Textarea
-                                {...skjema.felter.vilkårsresultatBegrunnelse.hentNavInputProps(
-                                    skjema.visFeilmeldinger
-                                )}
-                                name="vilkårsresultatBegrunnelse"
-                                label="Vilkårene for tilbakekreving"
-                                placeholder="Hvilke hendelser har ført til feilutbetalingen og vurder valg av hjemmel"
-                                maxLength={3000}
-                                readOnly={erLesevisning}
-                                value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
-                                onChange={(event: { target: { value: string } }) => {
-                                    skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
-                                        event.target.value
-                                    );
-                                    settIkkePersistertKomponent('vilkårsvurdering');
-                                }}
-                            />
                             <RadioGroup
                                 id="valgtVilkarResultatType"
                                 readOnly={erLesevisning}
-                                legend="Er vilkårene for tilbakekreving oppfylt?"
+                                legend="Velg det vilkåret i Folketrygdloven §22-15 som gjelder for perioden "
                                 value={skjema.felter.vilkårsresultatvurdering.verdi}
                                 error={
                                     ugyldigVilkårsresultatValgt
@@ -406,14 +386,14 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                                     name="valgtVilkarResultatType"
                                     value={Vilkårsresultat.ForstoBurdeForstått}
                                 >
-                                    Ja, mottaker forsto eller burde forstått at utbetalingen
-                                    skyldtes en feil (1. ledd, 1. punkt)
+                                    Mottaker forsto eller burde forstått at utbetalingen skyldtes en
+                                    feil (1. ledd, 1. punktum)
                                 </Radio>
                                 <Radio
                                     name="valgtVilkarResultatType"
                                     value={Vilkårsresultat.FeilOpplysningerFraBruker}
                                 >
-                                    Ja, mottaker har forårsaket feilutbetalingen ved forsett eller
+                                    Mottaker har forårsaket feilutbetalingen ved forsett eller
                                     uaktsomt gitt <strong>feilaktige</strong> opplysninger (1. ledd,
                                     2. punkt)
                                 </Radio>
@@ -421,7 +401,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                                     name="valgtVilkarResultatType"
                                     value={Vilkårsresultat.MangelfulleOpplysningerFraBruker}
                                 >
-                                    Ja, mottaker har forårsaket feilutbetalingen ved forsett eller
+                                    Mottaker har forårsaket feilutbetalingen ved forsett eller
                                     uaktsomt gitt <strong>mangelfulle</strong> opplysninger (1.
                                     ledd, 2. punkt)
                                 </Radio>
@@ -429,9 +409,26 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                                     name="valgtVilkarResultatType"
                                     value={Vilkårsresultat.GodTro}
                                 >
-                                    Nei, mottaker har mottatt beløpet i god tro (1. ledd)
+                                    Mottaker har mottatt beløpet i god tro (1. ledd)
                                 </Radio>
                             </RadioGroup>
+                            <Textarea
+                                {...skjema.felter.vilkårsresultatBegrunnelse.hentNavInputProps(
+                                    skjema.visFeilmeldinger
+                                )}
+                                name="vilkårsresultatBegrunnelse"
+                                label="Begrunn hvorfor du valgte vilkåret ovenfor"
+                                description="Beskriv hvem og hva som forårsaket feilutbetalingen"
+                                maxLength={3000}
+                                readOnly={erLesevisning}
+                                value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
+                                onChange={(event: { target: { value: string } }) => {
+                                    skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
+                                        event.target.value
+                                    );
+                                    settIkkePersistertKomponent('vilkårsvurdering');
+                                }}
+                            />
                         </VStack>
                         {vilkårsresultatVurderingGjort && (
                             <VStack gap="5">
