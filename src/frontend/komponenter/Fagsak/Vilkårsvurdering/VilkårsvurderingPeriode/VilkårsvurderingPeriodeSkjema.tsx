@@ -66,8 +66,8 @@ const settSkjemadataFraPeriode = (
     skjema.felter.godTroTilbakekrevesBeløp.onChange(
         vurdering?.godTro?.beløpTilbakekreves?.toString() || ''
     );
-    const erForsett = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.Forsett;
-    const erSimpelUaktsomhet = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.SimpelUaktsomhet;
+    const erForsett = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.Forsettlig;
+    const erSimpelUaktsomhet = vurdering?.aktsomhet?.aktsomhet === Aktsomhet.Uaktsomt;
     skjema.felter.aktsomhetVurdering.onChange(vurdering?.aktsomhet?.aktsomhet || '');
     skjema.felter.forstoIlleggeRenter.onChange(
         !kanIlleggeRenter ? OptionNEI : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
@@ -235,7 +235,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     const vilkårsresultatVurderingGjort = skjema.felter.vilkårsresultatvurdering.verdi !== '';
     const erGodTro = skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.GodTro;
-    const erForstodBurdeForstått =
+    const erForstoBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
 
     const ugyldigVilkårsresultatValgt =
@@ -432,6 +432,14 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         </VStack>
                         {vilkårsresultatVurderingGjort && (
                             <VStack gap="5">
+                                {erGodTro ? (
+                                    <GodTroSkjema skjema={skjema} erLesevisning={erLesevisning} />
+                                ) : (
+                                    <AktsomhetsvurderingSkjema
+                                        skjema={skjema}
+                                        erLesevisning={erLesevisning}
+                                    />
+                                )}
                                 <Textarea
                                     {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(
                                         skjema.visFeilmeldinger
@@ -439,15 +447,10 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                                     name="vurderingBegrunnelse"
                                     label={
                                         erGodTro
-                                            ? 'Vurder om beløpet er i behold'
-                                            : erForstodBurdeForstått
-                                              ? 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-                                              : 'Vurder i hvilken grad mottaker har handlet uaktsomt'
-                                    }
-                                    placeholder={
-                                        erGodTro
-                                            ? 'Begrunn hvorfor beløpet er i behold / er ikke i behold'
-                                            : ''
+                                            ? 'Begrunn hvorfor beløpet er i behold'
+                                            : erForstoBurdeForstått
+                                              ? 'Begrunn hvorfor du valgte alternativet ovenfor'
+                                              : 'Begrunn mottakerens aktsomhetsgrad'
                                     }
                                     readOnly={erLesevisning}
                                     value={
@@ -463,14 +466,6 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                                     }}
                                     maxLength={3000}
                                 />
-                                {erGodTro ? (
-                                    <GodTroSkjema skjema={skjema} erLesevisning={erLesevisning} />
-                                ) : (
-                                    <AktsomhetsvurderingSkjema
-                                        skjema={skjema}
-                                        erLesevisning={erLesevisning}
-                                    />
-                                )}
                             </VStack>
                         )}
                     </HGrid>

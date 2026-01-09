@@ -59,7 +59,7 @@ const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => 
         ? formatCurrencyNoKr(valgtPeriode?.feilutbetaltBeløp)
         : '100 %';
 
-    const erGrovtUaktsomhet = skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovUaktsomhet;
+    const erGrovtUaktsomhet = skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovtUaktsomt;
     const skalTilleggesRenterVerdi =
         skjema.felter.grovtUaktsomIlleggeRenter.verdi &&
         skjema.felter.grovtUaktsomIlleggeRenter.verdi.label;

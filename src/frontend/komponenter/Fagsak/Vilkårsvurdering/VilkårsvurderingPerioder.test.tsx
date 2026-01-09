@@ -225,7 +225,7 @@ describe('VilkårsvurderingPerioder', () => {
             })
         );
 
-        const godTroBegrunnelseInput = getByLabelText('Vurder om beløpet er i behold');
+        const godTroBegrunnelseInput = getByLabelText('Begrunn hvorfor beløpet er i behold');
         await user.type(godTroBegrunnelseInput, 'Beløp vurdering');
 
         await user.click(getByRole('radio', { name: 'Nei' }));

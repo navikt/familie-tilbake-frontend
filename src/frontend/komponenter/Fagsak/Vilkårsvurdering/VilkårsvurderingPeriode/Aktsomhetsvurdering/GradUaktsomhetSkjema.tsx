@@ -30,12 +30,10 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
 
     const grovUaktsomOffset = erValgtResultatTypeForstoBurdeForstaatt ? 193 : 213;
     const offset =
-        skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovUaktsomhet
-            ? grovUaktsomOffset
-            : 20;
+        skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovtUaktsomt ? grovUaktsomOffset : 20;
     return (
         <ArrowBox alignOffset={erLesevisning ? 5 : offset} marginTop={erLesevisning ? 15 : 0}>
-            {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.SimpelUaktsomhet &&
+            {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Uaktsomt &&
                 erTotalbeløpUnder4Rettsgebyr && (
                     <>
                         <HorisontalRadioGroup
@@ -74,7 +72,7 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                         )}
                     </>
                 )}
-            {(skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.SimpelUaktsomhet ||
+            {(skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.Uaktsomt ||
                 !erTotalbeløpUnder4Rettsgebyr) && (
                 <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
             )}

@@ -7,13 +7,7 @@ import GradForsettSkjema from './GradForsettSkjema';
 import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
-import {
-    Aktsomhet,
-    aktsomheter,
-    aktsomhetTyper,
-    forstodBurdeForståttAktsomheter,
-    Vilkårsresultat,
-} from '../../../../../kodeverk';
+import { Aktsomhet, aktsomheter, Vilkårsresultat } from '../../../../../kodeverk';
 import { OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
@@ -37,7 +31,7 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
                 readOnly={erLesevisning}
                 legend={
                     erForstodBurdeForstått
-                        ? 'I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?'
+                        ? 'Vurder mottakers grad av aktsomhet'
                         : 'I hvilken grad har mottaker handlet uaktsomt?'
                 }
                 value={skjema.felter.aktsomhetVurdering.verdi}
@@ -48,7 +42,7 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
                 }
                 onChange={(val: Aktsomhet) => {
                     const skalPreutfylleUtenRenter =
-                        val === Aktsomhet.Forsett &&
+                        val === Aktsomhet.Forsettlig &&
                         skjema.felter.forstoIlleggeRenter.verdi === '' &&
                         skjema.felter.vilkårsresultatvurdering.verdi ===
                             Vilkårsresultat.ForstoBurdeForstått;
@@ -59,16 +53,50 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
                     return skjema.felter.aktsomhetVurdering.validerOgSettFelt(val);
                 }}
             >
-                {aktsomhetTyper.map(type => (
-                    <Radio name="handletUaktsomhetGrad" key={type} value={type}>
-                        {erForstodBurdeForstått
-                            ? forstodBurdeForståttAktsomheter[type]
-                            : aktsomheter[type]}
-                    </Radio>
-                ))}
+                <Radio
+                    name="handletUaktsomhetGrad"
+                    key={Aktsomhet.Uaktsomt}
+                    value={Aktsomhet.Uaktsomt}
+                >
+                    {erForstodBurdeForstått ? (
+                        <>
+                            Mottaker <strong>burde forstått</strong> at utbetalingen skyldtes en
+                            feil
+                        </>
+                    ) : (
+                        aktsomheter[Aktsomhet.Uaktsomt]
+                    )}
+                </Radio>
+                <Radio
+                    name="handletUaktsomhetGrad"
+                    key={Aktsomhet.GrovtUaktsomt}
+                    value={Aktsomhet.GrovtUaktsomt}
+                >
+                    {erForstodBurdeForstått ? (
+                        <>
+                            Mottaker <strong>må ha forstått</strong> at utbetalingen skyldtes en
+                            feil
+                        </>
+                    ) : (
+                        aktsomheter[Aktsomhet.GrovtUaktsomt]
+                    )}
+                </Radio>
+                <Radio
+                    name="handletUaktsomhetGrad"
+                    key={Aktsomhet.Forsettlig}
+                    value={Aktsomhet.Forsettlig}
+                >
+                    {erForstodBurdeForstått ? (
+                        <>
+                            Mottaker <strong>forsto</strong> at utbetalingen skyldtes en feil
+                        </>
+                    ) : (
+                        aktsomheter[Aktsomhet.Forsettlig]
+                    )}
+                </Radio>
             </RadioGroup>
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&
-                (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsett ? (
+                (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig ? (
                     <GradForsettSkjema skjema={skjema} erLesevisning={erLesevisning} />
                 ) : (
                     <GradUaktsomhetSkjema skjema={skjema} erLesevisning={erLesevisning} />

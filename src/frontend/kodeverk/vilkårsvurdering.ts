@@ -33,28 +33,22 @@ export const vilkårsresultatTyper = [
 ];
 
 export enum Aktsomhet {
-    Forsett = 'FORSETT',
-    GrovUaktsomhet = 'GROV_UAKTSOMHET',
-    SimpelUaktsomhet = 'SIMPEL_UAKTSOMHET',
+    Forsettlig = 'FORSETTLIG',
+    GrovtUaktsomt = 'GROVT_UAKTSOMT',
+    Uaktsomt = 'UAKTSOMT',
 }
 
 export const aktsomheter: Record<Aktsomhet, string> = {
-    [Aktsomhet.Forsett]: 'Forsett',
-    [Aktsomhet.GrovUaktsomhet]: 'Grov uaktsomhet',
-    [Aktsomhet.SimpelUaktsomhet]: 'Simpel uaktsomhet',
+    [Aktsomhet.Uaktsomt]: 'Uaktsomt',
+    [Aktsomhet.GrovtUaktsomt]: 'Grovt uaktsomt',
+    [Aktsomhet.Forsettlig]: 'Forsettlig',
 };
 
 export const forstodBurdeForståttAktsomheter: Record<Aktsomhet, string> = {
-    [Aktsomhet.Forsett]: 'Forsto',
-    [Aktsomhet.GrovUaktsomhet]: 'Må ha forstått',
-    [Aktsomhet.SimpelUaktsomhet]: 'Burde ha forstått',
+    [Aktsomhet.Uaktsomt]: 'Mottaker burde forstått at utbetalingen skyldtes en feil',
+    [Aktsomhet.GrovtUaktsomt]: 'Mottaker må ha forstått at utbetalingen skyldtes en feil',
+    [Aktsomhet.Forsettlig]: 'Mottaker forsto at utbetalingen skyldtes en feil',
 };
-
-export const aktsomhetTyper = [
-    Aktsomhet.SimpelUaktsomhet,
-    Aktsomhet.GrovUaktsomhet,
-    Aktsomhet.Forsett,
-];
 
 export enum SærligeGrunner {
     GradAvUaktsomhet = 'GRAD_AV_UAKTSOMHET',

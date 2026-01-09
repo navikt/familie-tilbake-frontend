@@ -117,8 +117,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Aktivitet 2')).toBeInTheDocument();
         expect(getByText('1 000')).toBeInTheDocument();
         expect(getByText('Kopier vilkårsvurdering fra')).toBeInTheDocument();
-        expect(queryByText('Beløpet mottatt i god tro')).not.toBeInTheDocument();
-        expect(queryByLabelText('Vurder om beløpet er i behold')).not.toBeInTheDocument();
 
         expect(
             getByRole('radio', {
@@ -184,7 +182,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByLabelText('Vurder om beløpet er i behold')).toBeInTheDocument();
+        expect(queryByLabelText('Begrunn hvorfor beløpet er i behold')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -195,7 +193,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryByText('Ingen tilbakekreving')).not.toBeInTheDocument();
 
-        await user.type(getByLabelText('Vurder om beløpet er i behold'), 'begrunnelse');
+        await user.type(getByLabelText('Begrunn hvorfor beløpet er i behold'), 'begrunnelse');
         await user.click(
             getByLabelText('Nei', {
                 selector: 'input',
@@ -228,8 +226,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Kopier vilkårsvurdering fra')).not.toBeInTheDocument();
-        expect(queryByText('Beløpet mottatt i god tro')).not.toBeInTheDocument();
-        expect(queryByLabelText('Vurder om beløpet er i behold')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -242,7 +238,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        await user.type(getByLabelText('Vurder om beløpet er i behold'), 'begrunnelse');
+        await user.type(getByLabelText('Begrunn hvorfor beløpet er i behold'), 'begrunnelse');
         await user.click(
             getByLabelText('Ja', {
                 selector: 'input',
@@ -284,15 +280,10 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
         expect(
-            queryByLabelText(
-                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-            )
+            queryByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')
         ).not.toBeInTheDocument();
-        expect(
-            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
-        ).not.toBeInTheDocument();
+        expect(queryByText('Vurder mottakers grad av aktsomhet')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -309,13 +300,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(
-            queryByLabelText(
-                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-            )
+            queryByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')
         ).toBeInTheDocument();
-        expect(
-            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
-        ).toBeInTheDocument();
+        expect(queryByText('Vurder mottakers grad av aktsomhet')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -325,13 +312,11 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.type(
-            getByLabelText(
-                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-            ),
+            getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
             'begrunnelse'
         );
         await user.click(
-            getByLabelText('Forsto', {
+            getByLabelText('Mottaker forsto at utbetalingen skyldtes en feil', {
                 selector: 'input',
             })
         );
@@ -349,7 +334,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('Forsto/burde forstått - må ha forstått - ingen grunn til reduksjon', async () => {
+    test('Forsto/burde forstått - Mottaker må ha forstått at utbetalingen skyldtes en feil - ingen grunn til reduksjon', async () => {
         const {
             getByLabelText,
             getByRole,
@@ -365,15 +350,10 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
         expect(
-            queryByLabelText(
-                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-            )
+            queryByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')
         ).not.toBeInTheDocument();
-        expect(
-            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
-        ).not.toBeInTheDocument();
+        expect(queryByText('Vurder mottakers grad av aktsomhet')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -399,13 +379,11 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         ).not.toBeInTheDocument();
 
         await user.type(
-            getByLabelText(
-                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-            ),
+            getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
             'begrunnelse'
         );
         await user.click(
-            getByLabelText('Må ha forstått', {
+            getByLabelText('Mottaker må ha forstått at utbetalingen skyldtes en feil', {
                 selector: 'input',
             })
         );
@@ -490,7 +468,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -513,12 +490,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
         await user.click(
-            getByLabelText('Forsett', {
+            getByLabelText('Forsettlig', {
                 selector: 'input',
             })
         );
@@ -536,7 +510,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('Feilaktige - grov uaktsomhet - ingen grunn til reduksjon', async () => {
+    test('Feilaktige - grovt uaktsomt - ingen grunn til reduksjon', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText, queryByTestId } =
             renderVilkårsvurderingPeriodeSkjema(
                 lagBehandling(),
@@ -545,7 +519,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -563,12 +536,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
         await user.click(
-            getByLabelText('Grov uaktsomhet', {
+            getByLabelText('Grovt uaktsomt', {
                 selector: 'input',
             })
         );
@@ -611,7 +581,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
     });
 
-    test('Feilaktige - grov uaktsomhet - grunn til reduksjon', async () => {
+    test('Feilaktige - grovt uaktsomt - grunn til reduksjon', async () => {
         const {
             getByLabelText,
             getByRole,
@@ -626,13 +596,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
-        expect(
-            queryByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')
-        ).not.toBeInTheDocument();
-        expect(
-            queryByText('I hvilken grad burde mottaker forstått at utbetalingen skyldtes en feil?')
-        ).not.toBeInTheDocument();
+        expect(queryByText('Vurder mottakers grad av aktsomhet')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -657,12 +621,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryByText('Skal særlige grunner gi reduksjon av beløpet?')
         ).not.toBeInTheDocument();
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
         await user.click(
-            getByLabelText('Grov uaktsomhet', {
+            getByLabelText('Grovt uaktsomt', {
                 selector: 'input',
             })
         );
@@ -729,8 +690,8 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('Feilaktige - grov uaktsomhet - grunn til reduksjon - egendefinert', async () => {
-        const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole, queryByText } =
+    test('Feilaktige - grovt uaktsomt - grunn til reduksjon - egendefinert', async () => {
+        const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole } =
             renderVilkårsvurderingPeriodeSkjema(
                 lagBehandling(),
                 lagVilkårsvurderingPeriodeSkjemaData(),
@@ -738,7 +699,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -754,12 +714,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
         await user.click(
-            getByLabelText('Grov uaktsomhet', {
+            getByLabelText('Grovt uaktsomt', {
                 selector: 'input',
             })
         );
@@ -827,7 +784,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - grunn til reduksjon', async () => {
+    test('Mangelfulle - uaktsomt - under 4 rettsgebyr - grunn til reduksjon', async () => {
         const {
             getByLabelText,
             getByRole,
@@ -843,7 +800,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -864,12 +820,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         ).not.toBeInTheDocument();
         expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
         await user.click(
-            getByLabelText('Simpel uaktsomhet', {
+            getByLabelText('Uaktsomt', {
                 selector: 'input',
             })
         );
@@ -947,7 +900,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ingen grunn til reduksjon', async () => {
+    test('Mangelfulle - uaktsomt - under 4 rettsgebyr - ingen grunn til reduksjon', async () => {
         const { getByLabelText, getByRole, getByText, getByTestId, queryAllByText, queryByText } =
             renderVilkårsvurderingPeriodeSkjema(
                 lagBehandling(),
@@ -956,7 +909,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -972,12 +924,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
         await user.click(
-            getByLabelText('Simpel uaktsomhet', {
+            getByLabelText('Uaktsomt', {
                 selector: 'input',
             })
         );
@@ -1038,7 +987,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ikke tilbakekreves', async () => {
+    test('Mangelfulle - uaktsomt - under 4 rettsgebyr - ikke tilbakekreves', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } =
             renderVilkårsvurderingPeriodeSkjema(
                 lagBehandling(),
@@ -1047,7 +996,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -1063,12 +1011,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        await user.type(
-            getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
         await user.click(
-            getByLabelText('Simpel uaktsomhet', {
+            getByLabelText('Uaktsomt', {
                 selector: 'input',
             })
         );
@@ -1136,7 +1081,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(getByLabelText('Angi beløp som skal tilbakekreves')).toHaveValue('699');
     });
 
-    test('Åpner vurdert periode - mangelfulle - simpel uaktsomhet - under 4 rettsgebyr', async () => {
+    test('Åpner vurdert periode - mangelfulle - uaktsomt - under 4 rettsgebyr', async () => {
         const { getByLabelText, getByTestId, getByText } = renderVilkårsvurderingPeriodeSkjema(
             lagBehandling(),
             lagVilkårsvurderingPeriodeSkjemaData({
@@ -1144,8 +1089,8 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 vilkårsvurderingsresultatInfo: {
                     vilkårsvurderingsresultat: Vilkårsresultat.MangelfulleOpplysningerFraBruker,
                     aktsomhet: {
-                        begrunnelse: 'Vurdert aktsomhet til simpel',
-                        aktsomhet: Aktsomhet.SimpelUaktsomhet,
+                        begrunnelse: 'Vurdert aktsomhet til uaktsomt',
+                        aktsomhet: Aktsomhet.Uaktsomt,
                         tilbakekrevSmåbeløp: true,
                         særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
                         særligeGrunner: [
@@ -1179,10 +1124,10 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 }
             )
         ).toBeChecked();
-        expect(getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt')).toHaveValue(
-            'Vurdert aktsomhet til simpel'
+        expect(getByLabelText('Begrunn mottakerens aktsomhetsgrad')).toHaveValue(
+            'Vurdert aktsomhet til uaktsomt'
         );
-        expect(getByLabelText('Simpel uaktsomhet')).toBeChecked();
+        expect(getByLabelText('Uaktsomt')).toBeChecked();
         expect(
             getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
         ).toBeInTheDocument();

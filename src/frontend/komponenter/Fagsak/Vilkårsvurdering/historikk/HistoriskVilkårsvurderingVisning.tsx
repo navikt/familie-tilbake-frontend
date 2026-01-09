@@ -1,6 +1,6 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
-import { BodyShort, Box, Heading, HGrid, List, VStack } from '@navikt/ds-react';
+import { BodyShort, Box, HGrid, List, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import {
@@ -80,10 +80,6 @@ const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
                             </VStack>
                             {(godTro || aktsomhet) && (
                                 <VStack gap="1">
-                                    <Heading size="small" level="2">
-                                        {godTro && 'Beløpet mottatt i god tro'}
-                                        {aktsomhet && 'Aktsomhet'}
-                                    </Heading>
                                     <LabelVerdiVisning
                                         label={
                                             aktsomhet
