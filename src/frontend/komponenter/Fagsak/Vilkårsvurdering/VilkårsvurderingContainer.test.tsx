@@ -177,8 +177,6 @@ describe('VilkårsvurderingContainer', () => {
             )
         );
 
-        expect(getByText('Aktsomhet')).toBeInTheDocument();
-
         await user.click(
             getByRole('button', {
                 name: 'Neste periode',

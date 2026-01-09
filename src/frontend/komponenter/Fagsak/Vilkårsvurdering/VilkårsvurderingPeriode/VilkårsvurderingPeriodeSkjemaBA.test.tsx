@@ -183,7 +183,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Beløpet mottatt i god tro')).toBeInTheDocument();
         expect(queryByLabelText('Vurder om beløpet er i behold')).toBeInTheDocument();
 
         await user.click(
@@ -308,7 +307,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryByText('Aktsomhet')).toBeInTheDocument();
         expect(
             queryByLabelText(
                 'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
@@ -390,7 +388,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryByText('Aktsomhet')).toBeInTheDocument();
         expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
         expect(
             queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
@@ -508,8 +505,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryByText('Aktsomhet')).toBeInTheDocument();
-
         await user.click(
             getByRole('button', {
                 name: 'Gå videre til vedtakssteget',
@@ -565,7 +560,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryByText('Aktsomhet')).toBeInTheDocument();
         expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
 
         await user.type(
@@ -652,8 +646,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 }
             )
         );
-
-        expect(queryByText('Aktsomhet')).toBeInTheDocument();
 
         expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
         expect(
@@ -761,8 +753,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryByText('Aktsomhet')).toBeInTheDocument();
-
         await user.type(
             getByLabelText('Vurder i hvilken grad mottaker har handlet uaktsomt'),
             'begrunnelse'
@@ -868,7 +858,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryByText('Aktsomhet')).toBeInTheDocument();
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
         ).not.toBeInTheDocument();

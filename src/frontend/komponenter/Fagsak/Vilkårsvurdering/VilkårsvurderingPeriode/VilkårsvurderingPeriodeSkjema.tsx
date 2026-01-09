@@ -432,15 +432,6 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         </VStack>
                         {vilkårsresultatVurderingGjort && (
                             <VStack gap="5">
-                                {erGodTro ? (
-                                    <Heading size="small" level="2">
-                                        Beløpet mottatt i god tro
-                                    </Heading>
-                                ) : (
-                                    <Heading size="small" level="2">
-                                        Aktsomhet
-                                    </Heading>
-                                )}
                                 <Textarea
                                     {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(
                                         skjema.visFeilmeldinger
