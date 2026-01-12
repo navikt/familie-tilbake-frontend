@@ -363,7 +363,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         <RadioGroup
                             id="valgtVilkarResultatType"
                             size="small"
-                            className="w-100"
+                            className="w-105"
                             readOnly={erLesevisning}
                             legend="Velg det vilkåret i Folketrygdloven §22-15 som gjelder for perioden "
                             value={skjema.felter.vilkårsresultatvurdering.verdi}
@@ -409,7 +409,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                             name="vilkårsresultatBegrunnelse"
                             label="Begrunn hvorfor du valgte vilkåret ovenfor"
                             size="small"
-                            className="w-100"
+                            className="w-105"
                             resize
                             description="Beskriv hvem og hva som forårsaket feilutbetalingen"
                             maxLength={3000}

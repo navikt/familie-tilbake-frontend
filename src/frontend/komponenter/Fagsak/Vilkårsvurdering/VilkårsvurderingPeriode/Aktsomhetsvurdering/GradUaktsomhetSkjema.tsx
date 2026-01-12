@@ -35,7 +35,7 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                             legend="Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?"
                             readOnly={erLesevisning}
                             size="small"
-                            className="w-100"
+                            className="w-105"
                             value={skjema.felter.tilbakekrevSmåbeløp.verdi}
                             error={
                                 ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr
