@@ -9,7 +9,7 @@ import * as React from 'react';
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
-import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
+import { Aktsomhet } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
@@ -21,18 +21,12 @@ type Props = {
 
 const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandling();
-    const erValgtResultatTypeForstoBurdeForstaatt =
-        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
         skjema.visFeilmeldinger &&
         skjema.felter.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.Feil;
     const erTotalbeløpUnder4Rettsgebyr = skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
-
-    const grovUaktsomOffset = erValgtResultatTypeForstoBurdeForstaatt ? 193 : 213;
-    const offset =
-        skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovtUaktsomt ? grovUaktsomOffset : 20;
     return (
-        <ArrowBox alignOffset={erLesevisning ? 5 : offset} marginTop={erLesevisning ? 15 : 0}>
+        <>
             {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Uaktsomt &&
                 erTotalbeløpUnder4Rettsgebyr && (
                     <>
@@ -40,6 +34,8 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                             id="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
                             legend="Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?"
                             readOnly={erLesevisning}
+                            size="small"
+                            className="w-100"
                             value={skjema.felter.tilbakekrevSmåbeløp.verdi}
                             error={
                                 ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr
@@ -76,7 +72,7 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                 !erTotalbeløpUnder4Rettsgebyr) && (
                 <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
             )}
-        </ArrowBox>
+        </>
     );
 };
 

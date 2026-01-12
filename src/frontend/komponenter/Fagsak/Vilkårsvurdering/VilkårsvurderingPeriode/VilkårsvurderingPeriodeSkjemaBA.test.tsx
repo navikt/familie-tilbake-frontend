@@ -369,14 +369,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
         expect(
-            queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
+            queryByLabelText('Begrunn resultatet av vurderingen ovenfor')
         ).not.toBeInTheDocument();
-        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).not.toBeInTheDocument();
         expect(
-            queryByText('Skal særlige grunner gi reduksjon av beløpet?')
+            queryByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
         ).not.toBeInTheDocument();
+        expect(queryByText('Skal særlige grunner redusere beløpet?')).not.toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
@@ -388,12 +387,11 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Særlige grunner 4. ledd')).toBeInTheDocument();
+        expect(queryByLabelText('Begrunn resultatet av vurderingen ovenfor')).toBeInTheDocument();
         expect(
-            queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
+            queryByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
         ).toBeInTheDocument();
-        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeInTheDocument();
-        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeInTheDocument();
+        expect(queryByText('Skal særlige grunner redusere beløpet?')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -410,10 +408,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).not.toBeInTheDocument();
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
             getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
                 selector: 'input',
@@ -511,7 +506,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('Feilaktige - grovt uaktsomt - ingen grunn til reduksjon', async () => {
-        const { getByLabelText, getByRole, getByText, queryAllByText, queryByText, queryByTestId } =
+        const { getByLabelText, getByRole, getByText, queryAllByText, queryByTestId } =
             renderVilkårsvurderingPeriodeSkjema(
                 lagBehandling(),
                 lagVilkårsvurderingPeriodeSkjemaData(),
@@ -534,16 +529,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
-
         await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
         await user.click(
             getByLabelText('Grovt uaktsomt', {
                 selector: 'input',
             })
         );
-
-        expect(queryByText('Særlige grunner 4. ledd')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -553,10 +544,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
             getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
                 selector: 'input',
@@ -612,14 +600,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             )
         );
 
-        expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
         expect(
-            queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
+            queryByLabelText('Begrunn resultatet av vurderingen ovenfor')
         ).not.toBeInTheDocument();
-        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).not.toBeInTheDocument();
         expect(
-            queryByText('Skal særlige grunner gi reduksjon av beløpet?')
+            queryByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
         ).not.toBeInTheDocument();
+        expect(queryByText('Skal særlige grunner redusere beløpet?')).not.toBeInTheDocument();
 
         await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
         await user.click(
@@ -628,12 +615,11 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Særlige grunner 4. ledd')).toBeInTheDocument();
+        expect(queryByLabelText('Begrunn resultatet av vurderingen ovenfor')).toBeInTheDocument();
         expect(
-            queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
+            queryByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
         ).toBeInTheDocument();
-        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeInTheDocument();
-        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeInTheDocument();
+        expect(queryByText('Skal særlige grunner redusere beløpet?')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -643,10 +629,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
             getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
                 selector: 'input',
@@ -721,10 +704,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
             getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
                 selector: 'input',
@@ -818,7 +798,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
         ).not.toBeInTheDocument();
-        expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
 
         await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
         await user.click(
@@ -830,7 +809,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(
             queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
         ).toBeInTheDocument();
-        expect(queryByText('Særlige grunner 4. ledd')).not.toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -844,12 +822,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 name: 'Ja',
             })
         );
-        expect(queryByText('Særlige grunner 4. ledd')).toBeInTheDocument();
+
+        expect(queryByLabelText('Begrunn resultatet av vurderingen ovenfor')).toBeInTheDocument();
         expect(
-            queryByLabelText('Vurder særlige grunner du har vektlagt for resultatet')
+            queryByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
         ).toBeInTheDocument();
-        expect(queryByText('Særlige grunner som er vektlagt (4.ledd)')).toBeInTheDocument();
-        expect(queryByText('Skal særlige grunner gi reduksjon av beløpet?')).toBeInTheDocument();
+        expect(queryByText('Skal særlige grunner redusere beløpet?')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -859,10 +837,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
             getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
                 selector: 'input',
@@ -954,7 +929,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(
             queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
         ).not.toBeInTheDocument();
-        expect(queryByText('Særlige grunner 4. ledd')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -964,10 +938,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
 
-        await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
-            'begrunnelse'
-        );
+        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
             getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
                 selector: 'input',
@@ -1132,7 +1103,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
         ).toBeInTheDocument();
         expect(getByTestId('tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Ja')).toBeChecked();
-        expect(getByLabelText('Vurder særlige grunner du har vektlagt for resultatet')).toHaveValue(
+        expect(getByLabelText('Begrunn resultatet av vurderingen ovenfor')).toHaveValue(
             'Det finnes særlige grunner'
         );
         expect(getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot')).toBeChecked();

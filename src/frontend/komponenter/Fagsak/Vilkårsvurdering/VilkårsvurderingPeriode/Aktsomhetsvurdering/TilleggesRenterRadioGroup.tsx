@@ -33,6 +33,8 @@ const TilleggesRenterRadioGroup: React.FC<Props> = ({
             id="skalDetTilleggesRenter"
             legend="Skal det tillegges renter?"
             value={felt.verdi}
+            size="small"
+            className="w-100"
             error={
                 visFeilmeldingerForSkjema &&
                 felt.valideringsstatus === Valideringsstatus.Feil &&

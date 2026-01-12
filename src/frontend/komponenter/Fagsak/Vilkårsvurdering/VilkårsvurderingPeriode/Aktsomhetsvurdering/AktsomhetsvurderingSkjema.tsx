@@ -1,6 +1,6 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-import { Radio, RadioGroup, VStack } from '@navikt/ds-react';
+import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
 import GradForsettSkjema from './GradForsettSkjema';
@@ -19,16 +19,17 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
     const { settIkkePersistertKomponent } = useBehandling();
     const erForstodBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
-
     const ugyldigAktsomhetvurderingValgt =
         skjema.visFeilmeldinger &&
         skjema.felter.aktsomhetVurdering.valideringsstatus === Valideringsstatus.Feil;
 
     return (
-        <VStack gap="1">
+        <>
             <RadioGroup
                 id="handletUaktsomhetGrad"
                 readOnly={erLesevisning}
+                size="small"
+                className="w-100"
                 legend={
                     erForstodBurdeForstått
                         ? 'Vurder mottakers grad av aktsomhet'
@@ -95,13 +96,36 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
                     )}
                 </Radio>
             </RadioGroup>
+            <Textarea
+                {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
+                name="vurderingBegrunnelse"
+                label={
+                    erForstodBurdeForstått
+                        ? 'Begrunn hvorfor du valgte alternativet ovenfor'
+                        : 'Begrunn mottakerens aktsomhetsgrad'
+                }
+                size="small"
+                resize
+                readOnly={erLesevisning}
+                value={
+                    skjema.felter.aktsomhetBegrunnelse
+                        ? skjema.felter.aktsomhetBegrunnelse.verdi
+                        : ''
+                }
+                onChange={(event: { target: { value: string } }) => {
+                    skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(event.target.value);
+                    settIkkePersistertKomponent('vilkårsvurdering');
+                }}
+                maxLength={3000}
+                className="w-100"
+            />
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&
                 (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig ? (
                     <GradForsettSkjema skjema={skjema} erLesevisning={erLesevisning} />
                 ) : (
                     <GradUaktsomhetSkjema skjema={skjema} erLesevisning={erLesevisning} />
                 ))}
-        </VStack>
+        </>
     );
 };
 

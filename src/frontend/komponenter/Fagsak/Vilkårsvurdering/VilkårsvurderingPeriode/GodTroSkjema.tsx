@@ -3,7 +3,7 @@ import type {
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 
-import { BodyShort, Radio, TextField, VStack } from '@navikt/ds-react';
+import { BodyShort, Radio, Textarea, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
@@ -33,11 +33,13 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const harBeløpetIBehold =
         harVurderBeløpIBehold && skjema.felter.erBeløpetIBehold.verdi === OptionJA;
     return (
-        <VStack gap="1">
+        <>
             <HorisontalRadioGroup
                 id="erBelopetIBehold"
                 readOnly={erLesevisning}
+                size="small"
                 legend="Er beløpet i behold?"
+                marginbottom="0"
                 value={skjema.felter.erBeløpetIBehold.verdi}
                 error={
                     ugyldigErBeløpetIBeholdValgt
@@ -55,6 +57,25 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     </Radio>
                 ))}
             </HorisontalRadioGroup>
+            <Textarea
+                {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
+                name="vurderingBegrunnelse"
+                label="Begrunn hvorfor beløpet er i behold"
+                readOnly={erLesevisning}
+                size="small"
+                resize
+                className="w-100"
+                value={
+                    skjema.felter.aktsomhetBegrunnelse
+                        ? skjema.felter.aktsomhetBegrunnelse.verdi
+                        : ''
+                }
+                onChange={(event: { target: { value: string } }) => {
+                    skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(event.target.value);
+                    settIkkePersistertKomponent('vilkårsvurdering');
+                }}
+                maxLength={3000}
+            />
             <ArrowBoxContainer>
                 {harVurderBeløpIBehold && harBeløpetIBehold && (
                     <ArrowBox alignOffset={23}>
@@ -65,6 +86,7 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                             id="tilbakekrevdBelop"
                             label="Angi beløp som skal tilbakekreves"
                             readOnly={erLesevisning}
+                            size="small"
                             onChange={event => {
                                 skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
                                     event.target.value
@@ -82,7 +104,7 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     </ArrowBox>
                 )}
             </ArrowBoxContainer>
-        </VStack>
+        </>
     );
 };
 

@@ -260,12 +260,10 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        expect(
-            getByText('Vurder særlige grunner du har vektlagt for resultatet')
-        ).toBeInTheDocument();
+        expect(getByText('Begrunn resultatet av vurderingen ovenfor')).toBeInTheDocument();
 
         await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
+            getByLabelText('Begrunn resultatet av vurderingen ovenfor'),
             'Begrunnelse særlige grunner 2'
         );
         await user.click(
