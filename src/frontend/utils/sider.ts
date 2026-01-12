@@ -106,10 +106,7 @@ export const visSide = (steg: Behandlingssteg, behandling: Behandling): boolean 
         return !behandling.støtterManuelleBrevmottakere;
     }
     if (steg === Behandlingssteg.Forhåndsvarsel) {
-        const harVarselSteg = behandling.behandlingsstegsinfo.some(
-            ({ behandlingssteg }) => behandlingssteg === Behandlingssteg.Forhåndsvarsel
-        );
-        return harVarselSteg;
+        return behandling.erNyModell;
     }
 
     return true;
