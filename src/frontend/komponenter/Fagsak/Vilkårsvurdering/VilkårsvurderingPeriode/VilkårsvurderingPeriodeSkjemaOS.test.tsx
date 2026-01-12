@@ -493,7 +493,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
                 selector: 'input',
             })
         );
@@ -688,7 +688,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
                 selector: 'input',
             })
         );
@@ -806,7 +806,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
                 selector: 'input',
             })
         );
@@ -907,7 +907,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
                 selector: 'input',
             })
         );
@@ -1068,7 +1068,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
                 selector: 'input',
             })
         );
@@ -1197,7 +1197,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
         await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
                 selector: 'input',
             })
         );
@@ -1413,8 +1413,10 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(getByLabelText('Begrunn resultatet av vurderingen ovenfor')).toHaveValue(
             'Det finnes særlige grunner'
         );
-        expect(getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot')).toBeChecked();
-        expect(getByLabelText('Størrelsen på feilutbetalt beløp')).toBeChecked();
+        expect(
+            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot')
+        ).toBeChecked();
+        expect(getByLabelText('Størrelsen av det feilutbetalte beløpet')).toBeChecked();
         expect(getByLabelText('Annet')).toBeChecked();
         expect(getByTestId('annetBegrunnelse')).toHaveValue('Dette er en annen begrunnelse');
         expect(getByTestId('harGrunnerTilReduksjon_Ja')).toBeChecked();

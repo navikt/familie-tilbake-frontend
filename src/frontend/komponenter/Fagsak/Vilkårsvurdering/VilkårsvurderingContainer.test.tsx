@@ -267,7 +267,7 @@ describe('VilkårsvurderingContainer', () => {
             'Begrunnelse særlige grunner 2'
         );
         await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
                 selector: 'input',
             })
         );

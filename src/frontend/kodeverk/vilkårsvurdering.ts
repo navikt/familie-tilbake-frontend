@@ -59,10 +59,10 @@ export enum SærligeGrunner {
 }
 
 export const særligegrunner: Record<SærligeGrunner, string> = {
-    [SærligeGrunner.GradAvUaktsomhet]: 'Graden av uaktsomhet hos den kravet retter seg mot',
+    [SærligeGrunner.GradAvUaktsomhet]: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+    [SærligeGrunner.StørrelseBeløp]: 'Størrelsen av det feilutbetalte beløpet',
+    [SærligeGrunner.TidFraUtbetaling]: 'Hvor lang tid det har gått siden utbetalingen fant sted',
     [SærligeGrunner.HeltEllerDelvisNavsFeil]: 'Om feilen helt eller delvis kan tilskrives Nav',
-    [SærligeGrunner.StørrelseBeløp]: 'Størrelsen på feilutbetalt beløp',
-    [SærligeGrunner.TidFraUtbetaling]: 'Hvor lang tid siden utbetalingen fant sted',
     [SærligeGrunner.Annet]: 'Annet',
 };
 
