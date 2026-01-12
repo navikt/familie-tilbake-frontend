@@ -1,32 +1,18 @@
-import type {
-    JaNeiOption,
-    VilkårsvurderingSkjemaDefinisjon,
-} from '../VilkårsvurderingPeriodeSkjemaContext';
+import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-import {
-    BodyShort,
-    HGrid,
-    HStack,
-    Label,
-    Radio,
-    Select,
-    TextField,
-    VStack,
-} from '@navikt/ds-react';
+import { BodyShort, HGrid, HStack, Label, Select, TextField, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
 import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
+import { type Skjema } from '../../../../../hooks/skjema';
 import { Aktsomhet } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
-import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { useVilkårsvurdering } from '../../VilkårsvurderingContext';
 import {
     ANDELER,
     EGENDEFINERT,
-    jaNeiOptions,
     OptionJA,
     OptionNEI,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
@@ -50,10 +36,6 @@ const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => 
             skjema.felter.uaktsomAndelTilbakekreves.verdi === EGENDEFINERT) &&
         skjema.felter.uaktsomAndelTilbakekreves.verdi !== '-';
 
-    const ugyldigHarGrunnertilReduksjonValgt =
-        skjema.visFeilmeldinger &&
-        skjema.felter.harGrunnerTilReduksjon.valideringsstatus === Valideringsstatus.Feil;
-
     const beskjedTilbakekreves = harMerEnnEnAktivitet
         ? formatCurrencyNoKr(valgtPeriode?.feilutbetaltBeløp)
         : '100 %';
@@ -64,35 +46,6 @@ const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => 
         skjema.felter.grovtUaktsomIlleggeRenter.verdi.label;
     return (
         <VStack gap="1">
-            <HorisontalRadioGroup
-                id="harGrunnerTilReduksjon"
-                legend="Skal særlige grunner redusere beløpet?"
-                readOnly={erLesevisning}
-                size="small"
-                className="w-100"
-                value={skjema.felter.harGrunnerTilReduksjon.verdi}
-                error={
-                    ugyldigHarGrunnertilReduksjonValgt
-                        ? skjema.felter.harGrunnerTilReduksjon.feilmelding?.toString()
-                        : ''
-                }
-                onChange={(val: JaNeiOption) => {
-                    skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(OptionNEI);
-                    settIkkePersistertKomponent('vilkårsvurdering');
-                    return skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(val);
-                }}
-            >
-                {jaNeiOptions.map(opt => (
-                    <Radio
-                        key={opt.label}
-                        name="harGrunnerTilReduksjon"
-                        data-testid={`harGrunnerTilReduksjon_${opt.label}`}
-                        value={opt}
-                    >
-                        {opt.label}
-                    </Radio>
-                ))}
-            </HorisontalRadioGroup>
             {skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA && (
                 <HGrid columns={2}>
                     {!harMerEnnEnAktivitet && !erEgendefinert && (
