@@ -1,16 +1,16 @@
-import type { OppdaterFaktaOmFeilutbetalingSchemaDto } from './schema';
+import type { OppdaterFaktaOmFeilutbetalingSchema } from './schema';
 import type {
-    BestemmelseEllerGrunnlagDto,
-    FaktaOmFeilutbetalingDto,
-    FaktaPeriodeDto,
-    MuligeRettsligGrunnlagDto,
+    BestemmelseEllerGrunnlag,
+    FaktaOmFeilutbetaling,
+    FaktaPeriode,
+    MuligeRettsligGrunnlag,
     OppdaterFaktaData,
     OppdaterFaktaError,
-    OppdaterFaktaOmFeilutbetalingDto,
-    OppdaterFaktaPeriodeDto,
+    OppdaterFaktaOmFeilutbetaling,
+    OppdaterFaktaPeriode,
     OppdaterFaktaResponse,
     Options,
-} from '../../../generated';
+} from '../../../generated-new';
 import type { AxiosError } from 'axios';
 import type { SubmitHandler } from 'react-hook-form';
 
@@ -43,7 +43,7 @@ import { ActionBar } from '../ActionBar/ActionBar';
 type Props = {
     behandlingId: string;
     behandlingUrl: string;
-    faktaOmFeilutbetaling: FaktaOmFeilutbetalingDto;
+    faktaOmFeilutbetaling: FaktaOmFeilutbetaling;
 };
 
 export const FaktaSkjema = ({
@@ -53,7 +53,7 @@ export const FaktaSkjema = ({
 }: Props): React.JSX.Element => {
     const { actionBarStegtekst, hentBehandlingMedBehandlingId } = useBehandling();
     const navigerTilNeste = useStegNavigering(behandlingUrl, Behandlingssteg.Forhåndsvarsel);
-    const methods = useForm<OppdaterFaktaOmFeilutbetalingSchemaDto>({
+    const methods = useForm<OppdaterFaktaOmFeilutbetalingSchema>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
         defaultValues: {
             perioder: faktaOmFeilutbetaling.perioder.map(periode => ({
@@ -112,11 +112,11 @@ export const FaktaSkjema = ({
         mutationKey: ['oppdaterFakta'],
     });
 
-    const dataForPeriode = (id: string): FaktaPeriodeDto =>
+    const dataForPeriode = (id: string): FaktaPeriode =>
         // Siden disse kommer fra samme kall skal det ikke være mulig å ende opp med tomt svar
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        perioder.find(periode => periode.id === id)! as FaktaPeriodeDto;
-    const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetalingDto> = data => {
+        perioder.find(periode => periode.id === id)! as FaktaPeriode;
+    const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetaling> = data => {
         oppdaterMutation.mutate(
             { body: data, path: { behandlingId: behandlingId } },
             {
@@ -242,17 +242,16 @@ const PeriodeRad = ({
     periodeInfo,
     muligeRettsligGrunnlag,
 }: {
-    periode: OppdaterFaktaPeriodeDto;
+    periode: OppdaterFaktaPeriode;
     periodeIndex: number;
-    periodeInfo: FaktaPeriodeDto;
-    muligeRettsligGrunnlag: MuligeRettsligGrunnlagDto[];
+    periodeInfo: FaktaPeriode;
+    muligeRettsligGrunnlag: MuligeRettsligGrunnlag[];
 }): React.JSX.Element => {
-    const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlagDto[] =>
+    const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlag[] =>
         muligeRettsligGrunnlag.find(
             muligGrunnlag => muligGrunnlag.bestemmelse.nøkkel === bestemmelse
         )?.grunnlag ?? [];
-    const { register, setValue, formState } =
-        useFormContext<OppdaterFaktaOmFeilutbetalingSchemaDto>();
+    const { register, setValue, formState } = useFormContext<OppdaterFaktaOmFeilutbetalingSchema>();
     const nullstillBestemmelse = (index: number): void => {
         setValue(`perioder.${periodeIndex}.rettsligGrunnlag.${index}.grunnlag`, '', {
             shouldDirty: true,

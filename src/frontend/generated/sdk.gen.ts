@@ -23,9 +23,6 @@ import type {
     ErPerioderLikeResponses,
     ErPerioderSammenslåttData,
     ErPerioderSammenslåttResponses,
-    FaktaData,
-    FaktaErrors,
-    FaktaResponses,
     FeatureTogglesData,
     FeatureTogglesResponses,
     FerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveData,
@@ -124,9 +121,6 @@ import type {
     MigrerAlleSakerResponses,
     OppdaterBehandlendeEnhetPåBehandlingData,
     OppdaterBehandlendeEnhetPåBehandlingResponses,
-    OppdaterFaktaData,
-    OppdaterFaktaErrors,
-    OppdaterFaktaResponses,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponses,
     OpprettBehandlingData,
@@ -918,30 +912,6 @@ export const opprettBehandlingManuellTask = <ThrowOnError extends boolean = fals
         responseType: 'json',
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/behandling/manuelt/task/v1',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers,
-        },
-    });
-
-export const fakta = <ThrowOnError extends boolean = false>(
-    options: Options<FaktaData, ThrowOnError>
-) =>
-    (options.client ?? client).get<FaktaResponses, FaktaErrors, ThrowOnError>({
-        responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/v1/behandling/{behandlingId}/feilutbetaling',
-        ...options,
-    });
-
-export const oppdaterFakta = <ThrowOnError extends boolean = false>(
-    options: Options<OppdaterFaktaData, ThrowOnError>
-) =>
-    (options.client ?? client).patch<OppdaterFaktaResponses, OppdaterFaktaErrors, ThrowOnError>({
-        responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/v1/behandling/{behandlingId}/feilutbetaling',
         ...options,
         headers: {
             'Content-Type': 'application/json',
