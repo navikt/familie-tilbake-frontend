@@ -3,14 +3,13 @@ import type {
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 
-import { BodyShort, Radio, Textarea, TextField } from '@navikt/ds-react';
+import { Radio, Textarea, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
-import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 
 const ArrowBoxContainer = styled.div`
@@ -78,30 +77,33 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
             />
             <ArrowBoxContainer>
                 {harVurderBeløpIBehold && harBeløpetIBehold && (
-                    <ArrowBox alignOffset={23}>
-                        <TextField
-                            {...skjema.felter.godTroTilbakekrevesBeløp.hentNavInputProps(
-                                skjema.visFeilmeldinger
-                            )}
-                            id="tilbakekrevdBelop"
-                            label="Angi beløp som skal tilbakekreves"
-                            readOnly={erLesevisning}
-                            size="small"
-                            onChange={event => {
-                                skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
-                                    event.target.value
-                                );
-                                settIkkePersistertKomponent(`vilkårsvurdering`);
-                            }}
-                            value={skjema.felter.godTroTilbakekrevesBeløp.verdi}
-                            style={{ width: '6rem' }}
-                        />
-                    </ArrowBox>
+                    <TextField
+                        {...skjema.felter.godTroTilbakekrevesBeløp.hentNavInputProps(
+                            skjema.visFeilmeldinger
+                        )}
+                        id="tilbakekrevdBelop"
+                        label="Angi beløp som skal tilbakekreves"
+                        readOnly={erLesevisning}
+                        size="small"
+                        onChange={event => {
+                            skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
+                                event.target.value
+                            );
+                            settIkkePersistertKomponent(`vilkårsvurdering`);
+                        }}
+                        value={skjema.felter.godTroTilbakekrevesBeløp.verdi}
+                        style={{ width: '6rem' }}
+                    />
                 )}
                 {harVurderBeløpIBehold && !harBeløpetIBehold && (
-                    <ArrowBox alignOffset={83}>
-                        <BodyShort size="small">Ingen tilbakekreving</BodyShort>
-                    </ArrowBox>
+                    <TextField
+                        id="ingenTilbakekrevdBelop"
+                        label="Beløp som skal tilbakekreves"
+                        readOnly
+                        size="small"
+                        value={0}
+                        style={{ width: '6rem' }}
+                    />
                 )}
             </ArrowBoxContainer>
         </>

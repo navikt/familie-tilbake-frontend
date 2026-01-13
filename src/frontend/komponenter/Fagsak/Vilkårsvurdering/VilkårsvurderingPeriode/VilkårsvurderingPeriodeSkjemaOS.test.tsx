@@ -61,14 +61,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('God tro - beløp ikke i behold', async () => {
-        const {
-            getByLabelText,
-            getByRole,
-            getByText,
-            queryAllByText,
-            queryByLabelText,
-            queryByText,
-        } = render(
+        const { getByLabelText, getByRole, getByText, queryAllByText, queryByLabelText } = render(
             <FagsakContext.Provider value={lagFagsak()}>
                 <BehandlingProvider>
                     <VilkårsvurderingPeriodeSkjema
@@ -178,7 +171,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
-        expect(queryByText('Ingen tilbakekreving')).not.toBeInTheDocument();
 
         await user.type(getByLabelText('Begrunn hvorfor beløpet er i behold'), 'begrunnelse');
         await user.click(
@@ -187,7 +179,8 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Ingen tilbakekreving')).toBeInTheDocument();
+        const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
+        expect(tilbakekrevdBeløp).toHaveValue('0');
 
         await user.click(
             getByRole('button', {
@@ -265,7 +258,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         ).toBeEnabled();
 
-        expect(queryByText('Ingen tilbakekreving')).not.toBeInTheDocument();
         expect(queryByLabelText('Angi beløp som skal tilbakekreves')).toBeInTheDocument();
 
         await user.click(

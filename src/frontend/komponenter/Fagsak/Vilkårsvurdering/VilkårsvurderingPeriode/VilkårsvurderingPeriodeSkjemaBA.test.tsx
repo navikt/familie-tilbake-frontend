@@ -96,19 +96,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         });
         const behandletPerioder = [lagVilkårsvurderingPeriodeSkjemaData()];
 
-        const {
-            getByLabelText,
-            getByRole,
-            getByText,
-            queryAllByText,
-            queryByLabelText,
-            queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(
-            lagBehandling(),
-            vilkårsvurderingPeriode,
-            false,
-            behandletPerioder
-        );
+        const { getByLabelText, getByRole, getByText, queryAllByText, queryByLabelText } =
+            renderVilkårsvurderingPeriodeSkjema(
+                lagBehandling(),
+                vilkårsvurderingPeriode,
+                false,
+                behandletPerioder
+            );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(getByText('Feilutbetalt beløp')).toBeInTheDocument();
@@ -191,7 +185,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
-        expect(queryByText('Ingen tilbakekreving')).not.toBeInTheDocument();
 
         await user.type(getByLabelText('Begrunn hvorfor beløpet er i behold'), 'begrunnelse');
         await user.click(
@@ -200,7 +193,8 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Ingen tilbakekreving')).toBeInTheDocument();
+        const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
+        expect(tilbakekrevdBeløp).toHaveValue('0');
 
         await user.click(
             getByRole('button', {
@@ -245,7 +239,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByText('Ingen tilbakekreving')).not.toBeInTheDocument();
         expect(queryByLabelText('Angi beløp som skal tilbakekreves')).toBeInTheDocument();
 
         await user.click(

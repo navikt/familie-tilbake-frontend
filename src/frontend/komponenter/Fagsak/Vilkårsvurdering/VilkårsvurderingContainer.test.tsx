@@ -343,7 +343,9 @@ describe('VilkårsvurderingContainer', () => {
                 name: 'Nei',
             })
         ).toBeChecked();
-        expect(getByText('Ingen tilbakekreving')).toBeInTheDocument();
+
+        const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
+        expect(tilbakekrevdBeløp).toHaveValue('0');
 
         await user.click(
             getByRole('button', {
@@ -432,8 +434,8 @@ describe('VilkårsvurderingContainer', () => {
             'Begrunnelse god tro 2'
         );
         expect(getByLabelText('Nei')).toBeChecked();
-        expect(getByText('Ingen tilbakekreving')).toBeInTheDocument();
-
+        const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
+        expect(tilbakekrevdBeløp).toHaveValue('0');
         await user.click(
             getByRole('button', {
                 name: 'Forrige periode',
