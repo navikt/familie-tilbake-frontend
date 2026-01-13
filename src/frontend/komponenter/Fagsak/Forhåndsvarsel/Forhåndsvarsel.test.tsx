@@ -129,6 +129,18 @@ describe('Forhåndsvarsel', () => {
         expect(await screen.findByText(/Opprett forhåndsvarsel/)).toBeInTheDocument();
     });
 
+    test('Viser forhåndsvisning knapp når Ja er valgt og fritekst er fyllt ut', async () => {
+        renderForhåndsvarsel();
+
+        fireEvent.click(screen.getByLabelText('Ja'));
+
+        expect(await screen.findByText(/Opprett forhåndsvarsel/)).toBeInTheDocument();
+        const fritekstFelt = screen.getByLabelText(/Legg til utdypende tekst/i);
+        fireEvent.change(fritekstFelt, { target: { value: 'Dette er en fritekst' } });
+
+        expect(await screen.findByRole('button', { name: 'Forhåndsvis' })).toBeInTheDocument();
+    });
+
     test('Viser skjema for unntak når Nei er valgt', () => {
         renderForhåndsvarsel();
 

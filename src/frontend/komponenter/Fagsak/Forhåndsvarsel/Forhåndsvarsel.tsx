@@ -1,11 +1,11 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
-import type { ForhåndsvarselDto } from '../../../generated';
-import type { BehandlingDto } from '../../../generated';
+import type { ForhåndsvarselDto, RessursByte, BehandlingDto } from '../../../generated';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MegaphoneIcon } from '@navikt/aksel-icons';
-import { Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
+import { FilePdfIcon, MegaphoneIcon } from '@navikt/aksel-icons';
+import { Button, Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -34,6 +34,7 @@ import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { updateParentBounds } from '../../../utils/updateParentBounds';
 import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
 import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
+import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
@@ -49,45 +50,155 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
     const { forhåndsvarselInfo } = useForhåndsvarselQueries(behandling);
+    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling);
+    const [showModal, setShowModal] = useState(false);
+    const queryClient = useQueryClient();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [parentBounds, setParentBounds] = useState({ width: 'auto' });
+
+    const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
+
+    const methods = useForm<ForhåndsvarselFormData>({
+        resolver: zodResolver(forhåndsvarselSchema),
+        mode: 'all',
+        defaultValues: getDefaultValues(varselErSendt, forhåndsvarselInfo),
+    });
+
+    const fritekst = useWatch({
+        control: methods.control,
+        name: 'fritekst',
+    });
+
+    const skalSendesForhåndsvarsel = useWatch({
+        control: methods.control,
+        name: 'skalSendesForhåndsvarsel',
+    });
+
+    const handleMutationSuccess = useEffectEvent(
+        (isSuccess: boolean, data: RessursByte | undefined) => {
+            if (isSuccess && data) {
+                const currentQueryKey = [
+                    'forhåndsvisBrev',
+                    behandling.behandlingId,
+                    'VARSEL',
+                    fritekst,
+                ];
+                queryClient.setQueryData(currentQueryKey, data);
+                setShowModal(true);
+            }
+        }
+    );
+
+    useLayoutEffect(() => {
+        updateParentBounds(containerRef, setParentBounds);
+        window.addEventListener('resize', () => updateParentBounds(containerRef, setParentBounds));
+
+        return (): void =>
+            window.removeEventListener('resize', () =>
+                updateParentBounds(containerRef, setParentBounds)
+            );
+    }, []);
+
+    useEffect(() => {
+        handleMutationSuccess(forhåndsvisning.isSuccess, forhåndsvisning.data);
+    }, [forhåndsvisning.isSuccess, forhåndsvisning.data]);
+
+    const seForhåndsvisningWithModal = (): void => {
+        const currentQueryKey = ['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst];
+
+        const cachedData = queryClient.getQueryData(currentQueryKey);
+
+        if (cachedData) {
+            setShowModal(true);
+        } else {
+            seForhåndsvisning(fritekst);
+        }
+    };
+
+    const pdfData =
+        forhåndsvisning.data ||
+        queryClient.getQueryData(['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst]);
 
     return (
-        <VStack gap="4">
-            <HStack align="center" justify="space-between">
-                <Heading size="small">Forhåndsvarsel</Heading>
-                {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
-                    <Tooltip
-                        arrow={false}
-                        placement="bottom"
-                        content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
-                    >
-                        <Tag
-                            variant={getTagVariant(
-                                forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid
-                            )}
-                            icon={<MegaphoneIcon aria-hidden />}
+        <FormProvider {...methods}>
+            <VStack gap="4">
+                <HStack align="center" justify="space-between">
+                    <Heading size="small">Forhåndsvarsel</Heading>
+                    {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
+                        <Tooltip
+                            arrow={false}
+                            placement="bottom"
+                            content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
                         >
-                            {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
-                        </Tag>
-                    </Tooltip>
+                            <Tag
+                                variant={getTagVariant(
+                                    forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid
+                                )}
+                                icon={<MegaphoneIcon aria-hidden />}
+                            >
+                                {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
+                            </Tag>
+                        </Tooltip>
+                    )}
+                    {fritekst && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && (
+                        <Button
+                            type="button"
+                            loading={forhåndsvisning.isPending}
+                            icon={<FilePdfIcon aria-hidden />}
+                            variant="tertiary"
+                            size="small"
+                            onClick={seForhåndsvisningWithModal}
+                        >
+                            Forhåndsvis
+                        </Button>
+                    )}
+                </HStack>
+                <ForhåndsvarselSkjema
+                    behandling={behandling}
+                    forhåndsvarselInfo={forhåndsvarselInfo}
+                    skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
+                    parentBounds={parentBounds}
+                />
+                {forhåndsvisning.error && (
+                    <FixedAlert
+                        aria-live="assertive"
+                        variant="error"
+                        closeButton
+                        width={parentBounds.width}
+                        onClose={forhåndsvisning.reset}
+                    >
+                        <Heading spacing size="small" level="3">
+                            Forhåndsvisning feilet
+                        </Heading>
+                        {forhåndsvisning.error.message}
+                    </FixedAlert>
                 )}
-            </HStack>
-            <ForhåndsvarselSkjema behandling={behandling} forhåndsvarselInfo={forhåndsvarselInfo} />
-        </VStack>
+                {showModal && pdfData && (
+                    <PdfVisningModal
+                        åpen
+                        pdfdata={pdfData}
+                        onRequestClose={() => setShowModal(false)}
+                    />
+                )}
+            </VStack>
+        </FormProvider>
     );
 };
 
 type ForhåndsvarselSkjemaProps = {
     behandling: BehandlingDto;
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
+    skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
+    parentBounds: { width: string | undefined };
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     behandling,
     forhåndsvarselInfo,
+    skalSendesForhåndsvarsel,
+    parentBounds,
 }) => {
-    const containerRef = useRef<HTMLDivElement>(null);
     const { toggles } = useToggles();
-    const [parentBounds, setParentBounds] = useState({ width: 'auto' });
     const { actionBarStegtekst } = useBehandling();
 
     const {
@@ -114,11 +225,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
 
-    const methods = useForm<ForhåndsvarselFormData>({
-        resolver: zodResolver(forhåndsvarselSchema),
-        mode: 'all',
-        defaultValues: getDefaultValues(varselErSendt, forhåndsvarselInfo),
-    });
     const uttalelseMethods = useForm<UttalelseMedFristFormData>({
         resolver: zodResolver(uttalelseMedFristSchema),
         mode: 'all',
@@ -141,21 +247,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     useEffect(() => {
         getOppdatertUttalelseValues(harUttaltSeg);
     }, [harUttaltSeg]);
-
-    useLayoutEffect(() => {
-        updateParentBounds(containerRef, setParentBounds);
-        window.addEventListener('resize', () => updateParentBounds(containerRef, setParentBounds));
-
-        return (): void =>
-            window.removeEventListener('resize', () =>
-                updateParentBounds(containerRef, setParentBounds)
-            );
-    }, []);
-
-    const skalSendesForhåndsvarsel = useWatch({
-        control: methods.control,
-        name: 'skalSendesForhåndsvarsel',
-    });
 
     const getNesteKnappTekst = (): string => {
         if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
@@ -202,16 +293,13 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     return (
         <>
-            <FormProvider {...methods}>
-                <OpprettSkjema
-                    behandling={behandling}
-                    varselbrevtekster={varselbrevtekster}
-                    varselErSendt={varselErSendt}
-                    parentBounds={parentBounds}
-                    handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
-                    readOnly={!!forhåndsvarselInfo?.forhåndsvarselUnntak}
-                />
-            </FormProvider>
+            <OpprettSkjema
+                behandling={behandling}
+                varselbrevtekster={varselbrevtekster}
+                varselErSendt={varselErSendt}
+                handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
+                readOnly={!!forhåndsvarselInfo?.forhåndsvarselUnntak}
+            />
 
             {toggles[ToggleName.Forhåndsvarselsteg] && varselErSendt && (
                 <FormProvider {...uttalelseMethods}>
