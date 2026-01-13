@@ -7,7 +7,7 @@ import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { type Skjema } from '../../../../../hooks/skjema';
 import { Aktsomhet } from '../../../../../kodeverk';
-import { formatCurrencyNoKr, isEmpty } from '../../../../../utils';
+import { formatCurrencyNoKr, isEmpty, isNumeric } from '../../../../../utils';
 import { useVilkårsvurdering } from '../../VilkårsvurderingContext';
 import {
     ANDELER,
@@ -62,7 +62,8 @@ const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => 
                                 </option>
                                 {ANDELER.map(andel => (
                                     <option key={andel} value={andel}>
-                                        {andel}%
+                                        {andel}
+                                        {isNumeric(andel) ? '%' : null}
                                     </option>
                                 ))}
                             </Select>
