@@ -219,7 +219,7 @@ describe('VilkårsvurderingPerioder', () => {
         await user.type(begrunnelseInput, 'Gyldig begrunnelse');
 
         await user.click(
-            getByLabelText('Mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })

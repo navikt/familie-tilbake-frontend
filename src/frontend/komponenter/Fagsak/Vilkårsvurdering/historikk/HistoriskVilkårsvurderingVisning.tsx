@@ -19,7 +19,7 @@ const vilkårsresultaterTekster: Record<Vilkårsresultat, string> = {
         'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
     [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
         'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
-    [Vilkårsresultat.GodTro]: 'Mottaker har mottatt beløpet i god tro',
+    [Vilkårsresultat.GodTro]: 'Mottaker har mottatt beløpet i aktsom god tro',
     [Vilkårsresultat.Udefinert]: 'Udefinert',
 };
 

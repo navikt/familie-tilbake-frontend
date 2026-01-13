@@ -306,7 +306,7 @@ describe('VilkårsvurderingContainer', () => {
             'Begrunnelse1'
         );
         await user.click(
-            getByLabelText('Mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -336,7 +336,7 @@ describe('VilkårsvurderingContainer', () => {
             `${perioder[0].begrunnelse}Begrunnelse1`
         );
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -428,7 +428,7 @@ describe('VilkårsvurderingContainer', () => {
             'Begrunnelse vilkår 2'
         );
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -494,7 +494,7 @@ describe('VilkårsvurderingContainer', () => {
             )
         ).toBeChecked();
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -533,7 +533,7 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText(andrePeriode, { selector: 'label' })).toBeInTheDocument();
         expect(getByText('Begrunnelse vilkår 2')).toBeInTheDocument();
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -625,7 +625,7 @@ describe('VilkårsvurderingContainer', () => {
             )
         ).not.toBeChecked();
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })

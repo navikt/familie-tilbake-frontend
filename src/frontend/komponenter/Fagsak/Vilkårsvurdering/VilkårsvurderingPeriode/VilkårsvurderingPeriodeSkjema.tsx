@@ -399,7 +399,8 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                                 gitt <strong>mangelfulle</strong> opplysninger (1. ledd, 2. punkt)
                             </Radio>
                             <Radio name="valgtVilkarResultatType" value={Vilkårsresultat.GodTro}>
-                                Mottaker har mottatt beløpet i god tro (1. ledd)
+                                Mottaker har mottatt beløpet i <strong>aktsom god tro</strong> (1.
+                                ledd)
                             </Radio>
                         </RadioGroup>
                         <Textarea

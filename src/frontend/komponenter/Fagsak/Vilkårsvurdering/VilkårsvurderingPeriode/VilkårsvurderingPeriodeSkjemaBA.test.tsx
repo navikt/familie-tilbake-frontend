@@ -132,7 +132,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             getByRole('radio', {
-                name: /mottaker har mottatt beløpet i god tro/i,
+                name: /Mottaker har mottatt beløpet i aktsom god tro/i,
             })
         ).toBeInTheDocument();
 
@@ -170,7 +170,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.click(
-            getByLabelText('Mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -226,7 +226,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             'begrunnelse'
         );
         await user.click(
-            getByLabelText('Mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -1046,7 +1046,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             'Gitt i god tro'
         );
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
