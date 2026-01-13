@@ -197,7 +197,9 @@ describe('VilkårsvurderingContainer', () => {
         );
 
         expect(
-            getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+            getByText(
+                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
         ).toBeInTheDocument();
         expect(
             queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
@@ -252,7 +254,9 @@ describe('VilkårsvurderingContainer', () => {
             getByLabelText('Mottaker burde forstått at utbetalingen skyldtes en feil')
         );
         expect(
-            getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+            getByText(
+                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
         ).toBeInTheDocument();
         await user.click(
             getByRole('radio', {
@@ -273,7 +277,7 @@ describe('VilkårsvurderingContainer', () => {
         );
         await user.click(getByTestId('harGrunnerTilReduksjon_Nei'));
 
-        expect(getByText('100 %')).toBeInTheDocument();
+        expect(getByText('100%')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -382,7 +386,7 @@ describe('VilkårsvurderingContainer', () => {
             ],
         });
         setupUseBehandlingApiMock(vilkårsvurderingResponse);
-        const { getByText, getByRole, getByLabelText, queryByLabelText } =
+        const { getByText, getByRole, getByLabelText, getByTestId } =
             renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
@@ -406,8 +410,7 @@ describe('VilkårsvurderingContainer', () => {
         );
         expect(getByLabelText('Mottaker forsto at utbetalingen skyldtes en feil')).toBeChecked();
 
-        expect(queryByLabelText('Nei')).not.toBeInTheDocument();
-        expect(getByText('Nei')).toBeInTheDocument();
+        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
 
         await user.click(
             getByRole('button', {

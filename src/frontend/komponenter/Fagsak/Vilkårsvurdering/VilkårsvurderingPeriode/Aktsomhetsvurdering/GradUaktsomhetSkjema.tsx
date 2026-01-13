@@ -3,14 +3,13 @@ import type {
     VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-import { Radio } from '@navikt/ds-react';
+import { Alert, Radio } from '@navikt/ds-react';
 import * as React from 'react';
 
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet } from '../../../../../kodeverk';
-import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
@@ -32,10 +31,11 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     <>
                         <HorisontalRadioGroup
                             id="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
-                            legend="Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?"
+                            legend="Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?"
                             readOnly={erLesevisning}
                             size="small"
                             className="w-105"
+                            marginbottom="0"
                             value={skjema.felter.tilbakekrevSmåbeløp.verdi}
                             error={
                                 ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr
@@ -58,13 +58,14 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                                 </Radio>
                             ))}
                         </HorisontalRadioGroup>
+
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA && (
                             <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
                         )}
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI && (
-                            <ArrowBox alignOffset={80}>
+                            <Alert variant="warning" className="w-105" size="small">
                                 Når 6. ledd anvendes må alle perioder behandles likt
-                            </ArrowBox>
+                            </Alert>
                         )}
                     </>
                 )}

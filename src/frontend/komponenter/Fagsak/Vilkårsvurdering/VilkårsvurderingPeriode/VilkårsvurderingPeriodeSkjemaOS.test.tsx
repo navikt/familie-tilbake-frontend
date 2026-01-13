@@ -363,8 +363,8 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('100 %')).toBeInTheDocument();
-        expect(getByText('Skal det tillegges renter?')).toBeInTheDocument();
+        expect(getByText('100%')).toBeInTheDocument();
+        expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
         expect(getByLabelText('Nei')).toBeInTheDocument();
         expect(getByLabelText('Ja')).toBeInTheDocument();
 
@@ -501,8 +501,8 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('100 %')).toBeInTheDocument();
-        expect(getByText('Skal det tillegges renter?')).toBeInTheDocument();
+        expect(getByText('100%')).toBeInTheDocument();
+        expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
         expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeInTheDocument();
         expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeInTheDocument();
         expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
@@ -534,22 +534,23 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('Feilaktig - forsto', async () => {
-        const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
-            <FagsakContext.Provider value={lagFagsak()}>
-                <BehandlingProvider>
-                    <VilkårsvurderingPeriodeSkjema
-                        behandling={lagBehandling()}
-                        periode={periode}
-                        behandletPerioder={[]}
-                        erTotalbeløpUnder4Rettsgebyr={false}
-                        erLesevisning={false}
-                        perioder={[periode]}
-                        pendingPeriode={undefined}
-                        settPendingPeriode={vi.fn()}
-                    />
-                </BehandlingProvider>
-            </FagsakContext.Provider>
-        );
+        const { getByLabelText, getByRole, getByText, queryAllByText, queryByText, getByTestId } =
+            render(
+                <FagsakContext.Provider value={lagFagsak()}>
+                    <BehandlingProvider>
+                        <VilkårsvurderingPeriodeSkjema
+                            behandling={lagBehandling()}
+                            periode={periode}
+                            behandletPerioder={[]}
+                            erTotalbeløpUnder4Rettsgebyr={false}
+                            erLesevisning={false}
+                            perioder={[periode]}
+                            pendingPeriode={undefined}
+                            settPendingPeriode={vi.fn()}
+                        />
+                    </BehandlingProvider>
+                </FagsakContext.Provider>
+            );
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
 
@@ -600,9 +601,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         ).toBeEnabled();
 
         expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('100 %')).toBeInTheDocument();
-        expect(queryByText('Skal det tillegges renter?')).not.toBeInTheDocument();
-        expect(getByText('Det legges til 10 % renter')).toBeInTheDocument();
+        expect(getByText('100%')).toBeInTheDocument();
+        expect(queryByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
+        expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -691,7 +692,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('Skal det tillegges renter?')).toBeInTheDocument();
+        expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
         expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeInTheDocument();
 
         await user.click(
@@ -712,6 +713,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
+            getByTestId,
         } = render(
             <FagsakContext.Provider value={lagFagsak()}>
                 <BehandlingProvider>
@@ -809,8 +811,8 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(getByText('Angi andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('Skal det tillegges renter?')).toBeInTheDocument();
-        expect(getByLabelText('Nei')).toBeInTheDocument();
+        expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
+        expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeInTheDocument();
         expect(
             getByRole('combobox', {
                 name: 'Angi andel som skal tilbakekreves',
@@ -1017,7 +1019,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         ).toBeEnabled();
 
         expect(
-            queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+            queryByText(
+                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
         ).not.toBeInTheDocument();
 
         await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
@@ -1028,7 +1032,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(
-            queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+            queryByText(
+                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
         ).toBeInTheDocument();
 
         await user.click(
@@ -1066,7 +1072,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
         await user.click(getByTestId('harGrunnerTilReduksjon_Ja'));
 
-        expect(queryByText('Skal det tillegges renter?')).not.toBeInTheDocument();
+        expect(queryByText('Skal det beregnes 10% rentetillegg?')).not.toBeInTheDocument();
         expect(
             getByRole('combobox', {
                 name: 'Angi andel som skal tilbakekreves',
@@ -1156,7 +1162,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         ).toBeEnabled();
 
         expect(
-            queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+            queryByText(
+                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
         ).toBeInTheDocument();
         expect(
             queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
@@ -1196,8 +1204,8 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.click(getByTestId('harGrunnerTilReduksjon_Nei'));
 
         expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('100 %')).toBeInTheDocument();
-        expect(queryByText('Skal det tillegges renter?')).not.toBeInTheDocument();
+        expect(getByText('100%')).toBeInTheDocument();
+        expect(queryByText('Skal det beregnes 10% rentetillegg?')).not.toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -1266,7 +1274,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         ).toBeEnabled();
 
         expect(
-            queryByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+            queryByText(
+                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
         ).toBeInTheDocument();
         expect(
             queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
@@ -1399,7 +1409,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
         expect(getByLabelText('Uaktsomt')).toBeChecked();
         expect(
-            getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+            getByText(
+                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
         ).toBeInTheDocument();
         expect(getByTestId('tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Ja')).toBeChecked();
         expect(getByLabelText('Begrunn resultatet av vurderingen ovenfor')).toHaveValue(

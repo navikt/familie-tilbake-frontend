@@ -1,4 +1,4 @@
-import { Checkbox, CheckboxGroup, Radio, Textarea, VStack } from '@navikt/ds-react';
+import { Checkbox, CheckboxGroup, Radio, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
 import {
@@ -32,7 +32,7 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
         skjema.visFeilmeldinger &&
         skjema.felter.harGrunnerTilReduksjon.valideringsstatus === Valideringsstatus.Feil;
     return (
-        <VStack gap="6">
+        <>
             <CheckboxGroup
                 {...skjema.felter.særligeGrunner.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                 size="small"
@@ -120,7 +120,7 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                 }}
             />
             <ReduksjonAvBeløpSkjema skjema={skjema} erLesevisning={erLesevisning} />
-        </VStack>
+        </>
     );
 };
 

@@ -33,9 +33,9 @@ export const vilkårsresultatTyper = [
 ];
 
 export enum Aktsomhet {
-    Forsettlig = 'FORSETTLIG',
-    GrovtUaktsomt = 'GROVT_UAKTSOMT',
-    Uaktsomt = 'UAKTSOMT',
+    Forsettlig = 'FORSETT',
+    GrovtUaktsomt = 'GROV_UAKTSOMHET',
+    Uaktsomt = 'SIMPEL_UAKTSOMHET',
 }
 
 export const aktsomheter: Record<Aktsomhet, string> = {
