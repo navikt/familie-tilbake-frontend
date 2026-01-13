@@ -90,7 +90,7 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
                                 type={type}
                                 size="small"
                                 form={formId}
-                                loading={isLoading || disableNeste}
+                                loading={isLoading}
                                 onClick={() => {
                                     if (onNeste && type !== 'submit') onNeste();
                                 }}
