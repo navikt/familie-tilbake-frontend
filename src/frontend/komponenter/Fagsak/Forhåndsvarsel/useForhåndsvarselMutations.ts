@@ -240,7 +240,7 @@ export const useForhåndsvarselMutations = (
                 body: {
                     behandlingId: behandling.behandlingId,
                     brevmalkode: 'VARSEL',
-                    fritekst,
+                    fritekst: fritekst || '',
                 },
             });
         },
