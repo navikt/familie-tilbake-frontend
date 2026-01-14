@@ -36,7 +36,6 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
             <CheckboxGroup
                 {...skjema.felter.særligeGrunner.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                 size="small"
-                className="w-105"
                 legend="Hvilke særlige grunner kan være aktuelle i denne saken?"
                 onChange={(val: SærligeGrunner[]) => onChangeSærligeGrunner(val)}
                 value={skjema.felter.særligeGrunner.verdi}
@@ -59,7 +58,6 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     maxLength={3000}
                     size="small"
                     resize
-                    className="w-105"
                     readOnly={erLesevisning}
                     value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
                     onChange={event => {
@@ -77,7 +75,6 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                 legend="Skal særlige grunner redusere beløpet?"
                 readOnly={erLesevisning}
                 size="small"
-                className="w-105"
                 marginbottom="0"
                 value={skjema.felter.harGrunnerTilReduksjon.verdi}
                 error={
@@ -111,7 +108,6 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                 maxLength={3000}
                 size="small"
                 resize
-                className="w-105"
                 readOnly={erLesevisning}
                 value={skjema.felter.særligeGrunnerBegrunnelse.verdi}
                 onChange={event => {

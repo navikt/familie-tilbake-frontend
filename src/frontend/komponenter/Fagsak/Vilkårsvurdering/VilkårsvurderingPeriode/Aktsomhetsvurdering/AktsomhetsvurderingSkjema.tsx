@@ -29,7 +29,6 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
                 id="handletUaktsomhetGrad"
                 readOnly={erLesevisning}
                 size="small"
-                className="w-105"
                 legend={
                     erForstodBurdeForstått
                         ? 'Vurder mottakers grad av aktsomhet'
@@ -117,7 +116,6 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
                     settIkkePersistertKomponent('vilkårsvurdering');
                 }}
                 maxLength={3000}
-                className="w-105"
             />
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&
                 (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig ? (

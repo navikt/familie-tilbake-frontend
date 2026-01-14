@@ -17,6 +17,7 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
+import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { differenceInMonths, parseISO } from 'date-fns';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -315,7 +316,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     )}
                 </Stack>
             </HGrid>
-            <VStack gap="6">
+            <VStack gap="6" maxWidth={ATextWidthMax}>
                 <PeriodeOppsummering
                     fom={periode.periode.fom}
                     tom={periode.periode.tom}
@@ -363,7 +364,6 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         <RadioGroup
                             id="valgtVilkarResultatType"
                             size="small"
-                            className="w-105"
                             readOnly={erLesevisning}
                             legend="Velg det vilkåret i Folketrygdloven §22-15 som gjelder for perioden "
                             value={skjema.felter.vilkårsresultatvurdering.verdi}
@@ -410,7 +410,6 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                             name="vilkårsresultatBegrunnelse"
                             label="Begrunn hvorfor du valgte vilkåret ovenfor"
                             size="small"
-                            className="w-105"
                             resize
                             description="Beskriv hvem og hva som forårsaket feilutbetalingen"
                             maxLength={3000}

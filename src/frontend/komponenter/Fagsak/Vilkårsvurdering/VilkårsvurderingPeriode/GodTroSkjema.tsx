@@ -58,7 +58,6 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                 readOnly={erLesevisning}
                 size="small"
                 resize
-                className="w-105"
                 value={
                     skjema.felter.aktsomhetBegrunnelse
                         ? skjema.felter.aktsomhetBegrunnelse.verdi
