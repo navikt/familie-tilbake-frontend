@@ -89,7 +89,7 @@ export const FaktaSkjema = ({
         datepickerProps,
         inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
     } = useDatepicker({
-        onDateChange: date => {
+        onDateChange: async date => {
             if (date) {
                 methods.setValue(
                     'vurdering.oppdaget.dato',
@@ -99,6 +99,7 @@ export const FaktaSkjema = ({
             } else {
                 methods.setValue('vurdering.oppdaget.dato', '', { shouldDirty: true });
             }
+            await methods.trigger('vurdering.oppdaget.dato');
         },
         defaultSelected: faktaOmFeilutbetaling.vurdering.oppdaget?.dato
             ? parseISO(faktaOmFeilutbetaling.vurdering.oppdaget.dato)
