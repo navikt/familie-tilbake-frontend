@@ -86,5 +86,5 @@ export default defineConfig(
             },
         },
     },
-    [globalIgnores(['src/frontend/generated/'])]
+    [globalIgnores(['src/frontend/generated/', 'src/frontend/generated-new/'])]
 );

@@ -7,8 +7,8 @@ import * as React from 'react';
 
 import { FaktaSkeleton } from './FaktaSkeleton';
 import { FaktaSkjema } from './FaktaSkjema';
-import { fakta } from '../../../generated';
-import { oppdaterFaktaMutation } from '../../../generated/@tanstack/react-query.gen';
+import { fakta } from '../../../generated-new';
+import { oppdaterFaktaMutation } from '../../../generated-new/@tanstack/react-query.gen';
 import { formatterDatostring } from '../../../utils';
 
 type Props = {

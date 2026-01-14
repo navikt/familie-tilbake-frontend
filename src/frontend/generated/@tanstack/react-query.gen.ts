@@ -15,7 +15,6 @@ import {
     byttEnhet,
     erPerioderLike,
     erPerioderSammenslått,
-    fakta,
     featureToggles,
     ferdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgave,
     ferdigstillOppgaverForBehandling,
@@ -65,7 +64,6 @@ import {
     leggTilBrevmottaker,
     migrerAlleSaker,
     oppdaterBehandlendeEnhetPåBehandling,
-    oppdaterFakta,
     oppdaterManuellBrevmottaker,
     opprettBehandling,
     opprettBehandlingManuellTask,
@@ -105,9 +103,6 @@ import type {
     ErPerioderLikeResponse,
     ErPerioderSammenslåttData,
     ErPerioderSammenslåttResponse,
-    FaktaData,
-    FaktaError,
-    FaktaResponse,
     FeatureTogglesData,
     FeatureTogglesResponse,
     FerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveData,
@@ -200,9 +195,6 @@ import type {
     MigrerAlleSakerData,
     OppdaterBehandlendeEnhetPåBehandlingData,
     OppdaterBehandlendeEnhetPåBehandlingResponse,
-    OppdaterFaktaData,
-    OppdaterFaktaError,
-    OppdaterFaktaResponse,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponse,
     OpprettBehandlingData,
@@ -1517,51 +1509,6 @@ export const opprettBehandlingManuellTaskMutation = (
     > = {
         mutationFn: async fnOptions => {
             const { data } = await opprettBehandlingManuellTask({
-                ...options,
-                ...fnOptions,
-                throwOnError: true,
-            });
-            return data;
-        },
-    };
-    return mutationOptions;
-};
-
-export const faktaQueryKey = (options: Options<FaktaData>) => createQueryKey('fakta', options);
-
-export const faktaOptions = (options: Options<FaktaData>) =>
-    queryOptions<
-        FaktaResponse,
-        AxiosError<FaktaError>,
-        FaktaResponse,
-        ReturnType<typeof faktaQueryKey>
-    >({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await fakta({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true,
-            });
-            return data;
-        },
-        queryKey: faktaQueryKey(options),
-    });
-
-export const oppdaterFaktaMutation = (
-    options?: Partial<Options<OppdaterFaktaData>>
-): UseMutationOptions<
-    OppdaterFaktaResponse,
-    AxiosError<OppdaterFaktaError>,
-    Options<OppdaterFaktaData>
-> => {
-    const mutationOptions: UseMutationOptions<
-        OppdaterFaktaResponse,
-        AxiosError<OppdaterFaktaError>,
-        Options<OppdaterFaktaData>
-    > = {
-        mutationFn: async fnOptions => {
-            const { data } = await oppdaterFakta({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,
