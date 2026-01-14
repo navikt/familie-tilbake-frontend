@@ -339,85 +339,6 @@ export type OpprettManueltTilbakekrevingRequest = {
     eksternId: string;
 };
 
-export type BestemmelseEllerGrunnlagDto = {
-    nøkkel: string;
-    beskrivelse: string;
-};
-
-export type FaktaOmFeilutbetalingDto = {
-    feilutbetaling: FeilutbetalingDto;
-    tidligereVarsletBeløp: number;
-    muligeRettsligGrunnlag: Array<MuligeRettsligGrunnlagDto>;
-    perioder: Array<FaktaPeriodeDto>;
-    vurdering: VurderingDto;
-    ferdigvurdert: boolean;
-};
-
-export type FaktaPeriodeDto = {
-    id: string;
-    fom: string;
-    tom: string;
-    feilutbetaltBeløp: number;
-    splittbarePerioder: Array<FaktaPeriodeSplittbarePerioderInnerDto>;
-    rettsligGrunnlag: Array<RettsligGrunnlagDto>;
-};
-
-export type FaktaPeriodeSplittbarePerioderInnerDto = {
-    id: string;
-    fom: string;
-    tom: string;
-    feilutbetaltBeløp: number;
-    rettsligGrunnlag: Array<RettsligGrunnlagDto>;
-};
-
-export type FeilutbetalingDto = {
-    beløp: number;
-    fom: string;
-    tom: string;
-    revurdering: RevurderingDto;
-};
-
-export type MuligeRettsligGrunnlagDto = {
-    bestemmelse: BestemmelseEllerGrunnlagDto;
-    grunnlag: Array<BestemmelseEllerGrunnlagDto>;
-};
-
-export type OppdagetDto = {
-    dato: string;
-    av: AvEnum;
-    beskrivelse: string;
-};
-
-export type RettsligGrunnlagDto = {
-    bestemmelse: string;
-    grunnlag: string;
-};
-
-export type RevurderingDto = {
-    årsak: string;
-    vedtaksdato: string;
-    resultat: ResultatEnum;
-};
-
-export type VurderingDto = {
-    årsak?: string;
-    oppdaget?: OppdagetDto;
-};
-
-export type ErrorDto = {
-    message: string;
-};
-
-export type OppdaterFaktaOmFeilutbetalingDto = {
-    perioder?: Array<OppdaterFaktaPeriodeDto>;
-    vurdering?: VurderingDto;
-};
-
-export type OppdaterFaktaPeriodeDto = {
-    id: string;
-    rettsligGrunnlag: Array<RettsligGrunnlagDto>;
-};
-
 export type KanBehandlingOpprettesManueltRespons = {
     kanBehandlingOpprettes: boolean;
     melding: string;
@@ -582,7 +503,7 @@ export type Behandling = {
     type: BehandlingstypeEnum;
     status: BehandlingstatusEnum;
     vedtaksdato?: string;
-    resultat?: ResultatEnum2;
+    resultat?: ResultatEnum;
 };
 
 export type RessursListBehandling = {
@@ -1261,10 +1182,6 @@ export type GetårsakstypeEnum =
     | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
     | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
 
-export type AvEnum = 'NAV' | 'BRUKER' | 'IKKE_VURDERT';
-
-export type ResultatEnum = 'INNVILGET' | 'OPPHØRT';
-
 export type BehandlingstatusEnum =
     | 'AVSLUTTET'
     | 'FATTER_VEDTAK'
@@ -1276,7 +1193,7 @@ export type FagsystemTypeEnum = 'TILBAKEKREVING';
 
 export type KjønnEnum = 'MANN' | 'KVINNE' | 'UKJENT';
 
-export type ResultatEnum2 =
+export type ResultatEnum =
     | 'INGEN_TILBAKEBETALING'
     | 'DELVIS_TILBAKEBETALING'
     | 'FULL_TILBAKEBETALING'
@@ -2181,68 +2098,6 @@ export type OpprettBehandlingManuellTaskResponses = {
 
 export type OpprettBehandlingManuellTaskResponse =
     OpprettBehandlingManuellTaskResponses[keyof OpprettBehandlingManuellTaskResponses];
-
-export type FaktaData = {
-    body?: never;
-    path: {
-        behandlingId: string;
-    };
-    query?: never;
-    url: '/api/v1/behandling/{behandlingId}/feilutbetaling';
-};
-
-export type FaktaErrors = {
-    /**
-     * The server could not understand the request due to invalid syntax.
-     */
-    400: ErrorDto;
-    /**
-     * Server error
-     */
-    500: ErrorDto;
-};
-
-export type FaktaError = FaktaErrors[keyof FaktaErrors];
-
-export type FaktaResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: FaktaOmFeilutbetalingDto;
-};
-
-export type FaktaResponse = FaktaResponses[keyof FaktaResponses];
-
-export type OppdaterFaktaData = {
-    body: OppdaterFaktaOmFeilutbetalingDto;
-    path: {
-        behandlingId: string;
-    };
-    query?: never;
-    url: '/api/v1/behandling/{behandlingId}/feilutbetaling';
-};
-
-export type OppdaterFaktaErrors = {
-    /**
-     * The server could not understand the request due to invalid syntax.
-     */
-    400: ErrorDto;
-    /**
-     * Server error
-     */
-    500: ErrorDto;
-};
-
-export type OppdaterFaktaError = OppdaterFaktaErrors[keyof OppdaterFaktaErrors];
-
-export type OppdaterFaktaResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: FaktaOmFeilutbetalingDto;
-};
-
-export type OppdaterFaktaResponse = OppdaterFaktaResponses[keyof OppdaterFaktaResponses];
 
 export type KanBehandlingOpprettesManueltData = {
     body?: never;
