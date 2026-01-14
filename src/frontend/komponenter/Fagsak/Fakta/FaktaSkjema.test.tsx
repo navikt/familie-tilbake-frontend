@@ -416,7 +416,7 @@ describe('Fakta om feilutbetaling', () => {
             const submitKnapp = await findByRole('button', {
                 name: 'Gå videre til foreldelsessteget',
             });
-            expect(submitKnapp).toHaveAttribute('type', 'submit');
+            expect(submitKnapp).toHaveAttribute('type', 'button');
             expect(submitKnapp).toHaveTextContent('Neste');
         });
     });
