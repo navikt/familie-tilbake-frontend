@@ -28,21 +28,16 @@ vi.mock('react-router', () => ({
     useLocation: (): Location => mockUseLocation(),
 }));
 
-const createMockBehandling = (overrides: Record<string, unknown> = {}): BehandlingDto => {
-    const baseBehandling = lagBehandling({
+const createMockBehandling = (overrides: Record<string, unknown> = {}): BehandlingDto =>
+    lagBehandling({
         eksternBrukId: '456',
         behandlingId: '123',
         behandlingsstegsinfo: [lagFaktaSteg(), lagForeldelseSteg(), lagVilkårsvurderingSteg()],
         ...overrides,
     });
-    // Cast to BehandlingDto since the test data factory returns compatible structure
-    return baseBehandling as unknown as BehandlingDto;
-};
 
 const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): RenderResult => {
     const queryClient = createTestQueryClient();
-
-    // Pre-populate the query cache with mock data - wrapped in response object
     queryClient.setQueryData(['hentBehandling', { path: { behandlingId: '123' } }], {
         data: behandling,
     });
