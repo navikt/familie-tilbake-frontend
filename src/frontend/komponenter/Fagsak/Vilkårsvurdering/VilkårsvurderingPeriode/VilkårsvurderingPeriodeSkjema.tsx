@@ -443,6 +443,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         variant="secondary"
                         onClick={() => handleNavigering(PeriodeHandling.ForrigePeriode)}
                         loading={sendInnSkjemaMutation.isPending}
+                        aria-live="polite"
                         size="small"
                         className="py-2"
                     >
@@ -453,6 +454,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     <Button
                         onClick={() => handleNavigering(PeriodeHandling.NestePeriode)}
                         loading={sendInnSkjemaMutation.isPending}
+                        aria-live="polite"
                         size="small"
                         className="py-2"
                     >

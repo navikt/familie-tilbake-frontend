@@ -32,6 +32,7 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                 id="erBelopetIBehold"
                 readOnly={erLesevisning}
                 size="small"
+                aria-live="polite"
                 legend="Er beløpet i behold?"
                 marginbottom="0"
                 value={skjema.felter.erBeløpetIBehold.verdi}
@@ -55,6 +56,7 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                 {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
                 name="vurderingBegrunnelse"
                 label="Begrunn hvorfor beløpet er i behold"
+                aria-live="polite"
                 readOnly={erLesevisning}
                 size="small"
                 resize
@@ -77,6 +79,7 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     id="tilbakekrevdBelop"
                     label="Angi beløp som skal tilbakekreves"
                     readOnly={erLesevisning}
+                    aria-live="polite"
                     size="small"
                     onChange={event => {
                         skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
@@ -93,6 +96,7 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     id="ingenTilbakekrevdBelop"
                     label="Beløp som skal tilbakekreves"
                     readOnly
+                    aria-live="polite"
                     size="small"
                     value={0}
                     style={{ width: '6rem' }}

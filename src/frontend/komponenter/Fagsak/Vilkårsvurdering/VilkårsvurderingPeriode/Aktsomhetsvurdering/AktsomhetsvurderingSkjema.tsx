@@ -29,6 +29,7 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
                 id="handletUaktsomhetGrad"
                 readOnly={erLesevisning}
                 size="small"
+                aria-live="polite"
                 legend={
                     erForstodBurdeForstått
                         ? 'Vurder mottakers grad av aktsomhet'
@@ -98,6 +99,7 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
             <Textarea
                 {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
                 name="vurderingBegrunnelse"
+                aria-live="polite"
                 label={
                     erForstodBurdeForstått
                         ? 'Begrunn hvorfor du valgte alternativet ovenfor'

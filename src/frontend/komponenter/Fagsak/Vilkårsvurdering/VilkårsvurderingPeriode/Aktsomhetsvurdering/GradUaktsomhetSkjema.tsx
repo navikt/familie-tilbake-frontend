@@ -33,6 +33,7 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                             id="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
                             legend="Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?"
                             readOnly={erLesevisning}
+                            aria-live="polite"
                             size="small"
                             marginbottom="0"
                             value={skjema.felter.tilbakekrevSmåbeløp.verdi}
@@ -59,10 +60,14 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                         </HorisontalRadioGroup>
 
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA && (
-                            <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
+                            <SærligeGrunnerSkjema
+                                skjema={skjema}
+                                erLesevisning={erLesevisning}
+                                aria-live="polite"
+                            />
                         )}
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI && (
-                            <Alert variant="warning" size="small">
+                            <Alert variant="warning" size="small" aria-live="polite">
                                 Når 6. ledd anvendes må alle perioder behandles likt
                             </Alert>
                         )}

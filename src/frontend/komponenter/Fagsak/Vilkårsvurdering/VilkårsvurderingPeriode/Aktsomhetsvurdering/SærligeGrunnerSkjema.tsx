@@ -40,6 +40,7 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                 onChange={(val: SærligeGrunner[]) => onChangeSærligeGrunner(val)}
                 value={skjema.felter.særligeGrunner.verdi}
                 readOnly={erLesevisning}
+                aria-live="polite"
             >
                 {særligeGrunnerTyper.map((type: SærligeGrunner) => (
                     <Checkbox key={type} value={type}>
@@ -58,6 +59,7 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     maxLength={3000}
                     size="small"
                     resize
+                    aria-live="polite"
                     readOnly={erLesevisning}
                     value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
                     onChange={event => {
@@ -75,6 +77,7 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                 legend="Skal særlige grunner redusere beløpet?"
                 readOnly={erLesevisning}
                 size="small"
+                aria-live="polite"
                 marginbottom="0"
                 value={skjema.felter.harGrunnerTilReduksjon.verdi}
                 error={
@@ -106,6 +109,7 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                 name="sarligGrunnerBegrunnelse"
                 label="Begrunn resultatet av vurderingen ovenfor"
                 maxLength={3000}
+                aria-live="polite"
                 size="small"
                 resize
                 readOnly={erLesevisning}

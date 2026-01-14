@@ -31,6 +31,7 @@ const TilleggesRenterRadioGroup: React.FC<Props> = ({
             legend="Skal det beregnes 10% rentetillegg?"
             value={value}
             size="small"
+            aria-live="polite"
             readOnly={readOnly || !kanIlleggeRenter}
             error={
                 visFeilmeldingerForSkjema &&

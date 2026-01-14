@@ -20,7 +20,13 @@ const GradForsettSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
 
     return (
         <>
-            <Select label="Andel som skal tilbakekreves" size="small" readOnly className="w-55">
+            <Select
+                label="Andel som skal tilbakekreves"
+                size="small"
+                readOnly
+                className="w-55"
+                aria-live="polite"
+            >
                 <option>100%</option>
             </Select>
             <TilleggesRenterRadioGroup

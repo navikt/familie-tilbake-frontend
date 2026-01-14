@@ -45,6 +45,7 @@ const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => 
                                 )}
                                 label="Angi andel som skal tilbakekreves"
                                 size="small"
+                                aria-live="polite"
                                 id="andelSomTilbakekreves"
                                 aria-label="Angi andel som skal tilbakekreves"
                                 readOnly={erLesevisning}
@@ -74,6 +75,7 @@ const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => 
                                 )}
                                 label="Angi andel som skal tilbakekreves i prosent"
                                 size="small"
+                                aria-live="polite"
                                 id="andelSomTilbakekrevesManuell"
                                 aria-label="Angi andel som skal tilbakekreves - fritekst"
                                 readOnly={erLesevisning}
@@ -97,6 +99,7 @@ const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => 
                             id="belopSomSkalTilbakekreves"
                             label="Angi beløp som skal tilbakekreves"
                             size="small"
+                            aria-live="polite"
                             readOnly={erLesevisning}
                             value={skjema.felter.uaktsomTilbakekrevesBeløp.verdi}
                             onChange={event => {
@@ -122,8 +125,10 @@ const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => 
                 <>
                     {harMerEnnEnAktivitet ? (
                         <>
-                            <Label size="small">Beløp som skal tilbakekreves</Label>
-                            <BodyShort size="small">
+                            <Label size="small" aria-live="polite">
+                                Beløp som skal tilbakekreves
+                            </Label>
+                            <BodyShort size="small" aria-live="polite">
                                 {formatCurrencyNoKr(valgtPeriode?.feilutbetaltBeløp)}
                             </BodyShort>
                         </>
@@ -131,6 +136,7 @@ const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => 
                         <Select
                             label="Andel som skal tilbakekreves"
                             size="small"
+                            aria-live="polite"
                             readOnly
                             className="w-65"
                         >
