@@ -1,12 +1,8 @@
+import type { UserConfig } from '@hey-api/openapi-ts';
+
 import { defineConfig } from '@hey-api/openapi-ts';
 
-export default defineConfig({
-    input: 'https://tilbakekreving-backend.intern.dev.nav.no/v3/api-docs',
-    output: {
-        path: 'src/frontend/generated',
-        format: 'prettier',
-        lint: 'eslint',
-    },
+const defaultConfig: Partial<UserConfig> = {
     parser: {
         transforms: {
             enums: 'root',
@@ -24,4 +20,25 @@ export default defineConfig({
             baseUrl: '/familie-tilbake',
         },
     ],
-});
+};
+
+export default defineConfig([
+    {
+        ...defaultConfig,
+        input: 'https://tilbakekreving-backend.intern.dev.nav.no/v3/api-docs',
+        output: {
+            path: 'src/frontend/generated',
+            format: 'prettier',
+            lint: 'eslint',
+        },
+    },
+    {
+        ...defaultConfig,
+        input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/74d0fae516f329aee9ed6906af23dd84b893656d/tsp-output/schema/openapi.yaml',
+        output: {
+            path: 'src/frontend/generated-new',
+            format: 'prettier',
+            lint: 'eslint',
+        },
+    },
+] as UserConfig[]);

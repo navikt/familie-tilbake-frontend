@@ -118,47 +118,6 @@ export const zVarsel = z.object({
     perioder: z.array(zPeriode).min(1).max(2147483647),
 });
 
-export const zBestemmelseEllerGrunnlagDto = z.object({
-    nøkkel: z.string(),
-    beskrivelse: z.string(),
-});
-
-export const zMuligeRettsligGrunnlagDto = z.object({
-    bestemmelse: zBestemmelseEllerGrunnlagDto,
-    grunnlag: z.array(zBestemmelseEllerGrunnlagDto),
-});
-
-export const zRettsligGrunnlagDto = z.object({
-    bestemmelse: z.string(),
-    grunnlag: z.string(),
-});
-
-export const zFaktaPeriodeSplittbarePerioderInnerDto = z.object({
-    id: z.string(),
-    fom: z.iso.date(),
-    tom: z.iso.date(),
-    feilutbetaltBeløp: z.int(),
-    rettsligGrunnlag: z.array(zRettsligGrunnlagDto),
-});
-
-export const zFaktaPeriodeDto = z.object({
-    id: z.string(),
-    fom: z.iso.date(),
-    tom: z.iso.date(),
-    feilutbetaltBeløp: z.int(),
-    splittbarePerioder: z.array(zFaktaPeriodeSplittbarePerioderInnerDto),
-    rettsligGrunnlag: z.array(zRettsligGrunnlagDto),
-});
-
-export const zErrorDto = z.object({
-    message: z.string(),
-});
-
-export const zOppdaterFaktaPeriodeDto = z.object({
-    id: z.string(),
-    rettsligGrunnlag: z.array(zRettsligGrunnlagDto).min(1).max(2147483647),
-});
-
 export const zKanBehandlingOpprettesManueltRespons = z.object({
     kanBehandlingOpprettes: z.boolean(),
     melding: z.string(),
@@ -1039,48 +998,6 @@ export const zOpprettRevurderingDto = z.object({
     getårsakstype: zGetårsakstypeEnum,
 });
 
-export const zAvEnum = z.enum(['NAV', 'BRUKER', 'IKKE_VURDERT']);
-
-export const zOppdagetDto = z.object({
-    dato: z.iso.date(),
-    av: zAvEnum,
-    beskrivelse: z.string(),
-});
-
-export const zVurderingDto = z.object({
-    årsak: z.optional(z.string().min(3).max(3000)),
-    oppdaget: z.optional(zOppdagetDto),
-});
-
-export const zOppdaterFaktaOmFeilutbetalingDto = z.object({
-    perioder: z.optional(z.array(zOppdaterFaktaPeriodeDto)),
-    vurdering: z.optional(zVurderingDto),
-});
-
-export const zResultatEnum = z.enum(['INNVILGET', 'OPPHØRT']);
-
-export const zRevurderingDto = z.object({
-    årsak: z.string(),
-    vedtaksdato: z.iso.date(),
-    resultat: zResultatEnum,
-});
-
-export const zFeilutbetalingDto = z.object({
-    beløp: z.int(),
-    fom: z.iso.date(),
-    tom: z.iso.date(),
-    revurdering: zRevurderingDto,
-});
-
-export const zFaktaOmFeilutbetalingDto = z.object({
-    feilutbetaling: zFeilutbetalingDto,
-    tidligereVarsletBeløp: z.int(),
-    muligeRettsligGrunnlag: z.array(zMuligeRettsligGrunnlagDto),
-    perioder: z.array(zFaktaPeriodeDto),
-    vurdering: zVurderingDto,
-    ferdigvurdert: z.boolean(),
-});
-
 export const zBehandlingstatusEnum = z.enum([
     'AVSLUTTET',
     'FATTER_VEDTAK',
@@ -1161,7 +1078,7 @@ export const zRessursFagsakDto = z.object({
     stacktrace: z.optional(z.string()),
 });
 
-export const zResultatEnum2 = z.enum([
+export const zResultatEnum = z.enum([
     'INGEN_TILBAKEBETALING',
     'DELVIS_TILBAKEBETALING',
     'FULL_TILBAKEBETALING',
@@ -1176,7 +1093,7 @@ export const zBehandling = z.object({
     type: zBehandlingstypeEnum,
     status: zBehandlingstatusEnum,
     vedtaksdato: z.optional(z.iso.datetime()),
-    resultat: z.optional(zResultatEnum2),
+    resultat: z.optional(zResultatEnum),
 });
 
 export const zRessursListBehandling = z.object({
@@ -1932,32 +1849,6 @@ export const zOpprettBehandlingManuellTaskData = z.object({
  * OK
  */
 export const zOpprettBehandlingManuellTaskResponse = zRessursString;
-
-export const zFaktaData = z.object({
-    body: z.optional(z.never()),
-    path: z.object({
-        behandlingId: z.string(),
-    }),
-    query: z.optional(z.never()),
-});
-
-/**
- * The request has succeeded.
- */
-export const zFaktaResponse = zFaktaOmFeilutbetalingDto;
-
-export const zOppdaterFaktaData = z.object({
-    body: zOppdaterFaktaOmFeilutbetalingDto,
-    path: z.object({
-        behandlingId: z.string(),
-    }),
-    query: z.optional(z.never()),
-});
-
-/**
- * The request has succeeded.
- */
-export const zOppdaterFaktaResponse = zFaktaOmFeilutbetalingDto;
 
 export const zKanBehandlingOpprettesManueltData = z.object({
     body: z.optional(z.never()),
