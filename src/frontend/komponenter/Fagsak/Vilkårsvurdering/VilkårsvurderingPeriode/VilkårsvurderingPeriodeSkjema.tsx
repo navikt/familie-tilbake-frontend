@@ -381,8 +381,8 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                                 name="valgtVilkarResultatType"
                                 value={Vilkårsresultat.ForstoBurdeForstått}
                             >
-                                Mottaker forsto eller burde forstått at utbetalingen skyldtes en
-                                feil (1. ledd, 1. punktum)
+                                Mottaker <strong>forsto eller burde forstått</strong> at
+                                utbetalingen skyldtes en feil (1. ledd, 1. punktum)
                             </Radio>
                             <Radio
                                 name="valgtVilkarResultatType"
