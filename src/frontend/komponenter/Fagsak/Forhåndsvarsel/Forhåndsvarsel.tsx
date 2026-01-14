@@ -120,68 +120,67 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
         queryClient.getQueryData(['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst]);
 
     return (
-        <FormProvider {...methods}>
-            <VStack gap="4">
-                <HStack align="center" justify="space-between">
-                    <Heading size="small">Forhåndsvarsel</Heading>
-                    {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
-                        <Tooltip
-                            arrow={false}
-                            placement="bottom"
-                            content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
+        <VStack gap="4">
+            <HStack align="center" justify="space-between">
+                <Heading size="small">Forhåndsvarsel</Heading>
+                {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
+                    <Tooltip
+                        arrow={false}
+                        placement="bottom"
+                        content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
+                    >
+                        <Tag
+                            variant={getTagVariant(
+                                forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid
+                            )}
+                            icon={<MegaphoneIcon aria-hidden />}
                         >
-                            <Tag
-                                variant={getTagVariant(
-                                    forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid
-                                )}
-                                icon={<MegaphoneIcon aria-hidden />}
-                            >
-                                {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
-                            </Tag>
-                        </Tooltip>
-                    )}
-                    {fritekst && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && (
-                        <Button
-                            type="button"
-                            loading={forhåndsvisning.isPending}
-                            icon={<FilePdfIcon aria-hidden />}
-                            variant="tertiary"
-                            size="small"
-                            onClick={seForhåndsvisningWithModal}
-                        >
-                            Forhåndsvis
-                        </Button>
-                    )}
-                </HStack>
+                            {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
+                        </Tag>
+                    </Tooltip>
+                )}
+                {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && (
+                    <Button
+                        loading={forhåndsvisning.isPending}
+                        icon={<FilePdfIcon aria-hidden />}
+                        variant="tertiary"
+                        size="small"
+                        onClick={seForhåndsvisningWithModal}
+                    >
+                        Forhåndsvis
+                    </Button>
+                )}
+            </HStack>
+            <FormProvider {...methods}>
                 <ForhåndsvarselSkjema
                     behandling={behandling}
                     forhåndsvarselInfo={forhåndsvarselInfo}
                     skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
                     parentBounds={parentBounds}
                 />
-                {forhåndsvisning.error && (
-                    <FixedAlert
-                        aria-live="assertive"
-                        variant="error"
-                        closeButton
-                        width={parentBounds.width}
-                        onClose={forhåndsvisning.reset}
-                    >
-                        <Heading spacing size="small" level="3">
-                            Forhåndsvisning feilet
-                        </Heading>
-                        {forhåndsvisning.error.message}
-                    </FixedAlert>
-                )}
-                {showModal && pdfData && (
-                    <PdfVisningModal
-                        åpen
-                        pdfdata={pdfData}
-                        onRequestClose={() => setShowModal(false)}
-                    />
-                )}
-            </VStack>
-        </FormProvider>
+            </FormProvider>
+            {forhåndsvisning.error && (
+                <FixedAlert
+                    aria-live="assertive"
+                    variant="error"
+                    closeButton
+                    width={parentBounds.width}
+                    onClose={forhåndsvisning.reset}
+                >
+                    <Heading spacing size="small" level="3">
+                        Forhåndsvisning feilet
+                    </Heading>
+                    {forhåndsvisning.error.message}
+                </FixedAlert>
+            )}
+            {showModal && pdfData && (
+                <PdfVisningModal
+                    åpen
+                    pdfdata={pdfData}
+                    onRequestClose={() => setShowModal(false)}
+                />
+            )}
+        </VStack>
     );
 };
 
