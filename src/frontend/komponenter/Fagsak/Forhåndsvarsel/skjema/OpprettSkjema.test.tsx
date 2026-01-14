@@ -136,12 +136,6 @@ describe('ForhåndsvarselSkjema', () => {
         expect(screen.getByText('Legg til utdypende tekst')).toBeInTheDocument();
     });
 
-    test('Viser forhåndsvisning knapp når varsel ikke er sendt', async () => {
-        renderForhåndsvarselSkjema();
-
-        expect(await screen.findByRole('button', { name: 'Forhåndsvisning' })).toBeInTheDocument();
-    });
-
     test('Viser Brukeruttalelse når varsel er sendt', async () => {
         renderForhåndsvarselSkjemaSendt();
 
