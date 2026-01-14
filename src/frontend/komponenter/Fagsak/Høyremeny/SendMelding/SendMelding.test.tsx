@@ -5,6 +5,7 @@ import type { BehandlingDto, SpråkkodeEnum } from '../../../../generated';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -15,6 +16,7 @@ import { FagsakContext } from '../../../../context/FagsakContext';
 import { DokumentMal } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
+import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../../typer/ressurs';
 
 vi.mock('../../../../api/http/HttpProvider', () => {
@@ -48,12 +50,15 @@ const renderSendMelding = (
     behandling: BehandlingDto,
     språkkode: SpråkkodeEnum = 'NB'
 ): RenderResult => {
+    const queryClient = createTestQueryClient();
     return render(
-        <FagsakContext.Provider value={lagFagsak({ språkkode })}>
-            <SendMeldingProvider behandling={behandling}>
-                <SendMelding behandling={behandling} />
-            </SendMeldingProvider>
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak({ språkkode })}>
+                <SendMeldingProvider behandling={behandling}>
+                    <SendMelding behandling={behandling} />
+                </SendMeldingProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 
@@ -69,7 +74,11 @@ const setupMock = (behandlingILesemodus: boolean): void => {
             }),
     }));
     mockUseBehandling.mockImplementation(() => ({
+        behandling: lagBehandling(),
         behandlingILesemodus: behandlingILesemodus,
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
+        erStegBehandlet: vi.fn().mockReturnValue(false),
     }));
 };
 

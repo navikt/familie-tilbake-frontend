@@ -1,21 +1,23 @@
 import type { Http } from '../../../../api/http/HttpProvider';
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingContextType } from '../../../../context/BehandlingContext';
+import type { BehandlingDto } from '../../../../generated';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
-import { BehandlingProvider } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
+import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
 
 vi.setConfig({ testTimeout: 10000 });
 
@@ -35,6 +37,20 @@ vi.mock('../../../../api/http/HttpProvider', () => {
         }),
     };
 });
+
+vi.mock('../../../../context/BehandlingContext', () => ({
+    useBehandling: (): Partial<BehandlingContextType> => ({
+        behandling: lagBehandling(),
+        behandlingILesemodus: false,
+        settIkkePersistertKomponent: vi.fn(),
+        nullstillIkkePersisterteKomponenter: vi.fn(),
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
+        erStegBehandlet: vi.fn().mockReturnValue(false),
+        actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
+    }),
+}));
+
 vi.mock('../VilkårsvurderingContext', () => {
     return {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({
@@ -52,14 +68,15 @@ vi.mock('../VilkårsvurderingContext', () => {
 });
 
 const renderVilkårsvurderingPeriodeSkjema = (
-    behandling: Behandling,
+    behandling: BehandlingDto,
     periode: VilkårsvurderingPeriodeSkjemaData,
     erTotalbeløpUnder4Rettsgebyr: boolean,
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[] = []
-): RenderResult =>
-    render(
-        <FagsakContext.Provider value={lagFagsak()}>
-            <BehandlingProvider>
+): RenderResult => {
+    const queryClient = createTestQueryClient();
+    return render(
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak()}>
                 <VilkårsvurderingPeriodeSkjema
                     behandling={behandling}
                     periode={periode}
@@ -70,9 +87,10 @@ const renderVilkårsvurderingPeriodeSkjema = (
                     pendingPeriode={undefined}
                     settPendingPeriode={vi.fn()}
                 />
-            </BehandlingProvider>
-        </FagsakContext.Provider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
+};
 
 describe('VilkårsvurderingPeriodeSkjema', () => {
     let user: UserEvent;

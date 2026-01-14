@@ -19,6 +19,7 @@ import { formatterDatostring } from '../../utils';
 import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
 import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
+import UlagretDataModal from '../Felleskomponenter/Modal/UlagretDataModal';
 
 const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
     return `Behandlingen er satt på vent: ${
@@ -89,6 +90,7 @@ const FagsakContainer: React.FC = () => {
         <Suspense fallback={<HenterBehandling />}>
             <BehandlingProvider behandlingId={behandlingId}>
                 <BehandlingContent />
+                <UlagretDataModal />
             </BehandlingProvider>
         </Suspense>
     );

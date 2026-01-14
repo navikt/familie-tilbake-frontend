@@ -6,7 +6,9 @@ import React from 'react';
 
 import { ActionBar } from './ActionBar';
 import { FagsakContext } from '../../../context/FagsakContext';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
+
 const mockUseBehandling = vi.fn();
 vi.mock('../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
@@ -35,7 +37,11 @@ describe('ActionBar', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mockUseBehandling.mockImplementation(() => ({
+            behandling: lagBehandling(),
             erStegBehandlet: vi.fn().mockReturnValue(false),
+            behandlingILesemodus: false,
+            ventegrunn: undefined,
+            aktivtSteg: undefined,
         }));
     });
 

@@ -6,6 +6,7 @@ import type { Ressurs } from '../../../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRef } from 'react';
@@ -16,6 +17,7 @@ import { HenleggModal } from './HenleggModal';
 import { FagsakContext } from '../../../../../context/FagsakContext';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../../testdata/fagsakFactory';
+import { createTestQueryClient } from '../../../../../testutils/queryTestUtils';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { RessursStatus } from '../../../../../typer/ressurs';
 
@@ -41,11 +43,14 @@ const renderHenleggModal = (
     behandling: BehandlingDto,
     årsaker: Behandlingresultat[]
 ): RenderResult => {
+    const queryClient = createTestQueryClient();
     const mockDialogRef = createRef<HTMLDialogElement | null>();
     const renderModal = render(
-        <FagsakContext.Provider value={lagFagsak()}>
-            <HenleggModal behandling={behandling} dialogRef={mockDialogRef} årsaker={årsaker} />
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <HenleggModal behandling={behandling} dialogRef={mockDialogRef} årsaker={årsaker} />
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
     mockDialogRef.current?.showModal();
 
@@ -63,7 +68,12 @@ const setupMocks = (): void => {
         },
     }));
     mockUseBehandling.mockImplementation(() => ({
+        behandling: lagBehandling(),
         nullstillIkkePersisterteKomponenter: vi.fn(),
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
+        behandlingILesemodus: false,
+        erStegBehandlet: vi.fn().mockReturnValue(false),
     }));
 };
 

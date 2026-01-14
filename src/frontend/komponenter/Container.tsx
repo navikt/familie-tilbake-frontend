@@ -9,7 +9,6 @@ import {
 } from 'react-router';
 
 import { useApp } from '../context/AppContext';
-import { BehandlingProvider } from '../context/BehandlingContext';
 import { FagsakProvider } from '../context/FagsakContext';
 import { TogglesProvider } from '../context/TogglesContext';
 import { StegflytSkeleton } from './Fagsak/Stegflyt/StegflytSkeleton';
@@ -18,7 +17,6 @@ import FagsakErrorBoundary from './Felleskomponenter/ErrorBoundary/FagsakErrorBo
 import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import { FTHeader } from './Felleskomponenter/FTHeader/FTHeader';
 import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
-import UlagretDataModal from './Felleskomponenter/Modal/UlagretDataModal';
 import Toasts from './Felleskomponenter/Toast/Toasts';
 
 const Dashboard = lazyImportMedRetry(() => import('../pages/Dashboard'), 'Dashboard');
@@ -100,10 +98,7 @@ const FagsakProvidersWrapper: React.FC = () => (
     <Suspense fallback={<FagsakLoadingSkeleton />}>
         <FagsakErrorBoundary>
             <FagsakProvider>
-                <BehandlingProvider>
-                    <Outlet />
-                    <UlagretDataModal />
-                </BehandlingProvider>
+                <Outlet />
             </FagsakProvider>
         </FagsakErrorBoundary>
     </Suspense>

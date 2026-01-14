@@ -2,6 +2,7 @@ import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { BehandlingDto, ManuellBrevmottakerResponsDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 
@@ -9,6 +10,7 @@ import Brevmottakere from './Brevmottakere';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { MottakerType } from '../../../typer/Brevmottaker';
 
 vi.mock('react-router', async () => {
@@ -64,15 +66,22 @@ const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponsDto[] => [
 
 const renderBrevmottakere = (behandling: BehandlingDto): RenderResult => {
     mockUseBehandling.mockImplementation(() => ({
+        behandling: lagBehandling(),
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
         harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
         erStegBehandlet: vi.fn().mockReturnValue(false),
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
+        behandlingILesemodus: false,
     }));
 
+    const queryClient = createTestQueryClient();
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
-            <Brevmottakere behandling={behandling} />
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <Brevmottakere behandling={behandling} />
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 

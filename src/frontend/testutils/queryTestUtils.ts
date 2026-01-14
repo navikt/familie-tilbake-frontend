@@ -1,9 +1,9 @@
+import type { BehandlingDto } from '../generated';
+
 import { QueryClient } from '@tanstack/react-query';
 
-/**
- * Creates a QueryClient configured for testing.
- * Disables retries, refetching, and sets short cache times.
- */
+import { hentBehandlingQueryKey } from '../generated/@tanstack/react-query.gen';
+
 export const createTestQueryClient = (): QueryClient => {
     return new QueryClient({
         defaultOptions: {
@@ -20,4 +20,13 @@ export const createTestQueryClient = (): QueryClient => {
             },
         },
     });
+};
+
+export const setBehandlingQueryData = (
+    queryClient: QueryClient,
+    behandlingId: string,
+    behandling: BehandlingDto
+): void => {
+    const queryKey = hentBehandlingQueryKey({ path: { behandlingId } });
+    queryClient.setQueryData(queryKey, { data: behandling });
 };

@@ -49,8 +49,12 @@ vi.mock('../useForhåndsvarselMutations', () => ({
 
 const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
+        behandling: lagBehandlingDto(),
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 2 av 5'),
         erStegBehandlet: vi.fn().mockReturnValue(false),
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
+        behandlingILesemodus: false,
     }));
     mockUseToggles.mockImplementation(() => ({
         toggles: {

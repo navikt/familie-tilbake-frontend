@@ -6,6 +6,7 @@ import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -18,6 +19,7 @@ import { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagFaktaPeriode, lagFaktaResponse } from '../../../testdata/faktaFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../typer/ressurs';
 
 const mockUseBehandling = vi.fn();
@@ -44,12 +46,15 @@ const renderFaktaContainer = (
     behandling: BehandlingDto,
     ytelsestype: SchemaEnum4 = 'BARNETRYGD'
 ): RenderResult => {
+    const queryClient = createTestQueryClient();
     return render(
-        <FagsakContext.Provider value={lagFagsak({ ytelsestype })}>
-            <FaktaProvider behandling={behandling}>
-                <FaktaContainer />
-            </FaktaProvider>
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak({ ytelsestype })}>
+                <FaktaProvider behandling={behandling}>
+                    <FaktaContainer />
+                </FaktaProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 
@@ -95,6 +100,7 @@ const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: FaktaResponse)
         },
     }));
     mockUseBehandling.mockImplementation(() => ({
+        behandling: lagBehandling(),
         erStegBehandlet: (): boolean => behandlet,
         visVenteModal: false,
         behandlingILesemodus: lesemodus,
@@ -102,6 +108,8 @@ const setupMock = (behandlet: boolean, lesemodus: boolean, fakta: FaktaResponse)
         nullstillIkkePersisterteKomponenter: vi.fn(),
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 4'),
         harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
     }));
 };
 

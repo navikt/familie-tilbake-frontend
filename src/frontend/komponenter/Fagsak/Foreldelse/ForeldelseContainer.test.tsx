@@ -7,6 +7,7 @@ import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -19,6 +20,7 @@ import { Foreldelsevurdering } from '../../../kodeverk';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagForeldelsePeriode, lagForeldelseResponse } from '../../../testdata/foreldelseFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
@@ -48,12 +50,15 @@ vi.mock('react-router', async () => {
 });
 
 const renderForeldelseContainer = (behandling: BehandlingDto): RenderResult => {
+    const queryClient = createTestQueryClient();
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
-            <ForeldelseProvider behandling={behandling}>
-                <ForeldelseContainer behandling={behandling} />
-            </ForeldelseProvider>
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <ForeldelseProvider behandling={behandling}>
+                    <ForeldelseContainer behandling={behandling} />
+                </ForeldelseProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 
@@ -99,6 +104,7 @@ const setupMock = (
         }));
     }
     mockUseBehandling.mockImplementation(() => ({
+        behandling: lagBehandling(),
         erStegBehandlet: (): boolean => behandlet,
         erStegAutoutført: (): boolean => autoutført,
         visVenteModal: false,
@@ -107,6 +113,8 @@ const setupMock = (
         nullstillIkkePersisterteKomponenter: vi.fn(),
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 2 av 4'),
         harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
     }));
 };
 

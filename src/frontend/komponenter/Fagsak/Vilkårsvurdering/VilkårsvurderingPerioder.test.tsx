@@ -1,6 +1,6 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     VilkårsvurderingPeriode,
@@ -45,8 +45,10 @@ vi.mock('react-router', async () => {
     };
 });
 
-vi.mock('@tanstack/react-query', () => {
+vi.mock('@tanstack/react-query', async importOriginal => {
+    const actual = await importOriginal();
     return {
+        ...(actual as object),
         useMutation: vi.fn(({ mutationFn, onSuccess }) => {
             const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
                 const result = await mutationFn(behandlingId);
@@ -60,6 +62,12 @@ vi.mock('@tanstack/react-query', () => {
                 mutateAsync,
             };
         }),
+        useQueryClient: vi.fn(() => ({
+            invalidateQueries: vi.fn(),
+        })),
+        useSuspenseQuery: vi.fn(() => ({
+            data: { data: lagBehandling() },
+        })),
     };
 });
 
@@ -103,7 +111,7 @@ const setupMocks = (): void => {
     }));
 
     mockUseHttp.mockImplementation(() => ({
-        request: (): Promise<Ressurs<Behandling>> => {
+        request: (): Promise<Ressurs<BehandlingDto>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
                 data: lagBehandling(),
@@ -117,13 +125,13 @@ const renderVilkårsvurderingPerioder = (): RenderResult => {
         index: `idx_fpsd_${index}`,
         ...periode,
     }));
-
+    const behandling = lagBehandling();
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
-            <BehandlingProvider>
-                <VilkårsvurderingProvider behandling={lagBehandling()}>
+            <BehandlingProvider behandlingId={behandling.behandlingId}>
+                <VilkårsvurderingProvider behandling={behandling}>
                     <VilkårsvurderingPerioder
-                        behandling={lagBehandling()}
+                        behandling={behandling}
                         perioder={skjemaData}
                         erTotalbeløpUnder4Rettsgebyr={false}
                         erLesevisning={false}

@@ -4,7 +4,7 @@ import type { Location } from 'react-router';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, fireEvent } from '@testing-library/react';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { Stegflyt } from './Stegflyt';
 import { BehandlingProvider } from '../../../context/BehandlingContext';
@@ -18,7 +18,7 @@ import {
     lagVilkårsvurderingSteg,
 } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
-import { createTestQueryClient } from '../../../testutils/queryTestUtils';
+import { createTestQueryClient, setBehandlingQueryData } from '../../../testutils/queryTestUtils';
 
 const mockNavigate = vi.fn();
 const mockUseLocation = vi.fn();
@@ -38,9 +38,7 @@ const createMockBehandling = (overrides: Record<string, unknown> = {}): Behandli
 
 const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): RenderResult => {
     const queryClient = createTestQueryClient();
-    queryClient.setQueryData(['hentBehandling', { path: { behandlingId: '123' } }], {
-        data: behandling,
-    });
+    setBehandlingQueryData(queryClient, '123', behandling);
 
     return render(
         <QueryClientProvider client={queryClient}>
@@ -50,9 +48,11 @@ const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): Ren
                     fagsystem: Fagsystem.BA,
                 })}
             >
-                <BehandlingProvider behandlingId="123">
-                    <Stegflyt />
-                </BehandlingProvider>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <BehandlingProvider behandlingId="123">
+                        <Stegflyt />
+                    </BehandlingProvider>
+                </Suspense>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

@@ -1,5 +1,5 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { FaktaOmFeilutbetalingDto, OppdaterFaktaData } from '../../../generated';
+import type { FaktaOmFeilutbetaling, OppdaterFaktaData } from '../../../generated-new';
 import type { RenderResult } from '@testing-library/react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -8,6 +8,7 @@ import React from 'react';
 
 import { FaktaSkjema } from './FaktaSkjema';
 import { FagsakContext } from '../../../context/FagsakContext';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { configureZod } from '../../../utils/zodConfig';
 
@@ -20,8 +21,12 @@ vi.mock('react-router', async () => {
 });
 
 const mockUseBehandling = vi.fn(() => ({
+    behandling: lagBehandling(),
     actionBarStegtekst: (): string => 'Mocked!!',
     erStegBehandlet: (): boolean => false,
+    ventegrunn: undefined,
+    aktivtSteg: undefined,
+    behandlingILesemodus: false,
 }));
 
 vi.mock('../../../context/BehandlingContext', () => ({
@@ -29,8 +34,8 @@ vi.mock('../../../context/BehandlingContext', () => ({
 }));
 
 const faktaOmFeilutbetaling = (
-    overrides?: Partial<FaktaOmFeilutbetalingDto>
-): FaktaOmFeilutbetalingDto => ({
+    overrides?: Partial<FaktaOmFeilutbetaling>
+): FaktaOmFeilutbetaling => ({
     feilutbetaling: {
         beløp: 6900,
         fom: '1969-04-20',
@@ -73,14 +78,14 @@ const faktaOmFeilutbetaling = (
     ],
     ferdigvurdert: false,
     vurdering: {
-        årsak: undefined,
+        årsak: null,
         oppdaget: undefined,
     },
     ...overrides,
 });
 
 const renderFakta = (
-    overrides?: Partial<FaktaOmFeilutbetalingDto>
+    overrides?: Partial<FaktaOmFeilutbetaling>
 ): { result: RenderResult; mutationBody: Promise<OppdaterFaktaData> } => {
     const client = new QueryClient();
     const mutationBody = new Promise<OppdaterFaktaData>(resolve => {
@@ -253,6 +258,7 @@ describe('Fakta om feilutbetaling', () => {
                         dato: '2020-04-20',
                         beskrivelse: 'VI OPPDAGET EN FEIL!!!!',
                     },
+                    årsak: null,
                 },
             });
 

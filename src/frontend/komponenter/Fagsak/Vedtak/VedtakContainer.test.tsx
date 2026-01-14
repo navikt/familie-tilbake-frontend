@@ -12,6 +12,7 @@ import type {
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -29,6 +30,7 @@ import {
     lagPeriodeAvsnitt,
     lagVedaksbrevUnderavsnitt,
 } from '../../../testdata/vedtakFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
@@ -68,12 +70,15 @@ vi.mock('../../../hooks/useSammenslåPerioder', () => ({
 const mockedSettIkkePersistertKomponent = vi.fn();
 
 const renderVedtakContainer = (behandling: BehandlingDto): RenderResult => {
+    const queryClient = createTestQueryClient();
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
-            <VedtakProvider behandling={behandling}>
-                <VedtakContainer behandling={behandling} />
-            </VedtakProvider>
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <VedtakProvider behandling={behandling}>
+                    <VedtakContainer behandling={behandling} />
+                </VedtakProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 
@@ -144,6 +149,7 @@ const setupMock = (
     }));
 
     mockUseBehandling.mockImplementation(() => ({
+        behandling: lagBehandling(),
         visVenteModal: false,
         behandlingILesemodus: lesevisning,
         settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
@@ -151,6 +157,8 @@ const setupMock = (
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 4 av 4'),
         harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
         erStegBehandlet: vi.fn().mockReturnValue(false),
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
     }));
 };
 

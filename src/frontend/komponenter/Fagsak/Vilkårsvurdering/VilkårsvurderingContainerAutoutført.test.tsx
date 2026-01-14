@@ -71,6 +71,7 @@ const setupMock = (): void => {
     }));
 
     mockUseBehandling.mockImplementation(() => ({
+        behandling: lagBehandling(),
         erStegBehandlet: (): boolean => false,
         erStegAutoutført: (): boolean => true,
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 3 av 4'),

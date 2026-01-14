@@ -6,6 +6,7 @@ import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -17,6 +18,7 @@ import { FagsakContext } from '../../../../context/FagsakContext';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagTotrinnsStegInfo } from '../../../../testdata/totrinnskontrollFactory';
+import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
 import { Behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 
@@ -39,12 +41,15 @@ vi.mock('react-router', async () => {
 });
 
 const renderTotrinnskontroll = (behandling: BehandlingDto): RenderResult => {
+    const queryClient = createTestQueryClient();
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
-            <TotrinnskontrollProvider behandling={behandling}>
-                <Totrinnskontroll />
-            </TotrinnskontrollProvider>
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <TotrinnskontrollProvider behandling={behandling}>
+                    <Totrinnskontroll />
+                </TotrinnskontrollProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 
@@ -66,9 +71,13 @@ const setupMocks = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkont
         },
     }));
     mockUseBehandling.mockImplementation(() => ({
+        behandling: lagBehandling(),
         erStegBehandlet: (): boolean => false,
         visVenteModal: false,
         erBehandlingReturnertFraBeslutter: (): boolean => returnertFraBeslutter,
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
+        behandlingILesemodus: false,
     }));
 };
 

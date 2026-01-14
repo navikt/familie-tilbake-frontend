@@ -88,12 +88,15 @@ const setupMock = (
         },
     }));
     mockUseBehandling.mockImplementation(() => ({
+        behandling: lagBehandling(),
         erStegBehandlet: (): boolean => behandlet,
         erStegAutoutført: (): boolean => autoutført,
         behandlingILesemodus: lesevisning,
         settIkkePersistertKomponent: vi.fn(),
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
         harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
     }));
 };
 

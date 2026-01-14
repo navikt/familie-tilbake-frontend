@@ -4,6 +4,7 @@ import type { RedirectEtterLagringHook } from '../../../../hooks/useRedirectEtte
 import type { UserEvent } from '@testing-library/user-event';
 
 import { ActionMenu, Button } from '@navikt/ds-react';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -13,6 +14,7 @@ import { Feil } from '../../../../api/feil';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
+import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
 
 const mockUseBehandling = vi.fn();
 vi.mock('../../../../context/BehandlingContext', () => ({
@@ -32,7 +34,12 @@ vi.mock('./useStartPåNytt', () => ({
 const mockNullstill = vi.fn();
 const setupMocks = (): void => {
     mockUseBehandling.mockReturnValue({
+        behandling: lagBehandling(),
         nullstillIkkePersisterteKomponenter: mockNullstill,
+        ventegrunn: undefined,
+        aktivtSteg: undefined,
+        behandlingILesemodus: false,
+        erStegBehandlet: vi.fn().mockReturnValue(false),
     });
     mockUseRedirectEtterLagring.mockReturnValue(() => null);
 };
@@ -65,17 +72,20 @@ describe('StartPåNytt', () => {
             },
         });
 
+        const queryClient = createTestQueryClient();
         render(
-            <FagsakContext.Provider value={lagFagsak({ eksternFagsakId: '123' })}>
-                <ActionMenu open>
-                    <ActionMenu.Trigger>
-                        <Button>Test kun for å rendre</Button>
-                    </ActionMenu.Trigger>
-                    <ActionMenu.Content>
-                        <StartPåNytt behandling={lagBehandling()} />
-                    </ActionMenu.Content>
-                </ActionMenu>
-            </FagsakContext.Provider>
+            <QueryClientProvider client={queryClient}>
+                <FagsakContext.Provider value={lagFagsak({ eksternFagsakId: '123' })}>
+                    <ActionMenu open>
+                        <ActionMenu.Trigger>
+                            <Button>Test kun for å rendre</Button>
+                        </ActionMenu.Trigger>
+                        <ActionMenu.Content>
+                            <StartPåNytt behandling={lagBehandling()} />
+                        </ActionMenu.Content>
+                    </ActionMenu>
+                </FagsakContext.Provider>
+            </QueryClientProvider>
         );
 
         const dialog = document.querySelector('dialog') as HTMLDialogElement;
