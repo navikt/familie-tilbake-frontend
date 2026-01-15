@@ -100,7 +100,7 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
                 </section>
             </div>
 
-            <Høyremeny behandling={behandling} dialogRef={ref} />
+            <Høyremeny dialogRef={ref} />
         </>
     ) : !harKravgrunnlag ? (
         <>
@@ -117,20 +117,20 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
                 </section>
             </div>
 
-            <Høyremeny behandling={behandling} dialogRef={ref} />
+            <Høyremeny dialogRef={ref} />
         </>
     ) : erHistoriskeVerdier ? (
         <div className="flex-1 overflow-auto">
             <Suspense fallback="Historiske vurderinger laster...">
-                <HistoriskeVurderingermeny behandling={behandling} />
+                <HistoriskeVurderingermeny />
             </Suspense>
             <Routes>
                 <Route
                     path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
                     element={
-                        <HistoriskFaktaProvider behandling={behandling}>
+                        <HistoriskFaktaProvider>
                             <Suspense fallback="Historisk fakta laster...">
-                                <HistoriskFaktaContainer behandling={behandling} />
+                                <HistoriskFaktaContainer />
                             </Suspense>
                         </HistoriskFaktaProvider>
                     }
@@ -138,9 +138,9 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
                 <Route
                     path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
                     element={
-                        <HistoriskVilkårsvurderingProvider behandling={behandling}>
+                        <HistoriskVilkårsvurderingProvider>
                             <Suspense fallback="Historisk vilkårsvurdering laster...">
-                                <HistoriskVilkårsvurderingContainer behandling={behandling} />
+                                <HistoriskVilkårsvurderingContainer />
                             </Suspense>
                         </HistoriskVilkårsvurderingProvider>
                     }
@@ -183,7 +183,7 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
                                             behandlingUrl={behandlingUrl}
                                         />
                                     ) : (
-                                        <FaktaProvider behandling={behandling}>
+                                        <FaktaProvider>
                                             <FaktaContainer />
                                         </FaktaProvider>
                                     )
@@ -193,52 +193,52 @@ const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
                                 element={
                                     <Suspense fallback="Forhåndsvarsel laster...">
-                                        <Forhåndsvarsel behandling={behandling} />
+                                        <Forhåndsvarsel />
                                     </Suspense>
                                 }
                             />
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
                                 element={
-                                    <ForeldelseProvider behandling={behandling}>
-                                        <ForeldelseContainer behandling={behandling} />
+                                    <ForeldelseProvider>
+                                        <ForeldelseContainer />
                                     </ForeldelseProvider>
                                 }
                             />
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
                                 element={
-                                    <VilkårsvurderingProvider behandling={behandling}>
-                                        <VilkårsvurderingContainer behandling={behandling} />
+                                    <VilkårsvurderingProvider>
+                                        <VilkårsvurderingContainer />
                                     </VilkårsvurderingProvider>
                                 }
                             />
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                                 element={
-                                    <VedtakProvider behandling={behandling}>
-                                        <VedtakContainer behandling={behandling} />
+                                    <VedtakProvider>
+                                        <VedtakContainer />
                                     </VedtakProvider>
                                 }
                             />
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/verge'}
                                 element={
-                                    <VergeProvider behandling={behandling}>
+                                    <VergeProvider>
                                         <VergeContainer />
                                     </VergeProvider>
                                 }
                             />
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
-                                element={<BrevmottakerContainer behandling={behandling} />}
+                                element={<BrevmottakerContainer />}
                             />
                         </Routes>
                     </Suspense>
                 </section>
             </section>
             <Suspense fallback={<HøyremenySkeleton />}>
-                <Høyremeny behandling={behandling} dialogRef={ref} />
+                <Høyremeny dialogRef={ref} />
             </Suspense>
         </>
     ) : null;

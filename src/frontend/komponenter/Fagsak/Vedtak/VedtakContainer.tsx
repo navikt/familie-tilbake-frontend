@@ -1,5 +1,3 @@
-import type { BehandlingDto } from '../../../generated';
-
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import React, { useEffect, useState } from 'react';
@@ -34,11 +32,7 @@ const VarselbrevInfo = styled(BodyShort)`
     font-weight: ${AFontWeightBold};
 `;
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const VedtakContainer: React.FC<Props> = ({ behandling }) => {
+const VedtakContainer: React.FC = () => {
     const { fagsystem, eksternFagsakId } = useFagsak();
     const {
         vedtaksbrevavsnitt,
@@ -53,7 +47,7 @@ const VedtakContainer: React.FC<Props> = ({ behandling }) => {
         lagreUtkast,
         hentVedtaksbrevtekster,
     } = useVedtak();
-    const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandling();
+    const { behandling, behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandling();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA = behandling.behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
     const erRevurderingBortfaltBeløp =

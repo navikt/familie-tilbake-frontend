@@ -1,5 +1,3 @@
-import type { BehandlingDto } from '../../../../generated';
-
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
@@ -19,11 +17,8 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
         : 'Fritekst';
 };
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const SendMelding: React.FC<Props> = ({ behandling }) => {
+const SendMelding: React.FC = () => {
+    const { behandling } = useBehandling();
     const { språkkode } = useFagsak();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
     const { behandlingILesemodus } = useBehandling();

@@ -1,20 +1,20 @@
-import type { BehandlingDto } from '../../../../generated';
 import type { Journalpost } from '../../../../typer/journalføring';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../../typer/ressurs';
 import { Menysider } from '../Menykontainer';
 
 type Props = {
-    behandling: BehandlingDto;
     valgtMenyside: Menysider | null;
 };
 
 const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
-    ({ behandling, valgtMenyside }: Props) => {
+    ({ valgtMenyside }: Props) => {
+        const { behandling } = useBehandling();
         const [journalposter, settJournalposter] = useState<Ressurs<Journalpost[]>>();
         const { request } = useHttp();
 

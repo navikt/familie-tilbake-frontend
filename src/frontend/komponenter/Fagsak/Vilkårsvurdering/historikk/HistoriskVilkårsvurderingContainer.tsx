@@ -1,5 +1,3 @@
-import type { BehandlingDto } from '../../../../generated';
-
 import { Alert, Heading, VStack } from '@navikt/ds-react';
 import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
@@ -15,11 +13,7 @@ const Container = styled.div`
     padding: ${ASpacing3};
 `;
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const HistoriskVilkårsvurderingContainer: React.FC<Props> = () => {
+const HistoriskVilkårsvurderingContainer: React.FC = () => {
     const { inaktiveVilkårsvurderinger, skjemaData, setInaktivVilkårsvurdering } =
         useHistoriskVilkårsvurdering();
 

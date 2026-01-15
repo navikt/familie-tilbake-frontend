@@ -1,5 +1,5 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
-import type { ForhåndsvarselDto, RessursByte, BehandlingDto } from '../../../generated';
+import type { ForhåndsvarselDto, RessursByte } from '../../../generated';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,10 +37,6 @@ import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
 import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { ActionBar } from '../ActionBar/ActionBar';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
 type TagVariant = 'info-moderate' | 'success-moderate';
 
 const getTagVariant = (sendtTid: string): TagVariant => {
@@ -48,7 +44,8 @@ const getTagVariant = (sendtTid: string): TagVariant => {
     return ukerSiden >= 3 ? 'success-moderate' : 'info-moderate';
 };
 
-export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
+export const Forhåndsvarsel: React.FC = () => {
+    const { behandling } = useBehandling();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries(behandling);
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling);
     const [showModal, setShowModal] = useState(false);
@@ -153,7 +150,6 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
             </HStack>
             <FormProvider {...methods}>
                 <ForhåndsvarselSkjema
-                    behandling={behandling}
                     forhåndsvarselInfo={forhåndsvarselInfo}
                     skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
                     parentBounds={parentBounds}
@@ -185,18 +181,17 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
 };
 
 type ForhåndsvarselSkjemaProps = {
-    behandling: BehandlingDto;
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
     skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
     parentBounds: { width: string | undefined };
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
-    behandling,
     forhåndsvarselInfo,
     skalSendesForhåndsvarsel,
     parentBounds,
 }) => {
+    const { behandling } = useBehandling();
     const { toggles } = useToggles();
     const { actionBarStegtekst } = useBehandling();
 
@@ -293,7 +288,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     return (
         <>
             <OpprettSkjema
-                behandling={behandling}
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
                 handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}

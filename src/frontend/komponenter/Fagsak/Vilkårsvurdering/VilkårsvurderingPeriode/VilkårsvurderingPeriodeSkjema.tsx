@@ -1,5 +1,4 @@
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
-import type { BehandlingDto } from '../../../../generated';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { ChangeEvent, FC } from 'react';
 
@@ -108,7 +107,6 @@ const settSkjemadataFraPeriode = (
 };
 
 type Props = {
-    behandling: BehandlingDto;
     periode: VilkårsvurderingPeriodeSkjemaData;
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
@@ -119,7 +117,6 @@ type Props = {
 };
 
 const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
-    behandling,
     periode,
     behandletPerioder,
     erTotalbeløpUnder4Rettsgebyr,
@@ -147,6 +144,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         }
     );
     const {
+        behandling,
         settIkkePersistertKomponent,
         harUlagredeData,
         nullstillIkkePersisterteKomponenter,
@@ -308,11 +306,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         Detaljer for valgt periode
                     </Heading>
                     {!erLesevisning && !periode.foreldet && kanSplittePeriode(periode) && (
-                        <SplittPeriode
-                            behandling={behandling}
-                            periode={periode}
-                            onBekreft={onSplitPeriode}
-                        />
+                        <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
                     )}
                 </Stack>
             </HGrid>

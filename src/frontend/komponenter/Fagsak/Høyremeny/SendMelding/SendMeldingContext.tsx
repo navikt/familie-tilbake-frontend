@@ -1,4 +1,3 @@
-import type { BehandlingDto } from '../../../../generated';
 import type { BrevPayload } from '../../../../typer/api';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -7,6 +6,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router';
 
 import { useDokumentApi } from '../../../../api/dokument';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import {
     type Avhengigheter,
@@ -46,11 +46,8 @@ type SendMeldingSkjemaDefinisjon = {
 const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.maltype.valideringsstatus === Valideringsstatus.Ok;
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: Props) => {
+const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
+    const { behandling } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const queryClient = useQueryClient();
     const [senderInn, settSenderInn] = React.useState<boolean>(false);

@@ -1,8 +1,4 @@
-import type {
-    BehandlingDto,
-    BehandlingsresultatstypeEnum,
-    BehandlingstatusEnum,
-} from '../../../../generated';
+import type { BehandlingsresultatstypeEnum, BehandlingstatusEnum } from '../../../../generated';
 import type { TagProps } from '@navikt/ds-react';
 
 import {
@@ -20,6 +16,7 @@ import {
 import { ExpansionCard, Tag } from '@navikt/ds-react';
 import React from 'react';
 
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { ytelsetype as ytelsetyper } from '../../../../kodeverk';
 import {
@@ -30,11 +27,8 @@ import {
 import { formatterDatostring } from '../../../../utils';
 import { ICON_PROPS } from '../utils';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-export const Faktaboks: React.FC<Props> = ({ behandling }) => {
+export const Faktaboks: React.FC = () => {
+    const { behandling } = useBehandling();
     const { ytelsestype } = useFagsak();
 
     return (

@@ -1,12 +1,15 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 import type { RenderResult } from '@testing-library/react';
 
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { Faktaboks } from './Faktaboks';
+import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { ytelsetype, Ytelsetype } from '../../../../kodeverk';
+import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
+import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
     Behandlingstatus,
@@ -15,52 +18,18 @@ import {
     behandlingsstatuser,
     behandlingsresultater,
     behandlingårsaker,
-    Saksbehandlingstype,
-    Behandlingstype,
 } from '../../../../typer/behandling';
 
-const baseBehandling = (override: Partial<Behandling> = {}): Behandling => ({
-    eksternBrukId: 'ebb',
-    behandlingId: 'bid',
-    erBehandlingHenlagt: false,
-    type: Behandlingstype.Tilbakekreving,
-    status: Behandlingstatus.Opprettet,
-    opprettetDato: '2025-01-02',
-    avsluttetDato: null,
-    endretTidspunkt: '2025-01-02T10:00:00',
-    vedtaksDato: null,
-    enhetskode: '4800',
-    enhetsnavn: 'NAV Familie',
-    resultatstype: null,
-    ansvarligSaksbehandler: 'Z12345',
-    ansvarligBeslutter: null,
-    erBehandlingPåVent: false,
-    kanHenleggeBehandling: true,
-    kanRevurderingOpprettes: true,
-    harVerge: false,
-    kanEndres: true,
-    kanSetteTilbakeTilFakta: true,
-    varselSendt: false,
-    behandlingsstegsinfo: [],
-    fagsystemsbehandlingId: 'fsb',
-    eksternFaksakId: 'ekstern',
-    behandlingsårsakstype: null,
-    støtterManuelleBrevmottakere: false,
-    harManuelleBrevmottakere: false,
-    manuelleBrevmottakere: [],
-    begrunnelseForTilbakekreving: null,
-    saksbehandlingstype: Saksbehandlingstype.Ordinær,
-    erNyModell: true,
-    ...override,
-});
-
 const renderFaktaboks = (
-    delvisBehandling: Partial<Behandling> = {},
+    delvisBehandling: Partial<BehandlingDto> = {},
     ytelsestypeOverride: Ytelsetype = Ytelsetype.Barnetrygd
 ): RenderResult => {
+    const behandling = lagBehandling(delvisBehandling);
     return render(
         <FagsakContext.Provider value={lagFagsak({ ytelsestype: ytelsestypeOverride })}>
-            <Faktaboks behandling={baseBehandling(delvisBehandling)} />
+            <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+                <Faktaboks />
+            </BehandlingContext.Provider>
         </FagsakContext.Provider>
     );
 };
@@ -86,7 +55,7 @@ describe('Faktaboks', () => {
     });
 
     test('Skjuler revurderingsårsak når ikke satt', () => {
-        renderFaktaboks({ behandlingsårsakstype: null });
+        renderFaktaboks({ behandlingsårsakstype: undefined });
         expect(screen.queryByText('Revurderingsårsak')).not.toBeInTheDocument();
     });
 
@@ -126,8 +95,8 @@ describe('Faktaboks', () => {
         expect(screen.getByText('03.02.2025')).toBeInTheDocument();
     });
 
-    test('Skjuler avsluttet når null', () => {
-        renderFaktaboks({ avsluttetDato: null });
+    test('Skjuler avsluttet når undefined', () => {
+        renderFaktaboks({ avsluttetDato: undefined });
         expect(screen.queryByText('Avsluttet')).not.toBeInTheDocument();
     });
 

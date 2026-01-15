@@ -1,5 +1,3 @@
-import type { BehandlingDto } from '../../../generated';
-
 import {
     ClockDashedIcon,
     EnvelopeClosedIcon,
@@ -11,13 +9,14 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { Menysider, MenySideInnhold } from './Menykontainer';
+import { useBehandling } from '../../../context/BehandlingContext';
 
 type Props = {
     værtPåFatteVedtakSteget: boolean;
-    behandling: BehandlingDto;
 };
 
-export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteget, behandling }) => {
+export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteget }) => {
+    const { behandling } = useBehandling();
     const [valgtSide, setValgtSide] = useState(
         værtPåFatteVedtakSteget ? Menysider.Totrinn : Menysider.Historikk
     );
@@ -53,7 +52,7 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteg
                     />
                 )}
             </ToggleGroup>
-            <MenySideInnhold valgtMenyside={valgtSide} behandling={behandling} />
+            <MenySideInnhold valgtMenyside={valgtSide} />
         </div>
     );
 };

@@ -1,5 +1,3 @@
-import type { BehandlingDto } from '../../../generated';
-
 import { Alert, BodyLong, Heading, Link, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
@@ -12,11 +10,7 @@ import { finnDatoRelativtTilNå } from '../../../utils';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { ActionBar } from '../ActionBar/ActionBar';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
+const ForeldelseContainer: React.FC = () => {
     const {
         foreldelse,
         skjemaData,
@@ -28,7 +22,7 @@ const ForeldelseContainer: React.FC<Props> = ({ behandling }) => {
         senderInn,
         allePerioderBehandlet,
     } = useForeldelse();
-    const { behandlingILesemodus, actionBarStegtekst } = useBehandling();
+    const { behandling, behandlingILesemodus, actionBarStegtekst } = useBehandling();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
     const navigerEllerLagreOgNaviger =
         erAutoutført || (stegErBehandlet && erLesevisning) ? gåTilNesteSteg : sendInnSkjema;

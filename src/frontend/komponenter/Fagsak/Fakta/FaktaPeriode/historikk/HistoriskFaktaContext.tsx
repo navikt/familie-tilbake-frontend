@@ -1,4 +1,3 @@
-import type { BehandlingDto } from '../../../../../generated';
 import type { FaktaResponse } from '../../../../../typer/tilbakekrevingstyper';
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData } from '../../typer/fakta';
 
@@ -6,6 +5,7 @@ import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
 
 import { useBehandlingApi } from '../../../../../api/behandling';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -14,11 +14,8 @@ import {
 } from '../../../../../typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '../../../../../utils';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(({ behandling }: Props) => {
+const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
+    const { behandling } = useBehandling();
     const [inaktiveFakta, setInaktiveFakta] = useState<Ressurs<FaktaResponse[]>>(byggTomRessurs);
 
     const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>();

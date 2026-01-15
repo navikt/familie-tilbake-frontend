@@ -1,5 +1,6 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
+import type { BehandlingContextType } from '../../../context/BehandlingContext';
 import type { BehandlingDto } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
@@ -10,6 +11,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
 import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -17,8 +19,9 @@ import { vi } from 'vitest';
 
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
-import { BehandlingProvider } from '../../../context/BehandlingContext';
+import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
+import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
@@ -120,25 +123,52 @@ const setupMocks = (): void => {
     }));
 };
 
+const TestBehandlingProvider: React.FC<{
+    behandling: BehandlingDto;
+    children: React.ReactNode;
+}> = ({ behandling, children }) => {
+    const unsavedChanges = useUnsavedChanges();
+
+    const contextValue: BehandlingContextType = {
+        behandling,
+        behandlingILesemodus: false,
+        aktivtSteg: undefined,
+        ventegrunn: undefined,
+        harKravgrunnlag: true,
+        actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
+        erStegBehandlet: vi.fn().mockReturnValue(false),
+        erStegAutoutført: vi.fn().mockReturnValue(false),
+        erBehandlingReturnertFraBeslutter: vi.fn().mockReturnValue(false),
+        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
+        ...unsavedChanges,
+    };
+
+    return <BehandlingContext.Provider value={contextValue}>{children}</BehandlingContext.Provider>;
+};
+
 const renderVilkårsvurderingPerioder = (): RenderResult => {
     const skjemaData = perioder.map((periode, index) => ({
         index: `idx_fpsd_${index}`,
         ...periode,
     }));
     const behandling = lagBehandling();
+    const queryClient = new QueryClient({
+        defaultOptions: { queries: { retry: false } },
+    });
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
-            <BehandlingProvider behandlingId={behandling.behandlingId}>
-                <VilkårsvurderingProvider behandling={behandling}>
-                    <VilkårsvurderingPerioder
-                        behandling={behandling}
-                        perioder={skjemaData}
-                        erTotalbeløpUnder4Rettsgebyr={false}
-                        erLesevisning={false}
-                    />
-                </VilkårsvurderingProvider>
-            </BehandlingProvider>
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <TestBehandlingProvider behandling={behandling}>
+                    <VilkårsvurderingProvider>
+                        <VilkårsvurderingPerioder
+                            perioder={skjemaData}
+                            erTotalbeløpUnder4Rettsgebyr={false}
+                            erLesevisning={false}
+                        />
+                    </VilkårsvurderingProvider>
+                </TestBehandlingProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 

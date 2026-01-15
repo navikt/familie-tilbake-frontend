@@ -1,5 +1,3 @@
-import type { BehandlingDto } from '../../../generated';
-
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
@@ -12,11 +10,7 @@ import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const VilkårsvurderingContainer: React.FC<Props> = ({ behandling }) => {
+const VilkårsvurderingContainer: React.FC = () => {
     const { ytelsestype } = useFagsak();
     const {
         containerRef,
@@ -52,7 +46,6 @@ const VilkårsvurderingContainer: React.FC<Props> = ({ behandling }) => {
                     )}
                     {skjemaData && skjemaData.length > 0 && (
                         <VilkårsvurderingPerioder
-                            behandling={behandling}
                             perioder={skjemaData}
                             erTotalbeløpUnder4Rettsgebyr={totalbeløpErUnder4Rettsgebyr}
                             erLesevisning={erLesevisning}

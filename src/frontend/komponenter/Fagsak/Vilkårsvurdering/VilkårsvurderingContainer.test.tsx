@@ -155,8 +155,8 @@ const renderVilkårsvurderingContainer = (behandling: BehandlingDto): RenderResu
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
                 <TestBehandlingProvider behandling={behandling}>
-                    <VilkårsvurderingProvider behandling={behandling}>
-                        <VilkårsvurderingContainer behandling={behandling} />
+                    <VilkårsvurderingProvider>
+                        <VilkårsvurderingContainer />
                     </VilkårsvurderingProvider>
                 </TestBehandlingProvider>
             </FagsakContext.Provider>

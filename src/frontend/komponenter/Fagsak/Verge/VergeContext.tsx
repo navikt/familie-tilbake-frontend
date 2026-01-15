@@ -1,4 +1,3 @@
-import type { BehandlingDto } from '../../../generated';
 import type { VergeDto, VergeStegPayload } from '../../../typer/api';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -35,11 +34,8 @@ const erVergetypeOppfylt = (avhengigheter?: Avhengigheter): boolean =>
 const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
     erVergetypeOppfylt(avhengigheter) && avhengigheter?.vergetype.verdi === Vergetype.Advokat;
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const [VergeProvider, useVerge] = createUseContext(({ behandling }: Props) => {
+const [VergeProvider, useVerge] = createUseContext(() => {
+    const { behandling } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const queryClient = useQueryClient();
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);

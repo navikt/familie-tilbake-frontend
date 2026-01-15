@@ -1,5 +1,5 @@
 import type { ForeldelsePeriodeSkjemeData } from './typer/foreldelse';
-import type { BehandlingDto, BehandlingstatusEnum } from '../../../generated';
+import type { BehandlingstatusEnum } from '../../../generated';
 import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '../../../typer/api';
 import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 
@@ -43,10 +43,6 @@ const utledValgtPeriode = (
     return undefined;
 };
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
 export type ForeldelseHook = {
     foreldelse: Ressurs<ForeldelseResponse> | undefined;
     erAutoutført: boolean | undefined;
@@ -68,8 +64,10 @@ export type ForeldelseHook = {
     ) => void;
 };
 
-const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling }: Props) => {
+const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     const { fagsystem, eksternFagsakId } = useFagsak();
+    const { behandling, erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
+        useBehandling();
     const queryClient = useQueryClient();
     const [foreldelse, setForeldelse] = useState<Ressurs<ForeldelseResponse>>();
     const [skjemaData, settSkjemaData] = useState<ForeldelsePeriodeSkjemeData[]>([]);
@@ -78,8 +76,6 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(({ behandling }: Pr
     const [valgtPeriode, settValgtPeriode] = useState<ForeldelsePeriodeSkjemeData>();
     const [allePerioderBehandlet, settAllePerioderBehandlet] = useState<boolean>(false);
     const [senderInn, settSenderInn] = useState<boolean>(false);
-    const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
-        useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
     const navigate = useNavigate();

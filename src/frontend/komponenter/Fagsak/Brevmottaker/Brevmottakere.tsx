@@ -1,4 +1,3 @@
-import type { BehandlingDto } from '../../../generated';
 import type { Brevmottaker } from '../../../typer/Brevmottaker';
 
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
@@ -222,12 +221,8 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     );
 };
 
-type BrevmottakereProps = {
-    behandling: BehandlingDto;
-};
-
-const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
-    const { behandlingILesemodus, actionBarStegtekst } = useBehandling();
+const Brevmottakere: React.FC = () => {
+    const { behandling, behandlingILesemodus, actionBarStegtekst } = useBehandling();
     const { fagsystem, eksternFagsakId, bruker } = useFagsak();
     const navigate = useNavigate();
 

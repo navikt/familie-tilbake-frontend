@@ -1,13 +1,34 @@
+import type { BehandlingDto } from '../../../../../generated';
+import type { Ressurs } from '../../../../../typer/ressurs';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
+import { vi } from 'vitest';
 
 import SplittPeriode from './SplittPeriode';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
+import { BehandlingContext } from '../../../../../context/BehandlingContext';
+import { lagBehandlingContext } from '../../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../../testdata/vilkårsvurderingFactory';
+import { RessursStatus } from '../../../../../typer/ressurs';
+
+vi.mock('../../../../../api/http/HttpProvider', async () => {
+    const actual = await vi.importActual('../../../../../api/http/HttpProvider');
+    return {
+        ...actual,
+        useHttp: (): { request: () => Promise<Ressurs<BehandlingDto>> } => ({
+            request: (): Promise<Ressurs<BehandlingDto>> => {
+                return Promise.resolve({
+                    status: RessursStatus.Suksess,
+                    data: lagBehandling(),
+                });
+            },
+        }),
+    };
+});
 
 describe('SplittPeriode - Vilkårsvurdering', () => {
     let user: UserEvent;
@@ -17,6 +38,7 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
     });
 
     test('Åpning av modal', async () => {
+        const behandling = lagBehandling();
         const {
             getByAltText,
             getByLabelText,
@@ -26,11 +48,12 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
             queryByText,
         } = render(
             <HttpProvider>
-                <SplittPeriode
-                    periode={lagVilkårsvurderingPeriodeSkjemaData()}
-                    behandling={lagBehandling()}
-                    onBekreft={vi.fn()}
-                />
+                <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+                    <SplittPeriode
+                        periode={lagVilkårsvurderingPeriodeSkjemaData()}
+                        onBekreft={vi.fn()}
+                    />
+                </BehandlingContext.Provider>
             </HttpProvider>
         );
 

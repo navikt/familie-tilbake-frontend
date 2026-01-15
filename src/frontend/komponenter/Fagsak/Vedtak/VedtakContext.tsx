@@ -1,5 +1,4 @@
 import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
-import type { BehandlingDto } from '../../../generated';
 import type {
     ForeslåVedtakStegPayload,
     ForhåndsvisVedtaksbrev,
@@ -80,12 +79,9 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
     return perioderMedTekst;
 };
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => {
+const [VedtakProvider, useVedtak] = createUseContext(() => {
     const { fagsystem, eksternFagsakId } = useFagsak();
+    const { behandling, nullstillIkkePersisterteKomponenter } = useBehandling();
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
     const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
     const [skjemaData, settSkjemaData] = useState<AvsnittSkjemaData[]>([]);
@@ -96,7 +92,6 @@ const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => 
     const [senderInn, settSenderInn] = useState<boolean>(false);
     const [foreslåVedtakRespons, settForeslåVedtakRespons] = useState<Ressurs<string>>();
     const queryClient = useQueryClient();
-    const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { gjerVedtaksbrevteksterKall, gjerBeregningsresultatKall, sendInnForeslåVedtak } =
         useBehandlingApi();
     const { lagreUtkastVedtaksbrev } = useDokumentApi();

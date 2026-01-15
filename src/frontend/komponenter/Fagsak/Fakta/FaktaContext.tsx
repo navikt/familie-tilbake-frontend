@@ -1,5 +1,4 @@
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/fakta';
-import type { BehandlingDto } from '../../../generated';
 import type { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
 import type {
@@ -34,11 +33,8 @@ import { SYNLIGE_STEG } from '../../../utils/sider';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
+const [FaktaProvider, useFakta] = createUseContext(() => {
+    const { behandling } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const queryClient = useQueryClient();
     const [fakta, setFakta] = useState<Ressurs<FaktaResponse>>();
