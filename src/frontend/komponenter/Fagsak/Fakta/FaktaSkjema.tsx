@@ -28,6 +28,7 @@ import {
     useDatepicker,
     VStack,
 } from '@navikt/ds-react';
+import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useMutation } from '@tanstack/react-query';
 import { formatISO, parseISO } from 'date-fns';
 import * as React from 'react';
@@ -89,7 +90,7 @@ export const FaktaSkjema = ({
         datepickerProps,
         inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
     } = useDatepicker({
-        onDateChange: date => {
+        onDateChange: async date => {
             if (date) {
                 methods.setValue(
                     'vurdering.oppdaget.dato',
@@ -99,6 +100,7 @@ export const FaktaSkjema = ({
             } else {
                 methods.setValue('vurdering.oppdaget.dato', '', { shouldDirty: true });
             }
+            await methods.trigger('vurdering.oppdaget.dato');
         },
         defaultSelected: faktaOmFeilutbetaling.vurdering.oppdaget?.dato
             ? parseISO(faktaOmFeilutbetaling.vurdering.oppdaget.dato)
@@ -133,8 +135,8 @@ export const FaktaSkjema = ({
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)} id="fakta-skjema">
-                <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
+            <VStack as="form" gap="8" onSubmit={methods.handleSubmit(onSubmit)} id="fakta-skjema">
+                <VStack as="section" gap="6" aria-label="Rettslig grunnlag innhold">
                     <Heading level="2" size="small">
                         Rettslig grunnlag
                     </Heading>
@@ -168,8 +170,13 @@ export const FaktaSkjema = ({
                             </Table.Body>
                         </Table>
                     </div>
-                </section>
-                <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
+                </VStack>
+                <VStack
+                    as="section"
+                    maxWidth={ATextWidthMax}
+                    gap="6"
+                    aria-label="Rettslig grunnlag innhold"
+                >
                     <Heading level="2" size="small">
                         Detaljer om feilutbetalingen
                     </Heading>
@@ -178,7 +185,6 @@ export const FaktaSkjema = ({
                         {...methods.register('vurdering.årsak')}
                         error={methods.formState.errors.vurdering?.årsak?.message}
                         size="small"
-                        className="w-100"
                         minRows={3}
                         resize
                         maxLength={3000}
@@ -215,12 +221,12 @@ export const FaktaSkjema = ({
                         {...methods.register('vurdering.oppdaget.beskrivelse')}
                         error={methods.formState.errors.vurdering?.oppdaget?.beskrivelse?.message}
                         size="small"
-                        className="w-100 mb-6"
+                        className="mb-6"
                         minRows={3}
                         resize
                         maxLength={3000}
                     />
-                </section>
+                </VStack>
                 <ActionBar
                     {...(methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert
                         ? { type: 'submit', nesteTekst: 'Lagre', formId: 'fakta-skjema' }
@@ -231,7 +237,7 @@ export const FaktaSkjema = ({
                     onForrige={undefined}
                     isLoading={false}
                 />
-            </form>
+            </VStack>
         </FormProvider>
     );
 };

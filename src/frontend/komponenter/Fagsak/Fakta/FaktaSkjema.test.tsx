@@ -1,10 +1,11 @@
 import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { FaktaOmFeilutbetalingDto, OppdaterFaktaData } from '../../../generated';
+import type { FaktaOmFeilutbetaling, OppdaterFaktaData } from '../../../generated-new';
 import type { RenderResult } from '@testing-library/react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
+import { expect } from 'vitest';
 
 import { FaktaSkjema } from './FaktaSkjema';
 import { FagsakContext } from '../../../context/FagsakContext';
@@ -30,8 +31,8 @@ vi.mock('../../../context/BehandlingContext', () => ({
 }));
 
 const faktaOmFeilutbetaling = (
-    overrides?: Partial<FaktaOmFeilutbetalingDto>
-): FaktaOmFeilutbetalingDto => ({
+    overrides?: Partial<FaktaOmFeilutbetaling>
+): FaktaOmFeilutbetaling => ({
     feilutbetaling: {
         beløp: 6900,
         fom: '1969-04-20',
@@ -74,14 +75,14 @@ const faktaOmFeilutbetaling = (
     ],
     ferdigvurdert: false,
     vurdering: {
-        årsak: undefined,
+        årsak: null,
         oppdaget: undefined,
     },
     ...overrides,
 });
 
 const renderFakta = (
-    overrides?: Partial<FaktaOmFeilutbetalingDto>
+    overrides?: Partial<FaktaOmFeilutbetaling>
 ): { result: RenderResult; mutationBody: Promise<OppdaterFaktaData> } => {
     const client = new QueryClient();
     const mutationBody = new Promise<OppdaterFaktaData>(resolve => {
@@ -195,7 +196,7 @@ describe('Fakta om feilutbetaling', () => {
                     await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
                 );
             });
-            await expect(mutationBody).resolves.toEqual({
+            expect(mutationBody).resolves.toEqual({
                 path: {
                     behandlingId: 'unik',
                 },
@@ -249,6 +250,7 @@ describe('Fakta om feilutbetaling', () => {
                 result: { findByRole },
             } = renderFakta({
                 vurdering: {
+                    årsak: 'Toast',
                     oppdaget: {
                         av: 'NAV',
                         dato: '2020-04-20',
@@ -418,6 +420,40 @@ describe('Fakta om feilutbetaling', () => {
             });
             expect(submitKnapp).toHaveAttribute('type', 'button');
             expect(submitKnapp).toHaveTextContent('Neste');
+        });
+
+        test('Valg av dato med musepeker - skal revalidere etter valg', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta({
+                vurdering: {
+                    årsak: 'test',
+                    oppdaget: {
+                        av: 'NAV',
+                        dato: null,
+                        beskrivelse: 'test',
+                    },
+                },
+            });
+
+            const datoSelector = async (): Promise<HTMLElement> =>
+                findByRole('textbox', { name: 'Når ble feilutbetalingen oppdaget?' });
+
+            fireEvent.change(await datoSelector(), { target: { value: 'lol' } });
+            fireEvent.blur(await datoSelector());
+            expect(await datoSelector()).toHaveAccessibleDescription('Ugyldig datoformat');
+
+            fireEvent.click(await findByRole('button', { name: 'Åpne datovelger' }));
+            fireEvent.change(await findByRole('combobox', { name: 'År' }), {
+                target: { value: '2020' },
+            });
+            fireEvent.change(await findByRole('combobox', { name: 'Måned' }), {
+                target: { value: 'januar' },
+            });
+            fireEvent.click(await findByRole('button', { name: 'onsdag 1' }));
+
+            expect(await datoSelector()).toHaveValue('01.01.2020');
+            expect(await datoSelector()).not.toHaveAccessibleDescription();
         });
     });
 });
