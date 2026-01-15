@@ -1,5 +1,4 @@
 import type { BehandlingApiHook } from '../../../../api/behandling';
-import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { Ressurs } from '../../../../typer/ressurs';
 import type { FaktaResponse } from '../../../../typer/tilbakekrevingstyper';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
@@ -11,18 +10,15 @@ import * as React from 'react';
 
 import { FaktaProvider } from '../FaktaContext';
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
+import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { HendelseUndertype, HendelseType } from '../../../../kodeverk';
+import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagFaktaPeriode } from '../../../../testdata/faktaFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../../typer/ressurs';
-
-const mockUseBehandling = vi.fn();
-vi.mock('../../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 
 vi.mock('../../../../api/behandling', () => ({
     useBehandlingApi: (): Partial<BehandlingApiHook> => ({
@@ -49,22 +45,25 @@ const renderComponent = (
     periode: FaktaPeriodeSkjemaData,
     hendelseTyper: HendelseType[] | undefined
 ): RenderResult => {
+    const behandling = lagBehandling();
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <FaktaProvider behandling={lagBehandling()}>
-                    <table>
-                        <tbody>
-                            <FaktaPeriodeSkjema
-                                periode={periode}
-                                hendelseTyper={hendelseTyper}
-                                index={0}
-                                erLesevisning={false}
-                            />
-                        </tbody>
-                    </table>
-                </FaktaProvider>
+                <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+                    <FaktaProvider behandling={behandling}>
+                        <table>
+                            <tbody>
+                                <FaktaPeriodeSkjema
+                                    periode={periode}
+                                    hendelseTyper={hendelseTyper}
+                                    index={0}
+                                    erLesevisning={false}
+                                />
+                            </tbody>
+                        </table>
+                    </FaktaProvider>
+                </BehandlingContext.Provider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );
@@ -77,15 +76,6 @@ const mockPeriode: FaktaPeriodeSkjemaData = {
 
 beforeEach(() => {
     vi.clearAllMocks();
-    mockUseBehandling.mockImplementation(() => ({
-        behandling: lagBehandling(),
-        settIkkePersistertKomponent: vi.fn(),
-        nullstillIkkePersisterteKomponenter: vi.fn(),
-        ventegrunn: undefined,
-        aktivtSteg: undefined,
-        behandlingILesemodus: false,
-        erStegBehandlet: vi.fn().mockReturnValue(false),
-    }));
 });
 
 describe('FaktaPeriodeSkjema', () => {

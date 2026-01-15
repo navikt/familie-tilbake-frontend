@@ -1,4 +1,3 @@
-import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { BehandlingDto, ManuellBrevmottakerResponsDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 
@@ -7,7 +6,9 @@ import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 
 import Brevmottakere from './Brevmottakere';
+import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
+import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
@@ -20,11 +21,6 @@ vi.mock('react-router', async () => {
         useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
     };
 });
-
-const mockUseBehandling = vi.fn();
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 
 const createMockManuelleBrevmottakere = (): ManuellBrevmottakerResponsDto[] => [
     {
@@ -65,21 +61,13 @@ const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponsDto[] => [
 ];
 
 const renderBrevmottakere = (behandling: BehandlingDto): RenderResult => {
-    mockUseBehandling.mockImplementation(() => ({
-        behandling: lagBehandling(),
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
-        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
-        erStegBehandlet: vi.fn().mockReturnValue(false),
-        ventegrunn: undefined,
-        aktivtSteg: undefined,
-        behandlingILesemodus: false,
-    }));
-
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <Brevmottakere behandling={behandling} />
+                <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+                    <Brevmottakere behandling={behandling} />
+                </BehandlingContext.Provider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

@@ -1,4 +1,3 @@
-import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { Toggles } from '../../../context/toggles';
 import type { BehandlingDto, ForhåndsvarselDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
@@ -10,8 +9,10 @@ import React from 'react';
 import { Forhåndsvarsel } from './Forhåndsvarsel';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
+import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { ToggleName } from '../../../context/toggles';
+import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
 import { lagBehandlingDto } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
@@ -19,7 +20,6 @@ import {
     lagForhåndsvarselMutations,
 } from '../../../testdata/forhåndsvarselFactory';
 
-const mockUseBehandling = vi.fn();
 const mockUseToggles = vi.fn();
 
 vi.mock('react-router', async () => {
@@ -32,10 +32,6 @@ vi.mock('react-router', async () => {
 
 vi.mock('../../../context/TogglesContext', () => ({
     useToggles: (): Toggles => mockUseToggles(),
-}));
-
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
 }));
 
 vi.mock('../../../generated/@tanstack/react-query.gen', () => ({
@@ -70,14 +66,6 @@ const lagForhåndsvarselInfo = (overrides?: Partial<ForhåndsvarselDto>): Forhå
 });
 
 const setupMock = (): void => {
-    mockUseBehandling.mockImplementation(() => ({
-        behandling: lagBehandlingDto(),
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 2 av 5'),
-        erStegBehandlet: vi.fn().mockReturnValue(false),
-        ventegrunn: undefined,
-        aktivtSteg: undefined,
-        behandlingILesemodus: false,
-    }));
     mockUseToggles.mockImplementation(() => ({
         toggles: {
             [ToggleName.Forhåndsvarselsteg]: true,
@@ -88,9 +76,16 @@ const setupMock = (): void => {
 const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): RenderResult => {
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
-            <QueryClientProvider client={new QueryClient()}>
-                <Forhåndsvarsel behandling={behandling} />
-            </QueryClientProvider>
+            <BehandlingContext.Provider
+                value={lagBehandlingContext({
+                    behandling,
+                    actionBarStegtekst: (): string | undefined => 'Steg 2 av 5',
+                })}
+            >
+                <QueryClientProvider client={new QueryClient()}>
+                    <Forhåndsvarsel behandling={behandling} />
+                </QueryClientProvider>
+            </BehandlingContext.Provider>
         </FagsakContext.Provider>
     );
 };

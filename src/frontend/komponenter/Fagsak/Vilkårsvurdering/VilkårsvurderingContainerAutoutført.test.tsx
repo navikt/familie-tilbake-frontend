@@ -1,6 +1,5 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { VilkårsvurderingResponse } from '../../../typer/tilbakekrevingstyper';
 
@@ -11,7 +10,9 @@ import { vi } from 'vitest';
 
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
+import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
+import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingResponse } from '../../../testdata/vilkårsvurderingFactory';
@@ -47,11 +48,6 @@ vi.mock('react-router', async () => {
     };
 });
 
-const mockUseBehandling = vi.fn();
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
-
 const setupMock = (): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
@@ -69,26 +65,26 @@ const setupMock = (): void => {
             return Promise.resolve(ressurs);
         },
     }));
-
-    mockUseBehandling.mockImplementation(() => ({
-        behandling: lagBehandling(),
-        erStegBehandlet: (): boolean => false,
-        erStegAutoutført: (): boolean => true,
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 3 av 4'),
-        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
-    }));
 };
 
 describe('VilkårsvurderingContainer', () => {
     test('Vis autoutført', async () => {
         setupMock();
+        const behandling = lagBehandling();
 
         const { getByText } = render(
             <FagsakContext.Provider value={lagFagsak()}>
                 <QueryClientProvider client={queryClient}>
-                    <VilkårsvurderingProvider behandling={lagBehandling()}>
-                        <VilkårsvurderingContainer behandling={lagBehandling()} />
-                    </VilkårsvurderingProvider>
+                    <BehandlingContext.Provider
+                        value={lagBehandlingContext({
+                            behandling,
+                            erStegAutoutført: (): boolean => true,
+                        })}
+                    >
+                        <VilkårsvurderingProvider behandling={behandling}>
+                            <VilkårsvurderingContainer behandling={behandling} />
+                        </VilkårsvurderingProvider>
+                    </BehandlingContext.Provider>
                 </QueryClientProvider>
             </FagsakContext.Provider>
         );

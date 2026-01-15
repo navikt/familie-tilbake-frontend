@@ -1,6 +1,5 @@
 import type { BehandlingApiHook } from '../../../../../api/behandling';
 import type { Http } from '../../../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../../../context/BehandlingContext';
 import type { BehandlingDto } from '../../../../../generated';
 import type { Ressurs } from '../../../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
@@ -14,7 +13,9 @@ import * as React from 'react';
 import { vi } from 'vitest';
 
 import { HenleggModal } from './HenleggModal';
+import { BehandlingContext } from '../../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../../context/FagsakContext';
+import { lagBehandlingContext } from '../../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../../testutils/queryTestUtils';
@@ -29,10 +30,6 @@ vi.mock('../../../../../api/http/HttpProvider', () => {
         }),
     };
 });
-const mockUseBehandling = vi.fn();
-vi.mock('../../../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../../../api/behandling', () => ({
@@ -48,7 +45,13 @@ const renderHenleggModal = (
     const renderModal = render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <HenleggModal behandling={behandling} dialogRef={mockDialogRef} årsaker={årsaker} />
+                <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+                    <HenleggModal
+                        behandling={behandling}
+                        dialogRef={mockDialogRef}
+                        årsaker={årsaker}
+                    />
+                </BehandlingContext.Provider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );
@@ -66,14 +69,6 @@ const setupMocks = (): void => {
             };
             return Promise.resolve(ressurs);
         },
-    }));
-    mockUseBehandling.mockImplementation(() => ({
-        behandling: lagBehandling(),
-        nullstillIkkePersisterteKomponenter: vi.fn(),
-        ventegrunn: undefined,
-        aktivtSteg: undefined,
-        behandlingILesemodus: false,
-        erStegBehandlet: vi.fn().mockReturnValue(false),
     }));
 };
 

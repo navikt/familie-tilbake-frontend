@@ -1,50 +1,44 @@
-import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { BehandlingContextType } from '../../../context/BehandlingContext';
 import type { RenderResult } from '@testing-library/react';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { ActionBar } from './ActionBar';
+import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
+import {
+    lagBehandlingContext,
+    type BehandlingContextOverrides,
+} from '../../../testdata/behandlingContextFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
-
-const mockUseBehandling = vi.fn();
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 
 const renderActionBar = (
     onForrige: () => void,
     onNeste: () => void,
-    isLoading: boolean = false
+    isLoading: boolean = false,
+    behandlingContextOverrides: BehandlingContextOverrides = {}
 ): RenderResult => {
+    const behandlingContext: BehandlingContextType = lagBehandlingContext(
+        behandlingContextOverrides
+    );
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
-            <ActionBar
-                stegtekst="Steg 2 av 5"
-                forrigeAriaLabel="gå tilbake til faktasteget"
-                nesteAriaLabel="gå videre til vilkårsvurderingssteget"
-                onNeste={onNeste}
-                isLoading={isLoading}
-                onForrige={onForrige}
-            />
+            <BehandlingContext.Provider value={behandlingContext}>
+                <ActionBar
+                    stegtekst="Steg 2 av 5"
+                    forrigeAriaLabel="gå tilbake til faktasteget"
+                    nesteAriaLabel="gå videre til vilkårsvurderingssteget"
+                    onNeste={onNeste}
+                    isLoading={isLoading}
+                    onForrige={onForrige}
+                />
+            </BehandlingContext.Provider>
         </FagsakContext.Provider>
     );
 };
 
 describe('ActionBar', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-        mockUseBehandling.mockImplementation(() => ({
-            behandling: lagBehandling(),
-            erStegBehandlet: vi.fn().mockReturnValue(false),
-            behandlingILesemodus: false,
-            ventegrunn: undefined,
-            aktivtSteg: undefined,
-        }));
-    });
-
     test('Kaller ikke onNeste eller onForrige når isLoading = true', () => {
         const onNeste = vi.fn();
         const onForrige = vi.fn();

@@ -1,6 +1,5 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { BehandlingDto } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
@@ -15,8 +14,10 @@ import { vi } from 'vitest';
 
 import ForeldelseContainer from './ForeldelseContainer';
 import { ForeldelseProvider } from './ForeldelseContext';
+import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
+import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagForeldelsePeriode, lagForeldelseResponse } from '../../../testdata/foreldelseFactory';
@@ -32,10 +33,6 @@ vi.mock('../../../api/http/HttpProvider', () => {
         }),
     };
 });
-const mockUseBehandling = vi.fn();
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
@@ -49,14 +46,28 @@ vi.mock('react-router', async () => {
     };
 });
 
-const renderForeldelseContainer = (behandling: BehandlingDto): RenderResult => {
+const renderForeldelseContainer = (
+    behandling: BehandlingDto,
+    behandlet: boolean = false,
+    lesemodus: boolean = false,
+    autoutført: boolean = false
+): RenderResult => {
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <ForeldelseProvider behandling={behandling}>
-                    <ForeldelseContainer behandling={behandling} />
-                </ForeldelseProvider>
+                <BehandlingContext.Provider
+                    value={lagBehandlingContext({
+                        behandling,
+                        behandlingILesemodus: lesemodus,
+                        erStegBehandlet: (): boolean => behandlet,
+                        erStegAutoutført: (): boolean => autoutført,
+                    })}
+                >
+                    <ForeldelseProvider behandling={behandling}>
+                        <ForeldelseContainer behandling={behandling} />
+                    </ForeldelseProvider>
+                </BehandlingContext.Provider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );
@@ -79,12 +90,7 @@ const foreldetPerioder = [
     }),
 ];
 
-const setupMock = (
-    behandlet: boolean,
-    lesevisning: boolean,
-    autoutført: boolean,
-    foreldelse?: ForeldelseResponse
-): void => {
+const setupMock = (foreldelse?: ForeldelseResponse): void => {
     if (foreldelse) {
         mockUseBehandlingApi.mockImplementation(() => ({
             gjerForeldelseKall: (): Promise<Ressurs<ForeldelseResponse>> => {
@@ -103,19 +109,6 @@ const setupMock = (
             },
         }));
     }
-    mockUseBehandling.mockImplementation(() => ({
-        behandling: lagBehandling(),
-        erStegBehandlet: (): boolean => behandlet,
-        erStegAutoutført: (): boolean => autoutført,
-        visVenteModal: false,
-        behandlingILesemodus: lesevisning,
-        settIkkePersistertKomponent: vi.fn(),
-        nullstillIkkePersisterteKomponenter: vi.fn(),
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 2 av 4'),
-        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
-        ventegrunn: undefined,
-        aktivtSteg: undefined,
-    }));
 };
 
 describe('ForeldelseContainer', () => {
@@ -126,7 +119,7 @@ describe('ForeldelseContainer', () => {
     });
 
     test('Vis og fyll ut perioder og send inn', async () => {
-        setupMock(false, false, false, lagForeldelseResponse({ foreldetPerioder }));
+        setupMock(lagForeldelseResponse({ foreldetPerioder }));
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
             renderForeldelseContainer(lagBehandling());
 
@@ -228,10 +221,12 @@ describe('ForeldelseContainer', () => {
                 },
             ],
         });
-        setupMock(true, false, false, foreldelseResponse);
+        setupMock(foreldelseResponse);
 
-        const { getByText, getByRole, getByLabelText, queryByText } =
-            renderForeldelseContainer(lagBehandling());
+        const { getByText, getByRole, getByLabelText, queryByText } = renderForeldelseContainer(
+            lagBehandling(),
+            true
+        );
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
@@ -300,7 +295,7 @@ describe('ForeldelseContainer', () => {
     });
 
     test('Vis utfylt - lesevisning', async () => {
-        setupMock(true, true, false, {
+        setupMock({
             foreldetPerioder: [
                 {
                     ...foreldetPerioder[0],
@@ -319,7 +314,9 @@ describe('ForeldelseContainer', () => {
         });
 
         const { getByText, getByRole, getByLabelText } = renderForeldelseContainer(
-            lagBehandling({ status: Behandlingstatus.FatterVedtak })
+            lagBehandling({ status: Behandlingstatus.FatterVedtak }),
+            true,
+            true
         );
 
         await waitFor(() => {
@@ -424,8 +421,8 @@ describe('ForeldelseContainer', () => {
     });
 
     test('Vis autoutført', async () => {
-        setupMock(false, false, true);
-        const { getByText } = renderForeldelseContainer(lagBehandling());
+        setupMock();
+        const { getByText } = renderForeldelseContainer(lagBehandling(), false, false, true);
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();

@@ -1,6 +1,5 @@
 import type { DokumentApiHook } from '../../../../api/dokument';
 import type { Http } from '../../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { BehandlingDto, SpråkkodeEnum } from '../../../../generated';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -12,8 +11,10 @@ import * as React from 'react';
 
 import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
+import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { DokumentMal } from '../../../../kodeverk';
+import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
@@ -27,11 +28,6 @@ vi.mock('../../../../api/http/HttpProvider', () => {
         }),
     };
 });
-
-const mockUseBehandling = vi.fn();
-vi.mock('../../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 
 const mockUseDokumentApi = vi.fn();
 vi.mock('../../../../api/dokument', () => ({
@@ -48,21 +44,26 @@ vi.mock('react-router', async () => {
 
 const renderSendMelding = (
     behandling: BehandlingDto,
-    språkkode: SpråkkodeEnum = 'NB'
+    språkkode: SpråkkodeEnum = 'NB',
+    behandlingILesemodus: boolean = false
 ): RenderResult => {
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak({ språkkode })}>
-                <SendMeldingProvider behandling={behandling}>
-                    <SendMelding behandling={behandling} />
-                </SendMeldingProvider>
+                <BehandlingContext.Provider
+                    value={lagBehandlingContext({ behandling, behandlingILesemodus })}
+                >
+                    <SendMeldingProvider behandling={behandling}>
+                        <SendMelding behandling={behandling} />
+                    </SendMeldingProvider>
+                </BehandlingContext.Provider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );
 };
 
-const setupMock = (behandlingILesemodus: boolean): void => {
+const setupMock = (): void => {
     mockUseDokumentApi.mockImplementation(() => ({
         bestillBrev: (): Promise<{
             status: RessursStatus;
@@ -72,13 +73,6 @@ const setupMock = (behandlingILesemodus: boolean): void => {
                 status: RessursStatus.Suksess,
                 data: 'suksess',
             }),
-    }));
-    mockUseBehandling.mockImplementation(() => ({
-        behandling: lagBehandling(),
-        behandlingILesemodus: behandlingILesemodus,
-        ventegrunn: undefined,
-        aktivtSteg: undefined,
-        erStegBehandlet: vi.fn().mockReturnValue(false),
     }));
 };
 
@@ -90,7 +84,7 @@ describe('SendMelding', () => {
     });
 
     test('Fyller ut skjema og sender varsel', async () => {
-        setupMock(false);
+        setupMock();
 
         const { getByText, getByLabelText, getByRole, queryByRole, queryByText } =
             renderSendMelding(lagBehandling({ varselSendt: false }));
@@ -145,7 +139,7 @@ describe('SendMelding', () => {
     });
 
     test('Fyller ut skjema og sender korrigert varsel', async () => {
-        setupMock(false);
+        setupMock();
 
         const { getByText, getByLabelText, getByRole, queryByText } = renderSendMelding(
             lagBehandling({ varselSendt: true }),
@@ -184,7 +178,7 @@ describe('SendMelding', () => {
     });
 
     test('Fyller ut skjema og sender innhent dokumentasjon', async () => {
-        setupMock(false);
+        setupMock();
 
         const { getByText, getByLabelText, getByRole } = renderSendMelding(
             lagBehandling({ varselSendt: true })
@@ -221,10 +215,12 @@ describe('SendMelding', () => {
     });
 
     test('Lesevisning - venter på svar på manuelt brev', async () => {
-        setupMock(true);
+        setupMock();
 
         const { getByText, getByRole, queryByLabelText } = renderSendMelding(
-            lagBehandling({ varselSendt: false })
+            lagBehandling({ varselSendt: false }),
+            'NB',
+            true
         );
 
         expect(getByText('Brevmottaker')).toBeInTheDocument();

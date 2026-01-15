@@ -1,4 +1,3 @@
-import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { FaktaOmFeilutbetaling, OppdaterFaktaData } from '../../../generated-new';
 import type { RenderResult } from '@testing-library/react';
 
@@ -7,8 +6,9 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { FaktaSkjema } from './FaktaSkjema';
+import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
+import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { configureZod } from '../../../utils/zodConfig';
 
@@ -19,19 +19,6 @@ vi.mock('react-router', async () => {
         useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
     };
 });
-
-const mockUseBehandling = vi.fn(() => ({
-    behandling: lagBehandling(),
-    actionBarStegtekst: (): string => 'Mocked!!',
-    erStegBehandlet: (): boolean => false,
-    ventegrunn: undefined,
-    aktivtSteg: undefined,
-    behandlingILesemodus: false,
-}));
-
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): Partial<BehandlingHook> => mockUseBehandling(),
-}));
 
 const faktaOmFeilutbetaling = (
     overrides?: Partial<FaktaOmFeilutbetaling>
@@ -102,13 +89,15 @@ const renderFakta = (
     return {
         result: render(
             <FagsakContext.Provider value={lagFagsak()}>
-                <QueryClientProvider client={client}>
-                    <FaktaSkjema
-                        faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
-                        behandlingId="unik"
-                        behandlingUrl="https://tilbakekreving"
-                    />
-                </QueryClientProvider>
+                <BehandlingContext.Provider value={lagBehandlingContext()}>
+                    <QueryClientProvider client={client}>
+                        <FaktaSkjema
+                            faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
+                            behandlingId="unik"
+                            behandlingUrl="https://tilbakekreving"
+                        />
+                    </QueryClientProvider>
+                </BehandlingContext.Provider>
             </FagsakContext.Provider>
         ),
         mutationBody,

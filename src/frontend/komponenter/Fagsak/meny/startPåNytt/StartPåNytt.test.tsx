@@ -1,5 +1,4 @@
 import type { StartPåNyttHook as StartPåNyttHook } from './useStartPåNytt';
-import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { RedirectEtterLagringHook } from '../../../../hooks/useRedirectEtterLagring';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -11,15 +10,12 @@ import * as React from 'react';
 
 import { StartPåNytt } from './StartPåNytt';
 import { Feil } from '../../../../api/feil';
+import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
+import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
-
-const mockUseBehandling = vi.fn();
-vi.mock('../../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 
 const mockUseRedirectEtterLagring = vi.fn();
 vi.mock('../../../../hooks/useRedirectEtterLagring', () => ({
@@ -33,14 +29,6 @@ vi.mock('./useStartPåNytt', () => ({
 
 const mockNullstill = vi.fn();
 const setupMocks = (): void => {
-    mockUseBehandling.mockReturnValue({
-        behandling: lagBehandling(),
-        nullstillIkkePersisterteKomponenter: mockNullstill,
-        ventegrunn: undefined,
-        aktivtSteg: undefined,
-        behandlingILesemodus: false,
-        erStegBehandlet: vi.fn().mockReturnValue(false),
-    });
     mockUseRedirectEtterLagring.mockReturnValue(() => null);
 };
 
@@ -73,17 +61,25 @@ describe('StartPåNytt', () => {
         });
 
         const queryClient = createTestQueryClient();
+        const behandling = lagBehandling();
         render(
             <QueryClientProvider client={queryClient}>
                 <FagsakContext.Provider value={lagFagsak({ eksternFagsakId: '123' })}>
-                    <ActionMenu open>
-                        <ActionMenu.Trigger>
-                            <Button>Test kun for å rendre</Button>
-                        </ActionMenu.Trigger>
-                        <ActionMenu.Content>
-                            <StartPåNytt behandling={lagBehandling()} />
-                        </ActionMenu.Content>
-                    </ActionMenu>
+                    <BehandlingContext.Provider
+                        value={lagBehandlingContext({
+                            behandling,
+                            nullstillIkkePersisterteKomponenter: mockNullstill,
+                        })}
+                    >
+                        <ActionMenu open>
+                            <ActionMenu.Trigger>
+                                <Button>Test kun for å rendre</Button>
+                            </ActionMenu.Trigger>
+                            <ActionMenu.Content>
+                                <StartPåNytt behandling={behandling} />
+                            </ActionMenu.Content>
+                        </ActionMenu>
+                    </BehandlingContext.Provider>
                 </FagsakContext.Provider>
             </QueryClientProvider>
         );
