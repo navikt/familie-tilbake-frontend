@@ -1,5 +1,4 @@
 import type { Http } from '../../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../../context/BehandlingContext';
 import type { ForeldelseHook } from '../ForeldelseContext';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { RenderResult } from '@testing-library/react';
@@ -10,8 +9,9 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import ForeldelsePeriodeSkjema from './ForeldelsePeriodeSkjema';
+import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { Foreldelsevurdering } from '../../../../kodeverk';
-import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
 import { lagForeldelsePeriodeSkjemaData } from '../../../../testdata/foreldelseFactory';
 
 vi.mock('../../../../api/http/HttpProvider', () => {
@@ -30,17 +30,12 @@ vi.mock('../ForeldelseContext', () => {
     };
 });
 
-vi.mock('../../../../context/BehandlingContext', () => {
-    return {
-        useBehandling: (): Partial<BehandlingHook> => ({
-            behandling: lagBehandling(),
-            settIkkePersistertKomponent: vi.fn(),
-        }),
-    };
-});
-
 const renderForeldelsePeriodeSkjema = (periode: ForeldelsePeriodeSkjemeData): RenderResult =>
-    render(<ForeldelsePeriodeSkjema periode={periode} erLesevisning={false} />);
+    render(
+        <BehandlingContext.Provider value={lagBehandlingContext()}>
+            <ForeldelsePeriodeSkjema periode={periode} erLesevisning={false} />
+        </BehandlingContext.Provider>
+    );
 
 describe('ForeldelsePeriodeSkjema', () => {
     let user: UserEvent;

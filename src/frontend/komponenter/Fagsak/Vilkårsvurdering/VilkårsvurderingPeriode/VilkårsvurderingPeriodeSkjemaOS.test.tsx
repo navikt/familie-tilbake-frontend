@@ -1,5 +1,4 @@
 import type { Http } from '../../../../api/http/HttpProvider';
-import type { BehandlingContextType } from '../../../../context/BehandlingContext';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -10,9 +9,10 @@ import * as React from 'react';
 import { vi } from 'vitest';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
+import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
-import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
@@ -35,19 +35,6 @@ vi.mock('../../../../api/http/HttpProvider', () => {
         }),
     };
 });
-
-vi.mock('../../../../context/BehandlingContext', () => ({
-    useBehandling: (): Partial<BehandlingContextType> => ({
-        behandling: lagBehandling(),
-        behandlingILesemodus: false,
-        settIkkePersistertKomponent: vi.fn(),
-        nullstillIkkePersisterteKomponenter: vi.fn(),
-        ventegrunn: undefined,
-        aktivtSteg: undefined,
-        erStegBehandlet: vi.fn().mockReturnValue(false),
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
-    }),
-}));
 
 vi.mock('../VilkårsvurderingContext', () => {
     return {
@@ -72,7 +59,11 @@ const TestWrapper = ({ children }: { children: React.ReactNode }): React.ReactEl
     const queryClient = createTestQueryClient();
     return (
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak()}>{children}</FagsakContext.Provider>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <BehandlingContext.Provider value={lagBehandlingContext()}>
+                    {children}
+                </BehandlingContext.Provider>
+            </FagsakContext.Provider>
         </QueryClientProvider>
     );
 };

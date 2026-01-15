@@ -1,4 +1,3 @@
-import type { BehandlingHook } from '../../../../../context/BehandlingContext';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';
@@ -6,16 +5,9 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import SplittPeriode from './SplittPeriode';
-import { lagBehandling } from '../../../../../testdata/behandlingFactory';
+import { BehandlingContext } from '../../../../../context/BehandlingContext';
+import { lagBehandlingContext } from '../../../../../testdata/behandlingContextFactory';
 import { lagForeldelsePeriodeSkjemaData } from '../../../../../testdata/foreldelseFactory';
-
-vi.mock('../../../../../context/BehandlingContext', () => {
-    return {
-        useBehandling: (): Partial<BehandlingHook> => ({
-            behandling: lagBehandling(),
-        }),
-    };
-});
 
 describe('SplittPeriode - Foreldelse', () => {
     let user: UserEvent;
@@ -32,7 +24,9 @@ describe('SplittPeriode - Foreldelse', () => {
             queryByAltText,
             queryByText,
         } = render(
-            <SplittPeriode periode={lagForeldelsePeriodeSkjemaData()} onBekreft={vi.fn()} />
+            <BehandlingContext.Provider value={lagBehandlingContext()}>
+                <SplittPeriode periode={lagForeldelsePeriodeSkjemaData()} onBekreft={vi.fn()} />
+            </BehandlingContext.Provider>
         );
 
         expect(queryByAltText('Del opp perioden')).toBeInTheDocument();

@@ -1,5 +1,4 @@
 import type { Http } from '../../../../api/http/HttpProvider';
-import type { BehandlingContextType } from '../../../../context/BehandlingContext';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { RenderResult } from '@testing-library/react';
@@ -11,8 +10,10 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
+import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
+import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
@@ -32,23 +33,6 @@ vi.mock('../../../../api/http/HttpProvider', () => {
         useHttp: (): Http => ({
             systemetLaster: () => false,
             request: vi.fn(),
-        }),
-    };
-});
-
-vi.mock('../../../../context/BehandlingContext', async () => {
-    const { lagBehandling } = await import('../../../../testdata/behandlingFactory');
-    return {
-        useBehandling: (): Partial<BehandlingContextType> => ({
-            behandling: lagBehandling(),
-            behandlingILesemodus: false,
-            settIkkePersistertKomponent: vi.fn(),
-            nullstillIkkePersisterteKomponenter: vi.fn(),
-            harUlagredeData: false,
-            ventegrunn: undefined,
-            aktivtSteg: undefined,
-            erStegBehandlet: vi.fn().mockReturnValue(false),
-            actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
         }),
     };
 });
@@ -78,15 +62,17 @@ const renderVilkårsvurderingPeriodeSkjema = (
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <VilkårsvurderingPeriodeSkjema
-                    periode={periode}
-                    behandletPerioder={behandletPerioder}
-                    erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
-                    erLesevisning={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
+                <BehandlingContext.Provider value={lagBehandlingContext()}>
+                    <VilkårsvurderingPeriodeSkjema
+                        periode={periode}
+                        behandletPerioder={behandletPerioder}
+                        erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
+                        erLesevisning={false}
+                        perioder={[periode]}
+                        pendingPeriode={undefined}
+                        settPendingPeriode={vi.fn()}
+                    />
+                </BehandlingContext.Provider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );
