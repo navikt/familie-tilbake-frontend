@@ -18,20 +18,20 @@ importers:
         specifier: 5.2.2
         version: 5.2.2(react-hook-form@7.71.1(react@19.2.3))
       '@navikt/aksel-icons':
-        specifier: 7.39.0
-        version: 7.39.0
+        specifier: 7.39.1
+        version: 7.39.1
       '@navikt/ds-css':
-        specifier: 7.39.0
-        version: 7.39.0
+        specifier: 7.39.1
+        version: 7.39.1
       '@navikt/ds-react':
-        specifier: 7.39.0
-        version: 7.39.0(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: 7.39.1
+        version: 7.39.1(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@navikt/ds-tailwind':
-        specifier: 7.39.0
-        version: 7.39.0
+        specifier: 7.39.1
+        version: 7.39.1
       '@navikt/ds-tokens':
-        specifier: 7.39.0
-        version: 7.39.0
+        specifier: 7.39.1
+        version: 7.39.1
       '@sentry/browser':
         specifier: 10.33.0
         version: 10.33.0
@@ -762,24 +762,24 @@ packages:
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
 
-  '@navikt/aksel-icons@7.39.0':
-    resolution: {integrity: sha512-M36ZJ1HRYxyonPJmxOBkK4gjEjT1AVNHRLEk3nNioJZhIj2EDGl7Uw/ALjyghfkxzsof5Q/2m7XXIu3DvInxYQ==, tarball: https://npm.pkg.github.com/download/@navikt/aksel-icons/7.39.0/a085e7e78b32ffa64bd7319ab6ac697a59941067}
+  '@navikt/aksel-icons@7.39.1':
+    resolution: {integrity: sha512-cMu+gBb1/vJ+YbnYtFZAGeJTvPcy4pBa2OLHGcaU9PsoZJett7CmYsWVt7zodo6BD8h8Ne2ZkokFSP+aHCBoLA==, tarball: https://npm.pkg.github.com/download/@navikt/aksel-icons/7.39.1/07c4f141221b98e918a1b033cfd6448042ec619c}
 
-  '@navikt/ds-css@7.39.0':
-    resolution: {integrity: sha512-ngLTzI4StcpvDawTzmcPtT7PkU+AIHxrjUqdGX6+ABIQkDxAslta+fIIwVoGrQ8PwC8kAjR4tt4O9Zk2IDv77A==, tarball: https://npm.pkg.github.com/download/@navikt/ds-css/7.39.0/cffa34e23426bc9f15f8f9f8f02ca30f2ddfdb2b}
+  '@navikt/ds-css@7.39.1':
+    resolution: {integrity: sha512-DOvmzGdXcZNWFR8c8nq0fAp6eSmkXRk/jqLsyeI+3XmA6uOgaUYVoO2W9Nq8x3SLApwk116WVYtEjxcINMTmtQ==, tarball: https://npm.pkg.github.com/download/@navikt/ds-css/7.39.1/637a0fb74298b72c584a890cf60c01183616a106}
 
-  '@navikt/ds-react@7.39.0':
-    resolution: {integrity: sha512-N/dH3FzQpK6hZtTToAr2eHYac3/Gh4OagHUbvaFF5fyTnFoQk3SH7IEcmQHX6YQk3gX1gRu/Y61fd14VTVNxxg==, tarball: https://npm.pkg.github.com/download/@navikt/ds-react/7.39.0/6ae2986f89fc61890e37016b9c683bf74a309adf}
+  '@navikt/ds-react@7.39.1':
+    resolution: {integrity: sha512-SQKhmXwMrkd1DGVs9h2kb6d7dpY6p4PQHebUYI7bhY5zxEAG42t+HYcHGTUzT2d4YqiV31SDCmioSMkrh07GAw==, tarball: https://npm.pkg.github.com/download/@navikt/ds-react/7.39.1/6e1c8a690a2a5530f95e3ff206c0fcba6ef58ceb}
     peerDependencies:
       '@types/react': ^17.0.30 || ^18 || ^19
       react: ^17 || ^18 || ^19
       react-dom: ^17 || ^18 || ^19
 
-  '@navikt/ds-tailwind@7.39.0':
-    resolution: {integrity: sha512-HaxoMYAgV9/bXdiWX2YV1+eIC6ulT1UMKHWkGY6HTR4iBUA1QvrY+NxLF2YZ4lOHGalthyz76IhF3zoUX4znCw==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tailwind/7.39.0/b472fc2c328c4f0e2b75ab91e84929bbe6a14e54}
+  '@navikt/ds-tailwind@7.39.1':
+    resolution: {integrity: sha512-WHsshdkZEaT7TFM3CDbKaQYcqj2ilGldMSTIrNGRcjnpwFaBfgPvSU0WASedM7YMLmugqa0zOb4kWfmGithSLg==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tailwind/7.39.1/d309ad1255b603707a9033e45255d8a38b1a39c4}
 
-  '@navikt/ds-tokens@7.39.0':
-    resolution: {integrity: sha512-gJT0526hc6zDHll436JtsZylJlfmh6SIFIyIwBIWmy2pBoTP/QxB5+cwFXKUau0iaItjmVSb209v5+XSJGYhcw==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.39.0/1ae77ff83ab4e63b49d2538e57f4f577f1765092}
+  '@navikt/ds-tokens@7.39.1':
+    resolution: {integrity: sha512-30KbBABjLBBO7pEAz3GkFA9eHh3C4blHOClvBYarZAd30AsIN8LNoJk5jbt9rBeh51RIBslPe5+Pz+OLrnIY1Q==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.39.1/70c7db2e145503aa257d2dbe55ebbb6802b79871}
 
   '@opentelemetry/api-logs@0.208.0':
     resolution: {integrity: sha512-CjruKY9V6NMssL/T1kAFgzosF1v9o6oeN+aX5JB/C/xPNtmgIJqcXHG7fA82Ou1zCpWGl4lROQUKwUNE1pMCyg==}
@@ -4533,16 +4533,16 @@ snapshots:
 
   '@jsdevtools/ono@7.1.3': {}
 
-  '@navikt/aksel-icons@7.39.0': {}
+  '@navikt/aksel-icons@7.39.1': {}
 
-  '@navikt/ds-css@7.39.0': {}
+  '@navikt/ds-css@7.39.1': {}
 
-  '@navikt/ds-react@7.39.0(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@navikt/ds-react@7.39.1(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@floating-ui/react': 0.27.8(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@floating-ui/react-dom': 2.1.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@navikt/aksel-icons': 7.39.0
-      '@navikt/ds-tokens': 7.39.0
+      '@navikt/aksel-icons': 7.39.1
+      '@navikt/ds-tokens': 7.39.1
       '@types/react': 19.2.8
       clsx: 2.1.1
       date-fns: 4.1.0
@@ -4550,9 +4550,9 @@ snapshots:
       react-day-picker: 9.7.0(react@19.2.3)
       react-dom: 19.2.3(react@19.2.3)
 
-  '@navikt/ds-tailwind@7.39.0': {}
+  '@navikt/ds-tailwind@7.39.1': {}
 
-  '@navikt/ds-tokens@7.39.0': {}
+  '@navikt/ds-tokens@7.39.1': {}
 
   '@opentelemetry/api-logs@0.208.0':
     dependencies:
