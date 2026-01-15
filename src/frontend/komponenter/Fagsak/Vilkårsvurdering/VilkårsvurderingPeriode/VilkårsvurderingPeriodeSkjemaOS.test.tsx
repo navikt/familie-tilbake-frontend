@@ -95,7 +95,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={{
                         aktiviteter: [
                             {
@@ -226,7 +225,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
@@ -307,7 +305,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
@@ -418,7 +415,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
@@ -571,7 +567,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
@@ -652,7 +647,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             render(
                 <TestWrapper>
                     <VilkårsvurderingPeriodeSkjema
-                        behandling={lagBehandling()}
                         periode={periode}
                         behandletPerioder={[]}
                         erTotalbeløpUnder4Rettsgebyr={false}
@@ -757,7 +751,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}
@@ -893,7 +886,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             render(
                 <TestWrapper>
                     <VilkårsvurderingPeriodeSkjema
-                        behandling={lagBehandling()}
                         periode={periode}
                         behandletPerioder={[]}
                         erTotalbeløpUnder4Rettsgebyr={false}
@@ -1022,7 +1014,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
@@ -1159,7 +1150,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             render(
                 <TestWrapper>
                     <VilkårsvurderingPeriodeSkjema
-                        behandling={lagBehandling()}
                         periode={periode}
                         behandletPerioder={[]}
                         erTotalbeløpUnder4Rettsgebyr={true}
@@ -1272,7 +1262,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={true}
@@ -1361,7 +1350,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByLabelText, getByText } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={lagVilkårsvurderingPeriodeSkjemaData({
                         begrunnelse: 'Gitt i god tro',
                         vilkårsvurderingsresultatInfo: {
@@ -1400,7 +1388,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByLabelText, getByTestId, getByText } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={lagVilkårsvurderingPeriodeSkjemaData({
                         begrunnelse: 'Gitt mangelfulle opplysninger',
                         vilkårsvurderingsresultatInfo: {
@@ -1471,7 +1458,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         const { getByRole, queryAllByText } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={lagBehandling()}
                     periode={periode}
                     behandletPerioder={[]}
                     erTotalbeløpUnder4Rettsgebyr={false}

@@ -81,8 +81,8 @@ describe('VilkårsvurderingContainer', () => {
                             erStegAutoutført: (): boolean => true,
                         })}
                     >
-                        <VilkårsvurderingProvider behandling={behandling}>
-                            <VilkårsvurderingContainer behandling={behandling} />
+                        <VilkårsvurderingProvider>
+                            <VilkårsvurderingContainer />
                         </VilkårsvurderingProvider>
                     </BehandlingContext.Provider>
                 </QueryClientProvider>

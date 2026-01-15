@@ -1,6 +1,5 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
 import type {
-    BehandlingDto,
     BestillBrevDto,
     BrukeruttalelseDto,
     BestillBrevData,
@@ -25,6 +24,7 @@ import { useNavigate } from 'react-router';
 
 import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
 import { Feil } from '../../../api/feil';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import {
     bestillBrevMutation,
@@ -105,9 +105,9 @@ export const extractErrorFromMutationError = (error: unknown): Feil => {
 };
 
 export const useForhåndsvarselMutations = (
-    behandling: BehandlingDto,
     onForhåndsvarselSent?: () => void
 ): UseForhåndsvarselMutationsReturn => {
+    const { behandling } = useBehandling();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { fagsystem, eksternFagsakId } = useFagsak();

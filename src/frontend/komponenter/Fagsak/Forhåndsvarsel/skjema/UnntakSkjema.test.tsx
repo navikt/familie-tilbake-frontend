@@ -71,7 +71,7 @@ const renderUnntak = (): RenderResult => {
         <FagsakContext.Provider value={lagFagsak()}>
             <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
                 <QueryClientProvider client={new QueryClient()}>
-                    <Forhåndsvarsel behandling={behandling} />
+                    <Forhåndsvarsel />
                 </QueryClientProvider>
             </BehandlingContext.Provider>
         </FagsakContext.Provider>

@@ -56,7 +56,7 @@ const renderFaktaContainer = (
                         settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
                     })}
                 >
-                    <FaktaProvider behandling={behandling}>
+                    <FaktaProvider>
                         <FaktaContainer />
                     </FaktaProvider>
                 </BehandlingContext.Provider>

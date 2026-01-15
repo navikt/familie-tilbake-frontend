@@ -59,7 +59,7 @@ const renderVergeContainer = (
                 value={lagBehandlingContext({ behandling, ...behandlingContextOverrides })}
             >
                 <QueryClientProvider client={client}>
-                    <VergeProvider behandling={behandling}>
+                    <VergeProvider>
                         <VergeContainer />
                     </VergeProvider>
                 </QueryClientProvider>

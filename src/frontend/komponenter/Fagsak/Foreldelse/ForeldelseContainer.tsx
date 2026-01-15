@@ -108,11 +108,7 @@ const ForeldelseContainer: React.FC = () => {
                         )}
                     </Alert>
                     {skjemaData.length > 0 && (
-                        <ForeldelsePerioder
-                            behandling={behandling}
-                            perioder={skjemaData}
-                            erLesevisning={erLesevisning}
-                        />
+                        <ForeldelsePerioder perioder={skjemaData} erLesevisning={erLesevisning} />
                     )}
                 </>
             ) : (

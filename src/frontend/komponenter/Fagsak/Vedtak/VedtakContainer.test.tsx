@@ -80,8 +80,8 @@ const renderVedtakContainer = (
                         settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
                     })}
                 >
-                    <VedtakProvider behandling={behandling}>
-                        <VedtakContainer behandling={behandling} />
+                    <VedtakProvider>
+                        <VedtakContainer />
                     </VedtakProvider>
                 </BehandlingContext.Provider>
             </FagsakContext.Provider>

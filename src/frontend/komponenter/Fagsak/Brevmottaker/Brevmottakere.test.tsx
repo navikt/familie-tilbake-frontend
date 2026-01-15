@@ -66,7 +66,7 @@ const renderBrevmottakere = (behandling: BehandlingDto): RenderResult => {
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
                 <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
-                    <Brevmottakere behandling={behandling} />
+                    <Brevmottakere />
                 </BehandlingContext.Provider>
             </FagsakContext.Provider>
         </QueryClientProvider>

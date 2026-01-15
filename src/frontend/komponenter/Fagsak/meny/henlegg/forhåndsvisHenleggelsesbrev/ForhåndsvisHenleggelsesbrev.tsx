@@ -1,4 +1,3 @@
-import type { BehandlingDto } from '../../../../../generated';
 import type { HenleggelseSkjemaDefinisjon } from '../henleggModal/HenleggModalContext';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
@@ -16,12 +15,11 @@ const StyledContainer = styled.div`
 `;
 
 type Props = {
-    behandling: BehandlingDto;
     skjema: Skjema<HenleggelseSkjemaDefinisjon, string>;
     kanForhåndsvise: boolean;
 };
 
-const ForhåndsvisHenleggelsesBrev: React.FC<Props> = ({ behandling, skjema, kanForhåndsvise }) => {
+const ForhåndsvisHenleggelsesBrev: React.FC<Props> = ({ skjema, kanForhåndsvise }) => {
     const {
         hentetForhåndsvisning,
         hentBrev,
@@ -32,7 +30,7 @@ const ForhåndsvisHenleggelsesBrev: React.FC<Props> = ({ behandling, skjema, kan
 
     React.useEffect(() => {
         if (visModal) {
-            hentBrev(behandling);
+            hentBrev();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [visModal]);

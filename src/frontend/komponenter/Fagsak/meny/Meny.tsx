@@ -61,24 +61,16 @@ export const Behandlingsmeny: React.FC = () => {
 
                     {erBehandlingenAktiv && (
                         <>
-                            {behandling.kanHenleggeBehandling && (
-                                <Henlegg behandling={behandling} />
-                            )}
+                            {behandling.kanHenleggeBehandling && <Henlegg />}
 
                             {!venterPåKravgrunnlag &&
-                                (erSattPåvent ? (
-                                    <Gjenoppta behandling={behandling} />
-                                ) : (
-                                    <SettPåVent behandling={behandling} />
-                                ))}
+                                (erSattPåvent ? <Gjenoppta /> : <SettPåVent />)}
 
                             {erForvalter && (
                                 <>
-                                    {behandling.kanSetteTilbakeTilFakta && (
-                                        <StartPåNytt behandling={behandling} />
-                                    )}
+                                    {behandling.kanSetteTilbakeTilFakta && <StartPåNytt />}
 
-                                    <HentKorrigertKravgrunnlag behandling={behandling} />
+                                    <HentKorrigertKravgrunnlag />
                                 </>
                             )}
 
@@ -87,14 +79,14 @@ export const Behandlingsmeny: React.FC = () => {
                                     <ActionMenu.Divider />
 
                                     {behandling.støtterManuelleBrevmottakere && (
-                                        <LeggTilFjernBrevmottakere behandling={behandling} />
+                                        <LeggTilFjernBrevmottakere />
                                     )}
 
                                     {kanEndreEnhet && (
                                         <EndreEnhet behandlingsId={behandling.behandlingId} />
                                     )}
 
-                                    <HistoriskeVurderinger behandling={behandling} />
+                                    <HistoriskeVurderinger />
                                 </>
                             )}
                         </>

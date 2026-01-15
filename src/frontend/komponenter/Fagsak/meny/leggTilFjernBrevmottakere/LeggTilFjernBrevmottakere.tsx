@@ -1,5 +1,3 @@
-import type { BehandlingDto } from '../../../../generated';
-
 import { PersonPlusIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -18,15 +16,11 @@ import { SYNLIGE_STEG } from '../../../../utils/sider';
 import { AlertType, ToastTyper } from '../../../Felleskomponenter/Toast/typer';
 import { MODAL_BREDDE } from '../utils';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-export const LeggTilFjernBrevmottakere: React.FC<Props> = ({ behandling }) => {
+export const LeggTilFjernBrevmottakere: React.FC = () => {
+    const { behandling, nullstillIkkePersisterteKomponenter } = useBehandling();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [senderInn, settSenderInn] = useState(false);
     const [feilmelding, settFeilmelding] = useState('');
-    const { nullstillIkkePersisterteKomponenter } = useBehandling();
 
     const queryClient = useQueryClient();
     const { fagsystem, eksternFagsakId } = useFagsak();

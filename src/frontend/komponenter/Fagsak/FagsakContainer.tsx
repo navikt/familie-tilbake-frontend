@@ -28,18 +28,14 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
 };
 
 const BehandlingContent: React.FC = () => {
-    const { behandling, ventegrunn } = useBehandling();
+    const { ventegrunn } = useBehandling();
     const [visVenteModal, settVisVenteModal] = useState(false);
 
     return (
         <>
             {ventegrunn && <FTAlertStripe variant="info">{venteBeskjed(ventegrunn)}</FTAlertStripe>}
             {ventegrunn && !visVenteModal && (
-                <PåVentModal
-                    behandling={behandling}
-                    ventegrunn={ventegrunn}
-                    onClose={() => settVisVenteModal(true)}
-                />
+                <PåVentModal ventegrunn={ventegrunn} onClose={() => settVisVenteModal(true)} />
             )}
             <div
                 className={classNames(
@@ -49,7 +45,7 @@ const BehandlingContent: React.FC = () => {
                     }
                 )}
             >
-                <BehandlingContainer behandling={behandling} />
+                <BehandlingContainer />
             </div>
         </>
     );

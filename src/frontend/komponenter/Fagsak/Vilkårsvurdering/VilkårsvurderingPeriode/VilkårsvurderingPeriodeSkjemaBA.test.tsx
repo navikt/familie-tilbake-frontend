@@ -1,6 +1,5 @@
 import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingContextType } from '../../../../context/BehandlingContext';
-import type { BehandlingDto } from '../../../../generated';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { RenderResult } from '@testing-library/react';
@@ -14,7 +13,6 @@ import * as React from 'react';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
-import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
@@ -38,18 +36,22 @@ vi.mock('../../../../api/http/HttpProvider', () => {
     };
 });
 
-vi.mock('../../../../context/BehandlingContext', () => ({
-    useBehandling: (): Partial<BehandlingContextType> => ({
-        behandling: lagBehandling(),
-        behandlingILesemodus: false,
-        settIkkePersistertKomponent: vi.fn(),
-        nullstillIkkePersisterteKomponenter: vi.fn(),
-        ventegrunn: undefined,
-        aktivtSteg: undefined,
-        erStegBehandlet: vi.fn().mockReturnValue(false),
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
-    }),
-}));
+vi.mock('../../../../context/BehandlingContext', async () => {
+    const { lagBehandling } = await import('../../../../testdata/behandlingFactory');
+    return {
+        useBehandling: (): Partial<BehandlingContextType> => ({
+            behandling: lagBehandling(),
+            behandlingILesemodus: false,
+            settIkkePersistertKomponent: vi.fn(),
+            nullstillIkkePersisterteKomponenter: vi.fn(),
+            harUlagredeData: false,
+            ventegrunn: undefined,
+            aktivtSteg: undefined,
+            erStegBehandlet: vi.fn().mockReturnValue(false),
+            actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
+        }),
+    };
+});
 
 vi.mock('../VilkårsvurderingContext', () => {
     return {
@@ -68,7 +70,6 @@ vi.mock('../VilkårsvurderingContext', () => {
 });
 
 const renderVilkårsvurderingPeriodeSkjema = (
-    behandling: BehandlingDto,
     periode: VilkårsvurderingPeriodeSkjemaData,
     erTotalbeløpUnder4Rettsgebyr: boolean,
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[] = []
@@ -78,7 +79,6 @@ const renderVilkårsvurderingPeriodeSkjema = (
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
                     periode={periode}
                     behandletPerioder={behandletPerioder}
                     erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
@@ -121,12 +121,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(
-            lagBehandling(),
-            vilkårsvurderingPeriode,
-            false,
-            behandletPerioder
-        );
+        } = renderVilkårsvurderingPeriodeSkjema(vilkårsvurderingPeriode, false, behandletPerioder);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(getByText('Feilutbetalt beløp')).toBeInTheDocument();
@@ -236,11 +231,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(
-            lagBehandling(),
-            lagVilkårsvurderingPeriodeSkjemaData(),
-            false
-        );
+        } = renderVilkårsvurderingPeriodeSkjema(lagVilkårsvurderingPeriodeSkjemaData(), false);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Kopier vilkårsvurdering fra')).not.toBeInTheDocument();
@@ -290,11 +281,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(
-            lagBehandling(),
-            lagVilkårsvurderingPeriodeSkjemaData(),
-            false
-        );
+        } = renderVilkårsvurderingPeriodeSkjema(lagVilkårsvurderingPeriodeSkjemaData(), false);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -369,11 +356,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryByLabelText,
             queryByRole,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(
-            lagBehandling(),
-            lagVilkårsvurderingPeriodeSkjemaData(),
-            false
-        );
+        } = renderVilkårsvurderingPeriodeSkjema(lagVilkårsvurderingPeriodeSkjemaData(), false);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -492,11 +475,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Feilaktig - forsto', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema(
-                lagBehandling(),
-                lagVilkårsvurderingPeriodeSkjemaData(),
-                false
-            );
+            renderVilkårsvurderingPeriodeSkjema(lagVilkårsvurderingPeriodeSkjemaData(), false);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -546,11 +525,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Feilaktige - grov uaktsomhet - ingen grunn til reduksjon', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText, queryByTestId } =
-            renderVilkårsvurderingPeriodeSkjema(
-                lagBehandling(),
-                lagVilkårsvurderingPeriodeSkjemaData(),
-                false
-            );
+            renderVilkårsvurderingPeriodeSkjema(lagVilkårsvurderingPeriodeSkjemaData(), false);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -625,11 +600,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(
-            lagBehandling(),
-            lagVilkårsvurderingPeriodeSkjemaData(),
-            false
-        );
+        } = renderVilkårsvurderingPeriodeSkjema(lagVilkårsvurderingPeriodeSkjemaData(), false);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -736,11 +707,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Feilaktige - grov uaktsomhet - grunn til reduksjon - egendefinert', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema(
-                lagBehandling(),
-                lagVilkårsvurderingPeriodeSkjemaData(),
-                false
-            );
+            renderVilkårsvurderingPeriodeSkjema(lagVilkårsvurderingPeriodeSkjemaData(), false);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -840,11 +807,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             queryAllByText,
             queryByLabelText,
             queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema(
-            lagBehandling(),
-            lagVilkårsvurderingPeriodeSkjemaData(),
-            true
-        );
+        } = renderVilkårsvurderingPeriodeSkjema(lagVilkårsvurderingPeriodeSkjemaData(), true);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -951,11 +914,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ingen grunn til reduksjon', async () => {
         const { getByLabelText, getByRole, getByText, getByTestId, queryAllByText, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema(
-                lagBehandling(),
-                lagVilkårsvurderingPeriodeSkjemaData(),
-                true
-            );
+            renderVilkårsvurderingPeriodeSkjema(lagVilkårsvurderingPeriodeSkjemaData(), true);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -1039,11 +998,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Mangelfulle - simpel uaktsomhet - under 4 rettsgebyr - ikke tilbakekreves', async () => {
         const { getByLabelText, getByRole, getByText, queryAllByText, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema(
-                lagBehandling(),
-                lagVilkårsvurderingPeriodeSkjemaData(),
-                true
-            );
+            renderVilkårsvurderingPeriodeSkjema(lagVilkårsvurderingPeriodeSkjemaData(), true);
 
         expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByText('Aktsomhet')).not.toBeInTheDocument();
@@ -1103,7 +1058,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Åpner vurdert periode - god tro - beløp i behold', async () => {
         const { getByLabelText, getByText } = renderVilkårsvurderingPeriodeSkjema(
-            lagBehandling(),
             lagVilkårsvurderingPeriodeSkjemaData({
                 begrunnelse: 'Gitt i god tro',
                 vilkårsvurderingsresultatInfo: {
@@ -1132,7 +1086,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Åpner vurdert periode - mangelfulle - simpel uaktsomhet - under 4 rettsgebyr', async () => {
         const { getByLabelText, getByTestId, getByText } = renderVilkårsvurderingPeriodeSkjema(
-            lagBehandling(),
             lagVilkårsvurderingPeriodeSkjemaData({
                 begrunnelse: 'Gitt mangelfulle opplysninger',
                 vilkårsvurderingsresultatInfo: {
@@ -1194,7 +1147,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
     test('Validering vises når man forsøker å gå videre uten å fylle inn påkrevde felter', async () => {
         const { getByRole, queryAllByText } = renderVilkårsvurderingPeriodeSkjema(
-            lagBehandling(),
             lagVilkårsvurderingPeriodeSkjemaData(),
             false
         );

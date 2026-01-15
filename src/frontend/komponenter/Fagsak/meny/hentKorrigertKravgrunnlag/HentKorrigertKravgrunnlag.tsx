@@ -1,5 +1,3 @@
-import type { BehandlingDto } from '../../../../generated';
-
 import { HddUpIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -13,15 +11,11 @@ import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagri
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { AlertType, ToastTyper } from '../../../Felleskomponenter/Toast/typer';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-export const HentKorrigertKravgrunnlag: React.FC<Props> = ({ behandling }) => {
+export const HentKorrigertKravgrunnlag: React.FC = () => {
+    const { behandling, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { request } = useHttp();
     const { settToast } = useApp();
     const queryClient = useQueryClient();
-    const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { fagsystem, eksternFagsakId } = useFagsak();
 

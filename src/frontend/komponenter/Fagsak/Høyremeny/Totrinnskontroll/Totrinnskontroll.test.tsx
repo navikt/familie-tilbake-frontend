@@ -50,7 +50,7 @@ const renderTotrinnskontroll = (
                 <BehandlingContext.Provider
                     value={lagBehandlingContext({ behandling, ...behandlingContextOverrides })}
                 >
-                    <TotrinnskontrollProvider behandling={behandling}>
+                    <TotrinnskontrollProvider>
                         <Totrinnskontroll />
                     </TotrinnskontrollProvider>
                 </BehandlingContext.Provider>

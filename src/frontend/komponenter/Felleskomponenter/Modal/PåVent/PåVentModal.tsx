@@ -1,4 +1,3 @@
-import type { BehandlingDto } from '../../../../generated';
 import type { Behandlingsstegstilstand } from '../../../../typer/behandling';
 
 import { Alert, BodyLong, Button, Heading, Modal, Select } from '@navikt/ds-react';
@@ -9,6 +8,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { usePåVentBehandling } from './PåVentContext';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { Valideringsstatus } from '../../../../hooks/skjema';
 import {
     Behandlingssteg,
@@ -34,12 +34,12 @@ const FeilContainer = styled.div`
 `;
 
 type Props = {
-    behandling: BehandlingDto;
     ventegrunn: Behandlingsstegstilstand;
     onClose: () => void;
 };
 
-const PåVentModal: React.FC<Props> = ({ behandling, ventegrunn, onClose }) => {
+const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
+    const { behandling } = useBehandling();
     const queryClient = useQueryClient();
 
     const lukkModalOgHentBehandling = (): void => {

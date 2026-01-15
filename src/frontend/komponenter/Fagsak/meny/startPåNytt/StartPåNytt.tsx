@@ -1,5 +1,3 @@
-import type { BehandlingDto } from '../../../../generated';
-
 import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, Modal } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -14,14 +12,10 @@ import { RessursStatus } from '../../../../typer/ressurs';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { MODAL_BREDDE } from '../utils';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
+export const StartPåNytt: React.FC = () => {
+    const { behandling, nullstillIkkePersisterteKomponenter } = useBehandling();
     const queryClient = useQueryClient();
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const { nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const mutation = useStartPåNytt();

@@ -83,7 +83,7 @@ const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): 
                 })}
             >
                 <QueryClientProvider client={new QueryClient()}>
-                    <Forhåndsvarsel behandling={behandling} />
+                    <Forhåndsvarsel />
                 </QueryClientProvider>
             </BehandlingContext.Provider>
         </FagsakContext.Provider>

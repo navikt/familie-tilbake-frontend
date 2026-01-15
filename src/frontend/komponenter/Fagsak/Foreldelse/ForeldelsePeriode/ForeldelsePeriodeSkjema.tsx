@@ -1,4 +1,3 @@
-import type { BehandlingDto } from '../../../../generated';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { ReactNode } from 'react';
 
@@ -44,12 +43,11 @@ const StyledStack = styled(Stack)`
 `;
 
 type Props = {
-    behandling: BehandlingDto;
     periode: ForeldelsePeriodeSkjemeData;
     erLesevisning: boolean;
 };
 
-const ForeldelsePeriodeSkjema: React.FC<Props> = ({ behandling, periode, erLesevisning }) => {
+const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) => {
     const { oppdaterPeriode, onSplitPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
@@ -147,11 +145,7 @@ const ForeldelsePeriodeSkjema: React.FC<Props> = ({ behandling, periode, erLesev
                 </Heading>
 
                 {!erLesevisning && kanSplittePeriode(periode) && (
-                    <SplittPeriode
-                        behandling={behandling}
-                        periode={periode}
-                        onBekreft={onSplitPeriode}
-                    />
+                    <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
                 )}
             </StyledStack>
             <StyledVStack gap="4">

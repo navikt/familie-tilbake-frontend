@@ -1,9 +1,9 @@
-import type { BehandlingDto } from '../../../../../generated';
 import type { HenleggelseSkjemaDefinisjon } from '../henleggModal/HenleggModalContext';
 
 import * as React from 'react';
 
 import { useDokumentApi } from '../../../../../api/dokument';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import { type Skjema } from '../../../../../hooks/skjema';
 import {
     byggDataRessurs,
@@ -19,7 +19,7 @@ type ForhåndsvisHenleggelsesbrevHook = {
     visModal: boolean;
     settVisModal: React.Dispatch<React.SetStateAction<boolean>>;
     hentetForhåndsvisning: Ressurs<string>;
-    hentBrev: (behandling: BehandlingDto) => void;
+    hentBrev: () => void;
     nullstillHentetForhåndsvisning: () => void;
 };
 
@@ -30,6 +30,7 @@ type Props = {
 export const useForhåndsvisHenleggelsesbrev = ({
     skjema,
 }: Props): ForhåndsvisHenleggelsesbrevHook => {
+    const { behandling } = useBehandling();
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
         React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
@@ -39,7 +40,7 @@ export const useForhåndsvisHenleggelsesbrev = ({
         settHentetForhåndsvisning(byggTomRessurs);
     };
 
-    const hentBrev = (behandling: BehandlingDto): void => {
+    const hentBrev = (): void => {
         settHentetForhåndsvisning(byggHenterRessurs());
 
         forhåndsvisHenleggelsesbrev({

@@ -1,3 +1,4 @@
+import type { BehandlingHook } from '../../../../../context/BehandlingContext';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';
@@ -7,6 +8,14 @@ import * as React from 'react';
 import SplittPeriode from './SplittPeriode';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { lagForeldelsePeriodeSkjemaData } from '../../../../../testdata/foreldelseFactory';
+
+vi.mock('../../../../../context/BehandlingContext', () => {
+    return {
+        useBehandling: (): Partial<BehandlingHook> => ({
+            behandling: lagBehandling(),
+        }),
+    };
+});
 
 describe('SplittPeriode - Foreldelse', () => {
     let user: UserEvent;
@@ -23,11 +32,7 @@ describe('SplittPeriode - Foreldelse', () => {
             queryByAltText,
             queryByText,
         } = render(
-            <SplittPeriode
-                periode={lagForeldelsePeriodeSkjemaData()}
-                behandling={lagBehandling()}
-                onBekreft={vi.fn()}
-            />
+            <SplittPeriode periode={lagForeldelsePeriodeSkjemaData()} onBekreft={vi.fn()} />
         );
 
         expect(queryByAltText('Del opp perioden')).toBeInTheDocument();

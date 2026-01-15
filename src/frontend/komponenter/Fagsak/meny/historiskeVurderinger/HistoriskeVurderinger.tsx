@@ -1,17 +1,13 @@
-import type { BehandlingDto } from '../../../../generated';
-
 import { ClockDashedIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useApp } from '../../../../context/AppContext';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-export const HistoriskeVurderinger: React.FC<Props> = ({ behandling }) => {
+export const HistoriskeVurderinger: React.FC = () => {
+    const { behandling } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
 
     const { innloggetSaksbehandler } = useApp();

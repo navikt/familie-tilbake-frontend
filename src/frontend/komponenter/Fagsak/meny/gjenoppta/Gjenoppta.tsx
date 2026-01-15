@@ -1,19 +1,15 @@
-import type { BehandlingDto } from '../../../../generated';
-
 import { TimerStartIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useRef } from 'react';
 
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { usePåVentBehandling } from '../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 import { MODAL_BREDDE } from '../utils';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-export const Gjenoppta: React.FC<Props> = ({ behandling }) => {
+export const Gjenoppta: React.FC = () => {
+    const { behandling } = useBehandling();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const queryClient = useQueryClient();
 

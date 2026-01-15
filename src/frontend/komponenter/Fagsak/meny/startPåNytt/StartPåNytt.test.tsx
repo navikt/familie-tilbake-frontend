@@ -76,7 +76,7 @@ describe('StartPåNytt', () => {
                                 <Button>Test kun for å rendre</Button>
                             </ActionMenu.Trigger>
                             <ActionMenu.Content>
-                                <StartPåNytt behandling={behandling} />
+                                <StartPåNytt />
                             </ActionMenu.Content>
                         </ActionMenu>
                     </BehandlingContext.Provider>

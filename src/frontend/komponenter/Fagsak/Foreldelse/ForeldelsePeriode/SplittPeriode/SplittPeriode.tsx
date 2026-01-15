@@ -1,4 +1,3 @@
-import type { BehandlingDto } from '../../../../../generated';
 import type {
     BeregnSplittetPeriodeRespons,
     Periode,
@@ -10,6 +9,7 @@ import { Detail, Link } from '@navikt/ds-react';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import splitPeriodImageUrl from '../../../../../images/splitt.svg';
 import splitPeriodImageHoverUrl from '../../../../../images/splitt_hover.svg';
 import { flyttDatoISODateStr } from '../../../../../utils';
@@ -27,14 +27,14 @@ const konverterPeriode = (periode: ForeldelsePeriodeSkjemeData): TimelinePeriodP
 
 type Props = {
     periode: ForeldelsePeriodeSkjemeData;
-    behandling: BehandlingDto;
     onBekreft: (
         periode: ForeldelsePeriodeSkjemeData,
         nyePerioder: ForeldelsePeriodeSkjemeData[]
     ) => void;
 };
 
-const SplittPeriode: React.FC<Props> = ({ behandling, periode, onBekreft }) => {
+const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
+    const { behandling } = useBehandling();
     const [splittetPerioder, settSplittetPerioder] = useState<ForeldelsePeriodeSkjemeData[]>();
     const {
         visModal,

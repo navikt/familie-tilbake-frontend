@@ -1,4 +1,3 @@
-import type { BehandlingDto } from '../../../../../generated';
 import type { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 
 import { CircleSlashIcon } from '@navikt/aksel-icons';
@@ -7,6 +6,7 @@ import * as React from 'react';
 import { useEffect, useEffectEvent } from 'react';
 
 import { useHenleggSkjema } from './HenleggModalContext';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../../context/FagsakContext';
 import { behandlingsresultater } from '../../../../../typer/behandling';
 import { målform } from '../../../../../typer/målform';
@@ -16,14 +16,13 @@ import { MODAL_BREDDE } from '../../utils';
 import ForhåndsvisHenleggelsesBrev from '../forhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 
 type Props = {
-    behandling: BehandlingDto;
     dialogRef: React.RefObject<HTMLDialogElement | null>;
     årsaker: Behandlingresultat[];
 };
 
-export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker }) => {
+export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
+    const { behandling } = useBehandling();
     const { skjema, visFritekst, onBekreft, nullstillSkjema, kanForhåndsvise } = useHenleggSkjema({
-        behandling,
         lukkModal: () => dialogRef.current?.close(),
     });
     const { språkkode } = useFagsak();
@@ -110,7 +109,6 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
             <Modal.Footer>
                 <ForhåndsvisHenleggelsesBrev
                     key="forhåndsvis-henleggelsesbrev"
-                    behandling={behandling}
                     skjema={skjema}
                     kanForhåndsvise={kanForhåndsvise()}
                 />

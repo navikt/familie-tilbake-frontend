@@ -1,4 +1,3 @@
-import type { BehandlingDto } from '../../../../../generated';
 import type { Avhengigheter, FeltState, Skjema } from '../../../../../hooks/skjema';
 import type { HenleggBehandlingPaylod } from '../../../../../typer/api';
 
@@ -25,7 +24,6 @@ export type HenleggelseSkjemaDefinisjon = {
 };
 
 type Props = {
-    behandling: BehandlingDto;
     lukkModal: () => void;
 };
 
@@ -37,10 +35,10 @@ type HenleggBehandlingSkjemaHook = {
     kanForhåndsvise: () => boolean;
 };
 
-export const useHenleggSkjema = ({ behandling, lukkModal }: Props): HenleggBehandlingSkjemaHook => {
+export const useHenleggSkjema = ({ lukkModal }: Props): HenleggBehandlingSkjemaHook => {
     const queryClient = useQueryClient();
     const { henleggBehandling } = useBehandlingApi();
-    const { nullstillIkkePersisterteKomponenter } = useBehandling();
+    const { behandling, nullstillIkkePersisterteKomponenter } = useBehandling();
 
     const årsakkode = useFelt<Behandlingresultat | ''>({
         verdi: '',

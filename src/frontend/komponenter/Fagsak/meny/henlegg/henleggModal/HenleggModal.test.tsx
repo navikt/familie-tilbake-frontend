@@ -46,11 +46,7 @@ const renderHenleggModal = (
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
                 <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
-                    <HenleggModal
-                        behandling={behandling}
-                        dialogRef={mockDialogRef}
-                        årsaker={årsaker}
-                    />
+                    <HenleggModal dialogRef={mockDialogRef} årsaker={årsaker} />
                 </BehandlingContext.Provider>
             </FagsakContext.Provider>
         </QueryClientProvider>

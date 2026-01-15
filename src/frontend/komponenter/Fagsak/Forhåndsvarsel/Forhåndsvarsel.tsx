@@ -46,8 +46,8 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 
 export const Forhåndsvarsel: React.FC = () => {
     const { behandling } = useBehandling();
-    const { forhåndsvarselInfo } = useForhåndsvarselQueries(behandling);
-    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling);
+    const { forhåndsvarselInfo } = useForhåndsvarselQueries();
+    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
     const queryClient = useQueryClient();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -206,7 +206,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendUnntak,
         gåTilNeste,
         gåTilForrige,
-    } = useForhåndsvarselMutations(behandling);
+    } = useForhåndsvarselMutations();
 
     const mutations = [
         { key: 'forhåndsvarsel', mutation: sendForhåndsvarselMutation },
@@ -215,7 +215,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         { key: 'unntak', mutation: sendUnntakMutation },
     ] as const;
 
-    const { varselbrevtekster } = useForhåndsvarselQueries(behandling);
+    const { varselbrevtekster } = useForhåndsvarselQueries();
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
 

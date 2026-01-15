@@ -1,5 +1,3 @@
-import type { BehandlingDto } from '../../generated';
-
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button } from '@navikt/ds-react';
 import * as React from 'react';
@@ -59,13 +57,9 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
-const BehandlingContainer: React.FC<Props> = ({ behandling }) => {
+const BehandlingContainer: React.FC = () => {
+    const { behandling, harKravgrunnlag, aktivtSteg } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
-    const { harKravgrunnlag, aktivtSteg } = useBehandling();
     const navigate = useNavigate();
     const location = useLocation();
     const ref = useRef<HTMLDialogElement>(null);

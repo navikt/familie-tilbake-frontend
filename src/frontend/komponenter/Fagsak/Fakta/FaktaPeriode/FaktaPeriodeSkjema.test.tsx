@@ -51,7 +51,7 @@ const renderComponent = (
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
                 <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
-                    <FaktaProvider behandling={behandling}>
+                    <FaktaProvider>
                         <table>
                             <tbody>
                                 <FaktaPeriodeSkjema

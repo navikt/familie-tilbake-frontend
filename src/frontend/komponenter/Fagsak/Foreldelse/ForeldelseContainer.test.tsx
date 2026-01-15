@@ -64,8 +64,8 @@ const renderForeldelseContainer = (
                         erStegAutoutført: (): boolean => autoutført,
                     })}
                 >
-                    <ForeldelseProvider behandling={behandling}>
-                        <ForeldelseContainer behandling={behandling} />
+                    <ForeldelseProvider>
+                        <ForeldelseContainer />
                     </ForeldelseProvider>
                 </BehandlingContext.Provider>
             </FagsakContext.Provider>

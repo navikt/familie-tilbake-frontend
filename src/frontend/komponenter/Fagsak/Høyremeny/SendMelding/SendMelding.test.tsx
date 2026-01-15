@@ -54,8 +54,8 @@ const renderSendMelding = (
                 <BehandlingContext.Provider
                     value={lagBehandlingContext({ behandling, behandlingILesemodus })}
                 >
-                    <SendMeldingProvider behandling={behandling}>
-                        <SendMelding behandling={behandling} />
+                    <SendMeldingProvider>
+                        <SendMelding />
                     </SendMeldingProvider>
                 </BehandlingContext.Provider>
             </FagsakContext.Provider>
