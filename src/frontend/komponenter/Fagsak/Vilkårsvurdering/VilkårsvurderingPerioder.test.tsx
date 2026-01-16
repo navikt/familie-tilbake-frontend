@@ -1,6 +1,5 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { BehandlingContextType } from '../../../context/BehandlingContext';
 import type { BehandlingDto } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
@@ -19,9 +18,8 @@ import { vi } from 'vitest';
 
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
-import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
-import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
@@ -124,29 +122,6 @@ const setupMocks = (): void => {
     }));
 };
 
-const TestBehandlingProvider: React.FC<{
-    behandling: BehandlingDto;
-    children: React.ReactNode;
-}> = ({ behandling, children }) => {
-    const unsavedChanges = useUnsavedChanges();
-
-    const contextValue: BehandlingContextType = {
-        behandling,
-        behandlingILesemodus: false,
-        aktivtSteg: undefined,
-        ventegrunn: undefined,
-        harKravgrunnlag: true,
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
-        erStegBehandlet: vi.fn().mockReturnValue(false),
-        erStegAutoutført: vi.fn().mockReturnValue(false),
-        erBehandlingReturnertFraBeslutter: vi.fn().mockReturnValue(false),
-        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
-        ...unsavedChanges,
-    };
-
-    return <BehandlingContext.Provider value={contextValue}>{children}</BehandlingContext.Provider>;
-};
-
 const renderVilkårsvurderingPerioder = (): RenderResult => {
     const skjemaData = perioder.map((periode, index) => ({
         index: `idx_fpsd_${index}`,
@@ -157,7 +132,10 @@ const renderVilkårsvurderingPerioder = (): RenderResult => {
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <TestBehandlingProvider behandling={behandling}>
+                <TestBehandlingProvider
+                    behandling={behandling}
+                    overrides={{ harKravgrunnlag: true }}
+                >
                     <VilkårsvurderingProvider>
                         <VilkårsvurderingPerioder
                             perioder={skjemaData}

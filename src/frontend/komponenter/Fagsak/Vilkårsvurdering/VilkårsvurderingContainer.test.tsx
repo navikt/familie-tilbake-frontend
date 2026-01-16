@@ -1,6 +1,5 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { BehandlingContextType } from '../../../context/BehandlingContext';
 import type { BehandlingDto } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
@@ -19,10 +18,9 @@ import { vi } from 'vitest';
 
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
-import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
-import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges';
 import { Aktsomhet, HendelseType, Vilkårsresultat } from '../../../kodeverk';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
@@ -126,35 +124,15 @@ const setupMocks = (): void => {
     }));
 };
 
-const TestBehandlingProvider: React.FC<{
-    behandling: BehandlingDto;
-    children: React.ReactNode;
-}> = ({ behandling, children }) => {
-    const unsavedChanges = useUnsavedChanges();
-
-    const contextValue: BehandlingContextType = {
-        behandling,
-        behandlingILesemodus: false,
-        aktivtSteg: undefined,
-        ventegrunn: undefined,
-        harKravgrunnlag: true,
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
-        erStegBehandlet: vi.fn().mockReturnValue(false),
-        erStegAutoutført: vi.fn().mockReturnValue(false),
-        erBehandlingReturnertFraBeslutter: vi.fn().mockReturnValue(false),
-        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
-        ...unsavedChanges,
-    };
-
-    return <BehandlingContext.Provider value={contextValue}>{children}</BehandlingContext.Provider>;
-};
-
 const renderVilkårsvurderingContainer = (behandling: BehandlingDto): RenderResult => {
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
-                <TestBehandlingProvider behandling={behandling}>
+                <TestBehandlingProvider
+                    behandling={behandling}
+                    overrides={{ harKravgrunnlag: true }}
+                >
                     <VilkårsvurderingProvider>
                         <VilkårsvurderingContainer />
                     </VilkårsvurderingProvider>

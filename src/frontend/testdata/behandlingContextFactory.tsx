@@ -1,7 +1,11 @@
 import type { BehandlingContextType } from '../context/BehandlingContext';
 import type { BehandlingDto } from '../generated';
 
+import * as React from 'react';
+
 import { lagBehandling } from './behandlingFactory';
+import { BehandlingContext } from '../context/BehandlingContext';
+import { useUnsavedChanges } from '../hooks/useUnsavedChanges';
 
 export type BehandlingContextOverrides = {
     behandling?: BehandlingDto;
@@ -42,4 +46,29 @@ export const lagBehandlingContext = (
         nullstillIkkePersisterteKomponenter:
             overrides.nullstillIkkePersisterteKomponenter ?? ((): void => {}),
     };
+};
+
+/**
+ * Test provider som bruker ekte useUnsavedChanges hook.
+ * Bruk denne når tester trenger reaktiv unsaved changes-funksjonalitet.
+ */
+export const TestBehandlingProvider: React.FC<{
+    behandling?: BehandlingDto;
+    overrides?: Omit<
+        BehandlingContextOverrides,
+        | 'behandling'
+        | 'harUlagredeData'
+        | 'nullstillIkkePersisterteKomponenter'
+        | 'settIkkePersistertKomponent'
+    >;
+    children: React.ReactNode;
+}> = ({ behandling, overrides = {}, children }) => {
+    const unsavedChanges = useUnsavedChanges();
+    const contextValue = lagBehandlingContext({
+        behandling,
+        ...overrides,
+        ...unsavedChanges,
+    });
+
+    return <BehandlingContext.Provider value={contextValue}>{children}</BehandlingContext.Provider>;
 };
