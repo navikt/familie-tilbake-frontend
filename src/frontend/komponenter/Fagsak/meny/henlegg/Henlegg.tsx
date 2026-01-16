@@ -21,7 +21,7 @@ const hentÅrsaker = (behandlingstype: BehandlingstypeEnum): Behandlingresultat[
 };
 
 export const Henlegg: React.FC = () => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const årsaker = hentÅrsaker(behandling.type);
 

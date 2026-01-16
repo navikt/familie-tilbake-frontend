@@ -7,7 +7,7 @@ import { Radio } from '@navikt/ds-react';
 import * as React from 'react';
 
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
-import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
 import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
@@ -20,7 +20,7 @@ type Props = {
 };
 
 const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
     const erValgtResultatTypeForstoBurdeForstaatt =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =

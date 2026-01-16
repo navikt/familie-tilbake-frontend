@@ -5,10 +5,9 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { ToggleName } from '../../../../context/toggles';
-import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
@@ -70,11 +69,11 @@ const renderUnntak = (): RenderResult => {
     const behandling = lagBehandlingDto();
     const result = render(
         <FagsakContext.Provider value={lagFagsak()}>
-            <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+            <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={createTestQueryClient()}>
                     <Forhåndsvarsel />
                 </QueryClientProvider>
-            </BehandlingContext.Provider>
+            </TestBehandlingProvider>
         </FagsakContext.Provider>
     );
 

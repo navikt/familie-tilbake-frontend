@@ -10,10 +10,9 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
-import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
-import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
@@ -62,7 +61,7 @@ const renderVilkårsvurderingPeriodeSkjema = (
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <BehandlingContext.Provider value={lagBehandlingContext()}>
+                <TestBehandlingProvider>
                     <VilkårsvurderingPeriodeSkjema
                         periode={periode}
                         behandletPerioder={behandletPerioder}
@@ -72,7 +71,7 @@ const renderVilkårsvurderingPeriodeSkjema = (
                         pendingPeriode={undefined}
                         settPendingPeriode={vi.fn()}
                     />
-                </BehandlingContext.Provider>
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

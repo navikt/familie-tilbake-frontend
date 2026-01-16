@@ -13,10 +13,9 @@ import { vi } from 'vitest';
 
 import FaktaContainer from './FaktaContainer';
 import { FaktaProvider } from './FaktaContext';
-import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { HendelseType, HendelseUndertype } from '../../../kodeverk';
-import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagFaktaPeriode, lagFaktaResponse } from '../../../testdata/faktaFactory';
@@ -48,18 +47,18 @@ const renderFaktaContainer = (
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak({ ytelsestype })}>
-                <BehandlingContext.Provider
-                    value={lagBehandlingContext({
-                        behandling,
+                <TestBehandlingProvider
+                    behandling={behandling}
+                    stateOverrides={{
                         behandlingILesemodus: lesemodus,
                         erStegBehandlet: (): boolean => behandlet,
                         settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
-                    })}
+                    }}
                 >
                     <FaktaProvider>
                         <FaktaContainer />
                     </FaktaProvider>
-                </BehandlingContext.Provider>
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import {
     type Avhengigheter,
@@ -35,7 +36,7 @@ const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
     erVergetypeOppfylt(avhengigheter) && avhengigheter?.vergetype.verdi === Vergetype.Advokat;
 
 const [VergeProvider, useVerge] = createUseContext(() => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const queryClient = useQueryClient();
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
@@ -46,7 +47,7 @@ const [VergeProvider, useVerge] = createUseContext(() => {
     const [vergeRespons, settVergeRepons] = React.useState<Ressurs<string>>();
     const { gjerVergeKall, sendInnVerge } = useBehandlingApi();
     const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
-        useBehandling();
+        useBehandlingState();
     const { utførRedirect } = useRedirectEtterLagring();
     const navigate = useNavigate();
 
@@ -212,7 +213,6 @@ const [VergeProvider, useVerge] = createUseContext(() => {
     };
 
     return {
-        behandling,
         stegErBehandlet,
         erAutoutført,
         henterData,

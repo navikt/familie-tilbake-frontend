@@ -9,10 +9,9 @@ import * as React from 'react';
 import { vi } from 'vitest';
 
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
-import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
-import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
@@ -60,9 +59,7 @@ const TestWrapper = ({ children }: { children: React.ReactNode }): React.ReactEl
     return (
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <BehandlingContext.Provider value={lagBehandlingContext()}>
-                    {children}
-                </BehandlingContext.Provider>
+                <TestBehandlingProvider>{children}</TestBehandlingProvider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

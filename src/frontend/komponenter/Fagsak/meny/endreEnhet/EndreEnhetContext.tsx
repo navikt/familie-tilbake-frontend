@@ -2,7 +2,7 @@ import type { FeltState, Skjema } from '../../../../hooks/skjema';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFelt, useSkjema } from '../../../../hooks/skjema';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../utils';
@@ -20,7 +20,7 @@ type EndreEnhetHook = {
 };
 
 const useEndreEnhet = (behandlingId: string, lukkModal: () => void): EndreEnhetHook => {
-    const { nullstillIkkePersisterteKomponenter } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const queryClient = useQueryClient();
 
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<

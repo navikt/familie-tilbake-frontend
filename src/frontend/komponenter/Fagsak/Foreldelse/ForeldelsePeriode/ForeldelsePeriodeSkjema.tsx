@@ -21,7 +21,7 @@ import { styled } from 'styled-components';
 
 import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
-import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { Valideringsstatus } from '../../../../hooks/skjema/typer';
 import {
     Foreldelsevurdering,
@@ -52,7 +52,7 @@ const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) =>
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
     );
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
 
     React.useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');

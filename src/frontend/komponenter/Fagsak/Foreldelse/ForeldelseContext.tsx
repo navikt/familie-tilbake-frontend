@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Foreldelsevurdering } from '../../../kodeverk';
@@ -66,8 +67,9 @@ export type ForeldelseHook = {
 
 const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     const { fagsystem, eksternFagsakId } = useFagsak();
-    const { behandling, erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
-        useBehandling();
+    const behandling = useBehandling();
+    const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
+        useBehandlingState();
     const queryClient = useQueryClient();
     const [foreldelse, setForeldelse] = useState<Ressurs<ForeldelseResponse>>();
     const [skjemaData, settSkjemaData] = useState<ForeldelsePeriodeSkjemeData[]>([]);

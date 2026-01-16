@@ -34,7 +34,7 @@ type Props = {
 };
 
 const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const [splittetPerioder, settSplittetPerioder] = useState<ForeldelsePeriodeSkjemeData[]>();
     const {
         visModal,

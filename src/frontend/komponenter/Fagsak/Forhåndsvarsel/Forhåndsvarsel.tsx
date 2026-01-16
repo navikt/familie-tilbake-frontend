@@ -27,6 +27,7 @@ import {
 } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { ToggleName } from '../../../context/toggles';
 import { useToggles } from '../../../context/TogglesContext';
 import { Behandlingssteg } from '../../../typer/behandling';
@@ -45,7 +46,7 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 };
 
 export const Forhåndsvarsel: React.FC = () => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries();
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
@@ -191,9 +192,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     skalSendesForhåndsvarsel,
     parentBounds,
 }) => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const { toggles } = useToggles();
-    const { actionBarStegtekst } = useBehandling();
+    const { actionBarStegtekst } = useBehandlingState();
 
     const {
         sendForhåndsvarselMutation,

@@ -35,7 +35,7 @@ import * as React from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 
 import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring } from '../../../utils';
 import { useStegNavigering } from '../../../utils/sider';
@@ -52,7 +52,7 @@ export const FaktaSkjema = ({
     behandlingId,
     behandlingUrl,
 }: Props): React.JSX.Element => {
-    const { actionBarStegtekst } = useBehandling();
+    const { actionBarStegtekst } = useBehandlingState();
     const queryClient = useQueryClient();
     const navigerTilNeste = useStegNavigering(behandlingUrl, Behandlingssteg.Forhåndsvarsel);
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchema>({

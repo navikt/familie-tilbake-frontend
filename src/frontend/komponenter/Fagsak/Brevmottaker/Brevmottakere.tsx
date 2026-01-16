@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router';
 import { BrevmottakerModal } from './BrevmottakerModal';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
@@ -222,7 +223,8 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
 };
 
 const Brevmottakere: React.FC = () => {
-    const { behandling, behandlingILesemodus, actionBarStegtekst } = useBehandling();
+    const behandling = useBehandling();
+    const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
     const { fagsystem, eksternFagsakId, bruker } = useFagsak();
     const navigate = useNavigate();
 

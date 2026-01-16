@@ -1,35 +1,38 @@
-import type { BehandlingContextType } from '../context/BehandlingContext';
+import type { BehandlingStateContextType } from '../context/BehandlingStateContext';
 import type { BehandlingDto } from '../generated';
+import type { UseUnsavedChangesReturn } from '../hooks/useUnsavedChanges';
 
 import * as React from 'react';
 
 import { lagBehandling } from './behandlingFactory';
 import { BehandlingContext } from '../context/BehandlingContext';
+import { BehandlingStateContext } from '../context/BehandlingStateContext';
 import { useUnsavedChanges } from '../hooks/useUnsavedChanges';
 
-export type BehandlingContextOverrides = {
-    behandling?: BehandlingDto;
+export type BehandlingStateContextOverrides = {
     behandlingILesemodus?: boolean;
-    aktivtSteg?: BehandlingContextType['aktivtSteg'];
-    ventegrunn?: BehandlingContextType['ventegrunn'];
+    aktivtSteg?: BehandlingStateContextType['aktivtSteg'];
+    ventegrunn?: BehandlingStateContextType['ventegrunn'];
     harKravgrunnlag?: boolean;
-    actionBarStegtekst?: BehandlingContextType['actionBarStegtekst'];
-    erStegBehandlet?: BehandlingContextType['erStegBehandlet'];
-    erStegAutoutført?: BehandlingContextType['erStegAutoutført'];
-    erBehandlingReturnertFraBeslutter?: BehandlingContextType['erBehandlingReturnertFraBeslutter'];
-    harVærtPåFatteVedtakSteget?: BehandlingContextType['harVærtPåFatteVedtakSteget'];
+    actionBarStegtekst?: BehandlingStateContextType['actionBarStegtekst'];
+    erStegBehandlet?: BehandlingStateContextType['erStegBehandlet'];
+    erStegAutoutført?: BehandlingStateContextType['erStegAutoutført'];
+    erBehandlingReturnertFraBeslutter?: BehandlingStateContextType['erBehandlingReturnertFraBeslutter'];
+    harVærtPåFatteVedtakSteget?: BehandlingStateContextType['harVærtPåFatteVedtakSteget'];
     harUlagredeData?: boolean;
-    settIkkePersistertKomponent?: BehandlingContextType['settIkkePersistertKomponent'];
-    nullstillIkkePersisterteKomponenter?: BehandlingContextType['nullstillIkkePersisterteKomponenter'];
+    settIkkePersistertKomponent?: BehandlingStateContextType['settIkkePersistertKomponent'];
+    nullstillIkkePersisterteKomponenter?: BehandlingStateContextType['nullstillIkkePersisterteKomponenter'];
 };
 
-export const lagBehandlingContext = (
-    overrides: BehandlingContextOverrides = {}
-): BehandlingContextType => {
-    const behandling = overrides.behandling ?? lagBehandling();
+export type BehandlingContextOverrides = BehandlingStateContextOverrides & {
+    behandling?: BehandlingDto;
+};
 
+export const lagBehandlingStateContext = (
+    overrides: BehandlingStateContextOverrides = {},
+    unsavedChanges?: UseUnsavedChangesReturn
+): BehandlingStateContextType => {
     return {
-        behandling,
         behandlingILesemodus: overrides.behandlingILesemodus ?? false,
         aktivtSteg: overrides.aktivtSteg ?? undefined,
         ventegrunn: overrides.ventegrunn ?? undefined,
@@ -41,34 +44,44 @@ export const lagBehandlingContext = (
         erBehandlingReturnertFraBeslutter:
             overrides.erBehandlingReturnertFraBeslutter ?? ((): boolean => false),
         harVærtPåFatteVedtakSteget: overrides.harVærtPåFatteVedtakSteget ?? ((): boolean => false),
-        harUlagredeData: overrides.harUlagredeData ?? false,
-        settIkkePersistertKomponent: overrides.settIkkePersistertKomponent ?? ((): void => {}),
+        harUlagredeData: overrides.harUlagredeData ?? unsavedChanges?.harUlagredeData ?? false,
+        settIkkePersistertKomponent:
+            overrides.settIkkePersistertKomponent ??
+            unsavedChanges?.settIkkePersistertKomponent ??
+            ((): void => {}),
         nullstillIkkePersisterteKomponenter:
-            overrides.nullstillIkkePersisterteKomponenter ?? ((): void => {}),
+            overrides.nullstillIkkePersisterteKomponenter ??
+            unsavedChanges?.nullstillIkkePersisterteKomponenter ??
+            ((): void => {}),
     };
 };
 
 /**
- * Test provider som bruker ekte useUnsavedChanges hook.
- * Bruk denne når tester trenger reaktiv unsaved changes-funksjonalitet.
+ * @deprecated Bruk lagBehandlingStateContext i kombinasjon med BehandlingStateContext.Provider
+ * Denne funksjonen returnerer nå kun behandling for bakoverkompatibilitet med eksisterende tester
+ */
+export const lagBehandlingContext = (overrides: BehandlingContextOverrides = {}): BehandlingDto => {
+    return overrides.behandling ?? lagBehandling();
+};
+
+/**
+ * Test provider som wrapper både BehandlingContext og BehandlingStateContext.
+ * Bruk denne for enkel testing av komponenter som trenger begge kontekstene.
  */
 export const TestBehandlingProvider: React.FC<{
     behandling?: BehandlingDto;
-    overrides?: Omit<
-        BehandlingContextOverrides,
-        | 'behandling'
-        | 'harUlagredeData'
-        | 'nullstillIkkePersisterteKomponenter'
-        | 'settIkkePersistertKomponent'
-    >;
+    stateOverrides?: BehandlingStateContextOverrides;
     children: React.ReactNode;
-}> = ({ behandling, overrides = {}, children }) => {
+}> = ({ behandling, stateOverrides = {}, children }) => {
     const unsavedChanges = useUnsavedChanges();
-    const contextValue = lagBehandlingContext({
-        behandling,
-        ...overrides,
-        ...unsavedChanges,
-    });
+    const behandlingValue = behandling ?? lagBehandling();
+    const stateValue = lagBehandlingStateContext(stateOverrides, unsavedChanges);
 
-    return <BehandlingContext.Provider value={contextValue}>{children}</BehandlingContext.Provider>;
+    return (
+        <BehandlingContext.Provider value={behandlingValue}>
+            <BehandlingStateContext.Provider value={stateValue}>
+                {children}
+            </BehandlingStateContext.Provider>
+        </BehandlingContext.Provider>
+    );
 };

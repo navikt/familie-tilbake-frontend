@@ -4,6 +4,7 @@ import * as React from 'react';
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
 import { målform } from '../../../../typer/målform';
@@ -18,10 +19,10 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
 };
 
 const SendMelding: React.FC = () => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const { språkkode } = useFagsak();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
-    const { behandlingILesemodus } = useBehandling();
+    const { behandlingILesemodus } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeMal = (e: React.ChangeEvent<HTMLSelectElement>): void => {

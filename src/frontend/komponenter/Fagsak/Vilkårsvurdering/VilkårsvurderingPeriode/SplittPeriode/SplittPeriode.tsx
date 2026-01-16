@@ -34,7 +34,7 @@ type Props = {
 };
 
 const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
-    const { behandling } = useBehandling();
+    const { behandlingId } = useBehandling();
     const [splittetPerioder, settSplittetPerioder] =
         useState<VilkårsvurderingPeriodeSkjemaData[]>();
     const {
@@ -48,7 +48,7 @@ const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
         vedDatoEndring,
         sendInnSkjema,
         validateNyPeriode,
-    } = useDelOppPeriode(periode.periode.fom, behandling.behandlingId);
+    } = useDelOppPeriode(periode.periode.fom, behandlingId);
 
     const onChangeDato = useCallback(
         (nyVerdi?: string) => {

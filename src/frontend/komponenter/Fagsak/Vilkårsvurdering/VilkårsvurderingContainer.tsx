@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { vilkårsvurderingStegInfotekstForYtelsestype } from '../../../kodeverk';
 import { RessursStatus } from '../../../typer/ressurs';
@@ -19,7 +19,7 @@ const VilkårsvurderingContainer: React.FC = () => {
         erAutoutført,
         skjemaData,
     } = useVilkårsvurdering();
-    const { behandlingILesemodus } = useBehandling();
+    const { behandlingILesemodus } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
     const stegInfotekst = vilkårsvurderingStegInfotekstForYtelsestype[ytelsestype];

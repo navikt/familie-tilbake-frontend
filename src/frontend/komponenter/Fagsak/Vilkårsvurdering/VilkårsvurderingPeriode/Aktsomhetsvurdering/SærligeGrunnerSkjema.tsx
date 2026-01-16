@@ -4,7 +4,7 @@ import { Checkbox, CheckboxGroup, Detail, Textarea, VStack } from '@navikt/ds-re
 import * as React from 'react';
 
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
-import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { type Skjema } from '../../../../../hooks/skjema';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
 
     const onChangeSærligeGrunner = (val: SærligeGrunner[]): void => {
         skjema.felter.særligeGrunner.validerOgSettFelt(val);

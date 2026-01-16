@@ -11,10 +11,9 @@ import * as React from 'react';
 
 import SendMelding from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
-import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { DokumentMal } from '../../../../kodeverk';
-import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
@@ -51,13 +50,14 @@ const renderSendMelding = (
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak({ språkkode })}>
-                <BehandlingContext.Provider
-                    value={lagBehandlingContext({ behandling, behandlingILesemodus })}
+                <TestBehandlingProvider
+                    behandling={behandling}
+                    stateOverrides={{ behandlingILesemodus }}
                 >
                     <SendMeldingProvider>
                         <SendMelding />
                     </SendMeldingProvider>
-                </BehandlingContext.Provider>
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

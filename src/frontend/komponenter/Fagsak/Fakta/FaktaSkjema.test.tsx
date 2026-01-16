@@ -6,9 +6,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { FaktaSkjema } from './FaktaSkjema';
-import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
-import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { configureZod } from '../../../utils/zodConfig';
@@ -90,7 +89,7 @@ const renderFakta = (
     return {
         result: render(
             <FagsakContext.Provider value={lagFagsak()}>
-                <BehandlingContext.Provider value={lagBehandlingContext()}>
+                <TestBehandlingProvider>
                     <QueryClientProvider client={client}>
                         <FaktaSkjema
                             faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
@@ -98,7 +97,7 @@ const renderFakta = (
                             behandlingUrl="https://tilbakekreving"
                         />
                     </QueryClientProvider>
-                </BehandlingContext.Provider>
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         ),
         mutationBody,

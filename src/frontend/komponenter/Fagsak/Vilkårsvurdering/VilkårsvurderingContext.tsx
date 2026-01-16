@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router';
 import { useBehandlingApi } from '../../../api/behandling';
 import { Feil } from '../../../api/feil';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
 import {
@@ -80,8 +81,9 @@ export const erTotalbeløpUnder4Rettsgebyr = (vurdering: VilkårsvurderingRespon
 
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() => {
     const { fagsystem, eksternFagsakId, ytelsestype } = useFagsak();
-    const { behandling, erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
-        useBehandling();
+    const behandling = useBehandling();
+    const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
+        useBehandlingState();
     const containerRef = useRef<HTMLDivElement>(null);
     const [vilkårsvurdering, setVilkårsvurdering] = useState<Ressurs<VilkårsvurderingResponse>>();
     const [skjemaData, settSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);

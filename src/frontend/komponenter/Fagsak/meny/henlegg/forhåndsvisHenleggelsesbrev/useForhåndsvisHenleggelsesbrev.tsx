@@ -30,7 +30,7 @@ type Props = {
 export const useForhåndsvisHenleggelsesbrev = ({
     skjema,
 }: Props): ForhåndsvisHenleggelsesbrevHook => {
-    const { behandling } = useBehandling();
+    const { behandlingId } = useBehandling();
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
         React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
@@ -44,7 +44,7 @@ export const useForhåndsvisHenleggelsesbrev = ({
         settHentetForhåndsvisning(byggHenterRessurs());
 
         forhåndsvisHenleggelsesbrev({
-            behandlingId: behandling.behandlingId,
+            behandlingId: behandlingId,
             fritekst: skjema.felter.fritekst.verdi,
         })
             .then((response: Ressurs<string>) => {

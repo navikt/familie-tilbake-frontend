@@ -6,9 +6,8 @@ import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 
 import Brevmottakere from './Brevmottakere';
-import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
-import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
@@ -65,9 +64,9 @@ const renderBrevmottakere = (behandling: BehandlingDto): RenderResult => {
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+                <TestBehandlingProvider behandling={behandling}>
                     <Brevmottakere />
-                </BehandlingContext.Provider>
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

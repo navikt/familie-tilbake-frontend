@@ -13,9 +13,8 @@ import * as React from 'react';
 import { vi } from 'vitest';
 
 import { HenleggModal } from './HenleggModal';
-import { BehandlingContext } from '../../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../../context/FagsakContext';
-import { lagBehandlingContext } from '../../../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../../testutils/queryTestUtils';
@@ -45,9 +44,9 @@ const renderHenleggModal = (
     const renderModal = render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+                <TestBehandlingProvider behandling={behandling}>
                     <HenleggModal dialogRef={mockDialogRef} årsaker={årsaker} />
-                </BehandlingContext.Provider>
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

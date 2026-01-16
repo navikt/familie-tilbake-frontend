@@ -9,9 +9,8 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import ForeldelsePeriodeSkjema from './ForeldelsePeriodeSkjema';
-import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { Foreldelsevurdering } from '../../../../kodeverk';
-import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagForeldelsePeriodeSkjemaData } from '../../../../testdata/foreldelseFactory';
 
 vi.mock('../../../../api/http/HttpProvider', () => {
@@ -32,9 +31,9 @@ vi.mock('../ForeldelseContext', () => {
 
 const renderForeldelsePeriodeSkjema = (periode: ForeldelsePeriodeSkjemeData): RenderResult =>
     render(
-        <BehandlingContext.Provider value={lagBehandlingContext()}>
+        <TestBehandlingProvider>
             <ForeldelsePeriodeSkjema periode={periode} erLesevisning={false} />
-        </BehandlingContext.Provider>
+        </TestBehandlingProvider>
     );
 
 describe('ForeldelsePeriodeSkjema', () => {

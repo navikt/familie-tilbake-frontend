@@ -9,6 +9,7 @@ import { useVedtak } from './VedtakContext';
 import VedtakPerioder from './VedtakPerioder';
 import VedtakSkjema from './VedtakSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
@@ -47,13 +48,20 @@ const VedtakContainer: React.FC = () => {
         lagreUtkast,
         hentVedtaksbrevtekster,
     } = useVedtak();
-    const { behandling, behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandling();
+    const {
+        type,
+        behandlingsårsakstype,
+        behandlingId,
+        kanEndres,
+        eksternBrukId,
+        manuelleBrevmottakere,
+    } = useBehandling();
+    const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus;
-    const erRevurderingKlageKA = behandling.behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
+    const erRevurderingKlageKA = behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
     const erRevurderingBortfaltBeløp =
-        behandling.type === 'REVURDERING_TILBAKEKREVING' &&
-        behandling.behandlingsårsakstype ===
-            'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
+        type === 'REVURDERING_TILBAKEKREVING' &&
+        behandlingsårsakstype === 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
     const [erPerioderSammenslått, settErPerioderSammenslått] = useState<boolean>(false);
 
     const {
@@ -64,7 +72,7 @@ const VedtakContainer: React.FC = () => {
         erPerioderLike,
         laster,
         feilmelding,
-    } = useSammenslåPerioder(behandling.behandlingId);
+    } = useSammenslåPerioder(behandlingId);
 
     const handleKnappTrykk = async (): Promise<void> => {
         const oppdaterErPerioderSammenslått = !erPerioderSammenslått;
@@ -92,15 +100,12 @@ const VedtakContainer: React.FC = () => {
         // Skal trigge re-rendring
     }, [nonUsedKey]);
 
-    if (!behandling) return null;
-
     const harValideringsFeil = skjemaData.some(avs =>
         avs.underavsnittsliste.some(uavs => uavs.harFeil)
     );
 
     const kanViseForhåndsvisning =
-        (!erLesevisning ||
-            (behandling.kanEndres && aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK')) &&
+        (!erLesevisning || (kanEndres && aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK')) &&
         !erRevurderingKlageKA;
 
     if (
@@ -123,13 +128,13 @@ const VedtakContainer: React.FC = () => {
                     </>
                 )}
 
-                {behandling.manuelleBrevmottakere.length > 0 && (
+                {manuelleBrevmottakere.length > 0 && (
                     <>
                         <BrevmottakereAlert
-                            brevmottakere={behandling.manuelleBrevmottakere.map(
-                                brevmottakerDto => brevmottakerDto.brevmottaker
+                            brevmottakere={manuelleBrevmottakere.map(
+                                ({ brevmottaker }) => brevmottaker
                             )}
-                            linkTilBrevmottakerSteg={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
+                            linkTilBrevmottakerSteg={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
                         />
                         <Spacer20 />
                     </>

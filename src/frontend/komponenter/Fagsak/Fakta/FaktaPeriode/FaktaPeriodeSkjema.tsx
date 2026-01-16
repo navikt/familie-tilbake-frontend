@@ -6,7 +6,7 @@ import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { useEffect, useMemo } from 'react';
 
-import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
 import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
 import { useFakta } from '../FaktaContext';
@@ -26,7 +26,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
 }) => {
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
         useFakta();
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
 
     useEffect(() => {
         const skalAutoVelgeHendelsestype = !periode.hendelsestype && hendelseTyper?.length === 1;

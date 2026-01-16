@@ -47,7 +47,7 @@ const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean 
     avhengigheter?.maltype.valideringsstatus === Valideringsstatus.Ok;
 
 const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
-    const { behandling } = useBehandling();
+    const { behandlingId, eksternBrukId, varselSendt } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const queryClient = useQueryClient();
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
@@ -56,7 +56,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
     const navigate = useNavigate();
 
     const maler = [
-        behandling.varselSendt ? DokumentMal.KorrigertVarsel : DokumentMal.Varsel,
+        varselSendt ? DokumentMal.KorrigertVarsel : DokumentMal.Varsel,
         DokumentMal.InnhentDokumentasjon,
     ];
 
@@ -93,7 +93,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
 
     const hentBrevdata = (): BrevPayload => {
         return {
-            behandlingId: behandling.behandlingId,
+            behandlingId: behandlingId,
             brevmalkode: skjema.felter.maltype.verdi as DokumentMal,
             fritekst: skjema.felter.fritekst.verdi,
         };
@@ -109,13 +109,10 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
                 if (respons.status === RessursStatus.Suksess) {
                     nullstillSkjema();
                     queryClient.invalidateQueries({
-                        queryKey: [
-                            'hentBehandling',
-                            { path: { behandlingId: behandling.behandlingId } },
-                        ],
+                        queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
                     });
                     navigate(
-                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
+                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
                     );
                 } else {
                     settFeilmelding(hentFrontendFeilmelding(respons));
@@ -127,7 +124,6 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
     };
 
     return {
-        behandling,
         maler,
         skjema,
         hentBrevdata,

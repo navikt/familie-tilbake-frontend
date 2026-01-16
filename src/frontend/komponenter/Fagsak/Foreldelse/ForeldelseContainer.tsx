@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useForeldelse } from './ForeldelseContext';
 import ForeldelsePerioder from './ForeldelsePeriode/ForeldelsePerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { finnDatoRelativtTilNå } from '../../../utils';
@@ -22,7 +23,8 @@ const ForeldelseContainer: React.FC = () => {
         senderInn,
         allePerioderBehandlet,
     } = useForeldelse();
-    const { behandling, behandlingILesemodus, actionBarStegtekst } = useBehandling();
+    const behandling = useBehandling();
+    const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
     const navigerEllerLagreOgNaviger =
         erAutoutført || (stegErBehandlet && erLesevisning) ? gåTilNesteSteg : sendInnSkjema;

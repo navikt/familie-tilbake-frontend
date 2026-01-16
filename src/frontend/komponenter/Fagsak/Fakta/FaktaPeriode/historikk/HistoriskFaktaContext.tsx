@@ -15,7 +15,7 @@ import {
 import { sorterFeilutbetaltePerioder } from '../../../../../utils';
 
 const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const [inaktiveFakta, setInaktiveFakta] = useState<Ressurs<FaktaResponse[]>>(byggTomRessurs);
 
     const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>();

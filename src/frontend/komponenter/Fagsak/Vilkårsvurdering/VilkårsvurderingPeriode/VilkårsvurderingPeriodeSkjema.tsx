@@ -34,6 +34,7 @@ import {
     useVilkårsvurderingPeriodeSkjema,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import { formatterDatostring, isEmpty } from '../../../../utils';
@@ -143,13 +144,13 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
+    const behandling = useBehandling();
     const {
-        behandling,
         settIkkePersistertKomponent,
         harUlagredeData,
         nullstillIkkePersisterteKomponenter,
         actionBarStegtekst,
-    } = useBehandling();
+    } = useBehandlingState();
     const queryClient = useQueryClient();
 
     const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);

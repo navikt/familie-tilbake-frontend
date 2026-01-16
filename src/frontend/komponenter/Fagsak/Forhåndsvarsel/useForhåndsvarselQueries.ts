@@ -17,7 +17,7 @@ export type UseForhåndsvarselQueriesReturn = {
 };
 
 export const useForhåndsvarselQueries = (): UseForhåndsvarselQueriesReturn => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
 
     const forhåndsvarselInfoQuery = useSuspenseQuery({
         queryKey: ['hentForhåndsvarselInfo', behandling.behandlingId],

@@ -14,7 +14,7 @@ type Props = {
 
 const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
     ({ valgtMenyside }: Props) => {
-        const { behandling } = useBehandling();
+        const { behandlingId } = useBehandling();
         const [journalposter, settJournalposter] = useState<Ressurs<Journalpost[]>>();
         const { request } = useHttp();
 
@@ -23,13 +23,13 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
                 hentDokumentlisting();
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [behandling, valgtMenyside]);
+        }, [behandlingId, valgtMenyside]);
 
         const hentDokumentlisting = (): void => {
             settJournalposter(byggHenterRessurs());
             request<void, Journalpost[]>({
                 method: 'GET',
-                url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/journalposter`,
+                url: `/familie-tilbake/api/behandling/${behandlingId}/journalposter`,
             })
                 .then((hentetDokumenter: Ressurs<Journalpost[]>) => {
                     settJournalposter(hentetDokumenter);
@@ -45,7 +45,6 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
 
         return {
             journalposter,
-            behandling,
         };
     }
 );

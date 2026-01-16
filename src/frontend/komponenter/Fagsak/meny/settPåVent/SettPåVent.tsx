@@ -14,14 +14,14 @@ import { usePåVentBehandling } from '../../../Felleskomponenter/Modal/PåVent/P
 import { MODAL_BREDDE } from '../utils';
 
 export const SettPåVent: React.FC = () => {
-    const { behandling } = useBehandling();
+    const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
     const dialogRef = useRef<HTMLDialogElement>(null);
 
     const lukkModalOgHentBehandling = (): void => {
         dialogRef.current?.close();
         queryClient.invalidateQueries({
-            queryKey: ['hentBehandling', { path: { behandlingId: behandling.behandlingId } }],
+            queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
         });
     };
 
@@ -81,7 +81,7 @@ export const SettPåVent: React.FC = () => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button key="bekreft" onClick={() => onBekreft(behandling.behandlingId)}>
+                    <Button key="bekreft" onClick={() => onBekreft(behandlingId)}>
                         Sett på vent
                     </Button>
                     <Button

@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
-    const { behandling } = useBehandling();
+    const { type } = useBehandling();
     const { skjema, visFritekst, onBekreft, nullstillSkjema, kanForhåndsvise } = useHenleggSkjema({
         lukkModal: () => dialogRef.current?.close(),
     });
@@ -33,8 +33,8 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
     });
 
     useEffect(() => {
-        oppdaterBehandlingstype(behandling.type as Behandlingstype);
-    }, [behandling.type]);
+        oppdaterBehandlingstype(type as Behandlingstype);
+    }, [type]);
 
     const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         const årsak = e.target.value as Behandlingresultat;

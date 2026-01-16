@@ -14,13 +14,14 @@ import { SettPåVent } from './settPåVent/SettPåVent';
 import { StartPåNytt } from './startPåNytt/StartPåNytt';
 import { useApp } from '../../../context/AppContext';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Fagsystem } from '../../../kodeverk';
 import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
 
 export const Behandlingsmeny: React.FC = () => {
-    const { behandling, ventegrunn, erStegBehandlet, aktivtSteg, behandlingILesemodus } =
-        useBehandling();
+    const behandling = useBehandling();
+    const { ventegrunn, erStegBehandlet, aktivtSteg, behandlingILesemodus } = useBehandlingState();
     const [holdMenyenÅpen, setHoldMenyenÅpen] = useState(false);
     const { fagsystem, ytelsestype } = useFagsak();
     const { innloggetSaksbehandler } = useApp();

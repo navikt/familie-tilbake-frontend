@@ -39,13 +39,13 @@ type Props = {
 };
 
 const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
-    const { behandling } = useBehandling();
+    const { behandlingId, saksbehandlingstype, kanEndres } = useBehandling();
     const queryClient = useQueryClient();
 
     const lukkModalOgHentBehandling = (): void => {
         onClose();
         queryClient.invalidateQueries({
-            queryKey: ['hentBehandling', { path: { behandlingId: behandling.behandlingId } }],
+            queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
         });
     };
 
@@ -76,8 +76,7 @@ const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
 
     const vilBliAutomatiskBehandletUnder4rettsgebyr =
         venterPåKravgrunnlag &&
-        behandling.saksbehandlingstype ===
-            Saksbehandlingstype.AutomatiskIkkeInnkrevingUnder4XRettsgebyr;
+        saksbehandlingstype === Saksbehandlingstype.AutomatiskIkkeInnkrevingUnder4XRettsgebyr;
 
     const lukkModal = (): void => {
         tilbakestillFelterTilDefault();
@@ -157,11 +156,8 @@ const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
-                    variant="primary"
                     key="bekreft"
-                    onClick={() => {
-                        onBekreft(behandling.behandlingId);
-                    }}
+                    onClick={() => onBekreft(behandlingId)}
                     disabled={uendret}
                     size="small"
                 >
@@ -170,9 +166,9 @@ const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
                 <Button
                     variant="tertiary"
                     key="avbryt"
-                    onClick={() => onOkTaAvVent(behandling.behandlingId)}
+                    onClick={() => onOkTaAvVent(behandlingId)}
                     size="small"
-                    disabled={!behandling.kanEndres || venterPåKravgrunnlag}
+                    disabled={!kanEndres || venterPåKravgrunnlag}
                 >
                     Ta av vent
                 </Button>

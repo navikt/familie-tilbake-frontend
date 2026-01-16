@@ -159,6 +159,6 @@ export const erØnsketSideTilgjengelig = (
     return !!funnetØnsketSide;
 };
 
-export const finnSideForSteg = (behandlingssteg: Behandlingssteg): SynligSteg | undefined => {
+export const finnSideForSteg = (behandlingssteg: BehandlingsstegEnum): SynligSteg | undefined => {
     return Object.values(SYNLIGE_STEG).find(({ steg }) => steg === behandlingssteg);
 };

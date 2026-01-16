@@ -5,7 +5,8 @@ import { Stepper } from '@navikt/ds-react';
 import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
-import { erStegUtført, useBehandling } from '../../../context/BehandlingContext';
+import { useBehandling } from '../../../context/BehandlingContext';
+import { erStegUtført } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { type Behandlingsstegstilstand } from '../../../typer/behandling';
 import { erSidenAktiv, SYNLIGE_STEG, visSide } from '../../../utils/sider';
@@ -37,7 +38,7 @@ const mapStegTilStepperSteg = (
 };
 
 export const Stegflyt: React.FC = () => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const location = useLocation();
     const navigate = useNavigate();
     const { fagsystem, eksternFagsakId } = useFagsak();

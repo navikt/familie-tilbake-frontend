@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useDokumentApi } from '../../../api/dokument';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import {
@@ -81,7 +82,8 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
 
 const [VedtakProvider, useVedtak] = createUseContext(() => {
     const { fagsystem, eksternFagsakId } = useFagsak();
-    const { behandling, nullstillIkkePersisterteKomponenter } = useBehandling();
+    const behandling = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
     const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
     const [skjemaData, settSkjemaData] = useState<AvsnittSkjemaData[]>([]);

@@ -4,7 +4,7 @@ import type { JaNeiOption } from '../VilkårsvurderingPeriodeSkjemaContext';
 import { BodyShort, Label, Radio } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { Valideringsstatus } from '../../../../../hooks/skjema';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { jaNeiOptions } from '../VilkårsvurderingPeriodeSkjemaContext';
@@ -21,7 +21,7 @@ const TilleggesRenterRadioGroup: React.FC<Props> = ({
     felt,
     visFeilmeldingerForSkjema,
 }) => {
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
 
     return erLesevisning || !kanIlleggeRenter ? (
         <div>

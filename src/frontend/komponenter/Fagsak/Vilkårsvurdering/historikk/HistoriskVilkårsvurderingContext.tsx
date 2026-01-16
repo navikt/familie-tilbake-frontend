@@ -15,7 +15,7 @@ import {
 import { sorterFeilutbetaltePerioder } from '../../../../utils';
 
 const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = createUseContext(() => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const [inaktiveVilkårsvurderinger, setInaktiveVilkårsvurderinger] =
         useState<Ressurs<VilkårsvurderingResponse[]>>(byggTomRessurs);
 

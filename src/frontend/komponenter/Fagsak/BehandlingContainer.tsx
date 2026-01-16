@@ -19,6 +19,7 @@ import { VergeProvider } from './Verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
 import { useBehandling } from '../../context/BehandlingContext';
+import { useBehandlingState } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { Behandlingstatus } from '../../typer/behandling';
 import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from '../../utils/sider';
@@ -58,7 +59,8 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
 const BehandlingContainer: React.FC = () => {
-    const { behandling, harKravgrunnlag, aktivtSteg } = useBehandling();
+    const behandling = useBehandling();
+    const { harKravgrunnlag, aktivtSteg } = useBehandlingState();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const navigate = useNavigate();
     const location = useLocation();

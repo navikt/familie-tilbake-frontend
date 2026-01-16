@@ -10,10 +10,9 @@ import * as React from 'react';
 
 import { FaktaProvider } from '../FaktaContext';
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
-import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { HendelseUndertype, HendelseType } from '../../../../kodeverk';
-import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagFaktaPeriode } from '../../../../testdata/faktaFactory';
@@ -50,7 +49,7 @@ const renderComponent = (
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+                <TestBehandlingProvider behandling={behandling}>
                     <FaktaProvider>
                         <table>
                             <tbody>
@@ -63,7 +62,7 @@ const renderComponent = (
                             </tbody>
                         </table>
                     </FaktaProvider>
-                </BehandlingContext.Provider>
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

@@ -14,12 +14,11 @@ import { vi } from 'vitest';
 
 import VergeContainer from './VergeContainer';
 import { VergeProvider } from './VergeContext';
-import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Vergetype } from '../../../kodeverk/verge';
 import {
-    lagBehandlingContext,
-    type BehandlingContextOverrides,
+    TestBehandlingProvider,
+    type BehandlingStateContextOverrides,
 } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
@@ -50,21 +49,19 @@ vi.mock('react-router', async () => {
 
 const renderVergeContainer = (
     behandling: BehandlingDto,
-    behandlingContextOverrides: BehandlingContextOverrides = {}
+    stateOverrides: BehandlingStateContextOverrides = {}
 ): RenderResult => {
     const client = createTestQueryClient();
 
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
-            <BehandlingContext.Provider
-                value={lagBehandlingContext({ behandling, ...behandlingContextOverrides })}
-            >
+            <TestBehandlingProvider behandling={behandling} stateOverrides={stateOverrides}>
                 <QueryClientProvider client={client}>
                     <VergeProvider>
                         <VergeContainer />
                     </VergeProvider>
                 </QueryClientProvider>
-            </BehandlingContext.Provider>
+            </TestBehandlingProvider>
         </FagsakContext.Provider>
     );
 };

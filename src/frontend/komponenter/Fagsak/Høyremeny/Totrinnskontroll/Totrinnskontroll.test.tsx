@@ -13,11 +13,10 @@ import { vi } from 'vitest';
 
 import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
-import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import {
-    lagBehandlingContext,
-    type BehandlingContextOverrides,
+    TestBehandlingProvider,
+    type BehandlingStateContextOverrides,
 } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
@@ -41,19 +40,17 @@ vi.mock('react-router', async () => {
 
 const renderTotrinnskontroll = (
     behandling: BehandlingDto,
-    behandlingContextOverrides: BehandlingContextOverrides = {}
+    stateOverrides: BehandlingStateContextOverrides = {}
 ): RenderResult => {
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <BehandlingContext.Provider
-                    value={lagBehandlingContext({ behandling, ...behandlingContextOverrides })}
-                >
+                <TestBehandlingProvider behandling={behandling} stateOverrides={stateOverrides}>
                     <TotrinnskontrollProvider>
                         <Totrinnskontroll />
                     </TotrinnskontrollProvider>
-                </BehandlingContext.Provider>
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

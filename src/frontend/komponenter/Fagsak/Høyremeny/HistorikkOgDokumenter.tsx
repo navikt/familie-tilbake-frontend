@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteget }) => {
-    const { behandling } = useBehandling();
+    const { erNyModell } = useBehandling();
     const [valgtSide, setValgtSide] = useState(
         værtPåFatteVedtakSteget ? Menysider.Totrinn : Menysider.Historikk
     );
@@ -39,7 +39,7 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteg
                     value={Menysider.Dokumenter}
                     icon={<FolderFileIcon fontSize="1.25rem" aria-label="Dokumenter" />}
                 />
-                {!behandling.erNyModell && (
+                {!erNyModell && (
                     <ToggleGroup.Item
                         value={Menysider.SendBrev}
                         icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-label="Send brev" />}

@@ -9,10 +9,9 @@ import React from 'react';
 import { Forhåndsvarsel } from './Forhåndsvarsel';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
-import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { ToggleName } from '../../../context/toggles';
-import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandlingDto } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
@@ -77,16 +76,16 @@ const setupMock = (): void => {
 const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): RenderResult => {
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
-            <BehandlingContext.Provider
-                value={lagBehandlingContext({
-                    behandling,
+            <TestBehandlingProvider
+                behandling={behandling}
+                stateOverrides={{
                     actionBarStegtekst: (): string | undefined => 'Steg 2 av 5',
-                })}
+                }}
             >
                 <QueryClientProvider client={createTestQueryClient()}>
                     <Forhåndsvarsel />
                 </QueryClientProvider>
-            </BehandlingContext.Provider>
+            </TestBehandlingProvider>
         </FagsakContext.Provider>
     );
 };

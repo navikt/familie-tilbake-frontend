@@ -12,9 +12,9 @@ const Container = styled.div`
     margin: 2rem;
 `;
 const HistoriskeVurderingermeny: React.FC = () => {
-    const { behandling } = useBehandling();
+    const { eksternBrukId } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
-    const basePath = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+    const basePath = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}`;
     const location = useLocation();
     const behandlingsPath = location.pathname.split('/').at(-1);
 

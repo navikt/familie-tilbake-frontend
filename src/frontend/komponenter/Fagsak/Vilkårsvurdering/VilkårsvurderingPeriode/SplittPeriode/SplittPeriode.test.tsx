@@ -9,8 +9,7 @@ import { vi } from 'vitest';
 
 import SplittPeriode from './SplittPeriode';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
-import { BehandlingContext } from '../../../../../context/BehandlingContext';
-import { lagBehandlingContext } from '../../../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../../testdata/vilkårsvurderingFactory';
 import { RessursStatus } from '../../../../../typer/ressurs';
@@ -48,12 +47,12 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
             queryByText,
         } = render(
             <HttpProvider>
-                <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+                <TestBehandlingProvider behandling={behandling}>
                     <SplittPeriode
                         periode={lagVilkårsvurderingPeriodeSkjemaData()}
                         onBekreft={vi.fn()}
                     />
-                </BehandlingContext.Provider>
+                </TestBehandlingProvider>
             </HttpProvider>
         );
 

@@ -9,7 +9,7 @@ import { usePåVentBehandling } from '../../../Felleskomponenter/Modal/PåVent/P
 import { MODAL_BREDDE } from '../utils';
 
 export const Gjenoppta: React.FC = () => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const queryClient = useQueryClient();
 

@@ -28,7 +28,7 @@ import { formatterDatostring } from '../../../../utils';
 import { ICON_PROPS } from '../utils';
 
 export const Faktaboks: React.FC = () => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const { ytelsestype } = useFagsak();
 
     return (

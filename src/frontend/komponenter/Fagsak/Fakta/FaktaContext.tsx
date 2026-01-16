@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Behandlingssteg } from '../../../typer/behandling';
@@ -34,7 +35,7 @@ import { SYNLIGE_STEG } from '../../../utils/sider';
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 
 const [FaktaProvider, useFakta] = createUseContext(() => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const queryClient = useQueryClient();
     const [fakta, setFakta] = useState<Ressurs<FaktaResponse>>();
@@ -50,7 +51,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     const [senderInn, settSenderInn] = useState<boolean>(false);
     const [feilmeldinger, settFeilmeldinger] = useState<Feilmelding[]>();
     const { erStegBehandlet, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
-        useBehandling();
+        useBehandlingState();
     const { gjerFaktaKall, sendInnFakta } = useBehandlingApi();
     const { utførRedirect } = useRedirectEtterLagring();
     const navigate = useNavigate();

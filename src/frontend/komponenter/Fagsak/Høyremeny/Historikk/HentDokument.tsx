@@ -2,8 +2,8 @@ import type { HistorikkInnslag } from '../../../../typer/historikk';
 
 import * as React from 'react';
 
-import { useHistorikk } from './HistorikkContext';
 import { useHttp } from '../../../../api/http/HttpProvider';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -23,7 +23,7 @@ type Props = {
 const HentDokument: React.FC<Props> = ({ innslag, onClose }) => {
     const [hentetDokument, settHentetDokument] = React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
-    const { behandling } = useHistorikk();
+    const { behandlingId } = useBehandling();
     const { request } = useHttp();
 
     React.useEffect(() => {
@@ -31,7 +31,7 @@ const HentDokument: React.FC<Props> = ({ innslag, onClose }) => {
         settHentetDokument(byggHenterRessurs());
         request<void, string>({
             method: 'GET',
-            url: `/familie-tilbake/api/behandling/${behandling.behandlingId}/journalpost/${innslag.journalpostId}/dokument/${innslag.dokumentId}`,
+            url: `/familie-tilbake/api/behandling/${behandlingId}/journalpost/${innslag.journalpostId}/dokument/${innslag.dokumentId}`,
         }).then((response: Ressurs<string>) => {
             if (response.status === RessursStatus.Suksess) {
                 const blob = new Blob([base64ToArrayBuffer(response.data)], {
@@ -51,7 +51,7 @@ const HentDokument: React.FC<Props> = ({ innslag, onClose }) => {
             }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [behandling, innslag]);
+    }, [behandlingId, innslag]);
 
     const nullstillHentetDokument = (): void => {
         settHentetDokument(byggTomRessurs);

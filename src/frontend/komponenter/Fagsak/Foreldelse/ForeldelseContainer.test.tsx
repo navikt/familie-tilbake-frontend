@@ -14,10 +14,9 @@ import { vi } from 'vitest';
 
 import ForeldelseContainer from './ForeldelseContainer';
 import { ForeldelseProvider } from './ForeldelseContext';
-import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Foreldelsevurdering } from '../../../kodeverk';
-import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagForeldelsePeriode, lagForeldelseResponse } from '../../../testdata/foreldelseFactory';
@@ -56,18 +55,18 @@ const renderForeldelseContainer = (
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext.Provider value={lagFagsak()}>
-                <BehandlingContext.Provider
-                    value={lagBehandlingContext({
-                        behandling,
+                <TestBehandlingProvider
+                    behandling={behandling}
+                    stateOverrides={{
                         behandlingILesemodus: lesemodus,
                         erStegBehandlet: (): boolean => behandlet,
                         erStegAutoutført: (): boolean => autoutført,
-                    })}
+                    }}
                 >
                     <ForeldelseProvider>
                         <ForeldelseContainer />
                     </ForeldelseProvider>
-                </BehandlingContext.Provider>
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         </QueryClientProvider>
     );

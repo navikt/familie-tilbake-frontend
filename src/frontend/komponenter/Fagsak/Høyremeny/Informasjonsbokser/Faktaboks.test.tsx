@@ -5,10 +5,9 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { Faktaboks } from './Faktaboks';
-import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { ytelsetype, Ytelsetype } from '../../../../kodeverk';
-import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
@@ -27,9 +26,9 @@ const renderFaktaboks = (
     const behandling = lagBehandling(delvisBehandling);
     return render(
         <FagsakContext.Provider value={lagFagsak({ ytelsestype: ytelsestypeOverride })}>
-            <BehandlingContext.Provider value={lagBehandlingContext({ behandling })}>
+            <TestBehandlingProvider behandling={behandling}>
                 <Faktaboks />
-            </BehandlingContext.Provider>
+            </TestBehandlingProvider>
         </FagsakContext.Provider>
     );
 };

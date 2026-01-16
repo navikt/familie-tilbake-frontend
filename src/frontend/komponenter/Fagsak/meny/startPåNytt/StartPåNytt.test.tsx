@@ -10,9 +10,8 @@ import * as React from 'react';
 
 import { StartPåNytt } from './StartPåNytt';
 import { Feil } from '../../../../api/feil';
-import { BehandlingContext } from '../../../../context/BehandlingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
-import { lagBehandlingContext } from '../../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
@@ -65,11 +64,9 @@ describe('StartPåNytt', () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <FagsakContext.Provider value={lagFagsak({ eksternFagsakId: '123' })}>
-                    <BehandlingContext.Provider
-                        value={lagBehandlingContext({
-                            behandling,
-                            nullstillIkkePersisterteKomponenter: mockNullstill,
-                        })}
+                    <TestBehandlingProvider
+                        behandling={behandling}
+                        stateOverrides={{ nullstillIkkePersisterteKomponenter: mockNullstill }}
                     >
                         <ActionMenu open>
                             <ActionMenu.Trigger>
@@ -79,7 +76,7 @@ describe('StartPåNytt', () => {
                                 <StartPåNytt />
                             </ActionMenu.Content>
                         </ActionMenu>
-                    </BehandlingContext.Provider>
+                    </TestBehandlingProvider>
                 </FagsakContext.Provider>
             </QueryClientProvider>
         );

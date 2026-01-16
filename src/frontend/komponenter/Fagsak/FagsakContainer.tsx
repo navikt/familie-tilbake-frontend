@@ -6,11 +6,8 @@ import { Suspense, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import BehandlingContainer from './BehandlingContainer';
-import {
-    BehandlingProvider,
-    finnBehandlingId,
-    useBehandling,
-} from '../../context/BehandlingContext';
+import { BehandlingProvider, finnBehandlingId } from '../../context/BehandlingContext';
+import { BehandlingStateProvider, useBehandlingState } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { useBehandlingStore } from '../../stores/behandlingStore';
 import { useFagsakStore } from '../../stores/fagsakStore';
@@ -28,7 +25,7 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
 };
 
 const BehandlingContent: React.FC = () => {
-    const { ventegrunn } = useBehandling();
+    const { ventegrunn } = useBehandlingState();
     const [visVenteModal, settVisVenteModal] = useState(false);
 
     return (
@@ -85,8 +82,10 @@ const FagsakContainer: React.FC = () => {
     return (
         <Suspense fallback={<HenterBehandling />}>
             <BehandlingProvider behandlingId={behandlingId}>
-                <BehandlingContent />
-                <UlagretDataModal />
+                <BehandlingStateProvider>
+                    <BehandlingContent />
+                    <UlagretDataModal />
+                </BehandlingStateProvider>
             </BehandlingProvider>
         </Suspense>
     );

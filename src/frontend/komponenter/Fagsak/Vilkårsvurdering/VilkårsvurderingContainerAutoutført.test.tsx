@@ -10,9 +10,8 @@ import { vi } from 'vitest';
 
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
-import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
-import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingResponse } from '../../../testdata/vilkårsvurderingFactory';
@@ -70,16 +69,16 @@ describe('VilkårsvurderingContainer', () => {
         const { getByText } = render(
             <FagsakContext.Provider value={lagFagsak()}>
                 <QueryClientProvider client={queryClient}>
-                    <BehandlingContext.Provider
-                        value={lagBehandlingContext({
-                            behandling,
+                    <TestBehandlingProvider
+                        behandling={behandling}
+                        stateOverrides={{
                             erStegAutoutført: (): boolean => true,
-                        })}
+                        }}
                     >
                         <VilkårsvurderingProvider>
                             <VilkårsvurderingContainer />
                         </VilkårsvurderingProvider>
-                    </BehandlingContext.Provider>
+                    </TestBehandlingProvider>
                 </QueryClientProvider>
             </FagsakContext.Provider>
         );

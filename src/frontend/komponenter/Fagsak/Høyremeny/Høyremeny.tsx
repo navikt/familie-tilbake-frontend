@@ -6,14 +6,14 @@ import { useEffect } from 'react';
 import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
 import { BrukerInformasjon } from './Informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './Informasjonsbokser/Faktaboks';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 
 type Props = {
     dialogRef: React.RefObject<HTMLDialogElement | null>;
 };
 
 const Høyremeny: React.FC<Props> = ({ dialogRef }) => {
-    const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandling();
+    const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandlingState();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
 
     useEffect(() => {

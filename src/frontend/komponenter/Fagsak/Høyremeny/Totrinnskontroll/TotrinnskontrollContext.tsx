@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router';
 import { OptionIkkeGodkjent, totrinnGodkjenningOptions } from './typer/totrinnSkjemaTyper';
 import { useBehandlingApi } from '../../../../api/behandling';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { behandlingssteg } from '../../../../typer/behandling';
 import {
@@ -37,7 +38,7 @@ const stegRekkefølge: BehandlingsstegEnum[] = [
 ];
 
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
-    const { behandling } = useBehandling();
+    const behandling = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const queryClient = useQueryClient();
     const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
@@ -49,7 +50,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const [fatteVedtakRespons, settFatteVedtakRespons] = useState<Ressurs<string>>();
     const [disableBekreft, settDisableBekreft] = useState<boolean>(true);
     const [sendTilSaksbehandler, settSendTilSaksbehandler] = useState<boolean>(true);
-    const { erStegBehandlet, erBehandlingReturnertFraBeslutter } = useBehandling();
+    const { erStegBehandlet, erBehandlingReturnertFraBeslutter } = useBehandlingState();
     const { gjerTotrinnkontrollKall, sendInnFatteVedtak, kallAngreSendTilBeslutter } =
         useBehandlingApi();
     const navigate = useNavigate();

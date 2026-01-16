@@ -1,30 +1,21 @@
-import type { BehandlingContextType } from '../../../context/BehandlingContext';
 import type { RenderResult } from '@testing-library/react';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { ActionBar } from './ActionBar';
-import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
-import {
-    lagBehandlingContext,
-    type BehandlingContextOverrides,
-} from '../../../testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 
 const renderActionBar = (
     onForrige: () => void,
     onNeste: () => void,
-    isLoading: boolean = false,
-    behandlingContextOverrides: BehandlingContextOverrides = {}
+    isLoading: boolean = false
 ): RenderResult => {
-    const behandlingContext: BehandlingContextType = lagBehandlingContext(
-        behandlingContextOverrides
-    );
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
-            <BehandlingContext.Provider value={behandlingContext}>
+            <TestBehandlingProvider>
                 <ActionBar
                     stegtekst="Steg 2 av 5"
                     forrigeAriaLabel="gå tilbake til faktasteget"
@@ -33,7 +24,7 @@ const renderActionBar = (
                     isLoading={isLoading}
                     onForrige={onForrige}
                 />
-            </BehandlingContext.Provider>
+            </TestBehandlingProvider>
         </FagsakContext.Provider>
     );
 };

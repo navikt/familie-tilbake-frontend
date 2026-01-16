@@ -8,7 +8,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
-import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
 import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
@@ -23,7 +23,7 @@ type Props = {
 };
 
 const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
 
     const ugyldigErBeløpetIBeholdValgt =
         skjema.visFeilmeldinger &&
