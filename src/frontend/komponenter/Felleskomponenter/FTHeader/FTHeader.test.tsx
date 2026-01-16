@@ -1,6 +1,7 @@
+import type { QueryClient } from '@tanstack/react-query';
 import type { RenderResult } from '@testing-library/react';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -11,17 +12,11 @@ import { FTHeader } from './FTHeader';
 import { hentBrukerlenkeBaseUrl, hentAInntektUrl } from '../../../api/brukerlenker';
 import { useBehandlingStore } from '../../../stores/behandlingStore';
 import { useFagsakStore } from '../../../stores/fagsakStore';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 
 const mockHentBrukerlenkeBaseUrl = vi.mocked(hentBrukerlenkeBaseUrl);
 const mockHentAInntektUrl = vi.mocked(hentAInntektUrl);
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            retry: false,
-        },
-    },
-});
 const mockSaksbehandler = {
     displayName: 'Test Saksbehandler',
     email: 'test@nav.no',
@@ -31,6 +26,8 @@ const mockSaksbehandler = {
     navIdent: 'TST123',
     enhet: 'Test Enhet',
 };
+
+let queryClient: QueryClient;
 
 const renderHeader = (): RenderResult => {
     return render(
@@ -59,6 +56,7 @@ const setUpMocks = (): void => {
 
 describe('FTHeader', () => {
     beforeEach(() => {
+        queryClient = createTestQueryClient();
         vi.clearAllMocks();
         setUpMocks();
     });
@@ -72,10 +70,12 @@ describe('FTHeader', () => {
     test('Viser riktig titler når ingen personIdent er satt', async () => {
         renderHeader();
 
-        const modiaLenkeTekst = screen.getByText('Modia');
+        await waitFor(() => {
+            expect(screen.getByText('Modia')).toBeInTheDocument();
+        });
+
         const modiaPersonoversiktLenkeTekst = screen.queryByText('Modia personoversikt');
         expect(modiaPersonoversiktLenkeTekst).not.toBeInTheDocument();
-        expect(modiaLenkeTekst).toBeInTheDocument();
     });
 
     test('Har riktig lenke til A-inntekt, Gosys og Modia når personIdent er satt', async () => {
@@ -90,6 +90,10 @@ describe('FTHeader', () => {
 
         await waitFor(() => {
             expect(mockHentAInntektUrl).toHaveBeenCalled();
+        });
+
+        await waitFor(() => {
+            expect(screen.getByTitle('Systemer og oppslagsverk')).toBeInTheDocument();
         });
 
         const menyknapp = screen.getByTitle('Systemer og oppslagsverk');
@@ -112,6 +116,10 @@ describe('FTHeader', () => {
 
     test('Gir kun baseUrl når personIdent ikke er satt', async () => {
         renderHeader();
+
+        await waitFor(() => {
+            expect(screen.getByTitle('Systemer og oppslagsverk')).toBeInTheDocument();
+        });
 
         const menyknapp = screen.getByTitle('Systemer og oppslagsverk');
         await userEvent.click(menyknapp);

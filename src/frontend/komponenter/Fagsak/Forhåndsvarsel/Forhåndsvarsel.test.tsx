@@ -2,7 +2,7 @@ import type { Toggles } from '../../../context/toggles';
 import type { BehandlingDto, ForhåndsvarselDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
@@ -19,6 +19,7 @@ import {
     lagForhåndsvarselQueries,
     lagForhåndsvarselMutations,
 } from '../../../testdata/forhåndsvarselFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 
 const mockUseToggles = vi.fn();
 
@@ -82,7 +83,7 @@ const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): 
                     actionBarStegtekst: (): string | undefined => 'Steg 2 av 5',
                 })}
             >
-                <QueryClientProvider client={new QueryClient()}>
+                <QueryClientProvider client={createTestQueryClient()}>
                     <Forhåndsvarsel />
                 </QueryClientProvider>
             </BehandlingContext.Provider>

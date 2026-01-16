@@ -6,7 +6,7 @@ import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -23,6 +23,7 @@ import {
 } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../typer/ressurs';
 
 vi.mock('../../../api/http/HttpProvider', () => {
@@ -51,7 +52,7 @@ const renderVergeContainer = (
     behandling: BehandlingDto,
     behandlingContextOverrides: BehandlingContextOverrides = {}
 ): RenderResult => {
-    const client = new QueryClient();
+    const client = createTestQueryClient();
 
     return render(
         <FagsakContext.Provider value={lagFagsak()}>

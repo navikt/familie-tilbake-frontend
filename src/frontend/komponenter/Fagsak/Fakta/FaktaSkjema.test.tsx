@@ -1,7 +1,7 @@
 import type { FaktaOmFeilutbetaling, OppdaterFaktaData } from '../../../generated-new';
 import type { RenderResult } from '@testing-library/react';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
@@ -10,6 +10,7 @@ import { BehandlingContext } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { lagBehandlingContext } from '../../../testdata/behandlingContextFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { configureZod } from '../../../utils/zodConfig';
 
 vi.mock('react-router', async () => {
@@ -74,7 +75,7 @@ const faktaOmFeilutbetaling = (
 const renderFakta = (
     overrides?: Partial<FaktaOmFeilutbetaling>
 ): { result: RenderResult; mutationBody: Promise<OppdaterFaktaData> } => {
-    const client = new QueryClient();
+    const client = createTestQueryClient();
     const mutationBody = new Promise<OppdaterFaktaData>(resolve => {
         client.setMutationDefaults(['oppdaterFakta'], {
             mutationFn: async (fakta: OppdaterFaktaData) => {
