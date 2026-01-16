@@ -56,7 +56,7 @@ export const Fakta: React.FC<Props> = ({
                     aria-label="Feilutbetaling og revurdering"
                 >
                     <div
-                        className={classNames('grid grid-cols-2 gap-4 flex-1', {
+                        className={classNames('grid grid-cols-4 md:grid-cols-2 gap-4 flex-1', {
                             'flex-2': faktaOmFeilutbetaling.tidligereVarsletBeløp,
                         })}
                     >
@@ -81,7 +81,7 @@ export const Fakta: React.FC<Props> = ({
                                 </dd>
                             </div>
                         )}
-                        <div className="col-span-2 p-4 h-22 border rounded-xl border-ax-border-neutral-subtle">
+                        <div className="col-span-2 p-4 min-h-22 border rounded-xl border-ax-border-neutral-subtle">
                             <dt className="font-ax-bold text-ax-medium">Periode</dt>
                             <dd className="font-ax-bold text-ax-heading-medium">
                                 {formatterDatostring(faktaOmFeilutbetaling.feilutbetaling.fom)}–

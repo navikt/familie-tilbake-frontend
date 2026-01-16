@@ -73,6 +73,8 @@ export const FaktaSkjema = ({
                 ...faktaOmFeilutbetaling.vurdering,
                 oppdaget: {
                     ...faktaOmFeilutbetaling.vurdering.oppdaget,
+                    dato: faktaOmFeilutbetaling.vurdering.oppdaget?.dato ?? undefined,
+                    beskrivelse: faktaOmFeilutbetaling.vurdering.oppdaget?.beskrivelse ?? undefined,
                     av:
                         faktaOmFeilutbetaling.vurdering.oppdaget?.av === 'IKKE_VURDERT'
                             ? undefined
@@ -80,7 +82,9 @@ export const FaktaSkjema = ({
                 },
             },
         },
-        mode: 'all',
+        reValidateMode: 'onChange',
+        mode: 'onSubmit',
+        criteriaMode: 'all',
     });
     const perioder = useFieldArray({
         control: methods.control,
@@ -229,7 +233,11 @@ export const FaktaSkjema = ({
                 </VStack>
                 <ActionBar
                     {...(methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert
-                        ? { type: 'submit', nesteTekst: 'Lagre', formId: 'fakta-skjema' }
+                        ? {
+                              type: 'submit',
+                              nesteTekst: 'Lagre og gå til neste',
+                              formId: 'fakta-skjema',
+                          }
                         : { type: 'button', onNeste: navigerTilNeste })}
                     stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
                     forrigeAriaLabel={undefined}
