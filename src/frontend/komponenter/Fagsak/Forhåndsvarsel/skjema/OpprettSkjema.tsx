@@ -88,18 +88,18 @@ export const OpprettSkjema: React.FC<Props> = ({
                 <VStack gap="4">
                     <HStack gap="4">
                         <Box className="flex-1 border border-ax-border-neutral-strong rounded-lg py-3 px-4">
-                            <Heading size="small" className="mb-6">
+                            <Heading level="2" size="small" className="mb-6">
                                 {tittel}
                             </Heading>
                             <HStack align="center" justify="space-between">
-                                <Heading size="medium" level="2" spacing>
+                                <Heading size="medium" level="3" spacing>
                                     {varselbrevtekster.overskrift}
                                 </Heading>
                             </HStack>
                             <VStack maxWidth={ATextWidthMax}>
                                 {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
                                     <Fragment key={avsnitt.title}>
-                                        <Heading size="xsmall" level="3" spacing>
+                                        <Heading size="xsmall" level="4" spacing>
                                             {avsnitt.title}
                                         </Heading>
                                         <BodyLong size="small" spacing>
