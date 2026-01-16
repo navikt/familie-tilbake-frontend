@@ -365,7 +365,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                             id="valgtVilkarResultatType"
                             size="small"
                             readOnly={erLesevisning}
-                            legend="Velg det vilkåret i Folketrygdloven §22-15 som gjelder for perioden "
+                            legend="Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden "
                             value={skjema.felter.vilkårsresultatvurdering.verdi}
                             error={
                                 ugyldigVilkårsresultatValgt
