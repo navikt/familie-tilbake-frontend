@@ -44,20 +44,18 @@ export const Unntak: React.FC<Props> = ({ readOnly }) => {
                                 : undefined
                         }
                     >
-                        <Radio value="IKKE_PRAKTISK_MULIG" description="Forvaltningsloven §16a">
+                        <Radio value="IKKE_PRAKTISK_MULIG">
                             Varsling er ikke praktisk mulig eller vil hindre gjennomføring av
-                            vedtaket
+                            vedtaket (Forvaltningsloven §16a)
                         </Radio>
-                        <Radio
-                            value="UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING"
-                            description="Forvaltningsloven §16b"
-                        >
+                        <Radio value="UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING">
                             Mottaker av varselet har ukjent adresse og ettersporing er urimelig
-                            ressurskrevende
+                            ressurskrevende (Forvaltningsloven §16b)
                         </Radio>
-                        <Radio value="ÅPENBART_UNØDVENDIG" description="Forvaltningsloven §16c">
+                        <Radio value="ÅPENBART_UNØDVENDIG">
                             Varsel anses som åpenbart unødvendig eller mottaker av varselet er
                             allerede kjent med saken og har hatt mulighet til å uttale seg
+                            (Forvaltningsloven §16c)
                         </Radio>
                     </RadioGroup>
                 )}
