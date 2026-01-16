@@ -24,6 +24,8 @@ const mockUseBehandling = vi.fn(() => ({
     actionBarStegtekst: (): string => 'Mocked!!',
     erStegBehandlet: (): boolean => false,
     hentBehandlingMedBehandlingId: async (): Promise<void> => Promise.resolve(),
+    settIkkePersistertKomponent: (): void => {},
+    nullstillIkkePersisterteKomponenter: (): void => {},
 }));
 
 vi.mock('../../../context/BehandlingContext', () => ({
@@ -351,7 +353,9 @@ describe('Fakta om feilutbetaling', () => {
                 target: { value: 'Ny årsak' },
             });
 
-            fireEvent.blur(await findByRole('combobox', { name: 'Velg bestemmelse' }));
+            fireEvent.click(
+                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+            );
             const bestemmelseDropdown = await findByRole('combobox', {
                 name: 'Velg bestemmelse',
             });
@@ -366,7 +370,9 @@ describe('Fakta om feilutbetaling', () => {
                 { target: { value: 'B1' } }
             );
 
-            fireEvent.blur(await findByRole('combobox', { name: 'Velg grunnlag' }));
+            fireEvent.click(
+                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+            );
             const grunnlagDropdown = await findByRole('combobox', { name: 'Velg grunnlag' });
             expect(grunnlagDropdown).not.toHaveValue();
             expect(grunnlagDropdown).toBeInvalid();
@@ -382,10 +388,8 @@ describe('Fakta om feilutbetaling', () => {
                 target: { value: 'Ny årsak' },
             });
 
-            fireEvent.blur(
-                await findByRole('textbox', {
-                    name: 'Når ble feilutbetalingen oppdaget?',
-                })
+            fireEvent.click(
+                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
             );
             const oppdagetDato = await findByRole('textbox', {
                 name: 'Når ble feilutbetalingen oppdaget?',
@@ -413,6 +417,14 @@ describe('Fakta om feilutbetaling', () => {
                 result: { findByRole },
             } = renderFakta({
                 ferdigvurdert: true,
+                vurdering: {
+                    årsak: 'Begrunnelse',
+                    oppdaget: {
+                        av: 'NAV',
+                        dato: '2020-04-20',
+                        beskrivelse: 'VI OPPDAGET EN FEIL!!!!',
+                    },
+                },
             });
 
             const submitKnapp = await findByRole('button', {
@@ -440,7 +452,9 @@ describe('Fakta om feilutbetaling', () => {
                 findByRole('textbox', { name: 'Når ble feilutbetalingen oppdaget?' });
 
             fireEvent.change(await datoSelector(), { target: { value: 'lol' } });
-            fireEvent.blur(await datoSelector());
+            fireEvent.click(
+                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+            );
             expect(await datoSelector()).toHaveAccessibleDescription('Ugyldig datoformat');
 
             fireEvent.click(await findByRole('button', { name: 'Åpne datovelger' }));
