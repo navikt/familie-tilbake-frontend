@@ -1,12 +1,17 @@
-import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
-
-import { Checkbox, CheckboxGroup, Detail, Textarea, VStack } from '@navikt/ds-react';
+import { Checkbox, CheckboxGroup, Radio, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
+import {
+    jaNeiOptions,
+    OptionNEI,
+    type JaNeiOption,
+    type VilkårsvurderingSkjemaDefinisjon,
+} from '../VilkårsvurderingPeriodeSkjemaContext';
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { type Skjema } from '../../../../../hooks/skjema';
+import { Valideringsstatus, type Skjema } from '../../../../../hooks/skjema';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
+import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
@@ -23,64 +28,99 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
         }
         settIkkePersistertKomponent(`vilkårsvurdering`);
     };
-
+    const ugyldigHarGrunnertilReduksjonValgt =
+        skjema.visFeilmeldinger &&
+        skjema.felter.harGrunnerTilReduksjon.valideringsstatus === Valideringsstatus.Feil;
     return (
-        <VStack gap="5">
-            <Detail weight="semibold">Særlige grunner 4. ledd</Detail>
+        <>
+            <CheckboxGroup
+                {...skjema.felter.særligeGrunner.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
+                size="small"
+                legend="Hvilke særlige grunner kan være aktuelle i denne saken?"
+                onChange={(val: SærligeGrunner[]) => onChangeSærligeGrunner(val)}
+                value={skjema.felter.særligeGrunner.verdi}
+                readOnly={erLesevisning}
+                aria-live="polite"
+            >
+                {særligeGrunnerTyper.map((type: SærligeGrunner) => (
+                    <Checkbox key={type} value={type}>
+                        {særligegrunner[type]}
+                    </Checkbox>
+                ))}
+            </CheckboxGroup>
+            {skjema.felter.særligeGrunner.verdi.includes(SærligeGrunner.Annet) && (
+                <Textarea
+                    {...skjema.felter.særligeGrunnerAnnetBegrunnelse.hentNavInputProps(
+                        skjema.visFeilmeldinger
+                    )}
+                    label='Beskriv "Annet"'
+                    name="annetBegrunnelse"
+                    aria-label="Begrunnelse: Annet"
+                    maxLength={3000}
+                    size="small"
+                    resize
+                    aria-live="polite"
+                    readOnly={erLesevisning}
+                    value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
+                    onChange={event => {
+                        skjema.felter.særligeGrunnerAnnetBegrunnelse.validerOgSettFelt(
+                            event.target.value
+                        );
+                        settIkkePersistertKomponent(`vilkårsvurdering`);
+                    }}
+                    data-testid="annetBegrunnelse"
+                />
+            )}
+
+            <HorisontalRadioGroup
+                id="harGrunnerTilReduksjon"
+                legend="Skal særlige grunner redusere beløpet?"
+                readOnly={erLesevisning}
+                size="small"
+                aria-live="polite"
+                marginbottom="0"
+                value={skjema.felter.harGrunnerTilReduksjon.verdi}
+                error={
+                    ugyldigHarGrunnertilReduksjonValgt
+                        ? skjema.felter.harGrunnerTilReduksjon.feilmelding?.toString()
+                        : ''
+                }
+                onChange={(val: JaNeiOption) => {
+                    skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(OptionNEI);
+                    settIkkePersistertKomponent('vilkårsvurdering');
+                    return skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(val);
+                }}
+            >
+                {jaNeiOptions.map(opt => (
+                    <Radio
+                        key={opt.label}
+                        name="harGrunnerTilReduksjon"
+                        data-testid={`harGrunnerTilReduksjon_${opt.label}`}
+                        value={opt}
+                    >
+                        {opt.label}
+                    </Radio>
+                ))}
+            </HorisontalRadioGroup>
             <Textarea
                 {...skjema.felter.særligeGrunnerBegrunnelse.hentNavInputProps(
                     skjema.visFeilmeldinger
                 )}
                 name="sarligGrunnerBegrunnelse"
-                label="Vurder særlige grunner du har vektlagt for resultatet"
+                label="Begrunn resultatet av vurderingen ovenfor"
                 maxLength={3000}
+                aria-live="polite"
+                size="small"
+                resize
                 readOnly={erLesevisning}
                 value={skjema.felter.særligeGrunnerBegrunnelse.verdi}
                 onChange={event => {
                     skjema.felter.særligeGrunnerBegrunnelse.validerOgSettFelt(event.target.value);
                     settIkkePersistertKomponent(`vilkårsvurdering`);
                 }}
-                placeholder="Begrunn om det foreligger/ ikke foreligger særlige grunner for reduksjon av beløpet som kreves tilbake. Kryss av hvilke særlige grunner som er vektlagt for resultatet"
             />
-            <VStack gap="1">
-                <CheckboxGroup
-                    {...skjema.felter.særligeGrunner.hentNavBaseSkjemaProps(
-                        skjema.visFeilmeldinger
-                    )}
-                    legend="Særlige grunner som er vektlagt (4.ledd)"
-                    onChange={(val: SærligeGrunner[]) => onChangeSærligeGrunner(val)}
-                    value={skjema.felter.særligeGrunner.verdi}
-                    readOnly={erLesevisning}
-                >
-                    {særligeGrunnerTyper.map((type: SærligeGrunner) => (
-                        <Checkbox key={type} value={type}>
-                            {særligegrunner[type]}
-                        </Checkbox>
-                    ))}
-                </CheckboxGroup>
-                {skjema.felter.særligeGrunner.verdi.includes(SærligeGrunner.Annet) && (
-                    <Textarea
-                        {...skjema.felter.særligeGrunnerAnnetBegrunnelse.hentNavInputProps(
-                            skjema.visFeilmeldinger
-                        )}
-                        label={null}
-                        name="annetBegrunnelse"
-                        aria-label="Begrunnelse: Annet"
-                        maxLength={3000}
-                        readOnly={erLesevisning}
-                        value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
-                        onChange={event => {
-                            skjema.felter.særligeGrunnerAnnetBegrunnelse.validerOgSettFelt(
-                                event.target.value
-                            );
-                            settIkkePersistertKomponent(`vilkårsvurdering`);
-                        }}
-                        data-testid="annetBegrunnelse"
-                    />
-                )}
-            </VStack>
             <ReduksjonAvBeløpSkjema skjema={skjema} erLesevisning={erLesevisning} />
-        </VStack>
+        </>
     );
 };
 

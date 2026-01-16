@@ -3,19 +3,13 @@ import type {
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 
-import { BodyShort, Radio, TextField, VStack } from '@navikt/ds-react';
+import { Radio, Textarea, TextField } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
-import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
-
-const ArrowBoxContainer = styled.div`
-    width: 300px;
-`;
 
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
@@ -33,11 +27,14 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const harBeløpetIBehold =
         harVurderBeløpIBehold && skjema.felter.erBeløpetIBehold.verdi === OptionJA;
     return (
-        <VStack gap="1">
+        <>
             <HorisontalRadioGroup
                 id="erBelopetIBehold"
                 readOnly={erLesevisning}
+                size="small"
+                aria-live="polite"
                 legend="Er beløpet i behold?"
+                marginbottom="0"
                 value={skjema.felter.erBeløpetIBehold.verdi}
                 error={
                     ugyldigErBeløpetIBeholdValgt
@@ -55,34 +52,58 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     </Radio>
                 ))}
             </HorisontalRadioGroup>
-            <ArrowBoxContainer>
-                {harVurderBeløpIBehold && harBeløpetIBehold && (
-                    <ArrowBox alignOffset={23}>
-                        <TextField
-                            {...skjema.felter.godTroTilbakekrevesBeløp.hentNavInputProps(
-                                skjema.visFeilmeldinger
-                            )}
-                            id="tilbakekrevdBelop"
-                            label="Angi beløp som skal tilbakekreves"
-                            readOnly={erLesevisning}
-                            onChange={event => {
-                                skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
-                                    event.target.value
-                                );
-                                settIkkePersistertKomponent(`vilkårsvurdering`);
-                            }}
-                            value={skjema.felter.godTroTilbakekrevesBeløp.verdi}
-                            style={{ width: '6rem' }}
-                        />
-                    </ArrowBox>
-                )}
-                {harVurderBeløpIBehold && !harBeløpetIBehold && (
-                    <ArrowBox alignOffset={83}>
-                        <BodyShort size="small">Ingen tilbakekreving</BodyShort>
-                    </ArrowBox>
-                )}
-            </ArrowBoxContainer>
-        </VStack>
+            <Textarea
+                {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
+                name="vurderingBegrunnelse"
+                label="Begrunn hvorfor beløpet er i behold"
+                aria-live="polite"
+                readOnly={erLesevisning}
+                size="small"
+                resize
+                value={
+                    skjema.felter.aktsomhetBegrunnelse
+                        ? skjema.felter.aktsomhetBegrunnelse.verdi
+                        : ''
+                }
+                onChange={(event: { target: { value: string } }) => {
+                    skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(event.target.value);
+                    settIkkePersistertKomponent('vilkårsvurdering');
+                }}
+                maxLength={3000}
+            />
+            {harVurderBeløpIBehold && harBeløpetIBehold && (
+                <TextField
+                    {...skjema.felter.godTroTilbakekrevesBeløp.hentNavInputProps(
+                        skjema.visFeilmeldinger
+                    )}
+                    id="tilbakekrevdBelop"
+                    label="Angi beløp som skal tilbakekreves"
+                    readOnly={erLesevisning}
+                    aria-live="polite"
+                    size="small"
+                    onChange={event => {
+                        skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
+                            event.target.value
+                        );
+                        settIkkePersistertKomponent(`vilkårsvurdering`);
+                    }}
+                    value={skjema.felter.godTroTilbakekrevesBeløp.verdi}
+                    style={{ width: '6rem' }}
+                />
+            )}
+            {harVurderBeløpIBehold && !harBeløpetIBehold && (
+                <TextField
+                    id="ingenTilbakekrevdBelop"
+                    label="Beløp som skal tilbakekreves"
+                    readOnly
+                    aria-live="polite"
+                    size="small"
+                    value={0}
+                    style={{ width: '6rem' }}
+                    data-testid="ingenTilbakekrevdBelop"
+                />
+            )}
+        </>
     );
 };
 

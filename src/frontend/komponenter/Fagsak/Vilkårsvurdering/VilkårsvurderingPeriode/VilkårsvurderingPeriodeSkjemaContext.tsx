@@ -75,7 +75,7 @@ const erAktsomhetsvurderingOppfylt = (
 
 const avhengigheterOppfyltForstoIlleggrenter = (avhengigheter?: Avhengigheter): boolean =>
     erVilkårsresultatOppfylt(Vilkårsresultat.ForstoBurdeForstått, avhengigheter) &&
-    erAktsomhetsvurderingOppfylt(Aktsomhet.Forsett, avhengigheter);
+    erAktsomhetsvurderingOppfylt(Aktsomhet.Forsettlig, avhengigheter);
 
 const erBeløpUnder4RettsgebyrOppfylt = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.totalbeløpUnder4Rettsgebyr.verdi === true;
@@ -83,7 +83,7 @@ const erBeløpUnder4RettsgebyrOppfylt = (avhengigheter?: Avhengigheter): boolean
 const avhengigheterOppfyltTilbakekrevesBeløpUnder4Rettsgebyr = (
     avhengigheter?: Avhengigheter
 ): boolean =>
-    erAktsomhetsvurderingOppfylt(Aktsomhet.SimpelUaktsomhet, avhengigheter) &&
+    erAktsomhetsvurderingOppfylt(Aktsomhet.Uaktsomt, avhengigheter) &&
     erBeløpUnder4RettsgebyrOppfylt(avhengigheter);
 
 const erTilbakekrevBeløpUnder4Rettsgebyr = (avhengigheter?: Avhengigheter): boolean =>
@@ -91,10 +91,10 @@ const erTilbakekrevBeløpUnder4Rettsgebyr = (avhengigheter?: Avhengigheter): boo
     avhengigheter?.tilbakekrevSmåbeløp.verdi === OptionJA;
 
 const avhengigheterOppfyltSærligeGrunnerFelter = (avhengigheter?: Avhengigheter): boolean =>
-    (erAktsomhetsvurderingOppfylt(Aktsomhet.SimpelUaktsomhet, avhengigheter) &&
+    (erAktsomhetsvurderingOppfylt(Aktsomhet.Uaktsomt, avhengigheter) &&
         (!erBeløpUnder4RettsgebyrOppfylt(avhengigheter) ||
             erTilbakekrevBeløpUnder4Rettsgebyr(avhengigheter))) ||
-    erAktsomhetsvurderingOppfylt(Aktsomhet.GrovUaktsomhet, avhengigheter);
+    erAktsomhetsvurderingOppfylt(Aktsomhet.GrovtUaktsomt, avhengigheter);
 
 const avhengigheterOppfyltSærligGrunnAnnetBegrunnelse = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheterOppfyltSærligeGrunnerFelter(avhengigheter) &&
@@ -109,12 +109,12 @@ const erHarGrunnerTilReduksjonOppfylt = (
     avhengigheter.harGrunnerTilReduksjon.verdi === valg;
 
 const avhengigheterOppfyltGrovtIlleggRenter = (avhengigheter?: Avhengigheter): boolean =>
-    erAktsomhetsvurderingOppfylt(Aktsomhet.GrovUaktsomhet, avhengigheter) &&
+    erAktsomhetsvurderingOppfylt(Aktsomhet.GrovtUaktsomt, avhengigheter) &&
     erHarGrunnerTilReduksjonOppfylt(OptionNEI, avhengigheter);
 
 const avhengigheterOppfyltGrunnerTilReduksjonFelter = (avhengigheter?: Avhengigheter): boolean =>
-    (erAktsomhetsvurderingOppfylt(Aktsomhet.SimpelUaktsomhet, avhengigheter) ||
-        erAktsomhetsvurderingOppfylt(Aktsomhet.GrovUaktsomhet, avhengigheter)) &&
+    (erAktsomhetsvurderingOppfylt(Aktsomhet.Uaktsomt, avhengigheter) ||
+        erAktsomhetsvurderingOppfylt(Aktsomhet.GrovtUaktsomt, avhengigheter)) &&
     erHarGrunnerTilReduksjonOppfylt(OptionJA, avhengigheter);
 
 const avhengigheterOppfyltIkkeMerEnnAktivitetFelter = (avhengigheter?: Avhengigheter): boolean =>
@@ -400,15 +400,15 @@ const useVilkårsvurderingPeriodeSkjema = (
         const erForsto =
             skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
         const erForstoForsett =
-            erForsto && skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsett;
+            erForsto && skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig;
         const erGrovtUaktsomhet =
-            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovUaktsomhet;
+            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovtUaktsomt;
 
         const skalVurderereSmåbeløp =
-            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.SimpelUaktsomhet &&
+            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Uaktsomt &&
             skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
         const skalIkkeVurdereSærligeGrunner =
-            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsett ||
+            skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig ||
             (skalVurderereSmåbeløp && skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI);
 
         const harGrunnerTilReduksjon =

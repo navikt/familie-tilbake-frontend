@@ -179,7 +179,7 @@ describe('VilkårsvurderingPerioder', () => {
     test('Skal vise modal ved bytte av periode med ulagrede endringer', async () => {
         const { getByText, getAllByRole, getByLabelText } = renderVilkårsvurderingPerioder();
 
-        const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
+        const begrunnelseInput = getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor');
         await user.type(begrunnelseInput, 'Test begrunnelse som ikke er lagret');
 
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
@@ -196,7 +196,7 @@ describe('VilkårsvurderingPerioder', () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder();
 
-        const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
+        const begrunnelseInput = getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor');
         await user.type(begrunnelseInput, 'Test begrunnelse som ikke er lagret');
 
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
@@ -215,17 +215,17 @@ describe('VilkårsvurderingPerioder', () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder();
 
-        const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
+        const begrunnelseInput = getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor');
         await user.type(begrunnelseInput, 'Gyldig begrunnelse');
 
         await user.click(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         );
 
-        const godTroBegrunnelseInput = getByLabelText('Vurder om beløpet er i behold');
+        const godTroBegrunnelseInput = getByLabelText('Begrunn hvorfor beløpet er i behold');
         await user.type(godTroBegrunnelseInput, 'Beløp vurdering');
 
         await user.click(getByRole('radio', { name: 'Nei' }));
@@ -246,7 +246,7 @@ describe('VilkårsvurderingPerioder', () => {
         const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
             renderVilkårsvurderingPerioder();
 
-        const begrunnelseInput = getByLabelText('Vilkårene for tilbakekreving');
+        const begrunnelseInput = getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor');
         await user.type(begrunnelseInput, 'Test begrunnelse');
 
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');

@@ -26,7 +26,6 @@ vi.mock('../../../../api/http/HttpProvider', () => {
         }),
     };
 });
-
 const mockUseBehandling = vi.fn();
 vi.mock('../../../../context/BehandlingContext', () => ({
     useBehandling: (): BehandlingHook => mockUseBehandling(),
