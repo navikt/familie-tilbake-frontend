@@ -1,13 +1,13 @@
 import type { BehandlingApiHook } from '../../../../api/behandling';
 import type { Ressurs } from '../../../../typer/ressurs';
-import type { FaktaResponse } from '../../../../typer/tilbakekrevingstyper';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 import type { RenderResult } from '@testing-library/react';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
+import { HarBrukerUttaltSegValg, type FaktaResponse } from '../../../../typer/tilbakekrevingstyper';
 import { FaktaProvider } from '../FaktaContext';
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
 import { FagsakContext } from '../../../../context/FagsakContext';
@@ -26,8 +26,14 @@ vi.mock('../../../../api/behandling', () => ({
             data: {
                 totalFeilutbetaltPeriode: { fom: '2020-01-01', tom: '2020-12-31' },
                 totaltFeilutbetaltBeløp: 1000,
+                feilutbetaltePerioder: [],
+                revurderingsvedtaksdato: '2020-01-01',
+                vurderingAvBrukersUttalelse: {
+                    harBrukerUttaltSeg: HarBrukerUttaltSegValg.IkkeVurdert,
+                },
+                opprettetTid: '2020-01-01T00:00:00',
             },
-        } as Ressurs<FaktaResponse>),
+        } satisfies Ressurs<FaktaResponse>),
         sendInnFakta: vi.fn(),
     }),
 }));
@@ -78,15 +84,17 @@ beforeEach(() => {
 });
 
 describe('FaktaPeriodeSkjema', () => {
-    test('Skal sette default verdi til HendelseType.Annet når det kun er ett element i hendelseTyper lista', () => {
+    test('Skal sette default verdi til HendelseType.Annet når det kun er ett element i hendelseTyper lista', async () => {
         renderComponent(mockPeriode, [HendelseType.Annet]);
 
-        const selectElement = screen.getByTestId('perioder.0.årsak');
-        expect(selectElement).toBeInTheDocument();
-        expect(screen.getByText('Annet')).toBeInTheDocument();
+        await waitFor(() => {
+            const selectElement = screen.getByTestId('perioder.0.årsak');
+            expect(selectElement).toBeInTheDocument();
+            expect(screen.getByText('Annet')).toBeInTheDocument();
+        });
     });
 
-    test('Skal sette default verdi i underårsak-select når hendelsestype er valgt og det kun er én undertype', () => {
+    test('Skal sette default verdi i underårsak-select når hendelsestype er valgt og det kun er én undertype', async () => {
         const periodeWithValue = {
             ...mockPeriode,
             hendelsestype: HendelseType.Annet,
@@ -94,15 +102,19 @@ describe('FaktaPeriodeSkjema', () => {
         };
         renderComponent(periodeWithValue, [HendelseType.Annet]);
 
-        const underSelectElement = screen.getByTestId('perioder.0.underårsak');
-        expect(underSelectElement).toHaveValue(HendelseUndertype.AnnetFritekst);
+        await waitFor(() => {
+            const underSelectElement = screen.getByTestId('perioder.0.underårsak');
+            expect(underSelectElement).toHaveValue(HendelseUndertype.AnnetFritekst);
+        });
     });
 
-    test('Skal velge "-" som default når det er flere elementer i hendelseTyper lista', () => {
+    test('Skal velge "-" som default når det er flere elementer i hendelseTyper lista', async () => {
         const multipleHendelseTyper = [HendelseType.Annet, HendelseType.Dødsfall];
         renderComponent(mockPeriode, multipleHendelseTyper);
 
-        const selectElement = screen.getByTestId('perioder.0.årsak');
-        expect(selectElement).toHaveValue('-');
+        await waitFor(() => {
+            const selectElement = screen.getByTestId('perioder.0.årsak');
+            expect(selectElement).toHaveValue('-');
+        });
     });
 });
