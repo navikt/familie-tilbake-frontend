@@ -35,7 +35,7 @@ type Props = {
 
 export const BehandlingStateProvider = ({ children }: Props): React.ReactElement => {
     const behandling = useBehandling();
-    const unsavedChanges = useUlagretEndringer();
+    const ulagretEndringer = useUlagretEndringer();
 
     const behandlingILesemodus = useMemo((): boolean => {
         return (
@@ -128,7 +128,7 @@ export const BehandlingStateProvider = ({ children }: Props): React.ReactElement
         erStegAutoutført,
         erBehandlingReturnertFraBeslutter,
         harVærtPåFatteVedtakSteget,
-        ...unsavedChanges,
+        ...ulagretEndringer,
     };
 
     return (
