@@ -134,7 +134,7 @@ const renderVilkårsvurderingPerioder = (): RenderResult => {
             <FagsakContext.Provider value={lagFagsak()}>
                 <TestBehandlingProvider
                     behandling={behandling}
-                    overrides={{ harKravgrunnlag: true }}
+                    stateOverrides={{ harKravgrunnlag: true }}
                 >
                     <VilkårsvurderingProvider>
                         <VilkårsvurderingPerioder
