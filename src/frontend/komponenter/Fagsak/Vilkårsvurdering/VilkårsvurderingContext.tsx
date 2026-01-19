@@ -221,7 +221,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
             );
         const ikkeTilbakekrevSmåbeløpPerioder = filtrertePerioder.filter(
             ({ vilkårsvurderingsresultatInfo: resultatInfo }) =>
-                resultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.SimpelUaktsomhet &&
+                resultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.Uaktsomt &&
                 !resultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
         );
         if (

@@ -1,6 +1,6 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
-import { BodyShort, Box, Heading, HGrid, List, VStack } from '@navikt/ds-react';
+import { BodyShort, Box, HGrid, List, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import {
@@ -14,12 +14,12 @@ import TilbakekrevingAktivitetTabell from '../VilkårsvurderingPeriode/Tilbakekr
 
 const vilkårsresultaterTekster: Record<Vilkårsresultat, string> = {
     [Vilkårsresultat.ForstoBurdeForstått]:
-        'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+        'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
     [Vilkårsresultat.FeilOpplysningerFraBruker]:
-        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+        'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
     [Vilkårsresultat.MangelfulleOpplysningerFraBruker]:
-        'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
-    [Vilkårsresultat.GodTro]: 'Nei, mottaker har mottatt beløpet i god tro',
+        'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+    [Vilkårsresultat.GodTro]: 'Mottaker har mottatt beløpet i aktsom god tro',
     [Vilkårsresultat.Udefinert]: 'Udefinert',
 };
 
@@ -80,10 +80,6 @@ const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
                             </VStack>
                             {(godTro || aktsomhet) && (
                                 <VStack gap="1">
-                                    <Heading size="small" level="2">
-                                        {godTro && 'Beløpet mottatt i god tro'}
-                                        {aktsomhet && 'Aktsomhet'}
-                                    </Heading>
                                     <LabelVerdiVisning
                                         label={
                                             aktsomhet

@@ -28,6 +28,7 @@ import {
     useDatepicker,
     VStack,
 } from '@navikt/ds-react';
+import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { formatISO, parseISO } from 'date-fns';
@@ -52,9 +53,12 @@ export const FaktaSkjema = ({
     behandlingId,
     behandlingUrl,
 }: Props): React.JSX.Element => {
-    const { actionBarStegtekst } = useBehandlingState();
+    const { actionBarStegtekst, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
+        useBehandlingState();
     const queryClient = useQueryClient();
+
     const navigerTilNeste = useStegNavigering(behandlingUrl, Behandlingssteg.Forhåndsvarsel);
+
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchema>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
         defaultValues: {
@@ -74,6 +78,8 @@ export const FaktaSkjema = ({
                 ...faktaOmFeilutbetaling.vurdering,
                 oppdaget: {
                     ...faktaOmFeilutbetaling.vurdering.oppdaget,
+                    dato: faktaOmFeilutbetaling.vurdering.oppdaget?.dato ?? undefined,
+                    beskrivelse: faktaOmFeilutbetaling.vurdering.oppdaget?.beskrivelse ?? undefined,
                     av:
                         faktaOmFeilutbetaling.vurdering.oppdaget?.av === 'IKKE_VURDERT'
                             ? undefined
@@ -81,17 +87,21 @@ export const FaktaSkjema = ({
                 },
             },
         },
-        mode: 'all',
+        reValidateMode: 'onChange',
+        mode: 'onSubmit',
+        criteriaMode: 'all',
     });
+
     const perioder = useFieldArray({
         control: methods.control,
         name: 'perioder',
     }).fields;
+
     const {
         datepickerProps,
         inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
     } = useDatepicker({
-        onDateChange: date => {
+        onDateChange: async date => {
             if (date) {
                 methods.setValue(
                     'vurdering.oppdaget.dato',
@@ -101,6 +111,7 @@ export const FaktaSkjema = ({
             } else {
                 methods.setValue('vurdering.oppdaget.dato', '', { shouldDirty: true });
             }
+            await methods.trigger('vurdering.oppdaget.dato');
         },
         defaultSelected: faktaOmFeilutbetaling.vurdering.oppdaget?.dato
             ? parseISO(faktaOmFeilutbetaling.vurdering.oppdaget.dato)
@@ -114,6 +125,17 @@ export const FaktaSkjema = ({
         mutationKey: ['oppdaterFakta'],
     });
 
+    methods.subscribe({
+        formState: { isDirty: true },
+        callback: data => {
+            if (data.isDirty) {
+                settIkkePersistertKomponent('fakta');
+            } else {
+                nullstillIkkePersisterteKomponenter();
+            }
+        },
+    });
+
     const dataForPeriode = (id: string): FaktaPeriode =>
         // Siden disse kommer fra samme kall skal det ikke være mulig å ende opp med tomt svar
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -123,6 +145,7 @@ export const FaktaSkjema = ({
             { body: data, path: { behandlingId: behandlingId } },
             {
                 onSuccess: data => {
+                    nullstillIkkePersisterteKomponenter();
                     if (data.ferdigvurdert) {
                         queryClient
                             .invalidateQueries({
@@ -142,8 +165,8 @@ export const FaktaSkjema = ({
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)} id="fakta-skjema">
-                <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
+            <VStack as="form" gap="8" onSubmit={methods.handleSubmit(onSubmit)} id="fakta-skjema">
+                <VStack as="section" gap="6" aria-label="Rettslig grunnlag innhold">
                     <Heading level="2" size="small">
                         Rettslig grunnlag
                     </Heading>
@@ -177,8 +200,13 @@ export const FaktaSkjema = ({
                             </Table.Body>
                         </Table>
                     </div>
-                </section>
-                <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
+                </VStack>
+                <VStack
+                    as="section"
+                    maxWidth={ATextWidthMax}
+                    gap="6"
+                    aria-label="Rettslig grunnlag innhold"
+                >
                     <Heading level="2" size="small">
                         Detaljer om feilutbetalingen
                     </Heading>
@@ -187,7 +215,6 @@ export const FaktaSkjema = ({
                         {...methods.register('vurdering.årsak')}
                         error={methods.formState.errors.vurdering?.årsak?.message}
                         size="small"
-                        className="w-100"
                         minRows={3}
                         resize
                         maxLength={3000}
@@ -224,15 +251,19 @@ export const FaktaSkjema = ({
                         {...methods.register('vurdering.oppdaget.beskrivelse')}
                         error={methods.formState.errors.vurdering?.oppdaget?.beskrivelse?.message}
                         size="small"
-                        className="w-100 mb-6"
+                        className="mb-6"
                         minRows={3}
                         resize
                         maxLength={3000}
                     />
-                </section>
+                </VStack>
                 <ActionBar
                     {...(methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert
-                        ? { type: 'submit', nesteTekst: 'Lagre', formId: 'fakta-skjema' }
+                        ? {
+                              type: 'submit',
+                              nesteTekst: 'Lagre og gå til neste',
+                              formId: 'fakta-skjema',
+                          }
                         : { type: 'button', onNeste: navigerTilNeste })}
                     stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
                     forrigeAriaLabel={undefined}
@@ -240,7 +271,7 @@ export const FaktaSkjema = ({
                     onForrige={undefined}
                     isLoading={false}
                 />
-            </form>
+            </VStack>
         </FormProvider>
     );
 };

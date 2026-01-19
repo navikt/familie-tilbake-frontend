@@ -3,14 +3,13 @@ import type {
     VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-import { Radio } from '@navikt/ds-react';
+import { Alert, Radio } from '@navikt/ds-react';
 import * as React from 'react';
 
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
 import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
-import { Aktsomhet, Vilkårsresultat } from '../../../../../kodeverk';
-import ArrowBox from '../../../../Felleskomponenter/ArrowBox/ArrowBox';
+import { Aktsomhet } from '../../../../../kodeverk';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
@@ -21,27 +20,22 @@ type Props = {
 
 const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
-    const erValgtResultatTypeForstoBurdeForstaatt =
-        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
         skjema.visFeilmeldinger &&
         skjema.felter.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.Feil;
     const erTotalbeløpUnder4Rettsgebyr = skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
-
-    const grovUaktsomOffset = erValgtResultatTypeForstoBurdeForstaatt ? 193 : 213;
-    const offset =
-        skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovUaktsomhet
-            ? grovUaktsomOffset
-            : 20;
     return (
-        <ArrowBox alignOffset={erLesevisning ? 5 : offset} marginTop={erLesevisning ? 15 : 0}>
-            {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.SimpelUaktsomhet &&
+        <>
+            {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Uaktsomt &&
                 erTotalbeløpUnder4Rettsgebyr && (
                     <>
                         <HorisontalRadioGroup
                             id="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
-                            legend="Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?"
+                            legend="Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?"
                             readOnly={erLesevisning}
+                            aria-live="polite"
+                            size="small"
+                            marginbottom="0"
                             value={skjema.felter.tilbakekrevSmåbeløp.verdi}
                             error={
                                 ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr
@@ -64,21 +58,26 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                                 </Radio>
                             ))}
                         </HorisontalRadioGroup>
+
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA && (
-                            <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
+                            <SærligeGrunnerSkjema
+                                skjema={skjema}
+                                erLesevisning={erLesevisning}
+                                aria-live="polite"
+                            />
                         )}
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI && (
-                            <ArrowBox alignOffset={80}>
+                            <Alert variant="warning" size="small" aria-live="polite">
                                 Når 6. ledd anvendes må alle perioder behandles likt
-                            </ArrowBox>
+                            </Alert>
                         )}
                     </>
                 )}
-            {(skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.SimpelUaktsomhet ||
+            {(skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.Uaktsomt ||
                 !erTotalbeløpUnder4Rettsgebyr) && (
                 <SærligeGrunnerSkjema skjema={skjema} erLesevisning={erLesevisning} />
             )}
-        </ArrowBox>
+        </>
     );
 };
 

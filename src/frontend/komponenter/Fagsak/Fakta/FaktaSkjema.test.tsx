@@ -4,6 +4,7 @@ import type { RenderResult } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
+import { expect } from 'vitest';
 
 import { FaktaSkjema } from './FaktaSkjema';
 import { FagsakContext } from '../../../context/FagsakContext';
@@ -242,12 +243,12 @@ describe('Fakta om feilutbetaling', () => {
                 result: { findByRole },
             } = renderFakta({
                 vurdering: {
+                    årsak: 'Toast',
                     oppdaget: {
                         av: 'NAV',
                         dato: '2020-04-20',
                         beskrivelse: 'VI OPPDAGET EN FEIL!!!!',
                     },
-                    årsak: null,
                 },
             });
 
@@ -343,7 +344,9 @@ describe('Fakta om feilutbetaling', () => {
                 target: { value: 'Ny årsak' },
             });
 
-            fireEvent.blur(await findByRole('combobox', { name: 'Velg bestemmelse' }));
+            fireEvent.click(
+                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+            );
             const bestemmelseDropdown = await findByRole('combobox', {
                 name: 'Velg bestemmelse',
             });
@@ -358,7 +361,9 @@ describe('Fakta om feilutbetaling', () => {
                 { target: { value: 'B1' } }
             );
 
-            fireEvent.blur(await findByRole('combobox', { name: 'Velg grunnlag' }));
+            fireEvent.click(
+                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+            );
             const grunnlagDropdown = await findByRole('combobox', { name: 'Velg grunnlag' });
             expect(grunnlagDropdown).not.toHaveValue();
             expect(grunnlagDropdown).toBeInvalid();
@@ -374,10 +379,8 @@ describe('Fakta om feilutbetaling', () => {
                 target: { value: 'Ny årsak' },
             });
 
-            fireEvent.blur(
-                await findByRole('textbox', {
-                    name: 'Når ble feilutbetalingen oppdaget?',
-                })
+            fireEvent.click(
+                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
             );
             const oppdagetDato = await findByRole('textbox', {
                 name: 'Når ble feilutbetalingen oppdaget?',
@@ -405,6 +408,14 @@ describe('Fakta om feilutbetaling', () => {
                 result: { findByRole },
             } = renderFakta({
                 ferdigvurdert: true,
+                vurdering: {
+                    årsak: 'Begrunnelse',
+                    oppdaget: {
+                        av: 'NAV',
+                        dato: '2020-04-20',
+                        beskrivelse: 'VI OPPDAGET EN FEIL!!!!',
+                    },
+                },
             });
 
             const submitKnapp = await findByRole('button', {
@@ -412,6 +423,42 @@ describe('Fakta om feilutbetaling', () => {
             });
             expect(submitKnapp).toHaveAttribute('type', 'button');
             expect(submitKnapp).toHaveTextContent('Neste');
+        });
+
+        test('Valg av dato med musepeker - skal revalidere etter valg', async () => {
+            const {
+                result: { findByRole },
+            } = renderFakta({
+                vurdering: {
+                    årsak: 'test',
+                    oppdaget: {
+                        av: 'NAV',
+                        dato: null,
+                        beskrivelse: 'test',
+                    },
+                },
+            });
+
+            const datoSelector = async (): Promise<HTMLElement> =>
+                findByRole('textbox', { name: 'Når ble feilutbetalingen oppdaget?' });
+
+            fireEvent.change(await datoSelector(), { target: { value: 'lol' } });
+            fireEvent.click(
+                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+            );
+            expect(await datoSelector()).toHaveAccessibleDescription('Ugyldig datoformat');
+
+            fireEvent.click(await findByRole('button', { name: 'Åpne datovelger' }));
+            fireEvent.change(await findByRole('combobox', { name: 'År' }), {
+                target: { value: '2020' },
+            });
+            fireEvent.change(await findByRole('combobox', { name: 'Måned' }), {
+                target: { value: 'januar' },
+            });
+            fireEvent.click(await findByRole('button', { name: 'onsdag 1' }));
+
+            expect(await datoSelector()).toHaveValue('01.01.2020');
+            expect(await datoSelector()).not.toHaveAccessibleDescription();
         });
     });
 });

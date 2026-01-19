@@ -131,7 +131,7 @@ const renderVilkårsvurderingContainer = (behandling: BehandlingDto): RenderResu
             <FagsakContext.Provider value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
                 <TestBehandlingProvider
                     behandling={behandling}
-                    overrides={{ harKravgrunnlag: true }}
+                    stateOverrides={{ harKravgrunnlag: true }}
                 >
                     <VilkårsvurderingProvider>
                         <VilkårsvurderingContainer />
@@ -164,13 +164,11 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText('3 måneder')).toBeInTheDocument();
         expect(getByText('1 333')).toBeInTheDocument();
         expect(getByText('Bosatt i riket')).toBeInTheDocument();
-        expect(
-            getByText('Vilkårene for tilbakekreving', {
-                selector: 'h2',
-            })
-        ).toBeInTheDocument();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse vilkårene 1');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'Begrunnelse vilkårene 1'
+        );
 
         await user.click(
             getByRole('button', {
@@ -184,15 +182,13 @@ describe('VilkårsvurderingContainer', () => {
 
         await user.click(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
                 }
             )
         );
-
-        expect(getByText('Aktsomhet')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -202,15 +198,17 @@ describe('VilkårsvurderingContainer', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.type(
-            getByLabelText(
-                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-            ),
+            getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
             'Begrunnelse aktsomhet 1'
         );
-        await user.click(getByLabelText('Burde ha forstått'));
+        await user.click(
+            getByLabelText('Mottaker burde forstått at utbetalingen skyldtes en feil')
+        );
 
         expect(
-            getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+            getByText(
+                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
         ).toBeInTheDocument();
         expect(
             queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
@@ -244,10 +242,13 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText('1 333')).toBeInTheDocument();
         expect(getByText('Bor med søker')).toBeInTheDocument();
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse vilkårene 2');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'Begrunnelse vilkårene 2'
+        );
         await user.click(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -255,14 +256,16 @@ describe('VilkårsvurderingContainer', () => {
             )
         );
         await user.type(
-            getByLabelText(
-                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-            ),
+            getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
             'Begrunnelse aktsomhet 2'
         );
-        await user.click(getByLabelText('Burde ha forstått'));
+        await user.click(
+            getByLabelText('Mottaker burde forstått at utbetalingen skyldtes en feil')
+        );
         expect(
-            getByText('Totalbeløpet er under 4 rettsgebyr (6. ledd). Skal det tilbakekreves?')
+            getByText(
+                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
         ).toBeInTheDocument();
         await user.click(
             getByRole('radio', {
@@ -270,22 +273,20 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        expect(
-            getByText('Vurder særlige grunner du har vektlagt for resultatet')
-        ).toBeInTheDocument();
+        expect(getByText('Begrunn resultatet av vurderingen ovenfor')).toBeInTheDocument();
 
         await user.type(
-            getByLabelText('Vurder særlige grunner du har vektlagt for resultatet'),
+            getByLabelText('Begrunn resultatet av vurderingen ovenfor'),
             'Begrunnelse særlige grunner 2'
         );
         await user.click(
-            getByLabelText('Graden av uaktsomhet hos den kravet retter seg mot', {
+            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
                 selector: 'input',
             })
         );
         await user.click(getByTestId('harGrunnerTilReduksjon_Nei'));
 
-        expect(getByText('100 %')).toBeInTheDocument();
+        expect(getByText('100%')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -309,17 +310,17 @@ describe('VilkårsvurderingContainer', () => {
             expect(getByText(førstePeriode)).toBeInTheDocument();
         });
 
-        await user.type(getByLabelText('Vilkårene for tilbakekreving'), 'Begrunnelse1');
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'Begrunnelse1'
+        );
         await user.click(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         );
-        await waitFor(() => {
-            expect(getByLabelText('Vurder om beløpet er i behold')).toBeInTheDocument();
-        });
-        await user.type(getByLabelText('Vurder om beløpet er i behold'), 'Begrunnelse2');
+        await user.type(getByLabelText('Begrunn hvorfor beløpet er i behold'), 'Begrunnelse2');
         await user.click(
             getByRole('radio', {
                 name: 'Nei',
@@ -340,22 +341,24 @@ describe('VilkårsvurderingContainer', () => {
             førstePeriode
         );
         expect(getByText('Er beløpet i behold?')).toBeInTheDocument();
-        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue(
+        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
             `${perioder[0].begrunnelse}Begrunnelse1`
         );
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         ).toBeChecked();
-        expect(getByLabelText('Vurder om beløpet er i behold')).toHaveValue('Begrunnelse2');
+        expect(getByLabelText('Begrunn hvorfor beløpet er i behold')).toHaveValue('Begrunnelse2');
         expect(
             getByRole('radio', {
                 name: 'Nei',
             })
         ).toBeChecked();
-        expect(getByText('Ingen tilbakekreving')).toBeInTheDocument();
+
+        const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
+        expect(tilbakekrevdBeløp).toHaveValue('0');
 
         await user.click(
             getByRole('button', {
@@ -373,7 +376,7 @@ describe('VilkårsvurderingContainer', () => {
                         vilkårsvurderingsresultat: Vilkårsresultat.ForstoBurdeForstått,
                         aktsomhet: {
                             begrunnelse: 'Begrunnelse aktsomhet 1',
-                            aktsomhet: Aktsomhet.Forsett,
+                            aktsomhet: Aktsomhet.Forsettlig,
                             særligeGrunner: [],
                         },
                         godTro: undefined,
@@ -392,32 +395,31 @@ describe('VilkårsvurderingContainer', () => {
             ],
         });
         setupUseBehandlingApiMock(vilkårsvurderingResponse);
-        const { getByText, getByRole, getByLabelText, queryByLabelText } =
+        const { getByText, getByRole, getByLabelText, getByTestId } =
             renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
             expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
         });
 
-        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Begrunnelse vilkår 1');
+        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
+            'Begrunnelse vilkår 1'
+        );
         expect(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
                 }
             )
         ).toBeChecked();
-        expect(
-            getByLabelText(
-                'Vurder hvorfor mottaker burde forstått, må ha forstått eller forsto at utbetalingen skyldtes en feil'
-            )
-        ).toHaveTextContent('Begrunnelse aktsomhet 1');
-        expect(getByLabelText('Forsto')).toBeChecked();
+        expect(getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')).toHaveTextContent(
+            'Begrunnelse aktsomhet 1'
+        );
+        expect(getByLabelText('Mottaker forsto at utbetalingen skyldtes en feil')).toBeChecked();
 
-        expect(queryByLabelText('Nei')).not.toBeInTheDocument();
-        expect(getByText('Nei')).toBeInTheDocument();
+        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
 
         await user.click(
             getByRole('button', {
@@ -431,19 +433,21 @@ describe('VilkårsvurderingContainer', () => {
             })
         ).toBeInTheDocument();
 
-        expect(getByLabelText('Vilkårene for tilbakekreving')).toHaveValue('Begrunnelse vilkår 2');
+        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
+            'Begrunnelse vilkår 2'
+        );
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         ).toBeChecked();
-        expect(getByLabelText('Vurder om beløpet er i behold')).toHaveTextContent(
+        expect(getByLabelText('Begrunn hvorfor beløpet er i behold')).toHaveTextContent(
             'Begrunnelse god tro 2'
         );
         expect(getByLabelText('Nei')).toBeChecked();
-        expect(getByText('Ingen tilbakekreving')).toBeInTheDocument();
-
+        const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
+        expect(tilbakekrevdBeløp).toHaveValue('0');
         await user.click(
             getByRole('button', {
                 name: 'Forrige periode',
@@ -461,7 +465,7 @@ describe('VilkårsvurderingContainer', () => {
                             vilkårsvurderingsresultat: Vilkårsresultat.ForstoBurdeForstått,
                             aktsomhet: {
                                 begrunnelse: 'Begrunnelse aktsomhet 1',
-                                aktsomhet: Aktsomhet.Forsett,
+                                aktsomhet: Aktsomhet.Forsettlig,
                                 særligeGrunner: [],
                             },
                             godTro: undefined,
@@ -491,7 +495,7 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText('Begrunnelse vilkår 1')).toBeInTheDocument();
         expect(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -499,7 +503,7 @@ describe('VilkårsvurderingContainer', () => {
             )
         ).toBeChecked();
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
@@ -507,12 +511,12 @@ describe('VilkårsvurderingContainer', () => {
 
         expect(getByText('Begrunnelse aktsomhet 1')).toBeInTheDocument();
         expect(
-            getByLabelText('Forsto', {
+            getByLabelText('Mottaker forsto at utbetalingen skyldtes en feil', {
                 selector: 'input',
             })
         ).toBeChecked();
         expect(
-            getByLabelText('Må ha forstått', {
+            getByLabelText('Mottaker må ha forstått at utbetalingen skyldtes en feil', {
                 selector: 'input',
                 exact: false,
             })
@@ -538,14 +542,14 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText(andrePeriode, { selector: 'label' })).toBeInTheDocument();
         expect(getByText('Begrunnelse vilkår 2')).toBeInTheDocument();
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         ).toBeChecked();
         expect(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -604,7 +608,7 @@ describe('VilkårsvurderingContainer', () => {
         expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
         expect(
             getByLabelText(
-                'Ja, mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
+                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
                     exact: false,
@@ -613,7 +617,7 @@ describe('VilkårsvurderingContainer', () => {
         ).not.toBeChecked();
         expect(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -622,7 +626,7 @@ describe('VilkårsvurderingContainer', () => {
         ).not.toBeChecked();
         expect(
             getByLabelText(
-                'Ja, mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
                 {
                     selector: 'input',
                     exact: false,
@@ -630,7 +634,7 @@ describe('VilkårsvurderingContainer', () => {
             )
         ).not.toBeChecked();
         expect(
-            getByLabelText('Nei, mottaker har mottatt beløpet i god tro', {
+            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
