@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { useHttp } from '../api/http/HttpProvider';
+import { useBehandling } from '../context/BehandlingContext';
 import { type Ressurs, RessursStatus } from '../typer/ressurs';
 
 export type SammenslåttPeriodeHook = {
@@ -13,8 +14,9 @@ export type SammenslåttPeriodeHook = {
     laster: boolean;
 };
 
-export const useSammenslåPerioder = (behandlingId: string): SammenslåttPeriodeHook => {
+export const useSammenslåPerioder = (): SammenslåttPeriodeHook => {
     const { request } = useHttp();
+    const { behandlingId } = useBehandling();
     const [erPerioderLike, settErPerioderLike] = useState<boolean>(false);
     const [feilmelding, settFeilmelding] = useState<string>();
     const [laster, settLaster] = useState<boolean>(false);

@@ -48,14 +48,8 @@ const VedtakContainer: React.FC = () => {
         lagreUtkast,
         hentVedtaksbrevtekster,
     } = useVedtak();
-    const {
-        type,
-        behandlingsårsakstype,
-        behandlingId,
-        kanEndres,
-        eksternBrukId,
-        manuelleBrevmottakere,
-    } = useBehandling();
+    const { type, behandlingsårsakstype, kanEndres, eksternBrukId, manuelleBrevmottakere } =
+        useBehandling();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA = behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
@@ -72,7 +66,7 @@ const VedtakContainer: React.FC = () => {
         erPerioderLike,
         laster,
         feilmelding,
-    } = useSammenslåPerioder(behandlingId);
+    } = useSammenslåPerioder();
 
     const handleKnappTrykk = async (): Promise<void> => {
         const oppdaterErPerioderSammenslått = !erPerioderSammenslått;

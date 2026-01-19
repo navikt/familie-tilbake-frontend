@@ -15,7 +15,6 @@ import {
     brevmottakerFormDataSchema,
     type BrevmottakerFormData,
 } from './schema/brevmottakerSchema';
-import { useBehandling } from '../../../context/BehandlingContext';
 import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';
 import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 
@@ -36,7 +35,6 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
 }: BrevmottakerFormModalProps) => {
-    const { behandlingId } = useBehandling();
     const { lagreBrevmottaker } = useBrevmottakerApi();
 
     const lukkModal = (): void => {
@@ -57,7 +55,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     const handleSubmitForm = async (formData: BrevmottakerFormData): Promise<void> => {
         try {
             const brevmottaker = brevmottakerFormDataSchema.parse(formData) as Brevmottaker;
-            const response = await lagreBrevmottaker(behandlingId, brevmottaker, mottakerId);
+            const response = await lagreBrevmottaker(brevmottaker, mottakerId);
 
             if (response.success) {
                 lukkModal();
