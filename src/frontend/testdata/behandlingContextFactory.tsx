@@ -1,13 +1,13 @@
 import type { BehandlingStateContextType } from '../context/BehandlingStateContext';
 import type { BehandlingDto } from '../generated';
-import type { UseUnsavedChangesReturn } from '../hooks/useUnsavedChanges';
+import type { UseUlagretEndringerReturn } from '../hooks/useUlagretEndringer';
 
 import * as React from 'react';
 
 import { lagBehandling } from './behandlingFactory';
 import { BehandlingContext } from '../context/BehandlingContext';
 import { BehandlingStateContext } from '../context/BehandlingStateContext';
-import { useUnsavedChanges } from '../hooks/useUnsavedChanges';
+import { useUlagretEndringer } from '../hooks/useUlagretEndringer';
 
 export type BehandlingStateContextOverrides = {
     behandlingILesemodus?: boolean;
@@ -30,7 +30,7 @@ export type BehandlingContextOverrides = BehandlingStateContextOverrides & {
 
 export const lagBehandlingStateContext = (
     overrides: BehandlingStateContextOverrides = {},
-    unsavedChanges?: UseUnsavedChangesReturn
+    ulagretEndringer?: UseUlagretEndringerReturn
 ): BehandlingStateContextType => {
     return {
         behandlingILesemodus: overrides.behandlingILesemodus ?? false,
@@ -44,24 +44,16 @@ export const lagBehandlingStateContext = (
         erBehandlingReturnertFraBeslutter:
             overrides.erBehandlingReturnertFraBeslutter ?? ((): boolean => false),
         harVærtPåFatteVedtakSteget: overrides.harVærtPåFatteVedtakSteget ?? ((): boolean => false),
-        harUlagredeData: overrides.harUlagredeData ?? unsavedChanges?.harUlagredeData ?? false,
+        harUlagredeData: overrides.harUlagredeData ?? ulagretEndringer?.harUlagredeData ?? false,
         settIkkePersistertKomponent:
             overrides.settIkkePersistertKomponent ??
-            unsavedChanges?.settIkkePersistertKomponent ??
+            ulagretEndringer?.settIkkePersistertKomponent ??
             ((): void => {}),
         nullstillIkkePersisterteKomponenter:
             overrides.nullstillIkkePersisterteKomponenter ??
-            unsavedChanges?.nullstillIkkePersisterteKomponenter ??
+            ulagretEndringer?.nullstillIkkePersisterteKomponenter ??
             ((): void => {}),
     };
-};
-
-/**
- * @deprecated Bruk lagBehandlingStateContext i kombinasjon med BehandlingStateContext.Provider
- * Denne funksjonen returnerer nå kun behandling for bakoverkompatibilitet med eksisterende tester
- */
-export const lagBehandlingContext = (overrides: BehandlingContextOverrides = {}): BehandlingDto => {
-    return overrides.behandling ?? lagBehandling();
 };
 
 /**
@@ -73,9 +65,9 @@ export const TestBehandlingProvider: React.FC<{
     stateOverrides?: BehandlingStateContextOverrides;
     children: React.ReactNode;
 }> = ({ behandling, stateOverrides = {}, children }) => {
-    const unsavedChanges = useUnsavedChanges();
+    const ulagretEndringer = useUlagretEndringer();
     const behandlingValue = behandling ?? lagBehandling();
-    const stateValue = lagBehandlingStateContext(stateOverrides, unsavedChanges);
+    const stateValue = lagBehandlingStateContext(stateOverrides, ulagretEndringer);
 
     return (
         <BehandlingContext.Provider value={behandlingValue}>

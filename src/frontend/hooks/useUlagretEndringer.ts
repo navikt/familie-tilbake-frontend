@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export type UseUnsavedChangesReturn = {
+export type UseUlagretEndringerReturn = {
     harUlagredeData: boolean;
     settIkkePersistertKomponent: (komponentId: string) => void;
     nullstillIkkePersisterteKomponenter: () => void;
@@ -10,7 +10,7 @@ export type UseUnsavedChangesReturn = {
  * Hook for å tracke komponenter med ulagrede endringer.
  * Kan brukes globalt eller lokalt i komponenter.
  */
-export const useUnsavedChanges = (): UseUnsavedChangesReturn => {
+export const useUlagretEndringer = (): UseUlagretEndringerReturn => {
     const [ikkePersisterteKomponenter, settIkkePersisterteKomponenter] = useState<Set<string>>(
         new Set()
     );

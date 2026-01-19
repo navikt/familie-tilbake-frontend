@@ -6,14 +6,14 @@ import * as React from 'react';
 import { createContext, useContext, useMemo } from 'react';
 
 import { useBehandling } from './BehandlingContext';
-import { useUnsavedChanges, type UseUnsavedChangesReturn } from '../hooks/useUnsavedChanges';
+import { useUlagretEndringer, type UseUlagretEndringerReturn } from '../hooks/useUlagretEndringer';
 import { SYNLIGE_STEG } from '../utils/sider';
 
 export const erStegUtført = (status: string): boolean => {
     return status === 'UTFØRT' || status === 'AUTOUTFØRT';
 };
 
-export type BehandlingStateContextType = UseUnsavedChangesReturn & {
+export type BehandlingStateContextType = UseUlagretEndringerReturn & {
     behandlingILesemodus: boolean;
     aktivtSteg: Behandlingsstegstilstand | undefined;
     ventegrunn: Behandlingsstegstilstand | undefined;
@@ -35,7 +35,7 @@ type Props = {
 
 export const BehandlingStateProvider = ({ children }: Props): React.ReactElement => {
     const behandling = useBehandling();
-    const unsavedChanges = useUnsavedChanges();
+    const unsavedChanges = useUlagretEndringer();
 
     const behandlingILesemodus = useMemo((): boolean => {
         return (
