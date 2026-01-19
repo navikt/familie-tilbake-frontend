@@ -33,28 +33,22 @@ export const vilkårsresultatTyper = [
 ];
 
 export enum Aktsomhet {
-    Forsett = 'FORSETT',
-    GrovUaktsomhet = 'GROV_UAKTSOMHET',
-    SimpelUaktsomhet = 'SIMPEL_UAKTSOMHET',
+    Forsettlig = 'FORSETT',
+    GrovtUaktsomt = 'GROV_UAKTSOMHET',
+    Uaktsomt = 'SIMPEL_UAKTSOMHET',
 }
 
 export const aktsomheter: Record<Aktsomhet, string> = {
-    [Aktsomhet.Forsett]: 'Forsett',
-    [Aktsomhet.GrovUaktsomhet]: 'Grov uaktsomhet',
-    [Aktsomhet.SimpelUaktsomhet]: 'Simpel uaktsomhet',
+    [Aktsomhet.Uaktsomt]: 'Uaktsomt',
+    [Aktsomhet.GrovtUaktsomt]: 'Grovt uaktsomt',
+    [Aktsomhet.Forsettlig]: 'Forsettlig',
 };
 
 export const forstodBurdeForståttAktsomheter: Record<Aktsomhet, string> = {
-    [Aktsomhet.Forsett]: 'Forsto',
-    [Aktsomhet.GrovUaktsomhet]: 'Må ha forstått',
-    [Aktsomhet.SimpelUaktsomhet]: 'Burde ha forstått',
+    [Aktsomhet.Uaktsomt]: 'Mottaker burde forstått at utbetalingen skyldtes en feil',
+    [Aktsomhet.GrovtUaktsomt]: 'Mottaker må ha forstått at utbetalingen skyldtes en feil',
+    [Aktsomhet.Forsettlig]: 'Mottaker forsto at utbetalingen skyldtes en feil',
 };
-
-export const aktsomhetTyper = [
-    Aktsomhet.SimpelUaktsomhet,
-    Aktsomhet.GrovUaktsomhet,
-    Aktsomhet.Forsett,
-];
 
 export enum SærligeGrunner {
     GradAvUaktsomhet = 'GRAD_AV_UAKTSOMHET',
@@ -65,10 +59,10 @@ export enum SærligeGrunner {
 }
 
 export const særligegrunner: Record<SærligeGrunner, string> = {
-    [SærligeGrunner.GradAvUaktsomhet]: 'Graden av uaktsomhet hos den kravet retter seg mot',
+    [SærligeGrunner.GradAvUaktsomhet]: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+    [SærligeGrunner.StørrelseBeløp]: 'Størrelsen av det feilutbetalte beløpet',
+    [SærligeGrunner.TidFraUtbetaling]: 'Hvor lang tid det har gått siden utbetalingen fant sted',
     [SærligeGrunner.HeltEllerDelvisNavsFeil]: 'Om feilen helt eller delvis kan tilskrives Nav',
-    [SærligeGrunner.StørrelseBeløp]: 'Størrelsen på feilutbetalt beløp',
-    [SærligeGrunner.TidFraUtbetaling]: 'Hvor lang tid siden utbetalingen fant sted',
     [SærligeGrunner.Annet]: 'Annet',
 };
 

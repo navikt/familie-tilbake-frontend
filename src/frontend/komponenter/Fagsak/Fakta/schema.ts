@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import {
-    zOppdaget,
+    zFritekst,
     zOppdaterFaktaOmFeilutbetaling,
     zVurdering,
 } from '../../../generated-new/zod.gen';
@@ -11,10 +11,11 @@ export const oppdaterFaktaOmFeilutbetalingSchema = z.object({
     vurdering: z.object({
         ...zVurdering.shape,
         oppdaget: z.object({
-            ...zOppdaget.shape,
             av: z.enum(['BRUKER', 'NAV'], {
                 error: 'Du må enten velge Bruker eller Nav',
             }),
+            dato: z.iso.date(),
+            beskrivelse: zFritekst,
         }),
     }),
 });

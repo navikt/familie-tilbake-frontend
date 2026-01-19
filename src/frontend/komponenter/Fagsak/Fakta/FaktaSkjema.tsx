@@ -52,8 +52,15 @@ export const FaktaSkjema = ({
     behandlingId,
     behandlingUrl,
 }: Props): React.JSX.Element => {
-    const { actionBarStegtekst, hentBehandlingMedBehandlingId } = useBehandling();
+    const {
+        actionBarStegtekst,
+        hentBehandlingMedBehandlingId,
+        settIkkePersistertKomponent,
+        nullstillIkkePersisterteKomponenter,
+    } = useBehandling();
+
     const navigerTilNeste = useStegNavigering(behandlingUrl, Behandlingssteg.Forhåndsvarsel);
+
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchema>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
         defaultValues: {
@@ -73,6 +80,8 @@ export const FaktaSkjema = ({
                 ...faktaOmFeilutbetaling.vurdering,
                 oppdaget: {
                     ...faktaOmFeilutbetaling.vurdering.oppdaget,
+                    dato: faktaOmFeilutbetaling.vurdering.oppdaget?.dato ?? undefined,
+                    beskrivelse: faktaOmFeilutbetaling.vurdering.oppdaget?.beskrivelse ?? undefined,
                     av:
                         faktaOmFeilutbetaling.vurdering.oppdaget?.av === 'IKKE_VURDERT'
                             ? undefined
@@ -80,12 +89,16 @@ export const FaktaSkjema = ({
                 },
             },
         },
-        mode: 'all',
+        reValidateMode: 'onChange',
+        mode: 'onSubmit',
+        criteriaMode: 'all',
     });
+
     const perioder = useFieldArray({
         control: methods.control,
         name: 'perioder',
     }).fields;
+
     const {
         datepickerProps,
         inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
@@ -114,6 +127,17 @@ export const FaktaSkjema = ({
         mutationKey: ['oppdaterFakta'],
     });
 
+    methods.subscribe({
+        formState: { isDirty: true },
+        callback: data => {
+            if (data.isDirty) {
+                settIkkePersistertKomponent('fakta');
+            } else {
+                nullstillIkkePersisterteKomponenter();
+            }
+        },
+    });
+
     const dataForPeriode = (id: string): FaktaPeriode =>
         // Siden disse kommer fra samme kall skal det ikke være mulig å ende opp med tomt svar
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -123,6 +147,7 @@ export const FaktaSkjema = ({
             { body: data, path: { behandlingId: behandlingId } },
             {
                 onSuccess: data => {
+                    nullstillIkkePersisterteKomponenter();
                     if (data.ferdigvurdert) {
                         hentBehandlingMedBehandlingId(behandlingId).then(navigerTilNeste);
                     }
@@ -229,7 +254,11 @@ export const FaktaSkjema = ({
                 </VStack>
                 <ActionBar
                     {...(methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert
-                        ? { type: 'submit', nesteTekst: 'Lagre', formId: 'fakta-skjema' }
+                        ? {
+                              type: 'submit',
+                              nesteTekst: 'Lagre og gå til neste',
+                              formId: 'fakta-skjema',
+                          }
                         : { type: 'button', onNeste: navigerTilNeste })}
                     stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
                     forrigeAriaLabel={undefined}
