@@ -18,6 +18,7 @@ import * as React from 'react';
 import { useFakta } from './FaktaContext';
 import FaktaPerioder from './FaktaPeriode/FaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { HendelseType } from '../../../kodeverk';
 import { Behandlingssteg } from '../../../typer/behandling';
@@ -32,8 +33,8 @@ type Props = {
 };
 
 const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }) => {
+    const behandling = useBehandling();
     const {
-        behandling,
         oppdaterBegrunnelse,
         oppdaterBeskrivelseBrukerHarUttaltSeg,
         oppdaterBrukerHarUttaltSeg,

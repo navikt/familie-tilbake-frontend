@@ -359,7 +359,6 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     };
 
     return {
-        behandling,
         stegErBehandlet,
         fakta,
         skjemaData,
