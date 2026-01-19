@@ -72,13 +72,7 @@ export const StartPåNytt: React.FC = () => {
                 </Modal.Footer>
             </Modal>
 
-            {mutation.isError && (
-                <FeilModal
-                    feil={mutation.error}
-                    lukkFeilModal={mutation.reset}
-                    behandlingId={behandlingId}
-                />
-            )}
+            {mutation.isError && <FeilModal feil={mutation.error} lukkFeilModal={mutation.reset} />}
         </>
     );
 };

@@ -7,8 +7,6 @@ import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
 type Props = {
     ressurser: (Ressurs<unknown> | undefined)[];
-    eksternFagsakId?: string;
-    behandlingId?: string;
     henteBeskrivelse?: string;
     visFeilSide?: boolean;
     spinnerStørrelse?: '2xlarge' | 'large';
@@ -19,8 +17,6 @@ const DataLastIkkeSuksess: React.FC<Props> = ({
     spinnerStørrelse,
     henteBeskrivelse,
     visFeilSide,
-    eksternFagsakId,
-    behandlingId,
 }) => {
     const filtrerteRessurser = ressurser.filter(ressurs => ressurs !== undefined);
     const ingenTilgangRessurs = filtrerteRessurser.find(
@@ -39,7 +35,7 @@ const DataLastIkkeSuksess: React.FC<Props> = ({
             ressurs.status === RessursStatus.FunksjonellFeil
     );
     if (serverFeil && visFeilSide) {
-        return <ServerFeil eksternFagsakId={eksternFagsakId} behandlingId={behandlingId} />;
+        return <ServerFeil />;
     }
     if (feiletRessurs) {
         return <Alert variant="error">{feiletRessurs.frontendFeilmelding}</Alert>;
