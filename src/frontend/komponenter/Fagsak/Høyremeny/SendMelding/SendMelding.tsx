@@ -19,7 +19,7 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
 };
 
 const SendMelding: React.FC = () => {
-    const behandling = useBehandling();
+    const { manuelleBrevmottakere } = useBehandling();
     const { språkkode } = useFagsak();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
     const { behandlingILesemodus } = useBehandlingState();
@@ -40,14 +40,10 @@ const SendMelding: React.FC = () => {
 
             <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
                 <Heading size="xsmall" level="3">
-                    {behandling.manuelleBrevmottakere.length > 0 ? 'Brevmottakere' : 'Brevmottaker'}
+                    {manuelleBrevmottakere.length > 0 ? 'Brevmottakere' : 'Brevmottaker'}
                 </Heading>
                 <div className="gap-5 flex flex-col">
-                    <BrevmottakerListe
-                        brevmottakere={behandling.manuelleBrevmottakere.map(
-                            ({ brevmottaker }) => brevmottaker
-                        )}
-                    />
+                    <BrevmottakerListe />
 
                     <Select
                         {...skjema.felter.maltype.hentNavInputProps(skjema.visFeilmeldinger)}
