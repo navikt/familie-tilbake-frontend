@@ -8,6 +8,8 @@ import * as React from 'react';
 import { BrevmottakerFormModal } from './BrevmottakerFormModal';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Ytelsetype } from '../../../kodeverk';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { MottakerType } from '../../../typer/Brevmottaker';
 import { RessursStatus } from '../../../typer/ressurs';
@@ -28,7 +30,6 @@ const renderBrevmottakerFormModal = async (
     } = {}
 ): Promise<RenderResult> => {
     const defaultProps = {
-        behandlingId: 'test-behandling-id',
         visBrevmottakerModal: true,
         settVisBrevmottakerModal: vi.fn(),
         settBrevmottakerIdTilEndring: vi.fn(),
@@ -39,7 +40,9 @@ const renderBrevmottakerFormModal = async (
     return await waitFor(() =>
         render(
             <FagsakContext.Provider value={lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn })}>
-                <BrevmottakerFormModal {...defaultProps} />
+                <TestBehandlingProvider behandling={lagBehandling()}>
+                    <BrevmottakerFormModal {...defaultProps} />
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         )
     );

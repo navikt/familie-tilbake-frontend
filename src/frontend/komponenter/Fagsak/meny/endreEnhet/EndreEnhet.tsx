@@ -24,15 +24,9 @@ const enheter: Arbeidsfordelingsenhet[] = [
     { enhetskode: '4817', enhetsnavn: 'Nav Familie- og pensjonsytelser Steinkjer' },
 ];
 
-type Props = {
-    behandlingsId: BehandlingDto['behandlingId'];
-};
-
-export const EndreEnhet: React.FC<Props> = ({ behandlingsId }) => {
+export const EndreEnhet: React.FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const { skjema, sendInn, nullstillSkjema } = useEndreEnhet(behandlingsId, () =>
-        dialogRef.current?.close()
-    );
+    const { skjema, sendInn, nullstillSkjema } = useEndreEnhet(() => dialogRef.current?.close());
 
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 

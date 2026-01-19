@@ -56,9 +56,7 @@ export const Behandlingsmeny: React.FC = () => {
 
             <ActionMenu.Content onClick={() => setHoldMenyenÅpen(true)}>
                 <ActionMenu.Group aria-label="Menyvalg">
-                    {behandling.kanRevurderingOpprettes && (
-                        <Revurder behandlingId={behandling.behandlingId} />
-                    )}
+                    {behandling.kanRevurderingOpprettes && <Revurder />}
 
                     {erBehandlingenAktiv && (
                         <>
@@ -83,9 +81,7 @@ export const Behandlingsmeny: React.FC = () => {
                                         <LeggTilFjernBrevmottakere />
                                     )}
 
-                                    {kanEndreEnhet && (
-                                        <EndreEnhet behandlingsId={behandling.behandlingId} />
-                                    )}
+                                    {kanEndreEnhet && <EndreEnhet />}
 
                                     <HistoriskeVurderinger />
                                 </>

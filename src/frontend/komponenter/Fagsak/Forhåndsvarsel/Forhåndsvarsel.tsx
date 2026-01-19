@@ -46,7 +46,7 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 };
 
 export const Forhåndsvarsel: React.FC = () => {
-    const behandling = useBehandling();
+    const { behandlingId } = useBehandling();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries();
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
@@ -75,12 +75,7 @@ export const Forhåndsvarsel: React.FC = () => {
     const handleMutationSuccess = useEffectEvent(
         (isSuccess: boolean, data: RessursByte | undefined) => {
             if (isSuccess && data) {
-                const currentQueryKey = [
-                    'forhåndsvisBrev',
-                    behandling.behandlingId,
-                    'VARSEL',
-                    fritekst,
-                ];
+                const currentQueryKey = ['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst];
                 queryClient.setQueryData(currentQueryKey, data);
                 setShowModal(true);
             }
@@ -102,7 +97,7 @@ export const Forhåndsvarsel: React.FC = () => {
     }, [forhåndsvisning.isSuccess, forhåndsvisning.data]);
 
     const seForhåndsvisningWithModal = (): void => {
-        const currentQueryKey = ['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst];
+        const currentQueryKey = ['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst];
 
         const cachedData = queryClient.getQueryData(currentQueryKey);
 
@@ -115,7 +110,7 @@ export const Forhåndsvarsel: React.FC = () => {
 
     const pdfData =
         forhåndsvisning.data ||
-        queryClient.getQueryData(['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst]);
+        queryClient.getQueryData(['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst]);
 
     return (
         <VStack gap="4">
@@ -192,7 +187,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     skalSendesForhåndsvarsel,
     parentBounds,
 }) => {
-    const behandling = useBehandling();
     const { toggles } = useToggles();
     const { actionBarStegtekst } = useBehandlingState();
 
@@ -349,14 +343,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             {mutations.map(({ key, mutation }) => {
                 if (mutation?.isError) {
                     const feil = extractErrorFromMutationError(mutation.error);
-                    return (
-                        <FeilModal
-                            key={key}
-                            feil={feil}
-                            lukkFeilModal={mutation.reset}
-                            behandlingId={behandling.behandlingId}
-                        />
-                    );
+                    return <FeilModal key={key} feil={feil} lukkFeilModal={mutation.reset} />;
                 }
                 return null;
             })}

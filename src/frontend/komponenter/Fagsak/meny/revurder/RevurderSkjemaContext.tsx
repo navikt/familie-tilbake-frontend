@@ -1,9 +1,9 @@
-import type { BehandlingDto } from '../../../../generated';
 import type { Skjema } from '../../../../hooks/skjema';
 import type { Behandlingårsak } from '../../../../typer/behandling';
 
 import { useState, type RefObject } from 'react';
 
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { useFelt, useSkjema } from '../../../../hooks/skjema';
@@ -26,10 +26,8 @@ type RevurderSkjemaHook = {
     nullstillSkjema: () => void;
 };
 
-const useRevurderSkjema = (
-    behandlingId: BehandlingDto['behandlingId'],
-    dialogRef: RefObject<HTMLDialogElement | null>
-): RevurderSkjemaHook => {
+const useRevurderSkjema = (dialogRef: RefObject<HTMLDialogElement | null>): RevurderSkjemaHook => {
+    const { behandlingId } = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const { fagsystem, eksternFagsakId, ytelsestype } = useFagsak();
     const { utførRedirect } = useRedirectEtterLagring();

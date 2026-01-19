@@ -145,7 +145,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const behandling = useBehandling();
+    const { behandlingId, behandlingsstegsinfo } = useBehandling();
     const {
         settIkkePersistertKomponent,
         harUlagredeData,
@@ -157,7 +157,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
 
     // Sjekk om ForeslåVedtak-steget har status tilbakeført
-    const erVedtakTilbakeført = behandling.behandlingsstegsinfo.some(
+    const erVedtakTilbakeført = behandlingsstegsinfo.some(
         steg =>
             steg.behandlingssteg === 'FORESLÅ_VEDTAK' &&
             steg.behandlingsstegstatus === 'TILBAKEFØRT'
@@ -268,7 +268,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         ) {
             nullstillIkkePersisterteKomponenter();
             await queryClient.invalidateQueries({
-                queryKey: ['hentBehandling', { path: { behandlingId: behandling.behandlingId } }],
+                queryKey: ['hentBehandling', { path: { behandlingId } }],
             });
         }
     };
@@ -472,7 +472,6 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     feil={sendInnSkjemaMutation.error}
                     lukkFeilModal={sendInnSkjemaMutation.reset}
                     beskjed="Du kunne ikke lagre vilkårsvurderingen"
-                    behandlingId={behandling.behandlingId}
                 />
             )}
             {visUlagretDataModal && (

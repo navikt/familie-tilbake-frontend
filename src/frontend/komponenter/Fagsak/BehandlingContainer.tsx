@@ -174,10 +174,7 @@ const BehandlingContainer: React.FC = () => {
                                 path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                                 element={
                                     behandling.erNyModell ? (
-                                        <Fakta
-                                            behandlingId={behandling.behandlingId}
-                                            behandlingUrl={behandlingUrl}
-                                        />
+                                        <Fakta behandlingUrl={behandlingUrl} />
                                     ) : (
                                         <FaktaProvider>
                                             <FaktaContainer />

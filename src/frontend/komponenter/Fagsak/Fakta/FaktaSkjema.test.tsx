@@ -9,6 +9,7 @@ import { expect } from 'vitest';
 import { FaktaSkjema } from './FaktaSkjema';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { configureZod } from '../../../utils/zodConfig';
@@ -90,11 +91,10 @@ const renderFakta = (
     return {
         result: render(
             <FagsakContext.Provider value={lagFagsak()}>
-                <TestBehandlingProvider>
+                <TestBehandlingProvider behandling={lagBehandling({ behandlingId: 'unik' })}>
                     <QueryClientProvider client={client}>
                         <FaktaSkjema
                             faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
-                            behandlingId="unik"
                             behandlingUrl="https://tilbakekreving"
                         />
                     </QueryClientProvider>

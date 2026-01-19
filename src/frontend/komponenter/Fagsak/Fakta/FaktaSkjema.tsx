@@ -36,6 +36,7 @@ import * as React from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 
 import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring } from '../../../utils';
@@ -43,16 +44,12 @@ import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
-    behandlingId: string;
     behandlingUrl: string;
     faktaOmFeilutbetaling: FaktaOmFeilutbetaling;
 };
 
-export const FaktaSkjema = ({
-    faktaOmFeilutbetaling,
-    behandlingId,
-    behandlingUrl,
-}: Props): React.JSX.Element => {
+export const FaktaSkjema = ({ faktaOmFeilutbetaling, behandlingUrl }: Props): React.JSX.Element => {
+    const { behandlingId } = useBehandling();
     const { actionBarStegtekst, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const queryClient = useQueryClient();
@@ -142,17 +139,14 @@ export const FaktaSkjema = ({
         perioder.find(periode => periode.id === id)! as FaktaPeriode;
     const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetaling> = data => {
         oppdaterMutation.mutate(
-            { body: data, path: { behandlingId: behandlingId } },
+            { body: data, path: { behandlingId } },
             {
                 onSuccess: data => {
                     nullstillIkkePersisterteKomponenter();
                     if (data.ferdigvurdert) {
                         queryClient
                             .invalidateQueries({
-                                queryKey: [
-                                    'hentBehandling',
-                                    { path: { behandlingId: behandlingId } },
-                                ],
+                                queryKey: ['hentBehandling', { path: { behandlingId } }],
                             })
                             .then(navigerTilNeste);
                     }

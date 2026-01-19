@@ -17,7 +17,6 @@ const hentEksisterendeBrevmottaker = (
 type BrevmottakerModalProps = {
     visBrevmottakerModal: boolean;
     brevmottakerIdTilEndring: string | undefined;
-    behandlingId: string;
     brevmottakere: ManuellBrevmottakerResponsDto[];
     settVisBrevmottakerModal: (vis: boolean) => void;
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
@@ -26,7 +25,6 @@ type BrevmottakerModalProps = {
 export const BrevmottakerModal: React.FC<BrevmottakerModalProps> = ({
     visBrevmottakerModal,
     brevmottakerIdTilEndring,
-    behandlingId,
     brevmottakere,
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
@@ -48,7 +46,6 @@ export const BrevmottakerModal: React.FC<BrevmottakerModalProps> = ({
                     mode="endre"
                     initialData={formData}
                     mottakerId={brevmottakerIdTilEndring}
-                    behandlingId={behandlingId}
                     visBrevmottakerModal={visBrevmottakerModal}
                     settVisBrevmottakerModal={settVisBrevmottakerModal}
                     settBrevmottakerIdTilEndring={settBrevmottakerIdTilEndring}
@@ -60,7 +57,6 @@ export const BrevmottakerModal: React.FC<BrevmottakerModalProps> = ({
     return (
         <BrevmottakerFormModal
             mode="leggTil"
-            behandlingId={behandlingId}
             visBrevmottakerModal={visBrevmottakerModal}
             settVisBrevmottakerModal={settVisBrevmottakerModal}
             settBrevmottakerIdTilEndring={settBrevmottakerIdTilEndring}
