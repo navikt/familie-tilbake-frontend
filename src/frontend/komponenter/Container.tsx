@@ -12,7 +12,7 @@ import { useApp } from '../context/AppContext';
 import { FagsakProvider } from '../context/FagsakContext';
 import { TogglesProvider } from '../context/TogglesContext';
 import { StegflytSkeleton } from './Fagsak/Stegflyt/StegflytSkeleton';
-import { FagsakLoadingSkeleton } from './Felleskomponenter/Datalast/FagsakLoadingSkeleton';
+import { Spinner } from './Felleskomponenter/Datalast/Spinner';
 import FagsakErrorBoundary from './Felleskomponenter/ErrorBoundary/FagsakErrorBoundary';
 import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import { FTHeader } from './Felleskomponenter/FTHeader/FTHeader';
@@ -95,7 +95,7 @@ const AppRoutes: React.FC = () => {
 };
 
 const FagsakProvidersWrapper: React.FC = () => (
-    <Suspense fallback={<FagsakLoadingSkeleton />}>
+    <Suspense fallback={<Spinner type="fagsak" />}>
         <FagsakErrorBoundary>
             <FagsakProvider>
                 <Outlet />

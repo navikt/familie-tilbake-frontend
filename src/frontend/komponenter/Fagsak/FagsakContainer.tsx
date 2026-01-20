@@ -8,7 +8,7 @@ import { BehandlingStateProvider } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { useBehandlingStore } from '../../stores/behandlingStore';
 import { useFagsakStore } from '../../stores/fagsakStore';
-import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
+import { Spinner } from '../Felleskomponenter/Datalast/Spinner';
 import UlagretDataModal from '../Felleskomponenter/Modal/UlagretDataModal';
 
 const FagsakContainer: React.FC = () => {
@@ -43,7 +43,7 @@ const FagsakContainer: React.FC = () => {
     }
 
     return (
-        <Suspense fallback={<HenterBehandling />}>
+        <Suspense fallback={<Spinner type="behandling" />}>
             <BehandlingProvider behandlingId={behandlingId}>
                 <BehandlingStateProvider>
                     <BehandlingContainer />
