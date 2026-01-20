@@ -8,7 +8,7 @@ import { Button, Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react'
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch, useFormContext } from 'react-hook-form';
 
 import {
     forhåndsvarselSchema,
@@ -220,6 +220,10 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandling();
 
     const {
+        formState: { isDirty },
+    } = useFormContext<ForhåndsvarselFormData>();
+
+    const {
         sendForhåndsvarselMutation,
         sendBrukeruttalelseMutation,
         sendUtsettUttalelseFristMutation,
@@ -273,8 +277,10 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'Utsett frist';
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
+        } else if (skalSendeForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && isDirty) {
+            return 'Lagre og gå til neste';
         }
-        return 'Lagre og gå til neste';
+        return 'Neste';
     };
 
     const skalSendeForhåndsvarsel =
