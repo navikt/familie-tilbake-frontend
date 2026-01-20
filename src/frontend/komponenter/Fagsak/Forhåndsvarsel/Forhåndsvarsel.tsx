@@ -277,7 +277,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'Utsett frist';
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
-        } else if (skalSendeForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && isDirty) {
+        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && isDirty) {
             return 'Lagre og gå til neste';
         }
         return 'Neste';
