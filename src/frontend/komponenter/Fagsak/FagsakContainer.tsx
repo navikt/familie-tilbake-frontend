@@ -1,52 +1,15 @@
-import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
-
-import classNames from 'classnames';
 import * as React from 'react';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useLocation } from 'react-router';
 
 import BehandlingContainer from './BehandlingContainer';
 import { BehandlingProvider, finnBehandlingId } from '../../context/BehandlingContext';
-import { BehandlingStateProvider, useBehandlingState } from '../../context/BehandlingStateContext';
+import { BehandlingStateProvider } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { useBehandlingStore } from '../../stores/behandlingStore';
 import { useFagsakStore } from '../../stores/fagsakStore';
-import { venteårsaker } from '../../typer/behandling';
-import { formatterDatostring } from '../../utils';
-import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
 import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
-import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 import UlagretDataModal from '../Felleskomponenter/Modal/UlagretDataModal';
-
-const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
-    return `Behandlingen er satt på vent: ${
-        venteårsaker[ventegrunn.venteårsak as Venteårsak]
-    }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;
-};
-
-const BehandlingContent: React.FC = () => {
-    const { ventegrunn } = useBehandlingState();
-    const [visVenteModal, settVisVenteModal] = useState(false);
-
-    return (
-        <>
-            {ventegrunn && <FTAlertStripe variant="info">{venteBeskjed(ventegrunn)}</FTAlertStripe>}
-            {ventegrunn && !visVenteModal && (
-                <PåVentModal ventegrunn={ventegrunn} onClose={() => settVisVenteModal(true)} />
-            )}
-            <div
-                className={classNames(
-                    'grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-ax-neutral-100 min-h-screen',
-                    {
-                        venter: !!ventegrunn,
-                    }
-                )}
-            >
-                <BehandlingContainer />
-            </div>
-        </>
-    );
-};
 
 const FagsakContainer: React.FC = () => {
     const location = useLocation();
@@ -83,7 +46,7 @@ const FagsakContainer: React.FC = () => {
         <Suspense fallback={<HenterBehandling />}>
             <BehandlingProvider behandlingId={behandlingId}>
                 <BehandlingStateProvider>
-                    <BehandlingContent />
+                    <BehandlingContainer />
                     <UlagretDataModal />
                 </BehandlingStateProvider>
             </BehandlingProvider>

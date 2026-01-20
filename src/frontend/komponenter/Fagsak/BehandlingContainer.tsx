@@ -1,7 +1,10 @@
+import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
+
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button } from '@navikt/ds-react';
+import classNames from 'classnames';
 import * as React from 'react';
-import { Suspense, useRef } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
 import { ActionBar } from './ActionBar/ActionBar';
@@ -21,8 +24,11 @@ import { VilkårsvurderingProvider } from './Vilkårsvurdering/Vilkårsvurdering
 import { useBehandling } from '../../context/BehandlingContext';
 import { useBehandlingState } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
-import { Behandlingstatus } from '../../typer/behandling';
+import { Behandlingstatus, venteårsaker } from '../../typer/behandling';
+import { formatterDatostring } from '../../utils';
 import { erHistoriskSide, erØnsketSideTilgjengelig, utledBehandlingSide } from '../../utils/sider';
+import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
+import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 
 const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./Brevmottaker/Brevmottakere'),
@@ -58,93 +64,104 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
-const BehandlingContainer: React.FC = () => {
-    const behandling = useBehandling();
-    const { harKravgrunnlag, aktivtSteg } = useBehandlingState();
-    const { fagsystem, eksternFagsakId } = useFagsak();
-    const navigate = useNavigate();
-    const location = useLocation();
-    const ref = useRef<HTMLDialogElement>(null);
+type BehandlingLayoutProps = {
+    children: React.ReactNode;
+    visHøyremeny?: boolean;
+    dialogRef: React.RefObject<HTMLDialogElement | null>;
+};
 
-    const ønsketSide = location.pathname.split('/')[7];
-    const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
-    const erØnsketSideLovlig =
-        ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
-    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
-
-    React.useEffect(() => {
-        if (!erØnsketSideLovlig && aktivtSteg) {
-            const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
-            if (aktivSide) {
-                navigate(`${behandlingUrl}/${aktivSide?.href}`);
-            }
-        } else if (!erØnsketSideLovlig) {
-            if (behandling.status === Behandlingstatus.Avsluttet) {
-                navigate(`${behandlingUrl}/vedtak`);
-            } else {
-                navigate(`${behandlingUrl}`);
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [aktivtSteg, ønsketSide]);
-
-    return behandling.erBehandlingHenlagt ? (
-        <>
-            <div className="flex-1 overflow-auto">
-                <section className="px-6 text-center" aria-label="Behandlingen er henlagt">
-                    <BodyShort size="small">Behandlingen er henlagt</BodyShort>
-                </section>
-            </div>
-
-            <Høyremeny dialogRef={ref} />
-        </>
-    ) : !harKravgrunnlag ? (
-        <>
-            <div className="flex-1 overflow-auto">
-                <section className="px-6 text-center" aria-label="Venter på kravgrunnlag">
-                    <ActionBar
-                        stegtekst="På vent"
-                        skjulNeste
-                        forrigeAriaLabel={undefined}
-                        nesteAriaLabel="Neste"
-                        onNeste={() => null}
-                        onForrige={undefined}
-                    />
-                </section>
-            </div>
-
-            <Høyremeny dialogRef={ref} />
-        </>
-    ) : erHistoriskeVerdier ? (
-        <div className="flex-1 overflow-auto">
-            <Suspense fallback="Historiske vurderinger laster...">
-                <HistoriskeVurderingermeny />
+const BehandlingLayout: React.FC<BehandlingLayoutProps> = ({
+    children,
+    visHøyremeny = true,
+    dialogRef,
+}) => (
+    <>
+        <div className="flex-1 overflow-auto">{children}</div>
+        {visHøyremeny && (
+            <Suspense fallback={<HøyremenySkeleton />}>
+                <Høyremeny dialogRef={dialogRef} />
             </Suspense>
-            <Routes>
-                <Route
-                    path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
-                    element={
-                        <HistoriskFaktaProvider>
-                            <Suspense fallback="Historisk fakta laster...">
-                                <HistoriskFaktaContainer />
-                            </Suspense>
-                        </HistoriskFaktaProvider>
-                    }
-                />
-                <Route
-                    path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
-                    element={
-                        <HistoriskVilkårsvurderingProvider>
-                            <Suspense fallback="Historisk vilkårsvurdering laster...">
-                                <HistoriskVilkårsvurderingContainer />
-                            </Suspense>
-                        </HistoriskVilkårsvurderingProvider>
-                    }
-                />
-                <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
-            </Routes>
-        </div>
-    ) : harKravgrunnlag ? (
+        )}
+    </>
+);
+
+type HenlagtBehandlingProps = {
+    dialogRef: React.RefObject<HTMLDialogElement | null>;
+};
+
+const HenlagtBehandling: React.FC<HenlagtBehandlingProps> = ({ dialogRef }) => (
+    <BehandlingLayout dialogRef={dialogRef}>
+        <section className="px-6 text-center" aria-label="Behandlingen er henlagt">
+            <BodyShort size="small">Behandlingen er henlagt</BodyShort>
+        </section>
+    </BehandlingLayout>
+);
+
+type VenterPåKravgrunnlagBehandlingProps = {
+    dialogRef: React.RefObject<HTMLDialogElement | null>;
+};
+
+const VenterPåKravgrunnlagBehandling: React.FC<VenterPåKravgrunnlagBehandlingProps> = ({
+    dialogRef,
+}) => (
+    <BehandlingLayout dialogRef={dialogRef}>
+        <section className="px-6 text-center" aria-label="Venter på kravgrunnlag">
+            <ActionBar
+                stegtekst="På vent"
+                skjulNeste
+                forrigeAriaLabel={undefined}
+                nesteAriaLabel="Neste"
+                onNeste={() => null}
+                onForrige={undefined}
+            />
+        </section>
+    </BehandlingLayout>
+);
+
+type HistoriskBehandlingProps = {
+    dialogRef: React.RefObject<HTMLDialogElement | null>;
+};
+
+const HistoriskBehandling: React.FC<HistoriskBehandlingProps> = ({ dialogRef }) => (
+    <BehandlingLayout dialogRef={dialogRef} visHøyremeny={false}>
+        <Suspense fallback="Historiske vurderinger laster...">
+            <HistoriskeVurderingermeny />
+        </Suspense>
+        <Routes>
+            <Route
+                path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
+                element={
+                    <HistoriskFaktaProvider>
+                        <Suspense fallback="Historisk fakta laster...">
+                            <HistoriskFaktaContainer />
+                        </Suspense>
+                    </HistoriskFaktaProvider>
+                }
+            />
+            <Route
+                path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
+                element={
+                    <HistoriskVilkårsvurderingProvider>
+                        <Suspense fallback="Historisk vilkårsvurdering laster...">
+                            <HistoriskVilkårsvurderingContainer />
+                        </Suspense>
+                    </HistoriskVilkårsvurderingProvider>
+                }
+            />
+            <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
+        </Routes>
+    </BehandlingLayout>
+);
+
+type AktivBehandlingProps = {
+    behandlingUrl: string;
+    dialogRef: React.RefObject<HTMLDialogElement | null>;
+};
+
+const AktivBehandling: React.FC<AktivBehandlingProps> = ({ behandlingUrl, dialogRef }) => {
+    const behandling = useBehandling();
+
+    return (
         <>
             <section
                 /* Trekker fra høyde fra header (48), padding (16+16 + 16) og action baren (66) */
@@ -159,7 +176,7 @@ const BehandlingContainer: React.FC = () => {
                             <SidebarRightIcon title="Åpne informasjonspanelet" fontSize="1.5rem" />
                         }
                         className="lg:hidden"
-                        onClick={() => ref.current?.showModal()}
+                        onClick={() => dialogRef.current?.showModal()}
                     >
                         Åpne
                     </Button>
@@ -231,10 +248,85 @@ const BehandlingContainer: React.FC = () => {
                 </section>
             </section>
             <Suspense fallback={<HøyremenySkeleton />}>
-                <Høyremeny dialogRef={ref} />
+                <Høyremeny dialogRef={dialogRef} />
             </Suspense>
         </>
-    ) : null;
+    );
+};
+
+const Behandling: React.FC = () => {
+    const behandling = useBehandling();
+    const { harKravgrunnlag, aktivtSteg } = useBehandlingState();
+    const { fagsystem, eksternFagsakId } = useFagsak();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const dialogRef = useRef<HTMLDialogElement>(null);
+
+    const ønsketSide = location.pathname.split('/')[7];
+    const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
+    const erØnsketSideLovlig =
+        ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
+    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+
+    useEffect(() => {
+        if (!erØnsketSideLovlig && aktivtSteg) {
+            const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
+            if (aktivSide) {
+                navigate(`${behandlingUrl}/${aktivSide?.href}`);
+            }
+        } else if (!erØnsketSideLovlig) {
+            if (behandling.status === Behandlingstatus.Avsluttet) {
+                navigate(`${behandlingUrl}/vedtak`);
+            } else {
+                navigate(`${behandlingUrl}`);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [aktivtSteg, ønsketSide]);
+
+    if (behandling.erBehandlingHenlagt) {
+        return <HenlagtBehandling dialogRef={dialogRef} />;
+    }
+
+    if (!harKravgrunnlag) {
+        return <VenterPåKravgrunnlagBehandling dialogRef={dialogRef} />;
+    }
+
+    if (erHistoriskeVerdier) {
+        return <HistoriskBehandling dialogRef={dialogRef} />;
+    }
+
+    return <AktivBehandling behandlingUrl={behandlingUrl} dialogRef={dialogRef} />;
+};
+
+const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
+    return `Behandlingen er satt på vent: ${
+        venteårsaker[ventegrunn.venteårsak as Venteårsak]
+    }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;
+};
+
+const BehandlingContainer: React.FC = () => {
+    const { ventegrunn } = useBehandlingState();
+    const [visVenteModal, settVisVenteModal] = useState(false);
+
+    return (
+        <>
+            {ventegrunn && <FTAlertStripe variant="info">{venteBeskjed(ventegrunn)}</FTAlertStripe>}
+            {ventegrunn && !visVenteModal && (
+                <PåVentModal ventegrunn={ventegrunn} onClose={() => settVisVenteModal(true)} />
+            )}
+            <div
+                className={classNames(
+                    'grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-ax-neutral-100 min-h-screen',
+                    {
+                        venter: !!ventegrunn,
+                    }
+                )}
+            >
+                <Behandling />
+            </div>
+        </>
+    );
 };
 
 export default BehandlingContainer;
