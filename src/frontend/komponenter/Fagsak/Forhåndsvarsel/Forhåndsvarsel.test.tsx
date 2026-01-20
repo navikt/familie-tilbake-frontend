@@ -73,6 +73,8 @@ const setupMock = (): void => {
     mockUseBehandling.mockImplementation(() => ({
         actionBarStegtekst: vi.fn().mockReturnValue('Steg 2 av 5'),
         erStegBehandlet: vi.fn().mockReturnValue(false),
+        settIkkePersistertKomponent: (): void => {},
+        nullstillIkkePersisterteKomponenter: (): void => {},
     }));
     mockUseToggles.mockImplementation(() => ({
         toggles: {
