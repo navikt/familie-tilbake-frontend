@@ -12,8 +12,7 @@ export const FixedAlert: React.FC<Props> = ({ width, children, variant, ...props
 
     useEffect(() => {
         if (variant !== 'error') {
-            const textLength = typeof children === 'string' ? children.length : 100;
-            const timer = setTimeout(() => setIsVisible(false), Math.max(textLength * 50, 7000));
+            const timer = setTimeout(() => setIsVisible(false), 7000);
 
             return (): void => clearTimeout(timer);
         }
@@ -23,7 +22,14 @@ export const FixedAlert: React.FC<Props> = ({ width, children, variant, ...props
         return null;
     }
     return (
-        <Alert className="fixed bottom-34" style={{ width }} variant={variant} {...props}>
+        <Alert
+            size="small"
+            className="fixed bottom-34"
+            style={{ width }}
+            variant={variant}
+            contentMaxWidth={false}
+            {...props}
+        >
             {children}
         </Alert>
     );

@@ -116,7 +116,7 @@ describe('ForhåndsvarselSkjema', () => {
         expect(
             await screen.findByRole('heading', {
                 name: 'Opprett forhåndsvarsel',
-                level: 3,
+                level: 2,
             })
         ).toBeInTheDocument();
     });
