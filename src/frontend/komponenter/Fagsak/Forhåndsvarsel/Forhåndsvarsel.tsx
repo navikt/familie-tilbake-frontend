@@ -49,6 +49,7 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 };
 
 export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
+    const { settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries(behandling);
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling);
     const [showModal, setShowModal] = useState(false);
@@ -60,8 +61,21 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
 
     const methods = useForm<ForhåndsvarselFormData>({
         resolver: zodResolver(forhåndsvarselSchema),
-        mode: 'all',
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        criteriaMode: 'all',
         defaultValues: getDefaultValues(varselErSendt, forhåndsvarselInfo),
+    });
+
+    methods.subscribe({
+        formState: { isDirty: true },
+        callback: data => {
+            if (data.isDirty) {
+                settIkkePersistertKomponent('forhåndsvarsel');
+            } else {
+                nullstillIkkePersisterteKomponenter();
+            }
+        },
     });
 
     const fritekst = useWatch({
@@ -203,7 +217,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     ref,
 }) => {
     const { toggles } = useToggles();
-    const { actionBarStegtekst } = useBehandling();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandling();
 
     const {
         sendForhåndsvarselMutation,
@@ -231,7 +245,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const uttalelseMethods = useForm<UttalelseMedFristFormData>({
         resolver: zodResolver(uttalelseMedFristSchema),
-        mode: 'all',
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        criteriaMode: 'all',
         defaultValues: getUttalelseValues(forhåndsvarselInfo),
     });
 
@@ -258,7 +274,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
         }
-        return 'Neste';
+        return 'Lagre og gå til neste';
     };
 
     const skalSendeForhåndsvarsel =
@@ -266,6 +282,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const skalSendeUnntak =
         skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
         !forhåndsvarselInfo?.forhåndsvarselUnntak;
+
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
         data: ForhåndsvarselFormData
     ): void => {
@@ -276,6 +293,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         } else {
             gåTilNeste();
         }
+        nullstillIkkePersisterteKomponenter();
     };
 
     const handleUttalelseSubmit: SubmitHandler<UttalelseMedFristFormData> = (
