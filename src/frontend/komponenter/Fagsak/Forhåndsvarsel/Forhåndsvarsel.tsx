@@ -116,36 +116,39 @@ export const Forhåndsvarsel: React.FC = () => {
         <VStack gap="4">
             <HStack align="center" justify="space-between">
                 <Heading size="small">Forhåndsvarsel</Heading>
-                {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
-                    <Tooltip
-                        arrow={false}
-                        placement="bottom"
-                        content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
-                    >
-                        <Tag
-                            variant={getTagVariant(
-                                forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid
-                            )}
-                            icon={<MegaphoneIcon aria-hidden />}
+                <HStack gap="4">
+                    {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && (
+                        <Button
+                            loading={forhåndsvisning.isPending}
+                            icon={<FilePdfIcon aria-hidden />}
+                            variant="tertiary"
+                            size="small"
+                            onClick={seForhåndsvisningWithModal}
                         >
-                            {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
-                        </Tag>
-                    </Tooltip>
-                )}
-                {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && (
-                    <Button
-                        loading={forhåndsvisning.isPending}
-                        icon={<FilePdfIcon aria-hidden />}
-                        variant="tertiary"
-                        size="small"
-                        onClick={seForhåndsvisningWithModal}
-                    >
-                        Forhåndsvis
-                    </Button>
-                )}
+                            Forhåndsvis
+                        </Button>
+                    )}
+                    {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
+                        <Tooltip
+                            arrow={false}
+                            placement="bottom"
+                            content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
+                        >
+                            <Tag
+                                variant={getTagVariant(
+                                    forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid
+                                )}
+                                icon={<MegaphoneIcon aria-hidden />}
+                            >
+                                {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
+                            </Tag>
+                        </Tooltip>
+                    )}
+                </HStack>
             </HStack>
             <FormProvider {...methods}>
                 <ForhåndsvarselSkjema
+                    ref={containerRef}
                     forhåndsvarselInfo={forhåndsvarselInfo}
                     skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
                     parentBounds={parentBounds}
@@ -180,12 +183,14 @@ type ForhåndsvarselSkjemaProps = {
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
     skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
     parentBounds: { width: string | undefined };
+    ref: React.RefObject<HTMLDivElement | null>;
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     forhåndsvarselInfo,
     skalSendesForhåndsvarsel,
     parentBounds,
+    ref,
 }) => {
     const { toggles } = useToggles();
     const { actionBarStegtekst } = useBehandlingState();
@@ -281,7 +286,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             : undefined; // 'uttalelseUtenUtsettForm'; undefined hvis bare "Neste"
 
     return (
-        <>
+        <div ref={ref}>
             <OpprettSkjema
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
@@ -347,6 +352,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 }
                 return null;
             })}
-        </>
+        </div>
     );
 };

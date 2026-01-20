@@ -4,7 +4,7 @@ import type { FieldErrors, SubmitHandler } from 'react-hook-form';
 
 import {
     BodyLong,
-    ExpansionCard,
+    Box,
     Heading,
     HStack,
     Radio,
@@ -13,7 +13,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import React, { Fragment, useEffect, useEffectEvent, useState } from 'react';
+import React, { Fragment } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { SkalSendesForhåndsvarsel } from '../forhåndsvarselSchema';
@@ -34,7 +34,6 @@ export const OpprettSkjema: React.FC<Props> = ({
 }) => {
     const tittel = varselErSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const maksAntallTegn = 4000;
-    const [expansionCardÅpen, setExpansionCardÅpen] = useState(!varselErSendt);
 
     const {
         control,
@@ -47,20 +46,15 @@ export const OpprettSkjema: React.FC<Props> = ({
         Extract<ForhåndsvarselFormData, { skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja }>
     > = errors;
 
-    const handleVarselChange = useEffectEvent((varselErSendt: boolean) => {
-        if (varselErSendt) {
-            setExpansionCardÅpen(false);
-        }
-    });
-
-    useEffect(() => {
-        handleVarselChange(varselErSendt);
-    }, [varselErSendt]);
-
     const skalSendesForhåndsvarsel = useWatch({
         control: control,
         name: 'skalSendesForhåndsvarsel',
     });
+
+    const visSkjema =
+        skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja &&
+        varselbrevtekster &&
+        !varselErSendt;
 
     return (
         <VStack
@@ -89,49 +83,42 @@ export const OpprettSkjema: React.FC<Props> = ({
                 )}
             />
 
-            {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && varselbrevtekster && (
+            {visSkjema && (
                 <VStack gap="4">
                     <HStack gap="4">
-                        <ExpansionCard
-                            className="flex-1"
-                            aria-label={tittel}
-                            open={expansionCardÅpen}
-                            onToggle={setExpansionCardÅpen}
-                        >
-                            <ExpansionCard.Header>
-                                <ExpansionCard.Title size="small">{tittel}</ExpansionCard.Title>
-                            </ExpansionCard.Header>
-                            <ExpansionCard.Content>
-                                <HStack align="center" justify="space-between">
-                                    <Heading size="medium" level="2" spacing>
-                                        {varselbrevtekster.overskrift}
-                                    </Heading>
-                                </HStack>
-                                <VStack maxWidth={ATextWidthMax}>
-                                    {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
-                                        <Fragment key={avsnitt.title}>
-                                            <Heading size="xsmall" level="3" spacing>
-                                                {avsnitt.title}
-                                            </Heading>
-                                            <BodyLong size="small" spacing>
-                                                {avsnitt.body}
-                                            </BodyLong>
-                                            {avsnitt.title === 'Dette har skjedd' && (
-                                                <Textarea
-                                                    {...register('fritekst')}
-                                                    label="Legg til utdypende tekst"
-                                                    maxLength={maksAntallTegn}
-                                                    error={fieldError.fritekst?.message?.toString()}
-                                                    className="mb-6"
-                                                    readOnly={varselErSendt}
-                                                    resize
-                                                />
-                                            )}
-                                        </Fragment>
-                                    ))}
-                                </VStack>
-                            </ExpansionCard.Content>
-                        </ExpansionCard>
+                        <Box className="flex-1 border border-ax-border-neutral-strong rounded-lg py-3 px-4">
+                            <Heading level="2" size="small" className="mb-6">
+                                {tittel}
+                            </Heading>
+                            <HStack align="center" justify="space-between">
+                                <Heading size="medium" level="3" spacing>
+                                    {varselbrevtekster.overskrift}
+                                </Heading>
+                            </HStack>
+                            <VStack maxWidth={ATextWidthMax}>
+                                {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
+                                    <Fragment key={avsnitt.title}>
+                                        <Heading size="xsmall" level="4" spacing>
+                                            {avsnitt.title}
+                                        </Heading>
+                                        <BodyLong size="small" spacing>
+                                            {avsnitt.body}
+                                        </BodyLong>
+                                        {avsnitt.title === 'Dette har skjedd' && (
+                                            <Textarea
+                                                {...register('fritekst')}
+                                                label="Legg til utdypende tekst"
+                                                maxLength={maksAntallTegn}
+                                                error={fieldError.fritekst?.message?.toString()}
+                                                className="mb-6"
+                                                readOnly={varselErSendt}
+                                                resize
+                                            />
+                                        )}
+                                    </Fragment>
+                                ))}
+                            </VStack>
+                        </Box>
                     </HStack>
                 </VStack>
             )}

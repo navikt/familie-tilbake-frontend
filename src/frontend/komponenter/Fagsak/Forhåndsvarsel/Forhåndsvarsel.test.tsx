@@ -244,8 +244,6 @@ describe('Forhåndsvarsel', () => {
                 renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
 
                 fireEvent.click(screen.getByText('Ja'));
-                const visMerKnapp = await screen.findByRole('button', { name: /Vis mer/ });
-                fireEvent.click(visMerKnapp);
                 fireEvent.click(screen.getByRole('button', { name: 'Send forhåndsvarsel' }));
 
                 expect(await screen.findByText('Du må fylle inn en verdi')).toBeInTheDocument();
