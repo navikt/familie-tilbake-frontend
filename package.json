@@ -26,8 +26,8 @@
     ]
   },
   "dependencies": {
-    "@grafana/faro-web-sdk": "2.1.0",
-    "@hey-api/openapi-ts": "0.90.4",
+    "@grafana/faro-web-sdk": "2.2.0",
+    "@hey-api/openapi-ts": "0.90.6",
     "@hookform/resolvers": "5.2.2",
     "@navikt/aksel-icons": "7.39.1",
     "@navikt/ds-css": "7.39.1",
