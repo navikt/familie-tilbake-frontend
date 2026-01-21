@@ -179,7 +179,7 @@ describe('Brukeruttalelse', () => {
 
             expect(
                 await within(brukeruttalelseFieldset).findByText(
-                    'Du må velge om brukeren har uttalt seg eller om fristen skal utsettes'
+                    'Du må velge om brukeren har uttalt seg'
                 )
             ).toBeInTheDocument();
         });

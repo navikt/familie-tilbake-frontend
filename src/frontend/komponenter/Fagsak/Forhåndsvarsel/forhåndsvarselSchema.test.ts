@@ -99,9 +99,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                 });
 
                 const error = result.error?.issues.find(i => i.path.includes('harUttaltSeg'));
-                expect(error?.message).toBe(
-                    'Du må velge om brukeren har uttalt seg eller om fristen skal utsettes'
-                );
+                expect(error?.message).toBe('Du må velge om brukeren har uttalt seg');
             });
 
             test('Nei, gyldig validering', () => {

@@ -271,13 +271,24 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendBrukeruttalelse(data);
     };
 
-    const formId = !varselErSendt
-        ? 'opprettForm'
-        : varselErSendt && !forhåndsvarselInfo?.brukeruttalelse
-          ? 'uttalelseForm'
-          : skalSendeUnntak
-            ? 'unntakForm'
-            : undefined; // 'uttalelseUtenUtsettForm'; undefined hvis bare "Neste"
+    const harRegistrertBrukeruttalelse =
+        !!forhåndsvarselInfo?.brukeruttalelse ||
+        (forhåndsvarselInfo?.utsettUttalelseFrist?.length ?? 0) > 0;
+
+    const skalSendeUttalelse =
+        (varselErSendt || !!forhåndsvarselInfo?.forhåndsvarselUnntak) &&
+        !harRegistrertBrukeruttalelse;
+
+    const formId = ((): 'opprettForm' | 'uttalelseForm' | undefined => {
+        if (!varselErSendt && !forhåndsvarselInfo?.forhåndsvarselUnntak) {
+            return 'opprettForm';
+        }
+        if (skalSendeUttalelse) {
+            return 'uttalelseForm';
+        }
+
+        return undefined;
+    })();
 
     return (
         <>

@@ -70,7 +70,7 @@ const uttalelseMedFristSchemaBase = z.discriminatedUnion('harUttaltSeg', [
 export const uttalelseMedFristSchema = uttalelseMedFristSchemaBase.refine(
     data => data.harUttaltSeg !== HarUttaltSeg.IkkeValgt,
     {
-        message: 'Du må velge om brukeren har uttalt seg eller om fristen skal utsettes',
+        message: 'Du må velge om brukeren har uttalt seg', // eller om fristen skal utsettes', Tas med når toggle fjernes
         path: ['harUttaltSeg'],
     }
 );
@@ -154,18 +154,18 @@ export const getUttalelseValues = (
     };
 };
 
-export const uttalelseSchema = z
-    .discriminatedUnion('harUttaltSeg', [
-        harIkkeUttaltSegSchema,
-        harUttaltSegSchema,
-        ikkeValgtUttalelseSchema,
-    ])
-    .refine(data => data.harUttaltSeg !== HarUttaltSeg.IkkeValgt, {
-        message: 'Du må velge om brukeren har uttalt seg eller ikke',
-        path: ['harUttaltSeg'],
-    });
+// const uttalelseSchema = z
+//     .discriminatedUnion('harUttaltSeg', [
+//         harIkkeUttaltSegSchema,
+//         harUttaltSegSchema,
+//         ikkeValgtUttalelseSchema,
+//     ])
+//     .refine(data => data.harUttaltSeg !== HarUttaltSeg.IkkeValgt, {
+//         message: 'Du må velge om brukeren har uttalt seg eller ikke',
+//         path: ['harUttaltSeg'],
+//     });
 
-export const opprettSchema = z.object({
+const opprettSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Ja),
     fritekst: fritekstSchema,
 });
@@ -177,7 +177,7 @@ export const getOpprettValues = (): ForhåndsvarselFormData => {
     };
 };
 
-export const unntakSchema = z
+const unntakSchema = z
     .object({
         skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
         begrunnelseForUnntak: zBegrunnelseForUnntakEnum.optional(),
@@ -244,5 +244,3 @@ export type UttalelseMedFristFormData =
     | z.infer<typeof harUttaltSegSchema>
     | z.infer<typeof utsettFristSchema>
     | { harUttaltSeg: HarUttaltSeg.IkkeValgt };
-
-export type UnntakFormData = z.infer<typeof unntakSchema>;
