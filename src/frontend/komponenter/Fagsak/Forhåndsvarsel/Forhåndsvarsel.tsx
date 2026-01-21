@@ -28,8 +28,6 @@ import {
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { ToggleName } from '../../../context/toggles';
-import { useToggles } from '../../../context/TogglesContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { updateParentBounds } from '../../../utils/updateParentBounds';
@@ -192,7 +190,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     parentBounds,
     ref,
 }) => {
-    const { toggles } = useToggles();
     const { actionBarStegtekst } = useBehandlingState();
 
     const {
@@ -294,7 +291,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 readOnly={!!forhåndsvarselInfo?.forhåndsvarselUnntak}
             />
 
-            {toggles[ToggleName.Forhåndsvarselsteg] && varselErSendt && (
+            {(forhåndsvarselInfo?.forhåndsvarselUnntak || varselErSendt) && (
                 <FormProvider {...uttalelseMethods}>
                     <Uttalelse
                         handleUttalelseSubmit={handleUttalelseSubmit}

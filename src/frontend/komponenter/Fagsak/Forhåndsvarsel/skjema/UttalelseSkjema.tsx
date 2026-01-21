@@ -78,7 +78,7 @@ export const Uttalelse: React.FC<Props> = ({
                     >
                         <Radio value={HarUttaltSeg.Ja}>Ja</Radio>
                         <Radio value={HarUttaltSeg.Nei}>Nei</Radio>
-                        {kanUtsetteFrist && (
+                        {toggles[ToggleName.Forhåndsvarselsteg] && kanUtsetteFrist && (
                             <Radio value={HarUttaltSeg.UtsettFrist}>
                                 Utsett frist for å uttale seg
                             </Radio>
