@@ -111,7 +111,7 @@ export const Forhåndsvarsel: React.FC = () => {
         queryClient.getQueryData(['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst]);
 
     return (
-        <VStack gap="4">
+        <VStack gap="4" ref={containerRef}>
             <HStack align="center" justify="space-between">
                 <Heading size="small">Forhåndsvarsel</Heading>
                 <HStack gap="4">
@@ -146,7 +146,6 @@ export const Forhåndsvarsel: React.FC = () => {
             </HStack>
             <FormProvider {...methods}>
                 <ForhåndsvarselSkjema
-                    ref={containerRef}
                     forhåndsvarselInfo={forhåndsvarselInfo}
                     skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
                     parentBounds={parentBounds}
@@ -181,14 +180,12 @@ type ForhåndsvarselSkjemaProps = {
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
     skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
     parentBounds: { width: string | undefined };
-    ref: React.RefObject<HTMLDivElement | null>;
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     forhåndsvarselInfo,
     skalSendesForhåndsvarsel,
     parentBounds,
-    ref,
 }) => {
     const { actionBarStegtekst } = useBehandlingState();
 
@@ -283,7 +280,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             : undefined; // 'uttalelseUtenUtsettForm'; undefined hvis bare "Neste"
 
     return (
-        <div ref={ref}>
+        <>
             <OpprettSkjema
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
@@ -349,6 +346,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 }
                 return null;
             })}
-        </div>
+        </>
     );
 };
