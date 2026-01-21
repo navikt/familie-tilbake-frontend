@@ -151,7 +151,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
                 });
 
                 const error = result.error?.issues.find(i => i.path.includes('uttalelsesdato'));
-                expect(error?.message).toBe('Du må legge inn en gyldig dato');
+                expect(error?.message).toBe('Du må skrive en dato på denne måten: dd.mm.åååå');
             });
 
             test('Ja, feiler med manglende beskrivelse', () => {

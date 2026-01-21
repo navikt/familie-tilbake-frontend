@@ -3,7 +3,7 @@ import type { BehandlingDto, ForhåndsvarselDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import React from 'react';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
@@ -216,7 +216,12 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            expect(await screen.findByRole('radio', { name: 'Nei' })).toBeChecked();
+            const forhåndsvarselRadioGroup = await screen.findByRole('group', {
+                name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
+            });
+            expect(
+                within(forhåndsvarselRadioGroup).getByRole('radio', { name: 'Nei' })
+            ).toBeChecked();
             expect(
                 screen.getByRole('radio', {
                     name: /Varsling er ikke praktisk mulig eller vil hindre gjennomføring av vedtaket/,

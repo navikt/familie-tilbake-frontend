@@ -198,7 +198,7 @@ describe('Brukeruttalelse', () => {
                 fireEvent.click(nesteKnapp);
 
                 expect(
-                    await screen.findByText('Du må legge inn en gyldig dato')
+                    await screen.findByText('Du må skrive en dato på denne måten: dd.mm.åååå')
                 ).toBeInTheDocument();
             });
 
@@ -215,7 +215,7 @@ describe('Brukeruttalelse', () => {
                 fireEvent.blur(datoInput);
 
                 expect(
-                    await screen.findByText('Du må legge inn en gyldig dato')
+                    await screen.findByText('Du må skrive en dato på denne måten: dd.mm.åååå')
                 ).toBeInTheDocument();
             });
 
@@ -232,6 +232,47 @@ describe('Brukeruttalelse', () => {
                 fireEvent.click(nesteKnapp);
 
                 expect(await screen.findAllByText('Du må fylle inn en verdi')).toHaveLength(2);
+            });
+
+            test('skal vise feilmelding når dato er i fremtiden', async () => {
+                renderBrukeruttalelse();
+
+                const brukeruttalelseFieldset = screen.getByRole('group', {
+                    name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                });
+                const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
+                fireEvent.click(jaRadio);
+
+                const datoInput = await screen.findByLabelText('Når uttalte brukeren seg?');
+                fireEvent.change(datoInput, { target: { value: '01.01.2099' } });
+                fireEvent.blur(datoInput);
+
+                expect(
+                    await screen.findByText('Datoen kan ikke være i fremtiden')
+                ).toBeInTheDocument();
+            });
+
+            test('skal begrense kalenderen til dagens dato (toDate)', async () => {
+                renderBrukeruttalelse();
+
+                const brukeruttalelseFieldset = screen.getByRole('group', {
+                    name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                });
+                const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
+                fireEvent.click(jaRadio);
+
+                await screen.findByLabelText('Når uttalte brukeren seg?');
+
+                const kalenderKnapp = screen.getAllByRole('button', { name: 'Åpne datovelger' });
+                const uttalelsesKalenderKnapp = kalenderKnapp[0];
+                fireEvent.click(uttalelsesKalenderKnapp);
+
+                const kalender = await screen.findByRole('dialog');
+
+                const nesteMånedKnapp = within(kalender).getByRole('button', {
+                    name: /gå til neste måned/i,
+                });
+                expect(nesteMånedKnapp).toBeDisabled();
             });
         });
     });

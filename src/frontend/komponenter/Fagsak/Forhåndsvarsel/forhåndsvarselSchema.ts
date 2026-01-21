@@ -31,7 +31,7 @@ const fritekstSchema = z
     .max(4000, 'Maksimalt 4000 tegn tillatt');
 
 const uttalelsesDetaljerSchema = z.object({
-    uttalelsesdato: z.iso.date({ error: 'Du må legge inn en gyldig dato' }),
+    uttalelsesdato: z.iso.date({ error: 'Du må skrive en dato på denne måten: dd.mm.åååå' }),
     hvorBrukerenUttalteSeg: fritekstSchema,
     uttalelseBeskrivelse: fritekstSchema,
 });

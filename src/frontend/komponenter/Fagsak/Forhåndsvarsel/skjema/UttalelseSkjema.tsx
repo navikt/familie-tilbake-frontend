@@ -11,9 +11,11 @@ import {
     useDatepicker,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
+import { ToggleName } from '../../../../context/toggles';
+import { useToggles } from '../../../../context/TogglesContext';
 import { dateTilIsoDatoString } from '../../../../utils/dato';
 import { HarUttaltSeg } from '../forhåndsvarselSchema';
 
@@ -28,7 +30,9 @@ export const Uttalelse: React.FC<Props> = ({
     readOnly,
     kanUtsetteFrist = false,
 }) => {
+    const { toggles } = useToggles();
     const methods = useFormContext<UttalelseMedFristFormData>();
+    const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
 
     const harUttaltSeg = useWatch({
         control: methods.control,
@@ -38,10 +42,18 @@ export const Uttalelse: React.FC<Props> = ({
     const errors = methods.formState.errors;
 
     const uttalelsesDatepicker = useDatepicker({
+        toDate: new Date(),
         onDateChange: date => {
             const dateString = dateTilIsoDatoString(date);
             methods.setValue('uttalelsesDetaljer.0.uttalelsesdato', dateString);
             methods.trigger('uttalelsesDetaljer.0.uttalelsesdato');
+        },
+        onValidate: val => {
+            if (val.isAfter) {
+                setUttalelsesdatoFeil('Datoen kan ikke være i fremtiden');
+            } else {
+                setUttalelsesdatoFeil(undefined);
+            }
         },
     });
 
@@ -100,7 +112,7 @@ export const Uttalelse: React.FC<Props> = ({
                                         size="small"
                                         readOnly={readOnly}
                                         label="Når uttalte brukeren seg?"
-                                        error={fieldState.error?.message}
+                                        error={uttalelsesdatoFeil ?? fieldState.error?.message}
                                         onBlur={() =>
                                             methods.trigger(
                                                 `uttalelsesDetaljer.${index}.uttalelsesdato`
