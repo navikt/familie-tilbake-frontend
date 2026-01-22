@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselFormData, UttalelseFormData } from './forhåndsvarselSchema';
 import type { ForhåndsvarselDto, RessursByte } from '../../../generated';
 import type { SubmitHandler } from 'react-hook-form';
 
@@ -15,7 +15,7 @@ import {
     getDefaultValues,
     HarUttaltSeg,
     SkalSendesForhåndsvarsel,
-    uttalelseMedFristSchema,
+    uttalelseSchema,
     getUttalelseValues,
     getUttalelseValuesBasertPåValg,
 } from './forhåndsvarselSchema';
@@ -216,8 +216,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
 
-    const uttalelseMethods = useForm<UttalelseMedFristFormData>({
-        resolver: zodResolver(uttalelseMedFristSchema),
+    const uttalelseMethods = useForm<UttalelseFormData>({
+        resolver: zodResolver(uttalelseSchema),
         mode: 'all',
         defaultValues: getUttalelseValues(forhåndsvarselInfo),
     });
@@ -265,8 +265,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         }
     };
 
-    const handleUttalelseSubmit: SubmitHandler<UttalelseMedFristFormData> = (
-        data: UttalelseMedFristFormData
+    const handleUttalelseSubmit: SubmitHandler<UttalelseFormData> = (
+        data: UttalelseFormData
     ): void => {
         if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
             sendUtsettUttalelseFrist(data);

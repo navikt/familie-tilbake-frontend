@@ -1,4 +1,4 @@
-import type { UttalelseMedFristFormData } from '../forhåndsvarselSchema';
+import type { UttalelseFormData } from '../forhåndsvarselSchema';
 import type { SubmitHandler } from 'react-hook-form';
 
 import {
@@ -20,7 +20,7 @@ import { dateTilIsoDatoString } from '../../../../utils/dato';
 import { HarUttaltSeg } from '../forhåndsvarselSchema';
 
 type Props = {
-    handleUttalelseSubmit: SubmitHandler<UttalelseMedFristFormData>;
+    handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;
     readOnly: boolean;
     kanUtsetteFrist?: boolean;
 };
@@ -31,7 +31,7 @@ export const Uttalelse: React.FC<Props> = ({
     kanUtsetteFrist = false,
 }) => {
     const { toggles } = useToggles();
-    const methods = useFormContext<UttalelseMedFristFormData>();
+    const methods = useFormContext<UttalelseFormData>();
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
 
     const harUttaltSeg = useWatch({

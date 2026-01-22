@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselFormData, UttalelseFormData } from './forhåndsvarselSchema';
 import type {
     BestillBrevDto,
     BrukeruttalelseDto,
@@ -62,17 +62,15 @@ export type UseForhåndsvarselMutationsReturn = {
         Options<ForhåndsvarselUnntakData>
     >;
     readonly sendForhåndsvarsel: (formData: ForhåndsvarselFormData) => void;
-    readonly sendBrukeruttalelse: (formData: UttalelseMedFristFormData) => void;
+    readonly sendBrukeruttalelse: (formData: UttalelseFormData) => void;
     readonly sendUnntak: (formData: ForhåndsvarselFormData) => void;
-    readonly sendUtsettUttalelseFrist: (formData: UttalelseMedFristFormData) => void;
+    readonly sendUtsettUttalelseFrist: (formData: UttalelseFormData) => void;
     readonly seForhåndsvisning: (fritekst: string) => void;
     readonly gåTilNeste: () => void;
     readonly gåTilForrige: () => void;
 };
 
-const brukerUttalelsePayload = (
-    formData: UttalelseMedFristFormData
-): BrukeruttalelseDto | undefined => {
+const brukerUttalelsePayload = (formData: UttalelseFormData): BrukeruttalelseDto | undefined => {
     if (formData.harUttaltSeg === HarUttaltSeg.Ja && 'uttalelsesDetaljer' in formData) {
         return {
             harBrukerUttaltSeg: 'JA',
@@ -188,7 +186,7 @@ export const useForhåndsvarselMutations = (
                 body: payload,
             });
         },
-        sendBrukeruttalelse: (formData: UttalelseMedFristFormData): void => {
+        sendBrukeruttalelse: (formData: UttalelseFormData): void => {
             const payload = brukerUttalelsePayload(formData);
             if (!payload) return;
             sendBrukeruttalelseMutation.mutate({

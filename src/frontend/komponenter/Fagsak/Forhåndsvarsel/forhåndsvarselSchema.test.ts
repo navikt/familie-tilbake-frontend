@@ -1,6 +1,6 @@
 import {
     forhåndsvarselSchema,
-    uttalelseMedFristSchema,
+    uttalelseSchema,
     HarUttaltSeg,
     SkalSendesForhåndsvarsel,
 } from './forhåndsvarselSchema';
@@ -94,7 +94,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
     describe('Uttalelse', () => {
         describe('harUttaltSeg', () => {
             test('IkkeValgt, gir feilmelding', () => {
-                const result = uttalelseMedFristSchema.safeParse({
+                const result = uttalelseSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.IkkeValgt,
                 });
 
@@ -103,7 +103,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Nei, gyldig validering', () => {
-                const result = uttalelseMedFristSchema.safeParse({
+                const result = uttalelseSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.Nei,
                     kommentar: 'Bruker har ikke uttalt seg',
                 });
@@ -112,7 +112,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Nei, feiler med manglende kommentar', () => {
-                const result = uttalelseMedFristSchema.safeParse({
+                const result = uttalelseSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.Nei,
                     kommentar: '',
                 });
@@ -122,7 +122,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Ja, gyldig validering', () => {
-                const result = uttalelseMedFristSchema.safeParse({
+                const result = uttalelseSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.Ja,
                     uttalelsesDetaljer: [
                         {
@@ -137,7 +137,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Ja, feiler med ugyldig dato', () => {
-                const result = uttalelseMedFristSchema.safeParse({
+                const result = uttalelseSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.Ja,
                     uttalelsesDetaljer: [
                         {
@@ -153,7 +153,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Ja, feiler med manglende beskrivelse', () => {
-                const result = uttalelseMedFristSchema.safeParse({
+                const result = uttalelseSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.Ja,
                     uttalelsesDetaljer: [
                         {
@@ -171,7 +171,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Ja, feiler med manglende hvorBrukerenUttalteSeg', () => {
-                const result = uttalelseMedFristSchema.safeParse({
+                const result = uttalelseSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.Ja,
                     uttalelsesDetaljer: [
                         {
@@ -189,7 +189,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Utsett frist, gyldig validering', () => {
-                const result = uttalelseMedFristSchema.safeParse({
+                const result = uttalelseSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.UtsettFrist,
                     utsettUttalelseFrist: {
                         nyFrist: '2024-02-15',
@@ -201,7 +201,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Utsett frist, feiler med ugyldig dato', () => {
-                const result = uttalelseMedFristSchema.safeParse({
+                const result = uttalelseSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.UtsettFrist,
                     utsettUttalelseFrist: {
                         nyFrist: 'ikke-en-dato',
@@ -214,7 +214,7 @@ describe('Validering av forhåndsvarsel-skjema', () => {
             });
 
             test('Utsett frist, feiler uten begrunnelse', () => {
-                const result = uttalelseMedFristSchema.safeParse({
+                const result = uttalelseSchema.safeParse({
                     harUttaltSeg: HarUttaltSeg.UtsettFrist,
                     utsettUttalelseFrist: {
                         nyFrist: '2024-02-15',
