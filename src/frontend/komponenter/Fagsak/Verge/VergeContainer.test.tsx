@@ -1,12 +1,12 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { BehandlingDto } from '../../../generated';
 import type { VergeDto } from '../../../typer/api';
-import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -16,8 +16,13 @@ import VergeContainer from './VergeContainer';
 import { VergeProvider } from './VergeContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Vergetype } from '../../../kodeverk/verge';
+import {
+    TestBehandlingProvider,
+    type BehandlingStateContextOverrides,
+} from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../typer/ressurs';
 
 vi.mock('../../../api/http/HttpProvider', () => {
@@ -28,11 +33,6 @@ vi.mock('../../../api/http/HttpProvider', () => {
         }),
     };
 });
-
-const mockUseBehandling = vi.fn();
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../api/behandling', () => ({
@@ -47,22 +47,26 @@ vi.mock('react-router', async () => {
     };
 });
 
-const renderVergeContainer = (behandling: Behandling): RenderResult => {
+const renderVergeContainer = (
+    behandling: BehandlingDto,
+    stateOverrides: BehandlingStateContextOverrides = {}
+): RenderResult => {
+    const client = createTestQueryClient();
+
     return render(
         <FagsakContext.Provider value={lagFagsak()}>
-            <VergeProvider behandling={behandling}>
-                <VergeContainer />
-            </VergeProvider>
+            <TestBehandlingProvider behandling={behandling} stateOverrides={stateOverrides}>
+                <QueryClientProvider client={client}>
+                    <VergeProvider>
+                        <VergeContainer />
+                    </VergeProvider>
+                </QueryClientProvider>
+            </TestBehandlingProvider>
         </FagsakContext.Provider>
     );
 };
 
-const setupMock = (
-    behandlet: boolean,
-    lesevisning: boolean,
-    autoutført: boolean,
-    verge?: VergeDto
-): void => {
+const setupMock = (verge?: VergeDto): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVergeKall: (): Promise<Ressurs<VergeDto>> | undefined => {
             if (!verge) {
@@ -82,15 +86,6 @@ const setupMock = (
             return Promise.resolve(ressurs);
         },
     }));
-    mockUseBehandling.mockImplementation(() => ({
-        erStegBehandlet: (): boolean => behandlet,
-        erStegAutoutført: (): boolean => autoutført,
-        behandlingILesemodus: lesevisning,
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-        settIkkePersistertKomponent: vi.fn(),
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 1 av 5'),
-        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
-    }));
 };
 
 describe('VergeContainer', () => {
@@ -101,7 +96,7 @@ describe('VergeContainer', () => {
     });
 
     test('Fyller ut advokat', async () => {
-        setupMock(false, false, false);
+        setupMock();
 
         const { getByText, getByRole, getByLabelText, queryAllByText } =
             renderVergeContainer(lagBehandling());
@@ -141,7 +136,7 @@ describe('VergeContainer', () => {
     });
 
     test('Fyller ut verge for barn', async () => {
-        setupMock(false, false, false);
+        setupMock();
 
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
             renderVergeContainer(lagBehandling());
@@ -191,7 +186,7 @@ describe('VergeContainer', () => {
     });
 
     test('Vis utfylt - advokat - autoutført', async () => {
-        setupMock(true, false, true, {
+        setupMock({
             type: Vergetype.Advokat,
             navn: 'Advokat Advokatesen',
             orgNr: 'DummyOrg',
@@ -199,7 +194,11 @@ describe('VergeContainer', () => {
         });
 
         const { getByText, getByRole, getByLabelText, queryByLabelText } = renderVergeContainer(
-            lagBehandling({ harVerge: true })
+            lagBehandling({ harVerge: true }),
+            {
+                erStegBehandlet: (): boolean => true,
+                erStegAutoutført: (): boolean => true,
+            }
         );
 
         await waitFor(() => {
@@ -223,14 +222,16 @@ describe('VergeContainer', () => {
     });
 
     test('Vis utfylt - verge barn', async () => {
-        setupMock(true, false, false, {
+        setupMock({
             type: Vergetype.VergeForBarn,
             navn: 'Verge Vergesen',
             ident: '27106903129',
             begrunnelse: 'Verge er opprettet',
         });
         const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } =
-            renderVergeContainer(lagBehandling({ harVerge: true }));
+            renderVergeContainer(lagBehandling({ harVerge: true }), {
+                erStegBehandlet: (): boolean => true,
+            });
 
         await waitFor(() => {
             expect(getByText('Verge')).toBeInTheDocument();
@@ -252,7 +253,7 @@ describe('VergeContainer', () => {
     });
 
     test('Vis utfylt - advokat - lesevisning', async () => {
-        setupMock(true, true, false, {
+        setupMock({
             type: Vergetype.Advokat,
             navn: 'Advokat Advokatesen',
             orgNr: 'DummyOrg',
@@ -260,7 +261,11 @@ describe('VergeContainer', () => {
         });
 
         const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
-            lagBehandling({ harVerge: true })
+            lagBehandling({ harVerge: true }),
+            {
+                erStegBehandlet: (): boolean => true,
+                behandlingILesemodus: true,
+            }
         );
 
         await waitFor(() => {
@@ -283,14 +288,19 @@ describe('VergeContainer', () => {
     });
 
     test('Vis utfylt - verge barn - autoutført - lesevisning', async () => {
-        setupMock(true, true, true, {
+        setupMock({
             type: Vergetype.VergeForBarn,
             navn: 'Verge Vergesen',
             ident: '27106903129',
             begrunnelse: '',
         });
         const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
-            lagBehandling({ harVerge: true })
+            lagBehandling({ harVerge: true }),
+            {
+                erStegBehandlet: (): boolean => true,
+                behandlingILesemodus: true,
+                erStegAutoutført: (): boolean => true,
+            }
         );
 
         await waitFor(() => {

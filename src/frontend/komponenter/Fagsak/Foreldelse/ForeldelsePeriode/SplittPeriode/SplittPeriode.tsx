@@ -1,4 +1,3 @@
-import type { Behandling } from '../../../../../typer/behandling';
 import type {
     BeregnSplittetPeriodeRespons,
     Periode,
@@ -27,14 +26,13 @@ const konverterPeriode = (periode: ForeldelsePeriodeSkjemeData): TimelinePeriodP
 
 type Props = {
     periode: ForeldelsePeriodeSkjemeData;
-    behandling: Behandling;
     onBekreft: (
         periode: ForeldelsePeriodeSkjemeData,
         nyePerioder: ForeldelsePeriodeSkjemeData[]
     ) => void;
 };
 
-const SplittPeriode: React.FC<Props> = ({ behandling, periode, onBekreft }) => {
+const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
     const [splittetPerioder, settSplittetPerioder] = useState<ForeldelsePeriodeSkjemeData[]>();
     const {
         visModal,
@@ -47,7 +45,7 @@ const SplittPeriode: React.FC<Props> = ({ behandling, periode, onBekreft }) => {
         vedDatoEndring,
         sendInnSkjema,
         validateNyPeriode,
-    } = useDelOppPeriode(periode.periode.tom, behandling.behandlingId);
+    } = useDelOppPeriode(periode.periode.tom);
 
     const onChangeDato = useCallback(
         (nyVerdi?: string) => {

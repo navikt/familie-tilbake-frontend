@@ -1,40 +1,39 @@
-import type { Behandling } from '../../../../typer/behandling';
-
 import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, Modal } from '@navikt/ds-react';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useRef } from 'react';
 
 import { useStartPåNytt } from './useStartPåNytt';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { MODAL_BREDDE } from '../utils';
 
-type Props = {
-    behandling: Behandling;
-};
-
-export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
+export const StartPåNytt: React.FC = () => {
+    const { behandlingId, eksternBrukId } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
+    const queryClient = useQueryClient();
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const { hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } = useBehandling();
     const { utførRedirect } = useRedirectEtterLagring();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const mutation = useStartPåNytt();
 
     const handleNullstill = (): void => {
         nullstillIkkePersisterteKomponenter();
-        mutation.mutate(behandling.behandlingId, {
+        mutation.mutate(behandlingId, {
             onSuccess: ressurs => {
                 if (ressurs.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
-                    hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                        utførRedirect(
-                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                        );
-                        window.location.reload();
+                    queryClient.invalidateQueries({
+                        queryKey: ['behandling', behandlingId],
                     });
+                    utførRedirect(
+                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}`
+                    );
+                    window.location.reload();
                 }
             },
             onError: () => dialogRef.current?.close(),
@@ -73,13 +72,7 @@ export const StartPåNytt: React.FC<Props> = ({ behandling }) => {
                 </Modal.Footer>
             </Modal>
 
-            {mutation.isError && (
-                <FeilModal
-                    feil={mutation.error}
-                    lukkFeilModal={mutation.reset}
-                    behandlingId={behandling.behandlingId}
-                />
-            )}
+            {mutation.isError && <FeilModal feil={mutation.error} lukkFeilModal={mutation.reset} />}
         </>
     );
 };

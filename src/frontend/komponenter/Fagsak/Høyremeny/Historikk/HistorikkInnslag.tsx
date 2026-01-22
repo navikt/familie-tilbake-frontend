@@ -1,4 +1,4 @@
-import type { Behandlingssteg } from '../../../../typer/behandling';
+import type { BehandlingsstegEnum } from '../../../../generated';
 import type { HistorikkInnslag } from '../../../../typer/historikk';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
@@ -50,7 +50,7 @@ const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
 
     const lagTittel = (): React.ReactNode => {
         if (innslag.type === Historikkinnslagstype.Skjermlenke && innslag.steg) {
-            const steg = innslag.steg as Behandlingssteg;
+            const steg = innslag.steg as BehandlingsstegEnum;
             const side = finnSideForSteg(steg);
             return steg && side ? (
                 <Link

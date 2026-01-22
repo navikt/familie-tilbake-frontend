@@ -1,5 +1,3 @@
-import type { Behandling } from '../../../typer/behandling';
-
 import { Modal } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -8,15 +6,14 @@ import { useEffect } from 'react';
 import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
 import { BrukerInformasjon } from './Informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './Informasjonsbokser/Faktaboks';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 
 type Props = {
-    behandling: Behandling;
     dialogRef: React.RefObject<HTMLDialogElement | null>;
 };
 
-const Høyremeny: React.FC<Props> = ({ behandling, dialogRef }) => {
-    const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandling();
+const Høyremeny: React.FC<Props> = ({ dialogRef }) => {
+    const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandlingState();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
 
     useEffect(() => {
@@ -47,12 +44,9 @@ const Høyremeny: React.FC<Props> = ({ behandling, dialogRef }) => {
                 })}
             >
                 <div className="gap-4 flex flex-col flex-1 min-h-0">
-                    <Faktaboks behandling={behandling} />
+                    <Faktaboks />
                     <BrukerInformasjon />
-                    <HistorikkOgDokumenter
-                        værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}
-                        behandling={behandling}
-                    />
+                    <HistorikkOgDokumenter værtPåFatteVedtakSteget={værtPåFatteVedtakSteget} />
                 </div>
             </aside>
 
@@ -64,12 +58,9 @@ const Høyremeny: React.FC<Props> = ({ behandling, dialogRef }) => {
             >
                 <Modal.Header />
                 <Modal.Body className="flex flex-col gap-4">
-                    <Faktaboks behandling={behandling} />
+                    <Faktaboks />
                     <BrukerInformasjon />
-                    <HistorikkOgDokumenter
-                        værtPåFatteVedtakSteget={værtPåFatteVedtakSteget}
-                        behandling={behandling}
-                    />
+                    <HistorikkOgDokumenter værtPåFatteVedtakSteget={værtPåFatteVedtakSteget} />
                 </Modal.Body>
             </Modal>
         </>

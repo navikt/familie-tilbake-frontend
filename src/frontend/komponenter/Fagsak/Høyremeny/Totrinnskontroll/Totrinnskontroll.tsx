@@ -11,7 +11,7 @@ import {
     OptionIkkeGodkjent,
     totrinnGodkjenningOptions,
 } from './typer/totrinnSkjemaTyper';
-import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { finnSideForSteg } from '../../../../utils/sider';
@@ -43,7 +43,7 @@ const Totrinnskontroll: React.FC = () => {
         erLesevisning,
     } = useTotrinnskontroll();
 
-    const { aktivtSteg } = useBehandling();
+    const { aktivtSteg } = useBehandlingState();
 
     React.useEffect(() => {
         // console.log('bør no trigge re-rendring');

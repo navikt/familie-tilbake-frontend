@@ -1,3 +1,5 @@
+import type { Skjema } from '../../../../../hooks/skjema';
+
 import { Checkbox, CheckboxGroup, Radio, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
@@ -8,8 +10,8 @@ import {
     type VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
 import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
-import { useBehandling } from '../../../../../context/BehandlingContext';
-import { Valideringsstatus, type Skjema } from '../../../../../hooks/skjema';
+import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
+import { Valideringsstatus } from '../../../../../hooks/skjema';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 
@@ -19,7 +21,7 @@ type Props = {
 };
 
 const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
 
     const onChangeSærligeGrunner = (val: SærligeGrunner[]): void => {
         skjema.felter.særligeGrunner.validerOgSettFelt(val);

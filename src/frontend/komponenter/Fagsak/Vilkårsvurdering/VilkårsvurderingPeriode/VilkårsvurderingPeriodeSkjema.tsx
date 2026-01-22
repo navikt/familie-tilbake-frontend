@@ -18,6 +18,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
+import { useQueryClient } from '@tanstack/react-query';
 import { differenceInMonths, parseISO } from 'date-fns';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -34,13 +35,9 @@ import {
     useVilkårsvurderingPeriodeSkjema,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
-import {
-    Behandlingssteg,
-    Behandlingsstegstatus,
-    type Behandling,
-} from '../../../../typer/behandling';
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { ModalWrapper } from '../../../Felleskomponenter/Modal/ModalWrapper';
@@ -112,7 +109,6 @@ const settSkjemadataFraPeriode = (
 };
 
 type Props = {
-    behandling: Behandling;
     periode: VilkårsvurderingPeriodeSkjemaData;
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
@@ -123,7 +119,6 @@ type Props = {
 };
 
 const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
-    behandling,
     periode,
     behandletPerioder,
     erTotalbeløpUnder4Rettsgebyr,
@@ -143,7 +138,6 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         sendInnSkjemaMutation,
         sendInnSkjemaOgNaviger,
         settValgtPeriode,
-        hentBehandlingMedBehandlingId,
         erAllePerioderBehandlet,
     } = useVilkårsvurdering();
     const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
@@ -151,20 +145,22 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
+    const { behandlingId, behandlingsstegsinfo } = useBehandling();
     const {
         settIkkePersistertKomponent,
         harUlagredeData,
         nullstillIkkePersisterteKomponenter,
         actionBarStegtekst,
-    } = useBehandling();
+    } = useBehandlingState();
+    const queryClient = useQueryClient();
 
     const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
 
     // Sjekk om ForeslåVedtak-steget har status tilbakeført
-    const erVedtakTilbakeført = behandling.behandlingsstegsinfo.some(
+    const erVedtakTilbakeført = behandlingsstegsinfo.some(
         steg =>
-            steg.behandlingssteg === Behandlingssteg.ForeslåVedtak &&
-            steg.behandlingsstegstatus === Behandlingsstegstatus.Tilbakeført
+            steg.behandlingssteg === 'FORESLÅ_VEDTAK' &&
+            steg.behandlingsstegstatus === 'TILBAKEFØRT'
     );
 
     // Hvis vedtak er tilbakeført, marker vilkårsvurdering som "har ulagrede endringer"
@@ -271,7 +267,9 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                 handlingResult === PeriodeHandling.GåTilNesteSteg)
         ) {
             nullstillIkkePersisterteKomponenter();
-            await hentBehandlingMedBehandlingId(behandling.behandlingId);
+            await queryClient.invalidateQueries({
+                queryKey: ['hentBehandling', { path: { behandlingId } }],
+            });
         }
     };
 
@@ -308,11 +306,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         Detaljer for valgt periode
                     </Heading>
                     {!erLesevisning && !periode.foreldet && kanSplittePeriode(periode) && (
-                        <SplittPeriode
-                            behandling={behandling}
-                            periode={periode}
-                            onBekreft={onSplitPeriode}
-                        />
+                        <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
                     )}
                 </Stack>
             </HGrid>
@@ -463,7 +457,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                 )}
             </HStack>
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Vilkårsvurdering)}
+                stegtekst={actionBarStegtekst('VILKÅRSVURDERING')}
                 forrigeAriaLabel="Gå tilbake til foreldelsessteget"
                 nesteAriaLabel="Gå videre til vedtakssteget"
                 onNeste={() => handleNavigering(PeriodeHandling.GåTilNesteSteg)}
@@ -478,7 +472,6 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     feil={sendInnSkjemaMutation.error}
                     lukkFeilModal={sendInnSkjemaMutation.reset}
                     beskjed="Du kunne ikke lagre vilkårsvurderingen"
-                    behandlingId={behandling.behandlingId}
                 />
             )}
             {visUlagretDataModal && (

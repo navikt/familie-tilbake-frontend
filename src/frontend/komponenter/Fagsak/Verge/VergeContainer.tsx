@@ -12,7 +12,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { useVerge } from './VergeContext';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../utils';
@@ -28,7 +28,7 @@ const VergeContainer: React.FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =
         useVerge();
     const { behandlingILesemodus, settIkkePersistertKomponent, actionBarStegtekst } =
-        useBehandling();
+        useBehandlingState();
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>): void => {

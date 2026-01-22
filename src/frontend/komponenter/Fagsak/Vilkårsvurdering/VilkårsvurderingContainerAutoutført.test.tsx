@@ -1,10 +1,9 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { VilkårsvurderingResponse } from '../../../typer/tilbakekrevingstyper';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { vi } from 'vitest';
@@ -12,18 +11,14 @@ import { vi } from 'vitest';
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagVilkårsvurderingResponse } from '../../../testdata/vilkårsvurderingFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../typer/ressurs';
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            retry: false,
-        },
-    },
-});
+const queryClient = createTestQueryClient();
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../api/behandling', () => ({
@@ -47,11 +42,6 @@ vi.mock('react-router', async () => {
     };
 });
 
-const mockUseBehandling = vi.fn();
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
-
 const setupMock = (): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVilkårsvurderingKall: (): Promise<Ressurs<VilkårsvurderingResponse>> => {
@@ -69,26 +59,26 @@ const setupMock = (): void => {
             return Promise.resolve(ressurs);
         },
     }));
-
-    mockUseBehandling.mockImplementation(() => ({
-        erStegBehandlet: (): boolean => false,
-        erStegAutoutført: (): boolean => true,
-        hentBehandlingMedBehandlingId: vi.fn(),
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 3 av 4'),
-        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
-    }));
 };
 
 describe('VilkårsvurderingContainer', () => {
     test('Vis autoutført', async () => {
         setupMock();
+        const behandling = lagBehandling();
 
         const { getByText } = render(
             <FagsakContext.Provider value={lagFagsak()}>
                 <QueryClientProvider client={queryClient}>
-                    <VilkårsvurderingProvider behandling={lagBehandling()}>
-                        <VilkårsvurderingContainer behandling={lagBehandling()} />
-                    </VilkårsvurderingProvider>
+                    <TestBehandlingProvider
+                        behandling={behandling}
+                        stateOverrides={{
+                            erStegAutoutført: (): boolean => true,
+                        }}
+                    >
+                        <VilkårsvurderingProvider>
+                            <VilkårsvurderingContainer />
+                        </VilkårsvurderingProvider>
+                    </TestBehandlingProvider>
                 </QueryClientProvider>
             </FagsakContext.Provider>
         );

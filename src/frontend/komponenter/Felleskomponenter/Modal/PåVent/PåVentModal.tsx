@@ -1,7 +1,8 @@
-import type { Behandling, Behandlingsstegstilstand } from '../../../../typer/behandling';
+import type { Behandlingsstegstilstand } from '../../../../typer/behandling';
 
 import { Alert, BodyLong, Button, Heading, Modal, Select } from '@navikt/ds-react';
 import { ASpacing8, ATextDanger } from '@navikt/ds-tokens/dist/tokens';
+import { useQueryClient } from '@tanstack/react-query';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
 import { styled } from 'styled-components';
@@ -33,17 +34,19 @@ const FeilContainer = styled.div`
 `;
 
 type Props = {
-    behandling: Behandling;
     ventegrunn: Behandlingsstegstilstand;
     onClose: () => void;
 };
 
-const PåVentModal: React.FC<Props> = ({ behandling, ventegrunn, onClose }) => {
-    const { hentBehandlingMedBehandlingId } = useBehandling();
+const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
+    const { behandlingId, saksbehandlingstype, kanEndres } = useBehandling();
+    const queryClient = useQueryClient();
 
     const lukkModalOgHentBehandling = (): void => {
         onClose();
-        hentBehandlingMedBehandlingId(behandling.behandlingId);
+        queryClient.invalidateQueries({
+            queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
+        });
     };
 
     const { skjema, onBekreft, onOkTaAvVent, tilbakestillFelterTilDefault, feilmelding } =
@@ -73,8 +76,7 @@ const PåVentModal: React.FC<Props> = ({ behandling, ventegrunn, onClose }) => {
 
     const vilBliAutomatiskBehandletUnder4rettsgebyr =
         venterPåKravgrunnlag &&
-        behandling.saksbehandlingstype ===
-            Saksbehandlingstype.AutomatiskIkkeInnkrevingUnder4XRettsgebyr;
+        saksbehandlingstype === Saksbehandlingstype.AutomatiskIkkeInnkrevingUnder4XRettsgebyr;
 
     const lukkModal = (): void => {
         tilbakestillFelterTilDefault();
@@ -154,11 +156,8 @@ const PåVentModal: React.FC<Props> = ({ behandling, ventegrunn, onClose }) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
-                    variant="primary"
                     key="bekreft"
-                    onClick={() => {
-                        onBekreft(behandling.behandlingId);
-                    }}
+                    onClick={() => onBekreft(behandlingId)}
                     disabled={uendret}
                     size="small"
                 >
@@ -167,9 +166,9 @@ const PåVentModal: React.FC<Props> = ({ behandling, ventegrunn, onClose }) => {
                 <Button
                     variant="tertiary"
                     key="avbryt"
-                    onClick={() => onOkTaAvVent(behandling.behandlingId)}
+                    onClick={() => onOkTaAvVent(behandlingId)}
                     size="small"
-                    disabled={!behandling.kanEndres || venterPåKravgrunnlag}
+                    disabled={!kanEndres || venterPåKravgrunnlag}
                 >
                     Ta av vent
                 </Button>

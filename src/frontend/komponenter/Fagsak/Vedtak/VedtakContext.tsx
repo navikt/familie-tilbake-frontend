@@ -5,9 +5,9 @@ import type {
     Fritekstavsnitt,
     PeriodeMedTekst,
 } from '../../../typer/api';
-import type { Behandling } from '../../../typer/behandling';
 import type { Beregningsresultat, VedtaksbrevAvsnitt } from '../../../typer/vedtakTyper';
 
+import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import * as React from 'react';
 import { useState } from 'react';
@@ -16,9 +16,9 @@ import { useNavigate } from 'react-router';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useDokumentApi } from '../../../api/dokument';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
-import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -80,12 +80,10 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
     return perioderMedTekst;
 };
 
-type Props = {
-    behandling: Behandling;
-};
-
-const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => {
+const [VedtakProvider, useVedtak] = createUseContext(() => {
     const { fagsystem, eksternFagsakId } = useFagsak();
+    const behandling = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
     const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
     const [skjemaData, settSkjemaData] = useState<AvsnittSkjemaData[]>([]);
@@ -95,20 +93,17 @@ const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => 
     const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
     const [senderInn, settSenderInn] = useState<boolean>(false);
     const [foreslåVedtakRespons, settForeslåVedtakRespons] = useState<Ressurs<string>>();
-    const { visVenteModal, hentBehandlingMedBehandlingId, nullstillIkkePersisterteKomponenter } =
-        useBehandling();
+    const queryClient = useQueryClient();
     const { gjerVedtaksbrevteksterKall, gjerBeregningsresultatKall, sendInnForeslåVedtak } =
         useBehandlingApi();
     const { lagreUtkastVedtaksbrev } = useDokumentApi();
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        if (visVenteModal === false) {
-            hentBeregningsresultat();
-            hentVedtaksbrevtekster();
-        }
+        hentBeregningsresultat();
+        hentVedtaksbrevtekster();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [behandling, visVenteModal]);
+    }, [behandling]);
 
     React.useEffect(() => {
         if (vedtaksbrevavsnitt?.status === RessursStatus.Suksess) {
@@ -201,9 +196,9 @@ const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => 
 
     const validerAlleAvsnittOk = (validerPåkrevetFritekst: boolean): boolean => {
         const erRevurderingBortfaltBeløp =
-            behandling.type === Behandlingstype.RevurderingTilbakekreving &&
+            behandling.type === 'REVURDERING_TILBAKEKREVING' &&
             behandling.behandlingsårsakstype ===
-                Behandlingårsak.RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt;
+                'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
         let harFeil = false;
         skjemaData.map(avs => {
             const nyeUnderavsnitt = avs.underavsnittsliste.map(uavs => {
@@ -262,11 +257,15 @@ const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => 
                 .then((respons: Ressurs<string>) => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
-                        hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                            navigate(
-                                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                            );
+                        queryClient.invalidateQueries({
+                            queryKey: [
+                                'hentBehandling',
+                                { path: { behandlingId: behandling.behandlingId } },
+                            ],
                         });
+                        navigate(
+                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                        );
                     } else if (
                         respons.status === RessursStatus.Feilet ||
                         respons.status === RessursStatus.FunksjonellFeil
@@ -292,11 +291,15 @@ const [VedtakProvider, useVedtak] = createUseContext(({ behandling }: Props) => 
                 .then((respons: Ressurs<string>) => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
-                        hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                            navigate(
-                                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                            );
+                        queryClient.invalidateQueries({
+                            queryKey: [
+                                'hentBehandling',
+                                { path: { behandlingId: behandling.behandlingId } },
+                            ],
                         });
+                        navigate(
+                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                        );
                     } else if (
                         respons.status === RessursStatus.Feilet ||
                         respons.status === RessursStatus.FunksjonellFeil

@@ -19,6 +19,7 @@ import { useFakta } from './FaktaContext';
 import FaktaPerioder from './FaktaPeriode/FaktaPerioder';
 import FaktaRevurdering from './FaktaRevurdering';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { HendelseType } from '../../../kodeverk';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
@@ -32,8 +33,8 @@ type Props = {
 };
 
 const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }) => {
+    const behandling = useBehandling();
     const {
-        behandling,
         oppdaterBegrunnelse,
         oppdaterBeskrivelseBrukerHarUttaltSeg,
         oppdaterBrukerHarUttaltSeg,
@@ -45,7 +46,7 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }
         feilmeldinger,
         gåTilForrige,
     } = useFakta();
-    const { settIkkePersistertKomponent, actionBarStegtekst } = useBehandling();
+    const { settIkkePersistertKomponent, actionBarStegtekst } = useBehandlingState();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
 

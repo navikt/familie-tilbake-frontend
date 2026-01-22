@@ -1,15 +1,17 @@
-import type { BehandlingHook } from '../../../context/BehandlingContext';
 import type { FaktaOmFeilutbetaling, OppdaterFaktaData } from '../../../generated-new';
 import type { RenderResult } from '@testing-library/react';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { expect } from 'vitest';
 
 import { FaktaSkjema } from './FaktaSkjema';
 import { FagsakContext } from '../../../context/FagsakContext';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
+import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { configureZod } from '../../../utils/zodConfig';
 
 vi.mock('react-router', async () => {
@@ -19,18 +21,6 @@ vi.mock('react-router', async () => {
         useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
     };
 });
-
-const mockUseBehandling = vi.fn(() => ({
-    actionBarStegtekst: (): string => 'Mocked!!',
-    erStegBehandlet: (): boolean => false,
-    hentBehandlingMedBehandlingId: async (): Promise<void> => Promise.resolve(),
-    settIkkePersistertKomponent: (): void => {},
-    nullstillIkkePersisterteKomponenter: (): void => {},
-}));
-
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): Partial<BehandlingHook> => mockUseBehandling(),
-}));
 
 const faktaOmFeilutbetaling = (
     overrides?: Partial<FaktaOmFeilutbetaling>
@@ -86,7 +76,7 @@ const faktaOmFeilutbetaling = (
 const renderFakta = (
     overrides?: Partial<FaktaOmFeilutbetaling>
 ): { result: RenderResult; mutationBody: Promise<OppdaterFaktaData> } => {
-    const client = new QueryClient();
+    const client = createTestQueryClient();
     const mutationBody = new Promise<OppdaterFaktaData>(resolve => {
         client.setMutationDefaults(['oppdaterFakta'], {
             mutationFn: async (fakta: OppdaterFaktaData) => {
@@ -101,13 +91,14 @@ const renderFakta = (
     return {
         result: render(
             <FagsakContext.Provider value={lagFagsak()}>
-                <QueryClientProvider client={client}>
-                    <FaktaSkjema
-                        faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
-                        behandlingId="unik"
-                        behandlingUrl="https://tilbakekreving"
-                    />
-                </QueryClientProvider>
+                <TestBehandlingProvider behandling={lagBehandling({ behandlingId: 'unik' })}>
+                    <QueryClientProvider client={client}>
+                        <FaktaSkjema
+                            faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
+                            behandlingUrl="https://tilbakekreving"
+                        />
+                    </QueryClientProvider>
+                </TestBehandlingProvider>
             </FagsakContext.Provider>
         ),
         mutationBody,
@@ -198,7 +189,7 @@ describe('Fakta om feilutbetaling', () => {
                     await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
                 );
             });
-            expect(mutationBody).resolves.toEqual({
+            await expect(mutationBody).resolves.toEqual({
                 path: {
                     behandlingId: 'unik',
                 },

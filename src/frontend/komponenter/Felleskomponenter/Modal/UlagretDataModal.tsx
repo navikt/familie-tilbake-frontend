@@ -5,10 +5,10 @@ import React, { useCallback, useEffect } from 'react';
 import { useBeforeUnload, useBlocker } from 'react-router';
 
 import { ModalWrapper } from './ModalWrapper';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 
 const UlagretDataModal: FC = () => {
-    const { nullstillIkkePersisterteKomponenter, harUlagredeData } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter, harUlagredeData } = useBehandlingState();
     const skalBlokkere = useCallback<BlockerFunction>(
         ({ currentLocation, nextLocation }) =>
             harUlagredeData && currentLocation.pathname !== nextLocation.pathname,

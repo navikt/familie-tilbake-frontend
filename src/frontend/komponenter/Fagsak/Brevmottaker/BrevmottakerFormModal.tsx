@@ -1,3 +1,5 @@
+import type { Brevmottaker } from '../../../typer/Brevmottaker';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
 import * as React from 'react';
@@ -20,7 +22,6 @@ type BrevmottakerFormModalProps = {
     mode: 'endre' | 'leggTil';
     initialData?: Partial<BrevmottakerFormData>;
     mottakerId?: string;
-    behandlingId: string;
     visBrevmottakerModal: boolean;
     settVisBrevmottakerModal: (vis: boolean) => void;
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
@@ -30,7 +31,6 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
     mode,
     initialData,
     mottakerId,
-    behandlingId,
     visBrevmottakerModal,
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
@@ -54,9 +54,8 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
 
     const handleSubmitForm = async (formData: BrevmottakerFormData): Promise<void> => {
         try {
-            const brevmottaker = brevmottakerFormDataSchema.parse(formData);
-
-            const response = await lagreBrevmottaker(behandlingId, brevmottaker, mottakerId);
+            const brevmottaker = brevmottakerFormDataSchema.parse(formData) as Brevmottaker;
+            const response = await lagreBrevmottaker(brevmottaker, mottakerId);
 
             if (response.success) {
                 lukkModal();

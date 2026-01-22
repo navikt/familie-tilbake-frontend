@@ -1,8 +1,4 @@
-import type {
-    Behandlingresultat,
-    Behandling,
-    Behandlingstype,
-} from '../../../../../typer/behandling';
+import type { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 
 import { CircleSlashIcon } from '@navikt/aksel-icons';
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
@@ -10,6 +6,7 @@ import * as React from 'react';
 import { useEffect, useEffectEvent } from 'react';
 
 import { useHenleggSkjema } from './HenleggModalContext';
+import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../../context/FagsakContext';
 import { behandlingsresultater } from '../../../../../typer/behandling';
 import { målform } from '../../../../../typer/målform';
@@ -19,14 +16,13 @@ import { MODAL_BREDDE } from '../../utils';
 import ForhåndsvisHenleggelsesBrev from '../forhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 
 type Props = {
-    behandling: Behandling;
     dialogRef: React.RefObject<HTMLDialogElement | null>;
     årsaker: Behandlingresultat[];
 };
 
-export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker }) => {
+export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
+    const { type } = useBehandling();
     const { skjema, visFritekst, onBekreft, nullstillSkjema, kanForhåndsvise } = useHenleggSkjema({
-        behandling,
         lukkModal: () => dialogRef.current?.close(),
     });
     const { språkkode } = useFagsak();
@@ -37,8 +33,8 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
     });
 
     useEffect(() => {
-        oppdaterBehandlingstype(behandling.type);
-    }, [behandling.type]);
+        oppdaterBehandlingstype(type as Behandlingstype);
+    }, [type]);
 
     const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         const årsak = e.target.value as Behandlingresultat;
@@ -113,7 +109,6 @@ export const HenleggModal: React.FC<Props> = ({ behandling, dialogRef, årsaker 
             <Modal.Footer>
                 <ForhåndsvisHenleggelsesBrev
                     key="forhåndsvis-henleggelsesbrev"
-                    behandling={behandling}
                     skjema={skjema}
                     kanForhåndsvise={kanForhåndsvise()}
                 />

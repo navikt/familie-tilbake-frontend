@@ -6,6 +6,8 @@ import React from 'react';
 import { FeilModal } from './FeilModal';
 import { Feil } from '../../../../api/feil';
 import { FagsakContext } from '../../../../context/FagsakContext';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
+import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 
 const mockSetVisFeilModal = vi.fn();
@@ -15,13 +17,12 @@ const renderFeilModal = (
     behandlingId?: string,
     fagsakOverride?: ReturnType<typeof lagFagsak>
 ): RenderResult => {
+    const behandling = behandlingId ? lagBehandling({ behandlingId }) : lagBehandling();
     return render(
         <FagsakContext.Provider value={fagsakOverride ?? lagFagsak()}>
-            <FeilModal
-                feil={feil}
-                lukkFeilModal={mockSetVisFeilModal}
-                behandlingId={behandlingId}
-            />
+            <TestBehandlingProvider behandling={behandling}>
+                <FeilModal feil={feil} lukkFeilModal={mockSetVisFeilModal} />
+            </TestBehandlingProvider>
         </FagsakContext.Provider>
     );
 };
@@ -178,13 +179,13 @@ describe('FeilModal', () => {
         expect(screen.getByText(`Behandling ID: ${behandlingId}`)).toBeInTheDocument();
     });
 
-    test('Viser fagsakId men ikke behandlingsId når behandling ikke er tilgjengelig', () => {
+    test('Viser fagsakId og behandlingsId når begge er tilgjengelige', () => {
         const mockFeil = new Feil('Du har rollen BESLUTTER og trenger rollen FORVALTER', 403);
 
         renderFeilModal(mockFeil);
 
         expect(screen.queryByText(/Fagsak ID:/)).toBeInTheDocument();
-        expect(screen.queryByText(/Behandling ID:/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Behandling ID:/)).toBeInTheDocument();
     });
 
     test('Kaller på setVisFeilModal når lukkeknappen klikkes', () => {

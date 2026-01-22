@@ -1,5 +1,5 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
-import type { ForhåndsvarselDto, RessursByte, BehandlingDto } from '../../../generated';
+import type { ForhåndsvarselDto, RessursByte } from '../../../generated';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,6 +27,7 @@ import {
 } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { ToggleName } from '../../../context/toggles';
 import { useToggles } from '../../../context/TogglesContext';
 import { Behandlingssteg } from '../../../typer/behandling';
@@ -37,10 +38,6 @@ import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
 import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { ActionBar } from '../ActionBar/ActionBar';
 
-type Props = {
-    behandling: BehandlingDto;
-};
-
 type TagVariant = 'info-moderate' | 'success-moderate';
 
 const getTagVariant = (sendtTid: string): TagVariant => {
@@ -48,9 +45,10 @@ const getTagVariant = (sendtTid: string): TagVariant => {
     return ukerSiden >= 3 ? 'success-moderate' : 'info-moderate';
 };
 
-export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
-    const { forhåndsvarselInfo } = useForhåndsvarselQueries(behandling);
-    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations(behandling);
+export const Forhåndsvarsel: React.FC = () => {
+    const { behandlingId } = useBehandling();
+    const { forhåndsvarselInfo } = useForhåndsvarselQueries();
+    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
     const queryClient = useQueryClient();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -77,12 +75,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
     const handleMutationSuccess = useEffectEvent(
         (isSuccess: boolean, data: RessursByte | undefined) => {
             if (isSuccess && data) {
-                const currentQueryKey = [
-                    'forhåndsvisBrev',
-                    behandling.behandlingId,
-                    'VARSEL',
-                    fritekst,
-                ];
+                const currentQueryKey = ['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst];
                 queryClient.setQueryData(currentQueryKey, data);
                 setShowModal(true);
             }
@@ -104,7 +97,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
     }, [forhåndsvisning.isSuccess, forhåndsvisning.data]);
 
     const seForhåndsvisningWithModal = (): void => {
-        const currentQueryKey = ['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst];
+        const currentQueryKey = ['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst];
 
         const cachedData = queryClient.getQueryData(currentQueryKey);
 
@@ -117,7 +110,7 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
 
     const pdfData =
         forhåndsvisning.data ||
-        queryClient.getQueryData(['forhåndsvisBrev', behandling.behandlingId, 'VARSEL', fritekst]);
+        queryClient.getQueryData(['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst]);
 
     return (
         <VStack gap="4">
@@ -156,7 +149,6 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
             <FormProvider {...methods}>
                 <ForhåndsvarselSkjema
                     ref={containerRef}
-                    behandling={behandling}
                     forhåndsvarselInfo={forhåndsvarselInfo}
                     skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
                     parentBounds={parentBounds}
@@ -188,7 +180,6 @@ export const Forhåndsvarsel: React.FC<Props> = ({ behandling }) => {
 };
 
 type ForhåndsvarselSkjemaProps = {
-    behandling: BehandlingDto;
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
     skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
     parentBounds: { width: string | undefined };
@@ -196,14 +187,13 @@ type ForhåndsvarselSkjemaProps = {
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
-    behandling,
     forhåndsvarselInfo,
     skalSendesForhåndsvarsel,
     parentBounds,
     ref,
 }) => {
     const { toggles } = useToggles();
-    const { actionBarStegtekst } = useBehandling();
+    const { actionBarStegtekst } = useBehandlingState();
 
     const {
         sendForhåndsvarselMutation,
@@ -216,7 +206,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendUnntak,
         gåTilNeste,
         gåTilForrige,
-    } = useForhåndsvarselMutations(behandling);
+    } = useForhåndsvarselMutations();
 
     const mutations = [
         { key: 'forhåndsvarsel', mutation: sendForhåndsvarselMutation },
@@ -225,7 +215,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         { key: 'unntak', mutation: sendUnntakMutation },
     ] as const;
 
-    const { varselbrevtekster } = useForhåndsvarselQueries(behandling);
+    const { varselbrevtekster } = useForhåndsvarselQueries();
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
 
@@ -298,7 +288,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     return (
         <div ref={ref}>
             <OpprettSkjema
-                behandling={behandling}
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
                 handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
@@ -359,14 +348,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             {mutations.map(({ key, mutation }) => {
                 if (mutation?.isError) {
                     const feil = extractErrorFromMutationError(mutation.error);
-                    return (
-                        <FeilModal
-                            key={key}
-                            feil={feil}
-                            lukkFeilModal={mutation.reset}
-                            behandlingId={behandling.behandlingId}
-                        />
-                    );
+                    return <FeilModal key={key} feil={feil} lukkFeilModal={mutation.reset} />;
                 }
                 return null;
             })}

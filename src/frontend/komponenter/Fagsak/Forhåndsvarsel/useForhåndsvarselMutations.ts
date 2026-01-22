@@ -1,6 +1,5 @@
 import type { ForhåndsvarselFormData, UttalelseMedFristFormData } from './forhåndsvarselSchema';
 import type {
-    BehandlingDto,
     BestillBrevDto,
     BrukeruttalelseDto,
     BestillBrevData,
@@ -25,6 +24,7 @@ import { useNavigate } from 'react-router';
 
 import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
 import { Feil } from '../../../api/feil';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import {
     bestillBrevMutation,
@@ -105,30 +105,30 @@ export const extractErrorFromMutationError = (error: unknown): Feil => {
 };
 
 export const useForhåndsvarselMutations = (
-    behandling: BehandlingDto,
     onForhåndsvarselSent?: () => void
 ): UseForhåndsvarselMutationsReturn => {
+    const { behandlingId, eksternBrukId } = useBehandling();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const invalidateQueries = (): void => {
         queryClient.invalidateQueries({
-            queryKey: ['hentBehandling', behandling.behandlingId],
+            queryKey: ['hentBehandling', behandlingId],
         });
         queryClient.invalidateQueries({
-            queryKey: ['hentForhåndsvarselInfo', behandling.behandlingId],
+            queryKey: ['hentForhåndsvarselInfo', behandlingId],
         });
     };
 
     const gåTilNeste = (): void => {
         navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
         );
     };
 
     const gåTilForrige = (): void => {
         navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
         );
     };
 
@@ -179,7 +179,7 @@ export const useForhåndsvarselMutations = (
             if (formData.skalSendesForhåndsvarsel !== SkalSendesForhåndsvarsel.Ja) return;
 
             const payload: BestillBrevDto = {
-                behandlingId: behandling.behandlingId,
+                behandlingId: behandlingId,
                 brevmalkode: 'VARSEL',
                 fritekst: formData.fritekst,
             };
@@ -193,7 +193,7 @@ export const useForhåndsvarselMutations = (
             if (!payload) return;
             sendBrukeruttalelseMutation.mutate({
                 path: {
-                    behandlingId: behandling.behandlingId,
+                    behandlingId: behandlingId,
                 },
                 body: payload,
             });
@@ -212,7 +212,7 @@ export const useForhåndsvarselMutations = (
 
             sendUnntakMutation.mutate({
                 path: {
-                    behandlingId: behandling.behandlingId,
+                    behandlingId: behandlingId,
                 },
                 body: payload,
             });
@@ -227,7 +227,7 @@ export const useForhåndsvarselMutations = (
             //         begrunnelse: formData.harBrukerUttaltSeg.utsettUttalelseFrist.begrunnelse,
             //     };
             //     sendUtsettUttalelseFristMutation.mutate({
-            //         path: { behandlingId: behandling.behandlingId },
+            //         path: { behandlingId: behandlingId },
             //         body: payload,
             //     });
             // }
@@ -235,10 +235,10 @@ export const useForhåndsvarselMutations = (
         seForhåndsvisning: (fritekst: string): void => {
             seForhåndsvisningMutation.mutate({
                 path: {
-                    behandlingId: behandling.behandlingId,
+                    behandlingId: behandlingId,
                 },
                 body: {
-                    behandlingId: behandling.behandlingId,
+                    behandlingId: behandlingId,
                     brevmalkode: 'VARSEL',
                     fritekst: fritekst || '',
                 },

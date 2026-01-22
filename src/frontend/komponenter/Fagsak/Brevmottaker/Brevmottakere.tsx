@@ -1,8 +1,8 @@
-import type { Behandling } from '../../../typer/behandling';
 import type { Brevmottaker } from '../../../typer/Brevmottaker';
 
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router';
 import { BrevmottakerModal } from './BrevmottakerModal';
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
@@ -22,7 +23,6 @@ export type BrevmottakerProps = {
     brevmottaker: Brevmottaker;
     erStandardMottaker?: boolean;
     brevmottakerId: string;
-    behandlingId: string;
     erLesevisning: boolean;
     antallBrevmottakere: number;
     settVisBrevmottakerModal: (vis: boolean) => void;
@@ -33,13 +33,13 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     brevmottaker,
     brevmottakerId,
     erStandardMottaker,
-    behandlingId,
     erLesevisning,
     antallBrevmottakere,
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
 }) => {
-    const { hentBehandlingMedBehandlingId } = useBehandling();
+    const { behandlingId } = useBehandling();
+    const queryClient = useQueryClient();
     const { fjernManuellBrevmottaker } = useBehandlingApi();
 
     const landnavn = brevmottaker.manuellAdresseInfo
@@ -50,7 +50,9 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     const fjernBrevMottakerOgOppdaterState = (mottakerId: string): void => {
         fjernManuellBrevmottaker(behandlingId, mottakerId).then((respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.Suksess) {
-                hentBehandlingMedBehandlingId(behandlingId);
+                queryClient.invalidateQueries({
+                    queryKey: ['hentBehandling', { path: { behandlingId } }],
+                });
             }
         });
     };
@@ -219,12 +221,9 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     );
 };
 
-type BrevmottakereProps = {
-    behandling: Behandling;
-};
-
-const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
-    const { behandlingILesemodus, actionBarStegtekst } = useBehandling();
+const Brevmottakere: React.FC = () => {
+    const { eksternBrukId, manuelleBrevmottakere } = useBehandling();
+    const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
     const { fagsystem, eksternFagsakId, bruker } = useFagsak();
     const navigate = useNavigate();
 
@@ -235,13 +234,11 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
 
     const erLesevisning = !!behandlingILesemodus;
 
-    const { manuelleBrevmottakere } = behandling;
-
     const antallBrevmottakere = Object.keys(manuelleBrevmottakere).length;
 
     const gåTilNeste = (): void => {
         navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
         );
     };
 
@@ -258,7 +255,6 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
                 <BrevmottakerModal
                     visBrevmottakerModal={visBrevmottakerModal}
                     brevmottakerIdTilEndring={brevmottakerIdTilEndring}
-                    behandlingId={behandling.behandlingId}
                     brevmottakere={manuelleBrevmottakere}
                     settVisBrevmottakerModal={setVisBrevmottakerModal}
                     settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}
@@ -284,7 +280,6 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
                             }}
                             erStandardMottaker
                             brevmottakerId={bruker.personIdent}
-                            behandlingId={behandling.behandlingId}
                             erLesevisning={erLesevisning}
                             antallBrevmottakere={antallBrevmottakere}
                             settVisBrevmottakerModal={setVisBrevmottakerModal}
@@ -302,9 +297,8 @@ const Brevmottakere: React.FC<BrevmottakereProps> = ({ behandling }) => {
                                 key={brevmottakerRespons.id}
                             >
                                 <Brevmottaker
-                                    brevmottaker={brevmottakerRespons.brevmottaker}
+                                    brevmottaker={brevmottakerRespons.brevmottaker as Brevmottaker}
                                     brevmottakerId={brevmottakerRespons.id}
-                                    behandlingId={behandling.behandlingId}
                                     erLesevisning={erLesevisning}
                                     antallBrevmottakere={antallBrevmottakere}
                                     settVisBrevmottakerModal={setVisBrevmottakerModal}

@@ -1,8 +1,7 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../context/BehandlingContext';
+import type { BehandlingDto } from '../../../generated';
 import type { SammenslåttPeriodeHook } from '../../../hooks/useSammenslåPerioder';
-import type { Behandling } from '../../../typer/behandling';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     BeregningsresultatPeriode,
@@ -12,6 +11,7 @@ import type {
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -21,6 +21,7 @@ import VedtakContainer from './VedtakContainer';
 import { VedtakProvider } from './VedtakContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
@@ -29,6 +30,7 @@ import {
     lagPeriodeAvsnitt,
     lagVedaksbrevUnderavsnitt,
 } from '../../../testdata/vedtakFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
@@ -41,11 +43,6 @@ vi.mock('../../../api/http/HttpProvider', () => {
         }),
     };
 });
-
-const mockUseBehandling = vi.fn();
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../api/behandling', () => ({
@@ -67,13 +64,27 @@ vi.mock('../../../hooks/useSammenslåPerioder', () => ({
 
 const mockedSettIkkePersistertKomponent = vi.fn();
 
-const renderVedtakContainer = (behandling: Behandling): RenderResult => {
+const renderVedtakContainer = (
+    behandling: BehandlingDto,
+    lesemodus: boolean = false
+): RenderResult => {
+    const queryClient = createTestQueryClient();
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
-            <VedtakProvider behandling={behandling}>
-                <VedtakContainer behandling={behandling} />
-            </VedtakProvider>
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <TestBehandlingProvider
+                    behandling={behandling}
+                    stateOverrides={{
+                        behandlingILesemodus: lesemodus,
+                        settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
+                    }}
+                >
+                    <VedtakProvider>
+                        <VedtakContainer />
+                    </VedtakProvider>
+                </TestBehandlingProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 
@@ -109,11 +120,7 @@ const beregningsresultat: Beregningsresultat = {
     vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.Nei },
 };
 
-const setupMock = (
-    lesevisning: boolean,
-    avsnitt: VedtaksbrevAvsnitt[],
-    resultat: Beregningsresultat
-): void => {
+const setupMock = (avsnitt: VedtaksbrevAvsnitt[], resultat: Beregningsresultat): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVedtaksbrevteksterKall: (): Promise<Ressurs<VedtaksbrevAvsnitt[]>> => {
             const ressurs: Ressurs<VedtaksbrevAvsnitt[]> = {
@@ -141,17 +148,6 @@ const setupMock = (
     mockUseSammenslåPerioder.mockImplementation(() => ({
         hentErPerioderLike: (): Promise<boolean> => Promise.resolve(false),
         hentErPerioderSammenslått: (): Promise<boolean> => Promise.resolve(false),
-    }));
-
-    mockUseBehandling.mockImplementation(() => ({
-        visVenteModal: false,
-        behandlingILesemodus: lesevisning,
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-        settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
-        nullstillIkkePersisterteKomponenter: vi.fn(),
-        actionBarStegtekst: vi.fn().mockReturnValue('Steg 4 av 4'),
-        harVærtPåFatteVedtakSteget: vi.fn().mockReturnValue(false),
-        erStegBehandlet: vi.fn().mockReturnValue(false),
     }));
 };
 
@@ -181,7 +177,7 @@ describe('VedtakContainer', () => {
                 }),
             ]),
         ];
-        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
+        setupMock(vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getAllByText, getByRole, queryByRole, queryByText } =
             renderVedtakContainer(lagBehandling());
 
@@ -288,7 +284,7 @@ describe('VedtakContainer', () => {
                 }),
             ]),
         ];
-        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
+        setupMock(vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole, queryByText } =
             renderVedtakContainer(
                 lagBehandling({
@@ -390,7 +386,7 @@ describe('VedtakContainer', () => {
                 }),
             ]),
         ];
-        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
+        setupMock(vedtaksbrevAvsnitt, beregningsresultat);
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } =
             renderVedtakContainer(
@@ -490,7 +486,7 @@ describe('VedtakContainer', () => {
                 }),
             ]),
         ];
-        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
+        setupMock(vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getByRole, getAllByRole, getByTestId, queryByText, queryByRole } =
             renderVedtakContainer(
                 lagBehandling({
@@ -617,7 +613,7 @@ describe('VedtakContainer', () => {
                 }),
             ]),
         ];
-        setupMock(false, vedtaksbrevAvsnitt, beregningsresultat);
+        setupMock(vedtaksbrevAvsnitt, beregningsresultat);
 
         const { getByText, getByRole, getByTestId, queryByRole } =
             renderVedtakContainer(lagBehandling());
@@ -718,9 +714,9 @@ describe('VedtakContainer', () => {
                 }),
             ]),
         ];
-        setupMock(true, vedtaksbrevAvsnitt, beregningsresultat);
+        setupMock(vedtaksbrevAvsnitt, beregningsresultat);
 
-        const { getByText, getByRole, queryByRole } = renderVedtakContainer(lagBehandling());
+        const { getByText, getByRole, queryByRole } = renderVedtakContainer(lagBehandling(), true);
 
         await waitFor(() => {
             expect(getByText('Vedtak')).toBeInTheDocument();

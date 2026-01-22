@@ -1,8 +1,9 @@
-import type { BehandlingDto, ForhåndsvarselDto, Varselbrevtekst } from '../../../generated';
+import type { ForhåndsvarselDto, Varselbrevtekst } from '../../../generated';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
+import { useBehandling } from '../../../context/BehandlingContext';
 import { hentForhåndsvarselinfo, hentForhåndsvarselTekst } from '../../../generated';
 
 export type UseForhåndsvarselQueriesReturn = {
@@ -15,9 +16,9 @@ export type UseForhåndsvarselQueriesReturn = {
     readonly varselbrevteksterError: boolean;
 };
 
-export const useForhåndsvarselQueries = (
-    behandling: BehandlingDto
-): UseForhåndsvarselQueriesReturn => {
+export const useForhåndsvarselQueries = (): UseForhåndsvarselQueriesReturn => {
+    const behandling = useBehandling();
+
     const forhåndsvarselInfoQuery = useSuspenseQuery({
         queryKey: ['hentForhåndsvarselInfo', behandling.behandlingId],
         queryFn: () =>

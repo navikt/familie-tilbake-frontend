@@ -1,18 +1,19 @@
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/fakta';
 import type { HendelseType, HendelseUndertype } from '../../../kodeverk';
 import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '../../../typer/api';
-import type { Behandling } from '../../../typer/behandling';
 import type {
     FaktaResponse,
     VurderingAvBrukersUttalelse,
 } from '../../../typer/tilbakekrevingstyper';
 
+import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Behandlingssteg } from '../../../typer/behandling';
@@ -33,12 +34,10 @@ import { SYNLIGE_STEG } from '../../../utils/sider';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 
-type Props = {
-    behandling: Behandling;
-};
-
-const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
+const [FaktaProvider, useFakta] = createUseContext(() => {
+    const behandling = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
+    const queryClient = useQueryClient();
     const [fakta, setFakta] = useState<Ressurs<FaktaResponse>>();
     const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({
         perioder: [],
@@ -51,24 +50,17 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
     const [visFeilmeldinger, settVisFeilmeldinger] = useState<boolean>(false);
     const [senderInn, settSenderInn] = useState<boolean>(false);
     const [feilmeldinger, settFeilmeldinger] = useState<Feilmelding[]>();
-    const {
-        erStegBehandlet,
-        visVenteModal,
-        settIkkePersistertKomponent,
-        nullstillIkkePersisterteKomponenter,
-        hentBehandlingMedBehandlingId,
-    } = useBehandling();
+    const { erStegBehandlet, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
+        useBehandlingState();
     const { gjerFaktaKall, sendInnFakta } = useBehandlingApi();
     const { utførRedirect } = useRedirectEtterLagring();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (visVenteModal === false) {
-            settStegErBehandlet(erStegBehandlet(Behandlingssteg.Fakta));
-            hentFakta();
-        }
+        settStegErBehandlet(erStegBehandlet(Behandlingssteg.Fakta));
+        hentFakta();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [behandling, visVenteModal]);
+    }, [behandling]);
 
     useEffect(() => {
         if (fakta?.status === RessursStatus.Suksess) {
@@ -345,11 +337,15 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
                 sendInnFakta(behandling.behandlingId, payload).then((respons: Ressurs<string>) => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
-                        hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                            navigate(
-                                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                            );
+                        queryClient.invalidateQueries({
+                            queryKey: [
+                                'hentBehandling',
+                                { path: { behandlingId: behandling.behandlingId } },
+                            ],
                         });
+                        navigate(
+                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
+                        );
                     }
                 });
             }
@@ -363,7 +359,6 @@ const [FaktaProvider, useFakta] = createUseContext(({ behandling }: Props) => {
     };
 
     return {
-        behandling,
         stegErBehandlet,
         fakta,
         skjemaData,

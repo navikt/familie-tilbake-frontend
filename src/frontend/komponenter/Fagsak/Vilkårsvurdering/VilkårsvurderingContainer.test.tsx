@@ -1,6 +1,6 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
 import type { Http } from '../../../api/http/HttpProvider';
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     VilkårsvurderingResponse,
@@ -10,6 +10,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -17,15 +18,16 @@ import { vi } from 'vitest';
 
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
-import { BehandlingProvider } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Aktsomhet, HendelseType, Vilkårsresultat } from '../../../kodeverk';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
     lagVilkårsvurderingPeriode,
     lagVilkårsvurderingResponse,
 } from '../../../testdata/vilkårsvurderingFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../typer/ressurs';
 
 vi.setConfig({ testTimeout: 10000 });
@@ -48,8 +50,10 @@ vi.mock('react-router', async () => {
     };
 });
 
-vi.mock('@tanstack/react-query', () => {
+vi.mock('@tanstack/react-query', async importOriginal => {
+    const actual = await importOriginal();
     return {
+        ...(actual as object),
         useMutation: vi.fn(({ mutationFn, onSuccess }) => {
             const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
                 const result = await mutationFn(behandlingId);
@@ -64,9 +68,6 @@ vi.mock('@tanstack/react-query', () => {
                 mutateAsync: mutateAsync,
             };
         }),
-        useQueryClient: vi.fn(() => ({
-            invalidateQueries: vi.fn(),
-        })),
     };
 });
 
@@ -114,7 +115,7 @@ const setupUseBehandlingApiMock = (vilkårsvurdering: VilkårsvurderingResponse)
 
 const setupMocks = (): void => {
     mockUseHttp.mockImplementation(() => ({
-        request: (): Promise<Ressurs<Behandling>> => {
+        request: (): Promise<Ressurs<BehandlingDto>> => {
             return Promise.resolve({
                 status: RessursStatus.Suksess,
                 data: lagBehandling(),
@@ -123,15 +124,21 @@ const setupMocks = (): void => {
     }));
 };
 
-const renderVilkårsvurderingContainer = (behandling: Behandling): RenderResult => {
+const renderVilkårsvurderingContainer = (behandling: BehandlingDto): RenderResult => {
+    const queryClient = createTestQueryClient();
     return render(
-        <FagsakContext.Provider value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
-            <BehandlingProvider>
-                <VilkårsvurderingProvider behandling={behandling}>
-                    <VilkårsvurderingContainer behandling={behandling} />
-                </VilkårsvurderingProvider>
-            </BehandlingProvider>
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
+                <TestBehandlingProvider
+                    behandling={behandling}
+                    stateOverrides={{ harKravgrunnlag: true }}
+                >
+                    <VilkårsvurderingProvider>
+                        <VilkårsvurderingContainer />
+                    </VilkårsvurderingProvider>
+                </TestBehandlingProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 
@@ -169,7 +176,9 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        await waitFor(() => {
+            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        });
 
         await user.click(
             getByLabelText(

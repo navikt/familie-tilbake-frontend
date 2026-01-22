@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import GradForsettSkjema from './GradForsettSkjema';
 import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
-import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet, aktsomheter, Vilkårsresultat } from '../../../../../kodeverk';
 import { OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
@@ -16,7 +16,7 @@ type Props = {
 };
 
 const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
     const erForstodBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
     const ugyldigAktsomhetvurderingValgt =

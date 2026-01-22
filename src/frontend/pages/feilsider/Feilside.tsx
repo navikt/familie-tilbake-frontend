@@ -1,13 +1,16 @@
 import { BodyShort, Box, Button, HGrid, Link, Heading, List, Page, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
+import { useBehandling } from '../../context/BehandlingContext';
+import { useFagsak } from '../../context/FagsakContext';
+
 type Props = {
     httpStatus?: number;
-    eksternFagsakId?: string;
-    behandlingId?: string;
 };
 
-export const ServerFeil: React.FC<Props> = ({ httpStatus, eksternFagsakId, behandlingId }) => {
+export const ServerFeil: React.FC<Props> = ({ httpStatus }) => {
+    const { behandlingId } = useBehandling();
+    const { eksternFagsakId } = useFagsak();
     return (
         <Page.Block as="main" width="xl" gutters>
             <Box paddingBlock="20 8">

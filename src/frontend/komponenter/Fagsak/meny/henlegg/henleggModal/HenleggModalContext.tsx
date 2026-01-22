@@ -1,9 +1,11 @@
 import type { Avhengigheter, FeltState, Skjema } from '../../../../../hooks/skjema';
 import type { HenleggBehandlingPaylod } from '../../../../../typer/api';
-import type { Behandling } from '../../../../../typer/behandling';
+
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useBehandlingApi } from '../../../../../api/behandling';
 import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { ok, useFelt, useSkjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
@@ -23,7 +25,6 @@ export type HenleggelseSkjemaDefinisjon = {
 };
 
 type Props = {
-    behandling: Behandling;
     lukkModal: () => void;
 };
 
@@ -35,10 +36,11 @@ type HenleggBehandlingSkjemaHook = {
     kanForhåndsvise: () => boolean;
 };
 
-export const useHenleggSkjema = ({ behandling, lukkModal }: Props): HenleggBehandlingSkjemaHook => {
-    const { hentBehandlingMedBehandlingId } = useBehandling();
+export const useHenleggSkjema = ({ lukkModal }: Props): HenleggBehandlingSkjemaHook => {
+    const queryClient = useQueryClient();
     const { henleggBehandling } = useBehandlingApi();
-    const { nullstillIkkePersisterteKomponenter } = useBehandling();
+    const { behandlingId, varselSendt } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
 
     const årsakkode = useFelt<Behandlingresultat | ''>({
         verdi: '',
@@ -88,14 +90,14 @@ export const useHenleggSkjema = ({ behandling, lukkModal }: Props): HenleggBehan
                 begrunnelse: skjema.felter.begrunnelse.verdi,
                 fritekst: skjema.felter.fritekst.verdi,
             };
-            henleggBehandling(behandling.behandlingId, payload).then(
-                (response: Ressurs<string>) => {
-                    if (response.status === RessursStatus.Suksess) {
-                        lukkModal();
-                        hentBehandlingMedBehandlingId(behandling.behandlingId);
-                    }
+            henleggBehandling(behandlingId, payload).then((response: Ressurs<string>) => {
+                if (response.status === RessursStatus.Suksess) {
+                    lukkModal();
+                    queryClient.invalidateQueries({
+                        queryKey: ['behandling', behandlingId],
+                    });
                 }
-            );
+            });
         }
     };
 
@@ -116,7 +118,7 @@ export const useHenleggSkjema = ({ behandling, lukkModal }: Props): HenleggBehan
                 );
             case Behandlingstype.Tilbakekreving:
             default:
-                return behandling.varselSendt && erÅrsakValgt();
+                return varselSendt && erÅrsakValgt();
         }
     };
 

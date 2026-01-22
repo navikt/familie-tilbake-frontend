@@ -1,4 +1,3 @@
-import type { Behandling } from '../../../../typer/behandling';
 import type { ForeldelsePeriode } from '../../../../typer/tilbakekrevingstyper';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
@@ -51,12 +50,11 @@ const genererRader = (
 };
 
 type Props = {
-    behandling: Behandling;
     perioder: ForeldelsePeriodeSkjemeData[];
     erLesevisning: boolean;
 };
 
-const ForeldelsePerioder: React.FC<Props> = ({ behandling, perioder, erLesevisning }) => {
+const ForeldelsePerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
     const [tidslinjeRader, settTidslinjeRader] = React.useState<TimelinePeriodProps[][]>();
     const { valgtPeriode, settValgtPeriode } = useForeldelse();
 
@@ -77,11 +75,7 @@ const ForeldelsePerioder: React.FC<Props> = ({ behandling, perioder, erLesevisni
         <VStack gap="5">
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
             {!!valgtPeriode && (
-                <ForeldelsePeriodeSkjema
-                    behandling={behandling}
-                    periode={valgtPeriode}
-                    erLesevisning={erLesevisning}
-                />
+                <ForeldelsePeriodeSkjema periode={valgtPeriode} erLesevisning={erLesevisning} />
             )}
         </VStack>
     ) : null;
