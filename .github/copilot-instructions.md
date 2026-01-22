@@ -62,7 +62,7 @@ Arkitekturen er designet for å være generell og skalerbar til andre ytelser i 
 - **Frontend Monitoring**: Grafana Faro
 
 ### Testing
-- **Test Framework**: Jest
+- **Test Framework**: vitest
 - **Test Environment**: jsdom
 - **Testing Library**: React Testing Library
 
