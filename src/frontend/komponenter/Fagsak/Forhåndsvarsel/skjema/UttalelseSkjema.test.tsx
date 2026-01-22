@@ -166,6 +166,44 @@ describe('Brukeruttalelse', () => {
         expect(screen.getByLabelText('Begrunnelse for utsatt frist')).toBeInTheDocument();
     });
 
+    describe('Fylt uttalelse', () => {
+        test('Viser utfylte verdier når brukeruttalelse er fylt ut', async () => {
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: {
+                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                        utsettUttalelseFrist: [],
+                        brukeruttalelse: {
+                            harBrukerUttaltSeg: 'JA',
+                            uttalelsesdetaljer: [
+                                {
+                                    uttalelsesdato: '2023-06-15',
+                                    hvorBrukerenUttalteSeg: 'Telefon',
+                                    uttalelseBeskrivelse: 'Brukeren forklarte situasjonen',
+                                },
+                            ],
+                        },
+                    },
+                })
+            );
+
+            const { findByRole } = renderBrukeruttalelse();
+
+            const uttalelsesdato = await findByRole('textbox', {
+                name: 'Når uttalte brukeren seg?',
+            });
+            expect(uttalelsesdato).toHaveValue('15.06.2023');
+            const hvordanUttalteSeg = await findByRole('textbox', {
+                name: 'Hvordan uttalte brukeren seg?',
+            });
+            expect(hvordanUttalteSeg).toHaveValue('Telefon');
+            const beskrivelse = await findByRole('textbox', {
+                name: 'Beskriv hva brukeren har uttalt seg om',
+            });
+            expect(beskrivelse).toHaveValue('Brukeren forklarte situasjonen');
+        });
+    });
+
     describe('Validering', () => {
         test('skal vise feilmelding når ingen alternativ er valgt', async () => {
             renderBrukeruttalelse();

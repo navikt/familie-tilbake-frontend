@@ -41,12 +41,18 @@ export const Uttalelse: React.FC<Props> = ({
 
     const errors = methods.formState.errors;
 
-    const uttalelsesDatepicker = useDatepicker({
+    const {
+        datepickerProps,
+        inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
+    } = useDatepicker({
         toDate: new Date(),
-        onDateChange: date => {
+        defaultSelected: methods.getValues('uttalelsesDetaljer.0.uttalelsesdato')
+            ? new Date(methods.getValues('uttalelsesDetaljer.0.uttalelsesdato'))
+            : undefined,
+        onDateChange: async date => {
             const dateString = dateTilIsoDatoString(date);
             methods.setValue('uttalelsesDetaljer.0.uttalelsesdato', dateString);
-            methods.trigger('uttalelsesDetaljer.0.uttalelsesdato');
+            await methods.trigger('uttalelsesDetaljer.0.uttalelsesdato');
         },
         onValidate: val => {
             if (val.isAfter) {
@@ -101,27 +107,28 @@ export const Uttalelse: React.FC<Props> = ({
             {harUttaltSeg === HarUttaltSeg.Ja &&
                 fields.map((fieldItem, index) => (
                     <React.Fragment key={fieldItem.id}>
-                        <Controller
-                            name={`uttalelsesDetaljer.${index}.uttalelsesdato`}
-                            control={methods.control}
-                            render={({ field, fieldState }) => (
-                                <DatePicker {...uttalelsesDatepicker.datepickerProps}>
-                                    <DatePicker.Input
-                                        {...field}
-                                        {...uttalelsesDatepicker.inputProps}
-                                        size="small"
-                                        readOnly={readOnly}
-                                        label="Når uttalte brukeren seg?"
-                                        error={uttalelsesdatoFeil ?? fieldState.error?.message}
-                                        onBlur={() =>
-                                            methods.trigger(
-                                                `uttalelsesDetaljer.${index}.uttalelsesdato`
-                                            )
-                                        }
-                                    />
-                                </DatePicker>
-                            )}
-                        />
+                        <DatePicker {...datepickerProps}>
+                            <DatePicker.Input
+                                size="small"
+                                {...methods.register(`uttalelsesDetaljer.${index}.uttalelsesdato`)}
+                                {...datepickerInputProps}
+                                onBlur={async event => {
+                                    datepickerOnBlur?.(event);
+                                    await methods.trigger(
+                                        `uttalelsesDetaljer.${index}.uttalelsesdato`
+                                    );
+                                }}
+                                readOnly={readOnly}
+                                label="Når uttalte brukeren seg?"
+                                error={
+                                    uttalelsesdatoFeil ??
+                                    get(
+                                        errors,
+                                        `uttalelsesDetaljer.${index}.uttalelsesdato.message`
+                                    )
+                                }
+                            />
+                        </DatePicker>
                         <TextField
                             {...methods.register(
                                 `uttalelsesDetaljer.${index}.hvorBrukerenUttalteSeg`
