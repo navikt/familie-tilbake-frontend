@@ -107,7 +107,7 @@ export const Uttalelse: React.FC<Props> = ({
             {harUttaltSeg === HarUttaltSeg.Ja &&
                 fields.map((fieldItem, index) => (
                     <React.Fragment key={fieldItem.id}>
-                        <DatePicker {...datepickerProps}>
+                        <DatePicker {...datepickerProps} dropdownCaption>
                             <DatePicker.Input
                                 size="small"
                                 {...methods.register(`uttalelsesDetaljer.${index}.uttalelsesdato`)}
