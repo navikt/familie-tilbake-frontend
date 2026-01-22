@@ -6,7 +6,6 @@ import type {
     VilkårsvurderingPeriode,
     VilkårsvurderingResponse,
 } from '../../../typer/tilbakekrevingstyper';
-import type { UseMutationResult } from '@tanstack/react-query';
 import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -44,32 +43,6 @@ vi.mock('react-router', async () => {
     return {
         ...actual,
         useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
-vi.mock('@tanstack/react-query', async importOriginal => {
-    const actual = await importOriginal();
-    return {
-        ...(actual as object),
-        useMutation: vi.fn(({ mutationFn, onSuccess }) => {
-            const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
-                const result = await mutationFn(behandlingId);
-                if (onSuccess && result?.status === RessursStatus.Suksess) {
-                    await onSuccess(result);
-                }
-                return result;
-            };
-
-            return {
-                mutateAsync,
-            };
-        }),
-        useQueryClient: vi.fn(() => ({
-            invalidateQueries: vi.fn(),
-        })),
-        useSuspenseQuery: vi.fn(() => ({
-            data: { data: lagBehandling() },
-        })),
     };
 });
 
