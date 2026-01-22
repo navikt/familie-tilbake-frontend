@@ -1,4 +1,3 @@
-import type { Toggles } from '../../../../context/toggles';
 import type { RenderResult } from '@testing-library/react';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -6,7 +5,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { FagsakContext } from '../../../../context/FagsakContext';
-import { ToggleName } from '../../../../context/toggles';
 import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
@@ -20,12 +18,6 @@ import { Forhåndsvarsel } from '../Forhåndsvarsel';
 import { useForhåndsvarselMutations } from '../useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from '../useForhåndsvarselQueries';
 
-const mockUseToggles = vi.fn();
-
-vi.mock('../../../../context/TogglesContext', () => ({
-    useToggles: (): Toggles => mockUseToggles(),
-}));
-
 vi.mock('../useForhåndsvarselQueries', () => ({
     useForhåndsvarselQueries: vi.fn(),
 }));
@@ -34,14 +26,6 @@ vi.mock('../useForhåndsvarselMutations', () => ({
     useForhåndsvarselMutations: vi.fn(),
     mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
-
-const setupMock = (): void => {
-    mockUseToggles.mockImplementation(() => ({
-        toggles: {
-            [ToggleName.Forhåndsvarselsteg]: true,
-        },
-    }));
-};
 
 const renderForhåndsvarselSkjema = (): RenderResult => {
     const behandling = lagBehandlingDto();
@@ -94,7 +78,6 @@ const renderForhåndsvarselSkjemaSendt = (): RenderResult => {
 describe('ForhåndsvarselSkjema', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        setupMock();
 
         vi.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueries());
         vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());

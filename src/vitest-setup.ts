@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 
+import type { TogglesHook } from './frontend/context/TogglesContext';
+
 import { Crypto } from '@peculiar/webcrypto';
 import { TextEncoder } from 'util';
 import { vi } from 'vitest';
@@ -23,7 +25,7 @@ Object.defineProperty(global, 'crypto', {
     },
 });
 
-// Global mock for react-router - mocker useNavigate til en tom funksjon
+// Global mock for react-router
 // Individuelle tester kan overstyre dette ved behov
 vi.mock('react-router', async () => {
     const actual = await vi.importActual('react-router');
@@ -32,3 +34,13 @@ vi.mock('react-router', async () => {
         useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
     };
 });
+
+// Global mock for TogglesContext - fjernes når utsettelse er ute
+vi.mock('./frontend/context/TogglesContext', () => ({
+    useToggles: (): TogglesHook => ({
+        toggles: {
+            'familie-tilbake-frontend.forhaandsvarselsteg': true,
+        },
+        feilmelding: '',
+    }),
+}));

@@ -1,4 +1,3 @@
-import type { Toggles } from '../../../context/toggles';
 import type { BehandlingDto, ForhåndsvarselDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 
@@ -10,7 +9,6 @@ import { Forhåndsvarsel } from './Forhåndsvarsel';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { FagsakContext } from '../../../context/FagsakContext';
-import { ToggleName } from '../../../context/toggles';
 import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandlingDto } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
@@ -19,12 +17,6 @@ import {
     lagForhåndsvarselMutations,
 } from '../../../testdata/forhåndsvarselFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
-
-const mockUseToggles = vi.fn();
-
-vi.mock('../../../context/TogglesContext', () => ({
-    useToggles: (): Toggles => mockUseToggles(),
-}));
 
 vi.mock('./useForhåndsvarselQueries', () => ({
     useForhåndsvarselQueries: vi.fn(),
@@ -35,26 +27,12 @@ vi.mock('./useForhåndsvarselMutations', () => ({
     mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
 
-vi.mock('../../../generated', () => ({
-    BrevmalkodeEnum: {
-        VARSEL: 'VARSEL',
-    },
-}));
-
 const lagForhåndsvarselInfo = (overrides?: Partial<ForhåndsvarselDto>): ForhåndsvarselDto => ({
     varselbrevDto: { varselbrevSendtTid: undefined },
     utsettUttalelseFrist: [],
     brukeruttalelse: undefined,
     ...overrides,
 });
-
-const setupMock = (): void => {
-    mockUseToggles.mockImplementation(() => ({
-        toggles: {
-            [ToggleName.Forhåndsvarselsteg]: true,
-        },
-    }));
-};
 
 const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): RenderResult => {
     return render(
@@ -76,7 +54,6 @@ const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): 
 describe('Forhåndsvarsel', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        setupMock();
 
         vi.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueries());
         vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
