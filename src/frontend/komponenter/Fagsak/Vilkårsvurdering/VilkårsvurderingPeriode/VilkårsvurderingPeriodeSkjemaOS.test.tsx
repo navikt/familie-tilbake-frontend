@@ -17,14 +17,6 @@ import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
 
 vi.setConfig({ testTimeout: 10000 });
 
-vi.mock('react-router', async () => {
-    const actual = await vi.importActual('react-router');
-    return {
-        ...actual,
-        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
 vi.mock('../VilkårsvurderingContext', () => {
     return {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({

@@ -14,14 +14,6 @@ import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { configureZod } from '../../../utils/zodConfig';
 
-vi.mock('react-router', async () => {
-    const actual = await vi.importActual('react-router');
-    return {
-        ...actual,
-        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
 const faktaOmFeilutbetaling = (
     overrides?: Partial<FaktaOmFeilutbetaling>
 ): FaktaOmFeilutbetaling => ({

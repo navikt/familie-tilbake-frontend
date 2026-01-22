@@ -35,14 +35,6 @@ vi.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-vi.mock('react-router', async () => {
-    const actual = await vi.importActual('react-router');
-    return {
-        ...actual,
-        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
 const førstePeriode = '01.01.2020 - 31.03.2020';
 const andrePeriode = '01.05.2020 - 30.06.2020';
 const perioder: VilkårsvurderingPeriode[] = [

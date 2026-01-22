@@ -38,14 +38,6 @@ vi.mock('../../../../api/behandling', () => ({
     }),
 }));
 
-vi.mock('react-router', async () => {
-    const actual = await vi.importActual('react-router');
-    return {
-        ...actual,
-        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
 const renderComponent = (
     periode: FaktaPeriodeSkjemaData,
     hendelseTyper: HendelseType[] | undefined

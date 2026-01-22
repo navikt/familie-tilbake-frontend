@@ -13,14 +13,6 @@ import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { MottakerType } from '../../../typer/Brevmottaker';
 
-vi.mock('react-router', async () => {
-    const actual = await vi.importActual('react-router');
-    return {
-        ...actual,
-        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
 const createMockManuelleBrevmottakere = (): ManuellBrevmottakerResponsDto[] => [
     {
         id: 'mottaker-1',

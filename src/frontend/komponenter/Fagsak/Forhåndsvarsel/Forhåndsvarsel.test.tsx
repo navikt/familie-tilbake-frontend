@@ -22,14 +22,6 @@ import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 
 const mockUseToggles = vi.fn();
 
-vi.mock('react-router', async () => {
-    const actual = await vi.importActual('react-router');
-    return {
-        ...actual,
-        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
 vi.mock('../../../context/TogglesContext', () => ({
     useToggles: (): Toggles => mockUseToggles(),
 }));

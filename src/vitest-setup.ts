@@ -22,3 +22,13 @@ Object.defineProperty(global, 'crypto', {
         return crypto;
     },
 });
+
+// Global mock for react-router - mocker useNavigate til en tom funksjon
+// Individuelle tester kan overstyre dette ved behov
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router');
+    return {
+        ...actual,
+        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
+    };
+});

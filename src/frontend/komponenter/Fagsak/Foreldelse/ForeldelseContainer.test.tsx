@@ -28,14 +28,6 @@ vi.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-vi.mock('react-router', async () => {
-    const actual = await vi.importActual('react-router');
-    return {
-        ...actual,
-        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
 const renderForeldelseContainer = (
     behandling: BehandlingDto,
     behandlet: boolean = false,
