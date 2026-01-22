@@ -18,6 +18,7 @@ import { ToggleName } from '../../../../context/toggles';
 import { useToggles } from '../../../../context/TogglesContext';
 import { dateTilIsoDatoString } from '../../../../utils/dato';
 import { HarUttaltSeg } from '../forhåndsvarselSchema';
+import { parseISO } from 'date-fns/parseISO';
 
 type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;
@@ -47,7 +48,7 @@ export const Uttalelse: React.FC<Props> = ({
     } = useDatepicker({
         toDate: new Date(),
         defaultSelected: methods.getValues('uttalelsesDetaljer.0.uttalelsesdato')
-            ? new Date(methods.getValues('uttalelsesDetaljer.0.uttalelsesdato'))
+            ? parseISO(methods.getValues('uttalelsesDetaljer.0.uttalelsesdato'))
             : undefined,
         onDateChange: async date => {
             const dateString = dateTilIsoDatoString(date);
