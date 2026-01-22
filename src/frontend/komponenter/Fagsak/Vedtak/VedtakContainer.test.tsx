@@ -1,5 +1,4 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
-import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingDto } from '../../../generated';
 import type { SammenslåttPeriodeHook } from '../../../hooks/useSammenslåPerioder';
 import type { Ressurs } from '../../../typer/ressurs';
@@ -34,15 +33,6 @@ import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
-
-vi.mock('../../../api/http/HttpProvider', () => {
-    return {
-        useHttp: (): Http => ({
-            systemetLaster: () => false,
-            request: vi.fn(),
-        }),
-    };
-});
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../api/behandling', () => ({

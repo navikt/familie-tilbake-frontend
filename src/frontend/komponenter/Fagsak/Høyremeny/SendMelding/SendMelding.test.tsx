@@ -1,5 +1,4 @@
 import type { DokumentApiHook } from '../../../../api/dokument';
-import type { Http } from '../../../../api/http/HttpProvider';
 import type { BehandlingDto, SpråkkodeEnum } from '../../../../generated';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -18,15 +17,6 @@ import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../../typer/ressurs';
-
-vi.mock('../../../../api/http/HttpProvider', () => {
-    return {
-        useHttp: (): Http => ({
-            systemetLaster: () => false,
-            request: vi.fn(),
-        }),
-    };
-});
 
 const mockUseDokumentApi = vi.fn();
 vi.mock('../../../../api/dokument', () => ({

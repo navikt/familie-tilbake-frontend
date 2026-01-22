@@ -1,5 +1,4 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
-import type { Http } from '../../../api/http/HttpProvider';
 import type { BehandlingDto } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
@@ -31,11 +30,6 @@ import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../typer/ressurs';
 
 vi.setConfig({ testTimeout: 10000 });
-
-const mockUseHttp = vi.fn();
-vi.mock('../../../api/http/HttpProvider', () => ({
-    useHttp: (): Http => mockUseHttp(),
-}));
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../api/behandling', () => ({
@@ -113,17 +107,6 @@ const setupUseBehandlingApiMock = (vilkårsvurdering: VilkårsvurderingResponse)
     }));
 };
 
-const setupMocks = (): void => {
-    mockUseHttp.mockImplementation(() => ({
-        request: (): Promise<Ressurs<BehandlingDto>> => {
-            return Promise.resolve({
-                status: RessursStatus.Suksess,
-                data: lagBehandling(),
-            });
-        },
-    }));
-};
-
 const renderVilkårsvurderingContainer = (behandling: BehandlingDto): RenderResult => {
     const queryClient = createTestQueryClient();
     return render(
@@ -147,7 +130,6 @@ describe('VilkårsvurderingContainer', () => {
     beforeEach(() => {
         user = userEvent.setup();
         vi.clearAllMocks();
-        setupMocks();
         Element.prototype.scrollIntoView = vi.fn();
     });
 

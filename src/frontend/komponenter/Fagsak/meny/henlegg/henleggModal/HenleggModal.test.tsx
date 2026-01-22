@@ -1,5 +1,4 @@
 import type { BehandlingApiHook } from '../../../../../api/behandling';
-import type { Http } from '../../../../../api/http/HttpProvider';
 import type { BehandlingDto } from '../../../../../generated';
 import type { Ressurs } from '../../../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
@@ -20,15 +19,6 @@ import { lagFagsak } from '../../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../../testutils/queryTestUtils';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { RessursStatus } from '../../../../../typer/ressurs';
-
-vi.mock('../../../../../api/http/HttpProvider', () => {
-    return {
-        useHttp: (): Http => ({
-            systemetLaster: () => false,
-            request: vi.fn(),
-        }),
-    };
-});
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../../../api/behandling', () => ({

@@ -1,6 +1,4 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
-import type { Http } from '../../../api/http/HttpProvider';
-import type { BehandlingDto } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     VilkårsvurderingPeriode,
@@ -27,11 +25,6 @@ import {
 } from '../../../testdata/vilkårsvurderingFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../typer/ressurs';
-
-const mockUseHttp = vi.fn();
-vi.mock('../../../api/http/HttpProvider', () => ({
-    useHttp: (): Http => mockUseHttp(),
-}));
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../api/behandling', () => ({
@@ -82,15 +75,6 @@ const setupMocks = (): void => {
                 data: 'suksess',
             };
             return Promise.resolve(ressurs);
-        },
-    }));
-
-    mockUseHttp.mockImplementation(() => ({
-        request: (): Promise<Ressurs<BehandlingDto>> => {
-            return Promise.resolve({
-                status: RessursStatus.Suksess,
-                data: lagBehandling(),
-            });
         },
     }));
 };

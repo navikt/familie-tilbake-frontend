@@ -1,4 +1,3 @@
-import type { Http } from '../../../../api/http/HttpProvider';
 import type { ForeldelseHook } from '../ForeldelseContext';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { RenderResult } from '@testing-library/react';
@@ -13,14 +12,6 @@ import { Foreldelsevurdering } from '../../../../kodeverk';
 import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagForeldelsePeriodeSkjemaData } from '../../../../testdata/foreldelseFactory';
 
-vi.mock('../../../../api/http/HttpProvider', () => {
-    return {
-        useHttp: (): Http => ({
-            systemetLaster: () => false,
-            request: vi.fn(),
-        }),
-    };
-});
 vi.mock('../ForeldelseContext', () => {
     return {
         useForeldelse: (): Partial<ForeldelseHook> => ({

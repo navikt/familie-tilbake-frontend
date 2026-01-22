@@ -1,5 +1,4 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
-import type { Http } from '../../../api/http/HttpProvider';
 import type { Ressurs } from '../../../typer/ressurs';
 import type { VilkårsvurderingResponse } from '../../../typer/tilbakekrevingstyper';
 
@@ -24,15 +23,6 @@ const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
-
-vi.mock('../../../api/http/HttpProvider', () => {
-    return {
-        useHttp: (): Http => ({
-            systemetLaster: () => false,
-            request: vi.fn(),
-        }),
-    };
-});
 
 vi.mock('react-router', async () => {
     const actual = await vi.importActual('react-router');

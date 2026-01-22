@@ -1,4 +1,3 @@
-import type { Http } from '../../../../api/http/HttpProvider';
 import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
 import type { UserEvent } from '@testing-library/user-event';
 
@@ -23,15 +22,6 @@ vi.mock('react-router', async () => {
     return {
         ...actual,
         useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
-vi.mock('../../../../api/http/HttpProvider', () => {
-    return {
-        useHttp: (): Http => ({
-            systemetLaster: () => false,
-            request: vi.fn(),
-        }),
     };
 });
 
