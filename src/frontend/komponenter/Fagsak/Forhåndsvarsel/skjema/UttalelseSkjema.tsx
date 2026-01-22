@@ -11,6 +11,7 @@ import {
     useDatepicker,
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
+import { parseISO } from 'date-fns/parseISO';
 import React, { useState } from 'react';
 import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
@@ -18,7 +19,6 @@ import { ToggleName } from '../../../../context/toggles';
 import { useToggles } from '../../../../context/TogglesContext';
 import { dateTilIsoDatoString } from '../../../../utils/dato';
 import { HarUttaltSeg } from '../forhåndsvarselSchema';
-import { parseISO } from 'date-fns/parseISO';
 
 type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;
