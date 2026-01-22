@@ -114,9 +114,10 @@ export const BehandlingStateProvider = ({ children }: Props): React.ReactElement
         return !!behandlingSteg && behandlingSteg.behandlingsstegstatus === 'AUTOUTFØRT';
     };
 
-    const harVærtPåFatteVedtakSteget = (): boolean => {
-        return behandling.behandlingsstegsinfo.some(bsi => bsi.behandlingssteg === 'FATTE_VEDTAK');
-    };
+    const harVærtPåFatteVedtakSteget = (): boolean =>
+        behandling.behandlingsstegsinfo.some(
+            ({ behandlingssteg }) => behandlingssteg === 'FATTE_VEDTAK'
+        );
 
     const contextValue: BehandlingStateContextType = {
         behandlingILesemodus,
