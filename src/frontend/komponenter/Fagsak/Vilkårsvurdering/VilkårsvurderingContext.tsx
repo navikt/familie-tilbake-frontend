@@ -269,6 +269,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         Feil,
         { payload: VilkårdsvurderingStegPayload; handling: PeriodeHandling }
     >({
+        mutationKey: ['sendInnVilkårsvurdering'],
         mutationFn: async ({ payload, handling }) => {
             settValideringsFeilmelding(undefined);
             if (!validererTotaltBeløpMot4Rettsgebyr()) {

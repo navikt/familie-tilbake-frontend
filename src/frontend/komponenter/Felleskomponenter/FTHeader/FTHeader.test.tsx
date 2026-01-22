@@ -1,4 +1,3 @@
-import type { QueryClient } from '@tanstack/react-query';
 import type { RenderResult } from '@testing-library/react';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -27,9 +26,8 @@ const mockSaksbehandler = {
     enhet: 'Test Enhet',
 };
 
-let queryClient: QueryClient;
-
 const renderHeader = (): RenderResult => {
+    const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
             <FTHeader innloggetSaksbehandler={mockSaksbehandler} />
@@ -56,7 +54,6 @@ const setUpMocks = (): void => {
 
 describe('FTHeader', () => {
     beforeEach(() => {
-        queryClient = createTestQueryClient();
         vi.clearAllMocks();
         setUpMocks();
     });

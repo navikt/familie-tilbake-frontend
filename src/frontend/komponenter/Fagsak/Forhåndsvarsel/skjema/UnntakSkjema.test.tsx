@@ -33,15 +33,6 @@ vi.mock('../../../../context/TogglesContext', () => ({
     useToggles: (): Toggles => mockUseToggles(),
 }));
 
-vi.mock('../../../../generated/@tanstack/react-query.gen', () => ({
-    bestillBrevMutation: vi.fn().mockReturnValue({
-        mutationFn: vi.fn(),
-    }),
-    forhåndsvisBrevMutation: vi.fn().mockReturnValue({
-        mutationFn: vi.fn(),
-    }),
-}));
-
 vi.mock('../useForhåndsvarselQueries', () => ({
     useForhåndsvarselQueries: vi.fn(),
 }));

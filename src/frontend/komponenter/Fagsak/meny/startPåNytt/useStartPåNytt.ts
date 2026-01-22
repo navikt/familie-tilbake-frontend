@@ -28,6 +28,7 @@ export const useStartPåNytt = (): StartPåNyttHook => {
     const queryClient = useQueryClient();
 
     return useMutation<Ressurs<string>, Feil, string>({
+        mutationKey: ['startPåNytt'],
         mutationFn: async (behandlingId: string) => {
             const response = await startPåNytt(request, behandlingId);
             if (response.status === RessursStatus.Suksess) {
