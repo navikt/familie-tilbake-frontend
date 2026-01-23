@@ -76,7 +76,7 @@ describe('Unntak', () => {
     test('Viser feilmeldinger ved ingen valg av unntak eller begrunnelse', async () => {
         renderUnntak();
 
-        const nesteKnapp = screen.getByRole('button', { name: 'Neste' });
+        const nesteKnapp = screen.getByRole('button', { name: 'Lagre og gå til neste' });
         fireEvent.click(nesteKnapp);
 
         const unntakFeilmelding = await screen.findByText(

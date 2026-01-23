@@ -8,7 +8,7 @@ import { Button, Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react'
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch, useFormContext } from 'react-hook-form';
 
 import {
     forhåndsvarselSchema,
@@ -45,6 +45,8 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 
 export const Forhåndsvarsel: React.FC = () => {
     const { behandlingId } = useBehandling();
+    const { settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
+        useBehandlingState();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries();
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
@@ -56,8 +58,21 @@ export const Forhåndsvarsel: React.FC = () => {
 
     const methods = useForm<ForhåndsvarselFormData>({
         resolver: zodResolver(forhåndsvarselSchema),
-        mode: 'all',
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        criteriaMode: 'all',
         defaultValues: getDefaultValues(varselErSendt, forhåndsvarselInfo),
+    });
+
+    methods.subscribe({
+        formState: { isDirty: true },
+        callback: data => {
+            if (data.isDirty) {
+                settIkkePersistertKomponent('forhåndsvarsel');
+            } else {
+                nullstillIkkePersisterteKomponenter();
+            }
+        },
     });
 
     const fritekst = useWatch({
@@ -190,7 +205,11 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     parentBounds,
     ref,
 }) => {
-    const { actionBarStegtekst } = useBehandlingState();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
+
+    const {
+        formState: { isDirty },
+    } = useFormContext<ForhåndsvarselFormData>();
 
     const {
         sendForhåndsvarselMutation,
@@ -218,7 +237,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const uttalelseMethods = useForm<UttalelseFormData>({
         resolver: zodResolver(uttalelseSchema),
-        mode: 'all',
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        criteriaMode: 'all',
         defaultValues: getUttalelseValues(forhåndsvarselInfo),
     });
 
@@ -244,6 +265,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'Utsett frist';
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
+        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && isDirty) {
+            return 'Lagre og gå til neste';
         }
         return 'Neste';
     };
@@ -253,6 +276,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const skalSendeUnntak =
         skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
         !forhåndsvarselInfo?.forhåndsvarselUnntak;
+
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
         data: ForhåndsvarselFormData
     ): void => {
@@ -263,6 +287,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         } else {
             gåTilNeste();
         }
+        nullstillIkkePersisterteKomponenter();
     };
 
     const handleUttalelseSubmit: SubmitHandler<UttalelseFormData> = (
