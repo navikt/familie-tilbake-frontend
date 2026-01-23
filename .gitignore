@@ -13,4 +13,3 @@ ci-tests/reports
 pnpm-debug.log
 .vitest-cache
 coverage/
-instructions

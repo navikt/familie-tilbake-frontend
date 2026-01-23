@@ -6,7 +6,6 @@ import * as React from 'react';
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 import { Vilkårsresultat } from '../../../kodeverk';
-import { type Behandling } from '../../../typer/behandling';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
 import { FTAlertStripe } from '../../Felleskomponenter/Flytelementer';
 import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
@@ -58,14 +57,12 @@ const finnClassNamePeriodeStatus = (
 };
 
 type Props = {
-    behandling: Behandling;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
     erLesevisning: boolean;
 };
 
 const VilkårsvurderingPerioder: React.FC<Props> = ({
-    behandling,
     perioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
@@ -104,7 +101,6 @@ const VilkårsvurderingPerioder: React.FC<Props> = ({
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
             {valgtPeriode && (
                 <VilkårsvurderingPeriodeSkjema
-                    behandling={behandling}
                     periode={valgtPeriode}
                     behandletPerioder={behandletPerioder}
                     erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}

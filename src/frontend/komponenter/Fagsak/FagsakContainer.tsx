@@ -1,49 +1,29 @@
-import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
-
-import classNames from 'classnames';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useLocation } from 'react-router';
 
 import BehandlingContainer from './BehandlingContainer';
-import { useBehandling } from '../../context/BehandlingContext';
+import { BehandlingProvider, finnBehandlingId } from '../../context/BehandlingContext';
+import { BehandlingStateProvider } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { useBehandlingStore } from '../../stores/behandlingStore';
 import { useFagsakStore } from '../../stores/fagsakStore';
-import { venteårsaker } from '../../typer/behandling';
-import { RessursStatus } from '../../typer/ressurs';
-import { formatterDatostring } from '../../utils';
-import DataLastIkkeSuksess from '../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
-import HenterBehandling from '../Felleskomponenter/Modal/HenterBehandling';
-import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
-
-const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
-    return `Behandlingen er satt på vent: ${
-        venteårsaker[ventegrunn.venteårsak as Venteårsak]
-    }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;
-};
+import { Spinner } from '../Felleskomponenter/Datalast/Spinner';
+import UlagretDataModal from '../Felleskomponenter/Modal/UlagretDataModal';
 
 const FagsakContainer: React.FC = () => {
     const location = useLocation();
-    const behandlingId = location.pathname.split('/')[6];
+    const eksternBrukId = location.pathname.split('/')[6];
 
     const { fagsystem, eksternFagsakId, bruker, behandlinger } = useFagsak();
-    const {
-        behandling,
-        hentBehandlingMedEksternBrukId,
-        ventegrunn,
-        visVenteModal,
-        settVisVenteModal,
-    } = useBehandling();
-
     const { setBehandlingId } = useBehandlingStore();
     const { setEksternFagsakId, setFagsystem, setPersonIdent, resetFagsak } = useFagsakStore();
 
+    const behandlingId = eksternBrukId ? finnBehandlingId(behandlinger, eksternBrukId) : undefined;
+
     useEffect(() => {
-        if (behandlingId) {
-            hentBehandlingMedEksternBrukId(behandlinger, behandlingId);
-            setBehandlingId(behandlingId);
+        if (eksternBrukId) {
+            setBehandlingId(eksternBrukId);
         }
 
         setPersonIdent(bruker.personIdent);
@@ -56,47 +36,22 @@ const FagsakContainer: React.FC = () => {
             resetFagsak();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fagsystem, eksternFagsakId, bruker.personIdent, behandlingId]);
+    }, [fagsystem, eksternFagsakId, bruker.personIdent, eksternBrukId]);
 
-    if (behandling?.status === RessursStatus.Henter) {
-        return <HenterBehandling />;
+    if (!behandlingId) {
+        return null;
     }
 
-    if (behandling?.status === RessursStatus.Suksess) {
-        return (
-            <>
-                {ventegrunn && (
-                    <FTAlertStripe variant="info">{venteBeskjed(ventegrunn)}</FTAlertStripe>
-                )}
-                {visVenteModal && ventegrunn && (
-                    <PåVentModal
-                        behandling={behandling.data}
-                        ventegrunn={ventegrunn}
-                        onClose={() => settVisVenteModal(false)}
-                    />
-                )}
-                <div
-                    className={classNames(
-                        'grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-ax-neutral-100 min-h-screen',
-                        {
-                            venter: !!ventegrunn,
-                        }
-                    )}
-                >
-                    <BehandlingContainer behandling={behandling.data} />
-                </div>
-            </>
-        );
-    } else {
-        return (
-            <DataLastIkkeSuksess
-                ressurser={[behandling]}
-                behandlingId={behandlingId}
-                eksternFagsakId={eksternFagsakId}
-                visFeilSide
-            />
-        );
-    }
+    return (
+        <Suspense fallback={<Spinner type="behandling" />}>
+            <BehandlingProvider behandlingId={behandlingId}>
+                <BehandlingStateProvider>
+                    <BehandlingContainer />
+                    <UlagretDataModal />
+                </BehandlingStateProvider>
+            </BehandlingProvider>
+        </Suspense>
+    );
 };
 
 export default FagsakContainer;

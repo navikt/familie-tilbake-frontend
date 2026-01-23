@@ -1,4 +1,4 @@
-import type { BehandlingDto, Section, Varselbrevtekst } from '../../../../generated';
+import type { Section, Varselbrevtekst } from '../../../../generated';
 import type { ForhåndsvarselFormData } from '../forhåndsvarselSchema';
 import type { FieldErrors, SubmitHandler } from 'react-hook-form';
 
@@ -20,7 +20,6 @@ import { SkalSendesForhåndsvarsel } from '../forhåndsvarselSchema';
 import { Unntak } from './UnntakSkjema';
 
 type Props = {
-    behandling: BehandlingDto;
     varselbrevtekster: Varselbrevtekst | undefined;
     varselErSendt: boolean;
     handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData>;

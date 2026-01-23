@@ -1,15 +1,14 @@
 import type { BehandlingApiHook } from '../../../api/behandling';
-import type { Http } from '../../../api/http/HttpProvider';
-import type { Behandling } from '../../../typer/behandling';
+import type { BehandlingDto } from '../../../generated';
 import type { Ressurs } from '../../../typer/ressurs';
 import type {
     VilkårsvurderingResponse,
     VilkårsvurderingPeriode,
 } from '../../../typer/tilbakekrevingstyper';
-import type { UseMutationResult } from '@tanstack/react-query';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -17,58 +16,24 @@ import { vi } from 'vitest';
 
 import VilkårsvurderingContainer from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
-import { BehandlingProvider } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Aktsomhet, HendelseType, Vilkårsresultat } from '../../../kodeverk';
+import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import {
     lagVilkårsvurderingPeriode,
     lagVilkårsvurderingResponse,
 } from '../../../testdata/vilkårsvurderingFactory';
+import { createTestQueryClient } from '../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../typer/ressurs';
 
 vi.setConfig({ testTimeout: 10000 });
-
-const mockUseHttp = vi.fn();
-vi.mock('../../../api/http/HttpProvider', () => ({
-    useHttp: (): Http => mockUseHttp(),
-}));
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
-
-vi.mock('react-router', async () => {
-    const actual = await vi.importActual('react-router');
-    return {
-        ...actual,
-        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
-vi.mock('@tanstack/react-query', () => {
-    return {
-        useMutation: vi.fn(({ mutationFn, onSuccess }) => {
-            const mutateAsync = async (behandlingId: string): Promise<UseMutationResult> => {
-                const result = await mutationFn(behandlingId);
-                if (onSuccess && result?.status === RessursStatus.Suksess) {
-                    await onSuccess(result);
-                }
-                return result;
-            };
-
-            return {
-                mutate: mutateAsync,
-                mutateAsync: mutateAsync,
-            };
-        }),
-        useQueryClient: vi.fn(() => ({
-            invalidateQueries: vi.fn(),
-        })),
-    };
-});
 
 const førstePeriode = '01.01.2020 - 31.03.2020';
 const andrePeriode = '01.05.2020 - 30.06.2020';
@@ -112,26 +77,21 @@ const setupUseBehandlingApiMock = (vilkårsvurdering: VilkårsvurderingResponse)
     }));
 };
 
-const setupMocks = (): void => {
-    mockUseHttp.mockImplementation(() => ({
-        request: (): Promise<Ressurs<Behandling>> => {
-            return Promise.resolve({
-                status: RessursStatus.Suksess,
-                data: lagBehandling(),
-            });
-        },
-    }));
-};
-
-const renderVilkårsvurderingContainer = (behandling: Behandling): RenderResult => {
+const renderVilkårsvurderingContainer = (behandling: BehandlingDto): RenderResult => {
+    const queryClient = createTestQueryClient();
     return render(
-        <FagsakContext.Provider value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
-            <BehandlingProvider>
-                <VilkårsvurderingProvider behandling={behandling}>
-                    <VilkårsvurderingContainer behandling={behandling} />
-                </VilkårsvurderingProvider>
-            </BehandlingProvider>
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
+                <TestBehandlingProvider
+                    behandling={behandling}
+                    stateOverrides={{ harKravgrunnlag: true }}
+                >
+                    <VilkårsvurderingProvider>
+                        <VilkårsvurderingContainer />
+                    </VilkårsvurderingProvider>
+                </TestBehandlingProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 
@@ -140,7 +100,6 @@ describe('VilkårsvurderingContainer', () => {
     beforeEach(() => {
         user = userEvent.setup();
         vi.clearAllMocks();
-        setupMocks();
         Element.prototype.scrollIntoView = vi.fn();
     });
 
@@ -169,7 +128,9 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        await waitFor(() => {
+            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        });
 
         await user.click(
             getByLabelText(

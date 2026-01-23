@@ -4,7 +4,7 @@ import type { JaNeiOption } from '../VilkårsvurderingPeriodeSkjemaContext';
 import { Radio, RadioGroup, Stack } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { Valideringsstatus } from '../../../../../hooks/skjema';
 import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
@@ -23,7 +23,7 @@ const TilleggesRenterRadioGroup: React.FC<Props> = ({
     feilaktigForsett,
     visFeilmeldingerForSkjema,
 }) => {
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
     const value = !feilaktigForsett ? felt.verdi : kanIlleggeRenter ? OptionJA : OptionNEI;
     return (
         <RadioGroup

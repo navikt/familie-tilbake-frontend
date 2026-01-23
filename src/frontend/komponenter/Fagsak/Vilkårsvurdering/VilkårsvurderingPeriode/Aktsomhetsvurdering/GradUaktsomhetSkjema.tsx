@@ -7,7 +7,7 @@ import { Alert, Radio } from '@navikt/ds-react';
 import * as React from 'react';
 
 import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
-import { useBehandling } from '../../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet } from '../../../../../kodeverk';
 import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
@@ -19,7 +19,7 @@ type Props = {
 };
 
 const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
         skjema.visFeilmeldinger &&
         skjema.felter.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.Feil;

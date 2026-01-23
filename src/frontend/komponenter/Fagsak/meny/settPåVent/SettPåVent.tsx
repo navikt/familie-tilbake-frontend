@@ -1,7 +1,6 @@
-import type { Behandling } from '../../../../typer/behandling';
-
 import { TimerPauseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
 import { useRef } from 'react';
@@ -14,17 +13,16 @@ import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
 import { usePåVentBehandling } from '../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 import { MODAL_BREDDE } from '../utils';
 
-type Props = {
-    behandling: Behandling;
-};
-
-export const SettPåVent: React.FC<Props> = ({ behandling }) => {
-    const { hentBehandlingMedBehandlingId } = useBehandling();
+export const SettPåVent: React.FC = () => {
+    const { behandlingId } = useBehandling();
+    const queryClient = useQueryClient();
     const dialogRef = useRef<HTMLDialogElement>(null);
 
     const lukkModalOgHentBehandling = (): void => {
         dialogRef.current?.close();
-        hentBehandlingMedBehandlingId(behandling.behandlingId);
+        queryClient.invalidateQueries({
+            queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
+        });
     };
 
     const { skjema, onBekreft, feilmelding, tilbakestillFelterTilDefault } = usePåVentBehandling(
@@ -83,7 +81,7 @@ export const SettPåVent: React.FC<Props> = ({ behandling }) => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button key="bekreft" onClick={() => onBekreft(behandling.behandlingId)}>
+                    <Button key="bekreft" onClick={() => onBekreft(behandlingId)}>
                         Sett på vent
                     </Button>
                     <Button

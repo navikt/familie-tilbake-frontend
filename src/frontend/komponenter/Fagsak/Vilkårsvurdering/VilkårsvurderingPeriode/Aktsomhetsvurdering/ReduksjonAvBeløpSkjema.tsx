@@ -1,11 +1,11 @@
+import type { Skjema } from '../../../../../hooks/skjema';
 import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 import { BodyShort, Label, Select, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 
 import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
-import { useBehandling } from '../../../../../context/BehandlingContext';
-import { type Skjema } from '../../../../../hooks/skjema';
+import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { Aktsomhet } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty, isNumeric } from '../../../../../utils';
 import { useVilkårsvurdering } from '../../VilkårsvurderingContext';
@@ -22,7 +22,7 @@ type Props = {
 };
 
 const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
     const { valgtPeriode, kanIlleggeRenter } = useVilkårsvurdering();
     const harMerEnnEnAktivitet = skjema.felter.harMerEnnEnAktivitet.verdi === true;
     const erEgendefinert =

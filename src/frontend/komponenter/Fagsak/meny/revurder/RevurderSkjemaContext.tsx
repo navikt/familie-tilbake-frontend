@@ -1,9 +1,10 @@
 import type { Skjema } from '../../../../hooks/skjema';
-import type { Behandling, Behandlingårsak } from '../../../../typer/behandling';
+import type { Behandlingårsak } from '../../../../typer/behandling';
 
 import { useState, type RefObject } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { useFelt, useSkjema } from '../../../../hooks/skjema';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
@@ -25,11 +26,9 @@ type RevurderSkjemaHook = {
     nullstillSkjema: () => void;
 };
 
-const useRevurderSkjema = (
-    behandlingId: Behandling['behandlingId'],
-    dialogRef: RefObject<HTMLDialogElement | null>
-): RevurderSkjemaHook => {
-    const { nullstillIkkePersisterteKomponenter } = useBehandling();
+const useRevurderSkjema = (dialogRef: RefObject<HTMLDialogElement | null>): RevurderSkjemaHook => {
+    const { behandlingId } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const { fagsystem, eksternFagsakId, ytelsestype } = useFagsak();
     const { utførRedirect } = useRedirectEtterLagring();
     const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);

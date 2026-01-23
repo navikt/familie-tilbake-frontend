@@ -6,7 +6,7 @@ import type { Ressurs } from '../../../../typer/ressurs';
 import { useState } from 'react';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
-import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useSkjema, useFelt, feil, ok } from '../../../../hooks/skjema';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { isEmpty, validerGyldigDato } from '../../../../utils';
@@ -33,7 +33,7 @@ export const usePåVentBehandling = (
 ): PåVentBehandlingHook => {
     const [feilmelding, settFeilmelding] = useState<string>();
     const { request } = useHttp();
-    const { nullstillIkkePersisterteKomponenter } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
 
     const { onSubmit, skjema, nullstillSkjema, kanSendeSkjema } = useSkjema<
         {

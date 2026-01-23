@@ -1,4 +1,3 @@
-import type { Behandling } from '../../../../typer/behandling';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { ReactNode } from 'react';
 
@@ -22,7 +21,7 @@ import { styled } from 'styled-components';
 
 import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import SplittPeriode from './SplittPeriode/SplittPeriode';
-import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { Valideringsstatus } from '../../../../hooks/skjema/typer';
 import {
     Foreldelsevurdering,
@@ -44,17 +43,16 @@ const StyledStack = styled(Stack)`
 `;
 
 type Props = {
-    behandling: Behandling;
     periode: ForeldelsePeriodeSkjemeData;
     erLesevisning: boolean;
 };
 
-const ForeldelsePeriodeSkjema: React.FC<Props> = ({ behandling, periode, erLesevisning }) => {
+const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) => {
     const { oppdaterPeriode, onSplitPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
     );
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
 
     React.useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');
@@ -147,11 +145,7 @@ const ForeldelsePeriodeSkjema: React.FC<Props> = ({ behandling, periode, erLesev
                 </Heading>
 
                 {!erLesevisning && kanSplittePeriode(periode) && (
-                    <SplittPeriode
-                        behandling={behandling}
-                        periode={periode}
-                        onBekreft={onSplitPeriode}
-                    />
+                    <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
                 )}
             </StyledStack>
             <StyledVStack gap="4">

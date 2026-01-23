@@ -6,7 +6,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { useVedtak } from './VedtakContext';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { harVerdi, isEmpty, validerTekstMaksLengde } from '../../../utils';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 
@@ -28,7 +28,7 @@ const VedtakFritekstSkjema: React.FC<Props> = ({
     erLesevisning,
 }) => {
     const { oppdaterUnderavsnitt } = useVedtak();
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
     const { fritekst, fritekstPåkrevet, index, harFeil, feilmelding } = underavsnitt;
     const [fritekstfeltErSynlig, settFritekstfeltErSynlig] = React.useState<boolean>();
 

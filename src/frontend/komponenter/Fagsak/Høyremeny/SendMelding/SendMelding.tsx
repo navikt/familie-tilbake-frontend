@@ -1,11 +1,10 @@
-import type { Behandling } from '../../../../typer/behandling';
-
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
 import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
 import { målform } from '../../../../typer/målform';
@@ -19,14 +18,11 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
         : 'Fritekst';
 };
 
-type Props = {
-    behandling: Behandling;
-};
-
-const SendMelding: React.FC<Props> = ({ behandling }) => {
+const SendMelding: React.FC = () => {
+    const { manuelleBrevmottakere } = useBehandling();
     const { språkkode } = useFagsak();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
-    const { behandlingILesemodus } = useBehandling();
+    const { behandlingILesemodus } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus;
 
     const onChangeMal = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -44,14 +40,10 @@ const SendMelding: React.FC<Props> = ({ behandling }) => {
 
             <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
                 <Heading size="xsmall" level="3">
-                    {behandling.manuelleBrevmottakere.length > 0 ? 'Brevmottakere' : 'Brevmottaker'}
+                    {manuelleBrevmottakere.length > 0 ? 'Brevmottakere' : 'Brevmottaker'}
                 </Heading>
                 <div className="gap-5 flex flex-col">
-                    <BrevmottakerListe
-                        brevmottakere={behandling.manuelleBrevmottakere.map(
-                            ({ brevmottaker }) => brevmottaker
-                        )}
-                    />
+                    <BrevmottakerListe />
 
                     <Select
                         {...skjema.felter.maltype.hentNavInputProps(skjema.visFeilmeldinger)}

@@ -1,4 +1,4 @@
-import type { Behandling } from '../typer/behandling';
+import type { BehandlingDto } from '../generated';
 
 import { visSide } from './sider';
 import {
@@ -16,7 +16,7 @@ const mockBehandling = lagBehandling({
         lagFaktaSteg(),
         lagForeldelseSteg(),
         lagVilkårsvurderingSteg(),
-        lagForeslåVedtakSteg({ status: Behandlingsstegstatus.Startet }),
+        lagForeslåVedtakSteg({ status: Behandlingsstegstatus.Klar }),
     ],
 });
 
@@ -27,7 +27,7 @@ describe('Sider', () => {
     });
 
     test('visSide skal vise brevmottaker dersom den informasjonen er på behandlingen', () => {
-        const mockBehandlingMedBrevmottakerSteg: Behandling = {
+        const mockBehandlingMedBrevmottakerSteg: BehandlingDto = {
             ...mockBehandling,
             behandlingsstegsinfo: [...mockBehandling.behandlingsstegsinfo, lagBrevmottakerSteg()],
         };
@@ -37,7 +37,7 @@ describe('Sider', () => {
 
     test('visSide skal vise de synlige stegene: Fakta, Foreldelse, Vilkårsvurdering, Vedtak', () => {
         mockBehandling.behandlingsstegsinfo?.forEach(stegInfo => {
-            const result = visSide(stegInfo.behandlingssteg, mockBehandling as Behandling);
+            const result = visSide(stegInfo.behandlingssteg, mockBehandling);
             expect(result).toBe(true);
         });
     });

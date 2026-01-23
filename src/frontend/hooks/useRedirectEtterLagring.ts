@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { useBehandling } from '../context/BehandlingContext';
+import { useBehandlingState } from '../context/BehandlingStateContext';
 
 export type RedirectEtterLagringHook = {
     utførRedirect: (url: string) => void;
@@ -15,7 +15,7 @@ export type RedirectEtterLagringHook = {
  */
 export const useRedirectEtterLagring = (): RedirectEtterLagringHook => {
     const navigate = useNavigate();
-    const { harUlagredeData } = useBehandling();
+    const { harUlagredeData } = useBehandlingState();
     const [url, settUrl] = useState<string>();
 
     useEffect(() => {

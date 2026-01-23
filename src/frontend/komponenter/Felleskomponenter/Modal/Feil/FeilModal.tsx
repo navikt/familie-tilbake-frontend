@@ -6,21 +6,17 @@ import React from 'react';
 
 import { hentFeilObjekt } from './feilObjekt';
 import { hentStatus } from './hentStatus';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 
 type Props = {
     feil: Feil;
     lukkFeilModal: () => void;
     beskjed?: string;
-    behandlingId?: string;
 };
 
-export const FeilModal: React.FC<Props> = ({
-    feil,
-    lukkFeilModal,
-    beskjed,
-    behandlingId,
-}: Props) => {
+export const FeilModal: React.FC<Props> = ({ feil, lukkFeilModal, beskjed }: Props) => {
+    const { behandlingId } = useBehandling();
     const { eksternFagsakId } = useFagsak();
     const feilObjekt = hentFeilObjekt(hentStatus(feil));
     const innheholderCSRFTokenFeil = feil.message?.includes('CSRF-token');

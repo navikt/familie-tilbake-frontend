@@ -1,6 +1,3 @@
-import type { Http } from '../../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { Behandling } from '../../../../typer/behandling';
 import type { ForeldelseHook } from '../ForeldelseContext';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { RenderResult } from '@testing-library/react';
@@ -12,17 +9,9 @@ import * as React from 'react';
 
 import ForeldelsePeriodeSkjema from './ForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
-import { lagBehandling } from '../../../../testdata/behandlingFactory';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagForeldelsePeriodeSkjemaData } from '../../../../testdata/foreldelseFactory';
 
-vi.mock('../../../../api/http/HttpProvider', () => {
-    return {
-        useHttp: (): Http => ({
-            systemetLaster: () => false,
-            request: vi.fn(),
-        }),
-    };
-});
 vi.mock('../ForeldelseContext', () => {
     return {
         useForeldelse: (): Partial<ForeldelseHook> => ({
@@ -31,20 +20,11 @@ vi.mock('../ForeldelseContext', () => {
     };
 });
 
-vi.mock('../../../../context/BehandlingContext', () => {
-    return {
-        useBehandling: (): Partial<BehandlingHook> => ({
-            settIkkePersistertKomponent: vi.fn(),
-        }),
-    };
-});
-
-const renderForeldelsePeriodeSkjema = (
-    behandling: Behandling,
-    periode: ForeldelsePeriodeSkjemeData
-): RenderResult =>
+const renderForeldelsePeriodeSkjema = (periode: ForeldelsePeriodeSkjemeData): RenderResult =>
     render(
-        <ForeldelsePeriodeSkjema behandling={behandling} periode={periode} erLesevisning={false} />
+        <TestBehandlingProvider>
+            <ForeldelsePeriodeSkjema periode={periode} erLesevisning={false} />
+        </TestBehandlingProvider>
     );
 
 describe('ForeldelsePeriodeSkjema', () => {
@@ -56,7 +36,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
     test('Vurderer periode ikke foreldet ', async () => {
         const { getByRole, getByText, getByLabelText, queryAllByText, queryByLabelText } =
-            renderForeldelsePeriodeSkjema(lagBehandling(), lagForeldelsePeriodeSkjemaData());
+            renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
@@ -91,7 +71,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
     test('Vurderer periode foreldet ', async () => {
         const { getByLabelText, getByRole, getByText, queryByLabelText, queryAllByText } =
-            renderForeldelsePeriodeSkjema(lagBehandling(), lagForeldelsePeriodeSkjemaData());
+            renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
@@ -133,7 +113,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
     test('Vurderer periode til å bruke tilleggsfrist ', async () => {
         const { getByText, getByRole, getByLabelText, queryByLabelText, queryAllByText } =
-            renderForeldelsePeriodeSkjema(lagBehandling(), lagForeldelsePeriodeSkjemaData());
+            renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
@@ -182,7 +162,6 @@ describe('ForeldelsePeriodeSkjema', () => {
 
     test('Åpner vurdert periode med tilleggsfrist ', async () => {
         const { getByLabelText, getByText, queryByLabelText } = renderForeldelsePeriodeSkjema(
-            lagBehandling(),
             lagForeldelsePeriodeSkjemaData({
                 foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
                 begrunnelse: 'Vurdert',

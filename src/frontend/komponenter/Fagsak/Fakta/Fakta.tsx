@@ -1,5 +1,3 @@
-import type { Behandling } from '../../../generated';
-
 import { Heading, Tag } from '@navikt/ds-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
@@ -7,19 +5,17 @@ import * as React from 'react';
 
 import { FaktaSkeleton } from './FaktaSkeleton';
 import { FaktaSkjema } from './FaktaSkjema';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { fakta } from '../../../generated-new';
 import { oppdaterFaktaMutation } from '../../../generated-new/@tanstack/react-query.gen';
 import { formatterDatostring } from '../../../utils';
 
 type Props = {
-    behandlingId: Behandling['behandlingId'];
     behandlingUrl: string;
 };
 
-export const Fakta: React.FC<Props> = ({
-    behandlingId,
-    behandlingUrl,
-}: Props): React.JSX.Element => {
+export const Fakta: React.FC<Props> = ({ behandlingUrl }: Props): React.JSX.Element => {
+    const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
     const { data: faktaOmFeilutbetaling, isPending } = useQuery(
         {
@@ -131,7 +127,6 @@ export const Fakta: React.FC<Props> = ({
                 <FaktaSkjema
                     faktaOmFeilutbetaling={faktaOmFeilutbetaling}
                     behandlingUrl={behandlingUrl}
-                    behandlingId={behandlingId}
                 />
             </div>
         </>

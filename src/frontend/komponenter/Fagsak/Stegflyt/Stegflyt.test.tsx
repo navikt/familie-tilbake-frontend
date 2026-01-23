@@ -1,13 +1,13 @@
-import type { BehandlingHook } from '../../../context/BehandlingContext';
-import type { Behandling } from '../../../typer/behandling';
-import type { Ressurs } from '../../../typer/ressurs';
+import type { BehandlingDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 import type { Location } from 'react-router';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, fireEvent } from '@testing-library/react';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { Stegflyt } from './Stegflyt';
+import { BehandlingProvider } from '../../../context/BehandlingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Fagsystem } from '../../../kodeverk';
 import {
@@ -18,63 +18,52 @@ import {
     lagVilkårsvurderingSteg,
 } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
-import { Behandlingsstegstatus } from '../../../typer/behandling';
-import { RessursStatus } from '../../../typer/ressurs';
+import { createTestQueryClient, setBehandlingQueryData } from '../../../testutils/queryTestUtils';
 
 const mockNavigate = vi.fn();
 const mockUseLocation = vi.fn();
-const mockUseBehandling = vi.fn();
 
 vi.mock('react-router', () => ({
     useNavigate: (): ReturnType<typeof vi.fn> => mockNavigate,
     useLocation: (): Location => mockUseLocation(),
 }));
 
-vi.mock('../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-    erStegUtført: (status: Behandlingsstegstatus): boolean =>
-        status === Behandlingsstegstatus.Utført,
-}));
-
-const createMockRessursBehandling = (
-    overrides: Partial<Behandling> = {}
-): Ressurs<Partial<Behandling>> => ({
-    status: RessursStatus.Suksess,
-    data: lagBehandling({
+const createMockBehandling = (overrides: Record<string, unknown> = {}): BehandlingDto =>
+    lagBehandling({
         eksternBrukId: '456',
         behandlingId: '123',
         behandlingsstegsinfo: [lagFaktaSteg(), lagForeldelseSteg(), lagVilkårsvurderingSteg()],
         ...overrides,
-    }),
-});
+    });
 
-const renderStegflyt = (): RenderResult => {
+const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): RenderResult => {
+    const queryClient = createTestQueryClient();
+    setBehandlingQueryData(queryClient, '123', behandling);
+
     return render(
-        <FagsakContext.Provider
-            value={lagFagsak({
-                eksternFagsakId: '123',
-                fagsystem: Fagsystem.BA,
-            })}
-        >
-            <Stegflyt />
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider
+                value={lagFagsak({
+                    eksternFagsakId: '123',
+                    fagsystem: Fagsystem.BA,
+                })}
+            >
+                <Suspense fallback={<div>Loading...</div>}>
+                    <BehandlingProvider behandlingId="123">
+                        <Stegflyt />
+                    </BehandlingProvider>
+                </Suspense>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
-};
-
-const setupMocks = (): void => {
-    mockUseBehandling.mockReturnValue({
-        behandling: createMockRessursBehandling(),
-    });
-
-    mockUseLocation.mockReturnValue({
-        pathname: '/fagsystem/BA/fagsak/123/behandling/456/fakta',
-    });
 };
 
 describe('Stegflyt', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        setupMocks();
+        mockUseLocation.mockReturnValue({
+            pathname: '/fagsystem/BA/fagsak/123/behandling/456/fakta',
+        });
     });
 
     describe('Synlighet av steg', () => {
@@ -93,17 +82,15 @@ describe('Stegflyt', () => {
         });
 
         test('skal vise Brevmottaker når det er i behandlingsstegsinfo og støttet', () => {
-            mockUseBehandling.mockReturnValue({
-                behandling: createMockRessursBehandling({
-                    behandlingsstegsinfo: [
-                        lagFaktaSteg(),
-                        lagForeldelseSteg(),
-                        lagVilkårsvurderingSteg(),
-                        lagBrevmottakerSteg(),
-                    ],
-                }),
+            const behandling = createMockBehandling({
+                behandlingsstegsinfo: [
+                    lagFaktaSteg(),
+                    lagForeldelseSteg(),
+                    lagVilkårsvurderingSteg(),
+                    lagBrevmottakerSteg(),
+                ],
             });
-            const { getByText } = renderStegflyt();
+            const { getByText } = renderStegflyt(behandling);
 
             expect(getByText('Brevmottaker(e)')).toBeInTheDocument();
         });
@@ -159,17 +146,6 @@ describe('Stegflyt', () => {
         test('skal returnere null når aktiv stegnummer er mindre enn 1', () => {
             mockUseLocation.mockReturnValue({
                 pathname: '/ugyldig-side',
-            });
-
-            const { container } = renderStegflyt();
-            expect(container.firstChild).toBeNull();
-        });
-
-        test('skal returnere null når stegsinfo er undefined', () => {
-            mockUseBehandling.mockReturnValue({
-                behandling: {
-                    status: RessursStatus.Feilet,
-                },
             });
 
             const { container } = renderStegflyt();

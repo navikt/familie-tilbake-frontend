@@ -1,6 +1,6 @@
 import type { BrevPayload } from '../../../../typer/api';
-import type { Behandling } from '../../../../typer/behandling';
 
+import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
@@ -46,20 +46,17 @@ type SendMeldingSkjemaDefinisjon = {
 const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.maltype.valideringsstatus === Valideringsstatus.Ok;
 
-type Props = {
-    behandling: Behandling;
-};
-
-const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: Props) => {
+const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
+    const { behandlingId, eksternBrukId, varselSendt } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
+    const queryClient = useQueryClient();
     const [senderInn, settSenderInn] = React.useState<boolean>(false);
     const [feilmelding, settFeilmelding] = React.useState<string | undefined>();
-    const { hentBehandlingMedBehandlingId } = useBehandling();
     const { bestillBrev } = useDokumentApi();
     const navigate = useNavigate();
 
     const maler = [
-        behandling.varselSendt ? DokumentMal.KorrigertVarsel : DokumentMal.Varsel,
+        varselSendt ? DokumentMal.KorrigertVarsel : DokumentMal.Varsel,
         DokumentMal.InnhentDokumentasjon,
     ];
 
@@ -96,7 +93,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: 
 
     const hentBrevdata = (): BrevPayload => {
         return {
-            behandlingId: behandling.behandlingId,
+            behandlingId: behandlingId,
             brevmalkode: skjema.felter.maltype.verdi as DokumentMal,
             fritekst: skjema.felter.fritekst.verdi,
         };
@@ -111,11 +108,12 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: 
                 settFeilmelding(undefined);
                 if (respons.status === RessursStatus.Suksess) {
                     nullstillSkjema();
-                    hentBehandlingMedBehandlingId(behandling.behandlingId).then(() => {
-                        navigate(
-                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
-                        );
+                    queryClient.invalidateQueries({
+                        queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
                     });
+                    navigate(
+                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
+                    );
                 } else {
                     settFeilmelding(hentFrontendFeilmelding(respons));
                 }
@@ -126,7 +124,6 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(({ behandling }: 
     };
 
     return {
-        behandling,
         maler,
         skjema,
         hentBrevdata,

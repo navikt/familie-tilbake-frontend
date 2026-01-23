@@ -1,11 +1,11 @@
 import type { BehandlingApiHook } from '../../../../api/behandling';
-import type { BehandlingHook } from '../../../../context/BehandlingContext';
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../generated';
 import type { Ressurs } from '../../../../typer/ressurs';
 import type { Totrinnkontroll } from '../../../../typer/totrinnTyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
@@ -14,41 +14,41 @@ import { vi } from 'vitest';
 import Totrinnskontroll from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
+import {
+    TestBehandlingProvider,
+    type BehandlingStateContextOverrides,
+} from '../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagTotrinnsStegInfo } from '../../../../testdata/totrinnskontrollFactory';
+import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
 import { Behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
-
-const mockUseBehandling = vi.fn();
-vi.mock('../../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../../api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-vi.mock('react-router', async () => {
-    const actual = await vi.importActual('react-router');
-    return {
-        ...actual,
-        useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
-    };
-});
-
-const renderTotrinnskontroll = (behandling: Behandling): RenderResult => {
+const renderTotrinnskontroll = (
+    behandling: BehandlingDto,
+    stateOverrides: BehandlingStateContextOverrides = {}
+): RenderResult => {
+    const queryClient = createTestQueryClient();
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
-            <TotrinnskontrollProvider behandling={behandling}>
-                <Totrinnskontroll />
-            </TotrinnskontrollProvider>
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <TestBehandlingProvider behandling={behandling} stateOverrides={stateOverrides}>
+                    <TotrinnskontrollProvider>
+                        <Totrinnskontroll />
+                    </TotrinnskontrollProvider>
+                </TestBehandlingProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
 };
 
-const setupMocks = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkontroll): void => {
+const setupMocks = (totrinnkontroll: Totrinnkontroll): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerTotrinnkontrollKall: (): Promise<Ressurs<Totrinnkontroll>> => {
             const ressurs: Ressurs<Totrinnkontroll> = {
@@ -65,12 +65,6 @@ const setupMocks = (returnertFraBeslutter: boolean, totrinnkontroll: Totrinnkont
             return Promise.resolve(ressurs);
         },
     }));
-    mockUseBehandling.mockImplementation(() => ({
-        erStegBehandlet: (): boolean => false,
-        visVenteModal: false,
-        erBehandlingReturnertFraBeslutter: (): boolean => returnertFraBeslutter,
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-    }));
 };
 
 describe('Totrinnskontroll', () => {
@@ -81,7 +75,7 @@ describe('Totrinnskontroll', () => {
     });
 
     test('Vis og fyll ut - godkjenner', async () => {
-        setupMocks(false, {
+        setupMocks({
             totrinnsstegsinfo: [
                 lagTotrinnsStegInfo(Behandlingssteg.Fakta),
                 lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering),
@@ -133,7 +127,7 @@ describe('Totrinnskontroll', () => {
     });
 
     test('Vis og fyll ut - sender tilbake', async () => {
-        setupMocks(false, {
+        setupMocks({
             totrinnsstegsinfo: [
                 lagTotrinnsStegInfo(Behandlingssteg.Fakta),
                 lagTotrinnsStegInfo(Behandlingssteg.Foreldelse),
@@ -200,7 +194,7 @@ describe('Totrinnskontroll', () => {
     });
 
     test('Vis utfylt - sendt tilbake', async () => {
-        setupMocks(true, {
+        setupMocks({
             totrinnsstegsinfo: [
                 lagTotrinnsStegInfo(Behandlingssteg.Fakta, true),
                 lagTotrinnsStegInfo(
@@ -217,8 +211,10 @@ describe('Totrinnskontroll', () => {
             ],
         });
 
-        const { getByText, getAllByText, getAllByRole, queryByRole } =
-            renderTotrinnskontroll(lagBehandling());
+        const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
+            lagBehandling(),
+            { erBehandlingReturnertFraBeslutter: (): boolean => true }
+        );
 
         await waitFor(() => {
             expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
@@ -248,7 +244,7 @@ describe('Totrinnskontroll', () => {
     });
 
     test('Vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
-        setupMocks(false, {
+        setupMocks({
             totrinnsstegsinfo: [
                 lagTotrinnsStegInfo(Behandlingssteg.Fakta, true),
                 lagTotrinnsStegInfo(

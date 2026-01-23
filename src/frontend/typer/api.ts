@@ -1,5 +1,4 @@
 import type { Behandlingresultat, Behandlingssteg, Venteårsak } from './behandling';
-import type { Brevmottaker } from './Brevmottaker';
 import type { Aktsomhetsvurdering, GodTro, Periode } from './tilbakekrevingstyper';
 import type {
     DokumentMal,
@@ -94,11 +93,6 @@ export type BrevPayload = {
 export type ForhåndsvisHenleggelsesbrevPayload = {
     behandlingId: string;
     fritekst: string;
-};
-
-export type ManuellBrevmottakerResponseDto = {
-    id: string;
-    brevmottaker: Brevmottaker;
 };
 
 export type VergeDto = {

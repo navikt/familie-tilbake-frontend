@@ -1,5 +1,3 @@
-import type { Behandling } from '../../../typer/behandling';
-
 import * as React from 'react';
 
 import { Dokumentlisting } from './Dokumentlisting/Dokumentlisting';
@@ -20,33 +18,32 @@ export enum Menysider {
 
 type Props = {
     valgtMenyside: Menysider;
-    behandling: Behandling;
 };
 
-export const MenySideInnhold: React.FC<Props> = ({ valgtMenyside, behandling }) => {
+export const MenySideInnhold: React.FC<Props> = ({ valgtMenyside }) => {
     switch (valgtMenyside) {
         case Menysider.Totrinn:
             return (
-                <TotrinnskontrollProvider behandling={behandling}>
+                <TotrinnskontrollProvider>
                     <Totrinnskontroll />
                 </TotrinnskontrollProvider>
             );
         case Menysider.Dokumenter:
             return (
-                <DokumentlistingProvider behandling={behandling} valgtMenyside={valgtMenyside}>
+                <DokumentlistingProvider valgtMenyside={valgtMenyside}>
                     <Dokumentlisting />
                 </DokumentlistingProvider>
             );
         case Menysider.SendBrev:
             return (
-                <SendMeldingProvider behandling={behandling}>
-                    <SendMelding behandling={behandling} />
+                <SendMeldingProvider>
+                    <SendMelding />
                 </SendMeldingProvider>
             );
         case Menysider.Historikk:
         default:
             return (
-                <HistorikkProvider behandling={behandling} valgtMenyside={valgtMenyside}>
+                <HistorikkProvider valgtMenyside={valgtMenyside}>
                     <Historikk />
                 </HistorikkProvider>
             );

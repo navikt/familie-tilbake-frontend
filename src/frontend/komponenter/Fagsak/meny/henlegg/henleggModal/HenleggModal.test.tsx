@@ -1,11 +1,10 @@
 import type { BehandlingApiHook } from '../../../../../api/behandling';
-import type { Http } from '../../../../../api/http/HttpProvider';
-import type { BehandlingHook } from '../../../../../context/BehandlingContext';
-import type { Behandling } from '../../../../../typer/behandling';
+import type { BehandlingDto } from '../../../../../generated';
 import type { Ressurs } from '../../../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRef } from 'react';
@@ -14,23 +13,12 @@ import { vi } from 'vitest';
 
 import { HenleggModal } from './HenleggModal';
 import { FagsakContext } from '../../../../../context/FagsakContext';
+import { TestBehandlingProvider } from '../../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../../testdata/fagsakFactory';
+import { createTestQueryClient } from '../../../../../testutils/queryTestUtils';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { RessursStatus } from '../../../../../typer/ressurs';
-
-vi.mock('../../../../../api/http/HttpProvider', () => {
-    return {
-        useHttp: (): Http => ({
-            systemetLaster: () => false,
-            request: vi.fn(),
-        }),
-    };
-});
-const mockUseBehandling = vi.fn();
-vi.mock('../../../../../context/BehandlingContext', () => ({
-    useBehandling: (): BehandlingHook => mockUseBehandling(),
-}));
 
 const mockUseBehandlingApi = vi.fn();
 vi.mock('../../../../../api/behandling', () => ({
@@ -38,14 +26,19 @@ vi.mock('../../../../../api/behandling', () => ({
 }));
 
 const renderHenleggModal = (
-    behandling: Behandling,
+    behandling: BehandlingDto,
     årsaker: Behandlingresultat[]
 ): RenderResult => {
+    const queryClient = createTestQueryClient();
     const mockDialogRef = createRef<HTMLDialogElement | null>();
     const renderModal = render(
-        <FagsakContext.Provider value={lagFagsak()}>
-            <HenleggModal behandling={behandling} dialogRef={mockDialogRef} årsaker={årsaker} />
-        </FagsakContext.Provider>
+        <QueryClientProvider client={queryClient}>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <TestBehandlingProvider behandling={behandling}>
+                    <HenleggModal dialogRef={mockDialogRef} årsaker={årsaker} />
+                </TestBehandlingProvider>
+            </FagsakContext.Provider>
+        </QueryClientProvider>
     );
     mockDialogRef.current?.showModal();
 
@@ -61,10 +54,6 @@ const setupMocks = (): void => {
             };
             return Promise.resolve(ressurs);
         },
-    }));
-    mockUseBehandling.mockImplementation(() => ({
-        hentBehandlingMedBehandlingId: (): Promise<void> => Promise.resolve(),
-        nullstillIkkePersisterteKomponenter: vi.fn(),
     }));
 };
 

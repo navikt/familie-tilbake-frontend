@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingsresultatstypeEnum, BehandlingstatusEnum } from '../../../../generated';
 import type { TagProps } from '@navikt/ds-react';
 
 import {
@@ -16,23 +16,19 @@ import {
 import { ExpansionCard, Tag } from '@navikt/ds-react';
 import React from 'react';
 
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { ytelsetype as ytelsetyper } from '../../../../kodeverk';
 import {
     behandlingsresultater,
     behandlingsstatuser,
     behandlingårsaker,
-    Behandlingstatus,
-    Behandlingresultat,
 } from '../../../../typer/behandling';
 import { formatterDatostring } from '../../../../utils';
 import { ICON_PROPS } from '../utils';
 
-type Props = {
-    behandling: Behandling;
-};
-
-export const Faktaboks: React.FC<Props> = ({ behandling }) => {
+export const Faktaboks: React.FC = () => {
+    const behandling = useBehandling();
     const { ytelsestype } = useFagsak();
 
     return (
@@ -104,35 +100,35 @@ export const Faktaboks: React.FC<Props> = ({ behandling }) => {
 };
 
 const STATUS_META = {
-    [Behandlingstatus.Opprettet]: {
+    OPPRETTET: {
         variant: 'neutral-moderate',
         icon: FilePlusIcon,
     },
-    [Behandlingstatus.Utredes]: {
+    UTREDES: {
         variant: 'info-moderate',
         icon: FileLoadingIcon,
     },
-    [Behandlingstatus.FatterVedtak]: {
+    FATTER_VEDTAK: {
         variant: 'alt2-moderate',
         icon: TasklistIcon,
     },
-    [Behandlingstatus.IverksetterVedtak]: {
+    IVERKSETTER_VEDTAK: {
         variant: 'info-moderate',
         icon: TasklistSendIcon,
     },
-    [Behandlingstatus.Avsluttet]: {
+    AVSLUTTET: {
         variant: 'success-moderate',
         icon: FileCheckmarkIcon,
     },
 } satisfies Record<
-    Behandlingstatus,
+    BehandlingstatusEnum,
     {
         variant: TagProps['variant'];
         icon: React.ComponentType;
     }
 >;
 
-const StatusTag: React.FC<{ status: Behandlingstatus }> = ({ status }) => {
+const StatusTag: React.FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
     const { variant, icon: StatusIkon } = STATUS_META[status];
     return (
         <>
@@ -149,18 +145,21 @@ const StatusTag: React.FC<{ status: Behandlingstatus }> = ({ status }) => {
     );
 };
 
-const RESULTAT_META = {
-    [Behandlingresultat.Henlagt]: { variant: 'error-moderate' },
-    [Behandlingresultat.HenlagtFeilopprettet]: { variant: 'error-moderate' },
-    [Behandlingresultat.HenlagtFeilopprettetMedBrev]: { variant: 'error-moderate' },
-    [Behandlingresultat.HenlagtFeilopprettetUtenBrev]: { variant: 'error-moderate' },
-    [Behandlingresultat.IkkeFastsatt]: { variant: 'error-moderate' },
-    [Behandlingresultat.IngenTilbakebetaling]: { variant: 'warning-moderate' },
-    [Behandlingresultat.DelvisTilbakebetaling]: { variant: 'warning-moderate' },
-    [Behandlingresultat.FullTilbakebetaling]: { variant: 'info-moderate' },
-} satisfies Record<Behandlingresultat, { variant: TagProps['variant'] }>;
+const RESULTAT_META: Record<BehandlingsresultatstypeEnum, { variant: TagProps['variant'] }> = {
+    HENLAGT: { variant: 'error-moderate' },
+    HENLAGT_FEILOPPRETTET: { variant: 'error-moderate' },
+    HENLAGT_FEILOPPRETTET_MED_BREV: { variant: 'error-moderate' },
+    HENLAGT_FEILOPPRETTET_UTEN_BREV: { variant: 'error-moderate' },
+    HENLAGT_KRAVGRUNNLAG_NULLSTILT: { variant: 'error-moderate' },
+    HENLAGT_TEKNISK_VEDLIKEHOLD: { variant: 'error-moderate' },
+    HENLAGT_MANGLENDE_KRAVGRUNNLAG: { variant: 'error-moderate' },
+    IKKE_FASTSATT: { variant: 'error-moderate' },
+    INGEN_TILBAKEBETALING: { variant: 'warning-moderate' },
+    DELVIS_TILBAKEBETALING: { variant: 'warning-moderate' },
+    FULL_TILBAKEBETALING: { variant: 'info-moderate' },
+};
 
-const ResultatTag: React.FC<{ resultat: Behandlingresultat }> = ({ resultat }) => {
+const ResultatTag: React.FC<{ resultat: BehandlingsresultatstypeEnum }> = ({ resultat }) => {
     return (
         <>
             <dt className="shrink-0text-ax-medium font-ax-bold flex flex-row gap-2 items-center">

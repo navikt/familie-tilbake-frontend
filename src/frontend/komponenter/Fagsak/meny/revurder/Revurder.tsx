@@ -1,5 +1,3 @@
-import type { Behandling } from '../../../../typer/behandling';
-
 import { FileResetIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import * as React from 'react';
@@ -10,11 +8,7 @@ import { Behandlingårsak, behandlingårsaker } from '../../../../typer/behandli
 import { hentFrontendFeilmelding } from '../../../../utils';
 import { MODAL_BREDDE } from '../utils';
 
-type Props = {
-    behandlingId: Behandling['behandlingId'];
-};
-
-export const Revurder: React.FC<Props> = ({ behandlingId }) => {
+export const Revurder: React.FC = () => {
     const ref = useRef<HTMLDialogElement>(null);
     const {
         skjema,
@@ -22,7 +16,7 @@ export const Revurder: React.FC<Props> = ({ behandlingId }) => {
         nullstillSkjema,
         feilmelding: storeFeilmelding,
         setFeilmelding,
-    } = useRevurderSkjema(behandlingId, ref);
+    } = useRevurderSkjema(ref);
 
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs) || storeFeilmelding;
 

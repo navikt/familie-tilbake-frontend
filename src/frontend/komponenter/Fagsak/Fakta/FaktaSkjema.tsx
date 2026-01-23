@@ -30,34 +30,29 @@ import {
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useMutation } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { formatISO, parseISO } from 'date-fns';
 import * as React from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 
 import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring } from '../../../utils';
 import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
-    behandlingId: string;
     behandlingUrl: string;
     faktaOmFeilutbetaling: FaktaOmFeilutbetaling;
 };
 
-export const FaktaSkjema = ({
-    faktaOmFeilutbetaling,
-    behandlingId,
-    behandlingUrl,
-}: Props): React.JSX.Element => {
-    const {
-        actionBarStegtekst,
-        hentBehandlingMedBehandlingId,
-        settIkkePersistertKomponent,
-        nullstillIkkePersisterteKomponenter,
-    } = useBehandling();
+export const FaktaSkjema = ({ faktaOmFeilutbetaling, behandlingUrl }: Props): React.JSX.Element => {
+    const { behandlingId } = useBehandling();
+    const { actionBarStegtekst, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
+        useBehandlingState();
+    const queryClient = useQueryClient();
 
     const navigerTilNeste = useStegNavigering(behandlingUrl, Behandlingssteg.Forhåndsvarsel);
 
@@ -144,12 +139,16 @@ export const FaktaSkjema = ({
         perioder.find(periode => periode.id === id)! as FaktaPeriode;
     const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetaling> = data => {
         oppdaterMutation.mutate(
-            { body: data, path: { behandlingId: behandlingId } },
+            { body: data, path: { behandlingId } },
             {
                 onSuccess: data => {
                     nullstillIkkePersisterteKomponenter();
                     if (data.ferdigvurdert) {
-                        hentBehandlingMedBehandlingId(behandlingId).then(navigerTilNeste);
+                        queryClient
+                            .invalidateQueries({
+                                queryKey: ['hentBehandling', { path: { behandlingId } }],
+                            })
+                            .then(navigerTilNeste);
                     }
                 },
             }

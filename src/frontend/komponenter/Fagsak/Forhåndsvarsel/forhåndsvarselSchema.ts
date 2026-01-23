@@ -31,7 +31,7 @@ const fritekstSchema = z
     .max(4000, 'Maksimalt 4000 tegn tillatt');
 
 const uttalelsesDetaljerSchema = z.object({
-    uttalelsesdato: z.iso.date({ error: 'Du må legge inn en gyldig dato' }),
+    uttalelsesdato: z.iso.date({ error: 'Du må skrive en dato på denne måten: dd.mm.åååå' }),
     hvorBrukerenUttalteSeg: fritekstSchema,
     uttalelseBeskrivelse: fritekstSchema,
 });
@@ -60,24 +60,22 @@ const ikkeValgtUttalelseSchema = z.object({
     harUttaltSeg: z.literal(HarUttaltSeg.IkkeValgt),
 });
 
-const uttalelseMedFristSchemaBase = z.discriminatedUnion('harUttaltSeg', [
+const uttalelseSchemaBase = z.discriminatedUnion('harUttaltSeg', [
     harUttaltSegSchema,
     harIkkeUttaltSegSchema,
     utsettFristSchema,
     ikkeValgtUttalelseSchema,
 ]);
 
-export const uttalelseMedFristSchema = uttalelseMedFristSchemaBase.refine(
+export const uttalelseSchema = uttalelseSchemaBase.refine(
     data => data.harUttaltSeg !== HarUttaltSeg.IkkeValgt,
     {
-        message: 'Du må velge om brukeren har uttalt seg eller om fristen skal utsettes',
+        message: 'Du må velge om brukeren har uttalt seg', // eller om fristen skal utsettes', Tas med når toggle fjernes
         path: ['harUttaltSeg'],
     }
 );
 
-const getJaUttalelseValues = (
-    uttalelse: BrukeruttalelseDto | undefined
-): UttalelseMedFristFormData => {
+const getJaUttalelseValues = (uttalelse: BrukeruttalelseDto | undefined): UttalelseFormData => {
     return {
         harUttaltSeg: HarUttaltSeg.Ja,
         uttalelsesDetaljer: uttalelse?.uttalelsesdetaljer?.map((uttalelse: Uttalelsesdetaljer) => ({
@@ -94,9 +92,7 @@ const getJaUttalelseValues = (
     };
 };
 
-const getNeiUttalelseValues = (
-    uttalelse: BrukeruttalelseDto | undefined
-): UttalelseMedFristFormData => {
+const getNeiUttalelseValues = (uttalelse: BrukeruttalelseDto | undefined): UttalelseFormData => {
     return {
         harUttaltSeg: HarUttaltSeg.Nei,
         kommentar: uttalelse?.kommentar || '',
@@ -105,7 +101,7 @@ const getNeiUttalelseValues = (
 
 const getUtsettUttalelseValues = (
     utsettelser: FristUtsettelseDto[] | undefined
-): UttalelseMedFristFormData => {
+): UttalelseFormData => {
     const utsettelse = utsettelser?.[0];
     return {
         harUttaltSeg: HarUttaltSeg.UtsettFrist,
@@ -119,7 +115,7 @@ const getUtsettUttalelseValues = (
 export const getUttalelseValuesBasertPåValg = (
     harUttaltSeg: HarUttaltSeg,
     forhåndsvarselInfo: ForhåndsvarselDto | undefined
-): UttalelseMedFristFormData => {
+): UttalelseFormData => {
     switch (harUttaltSeg) {
         case HarUttaltSeg.Ja:
             return getJaUttalelseValues(forhåndsvarselInfo?.brukeruttalelse);
@@ -136,7 +132,7 @@ export const getUttalelseValuesBasertPåValg = (
 
 export const getUttalelseValues = (
     forhåndsvarselInfo: ForhåndsvarselDto | undefined
-): UttalelseMedFristFormData => {
+): UttalelseFormData => {
     if (forhåndsvarselInfo?.brukeruttalelse?.uttalelsesdetaljer?.length) {
         return getJaUttalelseValues(forhåndsvarselInfo.brukeruttalelse);
     }
@@ -154,18 +150,7 @@ export const getUttalelseValues = (
     };
 };
 
-export const uttalelseSchema = z
-    .discriminatedUnion('harUttaltSeg', [
-        harIkkeUttaltSegSchema,
-        harUttaltSegSchema,
-        ikkeValgtUttalelseSchema,
-    ])
-    .refine(data => data.harUttaltSeg !== HarUttaltSeg.IkkeValgt, {
-        message: 'Du må velge om brukeren har uttalt seg eller ikke',
-        path: ['harUttaltSeg'],
-    });
-
-export const opprettSchema = z.object({
+const opprettSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Ja),
     fritekst: fritekstSchema,
 });
@@ -177,7 +162,7 @@ export const getOpprettValues = (): ForhåndsvarselFormData => {
     };
 };
 
-export const unntakSchema = z
+const unntakSchema = z
     .object({
         skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
         begrunnelseForUnntak: zBegrunnelseForUnntakEnum.optional(),
@@ -239,10 +224,8 @@ export type ForhåndsvarselFormData =
     | z.infer<typeof unntakSchema>
     | { skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.IkkeValgt };
 
-export type UttalelseMedFristFormData =
+export type UttalelseFormData =
     | z.infer<typeof harIkkeUttaltSegSchema>
     | z.infer<typeof harUttaltSegSchema>
     | z.infer<typeof utsettFristSchema>
     | { harUttaltSeg: HarUttaltSeg.IkkeValgt };
-
-export type UnntakFormData = z.infer<typeof unntakSchema>;

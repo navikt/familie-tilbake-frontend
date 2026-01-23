@@ -5,7 +5,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import SplittPeriode from './SplittPeriode';
-import { lagBehandling } from '../../../../../testdata/behandlingFactory';
+import { TestBehandlingProvider } from '../../../../../testdata/behandlingContextFactory';
 import { lagForeldelsePeriodeSkjemaData } from '../../../../../testdata/foreldelseFactory';
 
 describe('SplittPeriode - Foreldelse', () => {
@@ -23,11 +23,9 @@ describe('SplittPeriode - Foreldelse', () => {
             queryByAltText,
             queryByText,
         } = render(
-            <SplittPeriode
-                periode={lagForeldelsePeriodeSkjemaData()}
-                behandling={lagBehandling()}
-                onBekreft={vi.fn()}
-            />
+            <TestBehandlingProvider>
+                <SplittPeriode periode={lagForeldelsePeriodeSkjemaData()} onBekreft={vi.fn()} />
+            </TestBehandlingProvider>
         );
 
         expect(queryByAltText('Del opp perioden')).toBeInTheDocument();

@@ -3,9 +3,11 @@ import type { UserEvent } from '@testing-library/user-event';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
+import { vi } from 'vitest';
 
 import SplittPeriode from './SplittPeriode';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
+import { TestBehandlingProvider } from '../../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../../testdata/vilkårsvurderingFactory';
 
@@ -17,6 +19,7 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
     });
 
     test('Åpning av modal', async () => {
+        const behandling = lagBehandling();
         const {
             getByAltText,
             getByLabelText,
@@ -26,11 +29,12 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
             queryByText,
         } = render(
             <HttpProvider>
-                <SplittPeriode
-                    periode={lagVilkårsvurderingPeriodeSkjemaData()}
-                    behandling={lagBehandling()}
-                    onBekreft={vi.fn()}
-                />
+                <TestBehandlingProvider behandling={behandling}>
+                    <SplittPeriode
+                        periode={lagVilkårsvurderingPeriodeSkjemaData()}
+                        onBekreft={vi.fn()}
+                    />
+                </TestBehandlingProvider>
             </HttpProvider>
         );
 

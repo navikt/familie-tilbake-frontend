@@ -1,4 +1,4 @@
-import type { Behandling } from '../../../../typer/behandling';
+import type { BehandlingstypeEnum } from '../../../../generated';
 
 import { CircleSlashIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
@@ -6,10 +6,11 @@ import * as React from 'react';
 import { useRef } from 'react';
 
 import { HenleggModal } from './henleggModal/HenleggModal';
-import { Behandlingresultat, Behandlingstype } from '../../../../typer/behandling';
+import { useBehandling } from '../../../../context/BehandlingContext';
+import { Behandlingresultat } from '../../../../typer/behandling';
 
-const hentÅrsaker = (behandlingstype: Behandlingstype): Behandlingresultat[] => {
-    if (behandlingstype === Behandlingstype.Tilbakekreving) {
+const hentÅrsaker = (behandlingstype: BehandlingstypeEnum): Behandlingresultat[] => {
+    if (behandlingstype === 'TILBAKEKREVING') {
         return [Behandlingresultat.HenlagtFeilopprettet];
     } else {
         return [
@@ -19,11 +20,8 @@ const hentÅrsaker = (behandlingstype: Behandlingstype): Behandlingresultat[] =>
     }
 };
 
-type Props = {
-    behandling: Behandling;
-};
-
-export const Henlegg: React.FC<Props> = ({ behandling }) => {
+export const Henlegg: React.FC = () => {
+    const behandling = useBehandling();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const årsaker = hentÅrsaker(behandling.type);
 
@@ -37,7 +35,7 @@ export const Henlegg: React.FC<Props> = ({ behandling }) => {
                 <span className="ml-1">Henlegg</span>
             </ActionMenu.Item>
 
-            <HenleggModal behandling={behandling} dialogRef={dialogRef} årsaker={årsaker} />
+            <HenleggModal dialogRef={dialogRef} årsaker={årsaker} />
         </>
     );
 };

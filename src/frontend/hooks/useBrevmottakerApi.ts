@@ -1,5 +1,6 @@
 import type { Brevmottaker } from '../typer/Brevmottaker';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { useHttp } from '../api/http/HttpProvider';
@@ -8,22 +9,21 @@ import { RessursStatus } from '../typer/ressurs';
 
 export const useBrevmottakerApi = (): {
     lagreBrevmottaker: (
-        behandlingId: string,
         brevmottaker: Brevmottaker,
         mottakerId?: string
     ) => Promise<{ success: boolean; error?: string }>;
-    fjernBrevmottaker: (behandlingId: string, mottakerId: string) => Promise<boolean>;
+    fjernBrevmottaker: (mottakerId: string) => Promise<boolean>;
     loading: boolean;
     error: string | null;
     clearError: () => void;
 } => {
+    const queryClient = useQueryClient();
+    const { behandlingId } = useBehandling();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { hentBehandlingMedBehandlingId } = useBehandling();
     const { request } = useHttp();
 
     const lagreBrevmottaker = async (
-        behandlingId: string,
         brevmottaker: Brevmottaker,
         mottakerId?: string
     ): Promise<{ success: boolean; error?: string }> => {
@@ -53,7 +53,7 @@ export const useBrevmottakerApi = (): {
                 return { success: false, error: errorMessage };
             }
 
-            await hentBehandlingMedBehandlingId(behandlingId);
+            await queryClient.invalidateQueries({ queryKey: ['behandling', behandlingId] });
             return { success: true };
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Ukjent feil ved lagring';
@@ -64,10 +64,7 @@ export const useBrevmottakerApi = (): {
         }
     };
 
-    const fjernBrevmottaker = async (
-        behandlingId: string,
-        mottakerId: string
-    ): Promise<boolean> => {
+    const fjernBrevmottaker = async (mottakerId: string): Promise<boolean> => {
         setLoading(true);
         setError(null);
 
@@ -86,7 +83,7 @@ export const useBrevmottakerApi = (): {
                 return false;
             }
 
-            await hentBehandlingMedBehandlingId(behandlingId);
+            await queryClient.invalidateQueries({ queryKey: ['behandling', behandlingId] });
             return true;
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Ukjent feil ved sletting';

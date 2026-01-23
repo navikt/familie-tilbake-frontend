@@ -1,5 +1,3 @@
-import type { Behandling } from '../../../typer/behandling';
-
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
 import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import React, { useEffect, useState } from 'react';
@@ -11,10 +9,10 @@ import { useVedtak } from './VedtakContext';
 import VedtakPerioder from './VedtakPerioder';
 import VedtakSkjema from './VedtakSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
-import { Behandlingssteg, Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { SYNLIGE_STEG } from '../../../utils/sider';
@@ -35,11 +33,7 @@ const VarselbrevInfo = styled(BodyShort)`
     font-weight: ${AFontWeightBold};
 `;
 
-type Props = {
-    behandling: Behandling;
-};
-
-const VedtakContainer: React.FC<Props> = ({ behandling }) => {
+const VedtakContainer: React.FC = () => {
     const { fagsystem, eksternFagsakId } = useFagsak();
     const {
         vedtaksbrevavsnitt,
@@ -54,14 +48,14 @@ const VedtakContainer: React.FC<Props> = ({ behandling }) => {
         lagreUtkast,
         hentVedtaksbrevtekster,
     } = useVedtak();
-    const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandling();
+    const { type, behandlingsårsakstype, kanEndres, eksternBrukId, manuelleBrevmottakere } =
+        useBehandling();
+    const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus;
-    const erRevurderingKlageKA =
-        behandling.behandlingsårsakstype === Behandlingårsak.RevurderingKlageKa;
+    const erRevurderingKlageKA = behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
     const erRevurderingBortfaltBeløp =
-        behandling.type === Behandlingstype.RevurderingTilbakekreving &&
-        behandling.behandlingsårsakstype ===
-            Behandlingårsak.RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt;
+        type === 'REVURDERING_TILBAKEKREVING' &&
+        behandlingsårsakstype === 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
     const [erPerioderSammenslått, settErPerioderSammenslått] = useState<boolean>(false);
 
     const {
@@ -72,7 +66,7 @@ const VedtakContainer: React.FC<Props> = ({ behandling }) => {
         erPerioderLike,
         laster,
         feilmelding,
-    } = useSammenslåPerioder(behandling.behandlingId);
+    } = useSammenslåPerioder();
 
     const handleKnappTrykk = async (): Promise<void> => {
         const oppdaterErPerioderSammenslått = !erPerioderSammenslått;
@@ -100,16 +94,12 @@ const VedtakContainer: React.FC<Props> = ({ behandling }) => {
         // Skal trigge re-rendring
     }, [nonUsedKey]);
 
-    if (!behandling) return null;
-
     const harValideringsFeil = skjemaData.some(avs =>
         avs.underavsnittsliste.some(uavs => uavs.harFeil)
     );
 
     const kanViseForhåndsvisning =
-        (!erLesevisning ||
-            (behandling.kanEndres &&
-                aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak)) &&
+        (!erLesevisning || (kanEndres && aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK')) &&
         !erRevurderingKlageKA;
 
     if (
@@ -132,13 +122,13 @@ const VedtakContainer: React.FC<Props> = ({ behandling }) => {
                     </>
                 )}
 
-                {behandling.manuelleBrevmottakere.length > 0 && (
+                {manuelleBrevmottakere.length > 0 && (
                     <>
                         <BrevmottakereAlert
-                            brevmottakere={behandling.manuelleBrevmottakere.map(
-                                brevmottakerDto => brevmottakerDto.brevmottaker
+                            brevmottakere={manuelleBrevmottakere.map(
+                                ({ brevmottaker }) => brevmottaker
                             )}
-                            linkTilBrevmottakerSteg={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
+                            linkTilBrevmottakerSteg={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
                         />
                         <Spacer20 />
                     </>
@@ -203,7 +193,7 @@ const VedtakContainer: React.FC<Props> = ({ behandling }) => {
                 <ActionBar
                     disableNeste={senderInn || disableBekreft || harValideringsFeil}
                     skjulNeste={erLesevisning}
-                    stegtekst={actionBarStegtekst(Behandlingssteg.ForeslåVedtak)}
+                    stegtekst={actionBarStegtekst('FORESLÅ_VEDTAK')}
                     nesteTekst="Send til godkjenning"
                     forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
                     nesteAriaLabel="Send til godkjenning hos beslutter"

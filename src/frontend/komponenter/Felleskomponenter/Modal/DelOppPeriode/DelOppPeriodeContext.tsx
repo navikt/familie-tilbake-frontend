@@ -4,6 +4,7 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 import { useState } from 'react';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
+import { useBehandling } from '../../../../context/BehandlingContext';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { getEndOfMonthISODateStr, validerDato } from '../../../../utils';
 
@@ -23,7 +24,8 @@ type DelOppPeriodeHook = {
     validateNyPeriode: (periode: Periode, månedsslutt: string) => boolean;
 };
 
-export const useDelOppPeriode = (fom: string, behandlingId: string): DelOppPeriodeHook => {
+export const useDelOppPeriode = (fom: string): DelOppPeriodeHook => {
+    const { behandlingId } = useBehandling();
     const [visModal, settVisModal] = useState(false);
     const [splittDato, settSplittDato] = useState(fom);
     const [tidslinjeRader, settTidslinjeRader] = useState<TimelinePeriodProps[][]>();

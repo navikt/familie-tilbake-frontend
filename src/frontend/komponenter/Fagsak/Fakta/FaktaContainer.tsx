@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { useFakta } from './FaktaContext';
 import GammelFaktaSkjema from './GammelFaktaSkjema';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
@@ -11,7 +11,7 @@ import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInforma
 
 const FaktaContainer: React.FC = () => {
     const { stegErBehandlet, skjemaData, fakta } = useFakta();
-    const { behandlingILesemodus } = useBehandling();
+    const { behandlingILesemodus } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus;
 
     if (fakta?.status === RessursStatus.Suksess) {

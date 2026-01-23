@@ -1,22 +1,16 @@
-import type { Behandling } from '../../../typer/behandling';
-
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
 import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { vilkårsvurderingStegInfotekstForYtelsestype } from '../../../kodeverk';
 import { RessursStatus } from '../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
-type Props = {
-    behandling: Behandling;
-};
-
-const VilkårsvurderingContainer: React.FC<Props> = ({ behandling }) => {
+const VilkårsvurderingContainer: React.FC = () => {
     const { ytelsestype } = useFagsak();
     const {
         containerRef,
@@ -25,7 +19,7 @@ const VilkårsvurderingContainer: React.FC<Props> = ({ behandling }) => {
         erAutoutført,
         skjemaData,
     } = useVilkårsvurdering();
-    const { behandlingILesemodus } = useBehandling();
+    const { behandlingILesemodus } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
     const stegInfotekst = vilkårsvurderingStegInfotekstForYtelsestype[ytelsestype];
@@ -52,7 +46,6 @@ const VilkårsvurderingContainer: React.FC<Props> = ({ behandling }) => {
                     )}
                     {skjemaData && skjemaData.length > 0 && (
                         <VilkårsvurderingPerioder
-                            behandling={behandling}
                             perioder={skjemaData}
                             erTotalbeløpUnder4Rettsgebyr={totalbeløpErUnder4Rettsgebyr}
                             erLesevisning={erLesevisning}

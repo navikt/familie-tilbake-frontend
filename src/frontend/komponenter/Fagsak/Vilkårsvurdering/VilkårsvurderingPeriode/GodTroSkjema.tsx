@@ -7,7 +7,7 @@ import { Radio, Textarea, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
-import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 
@@ -17,7 +17,7 @@ type Props = {
 };
 
 const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandling();
+    const { settIkkePersistertKomponent } = useBehandlingState();
 
     const ugyldigErBeløpetIBeholdValgt =
         skjema.visFeilmeldinger &&
