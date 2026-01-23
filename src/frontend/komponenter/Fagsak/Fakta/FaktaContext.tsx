@@ -15,6 +15,7 @@ import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
+import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Behandlingssteg } from '../../../typer/behandling';
 import {
@@ -338,10 +339,9 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
                         queryClient.invalidateQueries({
-                            queryKey: [
-                                'hentBehandling',
-                                { path: { behandlingId: behandling.behandlingId } },
-                            ],
+                            queryKey: hentBehandlingQueryKey({
+                                path: { behandlingId: behandling.behandlingId },
+                            }),
                         });
                         navigate(
                             `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`

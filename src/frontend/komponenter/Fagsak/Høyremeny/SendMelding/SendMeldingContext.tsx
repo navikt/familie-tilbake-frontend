@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 import { useDokumentApi } from '../../../../api/dokument';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../context/FagsakContext';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import {
     type Avhengigheter,
     type FeltState,
@@ -109,7 +110,7 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
                 if (respons.status === RessursStatus.Suksess) {
                     nullstillSkjema();
                     queryClient.invalidateQueries({
-                        queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
+                        queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                     });
                     navigate(
                         `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`

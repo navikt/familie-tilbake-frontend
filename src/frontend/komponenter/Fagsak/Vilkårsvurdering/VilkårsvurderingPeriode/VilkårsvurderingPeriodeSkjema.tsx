@@ -36,6 +36,7 @@ import {
 } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import { formatterDatostring, isEmpty } from '../../../../utils';
@@ -268,7 +269,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         ) {
             nullstillIkkePersisterteKomponenter();
             await queryClient.invalidateQueries({
-                queryKey: ['hentBehandling', { path: { behandlingId } }],
+                queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
             });
         }
     };

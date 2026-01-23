@@ -9,6 +9,7 @@ import { styled } from 'styled-components';
 
 import { usePåVentBehandling } from './PåVentContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { Valideringsstatus } from '../../../../hooks/skjema';
 import {
     Behandlingssteg,
@@ -45,7 +46,7 @@ const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
     const lukkModalOgHentBehandling = (): void => {
         onClose();
         queryClient.invalidateQueries({
-            queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
+            queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
         });
     };
 

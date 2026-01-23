@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useRef } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { usePåVentBehandling } from '../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 import { MODAL_BREDDE } from '../utils';
 
@@ -16,7 +17,7 @@ export const Gjenoppta: React.FC = () => {
     const lukkModalOgHentBehandling = (): void => {
         dialogRef.current?.close();
         queryClient.invalidateQueries({
-            queryKey: ['hentBehandling', { path: { behandlingId: behandling.behandlingId } }],
+            queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandling.behandlingId } }),
         });
     };
 

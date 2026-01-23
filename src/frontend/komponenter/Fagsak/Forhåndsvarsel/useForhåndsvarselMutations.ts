@@ -32,6 +32,7 @@ import {
     lagreBrukeruttalelseMutation,
     utsettUttalelseFristMutation,
     forhåndsvarselUnntakMutation,
+    hentBehandlingQueryKey,
 } from '../../../generated/@tanstack/react-query.gen';
 import { SYNLIGE_STEG } from '../../../utils/sider';
 
@@ -111,7 +112,7 @@ export const useForhåndsvarselMutations = (
     const { fagsystem, eksternFagsakId } = useFagsak();
     const invalidateQueries = (): void => {
         queryClient.invalidateQueries({
-            queryKey: ['hentBehandling', behandlingId],
+            queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
         });
         queryClient.invalidateQueries({
             queryKey: ['hentForhåndsvarselInfo', behandlingId],

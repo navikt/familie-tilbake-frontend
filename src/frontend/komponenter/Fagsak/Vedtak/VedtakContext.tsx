@@ -18,6 +18,7 @@ import { useDokumentApi } from '../../../api/dokument';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
+import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import {
     byggFeiletRessurs,
@@ -258,10 +259,9 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
                         queryClient.invalidateQueries({
-                            queryKey: [
-                                'hentBehandling',
-                                { path: { behandlingId: behandling.behandlingId } },
-                            ],
+                            queryKey: hentBehandlingQueryKey({
+                                path: { behandlingId: behandling.behandlingId },
+                            }),
                         });
                         navigate(
                             `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
@@ -292,10 +292,9 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
                         queryClient.invalidateQueries({
-                            queryKey: [
-                                'hentBehandling',
-                                { path: { behandlingId: behandling.behandlingId } },
-                            ],
+                            queryKey: hentBehandlingQueryKey({
+                                path: { behandlingId: behandling.behandlingId },
+                            }),
                         });
                         navigate(
                             `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`

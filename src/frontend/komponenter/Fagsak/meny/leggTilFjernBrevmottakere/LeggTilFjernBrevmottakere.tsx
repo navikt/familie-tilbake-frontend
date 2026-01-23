@@ -10,6 +10,7 @@ import { useApp } from '../../../../context/AppContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
 import { Behandlingssteg, Behandlingsstegstatus } from '../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
@@ -50,7 +51,7 @@ export const LeggTilFjernBrevmottakere: React.FC = () => {
             settSenderInn(false);
             if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
                 queryClient.invalidateQueries({
-                    queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
+                    queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                 });
                 navigate(
                     `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`
@@ -76,7 +77,7 @@ export const LeggTilFjernBrevmottakere: React.FC = () => {
             if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
                 dialogRef.current?.close();
                 queryClient.invalidateQueries({
-                    queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
+                    queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                 });
                 utførRedirect(
                     `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}`

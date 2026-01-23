@@ -12,6 +12,7 @@ import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
+import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
@@ -51,7 +52,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
         fjernManuellBrevmottaker(behandlingId, mottakerId).then((respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.Suksess) {
                 queryClient.invalidateQueries({
-                    queryKey: ['hentBehandling', { path: { behandlingId } }],
+                    queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
                 });
             }
         });

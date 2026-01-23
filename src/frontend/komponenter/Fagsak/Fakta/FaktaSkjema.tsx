@@ -38,6 +38,7 @@ import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook
 import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring } from '../../../utils';
 import { useStegNavigering } from '../../../utils/sider';
@@ -146,7 +147,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling, behandlingUrl }: Props): Re
                     if (data.ferdigvurdert) {
                         queryClient
                             .invalidateQueries({
-                                queryKey: ['hentBehandling', { path: { behandlingId } }],
+                                queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
                             })
                             .then(navigerTilNeste);
                     }
@@ -263,7 +264,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling, behandlingUrl }: Props): Re
                     forrigeAriaLabel={undefined}
                     nesteAriaLabel="Gå videre til foreldelsessteget"
                     onForrige={undefined}
-                    isLoading={false}
+                    isLoading={oppdaterMutation.isPending}
                 />
             </VStack>
         </FormProvider>
