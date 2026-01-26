@@ -20,12 +20,10 @@ import type { DefaultError, UseMutationResult } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router';
 
 import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
 import { Feil } from '../../../api/feil';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { useFagsak } from '../../../context/FagsakContext';
 import {
     bestillBrevMutation,
     forhåndsvisBrevMutation,
@@ -34,7 +32,8 @@ import {
     forhåndsvarselUnntakMutation,
     hentBehandlingQueryKey,
 } from '../../../generated/@tanstack/react-query.gen';
-import { SYNLIGE_STEG } from '../../../utils/sider';
+import { Behandlingssteg } from '../../../typer/behandling';
+import { useStegNavigering } from '../../../utils/sider';
 
 export type UseForhåndsvarselMutationsReturn = {
     readonly sendForhåndsvarselMutation: UseMutationResult<
@@ -67,8 +66,8 @@ export type UseForhåndsvarselMutationsReturn = {
     readonly sendUnntak: (formData: ForhåndsvarselFormData) => void;
     readonly sendUtsettUttalelseFrist: (formData: UttalelseFormData) => void;
     readonly seForhåndsvisning: (fritekst: string) => void;
-    readonly gåTilNeste: () => void;
-    readonly gåTilForrige: () => void;
+    readonly navigerTilNeste: () => void;
+    readonly navigerTilForrige: () => void;
 };
 
 const brukerUttalelsePayload = (formData: UttalelseFormData): BrukeruttalelseDto | undefined => {
@@ -106,10 +105,12 @@ export const extractErrorFromMutationError = (error: unknown): Feil => {
 export const useForhåndsvarselMutations = (
     onForhåndsvarselSent?: () => void
 ): UseForhåndsvarselMutationsReturn => {
-    const { behandlingId, eksternBrukId } = useBehandling();
-    const navigate = useNavigate();
+    const { behandlingId } = useBehandling();
+
+    const navigerTilNeste = useStegNavigering(Behandlingssteg.Foreldelse);
+    const navigerTilForrige = useStegNavigering(Behandlingssteg.Fakta);
+
     const queryClient = useQueryClient();
-    const { fagsystem, eksternFagsakId } = useFagsak();
     const invalidateQueries = (): void => {
         queryClient.invalidateQueries({
             queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
@@ -117,18 +118,6 @@ export const useForhåndsvarselMutations = (
         queryClient.invalidateQueries({
             queryKey: ['hentForhåndsvarselInfo', behandlingId],
         });
-    };
-
-    const gåTilNeste = (): void => {
-        navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.FORELDELSE.href}`
-        );
-    };
-
-    const gåTilForrige = (): void => {
-        navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
-        );
     };
 
     const sendForhåndsvarselMutation = useMutation({
@@ -145,6 +134,7 @@ export const useForhåndsvarselMutations = (
         ...lagreBrukeruttalelseMutation(),
         onSuccess: () => {
             invalidateQueries();
+            navigerTilNeste();
         },
     });
 
@@ -152,7 +142,7 @@ export const useForhåndsvarselMutations = (
         ...utsettUttalelseFristMutation(),
         onSuccess: () => {
             invalidateQueries();
-            gåTilNeste();
+            navigerTilNeste();
         },
     });
 
@@ -243,7 +233,7 @@ export const useForhåndsvarselMutations = (
                 },
             });
         },
-        gåTilNeste,
-        gåTilForrige,
+        navigerTilNeste,
+        navigerTilForrige,
     };
 };

@@ -223,8 +223,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendForhåndsvarsel,
         sendUnntakMutation,
         sendUnntak,
-        gåTilNeste,
-        gåTilForrige,
+        navigerTilNeste,
+        navigerTilForrige,
     } = useForhåndsvarselMutations();
 
     const mutations = [
@@ -288,7 +288,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         } else if (skalSendeUnntak) {
             sendUnntak(data);
         } else {
-            gåTilNeste();
+            navigerTilNeste();
         }
         nullstillIkkePersisterteKomponenter();
     };
@@ -352,7 +352,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     sendUnntakMutation?.isPending
                 }
                 forrigeAriaLabel="Gå til fakta om feilutbetaling"
-                onForrige={gåTilForrige}
+                onForrige={navigerTilForrige}
                 nesteAriaLabel={getNesteKnappTekst()}
                 {...(formId
                     ? {
@@ -361,7 +361,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                       }
                     : {
                           type: 'button' as const,
-                          onNeste: gåTilNeste,
+                          onNeste: navigerTilNeste,
                       })}
             />
 

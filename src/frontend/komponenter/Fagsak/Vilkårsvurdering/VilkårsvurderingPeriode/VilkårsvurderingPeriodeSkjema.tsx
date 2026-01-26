@@ -271,6 +271,11 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
             await queryClient.invalidateQueries({
                 queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
             });
+            if (handlingResult === PeriodeHandling.GåTilForrigeSteg) {
+                gåTilForrigeSteg();
+            } else {
+                gåTilNesteSteg();
+            }
         }
     };
 

@@ -5,7 +5,6 @@ import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { BrevmottakerModal } from './BrevmottakerModal';
 import { useBehandlingApi } from '../../../api/behandling';
@@ -17,7 +16,7 @@ import { Behandlingssteg } from '../../../typer/behandling';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
-import { SYNLIGE_STEG } from '../../../utils/sider';
+import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 export type BrevmottakerProps = {
@@ -223,11 +222,10 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
 };
 
 const Brevmottakere: React.FC = () => {
-    const { eksternBrukId, manuelleBrevmottakere } = useBehandling();
+    const { manuelleBrevmottakere } = useBehandling();
     const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
-    const { fagsystem, eksternFagsakId, bruker } = useFagsak();
-    const navigate = useNavigate();
-
+    const { bruker } = useFagsak();
+    const navigerTilNeste = useStegNavigering(Behandlingssteg.Fakta);
     const [visBrevmottakerModal, setVisBrevmottakerModal] = useState(false);
     const [brevmottakerIdTilEndring, setBrevmottakerIdTilEndring] = useState<string | undefined>(
         undefined
@@ -236,12 +234,6 @@ const Brevmottakere: React.FC = () => {
     const erLesevisning = !!behandlingILesemodus;
 
     const antallBrevmottakere = Object.keys(manuelleBrevmottakere).length;
-
-    const gåTilNeste = (): void => {
-        navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
-        );
-    };
 
     const kanLeggeTilMottaker =
         antallBrevmottakere == 0 &&
@@ -327,7 +319,7 @@ const Brevmottakere: React.FC = () => {
                 stegtekst={actionBarStegtekst(Behandlingssteg.Brevmottaker)}
                 forrigeAriaLabel={undefined}
                 nesteAriaLabel="Gå til faktasteget"
-                onNeste={gåTilNeste}
+                onNeste={navigerTilNeste}
                 onForrige={undefined}
             />
         </>

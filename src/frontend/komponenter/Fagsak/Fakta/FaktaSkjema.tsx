@@ -45,17 +45,16 @@ import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
-    behandlingUrl: string;
     faktaOmFeilutbetaling: FaktaOmFeilutbetaling;
 };
 
-export const FaktaSkjema = ({ faktaOmFeilutbetaling, behandlingUrl }: Props): React.JSX.Element => {
+export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element => {
     const { behandlingId } = useBehandling();
     const { actionBarStegtekst, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const queryClient = useQueryClient();
 
-    const navigerTilNeste = useStegNavigering(behandlingUrl, Behandlingssteg.Forhåndsvarsel);
+    const navigerTilNeste = useStegNavigering(Behandlingssteg.Forhåndsvarsel);
 
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchema>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),

@@ -154,11 +154,10 @@ const HistoriskBehandling: React.FC<HistoriskBehandlingProps> = ({ dialogRef }) 
 );
 
 type AktivBehandlingProps = {
-    behandlingUrl: string;
     dialogRef: React.RefObject<HTMLDialogElement | null>;
 };
 
-const AktivBehandling: React.FC<AktivBehandlingProps> = ({ behandlingUrl, dialogRef }) => {
+const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
     const behandling = useBehandling();
 
     return (
@@ -191,7 +190,7 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ behandlingUrl, dialog
                                 path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                                 element={
                                     behandling.erNyModell ? (
-                                        <Fakta behandlingUrl={behandlingUrl} />
+                                        <Fakta />
                                     ) : (
                                         <FaktaProvider>
                                             <FaktaContainer />
@@ -296,7 +295,7 @@ const Behandling: React.FC = () => {
         return <HistoriskBehandling dialogRef={dialogRef} />;
     }
 
-    return <AktivBehandling behandlingUrl={behandlingUrl} dialogRef={dialogRef} />;
+    return <AktivBehandling dialogRef={dialogRef} />;
 };
 
 const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {

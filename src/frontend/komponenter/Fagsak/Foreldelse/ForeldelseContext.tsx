@@ -6,14 +6,11 @@ import type { ForeldelseResponse } from '../../../typer/tilbakekrevingstyper';
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../context/FagsakContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
-import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Foreldelsevurdering } from '../../../kodeverk';
 import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
 import {
@@ -23,7 +20,7 @@ import {
     RessursStatus,
 } from '../../../typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
-import { SYNLIGE_STEG } from '../../../utils/sider';
+import { useStegNavigering } from '../../../utils/sider';
 
 const utledValgtPeriode = (
     skjemaPerioder: ForeldelsePeriodeSkjemeData[],
@@ -67,7 +64,6 @@ export type ForeldelseHook = {
 };
 
 const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
-    const { fagsystem, eksternFagsakId } = useFagsak();
     const behandling = useBehandling();
     const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
@@ -79,10 +75,16 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     const [valgtPeriode, settValgtPeriode] = useState<ForeldelsePeriodeSkjemeData>();
     const [allePerioderBehandlet, settAllePerioderBehandlet] = useState<boolean>(false);
     const [senderInn, settSenderInn] = useState<boolean>(false);
-    const { utførRedirect } = useRedirectEtterLagring();
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
-    const navigate = useNavigate();
-    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+
+    const navigerTilNeste = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
+    const navigerTilForrige = useStegNavigering(
+        behandling.behandlingsstegsinfo.some(
+            steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+        )
+            ? Behandlingssteg.Forhåndsvarsel
+            : Behandlingssteg.Fakta
+    );
 
     useEffect(() => {
         settStegErBehandlet(erStegBehandlet(Behandlingssteg.Foreldelse));
@@ -146,22 +148,6 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
             });
     };
 
-    const gåTilNesteSteg = (): void => {
-        navigate(`${behandlingUrl}/${SYNLIGE_STEG.VILKÅRSVURDERING.href}`);
-    };
-
-    const gåTilForrigeSteg = (): void => {
-        navigate(
-            `${behandlingUrl}/${
-                behandling.behandlingsstegsinfo.some(
-                    steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
-                )
-                    ? SYNLIGE_STEG.FORHÅNDSVARSEL.href
-                    : SYNLIGE_STEG.FAKTA.href
-            }`
-        );
-    };
-
     const oppdaterPeriode = (periode: ForeldelsePeriodeSkjemeData): void => {
         const perioder = skjemaData;
         const index = perioder.findIndex(bfp => bfp.index === periode.index);
@@ -208,7 +194,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     const sendInnSkjema = (): void => {
         nullstillIkkePersisterteKomponenter();
         if (stegErBehandlet && !harEndretOpplysninger()) {
-            utførRedirect(`${behandlingUrl}/${SYNLIGE_STEG.VILKÅRSVURDERING.href}`);
+            navigerTilNeste();
         } else {
             settSenderInn(true);
             const payload: ForeldelseStegPayload = {
@@ -236,9 +222,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                             path: { behandlingId: behandling.behandlingId },
                         }),
                     });
-                    navigate(
-                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                    );
+                    navigerTilNeste();
                 }
             });
         }
@@ -253,8 +237,8 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         valgtPeriode,
         settValgtPeriode,
         allePerioderBehandlet,
-        gåTilNesteSteg,
-        gåTilForrigeSteg,
+        navigerTilNeste,
+        navigerTilForrige,
         senderInn,
         sendInnSkjema,
         onSplitPeriode,
