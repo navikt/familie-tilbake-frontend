@@ -58,9 +58,9 @@ export const OpprettSkjema: React.FC<Props> = ({
     return (
         <VStack
             as="form"
-            gap="6"
             onSubmit={handleSubmit(handleForhåndsvarselSubmit)}
             id="opprettForm"
+            gap="6"
         >
             <Controller
                 control={control}
@@ -106,6 +106,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                                         {avsnitt.title === 'Dette har skjedd' && (
                                             <Textarea
                                                 {...register('fritekst')}
+                                                size="small"
                                                 label="Legg til utdypende tekst"
                                                 maxLength={maksAntallTegn}
                                                 error={fieldError.fritekst?.message?.toString()}

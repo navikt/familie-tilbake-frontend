@@ -125,22 +125,25 @@ export const Forhåndsvarsel: React.FC = () => {
         forhåndsvisning.data ||
         queryClient.getQueryData(['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst]);
 
+    const visForhåndsvisningsknapp = skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja;
+
     return (
-        <VStack gap="4">
+        <VStack gap="6">
             <HStack align="center" justify="space-between">
-                <Heading size="small">Forhåndsvarsel</Heading>
+                <Heading size="medium">Forhåndsvarsel</Heading>
                 <HStack gap="4">
-                    {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && (
-                        <Button
-                            loading={forhåndsvisning.isPending}
-                            icon={<FilePdfIcon aria-hidden />}
-                            variant="tertiary"
-                            size="small"
-                            onClick={seForhåndsvisningWithModal}
-                        >
-                            Forhåndsvis
-                        </Button>
-                    )}
+                    <Button
+                        loading={forhåndsvisning.isPending}
+                        icon={<FilePdfIcon aria-hidden />}
+                        variant="tertiary"
+                        size="small"
+                        onClick={seForhåndsvisningWithModal}
+                        className={visForhåndsvisningsknapp ? '' : 'invisible pointer-events-none'}
+                        aria-hidden={!visForhåndsvisningsknapp}
+                        tabIndex={visForhåndsvisningsknapp ? 0 : -1}
+                    >
+                        Forhåndsvis
+                    </Button>
                     {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
                         <Tooltip
                             arrow={false}
@@ -319,7 +322,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     })();
 
     return (
-        <VStack gap="4" ref={ref}>
+        <VStack gap="6" ref={ref}>
             <OpprettSkjema
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
