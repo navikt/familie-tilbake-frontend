@@ -42,7 +42,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
             harBrukerUttaltSeg: HarBrukerUttaltSegValg.IkkeVurdert,
         },
     });
-    // const navigerTilBehandling = useStegNavigering();
+    const navigerTilBehandling = useStegNavigering();
     const harForhåndsvarselSteg = behandling.behandlingsstegsinfo.some(
         steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
     );
@@ -347,7 +347,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
                                 path: { behandlingId: behandling.behandlingId },
                             }),
                         });
-                        navigerTilNeste();
+                        navigerTilBehandling();
                     }
                 });
             }
