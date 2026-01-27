@@ -27,13 +27,19 @@ export const zFaktaPeriode = z.object({
     id: z.string(),
     fom: z.iso.date(),
     tom: z.iso.date(),
-    feilutbetaltBeløp: z.int(),
+    feilutbetaltBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
     splittbarePerioder: z.array(
         z.object({
             id: z.string(),
             fom: z.iso.date(),
             tom: z.iso.date(),
-            feilutbetaltBeløp: z.int(),
+            feilutbetaltBeløp: z
+                .int()
+                .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+                .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
             rettsligGrunnlag: z.array(zRettsligGrunnlag),
         })
     ),
@@ -72,7 +78,10 @@ export const zRevurdering = z.object({
 });
 
 export const zFeilutbetaling = z.object({
-    beløp: z.int(),
+    beløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
     fom: z.iso.date(),
     tom: z.iso.date(),
     revurdering: zRevurdering,
@@ -80,7 +89,13 @@ export const zFeilutbetaling = z.object({
 
 export const zFaktaOmFeilutbetaling = z.object({
     feilutbetaling: zFeilutbetaling,
-    tidligereVarsletBeløp: z.union([z.int(), z.null()]),
+    tidligereVarsletBeløp: z.union([
+        z
+            .int()
+            .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+            .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+        z.null(),
+    ]),
     muligeRettsligGrunnlag: z.array(zMuligeRettsligGrunnlag),
     perioder: z.array(zFaktaPeriode),
     vurdering: zVurdering,
