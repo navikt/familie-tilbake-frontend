@@ -25,7 +25,7 @@ export const BrevmottakereAlert: React.FC<Props> = ({ brevmottakere, linkTilBrev
             {brevmottakere && brevmottakere.length !== 0 && (
                 <StyledAlert variant="info">
                     Brevmottaker(e) er endret, og vedtak sendes til:
-                    <BrevmottakerListe brevmottakere={brevmottakere} />
+                    <BrevmottakerListe />
                     <Button
                         variant="tertiary"
                         onClick={() => navigate(linkTilBrevmottakerSteg)}
