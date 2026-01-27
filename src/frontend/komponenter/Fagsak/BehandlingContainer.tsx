@@ -271,17 +271,17 @@ const Behandling: React.FC = () => {
     const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
-    const erØnsketSideLovlig =
+    const erØnsketSideGyldig =
         !!ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
 
-    const navigerHvisUlovligSide = useEffectEvent(
-        (erØnsketSideLovlig: boolean, aktivtSteg: Behandlingsstegstilstand | undefined) => {
-            if (!erØnsketSideLovlig && aktivtSteg) {
+    const navigerHvisUgyldigSide = useEffectEvent(
+        (erØnsketSideGyldig: boolean, aktivtSteg: Behandlingsstegstilstand | undefined) => {
+            if (!erØnsketSideGyldig && aktivtSteg) {
                 const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
                 if (aktivSide) {
-                    navigate(`${behandlingUrl}/${aktivSide?.href}`);
+                    navigate(`${behandlingUrl}/${aktivSide.href}`);
                 }
-            } else if (!erØnsketSideLovlig) {
+            } else if (!erØnsketSideGyldig) {
                 if (behandling.status === Behandlingstatus.Avsluttet) {
                     navigerTilVedtak();
                 } else {
@@ -292,8 +292,8 @@ const Behandling: React.FC = () => {
     );
 
     useEffect(() => {
-        navigerHvisUlovligSide(erØnsketSideLovlig, aktivtSteg);
-    }, [erØnsketSideLovlig, aktivtSteg]);
+        navigerHvisUgyldigSide(erØnsketSideGyldig, aktivtSteg);
+    }, [erØnsketSideGyldig, aktivtSteg]);
 
     if (behandling.erBehandlingHenlagt) {
         return <HenlagtBehandling dialogRef={dialogRef} />;
