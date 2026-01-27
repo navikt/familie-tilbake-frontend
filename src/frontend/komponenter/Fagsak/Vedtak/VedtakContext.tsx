@@ -248,10 +248,10 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                 fritekstavsnitt: lagFritekstavsnitt(),
             };
             sendInnForeslåVedtak(behandling.behandlingId, payload)
-                .then((respons: Ressurs<string>) => {
+                .then(async (respons: Ressurs<string>) => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
-                        queryClient.invalidateQueries({
+                        await queryClient.invalidateQueries({
                             queryKey: hentBehandlingQueryKey({
                                 path: { behandlingId: behandling.behandlingId },
                             }),
@@ -279,10 +279,10 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
             settForeslåVedtakRespons(undefined);
             nullstillIkkePersisterteKomponenter();
             lagreUtkastVedtaksbrev(behandling.behandlingId, lagFritekstavsnitt())
-                .then((respons: Ressurs<string>) => {
+                .then(async (respons: Ressurs<string>) => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
-                        queryClient.invalidateQueries({
+                        await queryClient.invalidateQueries({
                             queryKey: hentBehandlingQueryKey({
                                 path: { behandlingId: behandling.behandlingId },
                             }),

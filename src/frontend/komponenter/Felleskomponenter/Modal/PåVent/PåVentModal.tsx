@@ -43,9 +43,9 @@ const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
     const { behandlingId, saksbehandlingstype, kanEndres } = useBehandling();
     const queryClient = useQueryClient();
 
-    const lukkModalOgHentBehandling = (): void => {
+    const lukkModalOgHentBehandling = async (): Promise<void> => {
         onClose();
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
             queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
         });
     };

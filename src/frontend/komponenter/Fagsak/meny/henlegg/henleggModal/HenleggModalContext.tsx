@@ -90,10 +90,10 @@ export const useHenleggSkjema = ({ lukkModal }: Props): HenleggBehandlingSkjemaH
                 begrunnelse: skjema.felter.begrunnelse.verdi,
                 fritekst: skjema.felter.fritekst.verdi,
             };
-            henleggBehandling(behandlingId, payload).then((response: Ressurs<string>) => {
+            henleggBehandling(behandlingId, payload).then(async (response: Ressurs<string>) => {
                 if (response.status === RessursStatus.Suksess) {
                     lukkModal();
-                    queryClient.invalidateQueries({
+                    await queryClient.invalidateQueries({
                         queryKey: ['behandling', behandlingId],
                     });
                 }

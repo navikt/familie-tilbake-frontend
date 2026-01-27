@@ -177,9 +177,9 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
         settLaster(true);
         settFeilmelding('');
         kallAngreSendTilBeslutter(behandling.behandlingId)
-            .then((res: Ressurs<string>) => {
+            .then(async (res: Ressurs<string>) => {
                 if (res.status === RessursStatus.Suksess) {
-                    queryClient.invalidateQueries({
+                    await queryClient.invalidateQueries({
                         queryKey: hentBehandlingQueryKey({
                             path: { behandlingId: behandling.behandlingId },
                         }),
@@ -216,9 +216,9 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
             };
 
             sendInnFatteVedtak(behandling.behandlingId, payload)
-                .then((respons: Ressurs<string>) => {
+                .then(async (respons: Ressurs<string>) => {
                     if (respons.status === RessursStatus.Suksess) {
-                        queryClient.invalidateQueries({
+                        await queryClient.invalidateQueries({
                             queryKey: hentBehandlingQueryKey({
                                 path: { behandlingId: behandling.behandlingId },
                             }),

@@ -48,13 +48,15 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     const [organisasjonsnavn, kontaktperson] = brevmottaker.navn.split(' v/ ');
 
     const fjernBrevMottakerOgOppdaterState = (mottakerId: string): void => {
-        fjernManuellBrevmottaker(behandlingId, mottakerId).then((respons: Ressurs<string>) => {
-            if (respons.status === RessursStatus.Suksess) {
-                queryClient.invalidateQueries({
-                    queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
-                });
+        fjernManuellBrevmottaker(behandlingId, mottakerId).then(
+            async (respons: Ressurs<string>) => {
+                if (respons.status === RessursStatus.Suksess) {
+                    await queryClient.invalidateQueries({
+                        queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
+                    });
+                }
             }
-        });
+        );
     };
 
     const håndterEndreBrevmottaker = (): void => {

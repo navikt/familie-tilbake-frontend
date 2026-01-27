@@ -78,7 +78,6 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
 
     const navigerTilNeste = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
-    const navigerTilBehandling = useStegNavigering();
     const navigerTilForrige = useStegNavigering(
         behandling.behandlingsstegsinfo.some(
             steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
@@ -215,17 +214,19 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                     };
                 }),
             };
-            sendInnForeldelse(behandling.behandlingId, payload).then((respons: Ressurs<string>) => {
-                settSenderInn(false);
-                if (respons.status === RessursStatus.Suksess) {
-                    queryClient.invalidateQueries({
-                        queryKey: hentBehandlingQueryKey({
-                            path: { behandlingId: behandling.behandlingId },
-                        }),
-                    });
-                    navigerTilBehandling();
+            sendInnForeldelse(behandling.behandlingId, payload).then(
+                async (respons: Ressurs<string>) => {
+                    settSenderInn(false);
+                    if (respons.status === RessursStatus.Suksess) {
+                        await queryClient.refetchQueries({
+                            queryKey: hentBehandlingQueryKey({
+                                path: { behandlingId: behandling.behandlingId },
+                            }),
+                        });
+                        navigerTilNeste();
+                    }
                 }
-            });
+            );
         }
     };
 

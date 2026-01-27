@@ -14,9 +14,9 @@ export const Gjenoppta: React.FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const queryClient = useQueryClient();
 
-    const lukkModalOgHentBehandling = (): void => {
+    const lukkModalOgHentBehandling = async (): Promise<void> => {
         dialogRef.current?.close();
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
             queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandling.behandlingId } }),
         });
     };

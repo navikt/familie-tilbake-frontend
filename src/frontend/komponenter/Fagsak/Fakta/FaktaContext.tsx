@@ -47,7 +47,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
         steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
     );
     const navigerTilNeste = useStegNavigering(
-        harForhåndsvarselSteg ? Behandlingssteg.Forhåndsvarsel : Behandlingssteg.Vilkårsvurdering
+        harForhåndsvarselSteg ? Behandlingssteg.Forhåndsvarsel : Behandlingssteg.Foreldelse
     );
     const navigerTilForrige = useStegNavigering(
         behandling.behandlingsstegsinfo.some(
@@ -339,17 +339,19 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
                         })
                     ),
                 };
-                sendInnFakta(behandling.behandlingId, payload).then((respons: Ressurs<string>) => {
-                    settSenderInn(false);
-                    if (respons.status === RessursStatus.Suksess) {
-                        queryClient.invalidateQueries({
-                            queryKey: hentBehandlingQueryKey({
-                                path: { behandlingId: behandling.behandlingId },
-                            }),
-                        });
-                        navigerTilBehandling();
+                sendInnFakta(behandling.behandlingId, payload).then(
+                    async (respons: Ressurs<string>) => {
+                        settSenderInn(false);
+                        if (respons.status === RessursStatus.Suksess) {
+                            await queryClient.invalidateQueries({
+                                queryKey: hentBehandlingQueryKey({
+                                    path: { behandlingId: behandling.behandlingId },
+                                }),
+                            });
+                            navigerTilBehandling();
+                        }
                     }
-                });
+                );
             }
         }
     };

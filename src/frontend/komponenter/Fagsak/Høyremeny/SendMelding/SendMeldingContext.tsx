@@ -99,12 +99,12 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
         validerAlleSynligeFelter();
         if (kanSendeSkjema()) {
             settSenderInn(true);
-            bestillBrev(hentBrevdata()).then((respons: Ressurs<void>) => {
+            bestillBrev(hentBrevdata()).then(async (respons: Ressurs<void>) => {
                 settSenderInn(false);
                 settFeilmelding(undefined);
                 if (respons.status === RessursStatus.Suksess) {
                     nullstillSkjema();
-                    queryClient.invalidateQueries({
+                    await queryClient.invalidateQueries({
                         queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                     });
                 } else {

@@ -41,10 +41,10 @@ export const LeggTilFjernBrevmottakere: React.FC = () => {
         request<void, string>({
             method: 'POST',
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}/aktiver`,
-        }).then((respons: Ressurs<string>) => {
+        }).then(async (respons: Ressurs<string>) => {
             settSenderInn(false);
             if (respons.status === RessursStatus.Suksess) {
-                queryClient.invalidateQueries({
+                await queryClient.invalidateQueries({
                     queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                 });
                 navigerTilBrevmottakerSteg();
@@ -64,11 +64,11 @@ export const LeggTilFjernBrevmottakere: React.FC = () => {
         request<void, string>({
             method: 'PUT',
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}/deaktiver`,
-        }).then((respons: Ressurs<string>) => {
+        }).then(async (respons: Ressurs<string>) => {
             settSenderInn(false);
             if (respons.status === RessursStatus.Suksess) {
                 dialogRef.current?.close();
-                queryClient.invalidateQueries({
+                await queryClient.refetchQueries({
                     queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                 });
                 navigerTilBehandling();

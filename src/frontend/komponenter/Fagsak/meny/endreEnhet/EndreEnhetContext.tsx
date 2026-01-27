@@ -62,10 +62,10 @@ const useEndreEnhet = (lukkModal: () => void): EndreEnhetHook => {
                     },
                     url: `/familie-tilbake/api/behandling/${behandlingId}/bytt-enhet/v1`,
                 },
-                (response: Ressurs<string>) => {
+                async (response: Ressurs<string>) => {
                     if (response.status === RessursStatus.Suksess) {
                         lukkModal();
-                        queryClient.invalidateQueries({
+                        await queryClient.invalidateQueries({
                             queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
                         });
                     }

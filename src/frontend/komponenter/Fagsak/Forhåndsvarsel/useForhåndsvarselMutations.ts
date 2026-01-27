@@ -111,19 +111,19 @@ export const useForhåndsvarselMutations = (
     const navigerTilForrige = useStegNavigering(Behandlingssteg.Fakta);
 
     const queryClient = useQueryClient();
-    const invalidateQueries = (): void => {
-        queryClient.invalidateQueries({
+    const invalidateQueries = async (): Promise<void> => {
+        await queryClient.invalidateQueries({
             queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
         });
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
             queryKey: ['hentForhåndsvarselInfo', behandlingId],
         });
     };
 
     const sendForhåndsvarselMutation = useMutation({
         ...bestillBrevMutation(),
-        onSuccess: () => {
-            invalidateQueries();
+        onSuccess: async () => {
+            await invalidateQueries();
             if (onForhåndsvarselSent) {
                 onForhåndsvarselSent();
             }
@@ -132,16 +132,16 @@ export const useForhåndsvarselMutations = (
 
     const sendBrukeruttalelseMutation = useMutation({
         ...lagreBrukeruttalelseMutation(),
-        onSuccess: () => {
-            invalidateQueries();
+        onSuccess: async () => {
+            await invalidateQueries();
             navigerTilNeste();
         },
     });
 
     const sendUtsettUttalelseFristMutation = useMutation({
         ...utsettUttalelseFristMutation(),
-        onSuccess: () => {
-            invalidateQueries();
+        onSuccess: async () => {
+            await invalidateQueries();
             navigerTilNeste();
         },
     });
@@ -152,8 +152,8 @@ export const useForhåndsvarselMutations = (
 
     const sendUnntakMutation = useMutation({
         ...forhåndsvarselUnntakMutation(),
-        onSuccess: () => {
-            invalidateQueries();
+        onSuccess: async () => {
+            await invalidateQueries();
         },
     });
 

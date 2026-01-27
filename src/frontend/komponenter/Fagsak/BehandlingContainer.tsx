@@ -1,12 +1,11 @@
 import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
-import type { SynligeStegType } from '../../utils/sider';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
-import { Suspense, useEffect, useRef, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router';
+import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
 import { ActionBar } from './ActionBar/ActionBar';
 import { BehandlingContainerSkeleton } from './BehandlingContainerSkeleton';
@@ -24,6 +23,7 @@ import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historik
 import { VilkårsvurderingProvider } from './Vilkårsvurdering/VilkårsvurderingContext';
 import { useBehandling } from '../../context/BehandlingContext';
 import { useBehandlingState } from '../../context/BehandlingStateContext';
+import { useFagsak } from '../../context/FagsakContext';
 import { Behandlingssteg, Behandlingstatus, venteårsaker } from '../../typer/behandling';
 import { formatterDatostring } from '../../utils';
 import {
@@ -259,37 +259,41 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
 };
 
 const Behandling: React.FC = () => {
+    const { fagsystem, eksternFagsakId } = useFagsak();
     const behandling = useBehandling();
     const { harKravgrunnlag, aktivtSteg } = useBehandlingState();
     const location = useLocation();
     const dialogRef = useRef<HTMLDialogElement>(null);
-
+    const navigate = useNavigate();
     const navigerTilBehandling = useStegNavigering();
-    const navigerTilAktivtSteg = useStegNavigering(
-        aktivtSteg?.behandlingssteg as SynligeStegType | undefined
-    );
     const navigerTilVedtak = useStegNavigering(Behandlingssteg.ForeslåVedtak);
 
+    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
     const erØnsketSideLovlig =
-        ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
+        !!ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
 
-    useEffect(() => {
-        if (!erØnsketSideLovlig && aktivtSteg) {
-            const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
-            if (aktivSide) {
-                navigerTilAktivtSteg();
-            }
-        } else if (!erØnsketSideLovlig) {
-            if (behandling.status === Behandlingstatus.Avsluttet) {
-                navigerTilVedtak();
-            } else {
-                navigerTilBehandling();
+    const navigerHvisUlovligSide = useEffectEvent(
+        (erØnsketSideLovlig: boolean, aktivtSteg: Behandlingsstegstilstand | undefined) => {
+            if (!erØnsketSideLovlig && aktivtSteg) {
+                const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
+                if (aktivSide) {
+                    navigate(`${behandlingUrl}/${aktivSide?.href}`);
+                }
+            } else if (!erØnsketSideLovlig) {
+                if (behandling.status === Behandlingstatus.Avsluttet) {
+                    navigerTilVedtak();
+                } else {
+                    navigerTilBehandling();
+                }
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [aktivtSteg, ønsketSide]);
+    );
+
+    useEffect(() => {
+        navigerHvisUlovligSide(erØnsketSideLovlig, aktivtSteg);
+    }, [erØnsketSideLovlig, aktivtSteg]);
 
     if (behandling.erBehandlingHenlagt) {
         return <HenlagtBehandling dialogRef={dialogRef} />;

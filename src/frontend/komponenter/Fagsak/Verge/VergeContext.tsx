@@ -182,11 +182,11 @@ const [VergeProvider, useVerge] = createUseContext(() => {
                 },
             };
             sendInnVerge(behandling.behandlingId, payload)
-                .then((respons: Ressurs<string>) => {
+                .then(async (respons: Ressurs<string>) => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
                         nullstillIkkePersisterteKomponenter();
-                        queryClient.invalidateQueries({
+                        await queryClient.invalidateQueries({
                             queryKey: hentBehandlingQueryKey({
                                 path: { behandlingId: behandling.behandlingId },
                             }),

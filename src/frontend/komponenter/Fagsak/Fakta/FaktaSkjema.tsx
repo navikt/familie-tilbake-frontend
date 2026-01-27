@@ -141,14 +141,13 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
         oppdaterMutation.mutate(
             { body: data, path: { behandlingId } },
             {
-                onSuccess: data => {
+                onSuccess: async data => {
                     nullstillIkkePersisterteKomponenter();
                     if (data.ferdigvurdert) {
-                        queryClient
-                            .invalidateQueries({
-                                queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
-                            })
-                            .then(navigerTilNeste);
+                        await queryClient.refetchQueries({
+                            queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
+                        });
+                        navigerTilNeste();
                     }
                 },
             }

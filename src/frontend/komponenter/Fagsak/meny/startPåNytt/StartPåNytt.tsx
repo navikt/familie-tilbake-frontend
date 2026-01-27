@@ -8,32 +8,29 @@ import { useStartPåNytt } from './useStartPåNytt';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
-import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
 import { RessursStatus } from '../../../../typer/ressurs';
+import { useStegNavigering } from '../../../../utils/sider';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { MODAL_BREDDE } from '../utils';
 
 export const StartPåNytt: React.FC = () => {
-    const { behandlingId, eksternBrukId } = useBehandling();
+    const { behandlingId } = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const queryClient = useQueryClient();
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const { utførRedirect } = useRedirectEtterLagring();
+    const navigerTilBehandling = useStegNavigering();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const mutation = useStartPåNytt();
 
     const handleNullstill = (): void => {
         nullstillIkkePersisterteKomponenter();
         mutation.mutate(behandlingId, {
-            onSuccess: ressurs => {
+            onSuccess: async ressurs => {
                 if (ressurs.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
-                    queryClient.invalidateQueries({
+                    await queryClient.invalidateQueries({
                         queryKey: ['behandling', behandlingId],
                     });
-                    utførRedirect(
-                        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}`
-                    );
-                    window.location.reload();
+                    navigerTilBehandling();
                 }
             },
             onError: () => dialogRef.current?.close(),
