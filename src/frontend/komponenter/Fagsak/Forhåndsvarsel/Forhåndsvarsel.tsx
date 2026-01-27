@@ -128,7 +128,7 @@ export const Forhåndsvarsel: React.FC = () => {
     const visForhåndsvisningsknapp = skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja;
 
     return (
-        <VStack gap="4">
+        <VStack gap="6">
             <HStack align="center" justify="space-between">
                 <Heading size="medium">Forhåndsvarsel</Heading>
                 <HStack gap="4">
@@ -322,7 +322,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     })();
 
     return (
-        <VStack gap="4" ref={ref}>
+        <VStack gap="6" ref={ref}>
             <OpprettSkjema
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}

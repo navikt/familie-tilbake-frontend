@@ -60,7 +60,7 @@ export const OpprettSkjema: React.FC<Props> = ({
             as="form"
             onSubmit={handleSubmit(handleForhåndsvarselSubmit)}
             id="opprettForm"
-            className="gap-4.5"
+            gap="6"
         >
             <Controller
                 control={control}
