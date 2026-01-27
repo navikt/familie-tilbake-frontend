@@ -80,7 +80,7 @@ export const Uttalelse: React.FC<Props> = ({
         <VStack
             as="form"
             maxWidth={ATextWidthMax}
-            gap="4"
+            gap="6"
             id="uttalelseForm"
             onSubmit={methods.handleSubmit(handleUttalelseSubmit)}
         >
