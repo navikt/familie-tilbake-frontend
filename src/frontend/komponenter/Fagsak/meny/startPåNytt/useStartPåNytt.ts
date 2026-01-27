@@ -44,9 +44,9 @@ export const useStartPåNytt = (): StartPåNyttHook => {
                 finnesHttpStatusKode && response.httpStatusCode ? response.httpStatusCode : 500
             );
         },
-        onSuccess: response => {
+        onSuccess: async response => {
             if (response.status === RessursStatus.Suksess) {
-                queryClient.invalidateQueries({ queryKey: ['behandling'] });
+                await queryClient.invalidateQueries({ queryKey: ['behandling'] });
             }
         },
     });

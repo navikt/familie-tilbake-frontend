@@ -9,13 +9,11 @@ import type {
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../context/FagsakContext';
-import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
+import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
@@ -30,13 +28,12 @@ import {
     sorterFeilutbetaltePerioder,
     validerTekstMaksLengde,
 } from '../../../utils';
-import { SYNLIGE_STEG } from '../../../utils/sider';
+import { useStegNavigering } from '../../../utils/sider';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 
 const [FaktaProvider, useFakta] = createUseContext(() => {
     const behandling = useBehandling();
-    const { fagsystem, eksternFagsakId } = useFagsak();
     const queryClient = useQueryClient();
     const [fakta, setFakta] = useState<Ressurs<FaktaResponse>>();
     const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({
@@ -45,6 +42,21 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
             harBrukerUttaltSeg: HarBrukerUttaltSegValg.IkkeVurdert,
         },
     });
+    const navigerTilBehandling = useStegNavigering();
+    const harForhåndsvarselSteg = behandling.behandlingsstegsinfo.some(
+        steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+    );
+    const navigerTilNeste = useStegNavigering(
+        harForhåndsvarselSteg ? Behandlingssteg.Forhåndsvarsel : Behandlingssteg.Foreldelse
+    );
+    const navigerTilForrige = useStegNavigering(
+        behandling.behandlingsstegsinfo.some(
+            steg => steg.behandlingssteg === Behandlingssteg.Brevmottaker
+        )
+            ? Behandlingssteg.Brevmottaker
+            : Behandlingssteg.Verge
+    );
+
     const [behandlePerioderSamlet, settBehandlePerioderSamlet] = useState<boolean>(false);
     const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
     const [visFeilmeldinger, settVisFeilmeldinger] = useState<boolean>(false);
@@ -53,8 +65,6 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     const { erStegBehandlet, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const { gjerFaktaKall, sendInnFakta } = useBehandlingApi();
-    const { utførRedirect } = useRedirectEtterLagring();
-    const navigate = useNavigate();
 
     useEffect(() => {
         settStegErBehandlet(erStegBehandlet(Behandlingssteg.Fakta));
@@ -302,12 +312,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     const sendInnSkjema = (): void => {
         if (stegErBehandlet && !harEndretOpplysninger()) {
             nullstillIkkePersisterteKomponenter();
-            const harForhåndsvarselSteg = behandling.behandlingsstegsinfo.some(
-                steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
-            );
-            utførRedirect(
-                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${harForhåndsvarselSteg ? SYNLIGE_STEG.FORHÅNDSVARSEL.href : SYNLIGE_STEG.FORELDELSE.href}`
-            );
+            navigerTilNeste();
         } else {
             const feilmeldinger = validerForInnsending();
             if (feilmeldinger.length > 0) {
@@ -334,28 +339,21 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
                         })
                     ),
                 };
-                sendInnFakta(behandling.behandlingId, payload).then((respons: Ressurs<string>) => {
-                    settSenderInn(false);
-                    if (respons.status === RessursStatus.Suksess) {
-                        queryClient.invalidateQueries({
-                            queryKey: [
-                                'hentBehandling',
-                                { path: { behandlingId: behandling.behandlingId } },
-                            ],
-                        });
-                        navigate(
-                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                        );
+                sendInnFakta(behandling.behandlingId, payload).then(
+                    async (respons: Ressurs<string>) => {
+                        settSenderInn(false);
+                        if (respons.status === RessursStatus.Suksess) {
+                            await queryClient.invalidateQueries({
+                                queryKey: hentBehandlingQueryKey({
+                                    path: { behandlingId: behandling.behandlingId },
+                                }),
+                            });
+                            navigerTilBehandling();
+                        }
                     }
-                });
+                );
             }
         }
-    };
-
-    const gåTilForrige = (): void => {
-        navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VERGE.href}`
-        );
     };
 
     return {
@@ -374,7 +372,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
         visFeilmeldinger,
         feilmeldinger,
         senderInn,
-        gåTilForrige,
+        navigerTilForrige,
     };
 });
 

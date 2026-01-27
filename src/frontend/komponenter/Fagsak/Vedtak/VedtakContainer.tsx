@@ -10,12 +10,10 @@ import VedtakPerioder from './VedtakPerioder';
 import VedtakSkjema from './VedtakSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../context/FagsakContext';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
-import { SYNLIGE_STEG } from '../../../utils/sider';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { ActionBar } from '../ActionBar/ActionBar';
@@ -34,13 +32,12 @@ const VarselbrevInfo = styled(BodyShort)`
 `;
 
 const VedtakContainer: React.FC = () => {
-    const { fagsystem, eksternFagsakId } = useFagsak();
     const {
         vedtaksbrevavsnitt,
         beregningsresultat,
         skjemaData,
         nonUsedKey,
-        gåTilForrige,
+        navigerTilForrige,
         senderInn,
         disableBekreft,
         sendInnSkjema,
@@ -48,8 +45,7 @@ const VedtakContainer: React.FC = () => {
         lagreUtkast,
         hentVedtaksbrevtekster,
     } = useVedtak();
-    const { type, behandlingsårsakstype, kanEndres, eksternBrukId, manuelleBrevmottakere } =
-        useBehandling();
+    const { type, behandlingsårsakstype, kanEndres, manuelleBrevmottakere } = useBehandling();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus;
     const erRevurderingKlageKA = behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
@@ -128,7 +124,6 @@ const VedtakContainer: React.FC = () => {
                             brevmottakere={manuelleBrevmottakere.map(
                                 ({ brevmottaker }) => brevmottaker
                             )}
-                            linkTilBrevmottakerSteg={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`}
                         />
                         <Spacer20 />
                     </>
@@ -198,7 +193,7 @@ const VedtakContainer: React.FC = () => {
                     forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
                     nesteAriaLabel="Send til godkjenning hos beslutter"
                     onNeste={sendInnSkjema}
-                    onForrige={gåTilForrige}
+                    onForrige={navigerTilForrige}
                     isLoading={senderInn}
                 />
             </>

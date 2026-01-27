@@ -79,7 +79,7 @@ export const lagForhåndsvarselMutations = (): UseForhåndsvarselMutationsReturn
         sendBrukeruttalelse: vi.fn(),
         sendUtsettUttalelseFrist: vi.fn(),
         seForhåndsvisning: vi.fn(),
-        gåTilNeste: vi.fn(),
+        navigerTilNeste: vi.fn(),
         sendForhåndsvarselMutation: lagMockQuery(),
         sendBrukeruttalelseMutation: lagMockQuery(),
         sendUtsettUttalelseFristMutation: lagMockQuery(),

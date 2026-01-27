@@ -10,11 +10,7 @@ import { fakta } from '../../../generated-new';
 import { oppdaterFaktaMutation } from '../../../generated-new/@tanstack/react-query.gen';
 import { formatterDatostring } from '../../../utils';
 
-type Props = {
-    behandlingUrl: string;
-};
-
-export const Fakta: React.FC<Props> = ({ behandlingUrl }: Props): React.JSX.Element => {
+export const Fakta: React.FC = (): React.JSX.Element => {
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
     const { data: faktaOmFeilutbetaling, isPending } = useQuery(
@@ -124,10 +120,7 @@ export const Fakta: React.FC<Props> = ({ behandlingUrl }: Props): React.JSX.Elem
                         </dl>
                     </div>
                 </section>
-                <FaktaSkjema
-                    faktaOmFeilutbetaling={faktaOmFeilutbetaling}
-                    behandlingUrl={behandlingUrl}
-                />
+                <FaktaSkjema faktaOmFeilutbetaling={faktaOmFeilutbetaling} />
             </div>
         </>
     );

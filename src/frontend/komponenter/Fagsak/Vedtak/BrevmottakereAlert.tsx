@@ -3,38 +3,32 @@ import type { Brevmottaker } from '../../../generated';
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Alert, Button } from '@navikt/ds-react';
 import * as React from 'react';
-import { useNavigate } from 'react-router';
-import { styled } from 'styled-components';
 
+import { Behandlingssteg } from '../../../typer/behandling';
+import { useStegNavigering } from '../../../utils/sider';
 import BrevmottakerListe from '../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
-
-const StyledAlert = styled(Alert)`
-    margin-bottom: 1.5rem;
-`;
 
 type Props = {
     brevmottakere: Brevmottaker[];
-    linkTilBrevmottakerSteg: string;
 };
 
-export const BrevmottakereAlert: React.FC<Props> = ({ brevmottakere, linkTilBrevmottakerSteg }) => {
-    const navigate = useNavigate();
-
+export const BrevmottakereAlert: React.FC<Props> = ({ brevmottakere }) => {
+    const navigerTilBrevmottakerSteg = useStegNavigering(Behandlingssteg.Brevmottaker);
     return (
         <>
             {brevmottakere && brevmottakere.length !== 0 && (
-                <StyledAlert variant="info">
+                <Alert className="mb-6" variant="info">
                     Brevmottaker(e) er endret, og vedtak sendes til:
                     <BrevmottakerListe />
                     <Button
                         variant="tertiary"
-                        onClick={() => navigate(linkTilBrevmottakerSteg)}
+                        onClick={navigerTilBrevmottakerSteg}
                         icon={<MagnifyingGlassIcon />}
                         size="xsmall"
                     >
                         Se detaljer
                     </Button>
-                </StyledAlert>
+                </Alert>
             )}
         </>
     );

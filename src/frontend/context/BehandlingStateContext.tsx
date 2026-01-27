@@ -81,7 +81,8 @@ export const BehandlingStateProvider = ({ children }: Props): React.ReactElement
         const antallSynligeSteg = Object.values(SYNLIGE_STEG).filter(({ steg }) => {
             if (steg === 'VERGE' || steg === 'BREVMOTTAKER' || steg === 'FORHÅNDSVARSEL') {
                 return behandling.behandlingsstegsinfo.some(
-                    ({ behandlingssteg }) => behandlingssteg === steg
+                    ({ behandlingssteg, behandlingsstegstatus }) =>
+                        behandlingssteg === steg && behandlingsstegstatus !== 'TILBAKEFØRT'
                 );
             }
             return true;

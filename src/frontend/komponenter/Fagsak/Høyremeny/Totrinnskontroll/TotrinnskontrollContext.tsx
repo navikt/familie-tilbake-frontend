@@ -14,6 +14,7 @@ import { useBehandlingApi } from '../../../../api/behandling';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { behandlingssteg } from '../../../../typer/behandling';
 import {
     byggFeiletRessurs,
@@ -176,13 +177,12 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
         settLaster(true);
         settFeilmelding('');
         kallAngreSendTilBeslutter(behandling.behandlingId)
-            .then((res: Ressurs<string>) => {
+            .then(async (res: Ressurs<string>) => {
                 if (res.status === RessursStatus.Suksess) {
-                    queryClient.invalidateQueries({
-                        queryKey: [
-                            'hentBehandling',
-                            { path: { behandlingId: behandling.behandlingId } },
-                        ],
+                    await queryClient.invalidateQueries({
+                        queryKey: hentBehandlingQueryKey({
+                            path: { behandlingId: behandling.behandlingId },
+                        }),
                     });
                 } else {
                     settFeilmelding(
@@ -216,13 +216,12 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
             };
 
             sendInnFatteVedtak(behandling.behandlingId, payload)
-                .then((respons: Ressurs<string>) => {
+                .then(async (respons: Ressurs<string>) => {
                     if (respons.status === RessursStatus.Suksess) {
-                        queryClient.invalidateQueries({
-                            queryKey: [
-                                'hentBehandling',
-                                { path: { behandlingId: behandling.behandlingId } },
-                            ],
+                        await queryClient.invalidateQueries({
+                            queryKey: hentBehandlingQueryKey({
+                                path: { behandlingId: behandling.behandlingId },
+                            }),
                         });
                     } else if (
                         respons.status === RessursStatus.Feilet ||
