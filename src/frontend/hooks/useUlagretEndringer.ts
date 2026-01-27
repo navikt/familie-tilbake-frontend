@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export type UseUlagretEndringerReturn = {
     harUlagredeData: boolean;
@@ -14,11 +14,7 @@ export const useUlagretEndringer = (): UseUlagretEndringerReturn => {
     const [ikkePersisterteKomponenter, settIkkePersisterteKomponenter] = useState<Set<string>>(
         new Set()
     );
-    const [harUlagredeData, settHarUlagredeData] = useState(false);
-
-    useEffect(() => {
-        settHarUlagredeData(ikkePersisterteKomponenter.size > 0);
-    }, [ikkePersisterteKomponenter]);
+    const harUlagredeData = ikkePersisterteKomponenter.size > 0;
 
     const settIkkePersistertKomponent = (komponentId: string): void => {
         if (ikkePersisterteKomponenter.has(komponentId)) return;
