@@ -53,8 +53,8 @@ export type ForeldelseHook = {
         valgtPeriode: ForeldelsePeriodeSkjemeData | undefined
     ) => ForeldelsePeriodeSkjemeData | undefined;
     allePerioderBehandlet: boolean;
-    gåTilNesteSteg: () => void;
-    gåTilForrigeSteg: () => void;
+    navigerTilNeste: () => void;
+    navigerTilForrige: () => void;
     senderInn: boolean;
     sendInnSkjema: () => void;
     onSplitPeriode: (
@@ -78,6 +78,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
 
     const navigerTilNeste = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
+    const navigerTilBehandling = useStegNavigering();
     const navigerTilForrige = useStegNavigering(
         behandling.behandlingsstegsinfo.some(
             steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
@@ -222,7 +223,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                             path: { behandlingId: behandling.behandlingId },
                         }),
                     });
-                    navigerTilNeste();
+                    navigerTilBehandling();
                 }
             });
         }

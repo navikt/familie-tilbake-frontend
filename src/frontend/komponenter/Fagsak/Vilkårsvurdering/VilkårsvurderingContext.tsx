@@ -10,7 +10,6 @@ import type { AxiosError } from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { Feil } from '../../../api/feil';
@@ -18,6 +17,7 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
+import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -25,7 +25,7 @@ import {
     RessursStatus,
 } from '../../../typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '../../../utils';
-import { SYNLIGE_STEG } from '../../../utils/sider';
+import { useStegNavigering } from '../../../utils/sider';
 
 export type VilkårsvurderingHook = {
     containerRef: React.RefObject<HTMLDivElement | null>;
@@ -38,8 +38,8 @@ export type VilkårsvurderingHook = {
     valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined;
     settValgtPeriode: (periode: VilkårsvurderingPeriodeSkjemaData | undefined) => void;
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
-    gåTilNesteSteg: () => void;
-    gåTilForrigeSteg: () => void;
+    navigerTilNeste: () => void;
+    navigerTilForrige: () => void;
     valideringsFeilmelding: string | undefined;
     sendInnSkjemaOgNaviger: () => Promise<PeriodeHandling | undefined>;
     sendInnSkjemaMutation: {
@@ -80,7 +80,7 @@ export const erTotalbeløpUnder4Rettsgebyr = (vurdering: VilkårsvurderingRespon
 };
 
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() => {
-    const { fagsystem, eksternFagsakId, ytelsestype } = useFagsak();
+    const { ytelsestype } = useFagsak();
     const behandling = useBehandling();
     const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
@@ -96,9 +96,10 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     >([]);
     const [valideringsFeilmelding, settValideringsFeilmelding] = useState<string>();
     const { gjerVilkårsvurderingKall, sendInnVilkårsvurdering } = useBehandlingApi();
-    const navigate = useNavigate();
     const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(ytelsestype);
-    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+
+    const navigerTilNeste = useStegNavigering(Behandlingssteg.ForeslåVedtak);
+    const navigerTilForrige = useStegNavigering(Behandlingssteg.Foreldelse);
 
     useEffect(() => {
         settStegErBehandlet(erStegBehandlet('VILKÅRSVURDERING'));
@@ -156,14 +157,6 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
                     )
                 );
             });
-    };
-
-    const gåTilNesteSteg = (): void => {
-        navigate(`${behandlingUrl}/${SYNLIGE_STEG.FORESLÅ_VEDTAK.href}`);
-    };
-
-    const gåTilForrigeSteg = (): void => {
-        navigate(`${behandlingUrl}/${SYNLIGE_STEG.FORELDELSE.href}`);
     };
 
     const oppdaterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): void => {
@@ -312,8 +305,8 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         valgtPeriode,
         settValgtPeriode,
         behandletPerioder,
-        gåTilNesteSteg,
-        gåTilForrigeSteg,
+        navigerTilNeste,
+        navigerTilForrige,
         valideringsFeilmelding,
         sendInnSkjemaOgNaviger,
         sendInnSkjemaMutation,

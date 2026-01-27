@@ -11,15 +11,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import * as React from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useDokumentApi } from '../../../api/dokument';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../context/FagsakContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
+import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -27,7 +26,7 @@ import {
     RessursStatus,
 } from '../../../typer/ressurs';
 import { isEmpty, validerTekstMaksLengde } from '../../../utils';
-import { SYNLIGE_STEG } from '../../../utils/sider';
+import { useStegNavigering } from '../../../utils/sider';
 
 const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[] => {
     // @ts-expect-error - klager på periode men er trygt p.g.s. filtreringen
@@ -82,7 +81,6 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
 };
 
 const [VedtakProvider, useVedtak] = createUseContext(() => {
-    const { fagsystem, eksternFagsakId } = useFagsak();
     const behandling = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
@@ -98,7 +96,6 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
     const { gjerVedtaksbrevteksterKall, gjerBeregningsresultatKall, sendInnForeslåVedtak } =
         useBehandlingApi();
     const { lagreUtkastVedtaksbrev } = useDokumentApi();
-    const navigate = useNavigate();
 
     React.useEffect(() => {
         hentBeregningsresultat();
@@ -168,12 +165,8 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                 );
             });
     };
-
-    const gåTilForrige = (): void => {
-        navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.VILKÅRSVURDERING.href}`
-        );
-    };
+    const navigerTilBehandling = useStegNavigering();
+    const navigerTilForrige = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
 
     const oppdaterUnderavsnitt = (
         avsnittIndex: string,
@@ -263,9 +256,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                                 path: { behandlingId: behandling.behandlingId },
                             }),
                         });
-                        navigate(
-                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                        );
+                        navigerTilBehandling();
                     } else if (
                         respons.status === RessursStatus.Feilet ||
                         respons.status === RessursStatus.FunksjonellFeil
@@ -296,9 +287,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                                 path: { behandlingId: behandling.behandlingId },
                             }),
                         });
-                        navigate(
-                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                        );
+                        navigerTilBehandling();
                     } else if (
                         respons.status === RessursStatus.Feilet ||
                         respons.status === RessursStatus.FunksjonellFeil
@@ -335,7 +324,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         harPåkrevetFritekstMenIkkeUtfylt,
         nonUsedKey,
         oppdaterUnderavsnitt,
-        gåTilForrige,
+        navigerTilForrige,
         senderInn,
         disableBekreft,
         sendInnSkjema,

@@ -17,7 +17,7 @@ export type SynligSteg = {
     steg: Behandlingssteg;
 };
 
-type SynligeStegType =
+export type SynligeStegType =
     | Behandlingssteg.Brevmottaker
     | Behandlingssteg.Fakta
     | Behandlingssteg.Foreldelse
@@ -71,11 +71,11 @@ const aktiveBehandlingstegstatuser: BehandlingsstegstatusEnum[] = [
     'VENTER',
 ];
 
-export const useStegNavigering = (steg: SynligeStegType): (() => Promise<void> | void) => {
+export const useStegNavigering = (steg?: SynligeStegType): (() => Promise<void> | void) => {
     const { fagsystem, eksternFagsakId } = useFagsak();
     const { eksternBrukId } = useBehandling();
     const navigate = useNavigate();
-    const url = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG[steg].href}`;
+    const url = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}${steg ? `/${SYNLIGE_STEG[steg].href}` : ''}`;
     return () => navigate(url);
 };
 

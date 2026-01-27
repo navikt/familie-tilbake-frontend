@@ -22,7 +22,7 @@ vi.mock('../VilkårsvurderingContext', () => {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({
             kanIlleggeRenter: true,
             oppdaterPeriode: vi.fn(),
-            gåTilNesteSteg: vi.fn(),
+            navigerTilNeste: vi.fn(),
             sendInnSkjemaOgNaviger: vi.fn(),
             sendInnSkjemaMutation: {
                 isPending: false,
