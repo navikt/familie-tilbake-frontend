@@ -51,7 +51,9 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }
         behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
 
     const harBrevmottakerSteg = behandling.behandlingsstegsinfo.some(
-        steg => steg.behandlingssteg === Behandlingssteg.Brevmottaker
+        steg =>
+            steg.behandlingssteg === Behandlingssteg.Brevmottaker &&
+            steg.behandlingsstegstatus !== 'TILBAKEFØRT'
     );
 
     return (
