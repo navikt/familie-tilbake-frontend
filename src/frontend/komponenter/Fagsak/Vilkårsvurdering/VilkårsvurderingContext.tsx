@@ -168,12 +168,20 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         førsteUbehandletPeriode !== undefined && settValgtPeriode(førsteUbehandletPeriode);
     };
 
+    const scrollTilToppen = (): void => {
+        // Finn scroll-containeren (section med overflow-y-auto) og scroll til toppen
+        const scrollContainer = containerRef?.current?.closest('[aria-label="Behandlingsinnhold"]');
+        if (scrollContainer) {
+            scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
     const nestePeriode = (periode: VilkårsvurderingPeriodeSkjemaData): void => {
         const index = skjemaData.findIndex(bfp => bfp.index === periode.index);
         if (index < skjemaData.length - 1) {
             settValgtPeriode(skjemaData[index + 1]);
         }
-        containerRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollTilToppen();
     };
 
     const forrigePeriode = (periode: VilkårsvurderingPeriodeSkjemaData): void => {
@@ -181,7 +189,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         if (index > 0) {
             settValgtPeriode(skjemaData[index - 1]);
         }
-        containerRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollTilToppen();
     };
 
     const onSplitPeriode = (
