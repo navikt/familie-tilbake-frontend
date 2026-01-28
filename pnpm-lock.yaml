@@ -29,9 +29,6 @@ importers:
       '@navikt/ds-tailwind':
         specifier: 8.1.0
         version: 8.1.0
-      '@navikt/ds-tokens':
-        specifier: 8.1.0
-        version: 8.1.0
       '@sentry/browser':
         specifier: 10.36.0
         version: 10.36.0
@@ -828,6 +825,9 @@ packages:
       '@types/react': ^17.0.30 || ^18 || ^19
       react: ^17 || ^18 || ^19
       react-dom: ^17 || ^18 || ^19
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@navikt/ds-tailwind@8.1.0':
     resolution: {integrity: sha512-26FlMMcpuLKYgiYJ7zQgiwHGy3T0VywxrcFwQSum9kKyQCgMreW1RKHNV7v28Tip+1Dh7GcxVLZJ0/dxnQLb8Q==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tailwind/8.1.0/df7552f0dfe2ddb6090fd34e5bedaf984f091377}
@@ -4697,11 +4697,12 @@ snapshots:
       '@floating-ui/react-dom': 2.1.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@navikt/aksel-icons': 8.1.0
       '@navikt/ds-tokens': 8.1.0
-      '@types/react': 19.2.9
       date-fns: 4.1.0
       react: 19.2.3
       react-day-picker: 9.7.0(react@19.2.3)
       react-dom: 19.2.3(react@19.2.3)
+    optionalDependencies:
+      '@types/react': 19.2.9
 
   '@navikt/ds-tailwind@8.1.0': {}
 
