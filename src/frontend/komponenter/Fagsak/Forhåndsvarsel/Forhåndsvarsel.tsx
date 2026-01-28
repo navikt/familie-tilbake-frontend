@@ -281,16 +281,14 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const skalSendeForhåndsvarsel =
         skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt;
-    const skalSendeUnntak =
-        skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
-        !forhåndsvarselInfo?.forhåndsvarselUnntak;
+    const skalSendeEllerOppdatereUnntak = skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei;
 
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = async (
         data: ForhåndsvarselFormData
     ): Promise<void> => {
         if (skalSendeForhåndsvarsel) {
             sendForhåndsvarsel(data);
-        } else if (skalSendeUnntak) {
+        } else if (skalSendeEllerOppdatereUnntak) {
             if (begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') {
                 const uttalelseValid = await uttalelseMethods.trigger();
                 if (!uttalelseValid) return;
@@ -315,7 +313,10 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendBrukeruttalelse(data);
     };
 
-    const kanSendeUttalelse = varselErSendt || !!forhåndsvarselInfo?.forhåndsvarselUnntak;
+    const kanSendeUttalelse =
+        varselErSendt ||
+        (!!forhåndsvarselInfo?.forhåndsvarselUnntak &&
+            begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG');
 
     const formId = ((): 'opprettForm' | 'uttalelseForm' | undefined => {
         if (!varselErSendt && !forhåndsvarselInfo?.forhåndsvarselUnntak) {
@@ -325,7 +326,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'uttalelseForm';
         }
 
-        return undefined;
+        return 'opprettForm';
     })();
 
     return (
@@ -338,9 +339,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             />
 
             {forhåndsvarselInfo &&
-                ((skalSendeUnntak && begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') ||
-                    varselErSendt ||
-                    forhåndsvarselInfo.brukeruttalelse) && (
+                (varselErSendt || begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') && (
                     <FormProvider {...uttalelseMethods}>
                         <Uttalelse handleUttalelseSubmit={handleUttalelseSubmit} kanUtsetteFrist />
                     </FormProvider>
