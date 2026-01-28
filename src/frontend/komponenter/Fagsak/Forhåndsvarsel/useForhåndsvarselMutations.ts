@@ -154,6 +154,7 @@ export const useForhåndsvarselMutations = (
         ...forhåndsvarselUnntakMutation(),
         onSuccess: async () => {
             await invalidateQueries();
+            navigerTilNeste();
         },
     });
 
