@@ -107,6 +107,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                                             <Textarea
                                                 {...register('fritekst')}
                                                 size="small"
+                                                minRows={3}
                                                 label="Legg til utdypende tekst"
                                                 maxLength={maksAntallTegn}
                                                 error={fieldError.fritekst?.message?.toString()}
