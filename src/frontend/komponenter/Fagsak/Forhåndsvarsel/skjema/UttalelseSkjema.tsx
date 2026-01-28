@@ -151,6 +151,7 @@ export const Uttalelse: React.FC<Props> = ({
                             readOnly={readOnly}
                             label="Beskriv hva brukeren har uttalt seg om"
                             maxLength={4000}
+                            minRows={3}
                             resize
                             error={get(
                                 errors,
@@ -166,6 +167,7 @@ export const Uttalelse: React.FC<Props> = ({
                     readOnly={readOnly}
                     label="Kommentar til valget over"
                     maxLength={4000}
+                    minRows={3}
                     resize
                     error={get(errors, 'kommentar.message')}
                 />
@@ -191,6 +193,7 @@ export const Uttalelse: React.FC<Props> = ({
                     <Textarea
                         {...methods.register('utsettUttalelseFrist.begrunnelse')}
                         size="small"
+                        minRows={3}
                         readOnly={readOnly}
                         label="Begrunnelse for utsatt frist"
                         maxLength={4000}
