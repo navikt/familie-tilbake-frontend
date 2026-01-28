@@ -49,7 +49,6 @@ export const BrukerInformasjon: React.FC = () => {
                     Informasjon om bruker
                 </ExpansionCard.Title>
             </ExpansionCard.Header>
-
             <ExpansionCard.Content>
                 <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4 text-ax-text-neutral">
                     {bruker && (
@@ -88,7 +87,7 @@ export const BrukerInformasjon: React.FC = () => {
                                         Dødsdato
                                     </dt>
                                     <dd className="text-ax-medium">
-                                        <Tag size="small" variant="neutral-filled">
+                                        <Tag data-color="neutral" size="small" variant="strong">
                                             {formatterDatostring(bruker.dødsdato)}
                                         </Tag>
                                     </dd>

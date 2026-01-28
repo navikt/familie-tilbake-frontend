@@ -15,7 +15,7 @@ export const HøyremenySkeleton: React.FC = () => {
         >
             <div className="gap-4 flex flex-col flex-1 min-h-0">
                 <Box
-                    padding="4"
+                    padding="space-16"
                     className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
                 >
                     <Heading size="xsmall" level="2" className="flex flex-row gap-2">
@@ -75,7 +75,7 @@ export const HøyremenySkeleton: React.FC = () => {
                     </dl>
                 </Box>
                 <Box
-                    padding="4"
+                    padding="space-16"
                     className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
                 >
                     <Heading size="xsmall" level="2">

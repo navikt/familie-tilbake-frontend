@@ -53,7 +53,7 @@ export const Faktaboks: React.FC = () => {
                                 Revurderingsårsak
                             </dt>
                             <dd className="text-ax-medium items-center flex">
-                                <Tag size="small" variant="neutral-moderate">
+                                <Tag data-color="neutral" size="small" variant="moderate">
                                     {behandlingårsaker[behandling.behandlingsårsakstype]}
                                 </Tag>
                             </dd>

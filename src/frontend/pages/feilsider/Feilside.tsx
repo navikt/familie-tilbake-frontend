@@ -13,7 +13,7 @@ export const ServerFeil: React.FC<Props> = ({ httpStatus }) => {
     const { eksternFagsakId } = useFagsak();
     return (
         <Page.Block as="main" width="xl" gutters>
-            <Box paddingBlock="20 8">
+            <Box paddingBlock="space-80 space-32">
                 <HGrid columns="minmax(auto,600px)" data-aksel-template="500-v2">
                     <VStack gap="space-64">
                         <VStack gap="space-48" align="start">
@@ -36,18 +36,22 @@ export const ServerFeil: React.FC<Props> = ({ httpStatus }) => {
                                 <Heading level="2" size="xsmall">
                                     Hva kan du gjøre?
                                 </Heading>
-                                <List>
-                                    <List.Item>Last siden på nytt</List.Item>
-                                    <List.Item>Vent et par minutter og prøv en gang til</List.Item>
-                                    <List.Item>
-                                        <Link
-                                            target="_blank"
-                                            href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
-                                        >
-                                            Meld feil i porten
-                                        </Link>
-                                    </List.Item>
-                                </List>
+                                <Box marginBlock="space-16" asChild>
+                                    <List data-aksel-migrated-v8>
+                                        <List.Item>Last siden på nytt</List.Item>
+                                        <List.Item>
+                                            Vent et par minutter og prøv en gang til
+                                        </List.Item>
+                                        <List.Item>
+                                            <Link
+                                                target="_blank"
+                                                href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
+                                            >
+                                                Meld feil i porten
+                                            </Link>
+                                        </List.Item>
+                                    </List>
+                                </Box>
                             </div>
                             {(eksternFagsakId || behandlingId) && (
                                 <div>

@@ -138,7 +138,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
                                                         {aktsomhet.særligeGrunnerBegrunnelse}
                                                     </BodyShort>
                                                     <Box marginBlock="space-16" asChild>
-                                                        <List>
+                                                        <List data-aksel-migrated-v8>
                                                             {særligeGrunner?.map(grunn => {
                                                                 return (
                                                                     <List.Item
