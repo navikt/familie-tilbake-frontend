@@ -65,6 +65,7 @@ export const Unntak: React.FC<Props> = ({ readOnly }) => {
                 {...methods.register('beskrivelse')}
                 label="Forklar hvorfor forhåndsvarselet ikke skal bli sendt"
                 maxLength={2000}
+                minRows={3}
                 size="small"
                 readOnly={readOnly}
                 className="max-w-xl"
