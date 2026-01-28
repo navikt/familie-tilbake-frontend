@@ -20,6 +20,7 @@ import { FTHeader } from './Felleskomponenter/FTHeader/FTHeader';
 import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
 import UlagretDataModal from './Felleskomponenter/Modal/UlagretDataModal';
 import Toasts from './Felleskomponenter/Toast/Toasts';
+import PdfRenderer from './PdfRenderer/PdfRenderer';
 
 const Dashboard = lazyImportMedRetry(() => import('../pages/Dashboard'), 'Dashboard');
 const FagsakContainer = lazyImportMedRetry(
@@ -72,6 +73,7 @@ const AppRoutes: React.FC = () => {
                             }
                         />
                     </Route>
+                    <Route path="/pdf" element={<PdfRenderer />} />
                     <Route
                         path="/"
                         element={

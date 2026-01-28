@@ -121,6 +121,8 @@ import type {
     MigrerAlleSakerResponses,
     OppdaterBehandlendeEnhetPåBehandlingData,
     OppdaterBehandlendeEnhetPåBehandlingResponses,
+    OppdaterFagsysteminfoData,
+    OppdaterFagsysteminfoResponses,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponses,
     OpprettBehandlingData,
@@ -512,6 +514,18 @@ export const sendPåminnelseTilAlleSakerITilstand = <ThrowOnError extends boolea
     >({
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/forvaltning/poke',
+        ...options,
+    });
+
+/**
+ * Tving oppdatering av fagsysteminfo
+ */
+export const oppdaterFagsysteminfo = <ThrowOnError extends boolean = false>(
+    options: Options<OppdaterFagsysteminfoData, ThrowOnError>
+) =>
+    (options.client ?? client).post<OppdaterFagsysteminfoResponses, unknown, ThrowOnError>({
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/oppdater-fagsysteminfo/{behandlingId}',
         ...options,
     });
 

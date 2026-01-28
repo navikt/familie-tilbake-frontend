@@ -7,8 +7,8 @@ import * as React from 'react';
 
 import { FaktaSkeleton } from './FaktaSkeleton';
 import { FaktaSkjema } from './FaktaSkjema';
-import { fakta } from '../../../generated-new';
-import { oppdaterFaktaMutation } from '../../../generated-new/@tanstack/react-query.gen';
+import { behandlingFakta } from '../../../generated-new';
+import { behandlingOppdaterFaktaMutation } from '../../../generated-new/@tanstack/react-query.gen';
 import { formatterDatostring } from '../../../utils';
 
 type Props = {
@@ -25,7 +25,7 @@ export const Fakta: React.FC<Props> = ({
         {
             queryKey: ['hentFaktaOmFeilutbetaling'],
             queryFn: () =>
-                fakta({
+                behandlingFakta({
                     path: {
                         behandlingId: behandlingId,
                     },
@@ -36,7 +36,7 @@ export const Fakta: React.FC<Props> = ({
     );
 
     queryClient.setMutationDefaults(['oppdaterFakta'], {
-        ...oppdaterFaktaMutation(),
+        ...behandlingOppdaterFaktaMutation(),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['hentFaktaOmFeilutbetaling'] });
         },

@@ -574,7 +574,8 @@ export type RessursForhåndsvarselDto = {
 
 export type VarselbrevDto = {
     varselbrevSendtTid?: string;
-    uttalelsesfrist?: string;
+    opprinneligFristForUttalelse?: string;
+    tekstFraSaksbehandler?: string;
 };
 
 export type PersonIdent = {
@@ -1686,6 +1687,22 @@ export type SendPåminnelseTilAlleSakerITilstandData = {
 };
 
 export type SendPåminnelseTilAlleSakerITilstandResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type OppdaterFagsysteminfoData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/forvaltning/oppdater-fagsysteminfo/{behandlingId}';
+};
+
+export type OppdaterFagsysteminfoResponses = {
     /**
      * OK
      */

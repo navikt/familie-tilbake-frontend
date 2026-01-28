@@ -4,11 +4,11 @@ import type {
     FaktaOmFeilutbetaling,
     FaktaPeriode,
     MuligeRettsligGrunnlag,
-    OppdaterFaktaData,
-    OppdaterFaktaError,
+    BehandlingOppdaterFaktaData,
+    BehandlingOppdaterFaktaError,
     OppdaterFaktaOmFeilutbetaling,
     OppdaterFaktaPeriode,
-    OppdaterFaktaResponse,
+    BehandlingOppdaterFaktaResponse,
     Options,
 } from '../../../generated-new';
 import type { AxiosError } from 'axios';
@@ -120,9 +120,9 @@ export const FaktaSkjema = ({
             : undefined,
     });
     const oppdaterMutation = useMutation<
-        OppdaterFaktaResponse,
-        AxiosError<OppdaterFaktaError>,
-        Options<OppdaterFaktaData>
+        BehandlingOppdaterFaktaResponse,
+        AxiosError<BehandlingOppdaterFaktaError>,
+        Options<BehandlingOppdaterFaktaData>
     >({
         mutationKey: ['oppdaterFakta'],
     });

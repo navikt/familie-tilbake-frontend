@@ -68,7 +68,14 @@ export const zPeriode = z.object({
 });
 
 export const zFeilutbetaltePerioderDto = z.object({
-    sumFeilutbetaling: z.coerce.bigint(),
+    sumFeilutbetaling: z.coerce
+        .bigint()
+        .min(BigInt('-9223372036854775808'), {
+            error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
+        })
+        .max(BigInt('9223372036854775807'), {
+            error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
+        }),
     perioder: z.array(zPeriode),
 });
 
@@ -159,8 +166,9 @@ export const zVarselbrevtekst = z.object({
 });
 
 export const zVarselbrevDto = z.object({
-    varselbrevSendtTid: z.optional(z.iso.datetime()),
-    uttalelsesfrist: z.optional(z.iso.date()),
+    varselbrevSendtTid: z.optional(z.iso.date()),
+    opprinneligFristForUttalelse: z.optional(z.iso.date()),
+    tekstFraSaksbehandler: z.optional(z.string()),
 });
 
 export const zPersonIdent = z.object({
@@ -834,7 +842,14 @@ export const zVurdertVilkårsvurderingsperiodeDto = z.object({
 
 export const zVurdertVilkårsvurderingDto = z.object({
     perioder: z.array(zVurdertVilkårsvurderingsperiodeDto),
-    rettsgebyr: z.coerce.bigint(),
+    rettsgebyr: z.coerce
+        .bigint()
+        .min(BigInt('-9223372036854775808'), {
+            error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
+        })
+        .max(BigInt('9223372036854775807'), {
+            error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
+        }),
     opprettetTid: z.optional(z.iso.datetime()),
 });
 
@@ -929,7 +944,16 @@ export const zFaktainfo = z.object({
 });
 
 export const zFaktaFeilutbetalingDto = z.object({
-    varsletBeløp: z.optional(z.coerce.bigint()),
+    varsletBeløp: z.optional(
+        z.coerce
+            .bigint()
+            .min(BigInt('-9223372036854775808'), {
+                error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
+            })
+            .max(BigInt('9223372036854775807'), {
+                error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
+            })
+    ),
     totalFeilutbetaltPeriode: zDatoperiode,
     feilutbetaltePerioder: z.array(zFeilutbetalingsperiodeDto),
     totaltFeilutbetaltBeløp: z.number(),
@@ -1567,7 +1591,14 @@ export const zAngreSammenslåingResponse = zRessursString;
 export const zSettIverksettStegTilUtførtOgFortsettData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        taskId: z.coerce.bigint(),
+        taskId: z.coerce
+            .bigint()
+            .min(BigInt('-9223372036854775808'), {
+                error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
+            })
+            .max(BigInt('9223372036854775807'), {
+                error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
+            }),
         behandlingId: z.uuid(),
     }),
     query: z.optional(z.never()),
@@ -1585,6 +1616,14 @@ export const zSendPåminnelseTilAlleSakerITilstandData = z.object({
     query: z.object({
         tilstand: zSchemaEnum,
     }),
+});
+
+export const zOppdaterFagsysteminfoData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        behandlingId: z.uuid(),
+    }),
+    query: z.optional(z.never()),
 });
 
 export const zMigrerAlleSakerData = z.object({
