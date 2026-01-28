@@ -315,19 +315,13 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendBrukeruttalelse(data);
     };
 
-    const harRegistrertBrukeruttalelse =
-        !!forhåndsvarselInfo?.brukeruttalelse ||
-        (forhåndsvarselInfo?.utsettUttalelseFrist?.length ?? 0) > 0;
-
-    const skalSendeUttalelse =
-        (varselErSendt || !!forhåndsvarselInfo?.forhåndsvarselUnntak) &&
-        !harRegistrertBrukeruttalelse;
+    const kanSendeUttalelse = varselErSendt || !!forhåndsvarselInfo?.forhåndsvarselUnntak;
 
     const formId = ((): 'opprettForm' | 'uttalelseForm' | undefined => {
         if (!varselErSendt && !forhåndsvarselInfo?.forhåndsvarselUnntak) {
             return 'opprettForm';
         }
-        if (skalSendeUttalelse) {
+        if (kanSendeUttalelse) {
             return 'uttalelseForm';
         }
 
@@ -348,14 +342,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     varselErSendt ||
                     forhåndsvarselInfo.brukeruttalelse) && (
                     <FormProvider {...uttalelseMethods}>
-                        <Uttalelse
-                            handleUttalelseSubmit={handleUttalelseSubmit}
-                            readOnly={
-                                !!forhåndsvarselInfo.brukeruttalelse ||
-                                forhåndsvarselInfo.utsettUttalelseFrist.length > 0
-                            }
-                            kanUtsetteFrist
-                        />
+                        <Uttalelse handleUttalelseSubmit={handleUttalelseSubmit} kanUtsetteFrist />
                     </FormProvider>
                 )}
 

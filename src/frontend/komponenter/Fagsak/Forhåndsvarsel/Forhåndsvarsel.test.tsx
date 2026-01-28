@@ -318,7 +318,7 @@ describe('Forhåndsvarsel', () => {
             expect(nesteKnapp).toHaveAttribute('form', 'uttalelseForm');
         });
 
-        test('Neste-knapp har ikke form-attributt når brukeruttalelse allerede er registrert', async () => {
+        test('Neste-knapp har form-attributt når brukeruttalelse allerede er registrert (kan redigeres)', async () => {
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
                 lagForhåndsvarselQueries({
@@ -341,10 +341,10 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
-            expect(nesteKnapp).not.toHaveAttribute('form');
+            expect(nesteKnapp).toHaveAttribute('form', 'uttalelseForm');
         });
 
-        test('Neste-knapp har ikke form-attributt når varsel er sendt og uttalelse er registrert', async () => {
+        test('Neste-knapp har form-attributt når varsel er sendt og uttalelse er registrert (kan redigeres)', async () => {
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
                 lagForhåndsvarselQueries({
@@ -367,7 +367,7 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
-            expect(nesteKnapp).not.toHaveAttribute('form');
+            expect(nesteKnapp).toHaveAttribute('form', 'uttalelseForm');
         });
     });
 });
