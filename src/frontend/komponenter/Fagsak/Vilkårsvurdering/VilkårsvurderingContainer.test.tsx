@@ -272,12 +272,12 @@ describe('VilkårsvurderingContainer', () => {
                 exact: false,
             })
         );
-        await user.type(getByLabelText('Begrunn hvorfor beløpet er i behold'), 'Begrunnelse2');
         await user.click(
             getByRole('radio', {
                 name: 'Nei',
             })
         );
+        await user.type(getByLabelText('Begrunn hvorfor beløpet ikke er i behold'), 'Begrunnelse2');
 
         await user.click(
             getByRole('button', {
@@ -302,12 +302,14 @@ describe('VilkårsvurderingContainer', () => {
                 exact: false,
             })
         ).toBeChecked();
-        expect(getByLabelText('Begrunn hvorfor beløpet er i behold')).toHaveValue('Begrunnelse2');
         expect(
             getByRole('radio', {
                 name: 'Nei',
             })
         ).toBeChecked();
+        expect(getByLabelText('Begrunn hvorfor beløpet ikke er i behold')).toHaveValue(
+            'Begrunnelse2'
+        );
 
         const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
         expect(tilbakekrevdBeløp).toHaveValue('0');
@@ -394,7 +396,7 @@ describe('VilkårsvurderingContainer', () => {
                 exact: false,
             })
         ).toBeChecked();
-        expect(getByLabelText('Begrunn hvorfor beløpet er i behold')).toHaveTextContent(
+        expect(getByLabelText('Begrunn hvorfor beløpet ikke er i behold')).toHaveTextContent(
             'Begrunnelse god tro 2'
         );
         expect(getByLabelText('Nei')).toBeChecked();

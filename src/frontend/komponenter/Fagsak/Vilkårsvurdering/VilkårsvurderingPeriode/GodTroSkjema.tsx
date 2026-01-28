@@ -52,25 +52,33 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     </Radio>
                 ))}
             </HorisontalRadioGroup>
-            <Textarea
-                {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
-                name="vurderingBegrunnelse"
-                label="Begrunn hvorfor beløpet er i behold"
-                aria-live="polite"
-                readOnly={erLesevisning}
-                size="small"
-                resize
-                value={
-                    skjema.felter.aktsomhetBegrunnelse
-                        ? skjema.felter.aktsomhetBegrunnelse.verdi
-                        : ''
-                }
-                onChange={(event: { target: { value: string } }) => {
-                    skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(event.target.value);
-                    settIkkePersistertKomponent('vilkårsvurdering');
-                }}
-                maxLength={3000}
-            />
+            {harVurderBeløpIBehold && (
+                <Textarea
+                    {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(
+                        skjema.visFeilmeldinger
+                    )}
+                    name="vurderingBegrunnelse"
+                    label={
+                        harBeløpetIBehold
+                            ? 'Begrunn hvorfor beløpet er i behold'
+                            : 'Begrunn hvorfor beløpet ikke er i behold'
+                    }
+                    aria-live="polite"
+                    readOnly={erLesevisning}
+                    size="small"
+                    resize
+                    value={
+                        skjema.felter.aktsomhetBegrunnelse
+                            ? skjema.felter.aktsomhetBegrunnelse.verdi
+                            : ''
+                    }
+                    onChange={(event: { target: { value: string } }) => {
+                        skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(event.target.value);
+                        settIkkePersistertKomponent('vilkårsvurdering');
+                    }}
+                    maxLength={3000}
+                />
+            )}
             {harVurderBeløpIBehold && harBeløpetIBehold && (
                 <TextField
                     {...skjema.felter.godTroTilbakekrevesBeløp.hentNavInputProps(
