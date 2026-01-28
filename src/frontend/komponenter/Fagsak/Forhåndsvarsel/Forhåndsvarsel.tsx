@@ -214,6 +214,11 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         formState: { isDirty },
     } = useFormContext<ForhåndsvarselFormData>();
 
+    const begrunnelseForUnntak = useWatch({
+        control: useFormContext<ForhåndsvarselFormData>().control,
+        name: 'begrunnelseForUnntak',
+    });
+
     const {
         sendForhåndsvarselMutation,
         sendBrukeruttalelseMutation,
@@ -280,13 +285,21 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
         !forhåndsvarselInfo?.forhåndsvarselUnntak;
 
-    const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
+    const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = async (
         data: ForhåndsvarselFormData
-    ): void => {
+    ): Promise<void> => {
         if (skalSendeForhåndsvarsel) {
             sendForhåndsvarsel(data);
         } else if (skalSendeUnntak) {
-            sendUnntak(data);
+            if (begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') {
+                const uttalelseValid = await uttalelseMethods.trigger();
+                if (!uttalelseValid) return;
+
+                sendUnntak(data);
+                sendBrukeruttalelse(uttalelseMethods.getValues());
+            } else {
+                sendUnntak(data);
+            }
         } else {
             navigerTilNeste();
         }
@@ -330,18 +343,21 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 readOnly={!!forhåndsvarselInfo?.forhåndsvarselUnntak}
             />
 
-            {(forhåndsvarselInfo?.forhåndsvarselUnntak || varselErSendt) && (
-                <FormProvider {...uttalelseMethods}>
-                    <Uttalelse
-                        handleUttalelseSubmit={handleUttalelseSubmit}
-                        readOnly={
-                            !!forhåndsvarselInfo.brukeruttalelse ||
-                            forhåndsvarselInfo.utsettUttalelseFrist.length > 0
-                        }
-                        kanUtsetteFrist
-                    />
-                </FormProvider>
-            )}
+            {forhåndsvarselInfo &&
+                ((skalSendeUnntak && begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') ||
+                    varselErSendt ||
+                    forhåndsvarselInfo.brukeruttalelse) && (
+                    <FormProvider {...uttalelseMethods}>
+                        <Uttalelse
+                            handleUttalelseSubmit={handleUttalelseSubmit}
+                            readOnly={
+                                !!forhåndsvarselInfo.brukeruttalelse ||
+                                forhåndsvarselInfo.utsettUttalelseFrist.length > 0
+                            }
+                            kanUtsetteFrist
+                        />
+                    </FormProvider>
+                )}
 
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
