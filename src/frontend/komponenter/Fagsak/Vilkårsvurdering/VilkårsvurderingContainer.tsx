@@ -32,7 +32,7 @@ const VilkårsvurderingContainer: React.FC = () => {
                 <Heading level="1" size="small" spacing ref={containerRef}>
                     Tilbakekreving
                 </Heading>
-                <VStack gap="5">
+                <VStack gap="space-20">
                     {erAutoutført && (
                         <BodyLong size="small">
                             Automatisk vurdert. Alle perioder er foreldet.

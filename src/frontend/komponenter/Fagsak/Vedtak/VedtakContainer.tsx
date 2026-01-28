@@ -1,5 +1,4 @@
 import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
-import { AFontWeightBold, ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
@@ -22,15 +21,6 @@ import { ActionBar } from '../ActionBar/ActionBar';
 
 const StyledNavigering = styled(Navigering)`
     width: 90%;
-`;
-
-const StyledAlert = styled(Alert)`
-    width: 90%;
-    margin-bottom: ${ASpacing3};
-`;
-
-const VarselbrevInfo = styled(BodyShort)`
-    font-weight: ${AFontWeightBold};
 `;
 
 const VedtakContainer: React.FC = () => {
@@ -113,11 +103,11 @@ const VedtakContainer: React.FC = () => {
                 </Heading>
                 {erRevurderingKlageKA && (
                     <>
-                        <StyledAlert variant="info">
-                            <VarselbrevInfo>
+                        <Alert className="w-[90%] mb-3" variant="info">
+                            <BodyShort className="font-semibold">
                                 Vedtaksbrev sendes ikke ut fra denne behandlingen.
-                            </VarselbrevInfo>
-                        </StyledAlert>
+                            </BodyShort>
+                        </Alert>
                         <Spacer20 />
                     </>
                 )}
@@ -154,12 +144,12 @@ const VedtakContainer: React.FC = () => {
                 {foreslåVedtakRespons &&
                     (foreslåVedtakRespons.status === RessursStatus.Feilet ||
                         foreslåVedtakRespons.status === RessursStatus.FunksjonellFeil) && (
-                        <StyledAlert variant="error">
+                        <Alert className="w-[90%] mb-3" variant="error">
                             {foreslåVedtakRespons.frontendFeilmelding}
-                        </StyledAlert>
+                        </Alert>
                     )}
                 <StyledNavigering>
-                    <HStack gap="1">
+                    <HStack gap="space-4">
                         {kanViseForhåndsvisning && !!skjemaData.length && (
                             <ForhåndsvisVedtaksbrev />
                         )}

@@ -3,7 +3,6 @@ import type { HistorikkInnslag } from '../../../../typer/historikk';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
-import { AGray400, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
@@ -29,15 +28,11 @@ const Tidslinje = styled.div`
     text-align: center;
     background-image: radial-gradient(
         1px 1px at center,
-        ${AGray400} 1px,
+        var(--ax-border-neutral-strong) 1px,
         transparent 1px,
         transparent 4px
     );
     background-size: 100% 5px;
-`;
-
-const Innhold = styled.div`
-    margin-bottom: ${ASpacing6};
 `;
 
 type Props = {
@@ -109,7 +104,7 @@ const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
                 {innslag.aktør === Aktør.Beslutter && <BeslutterIkon />}
                 {innslag.aktør === Aktør.Saksbehandler && <SaksbehandlerIkon />}
             </Tidslinje>
-            <Innhold>
+            <div className="mb-6">
                 <Label>{lagTittel()}</Label>
                 <Detail>
                     {`${formatterDatoOgTidstring(innslag.opprettetTid)} | `}
@@ -129,7 +124,7 @@ const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
                         }}
                     />
                 )}
-            </Innhold>
+            </div>
         </Innslag>
     );
 };

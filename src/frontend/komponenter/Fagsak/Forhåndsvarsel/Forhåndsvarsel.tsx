@@ -111,10 +111,10 @@ export const Forhåndsvarsel: React.FC = () => {
         queryClient.getQueryData(['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst]);
 
     return (
-        <VStack gap="4">
+        <VStack gap="space-16">
             <HStack align="center" justify="space-between">
                 <Heading size="small">Forhåndsvarsel</Heading>
-                <HStack gap="4">
+                <HStack gap="space-16">
                     {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && (
                         <Button
                             loading={forhåndsvisning.isPending}
@@ -294,7 +294,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     })();
 
     return (
-        <VStack gap="4" ref={ref}>
+        <VStack gap="space-16" ref={ref} className="max-w-xl">
             <OpprettSkjema
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}

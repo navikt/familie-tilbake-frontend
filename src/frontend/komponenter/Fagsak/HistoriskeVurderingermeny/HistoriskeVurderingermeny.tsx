@@ -34,7 +34,7 @@ const HistoriskeVurderingermeny: React.FC = () => {
             <BodyLong>
                 Her kan du se tidligere lagrede verdier på stegene Fakta og Vilkårsvurdering.
             </BodyLong>
-            <HStack gap="4">
+            <HStack gap="space-16">
                 <Link href={`${basePath}/inaktiv-fakta`}>Fakta</Link>
                 <Link href={`${basePath}/inaktiv-vilkaarsvurdering`}>Vilkårsvurdering</Link>
             </HStack>

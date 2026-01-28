@@ -1,7 +1,6 @@
 import type { Behandlingsstegstilstand } from '../../../../typer/behandling';
 
 import { Alert, BodyLong, Button, Heading, Modal, Select } from '@navikt/ds-react';
-import { ASpacing8, ATextDanger } from '@navikt/ds-tokens/dist/tokens';
 import { useQueryClient } from '@tanstack/react-query';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
@@ -26,10 +25,10 @@ const StyledAlert = styled(Alert)`
 `;
 
 const FeilContainer = styled.div`
-    margin-top: ${ASpacing8};
+    margin-top: 32px;
 
     & .typo-normal {
-        color: ${ATextDanger};
+        color: var(--ax-text-danger);
     }
 `;
 

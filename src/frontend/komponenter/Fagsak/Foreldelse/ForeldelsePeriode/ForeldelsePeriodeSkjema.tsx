@@ -148,7 +148,7 @@ const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) =>
                     <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
                 )}
             </StyledStack>
-            <StyledVStack gap="4">
+            <StyledVStack gap="space-16">
                 <PeriodeOppsummering
                     fom={periode.periode.fom}
                     tom={periode.periode.tom}
@@ -167,7 +167,7 @@ const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) =>
                         settIkkePersistertKomponent('foreldelse');
                     }}
                 />
-                <HGrid columns={{ md: 1, lg: 2 }} gap="4">
+                <HGrid columns={{ md: 1, lg: 2 }} gap="space-16">
                     <RadioGroup
                         id="foreldet"
                         readOnly={erLesevisning}
@@ -189,7 +189,7 @@ const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) =>
                             </Radio>
                         ))}
                     </RadioGroup>
-                    <VStack gap="5">
+                    <VStack gap="space-20">
                         {erMedTilleggsfrist && (
                             <Datovelger
                                 felt={skjema.felter.oppdagelsesdato}
@@ -204,7 +204,7 @@ const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) =>
                             />
                         )}
                         {(erForeldet || erMedTilleggsfrist) && (
-                            <VStack gap="2">
+                            <VStack gap="space-8">
                                 <Datovelger
                                     felt={skjema.felter.foreldelsesfrist}
                                     label="Foreldelsesfrist"

@@ -15,8 +15,8 @@ export const ServerFeil: React.FC<Props> = ({ httpStatus }) => {
         <Page.Block as="main" width="xl" gutters>
             <Box paddingBlock="20 8">
                 <HGrid columns="minmax(auto,600px)" data-aksel-template="500-v2">
-                    <VStack gap="16">
-                        <VStack gap="12" align="start">
+                    <VStack gap="space-64">
+                        <VStack gap="space-48" align="start">
                             <div>
                                 {!!httpStatus && (
                                     <BodyShort textColor="subtle" size="small">

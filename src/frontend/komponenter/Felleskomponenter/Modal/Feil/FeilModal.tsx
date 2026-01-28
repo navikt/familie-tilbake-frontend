@@ -30,8 +30,11 @@ export const FeilModal: React.FC<Props> = ({ feil, lukkFeilModal, beskjed }: Pro
             </Modal.Header>
             <Modal.Body className="flex flex-col gap-6">
                 <p className="text-[#010B18AD] pt-4">{feilObjekt.httpStatus}</p>
-                <VStack gap="4">
-                    <VStack gap="4" className="border-b border-solid border-b-[#071A3636] pb-6">
+                <VStack gap="space-16">
+                    <VStack
+                        gap="space-16"
+                        className="border-b border-solid border-b-[#071A3636] pb-6"
+                    >
                         <h2 className="font-semibold text-xl">{beskjed ?? feilObjekt.beskjed}</h2>
                         <p>{feil.message}</p>
                         <VStack>
@@ -62,7 +65,7 @@ export const FeilModal: React.FC<Props> = ({ feil, lukkFeilModal, beskjed }: Pro
                         </VStack>
                     </VStack>
                     {(eksternFagsakId || behandlingId) && (
-                        <VStack gap="1" className="text-sm text-[#010B18AD]">
+                        <VStack gap="space-4" className="text-sm text-[#010B18AD]">
                             {eksternFagsakId && <span>Fagsak ID: {eksternFagsakId}</span>}
                             {behandlingId && <span>Behandling ID: {behandlingId}</span>}
                         </VStack>

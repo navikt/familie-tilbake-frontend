@@ -260,16 +260,15 @@ const Brevmottakere: React.FC = () => {
                     settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}
                 />
             )}
-            <VStack gap="4" align="start">
+            <VStack gap="space-16" align="start">
                 <Heading size="small" level="1">
                     Brevmottaker(e)
                 </Heading>
-                <VStack gap="4" minWidth="430px">
+                <VStack gap="space-16" minWidth="430px">
                     <Box
                         borderWidth="1"
-                        borderRadius="xlarge"
-                        padding="4"
-                        className="border-ax-border-neutral-subtle"
+                        padding="space-16"
+                        className="border-ax-border-neutral-subtle rounded-xl"
                         key={bruker.personIdent}
                     >
                         <Brevmottaker
@@ -291,9 +290,8 @@ const Brevmottakere: React.FC = () => {
                         manuelleBrevmottakere.map(brevmottakerRespons => (
                             <Box
                                 borderWidth="1"
-                                borderRadius="xlarge"
-                                padding="4"
-                                className="border-ax-border-neutral-subtle"
+                                padding="space-16"
+                                className="border-ax-border-neutral-subtle rounded-xl"
                                 key={brevmottakerRespons.id}
                             >
                                 <Brevmottaker

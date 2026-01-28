@@ -1,6 +1,6 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
-import { BodyShort, Box, HGrid, List, VStack } from '@navikt/ds-react';
+import { BodyShort, Box, Heading, HGrid, List, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import {
@@ -29,7 +29,7 @@ type Props = {
 
 const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
     return (
-        <VStack gap="10">
+        <VStack gap="space-40">
             {perioder.map(skjema => {
                 const erForstodBurdeForstått =
                     skjema.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat ===
@@ -40,9 +40,14 @@ const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
                 const begrunnelseAktsomhetGodTro = aktsomhet?.begrunnelse || godTro?.begrunnelse;
                 const særligeGrunner = aktsomhet?.særligeGrunner;
                 return (
-                    <Box key={skjema.index} padding="4" borderWidth="1" borderRadius="small">
-                        <HGrid columns={{ lg: 2, md: 1 }} gap="8">
-                            <VStack gap="4">
+                    <Box
+                        key={skjema.index}
+                        padding="space-16"
+                        borderWidth="1"
+                        className="rounded-sm"
+                    >
+                        <HGrid columns={{ lg: 2, md: 1 }} gap="space-32">
+                            <VStack gap="space-16">
                                 <Box>
                                     <LabelVerdiVisning
                                         label="Fra"
@@ -79,7 +84,7 @@ const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
                                 </VStack>
                             </VStack>
                             {(godTro || aktsomhet) && (
-                                <VStack gap="1">
+                                <VStack gap="space-4">
                                     <LabelVerdiVisning
                                         label={
                                             aktsomhet
@@ -125,23 +130,34 @@ const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
                                             />
 
                                             {særligeGrunner && særligeGrunner?.length > 0 && (
-                                                <List
-                                                    title="Særlige grunner"
-                                                    description={
-                                                        aktsomhet.særligeGrunnerBegrunnelse
-                                                    }
-                                                >
-                                                    {særligeGrunner?.map(grunn => {
-                                                        return (
-                                                            <List.Item key={grunn.særligGrunn}>
-                                                                {særligegrunner[grunn.særligGrunn]}{' '}
-                                                                {grunn.begrunnelse
-                                                                    ? `- (${grunn.begrunnelse})`
-                                                                    : ''}
-                                                            </List.Item>
-                                                        );
-                                                    })}
-                                                </List>
+                                                <div>
+                                                    <Heading as="h3" size="small">
+                                                        Særlige grunner
+                                                    </Heading>
+                                                    <BodyShort>
+                                                        {aktsomhet.særligeGrunnerBegrunnelse}
+                                                    </BodyShort>
+                                                    <Box marginBlock="space-16" asChild>
+                                                        <List>
+                                                            {særligeGrunner?.map(grunn => {
+                                                                return (
+                                                                    <List.Item
+                                                                        key={grunn.særligGrunn}
+                                                                    >
+                                                                        {
+                                                                            særligegrunner[
+                                                                                grunn.særligGrunn
+                                                                            ]
+                                                                        }{' '}
+                                                                        {grunn.begrunnelse
+                                                                            ? `- (${grunn.begrunnelse})`
+                                                                            : ''}
+                                                                    </List.Item>
+                                                                );
+                                                            })}
+                                                        </List>
+                                                    </Box>
+                                                </div>
                                             )}
 
                                             <LabelVerdiVisning

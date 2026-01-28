@@ -52,7 +52,7 @@ export const ManuellRegistrering: React.FC<Props> = ({ preutfyltNavn, mottakerTy
 
     return (
         <Fieldset legend="Manuell adresseregistrering" hideLegend>
-            <VStack gap="4">
+            <VStack gap="space-16">
                 <TextField
                     {...register(fieldPath('navn'))}
                     label="Navn"
@@ -85,7 +85,7 @@ export const ManuellRegistrering: React.FC<Props> = ({ preutfyltNavn, mottakerTy
                             </Alert>
                         )}
                         {landValue === 'NO' && (
-                            <HStack gap="4" wrap>
+                            <HStack gap="space-16" wrap>
                                 <TextField
                                     {...register(fieldPath('postnummer'))}
                                     label="Postnummer"

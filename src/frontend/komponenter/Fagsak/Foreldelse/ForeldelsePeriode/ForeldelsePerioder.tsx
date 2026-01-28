@@ -72,7 +72,7 @@ const ForeldelsePerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
     };
 
     return perioder && tidslinjeRader ? (
-        <VStack gap="5">
+        <VStack gap="space-20">
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
             {!!valgtPeriode && (
                 <ForeldelsePeriodeSkjema periode={valgtPeriode} erLesevisning={erLesevisning} />

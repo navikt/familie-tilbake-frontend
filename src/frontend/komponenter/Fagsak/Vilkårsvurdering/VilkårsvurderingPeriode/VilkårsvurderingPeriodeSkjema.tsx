@@ -17,7 +17,6 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
-import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInMonths, parseISO } from 'date-fns';
 import * as React from 'react';
@@ -285,7 +284,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     if (sendInnSkjemaMutation.isPending) {
         return (
-            <Box padding="4" className="min-w-[20rem]" aria-live="polite">
+            <Box padding="space-16" className="min-w-[20rem]" aria-live="polite">
                 Navigerer...
             </Box>
         );
@@ -294,7 +293,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     if (!periode) return null;
 
     return (
-        <Box padding="4" className="min-w-[20rem]">
+        <Box padding="space-16" className="min-w-[20rem]">
             <HGrid columns="1fr 4rem">
                 <Stack
                     className="max-w-120 w-full"
@@ -310,7 +309,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     )}
                 </Stack>
             </HGrid>
-            <VStack gap="6" maxWidth={ATextWidthMax}>
+            <VStack gap="space-16" className="max-w-xl">
                 <PeriodeOppsummering
                     fom={periode.periode.fom}
                     tom={periode.periode.tom}
@@ -346,7 +345,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         </Select>
                     )}
                 {periode.foreldet && (
-                    <HGrid gap="2">
+                    <HGrid gap="space-8">
                         <Heading size="xsmall" level="2">
                             Foreldelse
                         </Heading>

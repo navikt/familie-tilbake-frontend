@@ -15,7 +15,6 @@ import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { finnSideForSteg } from '../../../../utils/sider';
-import ArrowBox from '../../../Felleskomponenter/ArrowBox/ArrowBox';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
@@ -127,26 +126,21 @@ const Totrinnskontroll: React.FC = () => {
                                 </HorisontalRadioGroup>
                             )}
                             {vurdertIkkeGodkjent && (
-                                <ArrowBox alignOffset={erLesevisning ? 5 : 125}>
-                                    <Textarea
-                                        name={`ikkeGodkjentBegrunnelse_${totrinnSteg.index}`}
-                                        label="Begrunnelse"
-                                        readOnly={erLesevisning}
-                                        value={totrinnSteg.begrunnelse || ''}
-                                        maxLength={2000}
-                                        onChange={event =>
-                                            oppdaterBegrunnelse(
-                                                totrinnSteg.index,
-                                                event.target.value
-                                            )
-                                        }
-                                        error={
-                                            totrinnSteg.harFeilIBegrunnelse
-                                                ? totrinnSteg.begrunnelseFeilmelding
-                                                : null
-                                        }
-                                    />
-                                </ArrowBox>
+                                <Textarea
+                                    name={`ikkeGodkjentBegrunnelse_${totrinnSteg.index}`}
+                                    label="Begrunnelse"
+                                    readOnly={erLesevisning}
+                                    value={totrinnSteg.begrunnelse || ''}
+                                    maxLength={2000}
+                                    onChange={event =>
+                                        oppdaterBegrunnelse(totrinnSteg.index, event.target.value)
+                                    }
+                                    error={
+                                        totrinnSteg.harFeilIBegrunnelse
+                                            ? totrinnSteg.begrunnelseFeilmelding
+                                            : null
+                                    }
+                                />
                             )}
                         </div>
                     );

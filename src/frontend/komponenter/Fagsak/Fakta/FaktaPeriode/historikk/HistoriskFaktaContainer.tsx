@@ -1,7 +1,5 @@
 import { Alert, Heading, VStack } from '@navikt/ds-react';
-import { ASpacing3 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { useHistoriskFakta } from './HistoriskFaktaContext';
 import HistoriskFaktaVisning from './HistoriskFaktaVisning';
@@ -9,17 +7,13 @@ import VelgHistoriskFaktaVurdering from './VelgHistoriskFaktaVurdering';
 import { RessursStatus } from '../../../../../typer/ressurs';
 import DataLastIkkeSuksess from '../../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
-const Container = styled.div`
-    padding: ${ASpacing3};
-`;
-
 const HistoriskFaktaContainer: React.FC = () => {
     const { inaktiveFakta, skjemaData, fakta, setInaktivFakta } = useHistoriskFakta();
 
     if (inaktiveFakta?.status === RessursStatus.Suksess) {
         return (
-            <Container>
-                <VStack gap="5">
+            <div className="p-3">
+                <VStack gap="space-20">
                     <Alert variant="info">
                         <Heading level="2" size="small">
                             Tidligere fakta på denne behandlingen
@@ -33,7 +27,7 @@ const HistoriskFaktaContainer: React.FC = () => {
                         <HistoriskFaktaVisning skjemaData={skjemaData} fakta={fakta} />
                     )}
                 </VStack>
-            </Container>
+            </div>
         );
     } else {
         return <DataLastIkkeSuksess ressurser={[inaktiveFakta]} />;

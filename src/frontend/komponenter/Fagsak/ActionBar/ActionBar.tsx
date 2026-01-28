@@ -57,14 +57,14 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
         >
             <Behandlingsmeny />
 
-            <HStack gap="8">
+            <HStack gap="space-32">
                 <BodyShort
                     size="small"
                     className="text-ax-text-neutral-subtle font-ax-bold flex items-center text-nowrap"
                 >
                     {stegtekst}
                 </BodyShort>
-                <HStack gap="4" className="flex-nowrap">
+                <HStack gap="space-16" className="flex-nowrap">
                     {forrigeAriaLabel && onForrige && (
                         <Tooltip content={forrigeAriaLabel} aria-disabled={isLoading}>
                             <Button

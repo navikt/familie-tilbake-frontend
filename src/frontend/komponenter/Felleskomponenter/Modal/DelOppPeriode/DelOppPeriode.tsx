@@ -10,7 +10,6 @@ import {
     Timeline,
     useMonthpicker,
 } from '@navikt/ds-react';
-import { ABorderStrong, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import { endOfMonth, subMonths } from 'date-fns';
 import * as React from 'react';
 import { styled } from 'styled-components';
@@ -19,8 +18,8 @@ import { formatterDatoDDMMYYYY, formatterDatostring } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
 
 const TidslinjeContainer = styled.div`
-    border: 1px solid ${ABorderStrong};
-    margin-bottom: ${ASpacing6};
+    border: 1px solid var(--ax-border-info-strong);
+    margin-bottom: 24px;
     padding: 12px 16px;
 
     .etiketter div:last-child {
