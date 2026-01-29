@@ -309,7 +309,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     )}
                 </Stack>
             </HGrid>
-            <VStack gap="space-16" className="max-w-xl">
+            <VStack gap="space-24" className="max-w-xl">
                 <PeriodeOppsummering
                     fom={periode.periode.fom}
                     tom={periode.periode.tom}

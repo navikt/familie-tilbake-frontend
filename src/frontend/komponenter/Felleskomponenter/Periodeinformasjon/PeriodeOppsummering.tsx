@@ -8,12 +8,11 @@ import { hendelsetyper } from '../../../kodeverk';
 import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
 
 const StyledVStack = styled(VStack)`
-    background-color: #b4ccdc;
+    background-color: var(--ax-bg-info-moderate);
     padding: 12px 20px;
     margin-top: 12px;
     max-width: 30rem;
     width: 100%;
-    color: #000;
 `;
 
 type Props = {
@@ -25,7 +24,7 @@ type Props = {
 
 const PeriodeOppsummering: React.FC<Props> = ({ fom, tom, beløp, hendelsetype }) => {
     return (
-        <StyledVStack gap="space-20">
+        <StyledVStack gap="space-20" className="text-ax-text-info rounded-xl">
             <HGrid columns={{ md: 1, lg: '5fr 3fr' }} gap="space-16">
                 <Label size="small">{`${formatterDatostring(fom)} - ${formatterDatostring(
                     tom
