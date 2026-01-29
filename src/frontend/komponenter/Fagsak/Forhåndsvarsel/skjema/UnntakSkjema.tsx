@@ -60,6 +60,7 @@ export const Unntak: React.FC = () => {
                 {...methods.register('beskrivelse')}
                 label="Forklar hvorfor forhåndsvarselet ikke skal bli sendt"
                 maxLength={2000}
+                minRows={3}
                 size="small"
                 className="max-w-xl"
                 resize

@@ -142,6 +142,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                             size="small"
                             label="Beskriv hva brukeren har uttalt seg om"
                             maxLength={4000}
+                            minRows={3}
                             resize
                             error={get(
                                 errors,
@@ -156,6 +157,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                     size="small"
                     label="Kommentar til valget over"
                     maxLength={4000}
+                    minRows={3}
                     resize
                     error={get(errors, 'kommentar.message')}
                 />
@@ -180,6 +182,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                     <Textarea
                         {...methods.register('utsettUttalelseFrist.begrunnelse')}
                         size="small"
+                        minRows={3}
                         label="Begrunnelse for utsatt frist"
                         maxLength={4000}
                         resize
