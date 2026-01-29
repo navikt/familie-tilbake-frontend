@@ -315,17 +315,12 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const kanSendeUttalelse =
         varselErSendt ||
-        (!!forhåndsvarselInfo?.forhåndsvarselUnntak &&
-            begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG');
+        (skalSendeEllerOppdatereUnntak && begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG');
 
     const formId = ((): 'opprettForm' | 'uttalelseForm' | undefined => {
-        if (!varselErSendt && !forhåndsvarselInfo?.forhåndsvarselUnntak) {
-            return 'opprettForm';
-        }
-        if (kanSendeUttalelse) {
+        if (kanSendeUttalelse && !skalSendeEllerOppdatereUnntak) {
             return 'uttalelseForm';
         }
-
         return 'opprettForm';
     })();
 

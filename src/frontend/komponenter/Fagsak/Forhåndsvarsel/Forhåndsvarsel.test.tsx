@@ -314,6 +314,30 @@ describe('Forhåndsvarsel', () => {
             expect(nesteKnapp).toHaveAttribute('form', 'opprettForm');
         });
 
+        test('Bruker opprettForm når unntak er lagret og bruker endrer til ÅPENBART_UNØDVENDIG', async () => {
+            const mockQueries = vi.mocked(useForhåndsvarselQueries);
+            mockQueries.mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'IKKE_PRAKTISK_MULIG',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const åpenbartUnødvendigRadio = await screen.findByRole('radio', {
+                name: /Varsel anses som åpenbart unødvendig/,
+            });
+            fireEvent.click(åpenbartUnødvendigRadio);
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            expect(nesteKnapp).toHaveAttribute('form', 'opprettForm');
+        });
+
         test('Neste-knapp har form-attributt når brukeruttalelse allerede er registrert (kan redigeres)', async () => {
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
