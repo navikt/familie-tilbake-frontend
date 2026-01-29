@@ -65,13 +65,9 @@ export const Behandlingsmeny: React.FC = () => {
                             {!venterPåKravgrunnlag &&
                                 (erSattPåvent ? <Gjenoppta /> : <SettPåVent />)}
 
-                            {erForvalter && (
-                                <>
-                                    {behandling.kanSetteTilbakeTilFakta && <StartPåNytt />}
+                            {(behandling.kanSetteTilbakeTilFakta || erForvalter) && <StartPåNytt />}
 
-                                    <HentKorrigertKravgrunnlag />
-                                </>
-                            )}
+                            {erForvalter && <HentKorrigertKravgrunnlag />}
 
                             {!behandlingILesemodus && (
                                 <>
