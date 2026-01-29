@@ -61,7 +61,7 @@ export const vedtaksbrevLagVedtaksbrev = <ThrowOnError extends boolean = false>(
 ) =>
     (options.client ?? client).post<VedtaksbrevLagVedtaksbrevResponses, unknown, ThrowOnError>({
         responseType: 'blob',
-        url: '/api/v1/generate/vedtaksbrev/pdf',
+        url: '/api/v1/generate/vedtaksbrev/svg',
         ...options,
         headers: {
             'Content-Type': 'application/json',

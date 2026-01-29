@@ -3,7 +3,7 @@ import type { VedtaksbrevData } from '../../generated-new';
 import { Textarea } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { vedtaksbrevLagVedtaksbrevMutation } from '../../generated-new/@tanstack/react-query.gen';
@@ -16,15 +16,15 @@ const asBase64 = (blob: Blob): Promise<string> =>
         reader.readAsDataURL(blob);
     });
 
-const createDebounce = (updateFunction: () => void): (() => void) => {
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+const useDebounce = (updateFunction: () => void): (() => void) => {
+    const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
     return (): void => {
-        if (timeoutId != null) {
-            clearInterval(timeoutId);
+        if (timeoutId.current != null) {
+            clearInterval(timeoutId.current);
         }
-        timeoutId = setTimeout(() => {
+        timeoutId.current = setTimeout(() => {
             updateFunction();
-            timeoutId = null;
+            timeoutId.current = null;
         }, 500);
     };
 };
@@ -123,7 +123,7 @@ const PdfRenderer: React.FC = () => {
         mutationKey: ['lagPdf'],
         ...originalMutation,
         onSuccess: async data => {
-            const base64 = (await asBase64(data as Blob)).replace('octet-stream', 'pdf');
+            const base64 = (await asBase64(data as Blob)).replace('text/plain', 'image/svg+xml');
             console.log('Hello');
             console.log(base64);
             setPdf(base64);
@@ -135,20 +135,21 @@ const PdfRenderer: React.FC = () => {
         },
     });
 
-    const debouncedUpdate = createDebounce(() => {
+    const debouncedUpdate = useDebounce(() => {
         vedtaksbrevMutation.mutate({
             body: methods.getValues(),
         });
     });
 
     methods.watch(() => debouncedUpdate());
+
     return (
         <FormProvider {...methods}>
             <Textarea
                 label="hovedavsnitt"
                 {...methods.register('hovedavsnitt.underavsnitt.0.tekst')}
             />
-            <embed height="800px" width="50%" type="application/pdf" src={pdf} />
+            <img height="800px" width="50%" alt="Forhåndsvisning av PDF" src={pdf} />
         </FormProvider>
     );
 };
