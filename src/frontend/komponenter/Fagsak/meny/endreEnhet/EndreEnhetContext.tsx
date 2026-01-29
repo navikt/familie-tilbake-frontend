@@ -4,6 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { useFelt, useSkjema } from '../../../../hooks/skjema';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../utils';
@@ -61,11 +62,11 @@ const useEndreEnhet = (lukkModal: () => void): EndreEnhetHook => {
                     },
                     url: `/familie-tilbake/api/behandling/${behandlingId}/bytt-enhet/v1`,
                 },
-                (response: Ressurs<string>) => {
+                async (response: Ressurs<string>) => {
                     if (response.status === RessursStatus.Suksess) {
                         lukkModal();
-                        queryClient.invalidateQueries({
-                            queryKey: ['hentBehandling', { path: { behandlingId } }],
+                        await queryClient.invalidateQueries({
+                            queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
                         });
                     }
                 }

@@ -22,7 +22,7 @@ vi.mock('../VilkårsvurderingContext', () => {
     return {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({
             oppdaterPeriode: vi.fn(),
-            gåTilNesteSteg: vi.fn(),
+            navigerTilNeste: vi.fn(),
             sendInnSkjemaOgNaviger: vi.fn(),
             sendInnSkjemaMutation: {
                 isPending: false,
@@ -156,7 +156,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryByLabelText('Begrunn hvorfor beløpet er i behold')).toBeInTheDocument();
+        expect(
+            queryByLabelText('Begrunn hvorfor beløpet ikke er i behold')
+        ).not.toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -164,14 +166,14 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.type(getByLabelText('Begrunn hvorfor beløpet er i behold'), 'begrunnelse');
         await user.click(
             getByLabelText('Nei', {
                 selector: 'input',
             })
         );
+        await user.type(getByLabelText('Begrunn hvorfor beløpet ikke er i behold'), 'begrunnelse');
 
         const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
         expect(tilbakekrevdBeløp).toHaveValue('0');
@@ -208,12 +210,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
 
-        await user.type(getByLabelText('Begrunn hvorfor beløpet er i behold'), 'begrunnelse');
         await user.click(
             getByLabelText('Ja', {
                 selector: 'input',
             })
         );
+        await user.type(getByLabelText('Begrunn hvorfor beløpet er i behold'), 'begrunnelse');
 
         expect(queryByLabelText('Angi beløp som skal tilbakekreves')).toBeInTheDocument();
 

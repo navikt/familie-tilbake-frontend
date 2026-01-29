@@ -8,7 +8,7 @@ import { Button, Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react'
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch, useFormContext } from 'react-hook-form';
 
 import {
     forhåndsvarselSchema,
@@ -45,6 +45,8 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 
 export const Forhåndsvarsel: React.FC = () => {
     const { behandlingId } = useBehandling();
+    const { settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
+        useBehandlingState();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries();
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
@@ -56,8 +58,21 @@ export const Forhåndsvarsel: React.FC = () => {
 
     const methods = useForm<ForhåndsvarselFormData>({
         resolver: zodResolver(forhåndsvarselSchema),
-        mode: 'all',
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        criteriaMode: 'all',
         defaultValues: getDefaultValues(varselErSendt, forhåndsvarselInfo),
+    });
+
+    methods.subscribe({
+        formState: { isDirty: true },
+        callback: data => {
+            if (data.isDirty) {
+                settIkkePersistertKomponent('forhåndsvarsel');
+            } else {
+                nullstillIkkePersisterteKomponenter();
+            }
+        },
     });
 
     const fritekst = useWatch({
@@ -110,22 +125,25 @@ export const Forhåndsvarsel: React.FC = () => {
         forhåndsvisning.data ||
         queryClient.getQueryData(['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst]);
 
+    const visForhåndsvisningsknapp = skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja;
+
     return (
-        <VStack gap="space-16">
+        <VStack gap="space-24">
             <HStack align="center" justify="space-between">
-                <Heading size="small">Forhåndsvarsel</Heading>
+                <Heading size="medium">Forhåndsvarsel</Heading>
                 <HStack gap="space-16">
-                    {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && (
-                        <Button
-                            loading={forhåndsvisning.isPending}
-                            icon={<FilePdfIcon aria-hidden />}
-                            variant="tertiary"
-                            size="small"
-                            onClick={seForhåndsvisningWithModal}
-                        >
-                            Forhåndsvis
-                        </Button>
-                    )}
+                    <Button
+                        loading={forhåndsvisning.isPending}
+                        icon={<FilePdfIcon aria-hidden />}
+                        variant="tertiary"
+                        size="small"
+                        onClick={seForhåndsvisningWithModal}
+                        className={visForhåndsvisningsknapp ? '' : 'invisible pointer-events-none'}
+                        aria-hidden={!visForhåndsvisningsknapp}
+                        tabIndex={visForhåndsvisningsknapp ? 0 : -1}
+                    >
+                        Forhåndsvis
+                    </Button>
                     {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
                         <Tooltip
                             arrow={false}
@@ -190,7 +208,16 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     parentBounds,
     ref,
 }) => {
-    const { actionBarStegtekst } = useBehandlingState();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
+
+    const {
+        formState: { isDirty },
+    } = useFormContext<ForhåndsvarselFormData>();
+
+    const begrunnelseForUnntak = useWatch({
+        control: useFormContext<ForhåndsvarselFormData>().control,
+        name: 'begrunnelseForUnntak',
+    });
 
     const {
         sendForhåndsvarselMutation,
@@ -201,8 +228,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendForhåndsvarsel,
         sendUnntakMutation,
         sendUnntak,
-        gåTilNeste,
-        gåTilForrige,
+        navigerTilNeste,
+        navigerTilForrige,
     } = useForhåndsvarselMutations();
 
     const mutations = [
@@ -218,7 +245,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const uttalelseMethods = useForm<UttalelseFormData>({
         resolver: zodResolver(uttalelseSchema),
-        mode: 'all',
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        criteriaMode: 'all',
         defaultValues: getUttalelseValues(forhåndsvarselInfo),
     });
 
@@ -244,6 +273,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'Utsett frist';
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
+        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && isDirty) {
+            return 'Lagre og gå til neste';
         }
         return 'Neste';
     };
@@ -253,16 +284,26 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const skalSendeUnntak =
         skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
         !forhåndsvarselInfo?.forhåndsvarselUnntak;
-    const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = (
+
+    const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = async (
         data: ForhåndsvarselFormData
-    ): void => {
+    ): Promise<void> => {
         if (skalSendeForhåndsvarsel) {
             sendForhåndsvarsel(data);
         } else if (skalSendeUnntak) {
-            sendUnntak(data);
+            if (begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') {
+                const uttalelseValid = await uttalelseMethods.trigger();
+                if (!uttalelseValid) return;
+
+                sendUnntak(data);
+                sendBrukeruttalelse(uttalelseMethods.getValues());
+            } else {
+                sendUnntak(data);
+            }
         } else {
-            gåTilNeste();
+            navigerTilNeste();
         }
+        nullstillIkkePersisterteKomponenter();
     };
 
     const handleUttalelseSubmit: SubmitHandler<UttalelseFormData> = (
@@ -294,7 +335,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     })();
 
     return (
-        <VStack gap="space-16" ref={ref} className="max-w-xl">
+        <VStack gap="space-24" ref={ref}>
             <OpprettSkjema
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
@@ -302,18 +343,21 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 readOnly={!!forhåndsvarselInfo?.forhåndsvarselUnntak}
             />
 
-            {(forhåndsvarselInfo?.forhåndsvarselUnntak || varselErSendt) && (
-                <FormProvider {...uttalelseMethods}>
-                    <Uttalelse
-                        handleUttalelseSubmit={handleUttalelseSubmit}
-                        readOnly={
-                            !!forhåndsvarselInfo.brukeruttalelse ||
-                            forhåndsvarselInfo.utsettUttalelseFrist.length > 0
-                        }
-                        kanUtsetteFrist
-                    />
-                </FormProvider>
-            )}
+            {forhåndsvarselInfo &&
+                ((skalSendeUnntak && begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') ||
+                    varselErSendt ||
+                    forhåndsvarselInfo.brukeruttalelse) && (
+                    <FormProvider {...uttalelseMethods}>
+                        <Uttalelse
+                            handleUttalelseSubmit={handleUttalelseSubmit}
+                            readOnly={
+                                !!forhåndsvarselInfo.brukeruttalelse ||
+                                forhåndsvarselInfo.utsettUttalelseFrist.length > 0
+                            }
+                            kanUtsetteFrist
+                        />
+                    </FormProvider>
+                )}
 
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
@@ -324,7 +368,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                     sendUnntakMutation?.isPending
                 }
                 forrigeAriaLabel="Gå til fakta om feilutbetaling"
-                onForrige={gåTilForrige}
+                onForrige={navigerTilForrige}
                 nesteAriaLabel={getNesteKnappTekst()}
                 {...(formId
                     ? {
@@ -333,7 +377,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                       }
                     : {
                           type: 'button' as const,
-                          onNeste: gåTilNeste,
+                          onNeste: navigerTilNeste,
                       })}
             />
 

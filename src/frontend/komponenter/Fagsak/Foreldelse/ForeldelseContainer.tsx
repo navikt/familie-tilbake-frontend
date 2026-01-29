@@ -16,8 +16,8 @@ const ForeldelseContainer: React.FC = () => {
         foreldelse,
         skjemaData,
         erAutoutført,
-        gåTilNesteSteg,
-        gåTilForrigeSteg,
+        navigerTilNeste,
+        navigerTilForrige,
         stegErBehandlet,
         sendInnSkjema,
         senderInn,
@@ -27,7 +27,7 @@ const ForeldelseContainer: React.FC = () => {
     const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
     const navigerEllerLagreOgNaviger =
-        erAutoutført || (stegErBehandlet && erLesevisning) ? gåTilNesteSteg : sendInnSkjema;
+        erAutoutført || (stegErBehandlet && erLesevisning) ? navigerTilNeste : sendInnSkjema;
 
     return (
         <>
@@ -126,7 +126,7 @@ const ForeldelseContainer: React.FC = () => {
                         : 'Gå tilbake til faktasteget'
                 }
                 nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
-                onForrige={gåTilForrigeSteg}
+                onForrige={navigerTilForrige}
                 onNeste={navigerEllerLagreOgNaviger}
                 disableNeste={!allePerioderBehandlet}
                 isLoading={senderInn}

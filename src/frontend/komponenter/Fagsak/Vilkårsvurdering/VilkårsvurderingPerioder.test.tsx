@@ -189,10 +189,9 @@ describe('VilkårsvurderingPerioder', () => {
             })
         );
 
-        const godTroBegrunnelseInput = getByLabelText('Begrunn hvorfor beløpet er i behold');
-        await user.type(godTroBegrunnelseInput, 'Beløp vurdering');
-
         await user.click(getByRole('radio', { name: 'Nei' }));
+        const godTroBegrunnelseInput = getByLabelText('Begrunn hvorfor beløpet ikke er i behold');
+        await user.type(godTroBegrunnelseInput, 'Beløp vurdering');
 
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
         if (andrePeriodeButton) {

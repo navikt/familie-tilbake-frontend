@@ -3,34 +3,29 @@ import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-re
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useHttp } from '../../../../api/http/HttpProvider';
 import { useApp } from '../../../../context/AppContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../../context/FagsakContext';
-import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg, Behandlingsstegstatus } from '../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
-import { SYNLIGE_STEG } from '../../../../utils/sider';
+import { useStegNavigering } from '../../../../utils/sider';
 import { AlertType, ToastTyper } from '../../../Felleskomponenter/Toast/typer';
 import { MODAL_BREDDE } from '../utils';
 
 export const LeggTilFjernBrevmottakere: React.FC = () => {
-    const { behandlingId, eksternBrukId, manuelleBrevmottakere, behandlingsstegsinfo } =
-        useBehandling();
+    const { behandlingId, manuelleBrevmottakere, behandlingsstegsinfo } = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [senderInn, settSenderInn] = useState(false);
     const [feilmelding, settFeilmelding] = useState('');
-
+    const navigerTilBrevmottakerSteg = useStegNavigering(Behandlingssteg.Brevmottaker);
+    const navigerTilBehandling = useStegNavigering();
     const queryClient = useQueryClient();
-    const { fagsystem, eksternFagsakId } = useFagsak();
-    const { utførRedirect } = useRedirectEtterLagring();
     const { request } = useHttp();
     const { settToast } = useApp();
-    const navigate = useNavigate();
 
     const kanFjerneManuelleBrevmottakere =
         manuelleBrevmottakere.length ||
@@ -46,15 +41,13 @@ export const LeggTilFjernBrevmottakere: React.FC = () => {
         request<void, string>({
             method: 'POST',
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}/aktiver`,
-        }).then((respons: Ressurs<string>) => {
+        }).then(async (respons: Ressurs<string>) => {
             settSenderInn(false);
-            if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
-                queryClient.invalidateQueries({
-                    queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
+            if (respons.status === RessursStatus.Suksess) {
+                await queryClient.invalidateQueries({
+                    queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                 });
-                navigate(
-                    `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${SYNLIGE_STEG.BREVMOTTAKER.href}`
-                );
+                navigerTilBrevmottakerSteg();
             } else if (
                 respons.status === RessursStatus.Feilet ||
                 respons.status === RessursStatus.FunksjonellFeil ||
@@ -71,16 +64,14 @@ export const LeggTilFjernBrevmottakere: React.FC = () => {
         request<void, string>({
             method: 'PUT',
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}/deaktiver`,
-        }).then((respons: Ressurs<string>) => {
+        }).then(async (respons: Ressurs<string>) => {
             settSenderInn(false);
-            if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
+            if (respons.status === RessursStatus.Suksess) {
                 dialogRef.current?.close();
-                queryClient.invalidateQueries({
-                    queryKey: ['hentBehandling', { path: { behandlingId: behandlingId } }],
+                await queryClient.refetchQueries({
+                    queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                 });
-                utførRedirect(
-                    `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}`
-                );
+                navigerTilBehandling();
             } else if (
                 respons.status === RessursStatus.Feilet ||
                 respons.status === RessursStatus.FunksjonellFeil ||

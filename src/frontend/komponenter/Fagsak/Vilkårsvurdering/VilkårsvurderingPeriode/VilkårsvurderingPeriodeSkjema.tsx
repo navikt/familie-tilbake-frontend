@@ -35,6 +35,7 @@ import {
 } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import { formatterDatostring, isEmpty } from '../../../../utils';
@@ -132,8 +133,8 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         onSplitPeriode,
         nestePeriode,
         forrigePeriode,
-        gåTilForrigeSteg,
-        gåTilNesteSteg,
+        navigerTilForrige,
+        navigerTilNeste,
         sendInnSkjemaMutation,
         sendInnSkjemaOgNaviger,
         settValgtPeriode,
@@ -236,7 +237,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         skjema.visFeilmeldinger &&
         skjema.felter.vilkårsresultatvurdering.valideringsstatus === Valideringsstatus.Feil;
 
-    const handleNavigering = async (handling: PeriodeHandling): Promise<void> => {
+    const handleNavigering = async (handling: PeriodeHandling): Promise<(() => void) | void> => {
         let handlingResult: PeriodeHandling | undefined;
 
         // Alltid valider når man går til vedtak, eller når det er ulagrede data
@@ -252,8 +253,8 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         }
 
         const utførHandling = {
-            [PeriodeHandling.GåTilForrigeSteg]: (): void => gåTilForrigeSteg(),
-            [PeriodeHandling.GåTilNesteSteg]: (): void => gåTilNesteSteg(),
+            [PeriodeHandling.GåTilForrigeSteg]: (): Promise<void> | void => navigerTilForrige(),
+            [PeriodeHandling.GåTilNesteSteg]: (): Promise<void> | void => navigerTilNeste(),
             [PeriodeHandling.ForrigePeriode]: (): void => forrigePeriode(periode),
             [PeriodeHandling.NestePeriode]: (): void => nestePeriode(periode),
         }[handling];
@@ -267,8 +268,13 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         ) {
             nullstillIkkePersisterteKomponenter();
             await queryClient.invalidateQueries({
-                queryKey: ['hentBehandling', { path: { behandlingId } }],
+                queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
             });
+            if (handlingResult === PeriodeHandling.GåTilForrigeSteg) {
+                navigerTilForrige();
+            } else {
+                navigerTilNeste();
+            }
         }
     };
 

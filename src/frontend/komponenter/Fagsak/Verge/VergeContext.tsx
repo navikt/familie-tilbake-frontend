@@ -3,12 +3,11 @@ import type { VergeDto, VergeStegPayload } from '../../../typer/api';
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import * as React from 'react';
-import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../context/FagsakContext';
+import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import {
     type Avhengigheter,
     type FeltState,
@@ -17,7 +16,6 @@ import {
     useSkjema,
     Valideringsstatus,
 } from '../../../hooks/skjema';
-import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
 import { Vergetype } from '../../../kodeverk/verge';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { byggFeiletRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
@@ -27,7 +25,7 @@ import {
     validerTekstFelt,
     validerTekstFeltMaksLengde,
 } from '../../../utils';
-import { SYNLIGE_STEG } from '../../../utils/sider';
+import { useStegNavigering } from '../../../utils/sider';
 
 const erVergetypeOppfylt = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.vergetype.valideringsstatus === Valideringsstatus.Ok;
@@ -37,7 +35,6 @@ const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
 
 const [VergeProvider, useVerge] = createUseContext(() => {
     const behandling = useBehandling();
-    const { fagsystem, eksternFagsakId } = useFagsak();
     const queryClient = useQueryClient();
     const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
     const [erAutoutført, settErAutoutført] = React.useState<boolean>();
@@ -48,8 +45,7 @@ const [VergeProvider, useVerge] = createUseContext(() => {
     const { gjerVergeKall, sendInnVerge } = useBehandlingApi();
     const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
-    const { utførRedirect } = useRedirectEtterLagring();
-    const navigate = useNavigate();
+    const navigerTilNeste = useStegNavigering(Behandlingssteg.Fakta);
 
     React.useEffect(() => {
         if (behandling.harVerge) {
@@ -164,9 +160,7 @@ const [VergeProvider, useVerge] = createUseContext(() => {
     const sendInn = (): void => {
         if (stegErBehandlet && !harEndretOpplysninger()) {
             nullstillIkkePersisterteKomponenter();
-            utførRedirect(
-                `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${SYNLIGE_STEG.FAKTA.href}`
-            );
+            navigerTilNeste();
         } else if (kanSendeSkjema()) {
             settSenderInn(true);
             // @ts-expect-error har verdi her
@@ -188,19 +182,16 @@ const [VergeProvider, useVerge] = createUseContext(() => {
                 },
             };
             sendInnVerge(behandling.behandlingId, payload)
-                .then((respons: Ressurs<string>) => {
+                .then(async (respons: Ressurs<string>) => {
                     settSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
                         nullstillIkkePersisterteKomponenter();
-                        queryClient.invalidateQueries({
-                            queryKey: [
-                                'hentBehandling',
-                                { path: { behandlingId: behandling.behandlingId } },
-                            ],
+                        await queryClient.invalidateQueries({
+                            queryKey: hentBehandlingQueryKey({
+                                path: { behandlingId: behandling.behandlingId },
+                            }),
                         });
-                        navigate(
-                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`
-                        );
+                        navigerTilNeste();
                     } else {
                         settVergeRepons(respons);
                     }

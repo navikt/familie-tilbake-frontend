@@ -37,23 +37,23 @@ import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook
 import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring } from '../../../utils';
 import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type Props = {
-    behandlingUrl: string;
     faktaOmFeilutbetaling: FaktaOmFeilutbetaling;
 };
 
-export const FaktaSkjema = ({ faktaOmFeilutbetaling, behandlingUrl }: Props): React.JSX.Element => {
+export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element => {
     const { behandlingId } = useBehandling();
     const { actionBarStegtekst, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const queryClient = useQueryClient();
 
-    const navigerTilNeste = useStegNavigering(behandlingUrl, Behandlingssteg.Forhåndsvarsel);
+    const navigerTilNeste = useStegNavigering(Behandlingssteg.Forhåndsvarsel);
 
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchema>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
@@ -140,14 +140,13 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling, behandlingUrl }: Props): Re
         oppdaterMutation.mutate(
             { body: data, path: { behandlingId } },
             {
-                onSuccess: data => {
+                onSuccess: async data => {
                     nullstillIkkePersisterteKomponenter();
                     if (data.ferdigvurdert) {
-                        queryClient
-                            .invalidateQueries({
-                                queryKey: ['hentBehandling', { path: { behandlingId } }],
-                            })
-                            .then(navigerTilNeste);
+                        await queryClient.refetchQueries({
+                            queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
+                        });
+                        navigerTilNeste();
                     }
                 },
             }
@@ -267,7 +266,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling, behandlingUrl }: Props): Re
                     forrigeAriaLabel={undefined}
                     nesteAriaLabel="Gå videre til foreldelsessteget"
                     onForrige={undefined}
-                    isLoading={false}
+                    isLoading={oppdaterMutation.isPending}
                 />
             </VStack>
         </FormProvider>

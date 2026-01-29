@@ -31,7 +31,6 @@ export const OpprettSkjema: React.FC<Props> = ({
     handleForhåndsvarselSubmit,
     readOnly,
 }) => {
-    const tittel = varselErSendt ? 'Forhåndsvarsel' : 'Opprett forhåndsvarsel';
     const maksAntallTegn = 4000;
 
     const {
@@ -86,7 +85,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                     <HStack gap="space-16">
                         <Box className="flex-1 border border-ax-border-neutral-strong rounded-lg py-3 px-4">
                             <Heading level="2" size="small" className="mb-6">
-                                {tittel}
+                                Opprett forhåndsvarsel
                             </Heading>
                             <HStack align="center" justify="space-between">
                                 <Heading size="medium" level="3" spacing>
@@ -105,6 +104,8 @@ export const OpprettSkjema: React.FC<Props> = ({
                                         {avsnitt.title === 'Dette har skjedd' && (
                                             <Textarea
                                                 {...register('fritekst')}
+                                                size="small"
+                                                minRows={3}
                                                 label="Legg til utdypende tekst"
                                                 maxLength={maksAntallTegn}
                                                 error={fieldError.fritekst?.message?.toString()}

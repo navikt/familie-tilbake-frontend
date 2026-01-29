@@ -44,11 +44,17 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }
         senderInn,
         visFeilmeldinger,
         feilmeldinger,
-        gåTilForrige,
+        navigerTilForrige,
     } = useFakta();
     const { settIkkePersistertKomponent, actionBarStegtekst } = useBehandlingState();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
+
+    const harBrevmottakerSteg = behandling.behandlingsstegsinfo.some(
+        steg =>
+            steg.behandlingssteg === Behandlingssteg.Brevmottaker &&
+            steg.behandlingsstegstatus !== 'TILBAKEFØRT'
+    );
 
     return (
         <HGrid columns={2} gap="space-40">
@@ -200,7 +206,13 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }
             <FaktaRevurdering fakta={fakta} />
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
-                forrigeAriaLabel={behandling.harVerge ? 'Gå tilbake til vergesteget' : undefined}
+                forrigeAriaLabel={
+                    behandling.harVerge
+                        ? 'Gå tilbake til vergesteget'
+                        : harBrevmottakerSteg
+                          ? 'Gå tilbake til brevmottakersteget'
+                          : undefined
+                }
                 nesteAriaLabel={
                     behandling.behandlingsstegsinfo.some(
                         steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
@@ -208,7 +220,9 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }
                         ? 'Gå videre til forhåndsvarselsteget'
                         : 'Gå videre til foreldelsessteget'
                 }
-                onForrige={behandling.harVerge ? gåTilForrige : undefined}
+                onForrige={
+                    behandling.harVerge || harBrevmottakerSteg ? navigerTilForrige : undefined
+                }
                 onNeste={sendInnSkjema}
                 isLoading={senderInn}
             />

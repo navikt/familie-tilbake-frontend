@@ -227,12 +227,14 @@ describe('Forhåndsvarsel', () => {
             ).toBeInTheDocument();
         });
 
-        test('Viser "Neste" når Nei er valgt (for å sende unntak)', async () => {
+        test('Viser "Lagre og gå til neste" når Nei er valgt (for å sende unntak)', async () => {
             renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
 
             fireEvent.click(screen.getByLabelText('Nei'));
 
-            expect(await screen.findByRole('button', { name: 'Neste' })).toBeInTheDocument();
+            expect(
+                await screen.findByRole('button', { name: 'Lagre og gå til neste' })
+            ).toBeInTheDocument();
         });
 
         test('Viser "Neste" når varsel er sendt og bruker skal uttale seg', async () => {

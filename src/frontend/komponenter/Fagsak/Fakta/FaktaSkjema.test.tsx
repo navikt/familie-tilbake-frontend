@@ -85,10 +85,7 @@ const renderFakta = (
             <FagsakContext.Provider value={lagFagsak()}>
                 <TestBehandlingProvider behandling={lagBehandling({ behandlingId: 'unik' })}>
                     <QueryClientProvider client={client}>
-                        <FaktaSkjema
-                            faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)}
-                            behandlingUrl="https://tilbakekreving"
-                        />
+                        <FaktaSkjema faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)} />
                     </QueryClientProvider>
                 </TestBehandlingProvider>
             </FagsakContext.Provider>

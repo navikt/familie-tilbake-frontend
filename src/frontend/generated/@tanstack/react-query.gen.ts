@@ -64,6 +64,7 @@ import {
     leggTilBrevmottaker,
     migrerAlleSaker,
     oppdaterBehandlendeEnhetPåBehandling,
+    oppdaterFagsysteminfo,
     oppdaterManuellBrevmottaker,
     opprettBehandling,
     opprettBehandlingManuellTask,
@@ -195,6 +196,7 @@ import type {
     MigrerAlleSakerData,
     OppdaterBehandlendeEnhetPåBehandlingData,
     OppdaterBehandlendeEnhetPåBehandlingResponse,
+    OppdaterFagsysteminfoData,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponse,
     OpprettBehandlingData,
@@ -886,6 +888,29 @@ export const sendPåminnelseTilAlleSakerITilstandMutation = (
     > = {
         mutationFn: async fnOptions => {
             const { data } = await sendPåminnelseTilAlleSakerITilstand({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+/**
+ * Tving oppdatering av fagsysteminfo
+ */
+export const oppdaterFagsysteminfoMutation = (
+    options?: Partial<Options<OppdaterFagsysteminfoData>>
+): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<OppdaterFagsysteminfoData>> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<DefaultError>,
+        Options<OppdaterFagsysteminfoData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await oppdaterFagsysteminfo({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,

@@ -155,10 +155,12 @@ const opprettSchema = z.object({
     fritekst: fritekstSchema,
 });
 
-export const getOpprettValues = (): ForhåndsvarselFormData => {
+export const getOpprettValues = (
+    forhåndsvarselInfo?: ForhåndsvarselDto
+): ForhåndsvarselFormData => {
     return {
         skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja,
-        fritekst: '',
+        fritekst: forhåndsvarselInfo?.varselbrevDto?.tekstFraSaksbehandler ?? '',
     };
 };
 
@@ -192,7 +194,7 @@ export const getDefaultValues = (
     forhåndsvarselInfo: ForhåndsvarselDto | undefined
 ): ForhåndsvarselFormData => {
     if (varselErSendt) {
-        return getOpprettValues();
+        return getOpprettValues(forhåndsvarselInfo);
     }
 
     const forhåndsvarselUnntak = forhåndsvarselInfo?.forhåndsvarselUnntak;
