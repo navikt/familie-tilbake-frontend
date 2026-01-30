@@ -147,7 +147,6 @@ const OpprettVedtaksbrev: React.FC = () => {
         });
     });
 
-    // Generer PDF ved første innlasting med standardverdier
     useEffect(() => {
         vedtaksbrevMutation.mutate({
             body: methods.getValues(),
@@ -159,7 +158,7 @@ const OpprettVedtaksbrev: React.FC = () => {
 
     return (
         <>
-            <Heading level="1" size="small" spacing>
+            <Heading size="small" spacing>
                 Opprett vedtaksbrev
             </Heading>
             <FormProvider {...methods}>
@@ -167,6 +166,7 @@ const OpprettVedtaksbrev: React.FC = () => {
                     <div className="flex-1 min-w-0 p-4 border rounded-xl border-ax-border-neutral-subtle">
                         <Textarea
                             label="Brevets innledning"
+                            size="small"
                             {...methods.register('hovedavsnitt.underavsnitt.0.tekst')}
                         />
                     </div>
