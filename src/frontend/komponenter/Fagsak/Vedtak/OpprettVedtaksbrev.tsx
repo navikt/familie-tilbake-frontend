@@ -220,7 +220,7 @@ const OpprettVedtaksbrev: React.FC = () => {
                 forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
                 nesteAriaLabel="Send til godkjenning hos beslutter"
                 onNeste={() => {
-                    // TODO: Implementer innsending
+                    // TODO: Implementer send til godkjenning
                 }}
                 onForrige={navigerTilForrige}
             />
