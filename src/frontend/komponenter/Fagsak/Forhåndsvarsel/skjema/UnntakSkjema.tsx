@@ -4,7 +4,11 @@ import { RadioGroup, Radio, Textarea, Link } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-export const Unntak: React.FC = () => {
+type Props = {
+    readOnly: boolean;
+};
+
+export const Unntak: React.FC<Props> = ({ readOnly }) => {
     const methods = useFormContext<ForhåndsvarselFormData>();
     return (
         <>
@@ -16,6 +20,7 @@ export const Unntak: React.FC = () => {
                         {...field}
                         legend="Velg begrunnelse for unntak fra forhåndsvarsel"
                         size="small"
+                        readOnly={readOnly}
                         value={field.value ?? ''}
                         className="max-w-xl"
                         description={
@@ -62,6 +67,7 @@ export const Unntak: React.FC = () => {
                 maxLength={2000}
                 minRows={3}
                 size="small"
+                readOnly={readOnly}
                 className="max-w-xl"
                 resize
                 error={

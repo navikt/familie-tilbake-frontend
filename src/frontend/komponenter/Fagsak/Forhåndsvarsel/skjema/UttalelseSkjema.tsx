@@ -22,10 +22,15 @@ import { HarUttaltSeg } from '../forhåndsvarselSchema';
 
 type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;
+    readOnly: boolean;
     kanUtsetteFrist?: boolean;
 };
 
-export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFrist = false }) => {
+export const Uttalelse: React.FC<Props> = ({
+    handleUttalelseSubmit,
+    readOnly,
+    kanUtsetteFrist = false,
+}) => {
     const { toggles } = useToggles();
     const methods = useFormContext<UttalelseFormData>();
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
@@ -86,6 +91,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                     <RadioGroup
                         {...field}
                         size="small"
+                        readOnly={readOnly}
                         legend="Har brukeren uttalt seg etter forhåndsvarselet?"
                         error={fieldState.error?.message}
                     >
@@ -113,6 +119,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                                         `uttalelsesDetaljer.${index}.uttalelsesdato`
                                     );
                                 }}
+                                readOnly={readOnly}
                                 label="Når uttalte brukeren seg?"
                                 error={
                                     uttalelsesdatoFeil ??
@@ -128,6 +135,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                                 `uttalelsesDetaljer.${index}.hvorBrukerenUttalteSeg`
                             )}
                             size="small"
+                            readOnly={readOnly}
                             label="Hvordan uttalte brukeren seg?"
                             description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
                             error={get(
@@ -140,6 +148,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                                 `uttalelsesDetaljer.${index}.uttalelseBeskrivelse`
                             )}
                             size="small"
+                            readOnly={readOnly}
                             label="Beskriv hva brukeren har uttalt seg om"
                             maxLength={4000}
                             minRows={3}
@@ -155,6 +164,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                 <Textarea
                     {...methods.register('kommentar')}
                     size="small"
+                    readOnly={readOnly}
                     label="Kommentar til valget over"
                     maxLength={4000}
                     minRows={3}
@@ -172,6 +182,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                                 <DatePicker.Input
                                     {...nyFristDatepicker.inputProps}
                                     size="small"
+                                    readOnly={readOnly}
                                     label="Sett ny dato for frist"
                                     name={field.name}
                                     error={fieldState.error?.message}
@@ -182,6 +193,7 @@ export const Uttalelse: React.FC<Props> = ({ handleUttalelseSubmit, kanUtsetteFr
                     <Textarea
                         {...methods.register('utsettUttalelseFrist.begrunnelse')}
                         size="small"
+                        readOnly={readOnly}
                         minRows={3}
                         label="Begrunnelse for utsatt frist"
                         maxLength={4000}

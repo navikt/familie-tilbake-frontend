@@ -208,7 +208,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     parentBounds,
     ref,
 }) => {
-    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter, behandlingILesemodus } =
+        useBehandlingState();
 
     const {
         formState: { isDirty: forhåndsvarselIsDirty },
@@ -336,13 +337,17 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
                 handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
-                readOnly={!!forhåndsvarselInfo?.forhåndsvarselUnntak}
+                readOnly={behandlingILesemodus}
             />
 
             {forhåndsvarselInfo &&
                 (varselErSendt || begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') && (
                     <FormProvider {...uttalelseMethods}>
-                        <Uttalelse handleUttalelseSubmit={handleUttalelseSubmit} kanUtsetteFrist />
+                        <Uttalelse
+                            handleUttalelseSubmit={handleUttalelseSubmit}
+                            readOnly={behandlingILesemodus}
+                            kanUtsetteFrist
+                        />
                     </FormProvider>
                 )}
 
