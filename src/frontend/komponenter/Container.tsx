@@ -17,8 +17,6 @@ import FagsakErrorBoundary from './Felleskomponenter/ErrorBoundary/FagsakErrorBo
 import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import { FTHeader } from './Felleskomponenter/FTHeader/FTHeader';
 import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
-import PdfRenderer from './Felleskomponenter/PdfRenderer/PdfRenderer';
-
 import Toasts from './Felleskomponenter/Toast/Toasts';
 
 const Dashboard = lazyImportMedRetry(() => import('../pages/Dashboard'), 'Dashboard');
@@ -72,7 +70,6 @@ const AppRoutes: React.FC = () => {
                             }
                         />
                     </Route>
-                    <Route path="/pdf" element={<PdfRenderer />} />
                     <Route
                         path="/"
                         element={
