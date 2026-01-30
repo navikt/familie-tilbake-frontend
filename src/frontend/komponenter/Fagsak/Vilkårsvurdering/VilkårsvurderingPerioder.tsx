@@ -92,7 +92,7 @@ const VilkårsvurderingPerioder: React.FC<Props> = ({
     };
 
     return perioder && tidslinjeRader ? (
-        <VStack gap="5">
+        <VStack gap="space-20">
             {valideringsFeilmelding && (
                 <FTAlertStripe variant="error" fullWidth>
                     <BodyShort className="font-semibold">{valideringsFeilmelding}</BodyShort>

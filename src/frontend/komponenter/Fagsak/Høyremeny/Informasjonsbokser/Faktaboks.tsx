@@ -53,7 +53,7 @@ export const Faktaboks: React.FC = () => {
                                 Revurderingsårsak
                             </dt>
                             <dd className="text-ax-medium items-center flex">
-                                <Tag size="small" variant="neutral-moderate">
+                                <Tag data-color="neutral" size="small" variant="moderate">
                                     {behandlingårsaker[behandling.behandlingsårsakstype]}
                                 </Tag>
                             </dd>
@@ -101,35 +101,41 @@ export const Faktaboks: React.FC = () => {
 
 const STATUS_META = {
     OPPRETTET: {
-        variant: 'neutral-moderate',
+        dataColor: 'neutral',
+        variant: 'moderate',
         icon: FilePlusIcon,
     },
     UTREDES: {
-        variant: 'info-moderate',
+        dataColor: 'info',
+        variant: 'moderate',
         icon: FileLoadingIcon,
     },
     FATTER_VEDTAK: {
-        variant: 'alt2-moderate',
+        dataColor: 'meta-lime',
+        variant: 'moderate',
         icon: TasklistIcon,
     },
     IVERKSETTER_VEDTAK: {
-        variant: 'info-moderate',
+        dataColor: 'info',
+        variant: 'moderate',
         icon: TasklistSendIcon,
     },
     AVSLUTTET: {
-        variant: 'success-moderate',
+        dataColor: 'success',
+        variant: 'moderate',
         icon: FileCheckmarkIcon,
     },
 } satisfies Record<
     BehandlingstatusEnum,
     {
+        dataColor: TagProps['data-color'];
         variant: TagProps['variant'];
         icon: React.ComponentType;
     }
 >;
 
 const StatusTag: React.FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
-    const { variant, icon: StatusIkon } = STATUS_META[status];
+    const { dataColor, variant, icon: StatusIkon } = STATUS_META[status];
     return (
         <>
             <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
@@ -137,7 +143,7 @@ const StatusTag: React.FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
                 Status
             </dt>
             <dd className="text-ax-medium items-center flex">
-                <Tag size="small" variant={variant}>
+                <Tag size="small" data-color={dataColor} variant={variant}>
                     {behandlingsstatuser[status]}
                 </Tag>
             </dd>
@@ -145,21 +151,25 @@ const StatusTag: React.FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
     );
 };
 
-const RESULTAT_META: Record<BehandlingsresultatstypeEnum, { variant: TagProps['variant'] }> = {
-    HENLAGT: { variant: 'error-moderate' },
-    HENLAGT_FEILOPPRETTET: { variant: 'error-moderate' },
-    HENLAGT_FEILOPPRETTET_MED_BREV: { variant: 'error-moderate' },
-    HENLAGT_FEILOPPRETTET_UTEN_BREV: { variant: 'error-moderate' },
-    HENLAGT_KRAVGRUNNLAG_NULLSTILT: { variant: 'error-moderate' },
-    HENLAGT_TEKNISK_VEDLIKEHOLD: { variant: 'error-moderate' },
-    HENLAGT_MANGLENDE_KRAVGRUNNLAG: { variant: 'error-moderate' },
-    IKKE_FASTSATT: { variant: 'error-moderate' },
-    INGEN_TILBAKEBETALING: { variant: 'warning-moderate' },
-    DELVIS_TILBAKEBETALING: { variant: 'warning-moderate' },
-    FULL_TILBAKEBETALING: { variant: 'info-moderate' },
+const RESULTAT_META: Record<
+    BehandlingsresultatstypeEnum,
+    { dataColor: TagProps['data-color']; variant: TagProps['variant'] }
+> = {
+    HENLAGT: { dataColor: 'danger', variant: 'moderate' },
+    HENLAGT_FEILOPPRETTET: { dataColor: 'danger', variant: 'moderate' },
+    HENLAGT_FEILOPPRETTET_MED_BREV: { dataColor: 'danger', variant: 'moderate' },
+    HENLAGT_FEILOPPRETTET_UTEN_BREV: { dataColor: 'danger', variant: 'moderate' },
+    HENLAGT_KRAVGRUNNLAG_NULLSTILT: { dataColor: 'danger', variant: 'moderate' },
+    HENLAGT_TEKNISK_VEDLIKEHOLD: { dataColor: 'danger', variant: 'moderate' },
+    HENLAGT_MANGLENDE_KRAVGRUNNLAG: { dataColor: 'danger', variant: 'moderate' },
+    IKKE_FASTSATT: { dataColor: 'danger', variant: 'moderate' },
+    INGEN_TILBAKEBETALING: { dataColor: 'warning', variant: 'moderate' },
+    DELVIS_TILBAKEBETALING: { dataColor: 'warning', variant: 'moderate' },
+    FULL_TILBAKEBETALING: { dataColor: 'info', variant: 'moderate' },
 };
 
 const ResultatTag: React.FC<{ resultat: BehandlingsresultatstypeEnum }> = ({ resultat }) => {
+    const { dataColor, variant } = RESULTAT_META[resultat];
     return (
         <>
             <dt className="shrink-0text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
@@ -167,7 +177,7 @@ const ResultatTag: React.FC<{ resultat: BehandlingsresultatstypeEnum }> = ({ res
                 Resultat
             </dt>
             <dd className="text-ax-medium items-center flex">
-                <Tag size="small" variant={RESULTAT_META[resultat].variant}>
+                <Tag size="small" data-color={dataColor} variant={variant}>
                     {behandlingsresultater[resultat]}
                 </Tag>
             </dd>

@@ -59,28 +59,30 @@ describe('Faktaboks', () => {
     });
 
     test.each<[Behandlingstatus, string]>([
-        [Behandlingstatus.Opprettet, 'neutral-moderate'],
-        [Behandlingstatus.Utredes, 'info-moderate'],
-        [Behandlingstatus.FatterVedtak, 'alt2-moderate'],
-        [Behandlingstatus.IverksetterVedtak, 'info-moderate'],
-        [Behandlingstatus.Avsluttet, 'success-moderate'],
-    ])('Status tag variant %s', (status, forventetVariant) => {
+        [Behandlingstatus.Opprettet, 'neutral'],
+        [Behandlingstatus.Utredes, 'info'],
+        [Behandlingstatus.FatterVedtak, 'meta-lime'],
+        [Behandlingstatus.IverksetterVedtak, 'info'],
+        [Behandlingstatus.Avsluttet, 'success'],
+    ])('Status tag variant %s', (status, forventetDataColor) => {
         renderFaktaboks({ status });
         const tags = screen.getAllByText(behandlingsstatuser[status]);
-        const tag = tags.find(el => el.classList.contains('navds-tag'));
+        const tag = tags.find(el => el.classList.contains('aksel-tag'));
         expect(tag).toBeTruthy();
-        expect(tag?.className).toContain(forventetVariant);
+        expect(tag?.getAttribute('data-color')).toBe(forventetDataColor);
     });
 
     test.each<[Behandlingresultat, string]>([
-        [Behandlingresultat.Henlagt, 'error-moderate'],
-        [Behandlingresultat.IngenTilbakebetaling, 'warning-moderate'],
-        [Behandlingresultat.DelvisTilbakebetaling, 'warning-moderate'],
-        [Behandlingresultat.FullTilbakebetaling, 'info-moderate'],
-    ])('Resultat tag variant %s', (resultat, forventetVariant) => {
+        [Behandlingresultat.Henlagt, 'danger'],
+        [Behandlingresultat.IngenTilbakebetaling, 'warning'],
+        [Behandlingresultat.DelvisTilbakebetaling, 'warning'],
+        [Behandlingresultat.FullTilbakebetaling, 'info'],
+    ])('Resultat tag variant %s', (resultat, forventetDataColor) => {
         renderFaktaboks({ resultatstype: resultat });
-        const tag = screen.getByText(behandlingsresultater[resultat]);
-        expect(tag.className).toContain(forventetVariant);
+        const tags = screen.getAllByText(behandlingsresultater[resultat]);
+        const tag = tags.find(el => el.classList.contains('aksel-tag'));
+        expect(tag).toBeTruthy();
+        expect(tag?.getAttribute('data-color')).toBe(forventetDataColor);
     });
 
     test('Viser opprettet dato formatert', () => {

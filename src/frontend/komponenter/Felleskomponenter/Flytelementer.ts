@@ -1,17 +1,16 @@
 import { Alert } from '@navikt/ds-react';
-import { ASpacing2, ASpacing4, ASpacing5 } from '@navikt/ds-tokens/dist/tokens';
 import { styled } from 'styled-components';
 
 export const Spacer20 = styled.div`
-    height: ${ASpacing5};
+    height: 20px;
 `;
 
 export const Spacer8 = styled.div`
-    height: ${ASpacing2};
+    height: 8px;
 `;
 
 export const Navigering = styled.div`
-    padding: ${ASpacing4} 0;
+    padding: 16px 0;
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;

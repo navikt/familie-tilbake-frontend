@@ -2,7 +2,6 @@ import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
 import type { RuleSet } from 'styled-components';
 
 import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';
-import { ABorderWarning, ASpacing2 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { css, styled } from 'styled-components';
 
@@ -11,11 +10,11 @@ import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 
 const StyledExpansionCard = styled(ExpansionCard)`
-    margin-bottom: ${ASpacing2};
+    margin-bottom: 8px;
 `;
 
 const stylingWarningKantlinje = css`
-    border-left-color: ${ABorderWarning};
+    border-left-color: var(--ax-border-danger);
     border-left-width: 5px;
 `;
 const StyledExpansionHeader = styled(ExpansionCard.Header)<{

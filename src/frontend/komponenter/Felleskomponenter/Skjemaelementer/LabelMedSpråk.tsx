@@ -23,7 +23,7 @@ const LabelMedSpråk: React.FC<Props> = ({ label, språk }) => {
                 <Label size="small">{label}</Label>
             </div>
             <div className="språkkode">
-                <Tag variant="info" size="small">
+                <Tag data-color="info" size="small">
                     {språk}
                 </Tag>
             </div>

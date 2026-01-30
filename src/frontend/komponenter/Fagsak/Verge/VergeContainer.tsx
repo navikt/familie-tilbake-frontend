@@ -49,7 +49,7 @@ const VergeContainer: React.FC = () => {
             {henterData ? (
                 <HenterData beskrivelse="Henting av vergeinformasjon tar litt tid." />
             ) : (
-                <StyledVStack gap="5">
+                <StyledVStack gap="space-20">
                     {erAutoutført && (
                         <BodyLong size="small">
                             Automatisk vurdert. Verge er kopiert fra fagsystemet.
@@ -79,7 +79,7 @@ const VergeContainer: React.FC = () => {
                             ))}
                     </Select>
                     {vergetypeValgt && (
-                        <HGrid columns={{ lg: 2, md: 1 }} gap="4" align="start">
+                        <HGrid columns={{ lg: 2, md: 1 }} gap="space-16" align="start">
                             <TextField
                                 {...skjema.felter.navn.hentNavInputProps(skjema.visFeilmeldinger)}
                                 label="Navn"

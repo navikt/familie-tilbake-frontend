@@ -12,11 +12,11 @@ type Props = {
 
 const FaktaRevurdering: React.FC<Props> = ({ fakta }) => {
     return fakta ? (
-        <VStack gap="5">
+        <VStack gap="space-20">
             <Heading level="2" size="small">
                 Revurdering
             </Heading>
-            <VStack gap="4">
+            <VStack gap="space-16">
                 <HGrid columns={2}>
                     <div>
                         <Detail weight="semibold">Årsak(er) til revurdering</Detail>

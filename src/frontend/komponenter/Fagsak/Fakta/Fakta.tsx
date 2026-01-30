@@ -92,8 +92,9 @@ export const Fakta: React.FC = (): React.JSX.Element => {
                                 </dt>
                                 <dd>
                                     <Tag
+                                        data-color="neutral"
                                         key={faktaOmFeilutbetaling.feilutbetaling.revurdering.årsak}
-                                        variant="neutral-moderate"
+                                        variant="moderate"
                                         size="small"
                                         className="text-ax-medium"
                                     >

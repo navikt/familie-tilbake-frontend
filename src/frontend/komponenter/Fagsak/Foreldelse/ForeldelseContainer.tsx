@@ -36,11 +36,11 @@ const ForeldelseContainer: React.FC = () => {
             </Heading>
             {erAutoutført ? (
                 <Alert variant="success" className="min-w-80">
-                    <VStack gap="2">
+                    <VStack gap="space-8">
                         <Heading size="small" level="3">
                             Perioden er ikke foreldet
                         </Heading>
-                        <VStack gap="6">
+                        <VStack gap="space-24">
                             <BodyLong>
                                 Ingen perioder er foreldet etter foreldelsesloven{' '}
                                 <Link
@@ -77,7 +77,7 @@ const ForeldelseContainer: React.FC = () => {
                                 Vurder foreldelse
                             </Heading>
                         ) : (
-                            <VStack gap="2">
+                            <VStack gap="space-8">
                                 <Heading size="small" level="3">
                                     Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan være
                                     foreldet
