@@ -5,7 +5,7 @@ import crypto from 'crypto';
 
 import { logError } from '../../logging/logging';
 
-const IKKE_SIKRE_METODER = ['GET', 'HEAD', 'OPTIONS'];
+const IKKE_SIKRE_METODER = ['GET', 'HEAD', 'OPTIONS', 'POST'];
 const MAKS_GYLDIGE_CSRF_TOKENS = 5;
 
 export const genererCsrfToken = (session: Session): string => {

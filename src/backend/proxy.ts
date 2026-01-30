@@ -5,7 +5,7 @@ import type { ClientRequest, IncomingMessage } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { utledAccessToken } from './backend';
-import { proxyUrl, redirectRecords } from './config';
+import { redirectRecords } from './config';
 import { stdoutLogger } from './logging/logging';
 
 const restream = (proxyReq: ClientRequest, req: IncomingMessage): void => {
@@ -19,12 +19,12 @@ const restream = (proxyReq: ClientRequest, req: IncomingMessage): void => {
 };
 
 // eslint-disable-next-line
-export const doProxy: any = () => {
+export const doProxy: any = (target: string) => {
     return createProxyMiddleware({
         changeOrigin: true,
         on: { proxyReq: restream },
         secure: true,
-        target: `${proxyUrl}`,
+        target: target,
         logger: stdoutLogger,
     });
 };

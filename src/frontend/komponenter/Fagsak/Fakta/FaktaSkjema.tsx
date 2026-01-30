@@ -4,11 +4,11 @@ import type {
     FaktaOmFeilutbetaling,
     FaktaPeriode,
     MuligeRettsligGrunnlag,
-    OppdaterFaktaData,
-    OppdaterFaktaError,
+    BehandlingOppdaterFaktaData,
+    BehandlingOppdaterFaktaError,
     OppdaterFaktaOmFeilutbetaling,
     OppdaterFaktaPeriode,
-    OppdaterFaktaResponse,
+    BehandlingOppdaterFaktaResponse,
     Options,
 } from '../../../generated-new';
 import type { AxiosError } from 'axios';
@@ -114,9 +114,9 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
             : undefined,
     });
     const oppdaterMutation = useMutation<
-        OppdaterFaktaResponse,
-        AxiosError<OppdaterFaktaError>,
-        Options<OppdaterFaktaData>
+        BehandlingOppdaterFaktaResponse,
+        AxiosError<BehandlingOppdaterFaktaError>,
+        Options<BehandlingOppdaterFaktaData>
     >({
         mutationKey: ['oppdaterFakta'],
     });
