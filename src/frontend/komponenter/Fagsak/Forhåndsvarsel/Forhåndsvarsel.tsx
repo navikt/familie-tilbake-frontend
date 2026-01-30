@@ -211,7 +211,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
 
     const {
-        formState: { isDirty },
+        formState: { isDirty: forhåndsvarselIsDirty },
     } = useFormContext<ForhåndsvarselFormData>();
 
     const begrunnelseForUnntak = useWatch({
@@ -251,6 +251,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         defaultValues: getUttalelseValues(forhåndsvarselInfo),
     });
 
+    const uttalelseIsDirty = uttalelseMethods.formState.isDirty;
+
     const harUttaltSeg = useWatch({
         control: uttalelseMethods.control,
         name: 'harUttaltSeg',
@@ -273,7 +275,10 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'Utsett frist';
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
-        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && isDirty) {
+        } else if (
+            skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
+            (forhåndsvarselIsDirty || uttalelseIsDirty)
+        ) {
             return 'Lagre og gå til neste';
         }
         return 'Neste';
@@ -281,7 +286,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const skalSendeForhåndsvarsel =
         skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt;
-    const skalSendeEllerOppdatereUnntak = skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei;
+    const skalSendeEllerOppdatereUnntak =
+        skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && forhåndsvarselIsDirty;
 
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = async (
         data: ForhåndsvarselFormData
@@ -313,15 +319,15 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendBrukeruttalelse(data);
     };
 
-    const kanSendeUttalelse =
-        varselErSendt ||
-        (skalSendeEllerOppdatereUnntak && begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG');
-
     const formId = ((): 'opprettForm' | 'uttalelseForm' | undefined => {
-        if (kanSendeUttalelse && !skalSendeEllerOppdatereUnntak) {
+        if (!varselErSendt || skalSendeEllerOppdatereUnntak) {
+            return 'opprettForm';
+        }
+        if (varselErSendt || uttalelseIsDirty) {
             return 'uttalelseForm';
         }
-        return 'opprettForm';
+
+        return undefined;
     })();
 
     return (
