@@ -208,10 +208,11 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     parentBounds,
     ref,
 }) => {
-    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter, behandlingILesemodus } =
+        useBehandlingState();
 
     const {
-        formState: { isDirty },
+        formState: { isDirty: forhåndsvarselIsDirty },
     } = useFormContext<ForhåndsvarselFormData>();
 
     const begrunnelseForUnntak = useWatch({
@@ -251,6 +252,8 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         defaultValues: getUttalelseValues(forhåndsvarselInfo),
     });
 
+    const uttalelseIsDirty = uttalelseMethods.formState.isDirty;
+
     const harUttaltSeg = useWatch({
         control: uttalelseMethods.control,
         name: 'harUttaltSeg',
@@ -273,7 +276,10 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             return 'Utsett frist';
         } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
             return 'Send forhåndsvarsel';
-        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && isDirty) {
+        } else if (
+            skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
+            (forhåndsvarselIsDirty || uttalelseIsDirty)
+        ) {
             return 'Lagre og gå til neste';
         }
         return 'Neste';
@@ -281,16 +287,15 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const skalSendeForhåndsvarsel =
         skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt;
-    const skalSendeUnntak =
-        skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
-        !forhåndsvarselInfo?.forhåndsvarselUnntak;
+    const skalSendeEllerOppdatereUnntak =
+        skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && forhåndsvarselIsDirty;
 
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = async (
         data: ForhåndsvarselFormData
     ): Promise<void> => {
         if (skalSendeForhåndsvarsel) {
             sendForhåndsvarsel(data);
-        } else if (skalSendeUnntak) {
+        } else if (skalSendeEllerOppdatereUnntak) {
             if (begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') {
                 const uttalelseValid = await uttalelseMethods.trigger();
                 if (!uttalelseValid) return;
@@ -315,19 +320,11 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         sendBrukeruttalelse(data);
     };
 
-    const harRegistrertBrukeruttalelse =
-        !!forhåndsvarselInfo?.brukeruttalelse ||
-        (forhåndsvarselInfo?.utsettUttalelseFrist?.length ?? 0) > 0;
-
-    const skalSendeUttalelse =
-        (varselErSendt || !!forhåndsvarselInfo?.forhåndsvarselUnntak) &&
-        !harRegistrertBrukeruttalelse;
-
     const formId = ((): 'opprettForm' | 'uttalelseForm' | undefined => {
-        if (!varselErSendt && !forhåndsvarselInfo?.forhåndsvarselUnntak) {
+        if (!varselErSendt || skalSendeEllerOppdatereUnntak) {
             return 'opprettForm';
         }
-        if (skalSendeUttalelse) {
+        if (varselErSendt || uttalelseIsDirty) {
             return 'uttalelseForm';
         }
 
@@ -340,20 +337,15 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
                 handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
-                readOnly={!!forhåndsvarselInfo?.forhåndsvarselUnntak}
+                readOnly={behandlingILesemodus}
             />
 
             {forhåndsvarselInfo &&
-                ((skalSendeUnntak && begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') ||
-                    varselErSendt ||
-                    forhåndsvarselInfo.brukeruttalelse) && (
+                (varselErSendt || begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') && (
                     <FormProvider {...uttalelseMethods}>
                         <Uttalelse
                             handleUttalelseSubmit={handleUttalelseSubmit}
-                            readOnly={
-                                !!forhåndsvarselInfo.brukeruttalelse ||
-                                forhåndsvarselInfo.utsettUttalelseFrist.length > 0
-                            }
+                            readOnly={behandlingILesemodus}
                             kanUtsetteFrist
                         />
                     </FormProvider>

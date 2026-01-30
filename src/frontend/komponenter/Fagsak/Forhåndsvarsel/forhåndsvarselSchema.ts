@@ -116,11 +116,16 @@ export const getUttalelseValuesBasertPåValg = (
     harUttaltSeg: HarUttaltSeg,
     forhåndsvarselInfo: ForhåndsvarselDto | undefined
 ): UttalelseFormData => {
+    const eksisterendeUttalelse = forhåndsvarselInfo?.brukeruttalelse;
+    const harSammeType =
+        (harUttaltSeg === HarUttaltSeg.Ja && eksisterendeUttalelse?.uttalelsesdetaljer?.length) ||
+        (harUttaltSeg === HarUttaltSeg.Nei && eksisterendeUttalelse?.kommentar);
+
     switch (harUttaltSeg) {
         case HarUttaltSeg.Ja:
-            return getJaUttalelseValues(forhåndsvarselInfo?.brukeruttalelse);
+            return getJaUttalelseValues(harSammeType ? eksisterendeUttalelse : undefined);
         case HarUttaltSeg.Nei:
-            return getNeiUttalelseValues(forhåndsvarselInfo?.brukeruttalelse);
+            return getNeiUttalelseValues(harSammeType ? eksisterendeUttalelse : undefined);
         case HarUttaltSeg.UtsettFrist:
             return getUtsettUttalelseValues(forhåndsvarselInfo?.utsettUttalelseFrist);
         default:

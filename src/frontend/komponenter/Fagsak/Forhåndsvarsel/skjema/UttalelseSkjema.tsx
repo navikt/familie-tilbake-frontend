@@ -191,8 +191,8 @@ export const Uttalelse: React.FC<Props> = ({
                     <Textarea
                         {...methods.register('utsettUttalelseFrist.begrunnelse')}
                         size="small"
-                        minRows={3}
                         readOnly={readOnly}
+                        minRows={3}
                         label="Begrunnelse for utsatt frist"
                         maxLength={4000}
                         resize

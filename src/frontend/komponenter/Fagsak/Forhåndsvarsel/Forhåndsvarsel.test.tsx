@@ -299,7 +299,22 @@ describe('Forhåndsvarsel', () => {
             expect(nesteKnapp).toHaveAttribute('form', 'uttalelseForm');
         });
 
-        test('Bruker uttalelseForm når unntak er registrert', async () => {
+        test('Bruker opprettForm når bruker velger Nei og ÅPENBART_UNØDVENDIG', async () => {
+            renderForhåndsvarsel();
+
+            const neiRadio = screen.getByRole('radio', { name: 'Nei' });
+            fireEvent.click(neiRadio);
+
+            const åpenbartUnødvendigRadio = await screen.findByRole('radio', {
+                name: /Varsel anses som åpenbart unødvendig/,
+            });
+            fireEvent.click(åpenbartUnødvendigRadio);
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            expect(nesteKnapp).toHaveAttribute('form', 'opprettForm');
+        });
+
+        test('Bruker opprettForm når unntak er lagret og bruker endrer til ÅPENBART_UNØDVENDIG', async () => {
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
                 lagForhåndsvarselQueries({
@@ -314,11 +329,42 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
+            const åpenbartUnødvendigRadio = await screen.findByRole('radio', {
+                name: /Varsel anses som åpenbart unødvendig/,
+            });
+            fireEvent.click(åpenbartUnødvendigRadio);
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            expect(nesteKnapp).toHaveAttribute('form', 'opprettForm');
+        });
+
+        test('Neste-knapp har form-attributt når brukeruttalelse allerede er registrert (kan redigeres)', async () => {
+            const mockQueries = vi.mocked(useForhåndsvarselQueries);
+            mockQueries.mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                        brukeruttalelse: {
+                            harBrukerUttaltSeg: 'JA',
+                            uttalelsesdetaljer: [
+                                {
+                                    uttalelsesdato: '2023-01-15',
+                                    hvorBrukerenUttalteSeg: 'Telefon',
+                                    uttalelseBeskrivelse: 'Bruker har uttalt seg',
+                                },
+                            ],
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
             const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
             expect(nesteKnapp).toHaveAttribute('form', 'uttalelseForm');
         });
 
-        test('Neste-knapp har ikke form-attributt når brukeruttalelse allerede er registrert', async () => {
+        test('Neste-knapp har form-attributt når varsel er sendt og uttalelse er registrert (kan redigeres)', async () => {
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
                 lagForhåndsvarselQueries({
@@ -341,33 +387,7 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
-            expect(nesteKnapp).not.toHaveAttribute('form');
-        });
-
-        test('Neste-knapp har ikke form-attributt når varsel er sendt og uttalelse er registrert', async () => {
-            const mockQueries = vi.mocked(useForhåndsvarselQueries);
-            mockQueries.mockReturnValue(
-                lagForhåndsvarselQueries({
-                    forhåndsvarselInfo: lagForhåndsvarselInfo({
-                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                        brukeruttalelse: {
-                            harBrukerUttaltSeg: 'JA',
-                            uttalelsesdetaljer: [
-                                {
-                                    uttalelsesdato: '2023-01-15',
-                                    hvorBrukerenUttalteSeg: 'Telefon',
-                                    uttalelseBeskrivelse: 'Bruker har uttalt seg',
-                                },
-                            ],
-                        },
-                    }),
-                })
-            );
-
-            renderForhåndsvarsel();
-
-            const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
-            expect(nesteKnapp).not.toHaveAttribute('form');
+            expect(nesteKnapp).toHaveAttribute('form', 'uttalelseForm');
         });
     });
 });
