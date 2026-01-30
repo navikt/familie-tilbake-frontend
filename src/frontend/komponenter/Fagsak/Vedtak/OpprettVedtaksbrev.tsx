@@ -181,8 +181,8 @@ const OpprettVedtaksbrev: React.FC = () => {
                             ) : (
                                 <Skeleton
                                     variant="rounded"
-                                    className="aspect-[1/1.414] max-h-full w-auto"
-                                    height="100%"
+                                    className="aspect-[1/1.414] w-full max-w-md"
+                                    height={600}
                                 />
                             )}
                         </div>
