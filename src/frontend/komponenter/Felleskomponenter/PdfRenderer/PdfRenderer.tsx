@@ -109,7 +109,7 @@ const PdfRenderer: React.FC = () => {
                 bestemtEntall: 'barnetrygden',
             },
             signatur: {
-                enhetNavn: 'NAV Solør',
+                enhetNavn: 'Nav Solør',
                 ansvarligSaksbehandler: 'Saks Behandler',
                 besluttendeSaksbehandler: null,
             },

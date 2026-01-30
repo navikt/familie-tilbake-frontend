@@ -13,14 +13,6 @@ import { Behandlingssteg } from '../../../typer/behandling';
 import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
-const asBase64 = (blob: Blob): Promise<string> =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (): void => resolve(reader.result as string);
-        reader.onerror = (): void => reject(reader.error);
-        reader.readAsDataURL(blob);
-    });
-
 const useDebounce = (updateFunction: () => void): (() => void) => {
     const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
     return (): void => {
@@ -122,9 +114,9 @@ const OpprettVedtaksbrev: React.FC = () => {
             },
         },
     });
-    const [pdf, setPdf] = useState('');
+    const [pdfSider, setPdfSider] = useState<string[]>([]);
     const [gjeldendeSide, settGjeldendeSide] = useState(1);
-    const antallSider = 3; // TODO: Hent faktisk antall sider fra PDF
+    const antallSider = pdfSider.length;
     const { onMutate, ...originalMutation } = vedtaksbrevLagSvgVedtaksbrevMutation({
         baseURL: 'http://localhost:4000/pdf',
     });
@@ -132,9 +124,16 @@ const OpprettVedtaksbrev: React.FC = () => {
         mutationKey: ['lagPdf'],
         ...originalMutation,
         onSuccess: async data => {
-            const base64 = (await asBase64(data as Blob)).replace('text/plain', 'image/svg+xml');
-            setPdf(base64);
-            return base64;
+            const blob = data as Blob;
+            const tekst = await blob.text();
+            const respons = JSON.parse(tekst) as { page_count: number; pages: string[] };
+            const siderSomBase64 = respons.pages.map(
+                svg => `data:image/svg+xml;base64,${btoa(svg)}`
+            );
+            setPdfSider(siderSomBase64);
+            if (gjeldendeSide > respons.page_count) {
+                settGjeldendeSide(1);
+            }
         },
         onMutate: async (variables, context) => {
             await queryClient.cancelQueries({ queryKey: ['lagPdf'] });
@@ -171,18 +170,20 @@ const OpprettVedtaksbrev: React.FC = () => {
                             {...methods.register('hovedavsnitt.underavsnitt.0.tekst')}
                         />
                     </div>
-                    <div className="flex-1 min-w-0 flex flex-col border rounded-xl border-ax-border-neutral-subtle">
-                        <div className="flex-1 flex items-start justify-center p-4 overflow-auto">
-                            {pdf ? (
+                    <div className="flex-1 min-w-0 flex flex-col border rounded-xl border-ax-border-neutral-subtle bg-white">
+                        <div className="flex-1 flex items-start justify-center p-4 overflow-auto bg-white rounded-t-xl">
+                            {pdfSider.length > 0 ? (
                                 <img
                                     className="max-w-full h-auto"
-                                    alt="Forhåndsvisning av vedtaksbrev"
-                                    src={pdf}
+                                    alt={`Forhåndsvisning av vedtaksbrev, side ${gjeldendeSide}`}
+                                    src={pdfSider[gjeldendeSide - 1]}
                                 />
                             ) : (
-                                <div className="w-full h-full flex flex-col gap-4">
-                                    <Skeleton variant="rectangle" height="100%" width="100%" />
-                                </div>
+                                <Skeleton
+                                    variant="rounded"
+                                    className="aspect-[1/1.414] max-h-full w-auto"
+                                    height="100%"
+                                />
                             )}
                         </div>
                         <HStack
