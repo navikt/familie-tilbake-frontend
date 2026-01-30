@@ -34,7 +34,7 @@ export default defineConfig([
     },
     {
         ...defaultConfig,
-        input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/74d0fae516f329aee9ed6906af23dd84b893656d/tsp-output/schema/openapi.yaml',
+        input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/e50a403c132c3ec3ced7092bd2c0119e1be8b1e6/tsp-output/schema/openapi.yaml',
         output: {
             path: 'src/frontend/generated-new',
             format: 'prettier',

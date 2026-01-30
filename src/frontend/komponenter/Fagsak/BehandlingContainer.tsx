@@ -52,6 +52,10 @@ const VedtakContainer = lazyImportMedRetry(
     () => import('./Vedtak/VedtakContainer'),
     'VedtakContainer'
 );
+const OpprettVedtaksbrev = lazyImportMedRetry(
+    () => import('./Vedtak/OpprettVedtaksbrev'),
+    'OpprettVedtaksbrev'
+);
 const VergeContainer = lazyImportMedRetry(() => import('./Verge/VergeContainer'), 'VergeContainer');
 const VilkårsvurderingContainer = lazyImportMedRetry(
     () => import('./Vilkårsvurdering/VilkårsvurderingContainer'),
@@ -230,9 +234,13 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                                 element={
-                                    <VedtakProvider>
-                                        <VedtakContainer />
-                                    </VedtakProvider>
+                                    behandling.erNyModell ? (
+                                        <OpprettVedtaksbrev />
+                                    ) : (
+                                        <VedtakProvider>
+                                            <VedtakContainer />
+                                        </VedtakProvider>
+                                    )
                                 }
                             />
                             <Route
