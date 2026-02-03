@@ -82,30 +82,28 @@ const OpprettVedtaksbrev: React.FC = () => {
     methods.watch(() => debouncedUpdate()); // TODO: optimaliser
 
     return (
-        <VStack gap="space-24">
-            <Heading size="small">Opprett vedtaksbrev</Heading>
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-4 flex-1 min-h-0">
-                <div className="col-span-1 overflow-auto">
-                    <VStack gap="space-16">
-                        <FormProvider {...methods}>
-                            <Textarea
-                                label="Brevets innledning"
-                                size="small"
-                                minRows={3}
-                                {...methods.register('hovedavsnitt.underavsnitt.0.tekst')}
+        <>
+            <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
+                <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-4">
+                    <Heading size="small">Opprett vedtaksbrev</Heading>
+                    <FormProvider {...methods}>
+                        <Textarea
+                            label="Brevets innledning"
+                            size="small"
+                            minRows={3}
+                            {...methods.register('hovedavsnitt.underavsnitt.0.tekst')}
+                        />
+                        {methods.getValues('avsnitt').map((avsnitt, index) => (
+                            <PeriodeAvsnittSkjema
+                                key={`${avsnitt}-${index}`}
+                                avsnitt={avsnitt}
+                                indeks={index}
                             />
-                            {methods.getValues('avsnitt').map((avsnitt, index) => (
-                                <PeriodeAvsnittSkjema
-                                    key={`${avsnitt}-${index}`}
-                                    avsnitt={avsnitt}
-                                    indeks={index}
-                                />
-                            ))}
-                        </FormProvider>
-                    </VStack>
-                </div>
+                        ))}
+                    </FormProvider>
+                </VStack>
 
-                <div className="col-span-1 flex flex-col border rounded-xl border-ax-border-neutral-subtle bg-white h-full">
+                <div className="col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle">
                     <HStack
                         justify="center"
                         align="center"
@@ -118,8 +116,8 @@ const OpprettVedtaksbrev: React.FC = () => {
                             onPageChange={settGjeldendeSide}
                         />
                     </HStack>
-                    <div className="flex-1 flex items-start justify-center overflow-auto bg-white rounded-b-xl border-t border-ax-border-neutral-subtle">
-                        {vedtaksbrevMutation.isError ? (
+                    <div className="flex-1 flex items-start justify-center overflow-auto rounded-b-xl border-t border-ax-border-neutral-subtle">
+                        {!vedtaksbrevMutation.isError ? (
                             <VStack
                                 gap="space-16"
                                 padding="space-16"
@@ -134,7 +132,6 @@ const OpprettVedtaksbrev: React.FC = () => {
                                 <Button
                                     variant="secondary"
                                     size="small"
-                                    className="sm: bg-repeat"
                                     onClick={() => {
                                         vedtaksbrevMutation.reset();
                                         sendInnSkjemaData();
@@ -160,7 +157,6 @@ const OpprettVedtaksbrev: React.FC = () => {
                     </div>
                 </div>
             </div>
-
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.ForeslåVedtak)}
                 nesteTekst="Send til godkjenning"
@@ -171,7 +167,7 @@ const OpprettVedtaksbrev: React.FC = () => {
                 }}
                 onForrige={navigerTilForrige}
             />
-        </VStack>
+        </>
     );
 };
 
