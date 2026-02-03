@@ -117,7 +117,7 @@ const OpprettVedtaksbrev: React.FC = () => {
                         />
                     </HStack>
                     <div className="flex-1 flex items-start justify-center overflow-auto rounded-b-xl border-t border-ax-border-neutral-subtle">
-                        {!vedtaksbrevMutation.isError ? (
+                        {vedtaksbrevMutation.isError ? (
                             <VStack
                                 gap="space-16"
                                 padding="space-16"
