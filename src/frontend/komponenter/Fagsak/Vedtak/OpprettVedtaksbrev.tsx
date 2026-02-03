@@ -104,18 +104,20 @@ const OpprettVedtaksbrev: React.FC = () => {
                 </VStack>
 
                 <div className="col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle">
-                    <HStack
-                        justify="center"
-                        align="center"
-                        className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl "
-                    >
-                        <Pagination
-                            page={gjeldendeSide}
-                            count={pdfSider.length}
-                            size="small"
-                            onPageChange={settGjeldendeSide}
-                        />
-                    </HStack>
+                    {pdfSider.length > 0 && (
+                        <HStack
+                            justify="center"
+                            align="center"
+                            className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl "
+                        >
+                            <Pagination
+                                page={gjeldendeSide}
+                                count={pdfSider.length}
+                                size="small"
+                                onPageChange={settGjeldendeSide}
+                            />
+                        </HStack>
+                    )}
                     <div className="flex-1 flex items-start justify-center overflow-auto rounded-b-xl border-t border-ax-border-neutral-subtle">
                         {vedtaksbrevMutation.isError ? (
                             <VStack
