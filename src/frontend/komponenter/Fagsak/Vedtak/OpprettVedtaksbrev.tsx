@@ -27,8 +27,8 @@ import { ActionBar } from '../ActionBar/ActionBar';
 const useDebounce = (updateFunction: () => void): (() => void) => {
     const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
     return (): void => {
-        if (timeoutId.current != null) {
-            clearInterval(timeoutId.current);
+        if (timeoutId.current) {
+            clearTimeout(timeoutId.current);
         }
         timeoutId.current = setTimeout(() => {
             updateFunction();
