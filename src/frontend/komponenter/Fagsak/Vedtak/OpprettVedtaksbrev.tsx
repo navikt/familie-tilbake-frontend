@@ -66,20 +66,20 @@ const OpprettVedtaksbrev: React.FC = () => {
             onMutate?.(variables, context);
         },
     });
+
     const sendInnSkjemaData = (): void => {
         vedtaksbrevMutation.mutate({
             body: methods.getValues(),
         });
     };
+
     const debouncedUpdate = useDebounce(() => sendInnSkjemaData());
+    methods.watch(() => debouncedUpdate());
 
     const sendInnSkjemaVedFørsteRendering = useEffectEvent(() => sendInnSkjemaData());
-
     useEffect(() => {
         sendInnSkjemaVedFørsteRendering();
     }, []);
-
-    methods.watch(() => debouncedUpdate()); // TODO: optimaliser
 
     return (
         <>
