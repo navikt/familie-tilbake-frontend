@@ -1,12 +1,23 @@
-import type { VedtaksbrevData } from '../../../generated-new';
+import type { Avsnitt, VedtaksbrevData } from '../../../generated-new';
 
-import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
-import { BodyShort, Button, Heading, HStack, Skeleton, Textarea } from '@navikt/ds-react';
+import {
+    BodyShort,
+    Button,
+    ExpansionCard,
+    Heading,
+    HStack,
+    InlineMessage,
+    Pagination,
+    Skeleton,
+    Textarea,
+    VStack,
+} from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
+import { vedtaksbrevDefaultValues } from './schema';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { vedtaksbrevLagSvgVedtaksbrevMutation } from '../../../generated-new/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
@@ -31,92 +42,10 @@ const OpprettVedtaksbrev: React.FC = () => {
     const { actionBarStegtekst } = useBehandlingState();
     const navigerTilForrige = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
     const methods = useForm<VedtaksbrevData>({
-        defaultValues: {
-            hovedavsnitt: {
-                tittel: 'Tilbakekreving av arbeidsavklaringspenger',
-                underavsnitt: [
-                    {
-                        type: 'rentekst',
-                        tekst: 'I brev 26. januar 2026 fikk du melding om at barnetrygden din er endret. Endringen førte til at du har fått utbetalt for mye. Du må betale tilbake 3 450 kroner, som er deler av det feilutbetalte beløpet.',
-                    },
-                    {
-                        type: 'rentekst',
-                        tekst: 'Du har ikke uttalt deg om feilutbetalingen.',
-                    },
-                ],
-            },
-            avsnitt: [
-                {
-                    tittel: 'Perioden fra og med 1. februar 2025 til og med 28. februar 2025',
-                    underavsnitt: [
-                        {
-                            type: 'rentekst',
-                            tekst: 'Vi har fått melding om at barnet ditt døde. Barnetrygden skulle vært stanset fra og med 1. februar 2025.',
-                        },
-                        {
-                            type: 'rentekst',
-                            tekst: 'Fordi barnetrygden er utbetalt etter denne datoen er det utbetalt 6 900 kroner for mye',
-                        },
-                        {
-                            type: 'underavsnitt',
-                            tittel: 'Hvordan har vi kommet fram til at du må betale tilbake?',
-                            underavsnitt: [
-                                {
-                                    type: 'rentekst',
-                                    tekst: 'Du har fått vite om du har rett til barnetrygd og hvor mye du har rett til. Selv hvis du har meldt fra til oss, kan vi kreve tilbake det du har fått for mye hvis du burde forstått at beløpet var feil. At du må betale tilbake, betyr ikke at du selv har skyld i feilutbetalingen.',
-                                },
-                                {
-                                    type: 'rentekst',
-                                    tekst: 'Ut fra informasjonen du har fått, burde du etter vår vurdering forstått at du fikk for mye utbetalt. Derfor kan vi kreve tilbake.',
-                                },
-                            ],
-                        },
-                        {
-                            type: 'underavsnitt',
-                            tittel: 'Er det særlige grunner til å redusere beløpet?',
-                            underavsnitt: [
-                                {
-                                    type: 'rentekst',
-                                    tekst: 'Vi har lagt vekt på at du burde forstått at du fikk penger du ikke har rett til. Vi har likevel redusert beløpet du må betale tilbake fordi det er lenge siden feilutbetalingen skjedde.',
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    tittel: 'Perioden fra og med 1. mars 2025 til og med 31. mars 2025',
-                    underavsnitt: [
-                        {
-                            type: 'rentekst',
-                            tekst: 'Vi har fått melding om at barnet ditt døde. Barnetrygden skulle vært stanset fra og med 1. februar 2025.',
-                        },
-                        {
-                            type: 'rentekst',
-                            tekst: 'Fordi barnetrygden er utbetalt etter denne datoen er det utbetalt 6 900 kroner for mye',
-                        },
-                    ],
-                },
-            ],
-            brevGjelder: {
-                fultNavn: 'Kevin Sillerud',
-                fødselsnummer: '04206912345',
-            },
-            sendtDato: '27.januar 2026',
-            ytelse: {
-                url: 'nav.no/barnetrygd',
-                ubestemtEntall: 'barnetrygd',
-                bestemtEntall: 'barnetrygden',
-            },
-            signatur: {
-                enhetNavn: 'NAV Solør',
-                ansvarligSaksbehandler: 'Saks Behandler',
-                besluttendeSaksbehandler: null,
-            },
-        },
+        defaultValues: vedtaksbrevDefaultValues,
     });
     const [pdfSider, setPdfSider] = useState<string[]>([]);
     const [gjeldendeSide, settGjeldendeSide] = useState(1);
-    const antallSider = pdfSider.length;
     const { onMutate, ...originalMutation } = vedtaksbrevLagSvgVedtaksbrevMutation({
         baseURL: 'http://localhost:4000/pdf',
     });
@@ -131,89 +60,107 @@ const OpprettVedtaksbrev: React.FC = () => {
                 svg => `data:image/svg+xml;base64,${btoa(svg)}`
             );
             setPdfSider(siderSomBase64);
-            if (gjeldendeSide > respons.page_count) {
-                settGjeldendeSide(1);
-            }
         },
         onMutate: async (variables, context) => {
             await queryClient.cancelQueries({ queryKey: ['lagPdf'] });
             onMutate?.(variables, context);
         },
     });
-
-    const debouncedUpdate = useDebounce(() => {
+    const sendInnSkjemaData = (): void => {
         vedtaksbrevMutation.mutate({
             body: methods.getValues(),
         });
-    });
+    };
+    const debouncedUpdate = useDebounce(() => sendInnSkjemaData());
+
+    const sendInnSkjemaVedFørsteRendering = useEffectEvent(() => sendInnSkjemaData());
 
     useEffect(() => {
-        vedtaksbrevMutation.mutate({
-            body: methods.getValues(),
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        sendInnSkjemaVedFørsteRendering();
     }, []);
 
-    methods.watch(() => debouncedUpdate());
+    methods.watch(() => debouncedUpdate()); // TODO: optimaliser
 
     return (
-        <>
-            <Heading size="small" spacing>
-                Opprett vedtaksbrev
-            </Heading>
-            <FormProvider {...methods}>
-                <div className="flex gap-4 flex-1 min-h-0">
-                    <div className="flex-1 min-w-0 p-4 border rounded-xl border-ax-border-neutral-subtle">
-                        <Textarea
-                            label="Brevets innledning"
+        <VStack gap="space-24">
+            <Heading size="small">Opprett vedtaksbrev</Heading>
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-4 flex-1 min-h-0">
+                <div className="col-span-1 overflow-auto">
+                    <VStack gap="space-16">
+                        <FormProvider {...methods}>
+                            <Textarea
+                                label="Brevets innledning"
+                                size="small"
+                                minRows={3}
+                                {...methods.register('hovedavsnitt.underavsnitt.0.tekst')}
+                            />
+                            {methods.getValues('avsnitt').map((avsnitt, index) => (
+                                <PeriodeAvsnittSkjema
+                                    key={`${avsnitt}-${index}`}
+                                    avsnitt={avsnitt}
+                                    indeks={index}
+                                />
+                            ))}
+                        </FormProvider>
+                    </VStack>
+                </div>
+
+                <div className="col-span-1 flex flex-col border rounded-xl border-ax-border-neutral-subtle bg-white h-full">
+                    <HStack
+                        justify="center"
+                        align="center"
+                        className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl "
+                    >
+                        <Pagination
+                            page={gjeldendeSide}
+                            count={pdfSider.length}
                             size="small"
-                            {...methods.register('hovedavsnitt.underavsnitt.0.tekst')}
+                            onPageChange={settGjeldendeSide}
                         />
-                    </div>
-                    <div className="flex-1 min-w-0 flex flex-col border rounded-xl border-ax-border-neutral-subtle bg-white">
-                        <div className="flex-1 flex items-start justify-center p-4 overflow-auto bg-white rounded-t-xl">
-                            {pdfSider.length > 0 ? (
-                                <img
-                                    className="max-w-full h-auto"
-                                    alt={`Forhåndsvisning av vedtaksbrev, side ${gjeldendeSide}`}
-                                    src={pdfSider[gjeldendeSide - 1]}
-                                />
-                            ) : (
-                                <Skeleton
-                                    variant="rounded"
-                                    className="aspect-[1/1.414] w-full max-w-md"
-                                    height={600}
-                                />
-                            )}
-                        </div>
-                        <HStack
-                            justify="center"
-                            align="center"
-                            className="p-3 border-t border-ax-border-neutral-subtle gap-4"
-                        >
-                            <Button
-                                variant="tertiary"
-                                size="small"
-                                icon={<ChevronLeftIcon aria-hidden />}
-                                disabled={gjeldendeSide <= 1}
-                                onClick={() => settGjeldendeSide(s => Math.max(1, s - 1))}
-                                aria-label="Forrige side"
+                    </HStack>
+                    <div className="flex-1 flex items-start justify-center overflow-auto bg-white rounded-b-xl border-t border-ax-border-neutral-subtle">
+                        {vedtaksbrevMutation.isError ? (
+                            <VStack
+                                gap="space-16"
+                                padding="space-16"
+                                className="flex justify-center items-center h-full"
+                            >
+                                <InlineMessage size="small" status="error">
+                                    Kunne ikke laste inn forhåndsvisningen. Dette kan være et
+                                    midlertidig problem. Prøv å laste siden på nytt, eller prøv
+                                    igjen om litt.
+                                </InlineMessage>
+
+                                <Button
+                                    variant="secondary"
+                                    size="small"
+                                    className="sm: bg-repeat"
+                                    onClick={() => {
+                                        vedtaksbrevMutation.reset();
+                                        sendInnSkjemaData();
+                                    }}
+                                >
+                                    Last inn på nytt
+                                </Button>
+                            </VStack>
+                        ) : pdfSider.length > 0 ? (
+                            <img
+                                className="max-w-full max-h-full object-contain"
+                                alt={`Forhåndsvisning av vedtaksbrev, side ${gjeldendeSide}`}
+                                src={pdfSider[gjeldendeSide - 1]}
                             />
-                            <BodyShort size="small">
-                                Side {gjeldendeSide} av {antallSider}
-                            </BodyShort>
-                            <Button
-                                variant="tertiary"
-                                size="small"
-                                icon={<ChevronRightIcon aria-hidden />}
-                                disabled={gjeldendeSide >= antallSider}
-                                onClick={() => settGjeldendeSide(s => Math.min(antallSider, s + 1))}
-                                aria-label="Neste side"
+                        ) : (
+                            /* Fikser suspense etter hvert, dette er midlertidig */
+                            <Skeleton
+                                variant="rounded"
+                                className="aspect-[1/1.414] w-full max-w-md"
+                                height={600}
                             />
-                        </HStack>
+                        )}
                     </div>
                 </div>
-            </FormProvider>
+            </div>
+
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.ForeslåVedtak)}
                 nesteTekst="Send til godkjenning"
@@ -224,7 +171,76 @@ const OpprettVedtaksbrev: React.FC = () => {
                 }}
                 onForrige={navigerTilForrige}
             />
-        </>
+        </VStack>
+    );
+};
+
+// TODO få fra periode.dato senere
+const formaterPeriodeTittel = (tittel: string): string => {
+    const match = tittel.match(/fra og med (.+) til og med (.+)/i);
+    if (match) {
+        return `${match[1]}–${match[2]}`;
+    }
+    return tittel;
+};
+
+// TODO få info fra periode senere
+const harSærligeGrunner = (avsnitt: Avsnitt): boolean => {
+    return avsnitt.underavsnitt.some(
+        underavsnitt =>
+            underavsnitt.type === 'underavsnitt' &&
+            underavsnitt.tittel === 'Er det særlige grunner til å redusere beløpet?'
+    );
+};
+
+type PeriodeAvsnittSkjemaProps = {
+    avsnitt: Avsnitt;
+    indeks: number;
+};
+
+const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ avsnitt, indeks }) => {
+    const { register } = useFormContext<VedtaksbrevData>();
+    const [erÅpen, settErÅpen] = useState(false);
+
+    const periodeTittel = formaterPeriodeTittel(avsnitt.tittel);
+    const visSærligeGrunner = harSærligeGrunner(avsnitt);
+
+    return (
+        <ExpansionCard
+            size="small"
+            open={erÅpen}
+            onToggle={() => settErÅpen(prev => !prev)}
+            aria-label={periodeTittel}
+        >
+            <ExpansionCard.Header className="flex items-center">
+                <BodyShort className="font-ax-bold">{periodeTittel}</BodyShort>
+            </ExpansionCard.Header>
+            <ExpansionCard.Content>
+                <VStack gap="space-24">
+                    <Textarea
+                        label={avsnitt.tittel}
+                        description="Beskriv kort hva som har skjedd i denne perioden"
+                        size="small"
+                        minRows={3}
+                        {...register(`avsnitt.${indeks}.underavsnitt.0.tekst`)}
+                    />
+                    <Textarea
+                        label="Hvordan har vi kommet fram til at du må betale tilbake?"
+                        size="small"
+                        minRows={3}
+                        {...register(`avsnitt.${indeks}.underavsnitt.2.underavsnitt.0.tekst`)}
+                    />
+                    {visSærligeGrunner && (
+                        <Textarea
+                            label="Er det særlige grunner til å redusere beløpet?"
+                            size="small"
+                            minRows={3}
+                            {...register(`avsnitt.${indeks}.underavsnitt.3.underavsnitt.0.tekst`)}
+                        />
+                    )}
+                </VStack>
+            </ExpansionCard.Content>
+        </ExpansionCard>
     );
 };
 
